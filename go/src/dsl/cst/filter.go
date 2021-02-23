@@ -32,6 +32,6 @@ func (this *RootNode) BuildFilterStatementNode(astNode *dsl.ASTNode) (IExecutabl
 }
 
 func (this *FilterStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	this.filterEvaluable.Evaluate(&state.FilterExpression, state)
+	state.FilterExpression = this.filterEvaluable.Evaluate(state).Copy()
 	return nil, nil
 }

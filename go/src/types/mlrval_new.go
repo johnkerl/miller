@@ -50,21 +50,6 @@ func MlrvalFromAbsent() Mlrval {
 	}
 }
 
-func MlrvalPointerFromError() *Mlrval {
-	retval := MlrvalFromError()
-	return &retval
-}
-
-func MlrvalPointerFromAbsent() *Mlrval {
-	retval := MlrvalFromAbsent()
-	return &retval
-}
-
-func MlrvalPointerFromVoid() *Mlrval {
-	retval := MlrvalFromVoid()
-	return &retval
-}
-
 func MlrvalFromVoid() Mlrval {
 	return Mlrval{
 		mvtype:        MT_VOID,
@@ -93,11 +78,6 @@ func MlrvalFromString(input string) Mlrval {
 			mapval:        nil,
 		}
 	}
-}
-
-func MlrvalPointerFromString(input string) *Mlrval {
-	retval := MlrvalFromString(input)
-	return &retval
 }
 
 // xxx comment why two -- one for from parsed user data; other for from math ops

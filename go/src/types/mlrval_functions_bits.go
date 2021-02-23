@@ -3,8 +3,8 @@ package types
 // ================================================================
 // Bitwise NOT
 
-func bitwise_not_i_i(output, input1 *Mlrval) {
-	output.SetFromInt(^input1.intval)
+func bitwise_not_i_i(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(^input1.intval)
 }
 
 var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
@@ -19,8 +19,8 @@ var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ _absn1,
 }
 
-func MlrvalBitwiseNOT(output, input1 *Mlrval) {
-	bitwise_not_dispositions[input1.mvtype](output, input1)
+func MlrvalBitwiseNOT(input1 *Mlrval) *Mlrval {
+	return bitwise_not_dispositions[input1.mvtype](input1)
 }
 
 // ================================================================
@@ -34,7 +34,7 @@ const _m08 uint64 = 0x00ff00ff00ff00ff
 const _m16 uint64 = 0x0000ffff0000ffff
 const _m32 uint64 = 0x00000000ffffffff
 
-func bitcount_i_i(output, input1 *Mlrval) {
+func bitcount_i_i(input1 *Mlrval) *Mlrval {
 	a := uint64(input1.intval)
 	a = (a & _m01) + ((a >> 1) & _m01)
 	a = (a & _m02) + ((a >> 2) & _m02)
@@ -42,7 +42,7 @@ func bitcount_i_i(output, input1 *Mlrval) {
 	a = (a & _m08) + ((a >> 8) & _m08)
 	a = (a & _m16) + ((a >> 16) & _m16)
 	a = (a & _m32) + ((a >> 32) & _m32)
-	output.SetFromInt(int(a))
+	return MlrvalPointerFromInt(int(a))
 }
 
 var bitcount_dispositions = [MT_DIM]UnaryFunc{
@@ -57,15 +57,15 @@ var bitcount_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ _absn1,
 }
 
-func MlrvalBitCount(output, input1 *Mlrval) {
-	bitcount_dispositions[input1.mvtype](output, input1)
+func MlrvalBitCount(input1 *Mlrval) *Mlrval {
+	return bitcount_dispositions[input1.mvtype](input1)
 }
 
 // ================================================================
 // Bitwise AND
 
-func bitwise_and_i_ii(output, input1, input2 *Mlrval) {
-	output.SetFromInt(input1.intval & input2.intval)
+func bitwise_and_i_ii(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(input1.intval & input2.intval)
 }
 
 var bitwise_and_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -81,15 +81,15 @@ var bitwise_and_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalBitwiseAND(output, input1, input2 *Mlrval) {
-	bitwise_and_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
+func MlrvalBitwiseAND(input1, input2 *Mlrval) *Mlrval {
+	return bitwise_and_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Bitwise OR
 
-func bitwise_or_i_ii(output, input1, input2 *Mlrval) {
-	output.SetFromInt(input1.intval | input2.intval)
+func bitwise_or_i_ii(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(input1.intval | input2.intval)
 }
 
 var bitwise_or_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -105,15 +105,15 @@ var bitwise_or_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalBitwiseOR(output, input1, input2 *Mlrval) {
-	bitwise_or_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
+func MlrvalBitwiseOR(input1, input2 *Mlrval) *Mlrval {
+	return bitwise_or_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Bitwise XOR
 
-func bitwise_xor_i_ii(output, input1, input2 *Mlrval) {
-	output.SetFromInt(input1.intval ^ input2.intval)
+func bitwise_xor_i_ii(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(input1.intval ^ input2.intval)
 }
 
 var bitwise_xor_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -129,15 +129,15 @@ var bitwise_xor_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalBitwiseXOR(output, input1, input2 *Mlrval) {
-	bitwise_xor_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
+func MlrvalBitwiseXOR(input1, input2 *Mlrval) *Mlrval {
+	return bitwise_xor_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Left shift
 
-func lsh_i_ii(output, input1, input2 *Mlrval) {
-	output.SetFromInt(input1.intval << uint64(input2.intval))
+func lsh_i_ii(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(input1.intval << uint64(input2.intval))
 }
 
 var left_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -153,15 +153,15 @@ var left_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalLeftShift(output, input1, input2 *Mlrval) {
-	left_shift_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
+func MlrvalLeftShift(input1, input2 *Mlrval) *Mlrval {
+	return left_shift_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Signed right shift
 
-func srsh_i_ii(output, input1, input2 *Mlrval) {
-	output.SetFromInt(input1.intval >> uint64(input2.intval))
+func srsh_i_ii(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(input1.intval >> uint64(input2.intval))
 }
 
 var signed_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -177,18 +177,18 @@ var signed_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalSignedRightShift(output, input1, input2 *Mlrval) {
-	signed_right_shift_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
+func MlrvalSignedRightShift(input1, input2 *Mlrval) *Mlrval {
+	return signed_right_shift_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Unsigned right shift
 
-func ursh_i_ii(output, input1, input2 *Mlrval) {
+func ursh_i_ii(input1, input2 *Mlrval) *Mlrval {
 	var ua uint64 = uint64(input1.intval)
 	var ub uint64 = uint64(input2.intval)
 	var uc = ua >> ub
-	output.SetFromInt(int(uc))
+	return MlrvalPointerFromInt(int(uc))
 }
 
 var unsigned_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -204,6 +204,6 @@ var unsigned_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
-func MlrvalUnsignedRightShift(output, input1, input2 *Mlrval) {
-	unsigned_right_shift_dispositions[input1.mvtype][input2.mvtype](output, input1, input2)
+func MlrvalUnsignedRightShift(input1, input2 *Mlrval) *Mlrval {
+	return unsigned_right_shift_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }

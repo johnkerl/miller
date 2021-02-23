@@ -368,13 +368,11 @@ func (this *tStepperDelta) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	var delta types.Mlrval
-	if this.previous == nil {
-		delta.SetFromInt(0)
-	} else {
-		types.MlrvalBinaryMinus(&delta, valueFieldValue, this.previous)
+	delta := types.MlrvalPointerFromInt(0)
+	if this.previous != nil {
+		delta = types.MlrvalBinaryMinus(valueFieldValue, this.previous)
 	}
-	inrec.PutCopy(this.outputFieldName, &delta)
+	inrec.PutCopy(this.outputFieldName, delta)
 
 	this.previous = valueFieldValue.Copy()
 
@@ -434,14 +432,13 @@ func (this *tStepperFromFirst) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	var fromFirst types.Mlrval
+	fromFirst := types.MlrvalPointerFromInt(0)
 	if this.first == nil {
-		fromFirst.SetFromInt(0)
 		this.first = valueFieldValue.Copy()
 	} else {
-		types.MlrvalBinaryMinus(&fromFirst, valueFieldValue, this.first)
+		fromFirst = types.MlrvalBinaryMinus(valueFieldValue, this.first)
 	}
-	inrec.PutCopy(this.outputFieldName, &fromFirst)
+	inrec.PutCopy(this.outputFieldName, fromFirst)
 }
 
 // ================================================================
@@ -465,20 +462,18 @@ func (this *tStepperRatio) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	var ratio types.Mlrval
-	if this.previous == nil {
-		ratio.SetFromInt(1)
-	} else {
-		types.MlrvalDivide(&ratio, valueFieldValue, this.previous)
+	ratio := types.MlrvalPointerFromInt(1)
+	if this.previous != nil {
+		ratio = types.MlrvalDivide(valueFieldValue, this.previous)
 	}
-	inrec.PutCopy(this.outputFieldName, &ratio)
+	inrec.PutCopy(this.outputFieldName, ratio)
 
 	this.previous = valueFieldValue.Copy()
 }
 
 // ================================================================
 type tStepperRsum struct {
-	rsum            types.Mlrval
+	rsum            *types.Mlrval
 	outputFieldName string
 }
 
@@ -488,7 +483,7 @@ func stepperRsumAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperRsum{
-		rsum:            types.MlrvalFromInt(0),
+		rsum:            types.MlrvalPointerFromInt(0),
 		outputFieldName: inputFieldName + "_rsum",
 	}
 }
@@ -497,14 +492,14 @@ func (this *tStepperRsum) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	types.MlrvalBinaryPlus(&this.rsum, valueFieldValue, &this.rsum)
-	inrec.PutCopy(this.outputFieldName, &this.rsum)
+	this.rsum = types.MlrvalBinaryPlus(valueFieldValue, this.rsum)
+	inrec.PutCopy(this.outputFieldName, this.rsum)
 }
 
 // ================================================================
 type tStepperCounter struct {
-	counter         types.Mlrval
-	one             types.Mlrval
+	counter         *types.Mlrval
+	one             *types.Mlrval
 	outputFieldName string
 }
 
@@ -514,8 +509,8 @@ func stepperCounterAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperCounter{
-		counter:         types.MlrvalFromInt(0),
-		one:             types.MlrvalFromInt(1),
+		counter:         types.MlrvalPointerFromInt(0),
+		one:             types.MlrvalPointerFromInt(1),
 		outputFieldName: inputFieldName + "_counter",
 	}
 }
@@ -524,8 +519,8 @@ func (this *tStepperCounter) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	types.MlrvalBinaryPlus(&this.counter, &this.counter, &this.one)
-	inrec.PutCopy(this.outputFieldName, &this.counter)
+	this.counter = types.MlrvalBinaryPlus(this.counter, this.one)
+	inrec.PutCopy(this.outputFieldName, this.counter)
 }
 
 // ----------------------------------------------------------------
@@ -535,7 +530,7 @@ func (this *tStepperCounter) process(
 type tStepperEWMA struct {
 	alphas           []types.Mlrval
 	oneMinusAlphas   []types.Mlrval
-	prevs            []types.Mlrval
+	prevs            []*types.Mlrval
 	outputFieldNames []string
 	havePrevs        bool
 }
@@ -552,7 +547,7 @@ func stepperEWMAAlloc(
 
 	alphas := make([]types.Mlrval, n)
 	oneMinusAlphas := make([]types.Mlrval, n)
-	prevs := make([]types.Mlrval, n)
+	prevs := make([]*types.Mlrval, n)
 	outputFieldNames := make([]string, n)
 
 	suffixes := stringAlphas
@@ -574,7 +569,7 @@ func stepperEWMAAlloc(
 		}
 		alphas[i] = types.MlrvalFromFloat64(dalpha)
 		oneMinusAlphas[i] = types.MlrvalFromFloat64(1.0 - dalpha)
-		prevs[i] = types.MlrvalFromFloat64(0.0)
+		prevs[i] = types.MlrvalPointerFromFloat64(0.0)
 		outputFieldNames[i] = inputFieldName + "_ewma_" + suffix
 	}
 
@@ -594,20 +589,17 @@ func (this *tStepperEWMA) process(
 	if !this.havePrevs {
 		for i, _ := range this.alphas {
 			inrec.PutCopy(this.outputFieldNames[i], valueFieldValue)
-			this.prevs[i] = *valueFieldValue.Copy()
+			this.prevs[i] = valueFieldValue.Copy()
 		}
 		this.havePrevs = true
 	} else {
 		for i, _ := range this.alphas {
 			curr := valueFieldValue.Copy()
 			// xxx pending pointer-output refactor
-			var product1 types.Mlrval
-			var product2 types.Mlrval
-			var next types.Mlrval
-			types.MlrvalTimes(&product1, curr, &this.alphas[i])
-			types.MlrvalTimes(&product2, &this.prevs[i], &this.oneMinusAlphas[i])
-			types.MlrvalBinaryPlus(&next, &product1, &product2)
-			inrec.PutCopy(this.outputFieldNames[i], &next)
+			product1 := types.MlrvalTimes(curr, &this.alphas[i])
+			product2 := types.MlrvalTimes(this.prevs[i], &this.oneMinusAlphas[i])
+			next := types.MlrvalBinaryPlus(product1, product2)
+			inrec.PutCopy(this.outputFieldNames[i], next)
 			this.prevs[i] = next
 		}
 	}

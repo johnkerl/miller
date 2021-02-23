@@ -11,7 +11,6 @@ import (
 	"miller/src/dsl"
 	"miller/src/lib"
 	"miller/src/runtime"
-	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
@@ -82,12 +81,10 @@ func (this *ReturnNode) Execute(state *runtime.State) (*BlockExitPayload, error)
 		}, nil
 	} else {
 		// The return value can be of type MT_ERROR but we do not use Go-level error return here.
-		var returnValue types.Mlrval
-		this.returnValueExpression.Evaluate(&returnValue, state)
-		// TODO: pending pointer-output refactor
+		returnValue := this.returnValueExpression.Evaluate(state)
 		return &BlockExitPayload{
 			BLOCK_EXIT_RETURN_VALUE,
-			&returnValue,
+			returnValue.Copy(),
 		}, nil
 	}
 }

@@ -140,13 +140,12 @@ func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 
 func (this *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	newrec := types.NewMlrmapAsRecord()
-	var emitfValue types.Mlrval
 	for i, emitfEvaluable := range this.emitfEvaluables {
 		emitfName := this.emitfNames[i]
-		emitfEvaluable.Evaluate(&emitfValue, state)
+		emitfValue := emitfEvaluable.Evaluate(state)
 
 		if !emitfValue.IsAbsent() {
-			newrec.PutCopy(emitfName, &emitfValue)
+			newrec.PutCopy(emitfName, emitfValue)
 		}
 	}
 
@@ -196,8 +195,7 @@ func (this *EmitFStatementNode) emitfToFileOrPipe(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	var redirectorTarget types.Mlrval
-	this.redirectorTargetEvaluable.Evaluate(&redirectorTarget, state)
+	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(

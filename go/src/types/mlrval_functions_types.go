@@ -8,29 +8,29 @@ import (
 )
 
 // ================================================================
-func MlrvalTypeof(output, input1 *Mlrval) {
-	output.SetFromString(input1.GetTypeName())
+func MlrvalTypeof(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromString(input1.GetTypeName())
 }
 
 // ----------------------------------------------------------------
-func string_to_int(output, input1 *Mlrval) {
+func string_to_int(input1 *Mlrval) *Mlrval {
 	i, ok := lib.TryIntFromString(input1.printrep)
 	if ok {
-		output.SetFromInt(i)
+		return MlrvalPointerFromInt(i)
 	} else {
-		output.SetFromError()
+		return MLRVAL_ERROR
 	}
 }
 
-func float_to_int(output, input1 *Mlrval) {
-	output.SetFromInt(int(input1.floatval))
+func float_to_int(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(int(input1.floatval))
 }
 
-func bool_to_int(output, input1 *Mlrval) {
+func bool_to_int(input1 *Mlrval) *Mlrval {
 	if input1.boolval == true {
-		output.SetFromInt(1)
+		return MlrvalPointerFromInt(1)
 	} else {
-		output.SetFromInt(0)
+		return MlrvalPointerFromInt(0)
 	}
 }
 
@@ -46,29 +46,29 @@ var to_int_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ _erro1,
 }
 
-func MlrvalToInt(output, input1 *Mlrval) {
-	to_int_dispositions[input1.mvtype](output, input1)
+func MlrvalToInt(input1 *Mlrval) *Mlrval {
+	return to_int_dispositions[input1.mvtype](input1)
 }
 
 // ----------------------------------------------------------------
-func string_to_float(output, input1 *Mlrval) {
+func string_to_float(input1 *Mlrval) *Mlrval {
 	f, ok := lib.TryFloat64FromString(input1.printrep)
 	if ok {
-		output.SetFromFloat64(f)
+		return MlrvalPointerFromFloat64(f)
 	} else {
-		output.SetFromError()
+		return MLRVAL_ERROR
 	}
 }
 
-func int_to_float(output, input1 *Mlrval) {
-	output.SetFromFloat64(float64(input1.intval))
+func int_to_float(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromFloat64(float64(input1.intval))
 }
 
-func bool_to_float(output, input1 *Mlrval) {
+func bool_to_float(input1 *Mlrval) *Mlrval {
 	if input1.boolval == true {
-		output.SetFromFloat64(1.0)
+		return MlrvalPointerFromFloat64(1.0)
 	} else {
-		output.SetFromFloat64(0.0)
+		return MlrvalPointerFromFloat64(0.0)
 	}
 }
 
@@ -84,26 +84,26 @@ var to_float_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ _erro1,
 }
 
-func MlrvalToFloat(output, input1 *Mlrval) {
-	to_float_dispositions[input1.mvtype](output, input1)
+func MlrvalToFloat(input1 *Mlrval) *Mlrval {
+	return to_float_dispositions[input1.mvtype](input1)
 }
 
 // ----------------------------------------------------------------
-func string_to_boolean(output, input1 *Mlrval) {
+func string_to_boolean(input1 *Mlrval) *Mlrval {
 	b, ok := lib.TryBoolFromBoolString(input1.printrep)
 	if ok {
-		output.SetFromBool(b)
+		return MlrvalPointerFromBool(b)
 	} else {
-		output.SetFromError()
+		return MLRVAL_ERROR
 	}
 }
 
-func int_to_bool(output, input1 *Mlrval) {
-	output.SetFromBool(input1.intval != 0)
+func int_to_bool(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.intval != 0)
 }
 
-func float_to_bool(output, input1 *Mlrval) {
-	output.SetFromBool(input1.floatval != 0.0)
+func float_to_bool(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.floatval != 0.0)
 }
 
 var to_boolean_dispositions = [MT_DIM]UnaryFunc{
@@ -118,91 +118,91 @@ var to_boolean_dispositions = [MT_DIM]UnaryFunc{
 	/*MAP    */ _erro1,
 }
 
-func MlrvalToBoolean(output, input1 *Mlrval) {
-	to_boolean_dispositions[input1.mvtype](output, input1)
+func MlrvalToBoolean(input1 *Mlrval) *Mlrval {
+	return to_boolean_dispositions[input1.mvtype](input1)
 }
 
 // ----------------------------------------------------------------
-func MlrvalIsAbsent(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_ABSENT)
+func MlrvalIsAbsent(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_ABSENT)
 }
-func MlrvalIsError(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_ERROR)
+func MlrvalIsError(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_ERROR)
 }
-func MlrvalIsBool(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_BOOL)
+func MlrvalIsBool(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_BOOL)
 }
-func MlrvalIsBoolean(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_BOOL)
+func MlrvalIsBoolean(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_BOOL)
 }
-func MlrvalIsEmpty(output, input1 *Mlrval) {
+func MlrvalIsEmpty(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_VOID {
-		output.SetFromTrue()
+		return MLRVAL_TRUE
 	} else if input1.mvtype == MT_STRING {
 		if input1.printrep == "" {
-			output.SetFromTrue()
+			return MLRVAL_TRUE
 		} else {
-			output.SetFromFalse()
+			return MLRVAL_FALSE
 		}
 	} else {
-		output.SetFromFalse()
+		return MLRVAL_FALSE
 	}
 }
-func MlrvalIsEmptyMap(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_MAP && input1.mapval.FieldCount == 0)
+func MlrvalIsEmptyMap(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_MAP && input1.mapval.FieldCount == 0)
 }
-func MlrvalIsFloat(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_FLOAT)
+func MlrvalIsFloat(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_FLOAT)
 }
-func MlrvalIsInt(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_INT)
+func MlrvalIsInt(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_INT)
 }
-func MlrvalIsMap(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_MAP)
+func MlrvalIsMap(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_MAP)
 }
-func MlrvalIsArray(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_ARRAY)
+func MlrvalIsArray(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_ARRAY)
 }
-func MlrvalIsNonEmptyMap(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_MAP && input1.mapval.FieldCount != 0)
+func MlrvalIsNonEmptyMap(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_MAP && input1.mapval.FieldCount != 0)
 }
-func MlrvalIsNotEmpty(output, input1 *Mlrval) {
+func MlrvalIsNotEmpty(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_VOID {
-		output.SetFromFalse()
+		return MLRVAL_FALSE
 	} else if input1.mvtype == MT_STRING {
 		if input1.printrep == "" {
-			output.SetFromFalse()
+			return MLRVAL_FALSE
 		} else {
-			output.SetFromTrue()
+			return MLRVAL_TRUE
 		}
 	} else {
-		output.SetFromTrue()
+		return MLRVAL_TRUE
 	}
 }
-func MlrvalIsNotMap(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype != MT_MAP)
+func MlrvalIsNotMap(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype != MT_MAP)
 }
-func MlrvalIsNotArray(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype != MT_ARRAY)
+func MlrvalIsNotArray(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype != MT_ARRAY)
 }
-func MlrvalIsNotNull(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype != MT_ABSENT && input1.mvtype != MT_VOID)
+func MlrvalIsNotNull(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype != MT_ABSENT && input1.mvtype != MT_VOID)
 }
-func MlrvalIsNull(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_ABSENT || input1.mvtype == MT_VOID)
+func MlrvalIsNull(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_ABSENT || input1.mvtype == MT_VOID)
 }
-func MlrvalIsNumeric(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_INT || input1.mvtype == MT_FLOAT)
+func MlrvalIsNumeric(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_INT || input1.mvtype == MT_FLOAT)
 }
-func MlrvalIsPresent(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype != MT_ABSENT)
+func MlrvalIsPresent(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype != MT_ABSENT)
 }
-func MlrvalIsString(output, input1 *Mlrval) {
-	output.SetFromBool(input1.mvtype == MT_STRING || input1.mvtype == MT_VOID)
+func MlrvalIsString(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromBool(input1.mvtype == MT_STRING || input1.mvtype == MT_VOID)
 }
 
 // ----------------------------------------------------------------
-func assertingCommon(output, input1, check *Mlrval, description string, context *Context) {
+func assertingCommon(input1, check *Mlrval, description string, context *Context) *Mlrval {
 	if check.IsFalse() {
 		// TODO: get context as in the C impl
 		//fprintf(stderr, "%s: %s type-assertion failed at NR=%lld FNR=%lld FILENAME=%s\n",
@@ -218,101 +218,63 @@ func assertingCommon(output, input1, check *Mlrval, description string, context 
 		)
 		os.Exit(1)
 	}
-	output.CopyFrom(input1)
+	return input1
 }
 
-func MlrvalAssertingAbsent(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsAbsent(&check, input1)
-	assertingCommon(output, input1, &check, "is_absent", context)
+func MlrvalAssertingAbsent(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsAbsent(input1), "is_absent", context)
 }
-func MlrvalAssertingError(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsError(&check, input1)
-	assertingCommon(output, input1, &check, "is_error", context)
+func MlrvalAssertingError(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsError(input1), "is_error", context)
 }
-func MlrvalAssertingBool(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsBool(&check, input1)
-	assertingCommon(output, input1, &check, "is_bool", context)
+func MlrvalAssertingBool(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsBool(input1), "is_bool", context)
 }
-func MlrvalAssertingBoolean(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsBoolean(&check, input1)
-	assertingCommon(output, input1, &check, "is_boolean", context)
+func MlrvalAssertingBoolean(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsBoolean(input1), "is_boolean", context)
 }
-func MlrvalAssertingEmpty(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsEmpty(&check, input1)
-	assertingCommon(output, input1, &check, "is_empty", context)
+func MlrvalAssertingEmpty(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsEmpty(input1), "is_empty", context)
 }
-func MlrvalAssertingEmptyMap(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsEmptyMap(&check, input1)
-	assertingCommon(output, input1, &check, "is_empty_map", context)
+func MlrvalAssertingEmptyMap(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsEmptyMap(input1), "is_empty_map", context)
 }
-func MlrvalAssertingFloat(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsFloat(&check, input1)
-	assertingCommon(output, input1, &check, "is_float", context)
+func MlrvalAssertingFloat(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsFloat(input1), "is_float", context)
 }
-func MlrvalAssertingInt(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsInt(&check, input1)
-	assertingCommon(output, input1, &check, "is_int", context)
+func MlrvalAssertingInt(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsInt(input1), "is_int", context)
 }
-func MlrvalAssertingMap(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsMap(&check, input1)
-	assertingCommon(output, input1, &check, "is_map", context)
+func MlrvalAssertingMap(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsMap(input1), "is_map", context)
 }
-func MlrvalAssertingArray(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsArray(&check, input1)
-	assertingCommon(output, input1, &check, "is_array", context)
+func MlrvalAssertingArray(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsArray(input1), "is_array", context)
 }
-func MlrvalAssertingNonEmptyMap(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsNonEmptyMap(&check, input1)
-	assertingCommon(output, input1, &check, "is_non_empty_map", context)
+func MlrvalAssertingNonEmptyMap(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsNonEmptyMap(input1), "is_non_empty_map", context)
 }
-func MlrvalAssertingNotEmpty(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsNotEmpty(&check, input1)
-	assertingCommon(output, input1, &check, "is_not_empty", context)
+func MlrvalAssertingNotEmpty(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsNotEmpty(input1), "is_not_empty", context)
 }
-func MlrvalAssertingNotMap(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsNotMap(&check, input1)
-	assertingCommon(output, input1, &check, "is_not_map", context)
+func MlrvalAssertingNotMap(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsNotMap(input1), "is_not_map", context)
 }
-func MlrvalAssertingNotArray(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsNotArray(&check, input1)
-	assertingCommon(output, input1, &check, "is_not_array", context)
+func MlrvalAssertingNotArray(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsNotArray(input1), "is_not_array", context)
 }
-func MlrvalAssertingNotNull(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsNotNull(&check, input1)
-	assertingCommon(output, input1, &check, "is_not_null", context)
+func MlrvalAssertingNotNull(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsNotNull(input1), "is_not_null", context)
 }
-func MlrvalAssertingNull(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsNull(&check, input1)
-	assertingCommon(output, input1, &check, "is_null", context)
+func MlrvalAssertingNull(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsNull(input1), "is_null", context)
 }
-func MlrvalAssertingNumeric(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsNumeric(&check, input1)
-	assertingCommon(output, input1, &check, "is_numeric", context)
+func MlrvalAssertingNumeric(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsNumeric(input1), "is_numeric", context)
 }
-func MlrvalAssertingPresent(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsPresent(&check, input1)
-	assertingCommon(output, input1, &check, "is_present", context)
+func MlrvalAssertingPresent(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsPresent(input1), "is_present", context)
 }
-func MlrvalAssertingString(output, input1 *Mlrval, context *Context) {
-	check := MlrvalFromAbsent()
-	MlrvalIsString(&check, input1)
-	assertingCommon(output, input1, &check, "is_string", context)
+func MlrvalAssertingString(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, MlrvalIsString(input1), "is_string", context)
 }

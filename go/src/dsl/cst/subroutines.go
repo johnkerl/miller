@@ -11,7 +11,6 @@ package cst
 import (
 	"miller/src/dsl"
 	"miller/src/lib"
-	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
@@ -55,14 +54,12 @@ func (this *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecut
 	// Here we need to make an array of our arguments at the callsite, to be
 	// paired up with the parameters within he subroutine definition at runtime.
 	argumentNodes := make([]IEvaluable, callsiteArity)
-	arguments := make([]types.Mlrval, callsiteArity)
 	for i, argumentASTNode := range astNode.Children {
 		argumentNode, err := this.BuildEvaluableNode(argumentASTNode)
 		if err != nil {
 			return nil, err
 		}
 		argumentNodes[i] = argumentNode
-		arguments[i] = types.MlrvalFromError()
 	}
 
 	if uds == nil {
@@ -71,11 +68,11 @@ func (this *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecut
 		// this callsite. This happens example when a subroutine is called before
 		// it's defined.
 		uds = NewUnresolvedUDS(subroutineName, callsiteArity)
-		udsCallsiteNode := NewUDSCallsite(argumentNodes, arguments, uds)
+		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
 		this.rememberUnresolvedSubroutineCallsite(udsCallsiteNode)
 		return udsCallsiteNode, nil
 	} else {
-		udsCallsiteNode := NewUDSCallsite(argumentNodes, arguments, uds)
+		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
 		return udsCallsiteNode, nil
 	}
 }

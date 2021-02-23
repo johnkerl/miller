@@ -23,7 +23,7 @@ import (
 //	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
 
 // ----------------------------------------------------------------
-func MlrvalGetVar(mn, msum, msum2 *Mlrval) Mlrval {
+func MlrvalGetVar(mn, msum, msum2 *Mlrval) *Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	sum, isNumber := msum.GetNumericToFloatValue()
@@ -32,7 +32,7 @@ func MlrvalGetVar(mn, msum, msum2 *Mlrval) Mlrval {
 	lib.InternalCodingErrorIf(!isNumber)
 
 	if n < 2 {
-		return MlrvalFromVoid()
+		return MLRVAL_VOID
 	}
 
 	mean := float64(sum) / float64(n)
@@ -41,32 +41,25 @@ func MlrvalGetVar(mn, msum, msum2 *Mlrval) Mlrval {
 		numerator = 0.0
 	}
 	denominator := float64(n - 1)
-	return MlrvalFromFloat64(numerator / denominator)
+	return MlrvalPointerFromFloat64(numerator / denominator)
 }
 
 // ----------------------------------------------------------------
-func MlrvalGetStddev(mn, msum, msum2 *Mlrval) Mlrval {
+func MlrvalGetStddev(mn, msum, msum2 *Mlrval) *Mlrval {
 	mvar := MlrvalGetVar(mn, msum, msum2)
 	if mvar.IsVoid() {
 		return mvar
 	}
-	// xxx temp
-	output := MlrvalFromAbsent()
-	MlrvalSqrt(&output, &mvar)
-	return output
+	return MlrvalSqrt(mvar)
 }
 
 // ----------------------------------------------------------------
-// xxx refactor
-func MlrvalGetMeanEB(mn, msum, msum2 *Mlrval) Mlrval {
+func MlrvalGetMeanEB(mn, msum, msum2 *Mlrval) *Mlrval {
 	mvar := MlrvalGetVar(mn, msum, msum2)
 	if mvar.IsVoid() {
 		return mvar
 	}
-	output := MlrvalFromError()
-	MlrvalDivide(&output, &mvar, mn)
-	MlrvalSqrt(&output, &output)
-	return output
+	return MlrvalSqrt(MlrvalDivide(mvar, mn))
 }
 
 // ----------------------------------------------------------------

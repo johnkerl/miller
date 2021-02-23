@@ -112,11 +112,11 @@ func transformerSeqgenParseCLI(
 // ----------------------------------------------------------------
 type TransformerSeqgen struct {
 	fieldName      string
-	start          types.Mlrval
-	stop           types.Mlrval
-	step           types.Mlrval
+	start          *types.Mlrval
+	stop           *types.Mlrval
+	step           *types.Mlrval
 	doneComparator types.BinaryFunc
-	mdone          types.Mlrval
+	mdone          *types.Mlrval
 }
 
 // ----------------------------------------------------------------
@@ -126,9 +126,9 @@ func NewTransformerSeqgen(
 	stopString string,
 	stepString string,
 ) (*TransformerSeqgen, error) {
-	start := types.MlrvalFromInferredType(startString)
-	stop := types.MlrvalFromInferredType(stopString)
-	step := types.MlrvalFromInferredType(stepString)
+	start := types.MlrvalPointerFromInferredType(startString)
+	stop := types.MlrvalPointerFromInferredType(stopString)
+	step := types.MlrvalPointerFromInferredType(stepString)
 	var doneComparator types.BinaryFunc = nil
 
 	fstart, startIsNumeric := start.GetNumericToFloatValue()
@@ -181,7 +181,7 @@ func NewTransformerSeqgen(
 		stop:           stop,
 		step:           step,
 		doneComparator: doneComparator,
-		mdone:          types.MlrvalFromBool(false),
+		mdone:          types.MLRVAL_FALSE,
 	}, nil
 }
 
@@ -195,21 +195,21 @@ func (this *TransformerSeqgen) Transform(
 	context.UpdateForStartOfFile("seqgen")
 
 	for {
-		this.doneComparator(&this.mdone, &counter, &this.stop)
+		this.mdone = this.doneComparator(counter, this.stop)
 		done, _ := this.mdone.GetBoolValue()
 		if done {
 			break
 		}
 
 		outrec := types.NewMlrmapAsRecord()
-		outrec.PutCopy(this.fieldName, &counter)
+		outrec.PutCopy(this.fieldName, counter)
 
 		context.UpdateForInputRecord()
 
 		outrecAndContext := types.NewRecordAndContext(outrec, context)
 		outputChannel <- outrecAndContext
 
-		types.MlrvalBinaryPlus(&counter, &counter, &this.step)
+		counter = types.MlrvalBinaryPlus(counter, this.step)
 	}
 
 	outputChannel <- types.NewEndOfStreamMarker(context)

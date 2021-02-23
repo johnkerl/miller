@@ -13,7 +13,7 @@ type State struct {
 	Inrec            *types.Mlrmap
 	Context          *types.Context
 	Oosvars          *types.Mlrmap
-	FilterExpression types.Mlrval
+	FilterExpression *types.Mlrval
 	Stack            *Stack
 	OutputChannel    chan<- *types.RecordAndContext
 }
@@ -24,7 +24,7 @@ func NewEmptyState() *State {
 		Inrec:            nil,
 		Context:          nil,
 		Oosvars:          oosvars,
-		FilterExpression: types.MlrvalFromTrue(),
+		FilterExpression: types.MLRVAL_TRUE,
 		Stack:            NewStack(),
 		// OutputChannel is assigned after construction
 	}

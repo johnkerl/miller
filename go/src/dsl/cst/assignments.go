@@ -8,7 +8,6 @@ import (
 	"miller/src/dsl"
 	"miller/src/lib"
 	"miller/src/runtime"
-	"miller/src/types"
 )
 
 // ================================================================
@@ -60,10 +59,9 @@ func NewAssignmentNode(
 func (this *AssignmentNode) Execute(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
-	var rvalue types.Mlrval
-	this.rvalueNode.Evaluate(&rvalue, state)
+	rvalue := this.rvalueNode.Evaluate(state)
 	if !rvalue.IsAbsent() {
-		err := this.lvalueNode.Assign(&rvalue, state)
+		err := this.lvalueNode.Assign(rvalue, state)
 		if err != nil {
 			return nil, err
 		}

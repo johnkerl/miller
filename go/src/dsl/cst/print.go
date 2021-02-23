@@ -312,13 +312,12 @@ func (this *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 		//
 		// Plus: we never have to worry about forgetting to do fflush(). :)
 		var buffer bytes.Buffer
-		var evaluation types.Mlrval
 
 		for i, expressionEvaluable := range this.expressionEvaluables {
 			if i > 0 {
 				buffer.WriteString(" ")
 			}
-			expressionEvaluable.Evaluate(&evaluation, state)
+			evaluation := expressionEvaluable.Evaluate(state)
 			if !evaluation.IsAbsent() {
 				buffer.WriteString(evaluation.String())
 			}
@@ -361,8 +360,7 @@ func (this *PrintStatementNode) printToFileOrPipe(
 	outputString string,
 	state *runtime.State,
 ) error {
-	var redirectorTarget types.Mlrval // malloc-avoidance
-	this.redirectorTargetEvaluable.Evaluate(&redirectorTarget, state)
+	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(

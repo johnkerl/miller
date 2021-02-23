@@ -294,8 +294,7 @@ func (this *Mlrmap) Contains(that *Mlrmap) bool {
 		}
 		thisval := this.Get(pe.Key)
 		thatval := pe.Value
-		meq := MlrvalFromError()
-		MlrvalEquals(&meq, thisval, thatval)
+		meq := MlrvalEquals(thisval, thatval)
 		eq, ok := meq.GetBoolValue()
 		lib.InternalCodingErrorIf(!ok)
 		if !eq {

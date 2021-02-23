@@ -62,7 +62,7 @@ type IAssignable interface {
 // Also, for computed field names on the left-hand side, like '$a . $b' in mlr
 // put '$[$a . $b]' = $x + $y'.
 type IEvaluable interface {
-	Evaluate(output *types.Mlrval, state *runtime.State)
+	Evaluate(state *runtime.State) *types.Mlrval
 }
 
 // ================================================================
