@@ -32,15 +32,31 @@ TOP OF LIST:
   - maybe MT_PENDING_MUTABLE -- ?
 
   info:
-  for i in 100 200 500 1000 2000 5000 10000 20000; do echo $i; justtime GOGC=$i mlr -n put -q
-  100   TIME IN SECONDS 21.046 -- GOGC=100 mlr -n put -q -s silent=true -f u/mand.mlr
-  200   TIME IN SECONDS 17.233 -- GOGC=200 mlr -n put -q -s silent=true -f u/mand.mlr
-  500   TIME IN SECONDS 15.535 -- GOGC=500 mlr -n put -q -s silent=true -f u/mand.mlr
-  1000  TIME IN SECONDS 15.125 -- GOGC=1000 mlr -n put -q -s silent=true -f u/mand.mlr
-  2000  TIME IN SECONDS 15.428 -- GOGC=2000 mlr -n put -q -s silent=true -f u/mand.mlr
-  5000  TIME IN SECONDS 15.083 -- GOGC=5000 mlr -n put -q -s silent=true -f u/mand.mlr
-  10000 TIME IN SECONDS 15.175 -- GOGC=10000 mlr -n put -q -s silent=true -f u/mand.mlr
-  20000 TIME IN SECONDS 15.419 -- GOGC=20000 mlr -n put -q -s silent=true -f u/mand.mlr
+
+  $ for i in 100 200 300 400 500 600 700 800 900 1000 ; do echo $i; justtime GOGC=$i mlr -n put -q -f u/mand.mlr > /dev/null; done
+   100 TIME IN SECONDS 23.369 --  GOGC=100 mlr -n put -q -f u/mand.mlr
+   200 TIME IN SECONDS 19.427 --  GOGC=200 mlr -n put -q -f u/mand.mlr
+   300 TIME IN SECONDS 18.350 --  GOGC=300 mlr -n put -q -f u/mand.mlr
+   400 TIME IN SECONDS 17.712 --  GOGC=400 mlr -n put -q -f u/mand.mlr
+   500 TIME IN SECONDS 17.568 --  GOGC=500 mlr -n put -q -f u/mand.mlr
+   600 TIME IN SECONDS 24.172 --  GOGC=600 mlr -n put -q -f u/mand.mlr
+   700 TIME IN SECONDS 18.617 --  GOGC=700 mlr -n put -q -f u/mand.mlr
+   800 TIME IN SECONDS 19.073 --  GOGC=800 mlr -n put -q -f u/mand.mlr
+   900 TIME IN SECONDS 19.191 --  GOGC=900 mlr -n put -q -f u/mand.mlr
+  1000 TIME IN SECONDS 17.436 -- GOGC=1000 mlr -n put -q -f u/mand.mlr
+
+   100 TIME IN SECONDS 23.159 --  GOGC=100 mlr -n put -q -f u/mand.mlr
+   200 TIME IN SECONDS 19.138 --  GOGC=200 mlr -n put -q -f u/mand.mlr
+   300 TIME IN SECONDS 18.198 --  GOGC=300 mlr -n put -q -f u/mand.mlr
+   400 TIME IN SECONDS 17.718 --  GOGC=400 mlr -n put -q -f u/mand.mlr
+   500 TIME IN SECONDS 17.170 --  GOGC=500 mlr -n put -q -f u/mand.mlr
+   600 TIME IN SECONDS 18.928 --  GOGC=600 mlr -n put -q -f u/mand.mlr
+   700 TIME IN SECONDS 21.946 --  GOGC=700 mlr -n put -q -f u/mand.mlr
+   800 TIME IN SECONDS 19.452 --  GOGC=800 mlr -n put -q -f u/mand.mlr
+   900 TIME IN SECONDS 17.670 --  GOGC=900 mlr -n put -q -f u/mand.mlr
+  1000 TIME IN SECONDS 17.629 -- GOGC=1000 mlr -n put -q -f u/mand.mlr
+
+  https://golang.org/pkg/runtime/debug/#SetGCPercent
 
   mlr --cpuprofile cpu.pprof --from ~tmp/big sort -f a -nr x then nothing
   GOGC=1000 mlr --cpuprofile cpu.pprof --from /Users/kerl/tmp/huge sort -f a -nr x then nothing
