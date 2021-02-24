@@ -8,7 +8,10 @@ TOP OF LIST:
   o lots of array-of-pointer stuff, this is totally fine
   o take care w/ copying (non-pointer) mlrvals though
 
+! heap 10x (or find the right spot) & -> main
+
 * data-copy reduction:
+  - wup for it was the binary-operator node, w/ the '*', that broke w/ no-output-copy & fibo UT
   - literal-type nodes -- why is there even a copy? these should simply be pointing at the literal.
     > modify Evaluate to return pointer? 1st arg becomes optional buffer?
   - type-gated mv -- should use passed-in storage slot -- ?
