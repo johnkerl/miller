@@ -1,0 +1,32 @@
+As of 2021-02-23
+
+gcc mand.c
+go build mandg.go
+
+justtime python mand.py | wc -c
+TIME IN SECONDS 4.213 -- python mand.py
+  502002
+
+justtime ruby mand.rb | wc -c
+TIME IN SECONDS 1.306 -- ruby mand.rb
+  502002
+
+justtime a.out | wc -c
+TIME IN SECONDS 0.110 -- a.out
+  501501
+
+justtime mandg | wc -c
+TIME IN SECONDS 0.792 -- mandg
+  500500
+
+justtime ../../c/mlr -n put -q -f mand.mlr | wc -c
+TIME IN SECONDS 3.607 -- ../../c/mlr -n put -q -f mand.mlr
+  500500
+
+justtime ../../go/mlr -n put -q -f mand.mlr | wc -c
+TIME IN SECONDS 23.196 -- ../../go/mlr -n put -q -f mand.mlr
+  500500
+
+GOGC=1000 justtime ../../go/mlr -n put -q -f mand.mlr | wc -c
+TIME IN SECONDS 17.079 -- ../../go/mlr -n put -q -f mand.mlr
+  500500
