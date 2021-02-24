@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
 	int    iheight   =  500;
 	int    iwidth    = 1000;
 	int    maxits    =  100;
-	int    levelstep =  100;
+	int    levelstep =  5;
 	double jr        = 0.0;
 	double ji        = 0.0;
 	int    do_julia  = 0;
