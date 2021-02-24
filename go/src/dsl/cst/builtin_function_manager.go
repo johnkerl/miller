@@ -431,9 +431,23 @@ regex-match operator: try '$y = ~$x'.`,
 	{
 		name:  "substr",
 		class: FUNC_CLASS_STRING,
-		help: `substr(s,m,n) gives substring of s from 1-up position m to n
+		help: `substr(s,m,n) gives substring of s from 1-up position m to n xxxxxx fix me
 inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
-		ternaryFunc: types.MlrvalSubstr,
+		ternaryFunc: types.MlrvalSubstr0Up,
+	},
+	{
+		name:  "substr0",
+		class: FUNC_CLASS_STRING,
+		help: `substr(s,m,n) gives substring of s from 1-up position m to n xxxxxx fix me
+inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
+		ternaryFunc: types.MlrvalSubstr0Up,
+	},
+	{
+		name:  "substr1",
+		class: FUNC_CLASS_STRING,
+		help: `substr(s,m,n) gives substring of s from 1-up position m to n xxxxxx fix me
+inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
+		ternaryFunc: types.MlrvalSubstr1Up,
 	},
 
 	{
