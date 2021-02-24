@@ -536,9 +536,9 @@ static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, rsl
 	context_t* pctx)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
-	int idx = 0;
-	for (rsllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
-		idx++;
+	int dlen = pdata_fields->length;
+	rsllse_t* pd = pdata_fields->phead;
+	for (int idx = 1; idx <= dlen; idx++, pd = pd->pnext) {
 		char key_free_flags = 0;
 		char* key = low_int_to_string(idx, &key_free_flags);
 		char value_free_flags = pd->free_flag;
