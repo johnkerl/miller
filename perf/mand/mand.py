@@ -10,8 +10,8 @@ iheight =  500;
 iwidth  = 1000;
 maxits  =  100;
 
-for ii in xrange(0, iheight+1):
-	for ir in xrange(0, iwidth+1):
+for ii in range(0, iheight+1):
+	for ir in range(0, iwidth+1):
 		cr = rcorn + (ir/iwidth) * side;
 		ci = icorn + (ii/iheight) * side;
 
@@ -21,7 +21,7 @@ for ii in xrange(0, iheight+1):
 		# z := z^2 + c
 		iti = 0;
 		escaped = False;
-		for iti in xrange(0, maxits):
+		for iti in range(0, maxits):
 			mag = zr*zr + zi+zi;
 			if mag > 4.0:
 					escaped = True;
