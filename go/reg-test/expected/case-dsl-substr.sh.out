@@ -1,28 +1,28 @@
 
 mlr put $y = substr($x, 0, 0)
-x=abcdefg,y=
+x=abcdefg,y=a
 
 mlr put $y = substr($x, 0, 7)
 x=abcdefg,y=
 
 mlr put $y = substr($x, 1, 7)
-x=abcdefg,y=abcdefg
+x=abcdefg,y=
 
 mlr put $y = substr($x, 1, 6)
-x=abcdefg,y=abcdef
+x=abcdefg,y=bcdefg
 
 mlr put $y = substr($x, 2, 5)
-x=abcdefg,y=bcde
+x=abcdefg,y=cdef
 
 mlr put $y = substr($x, 2, 3)
-x=abcdefg,y=bc
+x=abcdefg,y=cd
 
 mlr put $y = substr($x, 3, 3)
-x=abcdefg,y=c
+x=abcdefg,y=d
 
 mlr put $y = substr($x, 4, 3)
 x=abcdefg,y=(error)
 
 mlr put $y = substr($x, 2, 5)
-x=1234567,y=2345
+x=1234567,y=3456
 

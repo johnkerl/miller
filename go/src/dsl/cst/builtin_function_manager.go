@@ -429,11 +429,26 @@ regex-match operator: try '$y = ~$x'.`,
 	},
 
 	{
+		name:  "substr0",
+		class: FUNC_CLASS_STRING,
+		help: `substr0(s,m,n) gives substring of s from 0-up position m to n
+inclusive. Negative indices -len .. -1 alias to 0 .. len-1.`,
+		ternaryFunc: types.MlrvalSubstr0Up,
+	},
+	{
+		name:  "substr1",
+		class: FUNC_CLASS_STRING,
+		help: `substr1(s,m,n) gives substring of s from 1-up position m to n
+inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
+		ternaryFunc: types.MlrvalSubstr1Up,
+	},
+	{
 		name:  "substr",
 		class: FUNC_CLASS_STRING,
-		help: `substr(s,m,n) gives substring of s from 1-up position m to n
-inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
-		ternaryFunc: types.MlrvalSubstr,
+		help: `substr is an alias for substr0. See also substr1. Miller is generally 1-up
+with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
+Arrays are new in Miller 6; the substr function is older.`,
+		ternaryFunc: types.MlrvalSubstr0Up,
 	},
 
 	{
