@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"runtime/debug"
 	"runtime/pprof"
 
 	"miller/src/auxents"
@@ -14,6 +15,7 @@ import (
 // ----------------------------------------------------------------
 func main() {
 	runtime.GOMAXPROCS(4) // Seems reasonable these days
+	debug.SetGCPercent(500) // Empirical: See README-profiling.md
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// CPU profiling
