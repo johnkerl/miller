@@ -1,84 +1,11 @@
 ================================================================
 TOP OF LIST:
 
-! GC ./parser-experiments/two/src/github.com/goccmack/gocc/
-
-* for i, e in range c optimization -- always *copies* e
-  o try and benchmark/compare ...
-  o lots of array-of-pointer stuff, this is totally fine
-  o take care w/ copying (non-pointer) mlrvals though
-
 ! heap 10x (or find the right spot) & -> main
-
-* data-copy reduction:
-  - wup for it was the binary-operator node, w/ the '*', that broke w/ no-output-copy & fibo UT
-  - literal-type nodes -- why is there even a copy? these should simply be pointing at the literal.
-    > modify Evaluate to return pointer? 1st arg becomes optional buffer?
-  - type-gated mv -- should use passed-in storage slot -- ?
-  - MLRVAL_INT_0 et al. are dangerous & should be rid of. (too easy to mutate?).
-    > and/or all MLRVAL_X -> MLRVAL_X()
-  - prof:
-    mlr --cpuprofile cpu.pprof -n put -q -s iwidth=500 -s iheight=500 -s silent=true -f u/mand.mlr
-    GOGC=off mlr --cpuprofile cpu.pprof -n put -q -s iwidth=500 -s iheight=500 -s silent=true -f u/mand.mlr
-  - check 'malloc-avoidance' comment
-  - MlrvalLessThanForSort
-  - MlrvalGetMeanEB et al.
-  - var delta types.Mlrval for uninits
-  - nice narrative write-up w/ the C stack-allocator problem, Go non-solutionk,
-    profilng methods, GC readings/findings, before-and-after CST data structures,
-    final perf results.
-  w defer the stack-allocation PR until after
-  - bonus: return MlrvalSqrt(MlrvalDivide(input1, input2))
-  - maybe MT_PENDING_MUTABLE -- ?
-
   info:
 
   $ for i in 100 200 300 400 500 600 700 800 900 1000 ; do echo $i; justtime GOGC=$i mlr -n put -q -f u/mand.mlr > /dev/null; done
-   100 TIME IN SECONDS 23.369 --  GOGC=100 mlr -n put -q -f u/mand.mlr
-   200 TIME IN SECONDS 19.427 --  GOGC=200 mlr -n put -q -f u/mand.mlr
-   300 TIME IN SECONDS 18.350 --  GOGC=300 mlr -n put -q -f u/mand.mlr
-   400 TIME IN SECONDS 17.712 --  GOGC=400 mlr -n put -q -f u/mand.mlr
-   500 TIME IN SECONDS 17.568 --  GOGC=500 mlr -n put -q -f u/mand.mlr
-   600 TIME IN SECONDS 24.172 --  GOGC=600 mlr -n put -q -f u/mand.mlr
-   700 TIME IN SECONDS 18.617 --  GOGC=700 mlr -n put -q -f u/mand.mlr
-   800 TIME IN SECONDS 19.073 --  GOGC=800 mlr -n put -q -f u/mand.mlr
-   900 TIME IN SECONDS 19.191 --  GOGC=900 mlr -n put -q -f u/mand.mlr
-  1000 TIME IN SECONDS 17.436 -- GOGC=1000 mlr -n put -q -f u/mand.mlr
-
-   100 TIME IN SECONDS 23.159 --  GOGC=100 mlr -n put -q -f u/mand.mlr
-   200 TIME IN SECONDS 19.138 --  GOGC=200 mlr -n put -q -f u/mand.mlr
-   300 TIME IN SECONDS 18.198 --  GOGC=300 mlr -n put -q -f u/mand.mlr
-   400 TIME IN SECONDS 17.718 --  GOGC=400 mlr -n put -q -f u/mand.mlr
-   500 TIME IN SECONDS 17.170 --  GOGC=500 mlr -n put -q -f u/mand.mlr
-   600 TIME IN SECONDS 18.928 --  GOGC=600 mlr -n put -q -f u/mand.mlr
-   700 TIME IN SECONDS 21.946 --  GOGC=700 mlr -n put -q -f u/mand.mlr
-   800 TIME IN SECONDS 19.452 --  GOGC=800 mlr -n put -q -f u/mand.mlr
-   900 TIME IN SECONDS 17.670 --  GOGC=900 mlr -n put -q -f u/mand.mlr
-  1000 TIME IN SECONDS 17.629 -- GOGC=1000 mlr -n put -q -f u/mand.mlr
-
   https://golang.org/pkg/runtime/debug/#SetGCPercent
-
-  mlr --cpuprofile cpu.pprof --from ~tmp/big sort -f a -nr x then nothing
-  GOGC=1000 mlr --cpuprofile cpu.pprof --from /Users/kerl/tmp/huge sort -f a -nr x then nothing
-
-  wc -l ~/tmp/big
-  1000000 /Users/kerl/tmp/big
-
-  wc -l ~/tmp/huge
-  10000000 /Users/kerl/tmp/huge
-
-* next round of data-copy reduction:
-  o $z = min($x, $y) -- needs to return pointer to x or y
-  o $z = $x + $y -- needs to have space for sum, and return pointer to it
-  o therefore type BinaryFunc func(input1, input2 *Mlrval) *types.Mlrval
-    - have the function z-allocate outputs when needed
-    - the outputs must be on the stack, not statically allocated, to make them re-entrant
-      and OK for recursive functions
-    - var output types.Mlrval w/ field-setters, rather than return &Mlrval{... all of them ...}
-  o then IEvaluable: Evaluate(state *runtime.State) *types.Mlrval
-  o invalidate CopyFrom
-  o check for under/over copy at Assign
-  o global *ERROR / *ABSENT / etc
 
 ----------------------------------------------------------------
 * regexes
@@ -564,3 +491,36 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o array-sort, map-key sort, map-value sort in the DSL?
   o closures for sorting and more -- ?!?
   o or maybe just use UDFs ...
+* optimize MlrvalLessThanForSort
+  o mlr --cpuprofile cpu.pprof --from ~tmp/big sort -f a -nr x then nothing
+  o GOGC=1000 mlr --cpuprofile cpu.pprof --from /Users/kerl/tmp/huge sort -f a -nr x then nothing
+  o wc -l ~/tmp/big
+    1000000 /Users/kerl/tmp/big
+  o wc -l ~/tmp/huge
+    10000000 /Users/kerl/tmp/huge
+* optimize MlrvalGetMeanEB et al.
+* data-copy reduction wup:
+  o literal-type nodes -- now zero-copy
+  x modify Evaluate to return pointer -- too much copying
+  o wup for it was the binary-operator node, w/ the '*', that broke w/ no-output-copy & fibo UT
+  o bonus: return MlrvalSqrt(MlrvalDivide(input1, input2))
+  o type-gated mv -- should use passed-in storage slot -- ?
+  o nice narrative write-up w/ the C stack-allocator problem, Go non-solution,
+    profilng methods, GC readings/findings, before-and-after CST data structures,
+    final perf results.
+  o next round of data-copy reduction:
+    - $z = min($x, $y) -- needs to return pointer to x or y
+    o $z = $x + $y -- needs to have space for sum, and return pointer to it
+    o therefore type BinaryFunc func(input1, input2 *Mlrval) *types.Mlrval
+      > have the function z-allocate outputs when needed
+      > the outputs must be on the stack, not statically allocated, to make them re-entrant
+        and OK for recursive functions
+      > var output types.Mlrval w/ field-setters, rather than return &Mlrval{... all of them ...}
+    - then IEvaluable: Evaluate(state *runtime.State) *types.Mlrval
+    - invalidate CopyFrom
+    - check for under/over copy at Assign
+    - global *ERROR / *ABSENT / etc
+* for i, e in range c optimization -- always *copies* e
+  o try and benchmark/compare ...
+  o lots of array-of-pointer stuff, this is totally fine
+  o take care w/ copying (non-pointer) mlrvals though
