@@ -28,13 +28,7 @@ w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/
 * prepipe
   - gzin; bz2in ...
 
-* sg/mktags more explicit comment.
-* justWroteEmptyLine -> pprint too ...
-* nidx @ 10-min
-* text-put @ 10-min
-* xls note (issue #396) @ file-format docs
 * fixed-width pprint input-scanner
-* 'string or int' -> 'string, int, or array thereof' throughout
 
 * commenting passes ...
 
@@ -47,6 +41,14 @@ w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/
 * new columns-to-arrays and arrays-to-columns for stan format
 * reg-test: diff the *.err files?
 * single-line JSON for DKVP/CSV/etc ...
+
+* small:
+  o sg/mktags more explicit comment.
+  o justWroteEmptyLine -> pprint too ...
+  o nidx @ 10-min
+  o text-put @ 10-min
+  o xls note (issue #396) @ file-format docs
+  o 'string or int' -> 'string, int, or array thereof' throughout
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * c/go both:
