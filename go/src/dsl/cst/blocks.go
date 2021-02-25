@@ -45,7 +45,7 @@ func (this *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 	// $ mlr put -v 'begin{@a=1;@b=2} $x=3; $y=4' s
 	// DSL EXPRESSION:
 	// begin{@a=1;@b=2} $x=3; $y=4
-	// RAW AST:
+	// AST:
 	// * StatementBlock
 	//     * BeginBlock
 	//         * StatementBlock

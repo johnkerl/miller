@@ -43,7 +43,7 @@ type EmitFStatementNode struct {
 // $ mlr -n put -v 'emitf a,$b,@c'
 // DSL EXPRESSION:
 // emitf a,$b,@c
-// RAW AST:
+// AST:
 // * statement block
 //     * emitf statement "emitf"
 //         * emittable list

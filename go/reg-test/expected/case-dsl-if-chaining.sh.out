@@ -12,7 +12,7 @@ DSL EXPRESSION:
     $x = 2;
     $y = 3
   }
-RAW AST:
+AST:
 * statement block
     * if-chain
         * if-item "if"
@@ -85,7 +85,7 @@ DSL EXPRESSION:
     $x = 1007;
     $y = 1008
   }
-RAW AST:
+AST:
 * statement block
     * if-chain
         * if-item "if"
@@ -172,7 +172,7 @@ DSL EXPRESSION:
     $x = 1015;
     $y = 1016
   }
-RAW AST:
+AST:
 * statement block
     * if-chain
         * if-item "if"
@@ -276,7 +276,7 @@ DSL EXPRESSION:
     $x = 1026;
     $y = 1027
   }
-RAW AST:
+AST:
 * statement block
     * if-chain
         * if-item "if"
@@ -397,7 +397,7 @@ DSL EXPRESSION:
     $x = 1040;
     $y = 1041
   }
-RAW AST:
+AST:
 * statement block
     * if-chain
         * if-item "if"
@@ -507,7 +507,7 @@ DSL EXPRESSION:
     $x = 2;
     $y = 3
   }
-RAW AST:
+AST:
 * statement block
     * if-chain
         * if-item "if"
@@ -580,7 +580,7 @@ DSL EXPRESSION:
     $x = 8;
     $y = 9
   }
-RAW AST:
+AST:
 * statement block
     * if-chain
         * if-item "if"
@@ -670,7 +670,7 @@ DSL EXPRESSION:
     $x = 17;
     $y = 18
   }
-RAW AST:
+AST:
 * statement block
     * if-chain
         * if-item "if"
@@ -777,7 +777,7 @@ DSL EXPRESSION:
     $x = 29;
     $y = 30
   }
-RAW AST:
+AST:
 * statement block
     * if-chain
         * if-item "if"

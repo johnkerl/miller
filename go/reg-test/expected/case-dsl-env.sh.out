@@ -2,7 +2,7 @@
 mlr -n put -v $z = ENV["HOME"]
 DSL EXPRESSION:
 $z = ENV["HOME"]
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "z"
@@ -13,7 +13,7 @@ RAW AST:
 mlr -n put -v $z = ENV["HOME"][1]
 DSL EXPRESSION:
 $z = ENV["HOME"][1]
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "z"
@@ -26,7 +26,7 @@ RAW AST:
 mlr -n put -v $ENV["FOO"] = "bar"
 DSL EXPRESSION:
 $ENV["FOO"] = "bar"
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * array or map index access "[]"
@@ -38,7 +38,7 @@ RAW AST:
 mlr -n put -v $ENV["FOO"][2] = "bar"
 DSL EXPRESSION:
 $ENV["FOO"][2] = "bar"
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * array or map index access "[]"

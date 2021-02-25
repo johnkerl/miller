@@ -2,21 +2,21 @@
 mlr -n put -v 
 DSL EXPRESSION:
 
-RAW AST:
+AST:
 * statement block
 
 
 mlr -n filter -v 
 DSL EXPRESSION:
 
-RAW AST:
+AST:
 * statement block
 
 
 mlr -n put -v begin {}
 DSL EXPRESSION:
 begin {}
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -25,7 +25,7 @@ RAW AST:
 mlr -n put -v begin {;}
 DSL EXPRESSION:
 begin {;}
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -34,7 +34,7 @@ RAW AST:
 mlr -n put -v begin {;;}
 DSL EXPRESSION:
 begin {;;}
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -43,7 +43,7 @@ RAW AST:
 mlr -n put -v begin {;;;}
 DSL EXPRESSION:
 begin {;;;}
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -52,7 +52,7 @@ RAW AST:
 mlr -n put -v begin {@x=1}
 DSL EXPRESSION:
 begin {@x=1}
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -64,7 +64,7 @@ RAW AST:
 mlr -n put -v begin {@x=1;}
 DSL EXPRESSION:
 begin {@x=1;}
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -76,7 +76,7 @@ RAW AST:
 mlr -n put -v begin {;@x=1}
 DSL EXPRESSION:
 begin {;@x=1}
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -88,7 +88,7 @@ RAW AST:
 mlr -n put -v begin {@x=1;@y=2}
 DSL EXPRESSION:
 begin {@x=1;@y=2}
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -103,7 +103,7 @@ RAW AST:
 mlr -n put -v begin {@x=1;;@y=2}
 DSL EXPRESSION:
 begin {@x=1;;@y=2}
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -118,7 +118,7 @@ RAW AST:
 mlr -n put -v true {}
 DSL EXPRESSION:
 true {}
-RAW AST:
+AST:
 * statement block
     * cond block
         * bool literal "true"
@@ -128,7 +128,7 @@ RAW AST:
 mlr -n put -v true {;}
 DSL EXPRESSION:
 true {;}
-RAW AST:
+AST:
 * statement block
     * cond block
         * bool literal "true"
@@ -138,7 +138,7 @@ RAW AST:
 mlr -n put -v true {;;}
 DSL EXPRESSION:
 true {;;}
-RAW AST:
+AST:
 * statement block
     * cond block
         * bool literal "true"
@@ -148,7 +148,7 @@ RAW AST:
 mlr -n put -v true {;;;}
 DSL EXPRESSION:
 true {;;;}
-RAW AST:
+AST:
 * statement block
     * cond block
         * bool literal "true"
@@ -158,7 +158,7 @@ RAW AST:
 mlr -n put -v true {@x=1}
 DSL EXPRESSION:
 true {@x=1}
-RAW AST:
+AST:
 * statement block
     * cond block
         * bool literal "true"
@@ -171,7 +171,7 @@ RAW AST:
 mlr -n put -v true {@x=1;}
 DSL EXPRESSION:
 true {@x=1;}
-RAW AST:
+AST:
 * statement block
     * cond block
         * bool literal "true"
@@ -184,7 +184,7 @@ RAW AST:
 mlr -n put -v true {;@x=1}
 DSL EXPRESSION:
 true {;@x=1}
-RAW AST:
+AST:
 * statement block
     * cond block
         * bool literal "true"
@@ -197,7 +197,7 @@ RAW AST:
 mlr -n put -v true {@x=1;@y=2}
 DSL EXPRESSION:
 true {@x=1;@y=2}
-RAW AST:
+AST:
 * statement block
     * cond block
         * bool literal "true"
@@ -213,7 +213,7 @@ RAW AST:
 mlr -n put -v true {@x=1;;@y=2}
 DSL EXPRESSION:
 true {@x=1;;@y=2}
-RAW AST:
+AST:
 * statement block
     * cond block
         * bool literal "true"
@@ -229,7 +229,7 @@ RAW AST:
 mlr -n put -v end {}
 DSL EXPRESSION:
 end {}
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -238,7 +238,7 @@ RAW AST:
 mlr -n put -v end {;}
 DSL EXPRESSION:
 end {;}
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -247,7 +247,7 @@ RAW AST:
 mlr -n put -v end {;;}
 DSL EXPRESSION:
 end {;;}
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -256,7 +256,7 @@ RAW AST:
 mlr -n put -v end {;;;}
 DSL EXPRESSION:
 end {;;;}
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -265,7 +265,7 @@ RAW AST:
 mlr -n put -v end {@x=1}
 DSL EXPRESSION:
 end {@x=1}
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -277,7 +277,7 @@ RAW AST:
 mlr -n put -v end {@x=1;}
 DSL EXPRESSION:
 end {@x=1;}
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -289,7 +289,7 @@ RAW AST:
 mlr -n put -v end {;@x=1}
 DSL EXPRESSION:
 end {;@x=1}
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -301,7 +301,7 @@ RAW AST:
 mlr -n put -v end {@x=1;@y=2}
 DSL EXPRESSION:
 end {@x=1;@y=2}
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -316,7 +316,7 @@ RAW AST:
 mlr -n put -v end {@x=1;;@y=2}
 DSL EXPRESSION:
 end {@x=1;;@y=2}
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block

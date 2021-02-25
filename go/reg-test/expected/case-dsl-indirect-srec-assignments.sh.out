@@ -2,7 +2,7 @@
 mlr put -v $["a"] = $["b"]; $["x"] = 10 * $["y"] ./reg-test/input/abixy
 DSL EXPRESSION:
 $["a"] = $["b"]; $["x"] = 10 * $["y"]
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * indirect field value "$[]"

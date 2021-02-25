@@ -1,6 +1,6 @@
 
 mlr --from ./reg-test/input/abixy put -v -a -f ./reg-test/input/test-dsl-stack-allocation.mlr
-RAW AST:
+AST:
 
 AST ROOT:
 text="block", type=STATEMENT_BLOCK:

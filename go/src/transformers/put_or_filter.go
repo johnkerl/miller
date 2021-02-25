@@ -301,7 +301,7 @@ func NewTransformerPut(
 		if verbose {
 			fmt.Println("DSL EXPRESSION:")
 			fmt.Println(dslString)
-			fmt.Println("RAW AST:")
+			fmt.Println("AST:")
 			astRootNode.Print()
 			fmt.Println()
 		}

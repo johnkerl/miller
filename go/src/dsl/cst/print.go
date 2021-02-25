@@ -23,7 +23,7 @@ import (
 // $ mlr -n put -v 'print $a, $b'
 // DSL EXPRESSION:
 // print $a, $b
-// RAW AST:
+// AST:
 // * statement block
 //     * print statement "print"
 //         * function callsite
@@ -34,7 +34,7 @@ import (
 // $ mlr -n put -v 'print > stdout, $a, $b'
 // DSL EXPRESSION:
 // print > stdout, $a, $b
-// RAW AST:
+// AST:
 // * statement block
 //     * print statement "print"
 //         * function callsite
@@ -46,7 +46,7 @@ import (
 // $ mlr -n put -v 'print > stderr, $a, $b'
 // DSL EXPRESSION:
 // print > stderr, $a, $b
-// RAW AST:
+// AST:
 // * statement block
 //     * print statement "print"
 //         * function callsite
@@ -58,7 +58,7 @@ import (
 // $ mlr -n put -v 'print > "foo.dat", $a, $b'
 // DSL EXPRESSION:
 // print > "foo.dat", $a, $b
-// RAW AST:
+// AST:
 // * statement block
 //     * print statement "print"
 //         * function callsite
@@ -70,7 +70,7 @@ import (
 // $ mlr -n put -v 'print >> "foo.dat", $a, $b'
 // DSL EXPRESSION:
 // print >> "foo.dat", $a, $b
-// RAW AST:
+// AST:
 // * statement block
 //     * print statement "print"
 //         * function callsite
@@ -82,7 +82,7 @@ import (
 // $ mlr -n put -v 'print | "command", $a, $b'
 // DSL EXPRESSION:
 // print | "command", $a, $b
-// RAW AST:
+// AST:
 // * statement block
 //     * print statement "print"
 //         * function callsite

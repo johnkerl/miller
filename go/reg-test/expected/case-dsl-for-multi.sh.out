@@ -2,7 +2,7 @@
 mlr -n put -v for (k             in @*) {}
 DSL EXPRESSION:
 for (k             in @*) {}
-RAW AST:
+AST:
 * statement block
     * single-variable for-loop "for"
         * local variable "k"
@@ -13,7 +13,7 @@ RAW AST:
 mlr -n put -v for (k, v          in @*) {}
 DSL EXPRESSION:
 for (k, v          in @*) {}
-RAW AST:
+AST:
 * statement block
     * double-variable for-loop "for"
         * local variable "k"
@@ -25,7 +25,7 @@ RAW AST:
 mlr -n put -v for ((k1,k2),    v in @*) {}
 DSL EXPRESSION:
 for ((k1,k2),    v in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list
@@ -39,7 +39,7 @@ RAW AST:
 mlr -n put -v for ((k1,k2,k3), v in @*) {}
 DSL EXPRESSION:
 for ((k1,k2,k3), v in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list

@@ -896,7 +896,7 @@ func (this *RootNode) BuildIndexedLvalueNode(astNode *dsl.ASTNode) (IAssignable,
 	// $ mlr -n put -v '$x[1][2]=3'
 	// DSL EXPRESSION:
 	// $x[1][2]=3
-	// RAW AST:
+	// AST:
 	// * StatementBlock
 	//     * Assignment "="
 	//         * ArrayOrMapIndexAccess "[]"

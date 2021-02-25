@@ -1,6 +1,6 @@
 
 mlr --opprint put -v @s = NR; $t = @s; $u=@["s"]; $v = $t - $u ./reg-test/input/abixy
-RAW AST:
+AST:
 
 AST ROOT:
 text="block", type=STATEMENT_BLOCK:
@@ -57,7 +57,7 @@ hat wye 9  0.03144187646093577 0.7495507603507059  9  9  0
 pan wye 10 0.5026260055412137  0.9526183602969864  10 10 0
 
 mlr put -v @t["u"] = NR; $tu = @["t"]["u"]; emitp all ./reg-test/input/abixy
-RAW AST:
+AST:
 
 AST ROOT:
 text="block", type=STATEMENT_BLOCK:
@@ -117,7 +117,7 @@ t:u=10
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,tu=10
 
 mlr put -v @t["u"] = NR; $tu = @["t"]["u"]; emitp @* ./reg-test/input/abixy
-RAW AST:
+AST:
 
 AST ROOT:
 text="block", type=STATEMENT_BLOCK:
@@ -177,7 +177,7 @@ t:u=10
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,tu=10
 
 mlr put -v @["s"] = $x; emitp all ./reg-test/input/abixy
-RAW AST:
+AST:
 
 AST ROOT:
 text="block", type=STATEMENT_BLOCK:
@@ -225,7 +225,7 @@ s=0.502626
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -v @["t"]["u"] = $y; emitp all ./reg-test/input/abixy
-RAW AST:
+AST:
 
 AST ROOT:
 text="block", type=STATEMENT_BLOCK:

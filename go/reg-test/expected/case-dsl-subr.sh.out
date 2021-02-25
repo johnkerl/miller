@@ -2,7 +2,7 @@
 mlr -n put -v call s()
 DSL EXPRESSION:
 call s()
-RAW AST:
+AST:
 * statement block
     * subroutine callsite "s"
 
@@ -12,7 +12,7 @@ mlr -n put -v call s
 mlr -n put -v call s(1,2,3)
 DSL EXPRESSION:
 call s(1,2,3)
-RAW AST:
+AST:
 * statement block
     * subroutine callsite "s"
         * int literal "1"
@@ -23,7 +23,7 @@ RAW AST:
 mlr -n put -v subr s() {}
 DSL EXPRESSION:
 subr s() {}
-RAW AST:
+AST:
 * statement block
     * subroutine definition "s"
         * parameter list
@@ -33,7 +33,7 @@ RAW AST:
 mlr -n put -v subr s() {x=1}
 DSL EXPRESSION:
 subr s() {x=1}
-RAW AST:
+AST:
 * statement block
     * subroutine definition "s"
         * parameter list
@@ -46,7 +46,7 @@ RAW AST:
 mlr -n put -v subr s() {return}
 DSL EXPRESSION:
 subr s() {return}
-RAW AST:
+AST:
 * statement block
     * subroutine definition "s"
         * parameter list
@@ -57,7 +57,7 @@ RAW AST:
 mlr -n put -v subr s() {return 2}
 DSL EXPRESSION:
 subr s() {return 2}
-RAW AST:
+AST:
 * statement block
     * subroutine definition "s"
         * parameter list
@@ -71,7 +71,7 @@ mlr -n put subr s()
 mlr -n put -v subr s() {}; call s()
 DSL EXPRESSION:
 subr s() {}; call s()
-RAW AST:
+AST:
 * statement block
     * subroutine definition "s"
         * parameter list
@@ -82,7 +82,7 @@ RAW AST:
 mlr -n put -v call s(); subr s() {}
 DSL EXPRESSION:
 call s(); subr s() {}
-RAW AST:
+AST:
 * statement block
     * subroutine callsite "s"
     * subroutine definition "s"
@@ -93,7 +93,7 @@ RAW AST:
 mlr -n put -v subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
 DSL EXPRESSION:
 subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
-RAW AST:
+AST:
 * statement block
     * subroutine definition "s"
         * parameter list
@@ -145,7 +145,7 @@ DSL EXPRESSION:
   print s(NR);
   call s("WORLD");
 
-RAW AST:
+AST:
 * statement block
     * function definition "s"
         * parameter list

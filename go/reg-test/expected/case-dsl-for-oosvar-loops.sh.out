@@ -22,7 +22,7 @@ DSL EXPRESSION:
     emit @n, "a", "b", "c", "d"
   }
 
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * array or map index access "[]"
@@ -265,7 +265,7 @@ mean  hat dog 0.47582364658050663
 mlr -n put -v for (k, k in $*) {}
 DSL EXPRESSION:
 for (k, k in $*) {}
-RAW AST:
+AST:
 * statement block
     * double-variable for-loop "for"
         * local variable "k"
@@ -277,7 +277,7 @@ RAW AST:
 mlr -n put -v for (k, k in @*) {}
 DSL EXPRESSION:
 for (k, k in @*) {}
-RAW AST:
+AST:
 * statement block
     * double-variable for-loop "for"
         * local variable "k"
@@ -289,7 +289,7 @@ RAW AST:
 mlr -n put -v for ((a,a), c in @*) {}
 DSL EXPRESSION:
 for ((a,a), c in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list
@@ -303,7 +303,7 @@ RAW AST:
 mlr -n put -v for ((a,b), a in @*) {}
 DSL EXPRESSION:
 for ((a,b), a in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list
@@ -317,7 +317,7 @@ RAW AST:
 mlr -n put -v for ((a,b), b in @*) {}
 DSL EXPRESSION:
 for ((a,b), b in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list
@@ -331,7 +331,7 @@ RAW AST:
 mlr -n put -v for ((a,a,c), d in @*) {}
 DSL EXPRESSION:
 for ((a,a,c), d in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list
@@ -346,7 +346,7 @@ RAW AST:
 mlr -n put -v for ((a,b,a), d in @*) {}
 DSL EXPRESSION:
 for ((a,b,a), d in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list
@@ -361,7 +361,7 @@ RAW AST:
 mlr -n put -v for ((a,b,c), a in @*) {}
 DSL EXPRESSION:
 for ((a,b,c), a in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list
@@ -376,7 +376,7 @@ RAW AST:
 mlr -n put -v for ((a,b,b), d in @*) {}
 DSL EXPRESSION:
 for ((a,b,b), d in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list
@@ -391,7 +391,7 @@ RAW AST:
 mlr -n put -v for ((a,b,c), b in @*) {}
 DSL EXPRESSION:
 for ((a,b,c), b in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list
@@ -406,7 +406,7 @@ RAW AST:
 mlr -n put -v for ((a,b,c), c in @*) {}
 DSL EXPRESSION:
 for ((a,b,c), c in @*) {}
-RAW AST:
+AST:
 * statement block
     * multi-variable for-loop "for"
         * parameter list

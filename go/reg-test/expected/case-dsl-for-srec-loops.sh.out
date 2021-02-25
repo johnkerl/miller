@@ -4,7 +4,7 @@
 mlr --from ./reg-test/input/abixy put -v for(k,v in $*) { }
 DSL EXPRESSION:
 for(k,v in $*) { }
-RAW AST:
+AST:
 * statement block
     * double-variable for-loop "for"
         * local variable "k"
@@ -28,7 +28,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {$nr= NR}
 DSL EXPRESSION:
 for(k,v in $*) {$nr= NR}
-RAW AST:
+AST:
 * statement block
     * double-variable for-loop "for"
         * local variable "k"
@@ -55,7 +55,7 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,nr=10
 mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {unset $[k]}; $j = NR
 DSL EXPRESSION:
 for(k,v in $*) {unset $[k]}; $j = NR
-RAW AST:
+AST:
 * statement block
     * double-variable for-loop "for"
         * local variable "k"
@@ -83,7 +83,7 @@ j=10
 mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR
 DSL EXPRESSION:
 for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR
-RAW AST:
+AST:
 * statement block
     * double-variable for-loop "for"
         * local variable "k"
@@ -117,7 +117,7 @@ x=0.5026260055412137,j=10
 mlr --from ./reg-test/input/abixy --opprint put -v for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}
 DSL EXPRESSION:
 for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}
-RAW AST:
+AST:
 * statement block
     * double-variable for-loop "for"
         * local variable "k"
@@ -150,7 +150,7 @@ other other other other other pan    wye    10     0.5026260055412137  0.9526183
 mlr --from ./reg-test/input/abixy put -v for(k,v in $*) {$[string(v)]=k}
 DSL EXPRESSION:
 for(k,v in $*) {$[string(v)]=k}
-RAW AST:
+AST:
 * statement block
     * double-variable for-loop "for"
         * local variable "k"
@@ -189,7 +189,7 @@ DSL EXPRESSION:
       $sum += $[k]
     }
   }
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "sum"
@@ -238,7 +238,7 @@ DSL EXPRESSION:
       $sum += float($[k])
     }
   }
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "sum"

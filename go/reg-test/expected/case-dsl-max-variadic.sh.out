@@ -2,7 +2,7 @@
 mlr -n put -v $z=max()
 DSL EXPRESSION:
 $z=max()
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "z"
@@ -12,7 +12,7 @@ RAW AST:
 mlr -n put -v $z=max(1)
 DSL EXPRESSION:
 $z=max(1)
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "z"
@@ -23,7 +23,7 @@ RAW AST:
 mlr -n put -v $z=max(1,)
 DSL EXPRESSION:
 $z=max(1,)
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "z"
@@ -34,7 +34,7 @@ RAW AST:
 mlr -n put -v $z=max(1,2)
 DSL EXPRESSION:
 $z=max(1,2)
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "z"
@@ -46,7 +46,7 @@ RAW AST:
 mlr -n put -v $z=max(1,2,)
 DSL EXPRESSION:
 $z=max(1,2,)
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "z"
@@ -58,7 +58,7 @@ RAW AST:
 mlr -n put -v $z=max(1,2,3)
 DSL EXPRESSION:
 $z=max(1,2,3)
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "z"
@@ -71,7 +71,7 @@ RAW AST:
 mlr -n put -v $z=max(1,2,3,)
 DSL EXPRESSION:
 $z=max(1,2,3,)
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "z"

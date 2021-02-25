@@ -6,7 +6,7 @@ OOSVAR-FROM-SREC ASSIGNMENT
 mlr put -v @v     = $* /dev/null
 DSL EXPRESSION:
 @v     = $*
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct oosvar value "v"
@@ -16,7 +16,7 @@ RAW AST:
 mlr put -v @v[1]  = $* /dev/null
 DSL EXPRESSION:
 @v[1]  = $*
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * array or map index access "[]"
@@ -28,7 +28,7 @@ RAW AST:
 mlr put -v @v[$2] = $* /dev/null
 DSL EXPRESSION:
 @v[$2] = $*
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * array or map index access "[]"
@@ -40,7 +40,7 @@ RAW AST:
 mlr put -v NR == 3 {@v     = $*} /dev/null
 DSL EXPRESSION:
 NR == 3 {@v     = $*}
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -55,7 +55,7 @@ RAW AST:
 mlr put -v NR == 3 {@v[1]  = $*} /dev/null
 DSL EXPRESSION:
 NR == 3 {@v[1]  = $*}
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -72,7 +72,7 @@ RAW AST:
 mlr put -v NR == 3 {@v[$2] = $*} /dev/null
 DSL EXPRESSION:
 NR == 3 {@v[$2] = $*}
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -289,7 +289,7 @@ SREC-FROM-OOSVAR ASSIGNMENT
 mlr put -v $* = @v     /dev/null
 DSL EXPRESSION:
 $* = @v    
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * full record "$*"
@@ -299,7 +299,7 @@ RAW AST:
 mlr put -v $* = @v[1]  /dev/null
 DSL EXPRESSION:
 $* = @v[1] 
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * full record "$*"
@@ -311,7 +311,7 @@ RAW AST:
 mlr put -v $* = @v[$2] /dev/null
 DSL EXPRESSION:
 $* = @v[$2]
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * full record "$*"
@@ -323,7 +323,7 @@ RAW AST:
 mlr put -v NR == 3 {$* = @v    } /dev/null
 DSL EXPRESSION:
 NR == 3 {$* = @v    }
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -338,7 +338,7 @@ RAW AST:
 mlr put -v NR == 3 {$* = @v[1] } /dev/null
 DSL EXPRESSION:
 NR == 3 {$* = @v[1] }
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -355,7 +355,7 @@ RAW AST:
 mlr put -v NR == 3 {$* = @v[$2]} /dev/null
 DSL EXPRESSION:
 NR == 3 {$* = @v[$2]}
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -388,7 +388,7 @@ OOSVAR-FROM-OOSVAR ASSIGNMENT
 mlr put -v @u    = @v /dev/null
 DSL EXPRESSION:
 @u    = @v
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct oosvar value "u"
@@ -398,7 +398,7 @@ RAW AST:
 mlr put -v @u    = @v[1] /dev/null
 DSL EXPRESSION:
 @u    = @v[1]
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct oosvar value "u"
@@ -410,7 +410,7 @@ RAW AST:
 mlr put -v @u[2] = @v /dev/null
 DSL EXPRESSION:
 @u[2] = @v
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * array or map index access "[]"
@@ -422,7 +422,7 @@ RAW AST:
 mlr put -v @u[2] = @v[1] /dev/null
 DSL EXPRESSION:
 @u[2] = @v[1]
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * array or map index access "[]"
@@ -436,7 +436,7 @@ RAW AST:
 mlr put -v begin { @u    = @v } /dev/null
 DSL EXPRESSION:
 begin { @u    = @v }
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -448,7 +448,7 @@ RAW AST:
 mlr put -v begin { @u    = @v[1] } /dev/null
 DSL EXPRESSION:
 begin { @u    = @v[1] }
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -462,7 +462,7 @@ RAW AST:
 mlr put -v begin { @u[2] = @v } /dev/null
 DSL EXPRESSION:
 begin { @u[2] = @v }
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -476,7 +476,7 @@ RAW AST:
 mlr put -v begin { @u[2] = @v[1] } /dev/null
 DSL EXPRESSION:
 begin { @u[2] = @v[1] }
-RAW AST:
+AST:
 * statement block
     * begin block
         * statement block
@@ -492,7 +492,7 @@ RAW AST:
 mlr put -v NR == 3 { @u    = @v } /dev/null
 DSL EXPRESSION:
 NR == 3 { @u    = @v }
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -507,7 +507,7 @@ RAW AST:
 mlr put -v NR == 3 { @u    = @v[1] } /dev/null
 DSL EXPRESSION:
 NR == 3 { @u    = @v[1] }
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -524,7 +524,7 @@ RAW AST:
 mlr put -v NR == 3 { @u[2] = @v } /dev/null
 DSL EXPRESSION:
 NR == 3 { @u[2] = @v }
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -541,7 +541,7 @@ RAW AST:
 mlr put -v NR == 3 { @u[2] = @v[1] } /dev/null
 DSL EXPRESSION:
 NR == 3 { @u[2] = @v[1] }
-RAW AST:
+AST:
 * statement block
     * cond block
         * operator "=="
@@ -560,7 +560,7 @@ RAW AST:
 mlr put -v end { @u    = @v } /dev/null
 DSL EXPRESSION:
 end { @u    = @v }
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -572,7 +572,7 @@ RAW AST:
 mlr put -v end { @u    = @v[1] } /dev/null
 DSL EXPRESSION:
 end { @u    = @v[1] }
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -586,7 +586,7 @@ RAW AST:
 mlr put -v end { @u[2] = @v } /dev/null
 DSL EXPRESSION:
 end { @u[2] = @v }
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block
@@ -600,7 +600,7 @@ RAW AST:
 mlr put -v end { @u[2] = @v[1] } /dev/null
 DSL EXPRESSION:
 end { @u[2] = @v[1] }
-RAW AST:
+AST:
 * statement block
     * end block
         * statement block

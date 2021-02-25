@@ -232,7 +232,7 @@ func (this *UDFManager) ExistsByName(name string) bool {
 //
 // $y = f($x)
 //
-// RAW AST:
+// AST:
 // * StatementBlock
 //     * FunctionDefinition "f"
 //         * ParameterList

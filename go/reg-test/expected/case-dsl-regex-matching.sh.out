@@ -2,7 +2,7 @@
 mlr filter -v $x =~ "bcd" ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "bcd"
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -15,7 +15,7 @@ x=abcde,y=ghi
 mlr filter -v $x =~ "^bcd" ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^bcd"
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -26,7 +26,7 @@ RAW AST:
 mlr filter -v $x =~ "^abc" ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^abc"
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -40,7 +40,7 @@ x=abcde,y=ghi
 mlr filter -v $x =~ "^abc$" ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^abc$"
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -52,7 +52,7 @@ x=abc,y=def
 mlr filter -v $x =~ "^a.*d$" ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^a.*d$"
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -64,7 +64,7 @@ x=abcd,y=ghi
 mlr filter -v $x =~ "^a.*"."d$" ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^a.*"."d$"
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -78,7 +78,7 @@ x=abcd,y=ghi
 mlr filter -v $y =~ "\".." ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $y =~ "\".."
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -90,7 +90,7 @@ x=ABCDE,y="GHI"
 mlr filter -v $x =~ "bcd"i ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "bcd"i
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -106,7 +106,7 @@ x=ABCDE,y="GHI"
 mlr filter -v $x =~ "^bcd"i ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^bcd"i
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -117,7 +117,7 @@ RAW AST:
 mlr filter -v $x =~ "^abc"i ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^abc"i
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -135,7 +135,7 @@ x=ABCDE,y="GHI"
 mlr filter -v $x =~ "^abc$"i ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^abc$"i
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -148,7 +148,7 @@ x=ABC,y=DEF
 mlr filter -v $x =~ "^a.*d$"i ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^a.*d$"i
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -161,7 +161,7 @@ x=ABCD,y=GHI
 mlr filter -v $x =~ "^a.*"."d$"i ./reg-test/input/regex.dkvp
 DSL EXPRESSION:
 $x =~ "^a.*"."d$"i
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"

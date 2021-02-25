@@ -114,7 +114,7 @@ func (this *RootNode) buildMainPass(ast *dsl.AST, isReplImmediate bool) error {
 	// $ mlr put -v 'begin{@a=1;@b=2} $x=3; $y=4' myfile.dkvp
 	// DSL EXPRESSION:
 	// begin{@a=1;@b=2} $x=3; $y=4
-	// RAW AST:
+	// AST:
 	// * StatementBlock
 	//     * BeginBlock
 	//         * StatementBlock

@@ -2,7 +2,7 @@
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put -v $i += 2
 DSL EXPRESSION:
 $i += 2
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "i"
@@ -19,7 +19,7 @@ eks wye 6 0.38139939387114097 0.13418874328430463
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put -v $i *= 2
 DSL EXPRESSION:
 $i *= 2
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "i"
@@ -36,7 +36,7 @@ eks wye 8 0.38139939387114097 0.13418874328430463
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put -v $i /= 2
 DSL EXPRESSION:
 $i /= 2
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "i"
@@ -53,7 +53,7 @@ eks wye 2   0.38139939387114097 0.13418874328430463
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put -v $i |= 2
 DSL EXPRESSION:
 $i |= 2
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "i"
@@ -70,7 +70,7 @@ eks wye 6 0.38139939387114097 0.13418874328430463
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put -v $j = true; $j &&= $i < 2
 DSL EXPRESSION:
 $j = true; $j &&= $i < 2
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "j"

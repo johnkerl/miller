@@ -2,7 +2,7 @@
 mlr put -v $x = 1 || 2 || 3 /dev/null
 DSL EXPRESSION:
 $x = 1 || 2 || 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -16,7 +16,7 @@ RAW AST:
 mlr filter -v      1 || 2 || 3 /dev/null
 DSL EXPRESSION:
      1 || 2 || 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "||"
@@ -29,7 +29,7 @@ RAW AST:
 mlr put -v $x = 1 ^^ 2 ^^ 3 /dev/null
 DSL EXPRESSION:
 $x = 1 ^^ 2 ^^ 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -43,7 +43,7 @@ RAW AST:
 mlr filter -v      1 ^^ 2 ^^ 3 /dev/null
 DSL EXPRESSION:
      1 ^^ 2 ^^ 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "^^"
@@ -56,7 +56,7 @@ RAW AST:
 mlr put -v $x = 1 && 2 && 3 /dev/null
 DSL EXPRESSION:
 $x = 1 && 2 && 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -70,7 +70,7 @@ RAW AST:
 mlr filter -v      1 && 2 && 3 /dev/null
 DSL EXPRESSION:
      1 && 2 && 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "&&"
@@ -83,7 +83,7 @@ RAW AST:
 mlr put -v $x = 1  == 2  == 3 /dev/null
 DSL EXPRESSION:
 $x = 1  == 2  == 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -97,7 +97,7 @@ RAW AST:
 mlr filter -v      1  == 2  == 3 /dev/null
 DSL EXPRESSION:
      1  == 2  == 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=="
@@ -110,7 +110,7 @@ RAW AST:
 mlr put -v $x = 1  != 2  != 3 /dev/null
 DSL EXPRESSION:
 $x = 1  != 2  != 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -124,7 +124,7 @@ RAW AST:
 mlr filter -v      1  != 2  != 3 /dev/null
 DSL EXPRESSION:
      1  != 2  != 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "!="
@@ -137,7 +137,7 @@ RAW AST:
 mlr put -v $x = 1  =~ 2  =~ 3 /dev/null
 DSL EXPRESSION:
 $x = 1  =~ 2  =~ 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -151,7 +151,7 @@ RAW AST:
 mlr filter -v      1  =~ 2  =~ 3 /dev/null
 DSL EXPRESSION:
      1  =~ 2  =~ 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=~"
@@ -164,7 +164,7 @@ RAW AST:
 mlr put -v $x = 1 !=~ 2 !=~ 3 /dev/null
 DSL EXPRESSION:
 $x = 1 !=~ 2 !=~ 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -178,7 +178,7 @@ RAW AST:
 mlr filter -v      1 !=~ 2 !=~ 3 /dev/null
 DSL EXPRESSION:
      1 !=~ 2 !=~ 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "!=~"
@@ -191,7 +191,7 @@ RAW AST:
 mlr put -v $x = 1  == 2  != 3 /dev/null
 DSL EXPRESSION:
 $x = 1  == 2  != 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -205,7 +205,7 @@ RAW AST:
 mlr filter -v      1  == 2  != 3 /dev/null
 DSL EXPRESSION:
      1  == 2  != 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "!="
@@ -218,7 +218,7 @@ RAW AST:
 mlr put -v $x = 1  != 2  == 3 /dev/null
 DSL EXPRESSION:
 $x = 1  != 2  == 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -232,7 +232,7 @@ RAW AST:
 mlr filter -v      1  != 2  == 3 /dev/null
 DSL EXPRESSION:
      1  != 2  == 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "=="
@@ -245,7 +245,7 @@ RAW AST:
 mlr put -v $x = 1  <  2  <  3 /dev/null
 DSL EXPRESSION:
 $x = 1  <  2  <  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -259,7 +259,7 @@ RAW AST:
 mlr filter -v      1  <  2  <  3 /dev/null
 DSL EXPRESSION:
      1  <  2  <  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "<"
@@ -272,7 +272,7 @@ RAW AST:
 mlr put -v $x = 1  <= 2  <= 3 /dev/null
 DSL EXPRESSION:
 $x = 1  <= 2  <= 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -286,7 +286,7 @@ RAW AST:
 mlr filter -v      1  <= 2  <= 3 /dev/null
 DSL EXPRESSION:
      1  <= 2  <= 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "<="
@@ -299,7 +299,7 @@ RAW AST:
 mlr put -v $x = 1  >  2  >  3 /dev/null
 DSL EXPRESSION:
 $x = 1  >  2  >  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -313,7 +313,7 @@ RAW AST:
 mlr filter -v      1  >  2  >  3 /dev/null
 DSL EXPRESSION:
      1  >  2  >  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator ">"
@@ -326,7 +326,7 @@ RAW AST:
 mlr put -v $x = 1  >= 2  >= 3 /dev/null
 DSL EXPRESSION:
 $x = 1  >= 2  >= 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -340,7 +340,7 @@ RAW AST:
 mlr filter -v      1  >= 2  >= 3 /dev/null
 DSL EXPRESSION:
      1  >= 2  >= 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator ">="
@@ -353,7 +353,7 @@ RAW AST:
 mlr put -v $x = 1  <  2  <= 3 /dev/null
 DSL EXPRESSION:
 $x = 1  <  2  <= 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -367,7 +367,7 @@ RAW AST:
 mlr filter -v      1  <  2  <= 3 /dev/null
 DSL EXPRESSION:
      1  <  2  <= 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "<="
@@ -380,7 +380,7 @@ RAW AST:
 mlr put -v $x = 1  <= 2  <  3 /dev/null
 DSL EXPRESSION:
 $x = 1  <= 2  <  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -394,7 +394,7 @@ RAW AST:
 mlr filter -v      1  <= 2  <  3 /dev/null
 DSL EXPRESSION:
      1  <= 2  <  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "<"
@@ -407,7 +407,7 @@ RAW AST:
 mlr put -v $x = 1 |  2 |  3 /dev/null
 DSL EXPRESSION:
 $x = 1 |  2 |  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -421,7 +421,7 @@ RAW AST:
 mlr filter -v      1 |  2 |  3 /dev/null
 DSL EXPRESSION:
      1 |  2 |  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "|"
@@ -434,7 +434,7 @@ RAW AST:
 mlr put -v $x = 1 ^  2 ^  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ^  2 ^  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -448,7 +448,7 @@ RAW AST:
 mlr filter -v      1 ^  2 ^  3 /dev/null
 DSL EXPRESSION:
      1 ^  2 ^  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "^"
@@ -461,7 +461,7 @@ RAW AST:
 mlr put -v $x = 1 &  2 &  3 /dev/null
 DSL EXPRESSION:
 $x = 1 &  2 &  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -475,7 +475,7 @@ RAW AST:
 mlr filter -v      1 &  2 &  3 /dev/null
 DSL EXPRESSION:
      1 &  2 &  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "&"
@@ -488,7 +488,7 @@ RAW AST:
 mlr put -v $x = 1 |  2 &  3 /dev/null
 DSL EXPRESSION:
 $x = 1 |  2 &  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -502,7 +502,7 @@ RAW AST:
 mlr filter -v      1 |  2 &  3 /dev/null
 DSL EXPRESSION:
      1 |  2 &  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "|"
@@ -515,7 +515,7 @@ RAW AST:
 mlr put -v $x = 1 |  2 ^  3 /dev/null
 DSL EXPRESSION:
 $x = 1 |  2 ^  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -529,7 +529,7 @@ RAW AST:
 mlr filter -v      1 |  2 ^  3 /dev/null
 DSL EXPRESSION:
      1 |  2 ^  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "|"
@@ -542,7 +542,7 @@ RAW AST:
 mlr put -v $x = 1 ^  2 |  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ^  2 |  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -556,7 +556,7 @@ RAW AST:
 mlr filter -v      1 ^  2 |  3 /dev/null
 DSL EXPRESSION:
      1 ^  2 |  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "|"
@@ -569,7 +569,7 @@ RAW AST:
 mlr put -v $x = 1 ^  2 &  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ^  2 &  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -583,7 +583,7 @@ RAW AST:
 mlr filter -v      1 ^  2 &  3 /dev/null
 DSL EXPRESSION:
      1 ^  2 &  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "^"
@@ -596,7 +596,7 @@ RAW AST:
 mlr put -v $x = 1 &  2 |  3 /dev/null
 DSL EXPRESSION:
 $x = 1 &  2 |  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -610,7 +610,7 @@ RAW AST:
 mlr filter -v      1 &  2 |  3 /dev/null
 DSL EXPRESSION:
      1 &  2 |  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "|"
@@ -623,7 +623,7 @@ RAW AST:
 mlr put -v $x = 1 &  2 ^  3 /dev/null
 DSL EXPRESSION:
 $x = 1 &  2 ^  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -637,7 +637,7 @@ RAW AST:
 mlr filter -v      1 &  2 ^  3 /dev/null
 DSL EXPRESSION:
      1 &  2 ^  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "^"
@@ -650,7 +650,7 @@ RAW AST:
 mlr put -v $x = 1  << 2  << 3 /dev/null
 DSL EXPRESSION:
 $x = 1  << 2  << 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -664,7 +664,7 @@ RAW AST:
 mlr filter -v      1  << 2  << 3 /dev/null
 DSL EXPRESSION:
      1  << 2  << 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "<<"
@@ -677,7 +677,7 @@ RAW AST:
 mlr put -v $x = 1  >> 2  >> 3 /dev/null
 DSL EXPRESSION:
 $x = 1  >> 2  >> 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -691,7 +691,7 @@ RAW AST:
 mlr filter -v      1  >> 2  >> 3 /dev/null
 DSL EXPRESSION:
      1  >> 2  >> 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator ">>"
@@ -704,7 +704,7 @@ RAW AST:
 mlr put -v $x = 1  << 2  >> 3 /dev/null
 DSL EXPRESSION:
 $x = 1  << 2  >> 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -718,7 +718,7 @@ RAW AST:
 mlr filter -v      1  << 2  >> 3 /dev/null
 DSL EXPRESSION:
      1  << 2  >> 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator ">>"
@@ -731,7 +731,7 @@ RAW AST:
 mlr put -v $x = 1  >> 2  << 3 /dev/null
 DSL EXPRESSION:
 $x = 1  >> 2  << 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -745,7 +745,7 @@ RAW AST:
 mlr filter -v      1  >> 2  << 3 /dev/null
 DSL EXPRESSION:
      1  >> 2  << 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "<<"
@@ -758,7 +758,7 @@ RAW AST:
 mlr put -v $x = 1 + 2 + 3 /dev/null
 DSL EXPRESSION:
 $x = 1 + 2 + 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -772,7 +772,7 @@ RAW AST:
 mlr filter -v      1 + 2 + 3 /dev/null
 DSL EXPRESSION:
      1 + 2 + 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "+"
@@ -785,7 +785,7 @@ RAW AST:
 mlr put -v $x = 1 - 2 - 3 /dev/null
 DSL EXPRESSION:
 $x = 1 - 2 - 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -799,7 +799,7 @@ RAW AST:
 mlr filter -v      1 - 2 - 3 /dev/null
 DSL EXPRESSION:
      1 - 2 - 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "-"
@@ -812,7 +812,7 @@ RAW AST:
 mlr put -v $x = 1 + 2 - 3 /dev/null
 DSL EXPRESSION:
 $x = 1 + 2 - 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -826,7 +826,7 @@ RAW AST:
 mlr filter -v      1 + 2 - 3 /dev/null
 DSL EXPRESSION:
      1 + 2 - 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "-"
@@ -839,7 +839,7 @@ RAW AST:
 mlr put -v $x = 1 - 2 + 3 /dev/null
 DSL EXPRESSION:
 $x = 1 - 2 + 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -853,7 +853,7 @@ RAW AST:
 mlr filter -v      1 - 2 + 3 /dev/null
 DSL EXPRESSION:
      1 - 2 + 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "+"
@@ -866,7 +866,7 @@ RAW AST:
 mlr put -v $x = 1 . 2 . 3 /dev/null
 DSL EXPRESSION:
 $x = 1 . 2 . 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -880,7 +880,7 @@ RAW AST:
 mlr filter -v      1 . 2 . 3 /dev/null
 DSL EXPRESSION:
      1 . 2 . 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "."
@@ -893,7 +893,7 @@ RAW AST:
 mlr put -v $x = 1 * 2 * 3 /dev/null
 DSL EXPRESSION:
 $x = 1 * 2 * 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -907,7 +907,7 @@ RAW AST:
 mlr filter -v      1 * 2 * 3 /dev/null
 DSL EXPRESSION:
      1 * 2 * 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "*"
@@ -920,7 +920,7 @@ RAW AST:
 mlr put -v $x = 1 / 2 / 3 /dev/null
 DSL EXPRESSION:
 $x = 1 / 2 / 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -934,7 +934,7 @@ RAW AST:
 mlr filter -v      1 / 2 / 3 /dev/null
 DSL EXPRESSION:
      1 / 2 / 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "/"
@@ -947,7 +947,7 @@ RAW AST:
 mlr put -v $x = 1 // 2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 // 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -961,7 +961,7 @@ RAW AST:
 mlr filter -v      1 // 2 // 3 /dev/null
 DSL EXPRESSION:
      1 // 2 // 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "//"
@@ -974,7 +974,7 @@ RAW AST:
 mlr put -v $x = 1 % 2 % 3 /dev/null
 DSL EXPRESSION:
 $x = 1 % 2 % 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -988,7 +988,7 @@ RAW AST:
 mlr filter -v      1 % 2 % 3 /dev/null
 DSL EXPRESSION:
      1 % 2 % 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "%"
@@ -1001,7 +1001,7 @@ RAW AST:
 mlr put -v $x = 1 ** 2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 ** 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1015,7 +1015,7 @@ RAW AST:
 mlr filter -v      1 ** 2 ** 3 /dev/null
 DSL EXPRESSION:
      1 ** 2 ** 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "**"
@@ -1028,7 +1028,7 @@ RAW AST:
 mlr put -v $x = 1 *  2 /  3 /dev/null
 DSL EXPRESSION:
 $x = 1 *  2 /  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1042,7 +1042,7 @@ RAW AST:
 mlr filter -v      1 *  2 /  3 /dev/null
 DSL EXPRESSION:
      1 *  2 /  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "/"
@@ -1055,7 +1055,7 @@ RAW AST:
 mlr put -v $x = 1 *  2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 *  2 // 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1069,7 +1069,7 @@ RAW AST:
 mlr filter -v      1 *  2 // 3 /dev/null
 DSL EXPRESSION:
      1 *  2 // 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "//"
@@ -1082,7 +1082,7 @@ RAW AST:
 mlr put -v $x = 1 *  2 %  3 /dev/null
 DSL EXPRESSION:
 $x = 1 *  2 %  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1096,7 +1096,7 @@ RAW AST:
 mlr filter -v      1 *  2 %  3 /dev/null
 DSL EXPRESSION:
      1 *  2 %  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "%"
@@ -1109,7 +1109,7 @@ RAW AST:
 mlr put -v $x = 1 *  2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 *  2 ** 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1123,7 +1123,7 @@ RAW AST:
 mlr filter -v      1 *  2 ** 3 /dev/null
 DSL EXPRESSION:
      1 *  2 ** 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "*"
@@ -1136,7 +1136,7 @@ RAW AST:
 mlr put -v $x = 1 /  2 *  3 /dev/null
 DSL EXPRESSION:
 $x = 1 /  2 *  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1150,7 +1150,7 @@ RAW AST:
 mlr filter -v      1 /  2 *  3 /dev/null
 DSL EXPRESSION:
      1 /  2 *  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "*"
@@ -1163,7 +1163,7 @@ RAW AST:
 mlr put -v $x = 1 /  2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 /  2 // 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1177,7 +1177,7 @@ RAW AST:
 mlr filter -v      1 /  2 // 3 /dev/null
 DSL EXPRESSION:
      1 /  2 // 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "//"
@@ -1190,7 +1190,7 @@ RAW AST:
 mlr put -v $x = 1 /  2 %  3 /dev/null
 DSL EXPRESSION:
 $x = 1 /  2 %  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1204,7 +1204,7 @@ RAW AST:
 mlr filter -v      1 /  2 %  3 /dev/null
 DSL EXPRESSION:
      1 /  2 %  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "%"
@@ -1217,7 +1217,7 @@ RAW AST:
 mlr put -v $x = 1 /  2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 /  2 ** 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1231,7 +1231,7 @@ RAW AST:
 mlr filter -v      1 /  2 ** 3 /dev/null
 DSL EXPRESSION:
      1 /  2 ** 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "/"
@@ -1244,7 +1244,7 @@ RAW AST:
 mlr put -v $x = 1 // 2 *  3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 *  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1258,7 +1258,7 @@ RAW AST:
 mlr filter -v      1 // 2 *  3 /dev/null
 DSL EXPRESSION:
      1 // 2 *  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "*"
@@ -1271,7 +1271,7 @@ RAW AST:
 mlr put -v $x = 1 // 2 /  3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 /  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1285,7 +1285,7 @@ RAW AST:
 mlr filter -v      1 // 2 /  3 /dev/null
 DSL EXPRESSION:
      1 // 2 /  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "/"
@@ -1298,7 +1298,7 @@ RAW AST:
 mlr put -v $x = 1 // 2 %  3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 %  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1312,7 +1312,7 @@ RAW AST:
 mlr filter -v      1 // 2 %  3 /dev/null
 DSL EXPRESSION:
      1 // 2 %  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "%"
@@ -1325,7 +1325,7 @@ RAW AST:
 mlr put -v $x = 1 // 2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 ** 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1339,7 +1339,7 @@ RAW AST:
 mlr filter -v      1 // 2 ** 3 /dev/null
 DSL EXPRESSION:
      1 // 2 ** 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "//"
@@ -1352,7 +1352,7 @@ RAW AST:
 mlr put -v $x = 1 %  2 *  3 /dev/null
 DSL EXPRESSION:
 $x = 1 %  2 *  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1366,7 +1366,7 @@ RAW AST:
 mlr filter -v      1 %  2 *  3 /dev/null
 DSL EXPRESSION:
      1 %  2 *  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "*"
@@ -1379,7 +1379,7 @@ RAW AST:
 mlr put -v $x = 1 %  2 /  3 /dev/null
 DSL EXPRESSION:
 $x = 1 %  2 /  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1393,7 +1393,7 @@ RAW AST:
 mlr filter -v      1 %  2 /  3 /dev/null
 DSL EXPRESSION:
      1 %  2 /  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "/"
@@ -1406,7 +1406,7 @@ RAW AST:
 mlr put -v $x = 1 %  2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 %  2 // 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1420,7 +1420,7 @@ RAW AST:
 mlr filter -v      1 %  2 // 3 /dev/null
 DSL EXPRESSION:
      1 %  2 // 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "//"
@@ -1433,7 +1433,7 @@ RAW AST:
 mlr put -v $x = 1 %  2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 %  2 ** 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1447,7 +1447,7 @@ RAW AST:
 mlr filter -v      1 %  2 ** 3 /dev/null
 DSL EXPRESSION:
      1 %  2 ** 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "%"
@@ -1460,7 +1460,7 @@ RAW AST:
 mlr put -v $x = 1 ** 2 *  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 *  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1474,7 +1474,7 @@ RAW AST:
 mlr filter -v      1 ** 2 *  3 /dev/null
 DSL EXPRESSION:
      1 ** 2 *  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "*"
@@ -1487,7 +1487,7 @@ RAW AST:
 mlr put -v $x = 1 ** 2 /  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 /  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1501,7 +1501,7 @@ RAW AST:
 mlr filter -v      1 ** 2 /  3 /dev/null
 DSL EXPRESSION:
      1 ** 2 /  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "/"
@@ -1514,7 +1514,7 @@ RAW AST:
 mlr put -v $x = 1 ** 2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 // 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1528,7 +1528,7 @@ RAW AST:
 mlr filter -v      1 ** 2 // 3 /dev/null
 DSL EXPRESSION:
      1 ** 2 // 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "//"
@@ -1541,7 +1541,7 @@ RAW AST:
 mlr put -v $x = 1 ** 2 %  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 %  3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1555,7 +1555,7 @@ RAW AST:
 mlr filter -v      1 ** 2 %  3 /dev/null
 DSL EXPRESSION:
      1 ** 2 %  3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "%"
@@ -1568,7 +1568,7 @@ RAW AST:
 mlr put -v $x = ++1 /dev/null
 DSL EXPRESSION:
 $x = ++1
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1580,7 +1580,7 @@ RAW AST:
 mlr filter -v      ++1 /dev/null
 DSL EXPRESSION:
      ++1
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "+"
@@ -1591,7 +1591,7 @@ RAW AST:
 mlr put -v $x = --1 /dev/null
 DSL EXPRESSION:
 $x = --1
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1603,7 +1603,7 @@ RAW AST:
 mlr filter -v      --1 /dev/null
 DSL EXPRESSION:
      --1
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "-"
@@ -1614,7 +1614,7 @@ RAW AST:
 mlr put -v $x = !!1 /dev/null
 DSL EXPRESSION:
 $x = !!1
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1626,7 +1626,7 @@ RAW AST:
 mlr filter -v      !!1 /dev/null
 DSL EXPRESSION:
      !!1
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "!"
@@ -1637,7 +1637,7 @@ RAW AST:
 mlr put -v $x = ~~1 /dev/null
 DSL EXPRESSION:
 $x = ~~1
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1649,7 +1649,7 @@ RAW AST:
 mlr filter -v      ~~1 /dev/null
 DSL EXPRESSION:
      ~~1
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "~"
@@ -1660,7 +1660,7 @@ RAW AST:
 mlr put -v $x = 1 ? 2 : 3 /dev/null
 DSL EXPRESSION:
 $x = 1 ? 2 : 3
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1673,7 +1673,7 @@ RAW AST:
 mlr filter -v      1 ? 2 : 3 /dev/null
 DSL EXPRESSION:
      1 ? 2 : 3
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "?:"
@@ -1685,7 +1685,7 @@ RAW AST:
 mlr put -v $x = 1 ? 2 ? 3 : 4 : 5 /dev/null
 DSL EXPRESSION:
 $x = 1 ? 2 ? 3 : 4 : 5
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1701,7 +1701,7 @@ RAW AST:
 mlr filter -v      1 ? 2 ? 3 : 4 : 5 /dev/null
 DSL EXPRESSION:
      1 ? 2 ? 3 : 4 : 5
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "?:"
@@ -1716,7 +1716,7 @@ RAW AST:
 mlr put -v $x = 1 ? 2 : 3 ? 4 : 5 /dev/null
 DSL EXPRESSION:
 $x = 1 ? 2 : 3 ? 4 : 5
-RAW AST:
+AST:
 * statement block
     * assignment "="
         * direct field value "x"
@@ -1732,7 +1732,7 @@ RAW AST:
 mlr filter -v      1 ? 2 : 3 ? 4 : 5 /dev/null
 DSL EXPRESSION:
      1 ? 2 : 3 ? 4 : 5
-RAW AST:
+AST:
 * statement block
     * bare boolean
         * operator "?:"

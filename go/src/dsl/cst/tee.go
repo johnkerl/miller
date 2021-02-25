@@ -28,7 +28,7 @@ import (
 // $ mlr -n put -v 'tee > stdout, $*'
 // DSL EXPRESSION:
 // tee > stdout, $*
-// RAW AST:
+// AST:
 // * statement block
 //     * tee statement "tee"
 //         * full record "$*"
@@ -38,7 +38,7 @@ import (
 // $ mlr -n put -v 'tee > "foo.dat", $*'
 // DSL EXPRESSION:
 // tee > "foo.dat", $*
-// RAW AST:
+// AST:
 // * statement block
 //     * tee statement "tee"
 //         * full record "$*"
@@ -48,7 +48,7 @@ import (
 // $ mlr -n put -v 'tee | "jq .", $*'
 // DSL EXPRESSION:
 // tee | "jq .", $*
-// RAW AST:
+// AST:
 // * statement block
 //     * tee statement "tee"
 //         * full record "$*"

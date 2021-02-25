@@ -209,7 +209,7 @@ func (this *UDSManager) ExistsByName(name string) bool {
 //
 // $y = f($x)
 //
-// RAW AST:
+// AST:
 // * StatementBlock
 //     * SubroutineDefinition "f"
 //         * ParameterList

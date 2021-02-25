@@ -19,7 +19,7 @@ import (
 // mlr -n put -v 'for (k in $*) { emit { k : k } }'
 // DSL EXPRESSION:
 // for (k in $*) { emit { k : k} }
-// RAW AST:
+// AST:
 // * StatementBlock
 //     * ForLoopOneVariable "for"
 //         * LocalVariable "k"
@@ -56,7 +56,7 @@ func NewForLoopOneVariableNode(
 // mlr -n put -v 'for (k in $*) { emit { k : k } }'
 // DSL EXPRESSION:
 // for (k, v in $*) { emit { k : v } }
-// RAW AST:
+// AST:
 // * StatementBlock
 //     * ForLoopOneVariable "for"
 //         * LocalVariable "k"
@@ -233,7 +233,7 @@ func NewForLoopTwoVariableNode(
 // mlr -n put -v 'for (k, v in $*) { emit { k : v } }'
 // DSL EXPRESSION:
 // for (k, v in $*) { emit { k : v } }
-// RAW AST:
+// AST:
 // * StatementBlock
 //     * ForLoopTwoVariable "for"
 //         * LocalVariable "k"
@@ -428,7 +428,7 @@ func NewForLoopMultivariableNode(
 // mlr -n put -v 'for ((k1, k2), v in $*) { }'
 // DSL EXPRESSION:
 // for ((k1, k2), v in $*) { }
-// RAW AST:
+// AST:
 // * statement block
 //     * multi-variable for-loop "for"
 //         * parameter list
@@ -739,7 +739,7 @@ func NewTripleForLoopNode(
 
 // DSL EXPRESSION:
 // for (;;) {}
-// RAW AST:
+// AST:
 // * StatementBlock
 //     * TripleForLoop "for"
 //         * StatementBlock
@@ -750,7 +750,7 @@ func NewTripleForLoopNode(
 // mlr --from u/s.dkvp put -v for (i = 0; i < NR; i += 1) { $i += i }
 // DSL EXPRESSION:
 // for (i = 0; i < NR; i += 1) { $i += i }
-// RAW AST:
+// AST:
 // * StatementBlock
 //     * TripleForLoop "for"
 //         * StatementBlock
