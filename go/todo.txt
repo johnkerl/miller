@@ -7,22 +7,21 @@ TOP OF LIST:
     - rename -r
   ! separate DSL/non-DSL string-literal handlers
 
-! rmd ex1 even simpler -- commarect
-w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/gocc/pull/107
-
 ! strptime/strftime experiments ...
 ! --nojvstack; default --jvstack; code it up ...
 
 * json null
+
 * smart fmtnum
   - fmtnum
   - ofmt
   - no other callsites?!?!?!
-! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
+  - note hexfmt for non-ints -- especially floats -- ?!?
+
+* smarter head-stop etc https://github.com/johnkerl/miller/issues/291
 
 * port verb merge-fields
 * port verb stats2
-* note hexfmt for non-ints -- especially floats -- ?!?
 
 * in-place processing
 * prepipe
@@ -43,6 +42,7 @@ w go get github.com/johnkerl/gocc@gocc2x.3, pending https://github.com/goccmack/
 * single-line JSON for DKVP/CSV/etc ...
 
 * small:
+  o rmd ex1 even simpler -- commarect
   o sg/mktags more explicit comment.
   o justWroteEmptyLine -> pprint too ...
   o nidx @ 10-min
@@ -141,10 +141,6 @@ emitp/emitf:
 
 * bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
   https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
-
-* more copy-on-retain for concurrent pointer-mods !
-  o make a thorough audit, and warn everywhere
-  o either do copy for all retainers, or treat inrecs as immutable ...
 
 * sliding-window averages into mapper step (C + Go)
 * stats1 rank
@@ -519,3 +515,7 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o try and benchmark/compare ...
   o lots of array-of-pointer stuff, this is totally fine
   o take care w/ copying (non-pointer) mlrvals though
+
+* more copy-on-retain for concurrent pointer-mods
+  o make a thorough audit, and warn everywhere
+  o either do copy for all retainers, or treat inrecs as immutable ...
