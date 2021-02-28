@@ -55,7 +55,7 @@ func transformerCatParseCLI(
 	// Parse local flags
 	doCounters := false
 	counterFieldName := ""
-	groupByFieldNames := ""
+	var groupByFieldNames []string = nil
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -74,7 +74,7 @@ func transformerCatParseCLI(
 			counterFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-g" {
-			groupByFieldNames = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerCatUsage(os.Stderr, true, 1)
@@ -92,8 +92,8 @@ func transformerCatParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerCat struct {
-	doCounters           bool
-	groupByFieldNameList []string
+	doCounters        bool
+	groupByFieldNames []string
 
 	counter          int
 	countsByGroup    map[string]int
@@ -106,27 +106,25 @@ type TransformerCat struct {
 func NewTransformerCat(
 	doCounters bool,
 	counterFieldName string,
-	groupByFieldNames string,
+	groupByFieldNames []string,
 ) (*TransformerCat, error) {
-
-	groupByFieldNameList := lib.SplitString(groupByFieldNames, ",")
 
 	if counterFieldName != "" {
 		doCounters = true
 	}
 
 	this := &TransformerCat{
-		doCounters:           doCounters,
-		groupByFieldNameList: groupByFieldNameList,
-		counter:              0,
-		countsByGroup:        make(map[string]int),
-		counterFieldName:     counterFieldName,
+		doCounters:        doCounters,
+		groupByFieldNames: groupByFieldNames,
+		counter:           0,
+		countsByGroup:     make(map[string]int),
+		counterFieldName:  counterFieldName,
 	}
 
 	if !doCounters {
 		this.recordTransformerFunc = this.simpleCat
 	} else {
-		if groupByFieldNames == "" {
+		if groupByFieldNames == nil {
 			this.recordTransformerFunc = this.countersUngrouped
 		} else {
 			this.recordTransformerFunc = this.countersGrouped
@@ -175,7 +173,7 @@ func (this *TransformerCat) countersGrouped(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNameList)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
 		var counter int = 0
 		if !ok {
 			// Treat as unkeyed

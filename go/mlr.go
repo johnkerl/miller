@@ -14,7 +14,7 @@ import (
 
 // ----------------------------------------------------------------
 func main() {
-	runtime.GOMAXPROCS(4) // Seems reasonable these days
+	runtime.GOMAXPROCS(4)   // Seems reasonable these days
 	debug.SetGCPercent(500) // Empirical: See README-profiling.md
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

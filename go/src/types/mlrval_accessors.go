@@ -1,6 +1,8 @@
 package types
 
 import (
+	"fmt"
+	"os"
 	"strconv"
 
 	"miller/src/lib"
@@ -130,6 +132,19 @@ func (this *Mlrval) GetNumericToFloatValue() (floatValue float64, isFloat bool) 
 	} else {
 		return -888.0, false
 	}
+}
+
+func (this *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {
+	floatValue, ok := this.GetNumericToFloatValue()
+	if !ok {
+		fmt.Fprintf(
+			os.Stderr,
+			"%s: couldn't parse \"%s\" as number.",
+			lib.MlrExeName(), this.String(),
+		)
+		os.Exit(1)
+	}
+	return floatValue
 }
 
 func (this *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
