@@ -147,6 +147,10 @@ func (this *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {
 	return floatValue
 }
 
+func (this *Mlrval) AssertNumeric() {
+	_ = this.GetNumericToFloatValueOrDie()
+}
+
 func (this *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
 	if this.mvtype == MT_BOOL {
 		return this.boolval, true
