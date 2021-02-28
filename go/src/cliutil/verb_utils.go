@@ -54,3 +54,19 @@ func VerbGetIntArgOrDie(verb string, opt string, args []string, pargi *int, argc
 	}
 	return retval
 }
+
+// E.g. with ["-n", "10.3"], makes sure there is something in the "10.3"
+// position, scans it as float, and returns it.
+func VerbGetFloatArgOrDie(verb string, opt string, args []string, pargi *int, argc int) float64 {
+	flag := args[*pargi]
+	stringArg := VerbGetStringArgOrDie(verb, opt, args, pargi, argc)
+	retval, err := strconv.ParseFloat(stringArg, 64)
+	if err != nil {
+		fmt.Fprintf(os.Stderr,
+			"%s %s: could not scan flag \"%s\" argument \"%s\" as float.\n",
+			lib.MlrExeName(), verb, flag, stringArg,
+		)
+		os.Exit(1)
+	}
+	return retval
+}

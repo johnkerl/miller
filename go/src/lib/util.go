@@ -100,9 +100,9 @@ func TryIntFromString(input string) (int, bool) {
 }
 
 func TryFloat64FromString(input string) (float64, bool) {
-	ival, err := strconv.ParseFloat(input, 64)
+	fval, err := strconv.ParseFloat(input, 64)
 	if err == nil {
-		return ival, true
+		return fval, true
 	} else {
 		return 0, false
 	}

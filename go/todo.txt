@@ -1,6 +1,10 @@
 ================================================================
 TOP OF LIST:
 
+* audit
+  groupByFieldNames = cliutil.VerbGetStringArgOrDie
+  -> cliutil.VerbGetStringArrayArgOrDie
+
 * regexes
   o finish stats1 -r
   o regex captures ...
