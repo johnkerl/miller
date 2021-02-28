@@ -149,6 +149,27 @@ Options:
 -s Separator, defaulting to mlr --oflatsep value.
 -h|--help Show this message.
 ================================================================
+Usage: mlr fraction [options]
+For each record's value in specified fields, computes the ratio of that
+value to the sum of values in that field over all input records.
+E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
+x=1,x_fraction=0.1  x=2,x_fraction=0.2  x=3,x_fraction=0.3  and  x=4,x_fraction=0.4
+
+Note: this is internally a two-pass algorithm: on the first pass it retains
+input records and accumulates sums; on the second pass it computes quotients
+and emits output records. This means it produces no output until all input is read.
+
+Options:
+-f {a,b,c}    Field name(s) for fraction calculation
+-g {d,e,f}    Optional group-by-field name(s) for fraction counts
+-p            Produce percents [0..100], not fractions [0..1]. Output field names
+              end with "_percent" rather than "_fraction"
+-c            Produce cumulative distributions, i.e. running sums: each output
+              value folds in the sum of the previous for the specified group
+              E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
+              x=1,x_cumulative_fraction=0.1  x=2,x_cumulative_fraction=0.3
+              x=3,x_cumulative_fraction=0.6  and  x=4,x_cumulative_fraction=1.0
+================================================================
 Usage: mlr gap [options]
 Emits an empty record every n records, or when certain values change.
 Options:
@@ -218,6 +239,20 @@ Usage: mlr histogram [options]
 -o {prefix}   Prefix for output field name. Default: no prefix.
 -h|--help Show this message.
 ================================================================
+Usage: mlr json-parse [options]
+Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].
+Options:
+-f {...} Comma-separated list of field names to json-parse (default all).
+-h|--help Show this message.
+================================================================
+Usage: mlr json-stringify [options]
+Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
+Options:
+-f {...} Comma-separated list of field names to json-parse (default all).
+--jvstack Produce multi-line JSON output.
+--no-jvstack Produce single-line JSON output per record (default).
+-h|--help Show this message.
+================================================================
 Usage: mlr join [options]
 Joins records from specified left file name with records from all file names
 at the end of the Miller argument list.
@@ -260,20 +295,6 @@ the main "mlr --help" for more information on syntax for these arguments.
 Please use "mlr --usage-separator-options" for information on specifying separators.
 Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
 including examples.
-================================================================
-Usage: mlr json-parse [options]
-Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].
-Options:
--f {...} Comma-separated list of field names to json-parse (default all).
--h|--help Show this message.
-================================================================
-Usage: mlr json-stringify [options]
-Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
-Options:
--f {...} Comma-separated list of field names to json-parse (default all).
---jvstack Produce multi-line JSON output.
---no-jvstack Produce single-line JSON output per record (default).
--h|--help Show this message.
 ================================================================
 Usage: mlr label [options] {new1,new2,new3,...}
 Given n comma-separated names, renames the first n fields of each record to
@@ -330,32 +351,6 @@ semicolons to separate expressions.)
 
 -h|--help Show this message.
 ================================================================
-Usage: mlr repeat [options]
-Copies input records to output records multiple times.
-Options must be exactly one of the following:
--n {repeat count}  Repeat each input record this many times.
--f {field name}    Same, but take the repeat count from the specified
-                   field name of each input record.
--h|--help Show this message.
-Example:
-  echo x=0 | mlr repeat -n 4 then put '$x=urand()'
-produces:
- x=0.488189
- x=0.484973
- x=0.704983
- x=0.147311
-Example:
-  echo a=1,b=2,c=3 | mlr repeat -f b
-produces:
-  a=1,b=2,c=3
-  a=1,b=2,c=3
-Example:
-  echo a=1,b=2,c=3 | mlr repeat -f c
-produces:
-  a=1,b=2,c=3
-  a=1,b=2,c=3
-  a=1,b=2,c=3
-================================================================
 Usage: mlr regularize [options]
 Outputs records sorted lexically ascending by keys.Options:
 -h|--help Show this message.
@@ -397,6 +392,32 @@ Options:
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+================================================================
+Usage: mlr repeat [options]
+Copies input records to output records multiple times.
+Options must be exactly one of the following:
+-n {repeat count}  Repeat each input record this many times.
+-f {field name}    Same, but take the repeat count from the specified
+                   field name of each input record.
+-h|--help Show this message.
+Example:
+  echo x=0 | mlr repeat -n 4 then put '$x=urand()'
+produces:
+ x=0.488189
+ x=0.484973
+ x=0.704983
+ x=0.147311
+Example:
+  echo a=1,b=2,c=3 | mlr repeat -f b
+produces:
+  a=1,b=2,c=3
+  a=1,b=2,c=3
+Example:
+  echo a=1,b=2,c=3 | mlr repeat -f c
+produces:
+  a=1,b=2,c=3
+  a=1,b=2,c=3
+  a=1,b=2,c=3
 ================================================================
 Usage: mlr sample [options]
 Reservoir sampling (subsampling without replacement), optionally by category.
@@ -565,6 +586,13 @@ Prints records in reverse order from the order in which they were encountered.
 Options:
 -h|--help Show this message.
 ================================================================
+Usage: mlr tail [options]
+Passes through the last n records, optionally by category.
+Options:
+-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
+-n {n} Head-count to print. Default 10.
+-h|--help Show this message.
+================================================================
 Usage: mlr tee [options] {filename}
 Options:
 -a    Append to existing file, if any, rather than overwriting.
@@ -574,13 +602,6 @@ Any of the output-format command-line flags (see mlr -h). Example: using
 the input is CSV, the output is pretty-print tabular, but the tee-file output
 is written in JSON format.
 
--h|--help Show this message.
-================================================================
-Usage: mlr tail [options]
-Passes through the last n records, optionally by category.
-Options:
--g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
--n {n} Head-count to print. Default 10.
 -h|--help Show this message.
 ================================================================
 Usage: mlr unflatten [options]

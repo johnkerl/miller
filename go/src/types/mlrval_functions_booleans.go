@@ -224,7 +224,6 @@ var eq_dispositions = [MT_DIM][MT_DIM]BinaryFunc{}
 
 func init() {
 	eq_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-
 		//       .  ERROR   ABSENT VOID     STRING   INT      FLOAT    BOOL   ARRAY    MAP
 		/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 		/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
@@ -236,7 +235,6 @@ func init() {
 		/*ARRAY  */ {_erro, _absn, _fals, _fals, _fals, _fals, _fals, eq_b_aa, _fals},
 		/*MAP    */ {_erro, _absn, _fals, _fals, _fals, _fals, _fals, _fals, eq_b_mm},
 	}
-
 }
 
 var ne_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -328,6 +326,14 @@ func MlrvalLessThanForSort(input1, input2 *Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
 	mretval := lt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	retval, ok := mretval.GetBoolValue()
+	lib.InternalCodingErrorIf(!ok)
+	return retval
+}
+
+// Convenience wrapper for non-DSL callsites that just want a bool
+func MlrvalEqualsAsBool(input1, input2 *Mlrval) bool {
+	mretval := eq_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 	retval, ok := mretval.GetBoolValue()
 	lib.InternalCodingErrorIf(!ok)
 	return retval
