@@ -207,6 +207,17 @@ Options:
 -n {n} Head-count to print. Default 10.
 -h|--help Show this message.
 ================================================================
+Just a histogram. Input values < lo or > hi are not counted.
+Usage: mlr histogram [options]
+-f {a,b,c}    Value-field names for histogram counts
+--lo {lo}     Histogram low value
+--hi {hi}     Histogram high value
+--nbins {n}   Number of histogram bins
+--auto        Automatically computes limits, ignoring --lo and --hi.
+              Holds all values in memory before producing any output.
+-o {prefix}   Prefix for output field name. Default: no prefix.
+-h|--help Show this message.
+================================================================
 Usage: mlr join [options]
 Joins records from specified left file name with records from all file names
 at the end of the Miller argument list.
