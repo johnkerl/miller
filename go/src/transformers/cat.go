@@ -80,6 +80,7 @@ func transformerCatParseCLI(
 			transformerCatUsage(os.Stderr, true, 1)
 		}
 	}
+
 	transformer, _ := NewTransformerCat(
 		doCounters,
 		counterFieldName,

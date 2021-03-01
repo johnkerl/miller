@@ -92,7 +92,6 @@ rrv ./reg-test/cases/case-c-format-values.sh
 rrv ./reg-test/cases/case-c-fraction.sh
 rrv ./reg-test/cases/case-c-having-fields.sh
 rrv ./reg-test/cases/case-c-head-early-out.sh
-rrv ./reg-test/cases/case-c-histogram.sh
 rrv ./reg-test/cases/case-c-in-place-processing.sh
 rrv ./reg-test/cases/case-c-int-float-stats1-step1.sh
 rrv ./reg-test/cases/case-c-join-prepipe.sh

@@ -177,8 +177,6 @@ REMAINING VERBS:
 bar
 count-distinct
 format-values
-fraction
-histogram
 least-frequent
 most-frequent
 sec2gmtdate
@@ -523,3 +521,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * more copy-on-retain for concurrent pointer-mods
   o make a thorough audit, and warn everywhere
   o either do copy for all retainers, or treat inrecs as immutable ...
+  o 'this.recordsAndContexts.PushBack(inrecAndContext)' idiom needs copy everywhere ...
