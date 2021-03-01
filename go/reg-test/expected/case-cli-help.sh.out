@@ -42,6 +42,21 @@ It is an error to specify -k as well as -v -- to clean keys and values,
 leave off -k as well as -v.
 -h|--help Show this message.
 ================================================================
+Usage: mlr count-distinct [options]
+Prints number of records having distinct values for specified field names.
+Same as uniq -c.
+
+Options:
+-f {a,b,c}    Field names for distinct count.
+-n            Show only the number of distinct values. Not compatible with -u.
+-o {name}     Field name for output count. Default "count".
+              Ignored with -u.
+-u            Do unlashed counts for multiple field names. With -f a,b and
+              without -u, computes counts for distinct combinations of a
+              and b field values. With -f a,b and with -u, computes counts
+              for distinct a field values and counts for distinct b field
+              values separately.
+================================================================
 Usage: mlr count [options]
 Prints number of records, optionally grouped by distinct values for specified field names.
 Options:
@@ -611,6 +626,20 @@ Options:
 -f {a,b,c} Comma-separated list of field names to unflatten (default all).
 -s {string} Separator, defaulting to mlr --oflatsep value.
 -h|--help Show this message.
+================================================================
+Usage: mlr uniq [options]
+Prints distinct values for specified field names. With -c, same as
+count-distinct. For uniq, -f is a synonym for -g.
+
+Options:
+-g {d,e,f}    Group-by-field names for uniq counts.
+-c            Show repeat counts in addition to unique values.
+-n            Show only the number of distinct values.
+-o {name}     Field name for output count. Default "count".
+-a            Output each unique record only once. Incompatible with -g.
+              With -c, produces unique records, with repeat counts for each.
+              With -n, produces only one record which is the unique-record count.
+              With neither -c nor -n, produces unique records.
 ================================================================
 Usage: mlr unsparsify [options]
 Prints records with the union of field names over all input records.

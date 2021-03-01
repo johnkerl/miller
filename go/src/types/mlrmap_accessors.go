@@ -79,6 +79,11 @@ func (this *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 
 // ----------------------------------------------------------------
 func (this *Mlrmap) PrependCopy(key string, value *Mlrval) {
+	this.PrependReference(key, value.Copy())
+}
+
+// ----------------------------------------------------------------
+func (this *Mlrmap) PrependReference(key string, value *Mlrval) {
 	pe := this.findEntry(key)
 	if pe == nil {
 		pe = newMlrmapEntry(key, value)
@@ -96,7 +101,7 @@ func (this *Mlrmap) PrependCopy(key string, value *Mlrval) {
 		}
 		this.FieldCount++
 	} else {
-		pe.Value = value.Copy()
+		pe.Value = value
 	}
 }
 

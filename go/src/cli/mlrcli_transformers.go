@@ -16,6 +16,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.CatSetup,
 	transformers.CheckSetup,
 	transformers.CleanWhitespaceSetup,
+	transformers.CountDistinctSetup,
 	transformers.CountSetup,
 	transformers.CountSimilarSetup,
 	transformers.CutSetup,
@@ -55,6 +56,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.TailSetup,
 	transformers.TeeSetup,
 	transformers.UnflattenSetup,
+	transformers.UniqSetup,
 	transformers.UnsparsifySetup,
 }
 
