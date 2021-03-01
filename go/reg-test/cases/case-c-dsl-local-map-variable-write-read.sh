@@ -1,16 +1,16 @@
-run_mlr --from $indir/xyz345 put -v -a '
+run_mlr --from $indir/xyz345 put '
     $s = a;
     $t = b[$x];
     $u = c[$x][$y];
     $v = d[$x][$y][$z];
 '
 
-run_mlr --from $indir/xyz345 put -v -a '
+run_mlr --from $indir/xyz345 put '
     d[$x][$y][$z] = 9;
     $d = d[$x][$y][$z];
 '
 
-run_mlr --from $indir/xyz345 put -v -a '
+run_mlr --from $indir/xyz345 put '
     a = 6;
     b[$x] = 7;
     c[$x][$y] = 8;
@@ -22,7 +22,7 @@ run_mlr --from $indir/xyz345 put -v -a '
     $d = d[$x][$y][$z];
 '
 
-run_mlr --from $indir/xyz345 put -v -a '
+run_mlr --from $indir/xyz345 put '
     a = 6;
     b[$x] = 7;
     c[$x][$y] = 8;

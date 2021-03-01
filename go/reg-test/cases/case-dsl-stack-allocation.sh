@@ -1,11 +1,9 @@
 
 # This important test validates the local-stack allocator: which variables are
 # assigned which offsets in the stack, and how the local-extent contract is
-# satisfied by the clear-at-enter-subframe logic. The -v flag gives context on
-# the AST; the -a flag provides the essential output on variable placement; the
-# Miller script per se validates semantics.
+# satisfied by the clear-at-enter-subframe logic.
 
-run_mlr --from $indir/abixy put -v -a -f $indir/test-dsl-stack-allocation.mlr
+run_mlr --from $indir/abixy put -f $indir/test-dsl-stack-allocation.mlr
 
 # These test absent-null handing for as-yet-undefined localvars in expression RHSs.
 run_mlr --from $indir/abixy put 'a=a; $oa = a'
