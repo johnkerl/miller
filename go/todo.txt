@@ -175,13 +175,11 @@ emitp/emitf:
 REMAINING VERBS:
 
 bar
-count-distinct
 format-values
 least-frequent
 most-frequent
 sec2gmtdate
 top
-uniq
 
 nest
 reshape
@@ -248,26 +246,6 @@ GOCC UPSTREAMS:
 * support "abc" (not just 'a' 'b' 'c') in the lexer part
 
 ----------------------------------------------------------------
-<<<<<<< HEAD
-=======
-FLAME GRAPHS
-
-go get -u github.com/google/pprof
-ll ~/go/bin/pprof
-go get -u github.com/uber/go-torch
-
-cd ~/git
-mkdir brendangregg
-cd brendangregg
-git clone https://github.com/brendangregg/FlameGraph
-
-cd /path/to/mlr/go
-export PATH=${PATH}:~/git/brendangregg/FlameGraph/
-go-torch cpu.pprof
-mv torch.svg ~/Desktop/
-
-----------------------------------------------------------------
->>>>>>> cb2647ab... perf-debug [WIP]
 NITS/NON-IMMEDIATE:
 
 * "Miller: " prefixes on all errors.New
