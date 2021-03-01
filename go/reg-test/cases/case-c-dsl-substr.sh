@@ -3,9 +3,9 @@ run_mlr put -q '
   print "input= <<".$x.">>";
   for (i = -n-2; i <= n+2; i += 1) {
     for (j = -n-2; j <= n+2; j += 1) {
-      print "i: ".fmtnum(i,"%3lld")
-        ."   j:".fmtnum(j,"%3lld")
-        ."   substr(".$x.",".fmtnum(i,"%3lld").",".fmtnum(j,"%3lld")."): <<"
+      print "i: ".fmtnum(i,"%3d")
+        ."   j:".fmtnum(j,"%3d")
+        ."   substr(".$x.",".fmtnum(i,"%3d").",".fmtnum(j,"%3d")."): <<"
         .substr($x, i, j) .">>";
     }
     print;
