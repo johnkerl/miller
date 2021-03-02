@@ -1,9 +1,7 @@
 ================================================================
 TOP OF LIST:
 
-* audit
-  groupByFieldNames = cliutil.VerbGetStringArgOrDie
-  -> cliutil.VerbGetStringArrayArgOrDie
+* warnings: call them something else & make them fatal the process ...
 
 * regexes
   o finish stats1 -r

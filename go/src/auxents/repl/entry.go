@@ -55,9 +55,11 @@ Miller's grammar, to stdout.
 
 -D Like -d but with output all on one line.
 
-or, ny --icsv, --ojson, etc. reader/writer options as for the main Miller command line.
+-w Show warnings about uninitialized variables
 
 -h|--help Show this message.
+
+Or any --icsv, --ojson, etc. reader/writer options as for the main Miller command line.
 
 Any data-file names are opened just as if you had waited and typed :open {filenames}
 at the Miller REPL prompt.
@@ -74,6 +76,7 @@ func ReplMain(args []string) int {
 	argi := 2
 
 	astPrintMode := ASTPrintNone
+	doWarnings := false
 	options := cliutil.DefaultOptions()
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -92,6 +95,9 @@ func ReplMain(args []string) int {
 			argi++
 		} else if args[argi] == "-D" {
 			astPrintMode = ASTPrintParexOneLine
+			argi++
+		} else if args[argi] == "-w" {
+			doWarnings = true
 			argi++
 
 		} else if cliutil.ParseReaderWriterOptions(
@@ -116,6 +122,7 @@ func ReplMain(args []string) int {
 		exeName,
 		replName,
 		astPrintMode,
+		doWarnings,
 		&options,
 	)
 	if err != nil {

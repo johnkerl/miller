@@ -133,6 +133,7 @@ func transformerPutOrFilterParseCLI(
 	printASTMultiLine := false
 	printASTSingleLine := false
 	exitAfterParse := false
+	doWarnings := false
 	invertFilter := false
 	suppressOutputRecord := false
 	presets := make([]string, 0)
@@ -200,6 +201,8 @@ func transformerPutOrFilterParseCLI(
 			printASTSingleLine = true
 		} else if opt == "-X" {
 			exitAfterParse = true
+		} else if opt == "-w" {
+			doWarnings = true
 
 		} else if opt == "-S" {
 			// TODO: this is a no-op in Miller 6 and above.
@@ -247,6 +250,7 @@ func transformerPutOrFilterParseCLI(
 		printASTMultiLine,
 		printASTSingleLine,
 		exitAfterParse,
+		doWarnings,
 		invertFilter,
 		suppressOutputRecord,
 		recordWriterOptions,
@@ -279,6 +283,7 @@ func NewTransformerPut(
 	printASTMultiLine bool,
 	printASTSingleLine bool,
 	exitAfterParse bool,
+	doWarnings bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
 	recordWriterOptions *cliutil.TWriterOptions,
@@ -314,7 +319,7 @@ func NewTransformerPut(
 			os.Exit(0)
 		}
 
-		err = cstRootNode.IngestAST(astRootNode, isFilter, false) // TODO: split out methods ...
+		err = cstRootNode.IngestAST(astRootNode, isFilter, false, doWarnings) // TODO: split out methods ...
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return nil, err

@@ -59,6 +59,7 @@ func (this *RootNode) IngestAST(
 	// interactive REPL statements which are intended to be executed once
 	// (immediately) but not retained.
 	isReplImmediate bool,
+	doWarnings bool,
 ) error {
 	if ast.RootNode == nil {
 		return errors.New("Cannot build CST from nil AST root")
@@ -72,9 +73,11 @@ func (this *RootNode) IngestAST(
 		return err
 	}
 
-	err = WarnOnAST(ast)
-	if err != nil {
-		return err
+	if doWarnings {
+		err = WarnOnAST(ast)
+		if err != nil {
+			return err
+		}
 	}
 
 	err = this.buildMainPass(ast, isReplImmediate)

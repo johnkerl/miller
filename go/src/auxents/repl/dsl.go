@@ -27,16 +27,17 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *Repl) handleDSLStringImmediate(dslString string) error {
-	return this.handleDSLStringAux(dslString, true)
+func (this *Repl) handleDSLStringImmediate(dslString string, doWarnings bool) error {
+	return this.handleDSLStringAux(dslString, true, doWarnings)
 }
-func (this *Repl) handleDSLStringBulk(dslString string) error {
-	return this.handleDSLStringAux(dslString, false)
+func (this *Repl) handleDSLStringBulk(dslString string, doWarnings bool) error {
+	return this.handleDSLStringAux(dslString, false, doWarnings)
 }
 
 func (this *Repl) handleDSLStringAux(
 	dslString string,
 	isReplImmediate bool, // False for load-from-file or non-immediate multi-line; true otherwise
+	doWarnings bool,
 ) error {
 	if strings.TrimSpace(dslString) == "" {
 		return nil
@@ -59,6 +60,7 @@ func (this *Repl) handleDSLStringAux(
 		astRootNode,
 		false, /*isFilter*/
 		isReplImmediate,
+		doWarnings,
 	)
 	if err != nil {
 		return err
