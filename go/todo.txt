@@ -5,6 +5,10 @@ TOP OF LIST:
   o triple-for multi-middle case
   o substr/error cases C <-> Go
 
+* warnings
+  o rename & fatal
+  o :warn on / :warn off in REPL
+
 * regexes
   o finish stats1 -r
   o regex captures ...
