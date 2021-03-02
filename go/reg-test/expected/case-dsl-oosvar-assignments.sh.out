@@ -6,6 +6,7 @@ OOSVAR-FROM-SREC ASSIGNMENT
 mlr put -v @v     = $* /dev/null
 DSL EXPRESSION:
 @v     = $*
+
 AST:
 * statement block
     * assignment "="
@@ -16,6 +17,7 @@ AST:
 mlr put -v @v[1]  = $* /dev/null
 DSL EXPRESSION:
 @v[1]  = $*
+
 AST:
 * statement block
     * assignment "="
@@ -28,6 +30,7 @@ AST:
 mlr put -v @v[$2] = $* /dev/null
 DSL EXPRESSION:
 @v[$2] = $*
+
 AST:
 * statement block
     * assignment "="
@@ -40,6 +43,7 @@ AST:
 mlr put -v NR == 3 {@v     = $*} /dev/null
 DSL EXPRESSION:
 NR == 3 {@v     = $*}
+
 AST:
 * statement block
     * cond block
@@ -55,6 +59,7 @@ AST:
 mlr put -v NR == 3 {@v[1]  = $*} /dev/null
 DSL EXPRESSION:
 NR == 3 {@v[1]  = $*}
+
 AST:
 * statement block
     * cond block
@@ -72,6 +77,7 @@ AST:
 mlr put -v NR == 3 {@v[$2] = $*} /dev/null
 DSL EXPRESSION:
 NR == 3 {@v[$2] = $*}
+
 AST:
 * statement block
     * cond block
@@ -289,6 +295,7 @@ SREC-FROM-OOSVAR ASSIGNMENT
 mlr put -v $* = @v     /dev/null
 DSL EXPRESSION:
 $* = @v    
+
 AST:
 * statement block
     * assignment "="
@@ -299,6 +306,7 @@ AST:
 mlr put -v $* = @v[1]  /dev/null
 DSL EXPRESSION:
 $* = @v[1] 
+
 AST:
 * statement block
     * assignment "="
@@ -311,6 +319,7 @@ AST:
 mlr put -v $* = @v[$2] /dev/null
 DSL EXPRESSION:
 $* = @v[$2]
+
 AST:
 * statement block
     * assignment "="
@@ -323,6 +332,7 @@ AST:
 mlr put -v NR == 3 {$* = @v    } /dev/null
 DSL EXPRESSION:
 NR == 3 {$* = @v    }
+
 AST:
 * statement block
     * cond block
@@ -338,6 +348,7 @@ AST:
 mlr put -v NR == 3 {$* = @v[1] } /dev/null
 DSL EXPRESSION:
 NR == 3 {$* = @v[1] }
+
 AST:
 * statement block
     * cond block
@@ -355,6 +366,7 @@ AST:
 mlr put -v NR == 3 {$* = @v[$2]} /dev/null
 DSL EXPRESSION:
 NR == 3 {$* = @v[$2]}
+
 AST:
 * statement block
     * cond block
@@ -388,6 +400,7 @@ OOSVAR-FROM-OOSVAR ASSIGNMENT
 mlr put -v @u    = @v /dev/null
 DSL EXPRESSION:
 @u    = @v
+
 AST:
 * statement block
     * assignment "="
@@ -398,6 +411,7 @@ AST:
 mlr put -v @u    = @v[1] /dev/null
 DSL EXPRESSION:
 @u    = @v[1]
+
 AST:
 * statement block
     * assignment "="
@@ -410,6 +424,7 @@ AST:
 mlr put -v @u[2] = @v /dev/null
 DSL EXPRESSION:
 @u[2] = @v
+
 AST:
 * statement block
     * assignment "="
@@ -422,6 +437,7 @@ AST:
 mlr put -v @u[2] = @v[1] /dev/null
 DSL EXPRESSION:
 @u[2] = @v[1]
+
 AST:
 * statement block
     * assignment "="
@@ -436,6 +452,7 @@ AST:
 mlr put -v begin { @u    = @v } /dev/null
 DSL EXPRESSION:
 begin { @u    = @v }
+
 AST:
 * statement block
     * begin block
@@ -448,6 +465,7 @@ AST:
 mlr put -v begin { @u    = @v[1] } /dev/null
 DSL EXPRESSION:
 begin { @u    = @v[1] }
+
 AST:
 * statement block
     * begin block
@@ -462,6 +480,7 @@ AST:
 mlr put -v begin { @u[2] = @v } /dev/null
 DSL EXPRESSION:
 begin { @u[2] = @v }
+
 AST:
 * statement block
     * begin block
@@ -476,6 +495,7 @@ AST:
 mlr put -v begin { @u[2] = @v[1] } /dev/null
 DSL EXPRESSION:
 begin { @u[2] = @v[1] }
+
 AST:
 * statement block
     * begin block
@@ -492,6 +512,7 @@ AST:
 mlr put -v NR == 3 { @u    = @v } /dev/null
 DSL EXPRESSION:
 NR == 3 { @u    = @v }
+
 AST:
 * statement block
     * cond block
@@ -507,6 +528,7 @@ AST:
 mlr put -v NR == 3 { @u    = @v[1] } /dev/null
 DSL EXPRESSION:
 NR == 3 { @u    = @v[1] }
+
 AST:
 * statement block
     * cond block
@@ -524,6 +546,7 @@ AST:
 mlr put -v NR == 3 { @u[2] = @v } /dev/null
 DSL EXPRESSION:
 NR == 3 { @u[2] = @v }
+
 AST:
 * statement block
     * cond block
@@ -541,6 +564,7 @@ AST:
 mlr put -v NR == 3 { @u[2] = @v[1] } /dev/null
 DSL EXPRESSION:
 NR == 3 { @u[2] = @v[1] }
+
 AST:
 * statement block
     * cond block
@@ -560,6 +584,7 @@ AST:
 mlr put -v end { @u    = @v } /dev/null
 DSL EXPRESSION:
 end { @u    = @v }
+
 AST:
 * statement block
     * end block
@@ -572,6 +597,7 @@ AST:
 mlr put -v end { @u    = @v[1] } /dev/null
 DSL EXPRESSION:
 end { @u    = @v[1] }
+
 AST:
 * statement block
     * end block
@@ -586,6 +612,7 @@ AST:
 mlr put -v end { @u[2] = @v } /dev/null
 DSL EXPRESSION:
 end { @u[2] = @v }
+
 AST:
 * statement block
     * end block
@@ -600,6 +627,7 @@ AST:
 mlr put -v end { @u[2] = @v[1] } /dev/null
 DSL EXPRESSION:
 end { @u[2] = @v[1] }
+
 AST:
 * statement block
     * end block

@@ -2,6 +2,7 @@
 mlr -n put -v call s()
 DSL EXPRESSION:
 call s()
+
 AST:
 * statement block
     * subroutine callsite "s"
@@ -12,6 +13,7 @@ mlr -n put -v call s
 mlr -n put -v call s(1,2,3)
 DSL EXPRESSION:
 call s(1,2,3)
+
 AST:
 * statement block
     * subroutine callsite "s"
@@ -23,6 +25,7 @@ AST:
 mlr -n put -v subr s() {}
 DSL EXPRESSION:
 subr s() {}
+
 AST:
 * statement block
     * subroutine definition "s"
@@ -33,6 +36,7 @@ AST:
 mlr -n put -v subr s() {x=1}
 DSL EXPRESSION:
 subr s() {x=1}
+
 AST:
 * statement block
     * subroutine definition "s"
@@ -46,6 +50,7 @@ AST:
 mlr -n put -v subr s() {return}
 DSL EXPRESSION:
 subr s() {return}
+
 AST:
 * statement block
     * subroutine definition "s"
@@ -57,6 +62,7 @@ AST:
 mlr -n put -v subr s() {return 2}
 DSL EXPRESSION:
 subr s() {return 2}
+
 AST:
 * statement block
     * subroutine definition "s"
@@ -71,6 +77,7 @@ mlr -n put subr s()
 mlr -n put -v subr s() {}; call s()
 DSL EXPRESSION:
 subr s() {}; call s()
+
 AST:
 * statement block
     * subroutine definition "s"
@@ -82,6 +89,7 @@ AST:
 mlr -n put -v call s(); subr s() {}
 DSL EXPRESSION:
 call s(); subr s() {}
+
 AST:
 * statement block
     * subroutine callsite "s"
@@ -93,6 +101,7 @@ AST:
 mlr -n put -v subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
 DSL EXPRESSION:
 subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
+
 AST:
 * statement block
     * subroutine definition "s"
@@ -144,6 +153,7 @@ DSL EXPRESSION:
   }
   print s(NR);
   call s("WORLD");
+
 
 AST:
 * statement block

@@ -2,6 +2,7 @@
 mlr put -v $x = 1 || 2 || 3 /dev/null
 DSL EXPRESSION:
 $x = 1 || 2 || 3
+
 AST:
 * statement block
     * assignment "="
@@ -16,6 +17,7 @@ AST:
 mlr filter -v      1 || 2 || 3 /dev/null
 DSL EXPRESSION:
      1 || 2 || 3
+
 AST:
 * statement block
     * bare boolean
@@ -29,6 +31,7 @@ AST:
 mlr put -v $x = 1 ^^ 2 ^^ 3 /dev/null
 DSL EXPRESSION:
 $x = 1 ^^ 2 ^^ 3
+
 AST:
 * statement block
     * assignment "="
@@ -43,6 +46,7 @@ AST:
 mlr filter -v      1 ^^ 2 ^^ 3 /dev/null
 DSL EXPRESSION:
      1 ^^ 2 ^^ 3
+
 AST:
 * statement block
     * bare boolean
@@ -56,6 +60,7 @@ AST:
 mlr put -v $x = 1 && 2 && 3 /dev/null
 DSL EXPRESSION:
 $x = 1 && 2 && 3
+
 AST:
 * statement block
     * assignment "="
@@ -70,6 +75,7 @@ AST:
 mlr filter -v      1 && 2 && 3 /dev/null
 DSL EXPRESSION:
      1 && 2 && 3
+
 AST:
 * statement block
     * bare boolean
@@ -83,6 +89,7 @@ AST:
 mlr put -v $x = 1  == 2  == 3 /dev/null
 DSL EXPRESSION:
 $x = 1  == 2  == 3
+
 AST:
 * statement block
     * assignment "="
@@ -97,6 +104,7 @@ AST:
 mlr filter -v      1  == 2  == 3 /dev/null
 DSL EXPRESSION:
      1  == 2  == 3
+
 AST:
 * statement block
     * bare boolean
@@ -110,6 +118,7 @@ AST:
 mlr put -v $x = 1  != 2  != 3 /dev/null
 DSL EXPRESSION:
 $x = 1  != 2  != 3
+
 AST:
 * statement block
     * assignment "="
@@ -124,6 +133,7 @@ AST:
 mlr filter -v      1  != 2  != 3 /dev/null
 DSL EXPRESSION:
      1  != 2  != 3
+
 AST:
 * statement block
     * bare boolean
@@ -137,6 +147,7 @@ AST:
 mlr put -v $x = 1  =~ 2  =~ 3 /dev/null
 DSL EXPRESSION:
 $x = 1  =~ 2  =~ 3
+
 AST:
 * statement block
     * assignment "="
@@ -151,6 +162,7 @@ AST:
 mlr filter -v      1  =~ 2  =~ 3 /dev/null
 DSL EXPRESSION:
      1  =~ 2  =~ 3
+
 AST:
 * statement block
     * bare boolean
@@ -164,6 +176,7 @@ AST:
 mlr put -v $x = 1 !=~ 2 !=~ 3 /dev/null
 DSL EXPRESSION:
 $x = 1 !=~ 2 !=~ 3
+
 AST:
 * statement block
     * assignment "="
@@ -178,6 +191,7 @@ AST:
 mlr filter -v      1 !=~ 2 !=~ 3 /dev/null
 DSL EXPRESSION:
      1 !=~ 2 !=~ 3
+
 AST:
 * statement block
     * bare boolean
@@ -191,6 +205,7 @@ AST:
 mlr put -v $x = 1  == 2  != 3 /dev/null
 DSL EXPRESSION:
 $x = 1  == 2  != 3
+
 AST:
 * statement block
     * assignment "="
@@ -205,6 +220,7 @@ AST:
 mlr filter -v      1  == 2  != 3 /dev/null
 DSL EXPRESSION:
      1  == 2  != 3
+
 AST:
 * statement block
     * bare boolean
@@ -218,6 +234,7 @@ AST:
 mlr put -v $x = 1  != 2  == 3 /dev/null
 DSL EXPRESSION:
 $x = 1  != 2  == 3
+
 AST:
 * statement block
     * assignment "="
@@ -232,6 +249,7 @@ AST:
 mlr filter -v      1  != 2  == 3 /dev/null
 DSL EXPRESSION:
      1  != 2  == 3
+
 AST:
 * statement block
     * bare boolean
@@ -245,6 +263,7 @@ AST:
 mlr put -v $x = 1  <  2  <  3 /dev/null
 DSL EXPRESSION:
 $x = 1  <  2  <  3
+
 AST:
 * statement block
     * assignment "="
@@ -259,6 +278,7 @@ AST:
 mlr filter -v      1  <  2  <  3 /dev/null
 DSL EXPRESSION:
      1  <  2  <  3
+
 AST:
 * statement block
     * bare boolean
@@ -272,6 +292,7 @@ AST:
 mlr put -v $x = 1  <= 2  <= 3 /dev/null
 DSL EXPRESSION:
 $x = 1  <= 2  <= 3
+
 AST:
 * statement block
     * assignment "="
@@ -286,6 +307,7 @@ AST:
 mlr filter -v      1  <= 2  <= 3 /dev/null
 DSL EXPRESSION:
      1  <= 2  <= 3
+
 AST:
 * statement block
     * bare boolean
@@ -299,6 +321,7 @@ AST:
 mlr put -v $x = 1  >  2  >  3 /dev/null
 DSL EXPRESSION:
 $x = 1  >  2  >  3
+
 AST:
 * statement block
     * assignment "="
@@ -313,6 +336,7 @@ AST:
 mlr filter -v      1  >  2  >  3 /dev/null
 DSL EXPRESSION:
      1  >  2  >  3
+
 AST:
 * statement block
     * bare boolean
@@ -326,6 +350,7 @@ AST:
 mlr put -v $x = 1  >= 2  >= 3 /dev/null
 DSL EXPRESSION:
 $x = 1  >= 2  >= 3
+
 AST:
 * statement block
     * assignment "="
@@ -340,6 +365,7 @@ AST:
 mlr filter -v      1  >= 2  >= 3 /dev/null
 DSL EXPRESSION:
      1  >= 2  >= 3
+
 AST:
 * statement block
     * bare boolean
@@ -353,6 +379,7 @@ AST:
 mlr put -v $x = 1  <  2  <= 3 /dev/null
 DSL EXPRESSION:
 $x = 1  <  2  <= 3
+
 AST:
 * statement block
     * assignment "="
@@ -367,6 +394,7 @@ AST:
 mlr filter -v      1  <  2  <= 3 /dev/null
 DSL EXPRESSION:
      1  <  2  <= 3
+
 AST:
 * statement block
     * bare boolean
@@ -380,6 +408,7 @@ AST:
 mlr put -v $x = 1  <= 2  <  3 /dev/null
 DSL EXPRESSION:
 $x = 1  <= 2  <  3
+
 AST:
 * statement block
     * assignment "="
@@ -394,6 +423,7 @@ AST:
 mlr filter -v      1  <= 2  <  3 /dev/null
 DSL EXPRESSION:
      1  <= 2  <  3
+
 AST:
 * statement block
     * bare boolean
@@ -407,6 +437,7 @@ AST:
 mlr put -v $x = 1 |  2 |  3 /dev/null
 DSL EXPRESSION:
 $x = 1 |  2 |  3
+
 AST:
 * statement block
     * assignment "="
@@ -421,6 +452,7 @@ AST:
 mlr filter -v      1 |  2 |  3 /dev/null
 DSL EXPRESSION:
      1 |  2 |  3
+
 AST:
 * statement block
     * bare boolean
@@ -434,6 +466,7 @@ AST:
 mlr put -v $x = 1 ^  2 ^  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ^  2 ^  3
+
 AST:
 * statement block
     * assignment "="
@@ -448,6 +481,7 @@ AST:
 mlr filter -v      1 ^  2 ^  3 /dev/null
 DSL EXPRESSION:
      1 ^  2 ^  3
+
 AST:
 * statement block
     * bare boolean
@@ -461,6 +495,7 @@ AST:
 mlr put -v $x = 1 &  2 &  3 /dev/null
 DSL EXPRESSION:
 $x = 1 &  2 &  3
+
 AST:
 * statement block
     * assignment "="
@@ -475,6 +510,7 @@ AST:
 mlr filter -v      1 &  2 &  3 /dev/null
 DSL EXPRESSION:
      1 &  2 &  3
+
 AST:
 * statement block
     * bare boolean
@@ -488,6 +524,7 @@ AST:
 mlr put -v $x = 1 |  2 &  3 /dev/null
 DSL EXPRESSION:
 $x = 1 |  2 &  3
+
 AST:
 * statement block
     * assignment "="
@@ -502,6 +539,7 @@ AST:
 mlr filter -v      1 |  2 &  3 /dev/null
 DSL EXPRESSION:
      1 |  2 &  3
+
 AST:
 * statement block
     * bare boolean
@@ -515,6 +553,7 @@ AST:
 mlr put -v $x = 1 |  2 ^  3 /dev/null
 DSL EXPRESSION:
 $x = 1 |  2 ^  3
+
 AST:
 * statement block
     * assignment "="
@@ -529,6 +568,7 @@ AST:
 mlr filter -v      1 |  2 ^  3 /dev/null
 DSL EXPRESSION:
      1 |  2 ^  3
+
 AST:
 * statement block
     * bare boolean
@@ -542,6 +582,7 @@ AST:
 mlr put -v $x = 1 ^  2 |  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ^  2 |  3
+
 AST:
 * statement block
     * assignment "="
@@ -556,6 +597,7 @@ AST:
 mlr filter -v      1 ^  2 |  3 /dev/null
 DSL EXPRESSION:
      1 ^  2 |  3
+
 AST:
 * statement block
     * bare boolean
@@ -569,6 +611,7 @@ AST:
 mlr put -v $x = 1 ^  2 &  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ^  2 &  3
+
 AST:
 * statement block
     * assignment "="
@@ -583,6 +626,7 @@ AST:
 mlr filter -v      1 ^  2 &  3 /dev/null
 DSL EXPRESSION:
      1 ^  2 &  3
+
 AST:
 * statement block
     * bare boolean
@@ -596,6 +640,7 @@ AST:
 mlr put -v $x = 1 &  2 |  3 /dev/null
 DSL EXPRESSION:
 $x = 1 &  2 |  3
+
 AST:
 * statement block
     * assignment "="
@@ -610,6 +655,7 @@ AST:
 mlr filter -v      1 &  2 |  3 /dev/null
 DSL EXPRESSION:
      1 &  2 |  3
+
 AST:
 * statement block
     * bare boolean
@@ -623,6 +669,7 @@ AST:
 mlr put -v $x = 1 &  2 ^  3 /dev/null
 DSL EXPRESSION:
 $x = 1 &  2 ^  3
+
 AST:
 * statement block
     * assignment "="
@@ -637,6 +684,7 @@ AST:
 mlr filter -v      1 &  2 ^  3 /dev/null
 DSL EXPRESSION:
      1 &  2 ^  3
+
 AST:
 * statement block
     * bare boolean
@@ -650,6 +698,7 @@ AST:
 mlr put -v $x = 1  << 2  << 3 /dev/null
 DSL EXPRESSION:
 $x = 1  << 2  << 3
+
 AST:
 * statement block
     * assignment "="
@@ -664,6 +713,7 @@ AST:
 mlr filter -v      1  << 2  << 3 /dev/null
 DSL EXPRESSION:
      1  << 2  << 3
+
 AST:
 * statement block
     * bare boolean
@@ -677,6 +727,7 @@ AST:
 mlr put -v $x = 1  >> 2  >> 3 /dev/null
 DSL EXPRESSION:
 $x = 1  >> 2  >> 3
+
 AST:
 * statement block
     * assignment "="
@@ -691,6 +742,7 @@ AST:
 mlr filter -v      1  >> 2  >> 3 /dev/null
 DSL EXPRESSION:
      1  >> 2  >> 3
+
 AST:
 * statement block
     * bare boolean
@@ -704,6 +756,7 @@ AST:
 mlr put -v $x = 1  << 2  >> 3 /dev/null
 DSL EXPRESSION:
 $x = 1  << 2  >> 3
+
 AST:
 * statement block
     * assignment "="
@@ -718,6 +771,7 @@ AST:
 mlr filter -v      1  << 2  >> 3 /dev/null
 DSL EXPRESSION:
      1  << 2  >> 3
+
 AST:
 * statement block
     * bare boolean
@@ -731,6 +785,7 @@ AST:
 mlr put -v $x = 1  >> 2  << 3 /dev/null
 DSL EXPRESSION:
 $x = 1  >> 2  << 3
+
 AST:
 * statement block
     * assignment "="
@@ -745,6 +800,7 @@ AST:
 mlr filter -v      1  >> 2  << 3 /dev/null
 DSL EXPRESSION:
      1  >> 2  << 3
+
 AST:
 * statement block
     * bare boolean
@@ -758,6 +814,7 @@ AST:
 mlr put -v $x = 1 + 2 + 3 /dev/null
 DSL EXPRESSION:
 $x = 1 + 2 + 3
+
 AST:
 * statement block
     * assignment "="
@@ -772,6 +829,7 @@ AST:
 mlr filter -v      1 + 2 + 3 /dev/null
 DSL EXPRESSION:
      1 + 2 + 3
+
 AST:
 * statement block
     * bare boolean
@@ -785,6 +843,7 @@ AST:
 mlr put -v $x = 1 - 2 - 3 /dev/null
 DSL EXPRESSION:
 $x = 1 - 2 - 3
+
 AST:
 * statement block
     * assignment "="
@@ -799,6 +858,7 @@ AST:
 mlr filter -v      1 - 2 - 3 /dev/null
 DSL EXPRESSION:
      1 - 2 - 3
+
 AST:
 * statement block
     * bare boolean
@@ -812,6 +872,7 @@ AST:
 mlr put -v $x = 1 + 2 - 3 /dev/null
 DSL EXPRESSION:
 $x = 1 + 2 - 3
+
 AST:
 * statement block
     * assignment "="
@@ -826,6 +887,7 @@ AST:
 mlr filter -v      1 + 2 - 3 /dev/null
 DSL EXPRESSION:
      1 + 2 - 3
+
 AST:
 * statement block
     * bare boolean
@@ -839,6 +901,7 @@ AST:
 mlr put -v $x = 1 - 2 + 3 /dev/null
 DSL EXPRESSION:
 $x = 1 - 2 + 3
+
 AST:
 * statement block
     * assignment "="
@@ -853,6 +916,7 @@ AST:
 mlr filter -v      1 - 2 + 3 /dev/null
 DSL EXPRESSION:
      1 - 2 + 3
+
 AST:
 * statement block
     * bare boolean
@@ -866,6 +930,7 @@ AST:
 mlr put -v $x = 1 . 2 . 3 /dev/null
 DSL EXPRESSION:
 $x = 1 . 2 . 3
+
 AST:
 * statement block
     * assignment "="
@@ -880,6 +945,7 @@ AST:
 mlr filter -v      1 . 2 . 3 /dev/null
 DSL EXPRESSION:
      1 . 2 . 3
+
 AST:
 * statement block
     * bare boolean
@@ -893,6 +959,7 @@ AST:
 mlr put -v $x = 1 * 2 * 3 /dev/null
 DSL EXPRESSION:
 $x = 1 * 2 * 3
+
 AST:
 * statement block
     * assignment "="
@@ -907,6 +974,7 @@ AST:
 mlr filter -v      1 * 2 * 3 /dev/null
 DSL EXPRESSION:
      1 * 2 * 3
+
 AST:
 * statement block
     * bare boolean
@@ -920,6 +988,7 @@ AST:
 mlr put -v $x = 1 / 2 / 3 /dev/null
 DSL EXPRESSION:
 $x = 1 / 2 / 3
+
 AST:
 * statement block
     * assignment "="
@@ -934,6 +1003,7 @@ AST:
 mlr filter -v      1 / 2 / 3 /dev/null
 DSL EXPRESSION:
      1 / 2 / 3
+
 AST:
 * statement block
     * bare boolean
@@ -947,6 +1017,7 @@ AST:
 mlr put -v $x = 1 // 2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 // 3
+
 AST:
 * statement block
     * assignment "="
@@ -961,6 +1032,7 @@ AST:
 mlr filter -v      1 // 2 // 3 /dev/null
 DSL EXPRESSION:
      1 // 2 // 3
+
 AST:
 * statement block
     * bare boolean
@@ -974,6 +1046,7 @@ AST:
 mlr put -v $x = 1 % 2 % 3 /dev/null
 DSL EXPRESSION:
 $x = 1 % 2 % 3
+
 AST:
 * statement block
     * assignment "="
@@ -988,6 +1061,7 @@ AST:
 mlr filter -v      1 % 2 % 3 /dev/null
 DSL EXPRESSION:
      1 % 2 % 3
+
 AST:
 * statement block
     * bare boolean
@@ -1001,6 +1075,7 @@ AST:
 mlr put -v $x = 1 ** 2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 ** 3
+
 AST:
 * statement block
     * assignment "="
@@ -1015,6 +1090,7 @@ AST:
 mlr filter -v      1 ** 2 ** 3 /dev/null
 DSL EXPRESSION:
      1 ** 2 ** 3
+
 AST:
 * statement block
     * bare boolean
@@ -1028,6 +1104,7 @@ AST:
 mlr put -v $x = 1 *  2 /  3 /dev/null
 DSL EXPRESSION:
 $x = 1 *  2 /  3
+
 AST:
 * statement block
     * assignment "="
@@ -1042,6 +1119,7 @@ AST:
 mlr filter -v      1 *  2 /  3 /dev/null
 DSL EXPRESSION:
      1 *  2 /  3
+
 AST:
 * statement block
     * bare boolean
@@ -1055,6 +1133,7 @@ AST:
 mlr put -v $x = 1 *  2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 *  2 // 3
+
 AST:
 * statement block
     * assignment "="
@@ -1069,6 +1148,7 @@ AST:
 mlr filter -v      1 *  2 // 3 /dev/null
 DSL EXPRESSION:
      1 *  2 // 3
+
 AST:
 * statement block
     * bare boolean
@@ -1082,6 +1162,7 @@ AST:
 mlr put -v $x = 1 *  2 %  3 /dev/null
 DSL EXPRESSION:
 $x = 1 *  2 %  3
+
 AST:
 * statement block
     * assignment "="
@@ -1096,6 +1177,7 @@ AST:
 mlr filter -v      1 *  2 %  3 /dev/null
 DSL EXPRESSION:
      1 *  2 %  3
+
 AST:
 * statement block
     * bare boolean
@@ -1109,6 +1191,7 @@ AST:
 mlr put -v $x = 1 *  2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 *  2 ** 3
+
 AST:
 * statement block
     * assignment "="
@@ -1123,6 +1206,7 @@ AST:
 mlr filter -v      1 *  2 ** 3 /dev/null
 DSL EXPRESSION:
      1 *  2 ** 3
+
 AST:
 * statement block
     * bare boolean
@@ -1136,6 +1220,7 @@ AST:
 mlr put -v $x = 1 /  2 *  3 /dev/null
 DSL EXPRESSION:
 $x = 1 /  2 *  3
+
 AST:
 * statement block
     * assignment "="
@@ -1150,6 +1235,7 @@ AST:
 mlr filter -v      1 /  2 *  3 /dev/null
 DSL EXPRESSION:
      1 /  2 *  3
+
 AST:
 * statement block
     * bare boolean
@@ -1163,6 +1249,7 @@ AST:
 mlr put -v $x = 1 /  2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 /  2 // 3
+
 AST:
 * statement block
     * assignment "="
@@ -1177,6 +1264,7 @@ AST:
 mlr filter -v      1 /  2 // 3 /dev/null
 DSL EXPRESSION:
      1 /  2 // 3
+
 AST:
 * statement block
     * bare boolean
@@ -1190,6 +1278,7 @@ AST:
 mlr put -v $x = 1 /  2 %  3 /dev/null
 DSL EXPRESSION:
 $x = 1 /  2 %  3
+
 AST:
 * statement block
     * assignment "="
@@ -1204,6 +1293,7 @@ AST:
 mlr filter -v      1 /  2 %  3 /dev/null
 DSL EXPRESSION:
      1 /  2 %  3
+
 AST:
 * statement block
     * bare boolean
@@ -1217,6 +1307,7 @@ AST:
 mlr put -v $x = 1 /  2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 /  2 ** 3
+
 AST:
 * statement block
     * assignment "="
@@ -1231,6 +1322,7 @@ AST:
 mlr filter -v      1 /  2 ** 3 /dev/null
 DSL EXPRESSION:
      1 /  2 ** 3
+
 AST:
 * statement block
     * bare boolean
@@ -1244,6 +1336,7 @@ AST:
 mlr put -v $x = 1 // 2 *  3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 *  3
+
 AST:
 * statement block
     * assignment "="
@@ -1258,6 +1351,7 @@ AST:
 mlr filter -v      1 // 2 *  3 /dev/null
 DSL EXPRESSION:
      1 // 2 *  3
+
 AST:
 * statement block
     * bare boolean
@@ -1271,6 +1365,7 @@ AST:
 mlr put -v $x = 1 // 2 /  3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 /  3
+
 AST:
 * statement block
     * assignment "="
@@ -1285,6 +1380,7 @@ AST:
 mlr filter -v      1 // 2 /  3 /dev/null
 DSL EXPRESSION:
      1 // 2 /  3
+
 AST:
 * statement block
     * bare boolean
@@ -1298,6 +1394,7 @@ AST:
 mlr put -v $x = 1 // 2 %  3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 %  3
+
 AST:
 * statement block
     * assignment "="
@@ -1312,6 +1409,7 @@ AST:
 mlr filter -v      1 // 2 %  3 /dev/null
 DSL EXPRESSION:
      1 // 2 %  3
+
 AST:
 * statement block
     * bare boolean
@@ -1325,6 +1423,7 @@ AST:
 mlr put -v $x = 1 // 2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 // 2 ** 3
+
 AST:
 * statement block
     * assignment "="
@@ -1339,6 +1438,7 @@ AST:
 mlr filter -v      1 // 2 ** 3 /dev/null
 DSL EXPRESSION:
      1 // 2 ** 3
+
 AST:
 * statement block
     * bare boolean
@@ -1352,6 +1452,7 @@ AST:
 mlr put -v $x = 1 %  2 *  3 /dev/null
 DSL EXPRESSION:
 $x = 1 %  2 *  3
+
 AST:
 * statement block
     * assignment "="
@@ -1366,6 +1467,7 @@ AST:
 mlr filter -v      1 %  2 *  3 /dev/null
 DSL EXPRESSION:
      1 %  2 *  3
+
 AST:
 * statement block
     * bare boolean
@@ -1379,6 +1481,7 @@ AST:
 mlr put -v $x = 1 %  2 /  3 /dev/null
 DSL EXPRESSION:
 $x = 1 %  2 /  3
+
 AST:
 * statement block
     * assignment "="
@@ -1393,6 +1496,7 @@ AST:
 mlr filter -v      1 %  2 /  3 /dev/null
 DSL EXPRESSION:
      1 %  2 /  3
+
 AST:
 * statement block
     * bare boolean
@@ -1406,6 +1510,7 @@ AST:
 mlr put -v $x = 1 %  2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 %  2 // 3
+
 AST:
 * statement block
     * assignment "="
@@ -1420,6 +1525,7 @@ AST:
 mlr filter -v      1 %  2 // 3 /dev/null
 DSL EXPRESSION:
      1 %  2 // 3
+
 AST:
 * statement block
     * bare boolean
@@ -1433,6 +1539,7 @@ AST:
 mlr put -v $x = 1 %  2 ** 3 /dev/null
 DSL EXPRESSION:
 $x = 1 %  2 ** 3
+
 AST:
 * statement block
     * assignment "="
@@ -1447,6 +1554,7 @@ AST:
 mlr filter -v      1 %  2 ** 3 /dev/null
 DSL EXPRESSION:
      1 %  2 ** 3
+
 AST:
 * statement block
     * bare boolean
@@ -1460,6 +1568,7 @@ AST:
 mlr put -v $x = 1 ** 2 *  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 *  3
+
 AST:
 * statement block
     * assignment "="
@@ -1474,6 +1583,7 @@ AST:
 mlr filter -v      1 ** 2 *  3 /dev/null
 DSL EXPRESSION:
      1 ** 2 *  3
+
 AST:
 * statement block
     * bare boolean
@@ -1487,6 +1597,7 @@ AST:
 mlr put -v $x = 1 ** 2 /  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 /  3
+
 AST:
 * statement block
     * assignment "="
@@ -1501,6 +1612,7 @@ AST:
 mlr filter -v      1 ** 2 /  3 /dev/null
 DSL EXPRESSION:
      1 ** 2 /  3
+
 AST:
 * statement block
     * bare boolean
@@ -1514,6 +1626,7 @@ AST:
 mlr put -v $x = 1 ** 2 // 3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 // 3
+
 AST:
 * statement block
     * assignment "="
@@ -1528,6 +1641,7 @@ AST:
 mlr filter -v      1 ** 2 // 3 /dev/null
 DSL EXPRESSION:
      1 ** 2 // 3
+
 AST:
 * statement block
     * bare boolean
@@ -1541,6 +1655,7 @@ AST:
 mlr put -v $x = 1 ** 2 %  3 /dev/null
 DSL EXPRESSION:
 $x = 1 ** 2 %  3
+
 AST:
 * statement block
     * assignment "="
@@ -1555,6 +1670,7 @@ AST:
 mlr filter -v      1 ** 2 %  3 /dev/null
 DSL EXPRESSION:
      1 ** 2 %  3
+
 AST:
 * statement block
     * bare boolean
@@ -1568,6 +1684,7 @@ AST:
 mlr put -v $x = ++1 /dev/null
 DSL EXPRESSION:
 $x = ++1
+
 AST:
 * statement block
     * assignment "="
@@ -1580,6 +1697,7 @@ AST:
 mlr filter -v      ++1 /dev/null
 DSL EXPRESSION:
      ++1
+
 AST:
 * statement block
     * bare boolean
@@ -1591,6 +1709,7 @@ AST:
 mlr put -v $x = --1 /dev/null
 DSL EXPRESSION:
 $x = --1
+
 AST:
 * statement block
     * assignment "="
@@ -1603,6 +1722,7 @@ AST:
 mlr filter -v      --1 /dev/null
 DSL EXPRESSION:
      --1
+
 AST:
 * statement block
     * bare boolean
@@ -1614,6 +1734,7 @@ AST:
 mlr put -v $x = !!1 /dev/null
 DSL EXPRESSION:
 $x = !!1
+
 AST:
 * statement block
     * assignment "="
@@ -1626,6 +1747,7 @@ AST:
 mlr filter -v      !!1 /dev/null
 DSL EXPRESSION:
      !!1
+
 AST:
 * statement block
     * bare boolean
@@ -1637,6 +1759,7 @@ AST:
 mlr put -v $x = ~~1 /dev/null
 DSL EXPRESSION:
 $x = ~~1
+
 AST:
 * statement block
     * assignment "="
@@ -1649,6 +1772,7 @@ AST:
 mlr filter -v      ~~1 /dev/null
 DSL EXPRESSION:
      ~~1
+
 AST:
 * statement block
     * bare boolean
@@ -1660,6 +1784,7 @@ AST:
 mlr put -v $x = 1 ? 2 : 3 /dev/null
 DSL EXPRESSION:
 $x = 1 ? 2 : 3
+
 AST:
 * statement block
     * assignment "="
@@ -1673,6 +1798,7 @@ AST:
 mlr filter -v      1 ? 2 : 3 /dev/null
 DSL EXPRESSION:
      1 ? 2 : 3
+
 AST:
 * statement block
     * bare boolean
@@ -1685,6 +1811,7 @@ AST:
 mlr put -v $x = 1 ? 2 ? 3 : 4 : 5 /dev/null
 DSL EXPRESSION:
 $x = 1 ? 2 ? 3 : 4 : 5
+
 AST:
 * statement block
     * assignment "="
@@ -1701,6 +1828,7 @@ AST:
 mlr filter -v      1 ? 2 ? 3 : 4 : 5 /dev/null
 DSL EXPRESSION:
      1 ? 2 ? 3 : 4 : 5
+
 AST:
 * statement block
     * bare boolean
@@ -1716,6 +1844,7 @@ AST:
 mlr put -v $x = 1 ? 2 : 3 ? 4 : 5 /dev/null
 DSL EXPRESSION:
 $x = 1 ? 2 : 3 ? 4 : 5
+
 AST:
 * statement block
     * assignment "="
@@ -1732,6 +1861,7 @@ AST:
 mlr filter -v      1 ? 2 : 3 ? 4 : 5 /dev/null
 DSL EXPRESSION:
      1 ? 2 : 3 ? 4 : 5
+
 AST:
 * statement block
     * bare boolean

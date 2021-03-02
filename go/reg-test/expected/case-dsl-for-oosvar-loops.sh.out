@@ -22,6 +22,7 @@ DSL EXPRESSION:
     emit @n, "a", "b", "c", "d"
   }
 
+
 AST:
 * statement block
     * assignment "="
@@ -265,6 +266,7 @@ mean  hat dog 0.47582364658050663
 mlr -n put -v for (k, k in $*) {}
 DSL EXPRESSION:
 for (k, k in $*) {}
+
 AST:
 * statement block
     * double-variable for-loop "for"
@@ -277,6 +279,7 @@ AST:
 mlr -n put -v for (k, k in @*) {}
 DSL EXPRESSION:
 for (k, k in @*) {}
+
 AST:
 * statement block
     * double-variable for-loop "for"
@@ -289,6 +292,7 @@ AST:
 mlr -n put -v for ((a,a), c in @*) {}
 DSL EXPRESSION:
 for ((a,a), c in @*) {}
+
 AST:
 * statement block
     * multi-variable for-loop "for"
@@ -303,6 +307,7 @@ AST:
 mlr -n put -v for ((a,b), a in @*) {}
 DSL EXPRESSION:
 for ((a,b), a in @*) {}
+
 AST:
 * statement block
     * multi-variable for-loop "for"
@@ -317,6 +322,7 @@ AST:
 mlr -n put -v for ((a,b), b in @*) {}
 DSL EXPRESSION:
 for ((a,b), b in @*) {}
+
 AST:
 * statement block
     * multi-variable for-loop "for"
@@ -331,6 +337,7 @@ AST:
 mlr -n put -v for ((a,a,c), d in @*) {}
 DSL EXPRESSION:
 for ((a,a,c), d in @*) {}
+
 AST:
 * statement block
     * multi-variable for-loop "for"
@@ -346,6 +353,7 @@ AST:
 mlr -n put -v for ((a,b,a), d in @*) {}
 DSL EXPRESSION:
 for ((a,b,a), d in @*) {}
+
 AST:
 * statement block
     * multi-variable for-loop "for"
@@ -361,6 +369,7 @@ AST:
 mlr -n put -v for ((a,b,c), a in @*) {}
 DSL EXPRESSION:
 for ((a,b,c), a in @*) {}
+
 AST:
 * statement block
     * multi-variable for-loop "for"
@@ -376,6 +385,7 @@ AST:
 mlr -n put -v for ((a,b,b), d in @*) {}
 DSL EXPRESSION:
 for ((a,b,b), d in @*) {}
+
 AST:
 * statement block
     * multi-variable for-loop "for"
@@ -391,6 +401,7 @@ AST:
 mlr -n put -v for ((a,b,c), b in @*) {}
 DSL EXPRESSION:
 for ((a,b,c), b in @*) {}
+
 AST:
 * statement block
     * multi-variable for-loop "for"
@@ -406,6 +417,7 @@ AST:
 mlr -n put -v for ((a,b,c), c in @*) {}
 DSL EXPRESSION:
 for ((a,b,c), c in @*) {}
+
 AST:
 * statement block
     * multi-variable for-loop "for"
