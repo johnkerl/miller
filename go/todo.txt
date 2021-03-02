@@ -39,10 +39,6 @@ TOP OF LIST:
 
 * fixed-width pprint input-scanner
 
-* uninit-var mode w/ put/filter -w
-  o retval from parameter-node for func/subr
-  o make optional with -w
-
 * commenting passes ...
 
 * help-refactor:
