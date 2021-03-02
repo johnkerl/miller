@@ -52,6 +52,7 @@ mention() {
 
 # ================================================================
 
-run_mlr --oxtab fraction -f x,y -g a -p -c ./reg-test/input/abixy-het
+mlr --from ./reg-test/input/abixy put '@o[1][2][3] = 7; for(k1,v in @o[1][2]) {$x+=10;$y+=100}'
+mlr --from ./reg-test/input/xyz2 put -q 'map o = @o; dump o'
 
 # ================================================================
