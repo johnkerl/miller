@@ -72,6 +72,11 @@ func (this *RootNode) IngestAST(
 		return err
 	}
 
+	err = WarnOnAST(ast)
+	if err != nil {
+		return err
+	}
+
 	err = this.buildMainPass(ast, isReplImmediate)
 	if err != nil {
 		return err
