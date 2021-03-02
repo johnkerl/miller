@@ -141,14 +141,20 @@ semicolons to separate expressions.)
 -q Does not include the modified record in the output stream.
    Useful for when all desired output is in begin and/or end blocks.
 
--v Prints the expressions's AST (abstract syntax tree), which gives
+-p Prints the expressions's AST (abstract syntax tree), which gives
    full transparency on the precedence and associativity rules of
    Miller's grammar, to stdout.
 
--d Like -v but uses a parenthesized-expression format for the AST. Then, exits without
-   stream processing.
+-d Like -p but uses a parenthesized-expression format for the AST.
 
 -D Like -d but with output all on one line.
+
+-E Echo DSL expression before printing parse-tree
+
+-v Same as -E -p.
+
+-X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
+   only want to look at parser information.
 
 -S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
    by the record-readers before filter/put is executed. Supported as no-op pass-through
@@ -351,14 +357,20 @@ semicolons to separate expressions.)
 -q Does not include the modified record in the output stream.
    Useful for when all desired output is in begin and/or end blocks.
 
--v Prints the expressions's AST (abstract syntax tree), which gives
+-p Prints the expressions's AST (abstract syntax tree), which gives
    full transparency on the precedence and associativity rules of
    Miller's grammar, to stdout.
 
--d Like -v but uses a parenthesized-expression format for the AST. Then, exits without
-   stream processing.
+-d Like -p but uses a parenthesized-expression format for the AST.
 
 -D Like -d but with output all on one line.
+
+-E Echo DSL expression before printing parse-tree
+
+-v Same as -E -p.
+
+-X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
+   only want to look at parser information.
 
 -S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
    by the record-readers before filter/put is executed. Supported as no-op pass-through

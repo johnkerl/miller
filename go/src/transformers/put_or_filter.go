@@ -86,14 +86,20 @@ semicolons to separate expressions.)
 -q Does not include the modified record in the output stream.
    Useful for when all desired output is in begin and/or end blocks.
 
--v Prints the expressions's AST (abstract syntax tree), which gives
+-p Prints the expressions's AST (abstract syntax tree), which gives
    full transparency on the precedence and associativity rules of
    Miller's grammar, to stdout.
 
--d Like -v but uses a parenthesized-expression format for the AST. Then, exits without
-   stream processing.
+-d Like -p but uses a parenthesized-expression format for the AST.
 
 -D Like -d but with output all on one line.
+
+-E Echo DSL expression before printing parse-tree
+
+-v Same as -E -p.
+
+-X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
+   only want to look at parser information.
 
 -S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
    by the record-readers before filter/put is executed. Supported as no-op pass-through
@@ -106,11 +112,6 @@ semicolons to separate expressions.)
 		os.Exit(exitCode)
 	}
 }
-
-//		} else if args[argi] == "-d" {
-//		} else if args[argi] == "-D" {
-//		} else if args[argi] == "-S" {
-//		} else if args[argi] == "-F" {
 
 // ----------------------------------------------------------------
 func transformerPutOrFilterParseCLI(
@@ -127,9 +128,11 @@ func transformerPutOrFilterParseCLI(
 	argi++
 
 	var dslStrings []string = make([]string, 0)
-	verbose := false
-	printASTOnly := false
+	echoDSLString := false
+	printASTAsTree := false
+	printASTMultiLine := false
 	printASTSingleLine := false
+	exitAfterParse := false
 	invertFilter := false
 	suppressOutputRecord := false
 	presets := make([]string, 0)
@@ -184,18 +187,19 @@ func transformerPutOrFilterParseCLI(
 		} else if opt == "-q" {
 			suppressOutputRecord = true
 
-		} else if opt == "-d" {
-			// TODO: move these to mlr auxents?
-			printASTOnly = true
-			printASTSingleLine = false
-
-		} else if opt == "-D" {
-			// TODO: move these to mlr auxents?
-			printASTOnly = true
-			printASTSingleLine = true
-
+		} else if opt == "-E" {
+			echoDSLString = true
+		} else if opt == "-p" {
+			printASTAsTree = true
 		} else if opt == "-v" {
-			verbose = true
+			echoDSLString = true
+			printASTAsTree = true
+		} else if opt == "-d" {
+			printASTMultiLine = true
+		} else if opt == "-D" {
+			printASTSingleLine = true
+		} else if opt == "-X" {
+			exitAfterParse = true
 
 		} else if opt == "-S" {
 			// TODO: this is a no-op in Miller 6 and above.
@@ -233,29 +237,16 @@ func transformerPutOrFilterParseCLI(
 		argi++
 	}
 
-	if printASTOnly {
-		for _, dslString := range dslStrings {
-			astRootNode, err := BuildASTFromStringWithMessage(dslString, false)
-			if err == nil {
-				if printASTSingleLine {
-					astRootNode.PrintParexOneLine()
-				} else {
-					astRootNode.PrintParex()
-				}
-				os.Exit(0)
-			} else {
-				// error message already printed out
-				os.Exit(1)
-			}
-		}
-	}
-
 	isFilter := verb == "filter"
 	transformer, err := NewTransformerPut(
 		dslStrings,
 		isFilter,
 		presets,
-		verbose,
+		echoDSLString,
+		printASTAsTree,
+		printASTMultiLine,
+		printASTSingleLine,
+		exitAfterParse,
 		invertFilter,
 		suppressOutputRecord,
 		recordWriterOptions,
@@ -283,7 +274,11 @@ func NewTransformerPut(
 	dslStrings []string,
 	isFilter bool,
 	presets []string,
-	verbose bool,
+	echoDSLString bool,
+	printASTAsTree bool,
+	printASTMultiLine bool,
+	printASTSingleLine bool,
+	exitAfterParse bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
 	recordWriterOptions *cliutil.TWriterOptions,
@@ -292,18 +287,31 @@ func NewTransformerPut(
 	cstRootNode := cst.NewEmptyRoot(recordWriterOptions)
 
 	for _, dslString := range dslStrings {
-		astRootNode, err := BuildASTFromStringWithMessage(dslString, verbose)
+		astRootNode, err := BuildASTFromStringWithMessage(dslString)
 		if err != nil {
 			// Error message already printed out
 			return nil, err
 		}
 
-		if verbose {
+		if echoDSLString {
 			fmt.Println("DSL EXPRESSION:")
 			fmt.Println(dslString)
+		}
+		if printASTAsTree {
 			fmt.Println("AST:")
 			astRootNode.Print()
 			fmt.Println()
+		}
+		if printASTMultiLine {
+			astRootNode.PrintParex()
+			fmt.Println()
+		}
+		if printASTSingleLine {
+			astRootNode.PrintParexOneLine()
+			fmt.Println()
+		}
+		if exitAfterParse {
+			os.Exit(0)
 		}
 
 		err = cstRootNode.IngestAST(astRootNode, isFilter, false) // TODO: split out methods ...
@@ -353,7 +361,7 @@ func NewTransformerPut(
 	}, nil
 }
 
-func BuildASTFromStringWithMessage(dslString string, verbose bool) (*dsl.AST, error) {
+func BuildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
 	astRootNode, err := BuildASTFromString(dslString)
 	if err != nil {
 		// Leave this out until we get better control over the error-messaging.
@@ -361,9 +369,6 @@ func BuildASTFromStringWithMessage(dslString string, verbose bool) (*dsl.AST, er
 		// fmt.Fprintln(os.Stderr, err)
 		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
 			lib.MlrExeName())
-		if verbose {
-			fmt.Fprintln(os.Stderr, dslString)
-		}
 		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	} else {
