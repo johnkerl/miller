@@ -1,9 +1,10 @@
 ================================================================
 TOP OF LIST:
 
-* audit
-  groupByFieldNames = cliutil.VerbGetStringArgOrDie
-  -> cliutil.VerbGetStringArrayArgOrDie
+! ut:
+  o triple-for multi-middle case
+  o substr/error cases C <-> Go
+  o put ' func f(x): int { } $y=f($i)' doesn't trigger
 
 * regexes
   o finish stats1 -r

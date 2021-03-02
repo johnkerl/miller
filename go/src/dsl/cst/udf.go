@@ -147,11 +147,21 @@ func (this *UDFCallsite) Evaluate(
 	// being MT_ERROR should be mapped to MT_ERROR here (nominally,
 	// data-dependent). But error-return could be something not data-dependent.
 	if err != nil {
+		err = this.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ERROR)
+		if err != nil {
+			fmt.Fprint(os.Stderr, err)
+			os.Exit(1)
+		}
 		return types.MLRVAL_ERROR
 	}
 
 	// Fell off end of function with no return
 	if blockExitPayload == nil {
+		err = this.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
+		if err != nil {
+			fmt.Fprint(os.Stderr, err)
+			os.Exit(1)
+		}
 		return types.MLRVAL_ABSENT
 	}
 
@@ -159,6 +169,11 @@ func (this *UDFCallsite) Evaluate(
 	// continue not in a loop, or return-void, both of which should have been
 	// reported as syntax errors during the parsing pass.
 	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
+		err = this.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
+		if err != nil {
+			fmt.Fprint(os.Stderr, err)
+			os.Exit(1)
+		}
 		return types.MLRVAL_ABSENT
 	}
 
@@ -169,13 +184,9 @@ func (this *UDFCallsite) Evaluate(
 	err = this.udf.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
 	if err != nil {
 		// TODO: put error-return in the Evaluate API
-		fmt.Fprint(
-			os.Stderr,
-			err,
-		)
+		fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
 	}
-
 	return blockExitPayload.blockReturnValue.Copy()
 }
 

@@ -12,7 +12,6 @@ x=3,y=4,z=5
 x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put @a = 1; $* = @a
-Exit status was 1; expected 0.
 
 mlr --from ./reg-test/input/xyz2 put @b[1] = 2; $* = @b
 1=2
@@ -35,7 +34,6 @@ c.1.2=3
 c.1.2=3
 
 mlr --from ./reg-test/input/xyz2 put a = 1; $* = a
-Exit status was 1; expected 0.
 
 mlr --from ./reg-test/input/xyz2 put b[1] = 2; $* = b
 1=2
@@ -46,7 +44,6 @@ mlr --from ./reg-test/input/xyz2 put c[1][2] = 3; $* = c
 1.2=3
 
 mlr --from ./reg-test/input/xyz2 put $* = 3
-Exit status was 1; expected 0.
 
 mlr --from ./reg-test/input/xyz2 put 
   func map_valued_func() {
@@ -142,7 +139,6 @@ x=3,y=4,z=5
 x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put @a = 1; @* = @a; dump
-Exit status was 1; expected 0.
 
 mlr --from ./reg-test/input/xyz2 put @b[1] = 2; @* = @b; dump
 {
@@ -211,7 +207,6 @@ x=3,y=4,z=5
 x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put a = 1; @* = a; dump
-Exit status was 1; expected 0.
 
 mlr --from ./reg-test/input/xyz2 put b[1] = 2; @* = b; dump
 {
@@ -238,7 +233,6 @@ x=3,y=4,z=5
 x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put @* = 3
-Exit status was 1; expected 0.
 
 mlr --from ./reg-test/input/xyz2 put 
   func map_valued_func() {
@@ -543,7 +537,6 @@ mlr --from ./reg-test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":
 }
 
 mlr --from ./reg-test/input/xyz2 put -q map o = @o; dump o
-Exit status was 0; expected 1.
 
 mlr --from ./reg-test/input/xyz2 put -q map o = $*; dump o
 {

@@ -4,16 +4,16 @@ announce MAPVAR ASSIGNMENTS TO FULL SREC
 
 run_mlr --from $indir/xyz2 put '$* = {"a":1, "b": {"x":8,"y":9}, "c":3}'
 run_mlr --from $indir/xyz2 put '$* = $*'
-run_mlr --from $indir/xyz2 put '@a = 1; $* = @a'
+mlr_expect_fail --from $indir/xyz2 put '@a = 1; $* = @a'
 run_mlr --from $indir/xyz2 put '@b[1] = 2; $* = @b'
 run_mlr --from $indir/xyz2 put '@c[1][2] = 3; $* = @c'
 run_mlr --from $indir/xyz2 put '@a = 1; $* = @*'
 run_mlr --from $indir/xyz2 put '@b[1] = 2; $* = @*'
 run_mlr --from $indir/xyz2 put '@c[1][2] = 3; $* = @*'
-run_mlr --from $indir/xyz2 put 'a = 1; $* = a'
+mlr_expect_fail --from $indir/xyz2 put 'a = 1; $* = a'
 run_mlr --from $indir/xyz2 put 'b[1] = 2; $* = b'
 run_mlr --from $indir/xyz2 put 'c[1][2] = 3; $* = c'
-run_mlr --from $indir/xyz2 put '$* = 3'
+mlr_expect_fail --from $indir/xyz2 put '$* = 3'
 
 run_mlr --from $indir/xyz2 put '
   func map_valued_func() {
@@ -36,16 +36,16 @@ announce MAPVAR ASSIGNMENTS TO FULL OOSVAR
 run_mlr --from $indir/xyz2 put '@* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump'
 run_mlr --from $indir/xyz2 put '@* = $*; dump'
 run_mlr --from $indir/xyz2 put '@* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @* = @*; dump'
-run_mlr --from $indir/xyz2 put '@a = 1; @* = @a; dump'
+mlr_expect_fail --from $indir/xyz2 put '@a = 1; @* = @a; dump'
 run_mlr --from $indir/xyz2 put '@b[1] = 2; @* = @b; dump'
 run_mlr --from $indir/xyz2 put '@c[1][2] = 3; @* = @c; dump'
 run_mlr --from $indir/xyz2 put '@a = 1; @* = @*; dump'
 run_mlr --from $indir/xyz2 put '@b[1] = 2; @* = @*; dump'
 run_mlr --from $indir/xyz2 put '@c[1][2] = 3; @* = @*; dump'
-run_mlr --from $indir/xyz2 put 'a = 1; @* = a; dump'
+mlr_expect_fail --from $indir/xyz2 put 'a = 1; @* = a; dump'
 run_mlr --from $indir/xyz2 put 'b[1] = 2; @* = b; dump'
 run_mlr --from $indir/xyz2 put 'c[1][2] = 3; @* = c; dump'
-run_mlr --from $indir/xyz2 put '@* = 3'
+mlr_expect_fail --from $indir/xyz2 put '@* = 3'
 
 run_mlr --from $indir/xyz2 put '
   func map_valued_func() {
@@ -88,7 +88,7 @@ run_mlr --from $indir/xyz2 put -q 'func map_valued_func() { return {"a":1,"b":2}
 announce MAPVAR ASSIGNMENTS TO MAP-TYPED LOCAL
 
 run_mlr         --from $indir/xyz2 put -q 'map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o'
-mlr_expect_fail --from $indir/xyz2 put -q 'map o = @o; dump o'
+run_mlr         --from $indir/xyz2 put -q 'map o = @o; dump o'
 run_mlr         --from $indir/xyz2 put -q 'map o = $*; dump o'
 run_mlr         --from $indir/xyz2 put -q 'map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o'
 mlr_expect_fail --from $indir/xyz2 put -q '@a = 1; map o = @a; dump o'
