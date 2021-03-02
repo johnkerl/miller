@@ -3,7 +3,7 @@ announce USER-DEFINED FUNCTIONS
 
 run_mlr --opprint --from $indir/abixy put 'func f(u,v){return u+v} $o=f(NR*1000,$x)'
 
-mlr_expect_fail --opprint --from $indir/abixy put 'func f(x,y,z){$nnn=999; int n=10; return $y} $o=f($i,$x,$y)'
+run_mlr --opprint --from $indir/abixy put 'func f(x,y,z){$nnn=999; int n=10; return $y} $o=f($i,$x,$y)'
 
 # general programming-language stuff
 run_mlr -n put -q -f $indir/sieve.mlr
