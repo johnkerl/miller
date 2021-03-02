@@ -18,6 +18,7 @@ TOP OF LIST:
 * json null
 
 * smart fmtnum
+  - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
   - fmtnum
   - ofmt
   - no other callsites?!?!?!
