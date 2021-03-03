@@ -60,6 +60,7 @@ func (this *RootNode) IngestAST(
 	// (immediately) but not retained.
 	isReplImmediate bool,
 	doWarnings bool,
+	warningsAreFatal bool,
 ) error {
 	if ast.RootNode == nil {
 		return errors.New("Cannot build CST from nil AST root")
@@ -74,9 +75,16 @@ func (this *RootNode) IngestAST(
 	}
 
 	if doWarnings {
-		err = WarnOnAST(ast)
-		if err != nil {
-			return err
+		ok := WarnOnAST(ast)
+		if !ok {
+			// Messages already printed out
+			if warningsAreFatal {
+				fmt.Printf(
+					"%s: Exiting due to warnings treated as fatal.\n",
+					lib.MlrExeName(),
+				)
+				os.Exit(1)
+			}
 		}
 	}
 

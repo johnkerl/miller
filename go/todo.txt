@@ -53,6 +53,8 @@ TOP OF LIST:
   o xls note (issue #396) @ file-format docs
   o 'string or int' -> 'string, int, or array thereof' throughout
 
+* https://segment.com/blog/allocation-efficiency-in-high-performance-go-services/
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * c/go both:
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
@@ -499,3 +501,7 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o make a thorough audit, and warn everywhere
   o either do copy for all retainers, or treat inrecs as immutable ...
   o 'this.recordsAndContexts.PushBack(inrecAndContext)' idiom needs copy everywhere ...
+
+* consider -w/-W to stderr not stdout -- ?
+* doc6 re warnings
+* -W to mlr main also -- so it can be used with .mlrrc

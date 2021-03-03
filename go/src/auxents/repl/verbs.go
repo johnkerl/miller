@@ -430,6 +430,7 @@ func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkippin
 		false, /*isFilter*/
 		true,  /*isReplImmediate*/
 		this.doWarnings,
+		false, // warningsAreFatal
 	)
 	if err != nil {
 		fmt.Println(err)

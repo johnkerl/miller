@@ -47,11 +47,10 @@ func ReplUsage(verbName string, o *os.File, exitCode int) {
 
 	fmt.Fprint(o,
 		`-v Prints the expressions's AST (abstract syntax tree), which gives
-full transparency on the precedence and associativity rules of
-Miller's grammar, to stdout.
+   full transparency on the precedence and associativity rules of
+   Miller's grammar, to stdout.
 
--d Like -v but uses a parenthesized-expression format for the AST. Then, exits without
-   stream processing.
+-d Like -v but uses a parenthesized-expression format for the AST.
 
 -D Like -d but with output all on one line.
 

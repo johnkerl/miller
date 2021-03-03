@@ -61,6 +61,7 @@ func (this *Repl) handleDSLStringAux(
 		false, /*isFilter*/
 		isReplImmediate,
 		doWarnings,
+		false, // warningsAreFatal
 	)
 	if err != nil {
 		return err
