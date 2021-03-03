@@ -1835,7 +1835,7 @@ Miller supports an ``awk``-like ``begin/end`` syntax.  The statements in the ``b
     a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
     x_sum=4.536294
 
-Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (as in ``awk``), the above can be written more succinctly as
+Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in ``awk``, where they'd default to 0 either way), the above can be written more succinctly as
 
 ::
 
