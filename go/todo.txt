@@ -5,10 +5,6 @@ TOP OF LIST:
   o triple-for multi-middle case
   o substr/error cases C <-> Go
 
-* warnings
-  o rename & fatal
-  o :warn on / :warn off in REPL
-
 * regexes
   o finish stats1 -r
   o regex captures ...
@@ -59,6 +55,8 @@ TOP OF LIST:
   o text-put @ 10-min
   o xls note (issue #396) @ file-format docs
   o 'string or int' -> 'string, int, or array thereof' throughout
+
+* https://segment.com/blog/allocation-efficiency-in-high-performance-go-services/
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 * c/go both:
@@ -506,3 +504,7 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o make a thorough audit, and warn everywhere
   o either do copy for all retainers, or treat inrecs as immutable ...
   o 'this.recordsAndContexts.PushBack(inrecAndContext)' idiom needs copy everywhere ...
+
+* consider -w/-W to stderr not stdout -- ?
+* doc6 re warnings
+* -W to mlr main also -- so it can be used with .mlrrc

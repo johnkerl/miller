@@ -86,9 +86,21 @@ semicolons to separate expressions.)
 -q Does not include the modified record in the output stream.
    Useful for when all desired output is in begin and/or end blocks.
 
--p Prints the expressions's AST (abstract syntax tree), which gives
-   full transparency on the precedence and associativity rules of
-   Miller's grammar, to stdout.
+-S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+   by the record-readers before filter/put is executed. Supported as no-op pass-through
+   flags for backward compatibility.
+
+-h|--help Show this message.
+
+Parser-info options:
+
+-w Print warnings about things like uninitialized variables.
+
+-W Same as -w, but exit the process if there are any warnings.
+
+-p Prints the expressions's AST (abstract syntax tree), which gives full
+  transparency on the precedence and associativity rules of Miller's grammar,
+  to stdout.
 
 -d Like -p but uses a parenthesized-expression format for the AST.
 
@@ -100,12 +112,6 @@ semicolons to separate expressions.)
 
 -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
    only want to look at parser information.
-
--S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
-   by the record-readers before filter/put is executed. Supported as no-op pass-through
-   flags for backward compatibility.
-
--h|--help Show this message.
 `)
 
 	if doExit {
@@ -133,6 +139,8 @@ func transformerPutOrFilterParseCLI(
 	printASTMultiLine := false
 	printASTSingleLine := false
 	exitAfterParse := false
+	doWarnings := false
+	warningsAreFatal := false
 	invertFilter := false
 	suppressOutputRecord := false
 	presets := make([]string, 0)
@@ -200,6 +208,12 @@ func transformerPutOrFilterParseCLI(
 			printASTSingleLine = true
 		} else if opt == "-X" {
 			exitAfterParse = true
+		} else if opt == "-w" {
+			doWarnings = true
+			warningsAreFatal = false
+		} else if opt == "-W" {
+			doWarnings = true
+			warningsAreFatal = true
 
 		} else if opt == "-S" {
 			// TODO: this is a no-op in Miller 6 and above.
@@ -247,6 +261,8 @@ func transformerPutOrFilterParseCLI(
 		printASTMultiLine,
 		printASTSingleLine,
 		exitAfterParse,
+		doWarnings,
+		warningsAreFatal,
 		invertFilter,
 		suppressOutputRecord,
 		recordWriterOptions,
@@ -279,6 +295,8 @@ func NewTransformerPut(
 	printASTMultiLine bool,
 	printASTSingleLine bool,
 	exitAfterParse bool,
+	doWarnings bool,
+	warningsAreFatal bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
 	recordWriterOptions *cliutil.TWriterOptions,
@@ -315,7 +333,13 @@ func NewTransformerPut(
 			os.Exit(0)
 		}
 
-		err = cstRootNode.IngestAST(astRootNode, isFilter, false) // TODO: split out methods ...
+		err = cstRootNode.IngestAST(
+			astRootNode,
+			isFilter,
+			false, // isReplImmediate
+			doWarnings,
+			warningsAreFatal,
+		)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return nil, err

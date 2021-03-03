@@ -141,9 +141,21 @@ semicolons to separate expressions.)
 -q Does not include the modified record in the output stream.
    Useful for when all desired output is in begin and/or end blocks.
 
--p Prints the expressions's AST (abstract syntax tree), which gives
-   full transparency on the precedence and associativity rules of
-   Miller's grammar, to stdout.
+-S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+   by the record-readers before filter/put is executed. Supported as no-op pass-through
+   flags for backward compatibility.
+
+-h|--help Show this message.
+
+Parser-info options:
+
+-w Print warnings about things like uninitialized variables.
+
+-W Same as -w, but exit the process if there are any warnings.
+
+-p Prints the expressions's AST (abstract syntax tree), which gives full
+  transparency on the precedence and associativity rules of Miller's grammar,
+  to stdout.
 
 -d Like -p but uses a parenthesized-expression format for the AST.
 
@@ -155,12 +167,6 @@ semicolons to separate expressions.)
 
 -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
    only want to look at parser information.
-
--S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
-   by the record-readers before filter/put is executed. Supported as no-op pass-through
-   flags for backward compatibility.
-
--h|--help Show this message.
 ================================================================
 Usage: mlr flatten [options]
 Flattens multi-level maps to single-level ones. Example: field with name 'a'
@@ -357,9 +363,21 @@ semicolons to separate expressions.)
 -q Does not include the modified record in the output stream.
    Useful for when all desired output is in begin and/or end blocks.
 
--p Prints the expressions's AST (abstract syntax tree), which gives
-   full transparency on the precedence and associativity rules of
-   Miller's grammar, to stdout.
+-S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+   by the record-readers before filter/put is executed. Supported as no-op pass-through
+   flags for backward compatibility.
+
+-h|--help Show this message.
+
+Parser-info options:
+
+-w Print warnings about things like uninitialized variables.
+
+-W Same as -w, but exit the process if there are any warnings.
+
+-p Prints the expressions's AST (abstract syntax tree), which gives full
+  transparency on the precedence and associativity rules of Miller's grammar,
+  to stdout.
 
 -d Like -p but uses a parenthesized-expression format for the AST.
 
@@ -371,12 +389,6 @@ semicolons to separate expressions.)
 
 -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
    only want to look at parser information.
-
--S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
-   by the record-readers before filter/put is executed. Supported as no-op pass-through
-   flags for backward compatibility.
-
--h|--help Show this message.
 ================================================================
 Usage: mlr regularize [options]
 Outputs records sorted lexically ascending by keys.Options:

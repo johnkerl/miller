@@ -124,7 +124,7 @@ func handleLoad(this *Repl, args []string) bool {
 		}
 		dslString := string(dslBytes)
 
-		err = this.handleDSLStringBulk(dslString)
+		err = this.handleDSLStringBulk(dslString, this.doWarnings)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -429,6 +429,8 @@ func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkippin
 		astRootNode,
 		false, /*isFilter*/
 		true,  /*isReplImmediate*/
+		this.doWarnings,
+		false, // warningsAreFatal
 	)
 	if err != nil {
 		fmt.Println(err)

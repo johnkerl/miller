@@ -38,6 +38,7 @@ type Repl struct {
 	prompt2         string
 
 	astPrintMode ASTPrintMode
+	doWarnings   bool
 	cstRootNode  *cst.RootNode
 
 	options *cliutil.TOptions
