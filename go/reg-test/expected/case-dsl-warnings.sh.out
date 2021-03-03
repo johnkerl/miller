@@ -1,0 +1,71 @@
+
+mlr -n put y =  1
+
+mlr -n put -w y =  1
+
+mlr -n put -W y =  1
+
+mlr -n put x = 3; y = x
+
+mlr -n put -w x = 3; y = x
+
+mlr -n put -W x = 3; y = x
+
+mlr -n put -W for (k in $*) { print k }
+
+mlr -n put -W for (k,v in $*) { print k,v }
+
+mlr -n put -W for ((k1,k2),v in $*) { print k1,k2,v }
+
+mlr -n put y = $x
+
+mlr -n put -w y = $x
+
+mlr -n put -W y = $x
+
+mlr -n put y = x
+
+mlr -n put -w y = x
+Variable name x might not have been assigned yet.
+
+mlr -n put -W y = x
+Variable name x might not have been assigned yet.
+mlr: Exiting due to warnings treated as fatal.
+
+mlr -n put z = x + y
+
+mlr -n put -w z = x + y
+Variable name x might not have been assigned yet.
+Variable name y might not have been assigned yet.
+
+mlr -n put -W z = x + y
+Variable name x might not have been assigned yet.
+Variable name y might not have been assigned yet.
+mlr: Exiting due to warnings treated as fatal.
+
+mlr -n put -W i = 0; z[i] = 1
+
+mlr -n put -W z[i] = 1
+Variable name i might not have been assigned yet.
+mlr: Exiting due to warnings treated as fatal.
+
+mlr -n put -W func f(n) { return n+1 }
+
+mlr -n put -W func f(n) { return m+1 }
+Variable name m might not have been assigned yet.
+mlr: Exiting due to warnings treated as fatal.
+
+mlr -n put -W m = 0; func f(n) { return m+1 }
+Variable name m might not have been assigned yet.
+mlr: Exiting due to warnings treated as fatal.
+
+mlr -n put -W subr f(n) { print m+1 }
+Variable name m might not have been assigned yet.
+mlr: Exiting due to warnings treated as fatal.
+
+mlr -n put -W m = 0; subr f(n) { print m+1 }
+Variable name m might not have been assigned yet.
+mlr: Exiting due to warnings treated as fatal.
+
+mlr -n put -W if (false) {x = 1}; print x
+

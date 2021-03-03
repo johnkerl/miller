@@ -39,6 +39,7 @@ func NewRepl(
 	exeName string,
 	replName string,
 	astPrintMode ASTPrintMode,
+	doWarnings bool,
 	options *cliutil.TOptions,
 ) (*Repl, error) {
 
@@ -81,6 +82,7 @@ func NewRepl(
 		prompt2:         getPrompt2(),
 
 		astPrintMode: astPrintMode,
+		doWarnings:   doWarnings,
 		cstRootNode:  cst.NewEmptyRoot(&options.WriterOptions).WithRedefinableUDFUDS(),
 
 		options:      options,
@@ -155,7 +157,7 @@ func (this *Repl) handleSession(istream *os.File) {
 			// Handled in that method.
 		} else {
 			// We need the non-trimmed line here since the DSL syntax for comments is '#.*\n'.
-			err = this.handleDSLStringImmediate(line)
+			err = this.handleDSLStringImmediate(line, this.doWarnings)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 			}
@@ -194,9 +196,9 @@ func (this *Repl) handleMultiLine(
 
 	var err error = nil
 	if doImmediate {
-		err = this.handleDSLStringImmediate(dslString)
+		err = this.handleDSLStringImmediate(dslString, this.doWarnings)
 	} else {
-		err = this.handleDSLStringBulk(dslString)
+		err = this.handleDSLStringBulk(dslString, this.doWarnings)
 	}
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
