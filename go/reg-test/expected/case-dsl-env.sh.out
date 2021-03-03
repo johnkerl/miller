@@ -2,6 +2,7 @@
 mlr -n put -v $z = ENV["HOME"]
 DSL EXPRESSION:
 $z = ENV["HOME"]
+
 AST:
 * statement block
     * assignment "="
@@ -13,6 +14,7 @@ AST:
 mlr -n put -v $z = ENV["HOME"][1]
 DSL EXPRESSION:
 $z = ENV["HOME"][1]
+
 AST:
 * statement block
     * assignment "="
@@ -26,6 +28,7 @@ AST:
 mlr -n put -v $ENV["FOO"] = "bar"
 DSL EXPRESSION:
 $ENV["FOO"] = "bar"
+
 AST:
 * statement block
     * assignment "="
@@ -38,6 +41,7 @@ AST:
 mlr -n put -v $ENV["FOO"][2] = "bar"
 DSL EXPRESSION:
 $ENV["FOO"][2] = "bar"
+
 AST:
 * statement block
     * assignment "="

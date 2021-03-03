@@ -6,7 +6,7 @@ eks pan 2 0.7586799647899636  0.5221511083334797  pan
 wye wye 3 0.20460330576630303 0.33831852551664776 wye
 eks wye 4 0.38139939387114097 0.13418874328430463 wye
 
-mlr --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp --ojson put $z=[1,2,[NR,[FILENAME,5],$x*$y]]
+mlr --from ./reg-test/input/s.dkvp --from ./reg-test/input/t.dkvp --ojson put $z=[ 1,2,[NR,[FILENAME,5],$x*$y] ]
 {
   "a": "pan",
   "b": "pan",
@@ -327,6 +327,7 @@ mlr --from ./reg-test/input/s.dkvp --idkvp --ojson put $*["a"] = {}
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put -v $new = $["a"]
 DSL EXPRESSION:
 $new = $["a"]
+
 AST:
 * statement block
     * assignment "="
@@ -343,6 +344,7 @@ eks wye 4 0.38139939387114097 0.13418874328430463 eks
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put -v $["new"] = $a
 DSL EXPRESSION:
 $["new"] = $a
+
 AST:
 * statement block
     * assignment "="
@@ -359,6 +361,7 @@ eks wye 4 0.38139939387114097 0.13418874328430463 eks
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put -v ${new} = $a . $b
 DSL EXPRESSION:
 ${new} = $a . $b
+
 AST:
 * statement block
     * assignment "="
@@ -376,6 +379,7 @@ eks wye 4 0.38139939387114097 0.13418874328430463 ekswye
 mlr --from ./reg-test/input/s.dkvp --idkvp --opprint put -v $new = ${a} . ${b}
 DSL EXPRESSION:
 $new = ${a} . ${b}
+
 AST:
 * statement block
     * assignment "="

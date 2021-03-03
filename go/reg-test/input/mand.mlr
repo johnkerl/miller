@@ -67,7 +67,7 @@ func get_point_plot(cr, ci, maxits) {
 	if (!escaped) {
 		return ".";
 	} else {
-		int level = 1 + (iti // @levelstep) % strlen(@chars);
+		int level = (iti // @levelstep) % strlen(@chars);
 		return substr(@chars, level, level);
 	}
 }

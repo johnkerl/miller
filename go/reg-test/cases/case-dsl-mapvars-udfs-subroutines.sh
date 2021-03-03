@@ -3,7 +3,7 @@ run_mlr --from $indir/abixy put '
     dump m;
     sum = 0;
     for (k, v in m) {
-      sum += k
+      sum += int(k)
     }
     return sum
   }
@@ -16,7 +16,7 @@ run_mlr --from $indir/abixy put '
     dump m;
     sum = 0;
     for (k, v in m) {
-      sum += k
+      sum += int(k)
     }
     @sum = sum;
   }

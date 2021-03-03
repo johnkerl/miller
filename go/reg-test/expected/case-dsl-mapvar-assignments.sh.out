@@ -4,8 +4,8 @@
 MAPVAR ASSIGNMENTS TO FULL SREC
 
 mlr --from ./reg-test/input/xyz2 put $* = {"a":1, "b": {"x":8,"y":9}, "c":3}
-a=1,c=3
-a=1,c=3
+a=1,b.x=8,b.y=9,c=3
+a=1,b.x=8,b.y=9,c=3
 
 mlr --from ./reg-test/input/xyz2 put $* = $*
 x=3,y=4,z=5
@@ -13,43 +13,37 @@ x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put @a = 1; $* = @a
 
-
-
 mlr --from ./reg-test/input/xyz2 put @b[1] = 2; $* = @b
 1=2
 1=2
 
 mlr --from ./reg-test/input/xyz2 put @c[1][2] = 3; $* = @c
-
-
+1.2=3
+1.2=3
 
 mlr --from ./reg-test/input/xyz2 put @a = 1; $* = @*
 a=1
 a=1
 
 mlr --from ./reg-test/input/xyz2 put @b[1] = 2; $* = @*
-
-
+b.1=2
+b.1=2
 
 mlr --from ./reg-test/input/xyz2 put @c[1][2] = 3; $* = @*
-
-
+c.1.2=3
+c.1.2=3
 
 mlr --from ./reg-test/input/xyz2 put a = 1; $* = a
-
-
 
 mlr --from ./reg-test/input/xyz2 put b[1] = 2; $* = b
 1=2
 1=2
 
 mlr --from ./reg-test/input/xyz2 put c[1][2] = 3; $* = c
-
-
+1.2=3
+1.2=3
 
 mlr --from ./reg-test/input/xyz2 put $* = 3
-
-
 
 mlr --from ./reg-test/input/xyz2 put 
   func map_valued_func() {
@@ -145,12 +139,6 @@ x=3,y=4,z=5
 x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put @a = 1; @* = @a; dump
-{
-}
-x=3,y=4,z=5
-{
-}
-x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put @b[1] = 2; @* = @b; dump
 {
@@ -219,12 +207,6 @@ x=3,y=4,z=5
 x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put a = 1; @* = a; dump
-{
-}
-x=3,y=4,z=5
-{
-}
-x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put b[1] = 2; @* = b; dump
 {
@@ -251,8 +233,6 @@ x=3,y=4,z=5
 x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put @* = 3
-x=3,y=4,z=5
-x=6,y=7,u=8
 
 mlr --from ./reg-test/input/xyz2 put 
   func map_valued_func() {
@@ -314,8 +294,6 @@ mlr --from ./reg-test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
 }
 
 mlr --from ./reg-test/input/xyz2 put -q @o = @o; dump @o
-
-
 
 mlr --from ./reg-test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @o = @*; dump
 {
@@ -559,7 +537,6 @@ mlr --from ./reg-test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":
 }
 
 mlr --from ./reg-test/input/xyz2 put -q map o = @o; dump o
-mlr: map type assertion for variable o unmet by value "" with type absent.
 
 mlr --from ./reg-test/input/xyz2 put -q map o = $*; dump o
 {
@@ -592,7 +569,6 @@ mlr --from ./reg-test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":
 }
 
 mlr --from ./reg-test/input/xyz2 put -q @a = 1; map o = @a; dump o
-mlr: map type assertion for variable o unmet by value 1 with type int.
 
 mlr --from ./reg-test/input/xyz2 put -q @b[1] = 2; map o = @b; dump o
 {
@@ -651,7 +627,6 @@ mlr --from ./reg-test/input/xyz2 put -q @c[1][2] = 3; map o = @*; dump o
 }
 
 mlr --from ./reg-test/input/xyz2 put -q a = 1; map o = a; dump o
-mlr: map type assertion for variable o unmet by value 1 with type int.
 
 mlr --from ./reg-test/input/xyz2 put -q b[1] = 2; map o = b; dump o
 {
@@ -706,8 +681,6 @@ mlr --from ./reg-test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":
 }
 
 mlr --from ./reg-test/input/xyz2 put -q var o = @o; dump o
-
-
 
 mlr --from ./reg-test/input/xyz2 put -q var o = $*; dump o
 {
@@ -856,8 +829,6 @@ mlr --from ./reg-test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; 
 }
 
 mlr --from ./reg-test/input/xyz2 put -q o = @o; dump o
-
-
 
 mlr --from ./reg-test/input/xyz2 put -q o = $*; dump o
 {

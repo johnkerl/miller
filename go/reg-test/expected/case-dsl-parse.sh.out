@@ -2,6 +2,7 @@
 mlr -n put -v $y = 1 || 2
 DSL EXPRESSION:
 $y = 1 || 2
+
 AST:
 * statement block
     * assignment "="
@@ -14,6 +15,7 @@ AST:
 mlr -n put -v $y = 1 || 2 || 3
 DSL EXPRESSION:
 $y = 1 || 2 || 3
+
 AST:
 * statement block
     * assignment "="
@@ -28,6 +30,7 @@ AST:
 mlr -n put -v $y = 1 || 2 && 3
 DSL EXPRESSION:
 $y = 1 || 2 && 3
+
 AST:
 * statement block
     * assignment "="
@@ -42,6 +45,7 @@ AST:
 mlr -n put -v $y = 1 && 2 || 3
 DSL EXPRESSION:
 $y = 1 && 2 || 3
+
 AST:
 * statement block
     * assignment "="
@@ -56,6 +60,7 @@ AST:
 mlr -n put -v $y = 1 ? 2 : 3
 DSL EXPRESSION:
 $y = 1 ? 2 : 3
+
 AST:
 * statement block
     * assignment "="
@@ -69,6 +74,7 @@ AST:
 mlr -n put -v $y = $a + $b * $c
 DSL EXPRESSION:
 $y = $a + $b * $c
+
 AST:
 * statement block
     * assignment "="
@@ -83,6 +89,7 @@ AST:
 mlr -n put -v $y = $a * $b * $c
 DSL EXPRESSION:
 $y = $a * $b * $c
+
 AST:
 * statement block
     * assignment "="
@@ -97,6 +104,7 @@ AST:
 mlr -n put -v $y = $a ** $b ** $c
 DSL EXPRESSION:
 $y = $a ** $b ** $c
+
 AST:
 * statement block
     * assignment "="
@@ -111,6 +119,7 @@ AST:
 mlr -n put -v $[2] = 3
 DSL EXPRESSION:
 $[2] = 3
+
 AST:
 * statement block
     * assignment "="
@@ -122,6 +131,7 @@ AST:
 mlr -n put -v $[$y] = 4
 DSL EXPRESSION:
 $[$y] = 4
+
 AST:
 * statement block
     * assignment "="
@@ -133,6 +143,7 @@ AST:
 mlr -n put -v $x = "abc"
 DSL EXPRESSION:
 $x = "abc"
+
 AST:
 * statement block
     * assignment "="
@@ -143,6 +154,7 @@ AST:
 mlr -n put -v $["abc"] = "def"
 DSL EXPRESSION:
 $["abc"] = "def"
+
 AST:
 * statement block
     * assignment "="
@@ -154,6 +166,7 @@ AST:
 mlr -n put -v $[FILENAME] = FNR
 DSL EXPRESSION:
 $[FILENAME] = FNR
+
 AST:
 * statement block
     * assignment "="
@@ -165,6 +178,7 @@ AST:
 mlr -n put -v $x = $a + $b + $c
 DSL EXPRESSION:
 $x = $a + $b + $c
+
 AST:
 * statement block
     * assignment "="
@@ -179,6 +193,7 @@ AST:
 mlr -n put -v $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
 DSL EXPRESSION:
 $x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c
+
 AST:
 * statement block
     * assignment "="
@@ -207,6 +222,7 @@ AST:
 mlr -n put -v $x = 2 * $a + $b . $c
 DSL EXPRESSION:
 $x = 2 * $a + $b . $c
+
 AST:
 * statement block
     * assignment "="
@@ -223,6 +239,7 @@ AST:
 mlr -n put -v $x = 2 * $a + ($b . $c)
 DSL EXPRESSION:
 $x = 2 * $a + ($b . $c)
+
 AST:
 * statement block
     * assignment "="
@@ -239,6 +256,7 @@ AST:
 mlr -n put -v $x = (NF + NR) * 7; $y = OFS . $y . "hello"
 DSL EXPRESSION:
 $x = (NF + NR) * 7; $y = OFS . $y . "hello"
+
 AST:
 * statement block
     * assignment "="
@@ -260,6 +278,7 @@ AST:
 mlr -n put -v $x = 123. + 1e-2 / .2e3 + 1.e-3
 DSL EXPRESSION:
 $x = 123. + 1e-2 / .2e3 + 1.e-3
+
 AST:
 * statement block
     * assignment "="
@@ -276,6 +295,7 @@ AST:
 mlr -n put -v $z=0x7fffffffffffffff  + 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff  + 0x7fffffffffffffff
+
 AST:
 * statement block
     * assignment "="
@@ -288,6 +308,7 @@ AST:
 mlr -n put -v $z=0x7fffffffffffffff .+ 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff .+ 0x7fffffffffffffff
+
 AST:
 * statement block
     * assignment "="
@@ -300,6 +321,7 @@ AST:
 mlr -n put -v $z=0x7fffffffffffffff  * 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff  * 0x7fffffffffffffff
+
 AST:
 * statement block
     * assignment "="
@@ -312,6 +334,7 @@ AST:
 mlr -n put -v $z=0x7fffffffffffffff .* 0x7fffffffffffffff
 DSL EXPRESSION:
 $z=0x7fffffffffffffff .* 0x7fffffffffffffff
+
 AST:
 * statement block
     * assignment "="
@@ -360,6 +383,7 @@ pan pan 1 0.3467901443380824 0.7268028627434533 .3e-4
 mlr -n put -v $y = 1 * 2 ?? 3
 DSL EXPRESSION:
 $y = 1 * 2 ?? 3
+
 AST:
 * statement block
     * assignment "="
@@ -374,6 +398,7 @@ AST:
 mlr -n put -v $y = 1 ?? 2 * 3
 DSL EXPRESSION:
 $y = 1 ?? 2 * 3
+
 AST:
 * statement block
     * assignment "="
@@ -388,6 +413,7 @@ AST:
 mlr -n put -v $z = []
 DSL EXPRESSION:
 $z = []
+
 AST:
 * statement block
     * assignment "="
@@ -398,6 +424,7 @@ AST:
 mlr -n put -v $z = [1,]
 DSL EXPRESSION:
 $z = [1,]
+
 AST:
 * statement block
     * assignment "="
@@ -409,6 +436,7 @@ AST:
 mlr -n put -v $z = [1,2]
 DSL EXPRESSION:
 $z = [1,2]
+
 AST:
 * statement block
     * assignment "="
@@ -421,6 +449,7 @@ AST:
 mlr -n put -v $z = [1,2,]
 DSL EXPRESSION:
 $z = [1,2,]
+
 AST:
 * statement block
     * assignment "="
@@ -433,6 +462,7 @@ AST:
 mlr -n put -v $z = [1,2,3]
 DSL EXPRESSION:
 $z = [1,2,3]
+
 AST:
 * statement block
     * assignment "="
@@ -446,6 +476,7 @@ AST:
 mlr -n put -v $z = [1,2,3,]
 DSL EXPRESSION:
 $z = [1,2,3,]
+
 AST:
 * statement block
     * assignment "="
@@ -459,6 +490,7 @@ AST:
 mlr -n put -v $z = {}
 DSL EXPRESSION:
 $z = {}
+
 AST:
 * statement block
     * assignment "="
@@ -469,6 +501,7 @@ AST:
 mlr -n put -v $z = {"a":"1"}
 DSL EXPRESSION:
 $z = {"a":"1"}
+
 AST:
 * statement block
     * assignment "="
@@ -482,6 +515,7 @@ AST:
 mlr -n put -v $z = {"a":"1",}
 DSL EXPRESSION:
 $z = {"a":"1",}
+
 AST:
 * statement block
     * assignment "="
@@ -495,6 +529,7 @@ AST:
 mlr -n put -v $z = {"a":"1", "b":2}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2}
+
 AST:
 * statement block
     * assignment "="
@@ -511,6 +546,7 @@ AST:
 mlr -n put -v $z = {"a":"1", "b":2,}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2,}
+
 AST:
 * statement block
     * assignment "="
@@ -527,6 +563,7 @@ AST:
 mlr -n put -v $z = {"a":"1", "b":2, "c":3}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2, "c":3}
+
 AST:
 * statement block
     * assignment "="
@@ -546,6 +583,7 @@ AST:
 mlr -n put -v $z = {"a":"1", "b":2, "c":3,}
 DSL EXPRESSION:
 $z = {"a":"1", "b":2, "c":3,}
+
 AST:
 * statement block
     * assignment "="
@@ -565,6 +603,7 @@ AST:
 mlr -n put -v $z = $a[1]
 DSL EXPRESSION:
 $z = $a[1]
+
 AST:
 * statement block
     * assignment "="
@@ -577,6 +616,7 @@ AST:
 mlr -n put -v $z = $a["index"]
 DSL EXPRESSION:
 $z = $a["index"]
+
 AST:
 * statement block
     * assignment "="
@@ -589,6 +629,7 @@ AST:
 mlr -n put -v $z = "abcde"[1]
 DSL EXPRESSION:
 $z = "abcde"[1]
+
 AST:
 * statement block
     * assignment "="
@@ -601,6 +642,7 @@ AST:
 mlr -n put -v $z = "abcde"["index"]
 DSL EXPRESSION:
 $z = "abcde"["index"]
+
 AST:
 * statement block
     * assignment "="
@@ -613,6 +655,7 @@ AST:
 mlr -n put -v $z = $a[1:2]
 DSL EXPRESSION:
 $z = $a[1:2]
+
 AST:
 * statement block
     * assignment "="
@@ -626,6 +669,7 @@ AST:
 mlr -n put -v $z = $a[:2]
 DSL EXPRESSION:
 $z = $a[:2]
+
 AST:
 * statement block
     * assignment "="
@@ -639,6 +683,7 @@ AST:
 mlr -n put -v $z = $a[1:]
 DSL EXPRESSION:
 $z = $a[1:]
+
 AST:
 * statement block
     * assignment "="
@@ -652,6 +697,7 @@ AST:
 mlr -n put -v $z = $a[:]
 DSL EXPRESSION:
 $z = $a[:]
+
 AST:
 * statement block
     * assignment "="
@@ -665,6 +711,7 @@ AST:
 mlr -n put -v $z = [5,6,7,8,9][1]
 DSL EXPRESSION:
 $z = [5,6,7,8,9][1]
+
 AST:
 * statement block
     * assignment "="
@@ -682,6 +729,7 @@ AST:
 mlr -n put -v $z = {"a":1, "b":2, "c":3}["b"]
 DSL EXPRESSION:
 $z = {"a":1, "b":2, "c":3}["b"]
+
 AST:
 * statement block
     * assignment "="
@@ -703,6 +751,7 @@ AST:
 mlr -n put -v begin{}
 DSL EXPRESSION:
 begin{}
+
 AST:
 * statement block
     * begin block
@@ -712,6 +761,7 @@ AST:
 mlr -n put -v begin{@y=1}
 DSL EXPRESSION:
 begin{@y=1}
+
 AST:
 * statement block
     * begin block
@@ -724,6 +774,7 @@ AST:
 mlr -n put -v end{}
 DSL EXPRESSION:
 end{}
+
 AST:
 * statement block
     * end block
@@ -733,6 +784,7 @@ AST:
 mlr -n put -v end{@y=1}
 DSL EXPRESSION:
 end{@y=1}
+
 AST:
 * statement block
     * end block
@@ -745,6 +797,7 @@ AST:
 mlr -n put -v $x=2; end{@y=1}
 DSL EXPRESSION:
 $x=2; end{@y=1}
+
 AST:
 * statement block
     * assignment "="
@@ -760,6 +813,7 @@ AST:
 mlr -n put -v begin{@y=1} $x=2
 DSL EXPRESSION:
 begin{@y=1} $x=2
+
 AST:
 * statement block
     * begin block
@@ -775,6 +829,7 @@ AST:
 mlr -n put -v begin{} end {}
 DSL EXPRESSION:
 begin{} end {}
+
 AST:
 * statement block
     * begin block
@@ -786,6 +841,7 @@ AST:
 mlr -n put -v $x=1;
 DSL EXPRESSION:
 $x=1;
+
 AST:
 * statement block
     * assignment "="
@@ -796,6 +852,7 @@ AST:
 mlr -n put -v $x=1;$y=2;
 DSL EXPRESSION:
 $x=1;$y=2;
+
 AST:
 * statement block
     * assignment "="
@@ -809,6 +866,7 @@ AST:
 mlr -n put -v begin{@x=1;@y=2}
 DSL EXPRESSION:
 begin{@x=1;@y=2}
+
 AST:
 * statement block
     * begin block
@@ -824,6 +882,7 @@ AST:
 mlr -n put -v begin{@x=1;@y=2;}
 DSL EXPRESSION:
 begin{@x=1;@y=2;}
+
 AST:
 * statement block
     * begin block
@@ -839,6 +898,7 @@ AST:
 mlr -n put -v begin{@x=1;@y=2;} $z=3
 DSL EXPRESSION:
 begin{@x=1;@y=2;} $z=3
+
 AST:
 * statement block
     * begin block
@@ -857,6 +917,7 @@ AST:
 mlr -n put -v begin{@x=1;@y=2;} $z=3;
 DSL EXPRESSION:
 begin{@x=1;@y=2;} $z=3;
+
 AST:
 * statement block
     * begin block
@@ -875,6 +936,7 @@ AST:
 mlr -n put -v if (NR == 1) { $z = 100 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 }
+
 AST:
 * statement block
     * if-chain
@@ -891,6 +953,7 @@ AST:
 mlr -n put -v if (NR == 1) { $z = 100 } else { $z = 900 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 } else { $z = 900 }
+
 AST:
 * statement block
     * if-chain
@@ -912,6 +975,7 @@ AST:
 mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }
+
 AST:
 * statement block
     * if-chain
@@ -936,6 +1000,7 @@ AST:
 mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }
+
 AST:
 * statement block
     * if-chain
@@ -965,6 +1030,7 @@ AST:
 mlr -n put -v if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 } else { $z = 900 }
 DSL EXPRESSION:
 if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } elif (NR == 3) { $z = 300 } else { $z = 900 }
+
 AST:
 * statement block
     * if-chain
@@ -1002,6 +1068,7 @@ AST:
 mlr -n put -v for (k in $*) { emit { k : k } }
 DSL EXPRESSION:
 for (k in $*) { emit { k : k } }
+
 AST:
 * statement block
     * single-variable for-loop "for"
@@ -1021,6 +1088,7 @@ AST:
 mlr -n put -v begin {}
 DSL EXPRESSION:
 begin {}
+
 AST:
 * statement block
     * begin block
@@ -1030,6 +1098,7 @@ AST:
 mlr -n put -v end {}
 DSL EXPRESSION:
 end {}
+
 AST:
 * statement block
     * end block
@@ -1039,6 +1108,7 @@ AST:
 mlr -n put -v if (1) {}
 DSL EXPRESSION:
 if (1) {}
+
 AST:
 * statement block
     * if-chain
@@ -1050,6 +1120,7 @@ AST:
 mlr -n put -v if (1) {2}
 DSL EXPRESSION:
 if (1) {2}
+
 AST:
 * statement block
     * if-chain
@@ -1063,6 +1134,7 @@ AST:
 mlr -n put -v for (k in $*) {}
 DSL EXPRESSION:
 for (k in $*) {}
+
 AST:
 * statement block
     * single-variable for-loop "for"
@@ -1074,6 +1146,7 @@ AST:
 mlr -n put -v for (k in $*) {2}
 DSL EXPRESSION:
 for (k in $*) {2}
+
 AST:
 * statement block
     * single-variable for-loop "for"
@@ -1087,6 +1160,7 @@ AST:
 mlr -n put -v while (false) {}
 DSL EXPRESSION:
 while (false) {}
+
 AST:
 * statement block
     * while loop "while"
@@ -1097,6 +1171,7 @@ AST:
 mlr -n put -v do {} while (false)
 DSL EXPRESSION:
 do {} while (false)
+
 AST:
 * statement block
     * do-while`loop "do"
@@ -1107,6 +1182,7 @@ AST:
 mlr -n put -v nr=NR; $nr=nr
 DSL EXPRESSION:
 nr=NR; $nr=nr
+
 AST:
 * statement block
     * assignment "="
@@ -1120,6 +1196,7 @@ AST:
 mlr -n put -v for (i = 0; i < 10; i += 1) { $x += i }
 DSL EXPRESSION:
 for (i = 0; i < 10; i += 1) { $x += i }
+
 AST:
 * statement block
     * triple-for loop "for"
@@ -1149,6 +1226,7 @@ AST:
 mlr -n put -v for (;;) {}
 DSL EXPRESSION:
 for (;;) {}
+
 AST:
 * statement block
     * triple-for loop "for"
@@ -1161,6 +1239,7 @@ AST:
 mlr -n put -v for (i = 0; i < NR; i += 1) { $i += i }
 DSL EXPRESSION:
 for (i = 0; i < NR; i += 1) { $i += i }
+
 AST:
 * statement block
     * triple-for loop "for"
@@ -1190,6 +1269,7 @@ AST:
 mlr -n put -v for (i = 0; i < NR; i += 1) { if (i == 2) { continue} $i += i }
 DSL EXPRESSION:
 for (i = 0; i < NR; i += 1) { if (i == 2) { continue} $i += i }
+
 AST:
 * statement block
     * triple-for loop "for"
@@ -1226,6 +1306,7 @@ AST:
 mlr -n put -v for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }
 DSL EXPRESSION:
 for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }
+
 AST:
 * statement block
     * triple-for loop "for"
@@ -1262,6 +1343,7 @@ AST:
 mlr -n put -v func f(){}
 DSL EXPRESSION:
 func f(){}
+
 AST:
 * statement block
     * function definition "f"
@@ -1272,6 +1354,7 @@ AST:
 mlr -n put -v func f(a){}
 DSL EXPRESSION:
 func f(a){}
+
 AST:
 * statement block
     * function definition "f"
@@ -1284,6 +1367,7 @@ AST:
 mlr -n put -v func f(a,){}
 DSL EXPRESSION:
 func f(a,){}
+
 AST:
 * statement block
     * function definition "f"
@@ -1296,6 +1380,7 @@ AST:
 mlr -n put -v func f(a,b){}
 DSL EXPRESSION:
 func f(a,b){}
+
 AST:
 * statement block
     * function definition "f"
@@ -1310,6 +1395,7 @@ AST:
 mlr -n put -v func f(a,b,){}
 DSL EXPRESSION:
 func f(a,b,){}
+
 AST:
 * statement block
     * function definition "f"
@@ -1324,6 +1410,7 @@ AST:
 mlr -n put -v func f(a,b,c){}
 DSL EXPRESSION:
 func f(a,b,c){}
+
 AST:
 * statement block
     * function definition "f"
@@ -1340,6 +1427,7 @@ AST:
 mlr -n put -v func f(a,b,c,){}
 DSL EXPRESSION:
 func f(a,b,c,){}
+
 AST:
 * statement block
     * function definition "f"
@@ -1356,6 +1444,7 @@ AST:
 mlr -n put -v func f(){return 1}
 DSL EXPRESSION:
 func f(){return 1}
+
 AST:
 * statement block
     * function definition "f"
@@ -1368,6 +1457,7 @@ AST:
 mlr -n put -v func f(a){return 1}
 DSL EXPRESSION:
 func f(a){return 1}
+
 AST:
 * statement block
     * function definition "f"
@@ -1382,6 +1472,7 @@ AST:
 mlr -n put -v func f(a,){return 1}
 DSL EXPRESSION:
 func f(a,){return 1}
+
 AST:
 * statement block
     * function definition "f"
@@ -1396,6 +1487,7 @@ AST:
 mlr -n put -v func f(a,b){return 1}
 DSL EXPRESSION:
 func f(a,b){return 1}
+
 AST:
 * statement block
     * function definition "f"
@@ -1412,6 +1504,7 @@ AST:
 mlr -n put -v func f(a,b,){return 1}
 DSL EXPRESSION:
 func f(a,b,){return 1}
+
 AST:
 * statement block
     * function definition "f"
@@ -1428,6 +1521,7 @@ AST:
 mlr -n put -v func f(a,b,c){return 1}
 DSL EXPRESSION:
 func f(a,b,c){return 1}
+
 AST:
 * statement block
     * function definition "f"
@@ -1446,6 +1540,7 @@ AST:
 mlr -n put -v func f(a,b,c,){return 1}
 DSL EXPRESSION:
 func f(a,b,c,){return 1}
+
 AST:
 * statement block
     * function definition "f"
@@ -1464,6 +1559,7 @@ AST:
 mlr -n put -v func f(x, y) { z = 3}
 DSL EXPRESSION:
 func f(x, y) { z = 3}
+
 AST:
 * statement block
     * function definition "f"
@@ -1481,6 +1577,7 @@ AST:
 mlr -n put -v func f(var x, var y): var { var z = 3}
 DSL EXPRESSION:
 func f(var x, var y): var { var z = 3}
+
 AST:
 * statement block
     * function definition "f"
@@ -1502,6 +1599,7 @@ AST:
 mlr -n put -v unset $x
 DSL EXPRESSION:
 unset $x
+
 AST:
 * statement block
     * unset "unset"
@@ -1511,6 +1609,7 @@ AST:
 mlr -n put -v unset $*
 DSL EXPRESSION:
 unset $*
+
 AST:
 * statement block
     * unset "unset"
@@ -1520,6 +1619,7 @@ AST:
 mlr -n put -v unset @x
 DSL EXPRESSION:
 unset @x
+
 AST:
 * statement block
     * unset "unset"
@@ -1529,6 +1629,7 @@ AST:
 mlr -n put -v unset @*
 DSL EXPRESSION:
 unset @*
+
 AST:
 * statement block
     * unset "unset"
@@ -1538,6 +1639,7 @@ AST:
 mlr -n put -v unset x
 DSL EXPRESSION:
 unset x
+
 AST:
 * statement block
     * unset "unset"
@@ -1547,6 +1649,7 @@ AST:
 mlr -n put -v unset 3
 DSL EXPRESSION:
 unset 3
+
 AST:
 * statement block
     * unset "unset"
@@ -1560,6 +1663,7 @@ mlr -n put -f ./reg-test/input/parse-error.mlr
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {};               $x=6; end{@z=9} /dev/null
 DSL EXPRESSION:
 begin{@a=1}; $e=2; $f==$g||$h==$i {};               $x=6; end{@z=9}
+
 AST:
 * statement block
     * begin block
@@ -1592,6 +1696,7 @@ AST:
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1};           $x=6; end{@z=9} /dev/null
 DSL EXPRESSION:
 begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1};           $x=6; end{@z=9}
+
 AST:
 * statement block
     * begin block
@@ -1627,6 +1732,7 @@ AST:
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2};      $x=6; end{@z=9} /dev/null
 DSL EXPRESSION:
 begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2};      $x=6; end{@z=9}
+
 AST:
 * statement block
     * begin block
@@ -1665,6 +1771,7 @@ AST:
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2;$u=3}; $x=6; end{@z=9} /dev/null
 DSL EXPRESSION:
 begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2;$u=3}; $x=6; end{@z=9}
+
 AST:
 * statement block
     * begin block
@@ -1706,6 +1813,7 @@ AST:
 mlr put -v begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emit @v;emit @w; dump}; $x=6; end{@z=9} /dev/null
 DSL EXPRESSION:
 begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;@t["u".$5]=2;emit @v;emit @w; dump}; $x=6; end{@z=9}
+
 AST:
 * statement block
     * begin block
@@ -1761,6 +1869,7 @@ AST:
 mlr put -v begin{true{@x=1}}; true{@x=2}; end{true{@x=3}} /dev/null
 DSL EXPRESSION:
 begin{true{@x=1}}; true{@x=2}; end{true{@x=3}}
+
 AST:
 * statement block
     * begin block

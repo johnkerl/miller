@@ -314,6 +314,7 @@ func NewTransformerPut(
 		if echoDSLString {
 			fmt.Println("DSL EXPRESSION:")
 			fmt.Println(dslString)
+			fmt.Println()
 		}
 		if printASTAsTree {
 			fmt.Println("AST:")

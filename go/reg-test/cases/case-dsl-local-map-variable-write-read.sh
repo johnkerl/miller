@@ -1,16 +1,16 @@
-run_mlr --from $indir/xyz345 put '
+run_mlr --from $indir/xyz345 --ojson put '
     $s = a;
     $t = b[$x];
     $u = c[$x][$y];
     $v = d[$x][$y][$z];
 '
 
-run_mlr --from $indir/xyz345 put '
+run_mlr --from $indir/xyz345 --ojson put '
     d[$x][$y][$z] = 9;
     $d = d[$x][$y][$z];
 '
 
-run_mlr --from $indir/xyz345 put '
+run_mlr --from $indir/xyz345 --ojson put '
     a = 6;
     b[$x] = 7;
     c[$x][$y] = 8;
@@ -22,7 +22,7 @@ run_mlr --from $indir/xyz345 put '
     $d = d[$x][$y][$z];
 '
 
-run_mlr --from $indir/xyz345 put '
+run_mlr --from $indir/xyz345 --ojson put '
     a = 6;
     b[$x] = 7;
     c[$x][$y] = 8;

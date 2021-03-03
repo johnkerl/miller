@@ -1,7 +1,9 @@
 ================================================================
 TOP OF LIST:
 
-* warnings: call them something else & make them fatal the process ...
+! ut:
+  o triple-for multi-middle case
+  o substr/error cases C <-> Go
 
 * regexes
   o finish stats1 -r
@@ -16,6 +18,7 @@ TOP OF LIST:
 * json null
 
 * smart fmtnum
+  - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
   - fmtnum
   - ofmt
   - no other callsites?!?!?!
