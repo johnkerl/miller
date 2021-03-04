@@ -58,7 +58,7 @@ mlr -n --ojson put
   "s17": "abcdefg",
   "s07": "",
   "s39": "",
-  "s53": (error),
+  "s53": "",
   "s93": ""
 }
 {
