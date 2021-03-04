@@ -65,13 +65,7 @@ func MlrvalDot(input1, input2 *Mlrval) *Mlrval {
 
 func MlrvalSubstr1Up(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
-		if input1.IsNumeric() {
-			// JIT-stringify, if not already (e.g. intval scanned from string
-			// in input-file data)
-			input1.setPrintRep()
-		} else {
-			return MLRVAL_ERROR
-		}
+		return MLRVAL_ERROR
 	}
 	// TODO: fix this with regard to UTF-8 and runes.
 	strlen := int(len(input1.printrep))
@@ -98,9 +92,9 @@ func MlrvalSubstr1Up(input1, input2, input3 *Mlrval) *Mlrval {
 	n, nok := UnaliasArrayLengthIndex(strlen, upperMindex)
 
 	if !mok || !nok {
-		return MlrvalPointerFromString("")
+		return MLRVAL_VOID
 	} else if m > n {
-		return MLRVAL_ERROR
+		return MLRVAL_VOID
 	} else {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
 		// while the 2nd is exclusive. For Miller, indices are 1-up and both
@@ -115,13 +109,7 @@ func MlrvalSubstr1Up(input1, input2, input3 *Mlrval) *Mlrval {
 
 func MlrvalSubstr0Up(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
-		if input1.IsNumeric() {
-			// JIT-stringify, if not already (e.g. intval scanned from string
-			// in input-file data)
-			input1.setPrintRep()
-		} else {
-			return MLRVAL_ERROR
-		}
+		return MLRVAL_ERROR
 	}
 	// TODO: fix this with regard to UTF-8 and runes.
 	strlen := int(len(input1.printrep))
@@ -156,9 +144,9 @@ func MlrvalSubstr0Up(input1, input2, input3 *Mlrval) *Mlrval {
 	n, nok := UnaliasArrayLengthIndex(strlen, upperMindex)
 
 	if !mok || !nok {
-		return MlrvalPointerFromString("")
+		return MLRVAL_VOID
 	} else if m > n {
-		return MLRVAL_ERROR
+		return MLRVAL_VOID
 	} else {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
 		// while the 2nd is exclusive. For Miller, indices are 1-up and both
