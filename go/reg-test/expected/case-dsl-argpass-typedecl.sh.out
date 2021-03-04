@@ -22,7 +22,6 @@ mlr --from ./reg-test/input/abixy put
   }
   $c = f($x);
 
-mlr: int type assertion for variable i unmet by value 0.346790 with type float.
 
 mlr --from ./reg-test/input/abixy put 
   func f(num i): int {
@@ -30,7 +29,6 @@ mlr --from ./reg-test/input/abixy put
   }
   $c = f($x);
 
-mlr: function f returned type float, not matching typedecl int.
 
 mlr --from ./reg-test/input/abixy put 
   func f(num i): int {
@@ -38,7 +36,6 @@ mlr --from ./reg-test/input/abixy put
   }
   $c = f($i);
 
-mlr: function f returned type float, not matching typedecl int.
 
 mlr --from ./reg-test/input/abixy put 
   func f(num i): int {
@@ -47,7 +44,6 @@ mlr --from ./reg-test/input/abixy put
   }
   $c = f($x);
 
-mlr: numeric type assertion for variable i unmet by value "a" with type string.
 
 mlr --from ./reg-test/input/abixy put 
   subr s(int i) {
@@ -82,7 +78,6 @@ mlr --from ./reg-test/input/abixy put
   }
   call s($x);
 
-mlr: int type assertion for variable i unmet by value 0.346790 with type float.
 
 mlr --from ./reg-test/input/abixy put 
   subr s(num i) {
@@ -91,5 +86,4 @@ mlr --from ./reg-test/input/abixy put
   }
   call s($x);
 
-mlr: numeric type assertion for variable i unmet by value "a" with type string.
 

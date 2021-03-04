@@ -6,8 +6,10 @@ for arg; do
   if [ "$arg" = "-C5" ]; then
     diff_context_flag="$arg"
   else
-    expfile=./reg-test/expected/$arg.out
-    outfile=./output-reg-test/$arg.out
-    diff -a -I '^mlr' -I '^Miller:' -I '^cat' $expfile $outfile
+    for suffix in out err; do
+      expfile=./reg-test/expected/$arg.$suffix
+      outfile=./output-reg-test/$arg.$suffix
+      diff -a -I '^mlr' -I '^Miller:' -I '^cat' $expfile $outfile
+    done
   fi
 done

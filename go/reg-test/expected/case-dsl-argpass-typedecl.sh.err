@@ -1,0 +1,9 @@
+
+Miller: couldn't assign variable int i from value float 0.3467901443380824
+Miller: couldn't assign variable int function return value from value float 3.7967901443380825
+Miller: couldn't assign variable int function return value from value float 4.45
+Miller: couldn't assign variable int function return value from value error (error)
+Miller: couldn't assign variable int i from value float 0.3467901443380824
+
+Miller: couldn't assign variable num i from value string a
+

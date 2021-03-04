@@ -1,0 +1,24 @@
+
+Miller: return statements in subr blocks must not return a value.
+Miller: return statements in func blocks must return a value.
+Miller: function named "log" must not override a built-in function of the same name.
+Miller: begin blocks can only be at top level.
+Miller: end blocks can only be at top level.
+Miller: begin blocks can only be at top level.
+Miller: end blocks can only be at top level.
+Miller: func blocks can only be at top level.
+Miller: subr blocks can only be at top level.
+Miller: func blocks can only be at top level.
+Miller: subr blocks can only be at top level.
+Miller: begin blocks can only be at top level.
+Miller: end blocks can only be at top level.
+Miller: begin blocks can only be at top level.
+Miller: end blocks can only be at top level.
+Miller: func blocks can only be at top level.
+Miller: subr blocks can only be at top level.
+Miller: func blocks can only be at top level.
+Miller: subr blocks can only be at top level.
+Miller: function named "log" must not override a built-in function of the same name.
+Miller: function named "f" has already been defined.
+Miller: subroutine named "s" has already been defined.
+Miller: subroutine named "s" has already been defined.

@@ -24,10 +24,8 @@ mlr --from ./reg-test/input/abixy-het put -q o = mapdiff(); dump o
 {}
 
 mlr --from ./reg-test/input/abixy-het put -q o = mapexcept(); dump o
-Miller: couldn't assign variable var o from value error (error)
 
 mlr --from ./reg-test/input/abixy-het put -q o = mapselect(); dump o
-Miller: couldn't assign variable var o from value error (error)
 
 mlr --from ./reg-test/input/abixy-het put -q o = mapsum($*); dump o
 {
