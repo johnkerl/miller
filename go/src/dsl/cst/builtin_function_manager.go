@@ -801,6 +801,37 @@ Leaves non-numbers as-is.`,
 		zaryFunc: types.MlrvalUptime,
 	},
 
+	{
+		name:  "strftime",
+		class: FUNC_CLASS_TIME,
+		help: ` Formats seconds since the epoch as timestamp, e.g.
+	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
+	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
+	Format strings are as in the C library (please see "man strftime" on your system),
+	with the Miller-specific addition of "%1S" through "%9S" which format the seconds
+	with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
+	See also strftime_local.
+`,
+		binaryFunc: types.MlrvalStrftime,
+	},
+
+	{
+		name:  "strptime",
+		class: FUNC_CLASS_TIME,
+		help: `strptime (class=time #args=2): Parses timestamp as floating-point seconds since the epoch,
+	e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
+	and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
+	See also strptime_local.
+`,
+		binaryFunc: types.MlrvalStrptime,
+	},
+
+	// TODO:
+
+	// strftime_local (class=time #args=2): Like strftime but consults the $TZ environment variable to get local time zone.
+
+	// strptime_local (class=time #args=2): Like strptime, but consults $TZ environment variable to find and use local timezone.
+
 	// TODO:
 
 	// dhms2fsec (class=time #args=1): Recovers floating-point seconds as in
@@ -856,26 +887,6 @@ Leaves non-numbers as-is.`,
 	//
 	// sec2hms (class=time #args=1): Formats integer seconds as in
 	// sec2hms(5000) = "01:23:20"
-	//
-	// strftime (class=time #args=2): Formats seconds since the epoch as timestamp, e.g.
-	// strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
-	// strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
-	// Format strings are as in the C library (please see "man strftime" on your system),
-	// with the Miller-specific addition of "%1S" through "%9S" which format the seconds
-	// with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
-	// See also strftime_local.
-	//
-	// strftime_local (class=time #args=2): Like strftime but consults the $TZ environment variable to get local time zone.
-	//
-	// strptime (class=time #args=2): Parses timestamp as floating-point seconds since the epoch,
-	// e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
-	// and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
-	// See also strptime_local.
-	//
-	// strptime_local (class=time #args=2): Like strptime, but consults $TZ environment variable to find and use local timezone.
-	//
-	// systime (class=time #args=0): Floating-point seconds since the epoch,
-	// e.g. 1440768801.748936.
 
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_TYPING

@@ -50,3 +50,12 @@ func MlrvalSec2GMTBinary(input1, input2 *Mlrval) *Mlrval {
 		return input1
 	}
 }
+
+// ----------------------------------------------------------------
+func MlrvalStrftime(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromString("foo")
+}
+
+func MlrvalStrptime(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromString("foo")
+}
