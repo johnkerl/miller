@@ -9,6 +9,7 @@ package cst
 
 import (
 	"fmt"
+	"os"
 
 	"miller/src/dsl"
 	"miller/src/lib"
@@ -106,7 +107,8 @@ func warnOnASTAux(
 				// -- not thousands of lines of Miller-DSL source code -- so
 				// people can look at their few lines of Miller-DSL code and
 				// spot their error.
-				fmt.Printf(
+				fmt.Fprintf(
+					os.Stderr,
 					"Variable name %s might not have been assigned yet.\n",
 					variableName,
 				)
