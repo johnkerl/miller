@@ -3,6 +3,9 @@ package types
 import (
 	"time"
 
+	"github.com/lestrrat-go/strftime"
+	"github.com/pbnjay/strptime"
+
 	"miller/src/lib"
 )
 
@@ -52,10 +55,42 @@ func MlrvalSec2GMTBinary(input1, input2 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
+// Argument 1 is int/float seconds since the epoch.
+// Argument 2 is format string like "%Y-%m-%d %H:%M:%S".
 func MlrvalStrftime(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromString("foo")
+	epochSeconds, ok := input1.GetNumericToFloatValue()
+	if !ok {
+		return MLRVAL_ERROR
+	}
+	if input2.mvtype != MT_STRING {
+		return MLRVAL_ERROR
+	}
+	formatString := input2.printrep
+
+	inputTime := lib.EpochSecondsToTime(epochSeconds)
+
+	outputString, err := strftime.Format(formatString, inputTime)
+	if err != nil {
+		return MLRVAL_ERROR
+	}
+
+	return MlrvalPointerFromString(outputString)
 }
 
 func MlrvalStrptime(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromString("foo")
+	if input1.mvtype != MT_STRING {
+		return MLRVAL_ERROR
+	}
+	if input2.mvtype != MT_STRING {
+		return MLRVAL_ERROR
+	}
+	timeString := input1.printrep
+	formatString := input2.printrep
+
+	t, err := strptime.Parse(timeString, formatString)
+	if err != nil {
+		return MLRVAL_ERROR
+	}
+
+	return MlrvalPointerFromFloat64(float64(t.UnixNano()) / 1.0e9)
 }
