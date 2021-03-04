@@ -9,6 +9,10 @@ import (
 	"miller/src/lib"
 )
 
+const ISO8601_TIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+
+var ptr_ISO8601_TIME_FORMAT = MlrvalPointerFromString("%Y-%m-%dT%H:%M:%SZ")
+
 // ================================================================
 func MlrvalSystime() *Mlrval {
 	return MlrvalPointerFromFloat64(
@@ -55,6 +59,11 @@ func MlrvalSec2GMTBinary(input1, input2 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
+func MlrvalSec2GMTDate(input1 *Mlrval) *Mlrval {
+	return MlrvalStrftime(input1, MlrvalPointerFromString("%Y-%m-%d"))
+}
+
+// ----------------------------------------------------------------
 // Argument 1 is int/float seconds since the epoch.
 // Argument 2 is format string like "%Y-%m-%d %H:%M:%S".
 func MlrvalStrftime(input1, input2 *Mlrval) *Mlrval {
@@ -77,6 +86,8 @@ func MlrvalStrftime(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromString(outputString)
 }
 
+// Argument 1 is formatted date string like "2021-03-04 02:59:50".
+// Argument 2 is format string like "%Y-%m-%d %H:%M:%S".
 func MlrvalStrptime(input1, input2 *Mlrval) *Mlrval {
 	if input1.mvtype != MT_STRING {
 		return MLRVAL_ERROR
@@ -93,4 +104,9 @@ func MlrvalStrptime(input1, input2 *Mlrval) *Mlrval {
 	}
 
 	return MlrvalPointerFromFloat64(float64(t.UnixNano()) / 1.0e9)
+}
+
+// Argument 1 is formatted date string like "2021-03-04T02:59:50Z".
+func MlrvalGMT2Sec(input1 *Mlrval) *Mlrval {
+	return MlrvalStrptime(input1, ptr_ISO8601_TIME_FORMAT)
 }

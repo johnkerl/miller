@@ -770,14 +770,32 @@ Int-valued example: '$n=floor(20+urand()*11)'.`,
 	// FUNC_CLASS_TIME
 
 	{
+		name:      "gmt2sec",
+		class:     FUNC_CLASS_TIME,
+		help:      `Parses GMT timestamp as integer seconds since the epoch.`,
+		unaryFunc: types.MlrvalGMT2Sec,
+	},
+
+	{
 		name:  "sec2gmt",
 		class: FUNC_CLASS_TIME,
 		help: `Formats seconds since epoch (integer part)
 as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-Leaves non-numbers as-is.`,
+Leaves non-numbers as-is. With second integer argument n, includes n decimal places
+for the seconds part`,
 		unaryFunc:          types.MlrvalSec2GMTUnary,
 		binaryFunc:         types.MlrvalSec2GMTBinary,
 		hasMultipleArities: true,
+	},
+
+	{
+		name:  "sec2gmtdate",
+		class: FUNC_CLASS_TIME,
+		help: `Formats seconds since epoch (integer part)
+as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
+Leaves non-numbers as-is.
+`,
+		unaryFunc:          types.MlrvalSec2GMTDate,
 	},
 
 	{
@@ -846,9 +864,6 @@ Leaves non-numbers as-is.`,
 	// fsec2hms (class=time #args=1): Formats floating-point seconds as in
 	// fsec2hms(5000.25) = "01:23:20.250000"
 	//
-	// gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since
-	// the epoch.
-	//
 	// localtime2sec (class=time #args=1): Parses local timestamp as integer seconds since
 	// the epoch. Consults $TZ environment variable.
 	//
@@ -860,19 +875,7 @@ Leaves non-numbers as-is.`,
 	//
 	// sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
 	// = "5d18h53m20s"
-	//
-	// sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
-	// as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-	// Leaves non-numbers as-is.
-	//
-	// sec2gmt (class=time #args=2): Formats seconds since epoch as GMT timestamp with n
-	// decimal places for seconds, e.g. sec2gmt(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
-	// Leaves non-numbers as-is.
-	//
-	// sec2gmtdate (class=time #args=1): Formats seconds since epoch (integer part)
-	// as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
-	// Leaves non-numbers as-is.
-	//
+
 	// sec2localtime (class=time #args=1): Formats seconds since epoch (integer part)
 	// as local timestamp, e.g. sec2localtime(1440768801.7) = "2015-08-28T13:33:21Z".
 	// Consults $TZ environment variable. Leaves non-numbers as-is.
