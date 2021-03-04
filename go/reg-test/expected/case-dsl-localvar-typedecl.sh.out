@@ -20,14 +20,12 @@ mlr --from ./reg-test/input/abixy put
   a = NR;
   $c = a;
 
-mlr: string type assertion for variable a unmet by value 1 with type int.
 
 mlr --from ./reg-test/input/abixy put 
   int a = $a;
   a = NR;
   $c = a;
 
-mlr: int type assertion for variable a unmet by value "pan" with type string.
 
 mlr --from ./reg-test/input/abixy put 
   int i = $i;

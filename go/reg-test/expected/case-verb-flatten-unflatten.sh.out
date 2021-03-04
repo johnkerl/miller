@@ -221,7 +221,7 @@ mlr --ixtab --ojson unflatten -s . ./reg-test/input/unflatten-input.xtab
   }
 }
 
-mlr --ixtab --ojson --iflatsep @ unflatten ./reg-test/input/unflatten-input-2.xtab
+mlr --ixtab --ojson --oflatsep @ unflatten ./reg-test/input/unflatten-input-2.xtab
 {
   "hostname": "localhost",
   "pid": 12345,
@@ -250,7 +250,7 @@ mlr --ixtab --ojson --iflatsep @ unflatten ./reg-test/input/unflatten-input-2.xt
   }
 }
 
-mlr --xtab --iflatsep . --oflatsep @ unflatten then flatten ./reg-test/input/unflatten-input.xtab
+mlr --xtab unflatten -s . then flatten -s @ ./reg-test/input/unflatten-input.xtab
 hostname                    localhost
 pid                         12345
 req@id                      6789

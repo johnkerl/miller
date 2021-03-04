@@ -1,0 +1,57 @@
+
+mlr: cannot parse DSL expression.
+Parse error on token "," at line 1 columnn 35.
+Expected one of:
+  { ( ) field_name $[ braced_field_name $[[ $[[[ full_srec oosvar_name @[
+  braced_oosvar_name full_oosvar all non_sigil_name float int + - .+ .- !
+  ~ string_literal regex_case_insensitive int_literal float_literal boolean_literal
+  const_M_PI const_M_E panic [ ctx_IPS ctx_IFS ctx_IRS ctx_OPS ctx_OFS ctx_ORS
+  ctx_OFLATSEP ctx_NF ctx_NR ctx_FNR ctx_FILENAME ctx_FILENUM env
+
+mlr: cannot parse DSL expression.
+Parse error on token "," at line 1 columnn 10.
+Expected one of:
+  ) non_sigil_name arr bool float int map num str var
+
+mlr: cannot parse DSL expression.
+Parse error on token "," at line 1 columnn 14.
+Expected one of:
+  ) non_sigil_name arr bool float int map num str var
+
+mlr: cannot parse DSL expression.
+Parse error on token "," at line 1 columnn 37.
+Expected one of:
+  { ( ) field_name $[ braced_field_name $[[ $[[[ full_srec oosvar_name @[
+  braced_oosvar_name full_oosvar all non_sigil_name float int + - .+ .- !
+  ~ string_literal regex_case_insensitive int_literal float_literal boolean_literal
+  const_M_PI const_M_E panic [ ctx_IPS ctx_IFS ctx_IRS ctx_OPS ctx_OFS ctx_ORS
+  ctx_OFLATSEP ctx_NF ctx_NR ctx_FNR ctx_FILENAME ctx_FILENUM env
+
+mlr: cannot parse DSL expression.
+Parse error on token "," at line 1 columnn 10.
+Expected one of:
+  ) non_sigil_name arr bool float int map num str var
+
+mlr: cannot parse DSL expression.
+Parse error on token "," at line 1 columnn 14.
+Expected one of:
+  ) non_sigil_name arr bool float int map num str var
+
+mlr: cannot parse DSL expression.
+Parse error on token "," at line 1 columnn 13.
+Expected one of:
+  { ( ) field_name $[ braced_field_name $[[ $[[[ full_srec oosvar_name @[
+  braced_oosvar_name full_oosvar all non_sigil_name float int + - .+ .- !
+  ~ string_literal regex_case_insensitive int_literal float_literal boolean_literal
+  const_M_PI const_M_E panic [ ctx_IPS ctx_IFS ctx_IRS ctx_OPS ctx_OFS ctx_ORS
+  ctx_OFLATSEP ctx_NF ctx_NR ctx_FNR ctx_FILENAME ctx_FILENUM env
+
+mlr: cannot parse DSL expression.
+Parse error on token "," at line 1 columnn 10.
+Expected one of:
+  { ( ) field_name $[ braced_field_name $[[ $[[[ full_srec oosvar_name @[
+  braced_oosvar_name full_oosvar all non_sigil_name float int + - .+ .- !
+  ~ string_literal regex_case_insensitive int_literal float_literal boolean_literal
+  const_M_PI const_M_E panic [ ctx_IPS ctx_IFS ctx_IRS ctx_OPS ctx_OFS ctx_ORS
+  ctx_OFLATSEP ctx_NF ctx_NR ctx_FNR ctx_FILENAME ctx_FILENUM env
+

@@ -16,12 +16,10 @@ mlr --from ./reg-test/input/xyz345 put
     a=2;
     a[3][4]=5;
 
-mlr: map type assertion for variable a unmet by value 2 with type int.
 
 mlr --from ./reg-test/input/xyz345 put 
     map a = {};
     a[3][4]=5;
     a=2;
 
-mlr: map type assertion for variable a unmet by value 2 with type int.
 

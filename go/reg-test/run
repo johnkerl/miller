@@ -35,8 +35,8 @@ set -uo pipefail
 #
 # * Each has lines of the form 'run_mlr ...' or 'mlr_expect_fail ...'.
 #   Those functions are defined here in this file. They take mlr command-lines
-#   as arguments.  They also take global variables $verbose, $outfile, and
-#   $errfile as side-inputs, and write global variables like
+#   as arguments.  They also take global variables $verbose, $actual_stdout_file, and
+#   $actual_stderr_file as side-inputs, and write global variables like
 #   $num_invocations_passed as side-outputs.
 #
 # * Each case can fail in the following ways:
@@ -75,11 +75,11 @@ run_mlr() {
     if [ "$verbose" = "true" ]; then
       echo mlr "$@"
     fi
-    echo mlr "$@" >> $outfile
+    echo mlr "$@" >> $actual_stdout_file
     num_invocations_attempted=`expr $num_invocations_attempted + 1`
 
-    # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
-    # Instead we use this '$errfile.$$' trick.
+    # There's no '1>> $actual_stdout_file 2>> $actual_stderr_file' but I'd use it if there were.
+    # Instead we use this '$actual_stderr_file.$$' trick.
     #
     # Also note that we could 2>&1 and have a single combined stdout-and-stderr
     # file. However, experience has shown that the line-ordering isn't
@@ -87,10 +87,10 @@ run_mlr() {
     # (and passing) on one platform to fail on another. See in particular
     # https://github.com/johnkerl/miller/issues/293
 
-    $path_to_mlr "$@" >> $outfile 2> $errfile.$$
+    $path_to_mlr "$@" >> $actual_stdout_file 2> $actual_stderr_file.$$
     status=$?
-    cat $errfile.$$ >> $errfile
-    rm $errfile.$$
+    cat $actual_stderr_file.$$ >> $actual_stderr_file
+    rm $actual_stderr_file.$$
 
     if [ $status -eq 0 ]; then
       num_invocations_passed=`expr $num_invocations_passed + 1`
@@ -98,10 +98,10 @@ run_mlr() {
       if [ "$verbose" = "true" ]; then
         echo "Exit status was $status; expected 0."
       fi
-      echo "Exit status was $status; expected 0." >> $outfile
+      echo "Exit status was $status; expected 0." >> $actual_stdout_file
       num_invocations_failed=`expr $num_invocations_failed + 1`
     fi
-    echo >> $outfile
+    echo >> $actual_stdout_file
   fi
 }
 
@@ -119,17 +119,17 @@ mlr_expect_fail() {
     if [ "$verbose" = "true" ]; then
       echo mlr "$@"
     fi
-    echo mlr "$@" >> $outfile 2> $errfile.$$
-    cat $errfile.$$ >> $errfile
-    rm $errfile.$$
+    echo mlr "$@" >> $actual_stdout_file 2> $actual_stderr_file.$$
+    cat $actual_stderr_file.$$ >> $actual_stderr_file
+    rm $actual_stderr_file.$$
     num_invocations_attempted=`expr $num_invocations_attempted + 1`
 
-    # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
-    # Instead we use this '$errfile.$$' trick.
-    $path_to_mlr "$@" >> $outfile 2> $errfile.$$
+    # There's no '1>> $actual_stdout_file 2>> $actual_stderr_file' but I'd use it if there were.
+    # Instead we use this '$actual_stderr_file.$$' trick.
+    $path_to_mlr "$@" >> $actual_stdout_file 2> $actual_stderr_file.$$
     status=$?
-    cat $errfile.$$ >> $errfile
-    rm $errfile.$$
+    cat $actual_stderr_file.$$ >> $actual_stderr_file
+    rm $actual_stderr_file.$$
 
     if [ $status -eq 1 ]; then
       num_invocations_passed=`expr $num_invocations_passed + 1`
@@ -138,9 +138,9 @@ mlr_expect_fail() {
       if [ "$verbose" = "true" ]; then
         echo "Exit status was $status; expected 1."
       fi
-      echo "Exit status was $status; expected 1." >> $outfile
+      echo "Exit status was $status; expected 1." >> $actual_stdout_file
     fi
-    echo >> $outfile
+    echo >> $actual_stdout_file
   fi
 }
 
@@ -161,7 +161,7 @@ run_mlr_externally_redirected() {
     if [ "$verbose" = "true" ]; then
       echo mlr "$@"
     fi
-    echo mlr "$@" >> $outfile
+    echo mlr "$@" >> $actual_stdout_file
     num_invocations_attempted=`expr $num_invocations_attempted + 1`
 
     $path_to_mlr "$@" # callsite is expected to redirect stdout and stderr
@@ -173,10 +173,10 @@ run_mlr_externally_redirected() {
       if [ "$verbose" = "true" ]; then
         echo "Exit status was $status; expected 0."
       fi
-      echo "Exit status was $status; expected 0." >> $outfile
+      echo "Exit status was $status; expected 0." >> $actual_stdout_file
       num_invocations_failed=`expr $num_invocations_failed + 1`
     fi
-    echo >> $outfile
+    echo >> $actual_stdout_file
   fi
 }
 
@@ -196,12 +196,12 @@ run_mlr_no_output() {
     fi
     num_invocations_attempted=`expr $num_invocations_attempted + 1`
 
-    # There's no '1>> $outfile 2>> $errfile' but I'd use it if there were.
-    # Instead we use this '$errfile.$$' trick.
-    $path_to_mlr "$@" 2> $errfile.$$
+    # There's no '1>> $actual_stdout_file 2>> $actual_stderr_file' but I'd use it if there were.
+    # Instead we use this '$actual_stderr_file.$$' trick.
+    $path_to_mlr "$@" 2> $actual_stderr_file.$$
     status=$?
-    cat $errfile.$$ >> $errfile
-    rm $errfile.$$
+    cat $actual_stderr_file.$$ >> $actual_stderr_file
+    rm $actual_stderr_file.$$
 
     if [ $status -eq 0 ]; then
       num_invocations_passed=`expr $num_invocations_passed + 1`
@@ -209,10 +209,10 @@ run_mlr_no_output() {
       if [ "$verbose" = "true" ]; then
         echo "Exit status was $status; expected 0."
       fi
-      echo "Exit status was $status; expected 0." >> $outfile
+      echo "Exit status was $status; expected 0." >> $actual_stdout_file
       num_invocations_failed=`expr $num_invocations_failed + 1`
     fi
-    echo >> $outfile
+    echo >> $actual_stdout_file
   fi
 }
 
@@ -229,9 +229,9 @@ run_cat() {
     if [ "$verbose" = "true" ]; then
       echo cat "$@"
     fi
-    echo cat "$@" >> $outfile # for diff at end
-    cat "$@" >> $outfile      # for diff at end
-    echo >> $outfile
+    echo cat "$@" >> $actual_stdout_file # for diff at end
+    cat "$@" >> $actual_stdout_file      # for diff at end
+    echo >> $actual_stdout_file
   fi
 }
 
@@ -244,10 +244,10 @@ announce() {
     echo "$@"
   else
 
-    echo >> $outfile
-    echo "================================================================" >> $outfile
-    echo "$@" >> $outfile
-    echo >> $outfile
+    echo >> $actual_stdout_file
+    echo "================================================================" >> $actual_stdout_file
+    echo "$@" >> $actual_stdout_file
+    echo >> $actual_stdout_file
   fi
 }
 
@@ -257,8 +257,8 @@ mention() {
     echo
     echo ---------------------------------------------------------------- "$@"
   else
-    echo >> $outfile
-    echo ---------------------------------------------------------------- "$@" >> $outfile
+    echo >> $actual_stdout_file
+    echo ---------------------------------------------------------------- "$@" >> $actual_stdout_file
   fi
 }
 
@@ -404,14 +404,16 @@ for case_file in $case_file_names; do
   num_invocations_failed=0
 
   case_name=$(basename $case_file)
-  outfile=$outdir/$case_name.out
-  errfile=$outdir/$case_name.err
-  expfile=$expdir/$case_name.out
+  actual_stdout_file=$outdir/$case_name.out
+  actual_stderr_file=$outdir/$case_name.err
+  expected_stdout_file=$expdir/$case_name.out
+  expected_stderr_file=$expdir/$case_name.err
 
   case_passed=true
 
   if [ "$only_show" = "false" ]; then
-    echo > $outfile
+    echo > $actual_stdout_file
+    echo > $actual_stderr_file
   fi
   num_cases_attempted=`expr $num_cases_attempted + 1`
 
@@ -471,21 +473,28 @@ for case_file in $case_file_names; do
     if [ "$sdiff" = "true" ]; then
       # Assuming we're run interactively
       width=$(stty size | awk '{print $2}')
-      echo sdiff -w $width $diff_context_flag $expfile $outfile
-      sdiff -w $width $diff_context_flag $expfile $outfile
+      echo sdiff -w $width $diff_context_flag $expected_stdout_file $actual_stdout_file
+      sdiff -w $width $diff_context_flag $expected_stdout_file $actual_stdout_file
+      echo sdiff -w $width $diff_context_flag $expected_stderr_file $actual_stderr_file
+      sdiff -w $width $diff_context_flag $expected_stderr_file $actual_stderr_file
     else
-      echo diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile
-      diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile
+      echo diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stdout_file $actual_stdout_file
+      diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stdout_file $actual_stdout_file
+      echo diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stderr_file $actual_stderr_file
+      diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stderr_file $actual_stderr_file
     fi
   else
-    diff -q -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expfile $outfile > /dev/null
+    diff -q -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stdout_file $actual_stdout_file > /dev/null
+    diff -q -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stderr_file $actual_stderr_file > /dev/null
   fi
   status=$?
   if [ $status -ne 0 ]; then
     if [ "$verbose" = "true" ]; then
       echo "Case failed due to expected output != actual output:"
-      echo "$expfile"
-      echo "$outfile"
+      echo "$expected_stdout_file"
+      echo "$actual_stdout_file"
+      echo "$expected_stderr_file"
+      echo "$actual_stderr_file"
     fi
     case_passed=false
   fi

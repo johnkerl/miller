@@ -3,7 +3,6 @@ TOP OF LIST:
 
 ! ut:
   o triple-for multi-middle case
-  o substr/error cases C <-> Go
 
 * -w's to stderr & trapping stderr in reg-test/run
 
