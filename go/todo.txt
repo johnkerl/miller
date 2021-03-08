@@ -8,6 +8,13 @@ TOP OF LIST:
   ! separate DSL/non-DSL string-literal handlers
 
 ! strptime/strftime experiments ...
+  * verb sec2gmtdate
+    - leaves non-numbers as-is -- ?
+    - check sec2gmt as well -- ?
+  * functions:
+    sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
+    sec2localtime dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec
+    localtime2sec gmt2sec strftime strftime_local strptime strptime_local
 
 ! --nojvstack; default --jvstack; code it up ...
 
@@ -178,7 +185,7 @@ bar
 format-values
 least-frequent
 most-frequent
-sec2gmtdate
+
 top
 
 nest
@@ -194,10 +201,6 @@ REMAINING FUNCTIONS:
 * regextract regextract_or_else
 
 * system
-
-* sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime sec2localtime
-* dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec localtime2sec gmt2sec
-* strftime strftime_local strptime strptime_local
 
 https://github.com/lestrrat-go/strftime
 https://github.com/pbnjay/strptime
