@@ -2086,11 +2086,20 @@ TripleForStart
     <<dsl.AppendChild($0, $2) >>
 ;
 
+// Enforced in the CST, not here: the last must be a bare boolean; the ones
+// before must be assignments.
 TripleForContinuation
   : empty
     << dsl.NewASTNodeZary(nil, dsl.NodeTypeStatementBlock) >>
-  | BracelessStatement
+  | TripleForContinuationItem
     << dsl.NewASTNodeUnary(nil, $0, dsl.NodeTypeStatementBlock) >>
+  | TripleForContinuation "," TripleForContinuationItem
+    <<dsl.AppendChild($0, $2) >>
+;
+
+TripleForContinuationItem
+  : Assignment
+  | BareBoolean
 ;
 
 TripleForUpdate

@@ -1,9 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-! ut:
-  o triple-for multi-middle case
-
 * regexes
   o finish stats1 -r
   o regex captures ...

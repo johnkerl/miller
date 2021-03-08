@@ -3,6 +3,8 @@ github.com/fatih/color v1.10.0/go.mod h1:ELkj/draVOlAH/xkhN6mQ50Qd0MPOk5AAr3maGE
 github.com/goccmack/gocc v0.0.0-20210201103733-1bd198f09019 h1:frVuW4LszXD/AjX9dC1y4I+GwTjZMl6153O2mk/lmHo=
 github.com/goccmack/gocc v0.0.0-20210201103733-1bd198f09019/go.mod h1:ZjwYs2UwOh6NiluQ1XCoKNLVECdeFf33rrGEZ+IpNq4=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
+github.com/johnkerl/gocc v0.0.0-20210214145925-018e125fd1ee h1:UCSd1mw2XP4Hv2iVlLjU6Om+DZfBc2XMJ1GqHorQUSc=
+github.com/johnkerl/gocc v0.0.0-20210214145925-018e125fd1ee/go.mod h1:6oAcMpl/qp57NgiufLc2bISrDa4q12XciKeOCUqdeoU=
 github.com/kisielk/errcheck v1.2.0/go.mod h1:/BMXB+zMLi60iA8Vv6Ksmxu/1UDYcXs4uQLJ+jE2L00=
 github.com/mattn/go-colorable v0.1.8 h1:c1ghPdyEDarC70ftn0y+A/Ee++9zz8ljHG1b13eJ0s8=
 github.com/mattn/go-colorable v0.1.8/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=
