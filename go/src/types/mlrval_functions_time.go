@@ -62,7 +62,11 @@ func MlrvalSec2GMTBinary(input1, input2 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 func MlrvalSec2GMTDate(input1 *Mlrval) *Mlrval {
-	return MlrvalStrftime(input1, MlrvalPointerFromString("%Y-%m-%d"))
+	if input1.mvtype == MT_INT || input1.mvtype == MT_FLOAT {
+		return MlrvalStrftime(input1, MlrvalPointerFromString("%Y-%m-%d"))
+	} else {
+		return input1
+	}
 }
 
 // ================================================================
