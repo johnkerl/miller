@@ -292,11 +292,11 @@ func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 // So we have:
 //
 //   mlr put '
-//     x = 1;           <--- frame #1 main
-//     for (k in $*) {  <--- frame #2 for for-loop bindvars (right here)
-//       x = 2          <--- frame #3 for for-loop locals
+//     x = 1;             <--- frame #1 main
+//     for (k,v in $*) {  <--- frame #2 for for-loop bindvars (right here)
+//       x = 2            <--- frame #3 for for-loop locals
 //     }
-//     x = 3;           <--- back in frame #1 main
+//     x = 3;             <--- back in frame #1 main
 //   '
 //
 
@@ -490,11 +490,11 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 // So we have:
 //
 //   mlr put '
-//     x = 1;           <--- frame #1 main
-//     for (k in $*) {  <--- frame #2 for for-loop bindvars (right here)
-//       x = 2          <--- frame #3 for for-loop locals
+//     x = 1;                   <--- frame #1 main
+//     for ((k1,k2),v in $*) {  <--- frame #2 for for-loop bindvars (right here)
+//       x = 2                  <--- frame #3 for for-loop locals
 //     }
-//     x = 3;           <--- back in frame #1 main
+//     x = 3;                   <--- back in frame #1 main
 //   '
 //
 
@@ -715,6 +715,7 @@ func (this *ForLoopMultivariableNode) executeInner(
 // ================================================================
 type TripleForLoopNode struct {
 	startBlockNode             *StatementBlockNode
+	precontinuationAssignments []IExecutable
 	continuationExpressionNode IEvaluable
 	updateBlockNode            *StatementBlockNode
 	bodyBlockNode              *StatementBlockNode
@@ -722,12 +723,14 @@ type TripleForLoopNode struct {
 
 func NewTripleForLoopNode(
 	startBlockNode *StatementBlockNode,
+	precontinuationAssignments []IExecutable,
 	continuationExpressionNode IEvaluable,
 	updateBlockNode *StatementBlockNode,
 	bodyBlockNode *StatementBlockNode,
 ) *TripleForLoopNode {
 	return &TripleForLoopNode{
 		startBlockNode,
+		precontinuationAssignments,
 		continuationExpressionNode,
 		updateBlockNode,
 		bodyBlockNode,
@@ -786,7 +789,6 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 
 	lib.InternalCodingErrorIf(startBlockASTNode.Type != dsl.NodeTypeStatementBlock)
 	lib.InternalCodingErrorIf(continuationExpressionASTNode.Type != dsl.NodeTypeStatementBlock)
-	lib.InternalCodingErrorIf(len(continuationExpressionASTNode.Children) > 1)
 	lib.InternalCodingErrorIf(updateBlockASTNode.Type != dsl.NodeTypeStatementBlock)
 	lib.InternalCodingErrorIf(bodyBlockASTNode.Type != dsl.NodeTypeStatementBlock)
 
@@ -795,17 +797,44 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 		return nil, err
 	}
 
+	// Enforced here, not in the grammar: the last must be a bare boolean; the ones
+	// before must be assignments. Example:
+	// for (int i = 0; c += 1, i < 10; i += 1) { ... }
+	var precontinuationAssignments []IExecutable = nil
 	var continuationExpressionNode IEvaluable = nil
-	// empty is true
-	if len(continuationExpressionASTNode.Children) == 1 {
-		bareBooleanASTNode := continuationExpressionASTNode.Children[0]
+	if len(continuationExpressionASTNode.Children) > 0 { // empty is true
+		n := len(continuationExpressionASTNode.Children)
+		if n > 1 {
+			precontinuationAssignments = make([]IExecutable, n-1)
+			for i := 0; i < n-1; i++ {
+				if continuationExpressionASTNode.Children[i].Type != dsl.NodeTypeAssignment {
+					return nil, errors.New(
+						"Miller: the non-final triple-for continutation statements must be assignments.",
+					)
+				}
+				precontinuationAssignment, err := this.BuildAssignmentNode(
+					continuationExpressionASTNode.Children[i],
+				)
+				if err != nil {
+					return nil, err
+				}
+				precontinuationAssignments[i] = precontinuationAssignment
+			}
+		}
+
+		bareBooleanASTNode := continuationExpressionASTNode.Children[n-1]
 		if bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean {
-			return nil, errors.New(
-				"Miller: the triple-for continutation statement must be a bare boolean.",
-			)
+			if n == 1 {
+				return nil, errors.New(
+					"Miller: the triple-for continutation statement must be a bare boolean.",
+				)
+			} else {
+				return nil, errors.New(
+					"Miller: the final triple-for continutation statement must be a bare boolean.",
+				)
+			}
 		}
 		lib.InternalCodingErrorIf(len(bareBooleanASTNode.Children) != 1)
-
 		continuationExpressionNode, err = this.BuildEvaluableNode(bareBooleanASTNode.Children[0])
 		if err != nil {
 			return nil, err
@@ -824,6 +853,7 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 
 	return NewTripleForLoopNode(
 		startBlockNode,
+		precontinuationAssignments,
 		continuationExpressionNode,
 		updateBlockNode,
 		bodyBlockNode,
@@ -837,11 +867,11 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 // So we have:
 //
 //   mlr put '
-//     x = 1;           <--- frame #1 main
-//     for (k in $*) {  <--- frame #2 for for-loop bindvars (right here)
-//       x = 2          <--- frame #3 for for-loop locals
+//     x = 1;                             <--- frame #1 main
+//     for (int i = 0; i < 10; i += 1) {  <--- frame #2 for for-loop bindvars (right here)
+//       x = 2                            <--- frame #3 for for-loop locals
 //     }
-//     x = 3;           <--- back in frame #1 main
+//     x = 3;                             <--- back in frame #1 main
 //   '
 //
 
@@ -859,9 +889,15 @@ func (this *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 	}
 
 	for {
-		// state.Stack.Dump()
-		// empty is true
-		if this.continuationExpressionNode != nil {
+		if this.precontinuationAssignments != nil {
+			for _, precontinuationAssignment := range this.precontinuationAssignments {
+				_, err := precontinuationAssignment.Execute(state)
+				if err != nil {
+					return nil, err
+				}
+			}
+		}
+		if this.continuationExpressionNode != nil { // empty is true
 			continuationValue := this.continuationExpressionNode.Evaluate(state)
 			boolValue, isBool := continuationValue.GetBoolValue()
 			if !isBool {
