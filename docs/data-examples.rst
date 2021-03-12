@@ -81,7 +81,7 @@ Categorization of total insured value:
 Color/shape data
 ----------------------------------------------------------------
 
-The `colored-shapes.dkvp <data/colored-shapes.dkvp>`_ file is some sample data produced by the `mkdat2 <https://github.com/johnkerl/miller/blob/master/doc/datagen/mkdat2>`_ script. The idea is:
+The `colored-shapes.dkvp <https://github.com/johnkerl/miller/blob/master/docs/data/colored-shapes.dkvp>`_ file is some sample data produced by the `mkdat2 <https://github.com/johnkerl/miller/blob/master/doc/datagen/mkdat2>`_ script. The idea is:
 
 * Produce some data with known distributions and correlations, and verify that Miller recovers those properties empirically.
 * Each record is labeled with one of a few colors and one of a few shapes.
