@@ -363,11 +363,11 @@ func MlrvalSec2DHMS(input1 *Mlrval) *Mlrval {
 		)
 	} else if m != 0 {
 		return MlrvalPointerFromString(
-			fmt.Sprintf("%02dm%02ds", m, s),
+			fmt.Sprintf("%dm%02ds", m, s),
 		)
 	} else {
 		return MlrvalPointerFromString(
-			fmt.Sprintf("%02ds", s),
+			fmt.Sprintf("%ds", s),
 		)
 	}
 

@@ -15,6 +15,9 @@ TOP OF LIST:
     sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
     sec2localtime dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec
     localtime2sec gmt2sec strftime strftime_local strptime strptime_local
+  ! strptime:
+    strptime("1970-01-01T00:00:00.Z", "%Y-%m-%dT%H:%M:%SZ")
+    (error)
 
 ! --nojvstack; default --jvstack; code it up ...
 
