@@ -471,6 +471,7 @@ func (this *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) ([]*Mlr
 	return mlrvals, allFound
 }
 
+// TODO: rename to CopySelectedValues
 // As previous but with copying. For stats1.
 func (this *Mlrmap) GetSelectedValues(selectedFieldNames []string) ([]*Mlrval, bool) {
 	allFound := true

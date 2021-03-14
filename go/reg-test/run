@@ -475,24 +475,38 @@ for case_file in $case_file_names; do
       width=$(stty size | awk '{print $2}')
       echo sdiff -w $width $diff_context_flag $expected_stdout_file $actual_stdout_file
       sdiff -w $width $diff_context_flag $expected_stdout_file $actual_stdout_file
+      ostatus=$?
       echo sdiff -w $width $diff_context_flag $expected_stderr_file $actual_stderr_file
       sdiff -w $width $diff_context_flag $expected_stderr_file $actual_stderr_file
+      estatus=$?
     else
       echo diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stdout_file $actual_stdout_file
       diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stdout_file $actual_stdout_file
+      ostatus=$?
       echo diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stderr_file $actual_stderr_file
       diff -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stderr_file $actual_stderr_file
+      estatus=$?
     fi
   else
     diff -q -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stdout_file $actual_stdout_file > /dev/null
+    ostatus=$?
     diff -q -a -I '^mlr' -I '^Miller:' -I '^cat' $diff_context_flag $expected_stderr_file $actual_stderr_file > /dev/null
+    estatus=$?
   fi
   status=$?
-  if [ $status -ne 0 ]; then
+
+  if [ $ostatus -ne 0 ]; then
     if [ "$verbose" = "true" ]; then
       echo "Case failed due to expected output != actual output:"
       echo "$expected_stdout_file"
       echo "$actual_stdout_file"
+    fi
+    case_passed=false
+  fi
+
+  if [ $estatus -ne 0 ]; then
+    if [ "$verbose" = "true" ]; then
+      echo "Case failed due to expected output != actual output:"
       echo "$expected_stderr_file"
       echo "$actual_stderr_file"
     fi
