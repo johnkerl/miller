@@ -332,6 +332,26 @@ useful names to otherwise integer-indexed fields.
 Options:
 -h|--help Show this message.
 ================================================================
+Usage: mlr least-frequent [options]
+Shows the least frequently occurring distinct values for specified field names.
+The first entry is the statistical anti-mode; the remaining are runners-up.
+Options:
+-f {one or more comma-separated field names}. Required flag.
+-n {count}. Optional flag defaulting to %!l(int=10)ld.
+-b          Suppress counts; show only field values.
+-o {name}   Field name for output count. Default "count".
+See also "mlr most-frequent".
+================================================================
+Usage: mlr most-frequent [options]
+Shows the most frequently occurring distinct values for specified field names.
+The first entry is the statistical mode; the remaining are runners-up.
+Options:
+-f {one or more comma-separated field names}. Required flag.
+-n {count}. Optional flag defaulting to %!l(int=10)ld.
+-b          Suppress counts; show only field values.
+-o {name}   Field name for output count. Default "count".
+See also "mlr least-frequent".
+================================================================
 Usage: mlr nothing [options]
 Drops all input records. Useful for testing, or after tee/print/etc. have
 produced other output.
@@ -465,6 +485,14 @@ Options:
 -g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.
 -k {k} Required: number of records to output in total, or by group if using -g.
 -h|--help Show this message.
+================================================================
+Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
+This is nothing more than a keystroke-saver for the sec2gmtdate function:
+  ../c/mlr sec2gmtdate time1,time2
+is the same as
+  ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
 ================================================================
 Usage: mlr sec2gmt [options] {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
