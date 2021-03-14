@@ -7,7 +7,8 @@ TOP OF LIST:
     - rename -r
   ! separate DSL/non-DSL string-literal handlers
 
-! strptime/strftime experiments ...
+! localtime functions
+* strptime w/ ...00.Z -> error
 
 ! --nojvstack; default --jvstack; code it up ...
 
