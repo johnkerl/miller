@@ -188,8 +188,6 @@ REMAINING VERBS:
 
 bar
 format-values
-least-frequent
-most-frequent
 
 top
 
