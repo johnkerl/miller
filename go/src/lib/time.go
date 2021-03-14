@@ -33,3 +33,10 @@ func Sec2GMT(epochSeconds float64, numDecimalPlaces int) string {
 			YYYY, MM, DD, hh, mm, ss, numDecimalPlaces, decimalPart)
 	}
 }
+
+func EpochSecondsToTime(epochSeconds float64) time.Time {
+	intPart := int64(epochSeconds)
+	fractionalPart := epochSeconds - float64(intPart)
+	decimalPart := int64(fractionalPart * 1e9)
+	return time.Unix(intPart, decimalPart).UTC()
+}
