@@ -2,7 +2,7 @@
 // Helper data structure for the join verb
 // ================================================================
 
-package transformers
+package utils
 
 import (
 	"container/list"
@@ -11,18 +11,18 @@ import (
 )
 
 // ----------------------------------------------------------------
-type tJoinBucket struct {
+type JoinBucket struct {
 	leftFieldValues    []*types.Mlrval
-	recordsAndContexts *list.List
-	wasPaired          bool
+	RecordsAndContexts *list.List
+	WasPaired          bool
 }
 
-func newJoinBucket(
+func NewJoinBucket(
 	leftFieldValues []*types.Mlrval,
-) *tJoinBucket {
-	return &tJoinBucket{
+) *JoinBucket {
+	return &JoinBucket{
 		leftFieldValues:    leftFieldValues,
-		recordsAndContexts: list.New(),
-		wasPaired:          false,
+		RecordsAndContexts: list.New(),
+		WasPaired:          false,
 	}
 }

@@ -2,7 +2,7 @@
 // For stats1 as well as merge-fields
 // ================================================================
 
-package transformers
+package utils
 
 import (
 	"fmt"
@@ -146,13 +146,13 @@ func NewStats1AccumulatorFactory() *Stats1AccumulatorFactory {
 }
 
 // ----------------------------------------------------------------
-func listStats1Accumulators(o *os.File) {
+func ListStats1Accumulators(o *os.File) {
 	for _, info := range stats1AccumulatorInfos {
 		fmt.Fprintf(o, "  %-8s %s\n", info.name, info.description)
 	}
 }
 
-func validateStats1AccumulatorName(
+func ValidateStats1AccumulatorName(
 	accumulatorName string,
 ) bool {
 	// First try percentiles, which have parameterized names.

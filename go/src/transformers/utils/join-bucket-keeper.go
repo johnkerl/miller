@@ -105,7 +105,7 @@
 //
 // ================================================================
 
-package transformers
+package utils
 
 import (
 	"container/list"
@@ -121,7 +121,7 @@ import (
 
 // ----------------------------------------------------------------
 // Data stored in this class
-type tJoinBucketKeeper struct {
+type JoinBucketKeeper struct {
 	// For streaming through the left-side file
 	recordReader input.IRecordReader
 	context      *types.Context
@@ -149,7 +149,7 @@ type tJoinBucketKeeper struct {
 	// nil at left EOF) with a different value.
 
 	peekRecordAndContext *types.RecordAndContext
-	joinBucket           *tJoinBucket
+	JoinBucket           *JoinBucket
 	leftUnpaireds        *list.List
 
 	leof  bool
@@ -157,12 +157,12 @@ type tJoinBucketKeeper struct {
 }
 
 // ----------------------------------------------------------------
-func newJoinBucketKeeper(
+func NewJoinBucketKeeper(
 	// TODO prepipe string,
 	leftFileName string,
 	joinReaderOptions *cliutil.TReaderOptions,
 	leftJoinFieldNames []string,
-) *tJoinBucketKeeper {
+) *JoinBucketKeeper {
 
 	// Instantiate the record-reader
 	recordReader := input.Create(joinReaderOptions)
@@ -190,7 +190,7 @@ func newJoinBucketKeeper(
 	leftFileNameArray := [1]string{leftFileName}
 	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, errorChannel)
 
-	this := &tJoinBucketKeeper{
+	this := &JoinBucketKeeper{
 		recordReader:     recordReader,
 		context:          initialContext,
 		inputChannel:     inputChannel,
@@ -199,7 +199,7 @@ func newJoinBucketKeeper(
 
 		leftJoinFieldNames: leftJoinFieldNames,
 
-		joinBucket:           newJoinBucket(nil),
+		JoinBucket:           NewJoinBucket(nil),
 		peekRecordAndContext: nil,
 		leftUnpaireds:        list.New(),
 
@@ -211,7 +211,7 @@ func newJoinBucketKeeper(
 }
 
 // ----------------------------------------------------------------
-// For tJoinBucketKeeper state machine
+// For JoinBucketKeeper state machine
 type tJoinBucketKeeperState int
 
 // (0) pre-fill:    Lv == null, peek == null, leof = false
@@ -225,8 +225,8 @@ const (
 	LEFT_STATE_3_EOF         = 3
 )
 
-func (this *tJoinBucketKeeper) computeState() tJoinBucketKeeperState {
-	if this.joinBucket.leftFieldValues == nil {
+func (this *JoinBucketKeeper) computeState() tJoinBucketKeeperState {
+	if this.JoinBucket.leftFieldValues == nil {
 		if !this.leof {
 			return LEFT_STATE_0_PREFILL
 		} else {
@@ -244,7 +244,7 @@ func (this *tJoinBucketKeeper) computeState() tJoinBucketKeeperState {
 // ----------------------------------------------------------------
 // This is the main entry point for the join verb.  Given the right-field
 // values from the current right-file record, this method finds left-file
-// join-bucket (if any) and points this.joinBucket at it.
+// join-bucket (if any) and points this.JoinBucket at it.
 //
 // If the join-keys have changed since the last right record, and if the
 // previous join-bucket wasn't ever paired with a right record, then it will be
@@ -254,7 +254,7 @@ func (this *tJoinBucketKeeper) computeState() tJoinBucketKeeperState {
 // left-file records found along the way lacking the specified join-field names
 // will also be moved to this.leftUnpaired.
 
-func (this *tJoinBucketKeeper) findJoinBucket(
+func (this *JoinBucketKeeper) FindJoinBucket(
 	rightFieldValues []*types.Mlrval, // nil means right-file EOF
 ) bool {
 	// TODO: comment me
@@ -274,7 +274,7 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 	if rightFieldValues != nil { // Not right EOF
 		if this.state == LEFT_STATE_1_FULL || this.state == LEFT_STATE_2_LAST_BUCKET {
 
-			cmp := compareLexically(this.joinBucket.leftFieldValues, rightFieldValues)
+			cmp := compareLexically(this.JoinBucket.leftFieldValues, rightFieldValues)
 
 			if cmp < 0 {
 				// Advance left until match or left EOF.  This might find a
@@ -289,20 +289,20 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 				}
 
 				// TODO: privatize more
-				if this.joinBucket.recordsAndContexts.Len() > 0 {
+				if this.JoinBucket.RecordsAndContexts.Len() > 0 {
 					cmp := compareLexically(
-						this.joinBucket.leftFieldValues,
+						this.JoinBucket.leftFieldValues,
 						rightFieldValues,
 					)
 					if cmp == 0 {
 						isPaired = true
-						this.joinBucket.wasPaired = true
+						this.JoinBucket.WasPaired = true
 					}
 				}
 
 			} else if cmp == 0 {
 				// Stay on current bucket
-				this.joinBucket.wasPaired = true
+				this.JoinBucket.WasPaired = true
 				isPaired = true
 			} else {
 				// E.g. joining on "id", current right-record has id=5,
@@ -333,7 +333,7 @@ func (this *tJoinBucketKeeper) findJoinBucket(
 // keys.  Any other records found along the way, lacking the necessary
 // join-field keys, are moved to the left-unpaired list.
 
-func (this *tJoinBucketKeeper) prepareForFirstJoinBucket() {
+func (this *JoinBucketKeeper) prepareForFirstJoinBucket() {
 	for {
 		// Skip over records not having the join keys. These go straight to the
 		// left-unpaired list.
@@ -360,7 +360,7 @@ func (this *tJoinBucketKeeper) prepareForFirstJoinBucket() {
 // are moved to the left-unpaired list.
 //
 // Pre-conditions:
-// * Our this.joinBucket.leftFieldValues < rightFieldValues (with lexical
+// * Our this.JoinBucket.leftFieldValues < rightFieldValues (with lexical
 //   comparison, even for numeric values).
 // * Currently in state 1 or 2 so there is a bucket but there may or may not be
 //   a peek-record.
@@ -370,13 +370,13 @@ func (this *tJoinBucketKeeper) prepareForFirstJoinBucket() {
 // * Consume the left input stream, feeding into unpaired, for as long as
 //   leftvals < rightvals && !eof.
 
-func (this *tJoinBucketKeeper) prepareForNewJoinBucket(
+func (this *JoinBucketKeeper) prepareForNewJoinBucket(
 	rightFieldValues []*types.Mlrval,
 ) {
-	if !this.joinBucket.wasPaired {
-		moveRecordsAndContexts(this.leftUnpaireds, this.joinBucket.recordsAndContexts)
+	if !this.JoinBucket.WasPaired {
+		moveRecordsAndContexts(this.leftUnpaireds, this.JoinBucket.RecordsAndContexts)
 	}
-	this.joinBucket = newJoinBucket(nil)
+	this.JoinBucket = NewJoinBucket(nil)
 
 	if this.peekRecordAndContext == nil { // left EOF
 		return
@@ -454,7 +454,7 @@ func (this *tJoinBucketKeeper) prepareForNewJoinBucket(
 // * peekRecordAndContext != nil
 // * peekRecordAndContext has the join keys
 
-func (this *tJoinBucketKeeper) fillNextJoinBucket() {
+func (this *JoinBucketKeeper) fillNextJoinBucket() {
 	peekRec := this.peekRecordAndContext.Record
 	peekFieldValues, hasAllJoinKeys := peekRec.ReferenceSelectedValues(
 		this.leftJoinFieldNames,
@@ -469,9 +469,9 @@ func (this *tJoinBucketKeeper) fillNextJoinBucket() {
 		os.Exit(1)
 	}
 
-	this.joinBucket.leftFieldValues = types.CopyMlrvalPointerArray(peekFieldValues)
-	this.joinBucket.recordsAndContexts.PushBack(this.peekRecordAndContext)
-	this.joinBucket.wasPaired = false
+	this.JoinBucket.leftFieldValues = types.CopyMlrvalPointerArray(peekFieldValues)
+	this.JoinBucket.RecordsAndContexts.PushBack(this.peekRecordAndContext)
+	this.JoinBucket.WasPaired = false
 
 	this.peekRecordAndContext = nil
 
@@ -491,13 +491,13 @@ func (this *tJoinBucketKeeper) fillNextJoinBucket() {
 
 		if hasAllJoinKeys {
 			cmp := compareLexically(
-				this.joinBucket.leftFieldValues,
+				this.JoinBucket.leftFieldValues,
 				peekFieldValues,
 			)
 			if cmp != 0 {
 				break
 			}
-			this.joinBucket.recordsAndContexts.PushBack(this.peekRecordAndContext)
+			this.JoinBucket.RecordsAndContexts.PushBack(this.peekRecordAndContext)
 		} else {
 			this.leftUnpaireds.PushBack(this.peekRecordAndContext)
 		}
@@ -507,12 +507,12 @@ func (this *tJoinBucketKeeper) fillNextJoinBucket() {
 
 // ----------------------------------------------------------------
 // TODO: comment
-func (this *tJoinBucketKeeper) markRemainingsAsUnpaired() {
-	// 1. Any records already in this.joinBucket.records (current bucket)
-	if !this.joinBucket.wasPaired {
-		moveRecordsAndContexts(this.leftUnpaireds, this.joinBucket.recordsAndContexts)
+func (this *JoinBucketKeeper) markRemainingsAsUnpaired() {
+	// 1. Any records already in this.JoinBucket.records (current bucket)
+	if !this.JoinBucket.WasPaired {
+		moveRecordsAndContexts(this.leftUnpaireds, this.JoinBucket.RecordsAndContexts)
 	}
-	this.joinBucket.recordsAndContexts = nil
+	this.JoinBucket.RecordsAndContexts = nil
 
 	// 2. Peek-record, if any
 	if this.peekRecordAndContext != nil {
@@ -532,7 +532,7 @@ func (this *tJoinBucketKeeper) markRemainingsAsUnpaired() {
 
 // ----------------------------------------------------------------
 // TODO: comment
-func (this *tJoinBucketKeeper) outputAndReleaseLeftUnpaireds(
+func (this *JoinBucketKeeper) OutputAndReleaseLeftUnpaireds(
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	for {
@@ -546,7 +546,7 @@ func (this *tJoinBucketKeeper) outputAndReleaseLeftUnpaireds(
 	}
 }
 
-func (this *tJoinBucketKeeper) releaseLeftUnpaireds(
+func (this *JoinBucketKeeper) ReleaseLeftUnpaireds(
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	for {
@@ -565,7 +565,7 @@ func (this *tJoinBucketKeeper) releaseLeftUnpaireds(
 // Method to get the next left-file record from the record-reader goroutine.
 // Returns nil at EOF.
 
-func (this *tJoinBucketKeeper) readRecord() *types.RecordAndContext {
+func (this *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 	if this.recordReaderDone {
 		return nil
 	}
@@ -626,25 +626,25 @@ func compareLexically(
 }
 
 // ================================================================
-func (this *tJoinBucketKeeper) dump(prefix string) {
+func (this *JoinBucketKeeper) dump(prefix string) {
 	fmt.Printf("+----------------------------------------------------- %s\n", prefix)
 	fmt.Println("| recordReaderDone     [", this.recordReaderDone, "]")
 	fmt.Println("| leof                 [", this.leof, "]")
 	fmt.Println("| stateCode            [", this.state, "]")
 	fmt.Println("| leftJoinFieldNames   [", strings.Join(this.leftJoinFieldNames, ","), "]")
 
-	fmt.Println("| joinBucket:")
+	fmt.Println("| JoinBucket:")
 	// TODO: make utility method
-	leftFieldValuesString := make([]string, len(this.joinBucket.leftFieldValues))
-	for i, leftFieldValue := range this.joinBucket.leftFieldValues {
+	leftFieldValuesString := make([]string, len(this.JoinBucket.leftFieldValues))
+	for i, leftFieldValue := range this.JoinBucket.leftFieldValues {
 		leftFieldValuesString[i] = leftFieldValue.String()
 	}
 	fmt.Printf("|   leftFieldValues    [%s]\n", strings.Join(leftFieldValuesString, ","))
-	fmt.Printf("|   recordsAndContexts (%d)\n", this.joinBucket.recordsAndContexts.Len())
-	for element := this.joinBucket.recordsAndContexts.Front(); element != nil; element = element.Next() {
+	fmt.Printf("|   RecordsAndContexts (%d)\n", this.JoinBucket.RecordsAndContexts.Len())
+	for element := this.JoinBucket.RecordsAndContexts.Front(); element != nil; element = element.Next() {
 		fmt.Println("|    ", element.Value.(*types.RecordAndContext).Record.ToDKVPString())
 	}
-	fmt.Println("|   wasPaired         ", this.joinBucket.wasPaired)
+	fmt.Println("|   WasPaired         ", this.JoinBucket.WasPaired)
 
 	if this.peekRecordAndContext == nil || this.peekRecordAndContext.Record == nil {
 		fmt.Println("| peekRecordAndContext [nil]")

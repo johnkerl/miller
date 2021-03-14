@@ -8,6 +8,7 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
+	"miller/src/transformers/utils"
 	"miller/src/transforming"
 	"miller/src/types"
 )
@@ -37,7 +38,7 @@ Options:
   p10 p25.2 p50 p98 p100 etc.
   TODO: flags for interpolated percentiles
 `)
-	listStats1Accumulators(o)
+	utils.ListStats1Accumulators(o)
 	fmt.Fprint(o, `
 -f {a,b,c}   Value-field names on which to compute statistics
 -g {d,e,f}   Optional group-by-field names
@@ -170,7 +171,7 @@ type TransformerStats1 struct {
 	doIterativeStats          bool
 
 	// State:
-	accumulatorFactory *Stats1AccumulatorFactory
+	accumulatorFactory *utils.Stats1AccumulatorFactory
 
 	// Accumulators are indexed by
 	//   groupByFieldName -> valueFieldName -> accumulatorName -> accumulator object
@@ -233,7 +234,7 @@ func NewTransformerStats1(
 	doIterativeStats bool,
 ) (*TransformerStats1, error) {
 	for _, name := range accumulatorNameList {
-		if !validateStats1AccumulatorName(name) {
+		if !utils.ValidateStats1AccumulatorName(name) {
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s stats1: accumulator \"%s\" not found.\n",
@@ -249,7 +250,7 @@ func NewTransformerStats1(
 		groupByFieldNameList:             groupByFieldNameList,
 		doInterpolatedPercentiles:        doInterpolatedPercentiles,
 		doIterativeStats:                 doIterativeStats,
-		accumulatorFactory:               NewStats1AccumulatorFactory(),
+		accumulatorFactory:               utils.NewStats1AccumulatorFactory(),
 		namedAccumulators:                lib.NewOrderedMap(),
 		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
 	}
@@ -317,7 +318,7 @@ func (this *TransformerStats1) handleInputRecord(
 				)
 				level3.(*lib.OrderedMap).Put(accumulatorName, namedAccumulator)
 			}
-			namedAccumulator.(*Stats1NamedAccumulator).Ingest(valueFieldValue)
+			namedAccumulator.(*utils.Stats1NamedAccumulator).Ingest(valueFieldValue)
 		}
 	}
 
@@ -377,7 +378,7 @@ func (this *TransformerStats1) emitIntoOutputRecord(
 	for pb := level2accumulators.Head; pb != nil; pb = pb.Next {
 		level3 := pb.Value.(*lib.OrderedMap)
 		for pc := level3.Head; pc != nil; pc = pc.Next {
-			namedAccumulator := pc.Value.(*Stats1NamedAccumulator)
+			namedAccumulator := pc.Value.(*utils.Stats1NamedAccumulator)
 			key, value := namedAccumulator.Emit()
 			outrec.PutCopy(key, &value)
 		}

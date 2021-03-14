@@ -4,6 +4,7 @@
 mlr --from ./reg-test/input/2.dkvp put @x=1; print
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; print
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 
@@ -14,6 +15,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; print > stdout
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; print > stdout
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 
@@ -24,6 +26,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; print > stderr
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; print > stderr
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -34,6 +37,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; print > ENV["outdir"]."/foo.dat"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; print > ENV["outdir"]."/foo.dat"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -46,6 +50,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; print @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; print @x
 1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 1
@@ -56,6 +61,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; print > stdout, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; print > stdout, @x
 1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 1
@@ -66,6 +72,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; print > stderr, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; print > stderr, @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -76,6 +83,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; print > ENV["outdir"]."/foo.dat", @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; print > ENV["outdir"]."/foo.dat", @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -90,6 +98,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; printn
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; printn
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -98,6 +107,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; printn > stdout
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; printn > stdout
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -106,6 +116,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; printn > stderr
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; printn > stderr
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -114,6 +125,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; printn > ENV["outdir"]."/foo.dat"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; printn > ENV["outdir"]."/foo.dat"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -124,6 +136,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; printn @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; printn @x
 1a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 1a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -132,6 +145,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; printn > stdout, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; printn > stdout, @x
 1a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 1a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -140,6 +154,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; printn > stderr, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; printn > stderr, @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -148,6 +163,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; printn > ENV["outdir"]."/foo.dat", @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; printn > ENV["outdir"]."/foo.dat", @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -160,6 +176,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; eprint
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; eprint
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -170,6 +187,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; eprint @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; eprint @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -182,6 +200,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; eprintn
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; eprintn
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -190,6 +209,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; eprintn @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; eprintn @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -200,6 +220,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; dump
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; dump
 {
   "x": 1
 }
@@ -214,6 +235,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; dump > stdout
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; dump > stdout
 {
   "x": 1
 }
@@ -228,6 +250,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; dump > stderr
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; dump > stderr
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -242,6 +265,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; dump > ENV["outdir"]."/foo.dat"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; dump > ENV["outdir"]."/foo.dat"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -258,6 +282,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; dump @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; dump @x
 1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 1
@@ -268,6 +293,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; dump > stdout, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; dump > stdout, @x
 1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 1
@@ -278,6 +304,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; dump > stderr, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; dump > stderr, @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -288,6 +315,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; dump > ENV["outdir"]."/foo.dat", @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; dump > ENV["outdir"]."/foo.dat", @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -302,6 +330,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; edump
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; edump
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -316,6 +345,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; edump @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; edump @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -328,6 +358,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x=1; tee > stdout, $*
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x=1; tee > stdout, $*
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -336,6 +367,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; tee > stderr, $*
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; tee > stderr, $*
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -346,6 +378,7 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 mlr --from ./reg-test/input/2.dkvp put @x=1; tee > ENV["outdir"]."/foo.dat", $*
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; tee > ENV["outdir"]."/foo.dat", $*
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -360,6 +393,7 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 mlr --from ./reg-test/input/2.dkvp put @x=1; emitf @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; emitf @x
 x=1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 x=1
@@ -370,6 +404,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x=1; emitf > stdout, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x=1; emitf > stdout, @x
 x=1
 x=1
 
@@ -378,6 +413,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; emitf > stderr, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; emitf > stderr, @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -388,6 +424,7 @@ x=1
 mlr --from ./reg-test/input/2.dkvp put @x=1; emitf > ENV["outdir"]."/foo.dat", @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; emitf > ENV["outdir"]."/foo.dat", @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -402,6 +439,7 @@ x=1
 mlr --from ./reg-test/input/2.dkvp put @x=1; emit @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; emit @x
 x=1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 x=1
@@ -412,6 +450,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x=1; emit > stdout, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x=1; emit > stdout, @x
 x=1
 x=1
 
@@ -420,6 +459,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; emit > stderr, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; emit > stderr, @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -430,6 +470,7 @@ x=1
 mlr --from ./reg-test/input/2.dkvp put @x=1; emit > ENV["outdir"]."/foo.dat", @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; emit > ENV["outdir"]."/foo.dat", @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -442,6 +483,7 @@ x=1
 mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emit (@x, @y)
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emit (@x, @y)
 x=1,y=2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 x=1,y=2
@@ -452,6 +494,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x=1; @y=2; emit > stdout, (@x, @y)
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x=1; @y=2; emit > stdout, (@x, @y)
 x=1,y=2
 x=1,y=2
 
@@ -460,6 +503,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emit > stderr, (@x, @y)
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emit > stderr, (@x, @y)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -470,6 +514,7 @@ x=1,y=2
 mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emit > ENV["outdir"]."/foo.dat", (@x, @y)
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emit > ENV["outdir"]."/foo.dat", (@x, @y)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -482,6 +527,7 @@ x=1,y=2
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emit @x, "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emit @x, "a"
 a=a,x=1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=a,x=1
@@ -492,6 +538,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x={"a":1}; emit > stdout, @x, "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x={"a":1}; emit > stdout, @x, "a"
 a=a,x=1
 a=a,x=1
 
@@ -500,6 +547,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emit > stderr, @x, "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emit > stderr, @x, "a"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -510,6 +558,7 @@ a=a,x=1
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emit > ENV["outdir"]."/foo.dat", @x, "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emit > ENV["outdir"]."/foo.dat", @x, "a"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -522,6 +571,7 @@ a=a,x=1
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emit (@x, @y), "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emit (@x, @y), "a"
 a=a,x=1,y=2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=a,x=1,y=2
@@ -532,6 +582,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x={"a":1}; @y={"a":2}; emit > stdout, (@x, @y), "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x={"a":1}; @y={"a":2}; emit > stdout, (@x, @y), "a"
 a=a,x=1,y=2
 a=a,x=1,y=2
 
@@ -540,6 +591,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emit > stderr, (@x, @y), "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emit > stderr, (@x, @y), "a"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -550,6 +602,7 @@ a=a,x=1,y=2
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emit > ENV["outdir"]."/foo.dat", (@x, @y), "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emit > ENV["outdir"]."/foo.dat", (@x, @y), "a"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -564,6 +617,7 @@ a=a,x=1,y=2
 mlr --from ./reg-test/input/2.dkvp put @x=1; emitp @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; emitp @x
 x=1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 x=1
@@ -574,6 +628,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x=1; emitp > stdout, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x=1; emitp > stdout, @x
 x=1
 x=1
 
@@ -582,6 +637,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; emitp > stderr, @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; emitp > stderr, @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -592,6 +648,7 @@ x=1
 mlr --from ./reg-test/input/2.dkvp put @x=1; emitp > ENV["outdir"]."/foo.dat", @x
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; emitp > ENV["outdir"]."/foo.dat", @x
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -604,6 +661,7 @@ x=1
 mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emitp (@x, @y)
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emitp (@x, @y)
 x=1,y=2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 x=1,y=2
@@ -614,6 +672,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x=1; @y=2; emitp > stdout, (@x, @y)
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x=1; @y=2; emitp > stdout, (@x, @y)
 x=1,y=2
 x=1,y=2
 
@@ -622,6 +681,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emitp > stderr, (@x, @y)
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emitp > stderr, (@x, @y)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -632,6 +692,7 @@ x=1,y=2
 mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emitp > ENV["outdir"]."/foo.dat", (@x, @y)
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x=1; @y=2; emitp > ENV["outdir"]."/foo.dat", (@x, @y)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -644,6 +705,7 @@ x=1,y=2
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emitp @x, "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emitp @x, "a"
 a=a,x=1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=a,x=1
@@ -654,6 +716,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x={"a":1}; emitp > stdout, @x, "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x={"a":1}; emitp > stdout, @x, "a"
 a=a,x=1
 a=a,x=1
 
@@ -662,6 +725,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emitp > stderr, @x, "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emitp > stderr, @x, "a"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -672,6 +736,7 @@ a=a,x=1
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emitp > ENV["outdir"]."/foo.dat", @x, "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; emitp > ENV["outdir"]."/foo.dat", @x, "a"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -684,6 +749,7 @@ a=a,x=1
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emitp (@x, @y), "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emitp (@x, @y), "a"
 a=a,x=1,y=2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=a,x=1,y=2
@@ -694,6 +760,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put -q @x={"a":1}; @y={"a":2}; emitp > stdout, (@x, @y), "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put -q @x={"a":1}; @y={"a":2}; emitp > stdout, (@x, @y), "a"
 a=a,x=1,y=2
 a=a,x=1,y=2
 
@@ -702,6 +769,7 @@ cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emitp > stderr, (@x, @y), "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emitp > stderr, (@x, @y), "a"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
@@ -712,6 +780,7 @@ a=a,x=1,y=2
 mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emitp > ENV["outdir"]."/foo.dat", (@x, @y), "a"
 
 cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/redirect-out.txt
+mlr --from ./reg-test/input/2.dkvp put @x={"a":1}; @y={"a":2}; emitp > ENV["outdir"]."/foo.dat", (@x, @y), "a"
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 
