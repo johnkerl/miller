@@ -386,6 +386,7 @@ static sllv_t* mapper_uniq_process_uniqify_entire_records_show_counts(
 			sllv_append(poutrecs, prec);
 			pe->pvvalue = NULL; // transfer ownership to poutrecs
 		}
+		sllv_append(poutrecs, NULL);
 
 		return poutrecs;
 	}
@@ -416,6 +417,7 @@ static sllv_t* mapper_uniq_process_uniqify_entire_records_show_num_distinct_only
 		long long count = pstate->puniqified_record_counts->num_occupied;
 		lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ll(count), FREE_ENTRY_VALUE);
 		sllv_append(poutrecs, poutrec);
+		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
 }
