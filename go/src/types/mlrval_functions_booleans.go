@@ -321,11 +321,41 @@ func MlrvalLessThanOrEquals(input1, input2 *Mlrval) *Mlrval {
 	return le_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
-// For Go's sort.Slice
-func MlrvalLessThanForSort(input1, input2 *Mlrval) bool {
+// For Go's sort.Slice.
+func MlrvalLessThanAsBool(input1, input2 *Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
 	mretval := lt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	retval, ok := mretval.GetBoolValue()
+	lib.InternalCodingErrorIf(!ok)
+	return retval
+}
+
+// For Go's sort.Slice.
+func MlrvalLessThanOrEqualsAsBool(input1, input2 *Mlrval) bool {
+	// TODO refactor to avoid copy
+	// This is a hot path for sort GC and is worth significant hand-optimization
+	mretval := le_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	retval, ok := mretval.GetBoolValue()
+	lib.InternalCodingErrorIf(!ok)
+	return retval
+}
+
+// For top-keeper
+func MlrvalGreaterThanAsBool(input1, input2 *Mlrval) bool {
+	// TODO refactor to avoid copy
+	// This is a hot path for sort GC and is worth significant hand-optimization
+	mretval := gt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	retval, ok := mretval.GetBoolValue()
+	lib.InternalCodingErrorIf(!ok)
+	return retval
+}
+
+// For top-keeper
+func MlrvalGreaterThanOrEqualsAsBool(input1, input2 *Mlrval) bool {
+	// TODO refactor to avoid copy
+	// This is a hot path for sort GC and is worth significant hand-optimization
+	mretval := ge_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 	retval, ok := mretval.GetBoolValue()
 	lib.InternalCodingErrorIf(!ok)
 	return retval

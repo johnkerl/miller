@@ -1,11 +1,17 @@
 ================================================================
 TOP OF LIST:
 
+* top
+  o eff, need ordered map
+    mlr --opprint --from ../data/medium top -f b,i,x -g a --max
+
 * regexes
   o finish stats1 -r
   o regex captures ...
     - rename -r
   ! separate DSL/non-DSL string-literal handlers
+
+* something getoptish ... -xyz -> -x -y -z ...
 
 ! localtime functions
 * strptime w/ ...00.Z -> error

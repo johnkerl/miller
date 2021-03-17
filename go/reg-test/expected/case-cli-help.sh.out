@@ -671,6 +671,19 @@ is written in JSON format.
 
 -h|--help Show this message.
 ================================================================
+Usage: mlr top [options]
+-f {a,b,c}    Value-field names for top counts.
+-g {d,e,f}    Optional group-by-field names for top counts.
+-n {count}    How many records to print per category; default 1.
+-a            Print all fields for top-value records; default is
+              to print only value and group-by fields. Requires a single
+              value-field name only.
+--min         Print top smallest values; default is top largest values.
+-F            Keep top values as floats even if they look like integers.
+-o {name}     Field name for output indices. Default "top_idx".
+Prints the n records with smallest/largest values at specified fields,
+optionally by category.
+================================================================
 Usage: mlr unflatten [options]
 Reverses flatten. Example: field with name 'a:b:c' and value 4
 becomes name 'a' and value '{"b": { "c": 4 }}'.

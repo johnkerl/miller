@@ -551,3 +551,106 @@ func MakePointerArray(
 	}
 	return pointerArray
 }
+
+// ----------------------------------------------------------------
+// Nominally for TopKeeper
+
+type BsearchMlrvalArrayFunc func(
+	array *[]*Mlrval,
+	size int, // maybe less than len(array)
+	value *Mlrval,
+) int
+
+func BsearchMlrvalArrayForDescendingInsert(
+	array *[]*Mlrval,
+	size int, // maybe less than len(array)
+	value *Mlrval,
+) int {
+	lo := 0
+	hi := size - 1
+	mid := (hi + lo) / 2
+	var newmid int
+
+	if size == 0 {
+		return 0
+	}
+
+	if MlrvalGreaterThanAsBool(value, (*array)[0]) {
+		return 0
+	}
+	if MlrvalLessThanAsBool(value, (*array)[hi]) {
+		return size
+	}
+
+	for lo < hi {
+		middleElement := (*array)[mid]
+		if MlrvalEqualsAsBool(value, middleElement) {
+			return mid
+		} else if MlrvalGreaterThanAsBool(value, middleElement) {
+			hi = mid
+			newmid = (hi + lo) / 2
+		} else {
+			lo = mid
+			newmid = (hi + lo) / 2
+		}
+		if mid == newmid {
+			if MlrvalGreaterThanOrEqualsAsBool(value, (*array)[lo]) {
+				return lo
+			} else if MlrvalGreaterThanOrEqualsAsBool(value, (*array)[hi]) {
+				return hi
+			} else {
+				return hi + 1
+			}
+		}
+		mid = newmid
+	}
+
+	return lo
+}
+
+func BsearchMlrvalArrayForAscendingInsert(
+	array *[]*Mlrval,
+	size int, // maybe less than len(array)
+	value *Mlrval,
+) int {
+	lo := 0
+	hi := size - 1
+	mid := (hi + lo) / 2
+	var newmid int
+
+	if size == 0 {
+		return 0
+	}
+
+	if MlrvalLessThanAsBool(value, (*array)[0]) {
+		return 0
+	}
+	if MlrvalGreaterThanAsBool(value, (*array)[hi]) {
+		return size
+	}
+
+	for lo < hi {
+		middleElement := (*array)[mid]
+		if MlrvalEqualsAsBool(value, middleElement) {
+			return mid
+		} else if MlrvalLessThanAsBool(value, middleElement) {
+			hi = mid
+			newmid = (hi + lo) / 2
+		} else {
+			lo = mid
+			newmid = (hi + lo) / 2
+		}
+		if mid == newmid {
+			if MlrvalLessThanOrEqualsAsBool(value, (*array)[lo]) {
+				return lo
+			} else if MlrvalLessThanOrEqualsAsBool(value, (*array)[hi]) {
+				return hi
+			} else {
+				return hi + 1
+			}
+		}
+		mid = newmid
+	}
+
+	return lo
+}
