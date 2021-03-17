@@ -1,15 +1,20 @@
 ================================================================
 TOP OF LIST:
 
-* top
-  o eff, need ordered map
-    mlr --opprint --from ../data/medium top -f b,i,x -g a --max
-
 * regexes
   o finish stats1 -r
   o regex captures ...
     - rename -r
   ! separate DSL/non-DSL string-literal handlers
+
+* remaining verbs:
+  o bar format-values
+  o nest reshape merge-fields stats2
+
+* remaining functions:
+  o new columns-to-arrays and arrays-to-columns for stan format
+  o regextract regextract_or_else
+  o system
 
 * something getoptish ... -xyz -> -x -y -z ...
 
@@ -188,28 +193,6 @@ emitp/emitf:
 * go 1.16
   o https://golang.org/doc/go1.16
   o io/ioutil deprecation: ioutil.ReadFile -> os.ReadFile
-
-================================================================
-REMAINING VERBS:
-
-bar
-format-values
-
-top
-
-nest
-reshape
-merge-fields
-stats2
-
-================================================================
-REMAINING FUNCTIONS:
-
-* new columns-to-arrays and arrays-to-columns for stan format
-
-* regextract regextract_or_else
-
-* system
 
 ================================================================
 CATEGORIES:
