@@ -58,6 +58,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.TacSetup,
 	transformers.TailSetup,
 	transformers.TeeSetup,
+	transformers.TopSetup,
 	transformers.UnflattenSetup,
 	transformers.UniqSetup,
 	transformers.UnsparsifySetup,

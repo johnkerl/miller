@@ -41,6 +41,9 @@ func NewRecordAndContext(
 
 // For the record-readers to update their initial context as each new record is read.
 func (this *RecordAndContext) Copy() *RecordAndContext {
+	if this == nil {
+		return nil
+	}
 	recordCopy := this.Record.Copy()
 	contextCopy := this.Context
 	return &RecordAndContext{

@@ -252,7 +252,7 @@ func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int, p float64) 
 func (this *PercentileKeeper) sortIfNecessary() {
 	if !this.sorted {
 		sort.Slice(this.data, func(i, j int) bool {
-			return types.MlrvalLessThanForSort(this.data[i], this.data[j])
+			return types.MlrvalLessThanAsBool(this.data[i], this.data[j])
 		})
 		this.sorted = true
 	}
