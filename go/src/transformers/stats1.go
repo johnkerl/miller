@@ -62,8 +62,8 @@ Options:
 		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", lib.MlrExeName(), verbNameStats1)
 	fmt.Fprintln(o,
 		`        This computes count and mode statistics on all field names beginning
-         with a through h, grouped by all field names starting with k.
-`)
+         with a through h, grouped by all field names starting with k.`)
+	fmt.Println()
 	fmt.Fprint(o,
 		`Notes:
 * p50 and median are synonymous.

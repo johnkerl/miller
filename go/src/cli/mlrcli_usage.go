@@ -242,6 +242,7 @@ func mainUsageDataFormatExamples(o *os.File, argv0 string) {
 `)
 }
 
+// TODO: ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
 func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 	fmt.Fprintln(o,
 		`
@@ -319,9 +320,9 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 
 	  Please use --iformat1 --oformat2 rather than --format1 --oformat2.
 	  The latter sets up input and output flags for format1, not all of which
-	  are overridden in all cases by setting output format to format2.
-
-`)
+	  are overridden in all cases by setting output format to format2.`)
+	fmt.Println()
+	fmt.Println()
 }
 
 //func mainUsageCommentsInData(o *os.File, argv0 string) {

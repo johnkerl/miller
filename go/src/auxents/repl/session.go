@@ -124,7 +124,7 @@ func (this *Repl) handleSession(istream *os.File) {
 		}
 
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "%s %s: %w\n", this.exeName, this.replName, err)
+			fmt.Fprintf(os.Stderr, "%s %s: %w", this.exeName, this.replName, err)
 			os.Exit(1)
 		}
 
@@ -183,7 +183,7 @@ func (this *Repl) handleMultiLine(
 		}
 
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "%s %s: %w\n", this.exeName, this.replName, err)
+			fmt.Fprintf(os.Stderr, "%s %s: %w\n", this.exeName, this.replName, err)
 			os.Exit(1)
 		}
 

@@ -27,7 +27,7 @@ func transformerFillDownUsage(
 	exitCode int,
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameFillDown)
-	fmt.Fprintln(o, "If a given record has a missing value for a given field, fill that from\n")
+	fmt.Fprintln(o, "If a given record has a missing value for a given field, fill that from")
 	fmt.Fprintln(o, "the corresponding value from a previous record, if any.")
 	fmt.Fprintln(o, "By default, a 'missing' field either is absent, or has the empty-string value.")
 	fmt.Fprintln(o, "With -a, a field is 'missing' only if it is absent.")

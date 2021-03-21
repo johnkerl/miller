@@ -621,7 +621,7 @@ func handleRedirectWrite(this *Repl, args []string) bool {
 	if err != nil {
 		fmt.Printf(
 			"%s %s: couldn't open \"%s\" for write.\n",
-			this.exeName, this.replName,
+			this.exeName, this.replName, filename,
 		)
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
@@ -652,7 +652,7 @@ func handleRedirectAppend(this *Repl, args []string) bool {
 	if err != nil {
 		fmt.Printf(
 			"%s %s: couldn't open \"%s\" for write.\n",
-			this.exeName, this.replName,
+			this.exeName, this.replName, filename,
 		)
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
@@ -879,8 +879,8 @@ func showREPLIntro(this *Repl) {
 	fmt.Printf("%s\n", HighlightString("What the Miller REPL is:"))
 	fmt.Println(
 		`The Miller REPL (read-evaluate-print loop) is an interactive counterpart
-to record-processing using the put/filter DSL (domain-specific language).
-`)
+to record-processing using the put/filter DSL (domain-specific language).`)
+	fmt.Println()
 
 	fmt.Printf("%s\n", HighlightString("Using Miller without the REPL:"))
 	fmt.Printf(
@@ -893,10 +893,10 @@ to record-processing using the put/filter DSL (domain-specific language).
 * Define user-defined functions/subroutines using func and subr.
 * Specify statements to be executed on each record -- which are anything outside of begin/end/func/subr.
 * Example:
-  %s --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y end {print "GOODBYE"}
-
-`,
+  %s --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y end {print "GOODBYE"}`,
 		this.exeName)
+	fmt.Println()
+	fmt.Println()
 
 	fmt.Printf("%s\n", HighlightString("Using Miller with the REPL:"))
 	fmt.Println(
@@ -921,8 +921,8 @@ to record-processing using the put/filter DSL (domain-specific language).
 * Define end {...} blocks; invoke them at will using ':end'.
 * Define user-defined functions/subroutines using func/subr; call them from other statements.
 * Interactively specify statements to be executed immediately on the current record.
-* Load any of the above from Miller-script files using ':load'.
-`)
+* Load any of the above from Miller-script files using ':load'.`)
+	fmt.Println()
 
 	fmt.Println(
 		`The input "record" by default is the empty map but you can do things like
@@ -932,8 +932,8 @@ foo.dat' followed by ':read' to populate it from a data file.
 Non-assignment expressions, such as '7' or 'true', operate as filter conditions
 in the put DSL: they can be used to specify whether a record will or won't be
 included in the output-record stream.  But here in the REPL, they are simply
-printed to the terminal, e.g. if you type '1+2', you will see '3'.
-`)
+printed to the terminal, e.g. if you type '1+2', you will see '3'.`)
+	fmt.Println()
 
 	fmt.Printf("%s\n", HighlightString("Entering multi-line statements:"))
 	fmt.Println(
@@ -941,15 +941,15 @@ printed to the terminal, e.g. if you type '1+2', you will see '3'.
   for semicolons), then ">" on a line by itself. These will be executed immediately.
 * If you enter '<<' on a line by itself, then the code, then '>>' on a line by
   itself, the statements will be remembered for executing on records with
-  ':main', as if you had done ':load' to load statements from a file.
-`)
+  ':main', as if you had done ':load' to load statements from a file.`)
+	fmt.Println()
 
 	fmt.Printf("%s\n", HighlightString("History-editing:"))
 	fmt.Println(
 		`No command-line-history-editing feature is built in but 'rlwrap mlr repl' is a
 delight. You may need 'brew install rlwrap', 'sudo apt-get install rlwrap',
-etc. depending on your platform.
-`)
+etc. depending on your platform.`)
+	fmt.Println()
 
 	fmt.Printf("%s\n", HighlightString("On-line help:"))
 	fmt.Println("Type ':help' to see more about your options. In particular, ':help examples'.")
@@ -965,8 +965,8 @@ func showREPLExamples(this *Repl) {
 [mlr] x=3  # These are local variables
 [mlr] y=4
 [mlr] x+y
-7
-`)
+7`)
+	fmt.Println()
 	fmt.Printf("%s\n", HighlightString("Defining functions:"))
 	fmt.Println(
 		`[mlr] <
@@ -975,8 +975,8 @@ func f(a,b) {
 }
 >
 [mlr] f(7,5)
-16807
-`)
+16807`)
+	fmt.Println()
 	fmt.Printf("%s\n", HighlightString("Reading and processing records:"))
 	fmt.Println(
 		`[mlr] :open foo.dat
@@ -995,6 +995,6 @@ FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
 0.021160211005187134
 [mlr] $z = f($x, $i)
 [mlr] :write
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=0.021160211005187134
-`)
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=0.021160211005187134`)
+	fmt.Println()
 }

@@ -1,6 +1,10 @@
 ================================================================
 TOP OF LIST:
 
+* windows port and testing
+  o useful warnings from: go test miller/src/...
+  o parser-experiments out of miller/go entirely -- ?
+
 * regexes
   o finish stats1 -r
   o regex captures ...

@@ -354,6 +354,7 @@ func (this *RootNode) BuildVariadicFunctionCallsiteNode(
 		return nil, errors.New(
 			fmt.Sprintf(
 				"Miller: function %s takes minimum argument count %d; got %d.\n",
+				builtinFunctionInfo.name,
 				builtinFunctionInfo.minimumVariadicArity,
 				callsiteArity,
 			),
