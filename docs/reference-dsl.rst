@@ -1422,7 +1422,7 @@ This produces heteregenous output which Miller, of course, has no problems with 
 
     $ mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
     x=-1,y=nan,z=nan
-    x=0,y=-inf,z=nan
+    x=0,y=-inf,z=-nan
     x=1,y=0.000000,z=0.000000
     x=2,y=0.301030,z=0.548662
     x=3,y=0.477121,z=0.690740

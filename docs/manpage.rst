@@ -28,7 +28,7 @@ This is simply a copy of what you should see on running **man mlr** at a command
            insertion-ordered hash map.  This encompasses a variety of data
            formats, including but not limited to the familiar CSV, TSV, and JSON.
            (Miller can handle positionally-indexed data as a special case.) This
-           manpage documents Miller v5.10.0-dev.
+           manpage documents Miller v5.10.1.
     
     EXAMPLES
        COMMAND-LINE SYNTAX
@@ -493,7 +493,7 @@ This is simply a copy of what you should see on running **man mlr** at a command
            Useful for doing a well-formatted check on input data.
     
        clean-whitespace
-           Usage: mlr clean-whitespace [options] {old1,new1,old2,new2,...}
+           Usage: mlr clean-whitespace [options]
            For each record, for each field in the record, whitespace-cleans the keys and
            values. Whitespace-cleaning entails stripping leading and trailing whitespace,
            and replacing multiple whitespace with singles. For finer-grained control,
@@ -503,7 +503,8 @@ This is simply a copy of what you should see on running **man mlr** at a command
            Options:
            -k|--keys-only	 Do not touch values.
            -v|--values-only  Do not touch keys.
-           It is an error to specify -k as well as -v.
+           It is an error to specify -k as well as -v -- to clean keys and values,
+           leave off -k as well as -v.
     
        count
            Usage: mlr count [options]

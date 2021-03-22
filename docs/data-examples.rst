@@ -96,7 +96,7 @@ Peek at the data:
 ::
 
     $ wc -l data/colored-shapes.dkvp
-       10078 data/colored-shapes.dkvp
+    10078 data/colored-shapes.dkvp
 
     $ head -n 6 data/colored-shapes.dkvp | mlr --opprint cat
     color  shape    flag i  u                   v                    w                   x
