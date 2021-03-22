@@ -294,7 +294,7 @@ clean-whitespace
 ::
 
     $ mlr clean-whitespace --help
-    Usage: mlr clean-whitespace [options] {old1,new1,old2,new2,...}
+    Usage: mlr clean-whitespace [options]
     For each record, for each field in the record, whitespace-cleans the keys and
     values. Whitespace-cleaning entails stripping leading and trailing whitespace,
     and replacing multiple whitespace with singles. For finer-grained control,
@@ -304,7 +304,8 @@ clean-whitespace
     Options:
     -k|--keys-only    Do not touch values.
     -v|--values-only  Do not touch keys.
-    It is an error to specify -k as well as -v.
+    It is an error to specify -k as well as -v -- to clean keys and values,
+    leave off -k as well as -v.
 
 ::
 
@@ -3146,7 +3147,7 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
 ::
 
     $ wc -l data/colored-shapes.dkvp
-       10078 data/colored-shapes.dkvp
+    10078 data/colored-shapes.dkvp
 
 ::
 
@@ -3288,7 +3289,7 @@ The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`
 ::
 
     $ wc -l data/repeats.dkvp
-          57 data/repeats.dkvp
+    57 data/repeats.dkvp
 
 ::
 
