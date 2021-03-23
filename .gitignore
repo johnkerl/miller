@@ -80,8 +80,6 @@ c/run_mlr_for_auxents
 c/push2
 push2
 data/.gitignore
-doc/jkopush
-doc/push2
 
 docs/_build
 
@@ -114,5 +112,5 @@ c/reg_test/input/comments/Makefile
 c/reg_test/input/rfc-csv/Makefile
 c/stream/Makefile
 c/unit_test/Makefile
-doc/Makefile
+man/Makefile
 parser-experiments/two/src

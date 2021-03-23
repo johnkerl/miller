@@ -334,7 +334,7 @@ top_srcdir = @top_srcdir@
 # not GPL, thus no COPYING file
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = LICENSE.txt README.md
-SUBDIRS = c
+SUBDIRS = c man
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
