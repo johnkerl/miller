@@ -12210,7 +12210,7 @@ ac_config_links="$ac_config_links c/parsing/lempar.c:c/parsing/lempar.c"
 ac_config_links="$ac_config_links c/parsing/mlr_dsl_parse.y:c/parsing/mlr_dsl_parse.y"
 
 
-ac_config_files="$ac_config_files Makefile c/cli/Makefile c/containers/Makefile c/parsing/Makefile c/dsl/Makefile c/experimental/Makefile c/input/Makefile c/lib/Makefile c/mapping/Makefile c/output/Makefile c/stream/Makefile c/auxents/Makefile c/unit_test/Makefile c/reg_test/Makefile c/reg_test/expected/Makefile c/reg_test/input/Makefile c/reg_test/input/rfc-csv/Makefile c/reg_test/input/comments/Makefile c/Makefile"
+ac_config_files="$ac_config_files Makefile c/cli/Makefile c/containers/Makefile c/parsing/Makefile c/dsl/Makefile c/experimental/Makefile c/input/Makefile c/lib/Makefile c/mapping/Makefile c/output/Makefile c/stream/Makefile c/auxents/Makefile c/unit_test/Makefile c/reg_test/Makefile c/reg_test/expected/Makefile c/reg_test/input/Makefile c/reg_test/input/rfc-csv/Makefile c/reg_test/input/comments/Makefile c/Makefile man/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -13248,6 +13248,7 @@ do
     "c/reg_test/input/rfc-csv/Makefile") CONFIG_FILES="$CONFIG_FILES c/reg_test/input/rfc-csv/Makefile" ;;
     "c/reg_test/input/comments/Makefile") CONFIG_FILES="$CONFIG_FILES c/reg_test/input/comments/Makefile" ;;
     "c/Makefile") CONFIG_FILES="$CONFIG_FILES c/Makefile" ;;
+    "man/Makefile") CONFIG_FILES="$CONFIG_FILES man/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

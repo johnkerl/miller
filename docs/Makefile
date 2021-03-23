@@ -21,10 +21,6 @@ help:
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
-	echo mkman start
-	mkman.rb > mlr.1
-	mkman.rb | groff -man -Tascii | col -b > manpage.txt
-	echo mkman end
 	./genrst
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 

@@ -27,7 +27,7 @@ clean: .always
 # OSX:
 # * brew install asciidoc
 # * export XML_CATALOG_FILES=/usr/local/etc/xml/catalog
-manpage: docs/miller.1.txt
-	( cd docs && a2x -d manpage -f manpage miller.1.txt )
+manpage: .always
+	make -C man manpage
 .always:
 	@true

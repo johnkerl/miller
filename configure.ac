@@ -37,5 +37,6 @@ AC_CONFIG_FILES([Makefile
 		c/reg_test/input/Makefile
 		c/reg_test/input/rfc-csv/Makefile
 		c/reg_test/input/comments/Makefile
-		c/Makefile])
+		c/Makefile
+		man/Makefile])
 AC_OUTPUT
