@@ -148,7 +148,7 @@ In this example I am using version 3.4.0; of course that will change for subsequ
 
 * Update version found in ``mlr --version`` and ``man mlr``:
 
-  * Edit ``configure.ac``, ``c/mlrvers.h``, and ``miller.spec`` from ``3.3.2-dev`` to ``3.4.0``. Likewise ``docs/conf.py``.
+  * Edit ``configure.ac``, ``c/mlrvers.h``, ``miller.spec``, and ``docs/conf.py`` from ``3.3.2-dev`` to ``3.4.0``.
   * Do a fresh ``autoreconf -fiv`` and commit the output. (Preferably on a Linux host, rather than MacOS, to reduce needless diffs in autogen build files.)
   * ``make -C c -f Makefile.no-autoconfig installhome && make -C man -f Makefile.no-autoconfig installhome && make -C docs -f Makefile.no-autoconfig html``
   * Commit and push.

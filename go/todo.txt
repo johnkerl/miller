@@ -5,6 +5,8 @@ TOP OF LIST:
   o useful warnings from: go test miller/src/...
   o parser-experiments out of miller/go entirely -- ?
 
+! readthedocs -- find out what's necessary to get per-version history
+
 * regexes
   o finish stats1 -r
   o regex captures ...
