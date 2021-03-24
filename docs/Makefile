@@ -23,12 +23,3 @@ help:
 %: Makefile
 	./genrst
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
-# These targets are only for local dev work.
-install:
-	mkdir -p $(INSTALLDIR)
-	cp mlr.1 $(INSTALLDIR)/mlr.1
-installhome:
-	mkdir -p $(INSTALLHOME)
-	cp mlr.1 $(INSTALLHOME)/mlr.1
-
