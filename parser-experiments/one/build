@@ -22,7 +22,7 @@ else
   exit 1
 fi
 
-dir=src/experimental
+dir=src
 mkdir -p $dir
 
 # ----------------------------------------------------------------

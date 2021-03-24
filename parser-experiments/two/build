@@ -22,15 +22,15 @@ else
   exit 1
 fi
 
-dir=src/experimental
+dir=src/parsing
 mkdir -p $dir
 
 # ----------------------------------------------------------------
 # Run the parser-generator
 
 # Build the bin/gocc executable:
-#go get github.com/goccmack/gocc
-go get github.com/johnkerl/gocc
+go get github.com/goccmack/gocc
+#go get github.com/johnkerl/gocc
 bingocc="$GOPATH/bin/gocc"
 if [ ! -x "$bingocc" ]; then
   exit 1
@@ -56,8 +56,8 @@ echo "Parser-autogen OK"
 
 # ----------------------------------------------------------------
 # Override GOCC codegen with customized error handling
-cp ../../src/parsing/errors.go.template src/experimental/errors/errors.go
-sed -i .bak 's:miller/parsing:experimental:' src/experimental/errors/errors.go
+cp ../../go/src/parsing/errors.go.template src/parsing/errors/errors.go
+sed -i .bak 's:miller/src:two/src:' src/parsing/errors/errors.go
 
 # ----------------------------------------------------------------
 # Copy AST files from the main Miller tree
@@ -68,11 +68,11 @@ rm -rf ./src/dsl/
 mkdir -p ./src/lib/
 mkdir -p ./src/dsl/
 
-cp ../../src/lib/*.go ./src/lib/
-cp ../../src/dsl/ast*.go ./src/dsl/
+cp ../../go/src/lib/*.go ./src/lib/
+cp ../../go/src/dsl/ast*.go ./src/dsl/
 
 # Different path to autogen between main Miller tree and here
-sed -i .bak 's:miller/parsing:experimental:' src/dsl/ast*go
+sed -i .bak 's:miller/src:two/src:' src/dsl/ast*go
 
 # ----------------------------------------------------------------
 # Compile the main and the parser-autogen

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/dsl"
+	"two/src/dsl"
 
-	"miller/src/parsing/lexer"
-	"miller/src/parsing/parser"
+	"two/src/parsing/lexer"
+	"two/src/parsing/parser"
 )
 
 const GREEN = "\033[32;01m"
