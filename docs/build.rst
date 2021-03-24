@@ -152,7 +152,6 @@ In this example I am using version 3.4.0; of course that will change for subsequ
   * Do a fresh ``autoreconf -fiv`` and commit the output. (Preferably on a Linux host, rather than MacOS, to reduce needless diffs in autogen build files.)
   * ``make -C c -f Makefile.no-autoconfig installhome && make -C man -f Makefile.no-autoconfig installhome && make -C docs -f Makefile.no-autoconfig html``
   * Commit and push.
-  * ISP upload so http://johnkerl.org/miller/doc/index.html will have updated head-docs.
 
 * Create the release tarball and SRPM:
 
