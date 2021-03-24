@@ -532,7 +532,7 @@ Suppose you have some date-stamped data which may (or may not) be missing entrie
 ::
 
     $ wc -l data/miss-date.csv
-    1372 data/miss-date.csv
+        1372 data/miss-date.csv
 
 Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using ``strptime``, then compute adjacent differences (the ``cat -n`` simply inserts record-counters):
 
