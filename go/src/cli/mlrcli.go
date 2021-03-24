@@ -7,7 +7,6 @@ package cli
 //// ----------------------------------------------------------------
 //#define DEFAULT_OFMT                     "%lf"
 //#define DEFAULT_OQUOTING                 QUOTE_MINIMAL
-//#define DEFAULT_JSON_FLATTEN_SEPARATOR   ":"
 //#define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
 //#define DEFAULT_COMMENT_STRING           "#"
 //

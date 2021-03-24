@@ -114,3 +114,10 @@ c/stream/Makefile
 c/unit_test/Makefile
 man/Makefile
 parser-experiments/two/src
+
+parser-experiments/one/src/github.com
+parser-experiments/one/src/experimental
+parser-experiments/one/main
+
+parser-experiments/two/src
+parser-experiments/two/main

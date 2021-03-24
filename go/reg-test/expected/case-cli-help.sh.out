@@ -103,7 +103,6 @@ Options:
 ================================================================
 Usage: mlr fill-down [options]
 If a given record has a missing value for a given field, fill that from
-
 the corresponding value from a previous record, if any.
 By default, a 'missing' field either is absent, or has the empty-string value.
 With -a, a field is 'missing' only if it is absent.
@@ -337,7 +336,7 @@ Shows the least frequently occurring distinct values for specified field names.
 The first entry is the statistical anti-mode; the remaining are runners-up.
 Options:
 -f {one or more comma-separated field names}. Required flag.
--n {count}. Optional flag defaulting to %!l(int=10)ld.
+-n {count}. Optional flag defaulting to 10.
 -b          Suppress counts; show only field values.
 -o {name}   Field name for output count. Default "count".
 See also "mlr most-frequent".
@@ -347,7 +346,7 @@ Shows the most frequently occurring distinct values for specified field names.
 The first entry is the statistical mode; the remaining are runners-up.
 Options:
 -f {one or more comma-separated field names}. Required flag.
--n {count}. Optional flag defaulting to %!l(int=10)ld.
+-n {count}. Optional flag defaulting to 10.
 -b          Suppress counts; show only field values.
 -o {name}   Field name for output count. Default "count".
 See also "mlr least-frequent".

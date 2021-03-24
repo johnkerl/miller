@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"miller/src/lib"
+	"miller/src/cliutil"
 	"miller/src/version"
 )
 
@@ -242,9 +243,8 @@ func mainUsageDataFormatExamples(o *os.File, argv0 string) {
 `)
 }
 
-// TODO: ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
 func mainUsageDataFormatOptions(o *os.File, argv0 string) {
-	fmt.Fprintln(o,
+	fmt.Fprintf(o,
 		`
 	  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
 	                                  (this is Miller's default format).
@@ -259,11 +259,8 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 	  --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
 	                                  "--ocsv --ofs tab", "--csv --fs tab".
 	  --iasv    --oasv    --asv       Similar but using ASCII FS %s and RS %s\n",
-		ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
 	  --iusv    --ousv    --usv       Similar but using Unicode FS %s\n",
-		USV_FS_FOR_HELP);
 	                                  and RS %s\n",
-		USV_RS_FOR_HELP);
 
 	  --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated
 	                                  with --fs tab, etc.). The 'lite' CSV does not handle
@@ -276,11 +273,8 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 	                                  "--ocsvlite --ofs tab", "--csvlite --fs tab".
 	  -t                              Synonymous with --tsvlite.
 	  --iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS %s and RS %s\n",
-		ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
 	  --iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS %s\n",
-		USV_FS_FOR_HELP);
 	                                  and RS %s\n",
-		USV_RS_FOR_HELP);
 
 	  --ipprint --opprint --pprint    Pretty-printed tabular (produces no
 	                                  output until all input is in).
@@ -311,7 +305,6 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 	              --oflatsep {string} Separator for flattening multi-level JSON keys,
 	                                  e.g. '{"a":{"b":3}}' becomes a:b => 3 for
 	                                  non-JSON formats. Defaults to %s.\n",
-		DEFAULT_JSON_FLATTEN_SEPARATOR);
 
 	  -p is a keystroke-saver for --nidx --fs space --repifs
 
@@ -320,7 +313,18 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 
 	  Please use --iformat1 --oformat2 rather than --format1 --oformat2.
 	  The latter sets up input and output flags for format1, not all of which
-	  are overridden in all cases by setting output format to format2.`)
+	  are overridden in all cases by setting output format to format2.`,
+
+		cliutil.ASV_FS_FOR_HELP,
+		cliutil.ASV_RS_FOR_HELP,
+		cliutil.USV_FS_FOR_HELP,
+		cliutil.USV_RS_FOR_HELP,
+		cliutil.ASV_FS_FOR_HELP,
+		cliutil.ASV_RS_FOR_HELP,
+		cliutil.USV_FS_FOR_HELP,
+		cliutil.USV_RS_FOR_HELP,
+		cliutil.DEFAULT_JSON_FLATTEN_SEPARATOR,
+	)
 	fmt.Println()
 	fmt.Println()
 }
