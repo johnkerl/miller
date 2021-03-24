@@ -2,8 +2,7 @@
 TOP OF LIST:
 
 * windows port and testing
-  o useful warnings from: go test miller/src/...
-  o parser-experiments out of miller/go entirely -- ?
+  o w/ and w/o cygwin -- in particular DSL-quoting strategies
 
 ! readthedocs -- find out what's necessary to get per-version history
 
