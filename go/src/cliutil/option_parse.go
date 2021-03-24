@@ -18,11 +18,11 @@ const ASV_RS = "\x1e"
 const USV_FS = "\xe2\x90\x9f"
 const USV_RS = "\xe2\x90\x9e"
 
-// TODO: move somewhere else; maybe cliutil
 const ASV_FS_FOR_HELP = "0x1f"
 const ASV_RS_FOR_HELP = "0x1e"
 const USV_FS_FOR_HELP = "U+241F (UTF-8 0xe2909f)"
 const USV_RS_FOR_HELP = "U+241E (UTF-8 0xe2909e)"
+const DEFAULT_JSON_FLATTEN_SEPARATOR = ":"
 
 // Returns true if the current flag was handled. Exported for use by join.
 func ParseReaderOptions(

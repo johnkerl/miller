@@ -6,13 +6,12 @@
 package lib
 
 import (
-	"miller/src/lib"
 	"testing"
 )
 
 func TestRegexReplaceOnce(t *testing.T) {
 	regexString := "[a-z]"
-	regex := lib.CompileMillerRegexOrDie(regexString)
+	regex := CompileMillerRegexOrDie(regexString)
 	replacement := "X"
 
 	input := "abcde"
@@ -22,7 +21,7 @@ func TestRegexReplaceOnce(t *testing.T) {
 		t.Fatal()
 	}
 
-	subOutput := lib.RegexReplaceOnce(regex, input, replacement)
+	subOutput := RegexReplaceOnce(regex, input, replacement)
 	if subOutput != "Xbcde" {
 		t.Fatal()
 	}

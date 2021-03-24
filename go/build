@@ -9,5 +9,5 @@ fi
 set -euo pipefail
 
 ./build-go
-./u/tester
+go test ./...
 ./reg-test/run -n $verbose
