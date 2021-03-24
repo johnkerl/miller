@@ -33,7 +33,6 @@ go get github.com/goccmack/gocc
 #go get github.com/johnkerl/gocc
 bingocc="$GOPATH/bin/gocc"
 
-export GOPATH="../go"
 if [ ! -x "$bingocc" ]; then
   exit 1
 fi
