@@ -405,6 +405,12 @@ func BuildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
 // xxx maybe split out dsl into two packages ... and/or put the ast.go into miller/parsing -- ?
 //   depends on TBD split-out of AST and CST ...
 func BuildASTFromString(dslString string) (*dsl.AST, error) {
+
+	// xxx make method
+	if strings.HasPrefix(dslString, "'") && strings.HasSuffix(dslString, "'") {
+		dslString = dslString[1:len(dslString)-1]
+	}
+
 	theLexer := lexer.NewLexer([]byte(dslString))
 	theParser := parser.NewParser()
 	interfaceAST, err := theParser.Parse(theLexer)
