@@ -171,6 +171,7 @@ In this example I am using version 3.4.0; of course that will change for subsequ
   * Publish the release
 
 * Check the release-specific docs:
+
   * Look at https://miller.readthedocs.io for new-version docs, after a few minutes' propagation time.
 
 * Notify:
