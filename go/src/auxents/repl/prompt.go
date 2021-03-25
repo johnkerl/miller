@@ -42,7 +42,7 @@ func getPrompt2() string {
 func (this *Repl) printStartupBanner() {
 	if this.inputIsTerminal {
 		// TODO: inhibit if mlr repl -q
-		fmt.Printf("Miller %s for %s:%s:%s\n", version.STRING, runtime.GOOS, runtime.GOARCH, runtime.Version())
+		fmt.Printf("Miller %s for %s %s %s\n", version.STRING, runtime.GOOS, runtime.GOARCH, runtime.Version())
 		fmt.Printf("Type ':help' for on-line help; ':quit' to quit.\n")
 	}
 }
