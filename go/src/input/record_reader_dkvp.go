@@ -71,6 +71,10 @@ func (this *RecordReaderDKVP) processHandle(
 		} else {
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
+
+			// xxx temp pending autodetect, and pending more windows-port work
+			line = strings.TrimRight(line, "\r\n")
+
 			record := recordFromDKVPLine(&line, &this.ifs, &this.ips)
 			context.UpdateForInputRecord()
 			inputChannel <- types.NewRecordAndContext(
