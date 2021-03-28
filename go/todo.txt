@@ -4,6 +4,14 @@ TOP OF LIST:
 * windows port and testing
   o w/ and w/o cygwin -- in particular DSL-quoting strategies
 
+  // +build !windows
+  [empty line]
+  package foo
+
+  // +build windows
+  [empty line]
+  package foo
+
 ! readthedocs -- find out what's necessary to get per-version history
 
 * regexes
