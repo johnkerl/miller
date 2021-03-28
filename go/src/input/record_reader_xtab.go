@@ -102,7 +102,7 @@ func (this *RecordReaderXTAB) processHandle(
 			line = strings.TrimRight(line, this.irs)
 
 			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r\n")
+			line = strings.TrimRight(line, "\r")
 
 			if line == "" {
 				if linesForRecord.Len() > 0 {

@@ -147,7 +147,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			line = strings.TrimRight(line, this.irs)
 
 			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r\n")
+			line = strings.TrimRight(line, "\r")
 
 			if line == "" {
 				// Reset to new schema
@@ -241,7 +241,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			line = strings.TrimRight(line, this.irs)
 
 			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r\n")
+			line = strings.TrimRight(line, "\r")
 
 			if line == "" {
 				// Reset to new schema

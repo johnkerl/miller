@@ -74,7 +74,7 @@ func (this *RecordReaderNIDX) processHandle(
 			line = strings.TrimRight(line, "\n")
 
 			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r\n")
+			line = strings.TrimRight(line, "\r")
 
 			record := recordFromNIDXLine(&line, &this.ifs)
 

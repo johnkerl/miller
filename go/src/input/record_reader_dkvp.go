@@ -73,7 +73,7 @@ func (this *RecordReaderDKVP) processHandle(
 			line = strings.TrimRight(line, "\n")
 
 			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r\n")
+			line = strings.TrimRight(line, "\r")
 
 			record := recordFromDKVPLine(&line, &this.ifs, &this.ips)
 			context.UpdateForInputRecord()
