@@ -56,7 +56,7 @@ echo "Parser-autogen OK"
 
 # ----------------------------------------------------------------
 # Override GOCC codegen with customized error handling
-cp ../../go/src/parsing/errors.go.template src/parsing/errors/errors.go
+cp ../../../go/src/parsing/errors.go.template src/parsing/errors/errors.go
 sed -i .bak 's:miller/src:two/src:' src/parsing/errors/errors.go
 
 # ----------------------------------------------------------------
@@ -68,8 +68,8 @@ rm -rf ./src/dsl/
 mkdir -p ./src/lib/
 mkdir -p ./src/dsl/
 
-cp ../../go/src/lib/*.go ./src/lib/
-cp ../../go/src/dsl/ast*.go ./src/dsl/
+cp ../../../go/src/lib/*.go ./src/lib/
+cp ../../../go/src/dsl/ast*.go ./src/dsl/
 
 # Different path to autogen between main Miller tree and here
 sed -i .bak 's:miller/src:two/src:' src/dsl/ast*go
