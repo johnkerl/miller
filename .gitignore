@@ -113,11 +113,8 @@ c/reg_test/input/rfc-csv/Makefile
 c/stream/Makefile
 c/unit_test/Makefile
 man/Makefile
-parser-experiments/two/src
 
-parser-experiments/one/src/github.com
-parser-experiments/one/src/experimental
-parser-experiments/one/main
-
-parser-experiments/two/src
-parser-experiments/two/main
+experiments/dsl-parser/one/src
+experiments/dsl-parser/one/main
+experiments/dsl-parser/two/src
+experiments/dsl-parser/two/main

@@ -20,7 +20,16 @@ const DEFAULT_PRIMARY_PROMPT = "[mlr] "
 const DEFAULT_SECONDARY_PROMPT = ""
 
 func getInputIsTerminal() bool {
-	return term.IsTerminal(int(os.Stdin.Fd()))
+	if runtime.GOOS == "windows" {
+		// Sadly, term.IsTerminal doesn't work inside MSYS2 but does work
+		// outside MSYS2.  Also sadly, I don't know how to tell the difference
+		// programatically between inside/outside MSYS2 here. So, as a
+		// workaround, I am simply defaulting to "is a terminal" here. Issues
+		// with regression-testing will need to be dealt with later.
+		return true
+	} else {
+		return term.IsTerminal(int(os.Stdin.Fd()))
+	}
 }
 
 func getPrompt1() string {

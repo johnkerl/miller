@@ -101,6 +101,9 @@ func (this *RecordReaderXTAB) processHandle(
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, this.irs)
 
+			// xxx temp pending autodetect, and pending more windows-port work
+			line = strings.TrimRight(line, "\r")
+
 			if line == "" {
 				if linesForRecord.Len() > 0 {
 					record, err := this.recordFromXTABLines(linesForRecord)

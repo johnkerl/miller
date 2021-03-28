@@ -146,6 +146,9 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, this.irs)
 
+			// xxx temp pending autodetect, and pending more windows-port work
+			line = strings.TrimRight(line, "\r")
+
 			if line == "" {
 				// Reset to new schema
 				headerStrings = nil
@@ -236,6 +239,9 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			inputLineNumber++
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, this.irs)
+
+			// xxx temp pending autodetect, and pending more windows-port work
+			line = strings.TrimRight(line, "\r")
 
 			if line == "" {
 				// Reset to new schema

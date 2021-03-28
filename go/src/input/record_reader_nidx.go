@@ -72,6 +72,10 @@ func (this *RecordReaderNIDX) processHandle(
 		} else {
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
+
+			// xxx temp pending autodetect, and pending more windows-port work
+			line = strings.TrimRight(line, "\r")
+
 			record := recordFromNIDXLine(&line, &this.ifs)
 
 			context.UpdateForInputRecord()
