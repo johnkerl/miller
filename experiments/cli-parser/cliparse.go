@@ -1,5 +1,6 @@
 // go mod init cliparse.go
 // go get golang.org/x/sys
+// go get github.com/kballard/go-shellquote
 
 package main
 
@@ -7,13 +8,20 @@ import (
 	"fmt"
 	"os"
 
-	"golang.org/x/sys/windows"
+	"cliparse/arch"
 )
 
 func main() {
-	fmt.Printf("<<%s>>\n", windows.UTF16PtrToString(windows.GetCommandLine()))
-	fmt.Println()
+	fmt.Println("-- os.Args:")
 	for i, arg := range os.Args {
+		fmt.Printf("args[%d] <<%s>>\n", i, arg)
+	}
+	fmt.Println()
+
+	fmt.Println("-- canonical args:")
+	args := arch.GetMainArgs()
+
+	for i, arg := range args {
 		fmt.Printf("args[%d] <<%s>>\n", i, arg)
 	}
 }
