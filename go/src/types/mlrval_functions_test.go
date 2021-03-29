@@ -23,7 +23,7 @@ import (
 // * numeric compares on numbers
 // * false < true
 
-func TestComparctors(t *testing.T) {
+func TestComparators(t *testing.T) {
 
 	i10 := MlrvalFromInt(10)
 	i2 := MlrvalFromInt(2)
