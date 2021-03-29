@@ -127,6 +127,8 @@ So, in broad overview, the key packages are:
 ### Miller per se
 
 * The main entry point is [mlr.go](./mlr.go); everything else in [src](./src).
+* [src/entrypoint](./src/entrypoint): All the usual contents of `main()` are here, for ease of testing.
+* [src/platform](./src/platform): Platform-dependent code, which as of early 2021 is the command-line parser. Handling single quotes and double quotes is different on Windows unless particular care is taken, which is what this package does.
 * [src/lib](./src/lib):
   * Implementation of the [`Mlrval`](./src/types/mlrval.go) datatype which includes string/int/float/boolean/void/absent/error types. These are used for record values, as well as expression/variable values in the Miller `put`/`filter` DSL. See also below for more details.
   * [`Mlrmap`](./src/types/mlrmap.go) is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see [mlrmap.go](./src/types/mlrmap.go) for more details.
