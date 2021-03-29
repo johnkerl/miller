@@ -7,9 +7,7 @@ import (
 	"runtime/debug"
 	"runtime/pprof"
 
-	"miller/src/auxents"
-	"miller/src/cli"
-	"miller/src/stream"
+	"miller/src/entrypoint"
 )
 
 // ----------------------------------------------------------------
@@ -47,21 +45,7 @@ func main() {
 		defer fmt.Fprintf(os.Stderr, "CPU profile finished.\n")
 	}
 
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// 'mlr repl' or 'mlr lecat' or any other non-miller-per-se toolery which
-	// is delivered (for convenience) within the mlr executable. If argv[1] is
-	// found then this function will not return.
-	auxents.Dispatch(os.Args)
-
-	options, recordTransformers, err := cli.ParseCommandLine(os.Args)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
-		os.Exit(1)
-	}
-
-	err = stream.Stream(options, recordTransformers)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
-		os.Exit(1)
-	}
+	// This will obtain os.Args and go from there.  All the usual contents of
+	// main() are put into this package for ease of testing.
+	entrypoint.Main()
 }
