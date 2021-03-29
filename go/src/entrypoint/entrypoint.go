@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"miller/src/platform"
+
 	"miller/src/auxents"
 	"miller/src/cli"
 	"miller/src/stream"
@@ -11,6 +13,12 @@ import (
 
 // ----------------------------------------------------------------
 func Main() {
+	// Special handling for Windows so we can do things like:
+	//
+	//   mlr put '$a = $b . "cd \"efg\" hi"' foo.dat
+	//
+	// as on Linux/Unix/MacOS.
+	os.Args = platform.GetArgs()
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// 'mlr repl' or 'mlr lecat' or any other non-miller-per-se toolery which
