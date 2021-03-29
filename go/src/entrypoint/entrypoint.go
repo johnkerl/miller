@@ -20,7 +20,6 @@ func Main() {
 	// as on Linux/Unix/MacOS.
 	os.Args = platform.GetArgs()
 
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// 'mlr repl' or 'mlr lecat' or any other non-miller-per-se toolery which
 	// is delivered (for convenience) within the mlr executable. If argv[1] is
 	// found then this function will not return.

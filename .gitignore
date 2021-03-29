@@ -119,3 +119,4 @@ experiments/dsl-parser/one/main
 experiments/dsl-parser/two/src
 experiments/dsl-parser/two/main
 experiments/cli-parser/cliparse
+experiments/cli-parser/cliparse.exe

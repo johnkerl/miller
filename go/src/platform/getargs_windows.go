@@ -5,6 +5,7 @@ package platform
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	shellquote "github.com/kballard/go-shellquote"
 	"golang.org/x/sys/windows"
@@ -21,8 +22,10 @@ func GetArgs() []string {
 		return os.Args
 	}
 
+	// Things on the command line include: args[0], which is fine as-is; various flags like
+	// -x or --xyz which are fine as-is; DSL expressions such as '$a = $b . "ccc"'; xxx type up more.
 	rawCommandLine := windows.UTF16PtrToString(windows.GetCommandLine())
-	args, err := shellquote.Split(os.Args)
+	newArgs, err := shellquote.Split(rawCommandLine)
 	if err != nil {
 		fmt.Fprintf(
 			os.Stderr,
@@ -30,5 +33,11 @@ func GetArgs() []string {
 			os.Args[0], err,
 		)
 	}
-	return args
+
+	for i, oldArg := range os.Args {
+		if strings.HasPrefix(oldArg, "'") && strings.HasSuffix(oldArg, "'") {
+			os.Args[i] = newArgs[i]
+		}
+	}
+	return os.Args
 }
