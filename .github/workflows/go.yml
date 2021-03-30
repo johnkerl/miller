@@ -23,7 +23,7 @@ jobs:
         go-version: 1.15
 
     - name: Build
-      run: cd go && go build -v ./... && echo "ls -lrt:" && ls -lrt && echo "ls -lrt /home/runner/go/bin:" && ls -lrt /home/runner/go/bin
+      run: cd go && go build -v mlr.go && echo "ls -lrt:" && ls -lrt && echo "ls -lrt /home/runner/go/bin:" && ls -lrt /home/runner/go/bin
 
     - name: Test
       run: cd go && ls -lrt && go test -v ./...
