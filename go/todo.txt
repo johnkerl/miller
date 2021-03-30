@@ -4,6 +4,8 @@ TOP OF LIST:
 ----------------------------------------------------------------
 * more testing-files per se 
 * how to wire reg-test/run into testing framework ... make it runnable without bash scripts
+* 'run: |' and then multi-line
+* TL;DR at top of go/README.md
 ----------------------------------------------------------------
 
 ! readthedocs -- find out what's necessary to get per-version history
