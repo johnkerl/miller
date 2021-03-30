@@ -1,11 +1,10 @@
 ================================================================
 TOP OF LIST:
 
-* windows port and testing
-  o w/ and w/o cygwin -- in particular DSL-quoting strategies
-
+----------------------------------------------------------------
 * more testing-files per se 
 * how to wire reg-test/run into testing framework ... make it runnable without bash scripts
+----------------------------------------------------------------
 
 ! readthedocs -- find out what's necessary to get per-version history
 
