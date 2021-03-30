@@ -159,6 +159,14 @@ system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
 in portable, modern C, with **zero runtime dependencies**. You can download or
 compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
+# Contributors
+
+Thanks to all the fine people who help make Miller better!
+
+<a href="https://github.com/johnkerl/miller/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
+</a>
+
 # Documentation links
 
 * [**Full documentation**](https://miller.readthedocs.io/)
