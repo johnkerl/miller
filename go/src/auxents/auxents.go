@@ -1,6 +1,6 @@
 // ================================================================
-// Little side-programs for hex, unhex, LF <-> CR/LF, etc which are delivered
-// within the mlr exectuable.
+// Support for Miller regression testing. Originally bash scripts; ported to Go
+// for ease of Windows-native testing.
 // ================================================================
 
 package auxents
@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 
+	"miller/src/auxents/regtest"
 	"miller/src/auxents/repl"
 )
 
@@ -30,11 +31,12 @@ var _AUX_LOOKUP_TABLE = []tAuxLookupEntry{}
 func init() {
 	_AUX_LOOKUP_TABLE = []tAuxLookupEntry{
 		{"aux-list", auxListMain, auxListUsage},
-		{"lecat", lecatMain, lecatUsage},
-		{"termcvt", termcvtMain, termcvtUsage},
 		{"hex", hexMain, hexUsage},
-		{"unhex", unhexMain, unhexUsage},
+		{"lecat", lecatMain, lecatUsage},
+		{"regtest", regtest.RegTestMain, regtest.RegTestUsage},
 		{"repl", repl.ReplMain, repl.ReplUsage},
+		{"termcvt", termcvtMain, termcvtUsage},
+		{"unhex", unhexMain, unhexUsage},
 	}
 }
 
