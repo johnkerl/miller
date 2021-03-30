@@ -23,7 +23,7 @@ jobs:
         go-version: 1.15
 
     - name: Build
-      run: cd go && go build -v ./... && ls -lrt && echo $GOPATH && ls -lrt $GOPATH/bin/
+      run: cd go && go build -v ./... && echo "ls -lrt:" && ls -lrt && echo GOPATH=$GOPATH && echo "GOPATH/bin:" && ls -lrt $GOPATH/bin/
 
     - name: Test
       run: cd go && ls -lrt && go test -v ./...
