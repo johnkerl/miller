@@ -2,6 +2,7 @@ package support
 
 import (
 	"bytes"
+	"fmt"
 	"os/exec"
 
 	shellquote "github.com/kballard/go-shellquote"
