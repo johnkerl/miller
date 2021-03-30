@@ -49,6 +49,6 @@ func getMillerExe() string {
 	if runtime.GOOS == "windows" {
 		return "../mlr.exe"
 	} else {
-		return "../mlre"
+		return "../mlr"
 	}
 }

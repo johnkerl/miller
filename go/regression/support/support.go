@@ -37,6 +37,7 @@ func RunMillerCommand(
 	stderr = stderrBuffer.String()
 
 	if err != nil {
+		exitCode = 1
 		exitError, ok := err.(*exec.ExitError)
 		if ok {
 			exitCode = exitError.ExitCode()
