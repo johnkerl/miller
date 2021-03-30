@@ -23,7 +23,7 @@ jobs:
         go-version: 1.15
 
     - name: Build
-      run: cd go && go build -v ./...
+      run: cd go && go build -v ./... && ls -lrt
 
     - name: Test
       run: cd go && ls -lrt && go test -v ./...
