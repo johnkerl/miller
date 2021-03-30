@@ -41,10 +41,13 @@ func RunMillerCommand(
 	stdout = stdoutBuffer.String()
 	stderr = stderrBuffer.String()
 
+	fmt.Println("AAA")
 	if err != nil {
+	fmt.Println("BBB", exitCode)
 		exitError, ok := err.(*exec.ExitError)
 		if ok {
 			exitCode = exitError.ExitCode()
+	fmt.Println("CCC", exitCode)
 		}
 	}
 
