@@ -2,7 +2,6 @@ package support
 
 import (
 	"bytes"
-	"fmt"
 	"os/exec"
 
 	shellquote "github.com/kballard/go-shellquote"
@@ -18,6 +17,7 @@ func RunMillerCommand(
 	executionError error, // TODO: comment: failure to even start the process
 ) {
 
+	fmt.Printf("%s %s\n", millerExe, argsString)
 	// xxx
 	millerExe = "../mlr"
 
@@ -41,13 +41,10 @@ func RunMillerCommand(
 	stdout = stdoutBuffer.String()
 	stderr = stderrBuffer.String()
 
-	fmt.Println("AAA")
 	if err != nil {
-	fmt.Println("BBB", exitCode)
 		exitError, ok := err.(*exec.ExitError)
 		if ok {
 			exitCode = exitError.ExitCode()
-	fmt.Println("CCC", exitCode)
 		}
 	}
 
