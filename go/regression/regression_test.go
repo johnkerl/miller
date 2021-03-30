@@ -6,6 +6,7 @@ package regression
 
 import (
 	"os"
+	"runtime"
 	"testing"
 
 	"miller/regression/support"
@@ -17,7 +18,7 @@ func TestWorkingDirectory(t *testing.T) {
 }
 
 func TestFoo(t *testing.T) {
-	stdout, stderr, exitCode, err := support.RunMillerCommand(os.Args[0], "cat testdata/abixy")
+	stdout, stderr, exitCode, err := support.RunMillerCommand(getMillerExe(), "cat testdata/abixy")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,7 +32,7 @@ func TestFoo(t *testing.T) {
 }
 
 func TestBar(t *testing.T) {
-	stdout, stderr, exitCode, err := support.RunMillerCommand(os.Args[0], "cxt testdata/abixy")
+	stdout, stderr, exitCode, err := support.RunMillerCommand(getMillerExe(), "cxt testdata/abixy")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,5 +41,14 @@ func TestBar(t *testing.T) {
 	t.Log("exitCode", exitCode)
 	if exitCode != 1 {
 		t.Fatal()
+	}
+}
+
+// TODO: comment when this is run as 'go test ...' then os.Args[0] isn't the mlr executable.
+func getMillerExe() string {
+	if runtime.GOOS == "windows" {
+		return "../mlr.exe"
+	} else {
+		return "../mlre"
 	}
 }
