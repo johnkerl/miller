@@ -157,7 +157,7 @@ func (this *RegTester) executeSingleDirectory(
 	hasDirectEntries := this.directoryHasDirectEntries(dirName)
 
 	if hasDirectEntries && this.verbosityLevel >= 1 {
-		fmt.Printf("%s BEGIN %s\n", MajorSeparator, dirName)
+		fmt.Printf("%s BEGIN %s/\n", MajorSeparator, dirName)
 	}
 
 	entries, err := os.ReadDir(dirName)
@@ -181,15 +181,15 @@ func (this *RegTester) executeSingleDirectory(
 		// multiply announce.
 		if hasDirectEntries {
 			if passed {
-				fmt.Printf("%s %s\n", PASS, dirName)
+				fmt.Printf("%s %s/\n", PASS, dirName)
 			} else {
-				fmt.Printf("%s %s\n", FAIL, dirName)
+				fmt.Printf("%s %s/\n", FAIL, dirName)
 			}
 		}
 	}
 
 	if hasDirectEntries && this.verbosityLevel >= 1 {
-		fmt.Printf("%s END   %s\n", MajorSeparator, dirName)
+		fmt.Printf("%s END   %s/\n", MajorSeparator, dirName)
 		fmt.Println()
 	}
 

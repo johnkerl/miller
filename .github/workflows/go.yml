@@ -26,4 +26,7 @@ jobs:
       run: cd go && go build -v mlr.go
 
     - name: Test
-      run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vvv
+      # In the event of needing to debug failures you can modify `./mlr regtest` verbosity
+      # using `-v`, `-vv`, or `-vvv`. Commit changes to this file and re-push to GitHub
+      # and let the GitHub Actions re-run.
+      run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vv

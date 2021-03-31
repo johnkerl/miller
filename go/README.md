@@ -8,6 +8,13 @@ A TL;DR for anyone wanting to compile and run Miller:
 * `./reg-test/run -n` -- old Bash-driven regression framework (doesn't work on Windows, unless MSYS2), features ported from C. Thousands of cases being gradually ported to `./mlr regtest`.
 * `./reg-test/run -o` -- same as previous, but features needing to be ported from C.
 
+A note on Continuous Integration:
+
+* The C implementation is auto-built for Linux using Travis: see [../.travis.yml](../.travis.yml).
+* The C implementation is also auto-built for Windows using Appveyor: see [../appveyor.yml](../appveyor.yml). However Ifind that it often breaks and I'm bewildered as to how to fix it.
+* See also [../README.md](../README.md).
+* The Go implementation is auto-built using GitHub Actions: see [../.github/workflows/go.yml](../.github/workflows/go.yml). This works splendidly on Linux, MacOS, and Windows.
+
 # Status of the Go port
 
 * This will be a full Go port of [Miller](https://miller.readthedocs.io/). Things are currently rough and iterative and incomplete. I don't have a firm timeline but I suspect it will take a few more months of late-evening/spare-time work.

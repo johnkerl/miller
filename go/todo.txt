@@ -5,7 +5,7 @@ TOP OF LIST:
 ! #455
 * finish #447
 ! substr operate on runes
-* windows mrpl colors -- ? checking isatty also -- ?
+d windows mrpl colors -- ? checking isatty also -- ?
 * more doclinks:
   https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html
   https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html
@@ -13,9 +13,6 @@ TOP OF LIST:
   mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
 
 ----------------------------------------------------------------
-! windows multi-line experiments ...
-* docs re travis -> gha xitn & what/where/when/how
-* trailing '/' for dirs ...
 * add .stdin option, for <<EOF-ish
   o impl StdinPipe with os.Exec ...
 * comment-strip
@@ -32,10 +29,15 @@ TOP OF LIST:
     - git rm'ing case*sh
     - gmt rm'ing reg-test/expected/same.*
 ! suppression of 'mlr: ...' diffs .....
-* port gradually over ...
 * how-to for -vvv levels at go.yml
 ! upload artifacts
   https://github.com/actions/upload-artifact
+* port cases gradually over ...
+----------------------------------------------------------------
+
+----------------------------------------------------------------
+d make a TL;DR at top of go/README.md
+d windows multi-line experiments ...
 ----------------------------------------------------------------
 
 data:

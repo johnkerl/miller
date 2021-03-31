@@ -6,5 +6,7 @@ set -euo pipefail
 cp src/parsing/errors.go.template src/parsing/errors/errors.go
 
 go build mlr.go
+# During the C-to-Go port I like to have ../c/mlr and ./mlrgo and have symlinks
+# to them from my ~/lbin. Hence the duplicate name here.
 cp mlr mlrgo
 echo "Compile OK"
