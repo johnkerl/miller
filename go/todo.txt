@@ -6,6 +6,12 @@ TOP OF LIST:
   o impl StdinPipe with os.Exec ...
 * --populate functionality
   o automate more
+    - hand-prep the case.sh file
+    - script taking case.sh file; computing new dirname
+    - writing 000n.cmd out to new dirname
+    - running mlr regtest -p of it
+    - git rm'ing case*sh
+    - gmt rm'ing reg-test/expected/same.*
 ! suppression of 'mlr: ...' diffs .....
 * port gradually over ...
 * how-to for -vvv levels at go.yml
