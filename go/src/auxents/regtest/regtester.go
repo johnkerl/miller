@@ -77,6 +77,12 @@ func (this *RegTester) Execute(
 		paths = []string{DefaultPath}
 	}
 
+	fmt.Println("REGRESSION TEST:")
+	for _, path := range paths {
+		fmt.Printf("  %s\n", path)
+	}
+	fmt.Println()
+
 	for _, path := range paths {
 		this.executeSinglePath(path)
 	}
