@@ -1,12 +1,12 @@
 ================================================================
 TOP OF LIST:
 
-! substr operate on runes
-
 * #455 -- doc-neatens re ordering
 d windows mrpl colors -- ? checking isatty also -- ?
 * more about HTTP logs in miller -- doc and encapsulate:
   mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
+
+* something getoptish ... -xyz -> -x -y -z ...
 
 ----------------------------------------------------------------
 * regtest .cmd format:
@@ -29,8 +29,6 @@ d windows mrpl colors -- ? checking isatty also -- ?
   o gmt rm'ing reg-test/expected/same.*
 
 * port cases gradually over to regtest v2 ...
-
-* something getoptish ... -xyz -> -x -y -z ...
 
 ! suppression of 'mlr: ...' diffs .....
   o cross-cutting ... search for os.Args[0] / MlrExeName()
@@ -546,3 +544,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * 123kb/123mb/123gb/123tb fcns (1000/1024)
 * //go:embed -- ?
 * github.com/spf13/cobra & viper -- improve CLI/REPL?
+* doc getoptish in various spots
