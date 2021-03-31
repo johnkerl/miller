@@ -161,7 +161,8 @@ compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
 # Contributors
 
-Thanks to all the fine people who help make Miller better!
+Thanks to all the fine people who help make Miller better by contributing commits/PRs! (I wish there
+were an equally fine way to honor all the fine people who contribute through issues and feature requests!)
 
 <a href="https://github.com/johnkerl/miller/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />

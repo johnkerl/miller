@@ -870,3 +870,11 @@ i:  12   j: 11   substr(o123456789, 12, 11): <<>>
 i:  12   j: 12   substr(o123456789, 12, 12): <<>>
 
 
+mlr --oxtab put $b=strlen($a); $c=substr($a,4,6); $d=substr0($a,4,6); $e=substr1($a,4,6); $f=truncate($a,6);
+a françois
+b 8
+c çoi
+d çoi
+e nço
+f franço
+

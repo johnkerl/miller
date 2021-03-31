@@ -17,6 +17,7 @@ d windows mrpl colors -- ? checking isatty also -- ?
   o comment-strip
   o doc re file format ...
   o putenvs ...
+
 * --populate functionality: automate more
   o hand-prep the case.sh file
   o script taking case.sh file; computing new dirname
@@ -26,21 +27,23 @@ d windows mrpl colors -- ? checking isatty also -- ?
   o running mlr regtest -p of it
   o git rm'ing case*sh
   o gmt rm'ing reg-test/expected/same.*
+
+* port cases gradually over to regtest v2 ...
+
+* something getoptish ... -xyz -> -x -y -z ...
+
 ! suppression of 'mlr: ...' diffs .....
   o cross-cutting ... search for os.Args[0] / MlrExeName()
+
 ! upload artifacts
   https://github.com/actions/upload-artifact
-* port cases gradually over ...
+
+* PR-template etc checklists
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
-d make a TL;DR at top of go/README.md
 d windows multi-line experiments ...
 ----------------------------------------------------------------
-
-data:
-* same reg-test/input
-* port reg-test/cases from *sh to dirs, one at a time, w/ cmd/out/err/[fail]
 
 ----------------------------------------------------------------
 
@@ -60,8 +63,6 @@ data:
   o new columns-to-arrays and arrays-to-columns for stan format
   o regextract regextract_or_else
   o system
-
-* something getoptish ... -xyz -> -x -y -z ...
 
 ! localtime functions
 * strptime w/ ...00.Z -> error

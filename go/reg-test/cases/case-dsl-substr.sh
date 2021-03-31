@@ -52,3 +52,7 @@ x=o
 x=o1
 x=o123456789
 EOF
+
+run_mlr --oxtab put '$b=strlen($a); $c=substr($a,4,6); $d=substr0($a,4,6); $e=substr1($a,4,6); $f=truncate($a,6);' <<EOF
+a=françois
+EOF

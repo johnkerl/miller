@@ -67,8 +67,10 @@ func MlrvalSubstr1Up(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
-	// TODO: fix this with regard to UTF-8 and runes.
-	strlen := int(len(input1.printrep))
+
+	// Handle UTF-8 correctly: len(input1.printrep) will count bytes, not runes.
+	runes := []rune(input1.printrep)
+	strlen := int(len(runes))
 
 	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
 	// empty in the DSL expression it comes in here as a 1. But when the upper
@@ -99,7 +101,7 @@ func MlrvalSubstr1Up(input1, input2, input3 *Mlrval) *Mlrval {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
 		// while the 2nd is exclusive. For Miller, indices are 1-up and both
 		// are inclusive.
-		return MlrvalPointerFromString(input1.printrep[m : n+1])
+		return MlrvalPointerFromString(string(runes[m : n+1]))
 	}
 }
 
@@ -111,8 +113,10 @@ func MlrvalSubstr0Up(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
-	// TODO: fix this with regard to UTF-8 and runes.
-	strlen := int(len(input1.printrep))
+
+	// Handle UTF-8 correctly: len(input1.printrep) will count bytes, not runes.
+	runes := []rune(input1.printrep)
+	strlen := int(len(runes))
 
 	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
 	// empty in the DSL expression it comes in here as a 1. But when the upper
@@ -151,7 +155,7 @@ func MlrvalSubstr0Up(input1, input2, input3 *Mlrval) *Mlrval {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
 		// while the 2nd is exclusive. For Miller, indices are 1-up and both
 		// are inclusive.
-		return MlrvalPointerFromString(input1.printrep[m : n+1])
+		return MlrvalPointerFromString(string(runes[m : n+1]))
 	}
 }
 
@@ -173,12 +177,14 @@ func MlrvalTruncate(input1, input2 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 
-	oldLength := int(len(input1.printrep))
+	// Handle UTF-8 correctly: len(input1.printrep) will count bytes, not runes.
+	runes := []rune(input1.printrep)
+	oldLength := int(len(runes))
 	maxLength := input2.intval
 	if oldLength <= maxLength {
 		return input1
 	} else {
-		return MlrvalPointerFromString(input1.printrep[0:maxLength])
+		return MlrvalPointerFromString(string(runes[0:maxLength]))
 	}
 }
 
