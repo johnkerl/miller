@@ -175,5 +175,6 @@ Thanks to all the fine people who help make Miller better!
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 * Some tutorials:
   * https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html
+  * https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html
   * https://www.togaware.com/linux/survivor/CSV_Files.html
   * https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html

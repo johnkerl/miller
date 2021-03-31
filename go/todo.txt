@@ -2,8 +2,7 @@
 TOP OF LIST:
 
 * manpage.txt fu w/ comments & automake
-! #455
-* finish #447
+* #455 -- doc-neatens re ordering
 ! substr operate on runes
 d windows mrpl colors -- ? checking isatty also -- ?
 * more doclinks:
