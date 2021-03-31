@@ -81,6 +81,7 @@ func (this *RegTester) Execute(
 	for _, path := range paths {
 		fmt.Printf("  %s\n", path)
 	}
+	fmt.Printf("Using executable: %s\n", this.exeName)
 	fmt.Println()
 
 	for _, path := range paths {
@@ -232,6 +233,13 @@ func (this *RegTester) executeSingleCmdFile(
 		}
 		return false
 	}
+
+	if this.verbosityLevel >= 2 {
+		fmt.Println("Command:")
+		fmt.Println(cmd)
+		fmt.Println()
+	}
+
 	expectedStdout, err := this.loadFile(expectedStdoutFileName)
 	if err != nil {
 		if this.verbosityLevel >= 2 {
