@@ -277,7 +277,7 @@ func (this *RegTester) populateSingleCmdFile(
 	}
 
 	if this.verbosityLevel >= 1 {
-		fmt.Printf("wrote %s\n", pass, cmdFileName)
+		fmt.Printf("wrote %s\n", cmdFileName)
 	}
 }
 
