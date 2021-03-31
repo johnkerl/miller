@@ -8,6 +8,8 @@ TOP OF LIST:
   o automate more
     - hand-prep the case.sh file
     - script taking case.sh file; computing new dirname
+    - remap run_mlr -> mlr; mlr_expect_fail -> create a .should-fail
+    - expand $indir
     - writing 000n.cmd out to new dirname
     - running mlr regtest -p of it
     - git rm'ing case*sh
