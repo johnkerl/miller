@@ -3,8 +3,8 @@ package regtest
 import (
 	"bytes"
 	"errors"
-	"strings"
 	"os/exec"
+	"strings"
 
 	shellquote "github.com/kballard/go-shellquote"
 )

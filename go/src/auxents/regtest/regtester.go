@@ -90,6 +90,7 @@ func (this *RegTester) Execute(
 		this.executeSinglePath(path)
 	}
 
+	fmt.Println()
 	fmt.Printf("NUMBER OF CASE-DIRECTORIES PASSED %d\n", this.directoryPassCount)
 	fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", this.directoryFailCount)
 	fmt.Printf("NUMBER OF CASES            PASSED %d\n", this.casePassCount)
@@ -243,7 +244,6 @@ func (this *RegTester) populateSingleCmdFile(
 		fmt.Println("Command:")
 		fmt.Println(cmd)
 	}
-
 
 	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
 
