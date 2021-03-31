@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/lib"
 	"miller/src/cliutil"
+	"miller/src/lib"
 	"miller/src/version"
 )
 

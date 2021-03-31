@@ -408,7 +408,7 @@ func BuildASTFromString(dslString string) (*dsl.AST, error) {
 
 	// xxx make method
 	if strings.HasPrefix(dslString, "'") && strings.HasSuffix(dslString, "'") {
-		dslString = dslString[1:len(dslString)-1]
+		dslString = dslString[1 : len(dslString)-1]
 	}
 
 	theLexer := lexer.NewLexer([]byte(dslString))
