@@ -139,22 +139,25 @@ func transformerSortParseCLI(
 			//
 			// As of Miller 6 we have a getoptish feature wherein "-xyz" is
 			// expanded to "-x -y -z" while "--xyz" is left intact. This is OK
-			// to do here globally since Miller is quite consistent (in main,
-			// verbs, and auxents) that multi-character options start with two
-			// dashes, e.g.  "--csv".
+			// to do globally (before any verb such as this one sees the
+			// command line) since Miller is quite consistent (in main, verbs,
+			// and auxents) that multi-character options start with two dashes,
+			// e.g.  "--csv" ...
 			//
-			// The sole exception is -nf/-nr, right here, which go back to the
-			// very start of Miller, whose command-line interface we don't want
-			// to break.
+			// ... with the sole exception being -nf/-nr, right here. This goes
+			// back to the very start of Miller, and we don't want to break the
+			// command-line interface to sort.
 			//
-			// Before Miller 6, opt would be "-nf" or "-nr". Now it's split
-			// into "-n -f" or "-n -r", respectively. Normally "-n", "-f",
-			// "-r", "-nf", and "-nr" each take a field-name list: e.g. "-nf
-			// a,b,c".  But now that's expanded to "-n -f a,b,c".
+			// Before Miller 6, opt and next arg would have been "-nf x,y,z" or
+			// "-nr x,y,z".  Now they're split into "-n -f x,y,z" or "-n -r
+			// x,y,z", respectively. Note that "-n x,y,z" and "-f x,y,z" and
+			// "-r x,y,z" are also valid. This means -n needs a field-name list
+			// after it unless it's followed immediately by -r or -f.
 			//
 			// So here we special-case this: if "-n" is followed immediately by
 			// "-f", we treat it the same as "-nf". Likewise, "-n" followed by
 			// "-r" is treated like "-nr".
+
 			if args[argi] == "-f" {
 				// Treat like "-nf"
 				argi++
