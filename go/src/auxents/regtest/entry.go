@@ -41,7 +41,9 @@ func RegTestMain(args []string) int {
 		} else if arg == "-v" {
 			verbosityLevel++
 		} else if arg == "-vv" {
-			verbosityLevel = 2
+			verbosityLevel += 2
+		} else if arg == "-vvv" {
+			verbosityLevel += 3
 
 		} else {
 			RegTestUsage(verbName, os.Stderr, 1)
@@ -55,11 +57,10 @@ func RegTestMain(args []string) int {
 		verbosityLevel,
 	)
 
-	err := regtester.Execute(paths)
+	ok := regtester.Execute(paths)
 
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+	if !ok {
+		return 1
 	}
 
 	return 0

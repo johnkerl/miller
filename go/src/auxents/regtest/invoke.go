@@ -1,7 +1,8 @@
-package support
+package regtest
 
 import (
 	"bytes"
+	"errors"
 	"os/exec"
 
 	shellquote "github.com/kballard/go-shellquote"
@@ -21,6 +22,13 @@ func RunMillerCommand(
 	if err != nil {
 		return "", "", -1, err
 	}
+	//  TODO: comment
+	if len(argsArray) < 1 {
+		return "", "", -1, errors.New(
+			"Empty command in regression-test input",
+		)
+	}
+	argsArray = argsArray[1:] // TODO: comment
 
 	cmd := exec.Command(millerExe, argsArray...)
 
