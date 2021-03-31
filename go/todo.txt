@@ -1,6 +1,8 @@
 ================================================================
 TOP OF LIST:
 
+* make a TL;DR at top of go/README.md
+
 ----------------------------------------------------------------
 * add .stdin option, for <<EOF-ish
   o impl StdinPipe with os.Exec ...
@@ -17,31 +19,13 @@ TOP OF LIST:
 ! suppression of 'mlr: ...' diffs .....
 * port gradually over ...
 * how-to for -vvv levels at go.yml
+! upload artifacts
+  https://github.com/actions/upload-artifact
 ----------------------------------------------------------------
-
-* 'run: |' and then multi-line
-* TL;DR at top of go/README.md
 
 data:
 * same reg-test/input
 * port reg-test/cases from *sh to dirs, one at a time, w/ cmd/out/err/[fail]
-
-code:
-* mlr reg-test auxent
-* --mlrexe override
-* -v / -vv / -vvv?
-  o default: dirs and statuses w/ green/red as now
-  o -v: individual case-files green/red indented
-  o -vv: with out/err
-* default dir ./reg-test/cases
-* recursive dir-walker finding .cmd files
-  o .cmd shellquote.Split and optionally override args[0]
-  o replace 0/1 w/ zero/non-zero ... try first ...
-* counts by cases and case-dirs
-  o ordered map :)
-* accept-case logic ...
-  o always write *.actout / *.acterr -- ?
-  o copy-overs -- ?
 
 ----------------------------------------------------------------
 
