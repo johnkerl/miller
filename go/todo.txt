@@ -1,12 +1,11 @@
 ================================================================
 TOP OF LIST:
 
+* mlr --help-function foo
 * #455 -- doc-neatens re ordering
 d windows mrpl colors -- ? checking isatty also -- ?
 * more about HTTP logs in miller -- doc and encapsulate:
   mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
-
-* something getoptish ... -xyz -> -x -y -z ...
 
 ----------------------------------------------------------------
 * regtest .cmd format:

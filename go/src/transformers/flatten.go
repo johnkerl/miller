@@ -29,7 +29,7 @@ func transformerFlattenUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameFlatten)
 	fmt.Fprint(o,
 		`Flattens multi-level maps to single-level ones. Example: field with name 'a'
-and value '{"b": { "c": 4 }}' becomes name 'a:b:c' and value 4.
+and value '{"b": { "c": 4 }}' becomes name 'a.b.c' and value 4.
 `)
 	fmt.Fprint(o, "Options:\n")
 	fmt.Fprint(o, "-f Comma-separated list of field names to flatten (default all).\n")

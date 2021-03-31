@@ -28,7 +28,7 @@ func transformerUnflattenUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameUnflatten)
 	fmt.Fprint(o,
-		`Reverses flatten. Example: field with name 'a:b:c' and value 4
+		`Reverses flatten. Example: field with name 'a.b.c' and value 4
 becomes name 'a' and value '{"b": { "c": 4 }}'.
 `)
 	fmt.Fprintf(o, "Options:\n")
