@@ -237,7 +237,6 @@ func (this *RegTester) executeSingleCmdFile(
 	if this.verbosityLevel >= 2 {
 		fmt.Println("Command:")
 		fmt.Println(cmd)
-		fmt.Println()
 	}
 
 	expectedStdout, err := this.loadFile(expectedStdoutFileName)
