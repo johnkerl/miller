@@ -23,10 +23,11 @@ func RegTestUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "[none] Print directory-level pass/fails, and overall pass/fail.\n")
+	fmt.Fprintf(o, "-m     Specify name of Miller executable to use.\n")
+	fmt.Fprintf(o, "-p     Create the .expout and .experr files, rather than checking them.\n")
 	fmt.Fprintf(o, "-v     Also include pass/fail at command-file level.\n")
 	fmt.Fprintf(o, "-vv    Also include pass/fail reasons for each command-file.\n")
 	fmt.Fprintf(o, "-vvv   Also include full stdout/stderr/exit-code for each command-file.\n")
-	fmt.Fprintf(o, "-m     Specify name of Miller executable to use.\n")
 	os.Exit(exitCode)
 }
 
@@ -38,6 +39,7 @@ func RegTestMain(args []string) int {
 	argc := len(args)
 	argi := 2
 	verbosityLevel := 0
+	doPopulate := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		arg := args[argi]
@@ -50,6 +52,16 @@ func RegTestMain(args []string) int {
 		if arg == "-h" || arg == "--help" {
 			RegTestUsage(verbName, os.Stdout, 0)
 
+		} else if arg == "-m" {
+			if argi >= argc {
+				RegTestUsage(verbName, os.Stderr, 1)
+			}
+			exeName = args[argi]
+			argi++
+
+		} else if arg == "-p" {
+			doPopulate = true
+
 		} else if arg == "-v" {
 			verbosityLevel++
 		} else if arg == "-vv" {
@@ -58,12 +70,6 @@ func RegTestMain(args []string) int {
 			verbosityLevel += 3
 		} else if arg == "-vvvv" {
 			verbosityLevel += 4
-		} else if arg == "-m" {
-			if argi >= argc {
-				RegTestUsage(verbName, os.Stderr, 1)
-			}
-			exeName = args[argi]
-			argi++
 
 		} else {
 			RegTestUsage(verbName, os.Stderr, 1)
@@ -74,6 +80,7 @@ func RegTestMain(args []string) int {
 	regtester := NewRegTester(
 		exeName,
 		verbName,
+		doPopulate,
 		verbosityLevel,
 	)
 
