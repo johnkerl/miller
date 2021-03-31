@@ -31,6 +31,7 @@ type RegTester struct {
 	exeName        string
 	verbName       string
 	verbosityLevel int
+	doPopulate     bool
 
 	directoryPassCount int
 	directoryFailCount int
@@ -42,11 +43,13 @@ type RegTester struct {
 func NewRegTester(
 	exeName string,
 	verbName string,
+	doPopulate bool,
 	verbosityLevel int,
 ) *RegTester {
 	return &RegTester{
 		exeName:            exeName,
 		verbName:           verbName,
+		doPopulate:         doPopulate,
 		verbosityLevel:     verbosityLevel,
 		directoryPassCount: 0,
 		directoryFailCount: 0,
@@ -87,6 +90,7 @@ func (this *RegTester) Execute(
 		this.executeSinglePath(path)
 	}
 
+	fmt.Println()
 	fmt.Printf("NUMBER OF CASE-DIRECTORIES PASSED %d\n", this.directoryPassCount)
 	fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", this.directoryFailCount)
 	fmt.Printf("NUMBER OF CASES            PASSED %d\n", this.casePassCount)
@@ -125,13 +129,18 @@ func (this *RegTester) executeSinglePath(
 		return passed
 	} else if mode.IsRegular() {
 		if strings.HasSuffix(path, CommandSuffix) {
-			passed := this.executeSingleCmdFile(path)
-			if passed {
-				this.casePassCount++
+			if this.doPopulate {
+				this.populateSingleCmdFile(path)
+				return true
 			} else {
-				this.caseFailCount++
+				passed := this.executeSingleCmdFile(path)
+				if passed {
+					this.casePassCount++
+				} else {
+					this.caseFailCount++
+				}
+				return passed
 			}
-			return passed
 		}
 		return true // No .cmd files directly inside
 	}
@@ -209,6 +218,67 @@ func (this *RegTester) directoryHasDirectEntries(
 		}
 	}
 	return false
+}
+
+// ----------------------------------------------------------------
+// TODO: comment
+func (this *RegTester) populateSingleCmdFile(
+	cmdFileName string,
+) {
+
+	if this.verbosityLevel >= 1 {
+		fmt.Printf("%s begin %s\n", MinorSeparator, cmdFileName)
+		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFileName)
+	}
+
+	expectedStdoutFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStdoutSuffix)
+	expectedStderrFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStderrSuffix)
+
+	cmd, err := this.loadFile(cmdFileName)
+	if err != nil {
+		fmt.Printf("%s: %v\n", cmdFileName, err)
+		return
+	}
+
+	if this.verbosityLevel >= 2 {
+		fmt.Println("Command:")
+		fmt.Println(cmd)
+	}
+
+	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
+
+	if this.verbosityLevel >= 3 {
+
+		fmt.Printf("actualStdout [%d]:\n", len(actualStdout))
+		fmt.Println(actualStdout)
+
+		fmt.Printf("actualStderr [%d]:\n", len(actualStderr))
+		fmt.Println(actualStderr)
+
+		fmt.Println("actualExitCode:")
+		fmt.Println(actualExitCode)
+
+		fmt.Println()
+	}
+
+	// TODO: temp replace-all for CR/LF to LF. Will need re-work once auto-detect is ported.
+	actualStdout = strings.ReplaceAll(actualStdout, "\r\n", "\n")
+	actualStderr = strings.ReplaceAll(actualStderr, "\r\n", "\n")
+
+	err = this.storeFile(expectedStdoutFileName, actualStdout)
+	if err != nil {
+		fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
+		return
+	}
+	err = this.storeFile(expectedStderrFileName, actualStderr)
+	if err != nil {
+		fmt.Printf("%s: %v\n", expectedStderrFileName, err)
+		return
+	}
+
+	if this.verbosityLevel >= 1 {
+		fmt.Printf("wrote %s\n", cmdFileName)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -364,4 +434,16 @@ func (this *RegTester) loadFile(
 		return "", err
 	}
 	return string(byteContents), nil
+}
+
+func (this *RegTester) storeFile(
+	fileName string,
+	contents string,
+) error {
+	err := os.WriteFile(fileName, []byte(contents), 0666)
+	if err != nil {
+		fmt.Printf("%s: %v\n", fileName, err)
+		return err
+	}
+	return nil
 }

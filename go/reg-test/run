@@ -369,6 +369,7 @@ if [ "$only_show" = "false" ]; then
   mkdir -p $outdir
 fi
 
+echo "REGRESTION TEST, BASH VERSION"
 echo Using mlr executable $path_to_mlr
 
 # Don't let the running user's .mlrrc affect the regression test

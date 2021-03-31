@@ -9,5 +9,12 @@ fi
 set -euo pipefail
 
 ./build-go
+
+echo
 go test ./...
+
+echo
+mlr regtest $verbose
+
+echo
 ./reg-test/run -n $verbose
