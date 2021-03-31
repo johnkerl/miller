@@ -2,10 +2,26 @@
 TOP OF LIST:
 
 * make a TL;DR at top of go/README.md
+* manpage.txt fu w/ comments & automake
+! #455
+* finish #447
+! substr operate on runes
+* windows mrpl colors -- ? checking isatty also -- ?
+* more doclinks:
+  https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html
+  https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html
+* more about HTTP logs in miller -- doc and encapsulate:
+  mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
 
 ----------------------------------------------------------------
+! windows multi-line experiments ...
+* docs re travis -> gha xitn & what/where/when/how
+* trailing '/' for dirs ...
 * add .stdin option, for <<EOF-ish
   o impl StdinPipe with os.Exec ...
+* comment-strip
+* doc re file format ...
+* putenvs ...
 * --populate functionality
   o automate more
     - hand-prep the case.sh file
@@ -223,6 +239,10 @@ emitp/emitf:
 * go 1.16
   o https://golang.org/doc/go1.16
   o io/ioutil deprecation: ioutil.ReadFile -> os.ReadFile
+
+* miller extensibility re golang plugins -- ?!?
+  ? verbs ?
+  ? DSL functions ?
 
 ================================================================
 CATEGORIES:
@@ -523,3 +543,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * doc6 re warnings
 * -W to mlr main also -- so it can be used with .mlrrc
 * push/pop/shift/unshift functions
+* 123kb/123mb/123gb/123tb fcns (1000/1024)
+* //go:embed -- ?
+* github.com/spf13/cobra & viper -- improve CLI/REPL?
