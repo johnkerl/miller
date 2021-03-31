@@ -1,7 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-* manpage.txt fu w/ comments & automake
 ! substr operate on runes
 
 * #455 -- doc-neatens re ordering
@@ -10,23 +9,25 @@ d windows mrpl colors -- ? checking isatty also -- ?
   mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
 
 ----------------------------------------------------------------
-* add .stdin option, for <<EOF-ish
-  o impl StdinPipe with os.Exec ...
-* comment-strip
-* doc re file format ...
-* putenvs ...
-* --populate functionality
-  o automate more
-    - hand-prep the case.sh file
-    - script taking case.sh file; computing new dirname
-    - remap run_mlr -> mlr; mlr_expect_fail -> create a .should-fail
-    - expand $indir
-    - writing 000n.cmd out to new dirname
-    - running mlr regtest -p of it
-    - git rm'ing case*sh
-    - gmt rm'ing reg-test/expected/same.*
+* regtest .cmd format:
+  o ... add .stdin option, for <<EOF-ish ...
+    - impl StdinPipe with os.Exec ...
+  o ... or simply support <<EOF ... EOF directly. preferable since then .cmd files are runnable
+    directly (unless on windows)
+  o comment-strip
+  o doc re file format ...
+  o putenvs ...
+* --populate functionality: automate more
+  o hand-prep the case.sh file
+  o script taking case.sh file; computing new dirname
+  o remap run_mlr -> mlr; mlr_expect_fail -> create a .should-fail
+  o expand $indir
+  o writing 000n.cmd out to new dirname
+  o running mlr regtest -p of it
+  o git rm'ing case*sh
+  o gmt rm'ing reg-test/expected/same.*
 ! suppression of 'mlr: ...' diffs .....
-* how-to for -vvv levels at go.yml
+  o cross-cutting ... search for os.Args[0] / MlrExeName()
 ! upload artifacts
   https://github.com/actions/upload-artifact
 * port cases gradually over ...
