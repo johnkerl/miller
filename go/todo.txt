@@ -11,6 +11,7 @@ TOP OF LIST:
 ? sdiff support -- ?
 ! suppression of 'mlr: ...' diffs .....
 * port gradually over ...
+! how-to for -vvv levels at go.yml
 
 * 'run: |' and then multi-line
 * TL;DR at top of go/README.md

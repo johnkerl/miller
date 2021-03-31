@@ -26,4 +26,4 @@ jobs:
       run: cd go && go build -v mlr.go
 
     - name: Test
-      run: cd go && go test -v ./... && ./mlr regtest
+      run: cd go && go test -v ./... && ./mlr regtest -vv
