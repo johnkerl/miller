@@ -2,12 +2,10 @@
 TOP OF LIST:
 
 * manpage.txt fu w/ comments & automake
-* #455 -- doc-neatens re ordering
 ! substr operate on runes
+
+* #455 -- doc-neatens re ordering
 d windows mrpl colors -- ? checking isatty also -- ?
-* more doclinks:
-  https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html
-  https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html
 * more about HTTP logs in miller -- doc and encapsulate:
   mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
 

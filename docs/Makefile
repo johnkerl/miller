@@ -1,5 +1,8 @@
 # Minimal makefile for Sphinx documentation
 #
+# Note: run this after make in the ../c directory and make in the ../man directory
+# since ../c/mlr is used to autogenerate ../man/manpage.txt which is used in this directory.
+# See also https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
 
 # You can set these variables from the command line, and also
 # from the environment for the first two.

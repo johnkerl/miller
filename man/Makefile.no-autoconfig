@@ -1,4 +1,7 @@
 # Respective MANPATH entries would include /usr/local/share/man or $HOME/man.
+# This should be run after make in the ../c directory but before make in the ../docs directory,
+# since ../c/mlr is used to autogenerate ./manpage.txt which is used in ../docs.
+# See also https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
 INSTALLDIR=/usr/local/share/man/man1
 INSTALLHOME=$(HOME)/man/man1
 
