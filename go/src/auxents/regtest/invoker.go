@@ -3,6 +3,7 @@ package regtest
 import (
 	"bytes"
 	"errors"
+	"strings"
 	"os/exec"
 
 	shellquote "github.com/kballard/go-shellquote"
@@ -24,6 +25,8 @@ func RunMillerCommand(
 	exitCode int,
 	executionError error, // failure to even start the process
 ) {
+	argsString = strings.TrimRight(argsString, "\n")
+	argsString = strings.TrimRight(argsString, "\r")
 
 	argsArray, err := shellquote.Split(argsString)
 	if err != nil {
@@ -37,6 +40,7 @@ func RunMillerCommand(
 			"Empty command in regression-test input",
 		)
 	}
+
 	argsArray = argsArray[1:] // everything after the Miller-executable name.
 
 	cmd := exec.Command(millerExe, argsArray...)
