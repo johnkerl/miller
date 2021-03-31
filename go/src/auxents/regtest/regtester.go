@@ -16,6 +16,7 @@ const DefaultPath = "./reg-test/cases"
 const CommandSuffix = ".cmd"
 const ExpectedStdoutSuffix = ".expout"
 const ExpectedStderrSuffix = ".experr"
+const ShouldFailSuffix = ".should-fail"
 
 const MajorSeparator = "================================================================"
 const MinorSeparator = "----------------------------------------------------------------"
@@ -62,7 +63,8 @@ func (this *RegTester) resetCounts() {
 }
 
 // ----------------------------------------------------------------
-// TODO: comment
+// Top-level entrypoint for the regtester. See the usage function in entry.go
+// for semantics.
 
 func (this *RegTester) Execute(
 	paths []string,
@@ -79,7 +81,6 @@ func (this *RegTester) Execute(
 		this.executeSinglePath(path)
 	}
 
-	fmt.Println()
 	fmt.Printf("NUMBER OF CASE-DIRECTORIES PASSED %d\n", this.directoryPassCount)
 	fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", this.directoryFailCount)
 	fmt.Printf("NUMBER OF CASES            PASSED %d\n", this.casePassCount)
@@ -96,7 +97,8 @@ func (this *RegTester) Execute(
 }
 
 // ----------------------------------------------------------------
-// TODO: comment
+// Recursively invoked routine to process either a single .cmd file, or a
+// directory of such, or a directory of directories.
 
 func (this *RegTester) executeSinglePath(
 	path string,
@@ -104,27 +106,31 @@ func (this *RegTester) executeSinglePath(
 	handle, err := os.Stat(path)
 	if err != nil {
 		fmt.Printf("%s: %v\n", path, err)
-		// TODO: attribs ...
 		return false
 	}
 	mode := handle.Mode()
 	if mode.IsDir() {
-		ok := this.executeSingleDirectory(path)
-		if ok {
+		passed := this.executeSingleDirectory(path)
+		if passed {
 			this.directoryPassCount++
 		} else {
 			this.directoryFailCount++
 		}
+		return passed
 	} else if mode.IsRegular() {
 		if strings.HasSuffix(path, CommandSuffix) {
-			ok := this.executeSingleCmdFile(path)
-			if ok {
+			passed := this.executeSingleCmdFile(path)
+			if passed {
 				this.casePassCount++
 			} else {
 				this.caseFailCount++
 			}
+			return passed
 		}
+		return true // No .cmd files directly inside
 	}
+
+	fmt.Printf("%s: neither directory nor regular file.\n", path)
 	return false // fall-through
 }
 
@@ -169,13 +175,15 @@ func (this *RegTester) executeSingleDirectory(
 
 	if hasDirectEntries && this.verbosityLevel >= 1 {
 		fmt.Printf("%s END   %s\n", MajorSeparator, dirName)
+		fmt.Println()
 	}
 
 	return passed
 }
 
 // ----------------------------------------------------------------
-// TODO: comment
+// Sees if a directory has .cmd files directly in it (vs in a subdirectory).
+// If so, we want to print a banner at start and end.
 func (this *RegTester) directoryHasDirectEntries(
 	dirName string,
 ) bool {
@@ -202,41 +210,44 @@ func (this *RegTester) executeSingleCmdFile(
 	cmdFileName string,
 ) bool {
 
-	if this.verbosityLevel >= 2 {
+	if this.verbosityLevel >= 1 {
 		fmt.Printf("%s begin %s\n", MinorSeparator, cmdFileName)
 		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFileName)
 	}
 
 	expectedStdoutFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStdoutSuffix)
 	expectedStderrFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStderrSuffix)
+	expectFailFileName := this.changeExtension(cmdFileName, CommandSuffix, ShouldFailSuffix)
 
 	cmd, err := this.loadFile(cmdFileName)
 	if err != nil {
-		if this.verbosityLevel >= 3 {
+		if this.verbosityLevel >= 2 {
 			fmt.Printf("%s: %v\n", cmdFileName, err)
 		}
 		return false
 	}
 	expectedStdout, err := this.loadFile(expectedStdoutFileName)
 	if err != nil {
-		if this.verbosityLevel >= 3 {
+		if this.verbosityLevel >= 2 {
 			fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
 		}
 		return false
 	}
 	expectedStderr, err := this.loadFile(expectedStderrFileName)
 	if err != nil {
-		if this.verbosityLevel >= 3 {
+		if this.verbosityLevel >= 2 {
 			fmt.Printf("%s: %v\n", expectedStderrFileName, err)
 		}
 		return false
+	}
+	expectedExitCode := 0
+	if this.FileExists(expectFailFileName) {
+		expectedExitCode = 1
 	}
 
 	passed := true
 
 	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
-	// xxx temp
-	expectedExitCode := 0
 
 	if this.verbosityLevel >= 3 {
 
@@ -257,24 +268,28 @@ func (this *RegTester) executeSingleCmdFile(
 
 		fmt.Println("expectedExitCode:")
 		fmt.Println(expectedExitCode)
+
+		fmt.Println()
 	}
 
-	// xxx Windows CR/LF <-> LF handling
+	// TODO Windows CR/LF <-> LF handling
 	if actualStdout != expectedStdout {
 		if this.verbosityLevel >= 2 {
 			fmt.Printf(
-				"stdout does not match expected %s\n",
+				"%s: stdout does not match expected %s\n",
+				cmdFileName,
 				expectedStdoutFileName,
 			)
 		}
 		passed = false
 	}
 
-	// xxx Windows CR/LF <-> LF handling
+	// TODO Windows CR/LF <-> LF handling
 	if actualStderr != expectedStderr {
 		if this.verbosityLevel >= 2 {
 			fmt.Printf(
-				"stderr does not match expected %s\n",
+				"%s: stderr does not match expected %s\n",
+				cmdFileName,
 				expectedStderrFileName,
 			)
 		}
@@ -284,14 +299,15 @@ func (this *RegTester) executeSingleCmdFile(
 	if actualExitCode != expectedExitCode {
 		if this.verbosityLevel >= 2 {
 			fmt.Printf(
-				"Exit code %d does not match expected %d\n",
+				"%s: exit code %d does not match expected %d\n",
+				cmdFileName,
 				actualExitCode, expectedExitCode,
 			)
 		}
 		passed = false
 	}
 
-	if this.verbosityLevel >= 2 {
+	if this.verbosityLevel >= 1 {
 		if passed {
 			fmt.Printf("%s %s\n", pass, cmdFileName)
 		} else {
@@ -299,7 +315,7 @@ func (this *RegTester) executeSingleCmdFile(
 		}
 	}
 
-	return false
+	return passed
 }
 
 // ----------------------------------------------------------------
@@ -311,13 +327,21 @@ func (this *RegTester) changeExtension(
 	return strings.TrimSuffix(fileName, oldExtension) + newExtension
 }
 
+func (this *RegTester) FileExists(fileName string) bool {
+	fileInfo, err := os.Stat(fileName)
+	if err != nil { // TODO: neither true nor false; throw & abend the entire suite maybe
+		return false
+	}
+	return !fileInfo.IsDir()
+}
+
 func (this *RegTester) loadFile(
 	fileName string,
 ) (string, error) {
 	byteContents, err := os.ReadFile(fileName)
 	if err != nil {
 		fmt.Printf("%s: %v\n", fileName, err)
-		return "", err // xxx or nah
+		return "", err
 	}
 	return string(byteContents), nil
 }

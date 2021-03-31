@@ -4,6 +4,14 @@ TOP OF LIST:
 ----------------------------------------------------------------
 * more testing-files per se 
 * how to wire reg-test/run into testing framework ... make it runnable without bash scripts
+! -m flag for using-exe
+! print using-exe in regtester; and trial this
+! --populate functionality
+? cat command -- ?
+? sdiff support -- ?
+! suppression of 'mlr: ...' diffs .....
+* port gradually over ...
+
 * 'run: |' and then multi-line
 * TL;DR at top of go/README.md
 

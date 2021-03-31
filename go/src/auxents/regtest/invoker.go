@@ -8,6 +8,13 @@ import (
 	shellquote "github.com/kballard/go-shellquote"
 )
 
+// RunMillerCommand runs a string like 'mlr cat foo.dat', with specified mlr
+// executable name to be interpolated into the args[0] slot. This allows us to
+// compare different versions of Miller using the same test data.
+//
+// Note the argsString could have left the exe name off entirely, like 'cat
+// foo.dat', but it's desirable for debugging to have the command-files be
+// directly runnable as-is.
 func RunMillerCommand(
 	millerExe string,
 	argsString string,
@@ -15,20 +22,22 @@ func RunMillerCommand(
 	stdout string,
 	stderr string,
 	exitCode int,
-	executionError error, // TODO: comment: failure to even start the process
+	executionError error, // failure to even start the process
 ) {
 
 	argsArray, err := shellquote.Split(argsString)
 	if err != nil {
 		return "", "", -1, err
 	}
-	//  TODO: comment
+	// Given file contents 'mlr cat foo.dat' and millerExe 'mlr-previous',
+	// contents split to ['mlr', 'cat', 'foo.dat']. We need a non-empty array
+	// in order to overwrite args[0] from 'mlr' to 'mlr-previous'.
 	if len(argsArray) < 1 {
 		return "", "", -1, errors.New(
 			"Empty command in regression-test input",
 		)
 	}
-	argsArray = argsArray[1:] // TODO: comment
+	argsArray = argsArray[1:] // everything after the Miller-executable name.
 
 	cmd := exec.Command(millerExe, argsArray...)
 
