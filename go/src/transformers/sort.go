@@ -135,10 +135,51 @@ func transformerSortParseCLI(
 			}
 
 		} else if opt == "-n" {
-			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
-			for _, item := range subList {
-				groupByFieldNames = append(groupByFieldNames, item)
-				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
+			// This is a bit of a hack.
+			//
+			// As of Miller 6 we have a getoptish feature wherein "-xyz" is
+			// expanded to "-x -y -z" while "--xyz" is left intact. This is OK
+			// to do here globally since Miller is quite consistent (in main,
+			// verbs, and auxents) that multi-character options start with two
+			// dashes, e.g.  "--csv".
+			//
+			// The sole exception is -nf/-nr, right here, which go back to the
+			// very start of Miller, whose command-line interface we don't want
+			// to break.
+			//
+			// Before Miller 6, opt would be "-nf" or "-nr". Now it's split
+			// into "-n -f" or "-n -r", respectively. Normally "-n", "-f",
+			// "-r", "-nf", and "-nr" each take a field-name list: e.g. "-nf
+			// a,b,c".  But now that's expanded to "-n -f a,b,c".
+			//
+			// So here we special-case this: if "-n" is followed immediately by
+			// "-f", we treat it the same as "-nf". Likewise, "-n" followed by
+			// "-r" is treated like "-nr".
+			if args[argi] == "-f" {
+				// Treat like "-nf"
+				argi++
+				subList := cliutil.VerbGetStringArrayArgOrDie(verb, "-nf", args, &argi, argc)
+				for _, item := range subList {
+					groupByFieldNames = append(groupByFieldNames, item)
+					comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
+				}
+
+			} else if args[argi] == "-r" {
+				// Treat like "-nr"
+				argi++
+				subList := cliutil.VerbGetStringArrayArgOrDie(verb, "-nr", args, &argi, argc)
+				for _, item := range subList {
+					groupByFieldNames = append(groupByFieldNames, item)
+					comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparator)
+				}
+
+			} else {
+				// Treat like "-n"
+				subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+				for _, item := range subList {
+					groupByFieldNames = append(groupByFieldNames, item)
+					comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
+				}
 			}
 
 		} else if opt == "-nf" {
