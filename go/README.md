@@ -1,3 +1,13 @@
+# Quickstart
+
+A TL;DR for anyone wanting to compile and run Miller:
+
+* `go build mlr.go` -- produces the `mlr` executable
+* `go test ./...` -- runs a relatively small number of unit tests
+* `./mlr regtest` -- new multiplatform regression framework, small-but-growing number of test cases
+* `./reg-test/run -n` -- old Bash-driven regression framework (doesn't work on Windows, unless MSYS2), features ported from C. Thousands of cases being gradually ported to `./mlr regtest`.
+* `./reg-test/run -o` -- same as previous, but features needing to be ported from C.
+
 # Status of the Go port
 
 * This will be a full Go port of [Miller](https://miller.readthedocs.io/). Things are currently rough and iterative and incomplete. I don't have a firm timeline but I suspect it will take a few more months of late-evening/spare-time work.

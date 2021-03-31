@@ -1,7 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-* make a TL;DR at top of go/README.md
 * manpage.txt fu w/ comments & automake
 ! #455
 * finish #447
