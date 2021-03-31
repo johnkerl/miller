@@ -71,7 +71,6 @@ func (this *RegTester) Execute(
 ) bool {
 
 	this.resetCounts()
-	// TODO: print using-exe
 
 	if len(paths) == 0 {
 		paths = []string{DefaultPath}
@@ -285,7 +284,10 @@ func (this *RegTester) executeSingleCmdFile(
 		fmt.Println()
 	}
 
-	// TODO Windows CR/LF <-> LF handling
+	// TODO: temp replace-all for CR/LF to LF. Will need re-work once auto-detect is ported.
+	actualStdout = strings.ReplaceAll(actualStdout, "\r\n", "\n")
+	actualStderr = strings.ReplaceAll(actualStderr, "\r\n", "\n")
+
 	if actualStdout != expectedStdout {
 		if this.verbosityLevel >= 2 {
 			fmt.Printf(
@@ -297,7 +299,6 @@ func (this *RegTester) executeSingleCmdFile(
 		passed = false
 	}
 
-	// TODO Windows CR/LF <-> LF handling
 	if actualStderr != expectedStderr {
 		if this.verbosityLevel >= 2 {
 			fmt.Printf(
