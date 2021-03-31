@@ -26,6 +26,7 @@ func RegTestUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "-v     Also include pass/fail at command-file level.\n")
 	fmt.Fprintf(o, "-vv    Also include pass/fail reasons for each command-file.\n")
 	fmt.Fprintf(o, "-vvv   Also include full stdout/stderr/exit-code for each command-file.\n")
+	fmt.Fprintf(o, "-m     Specify name of Miller executable to use.\n")
 	os.Exit(exitCode)
 }
 
@@ -57,6 +58,12 @@ func RegTestMain(args []string) int {
 			verbosityLevel += 3
 		} else if arg == "-vvvv" {
 			verbosityLevel += 4
+		} else if arg == "-m" {
+			if argi >= argc {
+				RegTestUsage(verbName, os.Stderr, 1)
+			}
+			exeName = args[argi]
+			argi++
 
 		} else {
 			RegTestUsage(verbName, os.Stderr, 1)
