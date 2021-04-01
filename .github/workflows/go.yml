@@ -36,6 +36,6 @@ jobs:
       with:
         name: ${{ matrix.os }} /mlr
         if: matrix.config.os == 'windows-latest'
-          path: go/mlr.exe
+        path: go/mlr.exe
         if: matrix.config.os != 'windows-latest'
-          path: go/mlr
+        path: go/mlr
