@@ -35,19 +35,19 @@ jobs:
       if: ${{ matrix.os }} == ubuntu-latest
       uses: actions/upload-artifact@v2
       with:
-        name: ubuntu/mlr
+        name: mlr-ubuntu
         path: go/mlr
 
     - name: UploadArtifactsMacOS
       if: ${{ matrix.os }} == macos-latest
       uses: actions/upload-artifact@v2
       with:
-        name: macos/mlr
+        name: mlr-macos
         path: go/mlr
 
     - name: UploadArtifactsWindows
       if: ${{ matrix.os }} == windows-latest
       uses: actions/upload-artifact@v2
       with:
-        name: windows/mlr.exe
+        name: mlr-windows
         path: go/mlr.exe
