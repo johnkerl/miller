@@ -31,11 +31,23 @@ jobs:
       # and let the GitHub Actions re-run.
       run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vv
 
-    - name: UploadArtifacts
+    - name: UploadArtifactsUbuntu
       uses: actions/upload-artifact@v2
+      runs-on: ubuntu-latest
       with:
-        name: ${{ matrix.os }} /mlr
-        if: matrix.config.os == 'windows-latest'
-        path: go/mlr.exe
-        else:
+        name: ubuntu/mlr
         path: go/mlr
+
+    - name: UploadArtifactsMacOS
+      uses: actions/upload-artifact@v2
+      runs-on: macos-latest
+      with:
+        name: macos/mlr
+        path: go/mlr
+
+    - name: UploadArtifactsWindows
+      uses: actions/upload-artifact@v2
+      runs-on: windows-latest
+      with:
+        name: windows/mlr.exe
+        path: go/mlr.exe
