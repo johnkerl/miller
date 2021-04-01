@@ -33,21 +33,21 @@ jobs:
 
     - name: UploadArtifactsUbuntu
       uses: actions/upload-artifact@v2
-      runs-on: ubuntu-latest
-      with:
-        name: ubuntu/mlr
-        path: go/mlr
+        runs-on: ubuntu-latest
+        with:
+          name: ubuntu/mlr
+          path: go/mlr
 
     - name: UploadArtifactsMacOS
       uses: actions/upload-artifact@v2
-      runs-on: macos-latest
-      with:
-        name: macos/mlr
-        path: go/mlr
+        runs-on: macos-latest
+        with:
+          name: macos/mlr
+          path: go/mlr
 
     - name: UploadArtifactsWindows
       uses: actions/upload-artifact@v2
-      runs-on: windows-latest
-      with:
-        name: windows/mlr.exe
-        path: go/mlr.exe
+        runs-on: windows-latest
+        with:
+          name: windows/mlr.exe
+          path: go/mlr.exe
