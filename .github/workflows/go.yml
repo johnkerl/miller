@@ -32,22 +32,22 @@ jobs:
       run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vv
 
     - name: UploadArtifactsUbuntu
+      if: ${{ matrix.os } == ubuntu-latest
       uses: actions/upload-artifact@v2
-      runs-on: ubuntu-latest
       with:
         name: ubuntu/mlr
         path: go/mlr
 
     - name: UploadArtifactsMacOS
+      if: ${{ matrix.os } == macos-latest
       uses: actions/upload-artifact@v2
-      runs-on: macos-latest
       with:
         name: macos/mlr
         path: go/mlr
 
     - name: UploadArtifactsWindows
+      if: ${{ matrix.os } == windows-latest
       uses: actions/upload-artifact@v2
-      runs-on: windows-latest
       with:
         name: windows/mlr.exe
         path: go/mlr.exe
