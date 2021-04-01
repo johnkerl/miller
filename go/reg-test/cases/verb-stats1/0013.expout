@@ -1,0 +1,15 @@
+x_min  1
+x_p0   1
+x_p50  2.5
+x_p100 b
+x_max  b
+y_min  1
+y_p0   1
+y_p50  3
+y_p100 4
+y_max  4
+z_min  a
+z_p0   a
+z_p50  d
+z_p100 f
+z_max  f

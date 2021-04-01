@@ -1,0 +1,5 @@
+resource=/some/other/path,loadsec=0.97,ok=false
+record_count=150,resource=/path/to/second/file
+resource=/path/to/second/file,loadsec=0.32,ok=true
+record_count=100,resource=/path/to/file
+resource=/path/to/file,loadsec=0.45,ok=true

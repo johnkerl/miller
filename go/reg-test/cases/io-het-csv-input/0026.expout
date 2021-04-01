@@ -1,0 +1,9 @@
+/some/other/path,0.97,false
+
+150,/path/to/second/file
+
+/path/to/second/file,0.32,true
+
+100,/path/to/file
+
+/path/to/file,0.45,true

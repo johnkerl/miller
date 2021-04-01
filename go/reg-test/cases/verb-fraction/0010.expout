@@ -1,0 +1,77 @@
+a                    pan
+b                    pan
+i                    1
+x                    0.3467901443380824
+y                    0.7268028627434533
+x_cumulative_percent 8.750686695876585
+y_cumulative_percent 14.62862415661702
+
+a                    eks
+b                    pan
+i                    2
+x                    0.7586799647899636
+y                    0.5221511083334797
+x_cumulative_percent 27.89474480337396
+y_cumulative_percent 25.138148414596827
+
+aaa                  wye
+b                    wye
+i                    3
+x                    0.20460330576630303
+y                    0.33831852551664776
+x_cumulative_percent 33.05757729712584
+y_cumulative_percent 31.947607772423858
+
+a                    eks
+bbb                  wye
+i                    4
+x                    0.38139939387114097
+y                    0.13418874328430463
+x_cumulative_percent 42.68157225849903
+y_cumulative_percent 34.648473154468675
+
+a                    wye
+b                    pan
+i                    5
+xxx                  0.5732889198020006
+y                    0.8636244699032729
+y_cumulative_percent 52.03095529685397
+
+a                    zee
+b                    pan
+i                    6
+x                    0.5271261600918548
+y                    0.49322128674835697
+x_cumulative_percent 55.98274575340497
+y_cumulative_percent 61.958198569740674
+
+a                    eks
+b                    zee
+iii                  7
+x                    0.6117840605678454
+y                    0.1878849191181694
+x_cumulative_percent 71.42012402659284
+y_cumulative_percent 65.73982630865927
+
+a                    zee
+b                    wye
+i                    8
+x                    0.5985540091064224
+yyy                  0.976181385699006
+x_cumulative_percent 86.52366341422008
+
+aaa                  hat
+bbb                  wye
+i                    9
+x                    0.03144187646093577
+y                    0.7495507603507059
+x_cumulative_percent 87.31704815866046
+y_cumulative_percent 80.82630563000914
+
+a                    pan
+b                    wye
+i                    10
+x                    0.5026260055412137
+y                    0.9526183602969864
+x_cumulative_percent 100
+y_cumulative_percent 100

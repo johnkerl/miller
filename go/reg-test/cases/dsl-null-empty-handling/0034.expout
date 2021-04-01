@@ -1,0 +1,12 @@
+x=1	y=2	xy=0	sy=0	xt=1
+x=1	y=	xy=	xt=1
+x=	y=2	xy=	sy=0
+x=	y=	xy=
+a=1	y=2	xy=0	sy=0
+a=1	y=
+a=	y=2	xy=0	sy=0
+a=	y=
+x=1	b=2	xy=1	xt=1
+x=1	b=	xy=1	xt=1
+x=	b=2
+x=	b=

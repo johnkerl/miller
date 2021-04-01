@@ -1,6 +1,0 @@
-run_mlr --from $indir/s.dkvp head -n 2 then put -q 'for (k in $*) { emit { "foo" : "bar" } }'
-run_mlr --from $indir/s.dkvp head -n 2 then put -q 'for (k in $*) { emit { "foo" : k } }'
-run_mlr --from $indir/s.dkvp head -n 2 then put -q 'for (k in $*) { emit { k: "bar" } }'
-run_mlr --from $indir/s.dkvp head -n 2 then put -q 'for (k in $*) { emit { k : k } }'
-run_mlr --from $indir/s.dkvp head -n 1 then put -q 'for (e in [3,4,5]) { emit { "foo" : "bar" } }'
-run_mlr --from $indir/s.dkvp head -n 1 then put -q 'for (e in [3,4,5]) { emit { "foo" : e } }'

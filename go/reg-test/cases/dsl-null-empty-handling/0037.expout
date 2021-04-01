@@ -1,0 +1,12 @@
+x=1	y=2	xy=0	sy=1	xt=0	st=0
+x=1	y=	xy=	sy=	xt=0	st=0
+x=	y=2	xy=	sy=1	xt=	st=0
+x=	y=	xy=	sy=	xt=	st=0
+a=1	y=2	xy=0	sy=1	xt=0	st=0
+a=1	y=	sy=	xt=0	st=0
+a=	y=2	xy=0	sy=1	xt=0	st=0
+a=	y=	sy=	xt=0	st=0
+x=1	b=2	xy=1	sy=3	xt=0	st=0
+x=1	b=	xy=1	sy=3	xt=0	st=0
+x=	b=2	sy=3	xt=	st=0
+x=	b=	sy=3	xt=	st=0

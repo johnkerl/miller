@@ -1,0 +1,12 @@
+x=1	y=2	xy=0	sy=2	xt=0	st=4
+x=1	y=	xy=	xt=0	st=4
+x=	y=2	xy=	sy=2	xt=	st=4
+x=	y=	xy=	xt=	st=4
+a=1	y=2	xy=2	sy=2	xt=4	st=4
+a=1	y=	xt=4	st=4
+a=	y=2	xy=2	sy=2	xt=4	st=4
+a=	y=	xt=4	st=4
+x=1	b=2	xy=1	xt=0	st=4
+x=1	b=	xy=1	xt=0	st=4
+x=	b=2	xt=	st=4
+x=	b=	xt=	st=4

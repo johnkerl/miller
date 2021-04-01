@@ -5,6 +5,7 @@
 package regtest
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -37,6 +38,9 @@ type RegTester struct {
 	directoryFailCount int
 	casePassCount      int
 	caseFailCount      int
+
+	failDirNames  *list.List
+	failCaseNames *list.List
 }
 
 // ----------------------------------------------------------------
@@ -55,6 +59,8 @@ func NewRegTester(
 		directoryFailCount: 0,
 		casePassCount:      0,
 		caseFailCount:      0,
+		failDirNames:       list.New(),
+		failCaseNames:      list.New(),
 	}
 }
 
@@ -90,11 +96,27 @@ func (this *RegTester) Execute(
 		this.executeSinglePath(path)
 	}
 
+	if this.failCaseNames.Len() > 0 {
+		fmt.Println()
+		fmt.Println("FAILED CASE FILES:")
+		for e := this.failCaseNames.Front(); e != nil; e = e.Next() {
+			fmt.Printf("  %s\n", e.Value.(string))
+		}
+	}
+
+	if this.failDirNames.Len() > 0 {
+		fmt.Println()
+		fmt.Println("FAILED CASE DIRECTORIES:")
+		for e := this.failDirNames.Front(); e != nil; e = e.Next() {
+			fmt.Printf("  %s/\n", e.Value.(string))
+		}
+	}
+
 	fmt.Println()
-	fmt.Printf("NUMBER OF CASE-DIRECTORIES PASSED %d\n", this.directoryPassCount)
-	fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", this.directoryFailCount)
 	fmt.Printf("NUMBER OF CASES            PASSED %d\n", this.casePassCount)
 	fmt.Printf("NUMBER OF CASES            FAILED %d\n", this.caseFailCount)
+	fmt.Printf("NUMBER OF CASE-DIRECTORIES PASSED %d\n", this.directoryPassCount)
+	fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", this.directoryFailCount)
 	fmt.Println()
 
 	if this.casePassCount > 0 && this.caseFailCount == 0 {
@@ -125,6 +147,7 @@ func (this *RegTester) executeSinglePath(
 			this.directoryPassCount++
 		} else {
 			this.directoryFailCount++
+			this.failDirNames.PushBack(path)
 		}
 		return passed
 	} else if mode.IsRegular() {
@@ -138,6 +161,7 @@ func (this *RegTester) executeSinglePath(
 					this.casePassCount++
 				} else {
 					this.caseFailCount++
+					this.failCaseNames.PushBack(path)
 				}
 				return passed
 			}
@@ -286,7 +310,7 @@ func (this *RegTester) executeSingleCmdFile(
 	cmdFileName string,
 ) bool {
 
-	if this.verbosityLevel >= 1 {
+	if this.verbosityLevel >= 2 {
 		fmt.Printf("%s begin %s\n", MinorSeparator, cmdFileName)
 		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFileName)
 	}

@@ -1,7 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-* mlr --help-function foo
 * #455 -- doc-neatens re ordering
 d windows mrpl colors -- ? checking isatty also -- ?
 * more about HTTP logs in miller -- doc and encapsulate:
@@ -26,6 +25,8 @@ d windows mrpl colors -- ? checking isatty also -- ?
   o running mlr regtest -p of it
   o git rm'ing case*sh
   o gmt rm'ing reg-test/expected/same.*
+
+! reg-test/cases-pending/...
 
 * port cases gradually over to regtest v2 ...
 

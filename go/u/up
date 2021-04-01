@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# ================================================================
+# tempware for converting regtest-v1 data to regtest-v2
+# ================================================================
+
+#set -euo pipefail
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 {case-name}" 1>&2
+  exit 1
+fi
+name="$1"
+
+oldfile="./reg-test/cases/case-${name}.sh"
+if [ ! -f "$oldfile" ]; then
+  echo "Not found: $oldfile" 1>&2
+  exit 1
+fi
+
+newdir="./reg-test/cases/$name"
+mkdir -p $newdir
+
+n=0
+stremp < $oldfile | while read line; do
+  n=$[n+1]
+  # xxx if run_mlr ...
+  # xxx if <<EOF or <<_EOF ...
+  # xxx assuming run_mlr:
+  cmd_file_name=$(printf "%04d.cmd" $n)
+  echo "$line" | sed -e 's/run_mlr/mlr/' -e 's:\$indir:reg-test/input:g' > $newdir/$cmd_file_name
+done
+
+mlr regtest -p $newdir
+mlr regtest -vv $newdir
+git rm -f $oldfile
+echo git rm ./reg-test/expected/case-${name}.sh.out
+echo git rm ./reg-test/expected/case-${name}.sh.err
+git rm -f ./reg-test/expected/case-${name}.sh.out
+git rm -f ./reg-test/expected/case-${name}.sh.err
+git add $newdir/*
