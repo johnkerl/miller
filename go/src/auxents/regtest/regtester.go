@@ -286,7 +286,7 @@ func (this *RegTester) executeSingleCmdFile(
 	cmdFileName string,
 ) bool {
 
-	if this.verbosityLevel >= 1 {
+	if this.verbosityLevel >= 2 {
 		fmt.Printf("%s begin %s\n", MinorSeparator, cmdFileName)
 		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFileName)
 	}
