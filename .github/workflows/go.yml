@@ -29,4 +29,5 @@ jobs:
       # In the event of needing to debug failures you can modify `./mlr regtest` verbosity
       # using `-v`, `-vv`, or `-vvv`. Commit changes to this file and re-push to GitHub
       # and let the GitHub Actions re-run.
-      run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vv
+      #run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vv
+      run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vvv ./reg-test/cases/dsl-mathy/0006.cmd
