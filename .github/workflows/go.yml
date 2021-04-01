@@ -34,15 +34,15 @@ jobs:
     - name: UploadArtifacts
       uses: actions/upload-artifact@v2
       if: matrix.os == 'ubuntu-latest'
-        with: 
-          name: ubuntu/mlr
-          path: go/mlr
+      with: 
+        name: ubuntu/mlr
+        path: go/mlr
       if: matrix.os == 'macos-latest'
-        with: 
-          name: macos/mlr
-          path: go/mlr
+      with: 
+        name: macos/mlr
+        path: go/mlr
       if: matrix.os == 'windows-latest'
-        with: 
-          name: windows/mlr
-          path: go/mlr.exe
+      with: 
+        name: windows/mlr
+        path: go/mlr.exe
 
