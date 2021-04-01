@@ -14,7 +14,7 @@ echo
 go test ./...
 
 echo
-mlr regtest $verbose
+mlr regtest reg-test cases reg-test/cases-pending $verbose
 
 echo
 ./reg-test/run -n $verbose

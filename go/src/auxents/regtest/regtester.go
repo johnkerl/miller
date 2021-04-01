@@ -104,6 +104,20 @@ func (this *RegTester) Execute(
 		}
 	}
 
+	if this.failCaseNames.Len() > 0 {
+		fmt.Println()
+		fmt.Println("RERUNS OF FIRST FAILED CASE FILES:")
+		verbosityLevel := 3
+		i := 0
+		for e := this.failCaseNames.Front(); e != nil; e = e.Next() {
+			this.executeSingleCmdFile(e.Value.(string), verbosityLevel)
+			i++
+			if i >= 10 {
+				break
+			}
+		}
+	}
+
 	if this.failDirNames.Len() > 0 {
 		fmt.Println()
 		fmt.Println("FAILED CASE DIRECTORIES:")
@@ -156,7 +170,7 @@ func (this *RegTester) executeSinglePath(
 				this.populateSingleCmdFile(path)
 				return true
 			} else {
-				passed := this.executeSingleCmdFile(path)
+				passed := this.executeSingleCmdFile(path, this.verbosityLevel)
 				if passed {
 					this.casePassCount++
 				} else {
@@ -308,9 +322,10 @@ func (this *RegTester) populateSingleCmdFile(
 // ----------------------------------------------------------------
 func (this *RegTester) executeSingleCmdFile(
 	cmdFileName string,
+	verbosityLevel int,
 ) bool {
 
-	if this.verbosityLevel >= 2 {
+	if verbosityLevel >= 2 {
 		fmt.Printf("%s begin %s\n", MinorSeparator, cmdFileName)
 		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFileName)
 	}
@@ -321,27 +336,27 @@ func (this *RegTester) executeSingleCmdFile(
 
 	cmd, err := this.loadFile(cmdFileName)
 	if err != nil {
-		if this.verbosityLevel >= 2 {
+		if verbosityLevel >= 2 {
 			fmt.Printf("%s: %v\n", cmdFileName, err)
 		}
 		return false
 	}
 
-	if this.verbosityLevel >= 2 {
+	if verbosityLevel >= 2 {
 		fmt.Println("Command:")
 		fmt.Println(cmd)
 	}
 
 	expectedStdout, err := this.loadFile(expectedStdoutFileName)
 	if err != nil {
-		if this.verbosityLevel >= 2 {
+		if verbosityLevel >= 2 {
 			fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
 		}
 		return false
 	}
 	expectedStderr, err := this.loadFile(expectedStderrFileName)
 	if err != nil {
-		if this.verbosityLevel >= 2 {
+		if verbosityLevel >= 2 {
 			fmt.Printf("%s: %v\n", expectedStderrFileName, err)
 		}
 		return false
@@ -355,7 +370,7 @@ func (this *RegTester) executeSingleCmdFile(
 
 	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
 
-	if this.verbosityLevel >= 3 {
+	if verbosityLevel >= 3 {
 
 		fmt.Printf("actualStdout [%d]:\n", len(actualStdout))
 		fmt.Println(actualStdout)
@@ -385,7 +400,7 @@ func (this *RegTester) executeSingleCmdFile(
 	expectedStderr = strings.ReplaceAll(expectedStderr, "\r\n", "\n")
 
 	if actualStdout != expectedStdout {
-		if this.verbosityLevel >= 2 {
+		if verbosityLevel >= 2 {
 			fmt.Printf(
 				"%s: stdout does not match expected %s\n",
 				cmdFileName,
@@ -396,7 +411,7 @@ func (this *RegTester) executeSingleCmdFile(
 	}
 
 	if actualStderr != expectedStderr {
-		if this.verbosityLevel >= 2 {
+		if verbosityLevel >= 2 {
 			fmt.Printf(
 				"%s: stderr does not match expected %s\n",
 				cmdFileName,
@@ -411,7 +426,7 @@ func (this *RegTester) executeSingleCmdFile(
 	}
 
 	if actualExitCode != expectedExitCode {
-		if this.verbosityLevel >= 2 {
+		if verbosityLevel >= 2 {
 			fmt.Printf(
 				"%s: exit code %d does not match expected %d\n",
 				cmdFileName,
@@ -421,7 +436,7 @@ func (this *RegTester) executeSingleCmdFile(
 		passed = false
 	}
 
-	if this.verbosityLevel >= 1 {
+	if verbosityLevel >= 1 {
 		if passed {
 			fmt.Printf("%s %s\n", pass, cmdFileName)
 		} else {

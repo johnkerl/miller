@@ -7,6 +7,9 @@ d windows mrpl colors -- ? checking isatty also -- ?
   mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
 
 ----------------------------------------------------------------
+! auto-rerun first-10 failed .cmd's w/ -vvv (verbosityLevel as argument, not this-dot)
+  o parameterize that w/ a flag -- ?
+
 * regtest .cmd format:
   o ... add .stdin option, for <<EOF-ish ...
     - impl StdinPipe with os.Exec ...
