@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -30,3 +30,26 @@ jobs:
       # using `-v`, `-vv`, or `-vvv`. Commit changes to this file and re-push to GitHub
       # and let the GitHub Actions re-run.
       run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vv
+
+    # After extensive futzwithing, this is still not quite right.  The Ubuntu &
+    # MacOS executables have the same path and one overwrites the other. :(
+    - name: UploadArtifactsUbuntu
+      if: ${{ matrix.os }} == ubuntu-latest
+      uses: actions/upload-artifact@v2
+      with:
+        name: mlr-ubuntu
+        path: go/mlr
+
+    - name: UploadArtifactsMacOS
+      if: ${{ matrix.os }} == macos-latest
+      uses: actions/upload-artifact@v2
+      with:
+        name: mlr-macos
+        path: go/mlr
+
+    - name: UploadArtifactsWindows
+      if: ${{ matrix.os }} == windows-latest
+      uses: actions/upload-artifact@v2
+      with:
+        name: mlr-windows
+        path: go/mlr.exe
