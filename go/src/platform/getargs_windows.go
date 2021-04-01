@@ -46,8 +46,8 @@ func GetArgs() []string {
 	if err != nil {
 		fmt.Fprintf(
 			os.Stderr,
-			"%s: internal error: could not parse Windows raw command line: %v\n",
-			os.Args[0], err,
+			"mlr: internal error: could not parse Windows raw command line: %v\n",
+			err,
 		)
 	}
 
