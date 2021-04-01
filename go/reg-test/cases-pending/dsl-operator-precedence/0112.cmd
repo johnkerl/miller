@@ -1,1 +1,1 @@
-mlr filter -v '        true && false && true' /dev/null
+mlr -n filter -v '        true && false && true'

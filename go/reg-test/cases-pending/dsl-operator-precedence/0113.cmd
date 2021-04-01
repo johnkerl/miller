@@ -1,1 +1,1 @@
-mlr put    -v '$y += $x + 3'  /dev/null
+mlr -n put    -v '$y += $x + 3' 

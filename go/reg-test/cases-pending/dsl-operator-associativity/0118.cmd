@@ -1,1 +1,1 @@
-mlr filter -v '     ++1'   /dev/null
+mlr -n filter -v '     ++1'  

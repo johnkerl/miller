@@ -1,1 +1,1 @@
-mlr put -v '@u[2] = @v'    /dev/null
+mlr -n put -v '@u[2] = @v'   

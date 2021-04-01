@@ -1,1 +1,1 @@
-mlr filter -v '        1==0 || false' /dev/null
+mlr -n filter -v '        1==0 || false'

@@ -1,1 +1,1 @@
-mlr --from /dev/null put -f reg-test/input/sieve.mlr
+mlr -n put -f reg-test/input/sieve.mlr

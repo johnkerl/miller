@@ -1,1 +1,1 @@
-mlr put -v 'begin { @u    = @v }'    /dev/null
+mlr -n put -v 'begin { @u    = @v }'   

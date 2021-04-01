@@ -1,1 +1,1 @@
-mlr filter -v '     $a==1 ? $b == 2 : $c == 3' /dev/null
+mlr -n filter -v '     $a==1 ? $b == 2 : $c == 3'

@@ -1,1 +1,1 @@
-mlr put -v 'NR == 3 {@v[$2] = $*}' /dev/null
+mlr -n put -v 'NR == 3 {@v[$2] = $*}'

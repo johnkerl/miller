@@ -1,1 +1,1 @@
-mlr filter -v '     true' /dev/null
+mlr -n filter -v '     true'

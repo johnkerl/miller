@@ -1,1 +1,1 @@
-mlr put    -v '$x = true' /dev/null
+mlr -n put    -v '$x = true'

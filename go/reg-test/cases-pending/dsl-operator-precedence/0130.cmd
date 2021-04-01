@@ -1,1 +1,1 @@
-mlr put -v '$y **= $x' /dev/null
+mlr -n put -v '$y **= $x'

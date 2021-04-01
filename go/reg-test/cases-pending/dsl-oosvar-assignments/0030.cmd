@@ -1,1 +1,1 @@
-mlr put -v 'NR == 3 { @u[2] = @v }'    /dev/null
+mlr -n put -v 'NR == 3 { @u[2] = @v }'   

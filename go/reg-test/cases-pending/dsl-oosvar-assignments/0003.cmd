@@ -1,1 +1,1 @@
-mlr put -v '@v[$2] = $*' /dev/null
+mlr -n put -v '@v[$2] = $*'

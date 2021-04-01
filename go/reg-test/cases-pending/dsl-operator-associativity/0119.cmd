@@ -1,1 +1,1 @@
-mlr put    -v '$x = --1'   /dev/null
+mlr -n put    -v '$x = --1'  
