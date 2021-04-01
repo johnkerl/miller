@@ -1,0 +1,2 @@
+x_y_ols_m x_y_ols_b x_y_ols_n x_y_pca_m x_y_pca_b x_y_pca_n x_y_pca_quality x_y_r2   x_y_corr x_y_cov  xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_pca_m xy_y2_pca_b xy_y2_pca_n xy_y2_pca_quality xy_y2_r2 xy_y2_corr xy_y2_cov
+0.028351  0.487644  2000      1.332924  -0.170590 2000      0.056909        0.000791 0.028120 0.002330 0.893610    0.107060    2000        1.529534    -0.055477   2000        0.824336          0.447971 0.669306   0.045036

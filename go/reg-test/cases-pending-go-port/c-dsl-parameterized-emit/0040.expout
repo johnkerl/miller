@@ -1,0 +1,10 @@
+a=pan,b=pan,sum=0.346790
+a=pan,b=wye,sum=0.502626
+a=eks,b=pan,sum=0.758680
+a=eks,b=wye,sum=0.381399
+a=eks,b=zee,sum=0.611784
+a=wye,b=wye,sum=0.204603
+a=wye,b=pan,sum=0.573289
+a=zee,b=pan,sum=0.527126
+a=zee,b=wye,sum=0.598554
+a=hat,b=wye,sum=0.031442

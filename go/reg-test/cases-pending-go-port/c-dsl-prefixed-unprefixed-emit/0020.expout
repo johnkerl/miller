@@ -1,0 +1,115 @@
+{
+  "sum": {
+    "cat": {
+      "pan": {
+        "catpan": 42.327158
+      },
+      "hat": {
+        "cathat": 43.184410
+      },
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
+      }
+    },
+    "pan": {
+      "wye": {
+        "panwye": 40.135300
+      },
+      "pan": {
+        "panpan": 36.226334
+      },
+      "hat": {
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
+      }
+    },
+    "wye": {
+      "cat": {
+        "wyecat": 40.805723
+      },
+      "hat": {
+        "wyehat": 41.166697
+      },
+      "dog": {
+        "wyedog": 40.619547
+      },
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
+      }
+    },
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
+      "pan": {
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
+      },
+      "wye": {
+        "dogwye": 37.223795
+      },
+      "cat": {
+        "dogcat": 45.642595
+      }
+    },
+    "hat": {
+      "hat": {
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
+      },
+      "pan": {
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
+      }
+    }
+  }
+}
+a   b   ab     sum
+cat pan catpan 42.327158
+cat hat cathat 43.184410
+cat dog catdog 39.241473
+cat wye catwye 45.196775
+cat cat catcat 37.894148
+pan wye panwye 40.135300
+pan pan panpan 36.226334
+pan hat panhat 35.115869
+pan dog pandog 37.817560
+pan cat pancat 42.235677
+wye cat wyecat 40.805723
+wye hat wyehat 41.166697
+wye dog wyedog 40.619547
+wye wye wyewye 32.490973
+wye pan wyepan 33.027196
+dog hat doghat 43.515162
+dog pan dogpan 45.614011
+dog dog dogdog 43.545956
+dog wye dogwye 37.223795
+dog cat dogcat 45.642595
+hat hat hathat 48.058897
+hat wye hatwye 34.054270
+hat pan hatpan 42.538758
+hat cat hatcat 44.325655
+hat dog hatdog 37.114244

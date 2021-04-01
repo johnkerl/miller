@@ -1,0 +1,123 @@
+{
+  "sum": {
+    "cat": {
+      "pan": {
+        "catpan": 42.327158
+      },
+      "hat": {
+        "cathat": 43.184410
+      },
+      "dog": {
+        "catdog": 39.241473
+      },
+      "wye": {
+        "catwye": 45.196775
+      },
+      "cat": {
+        "catcat": 37.894148
+      }
+    },
+    "pan": {
+      "wye": {
+        "panwye": 40.135300
+      },
+      "pan": {
+        "panpan": 36.226334
+      },
+      "hat": {
+        "panhat": 35.115869
+      },
+      "dog": {
+        "pandog": 37.817560
+      },
+      "cat": {
+        "pancat": 42.235677
+      }
+    },
+    "wye": {
+      "cat": {
+        "wyecat": 40.805723
+      },
+      "hat": {
+        "wyehat": 41.166697
+      },
+      "dog": {
+        "wyedog": 40.619547
+      },
+      "wye": {
+        "wyewye": 32.490973
+      },
+      "pan": {
+        "wyepan": 33.027196
+      }
+    },
+    "dog": {
+      "hat": {
+        "doghat": 43.515162
+      },
+      "pan": {
+        "dogpan": 45.614011
+      },
+      "dog": {
+        "dogdog": 43.545956
+      },
+      "wye": {
+        "dogwye": 37.223795
+      },
+      "cat": {
+        "dogcat": 45.642595
+      }
+    },
+    "hat": {
+      "hat": {
+        "hathat": 48.058897
+      },
+      "wye": {
+        "hatwye": 34.054270
+      },
+      "pan": {
+        "hatpan": 42.538758
+      },
+      "cat": {
+        "hatcat": 44.325655
+      },
+      "dog": {
+        "hatdog": 37.114244
+      }
+    }
+  }
+}
+a              cat
+sum:pan:catpan 42.327158
+sum:hat:cathat 43.184410
+sum:dog:catdog 39.241473
+sum:wye:catwye 45.196775
+sum:cat:catcat 37.894148
+
+a              pan
+sum:wye:panwye 40.135300
+sum:pan:panpan 36.226334
+sum:hat:panhat 35.115869
+sum:dog:pandog 37.817560
+sum:cat:pancat 42.235677
+
+a              wye
+sum:cat:wyecat 40.805723
+sum:hat:wyehat 41.166697
+sum:dog:wyedog 40.619547
+sum:wye:wyewye 32.490973
+sum:pan:wyepan 33.027196
+
+a              dog
+sum:hat:doghat 43.515162
+sum:pan:dogpan 45.614011
+sum:dog:dogdog 43.545956
+sum:wye:dogwye 37.223795
+sum:cat:dogcat 45.642595
+
+a              hat
+sum:hat:hathat 48.058897
+sum:wye:hatwye 34.054270
+sum:pan:hatpan 42.538758
+sum:cat:hatcat 44.325655
+sum:dog:hatdog 37.114244

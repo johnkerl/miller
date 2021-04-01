@@ -1,0 +1,55 @@
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="s", type=STRING_LITERAL.
+        text="NR", type=CONTEXT_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="t", type=FIELD_NAME.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="s", type=STRING_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="u", type=FIELD_NAME.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="s", type=STRING_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="v", type=FIELD_NAME.
+        text="-", type=OPERATOR:
+            text="t", type=FIELD_NAME.
+            text="u", type=FIELD_NAME.
+
+BLOCKED AST:
+
+MAIN BLOCK:
+text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="s", type=STRING_LITERAL.
+        text="NR", type=CONTEXT_VARIABLE.
+    text="=", type=SREC_ASSIGNMENT:
+        text="t", type=FIELD_NAME.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="s", type=STRING_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="u", type=FIELD_NAME.
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="s", type=STRING_LITERAL.
+    text="=", type=SREC_ASSIGNMENT:
+        text="v", type=FIELD_NAME.
+        text="-", type=OPERATOR:
+            text="t", type=FIELD_NAME.
+            text="u", type=FIELD_NAME.
+
+a   b   i  x                   y                   t  u  v
+pan pan 1  0.3467901443380824  0.7268028627434533  1  1  0
+eks pan 2  0.7586799647899636  0.5221511083334797  2  2  0
+wye wye 3  0.20460330576630303 0.33831852551664776 3  3  0
+eks wye 4  0.38139939387114097 0.13418874328430463 4  4  0
+wye pan 5  0.5732889198020006  0.8636244699032729  5  5  0
+zee pan 6  0.5271261600918548  0.49322128674835697 6  6  0
+eks zee 7  0.6117840605678454  0.1878849191181694  7  7  0
+zee wye 8  0.5985540091064224  0.976181385699006   8  8  0
+hat wye 9  0.03144187646093577 0.7495507603507059  9  9  0
+pan wye 10 0.5026260055412137  0.9526183602969864  10 10 0

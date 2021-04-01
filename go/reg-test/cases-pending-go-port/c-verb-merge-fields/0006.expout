@@ -1,0 +1,5 @@
+a_in a_out b_in b_out a_p0 a_min a_p29 a_max a_p100 b_p0 b_min b_p29 b_max b_p100
+436  abc   446  195   436  436   436   abc   abc    195  195   195   446   446
+526  320   def  780   320  320   320   526   526    780  780   780   def   def
+220  888   705  ghi   220  220   220   888   888    705  705   705   ghi   ghi
+jkl  mno   pqr  stu   jkl  jkl   jkl   mno   mno    pqr  pqr   pqr   stu   stu

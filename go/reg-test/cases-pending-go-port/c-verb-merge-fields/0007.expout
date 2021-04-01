@@ -1,0 +1,227 @@
+a_in_x    1
+a_out_x   2
+b_in_y    4
+b_out_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   2
+foo_p100  2
+foo_sum   3
+foo_count 2
+
+z         1
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_out_x   2
+b_in_y    4
+b_out_x   8
+foo_p0    2
+foo_min   2
+foo_p29   2
+foo_max   2
+foo_p100  2
+foo_sum   2
+foo_count 1
+
+a_in_x    1
+a_oot_x   2
+b_in_y    4
+b_out_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   1
+foo_p100  1
+foo_sum   1
+foo_count 1
+
+a_in_x    1
+a_out_x   2
+b_on_y    4
+b_out_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   2
+foo_p100  2
+foo_sum   3
+foo_count 2
+
+a_in_x    1
+a_out_x   2
+b_in_y    4
+b_oot_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   2
+foo_p100  2
+foo_sum   3
+foo_count 2
+
+z         2
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_oot_x   2
+b_in_y    4
+b_out_x   8
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_out_x   2
+b_on_y    4
+b_out_x   8
+foo_p0    2
+foo_min   2
+foo_p29   2
+foo_max   2
+foo_p100  2
+foo_sum   2
+foo_count 1
+
+a_on_x    1
+a_out_x   2
+b_in_y    4
+b_oot_x   8
+foo_p0    2
+foo_min   2
+foo_p29   2
+foo_max   2
+foo_p100  2
+foo_sum   2
+foo_count 1
+
+a_in_x    1
+a_oot_x   2
+b_on_y    4
+b_out_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   1
+foo_p100  1
+foo_sum   1
+foo_count 1
+
+a_in_x    1
+a_oot_x   2
+b_in_y    4
+b_oot_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   1
+foo_p100  1
+foo_sum   1
+foo_count 1
+
+a_in_x    1
+a_out_x   2
+b_on_y    4
+b_oot_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   2
+foo_p100  2
+foo_sum   3
+foo_count 2
+
+z         3
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_in_x    1
+a_oot_x   2
+b_on_y    4
+b_oot_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   1
+foo_p100  1
+foo_sum   1
+foo_count 1
+
+a_on_x    1
+a_out_x   2
+b_on_y    4
+b_oot_x   8
+foo_p0    2
+foo_min   2
+foo_p29   2
+foo_max   2
+foo_p100  2
+foo_sum   2
+foo_count 1
+
+a_on_x    1
+a_oot_x   2
+b_in_y    4
+b_oot_x   8
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_oot_x   2
+b_on_y    4
+b_out_x   8
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+z         4
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_oot_x   2
+b_on_y    4
+b_oot_x   8
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0

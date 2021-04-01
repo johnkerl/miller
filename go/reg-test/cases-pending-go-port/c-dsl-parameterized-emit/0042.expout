@@ -1,0 +1,10 @@
+a=pan,b=pan,sum=1
+a=pan,b=wye,sum=10
+a=eks,b=pan,sum=2
+a=eks,b=wye,sum=4
+a=eks,b=zee,sum=7
+a=wye,b=wye,sum=3
+a=wye,b=pan,sum=5
+a=zee,b=pan,sum=6
+a=zee,b=wye,sum=8
+a=hat,b=wye,sum=9
