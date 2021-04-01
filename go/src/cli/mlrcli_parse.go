@@ -340,13 +340,12 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 	} else if args[argi] == "--help-all-functions" || args[argi] == "-f" {
 		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
 		return true
-		//	} else if args[argi] == "--help-function" || args[argi] == "--hf" {
-		//		cliutil.CheckArgCount(args, argi, argc, 2);
-		//		fmgr_t* pfmgr = fmgr_alloc();
-		//		fmgr_function_usage(pfmgr, os.Stdout, args[argi+1]);
-		//		fmgr_free(pfmgr, nil);
-		//		return true;
-		//
+	} else if args[argi] == "--help-function" || args[argi] == "--hf" {
+		cliutil.CheckArgCount(args, argi, argc, 2)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(args[argi+1], os.Stdout)
+		argi++
+		return true
+
 		//	} else if args[argi] == "--list-all-keywords-raw" || args[argi] == "-K" {
 		//		mlr_dsl_list_all_keywords_raw(os.Stdout);
 		//		return true;
