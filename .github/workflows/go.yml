@@ -31,6 +31,8 @@ jobs:
       # and let the GitHub Actions re-run.
       run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vv
 
+    # After extensive futzwithing, this is still not quite right.  The Ubuntu &
+    # MacOS executables have the same path and one overwrites the other. :(
     - name: UploadArtifactsUbuntu
       if: ${{ matrix.os }} == ubuntu-latest
       uses: actions/upload-artifact@v2
