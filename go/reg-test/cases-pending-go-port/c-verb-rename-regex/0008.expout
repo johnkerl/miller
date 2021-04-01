@@ -1,0 +1,11 @@
+NamEEE,DatEEE_201505,EEExtraneous
+Alice,2015-05-14,foo
+Bob,2015-05-11,bar
+Chuck,2015-05-28,quux
+Denise,2015-05-02,meep
+
+NamEEE,DatEEE_201506,EEExtraneous
+Alice,2015-06-23,cafe
+Denise,2015-06-17,feed
+Chuck,2015-06-19,beef
+Bob,2015-06-19,d00d

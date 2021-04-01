@@ -1,0 +1,6 @@
+a x y z x_counter x_rsum y_counter y_rsum z_counter z_rsum
+b 1 2 - 1         1      1         2      -         -
+b 3 4 - 2         4      2         6      -         -
+b 5 - - 3         9      -         -      -         -
+b - 6 - -         -      3         12     -         -
+b - - - -         -      -         -      -         -

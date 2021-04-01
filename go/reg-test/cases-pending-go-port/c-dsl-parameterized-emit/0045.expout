@@ -1,0 +1,14 @@
+sum:pan:pan 1
+sum:pan:wye 10
+sum:eks:pan 2
+sum:wye:pan 5
+sum:zee:pan 6
+sum:zee:wye 8
+
+x 0.204603
+
+v:a   eks
+v:b   zee
+v:iii 7
+v:x   0.6117840605678454
+v:y   0.1878849191181694
