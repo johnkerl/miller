@@ -33,16 +33,18 @@ jobs:
 
     - name: UploadArtifacts
       uses: actions/upload-artifact@v2
-      with:
-        strategy:
-          matrix:
-            include:
-              - os: ubuntu-latest
+      strategy:
+        matrix:
+          include:
+            - os: ubuntu-latest
+              with:
                 name: ubuntu/mlr
                 path: go/mlr
-              - os: macos-latest
+            - os: macos-latest
+              with:
                 name: macos/mlr
                 path: go/mlr
-              - os: windows-latest
+            - os: windows-latest
+              with:
                 name: windows/mlr
                 path: go/mlr.exe
