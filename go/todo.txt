@@ -8,10 +8,6 @@ d windows mrpl colors -- ? checking isatty also -- ?
 * PR-template etc checklists
 
 ----------------------------------------------------------------
-! reg-test/cases-pending -- windows debug
-* cases-pending -> cases-pending-windows
-* case-c-*.sh -> cases-pending-go-port
-
 ! auto-rerun first-10 failed .cmd's w/ -vvv (verbosityLevel as argument, not this-dot)
   o parameterize that w/ a flag -- ?
 
@@ -24,10 +20,10 @@ d windows mrpl colors -- ? checking isatty also -- ?
   o doc re file format ...
   o putenvs ...
 
-* port cases gradually over to regtest v2 ...
-
-! suppression of 'mlr: ...' diffs .....
-  o cross-cutting ... search for os.Args[0] / MlrExeName()
+* reg-test/cases-pending-windows
+* reg-test/cases-pending-go-port
+* convert u/rr -o
+* convert u/rr -n
 
 ! upload artifacts
   https://github.com/actions/upload-artifact

@@ -39,8 +39,9 @@ type RegTester struct {
 	casePassCount      int
 	caseFailCount      int
 
-	failDirNames  *list.List
-	failCaseNames *list.List
+	failDirNames      *list.List
+	failCaseNames     *list.List
+	firstNFailsToShow int
 }
 
 // ----------------------------------------------------------------
@@ -49,6 +50,7 @@ func NewRegTester(
 	verbName string,
 	doPopulate bool,
 	verbosityLevel int,
+	firstNFailsToShow int,
 ) *RegTester {
 	return &RegTester{
 		exeName:            exeName,
@@ -61,6 +63,7 @@ func NewRegTester(
 		caseFailCount:      0,
 		failDirNames:       list.New(),
 		failCaseNames:      list.New(),
+		firstNFailsToShow:  firstNFailsToShow,
 	}
 }
 
@@ -96,15 +99,7 @@ func (this *RegTester) Execute(
 		this.executeSinglePath(path)
 	}
 
-	if this.failCaseNames.Len() > 0 {
-		fmt.Println()
-		fmt.Println("FAILED CASE FILES:")
-		for e := this.failCaseNames.Front(); e != nil; e = e.Next() {
-			fmt.Printf("  %s\n", e.Value.(string))
-		}
-	}
-
-	if this.failCaseNames.Len() > 0 {
+	if this.failCaseNames.Len() > 0 && this.firstNFailsToShow > 0 {
 		fmt.Println()
 		fmt.Println("RERUNS OF FIRST FAILED CASE FILES:")
 		verbosityLevel := 3
@@ -112,7 +107,7 @@ func (this *RegTester) Execute(
 		for e := this.failCaseNames.Front(); e != nil; e = e.Next() {
 			this.executeSingleCmdFile(e.Value.(string), verbosityLevel)
 			i++
-			if i >= 10 {
+			if i >= this.firstNFailsToShow {
 				break
 			}
 		}

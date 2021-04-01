@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strconv"
 	"strings"
 )
 
@@ -28,6 +29,7 @@ func RegTestUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "-v     Also include pass/fail at command-file level.\n")
 	fmt.Fprintf(o, "-vv    Also include pass/fail reasons for each command-file.\n")
 	fmt.Fprintf(o, "-vvv   Also include full stdout/stderr/exit-code for each command-file.\n")
+	fmt.Fprintf(o, "-s {n} After running tests, re-run first n failed .cmd files with verbosity level 3.\n")
 	os.Exit(exitCode)
 }
 
@@ -40,6 +42,7 @@ func RegTestMain(args []string) int {
 	argi := 2
 	verbosityLevel := 0
 	doPopulate := false
+	firstNFailsToShow := 0
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		arg := args[argi]
@@ -59,6 +62,17 @@ func RegTestMain(args []string) int {
 			exeName = args[argi]
 			argi++
 
+		} else if arg == "-s" {
+			if argi >= argc {
+				RegTestUsage(verbName, os.Stderr, 1)
+			}
+			temp, err := strconv.Atoi(args[argi])
+			if err != nil {
+				RegTestUsage(verbName, os.Stderr, 1)
+			}
+			firstNFailsToShow = temp
+			argi++
+
 		} else if arg == "-p" {
 			doPopulate = true
 
@@ -76,6 +90,7 @@ func RegTestMain(args []string) int {
 		verbName,
 		doPopulate,
 		verbosityLevel,
+		firstNFailsToShow,
 	)
 
 	ok := regtester.Execute(paths)
