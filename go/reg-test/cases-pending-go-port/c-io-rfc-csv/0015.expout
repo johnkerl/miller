@@ -1,0 +1,29 @@
+a pan
+b pan
+i 1
+x 2
+y 0.989945
+
+a eks
+b pan
+i 2
+x 1
+y 0.775159
+
+a wye
+b wye
+i 3
+x 1
+y 0.761642
+
+a eks
+b wye
+i 4
+x 5
+y 0.322934
+
+a wye
+b pan
+i 5
+x 5
+y 0.448283
