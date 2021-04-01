@@ -1,0 +1,77 @@
+a                     pan
+b                     pan
+i                     1
+x                     0.3467901443380824
+y                     0.7268028627434533
+x_cumulative_fraction 0.08750686695876585
+y_cumulative_fraction 0.1462862415661702
+
+a                     eks
+b                     pan
+i                     2
+x                     0.7586799647899636
+y                     0.5221511083334797
+x_cumulative_fraction 0.2789474480337396
+y_cumulative_fraction 0.2513814841459683
+
+aaa                   wye
+b                     wye
+i                     3
+x                     0.20460330576630303
+y                     0.33831852551664776
+x_cumulative_fraction 0.3305757729712584
+y_cumulative_fraction 0.3194760777242386
+
+a                     eks
+bbb                   wye
+i                     4
+x                     0.38139939387114097
+y                     0.13418874328430463
+x_cumulative_fraction 0.42681572258499034
+y_cumulative_fraction 0.34648473154468673
+
+a                     wye
+b                     pan
+i                     5
+xxx                   0.5732889198020006
+y                     0.8636244699032729
+y_cumulative_fraction 0.5203095529685396
+
+a                     zee
+b                     pan
+i                     6
+x                     0.5271261600918548
+y                     0.49322128674835697
+x_cumulative_fraction 0.5598274575340497
+y_cumulative_fraction 0.6195819856974067
+
+a                     eks
+b                     zee
+iii                   7
+x                     0.6117840605678454
+y                     0.1878849191181694
+x_cumulative_fraction 0.7142012402659285
+y_cumulative_fraction 0.6573982630865928
+
+a                     zee
+b                     wye
+i                     8
+x                     0.5985540091064224
+yyy                   0.976181385699006
+x_cumulative_fraction 0.8652366341422009
+
+aaa                   hat
+bbb                   wye
+i                     9
+x                     0.03144187646093577
+y                     0.7495507603507059
+x_cumulative_fraction 0.8731704815866045
+y_cumulative_fraction 0.8082630563000914
+
+a                     pan
+b                     wye
+i                     10
+x                     0.5026260055412137
+y                     0.9526183602969864
+x_cumulative_fraction 1
+y_cumulative_fraction 1

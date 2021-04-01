@@ -1,0 +1,12 @@
+x=1	y=2	xy=2	sy=6	xt=4	st=12
+x=1	y=	xy=	sy=	xt=4	st=12
+x=	y=2	xy=	sy=6	xt=	st=12
+x=	y=	xy=	sy=	xt=	st=12
+a=1	y=2	xy=2	sy=6	xt=4	st=12
+a=1	y=	sy=	xt=4	st=12
+a=	y=2	xy=2	sy=6	xt=4	st=12
+a=	y=	sy=	xt=4	st=12
+x=1	b=2	xy=1	sy=3	xt=4	st=12
+x=1	b=	xy=1	sy=3	xt=4	st=12
+x=	b=2	sy=3	xt=	st=12
+x=	b=	sy=3	xt=	st=12

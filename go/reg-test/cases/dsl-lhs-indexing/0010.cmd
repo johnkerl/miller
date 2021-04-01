@@ -1,0 +1,1 @@
+mlr --from reg-test/input/2.dkvp --ojson put '@a = 3; @a[1]=4; $new=@a'

@@ -1,0 +1,12 @@
+x=1	y=2	xy=3	sy=3	xt=1	st=3
+x=1	y=	xy=	sy=	xt=1	st=3
+x=	y=2	xy=	sy=3	st=3
+x=	y=	xy=	sy=	st=3
+a=1	y=2	xy=2	sy=3	st=3
+a=1	y=	sy=	st=3
+a=	y=2	xy=2	sy=3	st=3
+a=	y=	sy=	st=3
+x=1	b=2	xy=1	sy=3	xt=1	st=3
+x=1	b=	xy=1	sy=3	xt=1	st=3
+x=	b=2	sy=3	st=3
+x=	b=	sy=3	st=3

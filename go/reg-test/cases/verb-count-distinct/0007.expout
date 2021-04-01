@@ -1,0 +1,10 @@
+a=pan,b=pan,foo=2
+a=eks,b=pan,foo=2
+a=wye,b=wye,foo=2
+a=eks,b=wye,foo=2
+a=wye,b=pan,foo=2
+a=zee,b=pan,foo=2
+a=eks,b=zee,foo=2
+a=zee,b=wye,foo=2
+a=hat,b=wye,foo=2
+a=pan,b=wye,foo=2

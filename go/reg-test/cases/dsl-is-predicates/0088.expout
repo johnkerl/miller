@@ -1,0 +1,6 @@
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - false
+b - 6 - true
+b - - - false

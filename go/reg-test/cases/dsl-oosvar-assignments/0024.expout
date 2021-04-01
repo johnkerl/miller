@@ -1,0 +1,11 @@
+DSL EXPRESSION:
+begin { @u    = @v }
+
+AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "u"
+                * direct oosvar value "v"
+

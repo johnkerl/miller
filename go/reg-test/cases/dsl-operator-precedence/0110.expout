@@ -1,0 +1,10 @@
+DSL EXPRESSION:
+        true && false
+
+AST:
+* statement block
+    * bare boolean
+        * operator "&&"
+            * bool literal "true"
+            * bool literal "false"
+

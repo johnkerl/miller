@@ -1,0 +1,12 @@
+x=1	y=2	xy=3	sy=3	xt=5	st=7
+x=1	y=	xy=	sy=	xt=5	st=7
+x=	y=2	xy=	sy=3	xt=	st=7
+x=	y=	xy=	sy=	xt=	st=7
+a=1	y=2	xy=2	sy=3	xt=4	st=7
+a=1	y=	sy=	xt=4	st=7
+a=	y=2	xy=2	sy=3	xt=4	st=7
+a=	y=	sy=	xt=4	st=7
+x=1	b=2	xy=1	sy=3	xt=5	st=7
+x=1	b=	xy=1	sy=3	xt=5	st=7
+x=	b=2	sy=3	xt=	st=7
+x=	b=	sy=3	xt=	st=7

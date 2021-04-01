@@ -1,0 +1,42 @@
+a       pan
+v.pan.a pan
+v.pan.b pan
+v.pan.i 1
+v.pan.x 0.3467901443380824
+v.pan.y 0.7268028627434533
+v.wye.a pan
+v.wye.b wye
+v.wye.i 10
+v.wye.x 0.5026260055412137
+v.wye.y 0.9526183602969864
+
+a         eks
+v.pan.a   eks
+v.pan.b   pan
+v.pan.i   2
+v.pan.x   0.7586799647899636
+v.pan.y   0.5221511083334797
+v.zee.a   eks
+v.zee.b   zee
+v.zee.iii 7
+v.zee.x   0.6117840605678454
+v.zee.y   0.1878849191181694
+
+a         wye
+v.pan.a   wye
+v.pan.b   pan
+v.pan.i   5
+v.pan.xxx 0.5732889198020006
+v.pan.y   0.8636244699032729
+
+a         zee
+v.pan.a   zee
+v.pan.b   pan
+v.pan.i   6
+v.pan.x   0.5271261600918548
+v.pan.y   0.49322128674835697
+v.wye.a   zee
+v.wye.b   wye
+v.wye.i   8
+v.wye.x   0.5985540091064224
+v.wye.yyy 0.976181385699006

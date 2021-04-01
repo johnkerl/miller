@@ -1,0 +1,7 @@
+count=17,color=red,shape=square,flag=0
+count=11,color=purple,shape=triangle,flag=0
+count=11,color=yellow,shape=circle,flag=1
+count=6,color=red,shape=circle,flag=1
+count=7,color=purple,shape=square,flag=0
+count=3,color=red,shape=square,flag=1
+count=2,color=yellow,shape=triangle,flag=1

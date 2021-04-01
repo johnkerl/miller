@@ -1,0 +1,13 @@
+DSL EXPRESSION:
+$x = 1 ^^ 2 && 3
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "^^"
+            * int literal "1"
+            * operator "&&"
+                * int literal "2"
+                * int literal "3"
+

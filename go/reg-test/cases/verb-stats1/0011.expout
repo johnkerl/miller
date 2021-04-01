@@ -1,0 +1,119 @@
+a        pan
+b        pan
+i_mean   1
+i_meaneb 
+i_stddev 
+x_mean   0.3467901443380824
+x_meaneb 
+x_stddev 
+y_mean   0.7268028627434533
+y_meaneb 
+y_stddev 
+
+a        eks
+b        pan
+i_mean   2
+i_meaneb 
+i_stddev 
+x_mean   0.7586799647899636
+x_meaneb 
+x_stddev 
+y_mean   0.5221511083334797
+y_meaneb 
+y_stddev 
+
+a        wye
+b        wye
+i_mean   3
+i_meaneb 
+i_stddev 
+x_mean   0.20460330576630303
+x_meaneb 
+x_stddev 
+y_mean   0.33831852551664776
+y_meaneb 
+y_stddev 
+
+a        eks
+b        wye
+i_mean   4
+i_meaneb 
+i_stddev 
+x_mean   0.38139939387114097
+x_meaneb 
+x_stddev 
+y_mean   0.13418874328430463
+y_meaneb 
+y_stddev 
+
+a        wye
+b        pan
+i_mean   5
+i_meaneb 
+i_stddev 
+x_mean   0.5732889198020006
+x_meaneb 
+x_stddev 
+y_mean   0.8636244699032729
+y_meaneb 
+y_stddev 
+
+a        zee
+b        pan
+i_mean   6
+i_meaneb 
+i_stddev 
+x_mean   0.5271261600918548
+x_meaneb 
+x_stddev 
+y_mean   0.49322128674835697
+y_meaneb 
+y_stddev 
+
+a        eks
+b        zee
+i_mean   7
+i_meaneb 
+i_stddev 
+x_mean   0.6117840605678454
+x_meaneb 
+x_stddev 
+y_mean   0.1878849191181694
+y_meaneb 
+y_stddev 
+
+a        zee
+b        wye
+i_mean   8
+i_meaneb 
+i_stddev 
+x_mean   0.5985540091064224
+x_meaneb 
+x_stddev 
+y_mean   0.976181385699006
+y_meaneb 
+y_stddev 
+
+a        hat
+b        wye
+i_mean   9
+i_meaneb 
+i_stddev 
+x_mean   0.03144187646093577
+x_meaneb 
+x_stddev 
+y_mean   0.7495507603507059
+y_meaneb 
+y_stddev 
+
+a        pan
+b        wye
+i_mean   10
+i_meaneb 
+i_stddev 
+x_mean   0.5026260055412137
+x_meaneb 
+x_stddev 
+y_mean   0.9526183602969864
+y_meaneb 
+y_stddev 

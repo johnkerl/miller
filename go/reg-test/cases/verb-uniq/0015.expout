@@ -1,0 +1,7 @@
+foo=17,color=red,shape=square,flag=0
+foo=11,color=purple,shape=triangle,flag=0
+foo=11,color=yellow,shape=circle,flag=1
+foo=6,color=red,shape=circle,flag=1
+foo=7,color=purple,shape=square,flag=0
+foo=3,color=red,shape=square,flag=1
+foo=2,color=yellow,shape=triangle,flag=1

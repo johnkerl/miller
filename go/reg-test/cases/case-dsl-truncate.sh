@@ -1,6 +1,0 @@
-run_mlr --opprint --from $indir/s.dkvp put '$z = truncate($a, -1)'
-run_mlr --opprint --from $indir/s.dkvp put '$z = truncate($a, 0)'
-run_mlr --opprint --from $indir/s.dkvp put '$z = truncate($a, 1)'
-run_mlr --opprint --from $indir/s.dkvp put '$z = truncate($a, 2)'
-run_mlr --opprint --from $indir/s.dkvp put '$z = truncate($a, 3)'
-run_mlr --opprint --from $indir/s.dkvp put '$z = truncate($a, 4)'
