@@ -1,7 +1,3 @@
-
-# With mlr -n put v, we are only parsing the DSL expression into an AST and
-# then CST, but not executing it
-
 run_mlr -n put -v '$y = 1 || 2'
 run_mlr -n put -v '$y = 1 || 2 || 3'
 run_mlr -n put -v '$y = 1 || 2 && 3'

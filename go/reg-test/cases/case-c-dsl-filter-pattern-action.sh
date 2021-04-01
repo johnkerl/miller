@@ -1,8 +1,6 @@
-# ----------------------------------------------------------------
 run_mlr --from $indir/s.dkvp put 'NR == 2 { $z = 100 }'
 run_mlr --from $indir/s.dkvp put 'NR != 2 { $z = 100 }'
 
-# ----------------------------------------------------------------
 run_mlr --opprint put '         $x > 0.5;  $z = "flag"'  $indir/abixy
 run_mlr --opprint put '       !($x > 0.5); $z = "flag"'  $indir/abixy
 run_mlr --opprint put 'filter   $x > 0.5;  $z = "flag"'  $indir/abixy
@@ -10,9 +8,6 @@ run_mlr --opprint put '         $x > 0.5  {$z = "flag"}' $indir/abixy
 run_mlr --opprint put 'filter !($x > 0.5); $z = "flag"'  $indir/abixy
 run_mlr --opprint put '       !($x > 0.5) {$z = "flag"}' $indir/abixy
  
-# ----------------------------------------------------------------
-announce DSL SUB/GSUB/REGEX_EXTRACT
-
 run_mlr --opprint put '$y = sub($x, "e.*l",        "")' $indir/sub.dat
 run_mlr --opprint put '$y = sub($x, "e.*l"i,       "")' $indir/sub.dat
 run_mlr --opprint put '$y = sub($x, "e.*"."l",     "")' $indir/sub.dat
