@@ -33,18 +33,9 @@ jobs:
 
     - name: UploadArtifacts
       uses: actions/upload-artifact@v2
-      strategy:
-        matrix:
-          include:
-            - os: ubuntu-latest
-              with:
-                name: ubuntu/mlr
-                path: go/mlr
-            - os: macos-latest
-              with:
-                name: macos/mlr
-                path: go/mlr
-            - os: windows-latest
-              with:
-                name: windows/mlr
-                path: go/mlr.exe
+      with:
+        name: ${{ matrix.os }} /mlr
+        if: matrix.config.os == 'windows-latest'
+          path: go/mlr.exe
+        if: matrix.config.os != 'windows-latest'
+          path: go/mlr
