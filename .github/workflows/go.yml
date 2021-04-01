@@ -12,7 +12,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        exe: {macos-latest: "mlr", ubuntu-latest: "mlr", windows-latest: "mlr.exe"]
 
     steps:
     - uses: actions/checkout@v2
@@ -30,3 +31,19 @@ jobs:
       # using `-v`, `-vv`, or `-vvv`. Commit changes to this file and re-push to GitHub
       # and let the GitHub Actions re-run.
       run: cd go && go test -v ./... && ./mlr regtest -m ./mlr -vv
+
+    - name: UploadArtifacts
+      uses: actions/upload-artifact@v2
+      if: matrix.os == 'ubuntu-latest'
+        with: 
+          name: ubuntu/mlr
+          path: go/mlr
+      if: matrix.os == 'macos-latest'
+        with: 
+          name: macos/mlr
+          path: go/mlr
+      if: matrix.os == 'windows-latest'
+        with: 
+          name: windows/mlr
+          path: go/mlr.exe
+
