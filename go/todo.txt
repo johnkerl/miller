@@ -33,6 +33,7 @@ d windows mrpl colors -- ? checking isatty also -- ?
 
 ! upload artifacts
   https://github.com/actions/upload-artifact
+  https://forum.nim-lang.org/t/6371
 
 * PR-template etc checklists
 ----------------------------------------------------------------
