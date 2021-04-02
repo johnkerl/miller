@@ -1,1 +1,1 @@
-mlr cat /dev/null
+mlr -n cat
