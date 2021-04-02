@@ -1,0 +1,10 @@
+DSL EXPRESSION:
+$[$y] = 4
+
+AST:
+* statement block
+    * assignment "="
+        * indirect field value "$[]"
+            * direct field value "y"
+        * int literal "4"
+

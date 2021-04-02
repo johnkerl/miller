@@ -1,0 +1,10 @@
+DSL EXPRESSION:
+$[FILENAME] = FNR
+
+AST:
+* statement block
+    * assignment "="
+        * indirect field value "$[]"
+            * context variable "FILENAME"
+        * context variable "FNR"
+

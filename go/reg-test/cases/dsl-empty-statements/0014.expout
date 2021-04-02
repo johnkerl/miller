@@ -1,0 +1,9 @@
+DSL EXPRESSION:
+true {;;}
+
+AST:
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
+

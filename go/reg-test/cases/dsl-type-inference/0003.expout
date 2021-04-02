@@ -1,0 +1,10 @@
+a  1
+b  2.0
+s  1
+t  2.0
+u  3
+v  4.0
+ts int
+tt float
+tu int
+tv float

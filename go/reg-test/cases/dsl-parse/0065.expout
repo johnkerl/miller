@@ -1,0 +1,9 @@
+DSL EXPRESSION:
+$x=1;
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * int literal "1"
+

@@ -24,25 +24,25 @@ done
 run_mlr --ocsv    cat $indir/het.dkvp
 run_mlr --opprint cat $indir/het.dkvp
 
-run_mlr --opprint cat << EOF
+run_mlr --opprint cat <<EOF
 EOF
 
-run_mlr --opprint cat << EOF
+run_mlr --opprint cat <<EOF
 a=1,b=2,c=3
 EOF
 
-run_mlr --opprint cat << EOF
+run_mlr --opprint cat <<EOF
 a=1,b=2,c=3
 a=2,b=2,c=3
 EOF
 
-run_mlr --opprint cat << EOF
+run_mlr --opprint cat <<EOF
 a=1,b=2,c=3
 a=2,b=2,c=3
 d=3,e=5,f=6
 EOF
 
-run_mlr --opprint cat << EOF
+run_mlr --opprint cat <<EOF
 a=1,b=2,c=3
 d=2,e=5,f=6
 d=3,e=5,f=6

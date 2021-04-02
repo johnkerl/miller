@@ -1,0 +1,5 @@
+FIELD             F1  F2  F3
+ABC123            ABC 123 -
+ABC..123          -   -   -
+..ABC..123..      -   -   -
+none of the above -   -   -

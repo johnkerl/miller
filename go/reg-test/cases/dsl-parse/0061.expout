@@ -1,0 +1,11 @@
+DSL EXPRESSION:
+end{@y=1}
+
+AST:
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "y"
+                * int literal "1"
+

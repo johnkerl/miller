@@ -1,0 +1,9 @@
+DSL EXPRESSION:
+$z = []
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array literal "[]"
+

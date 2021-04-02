@@ -1,7 +1,0 @@
-
-mlr put filter NR > 2 ./reg-test/input/s.dkvp
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-
-mlr filter filter NR > 2 ./reg-test/input/s.dkvp
-

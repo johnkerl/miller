@@ -1,0 +1,16 @@
+FIELD
+-
+a
+ab
+abc
+abcd
+abcde
+abcdef
+
+FIELD        F0      F1 F2 F3 F4 F5 F6 F7 F8 F9
+abcdefg      abcdefg a  b  c  d  e  f  g  -  -
+abcdefgh     abcdefg a  b  c  d  e  f  g  -  -
+abcdefghi    abcdefg a  b  c  d  e  f  g  -  -
+abcdefghij   abcdefg a  b  c  d  e  f  g  -  -
+abcdefghijk  abcdefg a  b  c  d  e  f  g  -  -
+abcdefghijkl abcdefg a  b  c  d  e  f  g  -  -

@@ -1,0 +1,16 @@
+DSL EXPRESSION:
+func f(x, y) { z = 3}
+
+AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "x"
+            * parameter
+                * parameter name "y"
+        * statement block
+            * assignment "="
+                * local variable "z"
+                * int literal "3"
+

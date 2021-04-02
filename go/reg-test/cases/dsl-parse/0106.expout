@@ -1,0 +1,20 @@
+DSL EXPRESSION:
+func f(var x, var y): var { var z = 3}
+
+AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "x"
+                    * type declaration "var"
+            * parameter
+                * parameter name "y"
+                    * type declaration "var"
+        * statement block
+            * assignment "="
+                * local variable "z"
+                    * type declaration "var"
+                * int literal "3"
+        * type declaration "var"
+

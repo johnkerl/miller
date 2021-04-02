@@ -1,0 +1,15 @@
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 }
+
+AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "1"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "100"
+

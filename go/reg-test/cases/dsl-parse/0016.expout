@@ -1,0 +1,15 @@
+DSL EXPRESSION:
+$x = 2 * $a + $b . $c
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "."
+            * operator "+"
+                * operator "*"
+                    * int literal "2"
+                    * direct field value "a"
+                * direct field value "b"
+            * direct field value "c"
+

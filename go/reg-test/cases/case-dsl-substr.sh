@@ -46,7 +46,7 @@ run_mlr put -q '
     }
     print;
 }
-' << EOF
+' <<EOF
 x=
 x=o
 x=o1
