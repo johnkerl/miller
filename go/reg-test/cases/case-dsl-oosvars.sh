@@ -15,7 +15,7 @@ run_mlr --from $indir/abixy put -q '@a=1;b=2;$c=3;emitf @a,b,$c'
 run_mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean}' $indir/abixy
 run_mlr --opprint put -v 'end{@mean=@sum/@count; emitf @mean}; begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x' $indir/abixy
 
-run_mlr put -v 'begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6}' /dev/null
+run_mlr -n put -v 'begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6}'
 
 run_mlr put '@y[$a]=$y; end{dump}' $indir/abixy
 
