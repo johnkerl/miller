@@ -6,6 +6,14 @@
 
 #set -euo pipefail
 
+mlr="mlr"
+newcasesdir="./reg-test/cases"
+if [ $# -ge 1 -a "$1" = "-c" ]; then
+  mlr="../c/mlr"
+  newcasesdir="./reg-test/cases-pending-go-port"
+  shift
+fi
+
 if [ $# -ne 1 ]; then
   echo "Usage: $0 {case-name}" 1>&2
   exit 1
@@ -18,13 +26,13 @@ if [ ! -f "$oldfile" ]; then
   exit 1
 fi
 
-newdir="./reg-test/cases/$name"
+newdir="$newcasesdir/$name"
 mkdir -p $newdir
 
 u/upp $newdir < $oldfile
 
-mlr regtest -p $newdir
-mlr regtest -vv $newdir
+mlr regtest -m $mlr -p $newdir
+mlr regtest -m $mlr -vv $newdir
 git rm -f $oldfile
 echo git rm ./reg-test/expected/case-${name}.sh.out
 echo git rm ./reg-test/expected/case-${name}.sh.err
