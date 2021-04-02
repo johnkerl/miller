@@ -1,0 +1,11 @@
+DSL EXPRESSION:
+func f(a,){}
+
+AST:
+* statement block
+    * function definition "f"
+        * parameter list
+            * parameter
+                * parameter name "a"
+        * statement block
+

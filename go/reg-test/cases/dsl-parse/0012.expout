@@ -1,0 +1,10 @@
+DSL EXPRESSION:
+$["abc"] = "def"
+
+AST:
+* statement block
+    * assignment "="
+        * indirect field value "$[]"
+            * string literal "abc"
+        * string literal "def"
+

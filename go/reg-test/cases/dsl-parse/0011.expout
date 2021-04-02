@@ -1,0 +1,9 @@
+DSL EXPRESSION:
+$x = "abc"
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * string literal "abc"
+

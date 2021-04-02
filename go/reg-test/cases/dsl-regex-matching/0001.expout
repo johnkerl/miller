@@ -1,0 +1,12 @@
+DSL EXPRESSION:
+$x =~ "bcd"
+
+AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * string literal "bcd"
+
+x=abcd,y=ghi
+x=abcde,y=ghi

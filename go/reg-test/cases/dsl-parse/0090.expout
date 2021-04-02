@@ -1,0 +1,35 @@
+DSL EXPRESSION:
+for (i = 0; i < NR; i += 1) { if (i == 2) { break}    $i += i }
+
+AST:
+* statement block
+    * triple-for loop "for"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * int literal "0"
+        * statement block
+            * bare boolean
+                * operator "<"
+                    * local variable "i"
+                    * context variable "NR"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * operator "+"
+                    * local variable "i"
+                    * int literal "1"
+        * statement block
+            * if-chain
+                * if-item "if"
+                    * operator "=="
+                        * local variable "i"
+                        * int literal "2"
+                    * statement block
+                        * break "break"
+            * assignment "="
+                * direct field value "i"
+                * operator "+"
+                    * direct field value "i"
+                    * local variable "i"
+

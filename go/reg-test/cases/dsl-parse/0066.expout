@@ -1,0 +1,12 @@
+DSL EXPRESSION:
+$x=1;$y=2;
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * int literal "1"
+    * assignment "="
+        * direct field value "y"
+        * int literal "2"
+

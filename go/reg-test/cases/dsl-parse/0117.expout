@@ -1,0 +1,37 @@
+DSL EXPRESSION:
+begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1;$t=2};      $x=6; end{@z=9}
+
+AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "a"
+                * int literal "1"
+    * assignment "="
+        * direct field value "e"
+        * int literal "2"
+    * cond block
+        * operator "||"
+            * operator "=="
+                * direct field value "f"
+                * direct field value "g"
+            * operator "=="
+                * direct field value "h"
+                * direct field value "i"
+        * statement block
+            * assignment "="
+                * direct field value "s"
+                * int literal "1"
+            * assignment "="
+                * direct field value "t"
+                * int literal "2"
+    * assignment "="
+        * direct field value "x"
+        * int literal "6"
+    * end block
+        * statement block
+            * assignment "="
+                * direct oosvar value "z"
+                * int literal "9"
+

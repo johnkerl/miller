@@ -1,0 +1,13 @@
+DSL EXPRESSION:
+$x =~ "^a.*"."d$"
+
+AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * operator "."
+                * string literal "^a.*"
+                * string literal "d$"
+
+x=abcd,y=ghi

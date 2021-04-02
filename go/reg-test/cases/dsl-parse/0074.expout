@@ -1,0 +1,28 @@
+DSL EXPRESSION:
+if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 } else { $z = 900 }
+
+AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "1"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "100"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "2"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "200"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "z"
+                    * int literal "900"
+
