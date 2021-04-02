@@ -21,7 +21,7 @@ run_mlr put '$z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z)' $indir/typ
 run_mlr put '@s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
 run_mlr put '@s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s)' $indir/typeof.dkvp
 
-run_mlr cat << EOF
+run_mlr cat <<EOF
 x=1
 x=
 x=7
@@ -39,7 +39,7 @@ x=
 x=7
 EOF
 
-run_mlr cat << EOF
+run_mlr cat <<EOF
 x=1
 xxx=
 x=7
@@ -57,7 +57,7 @@ xxx=
 x=7
 EOF
 
-run_mlr cat << EOF
+run_mlr cat <<EOF
 x=1
 x=
 y=

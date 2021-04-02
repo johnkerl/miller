@@ -4,7 +4,7 @@
 
 export TZ=America/Sao_Paulo
 #echo TZ=$TZ
-run_mlr --opprint put '$b=localtime2sec($a); $c=sec2localtime($b); $d=sec2localdate($b)' <<_EOF
+run_mlr --opprint put '$b=localtime2sec($a); $c=sec2localtime($b); $d=sec2localdate($b)' <<EOF
 a=2017-02-18 23:00:00
 a=2017-02-18 23:59:59
 a=2017-02-19 00:00:00
@@ -20,7 +20,7 @@ export TZ=
 
 export TZ=America/Sao_Paulo
 #echo TZ=$TZ
-run_mlr --opprint put '$b=localtime2sec($a); $c=sec2localtime($b); $d=sec2localdate($b)' <<_EOF
+run_mlr --opprint put '$b=localtime2sec($a); $c=sec2localtime($b); $d=sec2localdate($b)' <<EOF
 a=2017-02-14 00:00:00
 a=2017-02-15 00:00:00
 a=2017-02-16 00:00:00
@@ -41,7 +41,7 @@ export TZ=
 
 export TZ=America/Sao_Paulo
 #echo TZ=$TZ
-run_mlr --opprint put '$b=strptime_local($a, "%Y-%m-%d %H:%M:%S"); $c=strftime_local($b, "%Y-%m-%d %H:%M:%S")' <<_EOF
+run_mlr --opprint put '$b=strptime_local($a, "%Y-%m-%d %H:%M:%S"); $c=strftime_local($b, "%Y-%m-%d %H:%M:%S")' <<EOF
 a=2017-02-18 23:00:00
 a=2017-02-18 23:59:59
 a=2017-02-19 00:00:00
@@ -57,7 +57,7 @@ export TZ=
 
 export TZ=America/Sao_Paulo
 #echo TZ=$TZ
-run_mlr --opprint put '$b=strptime_local($a, "%Y-%m-%d %H:%M:%S"); $c=strftime_local($b, "%Y-%m-%d %H:%M:%S")' <<_EOF
+run_mlr --opprint put '$b=strptime_local($a, "%Y-%m-%d %H:%M:%S"); $c=strftime_local($b, "%Y-%m-%d %H:%M:%S")' <<EOF
 a=2017-02-18 23:00:00
 a=2017-02-18 23:59:59
 a=2017-02-19 00:00:00
