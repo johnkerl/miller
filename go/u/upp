@@ -1,0 +1,97 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+@us = File.basename $0
+
+# ----------------------------------------------------------------
+def usage()
+  $stderr.puts "Usage: #{$us} {newdir}"
+  exit 1
+end
+
+# ----------------------------------------------------------------
+usage unless ARGV.length == 1
+newdir = ARGV[0]
+
+FileUtils.mkdir_p newdir
+
+n = 0
+while true
+  begin
+    cmd_file_line = $stdin.readline
+  rescue EOFError
+    break
+  end
+  cmd_file_line.chomp!
+
+  next if cmd_file_line =~ /^\s*$/
+  next if cmd_file_line =~ /^#.*$/
+
+  should_fail = false
+  here_doc_lines = nil
+  if cmd_file_line =~ /^run_mlr.*$/
+    cmd_file_line = cmd_file_line.sub("run_mlr", "mlr")
+  elsif cmd_file_line =~ /^mlr_expect_fail.*$/
+    cmd_file_line = cmd_file_line.sub("mlr_expect_fail", "mlr")
+    should_fail = true
+  else
+    die "$us: cannot handle cmd_file_line: #{cmd_file_line}"
+  end
+  cmd_file_line = cmd_file_line.sub("\$indir", "reg-test/input")
+
+  if cmd_file_line =~ /.*<<EOF$/
+    has_here_doc = true
+    cmd_file_line = cmd_file_line.sub("<<EOF", "")
+    cmd_file_line.strip!
+
+    here_doc_lines = []
+    while true
+      begin
+        here_doc_line = $stdin.readline
+      rescue EOFError
+        die "Premature EOF"
+      end
+      if here_doc_line =~ /^EOF$/
+        break
+      end
+      here_doc_lines << here_doc_line
+    end
+
+  end
+
+  # TODO:
+  # mention
+  # announce
+  # export VAR=value
+
+  n += 1
+  base = newdir + "/" + sprintf("%04d", n)
+  cmd_file_name = base + '.cmd'
+  input_file_name = base + '.input'
+
+  if here_doc_lines != nil
+    cmd_file_line += " " + input_file_name
+  end
+
+  puts "-- #{cmd_file_name}"
+  puts cmd_file_line
+  puts
+
+  File.open(cmd_file_name, "w") do |handle|
+    handle.write(cmd_file_line)
+  end
+
+  if should_fail
+    FileUtils.touch(base + '.should-fail')
+  end
+
+  if here_doc_lines != nil
+    File.open(input_file_name, "w") do |handle|
+      here_doc_lines.each do |here_doc_line|
+        handle.write(here_doc_line)
+      end
+    end
+  end
+
+end
