@@ -24,12 +24,13 @@ func RegTestUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "[none] Print directory-level pass/fails, and overall pass/fail.\n")
-	fmt.Fprintf(o, "-m     Specify name of Miller executable to use.\n")
-	fmt.Fprintf(o, "-p     Create the .expout and .experr files, rather than checking them.\n")
-	fmt.Fprintf(o, "-v     Also include pass/fail at command-file level.\n")
-	fmt.Fprintf(o, "-vv    Also include pass/fail reasons for each command-file.\n")
-	fmt.Fprintf(o, "-vvv   Also include full stdout/stderr/exit-code for each command-file.\n")
-	fmt.Fprintf(o, "-s {n} After running tests, re-run first n failed .cmd files with verbosity level 3.\n")
+	fmt.Fprintf(o, "-m {...} Specify name of Miller executable to use.\n")
+	fmt.Fprintf(o, "-c       Shorthand for -m ../c/mlr.\n")
+	fmt.Fprintf(o, "-p       Create the .expout and .experr files, rather than checking them.\n")
+	fmt.Fprintf(o, "-v       Also include pass/fail at command-file level.\n")
+	fmt.Fprintf(o, "-vv      Also include pass/fail reasons for each command-file.\n")
+	fmt.Fprintf(o, "-vvv     Also include full stdout/stderr/exit-code for each command-file.\n")
+	fmt.Fprintf(o, "-s {n}   After running tests, re-run first n failed .cmd files with verbosity level 3.\n")
 	os.Exit(exitCode)
 }
 
@@ -61,6 +62,9 @@ func RegTestMain(args []string) int {
 			}
 			exeName = args[argi]
 			argi++
+
+		} else if arg == "-c" {
+			exeName = "../c/mlr"
 
 		} else if arg == "-s" {
 			if argi >= argc {

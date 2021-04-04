@@ -38,7 +38,7 @@ while true
   else
     die "$us: cannot handle cmd_file_line: #{cmd_file_line}"
   end
-  cmd_file_line = cmd_file_line.sub("\$indir", "reg-test/input")
+  cmd_file_line = cmd_file_line.gsub("\$indir", "reg-test/input")
 
   if cmd_file_line =~ /.*<<EOF$/
     has_here_doc = true
