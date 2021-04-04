@@ -1,0 +1,4 @@
+x=1	ostype=absent	xtype=int	nstype=int	nsum=1
+x=	osum=1	ostype=int	xtype=empty	nstype=empty	nsum=
+x=7	osum=	ostype=empty	xtype=int	nstype=empty	nsum=
+sum=

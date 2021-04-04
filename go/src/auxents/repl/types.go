@@ -34,6 +34,7 @@ type Repl struct {
 	// Prompt1 is the main prompt, like $PS1. Prompt2 is for
 	// multi-line-input mode with "<" ... ">" or "<<" ... ">>".
 	inputIsTerminal bool
+	quietStartup    bool
 	prompt1         string
 	prompt2         string
 

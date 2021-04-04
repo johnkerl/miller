@@ -157,5 +157,5 @@ run_mlr put '$y = capitalize($z)' <<EOF
 x=hello
 EOF
 
-mention LHS value on first record should result in ZYX for process creation
+# mention LHS value on first record should result in ZYX for process creation
 export indir; run_mlr --from $indir/abixy put -q 'ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a'

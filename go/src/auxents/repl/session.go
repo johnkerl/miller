@@ -38,6 +38,7 @@ import (
 func NewRepl(
 	exeName string,
 	replName string,
+	quietStartup bool,
 	astPrintMode ASTPrintMode,
 	doWarnings bool,
 	options *cliutil.TOptions,
@@ -78,6 +79,7 @@ func NewRepl(
 		replName: replName,
 
 		inputIsTerminal: getInputIsTerminal(),
+		quietStartup:    quietStartup,
 		prompt1:         getPrompt1(),
 		prompt2:         getPrompt2(),
 
@@ -111,7 +113,9 @@ func controlCHandler(sysToSignalHandlerChannel chan os.Signal, appSignalNotifica
 
 // ----------------------------------------------------------------
 func (this *Repl) handleSession(istream *os.File) {
-	this.printStartupBanner()
+	if !this.quietStartup {
+		this.printStartupBanner()
+	}
 
 	lineReader := bufio.NewReader(istream)
 

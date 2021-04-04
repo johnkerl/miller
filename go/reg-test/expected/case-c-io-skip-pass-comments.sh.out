@@ -1,39 +1,5 @@
 
-
-================================================================
-SKIP/PASS COMMENTS DKVP
-
-
----------------------------------------------------------------- input comments1.dkvp
-cat ./reg-test/input/comments/comments1.dkvp
-# hello world 1
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- skip comments1.dkvp
-mlr --skip-comments --idkvp --oxtab cat
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
 mlr --skip-comments --idkvp --oxtab cat ./reg-test/input/comments/comments1.dkvp
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
-
----------------------------------------------------------------- pass comments1.dkvp
-mlr --pass-comments --idkvp --oxtab cat
-# hello world 1
 a 1
 b 2
 c 3
@@ -52,40 +18,10 @@ a 4
 b 5
 c 6
 
-
----------------------------------------------------------------- input comments2.dkvp
-cat ./reg-test/input/comments/comments2.dkvp
-a=1,b=2,c=3
-# hello world 2
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- skip comments2.dkvp
-mlr --skip-comments --idkvp --oxtab cat
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
 mlr --skip-comments --idkvp --oxtab cat ./reg-test/input/comments/comments2.dkvp
 a 1
 b 2
 c 3
-
-a 4
-b 5
-c 6
-
-
----------------------------------------------------------------- pass comments2.dkvp
-mlr --pass-comments --idkvp --oxtab cat
-a 1
-b 2
-c 3
-# hello world 2
 
 a 4
 b 5
@@ -101,24 +37,6 @@ a 4
 b 5
 c 6
 
-
----------------------------------------------------------------- input comments3.dkvp
-cat ./reg-test/input/comments/comments3.dkvp
-a=1,b=2,c=3
-a=4,b=5,c=6
-# hello world 3
-
-
----------------------------------------------------------------- skip comments3.dkvp
-mlr --skip-comments --idkvp --oxtab cat
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
 mlr --skip-comments --idkvp --oxtab cat ./reg-test/input/comments/comments3.dkvp
 a 1
 b 2
@@ -127,18 +45,6 @@ c 3
 a 4
 b 5
 c 6
-
-
----------------------------------------------------------------- pass comments3.dkvp
-mlr --pass-comments --idkvp --oxtab cat
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-# hello world 3
 
 mlr --pass-comments --idkvp --oxtab cat ./reg-test/input/comments/comments3.dkvp
 a 1
@@ -150,71 +56,18 @@ b 5
 c 6
 # hello world 3
 
-mlr termcvt --lf2crlf
 
+mlr --skip-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.dkvp
+a 1
+b 2
+c 3
 
----------------------------------------------------------------- input comments1-crlf.dkvp
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.dkvp
+a 4
+b 5
+c 6
+
+mlr --pass-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.dkvp
 # hello world 1
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- skip comments1-crlf.dkvp
-mlr --skip-comments --idkvp --oxtab cat
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
-mlr --skip-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.dkvp
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
-
----------------------------------------------------------------- pass comments1-crlf.dkvp
-mlr --pass-comments --idkvp --oxtab cat
-# hello world 1
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
-mlr --pass-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.dkvp
-# hello world 1
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
-
-================================================================
-SKIP/PASS COMMENTS DKVP WITH ALTERNATE PREFIX
-
-
----------------------------------------------------------------- input comments1-atat.dkvp
-cat ./reg-test/input/comments/comments1-atat.dkvp
-@@ hello world 1
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- skip comments1-atat.dkvp
-mlr --skip-comments-with @@ --idkvp --oxtab cat
 a 1
 b 2
 c 3
@@ -224,18 +77,6 @@ b 5
 c 6
 
 mlr --skip-comments-with @@ --idkvp --oxtab cat ./reg-test/input/comments/comments1-atat.dkvp
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
-
----------------------------------------------------------------- pass comments1-atat.dkvp
-mlr --pass-comments-with @@ --idkvp --oxtab cat
-@@ hello world 1
 a 1
 b 2
 c 3
@@ -254,40 +95,10 @@ a 4
 b 5
 c 6
 
-
----------------------------------------------------------------- input comments2-atat.dkvp
-cat ./reg-test/input/comments/comments2-atat.dkvp
-a=1,b=2,c=3
-@@ hello world 2
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- skip comments2-atat.dkvp
-mlr --skip-comments-with @@ --idkvp --oxtab cat
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
 mlr --skip-comments-with @@ --idkvp --oxtab cat ./reg-test/input/comments/comments2-atat.dkvp
 a 1
 b 2
 c 3
-
-a 4
-b 5
-c 6
-
-
----------------------------------------------------------------- pass comments2-atat.dkvp
-mlr --pass-comments-with @@ --idkvp --oxtab cat
-a 1
-b 2
-c 3
-@@ hello world 2
 
 a 4
 b 5
@@ -303,24 +114,6 @@ a 4
 b 5
 c 6
 
-
----------------------------------------------------------------- input comments3-atat.dkvp
-cat ./reg-test/input/comments/comments3-atat.dkvp
-a=1,b=2,c=3
-a=4,b=5,c=6
-@@ hello world 3
-
-
----------------------------------------------------------------- skip comments3-atat.dkvp
-mlr --skip-comments-with @@ --idkvp --oxtab cat
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
 mlr --skip-comments-with @@ --idkvp --oxtab cat ./reg-test/input/comments/comments3-atat.dkvp
 a 1
 b 2
@@ -329,18 +122,6 @@ c 3
 a 4
 b 5
 c 6
-
-
----------------------------------------------------------------- pass comments3-atat.dkvp
-mlr --pass-comments-with @@ --idkvp --oxtab cat
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-@@ hello world 3
 
 mlr --pass-comments-with @@ --idkvp --oxtab cat ./reg-test/input/comments/comments3-atat.dkvp
 a 1
@@ -352,41 +133,7 @@ b 5
 c 6
 @@ hello world 3
 
-
-================================================================
-SKIP/PASS COMMENTS NIDX
-
-
----------------------------------------------------------------- input comments1.nidx
-cat ./reg-test/input/comments/comments1.nidx
-# hello world 1
-aX1 bX2 cX3
-aX4 bX5 cX6
-
-
----------------------------------------------------------------- skip comments1.nidx
-mlr --skip-comments --inidx --oxtab cat
-1 aX1
-2 bX2
-3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-
 mlr --skip-comments --inidx --oxtab cat ./reg-test/input/comments/comments1.nidx
-1 aX1
-2 bX2
-3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-
-
----------------------------------------------------------------- pass comments1.nidx
-mlr --pass-comments --inidx --oxtab cat
-# hello world 1
 1 aX1
 2 bX2
 3 cX3
@@ -405,40 +152,10 @@ mlr --pass-comments --inidx --oxtab cat ./reg-test/input/comments/comments1.nidx
 2 bX5
 3 cX6
 
-
----------------------------------------------------------------- input comments2.nidx
-cat ./reg-test/input/comments/comments2.nidx
-aX1 bX2 cX3
-# hello world 2
-aX4 bX5 cX6
-
-
----------------------------------------------------------------- skip comments2.nidx
-mlr --skip-comments --inidx --oxtab cat
-1 aX1
-2 bX2
-3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-
 mlr --skip-comments --inidx --oxtab cat ./reg-test/input/comments/comments2.nidx
 1 aX1
 2 bX2
 3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-
-
----------------------------------------------------------------- pass comments2.nidx
-mlr --pass-comments --inidx --oxtab cat
-1 aX1
-2 bX2
-3 cX3
-# hello world 2
 
 1 aX4
 2 bX5
@@ -454,24 +171,6 @@ mlr --pass-comments --inidx --oxtab cat ./reg-test/input/comments/comments2.nidx
 2 bX5
 3 cX6
 
-
----------------------------------------------------------------- input comments3.nidx
-cat ./reg-test/input/comments/comments3.nidx
-aX1 bX2 cX3
-aX4 bX5 cX6
-# hello world 3
-
-
----------------------------------------------------------------- skip comments3.nidx
-mlr --skip-comments --inidx --oxtab cat
-1 aX1
-2 bX2
-3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-
 mlr --skip-comments --inidx --oxtab cat ./reg-test/input/comments/comments3.nidx
 1 aX1
 2 bX2
@@ -480,18 +179,6 @@ mlr --skip-comments --inidx --oxtab cat ./reg-test/input/comments/comments3.nidx
 1 aX4
 2 bX5
 3 cX6
-
-
----------------------------------------------------------------- pass comments3.nidx
-mlr --pass-comments --inidx --oxtab cat
-1 aX1
-2 bX2
-3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-# hello world 3
 
 mlr --pass-comments --inidx --oxtab cat ./reg-test/input/comments/comments3.nidx
 1 aX1
@@ -503,18 +190,8 @@ mlr --pass-comments --inidx --oxtab cat ./reg-test/input/comments/comments3.nidx
 3 cX6
 # hello world 3
 
-mlr termcvt --lf2crlf
 
-
----------------------------------------------------------------- input comments1-crlf.nidx
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.nidx
-# hello world 1
-aX1 bX2 cX3
-aX4 bX5 cX6
-
-
----------------------------------------------------------------- skip comments1-crlf.nidx
-mlr --skip-comments --inidx --oxtab cat
+mlr --skip-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.nidx
 1 aX1
 2 bX2
 3 cX3
@@ -523,18 +200,7 @@ mlr --skip-comments --inidx --oxtab cat
 2 bX5
 3 cX6
 
-mlr --skip-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.nidx
-1 aX1
-2 bX2
-3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-
-
----------------------------------------------------------------- pass comments1-crlf.nidx
-mlr --pass-comments --inidx --oxtab cat
+mlr --pass-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.nidx
 # hello world 1
 1 aX1
 2 bX2
@@ -543,42 +209,8 @@ mlr --pass-comments --inidx --oxtab cat
 1 aX4
 2 bX5
 3 cX6
-
-mlr --pass-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.nidx
-# hello world 1
-1 aX1
-2 bX2
-3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-
-
-================================================================
-SKIP/PASS COMMENTS JSON
-
-
----------------------------------------------------------------- input comments1.json
-cat ./reg-test/input/comments/comments1.json
-# hello world 1
-{ "a":1, "b":2, "c":3 }
-{ "a":4, "b":5, "c":6 }
-
-
----------------------------------------------------------------- skip comments1.json
-mlr --skip-comments --ijson --odkvp cat
-a=1,b=2,c=3
-a=4,b=5,c=6
 
 mlr --skip-comments --ijson --odkvp cat ./reg-test/input/comments/comments1.json
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments1.json
-mlr --pass-comments --ijson --odkvp cat
-# hello world 1
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -587,27 +219,7 @@ mlr --pass-comments --ijson --odkvp cat ./reg-test/input/comments/comments1.json
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-
----------------------------------------------------------------- input comments2.json
-cat ./reg-test/input/comments/comments2.json
-{ "a":1, "b":2, "c":3 }
-# hello world 2
-{ "a":4, "b":5, "c":6 }
-
-
----------------------------------------------------------------- skip comments2.json
-mlr --skip-comments --ijson --odkvp cat
-a=1,b=2,c=3
-a=4,b=5,c=6
-
 mlr --skip-comments --ijson --odkvp cat ./reg-test/input/comments/comments2.json
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments2.json
-mlr --pass-comments --ijson --odkvp cat
-# hello world 2
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -616,27 +228,7 @@ mlr --pass-comments --ijson --odkvp cat ./reg-test/input/comments/comments2.json
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-
----------------------------------------------------------------- input comments3.json
-cat ./reg-test/input/comments/comments3.json
-{ "a":1, "b":2, "c":3 }
-{ "a":4, "b":5, "c":6 }
-# hello world 3
-
-
----------------------------------------------------------------- skip comments3.json
-mlr --skip-comments --ijson --odkvp cat
-a=1,b=2,c=3
-a=4,b=5,c=6
-
 mlr --skip-comments --ijson --odkvp cat ./reg-test/input/comments/comments3.json
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments3.json
-mlr --pass-comments --ijson --odkvp cat
-# hello world 3
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -645,69 +237,18 @@ mlr --pass-comments --ijson --odkvp cat ./reg-test/input/comments/comments3.json
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr termcvt --lf2crlf
 
-
----------------------------------------------------------------- input comments1-crlf.json
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.json
-# hello world 1
-{ "a":1, "b":2, "c":3 }
-{ "a":4, "b":5, "c":6 }
-
-
----------------------------------------------------------------- skip comments1-crlf.json
-mlr --skip-comments --ijson --odkvp cat
+mlr --skip-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.json
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.json
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments1-crlf.json
-mlr --pass-comments --ijson --odkvp cat
+mlr --pass-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.json
 # hello world 1
 a=1,b=2,c=3
 a=4,b=5,c=6
-
-mlr --pass-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.json
-# hello world 1
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
-================================================================
-SKIP/PASS COMMENTS XTAB
-
-
----------------------------------------------------------------- input comments1.xtab
-cat ./reg-test/input/comments/comments1.xtab
-x 1
-#hello world3
-z 3
-
-x 2
-#hello world4
-z 5
-
-
-
----------------------------------------------------------------- skip comments1.xtab
-mlr --skip-comments --ixtab --odkvp cat
-x=1,z=3
-x=2,z=5
 
 mlr --skip-comments --ixtab --odkvp cat ./reg-test/input/comments/comments1.xtab
 x=1,z=3
-x=2,z=5
-
-
----------------------------------------------------------------- pass comments1.xtab
-mlr --pass-comments --ixtab --odkvp cat
-#hello world3
-x=1,z=3
-#hello world4
 x=2,z=5
 
 mlr --pass-comments --ixtab --odkvp cat ./reg-test/input/comments/comments1.xtab
@@ -716,44 +257,9 @@ x=1,z=3
 #hello world4
 x=2,z=5
 
-
----------------------------------------------------------------- input comments2.xtab
-cat ./reg-test/input/comments/comments2.xtab
-#hello world1
-
-#hello world2
-x 1
-#hello world3
-z 3
-
-x 2
-#hello world4
-z 5
-#hello world5
-
-#hello world6
-
-
----------------------------------------------------------------- skip comments2.xtab
-mlr --skip-comments --ixtab --odkvp cat
-x=1,z=3
-x=2,z=5
-
 mlr --skip-comments --ixtab --odkvp cat ./reg-test/input/comments/comments2.xtab
 x=1,z=3
 x=2,z=5
-
-
----------------------------------------------------------------- pass comments2.xtab
-mlr --pass-comments --ixtab --odkvp cat
-#hello world1
-#hello world2
-#hello world3
-x=1,z=3
-#hello world4
-#hello world5
-x=2,z=5
-#hello world6
 
 mlr --pass-comments --ixtab --odkvp cat ./reg-test/input/comments/comments2.xtab
 #hello world1
@@ -765,70 +271,18 @@ x=1,z=3
 x=2,z=5
 #hello world6
 
-mlr termcvt --lf2crlf
 
-
----------------------------------------------------------------- input comments1-crlf.xtab
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.xtab
-x 1
-#hello world3
-z 3
-
-x 2
-#hello world4
-z 5
-
-
-
----------------------------------------------------------------- skip comments1-crlf.xtab
-mlr --skip-comments --ixtab --odkvp cat
+mlr --skip-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.xtab
 x=1,z=3
 x=2,z=5
 
-mlr --skip-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.xtab
-x=1,z=3
-x=2,z=5
-
-
----------------------------------------------------------------- pass comments1-crlf.xtab
-mlr --pass-comments --ixtab --odkvp cat
+mlr --pass-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.xtab
 #hello world3
 x=1,z=3
 #hello world4
 x=2,z=5
-
-mlr --pass-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.xtab
-#hello world3
-x=1,z=3
-#hello world4
-x=2,z=5
-
-
-================================================================
-SKIP/PASS COMMENTS CSVLITE
-
-
----------------------------------------------------------------- input comments1.csv
-cat ./reg-test/input/comments/comments1.csv
-# hello
-a,b,c
-1,2,3
-4,5,6
-
-
----------------------------------------------------------------- skip comments1.csv
-mlr --skip-comments --icsvlite --odkvp cat
-a=1,b=2,c=3
-a=4,b=5,c=6
 
 mlr --skip-comments --icsvlite --odkvp cat ./reg-test/input/comments/comments1.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments1.csv
-mlr --pass-comments --icsvlite --odkvp cat
-# hello
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -837,36 +291,9 @@ mlr --pass-comments --icsvlite --odkvp cat ./reg-test/input/comments/comments1.c
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-
----------------------------------------------------------------- input comments2.csv
-cat ./reg-test/input/comments/comments2.csv
-# hello
-a,b,c
-# hi
-1,2,3
-# there
-4,5,6
-# haha
-
-
----------------------------------------------------------------- skip comments2.csv
-mlr --skip-comments --icsvlite --odkvp cat
-a=1,b=2,c=3
-a=4,b=5,c=6
-
 mlr --skip-comments --icsvlite --odkvp cat ./reg-test/input/comments/comments2.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments2.csv
-mlr --pass-comments --icsvlite --odkvp cat
-# hello
-# hi
-a=1,b=2,c=3
-# there
-a=4,b=5,c=6
-# haha
 
 mlr --pass-comments --icsvlite --odkvp cat ./reg-test/input/comments/comments2.csv
 # hello
@@ -876,64 +303,17 @@ a=1,b=2,c=3
 a=4,b=5,c=6
 # haha
 
-mlr termcvt --lf2crlf
 
-
----------------------------------------------------------------- input comments1-crlf.csv
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
-# hello
-a,b,c
-1,2,3
-4,5,6
-
-
----------------------------------------------------------------- skip comments1-crlf.csv
-mlr --skip-comments --icsvlite --odkvp cat
+mlr --skip-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments1-crlf.csv
-mlr --pass-comments --icsvlite --odkvp cat
+mlr --pass-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.csv
 # hello
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-mlr --pass-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
-# hello
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
-================================================================
-SKIP/PASS COMMENTS CSV
-
-
----------------------------------------------------------------- input comments1.csv
-cat ./reg-test/input/comments/comments1.csv
-# hello
-a,b,c
-1,2,3
-4,5,6
-
-
----------------------------------------------------------------- skip comments1.csv
-mlr --skip-comments --icsv --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
 mlr --skip-comments --icsv --odkvp cat ./reg-test/input/comments/comments1.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments1.csv
-mlr --pass-comments --icsv --odkvp cat
-# hello
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -942,36 +322,9 @@ mlr --pass-comments --icsv --odkvp cat ./reg-test/input/comments/comments1.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-
----------------------------------------------------------------- input comments2.csv
-cat ./reg-test/input/comments/comments2.csv
-# hello
-a,b,c
-# hi
-1,2,3
-# there
-4,5,6
-# haha
-
-
----------------------------------------------------------------- skip comments2.csv
-mlr --skip-comments --icsv --odkvp cat
-a=1,b=2,c=3
-a=4,b=5,c=6
-
 mlr --skip-comments --icsv --odkvp cat ./reg-test/input/comments/comments2.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments2.csv
-mlr --pass-comments --icsv --odkvp cat
-# hello
-# hi
-a=1,b=2,c=3
-# there
-a=4,b=5,c=6
-# haha
 
 mlr --pass-comments --icsv --odkvp cat ./reg-test/input/comments/comments2.csv
 # hello
@@ -981,41 +334,15 @@ a=1,b=2,c=3
 a=4,b=5,c=6
 # haha
 
-mlr termcvt --lf2crlf
 
-
----------------------------------------------------------------- input comments1-crlf.csv
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
-# hello
-a,b,c
-1,2,3
-4,5,6
-
-
----------------------------------------------------------------- skip comments1-crlf.csv
-mlr --skip-comments --icsv --odkvp cat
+mlr --skip-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
----------------------------------------------------------------- pass comments1-crlf.csv
-mlr --pass-comments --icsv --odkvp cat
+mlr --pass-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.csv
 # hello
 a=1,b=2,c=3
 a=4,b=5,c=6
-
-mlr --pass-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/comments1-crlf.csv
-# hello
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-
-================================================================
-INT64 I/O
 
 mlr --oxtab put $c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b) ./reg-test/input/int64io.dkvp
 a 0x1

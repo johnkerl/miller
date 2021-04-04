@@ -74,6 +74,7 @@ func ReplMain(args []string) int {
 	argc := len(args)
 	argi := 2
 
+	quietStartup := false
 	astPrintMode := ASTPrintNone
 	doWarnings := false
 	options := cliutil.DefaultOptions()
@@ -86,6 +87,9 @@ func ReplMain(args []string) int {
 		if args[argi] == "-h" || args[argi] == "--help" {
 			ReplUsage(replName, os.Stdout, 0)
 
+		} else if args[argi] == "-q" {
+			quietStartup = true
+			argi++
 		} else if args[argi] == "-v" {
 			astPrintMode = ASTPrintIndent
 			argi++
@@ -120,6 +124,7 @@ func ReplMain(args []string) int {
 	repl, err := NewRepl(
 		exeName,
 		replName,
+		quietStartup,
 		astPrintMode,
 		doWarnings,
 		&options,

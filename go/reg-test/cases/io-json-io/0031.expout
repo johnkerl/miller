@@ -1,0 +1,6 @@
+{
+  "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\xyz"
+}
+{
+  "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\\\xyz"
+}

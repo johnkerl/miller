@@ -1,0 +1,12 @@
+x=int,y=int,z=absent,s=int
+x=int,y=empty,z=absent,s=empty
+x=empty,y=int,z=absent,s=empty
+x=empty,y=empty,z=absent,s=empty
+a=1,y=int,x=absent,z=absent,s=empty
+a=1,y=empty,x=absent,z=absent,s=empty
+a=,y=int,x=absent,z=absent,s=empty
+a=,y=empty,x=absent,z=absent,s=empty
+x=int,b=2,y=absent,z=absent,s=empty
+x=int,b=,y=absent,z=absent,s=empty
+x=empty,b=2,y=absent,z=absent,s=empty
+x=empty,b=,y=absent,z=absent,s=empty
