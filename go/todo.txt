@@ -9,26 +9,9 @@ d windows mrpl colors -- ? checking isatty also -- ?
 
 ----------------------------------------------------------------
 * regtest .cmd format:
-  o ... add .stdin option, for <<EOF-ish ...
-    - impl StdinPipe with os.Exec ...
-  o ... or simply support <<EOF ... EOF directly. preferable since then .cmd files are runnable
-    directly (unless on windows)
-  o comment-strip
   o doc re file format ...
   o putenvs ...
   o windows multi-line experiments ...
-* more cases:
-  o mlr_expect_fail handling
-  o striphash
-  o announce
-    -> make these subdirs maybe
-  o mention
-  o EOF
-    ? auto
-    ? manual
-  o multi-line DSL statements
-  o putenv
-  o cat & cp
 
 * reg-test/cases-pending-windows
 * reg-test/cases-pending-go-port
