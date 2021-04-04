@@ -1,0 +1,11 @@
+x hello
+y o
+
+x HELLO
+y DEFAULT
+
+x world
+y o
+
+x WORLD
+y DEFAULT

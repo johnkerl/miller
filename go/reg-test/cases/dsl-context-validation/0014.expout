@@ -1,0 +1,10 @@
+DSL EXPRESSION:
+begin{true}
+
+AST:
+* statement block
+    * begin block
+        * statement block
+            * bare boolean
+                * bool literal "true"
+
