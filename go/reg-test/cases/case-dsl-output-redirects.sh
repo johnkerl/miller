@@ -1,502 +1,210 @@
 # ----------------------------------------------------------------
 mention print
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; print' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; print'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; print > stdout' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; print > stdout'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; print > stderr' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; print > stderr'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; print > ENV["outdir"]."/foo.dat"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; print > ENV["outdir"]."/foo.dat"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; print @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; print @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; print > stdout, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; print > stdout, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; print > stderr, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; print > stderr, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; print > ENV["outdir"]."/foo.dat", @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; print > ENV["outdir"]."/foo.dat", @x'
 
 # ----------------------------------------------------------------
 mention printn
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; printn' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; printn'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; printn > stdout' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; printn > stdout'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; printn > stderr' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; printn > stderr'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; printn > ENV["outdir"]."/foo.dat"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; printn > ENV["outdir"]."/foo.dat"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; printn @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; printn @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; printn > stdout, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; printn > stdout, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; printn > stderr, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; printn > stderr, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; printn > ENV["outdir"]."/foo.dat", @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; printn > ENV["outdir"]."/foo.dat", @x'
 
 # ----------------------------------------------------------------
 mention eprint
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; eprint' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; eprint'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; eprint @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; eprint @x'
 
 # ----------------------------------------------------------------
 mention eprintn
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; eprintn' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; eprintn'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; eprintn @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; eprintn @x'
 
 # ----------------------------------------------------------------
 mention dump
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; dump' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; dump'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; dump > stdout' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; dump > stdout'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; dump > stderr' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; dump > stderr'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; dump > ENV["outdir"]."/foo.dat"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; dump > ENV["outdir"]."/foo.dat"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; dump @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; dump @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; dump > stdout, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; dump > stdout, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; dump > stderr, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; dump > stderr, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; dump > ENV["outdir"]."/foo.dat", @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; dump > ENV["outdir"]."/foo.dat", @x'
 
 # ----------------------------------------------------------------
 mention edump
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; edump' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; edump'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; edump @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; edump @x'
 
 # ----------------------------------------------------------------
 mention tee
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; tee > stdout, $*' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x=1; tee > stdout, $*'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; tee > stderr, $*' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; tee > stderr, $*'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; tee > ENV["outdir"]."/foo.dat", $*' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; tee > ENV["outdir"]."/foo.dat", $*'
 
 # ----------------------------------------------------------------
 mention emitf
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emitf @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; emitf @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; emitf > stdout, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x=1; emitf > stdout, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emitf > stderr, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; emitf > stderr, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emitf > ENV["outdir"]."/foo.dat", @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; emitf > ENV["outdir"]."/foo.dat", @x'
 
 # ----------------------------------------------------------------
 mention emit
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emit @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; emit @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; emit > stdout, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x=1; emit > stdout, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emit > stderr, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; emit > stderr, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emit > ENV["outdir"]."/foo.dat", @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; emit > ENV["outdir"]."/foo.dat", @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; @y=2; emit (@x, @y)' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; @y=2; emit (@x, @y)'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; @y=2; emit > stdout, (@x, @y)' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x=1; @y=2; emit > stdout, (@x, @y)'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; @y=2; emit > stderr, (@x, @y)' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; @y=2; emit > stderr, (@x, @y)'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; @y=2; emit > ENV["outdir"]."/foo.dat", (@x, @y)' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; @y=2; emit > ENV["outdir"]."/foo.dat", (@x, @y)'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; emit @x, "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; emit @x, "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x={"a":1}; emit > stdout, @x, "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x={"a":1}; emit > stdout, @x, "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; emit > stderr, @x, "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; emit > stderr, @x, "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; emit > ENV["outdir"]."/foo.dat", @x, "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; emit > ENV["outdir"]."/foo.dat", @x, "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emit (@x, @y), "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emit (@x, @y), "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x={"a":1}; @y={"a":2}; emit > stdout, (@x, @y), "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x={"a":1}; @y={"a":2}; emit > stdout, (@x, @y), "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emit > stderr, (@x, @y), "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emit > stderr, (@x, @y), "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emit > ENV["outdir"]."/foo.dat", (@x, @y), "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emit > ENV["outdir"]."/foo.dat", (@x, @y), "a"'
 
 # ----------------------------------------------------------------
 mention emitp
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emitp @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; emitp @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; emitp > stdout, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x=1; emitp > stdout, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emitp > stderr, @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; emitp > stderr, @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; emitp > ENV["outdir"]."/foo.dat", @x' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; emitp > ENV["outdir"]."/foo.dat", @x'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; @y=2; emitp (@x, @y)' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; @y=2; emitp (@x, @y)'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x=1; @y=2; emitp > stdout, (@x, @y)' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x=1; @y=2; emitp > stdout, (@x, @y)'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; @y=2; emitp > stderr, (@x, @y)' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x=1; @y=2; emitp > stderr, (@x, @y)'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x=1; @y=2; emitp > ENV["outdir"]."/foo.dat", (@x, @y)' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x=1; @y=2; emitp > ENV["outdir"]."/foo.dat", (@x, @y)'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; emitp @x, "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; emitp @x, "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x={"a":1}; emitp > stdout, @x, "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x={"a":1}; emitp > stdout, @x, "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; emitp > stderr, @x, "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; emitp > stderr, @x, "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; emitp > ENV["outdir"]."/foo.dat", @x, "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; emitp > ENV["outdir"]."/foo.dat", @x, "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emitp (@x, @y), "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emitp (@x, @y), "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
 # Do either 'put -q' (no record-stream output) or use --opprint (record-stream
 # output is all at end of stream) since '> stdout' redirection decouples
 # record-stream output from print output, resulting in non-deterministic
 # output, which makes regtests fail.
-run_mlr_externally_redirected --from $indir/2.dkvp put -q '@x={"a":1}; @y={"a":2}; emitp > stdout, (@x, @y), "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put -q '@x={"a":1}; @y={"a":2}; emitp > stdout, (@x, @y), "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emitp > stderr, (@x, @y), "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emitp > stderr, (@x, @y), "a"'
 
-rm -f $outdir/redirect-out.txt $outdir/redirect-err.txt $outdir/foo.dat
-run_mlr_externally_redirected --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emitp > ENV["outdir"]."/foo.dat", (@x, @y), "a"' \
-  1> $outdir/redirect-out.txt 2> $outdir/redirect-err.txt
-run_cat $outdir/redirect-out.txt
-run_cat $outdir/redirect-err.txt
-run_cat $outdir/foo.dat
+run_mlr --from $indir/2.dkvp put '@x={"a":1}; @y={"a":2}; emitp > ENV["outdir"]."/foo.dat", (@x, @y), "a"'
 
 # ----------------------------------------------------------------
 # Test separate output formats for mlr main and mlr put.

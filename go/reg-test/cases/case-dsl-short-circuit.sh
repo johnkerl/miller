@@ -29,10 +29,7 @@ run_mlr --from $indir/s.dkvp --idkvp --opprint put '$z = $nonesuch ?? 999'
 run_mlr --from $indir/s.dkvp --idkvp --opprint put '$y ??= 999'
 run_mlr --from $indir/s.dkvp --idkvp --opprint put '$z ??= 999'
 
-run_mlr --ojson put '
-  $a = $a ??  "filla";
-  $b = $b ??? "fillb"
-' <<EOF
+run_mlr --ojson put '$a = $a ??  "filla"; $b = $b ??? "fillb"' <<EOF
 a=1,b=2,c=3
 a=,b=,c=3
 x=7,y=8,z=9
