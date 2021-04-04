@@ -36,7 +36,8 @@ while true
     cmd_file_line = cmd_file_line.sub("mlr_expect_fail", "mlr")
     should_fail = true
   else
-    die "$us: cannot handle cmd_file_line: #{cmd_file_line}"
+    $stderr.puts "$us: cannot handle cmd_file_line: #{cmd_file_line}"
+    exit 1
   end
   cmd_file_line = cmd_file_line.gsub("\$indir", "reg-test/input")
 
@@ -50,7 +51,8 @@ while true
       begin
         here_doc_line = $stdin.readline
       rescue EOFError
-        die "Premature EOF"
+        $stderr.puts "Premature EOF"
+        exit 1
       end
       if here_doc_line =~ /^EOF$/
         break
