@@ -1,1 +1,1 @@
-mlr repl -v ./reg-test/cases/repl/0013.input
+mlr repl -q -v ./reg-test/cases/repl/0013.input
