@@ -2,18 +2,17 @@ package regtest
 
 import (
 	"bytes"
-	"errors"
 	"os/exec"
 	"strings"
 
-	shellquote "github.com/kballard/go-shellquote"
+	"miller/src/platform"
 )
 
 // RunMillerCommand runs a string like 'mlr cat foo.dat', with specified mlr
 // executable name to be interpolated into the args[0] slot. This allows us to
 // compare different versions of Miller using the same test data.
 //
-// Note the argsString could have left the exe name off entirely, like 'cat
+// Note the argsString could have left the exe name off entirely, like 'tac
 // foo.dat', but it's desirable for debugging to have the command-files be
 // directly runnable as-is.
 func RunMillerCommand(
@@ -28,22 +27,15 @@ func RunMillerCommand(
 	argsString = strings.TrimRight(argsString, "\n")
 	argsString = strings.TrimRight(argsString, "\r")
 
-	argsArray, err := shellquote.Split(argsString)
-	if err != nil {
-		return "", "", -1, err
-	}
-	// Given file contents 'mlr cat foo.dat' and millerExe 'mlr-previous',
-	// contents split to ['mlr', 'cat', 'foo.dat']. We need a non-empty array
-	// in order to overwrite args[0] from 'mlr' to 'mlr-previous'.
-	if len(argsArray) < 1 {
-		return "", "", -1, errors.New(
-			"Empty command in regression-test input",
-		)
+	// Insert the desired Miller executable.
+	if strings.HasPrefix(argsString, "mlr ") {
+		argsString = strings.Replace(argsString, "mlr", millerExe, 1)
 	}
 
-	argsArray = argsArray[1:] // everything after the Miller-executable name.
+	// This is bash -c ... or cmd /c ...
+	shellRunName, shellRunArgs := platform.GetShellRunArray(argsString)
 
-	cmd := exec.Command(millerExe, argsArray...)
+	cmd := exec.Command(shellRunName, shellRunArgs...)
 
 	var stdoutBuffer bytes.Buffer
 	var stderrBuffer bytes.Buffer
@@ -51,7 +43,7 @@ func RunMillerCommand(
 	cmd.Stdout = &stdoutBuffer
 	cmd.Stderr = &stderrBuffer
 
-	err = cmd.Run()
+	err := cmd.Run()
 
 	exitCode = 0
 	stdout = stdoutBuffer.String()

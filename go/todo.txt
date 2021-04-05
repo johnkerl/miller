@@ -8,6 +8,10 @@ d windows mrpl colors -- ? checking isatty also -- ?
 * PR-template etc checklists
 
 ----------------------------------------------------------------
+? mlr repl -q ?
+* line-endings back into *.cmd et al.
+  - fixups
+  - u/upp generator
 * regtest .cmd format:
   o doc re file format ...
   o putenvs ...
@@ -17,6 +21,8 @@ d windows mrpl colors -- ? checking isatty also -- ?
 * reg-test/cases-pending-go-port
 * convert u/rr -o
 * convert u/rr -n
+
+* build-go -- miscs -> build-dsl, & checkins to git ?
 
 ! upload artifacts
   https://github.com/actions/upload-artifact
