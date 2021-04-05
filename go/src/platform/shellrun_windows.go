@@ -2,7 +2,7 @@
 // Wraps 'bash -c foo bar' or 'cmd /c foo bar', nominally for regression-testing.
 // ================================================================
 
-// +build !windows
+// +build windows
 
 package platform
 
