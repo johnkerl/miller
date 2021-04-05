@@ -29,6 +29,64 @@ d windows mrpl colors -- ? checking isatty also -- ?
   https://forum.nim-lang.org/t/6371
 ----------------------------------------------------------------
 
+----------------------------------------------------------------
+* cases
+  '$x=1'
+  '$x = 1'
+  '$x = "aaa"'
+  '$x = "a \"a\" a"'
+
+* sketch:
+  o take the os.Args and batch them by state-machine on left-sqout .. right-sqout
+  o get the raw CL and shellquote.split
+  o if length-mismatch: abend or passthru ...
+  o rest: same
+
+windows split bug:
+
+  C:\miller\go>mlr --from ..\data\small put '$z = $x + $y'
+
+  OS ARGS:
+  [0] mlr
+  [1] --from
+  [2] ..\data\small
+  [3] put
+  [4] '$z
+  [5] =
+  [6] $x
+  [7] +
+  [8] $y'
+
+  RAW CL:
+  mlr  --from ..\data\small put '$z = $x + $y'
+
+  SPLIT ARGS:
+  [0] mlr
+  [1] --from
+  [2] ..datasmall  <----- do not want to keep
+  [3] put
+  [4] $z = $x + $y <------ want to keep '...' delineation
+
+  MOD ARGS:
+  [0] mlr
+  [1] --from
+  [2] ..\data\small
+  [3] put
+  [4] '$z
+  [5] =
+  [6] $x
+  [7] +
+  [8] $y'
+
+  BUT REALLY WANTED:
+  [0] mlr
+  [1] --from
+  [2] ..\data\small
+  [3] put
+  [4] '$z = $x + $y'
+
+----------------------------------------------------------------
+
 ! readthedocs -- find out what's necessary to get per-version history
 
 * regexes
