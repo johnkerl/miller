@@ -30,7 +30,6 @@ import (
 // This function makes it possible to say the former, or the latter.
 
 func GetArgs() []string {
-
 	// If this code is running in MSYS2: MSYS2 does the right thing already and
 	// we won't try to improve on that.  This is true regardless of whether we
 	// were compiled inside MSYS2 or outside; what matters is whether we're
@@ -40,6 +39,12 @@ func GetArgs() []string {
 	if msystem != "" {
 		return os.Args
 	}
+
+	printArgs(os.Args, "ORIGINAL")
+
+	// xxx err
+	regrouped, _ := regroupForSingleQuote(os.Args)
+	printArgs(regrouped, "REGROUPED")
 
 	// Things on the command line include: args[0], which is fine as-is;
 	// various flags like -x or --xyz which are fine as-is; DSL expressions
@@ -61,5 +66,61 @@ func GetArgs() []string {
 			os.Args[i] = newArgs[i]
 		}
 	}
+	printArgs(os.Args, "NEW")
 	return os.Args
+}
+
+func printArgs(args []string, description string) {
+	fmt.Printf("%s:\n", description)
+	for i, arg := range args {
+		fmt.Printf("%d %s\n", i, arg)
+	}
+	fmt.Println()
+}
+
+func regroupForSingleQuote(inargs []string) ([]string, error) {
+	outargs := make([]string, 0, len(inargs))
+	inside := false
+	var concat string
+
+	// TODO: comment
+	// TODO: UT this all
+	for _, inarg := range inargs {
+		if !inside {
+			if !strings.HasPrefix(inarg, "'") {
+				// Current arg is not single-quoted, and not inside a single-quoted region
+				outargs = append(outargs, inarg)
+
+			} else {
+
+				// Start of single-quoted region
+				if strings.HasSuffix(inarg, "'") {
+					// Start and end of single-quoted region, like '$y=$x'
+					outargs = append(outargs, inarg)
+				} else {
+					// Start but not end of single-quoted region, like '$y=
+					inside = true
+					concat = inarg
+				}
+
+			}
+
+		} else {
+			if !strings.HasSuffix(inarg, "'") {
+				// Continuation of single-quoted region
+				concat = concat + " " + inarg
+
+			} else {
+				// End of single-quoted region
+				inside = false
+				concat = concat + " " + inarg
+				outargs = append(outargs, concat)
+				concat = ""
+			}
+		}
+	}
+
+	// xxx err if inside
+
+	return outargs, nil
 }
