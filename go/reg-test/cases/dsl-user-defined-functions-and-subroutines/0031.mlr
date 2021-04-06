@@ -1,0 +1,33 @@
+    func f(x) {
+        return x**2
+    }
+    func g(y) {
+        return y+1
+    }
+    subr s(a,b,c) {
+        print a.b.c
+    }
+    begin {
+        @a = 0;
+        var ell = 1;
+        emit ell;
+    }
+    end {
+        emit @a;
+        var emm = 2;
+        emit emm;
+    }
+    @a += 1;
+    begin {
+        @b = 0;
+        @c = 0;
+        emit ell;;
+    }
+    @b += 2;
+    @c += 3;
+    end {
+        emit @b;
+        emit @c;
+        emit emm;
+    }
+

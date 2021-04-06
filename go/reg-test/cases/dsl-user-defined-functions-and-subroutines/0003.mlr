@@ -1,0 +1,11 @@
+  func f(x,y,z) {
+    return x + y + z
+  }
+  subr s(a,b) {
+      $[a] = b;
+      return;
+      $DID = "YES";
+  }
+  $o = f($x, $y, $i);
+  call s("W", NR);
+
