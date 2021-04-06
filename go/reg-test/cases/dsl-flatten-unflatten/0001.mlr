@@ -1,0 +1,8 @@
+  map o = {};
+  for (k, v in $*) {
+    for (k2, v2 in flatten(k, ".", v)) {
+      o[k2] = v2
+    }
+  }
+  $* = o;
+
