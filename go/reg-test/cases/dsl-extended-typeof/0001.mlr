@@ -1,5 +1,3 @@
-
-mlr --from ./reg-test/input/xyz2 --oxtab put 
   a = {1:2, 3:4};
   b = {1: {2:3, 4:5}};
   @c = {1:2, 3:4};
@@ -27,46 +25,4 @@ mlr --from ./reg-test/input/xyz2 --oxtab put
   $tsa = typeof($a);
   $tsx = typeof($x);
   $ts  = typeof($*);
-
-x   3
-y   4
-z   5
-ta  map
-ta1 int
-ta7 absent
-tb  map
-tb1 map
-tb7 absent
-tc  map
-tc1 int
-tc7 absent
-td  map
-td1 map
-td7 absent
-te1 int
-te2 map
-tsa absent
-tsx int
-ts  map
-
-x   6
-y   7
-u   8
-ta  map
-ta1 int
-ta7 absent
-tb  map
-tb1 map
-tb7 absent
-tc  map
-tc1 int
-tc7 absent
-td  map
-td1 map
-td7 absent
-te1 int
-te2 map
-tsa absent
-tsx int
-ts  map
 
