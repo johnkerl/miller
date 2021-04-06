@@ -1,0 +1,7 @@
+  ab = $a . "_" . $b;
+  xy = $x . "_" . $y;
+  for (k, v in {ab : {"foo": xy}}) {
+    print "k is " . k . "  v is ";
+    dump v;
+  }
+

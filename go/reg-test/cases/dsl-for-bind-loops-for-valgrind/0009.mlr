@@ -1,0 +1,9 @@
+  ab = $a . "_" . $b;
+  xy = $x . "_" . $y;
+  map o = {};
+  o[ab] = {"foo": xy};
+  for (k, v in o) {
+    print "k is " . k . "  v is ";
+    dump v;
+  }
+

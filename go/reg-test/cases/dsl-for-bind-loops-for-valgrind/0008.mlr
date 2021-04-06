@@ -1,0 +1,9 @@
+  func f(a, b, x, y): map {
+    ab = $a . "_" . $b;
+    xy = $x . "_" . $y;
+    return {ab : xy};
+  }
+  for (k, v in f($a, $b, $x, $y)) {
+    print "k is " . k . "  v is " . v;
+  }
+

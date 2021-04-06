@@ -1,0 +1,8 @@
+  ab = $a . "_" . $b;
+  xy = $x . "_" . $y;
+  map o = {};
+  o[ab] = xy;
+  for (k in o) {
+    print "k is " . k;
+  }
+
