@@ -12,6 +12,9 @@ if [ $# -ge 1 -a "$1" = "-c" ]; then
   mlr="../c/mlr"
   newcasesdir="./reg-test/cases-pending-go-port"
   shift
+elif [ $# -ge 1 -a "$1" = "-w" ]; then
+  newcasesdir="./reg-test/cases-pending-windows"
+  shift
 fi
 
 if [ $# -ne 1 ]; then
