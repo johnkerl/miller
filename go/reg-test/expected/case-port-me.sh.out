@@ -1,0 +1,13 @@
+
+mlr --from ./reg-test/input/abixy put -q ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a
+[ZYX]=[CBA1] a is pan
+[ZYX]=[CBA1] a is eks
+[ZYX]=[CBA1] a is wye
+[ZYX]=[CBA1] a is eks
+[ZYX]=[CBA1] a is wye
+[ZYX]=[CBA1] a is zee
+[ZYX]=[CBA1] a is eks
+[ZYX]=[CBA1] a is zee
+[ZYX]=[CBA1] a is hat
+[ZYX]=[CBA1] a is pan
+
