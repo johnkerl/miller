@@ -380,7 +380,8 @@ end {
   emitp (@a[1][2], @b[9][2]), "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emitp (@a[9], @b[5]), "t", "u"
