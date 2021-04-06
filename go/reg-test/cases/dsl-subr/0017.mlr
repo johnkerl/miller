@@ -1,0 +1,11 @@
+    subr s(n) {
+        print "n = " . n;
+        if (is_numeric(n)) {
+            if (n > 0) {
+                call s(n-1)
+            }
+        }
+    }
+    print "";
+    call s(NR)
+

@@ -1,0 +1,10 @@
+DSL EXPRESSION:
+subr s() {}; call s()
+
+AST:
+* statement block
+    * subroutine definition "s"
+        * parameter list
+        * statement block
+    * subroutine callsite "s"
+
