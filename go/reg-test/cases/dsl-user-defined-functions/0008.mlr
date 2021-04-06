@@ -1,0 +1,10 @@
+  func f(n) {
+    return n+1;
+  }
+  $o1 = f(NR);
+  $o2 = f(f(NR));
+  $o3 = f(f(f(NR)));
+  $o4 = f(f(f(f(NR))));
+  $o5 = f(f(f(f(f(NR)))));
+  $o6 = f(f(f(f(f(f(NR))))));
+

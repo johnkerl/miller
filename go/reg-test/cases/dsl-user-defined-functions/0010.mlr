@@ -1,0 +1,15 @@
+  func f(n) {
+    str sn = string(n); # for map keys
+    if (is_present(@fcache[sn])) {
+      return @fcache[sn]
+    } else {
+      num rv = 1;
+      if (n >= 2) {
+        rv = f(n-1) + f(n-2)
+      }
+      @fcache[sn] = rv;
+      return rv
+    }
+  }
+  $o = f(NR)
+
