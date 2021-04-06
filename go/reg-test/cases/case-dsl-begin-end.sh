@@ -1,3 +1,5 @@
+# TODO: pending bugfix
+
 run_mlr --from $indir/s.dkvp put -q '@sum += $x; dump'
 run_mlr --from $indir/s.dkvp put -q '@sum[$a] += $x; dump'
 run_mlr --from $indir/s.dkvp put -q 'begin{@sum=0} @sum += $x; end{dump}'

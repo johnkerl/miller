@@ -1,3 +1,7 @@
+# TODO:
+# * regtest-v2 -- pending .env
+# * windows -- pending localtime impls
+
 # See also the system date command:
 # export TZ=America/Sao_Paulo; date -j -f "%Y-%m-%d %H:%M:%S %Z" "2017-02-19 00:30:00" +%s
 # export TZ=America/Sao_Paulo; date -r  86400 +"%Y-%m-%d %H:%M:%S %Z"

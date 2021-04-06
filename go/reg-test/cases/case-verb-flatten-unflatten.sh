@@ -1,3 +1,5 @@
+# TODO: git-checkin the intermediate(s)
+
 run_mlr --ijson --oxtab flatten      $indir/flatten-input-2.json
 run_mlr --ijson --oxtab flatten -s : $indir/flatten-input-2.json
 run_mlr --ijson --oxtab flatten -s . $indir/flatten-input-2.json

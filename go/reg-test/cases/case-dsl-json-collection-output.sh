@@ -1,3 +1,4 @@
+# TODO: maybe just git-checkin the intermediates
 
 run_mlr --json cat <<EOF
 {"x":1}

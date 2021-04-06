@@ -1,3 +1,5 @@
+# TODO: maybe just git-checkin the intermediates
+
 run_mlr --ijson --ojson --from $indir/flatten-input-2.json put '$req=json_stringify($req)'
 run_mlr --ijson --ojson --from $indir/flatten-input-2.json put '$req=json_stringify($req, false)'
 run_mlr --ijson --ojson --from $indir/flatten-input-2.json put '$req=json_stringify($req, true)'
