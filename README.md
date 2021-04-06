@@ -4,11 +4,13 @@
 
 # Build status
 
-[![Linux build status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
-[![Windows build status](https://ci.appveyor.com/api/projects/status/github/johnkerl/miller?branch=master&svg=true)](https://ci.appveyor.com/project/johnkerl/miller)
-[![Go-port multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)
-[![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
-[![Docs](https://readthedocs.org/projects/miller/badge/?version=latest)](https://miller.readthedocs.io/en/latest/?badge=latest)
+![Linux build status](https://travis-ci.org/johnkerl/miller.svg?branch=master)
+![Windows build status](https://ci.appveyor.com/api/projects/status/github/johnkerl/miller?branch=master&svg=true)
+![Go-port multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)
+
+[License: BSD2](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
+
+[Docs](https://miller.readthedocs.io/en/latest/?badge=latest)
 
 # Community
 
