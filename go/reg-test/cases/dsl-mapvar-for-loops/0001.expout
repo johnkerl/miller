@@ -1,18 +1,3 @@
-
-mlr --from ./reg-test/input/abixy put -q 
-  func f() {
-    return {
-      "a:".$a: $i,
-      "b:".$b: $y,
-      NR: NF,
-    }
-  }
-  for (k,v in f()) {
-    print "k=".k;
-    print "v=".v;
-  }
-  print
-
 k=a:pan
 v=1
 k=b:pan
@@ -82,5 +67,4 @@ k=b:wye
 v=0.9526183602969864
 k=10
 v=5
-
 
