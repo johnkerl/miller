@@ -1,0 +1,11 @@
+DSL EXPRESSION:
+begin{@x=$y}
+
+AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * direct field value "y"
+

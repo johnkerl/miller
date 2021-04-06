@@ -1,0 +1,19 @@
+a   pan
+pan 1
+wye 1
+
+a   eks
+pan 1
+wye 1
+zee 1
+
+a   wye
+wye 1
+pan 1
+
+a   zee
+pan 1
+wye 1
+
+a   hat
+wye 1

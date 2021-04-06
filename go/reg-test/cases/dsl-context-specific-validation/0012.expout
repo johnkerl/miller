@@ -1,0 +1,10 @@
+DSL EXPRESSION:
+end{unset $x}
+
+AST:
+* statement block
+    * end block
+        * statement block
+            * unset "unset"
+                * direct field value "x"
+

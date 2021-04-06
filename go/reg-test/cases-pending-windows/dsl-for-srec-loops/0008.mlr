@@ -1,0 +1,6 @@
+  $sum = float(0);
+  for(k,v in $*) {
+    if (k =~ "^[xy]$") {
+      $sum += float($[k])
+    }
+  }

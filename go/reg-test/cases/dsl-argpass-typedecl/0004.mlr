@@ -1,0 +1,4 @@
+  func f(num i): int {
+    return i+3.45;
+  }
+  $c = f($i);

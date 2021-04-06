@@ -1,0 +1,35 @@
+  for (k,v in $*) {
+      @logging1[NR][k] = v;
+      if (k == "x") {
+          break;
+      }
+  }
+
+  for (k,v in $*) {
+      if (k == "x") {
+          break;
+      }
+      @logging2[NR][k] = v;
+  }
+
+  for (k,v in $*) {
+      @logging3[NR][k] = v;
+      if (k == "x") {
+          continue;
+      }
+  }
+
+  for (k,v in $*) {
+      if (k == "x") {
+          continue;
+      }
+      @logging4[NR][k] = v;
+  }
+
+  end {
+    emitp @logging1, "NR", "k";
+    emitp @logging2, "NR", "k";
+    emitp @logging3, "NR", "k";
+    emitp @logging4, "NR", "k"
+  }
+

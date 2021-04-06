@@ -1,0 +1,11 @@
+DSL EXPRESSION:
+begin{$x=1}
+
+AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct field value "x"
+                * int literal "1"
+

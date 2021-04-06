@@ -1,0 +1,13 @@
+  $j = NR;
+  do {
+    $k = NR;
+    $j += 1;
+    do {
+      $k += 1;
+      if (NR == 2 || NR == 8) {
+        continue;
+      }
+      $k += 10000;
+    } while ($k < 7);
+  } while ($j < 4);
+

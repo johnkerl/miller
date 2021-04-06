@@ -1,0 +1,9 @@
+  func f(int x): var {
+    if (NR==2) {
+      return 2
+    } else {
+      return {}
+    }
+  }
+  $y=f($i)
+

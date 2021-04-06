@@ -1,0 +1,9 @@
+  func f(x,y,z) {
+    return # func must return value
+  }
+  subr s(a,b) {
+      $[a] = b;
+  }
+  $o = f($x, $y, $i);
+  call s("W", NR);
+

@@ -1,0 +1,5 @@
+  func f(n) {
+    return n - 1
+  }
+  f(NR) == 5
+

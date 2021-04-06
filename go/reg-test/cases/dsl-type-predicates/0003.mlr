@@ -1,0 +1,20 @@
+  @is_absent_i       = is_absent       ($i);
+  @is_present_i      = is_present      ($i);
+  @is_empty_i        = is_empty        ($i);
+  @is_not_empty_i    = is_not_empty    ($i);
+  @is_null_i         = is_null         ($i);
+  @is_not_null_i     = is_not_null     ($i);
+  @is_bool_i         = is_bool         ($i);
+  @is_boolean_i      = is_boolean      ($i);
+  @is_float_i        = is_float        ($i);
+  @is_int_i          = is_int          ($i);
+  @is_numeric_i      = is_numeric      ($i);
+  @is_string_i       = is_string       ($i);
+  @is_map_i          = is_map          ($i);
+  @is_not_map_i      = is_not_map      ($i);
+  @is_empty_map_i    = is_empty_map    ($i);
+  @is_nonempty_map_i = is_nonempty_map ($i);
+  @is_array_i        = is_array        ($i);
+  @is_not_array_i    = is_not_array    ($i);
+  dump;
+

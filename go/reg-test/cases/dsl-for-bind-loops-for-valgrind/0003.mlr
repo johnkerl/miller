@@ -1,0 +1,6 @@
+  ab = $a . "_" . $b;
+  xy = $x . "_" . $y;
+  for (k in {ab : xy}) {
+    print "k is " . k;
+  }
+

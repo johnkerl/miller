@@ -1,0 +1,11 @@
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        if (k2 == "i") {
+          continue;
+        }
+        @output[k1][k2] = v
+    }
+    emit @output, "NR", "name"
+  }
+

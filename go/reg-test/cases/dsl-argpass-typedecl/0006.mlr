@@ -1,0 +1,4 @@
+  subr s(int i) {
+    print i+3;
+  }
+  call s($i);

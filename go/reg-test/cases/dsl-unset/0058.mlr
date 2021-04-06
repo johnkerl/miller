@@ -1,0 +1,11 @@
+  v = {
+    "a": ["u", "v"],
+    "b": ["w", "x"],
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v;
+    dump v;
+  }
+

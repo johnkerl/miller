@@ -1,0 +1,20 @@
+{
+  "is_absent_dollar_star": false,
+  "is_present_dollar_star": true,
+  "is_empty_dollar_star": false,
+  "is_not_empty_dollar_star": true,
+  "is_null_dollar_star": false,
+  "is_not_null_dollar_star": true,
+  "is_bool_dollar_star": false,
+  "is_boolean_dollar_star": false,
+  "is_float_dollar_star": false,
+  "is_int_dollar_star": false,
+  "is_numeric_dollar_star": false,
+  "is_string_dollar_star": false,
+  "is_map_dollar_star": true,
+  "is_not_map_dollar_star": false,
+  "is_empty_map_dollar_star": false,
+  "is_nonempty_map_dollar_star": true,
+  "is_array_dollar_star": false,
+  "is_not_array_dollar_star": true
+}

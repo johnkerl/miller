@@ -1,0 +1,21 @@
+  $a = "";
+  @is_absent_empty       = is_absent       ($a);
+  @is_present_empty      = is_present      ($a);
+  @is_empty_empty        = is_empty        ($a);
+  @is_not_empty_empty    = is_not_empty    ($a);
+  @is_null_empty         = is_null         ($a);
+  @is_not_null_empty     = is_not_null     ($a);
+  @is_bool_empty         = is_bool         ($a);
+  @is_boolean_empty      = is_boolean      ($a);
+  @is_float_empty        = is_float        ($a);
+  @is_int_empty          = is_int          ($a);
+  @is_numeric_empty      = is_numeric      ($a);
+  @is_string_empty       = is_string       ($a);
+  @is_map_empty          = is_map          ($a);
+  @is_not_map_empty      = is_not_map      ($a);
+  @is_empty_map_empty    = is_empty_map    ($a);
+  @is_nonempty_map_empty = is_nonempty_map ($a);
+  @is_array_empty        = is_array        ($a);
+  @is_not_array_empty    = is_not_array    ($a);
+  dump;
+

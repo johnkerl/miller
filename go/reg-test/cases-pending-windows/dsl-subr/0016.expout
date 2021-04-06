@@ -1,0 +1,48 @@
+DSL EXPRESSION:
+  func s(x) {
+    return x*2;
+  }
+  subr s(a) {
+    print "HELLO, ".a."!"
+  }
+  print s(NR);
+  call s("WORLD");
+
+
+
+AST:
+* statement block
+    * function definition "s"
+        * parameter list
+            * parameter
+                * parameter name "x"
+        * statement block
+            * return "return"
+                * operator "*"
+                    * local variable "x"
+                    * int literal "2"
+    * subroutine definition "s"
+        * parameter list
+            * parameter
+                * parameter name "a"
+        * statement block
+            * print statement "print"
+                * function callsite
+                    * operator "."
+                        * operator "."
+                            * string literal "HELLO, "
+                            * local variable "a"
+                        * string literal "!"
+                * no-op
+    * print statement "print"
+        * function callsite
+            * function callsite "s"
+                * context variable "NR"
+        * no-op
+    * subroutine callsite "s"
+        * string literal "WORLD"
+
+2
+HELLO, WORLD!
+4
+HELLO, WORLD!

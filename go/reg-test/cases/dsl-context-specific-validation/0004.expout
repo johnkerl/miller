@@ -1,0 +1,14 @@
+DSL EXPRESSION:
+true{end{@x=1}}
+
+AST:
+* statement block
+    * cond block
+        * bool literal "true"
+        * statement block
+            * end block
+                * statement block
+                    * assignment "="
+                        * direct oosvar value "x"
+                        * int literal "1"
+

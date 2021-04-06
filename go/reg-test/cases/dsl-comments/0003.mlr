@@ -1,0 +1,4 @@
+  $s = "here is a pound#sign"; # but this is a comment
+  #$t = 2;
+  $u = 3;
+

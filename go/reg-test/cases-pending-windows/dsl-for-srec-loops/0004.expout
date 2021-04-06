@@ -1,0 +1,33 @@
+DSL EXPRESSION:
+for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR
+
+AST:
+* statement block
+    * double-variable for-loop "for"
+        * local variable "k"
+        * local variable "v"
+        * full record "$*"
+        * statement block
+            * if-chain
+                * if-item "if"
+                    * operator "!="
+                        * local variable "k"
+                        * string literal "x"
+                    * statement block
+                        * unset "unset"
+                            * indirect field value "$[]"
+                                * local variable "k"
+    * assignment "="
+        * direct field value "j"
+        * context variable "NR"
+
+x=0.3467901443380824,j=1
+x=0.7586799647899636,j=2
+x=0.20460330576630303,j=3
+x=0.38139939387114097,j=4
+x=0.5732889198020006,j=5
+x=0.5271261600918548,j=6
+x=0.6117840605678454,j=7
+x=0.5985540091064224,j=8
+x=0.03144187646093577,j=9
+x=0.5026260055412137,j=10

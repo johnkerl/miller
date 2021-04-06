@@ -1,0 +1,5 @@
+  begin {
+    @avoid = 3
+  }
+  NR != @avoid
+

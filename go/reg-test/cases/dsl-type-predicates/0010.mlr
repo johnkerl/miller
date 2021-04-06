@@ -1,0 +1,21 @@
+  v = [1,2,3];
+  @is_absent_array_in_bounds       = is_absent       (v[1]);
+  @is_present_array_in_bounds      = is_present      (v[1]);
+  @is_empty_array_in_bounds        = is_empty        (v[1]);
+  @is_not_empty_array_in_bounds    = is_not_empty    (v[1]);
+  @is_null_array_in_bounds         = is_null         (v[1]);
+  @is_not_null_array_in_bounds     = is_not_null     (v[1]);
+  @is_bool_array_in_bounds         = is_bool         (v[1]);
+  @is_boolean_array_in_bounds      = is_boolean      (v[1]);
+  @is_float_array_in_bounds        = is_float        (v[1]);
+  @is_int_array_in_bounds          = is_int          (v[1]);
+  @is_numeric_array_in_bounds      = is_numeric      (v[1]);
+  @is_string_array_in_bounds       = is_string       (v[1]);
+  @is_map_array_in_bounds          = is_map          (v[1]);
+  @is_not_map_array_in_bounds      = is_not_map      (v[1]);
+  @is_empty_map_array_in_bounds    = is_empty_map    (v[1]);
+  @is_nonempty_map_array_in_bounds = is_nonempty_map (v[1]);
+  @is_array_in_bounds_array        = is_array        (v[1]);
+  @is_not_array_in_bounds_array    = is_not_array    (v[1]);
+  dump;
+

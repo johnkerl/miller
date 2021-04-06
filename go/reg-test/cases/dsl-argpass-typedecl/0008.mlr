@@ -1,0 +1,5 @@
+  subr s(num i) {
+    i = "a";
+    print 2;
+  }
+  call s($x);

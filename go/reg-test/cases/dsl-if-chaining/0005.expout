@@ -1,0 +1,115 @@
+DSL EXPRESSION:
+  if (NR == 28) {
+    $x = 29;
+    $y = 30
+  } elif (NR == 31) {
+    $x = 32;
+    $y = 33
+  } elif (NR == 34) {
+    $x = 35;
+    $y = 36
+  } elif (NR == 37) {
+    $x = 38;
+    $y = 39
+  } else {
+    $x = 1040;
+    $y = 1041
+  }
+
+
+AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "28"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "29"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "30"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "31"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "32"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "33"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "34"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "35"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "36"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "37"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "38"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "39"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "1040"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "1041"
+
+i=1,x=1040,y=1041
+i=2,x=1040,y=1041
+i=3,x=1040,y=1041
+i=4,x=1040,y=1041
+i=5,x=1040,y=1041
+i=6,x=1040,y=1041
+i=7,x=1040,y=1041
+i=8,x=1040,y=1041
+i=9,x=1040,y=1041
+i=10,x=1040,y=1041
+i=11,x=1040,y=1041
+i=12,x=1040,y=1041
+i=13,x=1040,y=1041
+i=14,x=1040,y=1041
+i=15,x=1040,y=1041
+i=16,x=1040,y=1041
+i=17,x=1040,y=1041
+i=18,x=1040,y=1041
+i=19,x=1040,y=1041
+i=20,x=1040,y=1041
+i=21,x=1040,y=1041
+i=22,x=1040,y=1041
+i=23,x=1040,y=1041
+i=24,x=1040,y=1041
+i=25,x=1040,y=1041
+i=26,x=1040,y=1041
+i=27,x=1040,y=1041
+i=28,x=29,y=30
+i=29,x=1040,y=1041
+i=30,x=1040,y=1041
+i=31,x=32,y=33
+i=32,x=1040,y=1041
+i=33,x=1040,y=1041
+i=34,x=35,y=36
+i=35,x=1040,y=1041
+i=36,x=1040,y=1041
+i=37,x=38,y=39
+i=38,x=1040,y=1041
+i=39,x=1040,y=1041
+i=40,x=1040,y=1041

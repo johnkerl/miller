@@ -1,0 +1,20 @@
+  @is_absent_nonesuch       = is_absent       ($nonesuch);
+  @is_present_nonesuch      = is_present      ($nonesuch);
+  @is_empty_nonesuch        = is_empty        ($nonesuch);
+  @is_not_empty_nonesuch    = is_not_empty    ($nonesuch);
+  @is_null_nonesuch         = is_null         ($nonesuch);
+  @is_not_null_nonesuch     = is_not_null     ($nonesuch);
+  @is_bool_nonesuch         = is_bool         ($nonesuch);
+  @is_boolean_nonesuch      = is_boolean      ($nonesuch);
+  @is_float_nonesuch        = is_float        ($nonesuch);
+  @is_int_nonesuch          = is_int          ($nonesuch);
+  @is_numeric_nonesuch      = is_numeric      ($nonesuch);
+  @is_string_nonesuch       = is_string       ($nonesuch);
+  @is_map_nonesuch          = is_map          ($nonesuch);
+  @is_not_map_nonesuch      = is_not_map      ($nonesuch);
+  @is_empty_map_nonesuch    = is_empty_map    ($nonesuch);
+  @is_nonempty_map_nonesuch = is_nonempty_map ($nonesuch);
+  @is_array_nonesuch        = is_array        ($nonesuch);
+  @is_not_array_nonesuch    = is_not_array    ($nonesuch);
+  dump;
+

@@ -1,0 +1,10 @@
+  for (k,v in $*) {
+      @logging3[NR][k] = v;
+      if (k == "x") {
+          continue;
+      }
+  }
+  end {
+    emitp @logging3, "NR", "k";
+  }
+

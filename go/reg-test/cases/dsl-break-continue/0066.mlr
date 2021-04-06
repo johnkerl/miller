@@ -1,0 +1,16 @@
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        if (k1 != 2) {
+          continue
+        }
+        for ((k3, k4), v in @logging) {
+          if (k3 != 4) {
+            continue
+          }
+          @output[k1][k2][k3][k4] = v;
+        }
+    }
+    emit @output, "NR1", "name1", "NR2", "name2"
+  }
+

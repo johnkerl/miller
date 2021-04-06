@@ -1,0 +1,7 @@
+  subr foo() {
+    print "k is [".k."]"
+  }
+  for (k,v in $*) {
+    call foo()
+  }
+

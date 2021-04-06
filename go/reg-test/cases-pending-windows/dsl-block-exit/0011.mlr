@@ -1,0 +1,9 @@
+  $si = 0;
+  for (p = 1; p <= 3; p += 1) {
+    for (i = 0; i < NR; i += 1) {
+      if (i == 2) {
+        continue
+      }
+      $si += i * 10**p
+    }
+  }

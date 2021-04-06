@@ -1,0 +1,5 @@
+  $ha = hexfmt($a);
+  $hx = hexfmt($x);
+  $hi = hexfmt($i);
+  $nhi = hexfmt(-$i);
+

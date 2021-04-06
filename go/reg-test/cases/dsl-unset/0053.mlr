@@ -1,0 +1,11 @@
+  v = {
+    "a": {"x": 1},
+    "b": {"y": 1},
+  };
+  if (NR == 1) {
+    dump v;
+  } elif (NR == 2) {
+    unset v["a"];
+    dump v;
+  }
+

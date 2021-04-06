@@ -1,0 +1,3 @@
+  @asserting_empty_x = asserting_empty($x);
+  dump;
+

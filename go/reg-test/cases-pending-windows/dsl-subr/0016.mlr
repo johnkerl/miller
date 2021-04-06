@@ -1,0 +1,9 @@
+  func s(x) {
+    return x*2;
+  }
+  subr s(a) {
+    print "HELLO, ".a."!"
+  }
+  print s(NR);
+  call s("WORLD");
+
