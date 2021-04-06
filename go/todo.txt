@@ -8,6 +8,42 @@ d windows mrpl colors -- ? checking isatty also -- ?
 * PR-template etc checklists
 
 ----------------------------------------------------------------
+windows options for users:
+i summary: the only issue is '...' syntax for put/filter. everything else is fine (i think?)
+* inside msys2
+  o 100% of regtest functionality that passes on mac/linux, passes here
+* powershell -- mlr put '...' myfile.dat
+  o includes "..." inside '...'
+  o doesn't include \"...\" inside "..." inside '...'
+  o includes <,>,<<,>> inside '...'
+  o doesn't allow multiline inputs so it cannot support full regtest
+  o note powershell /c startup is maybe 2 seconds on a vanillabox so ps /c 0001.cmd is not ok
+* cmd -- mlr put '...' myfile.dat
+  o includes "..." inside '...'
+  o doesn't include \"...\" inside "..." inside '...'
+  o doesn't include <,>,<<,>> inside '...'
+  o also doesn't allow multiline inputs so it cannot support full regtest
+  o note cmd /c startup is superfast, but too weak for regtest
+* either powershell or cmd:
+  o don't use ....
+
+SO how to run github-actions regtest for windows??
+* gha bash -- ?
+  o won't exist (by default) on people's own systems, GHA-only
+* hook in msys2 somehow?
+  o bleah
+* powershell /c?
+  o needs re-working 0001.cmd etc into multiple commands -- batch the startup overhead
+  o but also needs a partition of regressables and non-regressables so maybe don't bother
+    (can't get the full suite into powershell /c regardless)
+* cmd /c ? needs a partition of regressables and non-regressables
+  o also needs a partition of regressables and non-regressables
+CONCLUSION:
+* stick with cmd /c for regtest
+* make a partitioned regtest
+* try to move a bunch of things to -f's though -- 0047.mlr or what have you
+
+----------------------------------------------------------------
 ? mlr repl -q ?
 * line-endings back into *.cmd et al.
   - fixups
@@ -35,56 +71,7 @@ d windows mrpl colors -- ? checking isatty also -- ?
   '$x = 1'
   '$x = "aaa"'
   '$x = "a \"a\" a"'
-
-* sketch:
-  o take the os.Args and batch them by state-machine on left-sqout .. right-sqout
-  o get the raw CL and shellquote.split
-  o if length-mismatch: abend or passthru ...
-  o rest: same
-
-windows split bug:
-
-  C:\miller\go>mlr --from ..\data\small put '$z = $x + $y'
-
-  OS ARGS:
-  [0] mlr
-  [1] --from
-  [2] ..\data\small
-  [3] put
-  [4] '$z
-  [5] =
-  [6] $x
-  [7] +
-  [8] $y'
-
-  RAW CL:
-  mlr  --from ..\data\small put '$z = $x + $y'
-
-  SPLIT ARGS:
-  [0] mlr
-  [1] --from
-  [2] ..datasmall  <----- do not want to keep
-  [3] put
-  [4] $z = $x + $y <------ want to keep '...' delineation
-
-  MOD ARGS:
-  [0] mlr
-  [1] --from
-  [2] ..\data\small
-  [3] put
-  [4] '$z
-  [5] =
-  [6] $x
-  [7] +
-  [8] $y'
-
-  BUT REALLY WANTED:
-  [0] mlr
-  [1] --from
-  [2] ..\data\small
-  [3] put
-  [4] '$z = $x + $y'
-
+  <, >, >>, << inside DSL
 ----------------------------------------------------------------
 
 ! readthedocs -- find out what's necessary to get per-version history

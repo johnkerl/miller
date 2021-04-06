@@ -40,11 +40,13 @@ func GetArgs() []string {
 		return os.Args
 	}
 
-	printArgs(os.Args, "ORIGINAL")
+	//printArgs(os.Args, "ORIGINAL")
 
-	// xxx err
-	regrouped, _ := regroupForSingleQuote(os.Args)
-	printArgs(regrouped, "REGROUPED")
+	regrouped, ok := regroupForSingleQuote(os.Args)
+	if !ok {
+		return os.Args
+	}
+	//printArgs(regrouped, "REGROUPED")
 
 	// Things on the command line include: args[0], which is fine as-is;
 	// various flags like -x or --xyz which are fine as-is; DSL expressions
@@ -52,7 +54,7 @@ func GetArgs() []string {
 	// shellquote.Split since that will remove the backslashes from things like
 	// ..\data\foo\dat or C:\foo\bar.baz.
 	rawCommandLine := windows.UTF16PtrToString(windows.GetCommandLine())
-	newArgs, err := shellquote.Split(rawCommandLine)
+	splitArgs, err := shellquote.Split(rawCommandLine)
 	if err != nil {
 		fmt.Fprintf(
 			os.Stderr,
@@ -61,15 +63,22 @@ func GetArgs() []string {
 		)
 	}
 
-	for i, oldArg := range os.Args {
+	retargs := make([]string, 0)
+
+	// TODO err/stetret if lens uneq
+
+	for i, oldArg := range regrouped {
 		if strings.HasPrefix(oldArg, "'") && strings.HasSuffix(oldArg, "'") {
-			os.Args[i] = newArgs[i]
+			retargs = append(retargs, splitArgs[i])
+		} else {
+			retargs = append(retargs, regrouped[i])
 		}
 	}
-	printArgs(os.Args, "NEW")
-	return os.Args
+	//printArgs(retargs, "NEW")
+	return retargs
 }
 
+// ----------------------------------------------------------------
 func printArgs(args []string, description string) {
 	fmt.Printf("%s:\n", description)
 	for i, arg := range args {
@@ -78,7 +87,8 @@ func printArgs(args []string, description string) {
 	fmt.Println()
 }
 
-func regroupForSingleQuote(inargs []string) ([]string, error) {
+// ----------------------------------------------------------------
+func regroupForSingleQuote(inargs []string) ([]string, bool) {
 	outargs := make([]string, 0, len(inargs))
 	inside := false
 	var concat string
@@ -120,7 +130,10 @@ func regroupForSingleQuote(inargs []string) ([]string, error) {
 		}
 	}
 
-	// xxx err if inside
+	// TODO: error not bool?
+	if inside {
+		return nil, false
+	}
 
-	return outargs, nil
+	return outargs, true
 }

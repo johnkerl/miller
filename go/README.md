@@ -1,6 +1,6 @@
 # Quickstart
 
-A TL;DR for anyone wanting to compile and run Miller:
+A TL;DR for anyone wanting to compile and run the Go port of Miller:
 
 * `go build mlr.go` -- produces the `mlr` executable
 * `go test ./...` -- runs a relatively small number of unit tests
