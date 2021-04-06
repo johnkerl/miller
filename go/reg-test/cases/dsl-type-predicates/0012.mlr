@@ -1,0 +1,21 @@
+  v = [1,2,3];
+  @is_absent_array_out_of_bounds       = is_absent       (v[0]);
+  @is_present_array_out_of_bounds      = is_present      (v[0]);
+  @is_empty_array_out_of_bounds        = is_empty        (v[0]);
+  @is_not_empty_array_out_of_bounds    = is_not_empty    (v[0]);
+  @is_null_array_out_of_bounds         = is_null         (v[0]);
+  @is_not_null_array_out_of_bounds     = is_not_null     (v[0]);
+  @is_bool_array_out_of_bounds         = is_bool         (v[0]);
+  @is_boolean_array_out_of_bounds      = is_boolean      (v[0]);
+  @is_float_array_out_of_bounds        = is_float        (v[0]);
+  @is_int_array_out_of_bounds          = is_int          (v[0]);
+  @is_numeric_array_out_of_bounds      = is_numeric      (v[0]);
+  @is_string_array_out_of_bounds       = is_string       (v[0]);
+  @is_map_array_out_of_bounds          = is_map          (v[0]);
+  @is_not_map_array_out_of_bounds      = is_not_map      (v[0]);
+  @is_empty_map_array_out_of_bounds    = is_empty_map    (v[0]);
+  @is_nonempty_map_array_out_of_bounds = is_nonempty_map (v[0]);
+  @is_array_out_of_bounds_array        = is_array        (v[0]);
+  @is_not_array_out_of_bounds_array    = is_not_array    (v[0]);
+  dump;
+

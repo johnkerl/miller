@@ -1,0 +1,20 @@
+{
+  "is_absent_empty_map": false,
+  "is_present_empty_map": true,
+  "is_empty_empty_map": false,
+  "is_not_empty_empty_map": true,
+  "is_null_empty_map": false,
+  "is_not_null_empty_map": true,
+  "is_bool_empty_map": false,
+  "is_boolean_empty_map": false,
+  "is_float_empty_map": false,
+  "is_int_empty_map": false,
+  "is_numeric_empty_map": false,
+  "is_string_empty_map": false,
+  "is_map_empty_map": true,
+  "is_not_map_empty_map": false,
+  "is_empty_map_empty_map": true,
+  "is_nonempty_map_empty_map": false,
+  "is_array_empty_map": false,
+  "is_not_array_empty_map": true
+}

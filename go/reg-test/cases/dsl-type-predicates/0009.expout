@@ -1,0 +1,20 @@
+{
+  "is_absent_array": false,
+  "is_present_array": true,
+  "is_empty_array": false,
+  "is_not_empty_array": true,
+  "is_null_array": false,
+  "is_not_null_array": true,
+  "is_bool_array": false,
+  "is_boolean_array": false,
+  "is_float_array": false,
+  "is_int_array": false,
+  "is_numeric_array": false,
+  "is_string_array": false,
+  "is_map_array": false,
+  "is_not_map_array": true,
+  "is_empty_map_array": false,
+  "is_nonempty_map_array": false,
+  "is_array_array": true,
+  "is_not_array_array": false
+}

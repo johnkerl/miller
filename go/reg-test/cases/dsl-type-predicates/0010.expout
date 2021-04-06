@@ -1,0 +1,20 @@
+{
+  "is_absent_array_in_bounds": false,
+  "is_present_array_in_bounds": true,
+  "is_empty_array_in_bounds": false,
+  "is_not_empty_array_in_bounds": true,
+  "is_null_array_in_bounds": false,
+  "is_not_null_array_in_bounds": true,
+  "is_bool_array_in_bounds": false,
+  "is_boolean_array_in_bounds": false,
+  "is_float_array_in_bounds": false,
+  "is_int_array_in_bounds": true,
+  "is_numeric_array_in_bounds": true,
+  "is_string_array_in_bounds": false,
+  "is_map_array_in_bounds": false,
+  "is_not_map_array_in_bounds": true,
+  "is_empty_map_array_in_bounds": false,
+  "is_nonempty_map_array_in_bounds": false,
+  "is_array_in_bounds_array": false,
+  "is_not_array_in_bounds_array": true
+}

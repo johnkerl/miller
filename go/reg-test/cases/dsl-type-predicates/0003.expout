@@ -1,0 +1,20 @@
+{
+  "is_absent_i": false,
+  "is_present_i": true,
+  "is_empty_i": false,
+  "is_not_empty_i": true,
+  "is_null_i": false,
+  "is_not_null_i": true,
+  "is_bool_i": false,
+  "is_boolean_i": false,
+  "is_float_i": false,
+  "is_int_i": true,
+  "is_numeric_i": true,
+  "is_string_i": false,
+  "is_map_i": false,
+  "is_not_map_i": true,
+  "is_empty_map_i": false,
+  "is_nonempty_map_i": false,
+  "is_array_i": false,
+  "is_not_array_i": true
+}

@@ -1,0 +1,20 @@
+  @is_absent_dollar_star       = is_absent       ($*);
+  @is_present_dollar_star      = is_present      ($*);
+  @is_empty_dollar_star        = is_empty        ($*);
+  @is_not_empty_dollar_star    = is_not_empty    ($*);
+  @is_null_dollar_star         = is_null         ($*);
+  @is_not_null_dollar_star     = is_not_null     ($*);
+  @is_bool_dollar_star         = is_bool         ($*);
+  @is_boolean_dollar_star      = is_boolean      ($*);
+  @is_float_dollar_star        = is_float        ($*);
+  @is_int_dollar_star          = is_int          ($*);
+  @is_numeric_dollar_star      = is_numeric      ($*);
+  @is_string_dollar_star       = is_string       ($*);
+  @is_map_dollar_star          = is_map          ($*);
+  @is_not_map_dollar_star      = is_not_map      ($*);
+  @is_empty_map_dollar_star    = is_empty_map    ($*);
+  @is_nonempty_map_dollar_star = is_nonempty_map ($*);
+  @is_array_dollar_star        = is_array        ($*);
+  @is_not_array_dollar_star    = is_not_array    ($*);
+  dump;
+
