@@ -1,0 +1,84 @@
+DSL EXPRESSION:
+  @o[1][1]["text1"][NR] = $a;
+  @o[1][2]["text2"][NR] = $b;
+  @o[1][2][$a][$i*100] = $x;
+  for((k1,k2),v in @o[1][2]) {
+    @n[3][4][k2][k1] = v;
+  }
+  end {
+    emit @n, "a", "b", "c", "d"
+  }
+
+
+
+AST:
+* statement block
+    * assignment "="
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * array or map index access "[]"
+                    * array or map index access "[]"
+                        * direct oosvar value "o"
+                        * int literal "1"
+                    * int literal "1"
+                * string literal "text1"
+            * context variable "NR"
+        * direct field value "a"
+    * assignment "="
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * array or map index access "[]"
+                    * array or map index access "[]"
+                        * direct oosvar value "o"
+                        * int literal "1"
+                    * int literal "2"
+                * string literal "text2"
+            * context variable "NR"
+        * direct field value "b"
+    * assignment "="
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * array or map index access "[]"
+                    * array or map index access "[]"
+                        * direct oosvar value "o"
+                        * int literal "1"
+                    * int literal "2"
+                * direct field value "a"
+            * operator "*"
+                * direct field value "i"
+                * int literal "100"
+        * direct field value "x"
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "k1"
+            * local variable "k2"
+        * local variable "v"
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * direct oosvar value "o"
+                * int literal "1"
+            * int literal "2"
+        * statement block
+            * assignment "="
+                * array or map index access "[]"
+                    * array or map index access "[]"
+                        * array or map index access "[]"
+                            * array or map index access "[]"
+                                * direct oosvar value "n"
+                                * int literal "3"
+                            * int literal "4"
+                        * local variable "k2"
+                    * local variable "k1"
+                * local variable "v"
+    * end block
+        * statement block
+            * emit statement "emit"
+                * emittable list
+                    * direct oosvar value "n"
+                * emit keys
+                    * string literal "a"
+                    * string literal "b"
+                    * string literal "c"
+                    * string literal "d"
+                * no-op
+

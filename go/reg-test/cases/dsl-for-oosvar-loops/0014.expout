@@ -1,0 +1,14 @@
+DSL EXPRESSION:
+for ((a,b,c), b in @*) {}
+
+AST:
+* statement block
+    * multi-variable for-loop "for"
+        * parameter list
+            * local variable "a"
+            * local variable "b"
+            * local variable "c"
+        * local variable "b"
+        * full oosvar "@*"
+        * statement block
+
