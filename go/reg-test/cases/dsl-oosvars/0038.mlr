@@ -1,0 +1,10 @@
+  @output[NR] = $*;
+  end {
+    for ((nr, k), v in @output) {
+      if (nr == 4 || k == "i") {
+        unset @output[nr][k]
+      }
+    }
+    emitp @output, "NR", "k"
+  }
+

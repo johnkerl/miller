@@ -1,0 +1,53 @@
+DSL EXPRESSION:
+begin {@a=0; @b=0; @c=0}; $za=@a; $zb=@b; $zc=@c; $d=@a+@b+@c; @a=@b; @b=@c; @c=$i
+
+AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "a"
+                * int literal "0"
+            * assignment "="
+                * direct oosvar value "b"
+                * int literal "0"
+            * assignment "="
+                * direct oosvar value "c"
+                * int literal "0"
+    * assignment "="
+        * direct field value "za"
+        * direct oosvar value "a"
+    * assignment "="
+        * direct field value "zb"
+        * direct oosvar value "b"
+    * assignment "="
+        * direct field value "zc"
+        * direct oosvar value "c"
+    * assignment "="
+        * direct field value "d"
+        * operator "+"
+            * operator "+"
+                * direct oosvar value "a"
+                * direct oosvar value "b"
+            * direct oosvar value "c"
+    * assignment "="
+        * direct oosvar value "a"
+        * direct oosvar value "b"
+    * assignment "="
+        * direct oosvar value "b"
+        * direct oosvar value "c"
+    * assignment "="
+        * direct oosvar value "c"
+        * direct field value "i"
+
+a   b   i  x                   y                   za zb zc d
+pan pan 1  0.3467901443380824  0.7268028627434533  0  0  0  0
+eks pan 2  0.7586799647899636  0.5221511083334797  0  0  1  1
+wye wye 3  0.20460330576630303 0.33831852551664776 0  1  2  3
+eks wye 4  0.38139939387114097 0.13418874328430463 1  2  3  6
+wye pan 5  0.5732889198020006  0.8636244699032729  2  3  4  9
+zee pan 6  0.5271261600918548  0.49322128674835697 3  4  5  12
+eks zee 7  0.6117840605678454  0.1878849191181694  4  5  6  15
+zee wye 8  0.5985540091064224  0.976181385699006   5  6  7  18
+hat wye 9  0.03144187646093577 0.7495507603507059  6  7  8  21
+pan wye 10 0.5026260055412137  0.9526183602969864  7  8  9  24

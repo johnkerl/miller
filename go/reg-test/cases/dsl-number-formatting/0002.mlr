@@ -1,0 +1,3 @@
+  $hi = "0x".fmtnum($i, "%04x");
+  $ex = fmtnum($x, "%8.3e");
+
