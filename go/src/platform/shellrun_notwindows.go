@@ -1,5 +1,5 @@
 // ================================================================
-// Wraps 'bash -c foo bar' or 'cmd /c foo bar', nominally for regression-testing.
+// Wraps 'sh -c foo bar' or 'cmd /c foo bar', nominally for regression-testing.
 // ================================================================
 
 // +build !windows

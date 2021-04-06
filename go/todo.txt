@@ -2,6 +2,32 @@
 TOP OF LIST:
 
 ----------------------------------------------------------------
+windows/regtest:
+* convert u/rr -o and u/rr -n: survey case-*.sh for themes
+  o multiline, check
+  o essential putenv (like TZ)
+  o inessential putenv (tee1=...)
+  o dynamic files like $path_to_mlr unhex ..., cp, cat, etc.
+* convert reg-test/cases-pending-windows
+* convert reg-test/cases-pending-go-port
+* clean up TODO/xxx in branch files
+? auto diff/findstr -- ? and/or mlr regtest -d ?
+d type up a note somewhere in the reg-test tree that all the .mlrs and the -f 00nn.mlr are for windows regtest
+d fix artifact-uploader name collision
+  https://github.com/actions/upload-artifact
+  https://forum.nim-lang.org/t/6371
+----------------------------------------------------------------
+
+* #455 -- doc-neatens re ordering
+d windows mrpl colors -- ? checking isatty also -- ?
+* more about HTTP logs in miller -- doc and encapsulate:
+  mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
+* PR-template etc checklists
+
+! readthedocs -- find out what's necessary to get per-version history
+
+----------------------------------------------------------------
+-- TODO: write this up (src/platform/README.md as well as readthedocs)
 windows options for users:
 i summary: the only issue is '...' syntax for put/filter. everything else is fine (i think?)
 * inside msys2
@@ -18,83 +44,38 @@ i summary: the only issue is '...' syntax for put/filter. everything else is fin
   o doesn't include <,>,<<,>> inside '...'
   o also doesn't allow multiline inputs so it cannot support full regtest
   o note cmd /c startup is superfast, but too weak for regtest
-* either powershell or cmd:
-  o don't use ....
+* either powershell or cmd: enumerate cases
+  o '$x=1'
+  o '$x = 1'
+  o '$x = "aaa"'
+  o '$x = "abc \"def\" ghi"'
+  o <, >, >>, << inside DSL
+----------------------------------------------------------------
 
+----------------------------------------------------------------
+-- TODO: write this up
 SO how to run github-actions regtest for windows??
 * gha bash -- ?
   o won't exist (by default) on people's own systems, GHA-only
 * hook in msys2 somehow?
-  o bleah
-* powershell /c?
+  o bleah -- fear of introducing opaqueness/brittleness to the regtest
+  o also it isn't really testing the windows experience; tests that pass in
+  linux/mac pass there (too easily)
+* powershell /c
   o needs re-working 0001.cmd etc into multiple commands -- batch the startup overhead
   o but also needs a partition of regressables and non-regressables so maybe don't bother
     (can't get the full suite into powershell /c regardless)
-* cmd /c ? needs a partition of regressables and non-regressables
-  o also needs a partition of regressables and non-regressables
+  o maybe -f 0047.mlr etc are enough
+* cmd /c
+  ? also needs a partition of regressables and non-regressables ?
+  o maybe -f 0047.mlr etc are enough
 CONCLUSION:
 * stick with cmd /c for regtest
-* make a partitioned regtest
 * try to move a bunch of things to -f's though
-
+* try not to have to make a platform-partitioned regtest
+-- TODO: reg-test README.md for .cmd format
 ----------------------------------------------------------------
 
-----------------------------------------------------------------
-windows plan:
-k make a dir for pending-windows, much larger now
-  k git mv the winfails there
-* survey case-*.sh for themes
-  o multiline, check
-  o essential putenv (like TZ)
-  o inessential putenv (tee1=...)
-  o dynamic files like $path_to_mlr unhex ..., cp, cat, etc.
-* survey cases-pending-windows for themes
-* make 000x.mlr etc as often as possible
-  - try to automate multiline '...' in u/upp
-* gradually move in passing cases
-* clean up TODO/xxx in branch files
-? auto diff/findstr -- ? and/or mlr regtest -d ?
-d type up a note somewhere in the reg-test tree that all the .mlrs and the -f'ing are for windows regtest
-----------------------------------------------------------------
-
-----------------------------------------------------------------
-? mlr repl -q ?
-* line-endings back into *.cmd et al.
-  - fixups
-  - u/upp generator
-* regtest .cmd format:
-  o doc re file format ...
-  o putenvs ...
-  o windows multi-line experiments ...
-
-* reg-test/cases-pending-windows
-* reg-test/cases-pending-go-port
-* convert u/rr -o
-* convert u/rr -n
-
-* build-go -- miscs -> build-dsl, & checkins to git ?
-
-! upload artifacts
-  https://github.com/actions/upload-artifact
-  https://forum.nim-lang.org/t/6371
-----------------------------------------------------------------
-
-----------------------------------------------------------------
-* cases
-  '$x=1'
-  '$x = 1'
-  '$x = "aaa"'
-  '$x = "a \"a\" a"'
-  <, >, >>, << inside DSL
-----------------------------------------------------------------
-
-* #455 -- doc-neatens re ordering
-d windows mrpl colors -- ? checking isatty also -- ?
-* more about HTTP logs in miller -- doc and encapsulate:
-  mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
-* PR-template etc checklists
-
-! readthedocs -- find out what's necessary to get per-version history
 
 * regexes
   o finish stats1 -r
