@@ -41,8 +41,8 @@ CONCLUSION:
 
 ----------------------------------------------------------------
 windows plan:
-* make a dir for pending-windows, much larger now
-  - git mv the winfails there
+k make a dir for pending-windows, much larger now
+  k git mv the winfails there
 * make 000x.mlr etc as often as possible
   - try to automate multiline '...' in u/upp
 * gradually move in passing cases
