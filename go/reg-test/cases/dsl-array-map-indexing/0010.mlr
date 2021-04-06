@@ -1,0 +1,12 @@
+  $o = {
+    "a": {
+      "x": [1,2,3],
+      "y": [4,5,6],
+    },
+    "b": {
+      "s": [7,8,9],
+      "t": [9,5,1],
+    },
+  };
+  # Expect "(error)" in the output data since strings are not map-indexable
+  $z = $o[[1]]["x"];
