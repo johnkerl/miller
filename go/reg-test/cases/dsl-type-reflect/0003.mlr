@@ -1,0 +1,5 @@
+  for (k, v in $*) {
+    $["s".k] = string(v)
+  }
+  $snonesuch = string($nonesuch)
+

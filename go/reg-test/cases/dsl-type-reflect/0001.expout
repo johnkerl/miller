@@ -1,0 +1,14 @@
+t      a     string int     float   boolean
+string abc   abc    (error) (error) (error)
+int    0     0      0       0       false
+int    2     2      2       2       true
+float  0.0   0.0    0       0.0     false
+float  2.3   2.3    2       2.3     true
+bool   false false  0       0       false
+bool   true  true   1       1       true
+string 0     0      0       0       (error)
+string 2     2      2       2       (error)
+string 0.0   0.0    (error) 0       (error)
+string 2.3   2.3    (error) 2.3     (error)
+string false false  (error) (error) false
+string true  true   (error) (error) true

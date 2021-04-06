@@ -1,0 +1,6 @@
+  $t       = typeof($a);
+  $string  = string($a);
+  $int     = int($a);
+  $float   = float($a);
+  $boolean = boolean($a);
+

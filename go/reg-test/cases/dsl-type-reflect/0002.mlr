@@ -1,0 +1,5 @@
+  for (k, v in $*) {
+    $["t".k] = typeof(v)
+  }
+  $tnonesuch = typeof($nonesuch)
+
