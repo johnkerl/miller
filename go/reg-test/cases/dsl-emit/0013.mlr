@@ -1,0 +1,8 @@
+  @sumx += $x;
+  @countx += 1;
+  @sums[$a][$b] += $x;
+  @counts[$a][$b] += 1;
+  end {
+    emitp @sums, "a";
+  }
+
