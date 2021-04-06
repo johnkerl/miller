@@ -3,6 +3,7 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 windows/regtest:
+! "git-checkin the intermediates" -- crank these out
 * convert u/rr -o and u/rr -n: survey case-*.sh for themes
   o multiline, check
   o essential putenv (like TZ)
