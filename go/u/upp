@@ -2,7 +2,7 @@
 
 require 'fileutils'
 
-@us = File.basename $0
+$us = File.basename $0
 
 # ----------------------------------------------------------------
 def usage()
@@ -30,22 +30,21 @@ while true
 
   should_fail = false
   here_doc_lines = nil
+  script_file_lines = nil
   if cmd_file_line =~ /^run_mlr.*$/
     cmd_file_line = cmd_file_line.sub("run_mlr", "mlr")
   elsif cmd_file_line =~ /^mlr_expect_fail.*$/
     cmd_file_line = cmd_file_line.sub("mlr_expect_fail", "mlr")
     should_fail = true
   else
-    $stderr.puts "$us: cannot handle cmd_file_line: #{cmd_file_line}"
+    $stderr.puts "#{$us}: cannot handle cmd_file_line: #{cmd_file_line}"
     exit 1
   end
   cmd_file_line = cmd_file_line.gsub("\$indir", "reg-test/input")
 
   if cmd_file_line =~ /.*<<EOF$/
-    has_here_doc = true
     cmd_file_line = cmd_file_line.sub("<<EOF", "")
     cmd_file_line.strip!
-
     here_doc_lines = []
     while true
       begin
@@ -59,7 +58,24 @@ while true
       end
       here_doc_lines << here_doc_line
     end
+  end
 
+  if cmd_file_line =~ /'$/ && !(cmd_file_line =~ /'.*'$/)
+    cmd_file_line = cmd_file_line.sub(/'$/, "")
+    cmd_file_line.strip!
+    script_file_lines = []
+    while true
+      begin
+        script_file_line = $stdin.readline
+      rescue EOFError
+        $stderr.puts "Premature EOF"
+        exit 1
+      end
+      if script_file_line =~ /'$/
+        break
+      end
+      script_file_lines << script_file_line
+    end
   end
 
   # TODO:
@@ -71,9 +87,13 @@ while true
   base = newdir + "/" + sprintf("%04d", n)
   cmd_file_name = base + '.cmd'
   input_file_name = base + '.input'
+  script_file_name = base + '.mlr'
 
   if here_doc_lines != nil
     cmd_file_line += " " + input_file_name
+  end
+  if script_file_lines != nil
+    cmd_file_line += " -f " + script_file_name
   end
 
   puts "-- #{cmd_file_name}"
@@ -82,6 +102,7 @@ while true
 
   File.open(cmd_file_name, "w") do |handle|
     handle.write(cmd_file_line)
+    handle.write("\n")
   end
 
   if should_fail
@@ -92,6 +113,14 @@ while true
     File.open(input_file_name, "w") do |handle|
       here_doc_lines.each do |here_doc_line|
         handle.write(here_doc_line)
+      end
+    end
+  end
+
+  if script_file_lines != nil
+    File.open(script_file_name, "w") do |handle|
+      script_file_lines.each do |script_file_line|
+        handle.write(script_file_line)
       end
     end
   end

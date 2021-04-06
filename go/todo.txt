@@ -43,10 +43,17 @@ CONCLUSION:
 windows plan:
 k make a dir for pending-windows, much larger now
   k git mv the winfails there
+* survey case-*.sh for themes
+  o multiline, check
+  o essential putenv (like TZ)
+  o inessential putenv (tee1=...)
+  o dynamic files like $path_to_mlr unhex ..., cp, cat, etc.
+* survey cases-pending-windows for themes
 * make 000x.mlr etc as often as possible
   - try to automate multiline '...' in u/upp
 * gradually move in passing cases
 * clean up TODO/xxx in branch files
+? auto diff/findstr -- ? and/or mlr regtest -d ?
 d type up a note somewhere in the reg-test tree that all the .mlrs and the -f'ing are for windows regtest
 ----------------------------------------------------------------
 
