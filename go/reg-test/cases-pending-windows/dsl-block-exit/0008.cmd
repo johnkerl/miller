@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp --opprint put -f ./reg-test/cases/dsl-block-exit/0008.mlr
+mlr --from reg-test/input/s.dkvp --opprint put -f ./reg-test/cases-pending-windows/dsl-block-exit/0008.mlr
