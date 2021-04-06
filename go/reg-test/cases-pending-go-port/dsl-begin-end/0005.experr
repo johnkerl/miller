@@ -1,0 +1,2 @@
+mlr DSL: syntax error at "["
+mlr put: syntax error on DSL parse of 'begin{@sum=[3,4]} @sum[1+NR%2] += $x; end{dump}'
