@@ -1,0 +1,5 @@
+  func f(x): int {
+    # fall-through return value is absent-null
+  }
+  $y=f($x)
+

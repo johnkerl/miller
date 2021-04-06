@@ -1,0 +1,11 @@
+  func f(m) {
+    dump m;
+    sum = 0;
+    for (k, v in m) {
+      sum += int(k)
+    }
+    return sum
+  }
+  @v[$i] = $a;
+  $y = f(@v)
+

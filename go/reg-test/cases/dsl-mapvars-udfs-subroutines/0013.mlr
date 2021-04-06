@@ -1,0 +1,5 @@
+ $* = mapdiff(
+   mapsum($*, {"a": "newval"}),
+   {"b": "nonesuch"},
+ )
+
