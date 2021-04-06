@@ -1,4 +1,4 @@
-
+# TODO: needs .env syntax
 
 run_mlr -n put -v '$z = ENV["HOME"]'
 run_mlr -n put -v '$z = ENV["HOME"][1]'

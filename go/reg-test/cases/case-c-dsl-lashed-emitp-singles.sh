@@ -1,66 +1,83 @@
-run_mlr -n put 'end {
+# TODO: bracketed-oosvar emits aren't in the mlrgo BNF
+run_mlr -n put '
+end {
   @a = 111;
   emitp @a
 }'
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a = 111;
   emitp (@a)
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111] = 222;
   emitp @a, "s"
 }'
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111] = 222;
   emitp (@a), "s"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111] = 222;
   @a[333] = 444;
   emitp @a, "s"
 }'
-run_mlr -n put 'end {
+
+run_mlr -n put '
+end {
   @a[111] = 222;
   @a[333] = 444;
   emitp (@a), "s"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   emitp @a, "s"
 }'
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   emitp (@a), "s"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   @a[444][555] = 666;
   emitp @a, "s"
 }'
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   @a[444][555] = 666;
   emitp (@a), "s"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   emitp @a, "s", "t"
 }'
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   emitp (@a), "s", "t"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   emitp @a[111], "t"
 }'
-run_mlr -n put 'end {
+
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   emitp (@a[111]), "t"
 }'
@@ -68,40 +85,48 @@ run_mlr -n put 'end {
 # ----------------------------------------------------------------
 announce LASHED EMIT SINGLES
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a = 111;
   emit @a
 }'
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a = 111;
   emit (@a)
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111] = 222;
   emit @a, "s"
 }'
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111] = 222;
   emit (@a), "s"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111] = 222;
   @a[333] = 444;
   emit @a, "s"
 }'
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111] = 222;
   @a[333] = 444;
   emit (@a), "s"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   emit @a, "s"
 }'
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[111][222] = 333;
   emit (@a), "s"
 }'
@@ -109,31 +134,36 @@ run_mlr -n put 'end {
 # ----------------------------------------------------------------
 announce LASHED EMITP PAIRS
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a = 111;
   @b = 222;
   emitp (@a, @b)
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1] = 111;
   @b[1] = 222;
   emitp (@a[1], @b[1])
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[1][2][3] = 8;
   emitp (@a, @b), "s", "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emitp (@a[1], @b[5]), "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][6][3] = 8;
   emitp (@a[1][2], @b[5][6]), "u"
@@ -142,31 +172,36 @@ run_mlr -n put 'end {
 # ----------------------------------------------------------------
 announce LASHED EMIT PAIRS
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a = 111;
   @b = 222;
   emit (@a, @b)
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1] = 111;
   @b[1] = 222;
   emit (@a[1], @b[1])
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[1][2][3] = 8;
   emit (@a, @b), "s", "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emit (@a[1], @b[5]), "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][6][3] = 8;
   emit (@a[1][2], @b[5][6]), "u"
@@ -175,7 +210,8 @@ run_mlr -n put 'end {
 # ----------------------------------------------------------------
 announce LASHED EMIT WITH VARYING DEPTH
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][1] = 1;
   @a[1][2] = 2;
   @a[2][1] = 3;
@@ -187,7 +223,8 @@ run_mlr -n put 'end {
   emit (@a[1], @b[2]), "t"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][1] = 1;
   @a[1][2] = 2;
   @a[2][1] = 3;
@@ -199,7 +236,8 @@ run_mlr -n put 'end {
   emit (@a, @b), "s", "t"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][1] = 1;
   @a[1][2] = 2;
   @a[2][1] = 3;
@@ -214,7 +252,8 @@ run_mlr -n put 'end {
   emit (@a, @b), "s", "t"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][1] = 1;
   @a[1][2] = 2;
   @a[2][1] = 3;
@@ -230,25 +269,29 @@ run_mlr -n put 'end {
 }'
 
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emit (@a[1], @b[3]), "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emit (@a[1][2], @b[5][9]), "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emit (@a[1][2], @b[9][2]), "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emit (@a[9], @b[5]), "t", "u"
@@ -257,7 +300,8 @@ run_mlr -n put 'end {
 # ----------------------------------------------------------------
 announce LASHED EMITP WITH VARYING DEPTH
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][1] = 1;
   @a[1][2] = 2;
   @a[2][1] = 3;
@@ -269,7 +313,8 @@ run_mlr -n put 'end {
   emitp (@a[1], @b[2]), "t"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][1] = 1;
   @a[1][2] = 2;
   @a[2][1] = 3;
@@ -281,7 +326,8 @@ run_mlr -n put 'end {
   emitp (@a, @b), "s", "t"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][1] = 1;
   @a[1][2] = 2;
   @a[2][1] = 3;
@@ -296,7 +342,8 @@ run_mlr -n put 'end {
   emitp (@a, @b), "s", "t"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][1] = 1;
   @a[1][2] = 2;
   @a[2][1] = 3;
@@ -312,19 +359,22 @@ run_mlr -n put 'end {
 }'
 
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emitp (@a[1], @b[3]), "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emitp (@a[1][2], @b[5][9]), "t", "u"
 }'
 
-run_mlr -n put 'end {
+run_mlr -n put '
+end {
   @a[1][2][3] = 4;
   @b[5][2][3] = 8;
   emitp (@a[1][2], @b[9][2]), "t", "u"

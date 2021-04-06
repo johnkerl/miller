@@ -1,3 +1,5 @@
+# TODO: git-checkin the intermediates
+
 run_mlr --ijson --ojson --from $indir/flatten-input-2.json json-stringify
 run_mlr --ijson --oxtab --from $indir/flatten-input-2.json json-stringify then flatten
 

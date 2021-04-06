@@ -1,3 +1,4 @@
+# TODO: needs --ofmt
 
 ofmt=pprint
 for ifmt in csv dkvp nidx json; do
