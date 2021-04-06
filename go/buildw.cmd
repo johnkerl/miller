@@ -1,0 +1,3 @@
+go build mlr.go
+go test ./...
+mlr regtest reg-test/cases
