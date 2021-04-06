@@ -1,0 +1,12 @@
+  num sum = 0;
+  for (num a = 1; a <= NR; a += 1) {
+    if (a == 4 || a == 5) {
+      continue;
+    }
+    if (a == 8) {
+        break;
+    }
+    sum += a;
+  }
+  $z = sum
+

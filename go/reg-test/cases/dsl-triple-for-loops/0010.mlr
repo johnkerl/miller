@@ -1,0 +1,7 @@
+  num sum = 0;
+  for (num a = 1; a <= 10; a += 1) {
+    continue;
+    sum += a;
+  }
+  $z = sum
+

@@ -1,0 +1,10 @@
+  num sum = 0;
+  num a = 1;
+  for (; ; a += 1) {
+    if (a > NR) {
+        break;
+    }
+    sum += a;
+  }
+  $z = sum
+

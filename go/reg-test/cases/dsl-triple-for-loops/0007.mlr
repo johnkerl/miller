@@ -1,0 +1,8 @@
+  num a = 100;
+  num b = 100;
+  for (num a = 200, b = 300; a <= 210; a += 1, b += 1) {
+    print "a:".a.",b:".b
+  }
+  $oa = a;
+  $ob = b;
+

@@ -1,0 +1,6 @@
+  num sum = 0;
+  for (num a=1; a <= NR; a += 1) {
+    sum += a;
+  }
+  $z = sum
+
