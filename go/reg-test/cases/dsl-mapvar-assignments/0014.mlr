@@ -1,0 +1,5 @@
+  func map_valued_func() {
+    return {"a":1,"b":2}
+  }
+  $* = map_valued_func();
+
