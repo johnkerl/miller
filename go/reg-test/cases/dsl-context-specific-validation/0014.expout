@@ -1,0 +1,10 @@
+DSL EXPRESSION:
+end{unset $*}
+
+AST:
+* statement block
+    * end block
+        * statement block
+            * unset "unset"
+                * full record "$*"
+

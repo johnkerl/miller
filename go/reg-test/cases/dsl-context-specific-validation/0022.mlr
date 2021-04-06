@@ -1,0 +1,6 @@
+  subr s(n) {
+    print "NR is ".n
+  }
+  call s(NR);
+  false
+
