@@ -1,0 +1,44 @@
+DSL EXPRESSION:
+  $sum = float(0);
+  for(k,v in $*) {
+    if (k =~ "^[xy]$") {
+      $sum += float($[k])
+    }
+  }
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "sum"
+        * function callsite "float"
+            * int literal "0"
+    * double-variable for-loop "for"
+        * local variable "k"
+        * local variable "v"
+        * full record "$*"
+        * statement block
+            * if-chain
+                * if-item "if"
+                    * operator "=~"
+                        * local variable "k"
+                        * string literal "^[xy]$"
+                    * statement block
+                        * assignment "="
+                            * direct field value "sum"
+                            * operator "+"
+                                * direct field value "sum"
+                                * function callsite "float"
+                                    * indirect field value "$[]"
+                                        * local variable "k"
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.0735930070815356
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.2808310731234434
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,sum=0.5429218312829508
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,sum=0.5155881371554456
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,sum=1.4369133897052735
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,sum=1.0203474468402116
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,sum=0.7996689796860148
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,sum=1.5747353948054283
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,sum=0.7809926368116417
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,sum=1.4552443658382002
