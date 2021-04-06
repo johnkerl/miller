@@ -1,0 +1,101 @@
+DSL EXPRESSION:
+  if (NR == 17) {
+    $x = 18;
+    $y = 19
+  } elif (NR == 20) {
+    $x = 21;
+    $y = 22
+  } elif (NR == 23) {
+    $x = 24;
+    $y = 25
+  } else {
+    $x = 1026;
+    $y = 1027
+  }
+
+
+AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * operator "=="
+                * context variable "NR"
+                * int literal "17"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "18"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "19"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "20"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "21"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "22"
+        * if-item "elif"
+            * operator "=="
+                * context variable "NR"
+                * int literal "23"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "24"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "25"
+        * if-item "else"
+            * statement block
+                * assignment "="
+                    * direct field value "x"
+                    * int literal "1026"
+                * assignment "="
+                    * direct field value "y"
+                    * int literal "1027"
+
+i=1,x=1026,y=1027
+i=2,x=1026,y=1027
+i=3,x=1026,y=1027
+i=4,x=1026,y=1027
+i=5,x=1026,y=1027
+i=6,x=1026,y=1027
+i=7,x=1026,y=1027
+i=8,x=1026,y=1027
+i=9,x=1026,y=1027
+i=10,x=1026,y=1027
+i=11,x=1026,y=1027
+i=12,x=1026,y=1027
+i=13,x=1026,y=1027
+i=14,x=1026,y=1027
+i=15,x=1026,y=1027
+i=16,x=1026,y=1027
+i=17,x=18,y=19
+i=18,x=1026,y=1027
+i=19,x=1026,y=1027
+i=20,x=21,y=22
+i=21,x=1026,y=1027
+i=22,x=1026,y=1027
+i=23,x=24,y=25
+i=24,x=1026,y=1027
+i=25,x=1026,y=1027
+i=26,x=1026,y=1027
+i=27,x=1026,y=1027
+i=28,x=1026,y=1027
+i=29,x=1026,y=1027
+i=30,x=1026,y=1027
+i=31,x=1026,y=1027
+i=32,x=1026,y=1027
+i=33,x=1026,y=1027
+i=34,x=1026,y=1027
+i=35,x=1026,y=1027
+i=36,x=1026,y=1027
+i=37,x=1026,y=1027
+i=38,x=1026,y=1027
+i=39,x=1026,y=1027
+i=40,x=1026,y=1027
