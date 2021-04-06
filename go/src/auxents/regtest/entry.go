@@ -37,7 +37,7 @@ func RegTestUsage(verbName string, o *os.File, exitCode int) {
 // Here the args are the full Miller command line: "mlr regtest --foo bar".
 func RegTestMain(args []string) int {
 
-	exeName := path.Base(args[0])
+	exeName := args[0]
 	verbName := args[1]
 	argc := len(args)
 	argi := 2
