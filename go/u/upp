@@ -27,6 +27,8 @@ while true
 
   next if cmd_file_line =~ /^\s*$/
   next if cmd_file_line =~ /^#.*$/
+  next if cmd_file_line =~ /^announce.*$/
+  next if cmd_file_line =~ /^mention.*$/
 
   should_fail = false
   here_doc_lines = nil
@@ -80,8 +82,6 @@ while true
   end
 
   # TODO:
-  # mention
-  # announce
   # export VAR=value
 
   n += 1

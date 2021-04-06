@@ -1,0 +1,16 @@
+  for (k1, v1 in $*) {
+    @output1[NR][k1] = "before";
+    if (k1 == "b") {
+        continue
+    }
+    @output1[NR][k1] = v1;
+    for (k2, v2 in $*) {
+      @output2[NR][k1."_".k2] = "before";
+      @output2[NR][k1."_".k2] = v2;
+    }
+  }
+  end {
+    emit @output1, "NR", "name";
+    emit @output2, "NR", "names";
+  }
+

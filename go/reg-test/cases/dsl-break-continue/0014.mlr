@@ -1,0 +1,12 @@
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    if (NR == 2 || NR == 8) {
+      continue;
+    }
+    while ($k < 7) {
+      $k += 1
+    }
+  }
+

@@ -1,0 +1,6 @@
+  while ($i < 5) {
+    $i += 1;
+    continue;
+    $a = "ERROR";
+  }
+

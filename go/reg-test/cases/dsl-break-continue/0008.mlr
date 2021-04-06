@@ -1,0 +1,9 @@
+  $NR = NR;
+  do {
+    $i += 1;
+    if (NR == 2) {
+      continue;
+    }
+    $a = "reached";
+  } while ($i < 5);
+

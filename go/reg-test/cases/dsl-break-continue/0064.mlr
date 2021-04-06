@@ -1,0 +1,12 @@
+  @logging[NR] = $*;
+  end {
+    for ((k1, k2), v in @logging) {
+        @output[k1][k2] = "before";
+        if (k1 == 5) {
+          continue;
+        }
+        @output[k1][k2] = v;
+    }
+    emit @output, "NR", "name"
+  }
+

@@ -1,0 +1,10 @@
+  $j = NR;
+  while ($j < 4) {
+    $k = NR;
+    $j += 1;
+    continue;
+    while ($k < 7) {
+      $k += 1
+    }
+  }
+
