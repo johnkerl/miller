@@ -8,13 +8,28 @@ fi
 
 set -euo pipefail
 
-./build-go
-
+echo ================================================================
+echo BUILD
+go build mlr.go
+echo Compile OK
 echo
-go test ./...
 
+# During the C-to-Go port I like to have ../c/mlr and ./mlrgo and have symlinks
+# to them from my ~/lbin. Hence the duplicate name here.
+cp mlr mlrgo
+
+echo ================================================================
+echo UNIT TESTS
+go test ./...
+echo
+
+echo ================================================================
+echo REGRESSION TESTS v2
 echo
 mlr regtest reg-test/cases reg-test/cases-pending-windows $verbose
+echo
 
+echo ================================================================
+echo REGRESSION TESTS v1
 echo
 ./reg-test/run -n $verbose

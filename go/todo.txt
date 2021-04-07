@@ -24,6 +24,8 @@ d windows mrpl colors -- ? checking isatty also -- ?
 * more about HTTP logs in miller -- doc and encapsulate:
   mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
 * PR-template etc checklists
+* mlr version along with mlr --version
+  o also darwin:amd64:go1.16 as in mrpl
 
 ! readthedocs -- find out what's necessary to get per-version history
 
