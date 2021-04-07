@@ -55,13 +55,13 @@ func (this *Repl) printStartupBanner() {
 }
 
 func (this *Repl) printPrompt1() {
-	if this.inputIsTerminal {
+	if this.inputIsTerminal && this.showPrompts {
 		fmt.Print(this.prompt1)
 	}
 }
 
 func (this *Repl) printPrompt2() {
-	if this.inputIsTerminal {
+	if this.inputIsTerminal && this.showPrompts {
 		fmt.Print(this.prompt2)
 	}
 }

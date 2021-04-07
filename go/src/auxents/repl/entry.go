@@ -56,6 +56,10 @@ func ReplUsage(verbName string, o *os.File, exitCode int) {
 
 -w Show warnings about uninitialized variables
 
+-q Don't show startup banner
+
+-s Don't show prompts
+
 -h|--help Show this message.
 
 Or any --icsv, --ojson, etc. reader/writer options as for the main Miller command line.
@@ -74,7 +78,8 @@ func ReplMain(args []string) int {
 	argc := len(args)
 	argi := 2
 
-	quietStartup := false
+	showStartupBanner := true
+	showPrompts := true
 	astPrintMode := ASTPrintNone
 	doWarnings := false
 	options := cliutil.DefaultOptions()
@@ -88,7 +93,10 @@ func ReplMain(args []string) int {
 			ReplUsage(replName, os.Stdout, 0)
 
 		} else if args[argi] == "-q" {
-			quietStartup = true
+			showStartupBanner = false
+			argi++
+		} else if args[argi] == "-s" {
+			showPrompts = true
 			argi++
 		} else if args[argi] == "-v" {
 			astPrintMode = ASTPrintIndent
@@ -124,7 +132,8 @@ func ReplMain(args []string) int {
 	repl, err := NewRepl(
 		exeName,
 		replName,
-		quietStartup,
+		showStartupBanner,
+		showPrompts,
 		astPrintMode,
 		doWarnings,
 		&options,
