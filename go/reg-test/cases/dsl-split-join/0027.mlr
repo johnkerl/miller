@@ -1,0 +1,1 @@
+begin{@v=[]} @v = append(@v, NR); $v=@v

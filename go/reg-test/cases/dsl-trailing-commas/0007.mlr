@@ -1,0 +1,1 @@
+func f(int a,,): int { return a*2 } $y=f(NR)

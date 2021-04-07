@@ -1,0 +1,1 @@
+@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump}

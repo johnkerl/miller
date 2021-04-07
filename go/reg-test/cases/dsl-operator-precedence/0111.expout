@@ -1,0 +1,16 @@
+DSL EXPRESSION:
+true && false && true; $x = 3
+
+
+AST:
+* statement block
+    * bare boolean
+        * operator "&&"
+            * operator "&&"
+                * bool literal "true"
+                * bool literal "false"
+            * bool literal "true"
+    * assignment "="
+        * direct field value "x"
+        * int literal "3"
+

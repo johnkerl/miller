@@ -1,0 +1,16 @@
+DSL EXPRESSION:
+$new = $["a"]
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "new"
+        * indirect field value "$[]"
+            * string literal "a"
+
+a   b   i x                   y                   new
+pan pan 1 0.3467901443380824  0.7268028627434533  pan
+eks pan 2 0.7586799647899636  0.5221511083334797  eks
+wye wye 3 0.20460330576630303 0.33831852551664776 wye
+eks wye 4 0.38139939387114097 0.13418874328430463 eks

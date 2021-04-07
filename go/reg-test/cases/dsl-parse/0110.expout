@@ -1,0 +1,9 @@
+DSL EXPRESSION:
+unset @*
+
+
+AST:
+* statement block
+    * unset "unset"
+        * full oosvar "@*"
+

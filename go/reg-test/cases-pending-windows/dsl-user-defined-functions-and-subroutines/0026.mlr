@@ -1,0 +1,1 @@
+func log(x) { return $x + 1 }

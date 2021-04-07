@@ -1,0 +1,1 @@
+subr s(a,b) { $[a] = b } call s("W", 999)

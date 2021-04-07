@@ -1,0 +1,12 @@
+DSL EXPRESSION:
+$z=0x7fffffffffffffff  + 0x7fffffffffffffff
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * operator "+"
+            * int literal "0x7fffffffffffffff"
+            * int literal "0x7fffffffffffffff"
+

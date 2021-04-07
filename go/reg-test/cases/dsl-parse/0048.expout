@@ -1,0 +1,12 @@
+DSL EXPRESSION:
+$z = $a[1]
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array or map index access "[]"
+            * direct field value "a"
+            * int literal "1"
+

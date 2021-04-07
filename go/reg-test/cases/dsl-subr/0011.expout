@@ -1,0 +1,22 @@
+DSL EXPRESSION:
+subr s(a) {print "HELLO, ".a."!"} call s("WORLD")
+
+
+AST:
+* statement block
+    * subroutine definition "s"
+        * parameter list
+            * parameter
+                * parameter name "a"
+        * statement block
+            * print statement "print"
+                * function callsite
+                    * operator "."
+                        * operator "."
+                            * string literal "HELLO, "
+                            * local variable "a"
+                        * string literal "!"
+                * no-op
+    * subroutine callsite "s"
+        * string literal "WORLD"
+

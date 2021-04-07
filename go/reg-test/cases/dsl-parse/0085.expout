@@ -1,0 +1,13 @@
+DSL EXPRESSION:
+nr=NR; $nr=nr
+
+
+AST:
+* statement block
+    * assignment "="
+        * local variable "nr"
+        * context variable "NR"
+    * assignment "="
+        * direct field value "nr"
+        * local variable "nr"
+

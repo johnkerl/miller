@@ -1,0 +1,28 @@
+DSL EXPRESSION:
+for(k,v in $*) {unset $[k]}; $j = NR
+
+
+AST:
+* statement block
+    * double-variable for-loop "for"
+        * local variable "k"
+        * local variable "v"
+        * full record "$*"
+        * statement block
+            * unset "unset"
+                * indirect field value "$[]"
+                    * local variable "k"
+    * assignment "="
+        * direct field value "j"
+        * context variable "NR"
+
+j=1
+j=2
+j=3
+j=4
+j=5
+j=6
+j=7
+j=8
+j=9
+j=10

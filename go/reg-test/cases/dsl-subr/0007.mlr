@@ -1,0 +1,1 @@
+subr s() {return 2}

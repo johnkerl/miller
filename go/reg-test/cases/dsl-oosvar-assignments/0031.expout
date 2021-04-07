@@ -1,0 +1,19 @@
+DSL EXPRESSION:
+NR == 3 { @u[2] = @v[1] }
+
+
+AST:
+* statement block
+    * cond block
+        * operator "=="
+            * context variable "NR"
+            * int literal "3"
+        * statement block
+            * assignment "="
+                * array or map index access "[]"
+                    * direct oosvar value "u"
+                    * int literal "2"
+                * array or map index access "[]"
+                    * direct oosvar value "v"
+                    * int literal "1"
+

@@ -1,0 +1,21 @@
+DSL EXPRESSION:
+$z = {"a":1, "b":2, "c":3}["b"]
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * array or map index access "[]"
+            * map literal "{}"
+                * map-literal key-value pair ":"
+                    * string literal "a"
+                    * int literal "1"
+                * map-literal key-value pair ":"
+                    * string literal "b"
+                    * int literal "2"
+                * map-literal key-value pair ":"
+                    * string literal "c"
+                    * int literal "3"
+            * string literal "b"
+

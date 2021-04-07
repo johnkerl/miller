@@ -1,8 +1,0 @@
-DSL EXPRESSION:
-unset $x
-
-AST:
-* statement block
-    * unset "unset"
-        * direct field value "x"
-

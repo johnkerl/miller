@@ -1,0 +1,19 @@
+DSL EXPRESSION:
+for (k in $*) { emit { k : k } }
+
+
+AST:
+* statement block
+    * single-variable for-loop "for"
+        * local variable "k"
+        * full record "$*"
+        * statement block
+            * emit statement "emit"
+                * emittable list
+                    * map literal "{}"
+                        * map-literal key-value pair ":"
+                            * local variable "k"
+                            * local variable "k"
+                * no-op
+                * no-op
+

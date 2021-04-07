@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp --opprint put '$z = min($x,$y,$i)'
+mlr --from reg-test/input/s.dkvp --opprint put -f reg-test/cases-pending-windows/dsl-mathy/0002.mlr

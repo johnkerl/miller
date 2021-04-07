@@ -1,0 +1,1 @@
+@idx = NR % 5; @idx = @idx == 0 ? 5 : @idx; $[@idx] = "NEW"

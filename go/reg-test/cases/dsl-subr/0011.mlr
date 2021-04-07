@@ -1,0 +1,1 @@
+subr s(a) {print "HELLO, ".a."!"} call s("WORLD")

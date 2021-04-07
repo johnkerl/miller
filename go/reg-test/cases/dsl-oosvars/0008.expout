@@ -1,0 +1,31 @@
+DSL EXPRESSION:
+begin{@ox=0}; $d=$x-@ox; @ox=$x
+
+
+AST:
+* statement block
+    * begin block
+        * statement block
+            * assignment "="
+                * direct oosvar value "ox"
+                * int literal "0"
+    * assignment "="
+        * direct field value "d"
+        * operator "-"
+            * direct field value "x"
+            * direct oosvar value "ox"
+    * assignment "="
+        * direct oosvar value "ox"
+        * direct field value "x"
+
+a   b   i  x                   y                   d
+pan pan 1  0.3467901443380824  0.7268028627434533  0.3467901443380824
+eks pan 2  0.7586799647899636  0.5221511083334797  0.41188982045188116
+wye wye 3  0.20460330576630303 0.33831852551664776 -0.5540766590236605
+eks wye 4  0.38139939387114097 0.13418874328430463 0.17679608810483793
+wye pan 5  0.5732889198020006  0.8636244699032729  0.19188952593085962
+zee pan 6  0.5271261600918548  0.49322128674835697 -0.04616275971014583
+eks zee 7  0.6117840605678454  0.1878849191181694  0.08465790047599064
+zee wye 8  0.5985540091064224  0.976181385699006   -0.013230051461422976
+hat wye 9  0.03144187646093577 0.7495507603507059  -0.5671121326454867
+pan wye 10 0.5026260055412137  0.9526183602969864  0.47118412908027796

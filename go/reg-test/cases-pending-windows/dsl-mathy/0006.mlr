@@ -1,0 +1,1 @@
+$q = qnorm(-5 + $i); $r = 5 + invqnorm($q)

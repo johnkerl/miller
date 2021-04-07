@@ -1,0 +1,19 @@
+DSL EXPRESSION:
+$x = $a==1 ? $b == 2 : $c == 3
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "x"
+        * operator "?:"
+            * operator "=="
+                * direct field value "a"
+                * int literal "1"
+            * operator "=="
+                * direct field value "b"
+                * int literal "2"
+            * operator "=="
+                * direct field value "c"
+                * int literal "3"
+

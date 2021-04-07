@@ -1,0 +1,1 @@
+for (k,v in $*) {if (is_string(v))   {@string[NR][k]  = v}}    end{ emit @string,  "NR", "k" }

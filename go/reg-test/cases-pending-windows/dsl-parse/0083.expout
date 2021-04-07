@@ -1,9 +1,0 @@
-DSL EXPRESSION:
-while (false) {}
-
-AST:
-* statement block
-    * while loop "while"
-        * bool literal "false"
-        * statement block
-

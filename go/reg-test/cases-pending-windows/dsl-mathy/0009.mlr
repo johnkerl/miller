@@ -1,0 +1,1 @@
+$nx = bitcount($x); $ni = bitcount($i)

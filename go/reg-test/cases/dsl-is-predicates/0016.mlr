@@ -1,0 +1,1 @@
+$f=is_boolean($nosuch>1)

@@ -1,0 +1,29 @@
+DSL EXPRESSION:
+begin{true{@x=1}}; true{@x=2}; end{true{@x=3}}
+
+
+AST:
+* statement block
+    * begin block
+        * statement block
+            * cond block
+                * bool literal "true"
+                * statement block
+                    * assignment "="
+                        * direct oosvar value "x"
+                        * int literal "1"
+    * cond block
+        * bool literal "true"
+        * statement block
+            * assignment "="
+                * direct oosvar value "x"
+                * int literal "2"
+    * end block
+        * statement block
+            * cond block
+                * bool literal "true"
+                * statement block
+                    * assignment "="
+                        * direct oosvar value "x"
+                        * int literal "3"
+

@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --opprint filter 'func f(x) { subr t(y) {} }; true'
+mlr --from reg-test/input/abixy --opprint filter -f reg-test/cases-pending-windows/dsl-user-defined-functions-and-subroutines/0023.mlr

@@ -1,0 +1,1 @@
+subr s()      { print 999  } call s()

@@ -1,0 +1,12 @@
+DSL EXPRESSION:
+@v[1]  = $*
+
+
+AST:
+* statement block
+    * assignment "="
+        * array or map index access "[]"
+            * direct oosvar value "v"
+            * int literal "1"
+        * full record "$*"
+

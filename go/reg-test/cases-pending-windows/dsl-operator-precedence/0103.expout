@@ -1,9 +1,0 @@
-DSL EXPRESSION:
-$x = true
-
-AST:
-* statement block
-    * assignment "="
-        * direct field value "x"
-        * bool literal "true"
-

@@ -1,0 +1,10 @@
+DSL EXPRESSION:
+@v     = $*
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct oosvar value "v"
+        * full record "$*"
+

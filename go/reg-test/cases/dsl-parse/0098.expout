@@ -1,0 +1,12 @@
+DSL EXPRESSION:
+func f(){return 1}
+
+
+AST:
+* statement block
+    * function definition "f"
+        * parameter list
+        * statement block
+            * return "return"
+                * int literal "1"
+

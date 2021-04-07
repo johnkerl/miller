@@ -1,0 +1,1 @@
+begin{@rsum = 0}; @rsum = @rsum + $x; $rsum = @rsum

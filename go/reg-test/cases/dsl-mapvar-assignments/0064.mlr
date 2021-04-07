@@ -1,0 +1,1 @@
+@a = 1; var o = @a; dump o

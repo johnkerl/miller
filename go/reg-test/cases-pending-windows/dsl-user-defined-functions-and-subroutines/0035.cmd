@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy put 'begin{@x=1} func f(x) { dump; print "hello"; tee  > ENV["outdir"]."/udf-x", $* } $o=f($i)'
+mlr --from reg-test/input/abixy put -f reg-test/cases-pending-windows/dsl-user-defined-functions-and-subroutines/0035.mlr

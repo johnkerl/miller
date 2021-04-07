@@ -1,0 +1,1 @@
+for (k,v in $*) {if (is_int(v))      {@int[NR][k]     = v}}    end{ emit @int,     "NR", "k" }

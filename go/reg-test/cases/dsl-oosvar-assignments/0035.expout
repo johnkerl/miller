@@ -1,0 +1,16 @@
+DSL EXPRESSION:
+end { @u[2] = @v[1] }
+
+
+AST:
+* statement block
+    * end block
+        * statement block
+            * assignment "="
+                * array or map index access "[]"
+                    * direct oosvar value "u"
+                    * int literal "2"
+                * array or map index access "[]"
+                    * direct oosvar value "v"
+                    * int literal "1"
+

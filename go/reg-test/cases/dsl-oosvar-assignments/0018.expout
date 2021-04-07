@@ -1,0 +1,17 @@
+DSL EXPRESSION:
+NR == 3 {$* = @v[$2]}
+
+
+AST:
+* statement block
+    * cond block
+        * operator "=="
+            * context variable "NR"
+            * int literal "3"
+        * statement block
+            * assignment "="
+                * full record "$*"
+                * array or map index access "[]"
+                    * direct oosvar value "v"
+                    * direct field value "2"
+

@@ -1,0 +1,12 @@
+DSL EXPRESSION:
+$y <<= $x
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "<<"
+            * direct field value "y"
+            * direct field value "x"
+

@@ -1,0 +1,1 @@
+o = mapdiff($*, {"a":999}); dump o

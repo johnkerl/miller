@@ -1,0 +1,13 @@
+DSL EXPRESSION:
+subr s() {x=1}
+
+
+AST:
+* statement block
+    * subroutine definition "s"
+        * parameter list
+        * statement block
+            * assignment "="
+                * local variable "x"
+                * int literal "1"
+

@@ -1,0 +1,36 @@
+DSL EXPRESSION:
+j = 2; for (i = 0; i < NR; i += 1) { $i += i }
+
+
+AST:
+* statement block
+    * assignment "="
+        * local variable "j"
+        * int literal "2"
+    * triple-for loop "for"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * int literal "0"
+        * statement block
+            * bare boolean
+                * operator "<"
+                    * local variable "i"
+                    * context variable "NR"
+        * statement block
+            * assignment "="
+                * local variable "i"
+                * operator "+"
+                    * local variable "i"
+                    * int literal "1"
+        * statement block
+            * assignment "="
+                * direct field value "i"
+                * operator "+"
+                    * direct field value "i"
+                    * local variable "i"
+
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=3,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=6,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=10,x=0.38139939387114097,y=0.13418874328430463

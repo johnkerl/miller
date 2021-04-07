@@ -1,0 +1,13 @@
+DSL EXPRESSION:
+$x =~ "^a.*d$"i
+
+
+AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "x"
+            * case-insensitive regular expression ""^a.*d$"i"
+
+x=abcd,y=ghi
+x=ABCD,y=GHI

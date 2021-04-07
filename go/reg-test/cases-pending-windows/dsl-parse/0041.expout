@@ -1,9 +1,0 @@
-DSL EXPRESSION:
-$z = {}
-
-AST:
-* statement block
-    * assignment "="
-        * direct field value "z"
-        * map literal "{}"
-

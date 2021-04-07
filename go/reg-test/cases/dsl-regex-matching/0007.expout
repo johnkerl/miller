@@ -1,0 +1,12 @@
+DSL EXPRESSION:
+$y =~ "\".."
+
+
+AST:
+* statement block
+    * bare boolean
+        * operator "=~"
+            * direct field value "y"
+            * string literal "".."
+
+x=ABCDE,y="GHI"

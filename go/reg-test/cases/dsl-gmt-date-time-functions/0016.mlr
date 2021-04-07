@@ -1,0 +1,1 @@
+$hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$resec-$sec

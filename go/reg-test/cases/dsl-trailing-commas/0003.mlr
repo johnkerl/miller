@@ -1,0 +1,1 @@
+func f(): int { return 999 } $y=f(,)

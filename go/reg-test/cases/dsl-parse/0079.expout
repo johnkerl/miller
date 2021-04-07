@@ -1,0 +1,11 @@
+DSL EXPRESSION:
+if (1) {}
+
+
+AST:
+* statement block
+    * if-chain
+        * if-item "if"
+            * int literal "1"
+            * statement block
+

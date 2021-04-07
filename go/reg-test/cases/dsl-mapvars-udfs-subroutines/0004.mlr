@@ -1,0 +1,1 @@
+func f(x) {return x**2}; var z = f($x); dump z

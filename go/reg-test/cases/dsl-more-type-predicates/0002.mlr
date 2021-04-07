@@ -1,0 +1,1 @@
+for (k,v in $*) {if (is_float(v))    {@float[NR][k]   = v}}    end{ emit @float,   "NR", "k" }

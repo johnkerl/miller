@@ -1,0 +1,14 @@
+DSL EXPRESSION:
+$y += $x * 3
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "+"
+            * direct field value "y"
+            * operator "*"
+                * direct field value "x"
+                * int literal "3"
+

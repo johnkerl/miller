@@ -1,0 +1,12 @@
+DSL EXPRESSION:
+@u[2] = @v
+
+
+AST:
+* statement block
+    * assignment "="
+        * array or map index access "[]"
+            * direct oosvar value "u"
+            * int literal "2"
+        * direct oosvar value "v"
+

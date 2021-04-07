@@ -1,0 +1,14 @@
+DSL EXPRESSION:
+$y = $a + $b * $c
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "y"
+        * operator "+"
+            * direct field value "a"
+            * operator "*"
+                * direct field value "b"
+                * direct field value "c"
+

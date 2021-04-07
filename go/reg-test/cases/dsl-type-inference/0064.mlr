@@ -1,0 +1,1 @@
+$min=min($pf1,$pf2);$max=max($pf1,$pf2)

@@ -1,0 +1,1 @@
+for (k,v in $*) {if (is_numeric(v))  {@numeric[NR][k] = v}}    end{ emit @numeric, "NR", "k" }

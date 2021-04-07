@@ -1,0 +1,13 @@
+DSL EXPRESSION:
+$z = {"a":"1",}
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * map literal "{}"
+            * map-literal key-value pair ":"
+                * string literal "a"
+                * string literal "1"
+
