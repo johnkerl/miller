@@ -584,3 +584,5 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * github.com/spf13/cobra & viper -- improve CLI/REPL?
 * doc getoptish in various spots
 * port format-specific default separators from C. E.g. NIDX's IFS should default to space.
+* 0035.cmd
+  begin{@x=1} func f(x) { dump; print "hello"; tee  > ENV["outdir"]."/udf-x", $* } $o=f($i)
