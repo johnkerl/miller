@@ -1,0 +1,9 @@
+{
+  "hostname": "\"localhost\"",
+  "pid": "12345",
+  "req": "{\n  \"id\": 6789,\n  \"method\": \"GET\",\n  \"path\": \"api/check\",\n  \"host\": \"foo.bar\",\n  \"headers\": {\n    \"host\": \"bar.baz\",\n    \"user-agent\": \"browser\"\n  }\n}",
+  "res": "{\n  \"status_code\": 200,\n  \"header\": {\n    \"content-type\": \"text\",\n    \"content-encoding\": \"plain\"\n  }\n}",
+  "empty1": "{}",
+  "empty2": "[]",
+  "wrapper": "{\n  \"empty3\": {},\n  \"emtpy4\": []\n}"
+}

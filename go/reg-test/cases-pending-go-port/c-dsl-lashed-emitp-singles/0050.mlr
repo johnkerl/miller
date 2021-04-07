@@ -1,0 +1,9 @@
+  @count[$a][$b] += 1;
+  @sum[$a][$b] += $x;
+  end {
+      for ((a, b), c in @count) {
+          @mean[a][b] = @sum[a][b] / @count[a][b]
+      }
+      emit (@sum, @count, @mean), "a", "b"
+  }
+

@@ -1,3 +1,5 @@
+# TODO: pipe/intermediate/binary handling
+
 run_mlr lecat --mono < $indir/line-ending-cr.bin
 run_mlr lecat --mono < $indir/line-ending-lf.bin
 run_mlr lecat --mono < $indir/line-ending-crlf.bin

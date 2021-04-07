@@ -40,10 +40,9 @@ A note on Continuous Integration:
 * Building:
   * Clone the Miller repo
   * `cd go`
-  * `./build` should create `mlr`, and print the two lines `Compile OK` and `Test OK`. If it doesn't do this on your platform, please [file an issue](https://github.com/johnkerl/miller/issues).
+  * `./build` should create `mlr`. If it doesn't do this on your platform, please [file an issue](https://github.com/johnkerl/miller/issues).
 * Platforms tried so far:
-  * macOS with Go 1.14, and Linux Mint with Go 1.10
-  * Windows I have not tried at all
+  * macOS with Go 1.14 and 1.16, Linux Mint with Go 1.10 and 1.16, and Windows 10 with Go 1.16
 * On-line help:
   * `mlr --help` advertises some things the Go implementation doesn't actually do yet.
   * `mlr --help-all-verbs` correctly lists verbs which do things in the Go implementation.
