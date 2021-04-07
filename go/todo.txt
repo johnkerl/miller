@@ -11,7 +11,7 @@ windows/regtest:
   o dynamic files like $path_to_mlr unhex ..., cp, cat, etc.
 * convert reg-test/cases-pending-windows
 * convert reg-test/cases-pending-go-port
-* clean up TODO/xxx in branch files
+* clean up TODO/xxx in src/platform
 ? auto diff/findstr -- ? and/or mlr regtest -d ?
 d type up a note somewhere in the reg-test tree that all the .mlrs and the -f 00nn.mlr are for windows regtest
 d fix artifact-uploader name collision
@@ -19,6 +19,7 @@ d fix artifact-uploader name collision
   https://forum.nim-lang.org/t/6371
 ----------------------------------------------------------------
 
+* proper windows terminal colors for repl and regtest
 * #455 -- doc-neatens re ordering
 d windows mrpl colors -- ? checking isatty also -- ?
 * more about HTTP logs in miller -- doc and encapsulate:

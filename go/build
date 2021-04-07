@@ -26,10 +26,12 @@ echo
 echo ================================================================
 echo REGRESSION TESTS v2
 echo
-mlr regtest reg-test/cases reg-test/cases-pending-windows $verbose
+mlr regtest $verbose reg-test/cases
+mlr regtest $verbose reg-test/cases-pending-windows
 echo
 
 echo ================================================================
 echo REGRESSION TESTS v1
 echo
 ./reg-test/run -n $verbose
+# ./reg-test/run -o $verbose
