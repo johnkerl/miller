@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp --opprint filter    'NR > 2'
+mlr --from reg-test/input/s.dkvp --opprint filter    -f reg-test/cases-pending-windows/dsl-filter/0005.mlr

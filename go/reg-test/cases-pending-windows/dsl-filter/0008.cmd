@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --opprint put    '$u=1; NR > 3; $v=2'
+mlr --from reg-test/input/abixy --opprint put    -f reg-test/cases-pending-windows/dsl-filter/0008.mlr
