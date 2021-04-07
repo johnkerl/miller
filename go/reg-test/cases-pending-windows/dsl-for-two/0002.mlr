@@ -1,0 +1,1 @@
+for (k,v in $*) { emit { "foo" : v } }
