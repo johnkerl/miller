@@ -1,5 +1,6 @@
 DSL EXPRESSION:
-     ++1
+++1
+
 
 AST:
 * statement block

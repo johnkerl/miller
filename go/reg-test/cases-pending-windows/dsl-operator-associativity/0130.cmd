@@ -1,1 +1,1 @@
-mlr -n filter -v '     1 ? 2 : 3 ? 4 : 5'
+mlr -n filter -v -f reg-test/cases-pending-windows/dsl-operator-associativity/0130.mlr
