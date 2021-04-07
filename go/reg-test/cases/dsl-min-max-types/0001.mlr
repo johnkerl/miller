@@ -1,0 +1,19 @@
+$min["n"]["n"] = min($n,$n);
+$min["n"]["b"] = min($n,$b);
+$min["n"]["v"] = min($n,$v);
+$min["n"]["s"] = min($n,$s);
+
+$min["b"]["n"] = min($b,$n);
+$min["b"]["b"] = min($b,$b);
+$min["b"]["v"] = min($b,$v);
+$min["b"]["s"] = min($b,$s);
+
+$min["v"]["n"] = min($v,$n);
+$min["v"]["b"] = min($v,$b);
+$min["v"]["v"] = min($v,$v);
+$min["v"]["s"] = min($v,$s);
+
+$min["s"]["n"] = min($s,$n);
+$min["s"]["b"] = min($s,$b);
+$min["s"]["v"] = min($s,$v);
+$min["s"]["s"] = min($s,$s);
