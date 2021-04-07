@@ -1,1 +1,1 @@
-mlr put '$a="hello"' then put '$b=$a." world";$z=$x+$y;$c=$b;$a=sub($b,"hello","farewell")' reg-test/input/int-float.dkvp
+mlr put -f reg-test/cases-pending-windows/dsl-typed-overlay/0004a.mlr then put -f reg-test/cases-pending-windows/dsl-typed-overlay/0004b.mlr reg-test/input/int-float.dkvp

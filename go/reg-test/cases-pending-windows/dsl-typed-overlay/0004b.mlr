@@ -1,0 +1,1 @@
+$b=$a." world";$z=$x+$y;$c=$b;$a=sub($b,"hello","farewell")
