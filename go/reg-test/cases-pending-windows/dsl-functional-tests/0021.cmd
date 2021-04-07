@@ -1,1 +1,1 @@
-mlr --opprint put '$y=mexp($x,35,37)' then put '$z=mmul($x,$y,37)' reg-test/input/modarith.dat
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-functional-tests/0021a.mlr then put -f reg-test/cases-pending-windows/dsl-functional-tests/0021b.mlr reg-test/input/modarith.dat

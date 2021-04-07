@@ -1,0 +1,15 @@
+DSL EXPRESSION:
+1 ? 2 ? 3 : 4 : 5
+
+
+AST:
+* statement block
+    * bare boolean
+        * operator "?:"
+            * int literal "1"
+            * operator "?:"
+                * int literal "2"
+                * int literal "3"
+                * int literal "4"
+            * int literal "5"
+

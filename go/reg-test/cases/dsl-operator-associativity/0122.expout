@@ -1,0 +1,11 @@
+DSL EXPRESSION:
+!!1
+
+
+AST:
+* statement block
+    * bare boolean
+        * operator "!"
+            * operator "!"
+                * int literal "1"
+

@@ -1,1 +1,1 @@
-mlr --opprint put '$y=madd($x,10,37)' then put '$z=msub($x,10,37)' reg-test/input/modarith.dat
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-functional-tests/0020a.mlr then put -f reg-test/cases-pending-windows/dsl-functional-tests/0020b.mlr reg-test/input/modarith.dat
