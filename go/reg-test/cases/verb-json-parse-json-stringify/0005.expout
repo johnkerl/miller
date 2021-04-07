@@ -1,0 +1,18 @@
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": "{\n  \"id\": 6789,\n  \"method\": \"GET\",\n  \"path\": \"api/check\",\n  \"host\": \"foo.bar\",\n  \"headers\": {\n    \"host\": \"bar.baz\",\n    \"user-agent\": \"browser\"\n  }\n}",
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  },
+  "empty1": {},
+  "empty2": [],
+  "wrapper": {
+    "empty3": {},
+    "emtpy4": []
+  }
+}
