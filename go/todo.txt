@@ -10,6 +10,8 @@ windows/regtest:
   o inessential putenv (tee1=...)
   o dynamic files like $path_to_mlr unhex ..., cp, cat, etc.
 * convert reg-test/cases-pending-windows
+  o one:
+    grep "'.*\"'" reg-test/cases-pending-windows/*/*.cmd|grep -w put | cat -n
 * convert reg-test/cases-pending-go-port
 * clean up TODO/xxx in src/platform
 ? auto diff/findstr -- ? and/or mlr regtest -d ?
