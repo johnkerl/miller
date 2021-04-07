@@ -1,1 +1,1 @@
-mlr --opprint put '@somesuch=1;$f=is_null(@somesuch)'         reg-test/input/nullvals.dkvp
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-is-predicates/0098.mlr         reg-test/input/nullvals.dkvp

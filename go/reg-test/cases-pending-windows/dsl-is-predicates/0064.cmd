@@ -1,1 +1,1 @@
-mlr --opprint put '$f=is_nonempty_map($nosuch)'               reg-test/input/nullvals.dkvp
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-is-predicates/0064.mlr               reg-test/input/nullvals.dkvp

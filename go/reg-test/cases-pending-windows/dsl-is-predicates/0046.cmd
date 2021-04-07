@@ -1,1 +1,1 @@
-mlr --opprint put '$f=is_int($z)'                             reg-test/input/nullvals.dkvp
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-is-predicates/0046.mlr                             reg-test/input/nullvals.dkvp

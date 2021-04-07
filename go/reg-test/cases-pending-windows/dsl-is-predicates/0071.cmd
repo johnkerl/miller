@@ -1,1 +1,1 @@
-mlr --opprint put '$f=is_not_empty($y)'                       reg-test/input/nullvals.dkvp
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-is-predicates/0071.mlr                       reg-test/input/nullvals.dkvp

@@ -1,1 +1,1 @@
-mlr --opprint put '$f=is_boolean($y>1)'                       reg-test/input/nullvals.dkvp
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-is-predicates/0014.mlr                       reg-test/input/nullvals.dkvp
