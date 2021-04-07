@@ -581,3 +581,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * //go:embed -- ?
 * github.com/spf13/cobra & viper -- improve CLI/REPL?
 * doc getoptish in various spots
+* port format-specific default separators from C. E.g. NIDX's IFS should default to space.
