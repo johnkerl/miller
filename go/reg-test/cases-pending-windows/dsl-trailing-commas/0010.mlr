@@ -1,0 +1,1 @@
+subr s(a,)   { print a*2 } call s(NR)

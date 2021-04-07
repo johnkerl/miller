@@ -1,1 +1,1 @@
-mlr put -q 'printn 1; printn "two"; printn $a; printn; printn $i < 4; printn "y is ".string($y); print ""' reg-test/input/abixy
+mlr put -q -f reg-test/cases-pending-windows/dsl-print/0002.mlr reg-test/input/abixy

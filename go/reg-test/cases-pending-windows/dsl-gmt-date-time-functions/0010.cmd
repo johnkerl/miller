@@ -1,1 +1,1 @@
-mlr --icsv --opprint put '$gmt = strftime($sec, "%Y-%m-%dT%H:%M:%6SZ")' reg-test/input/sec2gmt
+mlr --icsv --opprint put -f reg-test/cases-pending-windows/dsl-gmt-date-time-functions/0010.mlr reg-test/input/sec2gmt

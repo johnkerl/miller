@@ -1,1 +1,1 @@
-mlr --ojson --from reg-test/input/s.dkvp put '$keys   = get_keys($*)'
+mlr --ojson --from reg-test/input/s.dkvp put -f reg-test/cases-pending-windows/dsl-split-join/0023.mlr

@@ -1,1 +1,1 @@
-mlr --icsvlite --oxtab put '${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y}' reg-test/input/braced.csv
+mlr --icsvlite --oxtab put -f reg-test/cases-pending-windows/dsl-functional-tests/0035.mlr reg-test/input/braced.csv

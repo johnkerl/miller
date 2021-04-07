@@ -1,1 +1,1 @@
-mlr --from reg-test/input/xyz2 put -q 'c[1][2] = 3; o = c; dump o'
+mlr --from reg-test/input/xyz2 put -q -f reg-test/cases-pending-windows/dsl-mapvar-assignments/0086.mlr

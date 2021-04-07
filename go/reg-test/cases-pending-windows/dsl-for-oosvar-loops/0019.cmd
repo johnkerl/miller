@@ -1,1 +1,1 @@
-mlr --from reg-test/input/xyz2 put -q '@o["a"."b"]="c"."d"; for (k,v in @o) {print "k=".k.",v=".v}'
+mlr --from reg-test/input/xyz2 put -q -f reg-test/cases-pending-windows/dsl-for-oosvar-loops/0019.mlr

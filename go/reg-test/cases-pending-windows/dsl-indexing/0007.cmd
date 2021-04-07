@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp --idkvp --ojson put '$*["a"] = 78'
+mlr --from reg-test/input/s.dkvp --idkvp --ojson put -f reg-test/cases-pending-windows/dsl-indexing/0007.mlr

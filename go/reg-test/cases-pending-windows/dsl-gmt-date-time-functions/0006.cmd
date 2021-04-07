@@ -1,1 +1,1 @@
-mlr --csvlite put '$gmtdate = sec2gmtdate($sec)' reg-test/input/sec2gmt
+mlr --csvlite put -f reg-test/cases-pending-windows/dsl-gmt-date-time-functions/0006.mlr reg-test/input/sec2gmt

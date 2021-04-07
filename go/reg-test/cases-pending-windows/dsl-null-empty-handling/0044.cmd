@@ -1,1 +1,1 @@
-mlr --ofs tab put 'begin{@t=4};      $xy = $x & $y; $sy = @s & $y; $xt = $x & @t; $st = @s & @t' reg-test/input/typeof.dkvp
+mlr --ofs tab put -f reg-test/cases-pending-windows/dsl-null-empty-handling/0044.mlr reg-test/input/typeof.dkvp

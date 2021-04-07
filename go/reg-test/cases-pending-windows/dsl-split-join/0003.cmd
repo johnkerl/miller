@@ -1,1 +1,1 @@
-mlr -n put 'end { print joinkv({}, "=", ",") }'
+mlr -n put -f reg-test/cases-pending-windows/dsl-split-join/0003.mlr

@@ -1,1 +1,1 @@
-mlr -n put -v 'NR == 3 {$* = @v[1] }'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-oosvar-assignments/0017.mlr

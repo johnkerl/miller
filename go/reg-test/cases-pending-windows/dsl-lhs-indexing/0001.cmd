@@ -1,1 +1,1 @@
-mlr --ojson --from reg-test/input/2.dkvp put '$abc[FILENAME] = "def"'
+mlr --ojson --from reg-test/input/2.dkvp put -f reg-test/cases-pending-windows/dsl-lhs-indexing/0001.mlr

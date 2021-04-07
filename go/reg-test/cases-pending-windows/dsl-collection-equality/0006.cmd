@@ -1,1 +1,1 @@
-mlr -n put 'end { @eq = {}            == {}            ; print @eq}'
+mlr -n put -f reg-test/cases-pending-windows/dsl-collection-equality/0006.mlr

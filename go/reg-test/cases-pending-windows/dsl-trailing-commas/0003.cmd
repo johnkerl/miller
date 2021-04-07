@@ -1,1 +1,1 @@
-mlr --from reg-test/input/xyz345 put 'func f(): int { return 999 } $y=f(,)'
+mlr --from reg-test/input/xyz345 put -f reg-test/cases-pending-windows/dsl-trailing-commas/0003.mlr

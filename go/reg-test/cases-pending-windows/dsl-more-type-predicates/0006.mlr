@@ -1,0 +1,1 @@
+for (k,v in $*) {if (is_bool(v))     {@bool[NR][k]    = v}}    end{ emit @bool,    "NR", "k" }

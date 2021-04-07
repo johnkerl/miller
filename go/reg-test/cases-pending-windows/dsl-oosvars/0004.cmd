@@ -1,1 +1,1 @@
-mlr --opprint put -v 'begin{@ox="no"}; $d=@ox == "no" ? 1.0 : $x/@ox; @ox=$x' then step -a ratio -f x reg-test/input/abixy
+mlr --opprint put -v -f reg-test/cases-pending-windows/dsl-oosvars/0004.mlr then step -a ratio -f x reg-test/input/abixy

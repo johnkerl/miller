@@ -1,1 +1,1 @@
-mlr --from reg-test/input/xyz2 put '@o = {3:4}; $haskeya = haskey(@o, "a")'
+mlr --from reg-test/input/xyz2 put -f reg-test/cases-pending-windows/dsl-haskey/0009.mlr

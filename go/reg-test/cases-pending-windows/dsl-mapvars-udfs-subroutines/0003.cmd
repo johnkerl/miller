@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy-het put    'func f(x) {return {"a":x,"b":x**2}}; map o = f($x); $* = o'
+mlr --from reg-test/input/abixy-het put    -f reg-test/cases-pending-windows/dsl-mapvars-udfs-subroutines/0003.mlr

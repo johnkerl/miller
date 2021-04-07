@@ -1,1 +1,1 @@
-mlr --from reg-test/input/xyz2 put -q 'func f() { return {"a"."b":"c"."d",3:4}}; for (k,v in f()){print "k=".k.",v=".v}'
+mlr --from reg-test/input/xyz2 put -q -f reg-test/cases-pending-windows/dsl-for-oosvar-loops/0016.mlr

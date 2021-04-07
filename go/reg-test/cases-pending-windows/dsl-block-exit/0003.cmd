@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp put '$si = 0; for (i = 0; i < NR; i += 1) { if (i == 2) { break }      $si += i }'
+mlr --from reg-test/input/s.dkvp put -f reg-test/cases-pending-windows/dsl-block-exit/0003.mlr

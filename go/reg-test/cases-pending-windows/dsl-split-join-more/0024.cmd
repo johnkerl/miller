@@ -1,1 +1,1 @@
-mlr --oxtab --from reg-test/input/abixy-het put 's = joinv({1:2, "abc":4, 5:"xyz"}, ":"); $* = splitnv(s, ":")'
+mlr --oxtab --from reg-test/input/abixy-het put -f reg-test/cases-pending-windows/dsl-split-join-more/0024.mlr

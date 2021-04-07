@@ -1,1 +1,1 @@
-mlr --from reg-test/input/2.dkvp put 'subr s() {}'
+mlr --from reg-test/input/2.dkvp put -f reg-test/cases-pending-windows/dsl-subr/0012.mlr

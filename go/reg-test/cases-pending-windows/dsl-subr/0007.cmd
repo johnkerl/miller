@@ -1,1 +1,1 @@
-mlr -n put -v 'subr s() {return 2}'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-subr/0007.mlr

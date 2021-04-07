@@ -1,1 +1,1 @@
-mlr --opprint put '$[[3]]   = "NEW"'  reg-test/input/abixy
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-array-map-indexing/0074.mlr  reg-test/input/abixy

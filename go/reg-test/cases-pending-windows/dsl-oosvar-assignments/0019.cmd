@@ -1,1 +1,1 @@
-mlr put '@v[NR] = $a; NR == 7 { @v = $*} ; $* = @v' reg-test/input/abixy-het
+mlr put -f reg-test/cases-pending-windows/dsl-oosvar-assignments/0019.mlr reg-test/input/abixy-het

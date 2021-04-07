@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp --idkvp --opprint put '$z = [$a,$b,$i,$x,$y][[NR]]'
+mlr --from reg-test/input/s.dkvp --idkvp --opprint put -f reg-test/cases-pending-windows/dsl-array-map-indexing/0020.mlr

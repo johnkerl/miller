@@ -1,1 +1,1 @@
-mlr --json put '$a=$a[2]["b"][1]' reg-test/input/nested.json
+mlr --json put -f reg-test/cases-pending-windows/dsl-indexing/0016.mlr reg-test/input/nested.json

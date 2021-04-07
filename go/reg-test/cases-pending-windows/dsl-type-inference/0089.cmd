@@ -1,1 +1,1 @@
-mlr --xtab put -F '$iquot=$pf1//$pi2;$mod=$pf1%$pi2' reg-test/input/mixed-types.xtab
+mlr --xtab put -F -f reg-test/cases-pending-windows/dsl-type-inference/0089.mlr reg-test/input/mixed-types.xtab

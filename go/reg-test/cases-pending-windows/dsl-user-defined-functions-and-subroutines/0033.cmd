@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --opprint put 'func f(text) { print "TEXT IS ".text; return text.text } $o = f($a)'
+mlr --from reg-test/input/abixy --opprint put -f reg-test/cases-pending-windows/dsl-user-defined-functions-and-subroutines/0033.mlr

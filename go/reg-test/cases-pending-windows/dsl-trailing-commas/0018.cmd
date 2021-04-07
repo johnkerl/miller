@@ -1,1 +1,1 @@
-mlr         --from reg-test/input/xyz345 put '$y=pow($x,2)'
+mlr         --from reg-test/input/xyz345 put -f reg-test/cases-pending-windows/dsl-trailing-commas/0018.mlr

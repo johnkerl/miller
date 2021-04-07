@@ -1,1 +1,1 @@
-mlr put '$n = length({})' ./reg-test/cases-pending-windows/dsl-length/0007.input
+mlr put -f reg-test/cases-pending-windows/dsl-length/0007.mlr ./reg-test/cases-pending-windows/dsl-length/0007.input

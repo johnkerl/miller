@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp put '$z = 0; while ($z < $i) {$z += 1}'
+mlr --from reg-test/input/s.dkvp put -f reg-test/cases-pending-windows/dsl-do-while/0001.mlr

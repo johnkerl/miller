@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp --idkvp --opprint put '$y=FILENAME'
+mlr --from reg-test/input/s.dkvp --idkvp --opprint put -f reg-test/cases-pending-windows/dsl-basic/0010.mlr

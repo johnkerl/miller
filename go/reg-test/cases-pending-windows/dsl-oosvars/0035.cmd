@@ -1,1 +1,1 @@
-mlr put -q '@{variable.name} += $x; end{emit @{variable.name}}' reg-test/input/abixy
+mlr put -q -f reg-test/cases-pending-windows/dsl-oosvars/0035.mlr reg-test/input/abixy

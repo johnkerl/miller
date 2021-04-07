@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --opprint put -v 'for(k,v in $*) {$[k."_orig"]=v; $[k] = "other"}'
+mlr --from reg-test/input/abixy --opprint put -v -f reg-test/cases-pending-windows/dsl-for-srec-loops/0005.mlr

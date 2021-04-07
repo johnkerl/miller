@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp --idkvp --opprint put '$y ??= 999'
+mlr --from reg-test/input/s.dkvp --idkvp --opprint put -f reg-test/cases-pending-windows/dsl-short-circuit/0026.mlr

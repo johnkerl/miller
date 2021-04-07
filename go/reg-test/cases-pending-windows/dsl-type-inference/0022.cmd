@@ -1,1 +1,1 @@
-mlr --xtab put -F '$y=floor($pf1)' reg-test/input/mixed-types.xtab
+mlr --xtab put -F -f reg-test/cases-pending-windows/dsl-type-inference/0022.mlr reg-test/input/mixed-types.xtab

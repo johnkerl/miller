@@ -1,1 +1,1 @@
-mlr --from reg-test/input/2.dkvp --ojson put '@a = 3; @a[1]=4; $new=@a'
+mlr --from reg-test/input/2.dkvp --ojson put -f reg-test/cases-pending-windows/dsl-lhs-indexing/0010.mlr

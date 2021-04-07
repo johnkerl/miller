@@ -1,1 +1,1 @@
-mlr --from reg-test/input/xyz2 put '@* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @* = @*; dump'
+mlr --from reg-test/input/xyz2 put -f reg-test/cases-pending-windows/dsl-mapvar-assignments/0017.mlr

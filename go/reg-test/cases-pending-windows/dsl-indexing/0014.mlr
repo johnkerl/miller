@@ -1,0 +1,1 @@
+@curi=$i; $curi = @curi; $lagi=@lagi; @lagi=$i

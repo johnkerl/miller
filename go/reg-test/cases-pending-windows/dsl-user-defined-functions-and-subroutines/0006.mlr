@@ -1,0 +1,1 @@
+func f(x) {return k} for (k,v in $*) {$o=f($x)}

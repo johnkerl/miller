@@ -1,5 +1,6 @@
 DSL EXPRESSION:
-$* = @v[1] 
+$* = @v[1]
+
 
 AST:
 * statement block

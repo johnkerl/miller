@@ -1,1 +1,1 @@
-mlr --opprint put -v 'begin{@ox=0}; $d=$x-@ox; @ox=$x' reg-test/input/abixy
+mlr --opprint put -v -f reg-test/cases-pending-windows/dsl-oosvars/0008.mlr reg-test/input/abixy

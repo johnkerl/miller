@@ -1,1 +1,1 @@
-mlr filter -x '$x>0.3'   reg-test/input/abixy
+mlr filter -x -f reg-test/cases-pending-windows/dsl-functional-tests/0008.mlr   reg-test/input/abixy

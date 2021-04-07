@@ -1,1 +1,1 @@
-mlr --xtab put    '$y=sgn($nf1)' reg-test/input/mixed-types.xtab
+mlr --xtab put    -f reg-test/cases-pending-windows/dsl-type-inference/0041.mlr reg-test/input/mixed-types.xtab

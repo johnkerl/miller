@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --opprint put 'begin{@x=1} func f(x) { dump; print "hello" } $o=f($i)'
+mlr --from reg-test/input/abixy --opprint put -f reg-test/cases-pending-windows/dsl-user-defined-functions-and-subroutines/0034.mlr

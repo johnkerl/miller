@@ -1,1 +1,1 @@
-mlr         --from reg-test/input/xyz345 put '$y=log10($x)'
+mlr         --from reg-test/input/xyz345 put -f reg-test/cases-pending-windows/dsl-trailing-commas/0014.mlr

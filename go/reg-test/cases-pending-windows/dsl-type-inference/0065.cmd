@@ -1,1 +1,1 @@
-mlr --xtab put -F '$min=min($pf1,$pi2);$max=max($pf1,$pi2)' reg-test/input/mixed-types.xtab
+mlr --xtab put -F -f reg-test/cases-pending-windows/dsl-type-inference/0065.mlr reg-test/input/mixed-types.xtab

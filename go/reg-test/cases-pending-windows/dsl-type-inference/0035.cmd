@@ -1,1 +1,1 @@
-mlr --xtab put -F '$y=round($nf1)' reg-test/input/mixed-types.xtab
+mlr --xtab put -F -f reg-test/cases-pending-windows/dsl-type-inference/0035.mlr reg-test/input/mixed-types.xtab

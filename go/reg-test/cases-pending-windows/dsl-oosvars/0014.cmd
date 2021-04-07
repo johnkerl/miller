@@ -1,1 +1,1 @@
-mlr -n put -v 'begin{ @a = @b[1] }; $c = @d; @e[$i][2+$j][3] = $4; end{@f[@g[5][@h]] = 6}'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-oosvars/0014.mlr

@@ -1,0 +1,1 @@
+${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y}

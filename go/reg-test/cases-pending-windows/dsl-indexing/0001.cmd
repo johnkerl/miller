@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp --idkvp --opprint put '$z = {"a":$a,"b":$b,"i":$i,"x":$x,"y":$y}["b"]'
+mlr --from reg-test/input/s.dkvp --idkvp --opprint put -f reg-test/cases-pending-windows/dsl-indexing/0001.mlr

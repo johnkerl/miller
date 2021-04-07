@@ -1,1 +1,1 @@
-mlr -n put 'end {print joinv({"a":3,"b":4,"c":5}, ",")}'
+mlr -n put -f reg-test/cases-pending-windows/dsl-split-join/0010.mlr

@@ -1,1 +1,1 @@
-mlr put -v 'while($i < 5) { $i += 1}' reg-test/input/abixy
+mlr put -v -f reg-test/cases-pending-windows/dsl-do-while-loops/0001.mlr reg-test/input/abixy

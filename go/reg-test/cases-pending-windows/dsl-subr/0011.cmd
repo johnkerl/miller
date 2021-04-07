@@ -1,1 +1,1 @@
-mlr -n put -v 'subr s(a) {print "HELLO, ".a."!"} call s("WORLD")'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-subr/0011.mlr

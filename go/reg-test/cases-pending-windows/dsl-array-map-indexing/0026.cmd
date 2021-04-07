@@ -1,1 +1,1 @@
-mlr --opprint put 'unset $c' reg-test/input/abixy
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-array-map-indexing/0026.mlr reg-test/input/abixy

@@ -1,1 +1,1 @@
-mlr --opprint put '$hms=sec2dhms($sec);  $resec=dhms2sec($hms);  $diff=$resec-$sec' reg-test/input/sec2xhms
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-gmt-date-time-functions/0015.mlr reg-test/input/sec2xhms

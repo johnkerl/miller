@@ -1,1 +1,1 @@
-mlr --opprint put -v 'begin{@rsum = 0}; @rsum = @rsum + $x; $rsum = @rsum' reg-test/input/abixy
+mlr --opprint put -v -f reg-test/cases-pending-windows/dsl-oosvars/0005.mlr reg-test/input/abixy

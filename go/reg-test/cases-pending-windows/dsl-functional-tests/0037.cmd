@@ -1,1 +1,1 @@
-mlr --opprint put '$z = $x < 0.5 ? 0 : 1' reg-test/input/abixy
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-functional-tests/0037.mlr reg-test/input/abixy

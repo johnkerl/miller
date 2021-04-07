@@ -1,1 +1,1 @@
-mlr --from reg-test/input/s.dkvp --idkvp --opprint put '$j=$y+$i'
+mlr --from reg-test/input/s.dkvp --idkvp --opprint put -f reg-test/cases-pending-windows/dsl-basic/0004.mlr

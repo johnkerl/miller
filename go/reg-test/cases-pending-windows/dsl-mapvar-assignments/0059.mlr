@@ -1,0 +1,1 @@
+func map_valued_func() { return {"a":1,"b":2}} map o = map_valued_func(); dump o

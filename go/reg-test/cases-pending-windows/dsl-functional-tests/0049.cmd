@@ -1,1 +1,1 @@
-mlr --csvlite filter 'false ^^ false' reg-test/input/b.csv
+mlr --csvlite filter -f reg-test/cases-pending-windows/dsl-functional-tests/0049.mlr reg-test/input/b.csv

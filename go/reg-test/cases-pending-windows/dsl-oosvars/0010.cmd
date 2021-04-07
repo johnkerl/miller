@@ -1,1 +1,1 @@
-mlr put -q '@a=$a; @b=$b; @c=$x; end{emitf @a, @b, @c}' reg-test/input/abixy
+mlr put -q -f reg-test/cases-pending-windows/dsl-oosvars/0010.mlr reg-test/input/abixy

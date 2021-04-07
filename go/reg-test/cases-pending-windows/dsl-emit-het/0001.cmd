@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy put -q '@x={"a":NR}; @y={"a":-NR}; emit (@x, @y), "k"'
+mlr --from reg-test/input/abixy put -q -f reg-test/cases-pending-windows/dsl-emit-het/0001.mlr

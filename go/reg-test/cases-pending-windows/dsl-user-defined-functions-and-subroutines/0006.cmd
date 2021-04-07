@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --opprint put 'func f(x) {return k} for (k,v in $*) {$o=f($x)}'
+mlr --from reg-test/input/abixy --opprint put -f reg-test/cases-pending-windows/dsl-user-defined-functions-and-subroutines/0006.mlr

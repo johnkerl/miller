@@ -1,0 +1,1 @@
+func f(x) { return $x + 1 } func f(x) { return $x + 1}

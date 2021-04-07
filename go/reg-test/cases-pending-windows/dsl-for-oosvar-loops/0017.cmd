@@ -1,1 +1,1 @@
-mlr --from reg-test/input/xyz2 put -q 'for (k,v in {"a"."b":"c"."d",3:"c"}) {print "k=".k.",v=".v}'
+mlr --from reg-test/input/xyz2 put -q -f reg-test/cases-pending-windows/dsl-for-oosvar-loops/0017.mlr

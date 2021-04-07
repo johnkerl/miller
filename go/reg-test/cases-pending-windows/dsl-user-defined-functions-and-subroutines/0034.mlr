@@ -1,0 +1,1 @@
+begin{@x=1} func f(x) { dump; print "hello" } $o=f($i)

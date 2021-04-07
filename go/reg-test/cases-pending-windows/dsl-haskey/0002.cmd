@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy-het put '$haskey3 = haskey($*, 3)'
+mlr --from reg-test/input/abixy-het put -f reg-test/cases-pending-windows/dsl-haskey/0002.mlr

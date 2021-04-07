@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --opprint put 'subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)'
+mlr --from reg-test/input/abixy --opprint put -f reg-test/cases-pending-windows/dsl-user-defined-functions-and-subroutines/0032.mlr

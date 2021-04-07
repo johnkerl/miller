@@ -1,1 +1,1 @@
-mlr --opprint put 'unset $[[9]]' reg-test/input/abixy
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-array-map-indexing/0031.mlr reg-test/input/abixy

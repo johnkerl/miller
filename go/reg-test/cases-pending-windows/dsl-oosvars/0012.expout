@@ -1,6 +1,7 @@
 DSL EXPRESSION:
 begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean}
 
+
 AST:
 * statement block
     * begin block

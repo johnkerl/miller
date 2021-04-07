@@ -1,0 +1,1 @@
+for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR

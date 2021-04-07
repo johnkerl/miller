@@ -1,1 +1,1 @@
-mlr -n put 'end {print splitkv("a,b,c", "=", ",")}'
+mlr -n put -f reg-test/cases-pending-windows/dsl-split-join/0017.mlr

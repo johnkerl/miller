@@ -1,1 +1,1 @@
-mlr --opprint put -v 'begin {@count=0; @sum=0.0}; @count=@count+1; @sum=@sum+$x; end{@mean=@sum/@count; emitf @mean}' reg-test/input/abixy
+mlr --opprint put -v -f reg-test/cases-pending-windows/dsl-oosvars/0012.mlr reg-test/input/abixy

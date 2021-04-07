@@ -1,0 +1,1 @@
+o = joink({1:2,  "abc":4, 5:"xyz"}, ":"); print o

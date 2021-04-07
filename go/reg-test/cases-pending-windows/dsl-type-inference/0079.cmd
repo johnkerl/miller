@@ -1,1 +1,1 @@
-mlr --xtab put    '$prod=$pi1*$pi2;$quot=$pi1/$pi2' reg-test/input/mixed-types.xtab
+mlr --xtab put    -f reg-test/cases-pending-windows/dsl-type-inference/0079.mlr reg-test/input/mixed-types.xtab

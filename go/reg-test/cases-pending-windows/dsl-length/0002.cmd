@@ -1,1 +1,1 @@
-mlr put '$n = length($y)' ./reg-test/cases-pending-windows/dsl-length/0002.input
+mlr put -f reg-test/cases-pending-windows/dsl-length/0002.mlr ./reg-test/cases-pending-windows/dsl-length/0002.input

@@ -1,1 +1,1 @@
-mlr --opprint put -q '@s[NR][NR] = $i/100; @t[NR*10]=@s; end{emitp@s,"A","B"; emitp @t,"C","D","E"}' reg-test/input/abixy
+mlr --opprint put -q -f reg-test/cases-pending-windows/dsl-oosvar-assignments/0050.mlr reg-test/input/abixy

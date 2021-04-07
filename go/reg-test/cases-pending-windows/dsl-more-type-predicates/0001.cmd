@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --opprint put ' for (k, v in $*) { $[k."_type"]      = typeof(v)     } '
+mlr --from reg-test/input/abixy --opprint put -f reg-test/cases-pending-windows/dsl-more-type-predicates/0001.mlr

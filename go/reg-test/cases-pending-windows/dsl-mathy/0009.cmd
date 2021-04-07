@@ -1,1 +1,1 @@
-mlr --from reg-test/input/ten.dkvp --opprint put '$nx = bitcount($x); $ni = bitcount($i)'
+mlr --from reg-test/input/ten.dkvp --opprint put -f reg-test/cases-pending-windows/dsl-mathy/0009.mlr

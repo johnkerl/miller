@@ -1,0 +1,1 @@
+$gmtdate = sec2gmtdate($sec)

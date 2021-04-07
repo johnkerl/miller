@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy put 'while (NF < 256) { $["k".string(NF+1)] = "v".string(NF) }'
+mlr --from reg-test/input/abixy put -f reg-test/cases-pending-windows/dsl-indirect-srec-assignments/0002.mlr

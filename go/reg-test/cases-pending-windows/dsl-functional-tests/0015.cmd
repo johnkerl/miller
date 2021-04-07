@@ -1,1 +1,1 @@
-mlr put '$z = -0.024*$x+0.13' reg-test/input/abixy
+mlr put -f reg-test/cases-pending-windows/dsl-functional-tests/0015.mlr reg-test/input/abixy

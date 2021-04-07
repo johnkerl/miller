@@ -1,0 +1,1 @@
+@tmp = $a . $b; $ab = @tmp

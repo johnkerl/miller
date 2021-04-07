@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --opprint put 'func f(x) { return $x + 1 } func f(x) { return $x + 1}'
+mlr --from reg-test/input/abixy --opprint put -f reg-test/cases-pending-windows/dsl-user-defined-functions-and-subroutines/0027.mlr

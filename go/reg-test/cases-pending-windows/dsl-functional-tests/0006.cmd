@@ -1,1 +1,1 @@
-mlr filter 'NR>=4 && NR <= 7'   reg-test/input/abixy
+mlr filter -f reg-test/cases-pending-windows/dsl-functional-tests/0006.mlr   reg-test/input/abixy

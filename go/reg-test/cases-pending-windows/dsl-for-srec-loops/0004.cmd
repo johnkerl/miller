@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy put -v 'for(k,v in $*) {if (k != "x") {unset $[k]}}; $j = NR'
+mlr --from reg-test/input/abixy put -v -f reg-test/cases-pending-windows/dsl-for-srec-loops/0004.mlr

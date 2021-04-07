@@ -1,1 +1,1 @@
-mlr --from reg-test/input/xyz2 put -q '@b[1] = 2; var o = @*; dump o'
+mlr --from reg-test/input/xyz2 put -q -f reg-test/cases-pending-windows/dsl-mapvar-assignments/0068.mlr

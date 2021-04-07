@@ -1,1 +1,1 @@
-mlr put 'filter NR > 2' reg-test/input/s.dkvp
+mlr put -f reg-test/cases-pending-windows/dsl-no-filter-in-filter/0001.mlr reg-test/input/s.dkvp

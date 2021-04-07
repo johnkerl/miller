@@ -1,1 +1,1 @@
-mlr put -q '@s[1] += $i; @t=@s;             end{dump; emitp@s; emitp @t}' reg-test/input/abixy
+mlr put -q -f reg-test/cases-pending-windows/dsl-oosvar-assignments/0037.mlr reg-test/input/abixy

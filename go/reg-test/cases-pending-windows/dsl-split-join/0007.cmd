@@ -1,1 +1,1 @@
-mlr -n put 'end {print joink([1,2,3], ",")}'
+mlr -n put -f reg-test/cases-pending-windows/dsl-split-join/0007.mlr

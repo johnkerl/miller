@@ -1,1 +1,1 @@
-mlr filter -v '$x =~ "^a.*d$"'    reg-test/input/regex.dkvp
+mlr filter -v -f reg-test/cases-pending-windows/dsl-regex-matching/0005.mlr    reg-test/input/regex.dkvp

@@ -1,1 +1,1 @@
-mlr --from reg-test/input/xyz2 put -q 'func map_valued_func() { return {"a":1,"b":2}} map o = map_valued_func(); dump o'
+mlr --from reg-test/input/xyz2 put -q -f reg-test/cases-pending-windows/dsl-mapvar-assignments/0059.mlr

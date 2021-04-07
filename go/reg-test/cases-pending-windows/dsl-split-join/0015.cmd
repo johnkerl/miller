@@ -1,1 +1,1 @@
-mlr -n put 'end {print splitnv("3,4,5", ",")}'
+mlr -n put -f reg-test/cases-pending-windows/dsl-split-join/0015.mlr

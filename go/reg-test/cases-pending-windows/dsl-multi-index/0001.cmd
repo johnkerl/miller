@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy --ojson head -n 1 then put '$v[ ["req","host","header"]] = 4'
+mlr --from reg-test/input/abixy --ojson head -n 1 then put -f reg-test/cases-pending-windows/dsl-multi-index/0001.mlr

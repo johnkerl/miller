@@ -1,1 +1,1 @@
-mlr put -q '@s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u      ; dump}' reg-test/input/unset4.dkvp
+mlr put -q -f reg-test/cases-pending-windows/dsl-oosvars/0027.mlr reg-test/input/unset4.dkvp

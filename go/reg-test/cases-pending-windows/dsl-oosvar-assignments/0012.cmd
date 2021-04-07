@@ -1,1 +1,1 @@
-mlr --oxtab put -q '@v[$a][$b] = $*; end {emitp @v, "a", "b"}' reg-test/input/abixy-het
+mlr --oxtab put -q -f reg-test/cases-pending-windows/dsl-oosvar-assignments/0012.mlr reg-test/input/abixy-het

@@ -1,0 +1,1 @@
+subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)

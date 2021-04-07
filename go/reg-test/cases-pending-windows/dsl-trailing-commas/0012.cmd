@@ -1,1 +1,1 @@
-mlr         --from reg-test/input/xyz345 put 'subr s(int a,)   { print a*2 } call s(NR)'
+mlr         --from reg-test/input/xyz345 put -f reg-test/cases-pending-windows/dsl-trailing-commas/0012.mlr

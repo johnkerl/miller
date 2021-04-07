@@ -1,1 +1,1 @@
-mlr --opprint put '$a     = $[[2]]; unset $["a"]' reg-test/input/abixy
+mlr --opprint put -f reg-test/cases-pending-windows/dsl-array-map-indexing/0079.mlr reg-test/input/abixy

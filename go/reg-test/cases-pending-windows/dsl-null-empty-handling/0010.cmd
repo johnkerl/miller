@@ -1,1 +1,1 @@
-mlr put '$t = sub($nosuch,  "ell", "X")' reg-test/input/null-vs-empty.dkvp
+mlr put -f reg-test/cases-pending-windows/dsl-null-empty-handling/0010.mlr reg-test/input/null-vs-empty.dkvp

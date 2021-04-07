@@ -1,0 +1,1 @@
+$y = string($x); $z=$y.$y

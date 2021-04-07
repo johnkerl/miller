@@ -1,1 +1,1 @@
-mlr put 'unset $*; $aaa = 999' reg-test/input/unset4.dkvp
+mlr put -f reg-test/cases-pending-windows/dsl-oosvars/0033.mlr reg-test/input/unset4.dkvp

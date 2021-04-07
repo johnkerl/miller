@@ -1,0 +1,1 @@
+o = mapselect({"a":999}, "b", "nonesuch"); dump o

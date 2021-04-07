@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy-het put -q 'o = joinv($*, ":"); print o'
+mlr --from reg-test/input/abixy-het put -q -f reg-test/cases-pending-windows/dsl-split-join-more/0002.mlr

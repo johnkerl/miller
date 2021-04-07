@@ -1,1 +1,1 @@
-mlr --from reg-test/input/abixy-het put -q 'for (k,v in $*) {if (is_numeric(v))  {@numeric[NR][k] = v}}    end{ emit @numeric, "NR", "k" }'
+mlr --from reg-test/input/abixy-het put -q -f reg-test/cases-pending-windows/dsl-more-type-predicates/0004.mlr
