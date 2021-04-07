@@ -1,1 +1,1 @@
-mlr -n filter -v '        true && false'
+mlr -n filter -v -f reg-test/cases-pending-windows/dsl-operator-precedence/0110.mlr

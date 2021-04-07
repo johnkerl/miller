@@ -1,1 +1,1 @@
-mlr -n filter -v '     $a==1 || $b == 1 && $c == 1'
+mlr -n filter -v -f reg-test/cases-pending-windows/dsl-operator-precedence/0096.mlr

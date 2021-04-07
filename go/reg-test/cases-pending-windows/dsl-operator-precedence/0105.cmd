@@ -1,1 +1,1 @@
-mlr -n put    -v 'true || 1==0; $x = 3'
+mlr -n put    -v -f reg-test/cases-pending-windows/dsl-operator-precedence/0105.mlr
