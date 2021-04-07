@@ -1,0 +1,15 @@
+hostname                    localhost
+pid                         12345
+req%id                      6789
+req%method                  GET
+req%path                    api/check
+req%host                    foo.bar
+req%headers%host            bar.baz
+req%headers%user-agent      browser
+res%status_code             200
+res%header%content-type     text
+res%header%content-encoding plain
+empty1                      {}
+empty2                      []
+wrapper%empty3              {}
+wrapper%emtpy4              []
