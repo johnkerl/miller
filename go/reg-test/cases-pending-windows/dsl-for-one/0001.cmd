@@ -1,1 +1,0 @@
-mlr --from reg-test/input/s.dkvp head -n 2 then put -q -f reg-test/cases-pending-windows/dsl-for-one/0001.mlr
