@@ -1,1 +1,1 @@
-mlr -n put -v '$y = $a * $b * $c'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0007.mlr

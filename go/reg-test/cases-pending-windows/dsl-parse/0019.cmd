@@ -1,1 +1,1 @@
-mlr -n put -v '$x = 123. + 1e-2 / .2e3 + 1.e-3'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0019.mlr

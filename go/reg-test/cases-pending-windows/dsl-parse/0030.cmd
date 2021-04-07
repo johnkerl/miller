@@ -1,1 +1,1 @@
-mlr --opprint --from reg-test/input/s.dkvp head -n 1 then put '$z=2.3e-4'
+mlr --opprint --from reg-test/input/s.dkvp head -n 1 then put -f reg-test/cases-pending-windows/dsl-parse/0030.mlr

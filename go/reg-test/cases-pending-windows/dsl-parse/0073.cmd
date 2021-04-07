@@ -1,1 +1,1 @@
-mlr -n put -v 'if (NR == 1) { $z = 100 } elif (NR == 2) { $z = 200 }'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0073.mlr

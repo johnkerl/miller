@@ -1,1 +1,1 @@
-mlr -n put -v '$z = $a["index"]'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0049.mlr

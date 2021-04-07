@@ -1,1 +1,1 @@
-mlr -n put -v 'for (i = 0; i < 10; i += 1) { $x += i }'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0086.mlr

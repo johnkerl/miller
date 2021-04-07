@@ -1,1 +1,1 @@
-mlr -n put -v 'end{@y=1}'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0061.mlr

@@ -12,6 +12,6 @@ ARGV.each do |cmd_file_name|
     File.write(cmd_file_name, "#{left}-f #{mlr_file_name}#{right}".strip + "\n")
     puts mlr_file_name
   else
-    puts cm_file_name
+    puts cmd_file_name
   end
 end

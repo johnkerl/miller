@@ -1,1 +1,1 @@
-mlr -n put -v '$x = (NF + NR) * 7; $y = OFS . $y . "hello"'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0018.mlr

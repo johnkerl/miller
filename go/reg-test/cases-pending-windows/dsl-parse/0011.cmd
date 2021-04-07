@@ -1,1 +1,1 @@
-mlr -n put -v '$x = "abc"'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0011.mlr

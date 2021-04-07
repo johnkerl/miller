@@ -1,1 +1,1 @@
-mlr -n put -v '$[$y] = 4'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0010.mlr

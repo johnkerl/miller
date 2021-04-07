@@ -1,1 +1,1 @@
-mlr -n put -v '$z = [1,2,]'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0038.mlr

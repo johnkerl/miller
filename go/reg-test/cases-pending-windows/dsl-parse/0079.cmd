@@ -1,1 +1,1 @@
-mlr -n put -v 'if (1) {}'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0079.mlr

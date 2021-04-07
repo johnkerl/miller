@@ -1,1 +1,1 @@
-mlr -n put -v '$x = ($a + $b) + $c; $y = $a + ($b + $c); $z = $a + ($b)+ $c'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0015.mlr

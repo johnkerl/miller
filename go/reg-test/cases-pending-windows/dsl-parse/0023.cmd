@@ -1,1 +1,1 @@
-mlr -n put -v '$z=0x7fffffffffffffff .* 0x7fffffffffffffff'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0023.mlr

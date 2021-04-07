@@ -1,1 +1,1 @@
-mlr -n put -v 'begin{}'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0058.mlr

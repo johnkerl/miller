@@ -1,1 +1,1 @@
-mlr -n put -v 'begin{@a=1}; $e=2; $f==$g||$h==$i {$s=1};           $x=6; end{@z=9}'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0116.mlr

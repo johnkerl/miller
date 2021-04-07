@@ -1,1 +1,1 @@
-mlr -n put -v 'begin{true{@x=1}}; true{@x=2}; end{true{@x=3}}'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0120.mlr

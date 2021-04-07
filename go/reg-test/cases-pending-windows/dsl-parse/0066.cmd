@@ -1,1 +1,1 @@
-mlr -n put -v '$x=1;$y=2;'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0066.mlr

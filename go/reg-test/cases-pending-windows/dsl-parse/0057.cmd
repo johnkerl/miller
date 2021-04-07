@@ -1,1 +1,1 @@
-mlr -n put -v '$z = {"a":1, "b":2, "c":3}["b"]'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0057.mlr

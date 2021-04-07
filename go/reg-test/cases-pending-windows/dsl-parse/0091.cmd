@@ -1,1 +1,1 @@
-mlr -n put -v 'func f(){}'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0091.mlr

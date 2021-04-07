@@ -1,1 +1,1 @@
-mlr -n put -v 'func f(a,b,){return 1}'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0102.mlr

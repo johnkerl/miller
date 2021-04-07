@@ -1,1 +1,1 @@
-mlr -n put -v '$[2] = 3'
+mlr -n put -v -f reg-test/cases-pending-windows/dsl-parse/0009.mlr
