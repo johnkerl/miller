@@ -1,0 +1,19 @@
+$max["n"]["n"] = max($n,$n);
+$max["n"]["b"] = max($n,$b);
+$max["n"]["v"] = max($n,$v);
+$max["n"]["s"] = max($n,$s);
+
+$max["b"]["n"] = max($b,$n);
+$max["b"]["b"] = max($b,$b);
+$max["b"]["v"] = max($b,$v);
+$max["b"]["s"] = max($b,$s);
+
+$max["v"]["n"] = max($v,$n);
+$max["v"]["b"] = max($v,$b);
+$max["v"]["v"] = max($v,$v);
+$max["v"]["s"] = max($v,$s);
+
+$max["s"]["n"] = max($s,$n);
+$max["s"]["b"] = max($s,$b);
+$max["s"]["v"] = max($s,$v);
+$max["s"]["s"] = max($s,$s);

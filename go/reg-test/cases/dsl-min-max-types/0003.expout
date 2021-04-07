@@ -1,0 +1,32 @@
+{
+  "n": 1,
+  "b": true,
+  "v": "",
+  "s": "abc",
+  "le": {
+    "n": {
+      "n": true,
+      "b": false,
+      "v": false,
+      "s": true
+    },
+    "b": {
+      "n": false,
+      "b": true,
+      "v": false,
+      "s": false
+    },
+    "v": {
+      "n": true,
+      "b": false,
+      "v": true,
+      "s": true
+    },
+    "s": {
+      "n": false,
+      "b": false,
+      "v": false,
+      "s": true
+    }
+  }
+}

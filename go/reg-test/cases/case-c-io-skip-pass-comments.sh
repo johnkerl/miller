@@ -1,4 +1,5 @@
 # TODO: pending --ofmt
+# TODO: pending copy-file
 
 run_mlr --skip-comments --idkvp --oxtab cat $indir/comments/comments1.dkvp
 run_mlr --pass-comments --idkvp --oxtab cat $indir/comments/comments1.dkvp
