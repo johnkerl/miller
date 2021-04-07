@@ -96,7 +96,7 @@ func ReplMain(args []string) int {
 			showStartupBanner = false
 			argi++
 		} else if args[argi] == "-s" {
-			showPrompts = true
+			showPrompts = false
 			argi++
 		} else if args[argi] == "-v" {
 			astPrintMode = ASTPrintIndent
