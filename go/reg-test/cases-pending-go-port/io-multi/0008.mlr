@@ -1,0 +1,5 @@
+  $nf=NF;
+  $nr=NR;
+  $fnr=FNR;
+  $filenum=FILENUM;
+
