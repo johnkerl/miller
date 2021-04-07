@@ -1,0 +1,1 @@
+for (e in [3,4,5]) { emit { "foo" : "bar" } }
