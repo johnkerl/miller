@@ -15,6 +15,7 @@ import (
 
 const DefaultPath = "./reg-test/cases"
 const CommandSuffix = ".cmd"
+const EnvSuffix = ".env"
 const ExpectedStdoutSuffix = ".expout"
 const ExpectedStderrSuffix = ".experr"
 const ShouldFailSuffix = ".should-fail"
@@ -277,7 +278,9 @@ func (this *RegTester) populateSingleCmdFile(
 		fmt.Println(cmd)
 	}
 
+	// xxx putenv
 	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
+	// xxx unputenv
 
 	if this.verbosityLevel >= 3 {
 
@@ -327,6 +330,7 @@ func (this *RegTester) executeSingleCmdFile(
 	expectedStdoutFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStdoutSuffix)
 	expectedStderrFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStderrSuffix)
 	expectFailFileName := this.changeExtension(cmdFileName, CommandSuffix, ShouldFailSuffix)
+	envFileName := this.changeExtension(cmdFileName, CommandSuffix, EnvSuffix)
 
 	cmd, err := this.loadFile(cmdFileName)
 	if err != nil {
@@ -340,6 +344,15 @@ func (this *RegTester) executeSingleCmdFile(
 		fmt.Println("Command:")
 		fmt.Println(cmd)
 	}
+
+	// xxx this for -p and not -p
+	// xxx env:
+	// if -f envFileName:
+	//   err if not loadable
+	//   load k/v map
+	//   do the putenvs
+	//   ... run
+	//   do the unputnenvs
 
 	expectedStdout, err := this.loadFile(expectedStdoutFileName)
 	if err != nil {
@@ -362,7 +375,9 @@ func (this *RegTester) executeSingleCmdFile(
 
 	passed := true
 
+	// xxx putenv
 	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
+	// xxx unputenv
 
 	if verbosityLevel >= 3 {
 
