@@ -19,6 +19,9 @@ d type up a note somewhere in the reg-test tree that all the .mlrs and the -f 00
 d fix artifact-uploader name collision
   https://github.com/actions/upload-artifact
   https://forum.nim-lang.org/t/6371
+
+* github.com/mattn/go-isatty
+* color.Output refactor
 ----------------------------------------------------------------
 
 * proper windows terminal colors for repl and regtest
