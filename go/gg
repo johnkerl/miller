@@ -3,7 +3,7 @@
 path_to_mlr="./mlr"
 indir="./reg-test/input"
 
-build-go
+go build mlr.go
 if [ $? -ne 0 ]; then
   exit 1
 fi

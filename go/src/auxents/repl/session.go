@@ -38,7 +38,8 @@ import (
 func NewRepl(
 	exeName string,
 	replName string,
-	quietStartup bool,
+	showStartupBanner bool,
+	showPrompts bool,
 	astPrintMode ASTPrintMode,
 	doWarnings bool,
 	options *cliutil.TOptions,
@@ -78,10 +79,11 @@ func NewRepl(
 		exeName:  exeName,
 		replName: replName,
 
-		inputIsTerminal: getInputIsTerminal(),
-		quietStartup:    quietStartup,
-		prompt1:         getPrompt1(),
-		prompt2:         getPrompt2(),
+		inputIsTerminal:   getInputIsTerminal(),
+		showStartupBanner: showStartupBanner,
+		showPrompts:       showPrompts,
+		prompt1:           getPrompt1(),
+		prompt2:           getPrompt2(),
 
 		astPrintMode: astPrintMode,
 		doWarnings:   doWarnings,
@@ -113,7 +115,7 @@ func controlCHandler(sysToSignalHandlerChannel chan os.Signal, appSignalNotifica
 
 // ----------------------------------------------------------------
 func (this *Repl) handleSession(istream *os.File) {
-	if !this.quietStartup {
+	if this.showStartupBanner {
 		this.printStartupBanner()
 	}
 

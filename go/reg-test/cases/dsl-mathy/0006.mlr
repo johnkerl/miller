@@ -1,0 +1,5 @@
+$q = qnorm(-5 + $i);
+$r = 5 + invqnorm($q);
+# Set number of decimal places for multi-platform regression-test matches
+$q = fmtnum($q, "%.8f");
+$r = fmtnum($r, "%.8f");
