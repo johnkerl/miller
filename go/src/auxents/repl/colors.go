@@ -1,13 +1,15 @@
 // ================================================================
-// This is for doing color-highlighting for on-line help
+// This is for doing color-highlighting for on-line help.  This is a thin layer
+// over the package is uses -- the value-add here is to centralize the choice
+// of particular color (as of this writing, red) all in one spot.
 // ================================================================
 
 package repl
 
 import (
-	"github.com/fatih/color"
+	"miller/src/platform"
 )
 
-func HighlightString(input string) string {
-	return color.HiRedString(input)
+func PrintHighlightString(input string) {
+	platform.PrintHiRed(input)
 }

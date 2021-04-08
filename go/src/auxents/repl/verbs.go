@@ -823,29 +823,29 @@ func handleHelpSingle(this *Repl, arg string) {
 			if i > 0 {
 				fmt.Println()
 			}
-			fmt.Printf("%s: \n", HighlightString(strings.Join(entry.verbNames, " or ")))
+			PrintHighlightString(strings.Join(entry.verbNames, " or "))
 			entry.usageFunc(this)
 		}
 		return
 	}
 
 	if arg == "prompt" {
-		fmt.Printf(
-			"You can export the environment variable %s to customize the Miller REPL prompt.\n",
-			HighlightString(ENV_PRIMARY_PROMPT),
-		)
-		fmt.Printf(
-			"Otherwise, it defaults to \"%s\".\n",
-			HighlightString(DEFAULT_PRIMARY_PROMPT),
-		)
-		fmt.Printf(
-			"Likewise you can export the environment variable %s to customize the secondary prompt,\n",
-			HighlightString(ENV_SECONDARY_PROMPT),
-		)
-		fmt.Printf(
-			"which defaults to \"%s\". This is used for multi-line input.\n",
-			HighlightString(DEFAULT_SECONDARY_PROMPT),
-		)
+		fmt.Printf("You can export the environment variable ")
+		PrintHighlightString(ENV_PRIMARY_PROMPT)
+		fmt.Printf(" to customize the Miller REPL prompt.\n")
+
+		fmt.Printf("Otherwise, it defaults to \"")
+		PrintHighlightString(DEFAULT_PRIMARY_PROMPT)
+		fmt.Printf("\".\n")
+
+		fmt.Printf("Likewise you can export the environment variable ")
+		PrintHighlightString(ENV_SECONDARY_PROMPT)
+		fmt.Printf(" to customize the secondary prompt,\n")
+
+		fmt.Printf("which defaults to \"")
+		PrintHighlightString(DEFAULT_SECONDARY_PROMPT)
+		fmt.Printf("\". This is used for multi-line input.\n")
+
 		return
 	}
 
@@ -857,7 +857,7 @@ func handleHelpSingle(this *Repl, arg string) {
 	if arg == "function-details" {
 		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsagesDecorated(
 			os.Stdout,
-			func(functionName string) string { return HighlightString(functionName) },
+			func(functionName string) { PrintHighlightString(functionName) },
 		)
 		return
 	}
@@ -876,13 +876,13 @@ func handleHelpSingle(this *Repl, arg string) {
 }
 
 func showREPLIntro(this *Repl) {
-	fmt.Printf("%s\n", HighlightString("What the Miller REPL is:"))
+	PrintHighlightString("What the Miller REPL is:\n")
 	fmt.Println(
 		`The Miller REPL (read-evaluate-print loop) is an interactive counterpart
 to record-processing using the put/filter DSL (domain-specific language).`)
 	fmt.Println()
 
-	fmt.Printf("%s\n", HighlightString("Using Miller without the REPL:"))
+	PrintHighlightString("Using Miller without the REPL:\n")
 	fmt.Printf(
 		`Using put and filter, you can do the following:
 * Specify input format (e.g. --icsv), output format (e.g. --ojson), etc. using
@@ -898,7 +898,7 @@ to record-processing using the put/filter DSL (domain-specific language).`)
 	fmt.Println()
 	fmt.Println()
 
-	fmt.Printf("%s\n", HighlightString("Using Miller with the REPL:"))
+	PrintHighlightString("Using Miller with the REPL:\n")
 	fmt.Println(
 		`Using the REPL, by contrast, you get interactive control over those same steps:
 * Specify input format (e.g. --icsv), output format (e.g. --ojson), etc. using
@@ -935,7 +935,7 @@ included in the output-record stream.  But here in the REPL, they are simply
 printed to the terminal, e.g. if you type '1+2', you will see '3'.`)
 	fmt.Println()
 
-	fmt.Printf("%s\n", HighlightString("Entering multi-line statements:"))
+	PrintHighlightString("Entering multi-line statements:\n")
 	fmt.Println(
 		`* To enter multi-line statements, enter '<' on a line by itself, then the code (taking care
   for semicolons), then ">" on a line by itself. These will be executed immediately.
@@ -944,20 +944,20 @@ printed to the terminal, e.g. if you type '1+2', you will see '3'.`)
   ':main', as if you had done ':load' to load statements from a file.`)
 	fmt.Println()
 
-	fmt.Printf("%s\n", HighlightString("History-editing:"))
+	PrintHighlightString("History-editing:\n")
 	fmt.Println(
 		`No command-line-history-editing feature is built in but 'rlwrap mlr repl' is a
 delight. You may need 'brew install rlwrap', 'sudo apt-get install rlwrap',
 etc. depending on your platform.`)
 	fmt.Println()
 
-	fmt.Printf("%s\n", HighlightString("On-line help:"))
+	PrintHighlightString("On-line help:\n")
 	fmt.Println("Type ':help' to see more about your options. In particular, ':help examples'.")
 }
 
 // ----------------------------------------------------------------
 func showREPLExamples(this *Repl) {
-	fmt.Printf("%s\n", HighlightString("Immediately executed statements:"))
+	PrintHighlightString("Immediately executed statements:\n")
 	fmt.Println(
 		`[mlr] 1+2
 3
@@ -967,7 +967,7 @@ func showREPLExamples(this *Repl) {
 [mlr] x+y
 7`)
 	fmt.Println()
-	fmt.Printf("%s\n", HighlightString("Defining functions:"))
+	PrintHighlightString("Defining functions:\n")
 	fmt.Println(
 		`[mlr] <
 func f(a,b) {
@@ -977,7 +977,7 @@ func f(a,b) {
 [mlr] f(7,5)
 16807`)
 	fmt.Println()
-	fmt.Printf("%s\n", HighlightString("Reading and processing records:"))
+	PrintHighlightString("Reading and processing records:\n")
 	fmt.Println(
 		`[mlr] :open foo.dat
 [mlr] :read

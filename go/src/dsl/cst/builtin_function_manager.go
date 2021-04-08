@@ -1543,7 +1543,7 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionsRaw(o *os.File) {
 func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
 	this.ListBuiltinFunctionUsagesDecorated(
 		o,
-		func(functionName string) string { return functionName }, // no decoration
+		func(functionName string) { fmt.Print(functionName) }, // no decoration
 	)
 }
 
@@ -1552,15 +1552,15 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
 // -- capitalization, ANSI color, etc.
 func (this *BuiltinFunctionManager) ListBuiltinFunctionUsagesDecorated(
 	o *os.File,
-	nameDecorator func(string) string,
+	nameEmitter func(string),
 ) {
 	for i, builtinFunctionInfo := range *this.lookupTable {
 		if i > 0 {
 			fmt.Fprintln(o)
 		}
 		lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
-		fmt.Fprintf(o, "%-s  (class=%s #args=%s) %s\n",
-			nameDecorator(builtinFunctionInfo.name),
+		nameEmitter(builtinFunctionInfo.name)
+		fmt.Fprintf(o, "  (class=%s #args=%s) %s\n",
 			builtinFunctionInfo.class,
 			describeNargs(&builtinFunctionInfo),
 			builtinFunctionInfo.help,

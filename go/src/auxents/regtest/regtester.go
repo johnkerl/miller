@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fatih/color"
+	"miller/src/platform"
 )
 
 const DefaultPath = "./reg-test/cases"
@@ -21,11 +21,6 @@ const ShouldFailSuffix = ".should-fail"
 
 const MajorSeparator = "================================================================"
 const MinorSeparator = "----------------------------------------------------------------"
-
-var PASS = color.HiGreenString("PASS")
-var pass = color.HiGreenString("pass")
-var FAIL = color.HiRedString("FAIL")
-var fail = color.HiRedString("fail")
 
 // ----------------------------------------------------------------
 type RegTester struct {
@@ -129,10 +124,12 @@ func (this *RegTester) Execute(
 	fmt.Println()
 
 	if this.casePassCount > 0 && this.caseFailCount == 0 {
-		fmt.Printf("%s overall\n", PASS)
+		platform.PrintHiGreen("PASS")
+		fmt.Printf(" overall\n")
 		return true
 	} else {
-		fmt.Printf("%s overall\n", FAIL)
+		platform.PrintHiRed("FAIL")
+		fmt.Printf(" overall\n")
 		return false
 	}
 }
@@ -214,9 +211,11 @@ func (this *RegTester) executeSingleDirectory(
 		// multiply announce.
 		if hasDirectEntries {
 			if passed {
-				fmt.Printf("%s %s/\n", PASS, dirName)
+				platform.PrintHiGreen("PASS")
+				fmt.Printf(" %s/\n", dirName)
 			} else {
-				fmt.Printf("%s %s/\n", FAIL, dirName)
+				platform.PrintHiRed("FAIL")
+				fmt.Printf(" %s/\n", dirName)
 			}
 		}
 	}
@@ -433,9 +432,11 @@ func (this *RegTester) executeSingleCmdFile(
 
 	if verbosityLevel >= 1 {
 		if passed {
-			fmt.Printf("%s %s\n", pass, cmdFileName)
+			platform.PrintHiGreen("pass")
+			fmt.Printf(" %s\n", cmdFileName)
 		} else {
-			fmt.Printf("%s %s\n", fail, cmdFileName)
+			platform.PrintHiGreen("fail")
+			fmt.Printf(" %s\n", cmdFileName)
 		}
 	}
 
