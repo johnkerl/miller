@@ -9,7 +9,7 @@ import (
 	"os"
 	"runtime"
 
-	"golang.org/x/term"
+	isatty "github.com/mattn/go-isatty"
 
 	"miller/src/version"
 )
@@ -20,16 +20,7 @@ const DEFAULT_PRIMARY_PROMPT = "[mlr] "
 const DEFAULT_SECONDARY_PROMPT = ""
 
 func getInputIsTerminal() bool {
-	if runtime.GOOS == "windows" {
-		// Sadly, term.IsTerminal doesn't work inside MSYS2 but does work
-		// outside MSYS2.  Also sadly, I don't know how to tell the difference
-		// programatically between inside/outside MSYS2 here. So, as a
-		// workaround, I am simply defaulting to "is a terminal" here. Issues
-		// with regression-testing will need to be dealt with later.
-		return true
-	} else {
-		return term.IsTerminal(int(os.Stdin.Fd()))
-	}
+	return isatty.IsTerminal(os.Stdin.Fd())
 }
 
 func getPrompt1() string {
@@ -49,8 +40,7 @@ func getPrompt2() string {
 }
 
 func (this *Repl) printStartupBanner() {
-	if this.inputIsTerminal {
-		// TODO: inhibit if mlr repl -q
+	if this.inputIsTerminal && !this.quietStartup {
 		fmt.Printf("Miller %s for %s:%s:%s\n", version.STRING, runtime.GOOS, runtime.GOARCH, runtime.Version())
 		fmt.Printf("Type ':help' for on-line help; ':quit' to quit.\n")
 	}

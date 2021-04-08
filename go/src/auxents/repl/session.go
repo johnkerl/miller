@@ -113,9 +113,7 @@ func controlCHandler(sysToSignalHandlerChannel chan os.Signal, appSignalNotifica
 
 // ----------------------------------------------------------------
 func (this *Repl) handleSession(istream *os.File) {
-	if !this.quietStartup {
-		this.printStartupBanner()
-	}
+	this.printStartupBanner()
 
 	lineReader := bufio.NewReader(istream)
 
