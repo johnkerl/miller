@@ -1,1 +1,1 @@
-mlr repl -q ./reg-test/cases/repl/0003.input
+mlr repl -q -s ./reg-test/cases-pending-windows/repl/0003.input
