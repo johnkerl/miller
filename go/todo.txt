@@ -3,15 +3,12 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 windows/regtest:
-! "git-checkin the intermediates" -- crank these out
 * convert u/rr -o and u/rr -n: survey case-*.sh for themes
   o multiline, check
   o essential putenv (like TZ)
   o inessential putenv (tee1=...)
   o dynamic files like $path_to_mlr unhex ..., cp, cat, etc.
 * convert reg-test/cases-pending-windows
-  o one:
-    grep "'.*\"'" reg-test/cases-pending-windows/*/*.cmd|grep -w put | cat -n
 * convert reg-test/cases-pending-go-port
 * clean up TODO/xxx in src/platform
 ? auto diff/findstr -- ? and/or mlr regtest -d ?
@@ -19,14 +16,9 @@ d type up a note somewhere in the reg-test tree that all the .mlrs and the -f 00
 d fix artifact-uploader name collision
   https://github.com/actions/upload-artifact
   https://forum.nim-lang.org/t/6371
-
-* github.com/mattn/go-isatty
-* color.Output refactor
 ----------------------------------------------------------------
 
-* proper windows terminal colors for repl and regtest
 * #455 -- doc-neatens re ordering
-d windows mrpl colors -- ? checking isatty also -- ?
 * more about HTTP logs in miller -- doc and encapsulate:
   mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
 * PR-template etc checklists
