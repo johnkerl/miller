@@ -1,9 +1,15 @@
 #!/bin/bash
 
 verbose=""
+do_wips="false"
 if [ "$1" = "-v" ]; then
+  shift
   set -x
   verbose="-v"
+fi
+if [ "$1" = "-x" ]; then
+  shift
+  do_wips="true"
 fi
 
 set -euo pipefail
@@ -28,10 +34,15 @@ echo REGRESSION TESTS v2
 echo
 mlr regtest $verbose reg-test/cases
 mlr regtest $verbose reg-test/cases-pending-windows
+if [ "$do_wips" = "true" ]; then
+  mlr regtest $verbose reg-test/cases-pending-go-port
+fi
 echo
 
 echo ================================================================
 echo REGRESSION TESTS v1
 echo
 ./reg-test/run -n $verbose
-# ./reg-test/run -o $verbose
+if [ "$do_wips" = "true" ]; then
+  ./reg-test/run -o $verbose
+fi
