@@ -435,7 +435,7 @@ func (this *RegTester) executeSingleCmdFile(
 			platform.PrintHiGreen("pass")
 			fmt.Printf(" %s\n", cmdFileName)
 		} else {
-			platform.PrintHiGreen("fail")
+			platform.PrintHiRed("fail")
 			fmt.Printf(" %s\n", cmdFileName)
 		}
 	}
