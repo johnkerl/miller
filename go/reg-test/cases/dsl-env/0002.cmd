@@ -1,1 +1,1 @@
-mlr -n put -v '$z = ENV["HOME"][1]'
+mlr -n put -v -f reg-test/cases/dsl-env/0002.mlr

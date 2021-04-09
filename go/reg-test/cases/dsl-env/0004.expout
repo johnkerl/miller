@@ -1,6 +1,7 @@
 DSL EXPRESSION:
 $ENV["FOO"][2] = "bar"
 
+
 AST:
 * statement block
     * assignment "="
