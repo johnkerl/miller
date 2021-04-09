@@ -6,10 +6,12 @@ package regtest
 
 import (
 	"container/list"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
 
+	"miller/src/lib"
 	"miller/src/platform"
 )
 
@@ -266,6 +268,7 @@ func (this *RegTester) populateSingleCmdFile(
 
 	expectedStdoutFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStdoutSuffix)
 	expectedStderrFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStderrSuffix)
+	envFileName := this.changeExtension(cmdFileName, CommandSuffix, EnvSuffix)
 
 	cmd, err := this.loadFile(cmdFileName)
 	if err != nil {
@@ -278,9 +281,33 @@ func (this *RegTester) populateSingleCmdFile(
 		fmt.Println(cmd)
 	}
 
-	// xxx putenv
+	// The .env needn't exist (most test cases don't have one) in which case
+	// the envKeyValuePairs map will be empty.
+	envKeyValuePairs, err := this.loadEnvFile(envFileName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// Set any case-specific environment variables before running the case.
+	for key, value := range envKeyValuePairs {
+		if this.verbosityLevel >= 3 {
+			fmt.Printf("SETENV %s=%s\n", key, value)
+		}
+		os.Setenv(key, value)
+	}
+
 	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
-	// xxx unputenv
+
+	// Unset any case-specific environment variables after running the case.
+	// This is important since the setenv is done in the current process,
+	// and we don't want to affect subsequent test cases.
+	for key, _ := range envKeyValuePairs {
+		if this.verbosityLevel >= 3 {
+			fmt.Printf("UNSETENV %s\n", key)
+		}
+		os.Setenv(key, "")
+	}
 
 	if this.verbosityLevel >= 3 {
 
@@ -345,14 +372,13 @@ func (this *RegTester) executeSingleCmdFile(
 		fmt.Println(cmd)
 	}
 
-	// xxx this for -p and not -p
-	// xxx env:
-	// if -f envFileName:
-	//   err if not loadable
-	//   load k/v map
-	//   do the putenvs
-	//   ... run
-	//   do the unputnenvs
+	// The .env needn't exist (most test cases don't have one) in which case
+	// the envKeyValuePairs map will be empty.
+	envKeyValuePairs, err := this.loadEnvFile(envFileName)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
 
 	expectedStdout, err := this.loadFile(expectedStdoutFileName)
 	if err != nil {
@@ -375,12 +401,27 @@ func (this *RegTester) executeSingleCmdFile(
 
 	passed := true
 
-	// xxx putenv
+	// Set any case-specific environment variables before running the case.
+	for key, value := range envKeyValuePairs {
+		if verbosityLevel >= 3 {
+			fmt.Printf("SETENV %s=%s\n", key, value)
+		}
+		os.Setenv(key, value)
+	}
+
 	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
-	// xxx unputenv
+
+	// Unset any case-specific environment variables after running the case.
+	// This is important since the setenv is done in the current process,
+	// and we don't want to affect subsequent test cases.
+	for key, _ := range envKeyValuePairs {
+		if verbosityLevel >= 3 {
+			fmt.Printf("UNSETENV %s\n", key)
+		}
+		os.Setenv(key, "")
+	}
 
 	if verbosityLevel >= 3 {
-
 		fmt.Printf("actualStdout [%d]:\n", len(actualStdout))
 		fmt.Println(actualStdout)
 
@@ -496,4 +537,42 @@ func (this *RegTester) storeFile(
 		return err
 	}
 	return nil
+}
+
+// ----------------------------------------------------------------
+func (this *RegTester) loadEnvFile(
+	envFileName string,
+) (map[string]string, error) {
+	// If the file doesn't exist that's the normal case -- most cases do not
+	// have a .env file.
+	_, err := os.Stat(envFileName)
+	if os.IsNotExist(err) {
+		return nil, nil
+	}
+
+	// If the file does exist and isn't loadable, that's an error.
+	contents, err := this.loadFile(envFileName)
+	if err != nil {
+		return nil, err
+	}
+
+	keyValuePairs := make(map[string]string)
+	lines := strings.Split(contents, "\n")
+	for _, line := range lines {
+		line = strings.TrimSuffix(line, "\r")
+		if line == "" {
+			continue
+		}
+		fields := strings.SplitN(line, "=", 2)
+		if len(fields) != 2 {
+			return nil, errors.New(
+				fmt.Sprintf(
+					"%s: could not parse env line \"%s\" from file \"%s\".\n",
+					lib.MlrExeName(), line, envFileName,
+				),
+			)
+		}
+		keyValuePairs[fields[0]] = fields[1]
+	}
+	return keyValuePairs, nil
 }
