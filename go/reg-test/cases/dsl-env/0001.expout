@@ -1,0 +1,11 @@
+DSL EXPRESSION:
+$z = ENV["HOME"]
+
+
+AST:
+* statement block
+    * assignment "="
+        * direct field value "z"
+        * environment variable "ENV"
+            * string literal "HOME"
+

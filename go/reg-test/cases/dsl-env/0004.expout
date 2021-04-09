@@ -1,0 +1,14 @@
+DSL EXPRESSION:
+$ENV["FOO"][2] = "bar"
+
+
+AST:
+* statement block
+    * assignment "="
+        * array or map index access "[]"
+            * array or map index access "[]"
+                * direct field value "ENV"
+                * string literal "FOO"
+            * int literal "2"
+        * string literal "bar"
+
