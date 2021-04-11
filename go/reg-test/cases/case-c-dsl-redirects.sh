@@ -1,7 +1,3 @@
-# TODO:
-# * regtest-v2 -- pending auxfile
-# * windows -- ?
-
 # ----------------------------------------------------------------
 announce MAPPER TEE REDIRECTS
 

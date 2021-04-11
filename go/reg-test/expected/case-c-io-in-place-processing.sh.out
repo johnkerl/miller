@@ -1,5 +1,5 @@
 
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp1
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -11,7 +11,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp2
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -23,25 +23,23 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr -I --opprint head -n 2 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp1 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp2
+mlr -I --opprint head -n 2 /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp1 /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp2
 
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp1
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp1
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
 
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp2
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp2
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
 
 mlr -I --opprint head -n 2
-mlr: -I option (in-place operation) requires input files.
 
-mlr -I --opprint -n head -n 2 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp1
-mlr: -I option (in-place operation) requires input files.
+mlr -I --opprint -n head -n 2 /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp1
 
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp1
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -53,7 +51,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp2
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -65,9 +63,9 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr -I --opprint rename a,AYE,b,BEE /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp1 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp2
+mlr -I --opprint rename a,AYE,b,BEE /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp1 /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp2
 
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp1
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp1
 AYE BEE i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -80,7 +78,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-reg-test/abixy.temp2
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/abixy.temp2
 AYE BEE i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797

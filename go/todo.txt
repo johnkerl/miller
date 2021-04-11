@@ -3,9 +3,7 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 windows/regtest:
-* convert u/rr -o and u/rr -n: survey case-*.sh for themes
-  o multiline, check
-  o essential putenv (like TZ)
+* convert u/rr: survey case-*.sh for themes
   o inessential putenv (tee1=...)
   o dynamic files like $path_to_mlr unhex ..., cp, cat, etc.
 * convert reg-test/cases-pending-windows

@@ -1,5 +1,3 @@
-# TODO: pending regtest-v2 auxfile support
-
 cp $indir/abixy $outdir/abixy.temp1
 cp $indir/abixy $outdir/abixy.temp2
 run_cat $outdir/abixy.temp1

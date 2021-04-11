@@ -56,26 +56,6 @@ b 5
 c 6
 # hello world 3
 
-
-mlr --skip-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.dkvp
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
-mlr --pass-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.dkvp
-# hello world 1
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 6
-
 mlr --skip-comments-with @@ --idkvp --oxtab cat ./reg-test/input/comments/comments1-atat.dkvp
 a 1
 b 2
@@ -190,26 +170,6 @@ mlr --pass-comments --inidx --oxtab cat ./reg-test/input/comments/comments3.nidx
 3 cX6
 # hello world 3
 
-
-mlr --skip-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.nidx
-1 aX1
-2 bX2
-3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-
-mlr --pass-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.nidx
-# hello world 1
-1 aX1
-2 bX2
-3 cX3
-
-1 aX4
-2 bX5
-3 cX6
-
 mlr --skip-comments --ijson --odkvp cat ./reg-test/input/comments/comments1.json
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -237,16 +197,6 @@ mlr --pass-comments --ijson --odkvp cat ./reg-test/input/comments/comments3.json
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-
-mlr --skip-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.json
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-mlr --pass-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.json
-# hello world 1
-a=1,b=2,c=3
-a=4,b=5,c=6
-
 mlr --skip-comments --ixtab --odkvp cat ./reg-test/input/comments/comments1.xtab
 x=1,z=3
 x=2,z=5
@@ -271,17 +221,6 @@ x=1,z=3
 x=2,z=5
 #hello world6
 
-
-mlr --skip-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.xtab
-x=1,z=3
-x=2,z=5
-
-mlr --pass-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.xtab
-#hello world3
-x=1,z=3
-#hello world4
-x=2,z=5
-
 mlr --skip-comments --icsvlite --odkvp cat ./reg-test/input/comments/comments1.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -303,16 +242,6 @@ a=1,b=2,c=3
 a=4,b=5,c=6
 # haha
 
-
-mlr --skip-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-mlr --pass-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.csv
-# hello
-a=1,b=2,c=3
-a=4,b=5,c=6
-
 mlr --skip-comments --icsv --odkvp cat ./reg-test/input/comments/comments1.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -333,16 +262,6 @@ a=1,b=2,c=3
 # there
 a=4,b=5,c=6
 # haha
-
-
-mlr --skip-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.csv
-a=1,b=2,c=3
-a=4,b=5,c=6
-
-mlr --pass-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/go/output-reg-test/comments1-crlf.csv
-# hello
-a=1,b=2,c=3
-a=4,b=5,c=6
 
 mlr --oxtab put $c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b) ./reg-test/input/int64io.dkvp
 a 0x1
