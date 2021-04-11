@@ -2,6 +2,14 @@
 TOP OF LIST:
 
 ----------------------------------------------------------------
+auxfile sketch:
+* need outdir somewhere ...
+* copy primitive
+* compare-file (exp/act) primitive
+* rm-after ?
+----------------------------------------------------------------
+
+----------------------------------------------------------------
 windows/regtest:
 * convert u/rr: survey case-*.sh for themes
   o inessential putenv (tee1=...)
