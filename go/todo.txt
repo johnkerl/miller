@@ -6,6 +6,7 @@ TOP OF LIST:
 * convert reg-test/cases-pending-windows
 * convert reg-test/cases-pending-go-port
 * clean up TODO/xxx in src/platform
+* mlr regtest doc -- focus on either go/reg-test or go/src/auxents/regtest, one linking to the other
 d type up a note somewhere in the reg-test tree that all the .mlrs and the -f 00nn.mlr are for windows regtest
 d fix artifact-uploader name collision
   https://github.com/actions/upload-artifact
