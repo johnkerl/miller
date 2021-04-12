@@ -1,22 +1,15 @@
 ================================================================
 TOP OF LIST:
 
-----------------------------------------------------------------
-windows/regtest:
-* convert u/rr -o and u/rr -n: survey case-*.sh for themes
-  o multiline, check
-  o essential putenv (like TZ)
-  o inessential putenv (tee1=...)
-  o dynamic files like $path_to_mlr unhex ..., cp, cat, etc.
+* emph go 1.16 @ go.mod & README.md; also gha yaml
+
 * convert reg-test/cases-pending-windows
 * convert reg-test/cases-pending-go-port
 * clean up TODO/xxx in src/platform
-? auto diff/findstr -- ? and/or mlr regtest -d ?
 d type up a note somewhere in the reg-test tree that all the .mlrs and the -f 00nn.mlr are for windows regtest
 d fix artifact-uploader name collision
   https://github.com/actions/upload-artifact
   https://forum.nim-lang.org/t/6371
-----------------------------------------------------------------
 
 * #455 -- doc-neatens re ordering
 * more about HTTP logs in miller -- doc and encapsulate:
@@ -108,6 +101,8 @@ CONCLUSION:
 
 ! --nojvstack; default --jvstack; code it up ...
 
+* mlrrc: extend to maybe have a stdlib dir for often-used and/or shared DSL?
+
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
@@ -126,6 +121,7 @@ CONCLUSION:
 * port verb stats2
 
 * in-place processing
+  o make sure not to create foo.{temp} if foo does not exist
 * prepipe
   - gzin; bz2in ...
 

@@ -34,13 +34,7 @@ echo
 echo ================================================================
 echo REGRESSION TESTS v2 MAIN
 echo
-mlr regtest $verbose reg-test/cases
-
-echo
-echo ================================================================
-echo REGRESSION TESTS v2 PENDING WINDOWS
-echo
-mlr regtest $verbose reg-test/cases-pending-windows
+mlr regtest $verbose reg-test/cases reg-test/cases-pending-windows
 
 if [ "$do_wips" = "true" ]; then
   echo
@@ -50,16 +44,3 @@ if [ "$do_wips" = "true" ]; then
   mlr regtest $verbose reg-test/cases-pending-go-port
 fi
 echo
-
-echo
-echo ================================================================
-echo REGRESSION TESTS v1 PORTED TO GO
-echo
-./reg-test/run -n $verbose
-if [ "$do_wips" = "true" ]; then
-  echo
-  echo ================================================================
-  echo REGRESSION TESTS v1 PENDING GO PORT
-  echo
-  ./reg-test/run -o $verbose
-fi

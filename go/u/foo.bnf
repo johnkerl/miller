@@ -240,8 +240,7 @@ md_token_panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 //
 //   mlr -n put -v 'your expression goes here'
 //
-// Also see reg_test/run's filter -v and put -v outputs, e.g. in
-// reg_test/expected/out.
+// Also see expected outputs from 'mlr regtest', e.g. in reg-test/.../*.expout.
 // ================================================================
 
 // Import the AST/ASTNode types and functions

@@ -1,0 +1,2 @@
+# There is different rounding on i386 vs. x86_64 but the essential check is
+# that overflow has been avoided. Hence the %g output format here.

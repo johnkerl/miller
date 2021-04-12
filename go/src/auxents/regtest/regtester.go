@@ -1,5 +1,5 @@
 // ================================================================
-// TOOO
+// TOOO: comment
 // ================================================================
 
 package regtest
@@ -18,12 +18,19 @@ import (
 const DefaultPath = "./reg-test/cases"
 const CommandSuffix = ".cmd"
 const EnvSuffix = ".env"
+const PreCopySuffix = ".precopy"
 const ExpectedStdoutSuffix = ".expout"
 const ExpectedStderrSuffix = ".experr"
+const PostCompareSuffix = ".postcmp"
 const ShouldFailSuffix = ".should-fail"
 
 const MajorSeparator = "================================================================"
 const MinorSeparator = "----------------------------------------------------------------"
+
+type stringPair struct {
+	first  string
+	second string
+}
 
 // ----------------------------------------------------------------
 type RegTester struct {
@@ -161,19 +168,14 @@ func (this *RegTester) executeSinglePath(
 		return passed
 	} else if mode.IsRegular() {
 		if strings.HasSuffix(path, CommandSuffix) {
-			if this.doPopulate {
-				this.populateSingleCmdFile(path)
-				return true
+			passed := this.executeSingleCmdFile(path, this.verbosityLevel)
+			if passed {
+				this.casePassCount++
 			} else {
-				passed := this.executeSingleCmdFile(path, this.verbosityLevel)
-				if passed {
-					this.casePassCount++
-				} else {
-					this.caseFailCount++
-					this.failCaseNames.PushBack(path)
-				}
-				return passed
+				this.caseFailCount++
+				this.failCaseNames.PushBack(path)
 			}
+			return passed
 		}
 		return true // No .cmd files directly inside
 	}
@@ -256,94 +258,8 @@ func (this *RegTester) directoryHasDirectEntries(
 }
 
 // ----------------------------------------------------------------
-// TODO: comment
-func (this *RegTester) populateSingleCmdFile(
-	cmdFileName string,
-) {
-
-	if this.verbosityLevel >= 1 {
-		fmt.Printf("%s begin %s\n", MinorSeparator, cmdFileName)
-		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFileName)
-	}
-
-	expectedStdoutFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStdoutSuffix)
-	expectedStderrFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStderrSuffix)
-	envFileName := this.changeExtension(cmdFileName, CommandSuffix, EnvSuffix)
-
-	cmd, err := this.loadFile(cmdFileName)
-	if err != nil {
-		fmt.Printf("%s: %v\n", cmdFileName, err)
-		return
-	}
-
-	if this.verbosityLevel >= 2 {
-		fmt.Println("Command:")
-		fmt.Println(cmd)
-	}
-
-	// The .env needn't exist (most test cases don't have one) in which case
-	// the envKeyValuePairs map will be empty.
-	envKeyValuePairs, err := this.loadEnvFile(envFileName)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	// Set any case-specific environment variables before running the case.
-	for key, value := range envKeyValuePairs {
-		if this.verbosityLevel >= 3 {
-			fmt.Printf("SETENV %s=%s\n", key, value)
-		}
-		os.Setenv(key, value)
-	}
-
-	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
-
-	// Unset any case-specific environment variables after running the case.
-	// This is important since the setenv is done in the current process,
-	// and we don't want to affect subsequent test cases.
-	for key, _ := range envKeyValuePairs {
-		if this.verbosityLevel >= 3 {
-			fmt.Printf("UNSETENV %s\n", key)
-		}
-		os.Setenv(key, "")
-	}
-
-	if this.verbosityLevel >= 3 {
-
-		fmt.Printf("actualStdout [%d]:\n", len(actualStdout))
-		fmt.Println(actualStdout)
-
-		fmt.Printf("actualStderr [%d]:\n", len(actualStderr))
-		fmt.Println(actualStderr)
-
-		fmt.Println("actualExitCode:")
-		fmt.Println(actualExitCode)
-
-		fmt.Println()
-	}
-
-	// TODO: temp replace-all for CR/LF to LF. Will need re-work once auto-detect is ported.
-	actualStdout = strings.ReplaceAll(actualStdout, "\r\n", "\n")
-	actualStderr = strings.ReplaceAll(actualStderr, "\r\n", "\n")
-
-	err = this.storeFile(expectedStdoutFileName, actualStdout)
-	if err != nil {
-		fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
-		return
-	}
-	err = this.storeFile(expectedStderrFileName, actualStderr)
-	if err != nil {
-		fmt.Printf("%s: %v\n", expectedStderrFileName, err)
-		return
-	}
-
-	if this.verbosityLevel >= 1 {
-		fmt.Printf("wrote %s\n", cmdFileName)
-	}
-}
-
-// ----------------------------------------------------------------
+// This is the main regression-test logic for a single .cmd file (a single mlr
+// invocation) and its associated supporting files.
 func (this *RegTester) executeSingleCmdFile(
 	cmdFileName string,
 	verbosityLevel int,
@@ -354,10 +270,12 @@ func (this *RegTester) executeSingleCmdFile(
 		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFileName)
 	}
 
+	envFileName := this.changeExtension(cmdFileName, CommandSuffix, EnvSuffix)
+	preCopyFileName := this.changeExtension(cmdFileName, CommandSuffix, PreCopySuffix)
 	expectedStdoutFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStdoutSuffix)
 	expectedStderrFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStderrSuffix)
 	expectFailFileName := this.changeExtension(cmdFileName, CommandSuffix, ShouldFailSuffix)
-	envFileName := this.changeExtension(cmdFileName, CommandSuffix, EnvSuffix)
+	postCompareFileName := this.changeExtension(cmdFileName, CommandSuffix, PostCompareSuffix)
 
 	cmd, err := this.loadFile(cmdFileName)
 	if err != nil {
@@ -373,117 +291,276 @@ func (this *RegTester) executeSingleCmdFile(
 	}
 
 	// The .env needn't exist (most test cases don't have one) in which case
-	// the envKeyValuePairs map will be empty.
+	// the returned map will be empty.
 	envKeyValuePairs, err := this.loadEnvFile(envFileName)
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 
-	expectedStdout, err := this.loadFile(expectedStdoutFileName)
+	// The .precopy needn't exist (most test cases don't have one) in which case
+	// the returned map will be empty.
+	preCopySrcDestPairs, err := this.loadStringPairFile(preCopyFileName)
 	if err != nil {
-		if verbosityLevel >= 2 {
-			fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
-		}
+		fmt.Println(err)
 		return false
-	}
-	expectedStderr, err := this.loadFile(expectedStderrFileName)
-	if err != nil {
-		if verbosityLevel >= 2 {
-			fmt.Printf("%s: %v\n", expectedStderrFileName, err)
-		}
-		return false
-	}
-	expectedExitCode := 0
-	if this.FileExists(expectFailFileName) {
-		expectedExitCode = 1
 	}
 
 	passed := true
 
 	// Set any case-specific environment variables before running the case.
-	for key, value := range envKeyValuePairs {
+	for pe := envKeyValuePairs.Head; pe != nil; pe = pe.Next {
+		key := pe.Key
+		value := pe.Value.(string)
 		if verbosityLevel >= 3 {
 			fmt.Printf("SETENV %s=%s\n", key, value)
 		}
 		os.Setenv(key, value)
 	}
 
+	// Copy any files requested by the test. (Most don't; some do, e.g. those
+	// which test the write-in-place logic of mlr -I.)
+	for pe := preCopySrcDestPairs.Front(); pe != nil; pe = pe.Next() {
+		pair := pe.Value.(stringPair)
+		src := pair.first
+		dst := pair.second
+		if verbosityLevel >= 3 {
+			fmt.Printf("%s: copy %s to %s\n", cmdFileName, src, dst)
+		}
+		err := this.copyFile(src, dst)
+		if err != nil {
+			fmt.Printf("%s: %v\n", dst, err)
+			passed = false
+		}
+	}
+
+	// ****************************************************************
+	// HERE IS WHERE WE RUN THE MILLER COMMAND LINE FOR THE TEST CASE
 	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
+	// ****************************************************************
 
 	// Unset any case-specific environment variables after running the case.
 	// This is important since the setenv is done in the current process,
 	// and we don't want to affect subsequent test cases.
-	for key, _ := range envKeyValuePairs {
+	for pe := envKeyValuePairs.Head; pe != nil; pe = pe.Next {
+		key := pe.Key
 		if verbosityLevel >= 3 {
 			fmt.Printf("UNSETENV %s\n", key)
 		}
 		os.Setenv(key, "")
 	}
 
-	if verbosityLevel >= 3 {
-		fmt.Printf("actualStdout [%d]:\n", len(actualStdout))
-		fmt.Println(actualStdout)
-
-		fmt.Printf("expectedStdout [%d]:\n", len(expectedStdout))
-		fmt.Println(expectedStdout)
-
-		fmt.Printf("actualStderr [%d]:\n", len(actualStderr))
-		fmt.Println(actualStderr)
-
-		fmt.Printf("expectedStderr [%d]:\n", len(expectedStderr))
-		fmt.Println(expectedStderr)
-
-		fmt.Println("actualExitCode:")
-		fmt.Println(actualExitCode)
-
-		fmt.Println("expectedExitCode:")
-		fmt.Println(expectedExitCode)
-
-		fmt.Println()
+	// The .postcmp needn't exist (most test cases don't have one) in which case
+	// the returned map will be empty.
+	postCompareExpectedActualPairs, err := this.loadStringPairFile(postCompareFileName)
+	if err != nil {
+		fmt.Println(err)
+		return false
 	}
 
-	// TODO: temp replace-all for CR/LF to LF. Will need re-work once auto-detect is ported.
-	actualStdout = strings.ReplaceAll(actualStdout, "\r\n", "\n")
-	actualStderr = strings.ReplaceAll(actualStderr, "\r\n", "\n")
-	expectedStdout = strings.ReplaceAll(expectedStdout, "\r\n", "\n")
-	expectedStderr = strings.ReplaceAll(expectedStderr, "\r\n", "\n")
+	if this.doPopulate {
+		// Populate mode: write out the actual stdout/stderr/exit-code to disk
+		// as expected values for subsequent runs.
 
-	if actualStdout != expectedStdout {
-		if verbosityLevel >= 2 {
-			fmt.Printf(
-				"%s: stdout does not match expected %s\n",
-				cmdFileName,
-				expectedStdoutFileName,
-			)
+		// TODO: temp replace-all for CR/LF to LF. Will need re-work once auto-detect is ported.
+		actualStdout = strings.ReplaceAll(actualStdout, "\r\n", "\n")
+		actualStderr = strings.ReplaceAll(actualStderr, "\r\n", "\n")
+
+		// Write the .expout file
+		err = this.storeFile(expectedStdoutFileName, actualStdout)
+		if err != nil {
+			fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
+			passed = false
+		} else {
+			if this.verbosityLevel >= 1 {
+				fmt.Printf("wrote %s\n", expectedStdoutFileName)
+			}
 		}
-		passed = false
-	}
 
-	if actualStderr != expectedStderr {
-		if verbosityLevel >= 2 {
-			fmt.Printf(
-				"%s: stderr does not match expected %s\n",
-				cmdFileName,
-				expectedStderrFileName,
-			)
+		// Write the .experr file
+		err = this.storeFile(expectedStderrFileName, actualStderr)
+		if err != nil {
+			fmt.Printf("%s: %v\n", expectedStderrFileName, err)
+			passed = false
+		} else {
+			if this.verbosityLevel >= 1 {
+				fmt.Printf("wrote %s\n", expectedStdoutFileName)
+			}
 		}
-		// TODO: needs normalization of os.Args[0] -> "mlr" throughout the codebase,
-		// else we get spurious mismatch between expected strings like 'mlr: ...'
-		// and actuals like 'C:\miller\go\mlr.exe: ...'
 
-		// passed = false
-	}
+		// Write the .should-fail file
+		if actualExitCode != 0 {
+			err = this.storeFile(expectFailFileName, "")
+			if err != nil {
+				fmt.Printf("%s: %v\n", expectedStderrFileName, err)
+				passed = false
+			} else {
+				if this.verbosityLevel >= 1 {
+					fmt.Printf("wrote %s\n", expectedStdoutFileName)
+				}
+			}
 
-	if actualExitCode != expectedExitCode {
-		if verbosityLevel >= 2 {
-			fmt.Printf(
-				"%s: exit code %d does not match expected %d\n",
-				cmdFileName,
-				actualExitCode, expectedExitCode,
-			)
 		}
-		passed = false
+
+		for pe := postCompareExpectedActualPairs.Front(); pe != nil; pe = pe.Next() {
+			pair := pe.Value.(stringPair)
+			expectedFileName := pair.first
+			actualFileName := pair.second
+
+			err := this.copyFile(actualFileName, expectedFileName)
+			if err != nil {
+				fmt.Printf("Could not copy %s to %s: %v\n", actualFileName, expectedFileName, err)
+				passed = false
+			}
+			if verbosityLevel >= 3 {
+				fmt.Printf("Copied %s to %s: %v\n", actualFileName, expectedFileName, err)
+			}
+		}
+
+	} else {
+		// Verify mode: check actuals against expecteds
+
+		// Load the .expout file
+		expectedStdout, err := this.loadFile(expectedStdoutFileName)
+		if err != nil {
+			if verbosityLevel >= 2 {
+				fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
+			}
+			return false
+		}
+
+		// Load the .experr file
+		expectedStderr, err := this.loadFile(expectedStderrFileName)
+		if err != nil {
+			if verbosityLevel >= 2 {
+				fmt.Printf("%s: %v\n", expectedStderrFileName, err)
+			}
+			return false
+		}
+
+		// Load the .should-fail file
+		expectedExitCode := 0
+		if this.FileExists(expectFailFileName) {
+			expectedExitCode = 1
+		}
+
+		if verbosityLevel >= 3 {
+			fmt.Printf("actualStdout [%d]:\n", len(actualStdout))
+			fmt.Println(actualStdout)
+
+			fmt.Printf("expectedStdout [%d]:\n", len(expectedStdout))
+			fmt.Println(expectedStdout)
+
+			fmt.Printf("actualStderr [%d]:\n", len(actualStderr))
+			fmt.Println(actualStderr)
+
+			fmt.Printf("expectedStderr [%d]:\n", len(expectedStderr))
+			fmt.Println(expectedStderr)
+
+			fmt.Println("actualExitCode:")
+			fmt.Println(actualExitCode)
+
+			fmt.Println("expectedExitCode:")
+			fmt.Println(expectedExitCode)
+
+			fmt.Println()
+		}
+
+		// TODO: temp replace-all for CR/LF to LF. Will need re-work once auto-detect is ported.
+		actualStdout = strings.ReplaceAll(actualStdout, "\r\n", "\n")
+		actualStderr = strings.ReplaceAll(actualStderr, "\r\n", "\n")
+		expectedStdout = strings.ReplaceAll(expectedStdout, "\r\n", "\n")
+		expectedStderr = strings.ReplaceAll(expectedStderr, "\r\n", "\n")
+
+		// Compare stdout to .expout
+		if actualStdout != expectedStdout {
+			if verbosityLevel >= 2 {
+				fmt.Printf(
+					"%s: stdout does not match expected %s\n",
+					cmdFileName,
+					expectedStdoutFileName,
+				)
+			}
+			passed = false
+		}
+
+		// Compare stderr to .experr
+		if actualStderr != expectedStderr {
+			if verbosityLevel >= 2 {
+				fmt.Printf(
+					"%s: stderr does not match expected %s\n",
+					cmdFileName,
+					expectedStderrFileName,
+				)
+			}
+			// TODO: needs normalization of os.Args[0] -> "mlr" throughout the codebase,
+			// else we get spurious mismatch between expected strings like 'mlr: ...'
+			// and actuals like 'C:\miller\go\mlr.exe: ...'
+
+			// passed = false
+		}
+
+		// Compare exit code
+		if actualExitCode != expectedExitCode {
+			if verbosityLevel >= 2 {
+				fmt.Printf(
+					"%s: exit code %d does not match expected %d\n",
+					cmdFileName,
+					actualExitCode, expectedExitCode,
+				)
+			}
+			passed = false
+		}
+
+		// Compare any additional output files. Most test cases don't have
+		// these (just stdout/stderr), but some do: for example, those which
+		// test the tee verb/function.
+		for pe := postCompareExpectedActualPairs.Front(); pe != nil; pe = pe.Next() {
+			pair := pe.Value.(stringPair)
+			expectedFileName := pair.first
+			actualFileName := pair.second
+			ok, err := this.compareFiles(expectedFileName, actualFileName)
+			if err != nil {
+				fmt.Printf("%s: %v\n", cmdFileName, err)
+				passed = false
+			} else if !ok {
+				if verbosityLevel >= 2 {
+					fmt.Printf(
+						"%s: %s does not match %s\n",
+						cmdFileName, expectedFileName, actualFileName,
+					)
+				}
+				// TODO: if verbosityLevel >= 3, print the contents of both files
+				passed = false
+			} else {
+				if verbosityLevel >= 2 {
+					fmt.Printf(
+						"%s: %s matches %s\n",
+						cmdFileName, expectedFileName, actualFileName,
+					)
+				}
+			}
+		}
+
+		// Clean up any requested file-copies so that we're git-clean after the regression-test run.
+		for pe := preCopySrcDestPairs.Front(); pe != nil; pe = pe.Next() {
+			pair := pe.Value.(stringPair)
+			dst := pair.second
+			os.Remove(dst)
+			if verbosityLevel >= 3 {
+				fmt.Printf("%s: clean up %s\n", cmdFileName, dst)
+			}
+		}
+
+		// Clean up any extra output files so that we're git-clean after the regression-test run.
+		for pe := postCompareExpectedActualPairs.Front(); pe != nil; pe = pe.Next() {
+			pair := pe.Value.(stringPair)
+			actualFileName := pair.second
+			os.Remove(actualFileName)
+			if verbosityLevel >= 3 {
+				fmt.Printf("%s: clean up %s\n", cmdFileName, actualFileName)
+			}
+		}
 	}
 
 	if verbosityLevel >= 1 {
@@ -521,7 +598,6 @@ func (this *RegTester) loadFile(
 ) (string, error) {
 	byteContents, err := os.ReadFile(fileName)
 	if err != nil {
-		fmt.Printf("%s: %v\n", fileName, err)
 		return "", err
 	}
 	return string(byteContents), nil
@@ -533,30 +609,63 @@ func (this *RegTester) storeFile(
 ) error {
 	err := os.WriteFile(fileName, []byte(contents), 0666)
 	if err != nil {
-		fmt.Printf("%s: %v\n", fileName, err)
 		return err
 	}
 	return nil
 }
 
+func (this *RegTester) copyFile(
+	src string,
+	dst string,
+) error {
+	contents, err := this.loadFile(src)
+	if err != nil {
+		return err
+	}
+	err = this.storeFile(dst, contents)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (this *RegTester) compareFiles(
+	expectedFileName string,
+	actualFileName string,
+) (bool, error) {
+	expectedContents, err := this.loadFile(expectedFileName)
+	if err != nil {
+		return false, err
+	}
+	actualContents, err := this.loadFile(actualFileName)
+	if err != nil {
+		return false, err
+	}
+	// TODO: maybe rethink later with autoterm
+	expectedContents = strings.ReplaceAll(expectedContents, "\r\n", "\n")
+	actualContents = strings.ReplaceAll(actualContents, "\r\n", "\n")
+
+	return expectedContents == actualContents, nil
+}
+
 // ----------------------------------------------------------------
 func (this *RegTester) loadEnvFile(
-	envFileName string,
-) (map[string]string, error) {
+	filename string,
+) (*lib.OrderedMap, error) {
 	// If the file doesn't exist that's the normal case -- most cases do not
 	// have a .env file.
-	_, err := os.Stat(envFileName)
+	_, err := os.Stat(filename)
 	if os.IsNotExist(err) {
-		return nil, nil
+		return lib.NewOrderedMap(), nil
 	}
 
 	// If the file does exist and isn't loadable, that's an error.
-	contents, err := this.loadFile(envFileName)
+	contents, err := this.loadFile(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	keyValuePairs := make(map[string]string)
+	keyValuePairs := lib.NewOrderedMap()
 	lines := strings.Split(contents, "\n")
 	for _, line := range lines {
 		line = strings.TrimSuffix(line, "\r")
@@ -567,12 +676,51 @@ func (this *RegTester) loadEnvFile(
 		if len(fields) != 2 {
 			return nil, errors.New(
 				fmt.Sprintf(
-					"%s: could not parse env line \"%s\" from file \"%s\".\n",
-					lib.MlrExeName(), line, envFileName,
+					"%s: could not parse line \"%s\" from file \"%s\".\n",
+					lib.MlrExeName(), line, filename,
 				),
 			)
 		}
-		keyValuePairs[fields[0]] = fields[1]
+		keyValuePairs.Put(fields[0], fields[1])
 	}
 	return keyValuePairs, nil
+}
+
+// ----------------------------------------------------------------
+func (this *RegTester) loadStringPairFile(
+	filename string,
+) (*list.List, error) {
+	// If the file doesn't exist that's the normal case -- most cases do not
+	// have a .precopy or .postcmp file.
+	_, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return list.New(), nil
+	}
+
+	// If the file does exist and isn't loadable, that's an error.
+	contents, err := this.loadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	pairs := list.New()
+	lines := strings.Split(contents, "\n")
+	for _, line := range lines {
+		line = strings.TrimSuffix(line, "\r")
+		if line == "" {
+			continue
+		}
+		fields := strings.SplitN(line, " ", 2) // TODO: split on multi-space
+		if len(fields) != 2 {
+			return nil, errors.New(
+				fmt.Sprintf(
+					"%s: could not parse line \"%s\" from file \"%s\".\n",
+					lib.MlrExeName(), line, filename,
+				),
+			)
+		}
+		pair := stringPair{first: fields[0], second: fields[1]}
+		pairs.PushBack(pair)
+	}
+	return pairs, nil
 }

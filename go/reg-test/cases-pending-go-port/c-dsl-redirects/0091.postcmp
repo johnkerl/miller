@@ -1,0 +1,4 @@
+reg-test/cases-pending-go-port/c-dsl-redirects/0091.out.ekspan.expect reg-test/cases-pending-go-port/c-dsl-redirects/0091.out.ekspan
+reg-test/cases-pending-go-port/c-dsl-redirects/0091.out.ekswye.expect reg-test/cases-pending-go-port/c-dsl-redirects/0091.out.ekswye
+reg-test/cases-pending-go-port/c-dsl-redirects/0091.out.panpan.expect reg-test/cases-pending-go-port/c-dsl-redirects/0091.out.panpan
+reg-test/cases-pending-go-port/c-dsl-redirects/0091.out.wyewye.expect reg-test/cases-pending-go-port/c-dsl-redirects/0091.out.wyewye
