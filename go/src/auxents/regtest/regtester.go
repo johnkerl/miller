@@ -350,6 +350,14 @@ func (this *RegTester) executeSingleCmdFile(
 		os.Setenv(key, "")
 	}
 
+	// The .postcmp needn't exist (most test cases don't have one) in which case
+	// the returned map will be empty.
+	postCompareExpectedActualPairs, err := this.loadStringPairFile(postCompareFileName)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
 	if this.doPopulate {
 		// Populate mode: write out the actual stdout/stderr/exit-code to disk
 		// as expected values for subsequent runs.
@@ -394,8 +402,23 @@ func (this *RegTester) executeSingleCmdFile(
 
 		}
 
+		for pe := postCompareExpectedActualPairs.Front(); pe != nil; pe = pe.Next() {
+			pair := pe.Value.(stringPair)
+			expectedFileName := pair.first
+			actualFileName := pair.second
+
+			err := this.copyFile(actualFileName, expectedFileName)
+			if err != nil {
+				fmt.Printf("Could not copy %s to %s: %v\n", actualFileName, expectedFileName, err)
+				passed = false
+			}
+			if verbosityLevel >= 3 {
+				fmt.Printf("Copied %s to %s: %v\n", actualFileName, expectedFileName, err)
+			}
+		}
+
 	} else {
-		// Verification mode: check actuals against expecteds
+		// Verify mode: check actuals against expecteds
 
 		// Load the .expout file
 		expectedStdout, err := this.loadFile(expectedStdoutFileName)
@@ -489,14 +512,6 @@ func (this *RegTester) executeSingleCmdFile(
 			passed = false
 		}
 
-		// The .postcmp needn't exist (most test cases don't have one) in which case
-		// the returned map will be empty.
-		postCompareExpectedActualPairs, err := this.loadStringPairFile(postCompareFileName)
-		if err != nil {
-			fmt.Println(err)
-			return false
-		}
-
 		// Compare any additional output files. Most test cases don't have
 		// these (just stdout/stderr), but some do: for example, those which
 		// test the tee verb/function.
@@ -517,6 +532,13 @@ func (this *RegTester) executeSingleCmdFile(
 				}
 				// TODO: if verbosityLevel >= 3, print the contents of both files
 				passed = false
+			} else {
+				if verbosityLevel >= 2 {
+					fmt.Printf(
+						"%s: %s matches %s\n",
+						cmdFileName, expectedFileName, actualFileName,
+					)
+				}
 			}
 		}
 
