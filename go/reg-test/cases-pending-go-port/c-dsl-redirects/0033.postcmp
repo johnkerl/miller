@@ -1,0 +1,10 @@
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.ekspan.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.ekspan
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.ekswye.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.ekswye
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.ekszee.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.ekszee
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.hatwye.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.hatwye
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.panpan.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.panpan
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.panwye.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.panwye
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.wyepan.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.wyepan
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.wyewye.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.wyewye
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.zeepan.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.zeepan
+reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.zeewye.expect reg-test/cases-pending-go-port/c-dsl-redirects/0033.out.zeewye

@@ -1,0 +1,4 @@
+a:1=pan,b:1=pan
+a:1=pan,b:1=pan,a:2=eks,b:2=pan
+a:1=pan,b:1=pan,a:2=eks,b:2=pan,a:3=wye,b:3=wye
+a:1=pan,b:1=pan,a:2=eks,b:2=pan,a:3=wye,b:3=wye,a:4=eks,b:4=wye
