@@ -3,6 +3,7 @@ TOP OF LIST:
 
 * emph go 1.16 @ go.mod & README.md; also gha yaml
 
+! run a pending-go-port case w/o -c -- it leaves files it should not
 * convert reg-test/cases-pending-windows
 * convert reg-test/cases-pending-go-port
 * clean up TODO/xxx in src/platform
