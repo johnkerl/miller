@@ -1,12 +1,16 @@
 ================================================================
 TOP OF LIST:
 
+* emph go 1.16 @ go.mod & README.md; also gha yaml
+
 ----------------------------------------------------------------
-auxfile sketch:
-* need outdir somewhere ...
-* copy primitive
-* compare-file (exp/act) primitive
-* rm-after ?
+PRE
+* copy infile outdir/outfile
+? .precopy file?
+POST
+* cmp exp act
+? .postcmp
+? rm-after -- ?
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
@@ -22,6 +26,8 @@ d type up a note somewhere in the reg-test tree that all the .mlrs and the -f 00
 d fix artifact-uploader name collision
   https://github.com/actions/upload-artifact
   https://forum.nim-lang.org/t/6371
+* __CMD_DIR__ macro for .mlr files etc ?
+* either fix mr -p for precopy/postcmd or comment boldly
 ----------------------------------------------------------------
 
 * #455 -- doc-neatens re ordering
@@ -114,6 +120,8 @@ CONCLUSION:
 
 ! --nojvstack; default --jvstack; code it up ...
 
+* mlrrc: extend to maybe have a stdlib dir for often-used and/or shared DSL?
+
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
@@ -132,6 +140,7 @@ CONCLUSION:
 * port verb stats2
 
 * in-place processing
+  o make sure not to create foo.{temp} if foo does not exist
 * prepipe
   - gzin; bz2in ...
 

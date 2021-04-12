@@ -1,5 +1,5 @@
 // ================================================================
-// TOOO
+// TOOO: comment
 // ================================================================
 
 package regtest
@@ -18,12 +18,19 @@ import (
 const DefaultPath = "./reg-test/cases"
 const CommandSuffix = ".cmd"
 const EnvSuffix = ".env"
+const PreCopySuffix = ".precopy"
 const ExpectedStdoutSuffix = ".expout"
 const ExpectedStderrSuffix = ".experr"
+const PostCompareSuffix = ".postcmp"
 const ShouldFailSuffix = ".should-fail"
 
 const MajorSeparator = "================================================================"
 const MinorSeparator = "----------------------------------------------------------------"
+
+type stringPair struct {
+	first  string
+	second string
+}
 
 // ----------------------------------------------------------------
 type RegTester struct {
@@ -290,7 +297,9 @@ func (this *RegTester) populateSingleCmdFile(
 	}
 
 	// Set any case-specific environment variables before running the case.
-	for key, value := range envKeyValuePairs {
+	for pe := envKeyValuePairs.Head; pe != nil; pe = pe.Next {
+		key := pe.Key
+		value := pe.Value.(string)
 		if this.verbosityLevel >= 3 {
 			fmt.Printf("SETENV %s=%s\n", key, value)
 		}
@@ -302,7 +311,8 @@ func (this *RegTester) populateSingleCmdFile(
 	// Unset any case-specific environment variables after running the case.
 	// This is important since the setenv is done in the current process,
 	// and we don't want to affect subsequent test cases.
-	for key, _ := range envKeyValuePairs {
+	for pe := envKeyValuePairs.Head; pe != nil; pe = pe.Next {
+		key := pe.Key
 		if this.verbosityLevel >= 3 {
 			fmt.Printf("UNSETENV %s\n", key)
 		}
@@ -354,10 +364,12 @@ func (this *RegTester) executeSingleCmdFile(
 		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFileName)
 	}
 
+	envFileName := this.changeExtension(cmdFileName, CommandSuffix, EnvSuffix)
+	preCopyFileName := this.changeExtension(cmdFileName, CommandSuffix, PreCopySuffix)
 	expectedStdoutFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStdoutSuffix)
 	expectedStderrFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStderrSuffix)
 	expectFailFileName := this.changeExtension(cmdFileName, CommandSuffix, ShouldFailSuffix)
-	envFileName := this.changeExtension(cmdFileName, CommandSuffix, EnvSuffix)
+	postCompareFileName := this.changeExtension(cmdFileName, CommandSuffix, PostCompareSuffix)
 
 	cmd, err := this.loadFile(cmdFileName)
 	if err != nil {
@@ -373,8 +385,16 @@ func (this *RegTester) executeSingleCmdFile(
 	}
 
 	// The .env needn't exist (most test cases don't have one) in which case
-	// the envKeyValuePairs map will be empty.
+	// the returned map will be empty.
 	envKeyValuePairs, err := this.loadEnvFile(envFileName)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	// The .precopy needn't exist (most test cases don't have one) in which case
+	// the returned map will be empty.
+	preCopySrcDestPairs, err := this.loadStringPairFile(preCopyFileName)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -402,11 +422,27 @@ func (this *RegTester) executeSingleCmdFile(
 	passed := true
 
 	// Set any case-specific environment variables before running the case.
-	for key, value := range envKeyValuePairs {
+	for pe := envKeyValuePairs.Head; pe != nil; pe = pe.Next {
+		key := pe.Key
+		value := pe.Value.(string)
 		if verbosityLevel >= 3 {
 			fmt.Printf("SETENV %s=%s\n", key, value)
 		}
 		os.Setenv(key, value)
+	}
+
+	for pe := preCopySrcDestPairs.Front(); pe != nil; pe = pe.Next() {
+		pair := pe.Value.(stringPair)
+		src := pair.first
+		dst := pair.second
+		if verbosityLevel >= 3 {
+			fmt.Printf("%s: copy %s to %s\n", cmdFileName, src, dst)
+		}
+		err := this.copyFile(src, dst)
+		if err != nil {
+			fmt.Printf("%s: %v\n", dst, err)
+			passed = false
+		}
 	}
 
 	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
@@ -414,11 +450,20 @@ func (this *RegTester) executeSingleCmdFile(
 	// Unset any case-specific environment variables after running the case.
 	// This is important since the setenv is done in the current process,
 	// and we don't want to affect subsequent test cases.
-	for key, _ := range envKeyValuePairs {
+	for pe := envKeyValuePairs.Head; pe != nil; pe = pe.Next {
+		key := pe.Key
 		if verbosityLevel >= 3 {
 			fmt.Printf("UNSETENV %s\n", key)
 		}
 		os.Setenv(key, "")
+	}
+
+	// The .postcmp needn't exist (most test cases don't have one) in which case
+	// the returned map will be empty.
+	postCompareExpectedActualPairs, err := this.loadStringPairFile(postCompareFileName)
+	if err != nil {
+		fmt.Println(err)
+		return false
 	}
 
 	if verbosityLevel >= 3 {
@@ -449,6 +494,17 @@ func (this *RegTester) executeSingleCmdFile(
 	expectedStdout = strings.ReplaceAll(expectedStdout, "\r\n", "\n")
 	expectedStderr = strings.ReplaceAll(expectedStderr, "\r\n", "\n")
 
+	if actualExitCode != expectedExitCode {
+		if verbosityLevel >= 2 {
+			fmt.Printf(
+				"%s: exit code %d does not match expected %d\n",
+				cmdFileName,
+				actualExitCode, expectedExitCode,
+			)
+		}
+		passed = false
+	}
+
 	if actualStdout != expectedStdout {
 		if verbosityLevel >= 2 {
 			fmt.Printf(
@@ -475,15 +531,24 @@ func (this *RegTester) executeSingleCmdFile(
 		// passed = false
 	}
 
-	if actualExitCode != expectedExitCode {
-		if verbosityLevel >= 2 {
-			fmt.Printf(
-				"%s: exit code %d does not match expected %d\n",
-				cmdFileName,
-				actualExitCode, expectedExitCode,
-			)
+	for pe := postCompareExpectedActualPairs.Front(); pe != nil; pe = pe.Next() {
+		pair := pe.Value.(stringPair)
+		expectedFileName := pair.first
+		actualFileName := pair.second
+		ok, err := this.compareFiles(expectedFileName, actualFileName)
+		if err != nil {
+			fmt.Printf("%s: %v\n", cmdFileName, err)
+			passed = false
+		} else if !ok {
+			if verbosityLevel >= 2 {
+				fmt.Printf(
+					"%s: %s does not match %s\n",
+					cmdFileName, expectedFileName, actualFileName,
+				)
+			}
+			// TODO: if verbosityLevel >= 3, print the contents of both files
+			passed = false
 		}
-		passed = false
 	}
 
 	if verbosityLevel >= 1 {
@@ -521,7 +586,6 @@ func (this *RegTester) loadFile(
 ) (string, error) {
 	byteContents, err := os.ReadFile(fileName)
 	if err != nil {
-		fmt.Printf("%s: %v\n", fileName, err)
 		return "", err
 	}
 	return string(byteContents), nil
@@ -533,30 +597,63 @@ func (this *RegTester) storeFile(
 ) error {
 	err := os.WriteFile(fileName, []byte(contents), 0666)
 	if err != nil {
-		fmt.Printf("%s: %v\n", fileName, err)
 		return err
 	}
 	return nil
 }
 
+func (this *RegTester) copyFile(
+	src string,
+	dst string,
+) error {
+	contents, err := this.loadFile(src)
+	if err != nil {
+		return err
+	}
+	err = this.storeFile(dst, contents)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (this *RegTester) compareFiles(
+	expectedFileName string,
+	actualFileName string,
+) (bool, error) {
+	expectedContents, err := this.loadFile(expectedFileName)
+	if err != nil {
+		return false, err
+	}
+	actualContents, err := this.loadFile(actualFileName)
+	if err != nil {
+		return false, err
+	}
+	// TODO: maybe rethink later with autoterm
+	expectedContents = strings.ReplaceAll(expectedContents, "\r\n", "\n")
+	actualContents = strings.ReplaceAll(actualContents, "\r\n", "\n")
+
+	return expectedContents == actualContents, nil
+}
+
 // ----------------------------------------------------------------
 func (this *RegTester) loadEnvFile(
-	envFileName string,
-) (map[string]string, error) {
+	filename string,
+) (*lib.OrderedMap, error) {
 	// If the file doesn't exist that's the normal case -- most cases do not
 	// have a .env file.
-	_, err := os.Stat(envFileName)
+	_, err := os.Stat(filename)
 	if os.IsNotExist(err) {
-		return nil, nil
+		return lib.NewOrderedMap(), nil
 	}
 
 	// If the file does exist and isn't loadable, that's an error.
-	contents, err := this.loadFile(envFileName)
+	contents, err := this.loadFile(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	keyValuePairs := make(map[string]string)
+	keyValuePairs := lib.NewOrderedMap()
 	lines := strings.Split(contents, "\n")
 	for _, line := range lines {
 		line = strings.TrimSuffix(line, "\r")
@@ -567,12 +664,51 @@ func (this *RegTester) loadEnvFile(
 		if len(fields) != 2 {
 			return nil, errors.New(
 				fmt.Sprintf(
-					"%s: could not parse env line \"%s\" from file \"%s\".\n",
-					lib.MlrExeName(), line, envFileName,
+					"%s: could not parse line \"%s\" from file \"%s\".\n",
+					lib.MlrExeName(), line, filename,
 				),
 			)
 		}
-		keyValuePairs[fields[0]] = fields[1]
+		keyValuePairs.Put(fields[0], fields[1])
 	}
 	return keyValuePairs, nil
+}
+
+// ----------------------------------------------------------------
+func (this *RegTester) loadStringPairFile(
+	filename string,
+) (*list.List, error) {
+	// If the file doesn't exist that's the normal case -- most cases do not
+	// have a .precopy or .postcmp file.
+	_, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return list.New(), nil
+	}
+
+	// If the file does exist and isn't loadable, that's an error.
+	contents, err := this.loadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	pairs := list.New()
+	lines := strings.Split(contents, "\n")
+	for _, line := range lines {
+		line = strings.TrimSuffix(line, "\r")
+		if line == "" {
+			continue
+		}
+		fields := strings.SplitN(line, " ", 2) // TODO: split on multi-space
+		if len(fields) != 2 {
+			return nil, errors.New(
+				fmt.Sprintf(
+					"%s: could not parse line \"%s\" from file \"%s\".\n",
+					lib.MlrExeName(), line, filename,
+				),
+			)
+		}
+		pair := stringPair{first: fields[0], second: fields[1]}
+		pairs.PushBack(pair)
+	}
+	return pairs, nil
 }
