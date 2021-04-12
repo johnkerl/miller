@@ -44,11 +44,3 @@ if [ "$do_wips" = "true" ]; then
   mlr regtest $verbose reg-test/cases-pending-go-port
 fi
 echo
-
-echo
-if [ "$do_wips" = "true" ]; then
-  echo
-  echo ================================================================
-  echo REGRESSION TESTS v1
-  ./reg-test/run $verbose
-fi

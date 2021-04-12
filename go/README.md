@@ -7,8 +7,6 @@ A TL;DR for anyone wanting to compile and run the Go port of Miller:
 * `./mlr regtest` -- new multiplatform regression framework, small-but-growing number of test cases
   * `./mlr regtest reg-test/cases-pending-go-port` -- needing Go code to be ported from C
   * `./mlr regtest reg-test/cases-pending-windows` -- for Go code already ported from C but needing some work for Windows
-* `./reg-test/run -n` -- old Bash-driven regression framework (doesn't work on Windows, unless MSYS2), features ported from C. Thousands of cases being gradually ported to `./mlr regtest`.
-  * `./reg-test/run -o` -- same as previous, but features needing to be ported from C.
 
 A note on Continuous Integration:
 
@@ -26,7 +24,7 @@ A note on Continuous Integration:
 
 # Port-completion criteria
 
-* `reg-test/run` completes -- either completing/fixing the C/Go source-code discrepancies, or accepting the changes as backward incomptabilities
+* `mlr regtest reg-test/cases*` completes -- either completing/fixing the C/Go source-code discrepancies, or accepting the changes as backward incomptabilities
 * Double-checking all Miller issues ever, in case I fixed/implemented something but didn't have reg-test coverage
 * All `TODO`/`xxx` comments in Go, BNF source code, and case-files are resolved
 * Release notes including Go-only features, and C/Go backward-incompatibilities
