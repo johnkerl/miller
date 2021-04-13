@@ -4,7 +4,6 @@ TOP OF LIST:
 * emph go 1.16 @ go.mod & README.md; also gha yaml
 
 ? CASEDIR & CASEFILE macros -- ?
-! run a pending-go-port case w/o -c -- it leaves files it should not
 * convert regtest/cases-pending-windows
 * convert regtest/cases-pending-go-port
 * clean up TODO/xxx in src/platform
