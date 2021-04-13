@@ -14,10 +14,8 @@ import (
 )
 
 func TestRegression(t *testing.T) {
-
 	regtester := regtest.NewRegTester(
 		lib.MlrExeName(),
-		"regression",
 		false, // doPopulate
 		0, // verbosityLevel
 		0, // firstNFailsToShow
