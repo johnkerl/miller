@@ -17,13 +17,13 @@ import (
 )
 
 const DefaultPath = "./regtest/cases"
-const CommandSuffix = ".cmd"
-const EnvSuffix = ".env"
-const PreCopySuffix = ".precopy"
-const ExpectedStdoutSuffix = ".expout"
-const ExpectedStderrSuffix = ".experr"
-const PostCompareSuffix = ".postcmp"
-const ShouldFailSuffix = ".should-fail"
+const CmdName = "cmd"
+const EnvName = "env"
+const PreCopyName = "precopy"
+const ExpectedStdoutName = "expout"
+const ExpectedStderrName = "experr"
+const PostCompareName = "postcmp"
+const ShouldFailName = "should-fail"
 
 const MajorSeparator = "================================================================"
 const MinorSeparator = "----------------------------------------------------------------"
@@ -167,7 +167,8 @@ func (this *RegTester) executeSinglePath(
 		}
 		return passed
 	} else if mode.IsRegular() {
-		if strings.HasSuffix(path, CommandSuffix) {
+		basename := filepath.Base(path)
+		if basename == CmdName {
 			passed := this.executeSingleCmdFile(path, this.verbosityLevel)
 			if passed {
 				this.casePassCount++
@@ -189,9 +190,10 @@ func (this *RegTester) executeSingleDirectory(
 	dirName string,
 ) bool {
 	passed := true
-	hasDirectEntries := this.directoryHasDirectEntries(dirName)
+	// TODO: comment
+	isCaseDirectory := this.isCaseDirectory(dirName)
 
-	if hasDirectEntries && this.verbosityLevel >= 1 {
+	if !isCaseDirectory && this.verbosityLevel >= 1 {
 		fmt.Printf("%s BEGIN %s/\n", MajorSeparator, dirName)
 	}
 
@@ -214,7 +216,7 @@ func (this *RegTester) executeSingleDirectory(
 		// Only print if there are .cmd files directly in this directory.
 		// Otherwise it's just a directory-of-directories and we don't need to
 		// multiply announce.
-		if hasDirectEntries {
+		if !isCaseDirectory {
 			if passed {
 				platform.PrintHiGreen("PASS")
 				fmt.Printf(" %s/\n", dirName)
@@ -225,7 +227,7 @@ func (this *RegTester) executeSingleDirectory(
 		}
 	}
 
-	if hasDirectEntries && this.verbosityLevel >= 1 {
+	if !isCaseDirectory && this.verbosityLevel >= 1 {
 		fmt.Printf("%s END   %s/\n", MajorSeparator, dirName)
 		fmt.Println()
 	}
@@ -234,67 +236,60 @@ func (this *RegTester) executeSingleDirectory(
 }
 
 // ----------------------------------------------------------------
-// Sees if a directory has .cmd files directly in it (vs in a subdirectory).
-// If so, we want to print a banner at start and end.
-func (this *RegTester) directoryHasDirectEntries(
+// Sees if a directory contains a single test case. If so, we don't want to
+// print a banner at start and end at the default verbosity level.  In order to
+// manage print volume, we only want to print for directories-of-cases (next
+// level up).
+
+// TODO: don't print container-of-containers, via entries.any.isCaseDirectory
+// or somesuch.
+
+func (this *RegTester) isCaseDirectory(
 	dirName string,
 ) bool {
-
-	entries, err := os.ReadDir(dirName)
-	if err != nil {
-		fmt.Printf("%s: %v\n", dirName, err)
-		return false
-	}
-
-	for i := range entries {
-		entry := &entries[i]
-		entryName := (*entry).Name()
-
-		if strings.HasSuffix(entryName, CommandSuffix) {
-			return true
-		}
-	}
-	return false
+	cmdFilePath := dirName + string(filepath.Separator) + CmdName
+	return this.FileExists(cmdFilePath)
 }
 
 // ----------------------------------------------------------------
 // This is the main regression-test logic for a single .cmd file (a single mlr
 // invocation) and its associated supporting files.
 func (this *RegTester) executeSingleCmdFile(
-	cmdFileName string,
+	cmdFilePath string,
 	verbosityLevel int,
 ) bool {
 
 	if verbosityLevel >= 2 {
-		fmt.Printf("%s begin %s\n", MinorSeparator, cmdFileName)
-		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFileName)
+		fmt.Printf("%s begin %s\n", MinorSeparator, cmdFilePath)
+		defer fmt.Printf("%s end   %s\n", MinorSeparator, cmdFilePath)
 	}
 
 	// Given 'regtest/cases/foo/0038.cmd', get 'regtest/cases/foo' and '0038'.
-	// Various support files use syntax ${CASEDIR} and ${CASENAME} within them
-	// so they're relocatable, but we need to expand those in order to execute
-	// the test case.
-	caseDir, caseName := this.extractComponents(cmdFileName)
+	// Various support files use syntax ${CASEDIR} within them so they're
+	// relocatable, but we need to expand those in order to execute the test
+	// case.
+	caseDir := filepath.Dir(cmdFilePath)
 
-	cmd, err := this.loadFile(cmdFileName, caseDir, caseName)
+	cmd, err := this.loadFile(cmdFilePath, caseDir)
 	if err != nil {
 		if verbosityLevel >= 2 {
-			fmt.Printf("%s: %v\n", cmdFileName, err)
+			fmt.Printf("%s: %v\n", cmdFilePath, err)
 		}
 		return false
 	}
 
-	envFileName := this.changeExtension(cmdFileName, CommandSuffix, EnvSuffix)
-	preCopyFileName := this.changeExtension(cmdFileName, CommandSuffix, PreCopySuffix)
-	expectedStdoutFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStdoutSuffix)
-	expectedStderrFileName := this.changeExtension(cmdFileName, CommandSuffix, ExpectedStderrSuffix)
-	expectFailFileName := this.changeExtension(cmdFileName, CommandSuffix, ShouldFailSuffix)
-	postCompareFileName := this.changeExtension(cmdFileName, CommandSuffix, PostCompareSuffix)
+	slash := string(filepath.Separator) // Or backslash on Windows ... although modern Windows versions handle slashes fine.
+	envFileName := caseDir + slash + EnvName
+	preCopyFileName := caseDir + slash + PreCopyName
+	expectedStdoutFileName := caseDir + slash + ExpectedStdoutName
+	expectedStderrFileName := caseDir + slash + ExpectedStderrName
+	expectFailFileName := caseDir + slash + ShouldFailName
+	postCompareFileName := caseDir + slash + PostCompareName
 
-	cmd, err = this.loadFile(cmdFileName, caseDir, caseName)
+	cmd, err = this.loadFile(cmdFilePath, caseDir)
 	if err != nil {
 		if verbosityLevel >= 2 {
-			fmt.Printf("%s: %v\n", cmdFileName, err)
+			fmt.Printf("%s: %v\n", cmdFilePath, err)
 		}
 		return false
 	}
@@ -306,7 +301,7 @@ func (this *RegTester) executeSingleCmdFile(
 
 	// The .env needn't exist (most test cases don't have one) in which case
 	// the returned map will be empty.
-	envKeyValuePairs, err := this.loadEnvFile(envFileName, caseDir, caseName)
+	envKeyValuePairs, err := this.loadEnvFile(envFileName, caseDir)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -314,7 +309,7 @@ func (this *RegTester) executeSingleCmdFile(
 
 	// The .precopy needn't exist (most test cases don't have one) in which case
 	// the returned map will be empty.
-	preCopySrcDestPairs, err := this.loadStringPairFile(preCopyFileName, caseDir, caseName)
+	preCopySrcDestPairs, err := this.loadStringPairFile(preCopyFileName, caseDir)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -339,9 +334,9 @@ func (this *RegTester) executeSingleCmdFile(
 		src := pair.first
 		dst := pair.second
 		if verbosityLevel >= 3 {
-			fmt.Printf("%s: copy %s to %s\n", cmdFileName, src, dst)
+			fmt.Printf("%s: copy %s to %s\n", cmdFilePath, src, dst)
 		}
-		err := this.copyFile(src, dst, caseDir, caseName)
+		err := this.copyFile(src, dst, caseDir)
 		if err != nil {
 			fmt.Printf("%s: %v\n", dst, err)
 			passed = false
@@ -366,7 +361,7 @@ func (this *RegTester) executeSingleCmdFile(
 
 	// The .postcmp needn't exist (most test cases don't have one) in which case
 	// the returned map will be empty.
-	postCompareExpectedActualPairs, err := this.loadStringPairFile(postCompareFileName, caseDir, caseName)
+	postCompareExpectedActualPairs, err := this.loadStringPairFile(postCompareFileName, caseDir)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -421,7 +416,7 @@ func (this *RegTester) executeSingleCmdFile(
 			expectedFileName := pair.first
 			actualFileName := pair.second
 
-			err := this.copyFile(actualFileName, expectedFileName, caseDir, caseName)
+			err := this.copyFile(actualFileName, expectedFileName, caseDir)
 			if err != nil {
 				fmt.Printf("Could not copy %s to %s: %v\n", actualFileName, expectedFileName, err)
 				passed = false
@@ -435,7 +430,7 @@ func (this *RegTester) executeSingleCmdFile(
 		// Verify mode: check actuals against expecteds
 
 		// Load the .expout file
-		expectedStdout, err := this.loadFile(expectedStdoutFileName, caseDir, caseName)
+		expectedStdout, err := this.loadFile(expectedStdoutFileName, caseDir)
 		if err != nil {
 			if verbosityLevel >= 2 {
 				fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
@@ -444,7 +439,7 @@ func (this *RegTester) executeSingleCmdFile(
 		}
 
 		// Load the .experr file
-		expectedStderr, err := this.loadFile(expectedStderrFileName, caseDir, caseName)
+		expectedStderr, err := this.loadFile(expectedStderrFileName, caseDir)
 		if err != nil {
 			if verbosityLevel >= 2 {
 				fmt.Printf("%s: %v\n", expectedStderrFileName, err)
@@ -491,7 +486,7 @@ func (this *RegTester) executeSingleCmdFile(
 			if verbosityLevel >= 2 {
 				fmt.Printf(
 					"%s: stdout does not match expected %s\n",
-					cmdFileName,
+					cmdFilePath,
 					expectedStdoutFileName,
 				)
 			}
@@ -503,7 +498,7 @@ func (this *RegTester) executeSingleCmdFile(
 			if verbosityLevel >= 2 {
 				fmt.Printf(
 					"%s: stderr does not match expected %s\n",
-					cmdFileName,
+					cmdFilePath,
 					expectedStderrFileName,
 				)
 			}
@@ -519,7 +514,7 @@ func (this *RegTester) executeSingleCmdFile(
 			if verbosityLevel >= 2 {
 				fmt.Printf(
 					"%s: exit code %d does not match expected %d\n",
-					cmdFileName,
+					cmdFilePath,
 					actualExitCode, expectedExitCode,
 				)
 			}
@@ -533,15 +528,15 @@ func (this *RegTester) executeSingleCmdFile(
 			pair := pe.Value.(stringPair)
 			expectedFileName := pair.first
 			actualFileName := pair.second
-			ok, err := this.compareFiles(expectedFileName, actualFileName, caseDir, caseName)
+			ok, err := this.compareFiles(expectedFileName, actualFileName, caseDir)
 			if err != nil {
-				fmt.Printf("%s: %v\n", cmdFileName, err)
+				fmt.Printf("%s: %v\n", cmdFilePath, err)
 				passed = false
 			} else if !ok {
 				if verbosityLevel >= 2 {
 					fmt.Printf(
 						"%s: %s does not match %s\n",
-						cmdFileName, expectedFileName, actualFileName,
+						cmdFilePath, expectedFileName, actualFileName,
 					)
 				}
 				// TODO: if verbosityLevel >= 3, print the contents of both files
@@ -550,7 +545,7 @@ func (this *RegTester) executeSingleCmdFile(
 				if verbosityLevel >= 2 {
 					fmt.Printf(
 						"%s: %s matches %s\n",
-						cmdFileName, expectedFileName, actualFileName,
+						cmdFilePath, expectedFileName, actualFileName,
 					)
 				}
 			}
@@ -562,7 +557,7 @@ func (this *RegTester) executeSingleCmdFile(
 			dst := pair.second
 			os.Remove(dst)
 			if verbosityLevel >= 3 {
-				fmt.Printf("%s: clean up %s\n", cmdFileName, dst)
+				fmt.Printf("%s: clean up %s\n", cmdFilePath, dst)
 			}
 		}
 
@@ -572,7 +567,7 @@ func (this *RegTester) executeSingleCmdFile(
 			actualFileName := pair.second
 			os.Remove(actualFileName)
 			if verbosityLevel >= 3 {
-				fmt.Printf("%s: clean up %s\n", cmdFileName, actualFileName)
+				fmt.Printf("%s: clean up %s\n", cmdFilePath, actualFileName)
 			}
 		}
 	}
@@ -580,10 +575,10 @@ func (this *RegTester) executeSingleCmdFile(
 	if verbosityLevel >= 1 {
 		if passed {
 			platform.PrintHiGreen("pass")
-			fmt.Printf(" %s\n", cmdFileName)
+			fmt.Printf(" %s\n", cmdFilePath)
 		} else {
 			platform.PrintHiRed("fail")
-			fmt.Printf(" %s\n", cmdFileName)
+			fmt.Printf(" %s\n", cmdFilePath)
 		}
 	}
 
@@ -591,28 +586,9 @@ func (this *RegTester) executeSingleCmdFile(
 }
 
 // ----------------------------------------------------------------
-// Given 'regtest/cases/foo/0038.cmd', get 'regtest/cases/foo' and '0038'.
-// Various support files use syntax ${CASEDIR} and ${CASENAME} within them
-// so they're relocatable, but we need to expand those in order to execute
-// the test case.
-func (this *RegTester) extractComponents(cmdFileName string) (string, string) {
-	caseDir := filepath.Dir(cmdFileName)
-	caseName := strings.TrimSuffix(filepath.Base(cmdFileName), ".cmd")
-	return caseDir, caseName
-}
-
-// ----------------------------------------------------------------
-func (this *RegTester) changeExtension(
-	fileName string,
-	oldExtension string,
-	newExtension string,
-) string {
-	return strings.TrimSuffix(fileName, oldExtension) + newExtension
-}
-
 func (this *RegTester) FileExists(fileName string) bool {
 	fileInfo, err := os.Stat(fileName)
-	if err != nil { // TODO: neither true nor false; throw & abend the entire suite maybe
+	if err != nil {
 		return false
 	}
 	return !fileInfo.IsDir()
@@ -621,7 +597,6 @@ func (this *RegTester) FileExists(fileName string) bool {
 func (this *RegTester) loadFile(
 	fileName string,
 	caseDir string,
-	caseName string,
 ) (string, error) {
 	byteContents, err := os.ReadFile(fileName)
 	if err != nil {
@@ -629,7 +604,6 @@ func (this *RegTester) loadFile(
 	}
 	contents := string(byteContents)
 	contents = strings.ReplaceAll(contents, "${CASEDIR}", caseDir)
-	contents = strings.ReplaceAll(contents, "${CASENAME}", caseName)
 	return contents, nil
 }
 
@@ -648,9 +622,8 @@ func (this *RegTester) copyFile(
 	src string,
 	dst string,
 	caseDir string,
-	caseName string,
 ) error {
-	contents, err := this.loadFile(src, caseDir, caseName)
+	contents, err := this.loadFile(src, caseDir)
 	if err != nil {
 		return err
 	}
@@ -665,13 +638,12 @@ func (this *RegTester) compareFiles(
 	expectedFileName string,
 	actualFileName string,
 	caseDir string,
-	caseName string,
 ) (bool, error) {
-	expectedContents, err := this.loadFile(expectedFileName, caseDir, caseName)
+	expectedContents, err := this.loadFile(expectedFileName, caseDir)
 	if err != nil {
 		return false, err
 	}
-	actualContents, err := this.loadFile(actualFileName, caseDir, caseName)
+	actualContents, err := this.loadFile(actualFileName, caseDir)
 	if err != nil {
 		return false, err
 	}
@@ -686,7 +658,6 @@ func (this *RegTester) compareFiles(
 func (this *RegTester) loadEnvFile(
 	filename string,
 	caseDir string,
-	caseName string,
 ) (*lib.OrderedMap, error) {
 	// If the file doesn't exist that's the normal case -- most cases do not
 	// have a .env file.
@@ -696,7 +667,7 @@ func (this *RegTester) loadEnvFile(
 	}
 
 	// If the file does exist and isn't loadable, that's an error.
-	contents, err := this.loadFile(filename, caseDir, caseName)
+	contents, err := this.loadFile(filename, caseDir)
 	if err != nil {
 		return nil, err
 	}
@@ -726,7 +697,6 @@ func (this *RegTester) loadEnvFile(
 func (this *RegTester) loadStringPairFile(
 	filename string,
 	caseDir string,
-	caseName string,
 ) (*list.List, error) {
 	// If the file doesn't exist that's the normal case -- most cases do not
 	// have a .precopy or .postcmp file.
@@ -736,7 +706,7 @@ func (this *RegTester) loadStringPairFile(
 	}
 
 	// If the file does exist and isn't loadable, that's an error.
-	contents, err := this.loadFile(filename, caseDir, caseName)
+	contents, err := this.loadFile(filename, caseDir)
 	if err != nil {
 		return nil, err
 	}
