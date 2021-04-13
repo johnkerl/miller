@@ -10,6 +10,8 @@ The vast majority of Miller tests, though -- thousands of cases -- are tested by
 
 * `mlr regtest --help`
 
+* `go test` -- TODO -- also comment
+
 ## Items for the duration of the Go port
 
 * `mlr regtest -c ...` runs the C version of Miller from the local checkout

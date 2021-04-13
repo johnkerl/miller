@@ -4,7 +4,8 @@ A TL;DR for anyone wanting to compile and run the Go port of Miller:
 
 * `go build mlr.go` -- produces the `mlr` executable
 * `go test ./...` -- runs a relatively small number of unit tests
-* `./mlr regtest` -- new multiplatform regression framework, small-but-growing number of test cases
+* `go test` -- runs the same as `mlr regtest`. Note that (see `mlr regtest -h`) the latter gives you more options.
+* `./mlr regtest` -- runs `reg-test/cases`, which are cases passing on all platforms
   * `./mlr regtest reg-test/cases-pending-go-port` -- needing Go code to be ported from C
   * `./mlr regtest reg-test/cases-pending-windows` -- for Go code already ported from C but needing some work for Windows
 

@@ -1,5 +1,7 @@
 // ================================================================
-// TODO: comment
+// Miller regression tests are flexibly invoked via 'mlr regtest'.
+// However here is a standard location so people can get at them
+// via 'go test'.
 // ================================================================
 
 package main
@@ -11,7 +13,7 @@ import (
 	"miller/src/auxents/regtest"
 )
 
-func TestFoo(t *testing.T) {
+func TestRegression(t *testing.T) {
 
 	regtester := regtest.NewRegTester(
 		lib.MlrExeName(),
@@ -21,7 +23,7 @@ func TestFoo(t *testing.T) {
 		0, // firstNFailsToShow
 	)
 
-	paths := []string{}
+	paths := []string{} // use default
 
 	ok := regtester.Execute(paths)
 	if !ok {

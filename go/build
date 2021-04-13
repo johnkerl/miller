@@ -28,7 +28,8 @@ cp mlr mlrgo
 
 echo ================================================================
 echo UNIT TESTS
-go test ./...
+go test -v miller/src/...
+# 'go test' (with no arguments) is the same as 'mlr regtest'
 
 echo
 echo ================================================================
@@ -44,7 +45,3 @@ if [ "$do_wips" = "true" ]; then
   mlr regtest $verbose reg-test/cases-pending-go-port
 fi
 echo
-
-# TODO:
-# go test -v miller/src/...
-# go test
