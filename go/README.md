@@ -4,9 +4,10 @@ A TL;DR for anyone wanting to compile and run the Go port of Miller:
 
 * `go build mlr.go` -- produces the `mlr` executable
 * `go test ./...` -- runs a relatively small number of unit tests
-* `./mlr regtest` -- new multiplatform regression framework, small-but-growing number of test cases
-  * `./mlr regtest reg-test/cases-pending-go-port` -- needing Go code to be ported from C
-  * `./mlr regtest reg-test/cases-pending-windows` -- for Go code already ported from C but needing some work for Windows
+* `go test` -- runs the same as `mlr regtest`. Note that (see `mlr regtest -h`) the latter gives you more options.
+* `./mlr regtest` -- runs `regtest/cases`, which are cases passing on all platforms
+  * `./mlr regtest regtest/cases-pending-go-port` -- needing Go code to be ported from C
+  * `./mlr regtest regtest/cases-pending-windows` -- for Go code already ported from C but needing some work for Windows
 
 A note on Continuous Integration:
 
@@ -24,8 +25,8 @@ A note on Continuous Integration:
 
 # Port-completion criteria
 
-* `mlr regtest reg-test/cases*` completes -- either completing/fixing the C/Go source-code discrepancies, or accepting the changes as backward incomptabilities
-* Double-checking all Miller issues ever, in case I fixed/implemented something but didn't have reg-test coverage
+* `mlr regtest regtest/cases*` completes -- either completing/fixing the C/Go source-code discrepancies, or accepting the changes as backward incomptabilities
+* Double-checking all Miller issues ever, in case I fixed/implemented something but didn't have regtest coverage
 * All `TODO`/`xxx` comments in Go, BNF source code, and case-files are resolved
 * Release notes including Go-only features, and C/Go backward-incompatibilities
 * Docs updated at https://miller.readthedocs.io/ (source-controlled at [../docs](../docs/))
@@ -202,7 +203,7 @@ nil through the reader/transformer/writer sequence.
  
 ## Software-testing methodology
 
-See [./reg-test/README.md](./reg-test/README.md).
+See [./regtest/README.md](./regtest/README.md).
 
 ## Source-code indexing
 

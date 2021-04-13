@@ -1,3 +1,0 @@
-#!/bin/bash
-
-diff <(mlr -L) <(../c/mlr -L) | grep '>' | nf | cat -n

@@ -1,7 +1,0 @@
-#!/bin/bash
-
-verbs=$(diff <(mlr -L) <(../c/mlr -L) | grep '>' | nf)
-
-for verb in $verbs; do
-  wc -l ../c/mapping/mapper_$(echo $verb | sed 's/-/_/g').c
-done | sort -n

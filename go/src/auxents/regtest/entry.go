@@ -91,7 +91,6 @@ func RegTestMain(args []string) int {
 
 	regtester := NewRegTester(
 		exeName,
-		verbName,
 		doPopulate,
 		verbosityLevel,
 		firstNFailsToShow,
