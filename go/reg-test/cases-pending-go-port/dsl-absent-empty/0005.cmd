@@ -1,1 +1,0 @@
-mlr put -q '@sum[$a] += $x; end{emitp @sum, "a"}' reg-test/input/abixy-het

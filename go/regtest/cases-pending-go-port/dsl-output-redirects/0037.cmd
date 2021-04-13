@@ -1,0 +1,1 @@
+mlr --from regtest/input/2.dkvp put '@x=1; emitf > ENV["outdir"]."/foo.dat", @x'

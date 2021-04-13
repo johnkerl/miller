@@ -15,7 +15,7 @@ import (
 	"miller/src/platform"
 )
 
-const DefaultPath = "./reg-test/cases"
+const DefaultPath = "./regtest/cases"
 const CommandSuffix = ".cmd"
 const EnvSuffix = ".env"
 const PreCopySuffix = ".precopy"
@@ -35,7 +35,6 @@ type stringPair struct {
 // ----------------------------------------------------------------
 type RegTester struct {
 	exeName        string
-	verbName       string
 	verbosityLevel int
 	doPopulate     bool
 
@@ -52,14 +51,12 @@ type RegTester struct {
 // ----------------------------------------------------------------
 func NewRegTester(
 	exeName string,
-	verbName string,
 	doPopulate bool,
 	verbosityLevel int,
 	firstNFailsToShow int,
 ) *RegTester {
 	return &RegTester{
 		exeName:            exeName,
-		verbName:           verbName,
 		doPopulate:         doPopulate,
 		verbosityLevel:     verbosityLevel,
 		directoryPassCount: 0,
