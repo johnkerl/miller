@@ -15,7 +15,7 @@ import (
 	"miller/src/platform"
 )
 
-const DefaultPath = "./reg-test/cases"
+const DefaultPath = "./regtest/cases"
 const CommandSuffix = ".cmd"
 const EnvSuffix = ".env"
 const PreCopySuffix = ".precopy"

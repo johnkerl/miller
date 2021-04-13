@@ -35,13 +35,13 @@ echo
 echo ================================================================
 echo REGRESSION TESTS v2 MAIN
 echo
-mlr regtest $verbose reg-test/cases reg-test/cases-pending-windows
+mlr regtest $verbose regtest/cases regtest/cases-pending-windows
 
 if [ "$do_wips" = "true" ]; then
   echo
   echo ================================================================
   echo REGRESSION TESTS v2 PENDING GO PORT
   echo
-  mlr regtest $verbose reg-test/cases-pending-go-port
+  mlr regtest $verbose regtest/cases-pending-go-port
 fi
 echo

@@ -3,12 +3,13 @@ TOP OF LIST:
 
 * emph go 1.16 @ go.mod & README.md; also gha yaml
 
+? CASEDIR & CASEFILE macros -- ?
 ! run a pending-go-port case w/o -c -- it leaves files it should not
-* convert reg-test/cases-pending-windows
-* convert reg-test/cases-pending-go-port
+* convert regtest/cases-pending-windows
+* convert regtest/cases-pending-go-port
 * clean up TODO/xxx in src/platform
-* mlr regtest doc -- focus on either go/reg-test or go/src/auxents/regtest, one linking to the other
-d type up a note somewhere in the reg-test tree that all the .mlrs and the -f 00nn.mlr are for windows regtest
+* mlr regtest doc -- focus on either go/regtest or go/src/auxents/regtest, one linking to the other
+d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00nn.mlr are for windows regtest
 d fix artifact-uploader name collision
   https://github.com/actions/upload-artifact
   https://forum.nim-lang.org/t/6371
@@ -69,7 +70,7 @@ CONCLUSION:
 * stick with cmd /c for regtest
 * try to move a bunch of things to -f's though
 * try not to have to make a platform-partitioned regtest
--- TODO: reg-test README.md for .cmd format
+-- TODO: regtest README.md for .cmd format
 ----------------------------------------------------------------
 
 * regexes
@@ -138,7 +139,7 @@ CONCLUSION:
 
 ! reconsider OFMT -- %.6f is not really OK when inputs have far more digits.
 * new columns-to-arrays and arrays-to-columns for stan format
-* reg-test: diff the *.err files?
+* regtest: diff the *.err files?
 * single-line JSON for DKVP/CSV/etc ...
 
 * small:
@@ -166,19 +167,19 @@ emitp/emitf:
   o nesting level is wrong:
     mlr head -n 2 then put -o csv -q 'emitp > stderr, $*' s
 
-* ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
+* ./regtest/cases/case-c-dsl-indirect-oosvar-assignments.sh
   _:t:u=1 vs t:u=1 on emitp @*
 
 * check more
-  ./reg-test/cases/case-c-dsl-absent-empty.sh
-  ./reg-test/cases/case-c-dsl-break-continue.sh
-  ./reg-test/cases/case-c-dsl-for-oosvar-loops.sh
-  ./reg-test/cases/case-dsl-functional-tests.sh
-  ./reg-test/cases/case-c-dsl-indirect-oosvar-assignments.sh
-  ./reg-test/cases/case-c-dsl-lashed-emitp-singles.sh
-  ./reg-test/cases/case-c-dsl-mapvar-emit.sh
-  ./reg-test/cases/case-c-dsl-oosvar-assignments.sh
-  u/rr ./reg-test/cases/case-c-dsl-type-predicates.sh
+  ./regtest/cases/case-c-dsl-absent-empty.sh
+  ./regtest/cases/case-c-dsl-break-continue.sh
+  ./regtest/cases/case-c-dsl-for-oosvar-loops.sh
+  ./regtest/cases/case-dsl-functional-tests.sh
+  ./regtest/cases/case-c-dsl-indirect-oosvar-assignments.sh
+  ./regtest/cases/case-c-dsl-lashed-emitp-singles.sh
+  ./regtest/cases/case-c-dsl-mapvar-emit.sh
+  ./regtest/cases/case-c-dsl-oosvar-assignments.sh
+  u/rr ./regtest/cases/case-c-dsl-type-predicates.sh
 
 * new emitx punctuation-syntax -- decide x 4
   o to support (from C impl):
@@ -443,7 +444,7 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
     --versus--
     foo[NR] = $foo # auto-creates and auto-extends a map with keys "1","2","3",...
 * reorder locations of get/put/remove methods in mlrval/mlrmap
-* grep out all error message from reg-test outputs & doc them all & make sure index-searchable at readthedocs
+* grep out all error message from regtest outputs & doc them all & make sure index-searchable at readthedocs
 * short 'asserting' functions (absent/error); and/or put --strict or somesuch
 * function metadata: auto-sort on mlr -f?
 * --x2b @ help-doc .go; etc
@@ -470,7 +471,7 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o reduce $* copy ...
   o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
 
-* mlr --opprint put $[[1]] = $[[2]]; unset $["a"] ./reg-test/input/abixy
+* mlr --opprint put $[[1]] = $[[2]]; unset $["a"] ./regtest/input/abixy
   o squint at pointer-handling
   o output varied after flatten-mods
 

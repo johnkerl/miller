@@ -1,1 +1,0 @@
-mlr --opprint put '$y = sub($x, "([hg])e.*l(.)", "y\1y123.y")'  reg-test/input/sub.dat

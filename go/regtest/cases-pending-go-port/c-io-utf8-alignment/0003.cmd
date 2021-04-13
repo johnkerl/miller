@@ -1,0 +1,1 @@
+mlr --icsvlite --oxtab   cat regtest/input/utf8-1.csv
