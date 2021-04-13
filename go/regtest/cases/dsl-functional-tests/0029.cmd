@@ -1,1 +1,1 @@
-mlr put -f ${CASEDIR}/0029.mlr ./${CASEDIR}/0029.input
+mlr put -f ${CASEDIR}/${CASENAME}.mlr ./${CASEDIR}/${CASENAME}.input

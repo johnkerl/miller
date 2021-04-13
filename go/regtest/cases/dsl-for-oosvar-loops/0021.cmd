@@ -1,1 +1,1 @@
-mlr --from regtest/input/xyz2 put -f ${CASEDIR}/0021.mlr
+mlr --from regtest/input/xyz2 put -f ${CASEDIR}/${CASENAME}.mlr

@@ -1,1 +1,1 @@
-mlr --idkvp --opprint --from regtest/input/s.dkvp put -f ./${CASEDIR}/0003.mlr
+mlr --idkvp --opprint --from regtest/input/s.dkvp put -f ./${CASEDIR}/${CASENAME}.mlr

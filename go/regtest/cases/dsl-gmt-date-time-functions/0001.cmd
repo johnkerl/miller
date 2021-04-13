@@ -1,1 +1,1 @@
-mlr --csvlite put -f ${CASEDIR}/0001.mlr regtest/input/sec2gmt
+mlr --csvlite put -f ${CASEDIR}/${CASENAME}.mlr regtest/input/sec2gmt

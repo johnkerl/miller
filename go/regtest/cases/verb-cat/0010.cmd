@@ -1,1 +1,1 @@
-mlr cat ./${CASEDIR}/0010.input
+mlr cat ./${CASEDIR}/${CASENAME}.input

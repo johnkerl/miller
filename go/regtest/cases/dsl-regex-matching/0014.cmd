@@ -1,1 +1,1 @@
-mlr --csv filter -f ${CASEDIR}/0014.mlr    regtest/input/dot-match.csv
+mlr --csv filter -f ${CASEDIR}/${CASENAME}.mlr    regtest/input/dot-match.csv

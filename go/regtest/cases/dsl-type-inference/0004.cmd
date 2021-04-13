@@ -1,1 +1,1 @@
-mlr --xtab put    -f ${CASEDIR}/0004.mlr regtest/input/mixed-types.xtab
+mlr --xtab put    -f ${CASEDIR}/${CASENAME}.mlr regtest/input/mixed-types.xtab

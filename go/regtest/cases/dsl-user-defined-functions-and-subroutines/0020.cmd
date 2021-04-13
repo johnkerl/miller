@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy --opprint filter -f ${CASEDIR}/0020.mlr
+mlr --from regtest/input/abixy --opprint filter -f ${CASEDIR}/${CASENAME}.mlr

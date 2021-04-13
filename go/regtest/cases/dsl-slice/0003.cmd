@@ -1,1 +1,1 @@
-mlr -n --ojson put -f ./${CASEDIR}/0003.mlr
+mlr -n --ojson put -f ./${CASEDIR}/${CASENAME}.mlr

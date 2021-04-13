@@ -1,1 +1,1 @@
-mlr put -f ${CASEDIR}/0033.mlr regtest/input/unset4.dkvp
+mlr put -f ${CASEDIR}/${CASENAME}.mlr regtest/input/unset4.dkvp

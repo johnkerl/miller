@@ -1,1 +1,1 @@
-mlr --icsv --ojson --rs lf cat ./${CASEDIR}/0025.input
+mlr --icsv --ojson --rs lf cat ./${CASEDIR}/${CASENAME}.input

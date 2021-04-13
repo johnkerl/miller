@@ -1,1 +1,1 @@
-mlr --opprint put -v -f ${CASEDIR}/0005.mlr regtest/input/abixy
+mlr --opprint put -v -f ${CASEDIR}/${CASENAME}.mlr regtest/input/abixy

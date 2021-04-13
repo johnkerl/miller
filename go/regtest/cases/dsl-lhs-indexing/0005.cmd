@@ -1,1 +1,1 @@
-mlr --ojson --from regtest/input/2.dkvp put -f ${CASEDIR}/0005.mlr
+mlr --ojson --from regtest/input/2.dkvp put -f ${CASEDIR}/${CASENAME}.mlr

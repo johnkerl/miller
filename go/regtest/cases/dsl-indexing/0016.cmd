@@ -1,1 +1,1 @@
-mlr --json put -f ${CASEDIR}/0016.mlr regtest/input/nested.json
+mlr --json put -f ${CASEDIR}/${CASENAME}.mlr regtest/input/nested.json

@@ -4,6 +4,7 @@ TOP OF LIST:
 * emph go 1.16 @ go.mod & README.md; also gha yaml
 
 ? CASEDIR & CASEFILE macros -- ?
+* maybe dirs for _each case_ ... then files would be trivially relocatable
 * convert regtest/cases-pending-windows
 * convert regtest/cases-pending-go-port
 * clean up TODO/xxx in src/platform

@@ -1,1 +1,1 @@
-mlr --opprint put -f ${CASEDIR}/0113.mlr                          regtest/input/nullvals.dkvp
+mlr --opprint put -f ${CASEDIR}/${CASENAME}.mlr                          regtest/input/nullvals.dkvp

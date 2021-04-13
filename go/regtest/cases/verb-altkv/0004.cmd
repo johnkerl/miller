@@ -1,1 +1,1 @@
-mlr --inidx --ifs comma altkv ./${CASEDIR}/0004.input
+mlr --inidx --ifs comma altkv ./${CASEDIR}/${CASENAME}.input

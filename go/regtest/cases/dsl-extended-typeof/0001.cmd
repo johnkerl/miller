@@ -1,1 +1,1 @@
-mlr --from regtest/input/xyz2 --oxtab put -f ./${CASEDIR}/0001.mlr
+mlr --from regtest/input/xyz2 --oxtab put -f ./${CASEDIR}/${CASENAME}.mlr

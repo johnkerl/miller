@@ -1,1 +1,1 @@
-mlr --inidx --oxtab cat ./${CASEDIR}/0020.input
+mlr --inidx --oxtab cat ./${CASEDIR}/${CASENAME}.input

@@ -1,1 +1,1 @@
-mlr --ofs tab put -f ${CASEDIR}/0024.mlr regtest/input/typeof.dkvp
+mlr --ofs tab put -f ${CASEDIR}/${CASENAME}.mlr regtest/input/typeof.dkvp

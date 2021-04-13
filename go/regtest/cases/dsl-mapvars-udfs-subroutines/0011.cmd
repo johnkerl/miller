@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy put -f ./${CASEDIR}/0011.mlr
+mlr --from regtest/input/abixy put -f ./${CASEDIR}/${CASENAME}.mlr

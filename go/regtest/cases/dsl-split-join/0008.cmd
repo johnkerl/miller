@@ -1,1 +1,1 @@
-mlr -n put -f ${CASEDIR}/0008.mlr
+mlr -n put -f ${CASEDIR}/${CASENAME}.mlr

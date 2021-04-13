@@ -1,1 +1,1 @@
-mlr put -f ${CASEDIR}/0022.mlr regtest/input/minmax.dkvp
+mlr put -f ${CASEDIR}/${CASENAME}.mlr regtest/input/minmax.dkvp

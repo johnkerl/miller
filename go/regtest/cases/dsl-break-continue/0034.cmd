@@ -1,1 +1,1 @@
-mlr --opprint --from regtest/input/abixy put -q -f ./${CASEDIR}/0034.mlr
+mlr --opprint --from regtest/input/abixy put -q -f ./${CASEDIR}/${CASENAME}.mlr

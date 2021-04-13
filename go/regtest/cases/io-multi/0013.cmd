@@ -1,1 +1,1 @@
-mlr --opprint cat ./${CASEDIR}/0013.input
+mlr --opprint cat ./${CASEDIR}/${CASENAME}.input

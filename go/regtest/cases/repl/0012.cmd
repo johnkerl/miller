@@ -1,1 +1,1 @@
-mlr repl -q -s -D ./${CASEDIR}/0012.input
+mlr repl -q -s -D ./${CASEDIR}/${CASENAME}.input

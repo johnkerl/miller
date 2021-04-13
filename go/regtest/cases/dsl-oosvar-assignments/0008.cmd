@@ -1,1 +1,1 @@
-mlr --oxtab put -q -f ${CASEDIR}/0008.mlr regtest/input/abixy-het
+mlr --oxtab put -q -f ${CASEDIR}/${CASENAME}.mlr regtest/input/abixy-het

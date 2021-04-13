@@ -1,1 +1,1 @@
-mlr --inidx --ifs ' ' --oxtab cat ./${CASEDIR}/0024.input
+mlr --inidx --ifs ' ' --oxtab cat ./${CASEDIR}/${CASENAME}.input

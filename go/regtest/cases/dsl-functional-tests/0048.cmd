@@ -1,1 +1,1 @@
-mlr --csvlite filter -f ${CASEDIR}/0048.mlr  regtest/input/b.csv
+mlr --csvlite filter -f ${CASEDIR}/${CASENAME}.mlr  regtest/input/b.csv

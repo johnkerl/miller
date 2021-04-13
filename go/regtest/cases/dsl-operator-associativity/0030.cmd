@@ -1,1 +1,1 @@
-mlr -n filter -v -f ${CASEDIR}/0030.mlr
+mlr -n filter -v -f ${CASEDIR}/${CASENAME}.mlr

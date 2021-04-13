@@ -1,1 +1,1 @@
-mlr --oxtab --from regtest/input/abixy head -n 1 then put -f ${CASEDIR}/0032.mlr
+mlr --oxtab --from regtest/input/abixy head -n 1 then put -f ${CASEDIR}/${CASENAME}.mlr

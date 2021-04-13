@@ -1,1 +1,1 @@
-mlr --icsvlite --oxtab put -f ${CASEDIR}/0035.mlr regtest/input/braced.csv
+mlr --icsvlite --oxtab put -f ${CASEDIR}/${CASENAME}.mlr regtest/input/braced.csv

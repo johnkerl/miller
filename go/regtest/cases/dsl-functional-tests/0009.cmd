@@ -1,1 +1,1 @@
-mlr filter -x -f ${CASEDIR}/0009.mlr   regtest/input/abixy
+mlr filter -x -f ${CASEDIR}/${CASENAME}.mlr   regtest/input/abixy

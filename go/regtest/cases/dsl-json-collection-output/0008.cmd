@@ -1,1 +1,1 @@
-mlr --json cat ./${CASEDIR}/0008.input
+mlr --json cat ./${CASEDIR}/${CASENAME}.input
