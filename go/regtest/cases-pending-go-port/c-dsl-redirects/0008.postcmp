@@ -1,0 +1,5 @@
+regtest/cases-pending-go-port/c-dsl-redirects/0008.out.eks.expect regtest/cases-pending-go-port/c-dsl-redirects/0008.out.eks
+regtest/cases-pending-go-port/c-dsl-redirects/0008.out.hat.expect regtest/cases-pending-go-port/c-dsl-redirects/0008.out.hat
+regtest/cases-pending-go-port/c-dsl-redirects/0008.out.pan.expect regtest/cases-pending-go-port/c-dsl-redirects/0008.out.pan
+regtest/cases-pending-go-port/c-dsl-redirects/0008.out.wye.expect regtest/cases-pending-go-port/c-dsl-redirects/0008.out.wye
+regtest/cases-pending-go-port/c-dsl-redirects/0008.out.zee.expect regtest/cases-pending-go-port/c-dsl-redirects/0008.out.zee

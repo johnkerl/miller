@@ -130,7 +130,7 @@ func (this *RegTester) Execute(
 	fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", this.directoryFailCount)
 	fmt.Println()
 
-	if this.casePassCount > 0 && this.caseFailCount == 0 {
+	if this.casePassCount > 0 && this.caseFailCount == 0 && this.directoryPassCount > 0 && this.directoryFailCount == 0{
 		platform.PrintHiGreen("PASS")
 		fmt.Printf(" overall\n")
 		return true
