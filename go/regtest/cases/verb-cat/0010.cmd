@@ -1,1 +1,1 @@
-mlr cat ./regtest/cases/verb-cat/0010.input
+mlr cat ./${CASEDIR}/${CASENAME}.input

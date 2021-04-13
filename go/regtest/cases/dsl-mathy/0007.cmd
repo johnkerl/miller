@@ -1,1 +1,1 @@
-mlr --opprint --from regtest/input/ten.dkvp put -f regtest/cases/dsl-mathy/0007.mlr
+mlr --opprint --from regtest/input/ten.dkvp put -f ${CASEDIR}/${CASENAME}.mlr

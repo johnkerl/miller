@@ -1,1 +1,1 @@
-mlr put -f ./regtest/cases/dsl-triple-for-loops/0007.mlr ./regtest/cases/dsl-triple-for-loops/0007.input
+mlr put -f ./${CASEDIR}/${CASENAME}.mlr ./${CASEDIR}/${CASENAME}.input

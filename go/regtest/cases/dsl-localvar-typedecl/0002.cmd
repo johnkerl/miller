@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy put -f ./regtest/cases/dsl-localvar-typedecl/0002.mlr
+mlr --from regtest/input/abixy put -f ./${CASEDIR}/0002.mlr

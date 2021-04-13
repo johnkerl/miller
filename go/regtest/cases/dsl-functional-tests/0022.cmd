@@ -1,1 +1,1 @@
-mlr put -f regtest/cases/dsl-functional-tests/0022.mlr regtest/input/minmax.dkvp
+mlr put -f ${CASEDIR}/${CASENAME}.mlr regtest/input/minmax.dkvp

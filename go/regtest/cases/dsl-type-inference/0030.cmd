@@ -1,1 +1,1 @@
-mlr --xtab put    -f regtest/cases/dsl-type-inference/0030.mlr  regtest/input/mixed-types.xtab
+mlr --xtab put    -f ${CASEDIR}/${CASENAME}.mlr  regtest/input/mixed-types.xtab

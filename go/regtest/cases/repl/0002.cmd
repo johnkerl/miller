@@ -1,1 +1,1 @@
-mlr repl -q -s ./regtest/cases/repl/0002.input
+mlr repl -q -s ./${CASEDIR}/0002.input

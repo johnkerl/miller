@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy put -f ./regtest/cases/dsl-comments/0003.mlr
+mlr --from regtest/input/abixy put -f ./${CASEDIR}/${CASENAME}.mlr

@@ -1,1 +1,1 @@
-mlr --oxtab --from regtest/input/abixy put -q -f ./regtest/cases/dsl-emit/0007.mlr
+mlr --oxtab --from regtest/input/abixy put -q -f ./${CASEDIR}/${CASENAME}.mlr

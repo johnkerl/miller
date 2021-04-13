@@ -1,1 +1,1 @@
-mlr put -f regtest/cases/dsl-functional-tests/0014.mlr regtest/input/abixy
+mlr put -f ${CASEDIR}/${CASENAME}.mlr regtest/input/abixy

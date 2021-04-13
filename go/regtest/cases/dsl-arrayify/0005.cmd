@@ -1,1 +1,1 @@
-mlr --ojson seqgen --start 1 --stop 1 then put -f ./regtest/cases/dsl-arrayify/0005.mlr
+mlr --ojson seqgen --start 1 --stop 1 then put -f ./${CASEDIR}/${CASENAME}.mlr

@@ -1,1 +1,1 @@
-mlr --opprint put -v -f regtest/cases/dsl-oosvars/0002.mlr then step -a ratio -f x regtest/input/abixy
+mlr --opprint put -v -f ${CASEDIR}/0002.mlr then step -a ratio -f x regtest/input/abixy

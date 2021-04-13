@@ -1,1 +1,1 @@
-mlr --icsvlite --oxtab filter -f regtest/cases/dsl-functional-tests/0036.mlr regtest/input/braced.csv
+mlr --icsvlite --oxtab filter -f ${CASEDIR}/${CASENAME}.mlr regtest/input/braced.csv

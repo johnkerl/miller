@@ -1,1 +1,1 @@
-mlr --oxtab put -q -f regtest/cases/dsl-oosvar-assignments/0011.mlr regtest/input/abixy-het
+mlr --oxtab put -q -f ${CASEDIR}/${CASENAME}.mlr regtest/input/abixy-het

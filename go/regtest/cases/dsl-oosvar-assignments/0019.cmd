@@ -1,1 +1,1 @@
-mlr put -f regtest/cases/dsl-oosvar-assignments/0019.mlr regtest/input/abixy-het
+mlr put -f ${CASEDIR}/${CASENAME}.mlr regtest/input/abixy-het

@@ -1,1 +1,1 @@
-mlr --from regtest/input/s.dkvp --opprint put -x    -f regtest/cases/dsl-filter/0004.mlr
+mlr --from regtest/input/s.dkvp --opprint put -x    -f ${CASEDIR}/${CASENAME}.mlr

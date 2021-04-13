@@ -1,1 +1,1 @@
-mlr --opprint --from regtest/input/s.dkvp --from regtest/input/t.dkvp put -f regtest/cases/dsl-array-map-indexing/0042.mlr
+mlr --opprint --from regtest/input/s.dkvp --from regtest/input/t.dkvp put -f ${CASEDIR}/${CASENAME}.mlr

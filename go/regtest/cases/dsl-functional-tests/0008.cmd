@@ -1,1 +1,1 @@
-mlr filter -x -f regtest/cases/dsl-functional-tests/0008.mlr   regtest/input/abixy
+mlr filter -x -f ${CASEDIR}/${CASENAME}.mlr   regtest/input/abixy

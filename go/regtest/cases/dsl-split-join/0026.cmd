@@ -1,1 +1,1 @@
-mlr --ojson --from regtest/input/s.dkvp put -f regtest/cases/dsl-split-join/0026.mlr
+mlr --ojson --from regtest/input/s.dkvp put -f ${CASEDIR}/${CASENAME}.mlr

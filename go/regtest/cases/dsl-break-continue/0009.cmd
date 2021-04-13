@@ -1,1 +1,1 @@
-mlr --opprint --from regtest/input/abixy put -f ./regtest/cases/dsl-break-continue/0009.mlr
+mlr --opprint --from regtest/input/abixy put -f ./${CASEDIR}/${CASENAME}.mlr

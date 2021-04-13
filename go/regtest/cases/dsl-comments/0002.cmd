@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy filter -f ./regtest/cases/dsl-comments/0002.mlr
+mlr --from regtest/input/abixy filter -f ./${CASEDIR}/0002.mlr

@@ -1,1 +1,1 @@
-mlr -n put -v -f regtest/cases/dsl-operator-precedence/0115.mlr
+mlr -n put -v -f ${CASEDIR}/${CASENAME}.mlr

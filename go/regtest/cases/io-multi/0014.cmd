@@ -1,1 +1,1 @@
-mlr --opprint cat ./regtest/cases/io-multi/0014.input
+mlr --opprint cat ./${CASEDIR}/${CASENAME}.input

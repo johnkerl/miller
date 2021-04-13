@@ -1,1 +1,1 @@
-mlr put -f regtest/cases/dsl-null-empty-handling/0009.mlr  regtest/input/null-vs-empty.dkvp
+mlr put -f ${CASEDIR}/${CASENAME}.mlr  regtest/input/null-vs-empty.dkvp

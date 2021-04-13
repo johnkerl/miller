@@ -1,1 +1,1 @@
-mlr --ojson put '$y = strip($x)' ./regtest/cases/dsl-whitespace/0001.input
+mlr --ojson put '$y = strip($x)' ./${CASEDIR}/${CASENAME}.input
