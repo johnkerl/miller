@@ -1,1 +1,1 @@
-mlr --csvlite filter -f regtest/cases/dsl-functional-tests/0046.mlr  regtest/input/b.csv
+mlr --csvlite filter -f ${CASEDIR}/0046.mlr  regtest/input/b.csv

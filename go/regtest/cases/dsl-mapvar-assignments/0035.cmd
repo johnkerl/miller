@@ -1,1 +1,1 @@
-mlr --from regtest/input/xyz2 put -q -f regtest/cases/dsl-mapvar-assignments/0035.mlr
+mlr --from regtest/input/xyz2 put -q -f ${CASEDIR}/0035.mlr

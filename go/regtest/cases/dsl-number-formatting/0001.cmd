@@ -1,1 +1,1 @@
-mlr --opprint --from regtest/input/ten.dkvp put -f ./regtest/cases/dsl-number-formatting/0001.mlr
+mlr --opprint --from regtest/input/ten.dkvp put -f ./${CASEDIR}/0001.mlr

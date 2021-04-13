@@ -1,1 +1,1 @@
-mlr --icsv --ojson --jvquoteall --rs lf cat ./regtest/cases/io-json-io/0026.input
+mlr --icsv --ojson --jvquoteall --rs lf cat ./${CASEDIR}/0026.input

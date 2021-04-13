@@ -1,1 +1,1 @@
-mlr put -q -f regtest/cases/dsl-oosvars/0027.mlr regtest/input/unset4.dkvp
+mlr put -q -f ${CASEDIR}/0027.mlr regtest/input/unset4.dkvp

@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy put -f ./regtest/cases/dsl-mapvars-udfs-subroutines/0001.mlr
+mlr --from regtest/input/abixy put -f ./${CASEDIR}/0001.mlr

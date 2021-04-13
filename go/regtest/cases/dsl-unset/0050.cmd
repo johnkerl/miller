@@ -1,1 +1,1 @@
-mlr --from regtest/input/s.dkvp put -q -f ./regtest/cases/dsl-unset/0050.mlr
+mlr --from regtest/input/s.dkvp put -q -f ./${CASEDIR}/0050.mlr

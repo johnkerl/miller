@@ -1,1 +1,1 @@
-mlr put -f regtest/cases/dsl-length/0004.mlr ./regtest/cases/dsl-length/0004.input
+mlr put -f ${CASEDIR}/0004.mlr ./${CASEDIR}/0004.input

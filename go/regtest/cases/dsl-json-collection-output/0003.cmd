@@ -1,1 +1,1 @@
-mlr --json cat ./regtest/cases/dsl-json-collection-output/0003.input
+mlr --json cat ./${CASEDIR}/0003.input

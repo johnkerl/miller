@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy-het put -q -f regtest/cases/dsl-emit-het/0008.mlr
+mlr --from regtest/input/abixy-het put -q -f ${CASEDIR}/0008.mlr

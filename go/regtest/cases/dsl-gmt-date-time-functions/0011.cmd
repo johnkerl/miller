@@ -1,1 +1,1 @@
-mlr --icsv --opprint put -f regtest/cases/dsl-gmt-date-time-functions/0011.mlr  regtest/input/gmt2sec
+mlr --icsv --opprint put -f ${CASEDIR}/0011.mlr  regtest/input/gmt2sec

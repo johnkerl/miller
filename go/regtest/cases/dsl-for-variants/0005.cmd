@@ -1,1 +1,1 @@
-mlr --from regtest/input/s.dkvp head -n 2 then put -f ./regtest/cases/dsl-for-variants/0005.mlr
+mlr --from regtest/input/s.dkvp head -n 2 then put -f ./${CASEDIR}/0005.mlr

@@ -1,1 +1,1 @@
-mlr -n put    -v -f regtest/cases/dsl-operator-associativity/0049.mlr
+mlr -n put    -v -f ${CASEDIR}/0049.mlr

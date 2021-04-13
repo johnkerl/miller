@@ -1,1 +1,1 @@
-mlr --inidx --oxtab cat ./regtest/cases/io-multi/0020.input
+mlr --inidx --oxtab cat ./${CASEDIR}/0020.input

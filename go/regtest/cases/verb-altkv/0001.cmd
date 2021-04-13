@@ -1,1 +1,1 @@
-mlr altkv ./regtest/cases/verb-altkv/0001.input
+mlr altkv ./${CASEDIR}/0001.input

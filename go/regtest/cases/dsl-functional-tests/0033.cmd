@@ -1,1 +1,1 @@
-mlr put -f regtest/cases/dsl-functional-tests/0033.mlr ./regtest/cases/dsl-functional-tests/0033.input
+mlr put -f ${CASEDIR}/0033.mlr ./${CASEDIR}/0033.input

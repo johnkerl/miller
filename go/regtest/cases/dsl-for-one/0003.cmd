@@ -1,1 +1,1 @@
-mlr --from regtest/input/s.dkvp head -n 2 then put -q -f regtest/cases/dsl-for-one/0003.mlr
+mlr --from regtest/input/s.dkvp head -n 2 then put -q -f ${CASEDIR}/0003.mlr

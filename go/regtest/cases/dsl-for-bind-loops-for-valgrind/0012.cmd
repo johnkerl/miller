@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy-het put -q -f ./regtest/cases/dsl-for-bind-loops-for-valgrind/0012.mlr
+mlr --from regtest/input/abixy-het put -q -f ./${CASEDIR}/0012.mlr

@@ -1,1 +1,1 @@
-mlr --opprint --from regtest/input/abixy put -f ./regtest/cases/dsl-triple-for-loops/0002.mlr
+mlr --opprint --from regtest/input/abixy put -f ./${CASEDIR}/0002.mlr

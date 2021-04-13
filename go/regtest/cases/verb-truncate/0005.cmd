@@ -1,1 +1,1 @@
-mlr put '$y=truncate($x, 4)' ./regtest/cases/verb-truncate/0005.input
+mlr put '$y=truncate($x, 4)' ./${CASEDIR}/0005.input

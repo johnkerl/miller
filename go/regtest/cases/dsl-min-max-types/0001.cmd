@@ -1,1 +1,1 @@
-mlr --ojson put -f regtest/cases/dsl-min-max-types/0001.mlr regtest/cases/dsl-min-max-types/0001.input 
+mlr --ojson put -f ${CASEDIR}/0001.mlr ${CASEDIR}/0001.input 

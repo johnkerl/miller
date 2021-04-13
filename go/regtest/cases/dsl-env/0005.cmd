@@ -1,1 +1,1 @@
-mlr --from regtest/input/s.dkvp --opprint head -n 2 then put -f regtest/cases/dsl-env/0005.mlr
+mlr --from regtest/input/s.dkvp --opprint head -n 2 then put -f ${CASEDIR}/0005.mlr

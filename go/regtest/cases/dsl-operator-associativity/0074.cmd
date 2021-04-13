@@ -1,1 +1,1 @@
-mlr -n filter -v -f regtest/cases/dsl-operator-associativity/0074.mlr
+mlr -n filter -v -f ${CASEDIR}/0074.mlr

@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy put -v -f regtest/cases/dsl-for-srec-loops/0003.mlr
+mlr --from regtest/input/abixy put -v -f ${CASEDIR}/0003.mlr

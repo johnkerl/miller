@@ -1,1 +1,1 @@
-mlr filter -v -f regtest/cases/dsl-regex-matching/0009.mlr      regtest/input/regex.dkvp
+mlr filter -v -f ${CASEDIR}/0009.mlr      regtest/input/regex.dkvp

@@ -1,1 +1,1 @@
-mlr --ofs tab put -f regtest/cases/dsl-null-empty-handling/0031.mlr regtest/input/typeof.dkvp
+mlr --ofs tab put -f ${CASEDIR}/0031.mlr regtest/input/typeof.dkvp

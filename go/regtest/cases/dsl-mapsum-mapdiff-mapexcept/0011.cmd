@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy-het put -q -f regtest/cases/dsl-mapsum-mapdiff-mapexcept/0011.mlr
+mlr --from regtest/input/abixy-het put -q -f ${CASEDIR}/0011.mlr

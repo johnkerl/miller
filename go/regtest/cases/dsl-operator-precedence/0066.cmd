@@ -1,1 +1,1 @@
-mlr -n filter -v -f regtest/cases/dsl-operator-precedence/0066.mlr
+mlr -n filter -v -f ${CASEDIR}/0066.mlr

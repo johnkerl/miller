@@ -1,1 +1,1 @@
-mlr -n --ojson put -f ./regtest/cases/dsl-slice/0001.mlr
+mlr -n --ojson put -f ./${CASEDIR}/0001.mlr

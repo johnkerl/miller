@@ -1,1 +1,1 @@
-mlr -n put -f regtest/cases/dsl-split-join/0013.mlr
+mlr -n put -f ${CASEDIR}/0013.mlr

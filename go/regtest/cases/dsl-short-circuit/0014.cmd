@@ -1,1 +1,1 @@
-mlr --from regtest/input/s.dkvp --idkvp --opprint put -f regtest/cases/dsl-short-circuit/0014.mlr
+mlr --from regtest/input/s.dkvp --idkvp --opprint put -f ${CASEDIR}/0014.mlr

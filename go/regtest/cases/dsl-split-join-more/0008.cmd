@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy-het put -f regtest/cases/dsl-split-join-more/0008.mlr
+mlr --from regtest/input/abixy-het put -f ${CASEDIR}/0008.mlr

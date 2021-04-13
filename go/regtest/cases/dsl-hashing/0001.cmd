@@ -1,1 +1,1 @@
-mlr repl -s -q < ./regtest/cases/dsl-hashing/0001.input
+mlr repl -s -q < ./${CASEDIR}/0001.input

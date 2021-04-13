@@ -1,1 +1,1 @@
-mlr -n put -v -f regtest/cases/dsl-parse/0094.mlr
+mlr -n put -v -f ${CASEDIR}/0094.mlr

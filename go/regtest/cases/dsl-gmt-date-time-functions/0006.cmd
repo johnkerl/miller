@@ -1,1 +1,1 @@
-mlr --csvlite put -f regtest/cases/dsl-gmt-date-time-functions/0006.mlr regtest/input/sec2gmt
+mlr --csvlite put -f ${CASEDIR}/0006.mlr regtest/input/sec2gmt

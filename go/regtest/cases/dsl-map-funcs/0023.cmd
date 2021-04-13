@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy-het put -q -f regtest/cases/dsl-map-funcs/0023.mlr
+mlr --from regtest/input/abixy-het put -q -f ${CASEDIR}/0023.mlr

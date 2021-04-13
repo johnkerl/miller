@@ -1,1 +1,1 @@
-mlr --opprint --from regtest/input/abixy put -f regtest/cases/dsl-multipart-scripts/0006a.mlr -f regtest/input/put-script-piece-1 -f regtest/input/put-script-piece-2 -f regtest/input/put-script-piece-3 -f regtest/cases/dsl-multipart-scripts/0006b.mlr
+mlr --opprint --from regtest/input/abixy put -f ${CASEDIR}/0006a.mlr -f regtest/input/put-script-piece-1 -f regtest/input/put-script-piece-2 -f regtest/input/put-script-piece-3 -f ${CASEDIR}/0006b.mlr
