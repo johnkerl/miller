@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy filter -f ./regtest/cases/dsl-context-specific-validation/0021.mlr
+mlr --from regtest/input/abixy filter -f ./${CASEDIR}/0021.mlr

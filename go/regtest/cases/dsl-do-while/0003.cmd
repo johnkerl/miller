@@ -1,1 +1,1 @@
-mlr --from regtest/input/s.dkvp put -f regtest/cases/dsl-do-while/0003.mlr
+mlr --from regtest/input/s.dkvp put -f ${CASEDIR}/0003.mlr

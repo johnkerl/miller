@@ -1,1 +1,1 @@
-mlr --opprint put -f regtest/cases/dsl-array-map-indexing/0072.mlr    regtest/input/abixy
+mlr --opprint put -f ${CASEDIR}/0072.mlr    regtest/input/abixy

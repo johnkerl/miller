@@ -1,1 +1,1 @@
-mlr -n put -f regtest/cases/dsl-collection-equality/0009.mlr
+mlr -n put -f ${CASEDIR}/0009.mlr
