@@ -1,1 +1,1 @@
-mlr -n put -f ./regtest/cases-pending-go-port/c-dsl-lashed-emitp-singles/0035.mlr
+mlr -n put -f ${CASEDIR}/mlr

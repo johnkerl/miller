@@ -1,2 +1,2 @@
-regtest/cases-pending-go-port/c-io-in-place-processing/0001.abixy.temp1.expect regtest/cases-pending-go-port/c-io-in-place-processing/0001.abixy.temp1
-regtest/cases-pending-go-port/c-io-in-place-processing/0001.abixy.temp2.expect regtest/cases-pending-go-port/c-io-in-place-processing/0001.abixy.temp2
+${CASEDIR}/abixy.temp1.expect ${CASEDIR}/abixy.temp1
+${CASEDIR}/abixy.temp2.expect ${CASEDIR}/abixy.temp2

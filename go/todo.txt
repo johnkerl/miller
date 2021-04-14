@@ -3,8 +3,9 @@ TOP OF LIST:
 
 * emph go 1.16 @ go.mod & README.md; also gha yaml
 
-? CASEDIR & CASEFILE macros -- ?
-* maybe dirs for _each case_ ... then files would be trivially relocatable
+! make sure all 0nnn.* files are -> 0nnn/*
+! patch up regtest/cases-pending-go-port/dsl-output-redirects/0004/
+
 * convert regtest/cases-pending-windows
 * convert regtest/cases-pending-go-port
 * clean up TODO/xxx in src/platform
@@ -71,6 +72,8 @@ CONCLUSION:
 * try to move a bunch of things to -f's though
 * try not to have to make a platform-partitioned regtest
 -- TODO: regtest README.md for .cmd format
+
+* also: write up how git status after test should show any missed extra-outs
 ----------------------------------------------------------------
 
 * regexes

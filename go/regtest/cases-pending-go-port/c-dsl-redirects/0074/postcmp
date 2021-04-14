@@ -1,4 +1,4 @@
-regtest/cases-pending-go-port/c-dsl-redirects/0074.out.ekspan.expect regtest/cases-pending-go-port/c-dsl-redirects/0074.out.ekspan
-regtest/cases-pending-go-port/c-dsl-redirects/0074.out.ekswye.expect regtest/cases-pending-go-port/c-dsl-redirects/0074.out.ekswye
-regtest/cases-pending-go-port/c-dsl-redirects/0074.out.panpan.expect regtest/cases-pending-go-port/c-dsl-redirects/0074.out.panpan
-regtest/cases-pending-go-port/c-dsl-redirects/0074.out.wyewye.expect regtest/cases-pending-go-port/c-dsl-redirects/0074.out.wyewye
+${CASEDIR}/out.ekspan.expect ${CASEDIR}/out.ekspan
+${CASEDIR}/out.ekswye.expect ${CASEDIR}/out.ekswye
+${CASEDIR}/out.panpan.expect ${CASEDIR}/out.panpan
+${CASEDIR}/out.wyewye.expect ${CASEDIR}/out.wyewye
