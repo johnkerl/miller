@@ -6,6 +6,7 @@ TOP OF LIST:
 ! make sure all 0nnn.* files are -> 0nnn/*
 ! patch up regtest/cases-pending-go-port/dsl-output-redirects/0004/
 
+! fix up PASS/FAIL reporting only of 2nd-level directories, not 3rd
 * convert regtest/cases-pending-windows
 * convert regtest/cases-pending-go-port
 * clean up TODO/xxx in src/platform
