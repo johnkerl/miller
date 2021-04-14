@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy tee -a regtest/cases-pending-go-port/c-dsl-redirects/0003.out then nothing
+mlr --from regtest/input/abixy tee -a ${CASEDIR}/out then nothing

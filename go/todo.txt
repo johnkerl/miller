@@ -3,6 +3,8 @@ TOP OF LIST:
 
 * emph go 1.16 @ go.mod & README.md; also gha yaml
 
+! make sure all 'regtest/cases...' are gone from file-contents within regtest/
+
 * convert regtest/cases-pending-windows
 * convert regtest/cases-pending-go-port
 * clean up TODO/xxx in src/platform
