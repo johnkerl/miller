@@ -1,0 +1,10 @@
+${CASEDIR}/out.ekspan.expect ${CASEDIR}/out.ekspan
+${CASEDIR}/out.ekswye.expect ${CASEDIR}/out.ekswye
+${CASEDIR}/out.ekszee.expect ${CASEDIR}/out.ekszee
+${CASEDIR}/out.hatwye.expect ${CASEDIR}/out.hatwye
+${CASEDIR}/out.panpan.expect ${CASEDIR}/out.panpan
+${CASEDIR}/out.panwye.expect ${CASEDIR}/out.panwye
+${CASEDIR}/out.wyepan.expect ${CASEDIR}/out.wyepan
+${CASEDIR}/out.wyewye.expect ${CASEDIR}/out.wyewye
+${CASEDIR}/out.zeepan.expect ${CASEDIR}/out.zeepan
+${CASEDIR}/out.zeewye.expect ${CASEDIR}/out.zeewye

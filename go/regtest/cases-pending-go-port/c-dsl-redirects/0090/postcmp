@@ -1,0 +1,4 @@
+${CASEDIR}/out.ekspan.expect ${CASEDIR}/out.ekspan
+${CASEDIR}/out.ekswye.expect ${CASEDIR}/out.ekswye
+${CASEDIR}/out.panpan.expect ${CASEDIR}/out.panpan
+${CASEDIR}/out.wyewye.expect ${CASEDIR}/out.wyewye
