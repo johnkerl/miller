@@ -1,1 +1,1 @@
-mlr --from regtest/input/2.dkvp put '@x=1; emitp > ENV["outdir"]."/foo.dat", @x'
+mlr --from regtest/input/2.dkvp put '@x=1; emitp > "${CASEDIR}/foo.dat", @x'
