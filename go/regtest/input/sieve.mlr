@@ -8,7 +8,7 @@
 #   mlr -n put -q -f name-of-this-file.mlr -e '@n = 200'
 # i.e. 100 is the default upper limit, and another can be specified using -e.
 begin {
-  @n = 100;
+  @n ??= 100;
 }
 
 end {
