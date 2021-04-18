@@ -3,6 +3,7 @@ TOP OF LIST:
 
 * emph go 1.16 @ go.mod & README.md; also gha yaml
 
+* more operators in mlr.vim
 ! fix up PASS/FAIL reporting only of 2nd-level directories, not 3rd
 * clean up TODO/xxx in src/platform
 * mlr regtest doc -- focus on either go/regtest or go/src/auxents/regtest, one linking to the other
