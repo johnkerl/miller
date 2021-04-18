@@ -3,6 +3,7 @@ TOP OF LIST:
 
 * emph go 1.16 @ go.mod & README.md; also gha yaml
 
+* more operators in mlr.vim
 ! make sure all 0nnn.* files are -> 0nnn/*
 ! patch up regtest/cases-pending-go-port/dsl-output-redirects/0004/
 
