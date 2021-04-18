@@ -3,15 +3,14 @@ TOP OF LIST:
 
 * emph go 1.16 @ go.mod & README.md; also gha yaml
 
-! make sure all 0nnn.* files are -> 0nnn/*
-! patch up regtest/cases-pending-go-port/dsl-output-redirects/0004/
-
 ! fix up PASS/FAIL reporting only of 2nd-level directories, not 3rd
-* convert regtest/cases-pending-windows
-* convert regtest/cases-pending-go-port
 * clean up TODO/xxx in src/platform
 * mlr regtest doc -- focus on either go/regtest or go/src/auxents/regtest, one linking to the other
 d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00nn.mlr are for windows regtest
+
+* convert regtest/cases-pending-windows
+* convert regtest/cases-pending-go-port
+
 d fix artifact-uploader name collision
   https://github.com/actions/upload-artifact
   https://forum.nim-lang.org/t/6371
