@@ -158,12 +158,14 @@ func (this *RegTester) executeSinglePath(
 	}
 	mode := handle.Mode()
 	if mode.IsDir() {
-		passed := this.executeSingleDirectory(path)
-		if passed {
-			this.directoryPassCount++
-		} else {
-			this.directoryFailCount++
-			this.failDirNames.PushBack(path)
+		passed, hasCaseSubdirectories := this.executeSingleDirectory(path)
+		if hasCaseSubdirectories {
+			if passed {
+				this.directoryPassCount++
+			} else {
+				this.directoryFailCount++
+				this.failDirNames.PushBack(path)
+			}
 		}
 		return passed
 	} else if mode.IsRegular() {
@@ -188,12 +190,12 @@ func (this *RegTester) executeSinglePath(
 // ----------------------------------------------------------------
 func (this *RegTester) executeSingleDirectory(
 	dirName string,
-) bool {
+) (bool, bool) {
 	passed := true
 	// TODO: comment
-	isCaseDirectory := this.isCaseDirectory(dirName)
+	hasCaseSubdirectories := this.hasCaseSubdirectories(dirName)
 
-	if !isCaseDirectory && this.verbosityLevel >= 1 {
+	if hasCaseSubdirectories && this.verbosityLevel >= 1 {
 		fmt.Printf("%s BEGIN %s/\n", MajorSeparator, dirName)
 	}
 
@@ -216,7 +218,7 @@ func (this *RegTester) executeSingleDirectory(
 		// Only print if there are .cmd files directly in this directory.
 		// Otherwise it's just a directory-of-directories and we don't need to
 		// multiply announce.
-		if !isCaseDirectory {
+		if hasCaseSubdirectories {
 			if passed {
 				platform.PrintHiGreen("PASS")
 				fmt.Printf(" %s/\n", dirName)
@@ -227,12 +229,12 @@ func (this *RegTester) executeSingleDirectory(
 		}
 	}
 
-	if !isCaseDirectory && this.verbosityLevel >= 1 {
+	if !hasCaseSubdirectories && this.verbosityLevel >= 1 {
 		fmt.Printf("%s END   %s/\n", MajorSeparator, dirName)
 		fmt.Println()
 	}
 
-	return passed
+	return passed, hasCaseSubdirectories
 }
 
 // ----------------------------------------------------------------
@@ -243,6 +245,26 @@ func (this *RegTester) executeSingleDirectory(
 
 // TODO: don't print container-of-containers, via entries.any.isCaseDirectory
 // or somesuch.
+
+func (this *RegTester) hasCaseSubdirectories(
+	dirName string,
+) bool {
+
+	entries, err := os.ReadDir(dirName)
+	if err != nil {
+		fmt.Printf("%s: %v\n", dirName, err)
+		os.Exit(1)
+	}
+
+	for i := range entries {
+		entry := &entries[i]
+		path := dirName + "/" + (*entry).Name()
+		if this.isCaseDirectory(path) {
+			return true
+		}
+	}
+	return false
+}
 
 func (this *RegTester) isCaseDirectory(
 	dirName string,
