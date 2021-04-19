@@ -5,7 +5,7 @@
 # Put this in a begin-block so we can do either
 #   mlr -n put -q -f name-of-this-file.mlr
 # or
-#   mlr -n put -q -f name-of-this-file.mlr -e '@n = 200'
+#   mlr -n put -q -s n=1000 -f name-of-this-file.mlr
 # i.e. 100 is the default upper limit, and another can be specified using -e.
 begin {
   @n ??= 100;
