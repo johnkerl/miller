@@ -53,11 +53,7 @@ positionally-indexed.  Then, on the fly, you can add new fields which are
 functions of existing fields, drop fields, sort, aggregate statistically,
 pretty-print, and more.
 
-![cover-art-cat](./docs/coverart/cover-cat.png)
-
-![cover-art-sort-to-pprint](./docs/coverart/cover-sort-to-pprint.png)
-
-![cover-art-filter-to-json](./docs/coverart/cover-filter-to-json.png)
+![cover-art](./docs/coverart/cover-combined.png)
 
 * Miller operates on **key-value-pair data** while the familiar
 Unix tools operate on integer-indexed fields: if the natural data structure for
