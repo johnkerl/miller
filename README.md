@@ -113,8 +113,6 @@ including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 
 # Getting started
 
-# Some tutorials:
-
 * [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)
 * [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
 * [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
