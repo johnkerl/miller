@@ -48,59 +48,12 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 # What can Miller do for me?
 
 With Miller, you get to use named fields without needing to count positional
-indices, using familiar formats such as CSV, TSV, JSON, and positionally-indexed.
+indices, using familiar formats such as CSV, TSV, JSON, and
+positionally-indexed.  Then, on the fly, you can add new fields which are
+functions of existing fields, drop fields, sort, aggregate statistically,
+pretty-print, and more.
 
-For example, suppose you have a CSV data file like this:
-
-```
-county,tiv_2011,tiv_2012,line
-St. Johns,29589.12,35207.53,Residential
-Miami Dade,2850980.31,2650932.72,Commercial
-Highlands,49155.16,47362.96,Residential
-Palm Beach,1174081.5,1856589.17,Residential
-Duval,1731888.18,2785551.63,Residential
-Miami Dade,1158674.85,1076001.08,Residential
-Seminole,22890.55,20848.71,Residential
-Highlands,23006.41,19757.91,Residential
-```
-
-Then, on the fly, you can add new fields which are functions of existing fields, drop fields, sort, aggregate statistically, pretty-print, and more. A simple example:
-
-```
-$ mlr --csv sort -f county flins.csv
-county,tiv_2011,tiv_2012,line
-Duval,1731888.18,2785551.63,Residential
-Highlands,23006.41,19757.91,Residential
-Highlands,49155.16,47362.96,Residential
-Miami Dade,1158674.85,1076001.08,Residential
-Miami Dade,2850980.31,2650932.72,Commercial
-Palm Beach,1174081.5,1856589.17,Residential
-Seminole,22890.55,20848.71,Residential
-St. Johns,29589.12,35207.53,Residential
-```
-
-A more powerful example:
-
-```
-$ mlr --icsv --opprint --barred \
-  put '$tiv_delta = int($tiv_2012 - $tiv_2011); unset $tiv_2011, $tiv_2012' \
-  then sort -nr tiv_delta flins.csv 
-+------------+-------------+-----------+
-| county     | line        | tiv_delta |
-+------------+-------------+-----------+
-| Duval      | Residential | 1053663   |
-| Palm Beach | Residential | 682508    |
-| St. Johns  | Residential | 5618      |
-| Highlands  | Residential | -1792     |
-| Seminole   | Residential | -2042     |
-| Highlands  | Residential | -3249     |
-| Miami Dade | Residential | -82674    |
-| Miami Dade | Commercial  | -200048   |
-+------------+-------------+-----------+
-```
-
-This is something the Unix toolkit always could have done, and arguably always
-should have done.
+![cover-art](./docs/coverart/cover-combined.png)
 
 * Miller operates on **key-value-pair data** while the familiar
 Unix tools operate on integer-indexed fields: if the natural data structure for
@@ -111,7 +64,13 @@ insertion-ordered hash map.
 including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 (Miller can handle **positionally-indexed data** too!)
 
-For a few more examples please see [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
+# Getting started
+
+* [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)
+* [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
+* [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
+* [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
+* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
 
 # Features
 
@@ -171,14 +130,9 @@ were an equally fine way to honor all the fine people who contribute through iss
   <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
 </a>
 
-# Documentation links
+# More documentation links
 
 * [**Full documentation**](https://miller.readthedocs.io/)
 * [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-* Some tutorials:
-  * https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html
-  * https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html
-  * https://www.togaware.com/linux/survivor/CSV_Files.html
-  * https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html
