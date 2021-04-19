@@ -111,7 +111,15 @@ insertion-ordered hash map.
 including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 (Miller can handle **positionally-indexed data** too!)
 
-For a few more examples please see [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
+# Getting started
+
+# Some tutorials:
+
+* [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)
+* [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
+* [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
+* [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
+* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
 
 # Features
 
@@ -171,14 +179,9 @@ were an equally fine way to honor all the fine people who contribute through iss
   <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
 </a>
 
-# Documentation links
+# More documentation links
 
 * [**Full documentation**](https://miller.readthedocs.io/)
 * [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-* Some tutorials:
-  * https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html
-  * https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html
-  * https://www.togaware.com/linux/survivor/CSV_Files.html
-  * https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html
