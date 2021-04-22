@@ -15,9 +15,6 @@ TOP OF LIST:
   o system
   o regextract regextract_or_else
 
-* non-blocker: new functions:
-  o new columns-to-arrays and arrays-to-columns for stan format
-
 ! blocker: localtime functions
 * strptime w/ ...00.Z -> error
 * strptime/strftime experiments ...
@@ -34,8 +31,6 @@ TOP OF LIST:
 
 ? blocker? --nojvstack; default --jvstack; code it up ...
 
-* non-blocker: mlrrc: extend to maybe have a stdlib dir for often-used and/or shared DSL?
-
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
@@ -48,16 +43,23 @@ TOP OF LIST:
   - no other callsites?!?!?!
   - note hexfmt for non-ints -- especially floats -- ?!?
 
-* non-blocker: smarter head-stop etc https://github.com/johnkerl/miller/issues/291
-
 * blocker: in-place processing
   o make sure not to create foo.{temp} if foo does not exist
+
 * blocker: prepipe
   - gzin; bz2in ...
 
-* maybe don't do at all: fixed-width pprint input-scanner
+----------------------------------------------------------------
+* non-blocker: commenting passes ...
 
-* commenting passes ...
+* non-blocker: new functions:
+  o new columns-to-arrays and arrays-to-columns for stan format
+
+* non-blocker: mlrrc: extend to maybe have a stdlib dir for often-used and/or shared DSL?
+
+* non-blocker: smarter head-stop etc https://github.com/johnkerl/miller/issues/291
+
+* maybe don't do at all: fixed-width pprint input-scanner
 
 ----------------------------------------------------------------
 
