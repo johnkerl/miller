@@ -1,22 +1,21 @@
 ================================================================
 TOP OF LIST:
 
-* regexes
+* blocker: regexes
   o finish stats1 -r
   o regex captures ...
     - rename -r
   ! separate DSL/non-DSL string-literal handlers
 
-* remaining verbs:
+* blocker: remaining verbs:
   o bar format-values
   o nest reshape merge-fields stats2
 
-* remaining functions:
-  o new columns-to-arrays and arrays-to-columns for stan format
-  o regextract regextract_or_else
+* blocker: remaining functions:
   o system
+  o regextract regextract_or_else
 
-! localtime functions
+! blocker: localtime functions
 * strptime w/ ...00.Z -> error
 * strptime/strftime experiments ...
   * verb sec2gmtdate
@@ -30,35 +29,37 @@ TOP OF LIST:
     strptime("1970-01-01T00:00:00.Z", "%Y-%m-%dT%H:%M:%SZ")
     (error)
 
-! --nojvstack; default --jvstack; code it up ...
-
-* mlrrc: extend to maybe have a stdlib dir for often-used and/or shared DSL?
+? blocker? --nojvstack; default --jvstack; code it up ...
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
-* json null
+? blocker? json null
 
-* smart fmtnum
+* blocker: smart fmtnum
   - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
   - fmtnum
   - ofmt
   - no other callsites?!?!?!
   - note hexfmt for non-ints -- especially floats -- ?!?
 
-* smarter head-stop etc https://github.com/johnkerl/miller/issues/291
-
-* port verb merge-fields
-* port verb stats2
-
-* in-place processing
+* blocker: in-place processing
   o make sure not to create foo.{temp} if foo does not exist
-* prepipe
+
+* blocker: prepipe
   - gzin; bz2in ...
 
-* fixed-width pprint input-scanner
+----------------------------------------------------------------
+* non-blocker: commenting passes ...
 
-* commenting passes ...
+* non-blocker: new functions:
+  o new columns-to-arrays and arrays-to-columns for stan format
+
+* non-blocker: mlrrc: extend to maybe have a stdlib dir for often-used and/or shared DSL?
+
+* non-blocker: smarter head-stop etc https://github.com/johnkerl/miller/issues/291
+
+* maybe don't do at all: fixed-width pprint input-scanner
 
 ----------------------------------------------------------------
 
