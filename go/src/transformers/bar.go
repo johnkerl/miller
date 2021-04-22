@@ -35,9 +35,6 @@ func transformerBarUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	// TODO: make it clear they can use Unicode
-	// TODO: support \u and U+ encodings
-	// TODO: xxx length==same note ...
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameBar)
 	fmt.Fprintf(o, "Replaces a numeric field with a number of asterisks, allowing for cheesy\n")
 	fmt.Fprintf(o, "bar plots. These align best with --opprint or --oxtab output format.\n")
@@ -48,9 +45,11 @@ func transformerBarUsage(
 	fmt.Fprintf(o, "-w   {n}          Bar-field width: default '%d'.\n", barDefaultWidth)
 	fmt.Fprintf(o, "--auto            Automatically computes limits, ignoring --lo and --hi.\n")
 	fmt.Fprintf(o, "                  Holds all records in memory before producing any output.\n")
-	fmt.Fprintf(o, "-c   {character}  Fill character: default '%c'.\n", barDefaultFillString)
-	fmt.Fprintf(o, "-x   {character}  Out-of-bounds character: default '%c'.\n", barDefaultOOBString)
-	fmt.Fprintf(o, "-b   {character}  Blank character: default '%c'.\n", barDefaultBlankString)
+	fmt.Fprintf(o, "-c   {character}  Fill character: default '%s'.\n", barDefaultFillString)
+	fmt.Fprintf(o, "-x   {character}  Out-of-bounds character: default '%s'.\n", barDefaultOOBString)
+	fmt.Fprintf(o, "-b   {character}  Blank character: default '%s'.\n", barDefaultBlankString)
+	fmt.Fprintf(o, "Nominally the fill, out-of-bounds, and blank characters will be strings of length 1.\n")
+	fmt.Fprintf(o, "However you can make them all longer if you so desire.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
