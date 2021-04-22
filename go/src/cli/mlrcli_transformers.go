@@ -12,6 +12,7 @@ import (
 // ----------------------------------------------------------------
 var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.AltkvSetup,
+	transformers.BarSetup,
 	transformers.BootstrapSetup,
 	transformers.CatSetup,
 	transformers.CheckSetup,

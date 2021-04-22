@@ -4,6 +4,23 @@ Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
 Options:
 -h|--help Show this message.
 ================================================================
+Usage: mlr bar [options]
+Replaces a numeric field with a number of asterisks, allowing for cheesy
+bar plots. These align best with --opprint or --oxtab output format.
+Options:
+-f   {a,b,c}      Field names to convert to bars.
+--lo {lo}         Lower-limit value for min-width bar: default '0.000000'.
+--hi {hi}         Upper-limit value for max-width bar: default '100.000000'.
+-w   {n}          Bar-field width: default '40'.
+--auto            Automatically computes limits, ignoring --lo and --hi.
+                  Holds all records in memory before producing any output.
+-c   {character}  Fill character: default '*'.
+-x   {character}  Out-of-bounds character: default '#'.
+-b   {character}  Blank character: default '.'.
+Nominally the fill, out-of-bounds, and blank characters will be strings of length 1.
+However you can make them all longer if you so desire.
+-h|--help Show this message.
+================================================================
 Usage: mlr bootstrap [options]
 Emits an n-sample, with replacement, of the input records.
 See also mlr sample and mlr shuffle.
