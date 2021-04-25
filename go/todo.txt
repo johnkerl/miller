@@ -50,6 +50,10 @@ TOP OF LIST:
   - gzin; bz2in ...
 
 ----------------------------------------------------------------
+* non-blocker: --lib option, and to .mlrrc
+  o make up some stdlib functions -- ?
+  o xb2b ...
+
 * non-blocker: commenting passes ...
 
 * non-blocker: new functions:
