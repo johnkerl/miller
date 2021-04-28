@@ -700,6 +700,12 @@ run_mlr --csv fill-down -f a,b,c    $indir/fill-down.csv
 run_mlr --csv fill-down -f a,b,c -a $indir/fill-down.csv
 
 # ----------------------------------------------------------------
+announce FILL-EMPTY
+
+run_mlr --csv fill-empty        $indir/fill-down.csv
+run_mlr --csv fill-empty -v FOO $indir/fill-down.csv
+
+# ----------------------------------------------------------------
 announce SEQGEN
 
 run_mlr seqgen --start 1 --stop 5 --step  1

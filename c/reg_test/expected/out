@@ -4130,6 +4130,22 @@ a,b,c
 
 
 ================================================================
+FILL-EMPTY
+
+mlr --csv fill-empty ./reg_test/input/fill-down.csv
+a,b,c
+1,N/A,3
+4,5,6
+7,N/A,9
+
+mlr --csv fill-empty -v FOO ./reg_test/input/fill-down.csv
+a,b,c
+1,FOO,3
+4,5,6
+7,FOO,9
+
+
+================================================================
 SEQGEN
 
 mlr seqgen --start 1 --stop 5 --step 1

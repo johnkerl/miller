@@ -16,6 +16,7 @@ extern mapper_setup_t mapper_count_similar_setup;
 extern mapper_setup_t mapper_cut_setup;
 extern mapper_setup_t mapper_decimate_setup;
 extern mapper_setup_t mapper_fill_down_setup;
+extern mapper_setup_t mapper_fill_empty_setup;
 extern mapper_setup_t mapper_filter_setup;
 extern mapper_setup_t mapper_format_values_setup;
 extern mapper_setup_t mapper_fraction_setup;
