@@ -23,6 +23,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.CutSetup,
 	transformers.DecimateSetup,
 	transformers.FillDownSetup,
+	transformers.FillEmptySetup,
 	transformers.FilterSetup,
 	transformers.FlattenSetup,
 	transformers.FractionSetup,

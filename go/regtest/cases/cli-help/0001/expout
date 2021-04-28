@@ -130,6 +130,11 @@ Options:
  -f  Field names for fill-down.
 -h|--help Show this message.
 ================================================================
+Usage: mlr fill-empty [options]
+Fills empty-string fields with specified fill-value.
+Options:
+-v {string} Fill-value: defaults to "N/A"
+================================================================
 Usage: mlr filter [options] {DSL expression}
 Options:
 -f {file name} File containing a DSL expression.
