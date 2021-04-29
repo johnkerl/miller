@@ -15,8 +15,8 @@ TOP OF LIST:
   ! separate DSL/non-DSL string-literal handlers
 
 * blocker: remaining verbs:
-  o bar format-values
-  o nest reshape merge-fields stats2
+  o format-values
+  o merge-fields stats2
 
 * blocker: remaining functions:
   o system
@@ -69,8 +69,6 @@ TOP OF LIST:
 * non-blocker: mlrrc: extend to maybe have a stdlib dir for often-used and/or shared DSL?
 
 * non-blocker: smarter head-stop etc https://github.com/johnkerl/miller/issues/291
-
-* maybe don't do at all: fixed-width pprint input-scanner
 
 ----------------------------------------------------------------
 
@@ -308,7 +306,6 @@ CATEGORIES:
   o --allow-ragged-csv-input|--ragged
   o non-lite DKVP reader/writer
   o comment-filtering-composed io.Reader
-  o make a pprint reader w/ width-detect
 
 * widen DSL coverage
   o err-return for array/map get/put if incorrect types ... currently go-void ...
