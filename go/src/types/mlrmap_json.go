@@ -139,7 +139,7 @@ func (this *Mlrmap) marshalJSONAuxSingleLine(
 
 // ----------------------------------------------------------------
 // JSON-stringifies a single field of a record
-func (this *mlrmapEntry) JSONStringifyInPlace(
+func (this *MlrmapEntry) JSONStringifyInPlace(
 	jsonFormatting TJSONFormatting,
 ) {
 	outputBytes, err := this.Value.MarshalJSON(jsonFormatting)
@@ -152,7 +152,7 @@ func (this *mlrmapEntry) JSONStringifyInPlace(
 
 // ----------------------------------------------------------------
 // JSON-parses a single field of a record
-func (this *mlrmapEntry) JSONParseInPlace() {
+func (this *MlrmapEntry) JSONParseInPlace() {
 	input := this.Value.String()
 	err := this.Value.UnmarshalJSON([]byte(input))
 	if err != nil {

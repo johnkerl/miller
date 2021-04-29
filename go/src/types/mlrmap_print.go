@@ -2,6 +2,7 @@ package types
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 )
 
@@ -36,5 +37,22 @@ func (this Mlrmap) String() string {
 		return "Mlrmap: could not not marshal self to JSON"
 	} else {
 		return string(bytes) + "\n"
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *Mlrmap) Dump() {
+	fmt.Printf("FIELD COUNT: %d\n", this.FieldCount)
+	fmt.Printf("HEAD:        %p\n", this.Head)
+	fmt.Printf("TAIL:        %p\n", this.Tail)
+	fmt.Printf("KEYS TO ENTRIES:\n")
+	for k, e := range this.keysToEntries {
+		fmt.Printf("  %-10s %#v\n", k, e)
+	}
+	fmt.Printf("LIST:\n")
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		fmt.Printf("  key: \"%s\" value: %-20s prev:%p self:%p next:%p\n",
+			pe.Key, pe.Value.String(), pe.Prev, pe, pe.Next,
+		)
 	}
 }

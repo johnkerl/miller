@@ -39,11 +39,11 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp, char* argv0,
 static void    mapper_nest_free(mapper_t* pmapper, context_t* _);
 
 static sllv_t* mapper_nest_explode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_nest_implode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_explode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_nest_implode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_explode_pairs_across_fields   (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_explode_pairs_across_records  (lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t* mapper_nest_implode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t* mapper_nest_implode_values_across_records (lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static nest_bucket_t* nest_bucket_alloc(lrec_t* prepresentative);
 static void nest_bucket_free(nest_bucket_t* pbucket);
@@ -288,44 +288,6 @@ static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
-
-	if (pinrec == NULL) // end of input stream
-		return sllv_single(NULL);
-
-	lrece_t* pprev = NULL;
-	int field_count = 0;
-	for (lrece_t* pe = pinrec->phead; pe != NULL; /* increment in loop */) {
-		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
-			if (field_count > 0)
-				sb_append_string(pstate->psb, pstate->nested_fs);
-			sb_append_string(pstate->psb, pe->value);
-			field_count++;
-
-			// Keep the location so we can implode in-place.
-			if (pprev == NULL)
-				pprev = pe->pprev;
-			lrece_t* pnext = pe->pnext;
-			lrec_unlink_and_free(pinrec, pe);
-			pe = pnext;
-
-		} else {
-			pe = pe->pnext;
-		}
-	}
-
-	if (field_count > 0) {
-		if (pprev == NULL) // No record before the unlinked one, i.e. list-head.
-			lrec_prepend(pinrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
-		else
-			lrec_put_after(pinrec, pprev, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
-	}
-
-	return sllv_single(pinrec);
-}
-
-// ----------------------------------------------------------------
 static sllv_t* mapper_nest_explode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec == NULL) // End of input stream
 		return sllv_single(NULL);
@@ -348,69 +310,6 @@ static sllv_t* mapper_nest_explode_values_across_records(lrec_t* pinrec, context
 	}
 	lrec_free(pinrec);
 	return poutrecs;
-}
-
-// ----------------------------------------------------------------
-static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
-
-	if (pinrec != NULL) { // Not end of input stream
-		lrece_t* px = NULL;
-		char* field_value = lrec_get_ext(pinrec, pstate->field_name, &px);
-		if (field_value == NULL)
-			return sllv_single(pinrec);
-		char* field_value_copy = mlr_strdup_or_die(field_value);
-
-		// Don't lrec_remove pstate->field_name so we can implode in-place at the end.
-		slls_t* other_keys = mlr_reference_keys_from_record_except(pinrec, px);
-		lhmslv_t* other_values_to_buckets = lhmslv_get(pstate->other_keys_to_other_values_to_buckets, other_keys);
-		if (other_values_to_buckets == NULL) {
-			other_values_to_buckets = lhmslv_alloc();
-			lhmslv_put(pstate->other_keys_to_other_values_to_buckets,
-				slls_copy(other_keys), other_values_to_buckets, FREE_ENTRY_KEY);
-		}
-
-		slls_t* other_values = mlr_reference_values_from_record_except(pinrec, px);
-		nest_bucket_t* pbucket = lhmslv_get(other_values_to_buckets, other_values);
-		if (pbucket == NULL) {
-			pbucket = nest_bucket_alloc(pinrec);
-			lhmslv_put(other_values_to_buckets, slls_copy(other_values), pbucket, FREE_ENTRY_KEY);
-		} else {
-			lrec_free(pinrec);
-		}
-		lrec_t* pair = lrec_unbacked_alloc();
-		lrec_put(pair, pstate->field_name, field_value_copy, FREE_ENTRY_VALUE);
-		sllv_append(pbucket->pairs, pair);
-
-		slls_free(other_values);
-		slls_free(other_keys);
-
-		return NULL;
-
-	} else { // end of input stream
-		sllv_t* poutrecs = sllv_alloc();
-
-		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
-			lhmslv_t* other_values_to_buckets = pe->pvvalue;
-			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
-				nest_bucket_t* pbucket = pf->pvvalue;
-				lrec_t* poutrec = pbucket->prepresentative;
-				pbucket->prepresentative = NULL; // ownership transfer
-				for (sllve_t* pg = pbucket->pairs->phead; pg != NULL; pg = pg->pnext) {
-					lrec_t* pr = pg->pvvalue;
-					sb_append_string(pstate->psb, pr->phead->value);
-					if (pg->pnext != NULL)
-						sb_append_string(pstate->psb, pstate->nested_fs);
-				}
-				// pstate->field_name was already present so we'll overwrite it in-place here.
-				lrec_put(poutrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
-				sllv_append(poutrecs, poutrec);
-			}
-		}
-
-		sllv_append(poutrecs, NULL);
-		return poutrecs;
-	}
 }
 
 // ----------------------------------------------------------------
@@ -484,6 +383,107 @@ static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_
 
 	lrec_free(pinrec);
 	return poutrecs;
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_implode_values_across_fields(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	if (pinrec == NULL) // end of input stream
+		return sllv_single(NULL);
+
+	lrece_t* pprev = NULL;
+	int field_count = 0;
+	for (lrece_t* pe = pinrec->phead; pe != NULL; /* increment in loop */) {
+		if (regmatch_or_die(&pstate->regex, pe->key, 0, NULL)) {
+			if (field_count > 0)
+				sb_append_string(pstate->psb, pstate->nested_fs);
+			sb_append_string(pstate->psb, pe->value);
+			field_count++;
+
+			// Keep the location so we can implode in-place.
+			if (pprev == NULL)
+				pprev = pe->pprev;
+			lrece_t* pnext = pe->pnext;
+			lrec_unlink_and_free(pinrec, pe);
+			pe = pnext;
+
+		} else {
+			pe = pe->pnext;
+		}
+	}
+
+	if (field_count > 0) {
+		if (pprev == NULL) // No record before the unlinked one, i.e. list-head.
+			lrec_prepend(pinrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
+		else
+			lrec_put_after(pinrec, pprev, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
+	}
+
+	return sllv_single(pinrec);
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_nest_implode_values_across_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_nest_state_t* pstate = (mapper_nest_state_t*)pvstate;
+
+	if (pinrec != NULL) { // Not end of input stream
+		lrece_t* px = NULL;
+		char* field_value = lrec_get_ext(pinrec, pstate->field_name, &px);
+		if (field_value == NULL)
+			return sllv_single(pinrec);
+		char* field_value_copy = mlr_strdup_or_die(field_value);
+
+		// Don't lrec_remove pstate->field_name so we can implode in-place at the end.
+		slls_t* other_keys = mlr_reference_keys_from_record_except(pinrec, px);
+		lhmslv_t* other_values_to_buckets = lhmslv_get(pstate->other_keys_to_other_values_to_buckets, other_keys);
+		if (other_values_to_buckets == NULL) {
+			other_values_to_buckets = lhmslv_alloc();
+			lhmslv_put(pstate->other_keys_to_other_values_to_buckets,
+				slls_copy(other_keys), other_values_to_buckets, FREE_ENTRY_KEY);
+		}
+
+		slls_t* other_values = mlr_reference_values_from_record_except(pinrec, px);
+		nest_bucket_t* pbucket = lhmslv_get(other_values_to_buckets, other_values);
+		if (pbucket == NULL) {
+			pbucket = nest_bucket_alloc(pinrec);
+			lhmslv_put(other_values_to_buckets, slls_copy(other_values), pbucket, FREE_ENTRY_KEY);
+		} else {
+			lrec_free(pinrec);
+		}
+		lrec_t* pair = lrec_unbacked_alloc();
+		lrec_put(pair, pstate->field_name, field_value_copy, FREE_ENTRY_VALUE);
+		sllv_append(pbucket->pairs, pair);
+
+		slls_free(other_values);
+		slls_free(other_keys);
+
+		return NULL;
+
+	} else { // end of input stream
+		sllv_t* poutrecs = sllv_alloc();
+
+		for (lhmslve_t* pe = pstate->other_keys_to_other_values_to_buckets->phead; pe != NULL; pe = pe->pnext) {
+			lhmslv_t* other_values_to_buckets = pe->pvvalue;
+			for (lhmslve_t* pf = other_values_to_buckets->phead; pf != NULL; pf = pf->pnext) {
+				nest_bucket_t* pbucket = pf->pvvalue;
+				lrec_t* poutrec = pbucket->prepresentative;
+				pbucket->prepresentative = NULL; // ownership transfer
+				for (sllve_t* pg = pbucket->pairs->phead; pg != NULL; pg = pg->pnext) {
+					lrec_t* pr = pg->pvvalue;
+					sb_append_string(pstate->psb, pr->phead->value);
+					if (pg->pnext != NULL)
+						sb_append_string(pstate->psb, pstate->nested_fs);
+				}
+				// pstate->field_name was already present so we'll overwrite it in-place here.
+				lrec_put(poutrec, pstate->field_name, sb_finish(pstate->psb), FREE_ENTRY_VALUE);
+				sllv_append(poutrecs, poutrec);
+			}
+		}
+
+		sllv_append(poutrecs, NULL);
+		return poutrecs;
+	}
 }
 
 // ----------------------------------------------------------------
