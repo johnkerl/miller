@@ -165,12 +165,11 @@ func ParseReaderOptions(
 		readerOptions.InputFileFormat = "xtab"
 		argi += 1
 
-		//	} else if args[argi] == "--ipprint" {
-		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.IFS              = " ";
-		//		readerOptions.allow_repeat_ifs = true;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--ipprint" {
+		readerOptions.InputFileFormat = "pprint"
+		readerOptions.IFS = " "
+		argi += 1
+
 	} else if args[argi] == "--mmap" {
 		// No-op as of 5.6.3 (mmap is being abandoned) but don't break
 		// the command-line user experience.
@@ -535,14 +534,11 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "xtab"
 		argi += 1
 
-		// TODO: make a fixed-width scanner
-		//	} else if args[argi] == "--pprint" {
-		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.IFS              = " ";
-		//		readerOptions.allow_repeat_ifs = true;
-		//		writerOptions.OutputFileFormat        = "pprint";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--pprint" {
+		readerOptions.InputFileFormat = "pprint"
+		readerOptions.IFS = " "
+		writerOptions.OutputFileFormat = "pprint"
+		argi += 1
 	} else if args[argi] == "--c2t" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"

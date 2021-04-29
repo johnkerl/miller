@@ -38,6 +38,7 @@ type RecordReaderCSVLite struct {
 	irs                  string
 	useImplicitCSVHeader bool
 	allowRaggedCSVInput  bool
+	allowRepeatIFS       bool // true for PPRINT
 
 	emptyStringMlrval types.Mlrval
 
@@ -53,6 +54,23 @@ func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReader
 		irs:                  readerOptions.IRS,
 		useImplicitCSVHeader: readerOptions.UseImplicitCSVHeader,
 		allowRaggedCSVInput:  readerOptions.AllowRaggedCSVInput,
+		allowRepeatIFS:       false,
+
+		// TODO: port from C
+		//	pstate->comment_handling        = comment_handling;
+		//	pstate->comment_string          = comment_string;
+		emptyStringMlrval: types.MlrvalFromString(""),
+	}
+}
+
+// ----------------------------------------------------------------
+func NewRecordReaderPPRINT(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
+	return &RecordReaderCSVLite{
+		ifs:                  readerOptions.IFS,
+		irs:                  readerOptions.IRS,
+		useImplicitCSVHeader: readerOptions.UseImplicitCSVHeader,
+		allowRaggedCSVInput:  readerOptions.AllowRaggedCSVInput,
+		allowRepeatIFS:       true,
 
 		// TODO: port from C
 		//	pstate->comment_handling        = comment_handling;
@@ -156,6 +174,9 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			}
 
 			fields := lib.SplitString(line, this.ifs)
+			if this.allowRepeatIFS {
+				fields = this.stripEmpties(fields)
+			}
 			if headerStrings == nil {
 				headerStrings = fields
 				// Get data lines on subsequent loop iterations
@@ -250,6 +271,9 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			}
 
 			fields := lib.SplitString(line, this.ifs)
+			if this.allowRepeatIFS {
+				fields = this.stripEmpties(fields)
+			}
 			if headerStrings == nil {
 				n := len(fields)
 				headerStrings = make([]string, n)
@@ -307,4 +331,17 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 
 		}
 	}
+}
+
+// ----------------------------------------------------------------
+// For CSV, we have "a,,c" -> ["a", "", "c"]. But for PPRINT, "a  b" -> ["a", "b"].
+// One way to do this is split on single spaces, then strip empty-string slots.
+func (this *RecordReaderCSVLite) stripEmpties(input []string) []string {
+	output := make([]string, 0, len(input))
+	for _, e := range input {
+		if e != "" {
+			output = append(output, e)
+		}
+	}
+	return output
 }
