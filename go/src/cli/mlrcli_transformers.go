@@ -48,6 +48,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.RenameSetup,
 	transformers.ReorderSetup,
 	transformers.RepeatSetup,
+	transformers.ReshapeSetup,
 	transformers.SampleSetup,
 	transformers.Sec2GMTDateSetup,
 	transformers.Sec2GMTSetup,

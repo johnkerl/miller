@@ -448,6 +448,20 @@ func (this *Mlrmap) GetKeysJoined() string {
 	return buffer.String()
 }
 
+// For mlr reshape
+func (this *Mlrmap) GetValuesJoined() string {
+	var buffer bytes.Buffer
+	i := 0
+	for pe := this.Head; pe != nil; pe = pe.Next {
+		if i > 0 {
+			buffer.WriteString(",")
+		}
+		i++
+		buffer.WriteString(pe.Value.String())
+	}
+	return buffer.String()
+}
+
 // ----------------------------------------------------------------
 // For group-by in several transformers.  If the record is 'a=x,b=y,c=3,d=4,e=5' and
 // selectedFieldNames is 'a,b,c' then values are 'x,y,3'. This is returned as a
