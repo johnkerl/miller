@@ -2,6 +2,8 @@
 TOP OF LIST:
 
 ! fill-down --all
+! reorder -b/-a
+* fill-empty -> C
 
 * restore go fmt ./... note
 * hostname DSL function
