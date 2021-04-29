@@ -545,6 +545,62 @@ produces:
   a=1,b=2,c=3
   a=1,b=2,c=3
 ================================================================
+Usage: mlr reshape [options]
+Wide-to-long options:
+  -i {input field names}   -o {key-field name,value-field name}
+  -r {input field regexes} -o {key-field name,value-field name}
+  These pivot/reshape the input data such that the input fields are removed
+  and separate records are emitted for each key/value pair.
+  Note: this works with tail -f and produces output records for each input
+  record seen.
+Long-to-wide options:
+  -s {key-field name,value-field name}
+  These pivot/reshape the input data to undo the wide-to-long operation.
+  Note: this does not work with tail -f; it produces output records only after
+  all input records have been read.
+
+Examples:
+
+  Input file "wide.txt":
+    time       X           Y
+    2009-01-01 0.65473572  2.4520609
+    2009-01-02 -0.89248112 0.2154713
+    2009-01-03 0.98012375  1.3179287
+
+  mlr --pprint reshape -i X,Y -o item,value wide.txt
+    time       item value
+    2009-01-01 X    0.65473572
+    2009-01-01 Y    2.4520609
+    2009-01-02 X    -0.89248112
+    2009-01-02 Y    0.2154713
+    2009-01-03 X    0.98012375
+    2009-01-03 Y    1.3179287
+
+  mlr --pprint reshape -r '[A-Z]' -o item,value wide.txt
+    time       item value
+    2009-01-01 X    0.65473572
+    2009-01-01 Y    2.4520609
+    2009-01-02 X    -0.89248112
+    2009-01-02 Y    0.2154713
+    2009-01-03 X    0.98012375
+    2009-01-03 Y    1.3179287
+
+  Input file "long.txt":
+    time       item value
+    2009-01-01 X    0.65473572
+    2009-01-01 Y    2.4520609
+    2009-01-02 X    -0.89248112
+    2009-01-02 Y    0.2154713
+    2009-01-03 X    0.98012375
+    2009-01-03 Y    1.3179287
+
+  mlr --pprint reshape -s item,value long.txt
+    time       X           Y
+    2009-01-01 0.65473572  2.4520609
+    2009-01-02 -0.89248112 0.2154713
+    2009-01-03 0.98012375  1.3179287
+See also mlr nest.
+================================================================
 Usage: mlr sample [options]
 Reservoir sampling (subsampling without replacement), optionally by category.
 See also mlr bootstrap and mlr shuffle.
