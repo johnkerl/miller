@@ -11,6 +11,7 @@ fi
 # ----------------------------------------------------------------
 run_mlr() {
   echo
+  echo ---------------------------------------------------------------- "$@"
   echo $path_to_mlr "$@"
   echo
   $path_to_mlr "$@"
@@ -52,7 +53,37 @@ mention() {
 
 # ================================================================
 
-mlr --from ./regtest/input/abixy put '@o[1][2][3] = 7; for(k1,v in @o[1][2]) {$x+=10;$y+=100}'
-mlr --from ./regtest/input/xyz2 put -q 'map o = @o; dump o'
+echo 'x=a;b;c'                         | run_mlr nest -evF -f x
+echo 'foo=bar,x=a;b;c'                 | run_mlr nest -evF -f x
+echo 'x=a;b;c,foo=bar'                 | run_mlr nest -evF -f x
+
+echo 'x=a;b;c'                         | run_mlr nest -evR -f x
+echo 'foo=bar,x=a;b;c'                 | run_mlr nest -evR -f x
+echo 'x=a;b;c,foo=bar'                 | run_mlr nest -evR -f x
+
+echo 'x=a|b|c'                         | run_mlr nest -evF -S pipe -f x
+echo 'foo=bar,x=a|b|c'                 | run_mlr nest -evF -S pipe -f x
+echo 'x=a|b|c,foo=bar'                 | run_mlr nest -evF -S pipe -f x
+
+echo 'x=a|b|c'                         | run_mlr nest -evF -S '|' -f x
+echo 'foo=bar,x=a|b|c'                 | run_mlr nest -evF -S '|' -f x
+echo 'x=a|b|c,foo=bar'                 | run_mlr nest -evF -S '|' -f x
+
+echo 'x=a;b;c'                         | run_mlr nest -evR -f x
+echo 'foo=bar,x=a;b;c'                 | run_mlr nest -evR -f x
+echo 'x=a;b;c,foo=bar'                 | run_mlr nest -evR -f x
+
+
+echo 'x=a:1;b:2;c:3'                   | run_mlr nest -epF -f x
+echo 'foo=bar,x=a:1;b:2;c:3'           | run_mlr nest -epF -f x
+echo 'x=a:1;b:2;c:3,foo=bar'           | run_mlr nest -epF -f x
+
+echo 'x=a:1;b:2;c:3'                   | run_mlr nest -epR -f x
+echo 'foo=bar,x=a:1;b:2;c:3'           | run_mlr nest -epR -f x
+echo 'x=a:1;b:2;c:3,foo=bar'           | run_mlr nest -epR -f x
+
+echo 'x_1=a:1,x_2=b:2,x_3=c:3'         | run_mlr nest -ivF -f x
+echo 'foo=bar,x_1=a:1,x_2=b:2,x_3=c:3' | run_mlr nest -ivF -f x
+echo 'x_1=a:1,x_2=b:2,x_3=c:3,foo=bar' | run_mlr nest -ivF -f x
 
 # ================================================================

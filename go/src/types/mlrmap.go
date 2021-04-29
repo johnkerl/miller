@@ -56,20 +56,20 @@ package types
 // ----------------------------------------------------------------
 type Mlrmap struct {
 	FieldCount int
-	Head       *mlrmapEntry
-	Tail       *mlrmapEntry
+	Head       *MlrmapEntry
+	Tail       *MlrmapEntry
 
 	// Surprisingly, using this costs about 25% for cat/cut/etc tests
 	// on million-line data files (CSV, DKVP) with a dozen or so columns.
 	// So, the constructor allows callsites to use it, or not.
-	keysToEntries map[string]*mlrmapEntry
+	keysToEntries map[string]*MlrmapEntry
 }
 
-type mlrmapEntry struct {
+type MlrmapEntry struct {
 	Key   string
 	Value *Mlrval
-	Prev  *mlrmapEntry
-	Next  *mlrmapEntry
+	Prev  *MlrmapEntry
+	Next  *MlrmapEntry
 }
 
 // ----------------------------------------------------------------
@@ -97,7 +97,7 @@ func newMlrmapHashed() *Mlrmap {
 		FieldCount:    0,
 		Head:          nil,
 		Tail:          nil,
-		keysToEntries: make(map[string]*mlrmapEntry),
+		keysToEntries: make(map[string]*MlrmapEntry),
 	}
 }
 
@@ -116,8 +116,8 @@ func (this *Mlrmap) isHashed() bool {
 // ----------------------------------------------------------------
 // Value-copy is up to the caller -- PutReference and PutCopy
 // are in the public Mlrmap API.
-func newMlrmapEntry(key string, value *Mlrval) *mlrmapEntry {
-	return &mlrmapEntry{
+func newMlrmapEntry(key string, value *Mlrval) *MlrmapEntry {
+	return &MlrmapEntry{
 		key,
 		value,
 		nil,
