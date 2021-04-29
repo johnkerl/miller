@@ -371,6 +371,54 @@ Options:
 -o {name}   Field name for output count. Default "count".
 See also "mlr least-frequent".
 ================================================================
+Usage: mlr nest [options]
+Explodes specified field values into separate fields/records, or reverses this.
+Options:
+  --explode,--implode   One is required.
+  --values,--pairs      One is required.
+  --across-records,--across-fields One is required.
+  -f {field name}       Required.
+  --nested-fs {string}  Defaults to ";". Field separator for nested values.
+  --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
+  --evar {string}       Shorthand for --explode --values ---across-records --nested-fs {string}
+  --ivar {string}       Shorthand for --implode --values ---across-records --nested-fs {string}
+Please use "mlr --usage-separator-options" for information on specifying separators.
+
+Examples:
+
+  mlr nest --explode --values --across-records -f x
+  with input record "x=a;b;c,y=d" produces output records
+    "x=a,y=d"
+    "x=b,y=d"
+    "x=c,y=d"
+  Use --implode to do the reverse.
+
+  mlr nest --explode --values --across-fields -f x
+  with input record "x=a;b;c,y=d" produces output records
+    "x_1=a,x_2=b,x_3=c,y=d"
+  Use --implode to do the reverse.
+
+  mlr nest --explode --pairs --across-records -f x
+  with input record "x=a:1;b:2;c:3,y=d" produces output records
+    "a=1,y=d"
+    "b=2,y=d"
+    "c=3,y=d"
+
+  mlr nest --explode --pairs --across-fields -f x
+  with input record "x=a:1;b:2;c:3,y=d" produces output records
+    "a=1,b=2,c=3,y=d"
+
+Notes:
+* With --pairs, --implode doesn't make sense since the original field name has
+  been lost.
+* The combination "--implode --values --across-records" is non-streaming:
+  no output records are produced until all input records have been read. In
+  particular, this means it won't work in tail -f contexts. But all other flag
+  combinations result in streaming (tail -f friendly) data processing.
+* It's up to you to ensure that the nested-fs is distinct from your data's IFS:
+  e.g. by default the former is semicolon and the latter is comma.
+See also mlr reshape.
+================================================================
 Usage: mlr nothing [options]
 Drops all input records. Useful for testing, or after tee/print/etc. have
 produced other output.
