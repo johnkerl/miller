@@ -690,12 +690,19 @@ fill-down
 
     $ mlr fill-down --help
     Usage: mlr fill-down [options]
-    -f {a,b,c}          Field names for fill-down
-    -a|--only-if-absent Field names for fill-down
     If a given record has a missing value for a given field, fill that from
     the corresponding value from a previous record, if any.
     By default, a 'missing' field either is absent, or has the empty-string value.
     With -a, a field is 'missing' only if it is absent.
+    
+    Options:
+     --all Operate on all fields in the input.
+     -a|--only-if-absent If a given record has a missing value for a given field,
+         fill that from the corresponding value from a previous record, if any.
+         By default, a 'missing' field either is absent, or has the empty-string value.
+         With -a, a field is 'missing' only if it is absent.
+     -f  Field names for fill-down.
+     -h|--help Show this message.
 
 ::
 

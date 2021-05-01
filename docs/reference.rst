@@ -785,12 +785,12 @@ Examples:
     
     Verbs:
        altkv bar bootstrap cat check clean-whitespace count count-distinct
-       count-similar cut decimate fill-down filter format-values fraction grep
-       group-by group-like having-fields head histogram join label least-frequent
-       merge-fields most-frequent nest nothing put regularize remove-empty-columns
-       rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle
-       skip-trivial-records sort sort-within-records stats1 stats2 step tac tail
-       tee top uniq unsparsify
+       count-similar cut decimate fill-down fill-empty filter format-values
+       fraction grep group-by group-like having-fields head histogram join label
+       least-frequent merge-fields most-frequent nest nothing put regularize
+       remove-empty-columns rename reorder repeat reshape sample sec2gmt
+       sec2gmtdate seqgen shuffle skip-trivial-records sort sort-within-records
+       stats1 stats2 step tac tail tee top uniq unsparsify
     
     Functions for the filter and put verbs:
        + + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ << >> bitcount == != =~

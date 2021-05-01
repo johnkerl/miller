@@ -33,13 +33,13 @@ func transformerFillDownUsage(
 	fmt.Fprintln(o, "With -a, a field is 'missing' only if it is absent.")
 	fmt.Fprintln(o, "")
 	fmt.Fprintln(o, "Options:")
-	fmt.Fprintln(o, " --all Operate on all fields in the input.\n")
+	fmt.Fprintln(o, " --all Operate on all fields in the input.")
 	fmt.Fprintln(o, " -a|--only-if-absent If a given record has a missing value for a given field,")
 	fmt.Fprintln(o, "     fill that from the corresponding value from a previous record, if any.")
 	fmt.Fprintln(o, "     By default, a 'missing' field either is absent, or has the empty-string value.")
 	fmt.Fprintln(o, "     With -a, a field is 'missing' only if it is absent.")
 	fmt.Fprintln(o, " -f  Field names for fill-down.")
-	fmt.Fprintf(o, "-h|--help Show this message.\n")
+	fmt.Fprintln(o, " -h|--help Show this message.")
 
 	if doExit {
 		os.Exit(exitCode)
@@ -88,6 +88,10 @@ func transformerFillDownParseCLI(
 		} else {
 			transformerFillDownUsage(os.Stderr, true, 1)
 		}
+	}
+
+	if fillDownFieldNames == nil && !doAll {
+		transformerFillDownUsage(os.Stderr, true, 1)
 	}
 
 	transformer, _ := NewTransformerFillDown(
