@@ -53,18 +53,16 @@ mention() {
 
 # ================================================================
 
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f x,y -b u
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,v -b x
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f z,w,s -b v
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,v -b nonesuch
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,nonesuch -b x
-echo
+mlr --from regtest/input/reorder.dkvp reorder -f x,y -b u
+mlr --from regtest/input/reorder.dkvp reorder -f u,v -b x
+mlr --from regtest/input/reorder.dkvp reorder -f z,w,s -b v
+mlr --from regtest/input/reorder.dkvp reorder -f u,v -b nonesuch
+mlr --from regtest/input/reorder.dkvp reorder -f u,nonesuch -b x
 
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f x,y -a u
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,v -a x
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f z,w,s -a v
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,v -a nonesuch
-echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,nonesuch -a x
-echo
+mlr --from regtest/input/reorder.dkvp reorder -f x,y -a u
+mlr --from regtest/input/reorder.dkvp reorder -f u,v -a x
+mlr --from regtest/input/reorder.dkvp reorder -f z,w,s -a v
+mlr --from regtest/input/reorder.dkvp reorder -f u,v -a nonesuch
+mlr --from regtest/input/reorder.dkvp reorder -f u,nonesuch -a x
 
 # ================================================================

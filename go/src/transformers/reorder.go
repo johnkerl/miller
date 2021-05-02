@@ -208,6 +208,7 @@ func (this *TransformerReorder) reorderBefore(
 		inrec := inrecAndContext.Record
 		if inrec.Get(this.beforeFieldName) == nil {
 			outputChannel <- inrecAndContext
+			return
 		}
 
 		outrec := types.NewMlrmapAsRecord()
@@ -262,6 +263,7 @@ func (this *TransformerReorder) reorderAfter(
 		inrec := inrecAndContext.Record
 		if inrec.Get(this.afterFieldName) == nil {
 			outputChannel <- inrecAndContext
+			return
 		}
 
 		outrec := types.NewMlrmapAsRecord()
