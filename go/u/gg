@@ -53,37 +53,18 @@ mention() {
 
 # ================================================================
 
-echo 'x=a;b;c'                         | run_mlr nest -evF -f x
-echo 'foo=bar,x=a;b;c'                 | run_mlr nest -evF -f x
-echo 'x=a;b;c,foo=bar'                 | run_mlr nest -evF -f x
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f x,y -b u
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,v -b x
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f z,w,s -b v
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,v -b nonesuch
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,nonesuch -b x
+echo
 
-echo 'x=a;b;c'                         | run_mlr nest -evR -f x
-echo 'foo=bar,x=a;b;c'                 | run_mlr nest -evR -f x
-echo 'x=a;b;c,foo=bar'                 | run_mlr nest -evR -f x
-
-echo 'x=a|b|c'                         | run_mlr nest -evF -S pipe -f x
-echo 'foo=bar,x=a|b|c'                 | run_mlr nest -evF -S pipe -f x
-echo 'x=a|b|c,foo=bar'                 | run_mlr nest -evF -S pipe -f x
-
-echo 'x=a|b|c'                         | run_mlr nest -evF -S '|' -f x
-echo 'foo=bar,x=a|b|c'                 | run_mlr nest -evF -S '|' -f x
-echo 'x=a|b|c,foo=bar'                 | run_mlr nest -evF -S '|' -f x
-
-echo 'x=a;b;c'                         | run_mlr nest -evR -f x
-echo 'foo=bar,x=a;b;c'                 | run_mlr nest -evR -f x
-echo 'x=a;b;c,foo=bar'                 | run_mlr nest -evR -f x
-
-
-echo 'x=a:1;b:2;c:3'                   | run_mlr nest -epF -f x
-echo 'foo=bar,x=a:1;b:2;c:3'           | run_mlr nest -epF -f x
-echo 'x=a:1;b:2;c:3,foo=bar'           | run_mlr nest -epF -f x
-
-echo 'x=a:1;b:2;c:3'                   | run_mlr nest -epR -f x
-echo 'foo=bar,x=a:1;b:2;c:3'           | run_mlr nest -epR -f x
-echo 'x=a:1;b:2;c:3,foo=bar'           | run_mlr nest -epR -f x
-
-echo 'x_1=a:1,x_2=b:2,x_3=c:3'         | run_mlr nest -ivF -f x
-echo 'foo=bar,x_1=a:1,x_2=b:2,x_3=c:3' | run_mlr nest -ivF -f x
-echo 'x_1=a:1,x_2=b:2,x_3=c:3,foo=bar' | run_mlr nest -ivF -f x
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f x,y -a u
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,v -a x
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f z,w,s -a v
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,v -a nonesuch
+echo 's=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8' | run_mlr reorder -f u,nonesuch -a x
+echo
 
 # ================================================================
