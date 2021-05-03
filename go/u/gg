@@ -3,7 +3,7 @@
 path_to_mlr="./mlr"
 indir="./regtest/input"
 
-go build mlr.go
+#go build mlr.go
 if [ $? -ne 0 ]; then
   exit 1
 fi
@@ -53,37 +53,16 @@ mention() {
 
 # ================================================================
 
-echo 'x=a;b;c'                         | run_mlr nest -evF -f x
-echo 'foo=bar,x=a;b;c'                 | run_mlr nest -evF -f x
-echo 'x=a;b;c,foo=bar'                 | run_mlr nest -evF -f x
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f x,y -b u
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -b x
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f z,w,s -b v
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -b nonesuch
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,nonesuch -b x
 
-echo 'x=a;b;c'                         | run_mlr nest -evR -f x
-echo 'foo=bar,x=a;b;c'                 | run_mlr nest -evR -f x
-echo 'x=a;b;c,foo=bar'                 | run_mlr nest -evR -f x
-
-echo 'x=a|b|c'                         | run_mlr nest -evF -S pipe -f x
-echo 'foo=bar,x=a|b|c'                 | run_mlr nest -evF -S pipe -f x
-echo 'x=a|b|c,foo=bar'                 | run_mlr nest -evF -S pipe -f x
-
-echo 'x=a|b|c'                         | run_mlr nest -evF -S '|' -f x
-echo 'foo=bar,x=a|b|c'                 | run_mlr nest -evF -S '|' -f x
-echo 'x=a|b|c,foo=bar'                 | run_mlr nest -evF -S '|' -f x
-
-echo 'x=a;b;c'                         | run_mlr nest -evR -f x
-echo 'foo=bar,x=a;b;c'                 | run_mlr nest -evR -f x
-echo 'x=a;b;c,foo=bar'                 | run_mlr nest -evR -f x
-
-
-echo 'x=a:1;b:2;c:3'                   | run_mlr nest -epF -f x
-echo 'foo=bar,x=a:1;b:2;c:3'           | run_mlr nest -epF -f x
-echo 'x=a:1;b:2;c:3,foo=bar'           | run_mlr nest -epF -f x
-
-echo 'x=a:1;b:2;c:3'                   | run_mlr nest -epR -f x
-echo 'foo=bar,x=a:1;b:2;c:3'           | run_mlr nest -epR -f x
-echo 'x=a:1;b:2;c:3,foo=bar'           | run_mlr nest -epR -f x
-
-echo 'x_1=a:1,x_2=b:2,x_3=c:3'         | run_mlr nest -ivF -f x
-echo 'foo=bar,x_1=a:1,x_2=b:2,x_3=c:3' | run_mlr nest -ivF -f x
-echo 'x_1=a:1,x_2=b:2,x_3=c:3,foo=bar' | run_mlr nest -ivF -f x
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f x,y -a u
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -a x
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f z,w,s -a v
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -a nonesuch
+run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,nonesuch -a x
 
 # ================================================================

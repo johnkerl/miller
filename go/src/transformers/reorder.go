@@ -26,26 +26,26 @@ func transformerReorderUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameReorder)
+	argv0 := lib.MlrExeName()
+	verb := verbNameReorder
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprint(o,
 		`Moves specified names to start of record, or end of record.
 `)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-e Put specified field names at record end: default is to put them at record start.\n")
 	fmt.Fprintf(o, "-f {a,b,c} Field names to reorder.\n")
+	fmt.Fprintf(o, "-b {x}     Put field names specified with -f before field name specified by {x},\n")
+	fmt.Fprintf(o, "           if any. If {x} isn't present in a given record, the specified fields\n")
+	fmt.Fprintf(o, "           will not be moved.\n")
+	fmt.Fprintf(o, "-a {x}     Put field names specified with -f after field name specified by {x},\n")
+	fmt.Fprintf(o, "           if any. If {x} isn't present in a given record, the specified fields\n")
+	fmt.Fprintf(o, "           will not be moved.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(
-		o,
-		"%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n",
-		lib.MlrExeName(), verbNameReorder,
-	)
-	fmt.Fprintf(
-		o,
-		"%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n",
-		lib.MlrExeName(), verbNameReorder,
-	)
+	fmt.Fprintf(o, "%s %s    -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"a=1,b=2,d=4,c=3\".\n", argv0, verb)
+	fmt.Fprintf(o, "%s %s -e -f a,b sends input record \"d=4,b=2,a=1,c=3\" to \"d=4,c=3,a=1,b=2\".\n", argv0, verb)
 
 	if doExit {
 		os.Exit(exitCode)
@@ -67,6 +67,8 @@ func transformerReorderParseCLI(
 
 	var fieldNames []string = nil
 	putAtEnd := false
+	beforeFieldName := ""
+	afterFieldName := ""
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -81,8 +83,20 @@ func transformerReorderParseCLI(
 		} else if opt == "-f" {
 			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
+		} else if opt == "-b" {
+			beforeFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			afterFieldName = ""
+			putAtEnd = false
+
+		} else if opt == "-a" {
+			afterFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			beforeFieldName = ""
+			putAtEnd = false
+
 		} else if opt == "-e" {
 			putAtEnd = true
+			beforeFieldName = ""
+			afterFieldName = ""
 
 		} else {
 			transformerReorderUsage(os.Stderr, true, 1)
@@ -96,6 +110,8 @@ func transformerReorderParseCLI(
 	transformer, _ := NewTransformerReorder(
 		fieldNames,
 		putAtEnd,
+		beforeFieldName,
+		afterFieldName,
 	)
 
 	*pargi = argi
@@ -105,7 +121,10 @@ func transformerReorderParseCLI(
 // ----------------------------------------------------------------
 type TransformerReorder struct {
 	// input
-	fieldNames []string
+	fieldNames      []string
+	fieldNamesSet   map[string]bool
+	beforeFieldName string
+	afterFieldName  string
 
 	// state
 	recordTransformerFunc transforming.RecordTransformerFunc
@@ -114,20 +133,26 @@ type TransformerReorder struct {
 func NewTransformerReorder(
 	fieldNames []string,
 	putAtEnd bool,
+	beforeFieldName string,
+	afterFieldName string,
 ) (*TransformerReorder, error) {
 
-	if !putAtEnd {
-		lib.ReverseStringList(fieldNames)
-	}
-
 	this := &TransformerReorder{
-		fieldNames: fieldNames,
+		fieldNames:      fieldNames,
+		fieldNamesSet:   lib.StringListToSet(fieldNames),
+		beforeFieldName: beforeFieldName,
+		afterFieldName:  afterFieldName,
 	}
 
-	if !putAtEnd {
-		this.recordTransformerFunc = this.reorderToStart
-	} else {
+	if putAtEnd {
 		this.recordTransformerFunc = this.reorderToEnd
+	} else if beforeFieldName != "" {
+		this.recordTransformerFunc = this.reorderBefore
+	} else if afterFieldName != "" {
+		this.recordTransformerFunc = this.reorderAfter
+	} else {
+		this.recordTransformerFunc = this.reorderToStart
+		lib.ReverseStringList(this.fieldNames)
 	}
 
 	return this, nil
@@ -169,6 +194,116 @@ func (this *TransformerReorder) reorderToEnd(
 			inrec.MoveToTail(fieldName)
 		}
 		outputChannel <- inrecAndContext
+	} else {
+		outputChannel <- inrecAndContext // end-of-stream marker
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerReorder) reorderBefore(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
+		if inrec.Get(this.beforeFieldName) == nil {
+			outputChannel <- inrecAndContext
+			return
+		}
+
+		outrec := types.NewMlrmapAsRecord()
+		pe := inrec.Head
+
+		// * inrec will be GC'ed
+		// * We will use outrec.PutReference not output.PutCopy since inrec will be GC'ed
+
+		for ; pe != nil; pe = pe.Next {
+			if pe.Key == this.beforeFieldName {
+				break
+			}
+			if !this.fieldNamesSet[pe.Key] {
+				outrec.PutReference(pe.Key, pe.Value)
+			}
+		}
+
+		for _, fieldName := range this.fieldNames {
+			value := inrec.Get(fieldName)
+			if value != nil {
+				outrec.PutReference(fieldName, value)
+			}
+		}
+
+		value := inrec.Get(this.beforeFieldName)
+		if value != nil {
+			outrec.PutReference(this.beforeFieldName, value)
+		}
+
+		for ; pe != nil; pe = pe.Next {
+			if pe.Key != this.beforeFieldName && !this.fieldNamesSet[pe.Key] {
+				outrec.PutReference(pe.Key, pe.Value)
+			}
+		}
+
+		for _, fieldName := range this.fieldNames {
+			inrec.MoveToHead(fieldName)
+		}
+		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+
+	} else {
+		outputChannel <- inrecAndContext // end-of-stream marker
+	}
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerReorder) reorderAfter(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
+		if inrec.Get(this.afterFieldName) == nil {
+			outputChannel <- inrecAndContext
+			return
+		}
+
+		outrec := types.NewMlrmapAsRecord()
+		pe := inrec.Head
+
+		// * inrec will be GC'ed
+		// * We will use outrec.PutReference not output.PutCopy since inrec will be GC'ed
+
+		for ; pe != nil; pe = pe.Next {
+			if pe.Key == this.afterFieldName {
+				break
+			}
+			if !this.fieldNamesSet[pe.Key] {
+				outrec.PutReference(pe.Key, pe.Value)
+			}
+		}
+
+		value := inrec.Get(this.afterFieldName)
+		if value != nil {
+			outrec.PutReference(this.afterFieldName, value)
+		}
+
+		for _, fieldName := range this.fieldNames {
+			value := inrec.Get(fieldName)
+			if value != nil {
+				outrec.PutReference(fieldName, value)
+			}
+		}
+
+		for ; pe != nil; pe = pe.Next {
+			if pe.Key != this.afterFieldName && !this.fieldNamesSet[pe.Key] {
+				outrec.PutReference(pe.Key, pe.Value)
+			}
+		}
+
+		for _, fieldName := range this.fieldNames {
+			inrec.MoveToHead(fieldName)
+		}
+		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker
 	}

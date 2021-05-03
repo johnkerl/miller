@@ -514,6 +514,12 @@ Moves specified names to start of record, or end of record.
 Options:
 -e Put specified field names at record end: default is to put them at record start.
 -f {a,b,c} Field names to reorder.
+-b {x}     Put field names specified with -f before field name specified by {x},
+           if any. If {x} isn't present in a given record, the specified fields
+           will not be moved.
+-a {x}     Put field names specified with -f after field name specified by {x},
+           if any. If {x} isn't present in a given record, the specified fields
+           will not be moved.
 -h|--help Show this message.
 
 Examples:

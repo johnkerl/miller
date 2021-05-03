@@ -2042,9 +2042,15 @@ reorder
 
     $ mlr reorder --help
     Usage: mlr reorder [options]
-    -f {a,b,c}   Field names to reorder.
-    -e           Put specified field names at record end: default is to put
-                 them at record start.
+    -f {a,b,c} Field names to reorder.
+    -e         Put specified field names at record end: default is to put
+               them at record start.
+    -b {x}     Put field names specified with -f before field name specified by {x},
+               if any. If {x} isn't present in a given record, the specified fields
+               will not be moved.
+    -a {x}     Put field names specified with -f after field name specified by {x},
+               if any. If {x} isn't present in a given record, the specified fields
+               will not be moved.
     Examples:
     mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
     mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
