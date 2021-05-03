@@ -2,11 +2,7 @@
 TOP OF LIST:
 
 * restore go fmt ./... note
-* hostname DSL function
-  o OS function too ?
-  o runtime.GOOS, runtime.GOARCH, runtime.Version()?
 * mongo examples to doc :D
-? ENV as entire string-string map at RHS/LHS -- ?
 
 * blocker: regexes
   o finish stats1 -r
@@ -23,6 +19,7 @@ TOP OF LIST:
   o regextract regextract_or_else
 
 ! blocker: localtime functions
+
 * strptime w/ ...00.Z -> error
 * strptime/strftime experiments ...
   * verb sec2gmtdate
@@ -597,3 +594,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   begin{@x=1} func f(x) { dump; print "hello"; tee  > ENV["outdir"]."/udf-x", $* } $o=f($i)
 * docs nest simplers now that we have getoptish
 * doc for DSL hostname/os/version functions
+? ENV as entire string-string map at RHS/LHS -- ?
