@@ -150,6 +150,32 @@ static sllv_t* mapper_reorder_to_end(lrec_t* pinrec, context_t* pctx, void* pvst
 static sllv_t* mapper_reorder_before(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
 	if (pinrec != NULL) {
+		for (sllse_t* pe = pstate->pfield_name_list->phead; pe != NULL; pe = pe->pnext) {
+			lrec_move_to_tail(pinrec, pe->value);
+		}
+		return sllv_single(pinrec);
+	} else {
+		return sllv_single(NULL);
+	}
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_reorder_after(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
+	if (pinrec != NULL) {
+		for (sllse_t* pe = pstate->pfield_name_list->phead; pe != NULL; pe = pe->pnext) {
+			lrec_move_to_tail(pinrec, pe->value);
+		}
+		return sllv_single(pinrec);
+	} else {
+		return sllv_single(NULL);
+	}
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_reorder_before(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
+	if (pinrec != NULL) {
 		char* bvalue = lrec_get(pinrec, pstate->before_field_name);
 		if (bvalue == NULL) {
 			return sllv_single(pinrec);
