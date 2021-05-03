@@ -150,10 +150,46 @@ static sllv_t* mapper_reorder_to_end(lrec_t* pinrec, context_t* pctx, void* pvst
 static sllv_t* mapper_reorder_before(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
 	if (pinrec != NULL) {
-		for (sllse_t* pe = pstate->pfield_name_list->phead; pe != NULL; pe = pe->pnext) {
-			lrec_move_to_tail(pinrec, pe->value);
+		char* bvalue = lrec_get(pinrec, pstate->before_field_name);
+		if (bvalue == NULL) {
+			return sllv_single(pinrec);
 		}
-		return sllv_single(pinrec);
+
+		lrec_t* poutrec = lrec_unbacked_alloc();
+		lrece_t* pe = pinrec->phead;
+
+		for (; pe != NULL; pe = pe->pnext) {
+			if (streq(pe->key, pstate->before_field_name)) {
+				break;
+			}
+			if (!hss_has(pstate->pfield_name_set, pe->key)) {
+				lrec_put(poutrec, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value),
+					FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			}
+		}
+
+		for (sllse_t* pf = pstate->pfield_name_list->phead; pf != NULL; pf = pf->pnext) {
+			char* field_name = pf->value;
+			char* value = lrec_get(pinrec, field_name);
+			if (value != NULL) {
+				lrec_put(poutrec, field_name, mlr_strdup_or_die(value), FREE_ENTRY_VALUE);
+			}
+		}
+
+		lrec_put(poutrec, pstate->before_field_name, mlr_strdup_or_die(bvalue), FREE_ENTRY_VALUE);
+
+		for (; pe != NULL; pe = pe->pnext) {
+			if (streq(pe->key, pstate->before_field_name)) {
+				continue;
+			}
+			if (!hss_has(pstate->pfield_name_set, pe->key)) {
+				lrec_put(poutrec, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value),
+					FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			}
+		}
+
+		lrec_free(pinrec);
+		return sllv_single(poutrec);
 	} else {
 		return sllv_single(NULL);
 	}
@@ -163,10 +199,46 @@ static sllv_t* mapper_reorder_before(lrec_t* pinrec, context_t* pctx, void* pvst
 static sllv_t* mapper_reorder_after(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_reorder_state_t* pstate = (mapper_reorder_state_t*)pvstate;
 	if (pinrec != NULL) {
-		for (sllse_t* pe = pstate->pfield_name_list->phead; pe != NULL; pe = pe->pnext) {
-			lrec_move_to_tail(pinrec, pe->value);
+		char* avalue = lrec_get(pinrec, pstate->after_field_name);
+		if (avalue == NULL) {
+			return sllv_single(pinrec);
 		}
-		return sllv_single(pinrec);
+
+		lrec_t* poutrec = lrec_unbacked_alloc();
+		lrece_t* pe = pinrec->phead;
+
+		for (; pe != NULL; pe = pe->pnext) {
+			if (streq(pe->key, pstate->after_field_name)) {
+				break;
+			}
+			if (!hss_has(pstate->pfield_name_set, pe->key)) {
+				lrec_put(poutrec, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value),
+					FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			}
+		}
+
+		lrec_put(poutrec, pstate->after_field_name, mlr_strdup_or_die(avalue), FREE_ENTRY_VALUE);
+
+		for (sllse_t* pf = pstate->pfield_name_list->phead; pf != NULL; pf = pf->pnext) {
+			char* field_name = pf->value;
+			char* value = lrec_get(pinrec, field_name);
+			if (value != NULL) {
+				lrec_put(poutrec, field_name, mlr_strdup_or_die(value), FREE_ENTRY_VALUE);
+			}
+		}
+
+		for (; pe != NULL; pe = pe->pnext) {
+			if (streq(pe->key, pstate->after_field_name)) {
+				continue;
+			}
+			if (!hss_has(pstate->pfield_name_set, pe->key)) {
+				lrec_put(poutrec, mlr_strdup_or_die(pe->key), mlr_strdup_or_die(pe->value),
+					FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			}
+		}
+
+		lrec_free(pinrec);
+		return sllv_single(poutrec);
 	} else {
 		return sllv_single(NULL);
 	}
