@@ -52706,6 +52706,36 @@ y/,x/,i/,b/,a/
 0.803142013402256216,0.000047786161325772/,3/,pan/,zee/
 0.573903236805416328,0.676537984365847889/,4/,hat/,zee/
 
+mlr --from ./reg_test/input/reorder.dkvp reorder -f x,y -b u
+s=1,t=2,x=6,y=7,u=3,v=4,w=5,z=8
+
+mlr --from ./reg_test/input/reorder.dkvp reorder -f u,v -b x
+s=1,t=2,w=5,u=3,v=4,x=6,y=7,z=8
+
+mlr --from ./reg_test/input/reorder.dkvp reorder -f z,w,s -b v
+t=2,u=3,z=8,w=5,s=1,v=4,x=6,y=7
+
+mlr --from ./reg_test/input/reorder.dkvp reorder -f u,v -b nonesuch
+s=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8
+
+mlr --from ./reg_test/input/reorder.dkvp reorder -f u,nonesuch -b x
+s=1,t=2,v=4,w=5,u=3,x=6,y=7,z=8
+
+mlr --from ./reg_test/input/reorder.dkvp reorder -f x,y -a u
+s=1,t=2,u=3,x=6,y=7,v=4,w=5,z=8
+
+mlr --from ./reg_test/input/reorder.dkvp reorder -f u,v -a x
+s=1,t=2,w=5,x=6,u=3,v=4,y=7,z=8
+
+mlr --from ./reg_test/input/reorder.dkvp reorder -f z,w,s -a v
+t=2,u=3,v=4,z=8,w=5,s=1,x=6,y=7
+
+mlr --from ./reg_test/input/reorder.dkvp reorder -f u,v -a nonesuch
+s=1,t=2,u=3,v=4,w=5,x=6,y=7,z=8
+
+mlr --from ./reg_test/input/reorder.dkvp reorder -f u,nonesuch -a x
+s=1,t=2,v=4,w=5,x=6,u=3,y=7,z=8
+
 mlr --icsv --otsv -N cat
 a	b	c
 1	2	3

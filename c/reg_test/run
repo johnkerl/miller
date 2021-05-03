@@ -6469,6 +6469,18 @@ run_mlr --implicit-csv-header --icsv --ifs /, --opprint cut -x -f 2  $indir/mult
 run_mlr --csv -N reorder -f 1,3,2,5,4 $indir/multi-sep.csv-crlf
 run_mlr --csv -N reorder -f 5,4,3,2,1 $indir/multi-sep.csv-crlf
 
+run_mlr --from $indir/reorder.dkvp reorder -f x,y -b u
+run_mlr --from $indir/reorder.dkvp reorder -f u,v -b x
+run_mlr --from $indir/reorder.dkvp reorder -f z,w,s -b v
+run_mlr --from $indir/reorder.dkvp reorder -f u,v -b nonesuch
+run_mlr --from $indir/reorder.dkvp reorder -f u,nonesuch -b x
+
+run_mlr --from $indir/reorder.dkvp reorder -f x,y -a u
+run_mlr --from $indir/reorder.dkvp reorder -f u,v -a x
+run_mlr --from $indir/reorder.dkvp reorder -f z,w,s -a v
+run_mlr --from $indir/reorder.dkvp reorder -f u,v -a nonesuch
+run_mlr --from $indir/reorder.dkvp reorder -f u,nonesuch -a x
+
 run_mlr --icsv --otsv -N cat <<EOF
 a,b,c
 1,2,3

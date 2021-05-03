@@ -155,6 +155,7 @@ EXTRA_DIST=	\
 		regex.dkvp \
 		regularize.dkvp \
 		remove-empty-columns.csv \
+		reorder.dkvp \
 		repeat-input.dat \
 		repeats.dkvp \
 		reshape-long-ragged.dkvp \
