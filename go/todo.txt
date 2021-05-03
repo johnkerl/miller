@@ -1,8 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-! reorder -b/-a
-
 * restore go fmt ./... note
 * hostname DSL function
   o OS function too ?
@@ -598,3 +596,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * 0035.cmd
   begin{@x=1} func f(x) { dump; print "hello"; tee  > ENV["outdir"]."/udf-x", $* } $o=f($i)
 * docs nest simplers now that we have getoptish
+* doc for DSL hostname/os/version functions

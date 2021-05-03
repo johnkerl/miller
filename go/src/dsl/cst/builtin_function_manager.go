@@ -26,6 +26,7 @@ const (
 	FUNC_CLASS_CONVERSION                 = "conversion"
 	FUNC_CLASS_TYPING                     = "typing"
 	FUNC_CLASS_COLLECTIONS                = "maps/arrays"
+	FUNC_CLASS_SYSTEM                     = "system"
 	FUNC_CLASS_TIME                       = "time"
 )
 
@@ -1487,6 +1488,30 @@ unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}}.
 Useful for nested JSON-like structures for non-JSON file formats like CSV.
 See also arrayify.`,
 		binaryFunc: types.MlrvalUnflatten,
+	},
+
+	// ----------------------------------------------------------------
+	// FUNC_CLASS_SYSTEM
+
+	{
+		name:     "hostname",
+		class:    FUNC_CLASS_SYSTEM,
+		help:     `Returns the hostname as a string.`,
+		zaryFunc: types.MlrvalHostname,
+	},
+
+	{
+		name:     "os",
+		class:    FUNC_CLASS_SYSTEM,
+		help:     `Returns the operating-system name as a string.`,
+		zaryFunc: types.MlrvalOS,
+	},
+
+	{
+		name:     "version",
+		class:    FUNC_CLASS_SYSTEM,
+		help:     `Returns the Miller version as a string.`,
+		zaryFunc: types.MlrvalVersion,
 	},
 }
 
