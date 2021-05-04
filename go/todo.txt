@@ -1,9 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-* restore go fmt ./... note
-* mongo examples to doc :D
-
 * blocker: regexes
   o finish stats1 -r
   o regex captures ...
@@ -12,7 +9,8 @@ TOP OF LIST:
 
 * blocker: remaining verbs:
   o format-values
-  o merge-fields stats2
+  o merge-fields
+  o stats2
 
 * blocker: remaining functions:
   o system
@@ -595,3 +593,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * docs nest simplers now that we have getoptish
 * doc for DSL hostname/os/version functions
 ? ENV as entire string-string map at RHS/LHS -- ?
+* mongo examples to doc :D
