@@ -283,6 +283,11 @@ func (this *Stats2LogiRegAccumulator) Fit(
 ) {
 
 	if !this.fitReady {
+		// Idea for hold-and-fit in stats2.go is:
+		// * We've ingested say 10,000 records
+		// * After the end of those we compute m and b
+		// * Then for all 10,000 records we compute y = m*x + b
+		// The fitReady flag keeps us from recomputing the linear fit 10,000 times
 		this.m, this.b = lib.LogisticRegression(this.xs, this.ys)
 		this.fitReady = true
 	}
@@ -593,8 +598,16 @@ func (this *Stats2CorrCovAccumulator) Fit(
 	y float64,
 	outrec *types.Mlrmap,
 ) {
+	if this.doWhich != DO_LINREG_PCA {
+		return
+	}
 
 	if !this.fitReady {
+		// Idea for hold-and-fit in stats2.go is:
+		// * We've ingested say 10,000 records
+		// * After the end of those we compute m and b
+		// * Then for all 10,000 records we compute y = m*x + b
+		// The fitReady flag keeps us from recomputing the linear fit 10,000 times
 		Q := lib.GetCovMatrix(this.count, this.sumx, this.sumx2, this.sumy, this.sumy2, this.sumxy)
 
 		l1, l2, v1, v2 := lib.GetRealSymmetricEigensystem(Q)

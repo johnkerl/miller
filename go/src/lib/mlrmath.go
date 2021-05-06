@@ -189,6 +189,7 @@ func GetRealSymmetricEigensystem(
 		eigenvector2[0] = V[0][1] // Column 1 of V
 		eigenvector2[1] = V[1][1]
 	} else {
+		eigenvalue1, eigenvalue2 = eigenvalue2, eigenvalue1
 		eigenvector1[0] = V[0][1]
 		eigenvector1[1] = V[1][1]
 		eigenvector2[0] = V[0][0]

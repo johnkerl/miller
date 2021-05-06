@@ -17,6 +17,10 @@ import (
 // ----------------------------------------------------------------
 const verbNameStats2 = "stats2"
 
+// For joining "x" and "y" into "x...y" for map keys. "," is another natural choice but would break
+// if we were ever asked to process field names with commas in them.
+const stats2KeySeparator = "\001"
+
 var Stats2Setup = transforming.TransformerSetup{
 	Verb:         verbNameStats2,
 	UsageFunc:    transformerStats2Usage,
@@ -178,7 +182,6 @@ type TransformerStats2 struct {
 	// except we need maps that preserve insertion order.
 	namedAccumulators *lib.OrderedMap
 
-	// xxx need?
 	groupingKeysToGroupByFieldValues *lib.OrderedMap
 
 	// For hold-and-fit:
@@ -318,7 +321,7 @@ func (this *TransformerStats2) ingest(
 		valueFieldName1 := this.valueFieldNameList[i]
 		valueFieldName2 := this.valueFieldNameList[i+1]
 
-		key := valueFieldName1 + "," + valueFieldName2
+		key := valueFieldName1 + stats2KeySeparator + valueFieldName2
 
 		valueFieldsToAccumulator := groupToValueFields.(*lib.OrderedMap).Get(key)
 		if valueFieldsToAccumulator == nil {
@@ -391,8 +394,7 @@ func (this *TransformerStats2) emit(
 		// For "x","y"
 		for pc := groupToValueFields.Head; pc != nil; pc = pc.Next {
 
-			// xxx temp! use "\001" or somesuch, and make a split/join func pair
-			pairs := strings.Split(pc.Key, ",")
+			pairs := strings.Split(pc.Key, stats2KeySeparator)
 			valueFieldName1 := pairs[0]
 			valueFieldName2 := pairs[1]
 			valueFieldsToAccumulator := pc.Value.(*lib.OrderedMap)
@@ -437,8 +439,7 @@ func (this *TransformerStats2) fit(
 
 			// For "x","y"
 			for pb := groupToValueFields.Head; pb != nil; pb = pb.Next {
-				// xxx temp! use "\001" or somesuch, and make a split/join func pair
-				pairs := strings.Split(pb.Key, ",")
+				pairs := strings.Split(pb.Key, stats2KeySeparator)
 				valueFieldName1 := pairs[0]
 				valueFieldName2 := pairs[1]
 				valueFieldsToAccumulator := pb.Value.(*lib.OrderedMap)
