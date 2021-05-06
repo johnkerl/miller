@@ -447,16 +447,16 @@ func (this *TransformerStats2) fit(
 				// For "linreg-ols", "logireg"
 				for pc := valueFieldsToAccumulator.Head; pc != nil; pc = pc.Next {
 					accumulator := pc.Value.(utils.IStats2Accumulator)
-					if accumulator.Fit != nil { // E.g. R2 has no non-trivial fit-function
-						mval1 := record.Get(valueFieldName1)
-						mval2 := record.Get(valueFieldName2)
-						if mval1 != nil && mval2 != nil {
-							accumulator.Fit(
-								mval1.GetNumericToFloatValueOrDie(),
-								mval2.GetNumericToFloatValueOrDie(),
-								record,
-							)
-						}
+
+					// Note R2, cov, corr, etc have no non-trivial fit-function
+					mval1 := record.Get(valueFieldName1)
+					mval2 := record.Get(valueFieldName2)
+					if mval1 != nil && mval2 != nil {
+						accumulator.Fit(
+							mval1.GetNumericToFloatValueOrDie(),
+							mval2.GetNumericToFloatValueOrDie(),
+							record,
+						)
 					}
 				}
 			}
