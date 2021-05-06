@@ -498,6 +498,7 @@ func (this *Mlrmap) GetSelectedValuesJoined(selectedFieldNames []string) (string
 
 // As with GetSelectedValuesJoined but also returning the array of mlrvals.
 // For sort.
+// TODO: put 'Copy' into the method name
 func (this *Mlrmap) GetSelectedValuesAndJoined(selectedFieldNames []string) (
 	string,
 	[]*Mlrval,

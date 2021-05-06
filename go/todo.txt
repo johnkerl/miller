@@ -1,6 +1,13 @@
 ================================================================
 TOP OF LIST:
 
+! mrpl :h (and miller --help-xxx): substring ...
+! MlrvalPointerFromString -> NewMlrvalPointerFromString et al.
+
+* stats2
+  ? refactor runtime if doX {...} blocks into function pointers
+  o 'emit' -> 'populate'
+
 * blocker: regexes
   o finish stats1 -r
   o regex captures ...

@@ -744,6 +744,13 @@ Usage: mlr stats2 [options]
 Computes bivariate statistics for one or more given field-name pairs,
 accumulated across the input record stream.
 -a {linreg-ols,corr,...}  Names of accumulators: one or more of:
+  linreg-ols Linear regression using ordinary least squares
+  linreg-pca Linear regression using principal component analysis
+  r2       Quality metric for linreg-ols (linreg-pca emits its own)
+  logireg  Logistic regression
+  corr     Sample correlation
+  cov      Sample covariance
+  covx     Sample-covariance matrix
 -f {a,b,c,d}   Value-field name-pairs on which to compute statistics.
                There must be an even number of names.
 -g {e,f,g}     Optional group-by-field names.

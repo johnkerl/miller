@@ -6,52 +6,39 @@ package utils
 
 import (
 	"fmt"
+	"math"
 	"os"
 
 	"miller/src/lib"
 	"miller/src/types"
 )
 
-// ================================================================
-// Given: accumulate corr,cov on values x,y group by a,b.
-// Example input:       Example output:
-//   a b x y            a b x_corr x_cov y_corr y_cov
-//   s t 1 2            s t 2       6    2      8
-//   u v 3 4            u v 1       3    1      4
-//   s t 5 6            u w 1       7    1      9
-//   u w 7 9
-//
-// Multilevel hashmap structure:
-// {
-//   ["s","t"] : {                    <--- group-by field names
-//     ["x","y"] : {                  <--- value field names
-//       "corr" : stats2_corr object,
-//       "cov"  : stats2_cov  object
-//     }
-//   },
-//   ["u","v"] : {
-//     ["x","y"] : {
-//       "corr" : stats2_corr object,
-//       "cov"  : stats2_cov  object
-//     }
-//   },
-//   ["u","w"] : {
-//     ["x","y"] : {
-//       "corr" : stats2_corr object,
-//       "cov"  : stats2_cov  object
-//     }
-//   },
-// }
-// ================================================================
-
 // ----------------------------------------------------------------
 type IStats2Accumulator interface {
-	Ingest(value1, value2 *types.Mlrval)
-	Emit() types.Mlrval
+	Ingest(
+		x float64,
+		y float64,
+	)
+
+	Populate(
+		valueFieldName1 string,
+		valueFieldName2 string,
+		outrec *types.Mlrmap,
+	)
+
+	Fit(
+		x float64,
+		y float64,
+		outrec *types.Mlrmap,
+	)
 }
 
-// ----------------------------------------------------------------
-type newStats2AccumulatorFunc func() IStats2Accumulator
+type newStats2AccumulatorFunc func(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	accumulatorName string,
+	doVerbose bool,
+) IStats2Accumulator
 
 type stats2AccumulatorInfo struct {
 	name        string
@@ -61,14 +48,14 @@ type stats2AccumulatorInfo struct {
 
 var stats2AccumulatorInfos []stats2AccumulatorInfo = []stats2AccumulatorInfo{
 	{
-		"linreg-pca",
-		"Linear regression using principal component analysis",
-		NewStats2LinRegPCAAccumulator,
-	},
-	{
 		"linreg-ols",
 		"Linear regression using ordinary least squares",
 		NewStats2LinRegOLSAccumulator,
+	},
+	{
+		"linreg-pca",
+		"Linear regression using principal component analysis",
+		NewStats2LinRegPCAAccumulator,
 	},
 	{
 		"r2",
@@ -97,38 +84,6 @@ var stats2AccumulatorInfos []stats2AccumulatorInfo = []stats2AccumulatorInfo{
 	},
 }
 
-// ================================================================
-type Stats2NamedAccumulator struct {
-	value1FieldName string
-	value2FieldName string
-	accumulatorName string
-	accumulator     IStats2Accumulator
-	outputFieldName string
-}
-
-func NewStats2NamedAccumulator(
-	value1FieldName string,
-	value2FieldName string,
-	accumulatorName string,
-	accumulator IStats2Accumulator,
-) *Stats2NamedAccumulator {
-	return &Stats2NamedAccumulator{
-		value1FieldName: value1FieldName,
-		value2FieldName: value2FieldName,
-		accumulatorName: accumulatorName,
-		accumulator:     accumulator,
-		outputFieldName: value1FieldName + "_" + value2FieldName + "_" + accumulatorName,
-	}
-}
-
-func (this *Stats2NamedAccumulator) Ingest(value1, value2 *types.Mlrval) {
-	this.accumulator.Ingest(value1, value2)
-}
-
-func (this *Stats2NamedAccumulator) Emit() (key string, value types.Mlrval) {
-	return this.outputFieldName, this.accumulator.Emit()
-}
-
 // ----------------------------------------------------------------
 type Stats2AccumulatorFactory struct {
 }
@@ -137,7 +92,6 @@ func NewStats2AccumulatorFactory() *Stats2AccumulatorFactory {
 	return &Stats2AccumulatorFactory{}
 }
 
-// ----------------------------------------------------------------
 func ListStats2Accumulators(o *os.File) {
 	for _, info := range stats2AccumulatorInfos {
 		fmt.Fprintf(o, "  %-8s %s\n", info.name, info.description)
@@ -155,620 +109,567 @@ func ValidateStats2AccumulatorName(
 	return false
 }
 
-// ----------------------------------------------------------------
-func (this *Stats2AccumulatorFactory) MakeNamedAccumulator(
+func (this *Stats2AccumulatorFactory) Make(
+	valueFieldName1 string,
+	valueFieldName2 string,
 	accumulatorName string,
-	groupingKey string,
-	value1FieldName string,
-	value2FieldName string,
-) *Stats2NamedAccumulator {
-
-	accumulator := this.MakeAccumulator(
-		accumulatorName,
-		groupingKey,
-		value1FieldName,
-		value2FieldName,
-	)
-	// We don't return errors.New here. The nominal case is that the stats2
-	// verb has already pre-validated accumulator names, and this is just a
-	// fallback. The accumulators are instantiated for every unique combination
-	// of group-by field values in the record stream, only as those values are
-	// encountered: for example, with 'mlr stats2 -a count,sum -f x,y -g
-	// color,shape', we make a new accumulator the first time we find a record
-	// with 'color=blue,shape=square' and another the first time we find a
-	// record with 'color=red,shape=circle', and so on. The right thing is to
-	// pre-validate names once when the stats2 transformer is being
-	// instantiated.
-	lib.InternalCodingErrorIf(accumulator == nil)
-
-	return NewStats2NamedAccumulator(
-		value1FieldName,
-		value2FieldName,
-		accumulatorName,
-		accumulator,
-	)
-}
-
-func (this *Stats2AccumulatorFactory) MakeAccumulator(
-	accumulatorName string,
-	groupingKey string,
-	value1FieldName string,
-	value2FieldName string,
+	doVerbose bool,
 ) IStats2Accumulator {
+	// TODO: hashmapify the lookup table
 	for _, info := range stats2AccumulatorInfos {
 		if info.name == accumulatorName {
-			return info.constructor()
+			return info.constructor(valueFieldName1, valueFieldName2, accumulatorName, doVerbose)
 		}
 	}
 	return nil
 }
 
 // ================================================================
-type Stats2LinRegPCAAccumulator struct {
-	count int
-}
-
-func NewStats2LinRegPCAAccumulator() IStats2Accumulator {
-	return &Stats2LinRegPCAAccumulator{
-		count: 0,
-	}
-}
-func (this *Stats2LinRegPCAAccumulator) Ingest(value1, value2 *types.Mlrval) {
-	this.count++
-}
-func (this *Stats2LinRegPCAAccumulator) Emit() types.Mlrval {
-	return types.MlrvalFromInt(this.count)
-}
-
-// ================================================================
 type Stats2LinRegOLSAccumulator struct {
-	count int
-	sumx  *types.Mlrval
-	sumx2 *types.Mlrval
-	sumy  *types.Mlrval
-	sumxy *types.Mlrval
-
-// TODO
-//	char*  m_output_field_name
-//	char*  b_output_field_name
-//	char*  n_output_field_name
-//
-//	char*  fit_output_field_name
-//	int    fit_ready
-//	double m
-//	double b
-
+	count              int
+	sumx               float64
+	sumy               float64
+	sumx2              float64
+	sumxy              float64
+	mOutputFieldName   string
+	bOutputFieldName   string
+	nOutputFieldName   string
+	fitOutputFieldName string
+	fitReady           bool
+	m                  float64
+	b                  float64
 }
 
-func NewStats2LinRegOLSAccumulator() IStats2Accumulator {
+func NewStats2LinRegOLSAccumulator(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	accumulatorName string,
+	doVerbose bool,
+) IStats2Accumulator {
+	prefix := valueFieldName1 + "_" + valueFieldName2 + "_"
 	return &Stats2LinRegOLSAccumulator{
-		count: 0,
-		sumx:   types.MlrvalPointerFromInt(0),
-		sumx2:  types.MlrvalPointerFromInt(0),
-		sumy:   types.MlrvalPointerFromInt(0),
-		sumxy:  types.MlrvalPointerFromInt(0),
-
-//static stats2_acc_t* stats2_linreg_ols_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose) {
-//	this.m_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_m")
-//	this.b_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_b")
-//	this.n_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_n")
-//	this.fit_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_ols_fit")
-//	this.fit_ready = FALSE
-//	this.m         = -999.0
-//	this.b         = -999.0
-//
-//	pstats2_acc.pingest_func = stats2_linreg_ols_ingest
-//	pstats2_acc.pemit_func   = stats2_linreg_ols_emit
-//	pstats2_acc.pfit_func    = stats2_linreg_ols_fit
-
+		count:              0,
+		sumx:               0.0,
+		sumy:               0.0,
+		sumx2:              0.0,
+		sumxy:              0.0,
+		mOutputFieldName:   prefix + "ols_m",
+		bOutputFieldName:   prefix + "ols_b",
+		nOutputFieldName:   prefix + "ols_n",
+		fitOutputFieldName: prefix + "ols_fit",
+		fitReady:           false,
+		m:                  -999.0,
+		b:                  -999.0,
 	}
 }
 
-func (this *Stats2LinRegOLSAccumulator) Ingest(value1, value2 *types.Mlrval) {
+func (this *Stats2LinRegOLSAccumulator) Ingest(
+	x float64,
+	y float64,
+) {
 	this.count++
-	x2 := types.MlrvalTimes(value1, value1)
-	xy := types.MlrvalTimes(value1, value2)
-	this.sumx = types.MlrvalBinaryPlus(this.sumx, value1)
-	this.sumy = types.MlrvalBinaryPlus(this.sumx, value2)
-	this.sumx2 = types.MlrvalBinaryPlus(this.sumx2, x2)
-	this.sumxy = types.MlrvalBinaryPlus(this.sumx2, xy)
+	this.sumx += x
+	this.sumy += y
+	this.sumx2 += x * x
+	this.sumxy += x * y
 }
 
-func (this *Stats2LinRegOLSAccumulator) Emit() types.Mlrval {
-	return types.MlrvalFromInt(this.count)
+func (this *Stats2LinRegOLSAccumulator) Populate(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	outrec *types.Mlrmap,
+) {
+	if this.count < 2 {
+		outrec.PutCopy(this.mOutputFieldName, types.MLRVAL_VOID)
+		outrec.PutCopy(this.bOutputFieldName, types.MLRVAL_VOID)
+	} else {
+
+		m, b := lib.GetLinearRegressionOLS(this.count, this.sumx, this.sumx2, this.sumxy, this.sumy)
+
+		outrec.PutReference(this.mOutputFieldName, types.MlrvalPointerFromFloat64(m))
+		outrec.PutReference(this.bOutputFieldName, types.MlrvalPointerFromFloat64(b))
+	}
+	outrec.PutReference(this.nOutputFieldName, types.MlrvalPointerFromInt(this.count))
 }
 
-//static void stats2_linreg_ols_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
-//	stats2_linreg_ols_state_t* this = pvstate
-//
-//	if (this.count < 2) {
-//		lrec_put(poutrec, this.m_output_field_name, "", NO_FREE)
-//		lrec_put(poutrec, this.b_output_field_name, "", NO_FREE)
-//	} else {
-//		double m, b
-//		mlr_get_linear_regression_ols(this.count, this.sumx, this.sumx2, this.sumxy, this.sumy, &m, &b)
-//		char* mval = mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt)
-//		char* bval = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt)
-//
-//		lrec_put(poutrec, this.m_output_field_name, mval, FREE_ENTRY_VALUE)
-//		lrec_put(poutrec, this.b_output_field_name, bval, FREE_ENTRY_VALUE)
-//	}
-//
-//	char* nval = mlr_alloc_string_from_ll(this.count)
-//	lrec_put(poutrec, this.n_output_field_name, nval, FREE_ENTRY_VALUE)
-//}
+func (this *Stats2LinRegOLSAccumulator) Fit(
+	x float64,
+	y float64,
+	outrec *types.Mlrmap,
+) {
 
-//static void stats2_linreg_ols_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
-//	stats2_linreg_ols_state_t* this = pvstate
-//
-//	if (!this.fit_ready) {
-//		mlr_get_linear_regression_ols(this.count, this.sumx, this.sumx2, this.sumxy, this.sumy,
-//			&this.m, &this.b)
-//		this.fit_ready = TRUE
-//	}
-//
-//	if (this.count < 2) {
-//		lrec_put(poutrec, this.fit_output_field_name, "", NO_FREE)
-//	} else {
-//		double yfit = this.m * x + this.b
-//		char* sfit = mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt)
-//		lrec_put(poutrec, this.fit_output_field_name, sfit, FREE_ENTRY_VALUE)
-//	}
-//}
+	if !this.fitReady {
+		// Idea for hold-and-fit in stats2.go is:
+		// * We've ingested say 10,000 records
+		// * After the end of those we compute m and b
+		// * Then for all 10,000 records we compute y = m*x + b
+		// The fitReady flag keeps us from recomputing the linear fit 10,000 times
+		this.m, this.b = lib.GetLinearRegressionOLS(this.count, this.sumx, this.sumx2, this.sumxy, this.sumy)
+		this.fitReady = true
+	}
 
-// ================================================================
-type Stats2R2Accumulator struct {
-	count int
-}
-
-func NewStats2R2Accumulator() IStats2Accumulator {
-	return &Stats2R2Accumulator{
-		count: 0,
+	if this.count < 2 {
+		outrec.PutCopy(this.fitOutputFieldName, types.MLRVAL_VOID)
+	} else {
+		yfit := this.m*x + this.b
+		outrec.PutReference(this.fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
 	}
 }
-func (this *Stats2R2Accumulator) Ingest(value1, value2 *types.Mlrval) {
-	this.count++
-}
-func (this *Stats2R2Accumulator) Emit() types.Mlrval {
-	return types.MlrvalFromInt(this.count)
-}
-
-//// ----------------------------------------------------------------
-//// http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
-//// Alternatively, just use sqrt(corr) as defined above.
-//
-//typedef struct _stats2_r2_state_t {
-//	unsigned long long count
-//	double sumx
-//	double sumy
-//	double sumx2
-//	double sumxy
-//	double sumy2
-//	char*  r2_output_field_name
-//} stats2_r2_state_t
-//static void stats2_r2_ingest(void* pvstate, double x, double y) {
-//	stats2_r2_state_t* this = pvstate
-//	this.count++
-//	this.sumx  += x
-//	this.sumy  += y
-//	this.sumx2 += x*x
-//	this.sumxy += x*y
-//	this.sumy2 += y*y
-//}
-//static void stats2_r2_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
-//	stats2_r2_state_t* this = pvstate
-//	if (this.count < 2LL) {
-//		lrec_put(poutrec, this.r2_output_field_name, "", NO_FREE)
-//	} else {
-//		unsigned long long n = this.count
-//		double sumx  = this.sumx
-//		double sumy  = this.sumy
-//		double sumx2 = this.sumx2
-//		double sumy2 = this.sumy2
-//		double sumxy = this.sumxy
-//		double numerator = n*sumxy - sumx*sumy
-//		numerator = numerator * numerator
-//		double denominator = (n*sumx2 - sumx*sumx) * (n*sumy2 - sumy*sumy)
-//		double output = numerator/denominator
-//		char* val = mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt)
-//		lrec_put(poutrec, this.r2_output_field_name, val, FREE_ENTRY_VALUE)
-//	}
-//}
-//
-//static stats2_acc_t* stats2_r2_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose) {
-//	stats2_acc_t* pstats2_acc = mlr_malloc_or_die(sizeof(stats2_acc_t))
-//	stats2_r2_state_t* this = mlr_malloc_or_die(sizeof(stats2_r2_state_t))
-//	this.count     = 0LL
-//	this.sumx      = 0.0
-//	this.sumy      = 0.0
-//	this.sumx2     = 0.0
-//	this.sumxy     = 0.0
-//	this.sumy2     = 0.0
-//	this.r2_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_r2")
-//
-//	pstats2_acc.pvstate      = (void*)this
-//	pstats2_acc.pingest_func = stats2_r2_ingest
-//	pstats2_acc.pemit_func   = stats2_r2_emit
-//	pstats2_acc.pfit_func    = NULL
-//
-//	return pstats2_acc
-//}
 
 // ================================================================
+const LOGIREG_DVECTOR_INITIAL_SIZE = 16
+
 type Stats2LogiRegAccumulator struct {
-	count int
+	xs                 []float64
+	ys                 []float64
+	mOutputFieldName   string
+	bOutputFieldName   string
+	nOutputFieldName   string
+	fitOutputFieldName string
+	fitReady           bool
+	m                  float64
+	b                  float64
 }
 
-func NewStats2LogiRegAccumulator() IStats2Accumulator {
+func NewStats2LogiRegAccumulator(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	accumulatorName string,
+	doVerbose bool,
+) IStats2Accumulator {
+	prefix := valueFieldName1 + "_" + valueFieldName2 + "_"
 	return &Stats2LogiRegAccumulator{
-		count: 0,
+		xs:                 make([]float64, 0, LOGIREG_DVECTOR_INITIAL_SIZE),
+		ys:                 make([]float64, 0, LOGIREG_DVECTOR_INITIAL_SIZE),
+		mOutputFieldName:   prefix + "logistic_m",
+		bOutputFieldName:   prefix + "logistic_b",
+		nOutputFieldName:   prefix + "logistic_n",
+		fitOutputFieldName: prefix + "logistic_fit",
+		fitReady:           false,
+		m:                  -999.0,
+		b:                  -999.0,
 	}
 }
-func (this *Stats2LogiRegAccumulator) Ingest(value1, value2 *types.Mlrval) {
-	this.count++
-}
-func (this *Stats2LogiRegAccumulator) Emit() types.Mlrval {
-	return types.MlrvalFromInt(this.count)
+
+func (this *Stats2LogiRegAccumulator) Ingest(
+	x float64,
+	y float64,
+) {
+	this.xs = append(this.xs, x) // append is smart about cap-increase via doubling
+	this.ys = append(this.ys, y) // append is smart about cap-increase via doubling
 }
 
-//// ----------------------------------------------------------------
-//#define LOGIREG_DVECTOR_INITIAL_SIZE 1024
-//typedef struct _stats2_logireg_state_t {
-//	dvector_t* pxs
-//	dvector_t* pys
-//	char*  m_output_field_name
-//	char*  b_output_field_name
-//	char*  n_output_field_name
-//	char*  fit_output_field_name
-//	int    fit_ready
-//	double m
-//	double b
-//} stats2_logireg_state_t
-//static void stats2_logireg_ingest(void* pvstate, double x, double y) {
-//	stats2_logireg_state_t* this = pvstate
-//	dvector_append(this.pxs, x)
-//	dvector_append(this.pys, y)
-//}
-//
-//static void stats2_logireg_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
-//	stats2_logireg_state_t* this = pvstate
-//
-//	if (this.pxs.size < 2) {
-//		lrec_put(poutrec, this.m_output_field_name, "", NO_FREE)
-//		lrec_put(poutrec, this.b_output_field_name, "", NO_FREE)
-//	} else {
-//		double m, b
-//		mlr_logistic_regression(this.pxs.data, this.pys.data, this.pxs.size, &m, &b)
-//		char* mval = mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt)
-//		char* bval = mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt)
-//
-//		lrec_put(poutrec, this.m_output_field_name, mval, FREE_ENTRY_VALUE)
-//		lrec_put(poutrec, this.b_output_field_name, bval, FREE_ENTRY_VALUE)
-//	}
-//
-//	char* nval = mlr_alloc_string_from_ll(this.pxs.size)
-//	lrec_put(poutrec, this.n_output_field_name, nval, FREE_ENTRY_VALUE)
-//}
-//
-//static void stats2_logireg_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
-//	stats2_logireg_state_t* this = pvstate
-//
-//	if (!this.fit_ready) {
-//		mlr_logistic_regression(this.pxs.data, this.pys.data, this.pxs.size, &this.m, &this.b)
-//		this.fit_ready = TRUE
-//	}
-//
-//	if (this.pxs.size < 2) {
-//		lrec_put(poutrec, this.fit_output_field_name, "", NO_FREE)
-//	} else {
-//		double yfit = 1.0 / (1.0 + exp(-this.m*x - this.b))
-//		char* fitval = mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt)
-//		lrec_put(poutrec, this.fit_output_field_name, fitval, FREE_ENTRY_VALUE)
-//	}
-//}
-//
-//static stats2_acc_t* stats2_logireg_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose) {
-//	stats2_acc_t* pstats2_acc = mlr_malloc_or_die(sizeof(stats2_acc_t))
-//	stats2_logireg_state_t* this = mlr_malloc_or_die(sizeof(stats2_logireg_state_t))
-//	this.pxs = dvector_alloc(LOGIREG_DVECTOR_INITIAL_SIZE)
-//	this.pys = dvector_alloc(LOGIREG_DVECTOR_INITIAL_SIZE)
-//	this.m_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_m")
-//	this.b_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_b")
-//	this.n_output_field_name   = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_n")
-//	this.fit_output_field_name = mlr_paste_4_strings(value_field_name_1, "_", value_field_name_2, "_logistic_fit")
-//	this.fit_ready = FALSE
-//	this.m         = -999.0
-//	this.b         = -999.0
-//
-//	pstats2_acc.pvstate = (void*)this
-//	pstats2_acc.pingest_func = stats2_logireg_ingest
-//	pstats2_acc.pemit_func   = stats2_logireg_emit
-//	pstats2_acc.pfit_func    = stats2_logireg_fit
-//	return pstats2_acc
-//}
+func (this *Stats2LogiRegAccumulator) Populate(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	outrec *types.Mlrmap,
+) {
+
+	if len(this.xs) < 2 {
+		outrec.PutCopy(this.mOutputFieldName, types.MLRVAL_VOID)
+		outrec.PutCopy(this.bOutputFieldName, types.MLRVAL_VOID)
+	} else {
+		m, b := lib.LogisticRegression(this.xs, this.ys)
+		outrec.PutCopy(this.mOutputFieldName, types.MlrvalPointerFromFloat64(m))
+		outrec.PutCopy(this.bOutputFieldName, types.MlrvalPointerFromFloat64(b))
+	}
+	outrec.PutReference(this.nOutputFieldName, types.MlrvalPointerFromInt(len(this.xs)))
+}
+
+func (this *Stats2LogiRegAccumulator) Fit(
+	x float64,
+	y float64,
+	outrec *types.Mlrmap,
+) {
+
+	if !this.fitReady {
+		this.m, this.b = lib.LogisticRegression(this.xs, this.ys)
+		this.fitReady = true
+	}
+
+	if len(this.xs) < 2 {
+		outrec.PutCopy(this.fitOutputFieldName, types.MLRVAL_VOID)
+	} else {
+		yfit := 1.0 / (1.0 + math.Exp(-this.m*x-this.b))
+		outrec.PutReference(this.fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
+	}
+}
 
 // ================================================================
-type Stats2CorrAccumulator struct {
+// http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
+// Alternatively, just use sqrt(corr) as defined above.
+
+type Stats2R2Accumulator struct {
+	count             int
+	sumx              float64
+	sumy              float64
+	sumx2             float64
+	sumxy             float64
+	sumy2             float64
+	r2OutputFieldName string
+}
+
+func NewStats2R2Accumulator(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	accumulatorName string,
+	doVerbose bool,
+) IStats2Accumulator {
+	prefix := valueFieldName1 + "_" + valueFieldName2 + "_"
+	return &Stats2R2Accumulator{
+		count:             0,
+		sumx:              0.0,
+		sumy:              0.0,
+		sumx2:             0.0,
+		sumxy:             0.0,
+		sumy2:             0.0,
+		r2OutputFieldName: prefix + "r2",
+	}
+}
+
+func (this *Stats2R2Accumulator) Ingest(
+	x float64,
+	y float64,
+) {
+	this.count++
+	this.sumx += x
+	this.sumy += y
+	this.sumx2 += x * x
+	this.sumxy += x * y
+	this.sumy2 += y * y
+}
+
+func (this *Stats2R2Accumulator) Populate(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	outrec *types.Mlrmap,
+) {
+
+	if this.count < 2 {
+		outrec.PutCopy(this.r2OutputFieldName, types.MLRVAL_VOID)
+	} else {
+		n := float64(this.count)
+		sumx := this.sumx
+		sumy := this.sumy
+		sumx2 := this.sumx2
+		sumy2 := this.sumy2
+		sumxy := this.sumxy
+		numerator := n*sumxy - sumx*sumy
+		numerator = numerator * numerator
+		denominator := (n*sumx2 - sumx*sumx) * (n*sumy2 - sumy*sumy)
+		output := numerator / denominator
+		outrec.PutReference(this.r2OutputFieldName, types.MlrvalPointerFromFloat64(output))
+	}
+}
+
+// Trivial function; there is no fit-feature here
+func (this *Stats2R2Accumulator) Fit(
+	x float64,
+	y float64,
+	outrec *types.Mlrmap,
+) {
+}
+
+// ================================================================
+// Shared code for Corr, Cov, CovX, and LinRegPCA.
+// Corr(X,Y) = Cov(X,Y) / sigma_X sigma_Y.
+
+type BivarMeasure int
+
+const (
+	DO_CORR BivarMeasure = iota
+	DO_COV
+	DO_COVX
+	DO_LINREG_PCA
+)
+
+type Stats2CorrCovAccumulator struct {
 	count int
+	sumx  float64
+	sumy  float64
+	sumx2 float64
+	sumxy float64
+	sumy2 float64
+
+	doWhich   BivarMeasure
+	doVerbose bool
+
+	corrOutputFieldName string
+
+	covOutputFieldName string
+
+	covx00OutputFieldName string
+	covx01OutputFieldName string
+	covx10OutputFieldName string
+	covx11OutputFieldName string
+
+	pca_mOutputFieldName   string
+	pca_bOutputFieldName   string
+	pca_nOutputFieldName   string
+	pca_qOutputFieldName   string
+	pca_l1OutputFieldName  string
+	pca_l2OutputFieldName  string
+	pca_v11OutputFieldName string
+	pca_v12OutputFieldName string
+	pca_v21OutputFieldName string
+	pca_v22OutputFieldName string
+	pca_fitOutputFieldName string
+
+	fitReady bool
+	m        float64
+	b        float64
+	q        float64
 }
 
-func NewStats2CorrAccumulator() IStats2Accumulator {
-	return &Stats2CorrAccumulator{
+// ----------------------------------------------------------------
+func NewStats2CorrCovAccumulator(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	accumulatorName string,
+	doVerbose bool,
+	doWhich BivarMeasure,
+) IStats2Accumulator {
+	prefix := valueFieldName1 + "_" + valueFieldName2 + "_"
+	return &Stats2CorrCovAccumulator{
 		count: 0,
+
+		sumx:      0.0,
+		sumy:      0.0,
+		sumx2:     0.0,
+		sumxy:     0.0,
+		sumy2:     0.0,
+		doWhich:   doWhich,
+		doVerbose: doVerbose,
+
+		corrOutputFieldName: prefix + "corr",
+
+		covOutputFieldName: prefix + "cov",
+
+		covx00OutputFieldName: valueFieldName1 + "_" + valueFieldName1 + "_covx",
+		covx01OutputFieldName: valueFieldName1 + "_" + valueFieldName2 + "_covx",
+		covx10OutputFieldName: valueFieldName2 + "_" + valueFieldName1 + "_covx",
+		covx11OutputFieldName: valueFieldName2 + "_" + valueFieldName2 + "_covx",
+
+		pca_mOutputFieldName:   prefix + "pca_m",
+		pca_bOutputFieldName:   prefix + "pca_b",
+		pca_nOutputFieldName:   prefix + "pca_n",
+		pca_qOutputFieldName:   prefix + "pca_quality",
+		pca_l1OutputFieldName:  prefix + "pca_eival1",
+		pca_l2OutputFieldName:  prefix + "pca_eival2",
+		pca_v11OutputFieldName: prefix + "pca_eivec11",
+		pca_v12OutputFieldName: prefix + "pca_eivec12",
+		pca_v21OutputFieldName: prefix + "pca_eivec21",
+		pca_v22OutputFieldName: prefix + "pca_eivec22",
+		pca_fitOutputFieldName: prefix + "pca_fit",
+
+		fitReady: false,
+		m:        -999.0,
+		b:        -999.0,
 	}
 }
-func (this *Stats2CorrAccumulator) Ingest(value1, value2 *types.Mlrval) {
+
+func (this *Stats2CorrCovAccumulator) Ingest(
+	x float64,
+	y float64,
+) {
 	this.count++
-}
-func (this *Stats2CorrAccumulator) Emit() types.Mlrval {
-	return types.MlrvalFromInt(this.count)
-}
-
-// ================================================================
-type Stats2CovAccumulator struct {
-	count int
+	this.sumx += x
+	this.sumy += y
+	this.sumx2 += x * x
+	this.sumxy += x * y
+	this.sumy2 += y * y
 }
 
-func NewStats2CovAccumulator() IStats2Accumulator {
-	return &Stats2CovAccumulator{
-		count: 0,
+func (this *Stats2CorrCovAccumulator) Populate(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	outrec *types.Mlrmap,
+) {
+
+	if this.doWhich == DO_COVX {
+		key00 := this.covx00OutputFieldName
+		key01 := this.covx01OutputFieldName
+		key10 := this.covx10OutputFieldName
+		key11 := this.covx11OutputFieldName
+		if this.count < 2 {
+			outrec.PutCopy(key00, types.MLRVAL_VOID)
+			outrec.PutCopy(key01, types.MLRVAL_VOID)
+			outrec.PutCopy(key10, types.MLRVAL_VOID)
+			outrec.PutCopy(key11, types.MLRVAL_VOID)
+		} else {
+			Q := lib.GetCovMatrix(
+				this.count,
+				this.sumx,
+				this.sumx2,
+				this.sumy,
+				this.sumy2,
+				this.sumxy,
+			)
+			outrec.PutReference(key00, types.MlrvalPointerFromFloat64(Q[0][0]))
+			outrec.PutReference(key01, types.MlrvalPointerFromFloat64(Q[0][1]))
+			outrec.PutReference(key10, types.MlrvalPointerFromFloat64(Q[1][0]))
+			outrec.PutReference(key11, types.MlrvalPointerFromFloat64(Q[1][1]))
+		}
+
+	} else if this.doWhich == DO_LINREG_PCA {
+		keym := this.pca_mOutputFieldName
+		keyb := this.pca_bOutputFieldName
+		keyn := this.pca_nOutputFieldName
+		keyq := this.pca_qOutputFieldName
+
+		keyl1 := this.pca_l1OutputFieldName
+		keyl2 := this.pca_l2OutputFieldName
+		keyv11 := this.pca_v11OutputFieldName
+		keyv12 := this.pca_v12OutputFieldName
+		keyv21 := this.pca_v21OutputFieldName
+		keyv22 := this.pca_v22OutputFieldName
+
+		if this.count < 2 {
+			outrec.PutCopy(keym, types.MLRVAL_VOID)
+			outrec.PutCopy(keyb, types.MLRVAL_VOID)
+			outrec.PutCopy(keyn, types.MLRVAL_VOID)
+			outrec.PutCopy(keyq, types.MLRVAL_VOID)
+
+			if this.doVerbose {
+
+				outrec.PutCopy(keyl1, types.MLRVAL_VOID)
+				outrec.PutCopy(keyl2, types.MLRVAL_VOID)
+				outrec.PutCopy(keyv11, types.MLRVAL_VOID)
+				outrec.PutCopy(keyv12, types.MLRVAL_VOID)
+				outrec.PutCopy(keyv21, types.MLRVAL_VOID)
+				outrec.PutCopy(keyv22, types.MLRVAL_VOID)
+			}
+		} else {
+			Q := lib.GetCovMatrix(
+				this.count,
+				this.sumx,
+				this.sumx2,
+				this.sumy,
+				this.sumy2,
+				this.sumxy,
+			)
+
+			l1, l2, v1, v2 := lib.GetRealSymmetricEigensystem(Q)
+
+			x_mean := this.sumx / float64(this.count)
+			y_mean := this.sumy / float64(this.count)
+			m, b, q := lib.GetLinearRegressionPCA(l1, l2, v1, v2, x_mean, y_mean)
+
+			outrec.PutReference(keym, types.MlrvalPointerFromFloat64(m))
+			outrec.PutReference(keyb, types.MlrvalPointerFromFloat64(b))
+			outrec.PutReference(keyn, types.MlrvalPointerFromInt(this.count))
+			outrec.PutReference(keyq, types.MlrvalPointerFromFloat64(q))
+
+			if this.doVerbose {
+				outrec.PutReference(keyl1, types.MlrvalPointerFromFloat64(l1))
+				outrec.PutReference(keyl2, types.MlrvalPointerFromFloat64(l2))
+				outrec.PutReference(keyv11, types.MlrvalPointerFromFloat64(v1[0]))
+				outrec.PutReference(keyv12, types.MlrvalPointerFromFloat64(v1[1]))
+				outrec.PutReference(keyv21, types.MlrvalPointerFromFloat64(v2[0]))
+				outrec.PutReference(keyv22, types.MlrvalPointerFromFloat64(v2[1]))
+			}
+		}
+	} else {
+		key := this.corrOutputFieldName
+		if this.doWhich == DO_COV {
+			key = this.covOutputFieldName
+		}
+		if this.count < 2 {
+			outrec.PutCopy(key, types.MLRVAL_VOID)
+		} else {
+			output := lib.GetCov(this.count, this.sumx, this.sumy, this.sumxy)
+			if this.doWhich == DO_CORR {
+				sigmax := math.Sqrt(lib.GetVar(this.count, this.sumx, this.sumx2))
+				sigmay := math.Sqrt(lib.GetVar(this.count, this.sumy, this.sumy2))
+				output = output / sigmax / sigmay
+			}
+			outrec.PutReference(key, types.MlrvalPointerFromFloat64(output))
+		}
 	}
 }
-func (this *Stats2CovAccumulator) Ingest(value1, value2 *types.Mlrval) {
-	this.count++
-}
-func (this *Stats2CovAccumulator) Emit() types.Mlrval {
-	return types.MlrvalFromInt(this.count)
-}
 
-// ================================================================
-type Stats2CovXAccumulator struct {
-	count int
-}
+func (this *Stats2CorrCovAccumulator) Fit(
+	x float64,
+	y float64,
+	outrec *types.Mlrmap,
+) {
 
-func NewStats2CovXAccumulator() IStats2Accumulator {
-	return &Stats2CovXAccumulator{
-		count: 0,
+	if !this.fitReady {
+		Q := lib.GetCovMatrix(this.count, this.sumx, this.sumx2, this.sumy, this.sumy2, this.sumxy)
+
+		l1, l2, v1, v2 := lib.GetRealSymmetricEigensystem(Q)
+
+		x_mean := this.sumx / float64(this.count)
+		y_mean := this.sumy / float64(this.count)
+		this.m, this.b, this.q = lib.GetLinearRegressionPCA(l1, l2, v1, v2, x_mean, y_mean)
+
+		this.fitReady = true
+	}
+	if this.count < 2 {
+		outrec.PutCopy(this.pca_fitOutputFieldName, types.MLRVAL_VOID)
+	} else {
+		yfit := this.m*x + this.b
+		outrec.PutCopy(this.pca_fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
 	}
 }
-func (this *Stats2CovXAccumulator) Ingest(value1, value2 *types.Mlrval) {
-	this.count++
-}
-func (this *Stats2CovXAccumulator) Emit() types.Mlrval {
-	return types.MlrvalFromInt(this.count)
-}
 
 // ================================================================
-// ================================================================
+func NewStats2CorrAccumulator(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	accumulatorName string,
+	doVerbose bool,
+) IStats2Accumulator {
+	return NewStats2CorrCovAccumulator(
+		valueFieldName1,
+		valueFieldName2,
+		accumulatorName,
+		doVerbose,
+		DO_CORR,
+	)
+}
 
-//// ----------------------------------------------------------------
-//// Corr(X,Y) = Cov(X,Y) / sigma_X sigma_Y.
-//typedef struct _stats2_corr_cov_state_t {
-//	unsigned long long count
-//	double sumx
-//	double sumy
-//	double sumx2
-//	double sumxy
-//	double sumy2
-//	bivar_measure_t do_which
-//	int    do_verbose
-//
-//	char*  covx_00_output_field_name
-//	char*  covx_01_output_field_name
-//	char*  covx_10_output_field_name
-//	char*  covx_11_output_field_name
-//
-//	char*  pca_m_output_field_name
-//	char*  pca_b_output_field_name
-//	char*  pca_n_output_field_name
-//	char*  pca_q_output_field_name
-//	char* pca_l1_output_field_name
-//	char* pca_l2_output_field_name
-//	char* pca_v11_output_field_name
-//	char* pca_v12_output_field_name
-//	char* pca_v21_output_field_name
-//	char* pca_v22_output_field_name
-//	char* pca_fit_output_field_name
-//	int   fit_ready
-//	double m
-//	double b
-//	double q
-//
-//	char*  corr_output_field_name
-//	char*   cov_output_field_name
-//
-//} stats2_corr_cov_state_t
-//static void stats2_corr_cov_ingest(void* pvstate, double x, double y) {
-//	stats2_corr_cov_state_t* this = pvstate
-//	this.count++
-//	this.sumx  += x
-//	this.sumy  += y
-//	this.sumx2 += x*x
-//	this.sumxy += x*y
-//	this.sumy2 += y*y
-//}
-//
-//static void stats2_corr_cov_emit(void* pvstate, char* name1, char* name2, lrec_t* poutrec) {
-//	stats2_corr_cov_state_t* this = pvstate
-//	if (this.do_which == DO_COVX) {
-//		char* key00 = this.covx_00_output_field_name
-//		char* key01 = this.covx_01_output_field_name
-//		char* key10 = this.covx_10_output_field_name
-//		char* key11 = this.covx_11_output_field_name
-//		if (this.count < 2LL) {
-//			lrec_put(poutrec, key00, "", NO_FREE)
-//			lrec_put(poutrec, key01, "", NO_FREE)
-//			lrec_put(poutrec, key10, "", NO_FREE)
-//			lrec_put(poutrec, key11, "", NO_FREE)
-//		} else {
-//			double Q[2][2]
-//			mlr_get_cov_matrix(this.count,
-//				this.sumx, this.sumx2, this.sumy, this.sumy2, this.sumxy, Q)
-//			char* val00 = mlr_alloc_string_from_double(Q[0][0], MLR_GLOBALS.ofmt)
-//			char* val01 = mlr_alloc_string_from_double(Q[0][1], MLR_GLOBALS.ofmt)
-//			char* val10 = mlr_alloc_string_from_double(Q[1][0], MLR_GLOBALS.ofmt)
-//			char* val11 = mlr_alloc_string_from_double(Q[1][1], MLR_GLOBALS.ofmt)
-//			lrec_put(poutrec, key00, val00, FREE_ENTRY_VALUE)
-//			lrec_put(poutrec, key01, val01, FREE_ENTRY_VALUE)
-//			lrec_put(poutrec, key10, val10, FREE_ENTRY_VALUE)
-//			lrec_put(poutrec, key11, val11, FREE_ENTRY_VALUE)
-//		}
-//
-//	} else if (this.do_which == DO_LINREG_PCA) {
-//		char* keym   = this.pca_m_output_field_name
-//		char* keyb   = this.pca_b_output_field_name
-//		char* keyn   = this.pca_n_output_field_name
-//		char* keyq   = this.pca_q_output_field_name
-//		char* keyl1  = this.pca_l1_output_field_name
-//		char* keyl2  = this.pca_l2_output_field_name
-//		char* keyv11 = this.pca_v11_output_field_name
-//		char* keyv12 = this.pca_v12_output_field_name
-//		char* keyv21 = this.pca_v21_output_field_name
-//		char* keyv22 = this.pca_v22_output_field_name
-//		if (this.count < 2LL) {
-//			lrec_put(poutrec, keym,   "", NO_FREE)
-//			lrec_put(poutrec, keyb,   "", NO_FREE)
-//			lrec_put(poutrec, keyn,   "", NO_FREE)
-//			lrec_put(poutrec, keyq,   "", NO_FREE)
-//			if (this.do_verbose) {
-//				lrec_put(poutrec, keyl1,  "", NO_FREE)
-//				lrec_put(poutrec, keyl2,  "", NO_FREE)
-//				lrec_put(poutrec, keyv11, "", NO_FREE)
-//				lrec_put(poutrec, keyv12, "", NO_FREE)
-//				lrec_put(poutrec, keyv21, "", NO_FREE)
-//				lrec_put(poutrec, keyv22, "", NO_FREE)
-//			}
-//		} else {
-//			double Q[2][2]
-//			mlr_get_cov_matrix(this.count,
-//				this.sumx, this.sumx2, this.sumy, this.sumy2, this.sumxy, Q)
-//
-//			double l1, l2;       // Eigenvalues
-//			double v1[2], v2[2]; // Eigenvectors
-//			mlr_get_real_symmetric_eigensystem(Q, &l1, &l2, v1, v2)
-//
-//			double x_mean = this.sumx / this.count
-//			double y_mean = this.sumy / this.count
-//			double m, b, q
-//			mlr_get_linear_regression_pca(l1, l2, v1, v2, x_mean, y_mean, &m, &b, &q)
-//
-//			lrec_put(poutrec, keym, mlr_alloc_string_from_double(m, MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE)
-//			lrec_put(poutrec, keyb, mlr_alloc_string_from_double(b, MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE)
-//			lrec_put(poutrec, keyn, mlr_alloc_string_from_ll(this.count),           FREE_ENTRY_VALUE)
-//			lrec_put(poutrec, keyq, mlr_alloc_string_from_double(q, MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE)
-//			if (this.do_verbose) {
-//				lrec_put(poutrec, keyl1,  mlr_alloc_string_from_double(l1,    MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE)
-//				lrec_put(poutrec, keyl2,  mlr_alloc_string_from_double(l2,    MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE)
-//				lrec_put(poutrec, keyv11, mlr_alloc_string_from_double(v1[0], MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE)
-//				lrec_put(poutrec, keyv12, mlr_alloc_string_from_double(v1[1], MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE)
-//				lrec_put(poutrec, keyv21, mlr_alloc_string_from_double(v2[0], MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE)
-//				lrec_put(poutrec, keyv22, mlr_alloc_string_from_double(v2[1], MLR_GLOBALS.ofmt), FREE_ENTRY_VALUE)
-//			}
-//		}
-//	} else {
-//		char* key = (this.do_which == DO_CORR) ? this.corr_output_field_name : this.cov_output_field_name
-//		if (this.count < 2LL) {
-//			lrec_put(poutrec, key, "", NO_FREE)
-//		} else {
-//			double output = mlr_get_cov(this.count, this.sumx, this.sumy, this.sumxy)
-//			if (this.do_which == DO_CORR) {
-//				double sigmax = sqrt(mlr_get_var(this.count, this.sumx, this.sumx2))
-//				double sigmay = sqrt(mlr_get_var(this.count, this.sumy, this.sumy2))
-//				output = output / sigmax / sigmay
-//			}
-//			char* val = mlr_alloc_string_from_double(output, MLR_GLOBALS.ofmt)
-//			lrec_put(poutrec, key, val, FREE_ENTRY_VALUE)
-//		}
-//	}
-//}
-//
-//static void linreg_pca_fit(void* pvstate, double x, double y, lrec_t* poutrec) {
-//	stats2_corr_cov_state_t* this = pvstate
-//
-//	if (!this.fit_ready) {
-//		double Q[2][2]
-//		mlr_get_cov_matrix(this.count,
-//			this.sumx, this.sumx2, this.sumy, this.sumy2, this.sumxy, Q)
-//
-//		double l1, l2;       // Eigenvalues
-//		double v1[2], v2[2]; // Eigenvectors
-//		mlr_get_real_symmetric_eigensystem(Q, &l1, &l2, v1, v2)
-//
-//		double x_mean = this.sumx / this.count
-//		double y_mean = this.sumy / this.count
-//		mlr_get_linear_regression_pca(l1, l2, v1, v2, x_mean, y_mean, &this.m, &this.b, &this.q)
-//
-//		this.fit_ready = TRUE
-//	}
-//	if (this.count < 2LL) {
-//		lrec_put(poutrec, this.pca_fit_output_field_name, "", NO_FREE)
-//	} else {
-//		double yfit = this.m * x + this.b
-//		lrec_put(poutrec, this.pca_fit_output_field_name, mlr_alloc_string_from_double(yfit, MLR_GLOBALS.ofmt),
-//			FREE_ENTRY_VALUE)
-//	}
-//}
-//
-//static stats2_acc_t* stats2_corr_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name,
-//	bivar_measure_t do_which, int do_verbose)
-//{
-//	stats2_acc_t* pstats2_acc = mlr_malloc_or_die(sizeof(stats2_acc_t))
-//	stats2_corr_cov_state_t* this = mlr_malloc_or_die(sizeof(stats2_corr_cov_state_t))
-//	this.count      = 0LL
-//	this.sumx       = 0.0
-//	this.sumy       = 0.0
-//	this.sumx2      = 0.0
-//	this.sumxy      = 0.0
-//	this.sumy2      = 0.0
-//	this.do_which   = do_which
-//	this.do_verbose = do_verbose
-//
-//	char* name1 = value_field_name_1
-//	char* name2 = value_field_name_2
-//
-//	this.covx_00_output_field_name = mlr_paste_4_strings(name1, "_", name1, "_covx")
-//	this.covx_01_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_covx")
-//	this.covx_10_output_field_name = mlr_paste_4_strings(name2, "_", name1, "_covx")
-//	this.covx_11_output_field_name = mlr_paste_4_strings(name2, "_", name2, "_covx")
-//
-//	this.pca_m_output_field_name   = mlr_paste_4_strings(name1, "_", name2, "_pca_m")
-//	this.pca_b_output_field_name   = mlr_paste_4_strings(name1, "_", name2, "_pca_b")
-//	this.pca_n_output_field_name   = mlr_paste_4_strings(name1, "_", name2, "_pca_n")
-//	this.pca_q_output_field_name   = mlr_paste_4_strings(name1, "_", name2, "_pca_quality")
-//	this.pca_l1_output_field_name  = mlr_paste_4_strings(name1, "_", name2, "_pca_eival1")
-//	this.pca_l2_output_field_name  = mlr_paste_4_strings(name1, "_", name2, "_pca_eival2")
-//	this.pca_v11_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec11")
-//	this.pca_v12_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec12")
-//	this.pca_v21_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec21")
-//	this.pca_v22_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_eivec22")
-//	this.pca_fit_output_field_name = mlr_paste_4_strings(name1, "_", name2, "_pca_fit")
-//	this.fit_ready = FALSE
-//	this.m         = -999.0
-//	this.b         = -999.0
-//
-//	this.corr_output_field_name    = mlr_paste_4_strings(name1, "_", name2, "_corr")
-//	this.cov_output_field_name     = mlr_paste_4_strings(name1, "_", name2, "_cov")
-//
-//	pstats2_acc.pvstate      = (void*)this
-//	pstats2_acc.pingest_func = stats2_corr_cov_ingest
-//	pstats2_acc.pemit_func   = stats2_corr_cov_emit
-//	if (do_which == DO_LINREG_PCA)
-//		pstats2_acc.pfit_func = linreg_pca_fit
-//	else
-//		pstats2_acc.pfit_func = NULL
-//
-//	return pstats2_acc
-//}
+func NewStats2CovAccumulator(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	accumulatorName string,
+	doVerbose bool,
+) IStats2Accumulator {
+	return NewStats2CorrCovAccumulator(
+		valueFieldName1,
+		valueFieldName2,
+		accumulatorName,
+		doVerbose,
+		DO_COV,
+	)
+}
 
-//static stats2_acc_t* stats2_corr_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose) {
-//	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, stats2_acc_name, DO_CORR, do_verbose)
-//}
-//static stats2_acc_t* stats2_cov_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose) {
-//	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, stats2_acc_name, DO_COV, do_verbose)
-//}
-//static stats2_acc_t* stats2_covx_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose) {
-//	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, stats2_acc_name, DO_COVX, do_verbose)
-//}
-//static stats2_acc_t* stats2_linreg_pca_alloc(char* value_field_name_1, char* value_field_name_2, char* stats2_acc_name, int do_verbose) {
-//	return stats2_corr_cov_alloc(value_field_name_1, value_field_name_2, stats2_acc_name, DO_LINREG_PCA, do_verbose)
-//}
+func NewStats2CovXAccumulator(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	accumulatorName string,
+	doVerbose bool,
+) IStats2Accumulator {
+	return NewStats2CorrCovAccumulator(
+		valueFieldName1,
+		valueFieldName2,
+		accumulatorName,
+		doVerbose,
+		DO_COVX,
+	)
+}
+
+func NewStats2LinRegPCAAccumulator(
+	valueFieldName1 string,
+	valueFieldName2 string,
+	accumulatorName string,
+	doVerbose bool,
+) IStats2Accumulator {
+	return NewStats2CorrCovAccumulator(
+		valueFieldName1,
+		valueFieldName2,
+		accumulatorName,
+		doVerbose,
+		DO_LINREG_PCA,
+	)
+}

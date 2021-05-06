@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"errors"
 	"fmt"
 	"os"
@@ -171,13 +172,18 @@ type TransformerStats2 struct {
 	accumulatorFactory *utils.Stats2AccumulatorFactory
 
 	// Accumulators are indexed by
-	//   groupByFieldName . value1FieldName+value2FieldName . accumulatorName . accumulator object
+	//   groupByFieldName . value1FieldName+sep+value2FieldName . accumulatorName . accumulator object
 	// This would be
-	//   namedAccumulators map[string]map[string]map[string]Stats2NamedAccumulator
+	//   namedAccumulators map[string]map[string]map[string]IStats2Accumulator
 	// except we need maps that preserve insertion order.
 	namedAccumulators *lib.OrderedMap
 
-	groupingKeysToGroupByFieldValues map[string][]*types.Mlrval
+	// xxx need?
+	groupingKeysToGroupByFieldValues *lib.OrderedMap
+
+	// For hold-and-fit:
+	// ordered map from grouping-key to list of RecordAndContext
+	recordGroups *lib.OrderedMap
 }
 
 func NewTransformerStats2(
@@ -208,7 +214,8 @@ func NewTransformerStats2(
 		doHoldAndFit:                     doHoldAndFit,
 		accumulatorFactory:               utils.NewStats2AccumulatorFactory(),
 		namedAccumulators:                lib.NewOrderedMap(),
-		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
+		groupingKeysToGroupByFieldValues: lib.NewOrderedMap(),
+		recordGroups:                     lib.NewOrderedMap(),
 	}
 	return this, nil
 }
@@ -226,27 +233,27 @@ func NewTransformerStats2(
 // {
 //   ["s","t"] : {                    <--- group-by field names
 //     ["x","y"] : {                  <--- value field names
-//       "corr" : stats2_corr_t object,
-//       "cov"  : stats2_cov_t  object
+//       "corr" : stats2_corr object,
+//       "cov"  : stats2_cov  object
 //     }
 //   },
 //   ["u","v"] : {
 //     ["x","y"] : {
-//       "corr" : stats2_corr_t object,
-//       "cov"  : stats2_cov_t  object
+//       "corr" : stats2_corr object,
+//       "cov"  : stats2_cov  object
 //     }
 //   },
 //   ["u","w"] : {
 //     ["x","y"] : {
-//       "corr" : stats2_corr_t object,
-//       "cov"  : stats2_cov_t  object
+//       "corr" : stats2_corr object,
+//       "cov"  : stats2_cov  object
 //     }
 //   },
 // }
-// ================================================================
 //
 // In the iterative case, add to the current record its current group's stats fields.
 // In the non-iterative case, produce output only at the end of the input stream.
+// ================================================================
 
 // ----------------------------------------------------------------
 func (this *TransformerStats2) Transform(
@@ -254,312 +261,206 @@ func (this *TransformerStats2) Transform(
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		this.handleInputRecord(inrecAndContext, outputChannel)
-	} else {
-		this.handleEndOfRecordStream(inrecAndContext, outputChannel)
+
+		this.ingest(inrecAndContext)
+
+		if this.doIterativeStats {
+			// The input record is modified in this case, with new fields appended
+			outputChannel <- inrecAndContext
+		}
+		// if this.doHoldAndFit, the input record is held by the ingestor
+
+	} else { // end of record stream
+		if !this.doIterativeStats { // in the iterative case, already emitted per-record
+			if this.doHoldAndFit {
+				this.fit(outputChannel)
+			} else {
+				this.emit(outputChannel, &inrecAndContext.Context)
+			}
+		}
+		outputChannel <- inrecAndContext // end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerStats2) handleInputRecord(
+func (this *TransformerStats2) ingest(
 	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 
-// ----------------------------------------------------------------
-//		mapper_stats2_ingest(pinrec, pctx, this)
-
-//		if (this.doIterativeStats) {
-//			// The input record is modified in this case, with new fields appended
-//			return sllv_single(pinrec)
-//		} else if (this.doHoldAndFit) {
-//			// The input record is held by the ingestor
-//			return nil
-//		} else {
-//			lrec_free(pinrec)
-//			return nil
-//		}
-// ----------------------------------------------------------------
-
 	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
 	// then groupingKey is the string "circle,blue".
-	groupingKey, groupByFieldValues, ok := inrec.GetSelectedValuesAndJoined(
-		this.groupByFieldNameList,
-	)
+	groupingKey, groupByFieldValues, ok := inrec.GetSelectedValuesAndJoined(this.groupByFieldNameList)
 	if !ok {
 		return
 	}
 
-	level2 := this.namedAccumulators.Get(groupingKey)
-	if level2 == nil {
-		level2 = lib.NewOrderedMap()
-		this.namedAccumulators.Put(groupingKey, level2)
-		// E.g. if grouping by "color" and "shape", and the current record has
-		// color=blue, shape=circle, then groupByFieldValues is the array
-		// ["blue", "circle"].
-		this.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
+	this.groupingKeysToGroupByFieldValues.Put(groupingKey, groupByFieldValues)
+
+	groupToValueFields := this.namedAccumulators.Get(groupingKey)
+	if groupToValueFields == nil {
+		groupToValueFields = lib.NewOrderedMap()
+		this.namedAccumulators.Put(groupingKey, groupToValueFields)
 	}
-	for _, valueFieldName := range this.valueFieldNameList {
-		valueFieldValue := inrec.Get(valueFieldName)
-		if valueFieldValue == nil {
+
+	if this.doHoldAndFit { // Retain the input record in memory, for fitting and delivery at end of stream
+		groupToRecords := this.recordGroups.Get(groupingKey)
+		if groupToRecords == nil {
+			groupToRecords = list.New()
+			this.recordGroups.Put(groupingKey, groupToRecords)
+		}
+		groupToRecords.(*list.List).PushBack(inrecAndContext)
+	}
+
+	// for [["x","y"]]
+	n := len(this.valueFieldNameList)
+	for i := 0; i < n; i += 2 {
+		valueFieldName1 := this.valueFieldNameList[i]
+		valueFieldName2 := this.valueFieldNameList[i+1]
+
+		key := valueFieldName1 + "," + valueFieldName2
+
+		valueFieldsToAccumulator := groupToValueFields.(*lib.OrderedMap).Get(key)
+		if valueFieldsToAccumulator == nil {
+			valueFieldsToAccumulator = lib.NewOrderedMap()
+			groupToValueFields.(*lib.OrderedMap).Put(key, valueFieldsToAccumulator)
+		}
+
+		mval1 := inrec.Get(valueFieldName1)
+		mval2 := inrec.Get(valueFieldName2)
+		if mval1 == nil || mval2 == nil { // Key absent in current record
 			continue
 		}
-		level3 := level2.(*lib.OrderedMap).Get(valueFieldName)
-		if level3 == nil {
-			level3 = lib.NewOrderedMap()
-			level2.(*lib.OrderedMap).Put(valueFieldName, level3)
+		if mval1.IsVoid() || mval2.IsVoid() { // Key present in current record but with empty value
+			continue
 		}
-		for _, accumulatorName := range this.accumulatorNameList {
-			namedAccumulator := level3.(*lib.OrderedMap).Get(accumulatorName)
-			if namedAccumulator == nil {
-				namedAccumulator = this.accumulatorFactory.MakeNamedAccumulator(
-					accumulatorName,
-					groupingKey,
-					valueFieldName, // TODO
-					valueFieldName,
-				)
-				level3.(*lib.OrderedMap).Put(accumulatorName, namedAccumulator)
-			}
-			// TODO
-			namedAccumulator.(*utils.Stats2NamedAccumulator).Ingest(valueFieldValue, valueFieldValue)
-		}
-	}
 
-	if this.doIterativeStats {
-		this.emitIntoOutputRecord(
-			inrecAndContext.Record,
-			groupByFieldValues,
-			level2.(*lib.OrderedMap),
-			inrec,
-		)
-		outputChannel <- inrecAndContext
+		// for ["corr", "cov"]
+		for _, accumulatorName := range this.accumulatorNameList {
+			accumulator := valueFieldsToAccumulator.(*lib.OrderedMap).Get(accumulatorName)
+			if accumulator == nil {
+				accumulator = this.accumulatorFactory.Make(
+					valueFieldName1,
+					valueFieldName2,
+					accumulatorName,
+					this.doVerbose,
+				)
+				if accumulator == nil {
+					fmt.Fprintf(os.Stderr, "%s %s: accumulator \"%s\" not found.\n",
+						lib.MlrExeName(), verbNameStats2, accumulatorName,
+					)
+					os.Exit(1)
+				}
+				valueFieldsToAccumulator.(*lib.OrderedMap).Put(accumulatorName, accumulator)
+			}
+			accumulator.(utils.IStats2Accumulator).Ingest(
+				mval1.GetNumericToFloatValueOrDie(),
+				mval2.GetNumericToFloatValueOrDie(),
+			)
+		}
+
+		if this.doIterativeStats {
+			this.populateRecord(
+				inrecAndContext.Record,
+				valueFieldName1,
+				valueFieldName2,
+				valueFieldsToAccumulator.(*lib.OrderedMap),
+			)
+		}
 	}
 }
 
-//// ----------------------------------------------------------------
-//static void mapper_stats2_ingest(lrec_t* pinrec, context_t* pctx, mapper_stats2_state_t* this) {
-//	// ["s", "t"]
-//	slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec, this.pgroup_by_field_names)
-//	if (pgroup_by_field_values == nil) {
-//		return
-//	}
-//
-//	lhms2v_t* pgroup_to_acc_field = lhmslv_get(this.acc_groups, pgroup_by_field_values)
-//	if (pgroup_to_acc_field == nil) {
-//		pgroup_to_acc_field = lhms2v_alloc()
-//		lhmslv_put(this.acc_groups, slls_copy(pgroup_by_field_values), pgroup_to_acc_field, FREE_ENTRY_KEY)
-//	}
-//
-//	if (this.doHoldAndFit) { // Retain the input record in memory, for fitting and delivery at end of stream
-//		sllv_t* group_to_records = lhmslv_get(this.record_groups, pgroup_by_field_values)
-//		if (group_to_records == nil) {
-//			group_to_records = sllv_alloc()
-//			lhmslv_put(this.record_groups, slls_copy(pgroup_by_field_values), group_to_records, FREE_ENTRY_KEY)
-//		}
-//		sllv_append(group_to_records, pinrec)
-//	}
-//
-//	// for [["x","y"]]
-//	int n = this.pvalue_field_name_pairs.length
-//	for (int i = 0; i < n; i += 2) {
-//		char* value_field_name_1 = this.pvalue_field_name_pairs.strings[i]
-//		char* value_field_name_2 = this.pvalue_field_name_pairs.strings[i+1]
-//
-//		lhmsv_t* pacc_fields_to_acc_state = lhms2v_get(pgroup_to_acc_field, value_field_name_1, value_field_name_2)
-//		if (pacc_fields_to_acc_state == nil) {
-//			pacc_fields_to_acc_state = lhmsv_alloc()
-//			lhms2v_put(pgroup_to_acc_field, value_field_name_1, value_field_name_2, pacc_fields_to_acc_state, NO_FREE)
-//		}
-//
-//		char* sval1 = lrec_get(pinrec, value_field_name_1)
-//		char* sval2 = lrec_get(pinrec, value_field_name_2)
-//		if (sval1 == nil) // Key not present
-//			continue
-//		if (*sval1 == 0) // Key present with null value
-//			continue
-//		if (sval2 == nil) // Key not present
-//			continue
-//		if (*sval2 == 0) // Key present with null value
-//			continue
-//
-//		// for ["corr", "cov"]
-//		sllse_t* pc = this.paccumulator_names.phead
-//		for ( ; pc != nil; pc = pc.pnext) {
-//			char* stats2_acc_name = pc.value
-//			stats2_acc_t* pstats2_acc = lhmsv_get(pacc_fields_to_acc_state, stats2_acc_name)
-//			if (pstats2_acc == nil) {
-//				pstats2_acc = make_stats2(value_field_name_1, value_field_name_2, stats2_acc_name, this.do_verbose)
-//				if (pstats2_acc == nil) {
-//					fprintf(stderr, "mlr stats2: accumulator \"%s\" not found.\n",
-//						stats2_acc_name)
-//					exit(1)
-//				}
-//				lhmsv_put(pacc_fields_to_acc_state, stats2_acc_name, pstats2_acc, NO_FREE)
-//			}
-//			if (sval1 == nil || sval2 == nil)
-//				continue
-//
-//			double dval1 = mlr_double_from_string_or_die(sval1)
-//			double dval2 = mlr_double_from_string_or_die(sval2)
-//			pstats2_acc.pingest_func(pstats2_acc.pvstate, dval1, dval2)
-//		}
-//		if (this.doIterativeStats) {
-//			mapper_stats2_emit(this, pinrec, value_field_name_1, value_field_name_2,
-//				pacc_fields_to_acc_state)
-//		}
-//	}
-//}
-
 // ----------------------------------------------------------------
-func (this *TransformerStats2) handleEndOfRecordStream(
-	inrecAndContext *types.RecordAndContext,
+func (this *TransformerStats2) emit(
+	outputChannel chan<- *types.RecordAndContext,
+	context *types.Context,
+) {
+	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		outrec := types.NewMlrmapAsRecord()
+
+		// Add in a=s,b=t fields:
+		groupingKey := pa.Key
+		groupByFieldValues := this.groupingKeysToGroupByFieldValues.Get(groupingKey).([]*types.Mlrval)
+		for i, groupByFieldName := range this.groupByFieldNameList {
+			outrec.PutReference(groupByFieldName, groupByFieldValues[i].Copy())
+		}
+
+		// Add in fields such as x_y_corr, etc.
+		groupToValueFields := this.namedAccumulators.Get(groupingKey).(*lib.OrderedMap)
+
+		// For "x","y"
+		for pc := groupToValueFields.Head; pc != nil; pc = pc.Next {
+
+			// xxx temp! use "\001" or somesuch, and make a split/join func pair
+			pairs := strings.Split(pc.Key, ",")
+			valueFieldName1 := pairs[0]
+			valueFieldName2 := pairs[1]
+			valueFieldsToAccumulator := pc.Value.(*lib.OrderedMap)
+
+			this.populateRecord(outrec, valueFieldName1, valueFieldName2, valueFieldsToAccumulator)
+
+			// For "corr", "linreg"
+			for pd := valueFieldsToAccumulator.Head; pd != nil; pd = pd.Next {
+				accumulator := pd.Value.(utils.IStats2Accumulator)
+				accumulator.Populate(valueFieldName1, valueFieldName2, outrec)
+			}
+		}
+
+		outputChannel <- types.NewRecordAndContext(outrec, context)
+	}
+}
+
+func (this *TransformerStats2) populateRecord(
+	outrec *types.Mlrmap,
+	valueFieldName1 string,
+	valueFieldName2 string,
+	valueFieldsToAccumulator *lib.OrderedMap,
+) {
+	// For "corr", "linreg"
+	for pe := valueFieldsToAccumulator.Head; pe != nil; pe = pe.Next {
+		accumulator := pe.Value.(utils.IStats2Accumulator)
+		accumulator.Populate(valueFieldName1, valueFieldName2, outrec)
+	}
+}
+
+func (this *TransformerStats2) fit(
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	if this.doIterativeStats {
-		outputChannel <- inrecAndContext // end-of-stream marker
-		return
-	}
-
 	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		groupingKey := pa.Key
-		level2 := pa.Value.(*lib.OrderedMap)
-		groupByFieldValues := this.groupingKeysToGroupByFieldValues[groupingKey]
+		groupToValueFields := pa.Value.(*lib.OrderedMap)
+		recordsAndContexts := this.recordGroups.Get(groupingKey).(*list.List)
 
-		newrec := types.NewMlrmapAsRecord()
+		for recordsAndContexts.Front() != nil {
+			recordAndContext := recordsAndContexts.Remove(recordsAndContexts.Front()).(*types.RecordAndContext)
+			record := recordAndContext.Record
 
-		this.emitIntoOutputRecord(
-			inrecAndContext.Record,
-			groupByFieldValues,
-			level2,
-			newrec,
-		)
+			// For "x","y"
+			for pb := groupToValueFields.Head; pb != nil; pb = pb.Next {
+				// xxx temp! use "\001" or somesuch, and make a split/join func pair
+				pairs := strings.Split(pb.Key, ",")
+				valueFieldName1 := pairs[0]
+				valueFieldName2 := pairs[1]
+				valueFieldsToAccumulator := pb.Value.(*lib.OrderedMap)
 
-		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
-	}
+				// For "linreg-ols", "logireg"
+				for pc := valueFieldsToAccumulator.Head; pc != nil; pc = pc.Next {
+					accumulator := pc.Value.(utils.IStats2Accumulator)
+					if accumulator.Fit != nil { // E.g. R2 has no non-trivial fit-function
+						mval1 := record.Get(valueFieldName1)
+						mval2 := record.Get(valueFieldName2)
+						if mval1 != nil && mval2 != nil {
+							accumulator.Fit(
+								mval1.GetNumericToFloatValueOrDie(),
+								mval2.GetNumericToFloatValueOrDie(),
+								record,
+							)
+						}
+					}
+				}
+			}
 
-	outputChannel <- inrecAndContext // end-of-stream marker
-}
-
-//	if (!this.doIterativeStats) {
-//		if (!this.doHoldAndFit) {
-//			return mapper_stats2_emit_all(this)
-//		} else {
-//			return mapper_stats2_fit_all(this)
-//		}
-//	} else {
-//		return nil
-//	}
-
-// ----------------------------------------------------------------
-// TODO: comment
-func (this *TransformerStats2) emitIntoOutputRecord(
-	inrec *types.Mlrmap,
-	groupByFieldValues []*types.Mlrval,
-	level2accumulators *lib.OrderedMap,
-	outrec *types.Mlrmap,
-) {
-	for i, groupByFieldName := range this.groupByFieldNameList {
-		outrec.PutCopy(groupByFieldName, groupByFieldValues[i])
-	}
-
-	for pb := level2accumulators.Head; pb != nil; pb = pb.Next {
-		level3 := pb.Value.(*lib.OrderedMap)
-		for pc := level3.Head; pc != nil; pc = pc.Next {
-			namedAccumulator := pc.Value.(*utils.Stats2NamedAccumulator)
-			key, value := namedAccumulator.Emit()
-			outrec.PutCopy(key, &value)
+			outputChannel <- recordAndContext
 		}
 	}
 }
-
-//// ----------------------------------------------------------------
-//static sllv_t* mapper_stats2_emit_all(mapper_stats2_state_t* this) {
-//	sllv_t* poutrecs = sllv_alloc()
-//
-//	for (lhmslve_t* pa = this.acc_groups.phead; pa != nil; pa = pa.pnext) {
-//		lrec_t* poutrec = lrec_unbacked_alloc()
-//
-//		// Add in a=s,b=t fields:
-//		slls_t* pgroup_by_field_values = pa.key
-//		sllse_t* pb = this.pgroup_by_field_names.phead
-//		sllse_t* pc =         pgroup_by_field_values.phead
-//		for ( ; pb != nil && pc != nil; pb = pb.pnext, pc = pc.pnext) {
-//			lrec_put(poutrec, pb.value, pc.value, 0)
-//		}
-//
-//		// Add in fields such as x_y_corr, etc.
-//		lhms2v_t* pgroup_to_acc_field = pa.pvvalue
-//
-//		// For "x","y"
-//		for (lhms2ve_t* pd = pgroup_to_acc_field.phead; pd != nil; pd = pd.pnext) {
-//			char*    value_field_name_1 = pd.key1
-//			char*    value_field_name_2 = pd.key2
-//			lhmsv_t* pacc_fields_to_acc_state = pd.pvvalue
-//
-//			mapper_stats2_emit(this, poutrec, value_field_name_1, value_field_name_2,
-//				pacc_fields_to_acc_state)
-//
-//			// For "corr", "linreg"
-//			for (lhmsve_t* pe = pacc_fields_to_acc_state.phead; pe != nil; pe = pe.pnext) {
-//				stats2_acc_t* pstats2_acc = pe.pvvalue
-//				pstats2_acc.pemit_func(pstats2_acc.pvstate, value_field_name_1, value_field_name_2, poutrec)
-//			}
-//		}
-//
-//		sllv_append(poutrecs, poutrec)
-//	}
-//	sllv_append(poutrecs, nil)
-//	return poutrecs
-//}
-
-//static void mapper_stats2_emit(mapper_stats2_state_t* this, lrec_t* poutrec,
-//	char* value_field_name_1, char* value_field_name_2, lhmsv_t* pacc_fields_to_acc_state)
-//{
-//	// For "corr", "linreg"
-//	for (lhmsve_t* pe = pacc_fields_to_acc_state.phead; pe != nil; pe = pe.pnext) {
-//		stats2_acc_t* pstats2_acc = pe.pvvalue
-//		pstats2_acc.pemit_func(pstats2_acc.pvstate, value_field_name_1, value_field_name_2, poutrec)
-//	}
-//}
-
-//// ----------------------------------------------------------------
-//static sllv_t* mapper_stats2_fit_all(mapper_stats2_state_t* this) {
-//	sllv_t* poutrecs = sllv_alloc()
-//
-//	for (lhmslve_t* pa = this.acc_groups.phead; pa != nil; pa = pa.pnext) {
-//		slls_t* pgroup_by_field_values = pa.key
-//		sllv_t* precords = lhmslv_get(this.record_groups, pgroup_by_field_values)
-//
-//		while (precords.phead) {
-//			lrec_t* prec = sllv_pop(precords)
-//
-//			lhms2v_t* pgroup_to_acc_field = pa.pvvalue
-//
-//			// For "x","y"
-//			for (lhms2ve_t* pd = pgroup_to_acc_field.phead; pd != nil; pd = pd.pnext) {
-//				char*    value_field_name_1 = pd.key1
-//				char*    value_field_name_2 = pd.key2
-//				lhmsv_t* pacc_fields_to_acc_state = pd.pvvalue
-//
-//				// For "linreg-ols", "logireg"
-//				for (lhmsve_t* pe = pacc_fields_to_acc_state.phead; pe != nil; pe = pe.pnext) {
-//					stats2_acc_t* pstats2_acc = pe.pvvalue
-//					if (pstats2_acc.pfit_func != nil) {
-//						char* sx = lrec_get(prec, value_field_name_1)
-//						char* sy = lrec_get(prec, value_field_name_2)
-//						if (sx != nil && sy != nil) {
-//							double x = mlr_double_from_string_or_die(sx)
-//							double y = mlr_double_from_string_or_die(sy)
-//							pstats2_acc.pfit_func(pstats2_acc.pvstate, x, y, prec)
-//						}
-//					}
-//				}
-//			}
-//
-//			sllv_append(poutrecs, prec)
-//		}
-//	}
-//	sllv_append(poutrecs, nil)
-//	return poutrecs
-//}
