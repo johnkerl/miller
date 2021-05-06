@@ -1,8 +1,8 @@
 ================================================================
 TOP OF LIST:
 
-* restore go fmt ./... note
-* mongo examples to doc :D
+! mrpl :h (and miller --help-xxx): substring ...
+! MlrvalPointerFromString -> NewMlrvalPointerFromString et al.
 
 * blocker: regexes
   o finish stats1 -r
@@ -12,7 +12,7 @@ TOP OF LIST:
 
 * blocker: remaining verbs:
   o format-values
-  o merge-fields stats2
+  o merge-fields
 
 * blocker: remaining functions:
   o system
@@ -595,3 +595,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * docs nest simplers now that we have getoptish
 * doc for DSL hostname/os/version functions
 ? ENV as entire string-string map at RHS/LHS -- ?
+* mongo examples to doc :D

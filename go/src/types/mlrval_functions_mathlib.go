@@ -5,89 +5,10 @@
 package types
 
 import (
-	"fmt"
 	"math"
-	"os"
+
+	"miller/src/lib"
 )
-
-// ----------------------------------------------------------------
-// Some wrappers around things which aren't one-liners from math.*.
-
-func mlrSgn(a float64) float64 {
-	if a > 0 {
-		return 1.0
-	} else if a < 0 {
-		return -1.0
-	} else if a == 0 {
-		return 0.0
-	} else {
-		return math.NaN()
-	}
-}
-
-// Normal cumulative distribution function, expressed in terms of erfc library
-// function (which is awkward, but exists).
-func mlrQnorm(x float64) float64 {
-	return 0.5 * math.Erfc(-x/math.Sqrt2)
-}
-
-// This is a tangent-following method not unlike Newton-Raphson:
-// * We can compute qnorm(y) = integral from -infinity to y of (1/sqrt(2pi)) exp(-t^2/2) dt.
-// * We can compute derivative of qnorm(y) = (1/sqrt(2pi)) exp(-y^2/2).
-// * We cannot explicitly compute invqnorm(y).
-// * If dx/dy = (1/sqrt(2pi)) exp(-y^2/2) then dy/dx = sqrt(2pi) exp(y^2/2).
-//
-// This means we *can* compute the derivative of invqnorm even though we
-// can't compute the function itself. So the essence of the method is to
-// follow the tangent line to form successive approximations: we have known function input x
-// and unknown function output y and initial guess y0.  At each step we find the intersection
-// of the tangent line at y_n with the vertical line at x, to find y_{n+1}. Specificall:
-//
-// * Even though we can't compute y = q^-1(x) we can compute x = q(y).
-// * Start with initial guess for y (y0 = 0.0 or y0 = x both are OK).
-// * Find x = q(y). Since q (and therefore q^-1) are 1-1, we're done if qnorm(invqnorm(x)) is small.
-// * Else iterate: using point-slope form, (y_{n+1} - y_n) / (x_{n+1} - x_n) = m = sqrt(2pi) exp(y_n^2/2).
-//   Here x_2 = x (the input) and x_1 = q(y_1).
-// * Solve for y_{n+1} and repeat.
-
-const INVQNORM_TOL float64 = 1e-9
-const INVQNORM_MAXITER int = 30
-
-func mlrInvqnorm(x float64) float64 {
-	// Initial approximation is linear. Starting with y0 = 0.0 works just as well.
-	y0 := x - 0.5
-	if x <= 0.0 {
-		return 0.0
-	}
-	if x >= 1.0 {
-		return 0.0
-	}
-
-	y := y0
-	niter := 0
-
-	for {
-
-		backx := mlrQnorm(y)
-		err := math.Abs(x - backx)
-		if err < INVQNORM_TOL {
-			break
-		}
-		if niter > INVQNORM_MAXITER {
-			fmt.Fprintf(os.Stderr,
-				"Miller: internal coding error: max iterations %d exceeded in invqnorm.\n",
-				INVQNORM_MAXITER,
-			)
-			os.Exit(1)
-		}
-		m := math.Sqrt2 * math.SqrtPi * math.Exp(y*y/2.0)
-		delta_y := m * (x - backx)
-		y += delta_y
-		niter++
-	}
-
-	return y
-}
 
 // ----------------------------------------------------------------
 func math_unary_f_i(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval {
@@ -126,13 +47,13 @@ func MlrvalErfc(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](inpu
 func MlrvalExp(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Exp) }
 func MlrvalExpm1(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Expm1) }
 func MlrvalFloor(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Floor) }
-func MlrvalInvqnorm(input1 *Mlrval) *Mlrval { return mudispo[input1.mvtype](input1, mlrInvqnorm) }
+func MlrvalInvqnorm(input1 *Mlrval) *Mlrval { return mudispo[input1.mvtype](input1, lib.Invqnorm) }
 func MlrvalLog(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Log) }
 func MlrvalLog10(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Log10) }
 func MlrvalLog1p(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Log1p) }
-func MlrvalQnorm(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, mlrQnorm) }
+func MlrvalQnorm(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, lib.Qnorm) }
 func MlrvalRound(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Round) }
-func MlrvalSgn(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, mlrSgn) }
+func MlrvalSgn(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, lib.Sgn) }
 func MlrvalSin(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Sin) }
 func MlrvalSinh(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Sinh) }
 func MlrvalSqrt(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Sqrt) }

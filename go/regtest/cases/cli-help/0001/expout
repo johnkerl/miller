@@ -740,6 +740,33 @@ Notes:
   In particular, 1 and 1.0 are distinct text for count and mode.
 * When there are mode ties, the first-encountered datum wins.
 ================================================================
+Usage: mlr stats2 [options]
+Computes bivariate statistics for one or more given field-name pairs,
+accumulated across the input record stream.
+-a {linreg-ols,corr,...}  Names of accumulators: one or more of:
+  linreg-ols Linear regression using ordinary least squares
+  linreg-pca Linear regression using principal component analysis
+  r2       Quality metric for linreg-ols (linreg-pca emits its own)
+  logireg  Logistic regression
+  corr     Sample correlation
+  cov      Sample covariance
+  covx     Sample-covariance matrix
+-f {a,b,c,d}   Value-field name-pairs on which to compute statistics.
+               There must be an even number of names.
+-g {e,f,g}     Optional group-by-field names.
+-v             Print additional output for linreg-pca.
+-s             Print iterative stats. Useful in tail -f contexts (in which
+               case please avoid pprint-format output since end of input
+               stream will never be seen).
+--fit          Rather than printing regression parameters, applies them to
+               the input data to compute new fit fields. All input records are
+               held in memory until end of input stream. Has effect only for
+               linreg-ols, linreg-pca, and logireg.
+Only one of -s or --fit may be used.
+Example: mlr stats2 -a linreg-pca -f x,y
+Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
+Example: mlr stats2 -a corr -f x,y
+================================================================
 Usage: mlr step [options]
 Computes values dependent on the previous record, optionally grouped by category.
 Options:

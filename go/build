@@ -45,3 +45,6 @@ if [ "$do_wips" = "true" ]; then
   mlr regtest $verbose regtest/cases-pending-go-port
 fi
 echo
+
+# Run the auto-formatter
+go fmt ./...
