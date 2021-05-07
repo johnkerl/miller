@@ -1602,8 +1602,17 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string
 func (this *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName string, o *os.File) bool {
 	builtinFunctionInfo := this.LookUp(functionName)
 	if builtinFunctionInfo == nil {
+		this.listBuiltinFunctionUsageApproximate(functionName, o)
 		return false
 	}
+	this.listBuiltinFunctionUsageExact(builtinFunctionInfo, o)
+	return true
+}
+
+func (this *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
+	builtinFunctionInfo *BuiltinFunctionInfo,
+	o *os.File,
+) {
 	lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
 	fmt.Fprintf(o, "%-s  (class=%s #args=%s) %s\n",
 		builtinFunctionInfo.name,
@@ -1611,7 +1620,18 @@ func (this *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName str
 		describeNargs(builtinFunctionInfo),
 		builtinFunctionInfo.help,
 	)
-	return true
+}
+
+func (this *BuiltinFunctionManager) listBuiltinFunctionUsageApproximate(
+	text string,
+	o *os.File,
+) {
+	fmt.Fprintf(o, "No exact match for \"%s\". Inexact matches:\n", text)
+	for _, builtinFunctionInfo := range *this.lookupTable {
+		if strings.Contains(builtinFunctionInfo.name, text) {
+			fmt.Fprintf(o, "  %s\n", builtinFunctionInfo.name)
+		}
+	}
 }
 
 func describeNargs(info *BuiltinFunctionInfo) string {

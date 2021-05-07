@@ -350,6 +350,7 @@ func ParseWriterOptions(
 
 	} else if args[argi] == "--onidx" {
 		writerOptions.OutputFileFormat = "nidx"
+		writerOptions.OFS = " "
 		argi += 1
 
 	} else if args[argi] == "--oxtab" {
@@ -520,6 +521,8 @@ func ParseReaderWriterOptions(
 	} else if args[argi] == "--nidx" {
 		readerOptions.InputFileFormat = "nidx"
 		writerOptions.OutputFileFormat = "nidx"
+		readerOptions.IFS = " "
+		writerOptions.OFS = " "
 		argi += 1
 
 		//	} else if args[argi] == "-T" {
@@ -555,6 +558,7 @@ func ParseReaderWriterOptions(
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "nidx"
+		writerOptions.OFS = " "
 		argi += 1
 	} else if args[argi] == "--c2j" {
 		readerOptions.InputFileFormat = "csv"
@@ -601,6 +605,7 @@ func ParseReaderWriterOptions(
 		readerOptions.IFS = "\t"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "nidx"
+		writerOptions.OFS = " "
 		argi += 1
 	} else if args[argi] == "--t2j" {
 		readerOptions.InputFileFormat = "csv"
@@ -648,6 +653,7 @@ func ParseReaderWriterOptions(
 	} else if args[argi] == "--d2n" {
 		readerOptions.InputFileFormat = "dkvp"
 		writerOptions.OutputFileFormat = "nidx"
+		writerOptions.OFS = " "
 		argi += 1
 	} else if args[argi] == "--d2j" {
 		readerOptions.InputFileFormat = "dkvp"
@@ -674,6 +680,7 @@ func ParseReaderWriterOptions(
 	} else if args[argi] == "--n2c" {
 		readerOptions.InputFileFormat = "nidx"
 		writerOptions.OutputFileFormat = "csv"
+		writerOptions.OFS = " "
 		writerOptions.ORS = "auto"
 		argi += 1
 	} else if args[argi] == "--n2t" {
@@ -745,49 +752,42 @@ func ParseReaderWriterOptions(
 		//		writerOptions.OutputFileFormat = "markdown";
 		//		argi += 1;
 		//
-		//	} else if args[argi] == "--p2c" {
-		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.IFS              = " ";
-		//		readerOptions.allow_repeat_ifs = true;
-		//		writerOptions.OutputFileFormat        = "csv";
-		//		writerOptions.ORS              = "auto";
-		//		argi += 1;
-		//	} else if args[argi] == "--p2t" {
-		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.IFS              = " ";
-		//		readerOptions.allow_repeat_ifs = true;
-		//		writerOptions.OutputFileFormat        = "csv";
-		//		writerOptions.ORS              = "auto";
-		//		writerOptions.OFS              = "\t";
-		//		argi += 1;
-		//	} else if args[argi] == "--p2d" {
-		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.IFS              = " ";
-		//		readerOptions.allow_repeat_ifs = true;
-		//		writerOptions.OutputFileFormat        = "dkvp";
-		//		argi += 1;
-		//	} else if args[argi] == "--p2n" {
-		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.IFS              = " ";
-		//		readerOptions.allow_repeat_ifs = true;
-		//		writerOptions.OutputFileFormat        = "nidx";
-		//		argi += 1;
-		//	} else if args[argi] == "--p2j" {
-		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.IFS              = " ";
-		//		readerOptions.allow_repeat_ifs = true;
-		//		writerOptions.OutputFileFormat = "json";
-		//		argi += 1;
-		//	} else if args[argi] == "--p2x" {
-		//		readerOptions.InputFileFormat        = "csvlite";
-		//		readerOptions.IFS              = " ";
-		//		readerOptions.allow_repeat_ifs = true;
-		//		writerOptions.OutputFileFormat        = "xtab";
-		//		argi += 1;
+	} else if args[argi] == "--p2c" {
+		readerOptions.InputFileFormat = "pprint"
+		readerOptions.IFS = " "
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		argi += 1
+	} else if args[argi] == "--p2t" {
+		readerOptions.InputFileFormat = "pprint"
+		readerOptions.IFS = " "
+		writerOptions.OutputFileFormat = "csv"
+		writerOptions.ORS = "auto"
+		writerOptions.OFS = "\t"
+		argi += 1
+	} else if args[argi] == "--p2d" {
+		readerOptions.InputFileFormat = "pprint"
+		readerOptions.IFS = " "
+		writerOptions.OutputFileFormat = "dkvp"
+		argi += 1
+	} else if args[argi] == "--p2n" {
+		readerOptions.InputFileFormat = "pprint"
+		readerOptions.IFS = " "
+		writerOptions.OutputFileFormat = "nidx"
+		argi += 1
+	} else if args[argi] == "--p2j" {
+		readerOptions.InputFileFormat = "pprint"
+		readerOptions.IFS = " "
+		writerOptions.OutputFileFormat = "json"
+		argi += 1
+	} else if args[argi] == "--p2x" {
+		readerOptions.InputFileFormat = "pprint"
+		readerOptions.IFS = " "
+		writerOptions.OutputFileFormat = "xtab"
+		argi += 1
 		//	} else if args[argi] == "--p2m" {
-		//		readerOptions.InputFileFormat        = "csvlite";
+		//		readerOptions.InputFileFormat        = "pprint";
 		//		readerOptions.IFS              = " ";
-		//		readerOptions.allow_repeat_ifs = true;
 		//		writerOptions.OutputFileFormat        = "markdown";
 		//		argi += 1;
 		//
