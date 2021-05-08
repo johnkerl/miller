@@ -2,6 +2,33 @@
 
 **Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON.**
 
+# What can Miller do for me?
+
+With Miller, you get to use named fields without needing to count positional
+indices, using familiar formats such as CSV, TSV, JSON, and
+positionally-indexed.  Then, on the fly, you can add new fields which are
+functions of existing fields, drop fields, sort, aggregate statistically,
+pretty-print, and more.
+
+![cover-art](./docs/coverart/cover-combined.png)
+
+* Miller operates on **key-value-pair data** while the familiar
+Unix tools operate on integer-indexed fields: if the natural data structure for
+the latter is the array, then Miller's natural data structure is the
+insertion-ordered hash map.
+
+* Miller handles a **variety of data formats**,
+including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
+(Miller can handle **positionally-indexed data** too!)
+
+# Getting started
+
+* [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)
+* [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
+* [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
+* [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
+* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
+
 # Build status
 
 [![Linux build status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
@@ -43,33 +70,6 @@ There's a good chance you can get Miller pre-built for your system:
 |Windows|`choco install miller`|
 
 See also [building from source](https://miller.readthedocs.io/en/latest/build.html).
-
-# What can Miller do for me?
-
-With Miller, you get to use named fields without needing to count positional
-indices, using familiar formats such as CSV, TSV, JSON, and
-positionally-indexed.  Then, on the fly, you can add new fields which are
-functions of existing fields, drop fields, sort, aggregate statistically,
-pretty-print, and more.
-
-![cover-art](./docs/coverart/cover-combined.png)
-
-* Miller operates on **key-value-pair data** while the familiar
-Unix tools operate on integer-indexed fields: if the natural data structure for
-the latter is the array, then Miller's natural data structure is the
-insertion-ordered hash map.
-
-* Miller handles a **variety of data formats**,
-including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
-(Miller can handle **positionally-indexed data** too!)
-
-# Getting started
-
-* [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)
-* [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
-* [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
-* [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
-* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
 
 # Features
 
