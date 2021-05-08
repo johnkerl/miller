@@ -1,6 +1,6 @@
 # What is Miller?
 
-**Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON.**
+**Miller is like awk, sed, cut, join, and sort for data formats such as CSV, TSV, tabular JSON and positionally-indexed.**
 
 # What can Miller do for me?
 
