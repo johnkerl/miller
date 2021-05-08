@@ -29,6 +29,13 @@ including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 * [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
 * [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
 
+# More documentation links
+
+* [**Full documentation**](https://miller.readthedocs.io/)
+* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
+* [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
+* [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+
 # Build status
 
 [![Linux build status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
@@ -42,6 +49,15 @@ including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 
 * Discussion forum: https://github.com/johnkerl/miller/discussions
 * Feature requests / bug reports: https://github.com/johnkerl/miller/issues
+
+# Contributors
+
+Thanks to all the fine people who help make Miller better by contributing commits/PRs! (I wish there
+were an equally fine way to honor all the fine people who contribute through issues and feature requests!)
+
+<a href="https://github.com/johnkerl/miller/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
+</a>
 
 # Distributions
 
@@ -119,19 +135,3 @@ system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
 * Not unlike `jq` (http://stedolan.github.io/jq/) for JSON, Miller is written
 in portable, modern C, with **zero runtime dependencies**. You can download or
 compile a single binary, `scp` it to a faraway machine, and expect it to work.
-
-# Contributors
-
-Thanks to all the fine people who help make Miller better by contributing commits/PRs! (I wish there
-were an equally fine way to honor all the fine people who contribute through issues and feature requests!)
-
-<a href="https://github.com/johnkerl/miller/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
-</a>
-
-# More documentation links
-
-* [**Full documentation**](https://miller.readthedocs.io/)
-* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
-* [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
-* [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
