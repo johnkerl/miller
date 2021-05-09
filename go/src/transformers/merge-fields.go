@@ -56,7 +56,6 @@ func transformerMergeFieldsUsage(
 	fmt.Fprintf(o, "-o {name}   Output field basename for -f/-r.\n")
 	fmt.Fprintf(o, "-k          Keep the input fields which contributed to the output statistics;\n")
 	fmt.Fprintf(o, "            the default is to omit them.\n")
-	fmt.Fprintf(o, "-F          Computes integerable things (e.g. count) in floating point.\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "String-valued data make sense unless arithmetic on them is required,\n")
 	fmt.Fprintf(o, "e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,\n")
@@ -327,13 +326,11 @@ func (this *TransformerMergeFields) transformByNameList(
 		}
 
 		if mvalue.IsEmpty() { // key present with empty value
-
 			if !this.keepInputFields {
 				inrec.Remove(valueFieldName)
 			}
 			continue
 		}
-
 
 		for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
 			accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
@@ -348,8 +345,7 @@ func (this *TransformerMergeFields) transformByNameList(
 	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 		key, value := accumulator.Emit()
-		// xxx pointerize
-		inrec.PutReference(key, &value)
+		inrec.PutReference(key, value)
 	}
 
 	outputChannel <- inrecAndContext
@@ -408,8 +404,7 @@ func (this *TransformerMergeFields) transformByNameRegex(
 	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 		key, value := accumulator.Emit()
-		// xxx pointerize
-		inrec.PutReference(key, &value)
+		inrec.PutReference(key, value)
 	}
 
 	outputChannel <- inrecAndContext
@@ -488,8 +483,7 @@ func (this *TransformerMergeFields) transformByCollapsing(
 	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 		key, value := accumulator.Emit()
-		// xxx pointerize
-		inrec.PutReference(key, &value)
+		inrec.PutReference(key, value)
 	}
 
 	outputChannel <- inrecAndContext
