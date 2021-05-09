@@ -1,0 +1,580 @@
+package transformers
+
+import (
+	"errors"
+	"fmt"
+	"os"
+	"strings"
+
+	"miller/src/cliutil"
+	"miller/src/lib"
+	"miller/src/transformers/utils"
+	"miller/src/transforming"
+	"miller/src/types"
+)
+
+// ----------------------------------------------------------------
+const verbNameMergeFields = "merge-fields"
+
+var MergeFieldsSetup = transforming.TransformerSetup{
+	Verb:         verbNameMergeFields,
+	UsageFunc:    transformerMergeFieldsUsage,
+	ParseCLIFunc: transformerMergeFieldsParseCLI,
+	IgnoresInput: false,
+}
+
+type mergeByType int
+
+const (
+	e_MERGE_BY_NAME_LIST mergeByType = iota
+	e_MERGE_BY_NAME_REGEX
+	e_MERGE_BY_COLLAPSING
+	e_MERGE_UNSPECIFIED
+)
+
+func transformerMergeFieldsUsage(
+	o *os.File,
+	doExit bool,
+	exitCode int,
+) {
+	argv0 := lib.MlrExeName()
+	verb := verbNameMergeFields
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
+	fmt.Fprintf(o, "Computes univariate statistics for each input record, accumulated across\n")
+	fmt.Fprintf(o, "specified fields.\n")
+	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-a {sum,count,...}  Names of accumulators. One or more of:\n")
+	utils.ListStats1Accumulators(o)
+	fmt.Fprintf(o, "-f {a,b,c}  Value-field names on which to compute statistics. Requires -o.\n")
+	fmt.Fprintf(o, "-r {a,b,c}  Regular expressions for value-field names on which to compute\n")
+	fmt.Fprintf(o, "            statistics. Requires -o.\n")
+	fmt.Fprintf(o, "-c {a,b,c}  Substrings for collapse mode. All fields which have the same names\n")
+	fmt.Fprintf(o, "            after removing substrings will be accumulated together. Please see\n")
+	fmt.Fprintf(o, "            examples below.\n")
+	fmt.Fprintf(o, "-i          Use interpolated percentiles, like R's type=7; default like type=1.\n")
+	fmt.Fprintf(o, "            Not sensical for string-valued fields.\n")
+	fmt.Fprintf(o, "-o {name}   Output field basename for -f/-r.\n")
+	fmt.Fprintf(o, "-k          Keep the input fields which contributed to the output statistics;\n")
+	fmt.Fprintf(o, "            the default is to omit them.\n")
+	fmt.Fprintf(o, "-F          Computes integerable things (e.g. count) in floating point.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "String-valued data make sense unless arithmetic on them is required,\n")
+	fmt.Fprintf(o, "e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,\n")
+	fmt.Fprintf(o, "numbers are less than strings.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Example input data: \"a_in_x=1,a_out_x=2,b_in_y=4,b_out_x=8\".\n")
+	fmt.Fprintf(o, "Example: %s %s -a sum,count -f a_in_x,a_out_x -o foo\n", argv0, verb)
+	fmt.Fprintf(o, "  produces \"b_in_y=4,b_out_x=8,foo_sum=3,foo_count=2\" since \"a_in_x,a_out_x\" are\n")
+	fmt.Fprintf(o, "  summed over.\n")
+	fmt.Fprintf(o, "Example: %s %s -a sum,count -r in_,out_ -o bar\n", argv0, verb)
+	fmt.Fprintf(o, "  produces \"bar_sum=15,bar_count=4\" since all four fields are summed over.\n")
+	fmt.Fprintf(o, "Example: %s %s -a sum,count -c in_,out_\n", argv0, verb)
+	fmt.Fprintf(o, "  produces \"a_x_sum=3,a_x_count=2,b_y_sum=4,b_y_count=1,b_x_sum=8,b_x_count=1\"\n")
+	fmt.Fprintf(o, "  since \"a_in_x\" and \"a_out_x\" both collapse to \"a_x\", \"b_in_y\" collapses to\n")
+	fmt.Fprintf(o, "  \"b_y\", and \"b_out_x\" collapses to \"b_x\".\n")
+
+	if doExit {
+		os.Exit(exitCode)
+	}
+}
+
+func transformerMergeFieldsParseCLI(
+	pargi *int,
+	argc int,
+	args []string,
+	_ *cliutil.TReaderOptions,
+	__ *cliutil.TWriterOptions,
+) transforming.IRecordTransformer {
+
+	// Skip the verb name from the current spot in the mlr command line
+	argi := *pargi
+	verb := args[argi]
+	argi++
+
+	accumulatorNameList := make([]string, 0)
+	valueFieldNameList := make([]string, 0)
+	outputFieldBasename := ""
+	doWhich := e_MERGE_UNSPECIFIED
+	keepInputFields := false
+	doInterpolatedPercentiles := false
+
+	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
+		opt := args[argi]
+		if !strings.HasPrefix(opt, "-") {
+			break // No more flag options to process
+		}
+		argi++
+
+		if opt == "-h" || opt == "--help" {
+			transformerMergeFieldsUsage(os.Stdout, true, 0)
+
+		} else if opt == "-a" {
+			accumulatorNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+
+		} else if opt == "-f" {
+			valueFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doWhich = e_MERGE_BY_NAME_LIST
+
+		} else if opt == "-r" {
+			valueFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doWhich = e_MERGE_BY_NAME_REGEX
+
+		} else if opt == "-c" {
+			valueFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doWhich = e_MERGE_BY_COLLAPSING
+
+		} else if opt == "-o" {
+			outputFieldBasename = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+
+		} else if opt == "-k" {
+			keepInputFields = true
+
+		} else if opt == "-i" {
+			doInterpolatedPercentiles = true
+
+		} else if opt == "-S" {
+			// No-op pass-through for backward compatibility with Miller 5
+
+		} else if opt == "-F" {
+			// No-op pass-through for backward compatibility with Miller 5
+
+		} else {
+			transformerMergeFieldsUsage(os.Stderr, true, 1)
+		}
+	}
+
+	// TODO: libify for use across verbs.
+	if len(accumulatorNameList) == 0 {
+		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", lib.MlrExeName(), verbNameMergeFields)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", lib.MlrExeName(), verbNameMergeFields)
+		os.Exit(1)
+	}
+	if len(valueFieldNameList) == 0 {
+		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", lib.MlrExeName(), verbNameMergeFields)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", lib.MlrExeName(), verbNameMergeFields)
+		os.Exit(1)
+	}
+	if outputFieldBasename == "" {
+		if doWhich == e_MERGE_BY_NAME_LIST || doWhich == e_MERGE_BY_NAME_REGEX {
+			transformerMergeFieldsUsage(os.Stderr, true, 1)
+		}
+	}
+
+	transformer, _ := NewTransformerMergeFields(
+		accumulatorNameList,
+		valueFieldNameList,
+		outputFieldBasename,
+		doWhich,
+		doInterpolatedPercentiles,
+		keepInputFields,
+	)
+
+	*pargi = argi
+	return transformer
+}
+
+// ----------------------------------------------------------------
+// Given: accumulate count,sum on values x,y group by a,b.
+//
+// Example input:       Example output:
+//   a b x y            a b x_count x_sum y_count y_sum
+//   s t 1 2            s t 2       6     2       8
+//   u v 3 4            u v 1       3     1       4
+//   s t 5 6            u w 1       7     1       9
+//   u w 7 9
+//
+// Multilevel hashmap structure:
+// {
+//   "s,t" : {                <--- group-by field names
+//     "x" : {                  <--- value field name
+//       "count" : Stats1CountAccumulator object,
+//       "sum"   : Stats1SumAccumulator  object
+//     },
+//     "y" : {
+//       "count" : Stats1CountAccumulator object,
+//       "sum"   : Stats1SumAccumulator  object
+//     },
+//   },
+//   "u,v" : {
+//     "x" : {
+//       "count" : Stats1CountAccumulator object,
+//       "sum"   : Stats1SumAccumulator  object
+//     },
+//     "y" : {
+//       "count" : Stats1CountAccumulator object,
+//       "sum"   : Stats1SumAccumulator  object
+//     },
+//   },
+//   "u,w" : {
+//     "x" : {
+//       "count" : Stats1CountAccumulator object,
+//       "sum"   : Stats1SumAccumulator  object
+//     },
+//     "y" : {
+//       "count" : Stats1CountAccumulator object,
+//       "sum"   : Stats1SumAccumulator  object
+//     },
+//   },
+// }
+
+type TransformerMergeFields struct {
+	// Input:
+	accumulatorNameList       []string
+	valueFieldNameList        []string
+	outputFieldBasename       string
+	doInterpolatedPercentiles bool
+	keepInputFields           bool
+
+	// State:
+	accumulatorFactory *utils.Stats1AccumulatorFactory
+
+	// TODO: update this copypasta
+	// Accumulators are indexed by
+	//   groupByFieldName . valueFieldName . accumulatorName . accumulator object
+	// This would be
+	//   namedAccumulators map[string]map[string]map[string]Stats1NamedAccumulator
+	// except we need maps that preserve insertion order.
+	namedAccumulators *lib.OrderedMap
+
+	groupingKeysToGroupByFieldValues map[string][]*types.Mlrval
+
+	recordTransformerFunc transforming.RecordTransformerFunc
+}
+
+func NewTransformerMergeFields(
+	accumulatorNameList []string,
+	valueFieldNameList []string,
+	outputFieldBasename string,
+	doWhich mergeByType,
+	doInterpolatedPercentiles bool,
+	keepInputFields bool,
+) (*TransformerMergeFields, error) {
+	for _, name := range accumulatorNameList {
+		if !utils.ValidateStats1AccumulatorName(name) {
+			return nil, errors.New(
+				fmt.Sprintf(
+					"%s %s: accumulator \"%s\" not found.\n",
+					lib.MlrExeName(), verbNameMergeFields, name,
+				),
+			)
+		}
+	}
+
+	//	this.pvalue_field_regexes = sllv_alloc()
+	//	for (sllse_t* pa = pvalue_field_names.phead; pa != nil; pa = pa.Next) {
+	//		char* value_field_name = pa.value
+	//		regex_t* pvalue_field_regex = mlr_malloc_or_die(sizeof(regex_t))
+	//		regcomp_or_die(pvalue_field_regex, value_field_name, 0)
+	//		sllv_append(this.pvalue_field_regexes, pvalue_field_regex)
+	//	}
+	//	pmapper.pprocess_func =
+	//		(doWhich == MERGE_BY_NAME_LIST) ? mapper_merge_fields_process_by_name_list :
+	//		(doWhich == MERGE_BY_NAME_REGEX) ? mapper_merge_fields_process_by_name_regex :
+	//		mapper_merge_fields_process_by_collapsing
+
+	this := &TransformerMergeFields{
+		accumulatorNameList:              accumulatorNameList,
+		valueFieldNameList:               valueFieldNameList,
+		outputFieldBasename:              outputFieldBasename,
+		doInterpolatedPercentiles:        doInterpolatedPercentiles,
+		keepInputFields:                  keepInputFields,
+		accumulatorFactory:               utils.NewStats1AccumulatorFactory(),
+		namedAccumulators:                lib.NewOrderedMap(),
+		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
+	}
+
+	if doWhich == e_MERGE_BY_NAME_LIST {
+		this.recordTransformerFunc = this.transformByNameList
+	} else if doWhich == e_MERGE_BY_NAME_REGEX {
+		this.recordTransformerFunc = this.transformByNameRegex
+	} else if doWhich == e_MERGE_BY_COLLAPSING {
+		this.recordTransformerFunc = this.transformByCollapsing
+	} else {
+		lib.InternalCodingErrorIf(true)
+	}
+
+	return this, nil
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerMergeFields) Transform(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	this.recordTransformerFunc(inrecAndContext, outputChannel)
+}
+
+// ----------------------------------------------------------------
+//func (this *TransformerMergeFields) handleInputRecord(
+//inrecAndContext *types.RecordAndContext,
+//outputChannel chan<- *types.RecordAndContext,
+//) {
+//	inrec := inrecAndContext.Record
+//
+//	// TODO: make a function-pointer variant for non-iterative which doesn't get the
+//	// unnecessary groupByFieldValues.
+//
+//	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
+//	// then groupingKey is the string "circle,blue".
+//	groupingKey, groupByFieldValues, ok := inrec.GetSelectedValuesAndJoined(
+//		this.groupByFieldNameList,
+//	)
+//	if !ok {
+//		return
+//	}
+//
+//	level2 := this.namedAccumulators.Get(groupingKey)
+//	if level2 == nil {
+//		level2 = lib.NewOrderedMap()
+//		this.namedAccumulators.Put(groupingKey, level2)
+//		// E.g. if grouping by "color" and "shape", and the current record has
+//		// color=blue, shape=circle, then groupByFieldValues is the array
+//		// ["blue", "circle"].
+//		this.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
+//	}
+//	for _, valueFieldName := range this.valueFieldNameList {
+//		valueFieldValue := inrec.Get(valueFieldName)
+//		if valueFieldValue == nil {
+//			continue
+//		}
+//		level3 := level2.(*lib.OrderedMap).Get(valueFieldName)
+//		if level3 == nil {
+//			level3 = lib.NewOrderedMap()
+//			level2.(*lib.OrderedMap).Put(valueFieldName, level3)
+//		}
+//		for _, accumulatorName := range this.accumulatorNameList {
+//			namedAccumulator := level3.(*lib.OrderedMap).Get(accumulatorName)
+//			if namedAccumulator == nil {
+//				namedAccumulator = this.accumulatorFactory.MakeNamedAccumulator(
+//					accumulatorName,
+//					groupingKey,
+//					valueFieldName,
+//					this.doInterpolatedPercentiles,
+//				)
+//				level3.(*lib.OrderedMap).Put(accumulatorName, namedAccumulator)
+//			}
+//			namedAccumulator.(*utils.Stats1NamedAccumulator).Ingest(valueFieldValue)
+//		}
+//	}
+//
+//	if this.doIterativeStats {
+//		this.emitIntoOutputRecord(
+//			inrecAndContext.Record,
+//			groupByFieldValues,
+//			level2.(*lib.OrderedMap),
+//			inrec,
+//		)
+//		outputChannel <- inrecAndContext
+//	}
+//}
+
+// ----------------------------------------------------------------
+// TODO: comment
+//func (this *TransformerMergeFields) emitIntoOutputRecord(
+//inrec *types.Mlrmap,
+//groupByFieldValues []*types.Mlrval,
+//level2accumulators *lib.OrderedMap,
+//outrec *types.Mlrmap,
+//) {
+//	for i, groupByFieldName := range this.groupByFieldNameList {
+//		outrec.PutCopy(groupByFieldName, groupByFieldValues[i])
+//	}
+//
+//	for pb := level2accumulators.Head; pb != nil; pb = pb.Next {
+//		level3 := pb.Value.(*lib.OrderedMap)
+//		for pc := level3.Head; pc != nil; pc = pc.Next {
+//			namedAccumulator := pc.Value.(*utils.Stats1NamedAccumulator)
+//			key, value := namedAccumulator.Emit()
+//			outrec.PutCopy(key, &value)
+//		}
+//	}
+//}
+
+// ----------------------------------------------------------------
+func (this *TransformerMergeFields) transformByNameList(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	if !inrecAndContext.EndOfStream {
+		outputChannel <- inrecAndContext // end-of-stream marker
+	}
+
+	inrec := inrecAndContext.Record
+
+	// TODO: make accumulator.Reset()
+	//	lhmsv_t* pinaccs = lhmsv_alloc()
+
+	//	make_stats1_accs(this.outputFieldBasename, this.paccumulator_names,
+	//	    this.do_interpolated_percentiles, pinaccs)
+
+	for _, valueFieldName := range this.valueFieldNameList {
+		mvalue := inrec.Get(valueFieldName)
+		if mvalue == nil { // key not present
+			continue
+		}
+
+		if mvalue.IsEmpty() { // key present with empty value
+
+			if !this.keepInputFields {
+				inrec.Remove(valueFieldName)
+			}
+			continue
+		}
+
+		//		for (lhmsve_t* pc = pinaccs.phead; pc != nil; pc = pc.Next) {
+		//			stats1_acc_t* accumulator = pc.pvvalue
+		//			accumulator.Ingest(mvalue)
+		//			accumulator.Emit(this.outputFieldBasename, acc_name, true, inrec)
+		//		}
+
+		if !this.keepInputFields {
+			inrec.Remove(valueFieldName)
+		}
+	}
+
+	outputChannel <- inrecAndContext
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerMergeFields) transformByNameRegex(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	if !inrecAndContext.EndOfStream {
+		outputChannel <- inrecAndContext // end-of-stream marker
+	}
+
+	inrec := inrecAndContext.Record
+
+	//	lhmsv_t* pinaccs = lhmsv_alloc()
+
+	//	make_stats1_accs(this.outputFieldBasename, this.paccumulator_names,
+	//	    this.do_interpolated_percentiles, pinaccs)
+
+	for pb := inrec.Head; pb != nil; /* increment inside loop*/ {
+		//		valueFieldName := pb.Key
+		matched := false
+
+		//		for (sllve_t* pc = this.pvalue_field_regexes.phead; pc != nil && !matched; pc = pc.Next) {
+		//			regex_t* pvalue_field_regex = pc.pvvalue
+		//			matched = regmatch_or_die(pvalue_field_regex, valueFieldName, 0, nil)
+		//			if (matched) {
+		//				mvalue := inrec.Get(valueFieldName)
+		//				if mvalue != nil { // Key present
+		//					for (lhmsve_t* pd = pinaccs.phead; pd != nil; pd = pd.Next) {
+		//						stats1_acc_t* accumulator = pd.pvvalue
+		//						accumulator.Ingest(mvalue)
+		//					}
+		//					if !this.keepInputFields {
+		//						// We are modifying the lrec while iterating over it.
+		//						next := pb.Next
+		//						inrec.Unlink(pb)
+		//						pb = next
+		//					} else {
+		//						pb = pb.Next
+		//					}
+		//				} else {
+		//					pb = pb.Next
+		//				}
+		//			}
+		//		}
+
+		if !matched {
+			pb = pb.Next
+		}
+	}
+
+	//	for (lhmsve_t* pz = poutaccs.phead; pz != nil; pz = pz.Next) {
+	//		char* acc_name = pz.key
+	//		stats1_acc_t* accumulator = pz.pvvalue
+	//		accumulator.Emit(this.outputFieldBasename, acc_name, true, inrec)
+	//	}
+
+	outputChannel <- inrecAndContext
+}
+
+// ----------------------------------------------------------------
+// mlr merge-fields -c in_,out_ -a sum
+// a_in_x  1     a_sum_x 3
+// a_out_x 2     b_sum_y 4
+// b_in_y  4     b_sum_x 8
+// b_out_x 8
+
+func (this *TransformerMergeFields) transformByCollapsing(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	if !inrecAndContext.EndOfStream {
+		outputChannel <- inrecAndContext // end-of-stream marker
+	}
+
+	inrec := inrecAndContext.Record
+
+	//	lhmsv_t* short_names_to_in_acc_maps = lhmsv_alloc()
+
+	for pa := inrec.Head; pa != nil; /* increment inside loop */ {
+		//		char* valueFieldName = pa.key
+		matched := false
+		//		for (sllve_t* pb = this.pvalue_field_regexes.phead; pb != nil && !matched; pb = pb.Next) {
+		//			regex_t* pvalue_field_regex = pb.pvvalue
+		//			char* short_name = regex_sub(valueFieldName, pvalue_field_regex, this.psb, "", &matched, nil)
+		//			if (matched) {
+		//				lhmsv_t* in_acc_map_for_short_name = lhmsv_get(short_names_to_in_acc_maps, short_name)
+		//				if (out_acc_map_for_short_name == nil) { // First such
+		//
+		//					in_acc_map_for_short_name = lhmsv_alloc()
+		//					out_acc_map_for_short_name = lhmsv_alloc()
+		//
+		//					make_stats1_accs(short_name, this.paccumulator_names,
+		//						this.allow_int_float, this.do_interpolated_percentiles,
+		//						in_acc_map_for_short_name, out_acc_map_for_short_name)
+		//
+		//					lhmsv_put(short_names_to_in_acc_maps, mlr_strdup_or_die(short_name), in_acc_map_for_short_name)
+		//				}
+		//
+		//				mvalue := inrec.Get(valueFieldName)
+		//				if (mvalue != nil) { // Key present
+		//
+		//					if (*value_field_sval != 0) { // Key present with non-null value
+		//						for (lhmsve_t* pd = in_acc_map_for_short_name.phead; pd != nil; pd = pd.Next) {
+		//							stats1_acc_t* accumulator = pd.pvvalue
+		//
+		//							int have_dval = false
+		//							int have_nval = false
+		//							double value_field_dval = -999.0
+		//							mv_t   value_field_nval = mv_absent()
+		//
+		//							accumulator.Ingest(mvalue)
+		//						}
+		//					}
+		//
+		//					if (!this.keepInputFields) {
+		//						// We are modifying the lrec while iterating over it.
+		//						next := pa.Next
+		//						inrec.Unlink(pa)
+		//						pa = next
+		//					} else {
+		//						pa = pa.Next
+		//					}
+		//				} else {
+		//					pa = pa.Next
+		//				}
+		//			}
+		//		}
+		if !matched {
+			pa = pa.Next
+		}
+	}
+
+	//	for (lhmsve_t* pe = short_names_to_out_acc_maps.phead; pe != nil; pe = pe.Next) {
+	//		char* short_name = pe.key
+	//		lhmsv_t* out_acc_map_for_short_name = pe.pvvalue
+	//		for (lhmsve_t* pf = out_acc_map_for_short_name.phead; pf != nil; pf = pf.Next) {
+	//			char* acc_name = pf.key
+	//			stats1_acc_t* accumulator = pf.pvvalue
+	//			accumulator.Emit(short_name, acc_name, true, inrec)
+	//		}
+	//	}
+
+	outputChannel <- inrecAndContext
+}

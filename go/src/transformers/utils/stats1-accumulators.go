@@ -253,7 +253,7 @@ func (this *Stats1AccumulatorFactory) MakeAccumulator(
 		// To conserve memory, percentile-keeprs on the same value-field-name
 		// (and grouping-key) are shared. For example, p25,p75 on field "x".
 		// This means though that each datapoint must be ingested only once
-		// (e.g.  by the p25 accumulator) since it shares a percentile-keepr
+		// (e.g.  by the p25 accumulator) since it shares a percentile-keeper
 		// with the p75 accumulator. We handle this by tracking the first
 		// construction.
 		return NewStats1PercentileAccumulator(percentileKeeper, percentile, isPrimary)

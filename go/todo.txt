@@ -1,7 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-! mrpl :h (and miller --help-xxx): substring ...
 ! MlrvalPointerFromString -> NewMlrvalPointerFromString et al.
 
 * blocker: regexes

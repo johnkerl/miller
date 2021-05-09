@@ -39,6 +39,7 @@ var MAPPER_LOOKUP_TABLE = []transforming.TransformerSetup{
 	transformers.JoinSetup,
 	transformers.LabelSetup,
 	transformers.LeastFrequentSetup,
+	transformers.MergeFieldsSetup,
 	transformers.MostFrequentSetup,
 	transformers.NestSetup,
 	transformers.NothingSetup,
