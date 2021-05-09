@@ -29,6 +29,11 @@ func NewPercentileKeeper(
 	}
 }
 
+func (this *PercentileKeeper) Reset() {
+	this.data = make([]*types.Mlrval, 0, 1000)
+	this.sorted = false
+}
+
 // ----------------------------------------------------------------
 func (this *PercentileKeeper) Ingest(value *types.Mlrval) {
 	if len(this.data) >= cap(this.data) {

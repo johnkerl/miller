@@ -228,15 +228,8 @@ type TransformerMergeFields struct {
 	// State:
 	accumulatorFactory *utils.Stats1AccumulatorFactory
 
-	// TODO: update this copypasta
-	// Accumulators are indexed by
-	//   groupByFieldName . valueFieldName . accumulatorName . accumulator object
-	// This would be
-	//   namedAccumulators map[string]map[string]map[string]Stats1NamedAccumulator
-	// except we need maps that preserve insertion order.
+	// Ordered map from accumulator name to accumulator
 	namedAccumulators *lib.OrderedMap
-
-	groupingKeysToGroupByFieldValues map[string][]*types.Mlrval
 
 	recordTransformerFunc transforming.RecordTransformerFunc
 }
@@ -249,12 +242,13 @@ func NewTransformerMergeFields(
 	doInterpolatedPercentiles bool,
 	keepInputFields bool,
 ) (*TransformerMergeFields, error) {
-	for _, name := range accumulatorNameList {
-		if !utils.ValidateStats1AccumulatorName(name) {
+
+	for _, accumulatorName := range accumulatorNameList {
+		if !utils.ValidateStats1AccumulatorName(accumulatorName) {
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s %s: accumulator \"%s\" not found.\n",
-					lib.MlrExeName(), verbNameMergeFields, name,
+					lib.MlrExeName(), verbNameMergeFields, accumulatorName,
 				),
 			)
 		}
@@ -267,20 +261,25 @@ func NewTransformerMergeFields(
 	//		regcomp_or_die(pvalue_field_regex, value_field_name, 0)
 	//		sllv_append(this.pvalue_field_regexes, pvalue_field_regex)
 	//	}
-	//	pmapper.pprocess_func =
-	//		(doWhich == MERGE_BY_NAME_LIST) ? mapper_merge_fields_process_by_name_list :
-	//		(doWhich == MERGE_BY_NAME_REGEX) ? mapper_merge_fields_process_by_name_regex :
-	//		mapper_merge_fields_process_by_collapsing
 
 	this := &TransformerMergeFields{
-		accumulatorNameList:              accumulatorNameList,
-		valueFieldNameList:               valueFieldNameList,
-		outputFieldBasename:              outputFieldBasename,
-		doInterpolatedPercentiles:        doInterpolatedPercentiles,
-		keepInputFields:                  keepInputFields,
-		accumulatorFactory:               utils.NewStats1AccumulatorFactory(),
-		namedAccumulators:                lib.NewOrderedMap(),
-		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
+		accumulatorNameList:       accumulatorNameList,
+		valueFieldNameList:        valueFieldNameList,
+		outputFieldBasename:       outputFieldBasename,
+		doInterpolatedPercentiles: doInterpolatedPercentiles,
+		keepInputFields:           keepInputFields,
+		accumulatorFactory:        utils.NewStats1AccumulatorFactory(),
+		namedAccumulators:         lib.NewOrderedMap(),
+	}
+
+	for _, accumulatorName := range accumulatorNameList {
+		accumulator := this.accumulatorFactory.MakeNamedAccumulator(
+			accumulatorName,
+			"", // grouping-key used for stats1, not here
+			outputFieldBasename,
+			doInterpolatedPercentiles,
+		)
+		this.namedAccumulators.Put(accumulatorName, accumulator)
 	}
 
 	if doWhich == e_MERGE_BY_NAME_LIST {
@@ -305,107 +304,21 @@ func (this *TransformerMergeFields) Transform(
 }
 
 // ----------------------------------------------------------------
-//func (this *TransformerMergeFields) handleInputRecord(
-//inrecAndContext *types.RecordAndContext,
-//outputChannel chan<- *types.RecordAndContext,
-//) {
-//	inrec := inrecAndContext.Record
-//
-//	// TODO: make a function-pointer variant for non-iterative which doesn't get the
-//	// unnecessary groupByFieldValues.
-//
-//	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
-//	// then groupingKey is the string "circle,blue".
-//	groupingKey, groupByFieldValues, ok := inrec.GetSelectedValuesAndJoined(
-//		this.groupByFieldNameList,
-//	)
-//	if !ok {
-//		return
-//	}
-//
-//	level2 := this.namedAccumulators.Get(groupingKey)
-//	if level2 == nil {
-//		level2 = lib.NewOrderedMap()
-//		this.namedAccumulators.Put(groupingKey, level2)
-//		// E.g. if grouping by "color" and "shape", and the current record has
-//		// color=blue, shape=circle, then groupByFieldValues is the array
-//		// ["blue", "circle"].
-//		this.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
-//	}
-//	for _, valueFieldName := range this.valueFieldNameList {
-//		valueFieldValue := inrec.Get(valueFieldName)
-//		if valueFieldValue == nil {
-//			continue
-//		}
-//		level3 := level2.(*lib.OrderedMap).Get(valueFieldName)
-//		if level3 == nil {
-//			level3 = lib.NewOrderedMap()
-//			level2.(*lib.OrderedMap).Put(valueFieldName, level3)
-//		}
-//		for _, accumulatorName := range this.accumulatorNameList {
-//			namedAccumulator := level3.(*lib.OrderedMap).Get(accumulatorName)
-//			if namedAccumulator == nil {
-//				namedAccumulator = this.accumulatorFactory.MakeNamedAccumulator(
-//					accumulatorName,
-//					groupingKey,
-//					valueFieldName,
-//					this.doInterpolatedPercentiles,
-//				)
-//				level3.(*lib.OrderedMap).Put(accumulatorName, namedAccumulator)
-//			}
-//			namedAccumulator.(*utils.Stats1NamedAccumulator).Ingest(valueFieldValue)
-//		}
-//	}
-//
-//	if this.doIterativeStats {
-//		this.emitIntoOutputRecord(
-//			inrecAndContext.Record,
-//			groupByFieldValues,
-//			level2.(*lib.OrderedMap),
-//			inrec,
-//		)
-//		outputChannel <- inrecAndContext
-//	}
-//}
-
-// ----------------------------------------------------------------
-// TODO: comment
-//func (this *TransformerMergeFields) emitIntoOutputRecord(
-//inrec *types.Mlrmap,
-//groupByFieldValues []*types.Mlrval,
-//level2accumulators *lib.OrderedMap,
-//outrec *types.Mlrmap,
-//) {
-//	for i, groupByFieldName := range this.groupByFieldNameList {
-//		outrec.PutCopy(groupByFieldName, groupByFieldValues[i])
-//	}
-//
-//	for pb := level2accumulators.Head; pb != nil; pb = pb.Next {
-//		level3 := pb.Value.(*lib.OrderedMap)
-//		for pc := level3.Head; pc != nil; pc = pc.Next {
-//			namedAccumulator := pc.Value.(*utils.Stats1NamedAccumulator)
-//			key, value := namedAccumulator.Emit()
-//			outrec.PutCopy(key, &value)
-//		}
-//	}
-//}
-
-// ----------------------------------------------------------------
 func (this *TransformerMergeFields) transformByNameList(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	if !inrecAndContext.EndOfStream {
+	if inrecAndContext.EndOfStream {
 		outputChannel <- inrecAndContext // end-of-stream marker
+		return
 	}
 
 	inrec := inrecAndContext.Record
 
-	// TODO: make accumulator.Reset()
-	//	lhmsv_t* pinaccs = lhmsv_alloc()
-
-	//	make_stats1_accs(this.outputFieldBasename, this.paccumulator_names,
-	//	    this.do_interpolated_percentiles, pinaccs)
+	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
+		accumulator.Reset() // re-use from one record to the next
+	}
 
 	for _, valueFieldName := range this.valueFieldNameList {
 		mvalue := inrec.Get(valueFieldName)
@@ -421,15 +334,22 @@ func (this *TransformerMergeFields) transformByNameList(
 			continue
 		}
 
-		//		for (lhmsve_t* pc = pinaccs.phead; pc != nil; pc = pc.Next) {
-		//			stats1_acc_t* accumulator = pc.pvvalue
-		//			accumulator.Ingest(mvalue)
-		//			accumulator.Emit(this.outputFieldBasename, acc_name, true, inrec)
-		//		}
+
+		for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+			accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
+			accumulator.Ingest(mvalue)
+		}
 
 		if !this.keepInputFields {
 			inrec.Remove(valueFieldName)
 		}
+	}
+
+	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
+		key, value := accumulator.Emit()
+		// xxx pointerize
+		inrec.PutReference(key, &value)
 	}
 
 	outputChannel <- inrecAndContext
@@ -440,16 +360,17 @@ func (this *TransformerMergeFields) transformByNameRegex(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	if !inrecAndContext.EndOfStream {
+	if inrecAndContext.EndOfStream {
 		outputChannel <- inrecAndContext // end-of-stream marker
+		return
 	}
 
 	inrec := inrecAndContext.Record
 
-	//	lhmsv_t* pinaccs = lhmsv_alloc()
-
-	//	make_stats1_accs(this.outputFieldBasename, this.paccumulator_names,
-	//	    this.do_interpolated_percentiles, pinaccs)
+	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
+		accumulator.Reset() // re-use from one record to the next
+	}
 
 	for pb := inrec.Head; pb != nil; /* increment inside loop*/ {
 		//		valueFieldName := pb.Key
@@ -484,11 +405,12 @@ func (this *TransformerMergeFields) transformByNameRegex(
 		}
 	}
 
-	//	for (lhmsve_t* pz = poutaccs.phead; pz != nil; pz = pz.Next) {
-	//		char* acc_name = pz.key
-	//		stats1_acc_t* accumulator = pz.pvvalue
-	//		accumulator.Emit(this.outputFieldBasename, acc_name, true, inrec)
-	//	}
+	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
+		key, value := accumulator.Emit()
+		// xxx pointerize
+		inrec.PutReference(key, &value)
+	}
 
 	outputChannel <- inrecAndContext
 }
@@ -504,77 +426,71 @@ func (this *TransformerMergeFields) transformByCollapsing(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	if !inrecAndContext.EndOfStream {
+	if inrecAndContext.EndOfStream {
 		outputChannel <- inrecAndContext // end-of-stream marker
+		return
 	}
 
 	inrec := inrecAndContext.Record
 
-	//	lhmsv_t* short_names_to_in_acc_maps = lhmsv_alloc()
+	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
+		accumulator.Reset() // re-use from one record to the next
+	}
 
 	for pa := inrec.Head; pa != nil; /* increment inside loop */ {
-		//		char* valueFieldName = pa.key
+		//	char* valueFieldName = pa.key
 		matched := false
-		//		for (sllve_t* pb = this.pvalue_field_regexes.phead; pb != nil && !matched; pb = pb.Next) {
-		//			regex_t* pvalue_field_regex = pb.pvvalue
-		//			char* short_name = regex_sub(valueFieldName, pvalue_field_regex, this.psb, "", &matched, nil)
-		//			if (matched) {
-		//				lhmsv_t* in_acc_map_for_short_name = lhmsv_get(short_names_to_in_acc_maps, short_name)
-		//				if (out_acc_map_for_short_name == nil) { // First such
+		//	for (sllve_t* pb = this.pvalue_field_regexes.phead; pb != nil && !matched; pb = pb.Next) {
+		//		regex_t* pvalue_field_regex = pb.pvvalue
+		//		char* short_name = regex_sub(valueFieldName, pvalue_field_regex, this.psb, "", &matched, nil)
+		//		if (matched) {
+		//			lhmsv_t* in_acc_map_for_short_name = lhmsv_get(short_names_to_in_acc_maps, short_name)
+		//			if (out_acc_map_for_short_name == nil) { // First such
 		//
-		//					in_acc_map_for_short_name = lhmsv_alloc()
-		//					out_acc_map_for_short_name = lhmsv_alloc()
+		//				in_acc_map_for_short_name = lhmsv_alloc()
+		//				out_acc_map_for_short_name = lhmsv_alloc()
 		//
-		//					make_stats1_accs(short_name, this.paccumulator_names,
-		//						this.allow_int_float, this.do_interpolated_percentiles,
-		//						in_acc_map_for_short_name, out_acc_map_for_short_name)
+		//				make_stats1_accs(short_name, this.paccumulator_names,
+		//					this.allow_int_float, this.do_interpolated_percentiles,
+		//					in_acc_map_for_short_name, out_acc_map_for_short_name)
 		//
-		//					lhmsv_put(short_names_to_in_acc_maps, mlr_strdup_or_die(short_name), in_acc_map_for_short_name)
+		//				lhmsv_put(short_names_to_in_acc_maps, mlr_strdup_or_die(short_name), in_acc_map_for_short_name)
+		//			}
+		//
+		//			mvalue := inrec.Get(valueFieldName)
+		//			if (mvalue != nil) { // Key present
+		//				if (*value_field_sval != 0) { // Key present with non-null value
+		//					for (lhmsve_t* pd = in_acc_map_for_short_name.phead; pd != nil; pd = pd.Next) {
+		//						stats1_acc_t* accumulator = pd.pvvalue
+		//						accumulator.Ingest(mvalue)
+		//					}
 		//				}
 		//
-		//				mvalue := inrec.Get(valueFieldName)
-		//				if (mvalue != nil) { // Key present
-		//
-		//					if (*value_field_sval != 0) { // Key present with non-null value
-		//						for (lhmsve_t* pd = in_acc_map_for_short_name.phead; pd != nil; pd = pd.Next) {
-		//							stats1_acc_t* accumulator = pd.pvvalue
-		//
-		//							int have_dval = false
-		//							int have_nval = false
-		//							double value_field_dval = -999.0
-		//							mv_t   value_field_nval = mv_absent()
-		//
-		//							accumulator.Ingest(mvalue)
-		//						}
-		//					}
-		//
-		//					if (!this.keepInputFields) {
-		//						// We are modifying the lrec while iterating over it.
-		//						next := pa.Next
-		//						inrec.Unlink(pa)
-		//						pa = next
-		//					} else {
-		//						pa = pa.Next
-		//					}
+		//				if (!this.keepInputFields) {
+		//					// We are modifying the lrec while iterating over it.
+		//					next := pa.Next
+		//					inrec.Unlink(pa)
+		//					pa = next
 		//				} else {
 		//					pa = pa.Next
 		//				}
+		//			} else {
+		//				pa = pa.Next
 		//			}
 		//		}
+		//	}
 		if !matched {
 			pa = pa.Next
 		}
 	}
 
-	//	for (lhmsve_t* pe = short_names_to_out_acc_maps.phead; pe != nil; pe = pe.Next) {
-	//		char* short_name = pe.key
-	//		lhmsv_t* out_acc_map_for_short_name = pe.pvvalue
-	//		for (lhmsve_t* pf = out_acc_map_for_short_name.phead; pf != nil; pf = pf.Next) {
-	//			char* acc_name = pf.key
-	//			stats1_acc_t* accumulator = pf.pvvalue
-	//			accumulator.Emit(short_name, acc_name, true, inrec)
-	//		}
-	//	}
+	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
+		key, value := accumulator.Emit()
+		// xxx pointerize
+		inrec.PutReference(key, &value)
+	}
 
 	outputChannel <- inrecAndContext
 }
