@@ -1,8 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-! seqgen help saying -stop not --stop
-
 * blocker: regexes
   o finish stats1 -r
   o regex captures ...
