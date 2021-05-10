@@ -1,46 +1,23 @@
-RAW AST:
+DSL EXPRESSION:
+@s = NR; $t = @s; $u=@["s"]; $v = $t - $u
 
-AST ROOT:
-text="block", type=STATEMENT_BLOCK:
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRING_LITERAL.
-        text="NR", type=CONTEXT_VARIABLE.
-    text="=", type=SREC_ASSIGNMENT:
-        text="t", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="u", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="v", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="t", type=FIELD_NAME.
-            text="u", type=FIELD_NAME.
-
-BLOCKED AST:
-
-MAIN BLOCK:
-text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
-    text="=", type=OOSVAR_ASSIGNMENT:
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRING_LITERAL.
-        text="NR", type=CONTEXT_VARIABLE.
-    text="=", type=SREC_ASSIGNMENT:
-        text="t", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="u", type=FIELD_NAME.
-        text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRING_LITERAL.
-    text="=", type=SREC_ASSIGNMENT:
-        text="v", type=FIELD_NAME.
-        text="-", type=OPERATOR:
-            text="t", type=FIELD_NAME.
-            text="u", type=FIELD_NAME.
+AST:
+* statement block
+    * assignment "="
+        * direct oosvar value "s"
+        * context variable "NR"
+    * assignment "="
+        * direct field value "t"
+        * direct oosvar value "s"
+    * assignment "="
+        * direct field value "u"
+        * indirect oosvar value "@[]"
+            * string literal "s"
+    * assignment "="
+        * direct field value "v"
+        * operator "-"
+            * direct field value "t"
+            * direct field value "u"
 
 a   b   i  x                   y                   t  u  v
 pan pan 1  0.3467901443380824  0.7268028627434533  1  1  0

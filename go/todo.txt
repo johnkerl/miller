@@ -49,6 +49,12 @@ TOP OF LIST:
 * blocker: prepipe
   - gzin; bz2in ...
 
+* blocker: misctests
+  ? wut
+    mlr --from regtest/input/s.dkvp put -q 'begin{@sum=[0m0]} @sum[1+NR%2] += $i; end{dump}'
+  ? space/-
+    regtest/cases-pending-go-port//dsl-lashed-emitp-singles/0051/cmd
+
 ----------------------------------------------------------------
 * non-blocker: --lib option, and to .mlrrc
   o make up some stdlib functions -- ?
