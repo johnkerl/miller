@@ -55,8 +55,15 @@ mention() {
 
 mlr --c2p cat regtest/input/merge-fields-in-out.csv
 echo
-../c/mlr --csvlite --opprint merge-fields    -a p0,min,p29,max,p100,sum -c _in,_out regtest/input/merge-fields-in-out.csv
+../c/mlr --csvlite merge-fields  -a min,max,count,sum -c _in,_out regtest/input/merge-fields-in-out.csv
 echo
-../go/mlr --csvlite --opprint merge-fields    -a p0,min,p29,max,p100,sum -c _in,_out regtest/input/merge-fields-in-out.csv
+../go/mlr --csvlite merge-fields -a min,max,count,sum -c _in,_out regtest/input/merge-fields-in-out.csv
+echo
+echo
+mlr --c2p cat regtest/input/merge-fields-in-out.csv
+echo
+../c/mlr --csvlite merge-fields  -a p0,p29,p100 -c _in,_out regtest/input/merge-fields-in-out.csv
+echo
+../go/mlr --csvlite merge-fields -a p0,p29,p100 -c _in,_out regtest/input/merge-fields-in-out.csv
 
 # ================================================================

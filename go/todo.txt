@@ -6,6 +6,8 @@ TOP OF LIST:
   > needs UT
   > needs _ -> err x all
 
+! seqgen help saying -stop not --stop
+
 ! MlrvalPointerFromString -> NewMlrvalPointerFromString et al.
 
 * blocker: regexes

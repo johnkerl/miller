@@ -450,6 +450,7 @@ func (this *TransformerMergeFields) transformByCollapsing(
 	}
 
 	inrec := inrecAndContext.Record
+	this.accumulatorFactory.Reset() // discard cached percentile-keepers
 
 	// Ordered map from short name to accumulator name to accumulator
 	collapseAccumulators := lib.NewOrderedMap()

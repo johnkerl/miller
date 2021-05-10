@@ -200,6 +200,11 @@ func tryPercentileFromName(accumulatorName string) (float64, bool) {
 }
 
 // ----------------------------------------------------------------
+// For merge-fields wherein percentile-keepers are re-created on each record
+func (this *Stats1AccumulatorFactory) Reset() {
+	this.percentileKeepers = make(map[string]map[string]*PercentileKeeper)
+}
+
 func (this *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	accumulatorName string,
 	groupingKey string,
