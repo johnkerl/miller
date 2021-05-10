@@ -198,7 +198,7 @@ func transformerNestParseCLI(
 		transformerNestUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerNest(
+	transformer, err := NewTransformerNest(
 		fieldName,
 		nestedFS,
 		nestedPS,
@@ -206,6 +206,10 @@ func transformerNestParseCLI(
 		doPairs,
 		doAcrossFields,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

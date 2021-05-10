@@ -160,7 +160,7 @@ func transformerMergeFieldsParseCLI(
 		}
 	}
 
-	transformer, _ := NewTransformerMergeFields(
+	transformer, err := NewTransformerMergeFields(
 		accumulatorNameList,
 		valueFieldNameList,
 		outputFieldBasename,
@@ -168,6 +168,10 @@ func transformerMergeFieldsParseCLI(
 		doInterpolatedPercentiles,
 		keepInputFields,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

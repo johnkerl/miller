@@ -63,7 +63,11 @@ func transformerRegularizeParseCLI(
 		}
 	}
 
-	transformer, _ := NewTransformerRegularize()
+	transformer, err := NewTransformerRegularize()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

@@ -148,7 +148,7 @@ func transformerStats2ParseCLI(
 		os.Exit(1)
 	}
 
-	transformer, _ := NewTransformerStats2(
+	transformer, err := NewTransformerStats2(
 		accumulatorNameList,
 		valueFieldNameList,
 		groupByFieldNameList,
@@ -156,6 +156,10 @@ func transformerStats2ParseCLI(
 		doIterativeStats,
 		doHoldAndFit,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

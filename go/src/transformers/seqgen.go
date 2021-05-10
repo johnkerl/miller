@@ -99,7 +99,6 @@ func transformerSeqgenParseCLI(
 		stopString,
 		stepString,
 	)
-	// TODO: put error return into this API
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

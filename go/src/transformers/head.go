@@ -82,10 +82,14 @@ func transformerHeadParseCLI(
 		}
 	}
 
-	transformer, _ := NewTransformerHead(
+	transformer, err := NewTransformerHead(
 		headCount,
 		groupByFieldNames,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

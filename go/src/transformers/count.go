@@ -82,11 +82,15 @@ func transformerCountParseCLI(
 		}
 	}
 
-	transformer, _ := NewTransformerCount(
+	transformer, err := NewTransformerCount(
 		groupByFieldNames,
 		showCountsOnly,
 		outputFieldName,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

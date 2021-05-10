@@ -248,7 +248,11 @@ func transformerJoinParseCLI(
 		os.Exit(1)
 	}
 
-	transformer, _ := NewTransformerJoin(opts)
+	transformer, err := NewTransformerJoin(opts)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

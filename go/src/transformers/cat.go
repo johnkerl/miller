@@ -81,11 +81,15 @@ func transformerCatParseCLI(
 		}
 	}
 
-	transformer, _ := NewTransformerCat(
+	transformer, err := NewTransformerCat(
 		doCounters,
 		counterFieldName,
 		groupByFieldNames,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

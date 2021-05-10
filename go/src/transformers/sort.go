@@ -208,10 +208,14 @@ func transformerSortParseCLI(
 		transformerSortUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerSort(
+	transformer, err := NewTransformerSort(
 		groupByFieldNames,
 		comparatorFuncs,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

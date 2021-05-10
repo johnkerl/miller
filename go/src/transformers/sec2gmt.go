@@ -95,10 +95,14 @@ func transformerSec2GMTParseCLI(
 	fieldNames := args[argi]
 	argi++
 
-	transformer, _ := NewTransformerSec2GMT(
+	transformer, err := NewTransformerSec2GMT(
 		fieldNames,
 		numDecimalPlaces,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

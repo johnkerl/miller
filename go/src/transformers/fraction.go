@@ -105,12 +105,16 @@ func transformerFractionParseCLI(
 		transformerFractionUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerFraction(
+	transformer, err := NewTransformerFraction(
 		fractionFieldNames,
 		groupByFieldNames,
 		doPercents,
 		doCumu,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

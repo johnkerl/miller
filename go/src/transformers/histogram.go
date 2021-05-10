@@ -110,7 +110,7 @@ func transformerHistogramParseCLI(
 		transformerHistogramUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerHistogram(
+	transformer, err := NewTransformerHistogram(
 		valueFieldNames,
 		lo,
 		nbins,
@@ -118,6 +118,10 @@ func transformerHistogramParseCLI(
 		doAuto,
 		outputPrefix,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer
