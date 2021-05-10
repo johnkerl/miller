@@ -86,11 +86,11 @@ func MlrvalGetMeanEB(mn, msum, msum2 *Mlrval) *Mlrval {
 //   = sumx2 - n mean^2
 
 // ----------------------------------------------------------------
-func MlrvalGetSkewness(mn, msum, msum2, msum3 *Mlrval) Mlrval {
+func MlrvalGetSkewness(mn, msum, msum2, msum3 *Mlrval) *Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
-		return *MLRVAL_VOID
+		return MLRVAL_VOID
 	}
 	fn := float64(n)
 	sum, isNumber := msum.GetNumericToFloatValue()
@@ -105,7 +105,7 @@ func MlrvalGetSkewness(mn, msum, msum2, msum3 *Mlrval) Mlrval {
 	numerator = numerator / fn
 	denominator := (sum2 - fn*mean*mean) / (fn - 1.0)
 	denominator = math.Pow(denominator, 1.5)
-	return MlrvalFromFloat64(numerator / denominator)
+	return MlrvalPointerFromFloat64(numerator / denominator)
 }
 
 // Unbiased:
@@ -123,11 +123,11 @@ func MlrvalGetSkewness(mn, msum, msum2, msum3 *Mlrval) Mlrval {
 //   = sumx4 - mean*(4 sumx3 - mean*(6 sumx2 - 3 n mean^2))
 
 // ----------------------------------------------------------------
-func MlrvalGetKurtosis(mn, msum, msum2, msum3, msum4 *Mlrval) Mlrval {
+func MlrvalGetKurtosis(mn, msum, msum2, msum3, msum4 *Mlrval) *Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
-		return *MLRVAL_VOID
+		return MLRVAL_VOID
 	}
 	fn := float64(n)
 	sum, isNumber := msum.GetNumericToFloatValue()
@@ -145,6 +145,6 @@ func MlrvalGetKurtosis(mn, msum, msum2, msum3, msum4 *Mlrval) Mlrval {
 	numerator = numerator / fn
 	denominator := (sum2 - fn*mean*mean) / fn
 	denominator = denominator * denominator
-	return MlrvalFromFloat64(numerator/denominator - 3.0)
+	return MlrvalPointerFromFloat64(numerator/denominator - 3.0)
 
 }

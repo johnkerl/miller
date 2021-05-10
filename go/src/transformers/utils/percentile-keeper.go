@@ -29,6 +29,11 @@ func NewPercentileKeeper(
 	}
 }
 
+func (this *PercentileKeeper) Reset() {
+	this.data = make([]*types.Mlrval, 0, 1000)
+	this.sorted = false
+}
+
 // ----------------------------------------------------------------
 func (this *PercentileKeeper) Ingest(value *types.Mlrval) {
 	if len(this.data) >= cap(this.data) {
@@ -259,7 +264,7 @@ func (this *PercentileKeeper) sortIfNecessary() {
 }
 
 // ----------------------------------------------------------------
-func (this *PercentileKeeper) Emit(percentile float64) types.Mlrval {
+func (this *PercentileKeeper) Emit(percentile float64) *types.Mlrval {
 	if this.doInterpolatedPercentiles {
 		return this.EmitLinearlyInterpolated(percentile)
 	} else {
@@ -267,21 +272,21 @@ func (this *PercentileKeeper) Emit(percentile float64) types.Mlrval {
 	}
 }
 
-func (this *PercentileKeeper) EmitNonInterpolated(percentile float64) types.Mlrval {
+func (this *PercentileKeeper) EmitNonInterpolated(percentile float64) *types.Mlrval {
 	if len(this.data) == 0 {
-		return *types.MLRVAL_ABSENT
+		return types.MLRVAL_VOID
 	}
 	this.sortIfNecessary()
-	return *this.data[computeIndexNoninterpolated(int(len(this.data)), percentile)].Copy()
+	return this.data[computeIndexNoninterpolated(int(len(this.data)), percentile)].Copy()
 }
 
-func (this *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) types.Mlrval {
+func (this *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) *types.Mlrval {
 	if len(this.data) == 0 {
-		return *types.MLRVAL_ABSENT
+		return types.MLRVAL_VOID
 	}
 	this.sortIfNecessary()
 	output := getPercentileLinearlyInterpolated(this.data, int(len(this.data)), percentile)
-	return *output.Copy()
+	return output.Copy()
 }
 
 // ----------------------------------------------------------------

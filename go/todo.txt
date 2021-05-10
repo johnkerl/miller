@@ -1,7 +1,13 @@
 ================================================================
 TOP OF LIST:
 
-! mrpl :h (and miller --help-xxx): substring ...
+!!! mlr --from s stats1 -f x,y -a corr
+  panic: runtime error: invalid memory address or nil pointer dereference
+  > needs UT
+  > needs _ -> err x all
+
+! seqgen help saying -stop not --stop
+
 ! MlrvalPointerFromString -> NewMlrvalPointerFromString et al.
 
 * blocker: regexes

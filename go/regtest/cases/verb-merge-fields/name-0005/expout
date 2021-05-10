@@ -2,9 +2,9 @@ a_in_x    1
 a_out_x   2
 b_in_y    4
 b_out_x   8
-foo_p0    1.000000
+foo_p0    1
 foo_min   1
-foo_p29   1.290000
+foo_p29   1.29
 foo_max   2
 foo_p100  2
 foo_sum   3
@@ -47,9 +47,9 @@ a_in_x    1
 a_out_x   2
 b_on_y    4
 b_out_x   8
-foo_p0    1.000000
+foo_p0    1
 foo_min   1
-foo_p29   1.290000
+foo_p29   1.29
 foo_max   2
 foo_p100  2
 foo_sum   3
@@ -59,9 +59,9 @@ a_in_x    1
 a_out_x   2
 b_in_y    4
 b_oot_x   8
-foo_p0    1.000000
+foo_p0    1
 foo_min   1
-foo_p29   1.290000
+foo_p29   1.29
 foo_max   2
 foo_p100  2
 foo_sum   3
@@ -140,9 +140,9 @@ a_in_x    1
 a_out_x   2
 b_on_y    4
 b_oot_x   8
-foo_p0    1.000000
+foo_p0    1
 foo_min   1
-foo_p29   1.290000
+foo_p29   1.29
 foo_max   2
 foo_p100  2
 foo_sum   3

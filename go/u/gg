@@ -53,16 +53,17 @@ mention() {
 
 # ================================================================
 
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f x,y -b u
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -b x
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f z,w,s -b v
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -b nonesuch
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,nonesuch -b x
-
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f x,y -a u
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -a x
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f z,w,s -a v
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -a nonesuch
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,nonesuch -a x
+mlr --c2p cat regtest/input/merge-fields-in-out.csv
+echo
+../c/mlr --csvlite merge-fields  -a min,max,count,sum -c _in,_out regtest/input/merge-fields-in-out.csv
+echo
+../go/mlr --csvlite merge-fields -a min,max,count,sum -c _in,_out regtest/input/merge-fields-in-out.csv
+echo
+echo
+mlr --c2p cat regtest/input/merge-fields-in-out.csv
+echo
+../c/mlr --csvlite merge-fields  -a p0,p29,p100 -c _in,_out regtest/input/merge-fields-in-out.csv
+echo
+../go/mlr --csvlite merge-fields -a p0,p29,p100 -c _in,_out regtest/input/merge-fields-in-out.csv
 
 # ================================================================

@@ -16,7 +16,8 @@ import (
 // ----------------------------------------------------------------
 type IStats1Accumulator interface {
 	Ingest(value *types.Mlrval)
-	Emit() types.Mlrval
+	Emit() *types.Mlrval
+	Reset() // for merge-fields where we reset after each record instead of replace/recreate
 }
 
 // ----------------------------------------------------------------
@@ -124,8 +125,12 @@ func (this *Stats1NamedAccumulator) Ingest(value *types.Mlrval) {
 	this.accumulator.Ingest(value)
 }
 
-func (this *Stats1NamedAccumulator) Emit() (key string, value types.Mlrval) {
+func (this *Stats1NamedAccumulator) Emit() (key string, value *types.Mlrval) {
 	return this.outputFieldName, this.accumulator.Emit()
+}
+
+func (this *Stats1NamedAccumulator) Reset() {
+	this.accumulator.Reset()
 }
 
 // ----------------------------------------------------------------
@@ -195,6 +200,11 @@ func tryPercentileFromName(accumulatorName string) (float64, bool) {
 }
 
 // ----------------------------------------------------------------
+// For merge-fields wherein percentile-keepers are re-created on each record
+func (this *Stats1AccumulatorFactory) Reset() {
+	this.percentileKeepers = make(map[string]map[string]*PercentileKeeper)
+}
+
 func (this *Stats1AccumulatorFactory) MakeNamedAccumulator(
 	accumulatorName string,
 	groupingKey string,
@@ -253,7 +263,7 @@ func (this *Stats1AccumulatorFactory) MakeAccumulator(
 		// To conserve memory, percentile-keeprs on the same value-field-name
 		// (and grouping-key) are shared. For example, p25,p75 on field "x".
 		// This means though that each datapoint must be ingested only once
-		// (e.g.  by the p25 accumulator) since it shares a percentile-keepr
+		// (e.g.  by the p25 accumulator) since it shares a percentile-keeper
 		// with the p75 accumulator. We handle this by tracking the first
 		// construction.
 		return NewStats1PercentileAccumulator(percentileKeeper, percentile, isPrimary)
@@ -281,8 +291,11 @@ func NewStats1CountAccumulator() IStats1Accumulator {
 func (this *Stats1CountAccumulator) Ingest(value *types.Mlrval) {
 	this.count++
 }
-func (this *Stats1CountAccumulator) Emit() types.Mlrval {
-	return types.MlrvalFromInt(this.count)
+func (this *Stats1CountAccumulator) Emit() *types.Mlrval {
+	return types.MlrvalPointerFromInt(this.count)
+}
+func (this *Stats1CountAccumulator) Reset() {
+	this.count = 0
 }
 
 // ----------------------------------------------------------------
@@ -306,9 +319,9 @@ func (this *Stats1ModeAccumulator) Ingest(value *types.Mlrval) {
 		this.countsByValue.Put(key, iPrevious.(int)+1)
 	}
 }
-func (this *Stats1ModeAccumulator) Emit() types.Mlrval {
+func (this *Stats1ModeAccumulator) Emit() *types.Mlrval {
 	if this.countsByValue.FieldCount == 0 {
-		return *types.MLRVAL_ERROR
+		return types.MLRVAL_ERROR
 	}
 	maxValue := ""
 	var maxCount = int(0)
@@ -320,7 +333,10 @@ func (this *Stats1ModeAccumulator) Emit() types.Mlrval {
 			maxCount = count
 		}
 	}
-	return types.MlrvalFromString(maxValue)
+	return types.MlrvalPointerFromString(maxValue)
+}
+func (this *Stats1ModeAccumulator) Reset() {
+	this.countsByValue = lib.NewOrderedMap()
 }
 
 // ----------------------------------------------------------------
@@ -344,9 +360,9 @@ func (this *Stats1AntimodeAccumulator) Ingest(value *types.Mlrval) {
 		this.countsByValue.Put(key, iPrevious.(int)+1)
 	}
 }
-func (this *Stats1AntimodeAccumulator) Emit() types.Mlrval {
+func (this *Stats1AntimodeAccumulator) Emit() *types.Mlrval {
 	if this.countsByValue.FieldCount == 0 {
-		return *types.MLRVAL_ERROR
+		return types.MLRVAL_ERROR
 	}
 	minValue := ""
 	var minCount = int(0)
@@ -358,7 +374,10 @@ func (this *Stats1AntimodeAccumulator) Emit() types.Mlrval {
 			minCount = count
 		}
 	}
-	return types.MlrvalFromString(minValue)
+	return types.MlrvalPointerFromString(minValue)
+}
+func (this *Stats1AntimodeAccumulator) Reset() {
+	this.countsByValue = lib.NewOrderedMap()
 }
 
 // ----------------------------------------------------------------
@@ -374,10 +393,11 @@ func NewStats1SumAccumulator() IStats1Accumulator {
 func (this *Stats1SumAccumulator) Ingest(value *types.Mlrval) {
 	this.sum = types.MlrvalBinaryPlus(this.sum, value)
 }
-
-// xxx pending output-pointer refactor
-func (this *Stats1SumAccumulator) Emit() types.Mlrval {
-	return *this.sum.Copy()
+func (this *Stats1SumAccumulator) Emit() *types.Mlrval {
+	return this.sum.Copy()
+}
+func (this *Stats1SumAccumulator) Reset() {
+	this.sum = types.MlrvalPointerFromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -396,15 +416,16 @@ func (this *Stats1MeanAccumulator) Ingest(value *types.Mlrval) {
 	this.sum = types.MlrvalBinaryPlus(this.sum, value)
 	this.count++
 }
-
-// xxx pending output-pointer refactor
-func (this *Stats1MeanAccumulator) Emit() types.Mlrval {
+func (this *Stats1MeanAccumulator) Emit() *types.Mlrval {
 	if this.count == 0 {
-		return *types.MLRVAL_VOID
+		return types.MLRVAL_VOID
 	} else {
-		// TODO: pointer-only refactor
-		return *types.MlrvalDivide(this.sum, types.MlrvalPointerFromInt(this.count))
+		return types.MlrvalDivide(this.sum, types.MlrvalPointerFromInt(this.count))
 	}
+}
+func (this *Stats1MeanAccumulator) Reset() {
+	this.sum = types.MlrvalPointerFromInt(0)
+	this.count = 0
 }
 
 // ----------------------------------------------------------------
@@ -420,8 +441,15 @@ func NewStats1MinAccumulator() IStats1Accumulator {
 func (this *Stats1MinAccumulator) Ingest(value *types.Mlrval) {
 	this.min = types.MlrvalBinaryMin(this.min, value)
 }
-func (this *Stats1MinAccumulator) Emit() types.Mlrval {
-	return *this.min.Copy()
+func (this *Stats1MinAccumulator) Emit() *types.Mlrval {
+	if this.min.IsAbsent() {
+		return types.MLRVAL_VOID
+	} else {
+		return this.min.Copy()
+	}
+}
+func (this *Stats1MinAccumulator) Reset() {
+	this.min = types.MLRVAL_ABSENT
 }
 
 // ----------------------------------------------------------------
@@ -437,8 +465,15 @@ func NewStats1MaxAccumulator() IStats1Accumulator {
 func (this *Stats1MaxAccumulator) Ingest(value *types.Mlrval) {
 	this.max = types.MlrvalBinaryMax(this.max, value)
 }
-func (this *Stats1MaxAccumulator) Emit() types.Mlrval {
-	return *this.max.Copy()
+func (this *Stats1MaxAccumulator) Emit() *types.Mlrval {
+	if this.max.IsAbsent() {
+		return types.MLRVAL_VOID
+	} else {
+		return this.max.Copy()
+	}
+}
+func (this *Stats1MaxAccumulator) Reset() {
+	this.max = types.MLRVAL_ABSENT
 }
 
 // ----------------------------------------------------------------
@@ -461,10 +496,14 @@ func (this *Stats1VarAccumulator) Ingest(value *types.Mlrval) {
 	this.sum = types.MlrvalBinaryPlus(this.sum, value)
 	this.sum2 = types.MlrvalBinaryPlus(this.sum2, value2)
 }
-func (this *Stats1VarAccumulator) Emit() types.Mlrval {
+func (this *Stats1VarAccumulator) Emit() *types.Mlrval {
 	mcount := types.MlrvalFromInt(this.count)
-	// TODO: pointer-only refactor
-	return *types.MlrvalGetVar(&mcount, this.sum, this.sum2)
+	return types.MlrvalGetVar(&mcount, this.sum, this.sum2)
+}
+func (this *Stats1VarAccumulator) Reset() {
+	this.count = 0
+	this.sum = types.MlrvalPointerFromInt(0)
+	this.sum2 = types.MlrvalPointerFromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -487,9 +526,14 @@ func (this *Stats1StddevAccumulator) Ingest(value *types.Mlrval) {
 	this.sum = types.MlrvalBinaryPlus(this.sum, value)
 	this.sum2 = types.MlrvalBinaryPlus(this.sum2, value2)
 }
-func (this *Stats1StddevAccumulator) Emit() types.Mlrval {
+func (this *Stats1StddevAccumulator) Emit() *types.Mlrval {
 	mcount := types.MlrvalFromInt(this.count)
-	return *types.MlrvalGetStddev(&mcount, this.sum, this.sum2)
+	return types.MlrvalGetStddev(&mcount, this.sum, this.sum2)
+}
+func (this *Stats1StddevAccumulator) Reset() {
+	this.count = 0
+	this.sum = types.MlrvalPointerFromInt(0)
+	this.sum2 = types.MlrvalPointerFromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -512,9 +556,14 @@ func (this *Stats1MeanEBAccumulator) Ingest(value *types.Mlrval) {
 	this.sum = types.MlrvalBinaryPlus(this.sum, value)
 	this.sum2 = types.MlrvalBinaryPlus(this.sum2, value2)
 }
-func (this *Stats1MeanEBAccumulator) Emit() types.Mlrval {
+func (this *Stats1MeanEBAccumulator) Emit() *types.Mlrval {
 	mcount := types.MlrvalPointerFromInt(this.count)
-	return *types.MlrvalGetMeanEB(mcount, this.sum, this.sum2)
+	return types.MlrvalGetMeanEB(mcount, this.sum, this.sum2)
+}
+func (this *Stats1MeanEBAccumulator) Reset() {
+	this.count = 0
+	this.sum = types.MlrvalPointerFromInt(0)
+	this.sum2 = types.MlrvalPointerFromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -541,9 +590,15 @@ func (this *Stats1SkewnessAccumulator) Ingest(value *types.Mlrval) {
 	this.sum2 = types.MlrvalBinaryPlus(this.sum2, value2)
 	this.sum3 = types.MlrvalBinaryPlus(this.sum3, value3)
 }
-func (this *Stats1SkewnessAccumulator) Emit() types.Mlrval {
+func (this *Stats1SkewnessAccumulator) Emit() *types.Mlrval {
 	mcount := types.MlrvalPointerFromInt(this.count)
 	return types.MlrvalGetSkewness(mcount, this.sum, this.sum2, this.sum3)
+}
+func (this *Stats1SkewnessAccumulator) Reset() {
+	this.count = 0
+	this.sum = types.MlrvalPointerFromInt(0)
+	this.sum2 = types.MlrvalPointerFromInt(0)
+	this.sum3 = types.MlrvalPointerFromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -574,9 +629,16 @@ func (this *Stats1KurtosisAccumulator) Ingest(value *types.Mlrval) {
 	this.sum3 = types.MlrvalBinaryPlus(this.sum3, value3)
 	this.sum4 = types.MlrvalBinaryPlus(this.sum4, value4)
 }
-func (this *Stats1KurtosisAccumulator) Emit() types.Mlrval {
+func (this *Stats1KurtosisAccumulator) Emit() *types.Mlrval {
 	mcount := types.MlrvalPointerFromInt(this.count)
 	return types.MlrvalGetKurtosis(mcount, this.sum, this.sum2, this.sum3, this.sum4)
+}
+func (this *Stats1KurtosisAccumulator) Reset() {
+	this.count = 0
+	this.sum = types.MlrvalPointerFromInt(0)
+	this.sum2 = types.MlrvalPointerFromInt(0)
+	this.sum3 = types.MlrvalPointerFromInt(0)
+	this.sum4 = types.MlrvalPointerFromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -609,6 +671,12 @@ func (this *Stats1PercentileAccumulator) Ingest(value *types.Mlrval) {
 	}
 }
 
-func (this *Stats1PercentileAccumulator) Emit() types.Mlrval {
+func (this *Stats1PercentileAccumulator) Emit() *types.Mlrval {
 	return this.percentileKeeper.Emit(this.percentile)
+}
+
+func (this *Stats1PercentileAccumulator) Reset() {
+	if this.isPrimary {
+		this.percentileKeeper.Reset()
+	}
 }

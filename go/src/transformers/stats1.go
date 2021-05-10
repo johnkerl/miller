@@ -380,7 +380,7 @@ func (this *TransformerStats1) emitIntoOutputRecord(
 		for pc := level3.Head; pc != nil; pc = pc.Next {
 			namedAccumulator := pc.Value.(*utils.Stats1NamedAccumulator)
 			key, value := namedAccumulator.Emit()
-			outrec.PutCopy(key, &value)
+			outrec.PutCopy(key, value)
 		}
 	}
 }
