@@ -1,5 +1,5 @@
-a=pan,sum:pan=1,sum:wye=10
-a=eks,sum:pan=2,sum:wye=4,sum:zee=7
-a=wye,sum:wye=3,sum:pan=5
-a=zee,sum:pan=6,sum:wye=8
-a=hat,sum:wye=9
+a=pan,sum.pan=1,sum.wye=10
+a=eks,sum.pan=2,sum.wye=4,sum.zee=7
+a=wye,sum.wye=3,sum.pan=5
+a=zee,sum.pan=6,sum.wye=8
+a=hat,sum.wye=9
