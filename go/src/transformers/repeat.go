@@ -110,11 +110,15 @@ func transformerRepeatParseCLI(
 		transformerRepeatUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerRepeat(
+	transformer, err := NewTransformerRepeat(
 		repeatCountSource,
 		repeatCount,
 		repeatCountFieldName,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

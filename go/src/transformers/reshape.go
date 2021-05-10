@@ -190,7 +190,7 @@ func transformerReshapeParseCLI(
 		splitOutValueFieldName = splitOutFieldNames[1]
 	}
 
-	transformer, _ := NewTransformerReshape(
+	transformer, err := NewTransformerReshape(
 		inputFieldNames,
 		inputFieldRegexStrings,
 		outputKeyFieldName,
@@ -198,6 +198,10 @@ func transformerReshapeParseCLI(
 		splitOutKeyFieldName,
 		splitOutValueFieldName,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

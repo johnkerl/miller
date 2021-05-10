@@ -1,14 +1,7 @@
 ================================================================
 TOP OF LIST:
 
-!!! mlr --from s stats1 -f x,y -a corr
-  panic: runtime error: invalid memory address or nil pointer dereference
-  > needs UT
-  > needs _ -> err x all
-
 ! seqgen help saying -stop not --stop
-
-! MlrvalPointerFromString -> NewMlrvalPointerFromString et al.
 
 * blocker: regexes
   o finish stats1 -r
@@ -18,7 +11,6 @@ TOP OF LIST:
 
 * blocker: remaining verbs:
   o format-values
-  o merge-fields
 
 * blocker: remaining functions:
   o system

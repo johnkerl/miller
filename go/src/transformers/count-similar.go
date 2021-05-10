@@ -81,10 +81,14 @@ func transformerCountSimilarParseCLI(
 		transformerCountSimilarUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerCountSimilar(
+	transformer, err := NewTransformerCountSimilar(
 		groupByFieldNames,
 		counterFieldName,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

@@ -132,11 +132,15 @@ func transformerHavingFieldsParseCLI(
 		transformerHavingFieldsUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerHavingFields(
+	transformer, err := NewTransformerHavingFields(
 		havingFieldsCriterion,
 		fieldNames,
 		regexString,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

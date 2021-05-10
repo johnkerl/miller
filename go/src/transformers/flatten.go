@@ -78,10 +78,14 @@ func transformerFlattenParseCLI(
 		}
 	}
 
-	transformer, _ := NewTransformerFlatten(
+	transformer, err := NewTransformerFlatten(
 		oFlatSep,
 		fieldNames,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

@@ -114,7 +114,7 @@ func transformerCountDistinctParseCLI(
 	showCounts := true
 	uniqifyEntireRecords := false
 
-	transformer, _ := NewTransformerUniq(
+	transformer, err := NewTransformerUniq(
 		fieldNames,
 		showCounts,
 		showNumDistinctOnly,
@@ -122,6 +122,10 @@ func transformerCountDistinctParseCLI(
 		doLashed,
 		uniqifyEntireRecords,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

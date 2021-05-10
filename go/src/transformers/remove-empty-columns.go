@@ -64,7 +64,11 @@ func transformerRemoveEmptyColumnsParseCLI(
 		}
 	}
 
-	transformer, _ := NewTransformerRemoveEmptyColumns()
+	transformer, err := NewTransformerRemoveEmptyColumns()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

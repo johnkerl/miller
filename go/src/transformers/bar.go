@@ -119,7 +119,7 @@ func transformerBarParseCLI(
 		transformerBarUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerBar(
+	transformer, err := NewTransformerBar(
 		fieldNames,
 		lo,
 		hi,
@@ -129,6 +129,10 @@ func transformerBarParseCLI(
 		oobString,
 		blankString,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

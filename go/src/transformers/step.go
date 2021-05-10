@@ -136,7 +136,6 @@ func transformerStepParseCLI(
 		stringAlphas,
 		ewmaSuffixes,
 	)
-	// TODO: put error return into this API
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

@@ -82,10 +82,14 @@ func transformerSampleParseCLI(
 		transformerSampleUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerSample(
+	transformer, err := NewTransformerSample(
 		sampleCount,
 		groupByFieldNames,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

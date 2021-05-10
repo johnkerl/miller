@@ -71,9 +71,13 @@ func transformerSec2GMTDateParseCLI(
 	fieldNames := args[argi]
 	argi++
 
-	transformer, _ := NewTransformerSec2GMTDate(
+	transformer, err := NewTransformerSec2GMTDate(
 		fieldNames,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

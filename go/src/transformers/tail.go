@@ -77,10 +77,14 @@ func transformerTailParseCLI(
 		}
 	}
 
-	transformer, _ := NewTransformerTail(
+	transformer, err := NewTransformerTail(
 		tailCount,
 		groupByFieldNames,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

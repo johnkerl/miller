@@ -70,7 +70,11 @@ func transformerFillEmptyParseCLI(
 		}
 	}
 
-	transformer, _ := NewTransformerFillEmpty(fillString)
+	transformer, err := NewTransformerFillEmpty(fillString)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

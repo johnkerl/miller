@@ -86,10 +86,14 @@ func transformerCleanWhitespaceParseCLI(
 		transformerCleanWhitespaceUsage(os.Stderr, true, 1)
 	}
 
-	transformer, _ := NewTransformerCleanWhitespace(
+	transformer, err := NewTransformerCleanWhitespace(
 		doKeys,
 		doValues,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

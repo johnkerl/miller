@@ -149,13 +149,17 @@ func transformerStats1ParseCLI(
 		os.Exit(1)
 	}
 
-	transformer, _ := NewTransformerStats1(
+	transformer, err := NewTransformerStats1(
 		accumulatorNameList,
 		valueFieldNameList,
 		groupByFieldNameList,
 		doInterpolatedPercentiles,
 		doIterativeStats,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer

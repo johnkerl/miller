@@ -146,13 +146,17 @@ func transformerMostOrLeastFrequentParseCLI(
 		return nil
 	}
 
-	transformer, _ := NewTransformerMostOrLeastFrequent(
+	transformer, err := NewTransformerMostOrLeastFrequent(
 		groupByFieldNames,
 		maxOutputLength,
 		showCounts,
 		outputFieldName,
 		descending,
 	)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	*pargi = argi
 	return transformer
