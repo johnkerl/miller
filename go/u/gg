@@ -53,9 +53,10 @@ mention() {
 
 # ================================================================
 
-echo x=1 | ../c/mlr  merge-fields -a min -f x -o foo
-echo x=1 | ../go/mlr merge-fields -a min -f x -o foo
-echo y=1 | ../c/mlr  merge-fields -a min -f x -o foo
-echo y=1 | ../go/mlr merge-fields -a min -f x -o foo
+mlr --c2p cat regtest/input/merge-fields-in-out.csv
+echo
+../c/mlr --csvlite --opprint merge-fields    -a p0,min,p29,max,p100,sum -c _in,_out regtest/input/merge-fields-in-out.csv
+echo
+../go/mlr --csvlite --opprint merge-fields    -a p0,min,p29,max,p100,sum -c _in,_out regtest/input/merge-fields-in-out.csv
 
 # ================================================================

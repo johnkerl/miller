@@ -506,7 +506,7 @@ func (this *TransformerMergeFields) transformByCollapsing(
 			namedAccumulators = iNamedAccumulators.(*lib.OrderedMap)
 		}
 
-		for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		for pa := namedAccumulators.Head; pa != nil; pa = pa.Next {
 			accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 			accumulator.Ingest(mvalue)
 		}
