@@ -1,6 +1,8 @@
 ================================================================
 TOP OF LIST:
 
+* case auxfiles: cat them too
+
 * blocker: regexes
   o finish stats1 -r
   o regex captures ...
