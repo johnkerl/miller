@@ -379,25 +379,27 @@ func (this *TransformerMergeFields) transformByNameRegex(
 
 	for pe := inrec.Head; pe != nil; /* increment inside loop*/ {
 		valueFieldName := pe.Key
+
 		matched := false
-
 		for _, valueFieldNameRegex := range this.valueFieldNameRegexes {
-			matched = valueFieldNameRegex.MatchString(pe.Key)
-			if !matched {
-				continue
+			if valueFieldNameRegex.MatchString(pe.Key) {
+				matched = true
+				break
 			}
+		}
+		if !matched {
+			pe = pe.Next
+			continue
+		}
 
-			mvalue := inrec.Get(valueFieldName)
-			if mvalue != nil { // Key present
-				pe = pe.Next
-				continue
-			}
+		mvalue := inrec.Get(valueFieldName)
 
-			for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
-				accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
-				accumulator.Ingest(mvalue)
-			}
+		if mvalue == nil { // Key not present
+			pe = pe.Next
+			continue
+		}
 
+		if mvalue.IsEmpty() { // Key present with empty value
 			if !this.keepInputFields { // We are modifying the record while iterating over it.
 				next := pe.Next
 				inrec.Unlink(pe)
@@ -405,9 +407,19 @@ func (this *TransformerMergeFields) transformByNameRegex(
 			} else {
 				pe = pe.Next
 			}
+			continue
 		}
 
-		if !matched {
+		for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+			accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
+			accumulator.Ingest(mvalue)
+		}
+
+		if !this.keepInputFields { // We are modifying the record while iterating over it.
+			next := pe.Next
+			inrec.Unlink(pe)
+			pe = next
+		} else {
 			pe = pe.Next
 		}
 	}
