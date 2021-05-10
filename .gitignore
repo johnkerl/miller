@@ -1,5 +1,6 @@
 autom4te.cache
-mlr
+c/mlr
+go/mlr
 mlrd
 mlrg
 mlrp
