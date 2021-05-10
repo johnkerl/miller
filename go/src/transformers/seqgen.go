@@ -34,9 +34,9 @@ func transformerSeqgenUsage(
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {name} (default \"i\") Field name for counters.\n")
-	fmt.Fprintf(o, "-start {value} (default 1) Inclusive start value.\n")
-	fmt.Fprintf(o, "-step {value} (default 1) Step value.\n")
-	fmt.Fprintf(o, "-stop {value} (default 100) Inclusive stop value.\n")
+	fmt.Fprintf(o, "--start {value} (default 1) Inclusive start value.\n")
+	fmt.Fprintf(o, "--step {value} (default 1) Step value.\n")
+	fmt.Fprintf(o, "--stop {value} (default 100) Inclusive stop value.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	fmt.Fprintf(o, "Start, stop, and/or step may be floating-point. Output is integer if start,\n")

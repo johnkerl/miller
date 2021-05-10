@@ -686,9 +686,9 @@ output as specified by the options
 
 Options:
 -f {name} (default "i") Field name for counters.
--start {value} (default 1) Inclusive start value.
--step {value} (default 1) Step value.
--stop {value} (default 100) Inclusive stop value.
+--start {value} (default 1) Inclusive start value.
+--step {value} (default 1) Step value.
+--stop {value} (default 100) Inclusive stop value.
 -h|--help Show this message.
 Start, stop, and/or step may be floating-point. Output is integer if start,
 stop, and step are all integers. Step may be negative. It may not be zero
