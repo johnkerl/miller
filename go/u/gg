@@ -53,16 +53,9 @@ mention() {
 
 # ================================================================
 
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f x,y -b u
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -b x
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f z,w,s -b v
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -b nonesuch
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,nonesuch -b x
-
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f x,y -a u
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -a x
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f z,w,s -a v
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,v -a nonesuch
-run_mlr --from ../go/regtest/input/reorder.dkvp reorder -f u,nonesuch -a x
+echo x=1 | ../c/mlr  merge-fields -a min -f x -o foo
+echo x=1 | ../go/mlr merge-fields -a min -f x -o foo
+echo y=1 | ../c/mlr  merge-fields -a min -f x -o foo
+echo y=1 | ../go/mlr merge-fields -a min -f x -o foo
 
 # ================================================================

@@ -437,7 +437,11 @@ func (this *Stats1MinAccumulator) Ingest(value *types.Mlrval) {
 	this.min = types.MlrvalBinaryMin(this.min, value)
 }
 func (this *Stats1MinAccumulator) Emit() *types.Mlrval {
-	return this.min.Copy()
+	if this.min.IsAbsent() {
+		return types.MLRVAL_VOID
+	} else {
+		return this.min.Copy()
+	}
 }
 func (this *Stats1MinAccumulator) Reset() {
 	this.min = types.MLRVAL_ABSENT
@@ -457,7 +461,11 @@ func (this *Stats1MaxAccumulator) Ingest(value *types.Mlrval) {
 	this.max = types.MlrvalBinaryMax(this.max, value)
 }
 func (this *Stats1MaxAccumulator) Emit() *types.Mlrval {
-	return this.max.Copy()
+	if this.max.IsAbsent() {
+		return types.MLRVAL_VOID
+	} else {
+		return this.max.Copy()
+	}
 }
 func (this *Stats1MaxAccumulator) Reset() {
 	this.max = types.MLRVAL_ABSENT
