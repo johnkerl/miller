@@ -1,1 +1,1 @@
-mlr put '@["s"] = $x; emit @s' regtest/input/abixy
+mlr put -f ${CASEDIR}/mlr regtest/input/abixy

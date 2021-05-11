@@ -1,1 +1,1 @@
-mlr --opprint put '@s = NR; $t = @s; $u=@["s"]; $v = $t - $u' regtest/input/abixy
+mlr --opprint put -f ${CASEDIR}/mlr regtest/input/abixy
