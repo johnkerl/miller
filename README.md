@@ -28,6 +28,8 @@ including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 * [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
 * [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
 * [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
+* [Linux Magazine: Process structured text files with Miller](https://www.linux-magazine.com/Issues/2016/187/Miller)
+* [Miller: Command Line CSV File Processing](https://onepointzero.app/posts/miller-command-line-csv-file-processing/)
 
 # More documentation links
 
