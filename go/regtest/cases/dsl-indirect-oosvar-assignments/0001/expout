@@ -1,24 +1,3 @@
-DSL EXPRESSION:
-@s = NR; $t = @s; $u=@["s"]; $v = $t - $u
-
-AST:
-* statement block
-    * assignment "="
-        * direct oosvar value "s"
-        * context variable "NR"
-    * assignment "="
-        * direct field value "t"
-        * direct oosvar value "s"
-    * assignment "="
-        * direct field value "u"
-        * indirect oosvar value "@[]"
-            * string literal "s"
-    * assignment "="
-        * direct field value "v"
-        * operator "-"
-            * direct field value "t"
-            * direct field value "u"
-
 a   b   i  x                   y                   t  u  v
 pan pan 1  0.3467901443380824  0.7268028627434533  1  1  0
 eks pan 2  0.7586799647899636  0.5221511083334797  2  2  0

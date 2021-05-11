@@ -11,6 +11,12 @@ TOP OF LIST:
   o --d2n commawrong
   o --p2c et al
 
+* regtest emit factors:
+  o saveoffs:
+    regtest/cases-pending-go-port/dsl-absent-empty/0012/cmd
+
+* case auxfiles: cat them too
+
 * blocker: regexes
   o finish stats1 -r
   o regex captures ...
