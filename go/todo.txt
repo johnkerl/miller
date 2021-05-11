@@ -1,6 +1,10 @@
 ================================================================
 TOP OF LIST:
 
+* regtest emit factors:
+  o saveoffs:
+    regtest/cases-pending-go-port/dsl-absent-empty/0012/cmd
+
 * case auxfiles: cat them too
 
 * blocker: regexes
