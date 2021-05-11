@@ -1,6 +1,16 @@
 ================================================================
 TOP OF LIST:
 
+* tools/perf:
+  o https://eng.uber.com/pprof-go-profiler/
+  o profile mlr --j2x cat mappings.json
+  o golang static-analysis tool -- ?
+
+* blockers:
+  o repifs, for nidx & pprint both
+  o --d2n commawrong
+  o --p2c et al
+
 * blocker: regexes
   o finish stats1 -r
   o regex captures ...
