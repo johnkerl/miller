@@ -29,6 +29,8 @@ import (
 //   need the contexts.
 
 func Stream(
+	// fileNames argument is separate from options.FileNames for in-place mode,
+	// which sends along only one file name per call to Stream():
 	fileNames []string,
 	options cliutil.TOptions,
 	recordTransformers []transforming.IRecordTransformer,

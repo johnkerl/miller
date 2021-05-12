@@ -114,16 +114,6 @@ func processInPlace(
 		}
 		tempFileName := handle.Name()
 
-		// TODO
-		//		char* tempname = alloc_suffixed_temp_file_name(filename)
-		//		FILE* output_stream = fopen(tempname, "wb")
-		//		if (output_stream == nil) {
-		//			perror("fopen")
-		//			fmt.Fprintf(os.Stderr, "%s: Could not open \"%s\" for write.\n",
-		//				lib.MlrExeName(), tempname)
-		//			os.Exit(1)
-		//		}
-
 		options, recordTransformers, err := cli.ParseCommandLine(os.Args)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
