@@ -3,7 +3,6 @@ package output
 import (
 	"encoding/csv"
 	"io"
-	"os"
 	"strings"
 
 	"miller/src/cliutil"
@@ -41,7 +40,7 @@ func (this *RecordWriterCSV) Write(
 	}
 
 	if this.csvWriter == nil {
-		this.csvWriter = csv.NewWriter(os.Stdout)
+		this.csvWriter = csv.NewWriter(ostream)
 		this.csvWriter.Comma = rune(this.ofs[0]) // xxx temp
 	}
 

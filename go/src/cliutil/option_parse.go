@@ -851,10 +851,10 @@ func ParseMiscOptions(
 		options.NoInput = true
 		argi += 1
 
-		//	} else if args[argi] == "-I" {
-		//		options.do_in_place = true;
-		//		argi += 1;
-		//
+	} else if args[argi] == "-I" {
+		options.DoInPlace = true
+		argi += 1
+
 	} else if args[argi] == "--from" {
 		CheckArgCount(args, argi, argc, 2)
 		options.FileNames = append(options.FileNames, args[argi+1])

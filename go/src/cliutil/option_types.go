@@ -110,10 +110,8 @@ type TOptions struct {
 	//
 	//	char* ofmt;
 	//	nr_progress_mod int64u;
-	//
-	//	do_in_place bool;
-	//
-	NoInput bool // mlr -n
+	DoInPlace bool // mlr -I
+	NoInput   bool // mlr -n
 
 	HaveRandSeed bool
 	RandSeed     int

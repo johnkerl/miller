@@ -29,8 +29,12 @@ import (
 //   need the contexts.
 
 func Stream(
+	// fileNames argument is separate from options.FileNames for in-place mode,
+	// which sends along only one file name per call to Stream():
+	fileNames []string,
 	options cliutil.TOptions,
 	recordTransformers []transforming.IRecordTransformer,
+	outputStream *os.File,
 ) error {
 
 	// Since Go is concurrent, the context struct needs to be duplicated and
@@ -62,9 +66,9 @@ func Stream(
 	// Start the reader, transformer, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
 
-	go recordReader.Read(options.FileNames, *initialContext, inputChannel, errorChannel)
+	go recordReader.Read(fileNames, *initialContext, inputChannel, errorChannel)
 	go transforming.ChainTransformer(inputChannel, recordTransformers, outputChannel)
-	go output.ChannelWriter(outputChannel, recordWriter, doneChannel, os.Stdout)
+	go output.ChannelWriter(outputChannel, recordWriter, doneChannel, outputStream)
 
 	done := false
 	for !done {
