@@ -41,7 +41,7 @@ func Main() {
 		os.Exit(1)
 	}
 
-	err = stream.Stream(options, recordTransformers)
+	err = stream.Stream(options.FileNames, options, recordTransformers)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 		os.Exit(1)
