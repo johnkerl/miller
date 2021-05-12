@@ -197,7 +197,7 @@ package cli
 //	options.ofmt            = nil;
 //	options.nr_progress_mod = 0LL;
 //
-//	options.do_in_place     = false;
+//	options.DoInPlace     = false;
 //
 //	options.no_input        = false;
 //	options.have_rand_seed  = false;

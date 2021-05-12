@@ -78,11 +78,11 @@ func mainUsageLong(o *os.File, argv0 string) {
 	//	fmt.Fprintf(o, "NUMERICAL FORMATTING:\n");
 	//	mainUsageNumericalFormatting(o, argv0);
 	//	fmt.Fprintf(o, "\n");
-	//
-	//	fmt.Fprintf(o, "OTHER OPTIONS:\n");
-	//	mainUsageOtherOptions(o, argv0);
-	//	fmt.Fprintf(o, "\n");
-	//
+
+	fmt.Fprintf(o, "OTHER OPTIONS:\n")
+	mainUsageOtherOptions(o, argv0)
+	fmt.Fprintf(o, "\n")
+
 	fmt.Fprintf(o, "THEN-CHAINING:\n")
 	mainUsageThenChaining(o, argv0)
 	fmt.Fprintf(o, "\n")
@@ -481,26 +481,27 @@ func mainUsageFormatConversionKeystrokeSaverOptions(o *os.File, argv0 string) {
 //	fmt.Fprintf(o, "                     Defaults to %s.\n", DEFAULT_OFMT);
 //}
 
-//func mainUsageOtherOptions(o *os.File, argv0 string) {
-//	fmt.Fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter\n");
-//	fmt.Fprintf(o, "                     urand()/urandint()/urand32().\n");
-//	fmt.Fprintf(o, "  --nr-progress-mod {m}, with m a positive integer: print filename and record\n");
-//	fmt.Fprintf(o, "                     count to os.Stderr every m input records.\n");
-//	fmt.Fprintf(o, "  --from {filename}  Use this to specify an input file before the verb(s),\n");
-//	fmt.Fprintf(o, "                     rather than after. May be used more than once. Example:\n");
-//	fmt.Fprintf(o, "                     \"%s --from a.dat --from b.dat cat\" is the same as\n", argv0);
-//	fmt.Fprintf(o, "                     \"%s cat a.dat b.dat\".\n", argv0);
-//	fmt.Fprintf(o, "  -n                 Process no input files, nor standard input either. Useful\n");
-//	fmt.Fprintf(o, "                     for %s put with begin/end statements only. (Same as --from\n", argv0);
-//	fmt.Fprintf(o, "                     /dev/null.) Also useful in \"%s -n put -v '...'\" for\n", argv0);
-//	fmt.Fprintf(o, "                     analyzing abstract syntax trees (if that's your thing).\n");
-//	fmt.Fprintf(o, "  -I                 Process files in-place. For each file name on the command\n");
-//	fmt.Fprintf(o, "                     line, output is written to a temp file in the same\n");
-//	fmt.Fprintf(o, "                     directory, which is then renamed over the original. Each\n");
-//	fmt.Fprintf(o, "                     file is processed in isolation: if the output format is\n");
-//	fmt.Fprintf(o, "                     CSV, CSV headers will be present in each output file;\n");
-//	fmt.Fprintf(o, "                     statistics are only over each file's own records; and so on.\n");
-//}
+// TODO
+func mainUsageOtherOptions(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter\n")
+	fmt.Fprintf(o, "                     urand()/urandint()/urand32().\n")
+	fmt.Fprintf(o, "  --nr-progress-mod {m}, with m a positive integer: print filename and record\n")
+	fmt.Fprintf(o, "                     count to os.Stderr every m input records.\n")
+	fmt.Fprintf(o, "  --from {filename}  Use this to specify an input file before the verb(s),\n")
+	fmt.Fprintf(o, "                     rather than after. May be used more than once. Example:\n")
+	fmt.Fprintf(o, "                     \"%s --from a.dat --from b.dat cat\" is the same as\n", argv0)
+	fmt.Fprintf(o, "                     \"%s cat a.dat b.dat\".\n", argv0)
+	fmt.Fprintf(o, "  -n                 Process no input files, nor standard input either. Useful\n")
+	fmt.Fprintf(o, "                     for %s put with begin/end statements only. (Same as --from\n", argv0)
+	fmt.Fprintf(o, "                     /dev/null.) Also useful in \"%s -n put -v '...'\" for\n", argv0)
+	fmt.Fprintf(o, "                     analyzing abstract syntax trees (if that's your thing).\n")
+	fmt.Fprintf(o, "  -I                 Process files in-place. For each file name on the command\n")
+	fmt.Fprintf(o, "                     line, output is written to a temp file in the same\n")
+	fmt.Fprintf(o, "                     directory, which is then renamed over the original. Each\n")
+	fmt.Fprintf(o, "                     file is processed in isolation: if the output format is\n")
+	fmt.Fprintf(o, "                     CSV, CSV headers will be present in each output file;\n")
+	fmt.Fprintf(o, "                     statistics are only over each file's own records; and so on.\n")
+}
 
 func mainUsageThenChaining(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n")

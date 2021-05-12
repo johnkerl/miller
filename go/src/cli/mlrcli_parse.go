@@ -139,10 +139,10 @@ func ParseCommandLine(args []string) (
 		options.FileNames = nil
 	}
 
-	//	if (options.do_in_place && (options.FileNames == nil || options.FileNames.length == 0)) {
-	//		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", lib.MlrExeName());
-	//		os.Exit(1);
-	//	}
+	if options.DoInPlace && (options.FileNames == nil || len(options.FileNames) == 0) {
+		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", lib.MlrExeName())
+		os.Exit(1)
+	}
 
 	if options.HaveRandSeed {
 		lib.SeedRandom(int64(options.RandSeed))
@@ -404,9 +404,9 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		//	} else if args[argi] == "--usage-numerical-formatting" {
 		//		mainUsageNumericalFormatting(os.Stdout, lib.MlrExeName());
 		//		return true;
-		//	} else if args[argi] == "--usage-other-options" {
-		//		mainUsageOtherOptions(os.Stdout, lib.MlrExeName());
-		//		return true;
+	} else if args[argi] == "--usage-other-options" {
+		mainUsageOtherOptions(os.Stdout, lib.MlrExeName())
+		return true
 	} else if args[argi] == "--usage-then-chaining" {
 		mainUsageThenChaining(os.Stdout, lib.MlrExeName())
 		return true
