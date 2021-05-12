@@ -366,6 +366,7 @@ func LengthenMlrvalArray(array *[]Mlrval, newLength64 int) {
 	if newLength <= cap(*array) {
 		newArray := (*array)[:newLength]
 		for zindex := len(*array); zindex < newLength; zindex++ {
+			// TODO: comment why not MT_ABSENT
 			newArray[zindex] = MlrvalFromString("")
 		}
 		*array = newArray

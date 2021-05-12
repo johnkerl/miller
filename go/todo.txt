@@ -6,6 +6,22 @@ TOP OF LIST:
   o profile mlr --j2x cat mappings.json
   o golang static-analysis tool -- ?
 
+* 2121 case:
+  o ../c/mlr  --from s put '$z=1+""'
+  o ../go/mlr --from s put '$z=1+""'
+  o array auto-extend:
+    - fill with absent is not ok
+      > Miller internal coding error: absent-values should not have been assigned
+      > cmt mlrval_new.go
+    - fill with empty results in these situations :(
+      > https://miller.readthedocs.io/en/latest/reference.html#null-data-empty-and-absent
+        "Empty values are explicit in the data so they should explicitly affect
+        accumulations: mlr put '@sum += $x' should accumulate numeric x values
+        into the sum but an empty x, when encountered in the input data stream,
+        should make the sum non-numeric."
+    - fill with ... use JSON_NULL here?
+  o needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
+
 * blockers:
   o repifs, for nidx & pprint both
   o --d2n commawrong
