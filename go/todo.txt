@@ -1,33 +1,10 @@
 ================================================================
 TOP OF LIST:
 
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-JSON null:
-* null literal in bnf
-* scan-test for json input
-* write-test for json output
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 * tools/perf:
   o https://eng.uber.com/pprof-go-profiler/
   o profile mlr --j2x cat mappings.json
   o golang static-analysis tool -- ?
-
-* 2121 case:
-  o ../c/mlr  --from s put '$z=1+""'
-  o ../go/mlr --from s put '$z=1+""'
-  o array auto-extend:
-    - fill with absent is not ok
-      > Miller internal coding error: absent-values should not have been assigned
-      > cmt mlrval_new.go
-    - fill with empty results in these situations :(
-      > https://miller.readthedocs.io/en/latest/reference.html#null-data-empty-and-absent
-        "Empty values are explicit in the data so they should explicitly affect
-        accumulations: mlr put '@sum += $x' should accumulate numeric x values
-        into the sum but an empty x, when encountered in the input data stream,
-        should make the sum non-numeric."
-    - fill with ... use JSON_NULL here?
-  o needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
 
 * blockers:
   o repifs, for nidx & pprint both
@@ -72,8 +49,6 @@ JSON null:
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
-
-? blocker? json null
 
 * blocker: smart fmtnum
   - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
@@ -629,3 +604,15 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * doc for DSL hostname/os/version functions
 ? ENV as entire string-string map at RHS/LHS -- ?
 * mongo examples to doc :D
+* doc for array auto-extend:
+  - fill with absent is not ok
+    > Miller internal coding error: absent-values should not have been assigned
+    > cmt mlrval_new.go
+  - fill with empty results in these situations :(
+    > https://miller.readthedocs.io/en/latest/reference.html#null-data-empty-and-absent
+      "Empty values are explicit in the data so they should explicitly affect
+      accumulations: mlr put '@sum += $x' should accumulate numeric x values
+      into the sum but an empty x, when encountered in the input data stream,
+      should make the sum non-numeric."
+  - use JSON null here
+  - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
