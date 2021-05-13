@@ -73,27 +73,32 @@ const (
 	// Key not present in input record, e.g. 'foo = $nosuchkey'
 	MT_ABSENT = 1
 
+	// Used only for JSON null, and for 'empty' slots when an array is
+	// auto-extended by assigning to an index having a gap from the last index.
+	// E.g. x=[1,2,3] then x[5]=5; now x[4] is null
+	MT_NULL = 2
+
 	// Key present in input record with empty value, e.g. input data '$x=,$y=2'
-	MT_VOID = 2
+	MT_VOID = 3
 
-	MT_STRING = 3
+	MT_STRING = 4
 
-	MT_INT = 4
+	MT_INT = 5
 
-	MT_FLOAT = 5
+	MT_FLOAT = 6
 
-	MT_BOOL = 6
+	MT_BOOL = 7
 
-	MT_ARRAY = 7
+	MT_ARRAY = 8
 
-	MT_MAP = 8
+	MT_MAP = 9
 
 	// Not a type -- this is a dimension for disposition vectors and
 	// disposition matrices. For example, when we want to add two mlrvals,
 	// instead of if/elsing or switching on the types of both operands, we
 	// instead jump directly to a type-specific function in a matrix of
 	// function pointers which is MT_DIM x MT_DIM.
-	MT_DIM = 9
+	MT_DIM = 10
 )
 
 var TYPE_NAMES = [MT_DIM]string{
