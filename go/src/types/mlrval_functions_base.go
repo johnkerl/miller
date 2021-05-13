@@ -91,6 +91,11 @@ func _absn1(input1 *Mlrval) *Mlrval {
 	return MLRVAL_ABSENT
 }
 
+// Return zero (unary)
+func _zero1(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(0)
+}
+
 // Return null (unary)
 func _null1(input1 *Mlrval) *Mlrval {
 	return MLRVAL_NULL
@@ -125,6 +130,11 @@ func _null(input1, input2 *Mlrval) *Mlrval {
 // Return void (binary)
 func _void(input1, input2 *Mlrval) *Mlrval {
 	return MLRVAL_VOID
+}
+
+// Return 0 (binary)
+func _zero2(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(0)
 }
 
 // Return first argument (binary)
