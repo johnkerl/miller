@@ -1,6 +1,13 @@
 ================================================================
 TOP OF LIST:
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+JSON null:
+* null literal in bnf
+* scan-test for json input
+* write-test for json output
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 * tools/perf:
   o https://eng.uber.com/pprof-go-profiler/
   o profile mlr --j2x cat mappings.json
@@ -245,14 +252,6 @@ emitp/emitf:
 ! se-q reads
 
 * stats1: actualize -S and -F -- ?
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
-  o https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions
-  o "null can be added to any value, and returns the other value unchanged."
-  o "the length of null is 0"
-  o note json types: string, number, boolean, null, object, array.
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf

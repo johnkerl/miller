@@ -134,7 +134,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	delimiter, isDelim := startToken.(json.Delim)
 	if !isDelim {
 		if startToken == nil {
-			return MLRVAL_VOID, false, nil
+			return MLRVAL_NULL, false, nil
 		}
 
 		sval, ok := startToken.(string)
