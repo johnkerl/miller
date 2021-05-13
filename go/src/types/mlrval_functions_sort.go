@@ -114,24 +114,26 @@ func bbcmp(input1, input2 *Mlrval) int {
 
 // ----------------------------------------------------------------
 // Sort rules (same for min, max, and comparator):
-// * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
+// * NUMERICS < BOOL < STRINGS < ERROR < NULL < ABSENT
 // * error == error (singleton type)
 // * absent == absent (singleton type)
+// * null == null (singleton type)
 // * string compares on strings
 // * numeric compares on numbers
 // * false < true
 
 var num_cmp_dispositions = [MT_DIM][MT_DIM]ComparatorFunc{
-	//       .  ERROR   ABSENT VOID   STRING INT    FLOAT  BOOL    ARRAY MAP
-	/*ERROR  */ {_zero, _neg1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
-	/*ABSENT */ {_pos1, _zero, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
-	/*VOID   */ {_neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero},
-	/*STRING */ {_neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero},
-	/*INT    */ {_neg1, _neg1, _neg1, _neg1, iicmp, ifcmp, _neg1, _zero, _zero},
-	/*FLOAT  */ {_neg1, _neg1, _neg1, _neg1, ficmp, ffcmp, _neg1, _zero, _zero},
-	/*BOOL   */ {_neg1, _neg1, _neg1, _neg1, _pos1, _pos1, bbcmp, _zero, _zero},
-	/*ARRAY  */ {_zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
-	/*MAP    */ {_zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
+	//       .  ERROR   ABSENT NULL   VOID   STRING INT    FLOAT  BOOL   ARRAY  MAP
+	/*ERROR  */ {_zero, _neg1, _neg1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
+	/*ABSENT */ {_pos1, _zero, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
+	/*NULL   */ {_pos1, _neg1, _zero, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1},
+	/*VOID   */ {_neg1, _neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero},
+	/*STRING */ {_neg1, _neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero},
+	/*INT    */ {_neg1, _neg1, _neg1, _neg1, _neg1, iicmp, ifcmp, _neg1, _zero, _zero},
+	/*FLOAT  */ {_neg1, _neg1, _neg1, _neg1, _neg1, ficmp, ffcmp, _neg1, _zero, _zero},
+	/*BOOL   */ {_neg1, _neg1, _neg1, _neg1, _neg1, _pos1, _pos1, bbcmp, _zero, _zero},
+	/*ARRAY  */ {_zero, _zero, _neg1, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
+	/*MAP    */ {_zero, _zero, _neg1, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
 }
 
 func NumericAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {

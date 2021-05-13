@@ -104,6 +104,7 @@ const (
 var TYPE_NAMES = [MT_DIM]string{
 	"error",
 	"absent",
+	"null",
 	"empty", // For backward compatiblity with the C impl: this is user-visible
 	"string",
 	"int",

@@ -206,20 +206,8 @@ func ne_b_mm(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(!input1.mapval.Equals(input2.mapval))
 }
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//var eq_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-//	//       .  ERROR   ABSENT VOID     STRING   INT      FLOAT    BOOL     ARRAY    MAP
-//	/*ERROR  */ {_erro, _erro, _erro,   _erro,   _erro,   _erro,   _erro,   _erro,   _erro},
-//	/*ABSENT */ {_erro, _absn, _absn,   _absn,   _absn,   _absn,   _absn,   _absn,   _absn},
-//	/*VOID   */ {_erro, _absn, eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _fals,   _fals,   _fals},
-//	/*STRING */ {_erro, _absn, eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _fals,   _fals,   _fals},
-//	/*INT    */ {_erro, _absn, eq_b_xs, eq_b_xs, eq_b_ii, eq_b_if, _fals,   _fals,   _fals},
-//	/*FLOAT  */ {_erro, _absn, eq_b_xs, eq_b_xs, eq_b_fi, eq_b_ff, _fals,   _fals,   _fals},
-//	/*BOOL   */ {_erro, _absn, _fals,   _fals,   _fals,   _fals,   eq_b_bb, _fals,   _fals},
-//	/*ARRAY  */ {_erro, _absn, _fals,   _fals,   _fals,   _fals,   _fals,   eq_b_aa, _fals},
-//	/*MAP    */ {_erro, _absn, _fals,   _fals,   _fals,   _fals,   _fals,   _fals,   eq_b_mm},
-//}
-
+// We get a Golang "initialization loop" due to recursive depth computation
+// if this is defined statically. So, we use a "package init" function.
 var eq_dispositions = [MT_DIM][MT_DIM]BinaryFunc{}
 
 func init() {

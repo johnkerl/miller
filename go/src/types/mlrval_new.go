@@ -15,12 +15,14 @@ import (
 
 var value_MLRVAL_ERROR = mlrvalFromError()
 var value_MLRVAL_ABSENT = mlrvalFromAbsent()
+var value_MLRVAL_NULL = mlrvalFromNull()
 var value_MLRVAL_VOID = mlrvalFromVoid()
 var value_MLRVAL_TRUE = mlrvalFromTrue()
 var value_MLRVAL_FALSE = mlrvalFromFalse()
 
 var MLRVAL_ERROR = &value_MLRVAL_ERROR
 var MLRVAL_ABSENT = &value_MLRVAL_ABSENT
+var MLRVAL_NULL = &value_MLRVAL_NULL
 var MLRVAL_VOID = &value_MLRVAL_VOID
 var MLRVAL_TRUE = &value_MLRVAL_TRUE
 var MLRVAL_FALSE = &value_MLRVAL_FALSE
@@ -213,6 +215,19 @@ func mlrvalFromAbsent() Mlrval {
 	return Mlrval{
 		mvtype:        MT_ABSENT,
 		printrep:      "(absent)",
+		printrepValid: true,
+		intval:        0,
+		floatval:      0.0,
+		boolval:       false,
+		arrayval:      nil,
+		mapval:        nil,
+	}
+}
+
+func mlrvalFromNull() Mlrval {
+	return Mlrval{
+		mvtype:        MT_NULL,
+		printrep:      "null",
 		printrepValid: true,
 		intval:        0,
 		floatval:      0.0,
