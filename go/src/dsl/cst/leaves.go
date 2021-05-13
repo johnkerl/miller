@@ -62,6 +62,9 @@ func (this *RootNode) BuildLeafNode(
 	case dsl.NodeTypeBoolLiteral:
 		return this.BuildBoolLiteralNode(sval), nil
 		break
+	case dsl.NodeTypeNullLiteral:
+		return this.BuildNullLiteralNode(), nil
+		break
 	case dsl.NodeTypeContextVariable:
 		return this.BuildContextVariableNode(astNode)
 		break
@@ -254,6 +257,22 @@ func (this *BoolLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return &this.literal
+}
+
+// ----------------------------------------------------------------
+type NullLiteralNode struct {
+	literal *types.Mlrval
+}
+
+func (this *RootNode) BuildNullLiteralNode() *NullLiteralNode {
+	return &NullLiteralNode{
+		literal: types.MLRVAL_NULL,
+	}
+}
+func (this *NullLiteralNode) Evaluate(
+	state *runtime.State,
+) *types.Mlrval {
+	return this.literal
 }
 
 // ================================================================
