@@ -68,6 +68,7 @@ func init() {
 	depth_dispositions = [MT_DIM]UnaryFunc{
 		/*ERROR  */ _erro1,
 		/*ABSENT */ _absn1,
+		/*NULL   */ _zero1,
 		/*VOID   */ depth_from_scalar,
 		/*STRING */ depth_from_scalar,
 		/*INT    */ depth_from_scalar,
@@ -132,6 +133,7 @@ func leafcount_from_scalar(input1 *Mlrval) *Mlrval {
 var leafcount_dispositions = [MT_DIM]UnaryFunc{
 	/*ERROR  */ _erro1,
 	/*ABSENT */ _absn1,
+	/*NULL   */ _zero1,
 	/*VOID   */ leafcount_from_scalar,
 	/*STRING */ leafcount_from_scalar,
 	/*INT    */ leafcount_from_scalar,

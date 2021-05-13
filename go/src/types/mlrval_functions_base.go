@@ -91,6 +91,16 @@ func _absn1(input1 *Mlrval) *Mlrval {
 	return MLRVAL_ABSENT
 }
 
+// Return zero (unary)
+func _zero1(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(0)
+}
+
+// Return null (unary)
+func _null1(input1 *Mlrval) *Mlrval {
+	return MLRVAL_NULL
+}
+
 // Return void (unary)
 func _void1(input1 *Mlrval) *Mlrval {
 	return MLRVAL_VOID
@@ -112,9 +122,19 @@ func _absn(input1, input2 *Mlrval) *Mlrval {
 	return MLRVAL_ABSENT
 }
 
+// Return null (binary)
+func _null(input1, input2 *Mlrval) *Mlrval {
+	return MLRVAL_NULL
+}
+
 // Return void (binary)
 func _void(input1, input2 *Mlrval) *Mlrval {
 	return MLRVAL_VOID
+}
+
+// Return 0 (binary)
+func _zero2(input1 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(0)
 }
 
 // Return first argument (binary)
@@ -125,6 +145,11 @@ func _1___(input1, input2 *Mlrval) *Mlrval {
 // Return second argument (binary)
 func _2___(input1, input2 *Mlrval) *Mlrval {
 	return input2
+}
+
+// Return negative second argument (binary)
+func _n2__(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalUnaryMinus(input2)
 }
 
 // Return first argument, as string (binary)

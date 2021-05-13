@@ -22,6 +22,7 @@ func math_unary_f_f(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval {
 var mudispo = [MT_DIM]mathLibUnaryFuncWrapper{
 	/*ERROR  */ _math_unary_erro1,
 	/*ABSENT */ _math_unary_absn1,
+	/*NULL   */ _math_unary_null1,
 	/*VOID   */ _math_unary_void1,
 	/*STRING */ _math_unary_erro1,
 	/*INT    */ math_unary_f_i,
@@ -78,16 +79,17 @@ func pow_f_ff(input1, input2 *Mlrval) *Mlrval {
 }
 
 var pow_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT VOID   STRING INT    FLOAT  BOOL ARRAY MAP
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
-	/*VOID   */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
-	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*INT    */ {_erro, _1___, _void, _erro, pow_f_ii, pow_f_if, _erro, _absn, _absn},
-	/*FLOAT  */ {_erro, _1___, _void, _erro, pow_f_fi, pow_f_ff, _erro, _absn, _absn},
-	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
-	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	//       .  ERROR   ABSENT NULL   VOID   STRING INT       FLOAT     BOOL   ARRAY  MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
+	/*NULL   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*VOID   */ {_erro, _absn, _erro, _void, _erro, _void, _void, _erro, _absn, _absn},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*INT    */ {_erro, _1___, _erro, _void, _erro, pow_f_ii, pow_f_if, _erro, _absn, _absn},
+	/*FLOAT  */ {_erro, _1___, _erro, _void, _erro, pow_f_fi, pow_f_ff, _erro, _absn, _absn},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
 func MlrvalPow(input1, input2 *Mlrval) *Mlrval {
@@ -109,16 +111,17 @@ func atan2_f_ff(input1, input2 *Mlrval) *Mlrval {
 }
 
 var atan2_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT VOID   STRING INT    FLOAT  BOOL ARRAY MAP
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
-	/*VOID   */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
-	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*INT    */ {_erro, _1___, _void, _erro, atan2_f_ii, atan2_f_if, _erro, _absn, _absn},
-	/*FLOAT  */ {_erro, _1___, _void, _erro, atan2_f_fi, atan2_f_ff, _erro, _absn, _absn},
-	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
-	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	//       .  ERROR   ABSENT NULL   VOID   STRING INT         FLOAT       BOOL   ARRAY  MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
+	/*NULL   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*VOID   */ {_erro, _absn, _erro, _void, _erro, _void, _void, _erro, _absn, _absn},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*INT    */ {_erro, _1___, _erro, _void, _erro, atan2_f_ii, atan2_f_if, _erro, _absn, _absn},
+	/*FLOAT  */ {_erro, _1___, _erro, _void, _erro, atan2_f_fi, atan2_f_ff, _erro, _absn, _absn},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
 func MlrvalAtan2(input1, input2 *Mlrval) *Mlrval {
@@ -144,16 +147,17 @@ func roundm_f_ff(input1, input2 *Mlrval) *Mlrval {
 }
 
 var roundm_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//           ERROR  ABSENT VOID   STRING INT    FLOAT  BOOL ARRAY MAP
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*ABSENT */ {_erro, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
-	/*VOID   */ {_erro, _absn, _void, _erro, _void, _void, _erro, _absn, _absn},
-	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*INT    */ {_erro, _1___, _void, _erro, roundm_f_ii, roundm_f_if, _erro, _absn, _absn},
-	/*FLOAT  */ {_erro, _1___, _void, _erro, roundm_f_fi, roundm_f_ff, _erro, _absn, _absn},
-	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*ARRAY  */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
-	/*MAP    */ {_absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	//       .  ERROR   ABSENT NULL   VOID   STRING INT          FLOAT        BOOL   ARRAY  MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn},
+	/*NULL   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*VOID   */ {_erro, _absn, _erro, _void, _erro, _void, _void, _erro, _absn, _absn},
+	/*STRING */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*INT    */ {_erro, _1___, _erro, _void, _erro, roundm_f_ii, roundm_f_if, _erro, _absn, _absn},
+	/*FLOAT  */ {_erro, _1___, _erro, _void, _erro, roundm_f_fi, roundm_f_ff, _erro, _absn, _absn},
+	/*BOOL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ARRAY  */ {_absn, _absn, _erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*MAP    */ {_absn, _absn, _erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
 }
 
 func MlrvalRoundm(input1, input2 *Mlrval) *Mlrval {

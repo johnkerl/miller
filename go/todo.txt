@@ -6,22 +6,6 @@ TOP OF LIST:
   o profile mlr --j2x cat mappings.json
   o golang static-analysis tool -- ?
 
-* 2121 case:
-  o ../c/mlr  --from s put '$z=1+""'
-  o ../go/mlr --from s put '$z=1+""'
-  o array auto-extend:
-    - fill with absent is not ok
-      > Miller internal coding error: absent-values should not have been assigned
-      > cmt mlrval_new.go
-    - fill with empty results in these situations :(
-      > https://miller.readthedocs.io/en/latest/reference.html#null-data-empty-and-absent
-        "Empty values are explicit in the data so they should explicitly affect
-        accumulations: mlr put '@sum += $x' should accumulate numeric x values
-        into the sum but an empty x, when encountered in the input data stream,
-        should make the sum non-numeric."
-    - fill with ... use JSON_NULL here?
-  o needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
-
 * blockers:
   o repifs, for nidx & pprint both
   o --d2n commawrong
@@ -65,8 +49,6 @@ TOP OF LIST:
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
-
-? blocker? json null
 
 * blocker: smart fmtnum
   - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
@@ -245,14 +227,6 @@ emitp/emitf:
 ! se-q reads
 
 * stats1: actualize -S and -F -- ?
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! JSON null needs to be passed through as-is ... somehow ... new mlrval type??
-  o https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions
-  o "null can be added to any value, and returns the other value unchanged."
-  o "the length of null is 0"
-  o note json types: string, number, boolean, null, object, array.
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
@@ -630,3 +604,15 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * doc for DSL hostname/os/version functions
 ? ENV as entire string-string map at RHS/LHS -- ?
 * mongo examples to doc :D
+* doc for array auto-extend:
+  - fill with absent is not ok
+    > Miller internal coding error: absent-values should not have been assigned
+    > cmt mlrval_new.go
+  - fill with empty results in these situations :(
+    > https://miller.readthedocs.io/en/latest/reference.html#null-data-empty-and-absent
+      "Empty values are explicit in the data so they should explicitly affect
+      accumulations: mlr put '@sum += $x' should accumulate numeric x values
+      into the sum but an empty x, when encountered in the input data stream,
+      should make the sum non-numeric."
+  - use JSON null here
+  - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this

@@ -134,7 +134,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	delimiter, isDelim := startToken.(json.Delim)
 	if !isDelim {
 		if startToken == nil {
-			return MLRVAL_VOID, false, nil
+			return MLRVAL_NULL, false, nil
 		}
 
 		sval, ok := startToken.(string)
@@ -279,6 +279,9 @@ func (this *Mlrval) marshalJSONAux(
 	case MT_ABSENT:
 		return this.marshalJSONAbsent()
 		break
+	case MT_NULL:
+		return this.marshalJSONNull()
+		break
 	case MT_VOID:
 		return this.marshalJSONVoid()
 		break
@@ -329,6 +332,12 @@ func (this *Mlrval) marshalJSONAbsent() ([]byte, error) {
 	return nil, errors.New(
 		"Miller internal coding error: absent-values should not have been assigned",
 	)
+}
+
+// ----------------------------------------------------------------
+func (this *Mlrval) marshalJSONNull() ([]byte, error) {
+	lib.InternalCodingErrorIf(this.mvtype != MT_NULL)
+	return []byte("null"), nil
 }
 
 // ----------------------------------------------------------------

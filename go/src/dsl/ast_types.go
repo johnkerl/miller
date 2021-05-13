@@ -29,6 +29,7 @@ const (
 	NodeTypeIntLiteral                          = "int literal"
 	NodeTypeFloatLiteral                        = "float literal"
 	NodeTypeBoolLiteral                         = "bool literal"
+	NodeTypeNullLiteral                         = "null literal"
 	NodeTypeArrayLiteral                        = "array literal"
 	NodeTypeMapLiteral                          = "map literal"
 	NodeTypeMapLiteralKeyValuePair              = "map-literal key-value pair"

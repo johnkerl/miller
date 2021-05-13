@@ -186,6 +186,8 @@ func (this *ASTNode) Text() string {
 		return tokenText
 	case NodeTypeBoolLiteral:
 		return tokenText
+	case NodeTypeNullLiteral:
+		return tokenText
 	case NodeTypeArrayLiteral:
 		return tokenText
 	case NodeTypeMapLiteral:

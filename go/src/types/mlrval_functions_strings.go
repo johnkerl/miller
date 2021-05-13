@@ -43,16 +43,17 @@ func dot_s_xx(input1, input2 *Mlrval) *Mlrval {
 }
 
 var dot_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//       .  ERROR   ABSENT VOID   STRING    INT       FLOAT     BOOL      ARRAY     MAP
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
-	/*ABSENT */ {_erro, _absn, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn},
-	/*VOID   */ {_erro, _void, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn},
-	/*STRING */ {_erro, _1___, _1___, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
-	/*INT    */ {_erro, _s1__, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
-	/*FLOAT  */ {_erro, _s1__, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
-	/*BOOL   */ {_erro, _s1__, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
-	/*ARRAY  */ {_absn, _absn, _absn, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
-	/*MAP    */ {_absn, _absn, _absn, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+	//       .  ERROR   ABSENT NULL   VOID   STRING    INT       FLOAT     BOOL      ARRAY     MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn},
+	/*ABSENT */ {_erro, _absn, _null, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn},
+	/*NULL   */ {_erro, _null, _null, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn},
+	/*VOID   */ {_erro, _void, _void, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn},
+	/*STRING */ {_erro, _1___, _1___, _1___, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+	/*INT    */ {_erro, _s1__, _1___, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+	/*FLOAT  */ {_erro, _s1__, _1___, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+	/*BOOL   */ {_erro, _s1__, _1___, _s1__, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+	/*ARRAY  */ {_absn, _absn, _absn, _absn, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
+	/*MAP    */ {_absn, _absn, _absn, _absn, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx, dot_s_xx},
 }
 
 func MlrvalDot(input1, input2 *Mlrval) *Mlrval {
@@ -315,16 +316,17 @@ func fmtnum_bs(input1, input2 *Mlrval) *Mlrval {
 }
 
 var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//       .  ERROR   ABSENT VOID   STRING INT    FLOAT  BOOL   ARRAY  MAP
-	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*ABSENT */ {_erro, _absn, _erro, _absn, _erro, _erro, _erro, _erro, _erro},
-	/*VOID   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*STRING */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*INT    */ {_erro, _absn, _erro, fmtnum_is, _erro, _erro, _erro, _erro, _erro},
-	/*FLOAT  */ {_erro, _absn, _erro, fmtnum_fs, _erro, _erro, _erro, _erro, _erro},
-	/*BOOL   */ {_erro, _absn, _erro, fmtnum_bs, _erro, _erro, _erro, _erro, _erro},
-	/*ARRAY  */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*MAP    */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	//       .  ERROR   ABSENT NULL   VOID   STRING     INT    FLOAT  BOOL   ARRAY  MAP
+	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _erro, _erro, _absn, _erro, _erro, _erro, _erro, _erro},
+	/*NULL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*VOID   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*STRING */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*INT    */ {_erro, _absn, _erro, _erro, fmtnum_is, _erro, _erro, _erro, _erro, _erro},
+	/*FLOAT  */ {_erro, _absn, _erro, _erro, fmtnum_fs, _erro, _erro, _erro, _erro, _erro},
+	/*BOOL   */ {_erro, _absn, _erro, _erro, fmtnum_bs, _erro, _erro, _erro, _erro, _erro},
+	/*ARRAY  */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*MAP    */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
 func MlrvalFmtNum(input1, input2 *Mlrval) *Mlrval {
