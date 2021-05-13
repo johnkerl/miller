@@ -53,6 +53,7 @@ _letter : 'a'-'z' | 'A'-'Z' ;
 _decdig : '0'-'9' ;
 _hexdig : '0'-'9' | 'a'-'f' | 'A'-'F';
 _bindig : '0'-'1' ;
+_leading_idchar : _letter | '_' ;
 _idchar : _letter | _decdig | '_' ;
 !whitespace : ' ' | '\t' | '\n' | '\r' ;
 !comment : '#'  {.} '\n' ;
@@ -227,6 +228,9 @@ stderr   : 's' 't' 'd' 'e' 'r' 'r' ;
 // Also note: if we omit the '$' here and include it in the parser section
 // below as "$", then we get an LR-1 conflict. So this must be dealt with at
 // the AST level.
+//
+// Also note $1 is a valid field name but @1 is not a valid oosvar name; hence
+// _leading_idchar vs _idchar.
 field_name : '$' _idchar { _idchar } ;
 
 // This is for literal strings but where the field name might have spaces in it
@@ -244,7 +248,7 @@ braced_field_name: '$' '{' _braced_char { _braced_char } '}' ;
 
 full_srec : '$' '*' ;
 
-oosvar_name : '@' _idchar { _idchar } ;
+oosvar_name : '@' _leading_idchar { _idchar } ;
 
 // This is for literal strings but where the oosvar name might have spaces in it
 // or somesuch.
@@ -256,7 +260,7 @@ all         : 'a' 'l' 'l' ;
 // ----------------------------------------------------------------
 // FUNCTIONS AND LOCAL VARIABLES
 
-non_sigil_name : _idchar { _idchar } ;
+non_sigil_name : _leading_idchar { _idchar } ;
 
 // ----------------------------------------------------------------
 // PANIC TOKEN

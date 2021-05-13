@@ -3,8 +3,9 @@
 // over the top of GOCC codegen so that we can customize handling of error
 // messages.
 //
-// Source:      src/parsing/errors.go.template
-// Destination: src/parsing/errors/errors.go
+// Source:       src/parsing/errors.go.template
+// Destination:
+// src/parsing/errors/errors.go
 // ================================================================
 
 package errors
