@@ -147,6 +147,11 @@ func _2___(input1, input2 *Mlrval) *Mlrval {
 	return input2
 }
 
+// Return negative second argument (binary)
+func _n2__(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalUnaryMinus(input2)
+}
+
 // Return first argument, as string (binary)
 func _s1__(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromString(input1.String())
