@@ -99,6 +99,12 @@ func processInPlace(
 	}
 
 	for _, fileName := range fileNames {
+
+		if _, err := os.Stat(fileName); os.IsNotExist(err) {
+			fmt.Fprintf(os.Stderr, "%s: %v\n", lib.MlrExeName(), err)
+			os.Exit(1)
+		}
+
 		// Reconstruct the transformers for each file name, and allocate
 		// reader, mappers, and writer individually for each file name.  This
 		// way CSV headers appear in each file, head -n 10 puts 10 rows for
