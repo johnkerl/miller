@@ -29,6 +29,7 @@ func transformerSortWithinRecordsUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSortWithinRecords)
 	fmt.Fprintln(o, "Outputs records sorted lexically ascending by keys.")
 	fmt.Fprintf(o, "Options:\n")
+	fmt.Fprintf(o, "-r        Recursively sort subobjects/submaps, e.g. for JSON input.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
@@ -47,6 +48,7 @@ func transformerSortWithinRecordsParseCLI(
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
 	argi++
+	doRecurse := false
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -58,6 +60,9 @@ func transformerSortWithinRecordsParseCLI(
 		if opt == "-h" || opt == "--help" {
 			transformerSortWithinRecordsUsage(os.Stdout, true, 0)
 
+		} else if opt == "-r" {
+			doRecurse = true
+
 		} else {
 			transformerSortWithinRecordsUsage(os.Stderr, true, 1)
 		}
@@ -66,7 +71,7 @@ func transformerSortWithinRecordsParseCLI(
 	// TODO: allow sort by key or value?
 	// TODO: allow sort ascendending/descending?
 
-	transformer, err := NewTransformerSortWithinRecords()
+	transformer, err := NewTransformerSortWithinRecords(doRecurse)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -78,11 +83,19 @@ func transformerSortWithinRecordsParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerSortWithinRecords struct {
+	recordTransformerFunc transforming.RecordTransformerFunc
 }
 
-func NewTransformerSortWithinRecords() (*TransformerSortWithinRecords, error) {
+func NewTransformerSortWithinRecords(
+	doRecurse bool,
+) (*TransformerSortWithinRecords, error) {
 
 	this := &TransformerSortWithinRecords{}
+	if doRecurse {
+		this.recordTransformerFunc = this.transformRecursively
+	} else {
+		this.recordTransformerFunc = this.transformNonrecursively
+	}
 
 	return this, nil
 }
@@ -92,9 +105,29 @@ func (this *TransformerSortWithinRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	this.recordTransformerFunc(inrecAndContext, outputChannel)
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerSortWithinRecords) transformNonrecursively(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		inrec.SortByKey()
+	}
+	outputChannel <- inrecAndContext // including end-of-stream marker
+}
+
+// ----------------------------------------------------------------
+func (this *TransformerSortWithinRecords) transformRecursively(
+	inrecAndContext *types.RecordAndContext,
+	outputChannel chan<- *types.RecordAndContext,
+) {
+	if !inrecAndContext.EndOfStream {
+		inrec := inrecAndContext.Record
+		inrec.SortByKeyRecursively()
 	}
 	outputChannel <- inrecAndContext // including end-of-stream marker
 }

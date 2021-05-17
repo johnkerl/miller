@@ -688,6 +688,26 @@ func (this *Mlrmap) SortByKey() {
 	*this = *that
 }
 
+// ----------------------------------------------------------------
+func (this *Mlrmap) SortByKeyRecursively() {
+	keys := this.GetKeys()
+
+	lib.SortStrings(keys)
+
+	that := NewMlrmapAsRecord()
+
+	for _, key := range keys {
+		// Old record will be GC'ed: just move pointers
+		value := this.Get(key)
+		if value.IsMap() {
+			value.mapval.SortByKeyRecursively()
+		}
+		that.PutReference(key, value)
+	}
+
+	*this = *that
+}
+
 // ================================================================
 // PRIVATE METHODS
 
