@@ -53,17 +53,52 @@ mention() {
 
 # ================================================================
 
-mlr --c2p cat regtest/input/merge-fields-in-out.csv
-echo
-../c/mlr --csvlite merge-fields  -a min,max,count,sum -c _in,_out regtest/input/merge-fields-in-out.csv
-echo
-../go/mlr --csvlite merge-fields -a min,max,count,sum -c _in,_out regtest/input/merge-fields-in-out.csv
-echo
-echo
-mlr --c2p cat regtest/input/merge-fields-in-out.csv
-echo
-../c/mlr --csvlite merge-fields  -a p0,p29,p100 -c _in,_out regtest/input/merge-fields-in-out.csv
-echo
-../go/mlr --csvlite merge-fields -a p0,p29,p100 -c _in,_out regtest/input/merge-fields-in-out.csv
+echo "======================================================================== 0"
+path_to_mlr="../c/mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { dump }' s
+path_to_mlr="./mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { dump }' s
+
+echo "======================================================================== 1 GOOD"
+path_to_mlr="../c/mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' s
+path_to_mlr="./mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' s
+
+echo "======================================================================== 2 DIFFERENT SHAPES"
+path_to_mlr="../c/mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emit @sum }' s
+path_to_mlr="./mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emit @sum }' s
+
+echo "======================================================================== 3 GOOD"
+path_to_mlr="../c/mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
+path_to_mlr="./mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
+
+echo "======================================================================== 4 GOOD"
+path_to_mlr="../c/mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' s
+path_to_mlr="./mlr"
+run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' s
+
+echo "======================================================================== 5 GOOD"
+path_to_mlr="../c/mlr"
+run_mlr --oxtab --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' s
+path_to_mlr="./mlr"
+run_mlr --oxtab --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' s
+
+echo "======================================================================== 6 GOOD"
+path_to_mlr="../c/mlr"
+run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @* }' s
+path_to_mlr="./mlr"
+run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @* }' s
+
+echo "======================================================================== 7 EMITP OUTPUT HAS LEADING UNDERSCORE"
+path_to_mlr="../c/mlr"
+run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @*, "prefix" }' s
+path_to_mlr="./mlr"
+run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @*, "prefix" }' s
 
 # ================================================================

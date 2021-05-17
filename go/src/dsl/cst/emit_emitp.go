@@ -60,6 +60,9 @@ type EmitXStatementNode struct {
 	// The "x","y" parts.
 	indexEvaluables []IEvaluable
 
+	// Whether each emittable is 'all'/'@*', or not
+	isFullOosvars []bool
+
 	// Appropriate function to evaluate statements, depending on indexed or not.
 	executorFunc Executor
 
@@ -109,6 +112,7 @@ func (root *RootNode) buildEmitXStatementNode(
 
 	var names []string = nil
 	var emitEvaluables []IEvaluable = nil
+	var isFullOosvars []bool = nil
 	var indexEvaluables []IEvaluable = nil
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -119,13 +123,15 @@ func (root *RootNode) buildEmitXStatementNode(
 	numEmittables := len(emittablesNode.Children)
 	names = make([]string, numEmittables)
 	emitEvaluables = make([]IEvaluable, numEmittables)
+	isFullOosvars = make([]bool, numEmittables)
 	for i, emittableNode := range emittablesNode.Children {
-		name, emitEvaluable, err := root.buildEmittableNode(emittableNode)
+		name, emitEvaluable, isFullOosvar, err := root.buildEmittableNode(emittableNode)
 		if err != nil {
 			return nil, err
 		}
 		names[i] = name
 		emitEvaluables[i] = emitEvaluable
+		isFullOosvars[i] = isFullOosvar
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -150,6 +156,7 @@ func (root *RootNode) buildEmitXStatementNode(
 		names:           names,
 		emitEvaluables:  emitEvaluables,
 		indexEvaluables: indexEvaluables,
+		isFullOosvars:   isFullOosvars,
 		isEmitP:         isEmitP,
 	}
 
@@ -164,7 +171,7 @@ func (root *RootNode) buildEmitXStatementNode(
 
 	if redirectorNode.Type == dsl.NodeTypeNoOp {
 		// No > >> or | was provided.
-		retval.emitToRedirectFunc = retval.emitToRecordStream
+		retval.emitToRedirectFunc = retval.emitRecordToRecordStream
 	} else {
 		// There is > >> or | provided.
 		lib.InternalCodingErrorIf(redirectorNode.Children == nil)
@@ -173,15 +180,15 @@ func (root *RootNode) buildEmitXStatementNode(
 		var err error = nil
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
-			retval.emitToRedirectFunc = retval.emitToFileOrPipe
+			retval.emitToRedirectFunc = retval.emitRecordToFileOrPipe
 			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(root.recordWriterOptions)
 			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stdout)")
 		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
-			retval.emitToRedirectFunc = retval.emitToFileOrPipe
+			retval.emitToRedirectFunc = retval.emitRecordToFileOrPipe
 			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(root.recordWriterOptions)
 			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stderr)")
 		} else {
-			retval.emitToRedirectFunc = retval.emitToFileOrPipe
+			retval.emitToRedirectFunc = retval.emitRecordToFileOrPipe
 
 			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
 			if err != nil {
@@ -220,17 +227,23 @@ func (root *RootNode) buildEmitXStatementNode(
 
 func (root *RootNode) buildEmittableNode(
 	astNode *dsl.ASTNode,
-) (name string, emitEvaluable IEvaluable, err error) {
+) (name string, emitEvaluable IEvaluable, isFullOosvar bool, err error) {
 	name = "_"
 	emitEvaluable = nil
+	isFullOosvar = true
 	err = nil
 
 	if astNode.Type == dsl.NodeTypeLocalVariable {
 		name = string(astNode.Token.Lit)
+		isFullOosvar = false
 	} else if astNode.Type == dsl.NodeTypeDirectOosvarValue {
 		name = string(astNode.Token.Lit)
+		isFullOosvar = false
 	} else if astNode.Type == dsl.NodeTypeDirectFieldValue {
 		name = string(astNode.Token.Lit)
+		isFullOosvar = false
+	} else if astNode.Type == dsl.NodeTypeMapLiteral {
+		isFullOosvar = false
 	}
 
 	// xxx temp
@@ -252,7 +265,7 @@ func (root *RootNode) buildEmittableNode(
 
 	emitEvaluable, err = root.BuildEvaluableNode(astNode)
 
-	return name, emitEvaluable, err
+	return name, emitEvaluable, isFullOosvar, err
 }
 
 // ================================================================
@@ -274,7 +287,57 @@ func (node *EmitXStatementNode) executeNonIndexed(
 		}
 
 		if node.isEmitP {
-			newrec.PutCopy(node.names[i], emittable)
+			if node.isFullOosvars[i] {
+				// The top-level map for 'all oosvars' doesn't have a name --
+				// other than '@*' of course. But we need to not include that
+				// 'name' as the first output slot. Without this check,
+				//
+				//   mlr put -q @sum[$a][$b] += $x; end { emitp @* } foo.dat
+				//
+				// results in something like
+				//
+				//   {
+				//     "_": {
+				//       "sum": {
+				//         "eks": {
+				//           "wye": 0.38139939387114097,
+				//           "zee": 0.6117840605678454
+				//         }
+				//       },
+				//       "count": {
+				//         "eks": {
+				//           "wye": 2,
+				//           "zee": 4,
+				//         }
+				//       },
+				//     }
+				//   }
+				//
+				// when we really want
+				//
+				//   {
+				//     "sum": {
+				//       "eks": {
+				//         "wye": 0.38139939387114097,
+				//         "zee": 0.6117840605678454
+				//       }
+				//     },
+				//     "count": {
+				//       "eks": {
+				//         "wye": 2,
+				//         "zee": 4,
+				//       }
+				//     },
+				//   }
+
+				top := emittable.GetMap()
+				lib.InternalCodingErrorIf(top == nil)
+				for pe := top.Head; pe != nil; pe = pe.Next {
+					newrec.PutCopy(pe.Key, pe.Value)
+				}
+			} else {
+				newrec.PutCopy(node.names[i], emittable)
+			}
 		} else {
 			if emittable.IsMap() {
 				newrec.Merge(emittable.GetMap())
@@ -404,7 +467,7 @@ func (node *EmitXStatementNode) executeIndexedAux(
 }
 
 // ----------------------------------------------------------------
-func (node *EmitXStatementNode) emitToRecordStream(
+func (node *EmitXStatementNode) emitRecordToRecordStream(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
@@ -418,7 +481,7 @@ func (node *EmitXStatementNode) emitToRecordStream(
 }
 
 // ----------------------------------------------------------------
-func (node *EmitXStatementNode) emitToFileOrPipe(
+func (node *EmitXStatementNode) emitRecordToFileOrPipe(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
