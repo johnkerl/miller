@@ -50,8 +50,8 @@ type tEmitToRedirectFunc func(
 ) error
 
 type EmitXStatementNode struct {
-	// These are "_" for maps like in 'emit {...}'; "x" for named variables like
-	// in 'emit @x'.
+	// These are "_" for nameless maps like in 'emit {...}'; "x" for named
+	// variables like in 'emit @x'.
 	names []string
 
 	// Maps or named variables: the @a, @b parts.
@@ -228,7 +228,7 @@ func (root *RootNode) buildEmitXStatementNode(
 func (root *RootNode) buildEmittableNode(
 	astNode *dsl.ASTNode,
 ) (name string, emitEvaluable IEvaluable, isFullOosvar bool, err error) {
-	name = "_"
+	name = ""
 	emitEvaluable = nil
 	isFullOosvar = true
 	err = nil
@@ -243,6 +243,7 @@ func (root *RootNode) buildEmittableNode(
 		name = string(astNode.Token.Lit)
 		isFullOosvar = false
 	} else if astNode.Type == dsl.NodeTypeMapLiteral {
+		name = "_"
 		isFullOosvar = false
 	}
 
@@ -441,7 +442,16 @@ func (node *EmitXStatementNode) executeIndexedAux(
 			if node.isEmitP {
 				for i, nextLevel := range nextLevels {
 					if nextLevel != nil {
-						newrec.PutCopy(mapNames[i], nextLevel)
+						if this.isFullOosvars[i] {
+							// See extended comment for the non-indexed case, above.
+							top := nextLevel.GetMap()
+							lib.InternalCodingErrorIf(top == nil)
+							for pe := top.Head; pe != nil; pe = pe.Next {
+								newrec.PutCopy(pe.Key, pe.Value)
+							}
+						} else {
+							newrec.PutCopy(mapNames[i], nextLevel)
+						}
 					}
 				}
 			} else {

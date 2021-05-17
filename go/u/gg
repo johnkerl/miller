@@ -95,10 +95,18 @@ run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @* }' s
 path_to_mlr="./mlr"
 run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @* }' s
 
-echo "======================================================================== 7 EMITP OUTPUT HAS LEADING UNDERSCORE"
+echo "======================================================================== 7 DIFFERENT SHAPES"
 path_to_mlr="../c/mlr"
-run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @*, "prefix" }' s
+#run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end { emitp @*, "a" }' s
+run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @*, "a" }' s
 path_to_mlr="./mlr"
-run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @*, "prefix" }' s
+run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @*, "a" }' s
+
+echo "======================================================================== 8 ???"
+path_to_mlr="../c/mlr"
+#run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end { emitp (@sum, @count), "a" }' s
+run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
+path_to_mlr="./mlr"
+run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
 
 # ================================================================
