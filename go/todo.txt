@@ -70,6 +70,11 @@ DOC6
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
 
+* defer json comment-handling
+
+* json-triple-quote -- what can be done here?
+* -l/-L?
+
 w survey
   o summary to GHD thread
   o note go-port status ...

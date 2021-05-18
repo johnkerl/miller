@@ -1,0 +1,29 @@
+a          pan
+sums:pan   0.346790
+counts:pan 1
+sums:wye   0.502626
+counts:wye 1
+
+a          eks
+sums:pan   0.758680
+counts:pan 1
+sums:wye   0.381399
+counts:wye 1
+sums:zee   0.611784
+counts:zee 1
+
+a          wye
+sums:wye   0.204603
+counts:wye 1
+sums:pan   0.573289
+counts:pan 1
+
+a          zee
+sums:pan   0.527126
+counts:pan 1
+sums:wye   0.598554
+counts:wye 1
+
+a          hat
+sums:wye   0.031442
+counts:wye 1

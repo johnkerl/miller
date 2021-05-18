@@ -1,0 +1,10 @@
+sums:pan:pan 0.346790
+sums:pan:wye 0.502626
+sums:eks:pan 0.758680
+sums:eks:wye 0.381399
+sums:eks:zee 0.611784
+sums:wye:wye 0.204603
+sums:wye:pan 0.573289
+sums:zee:pan 0.527126
+sums:zee:wye 0.598554
+sums:hat:wye 0.031442
