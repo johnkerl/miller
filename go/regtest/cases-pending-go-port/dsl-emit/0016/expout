@@ -1,0 +1,19 @@
+a   pan
+pan 0.346790
+wye 0.502626
+
+a   eks
+pan 0.758680
+wye 0.381399
+zee 0.611784
+
+a   wye
+wye 0.204603
+pan 0.573289
+
+a   zee
+pan 0.527126
+wye 0.598554
+
+a   hat
+wye 0.031442
