@@ -1,0 +1,4 @@
+a=vee,count:wye=1,count:zee=1
+a=eks,count:wye=1,count:zee=1
+a=vee,sum:wye=2,sum:zee=4
+a=eks,sum:wye=6,sum:zee=8
