@@ -19,6 +19,7 @@ import (
 
 const DefaultPath = "./regtest/cases"
 const CmdName = "cmd"
+const MlrName = "mlr"
 const EnvName = "env"
 const ScriptName = "mlr"
 const PreCopyName = "precopy"
@@ -337,6 +338,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 	}
 
 	slash := string(filepath.Separator) // Or backslash on Windows ... although modern Windows versions handle slashes fine.
+	mlrFileName := caseDir + slash + MlrName
 	envFileName := caseDir + slash + EnvName
 	preCopyFileName := caseDir + slash + PreCopyName
 	expectedStdoutFileName := caseDir + slash + ExpectedStdoutName
@@ -355,6 +357,12 @@ func (regtester *RegTester) executeSingleCmdFile(
 	if verbosityLevel >= 2 {
 		fmt.Println("Command:")
 		fmt.Println(cmd)
+
+		mlr, err := this.loadFile(mlrFileName, caseDir)
+		if err == nil {
+			fmt.Println("Miller DSL script:")
+			fmt.Println(mlr)
+		}
 	}
 
 	if regtester.plainMode {
