@@ -54,59 +54,52 @@ mention() {
 # ================================================================
 
 echo "======================================================================== 0"
-path_to_mlr="../c/mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { dump }' s
-path_to_mlr="./mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { dump }' s
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { dump }' regtest/input/emit2.dkvp
+done
 
-echo "======================================================================== 1 GOOD"
-path_to_mlr="../c/mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' s
-path_to_mlr="./mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' s
 
-echo "======================================================================== 2 DIFFERENT SHAPES"
-path_to_mlr="../c/mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emit @sum }' s
-path_to_mlr="./mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emit @sum }' s
 
-echo "======================================================================== 3 GOOD"
-path_to_mlr="../c/mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
-path_to_mlr="./mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit @*}' regtest/input/emit2.dkvp
+done
 
-echo "======================================================================== 4 GOOD"
-path_to_mlr="../c/mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' s
-path_to_mlr="./mlr"
-run_mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' s
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit @sum, "a"}' regtest/input/emit2.dkvp
+done
 
-echo "======================================================================== 5 GOOD"
-path_to_mlr="../c/mlr"
-run_mlr --oxtab --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' s
-path_to_mlr="./mlr"
-run_mlr --oxtab --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' s
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit @sum, "a", "b"}' regtest/input/emit2.dkvp
+done
 
-echo "======================================================================== 6 GOOD"
-path_to_mlr="../c/mlr"
-run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @* }' s
-path_to_mlr="./mlr"
-run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @* }' s
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit @sum, "a", "b", "c"}' regtest/input/emit2.dkvp
+done
 
-echo "======================================================================== 7 DIFFERENT SHAPES"
-path_to_mlr="../c/mlr"
-#run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end { emitp @*, "a" }' s
-run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @*, "a" }' s
-path_to_mlr="./mlr"
-run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @*, "a" }' s
 
-echo "======================================================================== 8 ???"
-path_to_mlr="../c/mlr"
-#run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end { emitp (@sum, @count), "a" }' s
-run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
-path_to_mlr="./mlr"
-run_mlr --ojson --jvstack put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' s
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emitp @*}' regtest/input/emit2.dkvp
+done
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emitp @sum, "a"}' regtest/input/emit2.dkvp
+done
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emitp @sum, "a", "b"}' regtest/input/emit2.dkvp
+done
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emitp @sum, "a", "b", "c"}' regtest/input/emit2.dkvp
+done
 
 # ================================================================
