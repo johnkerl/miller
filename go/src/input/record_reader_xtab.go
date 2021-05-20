@@ -38,7 +38,8 @@ func (reader *RecordReaderXTAB) Read(
 	filenames []string,
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
+	warningChannel chan error,
+	fatalErrorChannel chan error,
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
@@ -48,9 +49,9 @@ func (reader *RecordReaderXTAB) Read(
 				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
-				errorChannel <- err
+				fatalErrorChannel <- err
 			}
-			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, warningChannel, fatalErrorChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
@@ -60,9 +61,13 @@ func (reader *RecordReaderXTAB) Read(
 					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
-					errorChannel <- err
+					if reader.readerOptions.KeepGoing {
+						warningChannel <- err
+					} else {
+						fatalErrorChannel <- err
+					}
 				} else {
-					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, warningChannel, fatalErrorChannel)
 					handle.Close()
 				}
 			}
@@ -76,7 +81,8 @@ func (reader *RecordReaderXTAB) processHandle(
 	filename string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
+	warningChannel chan error,
+	fatalErrorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
 
@@ -95,51 +101,49 @@ func (reader *RecordReaderXTAB) processHandle(
 			if linesForRecord.Len() > 0 {
 				record, err := reader.recordFromXTABLines(linesForRecord)
 				if err != nil {
-					errorChannel <- err
-					return
+					if reader.readerOptions.KeepGoing {
+						warningChannel <- err
+					} else {
+						fatalErrorChannel <- err
+						return
+					}
+				} else {
+					context.UpdateForInputRecord()
+					inputChannel <- types.NewRecordAndContext(record, context)
+					linesForRecord = list.New()
 				}
-				context.UpdateForInputRecord()
-				inputChannel <- types.NewRecordAndContext(record, context)
-				linesForRecord = list.New()
 			}
-			continue
-		}
-
-		if err != nil {
-			errorChannel <- err
-			break
-		}
-
-		// Check for comments-in-data feature
-		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-			if reader.readerOptions.CommentHandling == cliutil.PassComments {
-				inputChannel <- types.NewOutputString(line, context)
-				continue
-			} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
-				continue
+		} else if err != nil {
+			if reader.readerOptions.KeepGoing {
+				warningChannel <- err
+			} else {
+				fatalErrorChannel <- err
 			}
-			// else comments are data
-		}
-
-		// xxx temp pending autodetect, and pending more windows-port work
-		// This is how to do a chomp:
-		line = strings.TrimRight(line, "\n")
-		line = strings.TrimRight(line, "\r")
-		//line = strings.TrimRight(line, reader.readerOptions.IRS)
-
-		if line != "" {
-			linesForRecord.PushBack(line)
-
 		} else {
-			if linesForRecord.Len() > 0 {
-				record, err := reader.recordFromXTABLines(linesForRecord)
-				if err != nil {
-					errorChannel <- err
-					return
+			// This is how to do a chomp:
+			line = strings.TrimRight(line, reader.readerOptions.IRS)
+
+			// xxx temp pending autodetect, and pending more windows-port work
+			line = strings.TrimRight(line, "\r")
+
+			if line == "" {
+				if linesForRecord.Len() > 0 {
+					record, err := reader.recordFromXTABLines(linesForRecord)
+					if err != nil {
+						if reader.readerOptions.KeepGoing {
+							warningChannel <- err
+						} else {
+							fatalErrorChannel <- err
+						}
+					} else {
+						context.UpdateForInputRecord()
+						inputChannel <- types.NewRecordAndContext(record, context)
+						linesForRecord = list.New()
+					}
+					context.UpdateForInputRecord()
+					inputChannel <- types.NewRecordAndContext(record, context)
+					linesForRecord = list.New()
 				}
-				context.UpdateForInputRecord()
-				inputChannel <- types.NewRecordAndContext(record, context)
-				linesForRecord = list.New()
 			}
 		}
 	}

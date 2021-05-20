@@ -15,6 +15,7 @@ type IRecordReader interface {
 		filenames []string,
 		initialContext types.Context,
 		inputChannel chan<- *types.RecordAndContext,
-		errorChannel chan error,
+		warningChannel chan error,
+		fatalErrorChannel chan error,
 	)
 }

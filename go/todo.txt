@@ -76,9 +76,13 @@ DOC6
   o OLH re limitations
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
+<<<<<<< HEAD
 
 * defer json comment-handling
 
+=======
+  o doc-note somewhere -k will keep going too far on dquot imbalance for CSV; so must it be
+>>>>>>> 2bb528148 (Propagate warningChannel throughout record-reader API)
 * json-triple-quote -- what can be done here?
 
 w survey

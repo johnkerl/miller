@@ -460,12 +460,13 @@ func (tr *TransformerJoin) ingestLeftFile() {
 
 	// Set up channels for the record-reader.
 	inputChannel := make(chan *types.RecordAndContext, 10)
-	errorChannel := make(chan error, 1)
+	warningChannel := make(chan error, 1)
+	fatalErrorChannel := make(chan error, 1)
 
 	// Start the record reader.
 	// TODO: prepipe
 	leftFileNameArray := [1]string{tr.opts.leftFileName}
-	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, errorChannel)
+	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, warningChannel, fatalErrorChannel)
 
 	// Ingest parsed records and bucket them by their join-field values.  E.g.
 	// if the join-field is "id" then put all records with id=1 in one bucket,
@@ -475,7 +476,9 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	for !done {
 		select {
 
-		case err := <-errorChannel:
+		case err := <-warningChannel:
+			fmt.Fprintln(os.Stderr, lib.MlrExeName(), ": ", err)
+		case err := <-fatalErrorChannel:
 			fmt.Fprintln(os.Stderr, lib.MlrExeName(), ": ", err)
 			os.Exit(1)
 

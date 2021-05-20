@@ -26,7 +26,8 @@ func (reader *RecordReaderDKVP) Read(
 	filenames []string,
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
+	warningChannel chan error,
+	fatalErrorChannel chan error,
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
@@ -36,9 +37,9 @@ func (reader *RecordReaderDKVP) Read(
 				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
-				errorChannel <- err
+				fatalErrorChannel <- err
 			}
-			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, warningChannel, fatalErrorChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
@@ -48,9 +49,14 @@ func (reader *RecordReaderDKVP) Read(
 					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
-					errorChannel <- err
+					if reader.readerOptions.KeepGoing {
+						warningChannel <- err
+					} else {
+						fatalErrorChannel <- err
+						return
+					}
 				} else {
-					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, warningChannel, fatalErrorChannel)
 					handle.Close()
 				}
 			}
@@ -64,7 +70,8 @@ func (reader *RecordReaderDKVP) processHandle(
 	filename string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
+	warningChannel chan error,
+	fatalErrorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
 
@@ -78,8 +85,13 @@ func (reader *RecordReaderDKVP) processHandle(
 			break
 		}
 		if err != nil {
-			errorChannel <- err
-			break
+			if reader.readerOptions.KeepGoing {
+				warningChannel <- err
+				continue
+			} else {
+				fatalErrorChannel <- err
+				break
+			}
 		}
 
 		// Check for comments-in-data feature

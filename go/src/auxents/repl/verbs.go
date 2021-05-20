@@ -193,13 +193,15 @@ func (repl *Repl) openFiles(filenames []string) {
 	repl.options.FileNames = filenames
 
 	repl.inputChannel = make(chan *types.RecordAndContext, 10)
-	repl.errorChannel = make(chan error, 1)
+	repl.warningChannel = make(chan error, 1)
+	repl.fatalErrorChannel = make(chan error, 1)
 
 	go repl.recordReader.Read(
 		filenames,
 		*repl.runtimeState.Context,
 		repl.inputChannel,
-		repl.errorChannel,
+		repl.warningChannel,
+		repl.fatalErrorChannel,
 	)
 }
 
@@ -248,14 +250,17 @@ func handleRead(repl *Repl, args []string) bool {
 	select {
 	case recordAndContext = <-repl.inputChannel:
 		break
-	case err = <-repl.errorChannel:
+	case err = <-repl.warningChannel:
+		break
+	case err = <-repl.fatalErrorChannel:
 		break
 	}
 
 	if err != nil {
 		fmt.Println(err)
 		repl.inputChannel = nil
-		repl.errorChannel = nil
+		repl.warningChannel = nil
+		repl.fatalErrorChannel = nil
 		return true
 	}
 
@@ -393,7 +398,9 @@ func handleSkipOrProcessN(repl *Repl, n int, processingNotSkipping bool) {
 		select {
 		case recordAndContext = <-repl.inputChannel:
 			break
-		case err = <-repl.errorChannel:
+		case err = <-repl.warningChannel:
+			break
+		case err = <-repl.fatalErrorChannel:
 			break
 		case _ = <-repl.appSignalNotificationChannel: // user typed control-C
 			break
@@ -402,7 +409,8 @@ func handleSkipOrProcessN(repl *Repl, n int, processingNotSkipping bool) {
 		if err != nil {
 			fmt.Println(err)
 			repl.inputChannel = nil
-			repl.errorChannel = nil
+			repl.warningChannel = nil
+			repl.fatalErrorChannel = nil
 			return
 		}
 
@@ -451,7 +459,9 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 		select {
 		case recordAndContext = <-repl.inputChannel:
 			break
-		case err = <-repl.errorChannel:
+		case err = <-repl.warningChannel:
+			break
+		case err = <-repl.fatalErrorChannel:
 			break
 		case _ = <-repl.appSignalNotificationChannel: // user typed control-C
 			doubleBreak = true
@@ -464,7 +474,8 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 		if err != nil {
 			fmt.Println(err)
 			repl.inputChannel = nil
-			repl.errorChannel = nil
+			repl.warningChannel = nil
+			repl.fatalErrorChannel = nil
 			return
 		}
 
@@ -510,7 +521,8 @@ func skipOrProcessRecord(
 	if recordAndContext.EndOfStream == true {
 		fmt.Println("End of record stream")
 		repl.inputChannel = nil
-		repl.errorChannel = nil
+		repl.warningChannel = nil
+		repl.fatalErrorChannel = nil
 		return true
 	}
 

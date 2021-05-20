@@ -45,11 +45,12 @@ type Repl struct {
 
 	options *cliutil.TOptions
 
-	inputChannel chan *types.RecordAndContext
-	errorChannel chan error
-	recordReader input.IRecordReader
-	recordWriter output.IRecordWriter
-	outputStream *os.File
+	inputChannel      chan *types.RecordAndContext
+	warningChannel    chan error
+	fatalErrorChannel chan error
+	recordReader      input.IRecordReader
+	recordWriter      output.IRecordWriter
+	outputStream      *os.File
 
 	runtimeState *runtime.State
 

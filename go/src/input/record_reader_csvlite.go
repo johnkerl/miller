@@ -59,7 +59,8 @@ func (reader *RecordReaderCSVLite) Read(
 	filenames []string,
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
+	warningChannel chan error,
+	fatalErrorChannel chan error,
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
@@ -69,7 +70,7 @@ func (reader *RecordReaderCSVLite) Read(
 				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
-				errorChannel <- err
+				fatalErrorChannel <- err
 			}
 			if reader.readerOptions.UseImplicitCSVHeader {
 				reader.processHandleImplicitCSVHeader(
@@ -77,7 +78,8 @@ func (reader *RecordReaderCSVLite) Read(
 					"(stdin)",
 					&context,
 					inputChannel,
-					errorChannel,
+					warningChannel,
+					fatalErrorChannel,
 				)
 			} else {
 				reader.processHandleExplicitCSVHeader(
@@ -85,7 +87,8 @@ func (reader *RecordReaderCSVLite) Read(
 					"(stdin)",
 					&context,
 					inputChannel,
-					errorChannel,
+					warningChannel,
+					fatalErrorChannel,
 				)
 			}
 		} else {
@@ -97,7 +100,11 @@ func (reader *RecordReaderCSVLite) Read(
 					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
-					errorChannel <- err
+					if reader.readerOptions.KeepGoing {
+						warningChannel <- err
+					} else {
+						fatalErrorChannel <- err
+					}
 				} else {
 					if reader.readerOptions.UseImplicitCSVHeader {
 						reader.processHandleImplicitCSVHeader(
@@ -105,7 +112,8 @@ func (reader *RecordReaderCSVLite) Read(
 							filename,
 							&context,
 							inputChannel,
-							errorChannel,
+							warningChannel,
+							fatalErrorChannel,
 						)
 					} else {
 						reader.processHandleExplicitCSVHeader(
@@ -113,7 +121,8 @@ func (reader *RecordReaderCSVLite) Read(
 							filename,
 							&context,
 							inputChannel,
-							errorChannel,
+							warningChannel,
+							fatalErrorChannel,
 						)
 					}
 					handle.Close()
@@ -130,7 +139,8 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	filename string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
+	warningChannel chan error,
+	fatalErrorChannel chan error,
 ) {
 	var inputLineNumber int = 0
 	var headerStrings []string = nil
@@ -145,7 +155,11 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			err = nil
 			eof = true
 		} else if err != nil {
-			errorChannel <- err
+			if reader.readerOptions.KeepGoing {
+				warningChannel <- err
+			} else {
+				fatalErrorChannel <- err
+			}
 		} else {
 			inputLineNumber++
 
@@ -187,8 +201,13 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 							len(headerStrings), len(fields), filename, inputLineNumber,
 						),
 					)
-					errorChannel <- err
-					return
+					if reader.readerOptions.KeepGoing {
+						warningChannel <- err
+						continue
+					} else {
+						fatalErrorChannel <- err
+						return
+					}
 				}
 
 				record := types.NewMlrmap()
@@ -238,7 +257,8 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	filename string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
+	warningChannel chan error,
+	fatalErrorChannel chan error,
 ) {
 	var inputLineNumber int = 0
 	var headerStrings []string = nil
@@ -253,7 +273,11 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			err = nil
 			eof = true
 		} else if err != nil {
-			errorChannel <- err
+			if reader.readerOptions.KeepGoing {
+				warningChannel <- err
+			} else {
+				fatalErrorChannel <- err
+			}
 		} else {
 			inputLineNumber++
 
@@ -299,8 +323,13 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 							len(headerStrings), len(fields), filename, inputLineNumber,
 						),
 					)
-					errorChannel <- err
-					return
+					if reader.readerOptions.KeepGoing {
+						warningChannel <- err
+						continue
+					} else {
+						fatalErrorChannel <- err
+						return
+					}
 				}
 			}
 

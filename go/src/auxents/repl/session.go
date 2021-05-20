@@ -107,12 +107,12 @@ func NewRepl(
 		doWarnings:   doWarnings,
 		cstRootNode:  cstRootNode,
 
-		options:      options,
-		inputChannel: nil,
-		errorChannel: nil,
-		recordReader: recordReader,
-		recordWriter: recordWriter,
-		outputStream: outputStream,
+		options:           options,
+		inputChannel:      nil,
+		fatalErrorChannel: nil,
+		recordReader:      recordReader,
+		recordWriter:      recordWriter,
+		outputStream:      outputStream,
 
 		runtimeState:                 runtimeState,
 		sysToSignalHandlerChannel:    sysToSignalHandlerChannel,
