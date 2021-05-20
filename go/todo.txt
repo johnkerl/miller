@@ -1,19 +1,26 @@
 ================================================================
 TOP OF LIST:
 
+* appveyor off w/ ping-me notes
+  o attempt localwost build
+* --no-xyz audit
+* mlr -k
+  o c,go
+  o various test cases
+  o OLH re limitations
+  o check JSON-parser x 2 -- is there really a 'restart'?
+    - infinite-loop avoidance for sure
+* json-triple-quote -- what can be done here?
+
 * tools/perf:
   o https://eng.uber.com/pprof-go-profiler/
   o profile mlr --j2x cat mappings.json
   o golang static-analysis tool -- ?
 
+----------------------------------------------------------------
+
 * blockers:
   o repifs, for nidx & pprint both
-  o --d2n commawrong
-  o --p2c et al
-
-* regtest emit factors:
-  o saveoffs:
-    regtest/cases-pending-go-port/dsl-absent-empty/0012/cmd
 
 * case auxfiles: cat them too
 
@@ -56,9 +63,6 @@ TOP OF LIST:
   - ofmt
   - no other callsites?!?!?!
   - note hexfmt for non-ints -- especially floats -- ?!?
-
-* blocker: in-place processing
-  o make sure not to create foo.{temp} if foo does not exist
 
 * blocker: prepipe
   - gzin; bz2in ...
