@@ -84,6 +84,9 @@ DOC6
   o doc-note somewhere -k will keep going too far on dquot imbalance for CSV; so must it be
 >>>>>>> 2bb528148 (Propagate warningChannel throughout record-reader API)
 * json-triple-quote -- what can be done here?
+  o JSON:
+    - avoid infinite loop
+    - maybe there's not much we can do here, e.g. non-standard """...""" stuff -- how to "seek to valid" in a general way -- ?
 
 w survey
   o summary to GHD thread
