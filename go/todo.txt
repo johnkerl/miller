@@ -616,3 +616,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
       should make the sum non-numeric."
   - use JSON null here
   - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
+* sec2gmt --millis/--micros/--nanos doc
