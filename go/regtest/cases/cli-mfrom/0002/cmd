@@ -1,0 +1,1 @@
+mlr --csv --mfrom regtest/input/s.csv regtest/input/t.csv -- cat
