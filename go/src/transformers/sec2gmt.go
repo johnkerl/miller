@@ -34,6 +34,9 @@ func transformerSec2GMTUsage(
 	fmt.Fprintf(o, "  %s put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'\n", lib.MlrExeName())
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-1 through -9: format the seconds using 1..9 decimal places, respectively.\n")
+	fmt.Fprintf(o, "--millis Input numbers are treated as milliseconds since the epoch.\n")
+	fmt.Fprintf(o, "--micros Input numbers are treated as microseconds since the epoch.\n")
+	fmt.Fprintf(o, "--nanos  Input numbers are treated as nanoseconds since the epoch.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
@@ -53,6 +56,7 @@ func transformerSec2GMTParseCLI(
 	argi := *pargi
 	argi++
 
+	preDivide := 1.0
 	numDecimalPlaces := 0
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -84,6 +88,13 @@ func transformerSec2GMTParseCLI(
 		} else if opt == "-9" {
 			numDecimalPlaces = 9
 
+		} else if opt == "--millis" {
+			preDivide = 1.0e3
+		} else if opt == "--micros" {
+			preDivide = 1.0e6
+		} else if opt == "--nanos" {
+			preDivide = 1.0e9
+
 		} else {
 			transformerSec2GMTUsage(os.Stderr, true, 1)
 		}
@@ -97,6 +108,7 @@ func transformerSec2GMTParseCLI(
 
 	transformer, err := NewTransformerSec2GMT(
 		fieldNames,
+		preDivide,
 		numDecimalPlaces,
 	)
 	if err != nil {
@@ -111,15 +123,18 @@ func transformerSec2GMTParseCLI(
 // ----------------------------------------------------------------
 type TransformerSec2GMT struct {
 	fieldNameList    []string
+	preDivide        float64
 	numDecimalPlaces int
 }
 
 func NewTransformerSec2GMT(
 	fieldNames string,
+	preDivide float64,
 	numDecimalPlaces int,
 ) (*TransformerSec2GMT, error) {
 	this := &TransformerSec2GMT{
 		fieldNameList:    lib.SplitString(fieldNames, ","),
+		preDivide:        preDivide,
 		numDecimalPlaces: numDecimalPlaces,
 	}
 	return this, nil
@@ -137,7 +152,10 @@ func (this *TransformerSec2GMT) Transform(
 			if value != nil {
 				floatval, ok := value.GetNumericToFloatValue()
 				if ok {
-					newValue := types.MlrvalFromString(lib.Sec2GMT(floatval, this.numDecimalPlaces))
+					newValue := types.MlrvalFromString(lib.Sec2GMT(
+						floatval/this.preDivide,
+						this.numDecimalPlaces,
+					))
 					inrec.PutReference(fieldName, &newValue)
 				}
 			}

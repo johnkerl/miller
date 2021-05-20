@@ -677,6 +677,9 @@ is the same as
   mlr put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'
 Options:
 -1 through -9: format the seconds using 1..9 decimal places, respectively.
+--millis Input numbers are treated as milliseconds since the epoch.
+--micros Input numbers are treated as microseconds since the epoch.
+--nanos  Input numbers are treated as nanoseconds since the epoch.
 -h|--help Show this message.
 ================================================================
 Usage: mlr seqgen [options]
