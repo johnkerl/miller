@@ -11,6 +11,7 @@ TOP OF LIST:
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
 * json-triple-quote -- what can be done here?
+* -l/-L
 
 * tools/perf:
   o https://eng.uber.com/pprof-go-profiler/
@@ -621,3 +622,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   - use JSON null here
   - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
 * sec2gmt --millis/--micros/--nanos doc
+* doc --mfrom
