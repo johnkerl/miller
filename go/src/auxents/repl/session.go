@@ -29,6 +29,7 @@ import (
 	"miller/src/cliutil"
 	"miller/src/dsl/cst"
 	"miller/src/input"
+	"miller/src/lib"
 	"miller/src/output"
 	"miller/src/runtime"
 	"miller/src/types"
@@ -75,7 +76,24 @@ func NewRepl(
 	signal.Notify(sysToSignalHandlerChannel, os.Interrupt, syscall.SIGTERM)
 	go controlCHandler(sysToSignalHandlerChannel, appSignalNotificationChannel)
 
-	return &Repl{
+	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions).WithRedefinableUDFUDS()
+
+	// TODO
+
+	// If there was a --load/--mload on the command line, load those DSL strings here (e.g.
+	// someone's local function library).
+	dslStrings := make([]string, 0)
+	for _, filename := range options.DSLPreloadFileNames {
+		theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from \"%s\": ",
+				exeName, replName, filename)
+			return nil, err
+		}
+		dslStrings = append(dslStrings, theseDSLStrings...)
+	}
+
+	repl := &Repl{
 		exeName:  exeName,
 		replName: replName,
 
@@ -87,7 +105,7 @@ func NewRepl(
 
 		astPrintMode: astPrintMode,
 		doWarnings:   doWarnings,
-		cstRootNode:  cst.NewEmptyRoot(&options.WriterOptions).WithRedefinableUDFUDS(),
+		cstRootNode:  cstRootNode,
 
 		options:      options,
 		inputChannel: nil,
@@ -99,7 +117,17 @@ func NewRepl(
 		runtimeState:                 runtimeState,
 		sysToSignalHandlerChannel:    sysToSignalHandlerChannel,
 		appSignalNotificationChannel: appSignalNotificationChannel,
-	}, nil
+	}
+
+	for _, dslString := range dslStrings {
+		err := repl.handleDSLStringBulk(dslString, doWarnings)
+		if err != nil {
+			// Error message already printed out
+			return nil, err
+		}
+	}
+
+	return repl, nil
 }
 
 // When the user types control-C, immediately print something to the screen,

@@ -138,7 +138,8 @@ Options:
 ================================================================
 Usage: mlr filter [options] {DSL expression}
 Options:
--f {file name} File containing a DSL expression.
+-f {file name} File containing a DSL expression. If the filename is a directory,
+   all *.mlr files in that directory are loaded.
 
 -e {expression} You can use this after -f to add an expression. Example use
    case: define functions/subroutines in a file you specify with -f, then call
@@ -472,7 +473,8 @@ Options:
 ================================================================
 Usage: mlr put [options] {DSL expression}
 Options:
--f {file name} File containing a DSL expression.
+-f {file name} File containing a DSL expression. If the filename is a directory,
+   all *.mlr files in that directory are loaded.
 
 -e {expression} You can use this after -f to add an expression. Example use
    case: define functions/subroutines in a file you specify with -f, then call

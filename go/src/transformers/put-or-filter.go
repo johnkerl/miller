@@ -3,7 +3,6 @@ package transformers
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -63,7 +62,8 @@ func transformerPutOrFilterUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", lib.MlrExeName(), verb)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o,
-		`-f {file name} File containing a DSL expression.
+		`-f {file name} File containing a DSL expression. If the filename is a directory,
+   all *.mlr files in that directory are loaded.
 
 -e {expression} You can use this after -f to add an expression. Example use
    case: define functions/subroutines in a file you specify with -f, then call
@@ -124,8 +124,7 @@ func transformerPutOrFilterParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TReaderOptions,
-	mainRecordWriterOptions *cliutil.TWriterOptions,
+	mainOptions *cliutil.TOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -134,6 +133,7 @@ func transformerPutOrFilterParseCLI(
 	argi++
 
 	var dslStrings []string = make([]string, 0)
+	haveDSLStringsHere := false
 	echoDSLString := false
 	printASTAsTree := false
 	printASTMultiLine := false
@@ -146,15 +146,26 @@ func transformerPutOrFilterParseCLI(
 	presets := make([]string, 0)
 
 	// TODO: make sure this is a full nested-struct copy.
-	var recordWriterOptions *cliutil.TWriterOptions = nil
-	if mainRecordWriterOptions != nil {
-		// TODO: make a .Copy() method
-		copyThereof := *mainRecordWriterOptions
-		recordWriterOptions = &copyThereof
+	var options *cliutil.TOptions = nil
+	if mainOptions != nil {
+		copyThereof := *mainOptions // struct copy
+		options = &copyThereof
+	}
+
+	// If there was a global --load/--mload, load those DSL strings here (e.g.
+	// someone's local function library).
+	for _, filename := range options.DSLPreloadFileNames {
+		theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from \"%s\": ",
+				lib.MlrExeName(), verb, filename)
+			fmt.Println(err)
+			return nil
+		}
+		dslStrings = append(dslStrings, theseDSLStrings...)
 	}
 
 	// Parse local flags.
-
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
@@ -168,19 +179,20 @@ func transformerPutOrFilterParseCLI(
 		} else if opt == "-f" {
 			// Get a DSL string from the user-specified filename
 			filename := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
-			data, err := ioutil.ReadFile(filename)
+			theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
 					lib.MlrExeName(), verb, filename)
 				fmt.Println(err)
 				return nil
 			}
-			dslString := string(data)
-			dslStrings = append(dslStrings, dslString)
+			dslStrings = append(dslStrings, theseDSLStrings...)
+			haveDSLStringsHere = true
 
 		} else if opt == "-e" {
 			dslString := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			dslStrings = append(dslStrings, dslString)
+			haveDSLStringsHere = true
 
 		} else if opt == "-s" {
 			// E.g.
@@ -228,7 +240,7 @@ func transformerPutOrFilterParseCLI(
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.
 			wargi := argi - 1
-			if cliutil.ParseWriterOptions(args, argc, &wargi, recordWriterOptions) {
+			if cliutil.ParseWriterOptions(args, argc, &wargi, &options.WriterOptions) {
 				// This lets mlr main and mlr put have different output formats.
 				// Nothing else to handle here.
 				argi = wargi
@@ -241,7 +253,7 @@ func transformerPutOrFilterParseCLI(
 	// If they've used either of 'mlr put -f {filename}' or 'mlr put -e
 	// {expression}' then that specifies their DSL expression. But if they've
 	// done neither then we expect 'mlr put {expression}'.
-	if len(dslStrings) == 0 {
+	if !haveDSLStringsHere {
 		// Get the DSL string from the command line, after the flags
 		if argi >= argc {
 			transformerPutUsage(os.Stderr, true, 1)
@@ -265,7 +277,7 @@ func transformerPutOrFilterParseCLI(
 		warningsAreFatal,
 		invertFilter,
 		suppressOutputRecord,
-		recordWriterOptions,
+		options,
 	)
 	if err != nil {
 		// Error message already printed out
@@ -299,10 +311,10 @@ func NewTransformerPut(
 	warningsAreFatal bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
-	recordWriterOptions *cliutil.TWriterOptions,
+	options *cliutil.TOptions,
 ) (*TransformerPut, error) {
 
-	cstRootNode := cst.NewEmptyRoot(recordWriterOptions)
+	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions)
 
 	for _, dslString := range dslStrings {
 		astRootNode, err := BuildASTFromStringWithMessage(dslString)

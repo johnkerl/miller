@@ -288,8 +288,7 @@ func parseTransformers(
 			&argi,
 			argc,
 			args,
-			&options.ReaderOptions,
-			&options.WriterOptions,
+			options,
 		)
 		lib.InternalCodingErrorIf(transformer == nil)
 

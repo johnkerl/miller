@@ -48,8 +48,7 @@ func transformerBootstrapParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TReaderOptions,
-	__ *cliutil.TWriterOptions,
+	_ *cliutil.TOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line

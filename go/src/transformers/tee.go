@@ -48,8 +48,7 @@ func transformerTeeParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TReaderOptions,
-	mainRecordWriterOptions *cliutil.TWriterOptions,
+	mainOptions *cliutil.TOptions,
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -61,8 +60,8 @@ func transformerTeeParseCLI(
 	piping := false
 	// TODO: make sure this is a full nested-struct copy.
 	var recordWriterOptions *cliutil.TWriterOptions = nil
-	if mainRecordWriterOptions != nil {
-		copyThereof := *mainRecordWriterOptions
+	if mainOptions != nil {
+		copyThereof := mainOptions.WriterOptions // struct copy
 		recordWriterOptions = &copyThereof
 	}
 

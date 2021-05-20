@@ -60,6 +60,13 @@ func ReplUsage(verbName string, o *os.File, exitCode int) {
 
 -s Don't show prompts
 
+--load {DSL script file} Load script file before presenting the prompt.
+   If the name following --load is a directory, load all "*.mlr" files
+   in that directory.
+
+--mload {DSL script files} -- Like --load but works with more than one filename,
+   e.g. '--mload *.mlr --'.
+
 -h|--help Show this message.
 
 Or any --icsv, --ojson, etc. reader/writer options as for the main Miller command line.
@@ -110,6 +117,26 @@ func ReplMain(args []string) int {
 		} else if args[argi] == "-w" {
 			doWarnings = true
 			argi++
+
+		} else if args[argi] == "--load" {
+			if argc-argi < 2 {
+				ReplUsage(replName, os.Stderr, 1)
+			}
+			options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[argi+1])
+			argi += 2
+
+		} else if args[argi] == "--mload" {
+			if argc-argi < 2 {
+				ReplUsage(replName, os.Stderr, 1)
+			}
+			argi += 1
+			for argi < argc && args[argi] != "--" {
+				options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[argi])
+				argi += 1
+			}
+			if args[argi] == "--" {
+				argi += 1
+			}
 
 		} else if cliutil.ParseReaderWriterOptions(
 			args, argc, &argi, &options.ReaderOptions, &options.WriterOptions,

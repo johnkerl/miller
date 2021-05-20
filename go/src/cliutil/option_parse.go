@@ -871,6 +871,22 @@ func ParseMiscOptions(
 			argi += 1
 		}
 
+	} else if args[argi] == "--load" {
+		CheckArgCount(args, argi, argc, 2)
+		options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[argi+1])
+		argi += 2
+
+	} else if args[argi] == "--mload" {
+		CheckArgCount(args, argi, argc, 2)
+		argi += 1
+		for argi < argc && args[argi] != "--" {
+			options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[argi])
+			argi += 1
+		}
+		if args[argi] == "--" {
+			argi += 1
+		}
+
 		//	} else if args[argi] == "--ofmt" {
 		//		CheckArgCount(args, argi, argc, 2);
 		//		options.ofmt = args[argi+1];
