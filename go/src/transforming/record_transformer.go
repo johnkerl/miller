@@ -29,8 +29,7 @@ type TransformerParseCLIFunc func(
 	pargi *int,
 	argc int,
 	args []string,
-	readerOptions *cliutil.TReaderOptions,
-	writerOptions *cliutil.TWriterOptions,
+	mainOptions *cliutil.TOptions,
 ) IRecordTransformer
 
 type TransformerSetup struct {

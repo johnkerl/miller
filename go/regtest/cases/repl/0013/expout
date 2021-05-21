@@ -1,0 +1,6 @@
+* statement block
+    * assignment "="
+        * local variable "y"
+        * operator "+"
+            * local variable "x"
+            * int literal "1"

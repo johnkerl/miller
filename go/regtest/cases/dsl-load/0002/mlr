@@ -1,0 +1,2 @@
+$fibo = fibo($i);
+$factorial = factorial($i);

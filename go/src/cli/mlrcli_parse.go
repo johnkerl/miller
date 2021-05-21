@@ -288,8 +288,7 @@ func parseTransformers(
 			&argi,
 			argc,
 			args,
-			&options.ReaderOptions,
-			&options.WriterOptions,
+			options,
 		)
 		lib.InternalCodingErrorIf(transformer == nil)
 
@@ -520,7 +519,13 @@ func handleMlrrcLine(
 	argi := 0
 	argc := len(args)
 
-	if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
+	if args[0] == "--prepipe" {
+		// Don't allow code execution via .mlrrc
+		return false
+	} else if args[0] == "--load" || args[0] == "--mload" {
+		// Don't allow code execution via .mlrrc
+		return false
+	} else if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
 		// handled
 	} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
 		// handled

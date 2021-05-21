@@ -6,7 +6,6 @@ package repl
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -100,6 +99,7 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 // ----------------------------------------------------------------
 func usageLoad(this *Repl) {
 	fmt.Println(":load {one or more filenames containing Miller DSL statements}")
+	fmt.Println("If a filename is a directory, all \"*.mlr\" files will be loaded from within it.")
 	fmt.Print(
 		`Any 'begin {...}' / 'end{...}' blocks are parsed and saved. (You can then type
 ':begin' or ':end', respectively, to execute them.) User-defined functions and
@@ -115,18 +115,19 @@ func handleLoad(this *Repl, args []string) bool {
 		return false
 	}
 	for _, filename := range args {
-		dslBytes, err := ioutil.ReadFile(filename)
+		dslStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 		if err != nil {
-			fmt.Printf("Cannot load DSL expression from file \"%s\": ",
+			fmt.Printf("Cannot load DSL expression file \"%s\": ",
 				filename)
 			fmt.Println(err)
 			return true
 		}
-		dslString := string(dslBytes)
 
-		err = this.handleDSLStringBulk(dslString, this.doWarnings)
-		if err != nil {
-			fmt.Println(err)
+		for _, dslString := range dslStrings {
+			err = this.handleDSLStringBulk(dslString, this.doWarnings)
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	}
 	return true

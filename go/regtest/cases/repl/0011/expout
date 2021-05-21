@@ -1,0 +1,6 @@
+(statement-block
+    (=
+        y
+        (+ x 1)
+    )
+)

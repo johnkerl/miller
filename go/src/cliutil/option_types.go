@@ -95,7 +95,19 @@ type TOptions struct {
 	ReaderOptions TReaderOptions
 	WriterOptions TWriterOptions
 
+	// Data files to be operated on: e.g. given 'mlr cat foo.dat bar.dat', this
+	// is ["foo.dat", "bar.dat"].
 	FileNames []string
+
+	// DSL files to be loaded for every put/filter operation -- like 'put -f'
+	// or 'filter -f' but specified up front on the command line, suitable for
+	// .mlrrc. Use-case is someone has DSL functions they always want to be
+	// defined.
+	//
+	// TODO: risk of CVE?!? :( -- exclude from .mlrrc & only maybe suggest
+	// people use an alias -- ?
+	// TODO: comment re if-dir then load all *.mlr
+	DSLPreloadFileNames []string
 
 	// These are used to construct the transformer list. In particular, for in-place mode
 	// they're reconstructed for each file.  We make copies since each pass through a
@@ -123,8 +135,9 @@ func DefaultOptions() TOptions {
 		ReaderOptions: DefaultReaderOptions(),
 		WriterOptions: DefaultWriterOptions(),
 
-		FileNames: make([]string, 0),
-		NoInput:   false,
+		FileNames:           make([]string, 0),
+		DSLPreloadFileNames: make([]string, 0),
+		NoInput:             false,
 	}
 }
 

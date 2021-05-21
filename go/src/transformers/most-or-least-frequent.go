@@ -79,8 +79,7 @@ func transformerMostFrequentParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TReaderOptions,
-	__ *cliutil.TWriterOptions,
+	_ *cliutil.TOptions,
 ) transforming.IRecordTransformer {
 	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, true, transformerMostFrequentUsage)
 }
@@ -89,8 +88,7 @@ func transformerLeastFrequentParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TReaderOptions,
-	__ *cliutil.TWriterOptions,
+	_ *cliutil.TOptions,
 ) transforming.IRecordTransformer {
 	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, false, transformerLeastFrequentUsage)
 }

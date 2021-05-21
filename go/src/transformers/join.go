@@ -67,9 +67,6 @@ func newJoinOptions() *tJoinOptions {
 
 		leftFileName: "",
 		prepipe:      "",
-
-		// TODO
-		// readerOptions: readerOptions,
 	}
 }
 
@@ -134,8 +131,7 @@ func transformerJoinParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	mainReaderOptions *cliutil.TReaderOptions, // Options for the right-files
-	__ *cliutil.TWriterOptions,
+	mainOptions *cliutil.TOptions, // Options for the right-files
 ) transforming.IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -146,9 +142,9 @@ func transformerJoinParseCLI(
 	// Parse local flags
 	opts := newJoinOptions()
 
-	if mainReaderOptions != nil { // for 'mlr --usage-all-verbs', it's nil
+	if mainOptions != nil { // for 'mlr --usage-all-verbs', it's nil
 		// TODO: make sure this is a full nested-struct copy.
-		opts.joinReaderOptions = *mainReaderOptions // struct copy
+		opts.joinReaderOptions = mainOptions.ReaderOptions // struct copy
 	}
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {

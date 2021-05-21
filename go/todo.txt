@@ -11,7 +11,6 @@ TOP OF LIST:
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
 * json-triple-quote -- what can be done here?
-* -l/-L
 
 * tools/perf:
   o https://eng.uber.com/pprof-go-profiler/
@@ -623,3 +622,11 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
 * sec2gmt --millis/--micros/--nanos doc
 * doc --mfrom
+* sort-within-records --recursive doc
+* doc re --load/--mload at mlrmain & repl
+* doc re put -f dirname will load dirname/*.mlr
+  mlr --opprint --from foo.dat --load u/stdlib/ put '$f=fibo($i); $g=factorial($i)'
+  mlr --opprint --from foo.dat put -f u/stdlib/ -e '$f=fibo($i); $g=factorial($i)'
+* OLH re no --prepipe and --load/--mload in .mlrrc for vulnerability avoidance
+  o --prepipe-foo
+  o local-alias suggestions
