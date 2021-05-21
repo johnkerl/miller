@@ -2,6 +2,7 @@
 TOP OF LIST:
 
 * appveyor off w/ ping-me notes
+  o leave revival note
   o attempt localwost build
 * --no-xyz audit
 * mlr -k
