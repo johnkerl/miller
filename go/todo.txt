@@ -340,6 +340,8 @@ GOCC UPSTREAMS:
 * support "abc" (not just 'a' 'b' 'c') in the lexer part
 
 ----------------------------------------------------------------
+foo:1
+----------------------------------------------------------------
 NITS/NON-IMMEDIATE:
 
 * "Miller: " prefixes on all errors.New
