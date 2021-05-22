@@ -523,15 +523,15 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 
 * why no flagSet:
 
-	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr
-	// sort' is it needs to take things like 'mlr sort -f a -n b -n c', i.e.
-	// first sort lexically on field a, then numerically on field b, then
-	// lexically on field c. The flagSet API would let the '-f c' clobber the
-	// '-f a', while we want both.
+	Unlike other transformers, we can't use flagSet here. The syntax of 'mlr
+	sort' is it needs to take things like 'mlr sort -f a -n b -n c', i.e.
+	first sort lexically on field a, then numerically on field b, then
+	lexically on field c. The flagSet API would let the '-f c' clobber the
+	'-f a', while we want both.
 
-	// Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
-	// and 'mlr filter' is they need to be able to take -f and/or -e more than
-	// once, and Go flags can't handle that.
+	Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
+	and 'mlr filter' is they need to be able to take -f and/or -e more than
+	once, and Go flags can't handle that.
 
 * doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.
 * doc re two-arg flatten
