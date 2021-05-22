@@ -100,13 +100,19 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "               as here, it must be specified there as well as here.\n");
 	fprintf(o, "File-format options default to those for the right file names on the Miller\n");
 	fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n");
-	fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments.\n", argv0);
+	fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments:\n", argv0);
 	fprintf(o, "  -i {one of csv,dkvp,nidx,pprint,xtab}\n");
 	fprintf(o, "  --irs {record-separator character}\n");
 	fprintf(o, "  --ifs {field-separator character}\n");
 	fprintf(o, "  --ips {pair-separator character}\n");
 	fprintf(o, "  --repifs\n");
 	fprintf(o, "  --repips\n");
+	fprintf(o, "  --implicit-csv-header\n");
+	fprintf(o, "  --no-implicit-csv-header\n");
+	fprintf(o, "For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will\n");
+	fprintf(o, "be specified CSV as well unless you override with 'mlr --csv ... join --ijson -l foo' etc.\n");
+	fprintf(o, "Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be\n");
+	fprintf(o, "expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.\n");
 	fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
 		argv0);
 	fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information\n");
