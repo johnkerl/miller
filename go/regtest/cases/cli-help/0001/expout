@@ -329,17 +329,21 @@ Options:
   --prepipe {command} As in main input options; see mlr --help for details.
                If you wish to use a prepipe command for the main input as well
                as here, it must be specified there as well as here.
--h|--help Show this message.
-
 File-format options default to those for the right file names on the Miller
 argument list, but may be overridden for the left file as follows. Please see
-the main "mlr --help" for more information on syntax for these arguments.
+the main "mlr --help" for more information on syntax for these arguments:
   -i {one of csv,dkvp,nidx,pprint,xtab}
   --irs {record-separator character}
   --ifs {field-separator character}
   --ips {pair-separator character}
   --repifs
   --repips
+  --implicit-csv-header
+  --no-implicit-csv-header
+For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will
+be specified CSV as well unless you override with 'mlr --csv ... join --ijson -l foo' etc.
+Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be
+expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.
 Please use "mlr --usage-separator-options" for information on specifying separators.
 Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
 including examples.

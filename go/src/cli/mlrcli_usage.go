@@ -66,11 +66,11 @@ func mainUsageLong(o *os.File, argv0 string) {
 	//	fmt.Fprintf(o, "SEPARATOR OPTIONS:\n");
 	//	mainUsageSeparatorOptions(o, argv0);
 	//	fmt.Fprintf(o, "\n");
-	//
-	//	fmt.Fprintf(o, "RELEVANT TO CSV/CSV-LITE INPUT ONLY:\n");
-	//	mainUsageCsvOptions(o, argv0);
-	//	fmt.Fprintf(o, "\n");
-	//
+
+	fmt.Fprintf(o, "RELEVANT TO CSV/CSV-LITE INPUT ONLY:\n")
+	mainUsageCsvOptions(o, argv0)
+	fmt.Fprintf(o, "\n")
+
 	//	fmt.Fprintf(o, "DOUBLE-QUOTING FOR CSV OUTPUT:\n");
 	//	mainUsageDoubleQuoting(o, argv0);
 	//	fmt.Fprintf(o, "\n");
@@ -446,17 +446,23 @@ func mainUsageFormatConversionKeystrokeSaverOptions(o *os.File, argv0 string) {
 //	}
 //}
 
-//func mainUsageCsvOptions(o *os.File, argv0 string) {
-//	fmt.Fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
-//	fmt.Fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
-//	fmt.Fprintf(o, "                     missing headers.\n");
-//	fmt.Fprintf(o, "  --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,\n");
-//	fmt.Fprintf(o, "                     fill remaining keys with empty string. If a data line has more\n");
-//	fmt.Fprintf(o, "                     fields than the header line, use integer field labels as in\n");
-//	fmt.Fprintf(o, "                     the implicit-header case.\n");
-//	fmt.Fprintf(o, "  --headerless-csv-output   Print only CSV data lines.\n");
-//	fmt.Fprintf(o, "  -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.\n");
-//}
+func mainUsageCsvOptions(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n")
+	fmt.Fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n")
+	fmt.Fprintf(o, "                     missing headers.\n")
+	fmt.Fprintf(o, "  --no-implicit-csv-header Do not use --implicit-csv-header. This is the default\n")
+	fmt.Fprintf(o, "                     anyway -- the main use is for the flags to 'mlr join' if you have\n")
+	fmt.Fprintf(o, "                     main file(s) which are headerless but you want to join in on\n")
+	fmt.Fprintf(o, "                     a file which does have a CSV header. Then you could use\n")
+	fmt.Fprintf(o, "                     'mlr --csv --implicit-csv-header join --no-implicit-csv-header\n")
+	fmt.Fprintf(o, "                     -l your-join-in-with-header.csv ... your-headerless.csv'\n")
+	fmt.Fprintf(o, "  --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,\n")
+	fmt.Fprintf(o, "                     fill remaining keys with empty string. If a data line has more\n")
+	fmt.Fprintf(o, "                     fields than the header line, use integer field labels as in\n")
+	fmt.Fprintf(o, "                     the implicit-header case.\n")
+	fmt.Fprintf(o, "  --headerless-csv-output   Print only CSV data lines.\n")
+	fmt.Fprintf(o, "  -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.\n")
+}
 
 //func mainUsageDoubleQuoting(o *os.File, argv0 string) {
 //	fmt.Fprintf(o, "  --quote-all        Wrap all fields in double quotes\n");

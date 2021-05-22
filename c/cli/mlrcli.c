@@ -961,6 +961,12 @@ static void main_usage_csv_options(FILE* o, char* argv0) {
 	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
 	fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
 	fprintf(o, "                     missing headers.\n");
+	fprintf(o, "  --no-implicit-csv-header Do not use --implicit-csv-header. This is the default\n");
+	fprintf(o, "                     anyway -- the main use is for the flags to 'mlr join' if you have\n");
+	fprintf(o, "                     main file(s) which are headerless but you want to join in on\n");
+	fprintf(o, "                     a file which does have a CSV header. Then you could use\n");
+	fprintf(o, "                     'mlr --csv --implicit-csv-header join --no-implicit-csv-header\n");
+	fprintf(o, "                     -l your-join-in-with-header.csv ... your-headerless.csv'\n");
 	fprintf(o, "  --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,\n");
 	fprintf(o, "                     fill remaining keys with empty string. If a data line has more\n");
 	fprintf(o, "                     fields than the header line, use integer field labels as in\n");
