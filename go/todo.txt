@@ -1,13 +1,15 @@
 ================================================================
 TOP OF LIST:
 
-* --no-xyz audit
+* travis-ci.org -> travis-ci.com
+
 * mlr -k
   o c,go
   o various test cases
   o OLH re limitations
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
+
 * json-triple-quote -- what can be done here?
 
 * tools/perf:
