@@ -18,6 +18,9 @@ TOP OF LIST:
 ----------------------------------------------------------------
 
 * blockers:
+  o fix emit
+
+* blockers:
   o repifs, for nidx & pprint both
 
 * case auxfiles: cat them too
