@@ -76,6 +76,9 @@ func OpenInboundHalfPipe(commandString string) (*os.File, error) {
 		return nil, err
 	}
 
+	// xxx comment somewhere
+	// https://stackoverflow.com/questions/47486128/why-does-io-pipe-continue-to-block-even-when-eof-is-reached
+
 	// xxx comment
 	go func(process *os.Process, readPipe *os.File) {
 		_, err := process.Wait()
