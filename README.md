@@ -40,7 +40,6 @@ including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 
 # Build status
 
-[![Linux build status](https://travis-ci.com/johnkerl/miller.svg?branch=master)](https://travis-ci.com/johnkerl/miller)
 [![Go-port multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
 
 [License: BSD2](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
