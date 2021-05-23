@@ -1,3 +1,4 @@
+# No longer used -- see README-autobuild.md
 install:
   - set PATH=C:\msys64\usr\bin;%PATH%
   - bash -lc "curl -O http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz"

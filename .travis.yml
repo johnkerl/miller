@@ -1,3 +1,4 @@
+# No longer used -- see README-autobuild.md
 arch:
   - amd64
   - ppc64le

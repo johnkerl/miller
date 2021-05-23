@@ -1,8 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-* travis-ci.org -> travis-ci.com
-
 * mlr -k
   o c,go
   o various test cases
