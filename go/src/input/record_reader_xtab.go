@@ -14,10 +14,8 @@ import (
 )
 
 type RecordReaderXTAB struct {
-	ifsRegex *regexp.Regexp
-	ifs      string
-	ips      string
-	irs      string
+	readerOptions *cliutil.TReaderOptions
+	ifsRegex      *regexp.Regexp
 	// TODO: parameterize IRS
 
 	// TODO: port from C
@@ -31,11 +29,9 @@ type RecordReaderXTAB struct {
 // ----------------------------------------------------------------
 func NewRecordReaderXTAB(readerOptions *cliutil.TReaderOptions) *RecordReaderXTAB {
 	return &RecordReaderXTAB{
+		readerOptions: readerOptions,
 		// TODO: incorporate IFS
 		ifsRegex: regexp.MustCompile("\\s+"),
-		ifs:      readerOptions.IFS,
-		ips:      readerOptions.IPS,
-		irs:      "\n",
 	}
 }
 
@@ -80,7 +76,7 @@ func (this *RecordReaderXTAB) processHandle(
 
 	eof := false
 	for !eof {
-		line, err := lineReader.ReadString(this.irs[0]) // xxx temp
+		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
 		if err == io.EOF {
 			err = nil
 			eof = true
@@ -99,7 +95,7 @@ func (this *RecordReaderXTAB) processHandle(
 			errorChannel <- err
 		} else {
 			// This is how to do a chomp:
-			line = strings.TrimRight(line, this.irs)
+			line = strings.TrimRight(line, this.readerOptions.IRS)
 
 			// xxx temp pending autodetect, and pending more windows-port work
 			line = strings.TrimRight(line, "\r")

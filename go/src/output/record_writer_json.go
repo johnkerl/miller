@@ -13,8 +13,8 @@ import (
 // ----------------------------------------------------------------
 type RecordWriterJSON struct {
 	// Parameters:
-	wrapJSONOutputInOuterList bool
-	jsonFormatting            types.TJSONFormatting
+	writerOptions  *cliutil.TWriterOptions
+	jsonFormatting types.TJSONFormatting
 
 	// State:
 	onFirst bool
@@ -27,9 +27,9 @@ func NewRecordWriterJSON(writerOptions *cliutil.TWriterOptions) *RecordWriterJSO
 		jsonFormatting = types.JSON_MULTILINE
 	}
 	return &RecordWriterJSON{
-		wrapJSONOutputInOuterList: writerOptions.WrapJSONOutputInOuterList,
-		jsonFormatting:            jsonFormatting,
-		onFirst:                   true,
+		writerOptions:  writerOptions,
+		jsonFormatting: jsonFormatting,
+		onFirst:        true,
 	}
 }
 
@@ -38,7 +38,7 @@ func (this *RecordWriterJSON) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
 ) {
-	if this.wrapJSONOutputInOuterList {
+	if this.writerOptions.WrapJSONOutputInOuterList {
 		this.writeWithListWrap(outrec, ostream)
 	} else {
 		this.writeWithoutListWrap(outrec, ostream)

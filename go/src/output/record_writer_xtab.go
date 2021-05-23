@@ -10,12 +10,14 @@ import (
 )
 
 type RecordWriterXTAB struct {
-	onFirst bool
+	writerOptions *cliutil.TWriterOptions
+	onFirst       bool
 }
 
 func NewRecordWriterXTAB(writerOptions *cliutil.TWriterOptions) *RecordWriterXTAB {
 	return &RecordWriterXTAB{
-		onFirst: true,
+		writerOptions: writerOptions,
+		onFirst:       true,
 	}
 }
 

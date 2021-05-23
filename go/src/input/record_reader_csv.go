@@ -15,19 +15,15 @@ import (
 
 // ----------------------------------------------------------------
 type RecordReaderCSV struct {
-	ifs                 string
-	useImplicitHeader   bool
-	allowRaggedCSVInput bool
-	emptyStringMlrval   types.Mlrval
+	readerOptions     *cliutil.TReaderOptions
+	emptyStringMlrval types.Mlrval
 }
 
 // ----------------------------------------------------------------
 func NewRecordReaderCSV(readerOptions *cliutil.TReaderOptions) *RecordReaderCSV {
 	return &RecordReaderCSV{
-		ifs:                 readerOptions.IFS,
-		useImplicitHeader:   readerOptions.UseImplicitCSVHeader,
-		allowRaggedCSVInput: readerOptions.AllowRaggedCSVInput,
-		emptyStringMlrval:   types.MlrvalFromString(""),
+		readerOptions:     readerOptions,
+		emptyStringMlrval: types.MlrvalFromString(""),
 	}
 }
 
@@ -66,12 +62,12 @@ func (this *RecordReaderCSV) processHandle(
 	errorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
-	needHeader := !this.useImplicitHeader
+	needHeader := !this.readerOptions.UseImplicitCSVHeader
 	var header []string = nil
 	var rowNumber int = 0
 
 	csvReader := csv.NewReader(handle)
-	csvReader.Comma = rune(this.ifs[0]) // xxx temp
+	csvReader.Comma = rune(this.readerOptions.IFS[0]) // xxx temp
 
 	for {
 		if needHeader {
@@ -125,7 +121,7 @@ func (this *RecordReaderCSV) processHandle(
 			}
 
 		} else {
-			if !this.allowRaggedCSVInput {
+			if !this.readerOptions.AllowRaggedCSVInput {
 				err := errors.New(
 					fmt.Sprintf(
 						"Miller: CSV header/data length mismatch %d != %d "+

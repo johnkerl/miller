@@ -13,15 +13,13 @@ import (
 )
 
 type RecordReaderDKVP struct {
-	ifs string
-	ips string
+	readerOptions *cliutil.TReaderOptions
 	// TODO: parameterize IRS
 }
 
 func NewRecordReaderDKVP(readerOptions *cliutil.TReaderOptions) *RecordReaderDKVP {
 	return &RecordReaderDKVP{
-		ifs: readerOptions.IFS,
-		ips: readerOptions.IPS,
+		readerOptions: readerOptions,
 	}
 }
 
@@ -75,7 +73,7 @@ func (this *RecordReaderDKVP) processHandle(
 			// xxx temp pending autodetect, and pending more windows-port work
 			line = strings.TrimRight(line, "\r")
 
-			record := recordFromDKVPLine(&line, &this.ifs, &this.ips)
+			record := this.recordFromDKVPLine(&line)
 			context.UpdateForInputRecord()
 			inputChannel <- types.NewRecordAndContext(
 				record,
@@ -86,15 +84,13 @@ func (this *RecordReaderDKVP) processHandle(
 }
 
 // ----------------------------------------------------------------
-func recordFromDKVPLine(
+func (this *RecordReaderDKVP) recordFromDKVPLine(
 	line *string,
-	ifs *string,
-	ips *string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	pairs := lib.SplitString(*line, *ifs)
+	pairs := lib.SplitString(*line, this.readerOptions.IFS)
 	for i, pair := range pairs {
-		kv := strings.SplitN(pair, *ips, 2)
+		kv := strings.SplitN(pair, this.readerOptions.IPS, 2)
 		// TODO check length 0. also, check input is empty since "".split() -> [""] not []
 		if len(kv) == 1 {
 			// E.g the pair has no equals sign: "a" rather than "a=1" or

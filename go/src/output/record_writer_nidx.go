@@ -9,14 +9,12 @@ import (
 )
 
 type RecordWriterNIDX struct {
-	ofs string
-	ors string
+	writerOptions *cliutil.TWriterOptions
 }
 
 func NewRecordWriterNIDX(writerOptions *cliutil.TWriterOptions) *RecordWriterNIDX {
 	return &RecordWriterNIDX{
-		ofs: writerOptions.OFS,
-		ors: writerOptions.ORS,
+		writerOptions: writerOptions,
 	}
 }
 
@@ -33,9 +31,9 @@ func (this *RecordWriterNIDX) Write(
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
-			buffer.WriteString(this.ofs)
+			buffer.WriteString(this.writerOptions.OFS)
 		}
 	}
-	buffer.WriteString(this.ors)
+	buffer.WriteString(this.writerOptions.ORS)
 	ostream.Write(buffer.Bytes())
 }

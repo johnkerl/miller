@@ -10,10 +10,7 @@ import (
 )
 
 type RecordWriterCSVLite struct {
-	ofs string
-	ors string
-
-	doHeaderlessOutput bool
+	writerOptions *cliutil.TWriterOptions
 	// For reporting schema changes: we print a newline and the new header
 	lastJoinedHeader *string
 	// Only write one blank line for schema changes / blank input lines
@@ -23,10 +20,7 @@ type RecordWriterCSVLite struct {
 func NewRecordWriterCSVLite(writerOptions *cliutil.TWriterOptions) *RecordWriterCSVLite {
 
 	return &RecordWriterCSVLite{
-		ofs: writerOptions.OFS,
-		ors: writerOptions.ORS,
-
-		doHeaderlessOutput: writerOptions.HeaderlessCSVOutput,
+		writerOptions:      writerOptions,
 		lastJoinedHeader:   nil,
 		justWroteEmptyLine: false,
 	}
@@ -43,7 +37,7 @@ func (this *RecordWriterCSVLite) Write(
 
 	if outrec.FieldCount == 0 {
 		if !this.justWroteEmptyLine {
-			ostream.Write([]byte(this.ors))
+			ostream.Write([]byte(this.writerOptions.ORS))
 		}
 		joinedHeader := ""
 		this.lastJoinedHeader = &joinedHeader
@@ -56,7 +50,7 @@ func (this *RecordWriterCSVLite) Write(
 	if this.lastJoinedHeader == nil || *this.lastJoinedHeader != joinedHeader {
 		if this.lastJoinedHeader != nil {
 			if !this.justWroteEmptyLine {
-				ostream.Write([]byte(this.ors))
+				ostream.Write([]byte(this.writerOptions.ORS))
 			}
 			this.justWroteEmptyLine = true
 		}
@@ -64,17 +58,17 @@ func (this *RecordWriterCSVLite) Write(
 		needToPrintHeader = true
 	}
 
-	if needToPrintHeader && !this.doHeaderlessOutput {
+	if needToPrintHeader && !this.writerOptions.HeaderlessCSVOutput {
 		var buffer bytes.Buffer // faster than fmt.Print() separately
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(pe.Key)
 
 			if pe.Next != nil {
-				buffer.WriteString(this.ofs)
+				buffer.WriteString(this.writerOptions.OFS)
 			}
 		}
 
-		buffer.WriteString(this.ors)
+		buffer.WriteString(this.writerOptions.ORS)
 		ostream.Write(buffer.Bytes())
 	}
 
@@ -82,10 +76,10 @@ func (this *RecordWriterCSVLite) Write(
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
-			buffer.WriteString(this.ofs)
+			buffer.WriteString(this.writerOptions.OFS)
 		}
 	}
-	buffer.WriteString(this.ors)
+	buffer.WriteString(this.writerOptions.ORS)
 	ostream.Write(buffer.Bytes())
 
 	this.justWroteEmptyLine = false
