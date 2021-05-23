@@ -21,6 +21,9 @@ TOP OF LIST:
   o fix emit
 
 * blockers:
+  o convert regtest/cases-pending-windows
+
+* blockers:
   o repifs, for nidx & pprint both
 
 * case auxfiles: cat them too
@@ -53,15 +56,13 @@ TOP OF LIST:
     strptime("1970-01-01T00:00:00.Z", "%Y-%m-%dT%H:%M:%SZ")
     (error)
 
-? blocker? --nojvstack; default --jvstack; code it up ...
-
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
 * blocker: smart fmtnum
   - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
   - fmtnum
-  - ofmt
+  - ofmt needs to go through this sanitizer logic -- prohibit '%s' for example
   - no other callsites?!?!?!
   - note hexfmt for non-ints -- especially floats -- ?!?
 
@@ -75,16 +76,10 @@ TOP OF LIST:
     regtest/cases-pending-go-port//dsl-lashed-emitp-singles/0051/cmd
 
 ----------------------------------------------------------------
-* non-blocker: --lib option, and to .mlrrc
-  o make up some stdlib functions -- ?
-  o xb2b ...
-
 * non-blocker: commenting passes ...
 
 * non-blocker: new functions:
   o new columns-to-arrays and arrays-to-columns for stan format
-
-* non-blocker: mlrrc: extend to maybe have a stdlib dir for often-used and/or shared DSL?
 
 * non-blocker: smarter head-stop etc https://github.com/johnkerl/miller/issues/291
 
