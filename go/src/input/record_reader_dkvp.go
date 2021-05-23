@@ -74,7 +74,17 @@ func (this *RecordReaderDKVP) processHandle(
 			err = nil
 			eof = true
 		} else if err != nil {
-			errorChannel <- err
+
+			// xxx fix
+			// xxx comment multiple places
+			// xxx do this only if this.readerOptions.Prepipe != ""
+			// xxx libify even that
+			if strings.Contains(err.Error(), "file already closed") {
+				err = nil
+				eof = true
+			} else {
+				errorChannel <- err
+			}
 		} else {
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")

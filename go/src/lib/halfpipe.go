@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -75,7 +76,22 @@ func OpenInboundHalfPipe(commandString string) (*os.File, error) {
 		return nil, err
 	}
 
-	go process.Wait()
+	// xxx comment
+	go func(process *os.Process, readPipe *os.File) {
+		_, err := process.Wait()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s: %v\n", MlrExeName(), err)
+		}
+		readPipe.Close()
+	}(process, readPipe)
 
 	return readPipe, nil
+}
+
+func waitAndClose(process *os.Process, readPipe *os.File) {
+	_, err := process.Wait()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s: %v\n", MlrExeName(), err)
+	}
+	readPipe.Close()
 }
