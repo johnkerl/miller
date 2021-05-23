@@ -3,7 +3,6 @@ package input
 import (
 	"bufio"
 	"io"
-	"os"
 	"strconv"
 	"strings"
 
@@ -31,11 +30,14 @@ func (this *RecordReaderDKVP) Read(
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
-			handle := os.Stdin
+			handle, err := lib.OpenStdin(this.readerOptions.FileInputEncoding)
+			if err != nil {
+				errorChannel <- err
+			}
 			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 		} else {
 			for _, filename := range filenames {
-				handle, err := os.Open(filename)
+				handle, err := lib.OpenFile(filename, this.readerOptions.FileInputEncoding)
 				if err != nil {
 					errorChannel <- err
 				} else {
@@ -49,7 +51,7 @@ func (this *RecordReaderDKVP) Read(
 }
 
 func (this *RecordReaderDKVP) processHandle(
-	handle *os.File,
+	handle io.Reader,
 	filename string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,

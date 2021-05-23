@@ -17,8 +17,25 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 
+* blocker: prepipe
+  - gzin; bz2in ...
+    handle, err = gzip.NewReader(handle)
+    handle, err = bzip2.NewReader(handle)
+  ? gzout, bz2out -- ? make sure this works through tee? bleah ...
+  - n.b. brew install pigz, then pigz -z
+  - needs prepipe per se
+  - needs UT cases for non-pipe readers
+  - needs UT cases for pre-pipe readers
+  ? zip -- but that is an archive case too not just an encoding case
+    ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
+    ? as 6.1 follow-on work -- ?
+
 * blockers:
   o fix emit
+
+* blockers:
+  o markdown writer
+  o --x2m iospecs
 
 * blockers:
   o convert regtest/cases-pending-windows
@@ -41,7 +58,9 @@ TOP OF LIST:
   o system
   o regextract regextract_or_else
 
-! blocker: localtime functions
+* blocker: comment-handling
+
+* blocker: localtime functions
 
 * strptime w/ ...00.Z -> error
 * strptime/strftime experiments ...
@@ -65,9 +84,6 @@ TOP OF LIST:
   - ofmt needs to go through this sanitizer logic -- prohibit '%s' for example
   - no other callsites?!?!?!
   - note hexfmt for non-ints -- especially floats -- ?!?
-
-* blocker: prepipe
-  - gzin; bz2in ...
 
 * blocker: misctests
   ? wut
@@ -628,3 +644,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * OLH re no --prepipe and --load/--mload in .mlrrc for vulnerability avoidance
   o --prepipe-foo
   o local-alias suggestions
+* make an io.ReadCloser wrapper for bzip2

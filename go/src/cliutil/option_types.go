@@ -6,6 +6,10 @@
 
 package cliutil
 
+import (
+	"miller/src/lib"
+)
+
 // ----------------------------------------------------------------
 //typedef struct _generator_opts_t {
 //	char* field_name;
@@ -39,6 +43,9 @@ type TReaderOptions struct {
 	//
 	//	// Fake internal-data-generator 'reader'
 	//	generator_opts_t generator_opts;
+
+	// For in-process gunzip/bunzip2/zcat (distinct from prepipe)
+	FileInputEncoding lib.TFileInputEncoding
 }
 
 // ----------------------------------------------------------------
@@ -143,10 +150,11 @@ func DefaultOptions() TOptions {
 
 func DefaultReaderOptions() TReaderOptions {
 	return TReaderOptions{
-		InputFileFormat: "dkvp", // xxx constify at top
-		IRS:             "\n",
-		IFS:             ",",
-		IPS:             "=",
+		InputFileFormat:   "dkvp", // xxx constify at top
+		IRS:               "\n",
+		IFS:               ",",
+		IPS:               "=",
+		FileInputEncoding: lib.FileInputEncodingCat,
 	}
 }
 
