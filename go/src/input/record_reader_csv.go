@@ -35,14 +35,21 @@ func (this *RecordReaderCSV) Read(
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
-			handle, err := lib.OpenStdin(this.readerOptions.FileInputEncoding)
+			handle, err := lib.OpenStdin(
+				this.readerOptions.Prepipe,
+				this.readerOptions.FileInputEncoding,
+			)
 			if err != nil {
 				errorChannel <- err
 			}
 			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 		} else {
 			for _, filename := range filenames {
-				handle, err := lib.OpenFile(filename, this.readerOptions.FileInputEncoding)
+				handle, err := lib.OpenFileForRead(
+					filename,
+					this.readerOptions.Prepipe,
+					this.readerOptions.FileInputEncoding,
+				)
 				if err != nil {
 					errorChannel <- err
 				} else {

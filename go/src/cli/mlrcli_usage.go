@@ -59,10 +59,10 @@ func mainUsageLong(o *os.File, argv0 string) {
 	mainUsageFormatConversionKeystrokeSaverOptions(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "COMPRESSED-DATA OPTIONS:\N");
-	//	mainUsageCompressedDataOptions(o, argv0);
-	//	fmt.Fprintf(o, "\n");
-	//
+	fmt.Fprintf(o, "COMPRESSED-DATA OPTIONS:\n")
+	mainUsageCompressedDataOptions(o, argv0)
+	fmt.Fprintf(o, "\n")
+
 	//	fmt.Fprintf(o, "SEPARATOR OPTIONS:\n");
 	//	mainUsageSeparatorOptions(o, argv0);
 	//	fmt.Fprintf(o, "\n");
@@ -364,25 +364,26 @@ func mainUsageFormatConversionKeystrokeSaverOptions(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "output only.\n")
 }
 
-//func mainUsageCompressedDataOptions(o *os.File, argv0 string) {
-//	fmt.Fprintf(o, "  --prepipe {command} This allows Miller to handle compressed inputs. You can do\n");
-//	fmt.Fprintf(o, "  without this for single input files, e.g. \"gunzip < myfile.csv.gz | %s ...\".\n",
-//		argv0);
-//	fmt.Fprintf(o, "  However, when multiple input files are present, between-file separations are\n");
-//	fmt.Fprintf(o, "  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can\n");
-//	fmt.Fprintf(o, "  specify an action to be taken on each input file. This pre-pipe command must\n");
-//	fmt.Fprintf(o, "  be able to read from standard input; it will be invoked with\n");
-//	fmt.Fprintf(o, "    {command} < {filename}.\n");
-//	fmt.Fprintf(o, "  Examples:\n");
-//	fmt.Fprintf(o, "    %s --prepipe 'gunzip'\n", argv0);
-//	fmt.Fprintf(o, "    %s --prepipe 'zcat -cf'\n", argv0);
-//	fmt.Fprintf(o, "    %s --prepipe 'xz -cd'\n", argv0);
-//	fmt.Fprintf(o, "    %s --prepipe cat\n", argv0);
-//	fmt.Fprintf(o, "  Note that this feature is quite general and is not limited to decompression\n");
-//	fmt.Fprintf(o, "  utilities. You can use it to apply per-file filters of your choice.\n");
-//	fmt.Fprintf(o, "  For output compression (or other) utilities, simply pipe the output:\n");
-//	fmt.Fprintf(o, "    %s ... | {your compression command}\n", argv0);
-//}
+// TODO: ---gzip --bz2in --zin as well
+func mainUsageCompressedDataOptions(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "  --prepipe {command} This allows Miller to handle compressed inputs. You can do\n")
+	fmt.Fprintf(o, "  without this for single input files, e.g. \"gunzip < myfile.csv.gz | %s ...\".\n",
+		argv0)
+	fmt.Fprintf(o, "  However, when multiple input files are present, between-file separations are\n")
+	fmt.Fprintf(o, "  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can\n")
+	fmt.Fprintf(o, "  specify an action to be taken on each input file. This pre-pipe command must\n")
+	fmt.Fprintf(o, "  be able to read from standard input; it will be invoked with\n")
+	fmt.Fprintf(o, "    {command} < {filename}.\n")
+	fmt.Fprintf(o, "  Examples:\n")
+	fmt.Fprintf(o, "    %s --prepipe 'gunzip'\n", argv0)
+	fmt.Fprintf(o, "    %s --prepipe 'zcat -cf'\n", argv0)
+	fmt.Fprintf(o, "    %s --prepipe 'xz -cd'\n", argv0)
+	fmt.Fprintf(o, "    %s --prepipe cat\n", argv0)
+	fmt.Fprintf(o, "  Note that this feature is quite general and is not limited to decompression\n")
+	fmt.Fprintf(o, "  utilities. You can use it to apply per-file filters of your choice.\n")
+	fmt.Fprintf(o, "  For output compression (or other) utilities, simply pipe the output:\n")
+	fmt.Fprintf(o, "    %s ... | {your compression command}\n", argv0)
+}
 
 //func mainUsageSeparatorOptions(o *os.File, argv0 string) {
 //	fmt.Fprintf(o, "  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");

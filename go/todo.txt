@@ -26,6 +26,7 @@ TOP OF LIST:
   - needs prepipe per se
   - needs UT cases for non-pipe readers
   - needs UT cases for pre-pipe readers
+  ! auto-detect for .gz .bz2 .z -- ?
   ? zip -- but that is an archive case too not just an encoding case
     ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
     ? as 6.1 follow-on work -- ?

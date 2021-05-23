@@ -34,16 +34,14 @@ type TReaderOptions struct {
 	UseImplicitCSVHeader bool
 	AllowRaggedCSVInput  bool
 	//
-	//	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
-	//	// files are read directly rather than through a pipe.
-	//	prepipe string;
-	//
 	//	comment_handling_t comment_handling;
 	//	comment_string string;
 	//
 	//	// Fake internal-data-generator 'reader'
 	//	generator_opts_t generator_opts;
 
+	// For out-of-process handling of compressed data, via popen
+	Prepipe string
 	// For in-process gunzip/bunzip2/zcat (distinct from prepipe)
 	FileInputEncoding lib.TFileInputEncoding
 }

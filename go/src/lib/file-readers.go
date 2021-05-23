@@ -1,11 +1,24 @@
+// ================================================================
 // Wrapper for os.Open which maps string filename to *os.File, which in turn
 // implements io.ReadCloser, and optional in turn wrapping that in a
 // gzip/zlib/bunzip2 reader. Shared across record-readers for all the various
-// input-file formats Miller supports.
+// input-file formats (CSV, JSON, XTAB, DKVP, NIDX, PPRINT) which Miller
+// supports.
+//
+// There are two ways of handling compressed data in the Miller Go port:
+//
+// * A user-specified 'prepipe' command such as 'gunzip', where we popen a
+//   process, hand it the filename via '< filename', and read from that pipe;
+//
+// * An indication to use an in-process encoding reader (gzip or bzip2, etc).
+//
+// If a prepipe is specified, it is used; else the encoding is used.
+// ================================================================
 
 package lib
 
 import (
+	"bytes"
 	"compress/bzip2"
 	"compress/gzip"
 	"compress/zlib"
@@ -23,24 +36,85 @@ const (
 	FileInputEncodingZlib
 )
 
-func OpenFile(
+// OpenFileForRead: If prepipe is non-empty, popens "{prepipe} < {filename}"
+// and returns a handle to that where prepipe is nominally things like
+// "gunzip", "cat", etc.  Otherwise, delegates to an in-process reader which
+// can natively handle gzip/bzip2/zlib depending on the specified encoding.  If
+// the encoding isn't a compression encoding, this ends up being simply
+// os.Open.
+func OpenFileForRead(
 	filename string,
-	encoding TFileInputEncoding,
+	prepipe string,
+	encoding TFileInputEncoding, // ignored if prepipe is non-empty
 ) (io.ReadCloser, error) {
-	handle, err := os.Open(filename)
-	if err != nil {
-		return nil, err
+	if prepipe != "" {
+		return openPrepipedHandleForRead(filename, prepipe)
+	} else {
+		handle, err := os.Open(filename)
+		if err != nil {
+			return nil, err
+		}
+		return openEncodedHandleForRead(handle, encoding)
 	}
-	return openHandle(handle, encoding)
 }
 
+// OpenStdin: if prepipe is non-empty, popens "{prepipe}" and returns a handle
+// to that where prepipe is nominally things like "gunzip", "cat", etc.
+// Otherwise, delegates to an in-process reader which can natively handle
+// gzip/bzip2/zlib depending on the specified encoding.  If the encoding isn't
+// a compression encoding, this ends up being simply os.Stdin.
 func OpenStdin(
-	encoding TFileInputEncoding,
+	prepipe string,
+	encoding TFileInputEncoding, // ignored if prepipe is non-empty
 ) (io.ReadCloser, error) {
-	return openHandle(os.Stdin, encoding)
+	if prepipe != "" {
+		return openPrepipedHandleForRead("", prepipe)
+	} else {
+		return openEncodedHandleForRead(os.Stdin, encoding)
+	}
 }
 
-func openHandle(
+func openPrepipedHandleForRead(
+	filename string,
+	prepipe string,
+) (io.ReadCloser, error) {
+	escapedFilename := escapeFileNameForPopen(filename)
+
+	var command string
+	if filename == "" { // stdin
+		command = prepipe
+	} else {
+		command = prepipe + " < " + escapedFilename
+	}
+
+	return OpenInboundHalfPipe(command)
+}
+
+// Avoids shell-injection cases by replacing single-quote with backslash
+// single-quote and double-quote with backslack double-quote, then wrapping the
+// entire result in initial and final single-quote.
+//
+// TODO: test on Windows. Maybe needs move to src/platform.
+func escapeFileNameForPopen(filename string) string {
+	var buffer bytes.Buffer
+	foundQuote := false
+	for _, c := range filename {
+		if c == '\'' || c == '"' {
+			buffer.WriteRune('\'')
+			buffer.WriteRune(c)
+			buffer.WriteRune('\'')
+		} else {
+			buffer.WriteRune(c)
+		}
+	}
+	if foundQuote {
+		return "'" + buffer.String() + "'"
+	} else {
+		return buffer.String()
+	}
+}
+
+func openEncodedHandleForRead(
 	handle *os.File,
 	encoding TFileInputEncoding,
 ) (io.ReadCloser, error) {

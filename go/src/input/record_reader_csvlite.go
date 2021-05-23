@@ -79,7 +79,10 @@ func (this *RecordReaderCSVLite) Read(
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
-			handle, err := lib.OpenStdin(this.readerOptions.FileInputEncoding)
+			handle, err := lib.OpenStdin(
+				this.readerOptions.Prepipe,
+				this.readerOptions.FileInputEncoding,
+			)
 			if err != nil {
 				errorChannel <- err
 			}
@@ -102,7 +105,11 @@ func (this *RecordReaderCSVLite) Read(
 			}
 		} else {
 			for _, filename := range filenames {
-				handle, err := lib.OpenFile(filename, this.readerOptions.FileInputEncoding)
+				handle, err := lib.OpenFileForRead(
+					filename,
+					this.readerOptions.Prepipe,
+					this.readerOptions.FileInputEncoding,
+				)
 				if err != nil {
 					errorChannel <- err
 				} else {
