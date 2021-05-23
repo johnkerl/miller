@@ -13,11 +13,9 @@ import (
 )
 
 type RecordWriterPPRINT struct {
+	writerOptions *cliutil.TWriterOptions
 	// Input:
 	records *list.List
-	// For detecting schema changes: we print a newline and the new header.
-	barred       bool
-	rightAligned bool
 
 	// State:
 	lastJoinedHeader *string
@@ -26,9 +24,8 @@ type RecordWriterPPRINT struct {
 
 func NewRecordWriterPPRINT(writerOptions *cliutil.TWriterOptions) *RecordWriterPPRINT {
 	return &RecordWriterPPRINT{
-		records:      list.New(),
-		barred:       writerOptions.BarredPprintOutput,
-		rightAligned: writerOptions.RightAlignedPprintOutput,
+		writerOptions: writerOptions,
+		records:       list.New(),
 
 		lastJoinedHeader: nil,
 		batch:            list.New(),
@@ -60,7 +57,7 @@ func (this *RecordWriterPPRINT) Write(
 			joinedHeader := strings.Join(outrec.GetKeys(), ",")
 			if *this.lastJoinedHeader != joinedHeader {
 				// Print and free old batch
-				if this.writeHeterogenousList(this.batch, this.barred, ostream) {
+				if this.writeHeterogenousList(this.batch, this.writerOptions.BarredPprintOutput, ostream) {
 					// Print a newline
 					ostream.Write([]byte("\n"))
 				}
@@ -77,7 +74,7 @@ func (this *RecordWriterPPRINT) Write(
 	} else { // End of record stream
 
 		if this.batch.Front() != nil {
-			this.writeHeterogenousList(this.batch, this.barred, ostream)
+			this.writeHeterogenousList(this.batch, this.writerOptions.BarredPprintOutput, ostream)
 		}
 	}
 }
@@ -153,7 +150,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 		if onFirst {
 			var buffer bytes.Buffer // faster than fmt.Print() separately
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				if !this.rightAligned {
+				if !this.writerOptions.RightAlignedPprintOutput {
 					if pe.Next != nil {
 						buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[pe.Key], pe.Key))
 					} else {
@@ -179,7 +176,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 			if s == "" {
 				s = "-"
 			}
-			if !this.rightAligned {
+			if !this.writerOptions.RightAlignedPprintOutput {
 				if pe.Next != nil {
 					buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[pe.Key], s))
 				} else {
@@ -251,7 +248,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 
 			buffer.WriteString(verticalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				if !this.rightAligned {
+				if !this.writerOptions.RightAlignedPprintOutput {
 					buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[pe.Key], pe.Key))
 				} else {
 					buffer.WriteString(fmt.Sprintf("%*s", maxWidths[pe.Key], pe.Key))
@@ -284,7 +281,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 		buffer.WriteString(verticalStart)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
-			if !this.rightAligned {
+			if !this.writerOptions.RightAlignedPprintOutput {
 				buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[pe.Key], s))
 			} else {
 				buffer.WriteString(fmt.Sprintf("%*s", maxWidths[pe.Key], s))

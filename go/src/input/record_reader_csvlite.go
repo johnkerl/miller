@@ -34,13 +34,11 @@ import (
 
 // ----------------------------------------------------------------
 type RecordReaderCSVLite struct {
-	ifs                  string
-	irs                  string
-	useImplicitCSVHeader bool
-	allowRaggedCSVInput  bool
-	allowRepeatIFS       bool // true for PPRINT
-
+	readerOptions     *cliutil.TReaderOptions
 	emptyStringMlrval types.Mlrval
+
+	// TODO: from reader options
+	allowRepeatIFS bool
 
 	// TODO: port from C
 	//	comment_handling_t comment_handling;
@@ -50,11 +48,8 @@ type RecordReaderCSVLite struct {
 // ----------------------------------------------------------------
 func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
-		ifs:                  readerOptions.IFS,
-		irs:                  readerOptions.IRS,
-		useImplicitCSVHeader: readerOptions.UseImplicitCSVHeader,
-		allowRaggedCSVInput:  readerOptions.AllowRaggedCSVInput,
-		allowRepeatIFS:       false,
+		readerOptions:  readerOptions,
+		allowRepeatIFS: false,
 
 		// TODO: port from C
 		//	pstate->comment_handling        = comment_handling;
@@ -66,11 +61,8 @@ func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReader
 // ----------------------------------------------------------------
 func NewRecordReaderPPRINT(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
-		ifs:                  readerOptions.IFS,
-		irs:                  readerOptions.IRS,
-		useImplicitCSVHeader: readerOptions.UseImplicitCSVHeader,
-		allowRaggedCSVInput:  readerOptions.AllowRaggedCSVInput,
-		allowRepeatIFS:       true,
+		readerOptions:  readerOptions,
+		allowRepeatIFS: true,
 
 		// TODO: port from C
 		//	pstate->comment_handling        = comment_handling;
@@ -89,7 +81,7 @@ func (this *RecordReaderCSVLite) Read(
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
 			handle := os.Stdin
-			if this.useImplicitCSVHeader {
+			if this.readerOptions.UseImplicitCSVHeader {
 				this.processHandleImplicitCSVHeader(
 					handle,
 					"(stdin)",
@@ -112,7 +104,7 @@ func (this *RecordReaderCSVLite) Read(
 				if err != nil {
 					errorChannel <- err
 				} else {
-					if this.useImplicitCSVHeader {
+					if this.readerOptions.UseImplicitCSVHeader {
 						this.processHandleImplicitCSVHeader(
 							handle,
 							filename,
@@ -153,7 +145,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	lineReader := bufio.NewReader(handle)
 	eof := false
 	for !eof {
-		line, err := lineReader.ReadString(this.irs[0]) // xxx temp
+		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
 		if err == io.EOF {
 			err = nil
 			eof = true
@@ -162,7 +154,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 		} else {
 			inputLineNumber++
 			// This is how to do a chomp:
-			line = strings.TrimRight(line, this.irs)
+			line = strings.TrimRight(line, this.readerOptions.IRS)
 
 			// xxx temp pending autodetect, and pending more windows-port work
 			line = strings.TrimRight(line, "\r")
@@ -173,7 +165,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				continue
 			}
 
-			fields := lib.SplitString(line, this.ifs)
+			fields := lib.SplitString(line, this.readerOptions.IFS)
 			if this.allowRepeatIFS {
 				fields = this.stripEmpties(fields)
 			}
@@ -181,7 +173,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				headerStrings = fields
 				// Get data lines on subsequent loop iterations
 			} else {
-				if !this.allowRaggedCSVInput && len(headerStrings) != len(fields) {
+				if !this.readerOptions.AllowRaggedCSVInput && len(headerStrings) != len(fields) {
 					err := errors.New(
 						fmt.Sprintf(
 							"Miller: CSV header/data length mismatch %d != %d "+
@@ -194,7 +186,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				}
 
 				record := types.NewMlrmap()
-				if !this.allowRaggedCSVInput {
+				if !this.readerOptions.AllowRaggedCSVInput {
 					for i, field := range fields {
 						value := types.MlrvalPointerFromInferredType(field)
 						record.PutCopy(headerStrings[i], value)
@@ -250,7 +242,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	lineReader := bufio.NewReader(handle)
 	eof := false
 	for !eof {
-		line, err := lineReader.ReadString(this.irs[0]) // xxx temp
+		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
 		if err == io.EOF {
 			err = nil
 			eof = true
@@ -259,7 +251,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 		} else {
 			inputLineNumber++
 			// This is how to do a chomp:
-			line = strings.TrimRight(line, this.irs)
+			line = strings.TrimRight(line, this.readerOptions.IRS)
 
 			// xxx temp pending autodetect, and pending more windows-port work
 			line = strings.TrimRight(line, "\r")
@@ -270,7 +262,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 				continue
 			}
 
-			fields := lib.SplitString(line, this.ifs)
+			fields := lib.SplitString(line, this.readerOptions.IFS)
 			if this.allowRepeatIFS {
 				fields = this.stripEmpties(fields)
 			}
@@ -281,7 +273,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 					headerStrings[i] = strconv.Itoa(i + 1)
 				}
 			} else {
-				if !this.allowRaggedCSVInput && len(headerStrings) != len(fields) {
+				if !this.readerOptions.AllowRaggedCSVInput && len(headerStrings) != len(fields) {
 					err := errors.New(
 						fmt.Sprintf(
 							"Miller: CSV header/data length mismatch %d != %d "+
@@ -295,7 +287,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			}
 
 			record := types.NewMlrmap()
-			if !this.allowRaggedCSVInput {
+			if !this.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
 					value := types.MlrvalPointerFromInferredType(field)
 					record.PutCopy(headerStrings[i], value)

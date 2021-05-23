@@ -12,10 +12,13 @@ import (
 )
 
 type RecordReaderJSON struct {
+	readerOptions *cliutil.TReaderOptions
 }
 
 func NewRecordReaderJSON(readerOptions *cliutil.TReaderOptions) *RecordReaderJSON {
-	return &RecordReaderJSON{}
+	return &RecordReaderJSON{
+		readerOptions: readerOptions,
+	}
 }
 
 func (this *RecordReaderJSON) Read(

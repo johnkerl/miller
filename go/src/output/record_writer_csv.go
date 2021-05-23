@@ -10,23 +10,20 @@ import (
 )
 
 type RecordWriterCSV struct {
-	csvWriter          *csv.Writer
-	doHeaderlessOutput bool
+	writerOptions *cliutil.TWriterOptions
+	csvWriter     *csv.Writer
 	// For reporting schema changes: we print a newline and the new header
 	lastJoinedHeader *string
 	// Only write one blank line for schema changes / blank input lines
 	justWroteEmptyLine bool
-
-	ofs string
 }
 
 func NewRecordWriterCSV(writerOptions *cliutil.TWriterOptions) *RecordWriterCSV {
 	return &RecordWriterCSV{
+		writerOptions:      writerOptions,
 		csvWriter:          nil, // will be set on first Write() wherein we have the ostream
-		doHeaderlessOutput: writerOptions.HeaderlessCSVOutput,
 		lastJoinedHeader:   nil,
 		justWroteEmptyLine: false,
-		ofs:                writerOptions.OFS,
 	}
 }
 
@@ -41,7 +38,7 @@ func (this *RecordWriterCSV) Write(
 
 	if this.csvWriter == nil {
 		this.csvWriter = csv.NewWriter(ostream)
-		this.csvWriter.Comma = rune(this.ofs[0]) // xxx temp
+		this.csvWriter.Comma = rune(this.writerOptions.OFS[0]) // xxx temp
 	}
 
 	if outrec.FieldCount == 0 {
@@ -67,7 +64,7 @@ func (this *RecordWriterCSV) Write(
 		needToPrintHeader = true
 	}
 
-	if needToPrintHeader && !this.doHeaderlessOutput {
+	if needToPrintHeader && !this.writerOptions.HeaderlessCSVOutput {
 		fields := make([]string, outrec.FieldCount)
 		i := 0
 		for pe := outrec.Head; pe != nil; pe = pe.Next {

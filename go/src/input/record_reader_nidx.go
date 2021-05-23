@@ -13,15 +13,13 @@ import (
 )
 
 type RecordReaderNIDX struct {
-	// TODO: use the parameterization
-	ifs string
-	ips string
+	// TODO: use the parameterization for readerOptions.IFS/readerOptions.IPS
+	readerOptions *cliutil.TReaderOptions
 }
 
 func NewRecordReaderNIDX(readerOptions *cliutil.TReaderOptions) *RecordReaderNIDX {
 	return &RecordReaderNIDX{
-		ifs: readerOptions.IFS,
-		ips: readerOptions.IPS,
+		readerOptions: readerOptions,
 	}
 }
 
@@ -76,7 +74,7 @@ func (this *RecordReaderNIDX) processHandle(
 			// xxx temp pending autodetect, and pending more windows-port work
 			line = strings.TrimRight(line, "\r")
 
-			record := recordFromNIDXLine(&line, &this.ifs)
+			record := recordFromNIDXLine(&line, &this.readerOptions.IFS)
 
 			context.UpdateForInputRecord()
 			inputChannel <- types.NewRecordAndContext(
