@@ -20,25 +20,19 @@ TOP OF LIST:
 ! get doc6 going sooner than later! lots accumulating ...
 
 * blocker: prepipe
-  k gzin; bz2in ...
-    handle, err = gzip.NewReader(handle)
-    handle, err = bzip2.NewReader(handle)
-  ? gzout, bz2out -- ? make sure this works through tee? bleah ...
+  ! olh re --gzin 1st, then prepipe afterward
+    - also suffix-inference
   - n.b. brew install pigz, then pigz -z
   k needs prepipe per se
   - needs UT cases for non-pipe readers
   - needs UT cases for pre-pipe readers
-  k auto-detect for .gz .bz2 .z -- ?
-  ? zip -- but that is an archive case too not just an encoding case
-    ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
-    ? as 6.1 follow-on work -- ?
-
-* blockers:
-  o fix emit
 
 * blockers:
   o markdown writer
   o --x2m iospecs
+
+* blockers:
+  o fix emit
 
 * blockers:
   o convert regtest/cases-pending-windows
@@ -104,6 +98,11 @@ TOP OF LIST:
   o new columns-to-arrays and arrays-to-columns for stan format
 
 * non-blocker: smarter head-stop etc https://github.com/johnkerl/miller/issues/291
+
+? gzout, bz2out -- ? make sure this works through tee? bleah ...
+? zip -- but that is an archive case too not just an encoding case
+  ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
+  ? as 6.1 follow-on work -- ?
 
 ----------------------------------------------------------------
 
