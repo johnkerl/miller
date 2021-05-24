@@ -8,25 +8,15 @@ Overview
    :maxdepth: 1
 
    quick-examples
-   features
    10min
+   features
    feature-comparison
    file-formats
    record-heterogeneity
-   internationalization
-   contact
-
-Using Miller
-----------------------------------------------------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   sql-examples
-   log-processing-examples
-   data-examples
    customization
    install
+   internationalization
+   contact
 
 Details
 ----------------------------------------------------------------
@@ -35,6 +25,9 @@ Details
    :maxdepth: 1
 
    faq
+   sql-examples
+   log-processing-examples
+   data-examples
    cookbook
    cookbook2
    cookbook3

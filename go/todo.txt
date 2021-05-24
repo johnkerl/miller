@@ -18,8 +18,19 @@ TOP OF LIST:
 ----------------------------------------------------------------
 
 ! get doc6 going sooner than later! lots accumulating ...
-  o quick-examples needs fewer inputs, and outputs for all retained inputs
+  ? quick-examples needs fewer inputs, and outputs for all retained inputs
+    ? or q-e more links to 10min
   o 10min needs jvstack/jsonx update
+  o C->Go throughout
+  ! thruout pitch the docs at primarily the first whenever possible:
+    - ruby-level user w/o heavy sysadm
+    - sysadm w/o dev
+      > do not assume people know awk! XD
+    - devs
+  - in that vein re-think the faq -- split up, and/or move down
+  - likewise cookbook2/3 -- overly nerdy; perhaps just annoying
+  - re-work data-sharing <-> SQL ...
+  - reference truly last
 
 * blocker: jsonx back-compat
 
