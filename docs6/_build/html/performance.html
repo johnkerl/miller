@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Performance &#8212; Miller 5.10.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="How original is Miller?" href="originality.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="originality.html" title="How original is Miller?"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Performance</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="performance">
+<h1>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="disclaimer">
+<h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Permalink to this headline">¶</a></h2>
+<p>In a previous version of this page (see <a class="reference external" href="http://johnkerl.org/miller-releases/miller-5.1.0/doc/performance.html">here</a>) I compared Miller to some items in the Unix toolkit in terms of run time. But such comparisons are very much not apples-to-apples:</p>
+<ul class="simple">
+<li><p>Miller’s principal strength is that it handles <strong>key-value data in various formats</strong> while the system tools <strong>do not</strong>. So if you time <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">sort</span></code> on a CSV file against system <code class="docutils literal notranslate"><span class="pre">sort</span></code>, it’s not relevant to say which is faster by how many percent – Miller will respect the header line, leaving it in place, while the system sort will move it, sorting it along with all the other header lines. This would be comparing the run times of two programs produce different outputs.  Likewise, <code class="docutils literal notranslate"><span class="pre">awk</span></code> doesn’t respect header lines, although you can code up some CSV-handling using <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(NR==1)</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}</span> <span class="pre">else</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}</span></code>. And that’s just CSV: I don’t know any simple way to get <code class="docutils literal notranslate"><span class="pre">sort</span></code>, <code class="docutils literal notranslate"><span class="pre">awk</span></code>, etc. to handle DKVP, JSON, etc. – which is the main rreason I wrote Miller.</p></li>
+<li><p><strong>Implementations differ by platform</strong>: one <code class="docutils literal notranslate"><span class="pre">awk</span></code> may be fundamentally faster than another, and <code class="docutils literal notranslate"><span class="pre">mawk</span></code> has a very efficient bytecode implementation – which handles positionally indexed data far faster than Miller does.</p></li>
+<li><p>The system <code class="docutils literal notranslate"><span class="pre">sort</span></code> command will, on some systems, handle too-large-for-RAM datasets by spilling to disk; Miller (as of version 5.2.0, mid-2017) does not. Miller sorts are always stable; GNU supports stable and unstable variants.</p></li>
+<li><p>Etc.</p></li>
+</ul>
+</div>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Miller can do many kinds of processing on key-value-pair data using elapsed time roughly of the same order of magnitude as items in the Unix toolkit can handle positionally indexed data. Specific results vary widely by platform, implementation details, multi-core use (or not). Lastly, specific special-purpose non-record-aware processing will run far faster in <code class="docutils literal notranslate"><span class="pre">grep</span></code>, <code class="docutils literal notranslate"><span class="pre">sed</span></code>, etc.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Performance</a><ul>
+<li><a class="reference internal" href="#disclaimer">Disclaimer</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="originality.html"
+                        title="previous chapter">How original is Miller?</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/performance.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="originality.html" title="How original is Miller?"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Performance</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

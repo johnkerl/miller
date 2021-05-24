@@ -18,10 +18,15 @@ TOP OF LIST:
 ----------------------------------------------------------------
 
 ! get doc6 going sooner than later! lots accumulating ...
+  o quick-examples needs fewer inputs, and outputs for all retained inputs
+  o 10min needs jvstack/jsonx update
+
+* blocker: jsonx back-compat
 
 * blockers:
   o markdown writer
   o --x2m iospecs
+  o file-formats: colon -> dot
 
 * blockers:
   o fix emit

@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Features &#8212; Miller 5.10.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Miller in 10 minutes" href="10min.html" />
+    <link rel="prev" title="Quick examples" href="quick-examples.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="10min.html" title="Miller in 10 minutes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quick-examples.html" title="Quick examples"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Features</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="features">
+<h1>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h1>
+<p>Miller is like awk, sed, cut, join, and sort for <strong>name-indexed data such as
+CSV, TSV, and tabular JSON</strong>. You get to work with your data using named
+fields, without needing to count positional column indices.</p>
+<p>This is something the Unix toolkit always could have done, and arguably
+always should have done.  It operates on key-value-pair data while the familiar
+Unix tools operate on integer-indexed fields: if the natural data structure for
+the latter is the array, then Miller’s natural data structure is the
+insertion-ordered hash map.  This encompasses a <strong>variety of data formats</strong>,
+including but not limited to the familiar CSV, TSV, and JSON.  (Miller can handle
+<strong>positionally-indexed data</strong> as a special case.)</p>
+<ul class="simple">
+<li><p>Miller is <strong>multi-purpose</strong>: it’s useful for <strong>data cleaning</strong>, <strong>data reduction</strong>, <strong>statistical reporting</strong>, <strong>devops</strong>, <strong>system administration</strong>, <strong>log-file processing</strong>, <strong>format conversion</strong>, and <strong>database-query post-processing</strong>.</p></li>
+<li><p>You can use Miller to snarf and munge <strong>log-file data</strong>, including selecting out relevant substreams, then produce CSV format and load that into all-in-memory/data-frame utilities for further statistical and/or graphical processing.</p></li>
+<li><p>Miller complements <strong>data-analysis tools</strong> such as <strong>R</strong>, <strong>pandas</strong>, etc.: you can use Miller to <strong>clean</strong> and <strong>prepare</strong> your data. While you can do <strong>basic statistics</strong> entirely in Miller, its streaming-data feature and single-pass algorithms enable you to <strong>reduce very large data sets</strong>.</p></li>
+<li><p>Miller complements SQL <strong>databases</strong>: you can slice, dice, and reformat data on the client side on its way into or out of a database.  (Examples <a class="reference internal" href="sql-examples.html#sql-input-examples"><span class="std std-ref">here</span></a> and <a class="reference internal" href="sql-examples.html#sql-output-examples"><span class="std std-ref">here</span></a>.) You can also reap some of the benefits of databases for quick, setup-free one-off tasks when you just need to query some data in disk files in a hurry.</p></li>
+<li><p>Miller also goes beyond the classic Unix tools by stepping fully into our modern, <strong>no-SQL</strong> world: its essential record-heterogeneity property allows Miller to operate on data where records with different schema (field names) are interleaved.</p></li>
+<li><p>Miller is <strong>streaming</strong>: most operations need only a single record in memory at a time, rather than ingesting all input before producing any output.  For those operations which require deeper retention (<code class="docutils literal notranslate"><span class="pre">sort</span></code>, <code class="docutils literal notranslate"><span class="pre">tac</span></code>, <code class="docutils literal notranslate"><span class="pre">stats1</span></code>), Miller retains only as much data as needed.  This means that whenever functionally possible, you can operate on files which are larger than your system’s available RAM, and you can use Miller in <strong>tail -f</strong> contexts.</p></li>
+<li><p>Miller is <strong>pipe-friendly</strong> and interoperates with the Unix toolkit</p></li>
+<li><p>Miller’s I/O formats include <strong>tabular pretty-printing</strong>, <strong>positionally indexed</strong> (Unix-toolkit style), CSV, JSON, and others</p></li>
+<li><p>Miller does <strong>conversion</strong> between formats</p></li>
+<li><p>Miller’s <strong>processing is format-aware</strong>: e.g. CSV <code class="docutils literal notranslate"><span class="pre">sort</span></code> and <code class="docutils literal notranslate"><span class="pre">tac</span></code> keep header lines first</p></li>
+<li><p>Miller has high-throughput <strong>performance</strong> on par with the Unix toolkit</p></li>
+<li><p>Not unlike <a class="reference external" href="https://stedolan.github.io/jq/">jq</a> (for JSON), Miller is written in portable, modern C, with <strong>zero runtime dependencies</strong>.  You can download or compile a single binary, <code class="docutils literal notranslate"><span class="pre">scp</span></code> it to a faraway machine, and expect it to work.</p></li>
+</ul>
+<p>Releases and release notes: <a class="reference external" href="https://github.com/johnkerl/miller/releases">https://github.com/johnkerl/miller/releases</a>.</p>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quick-examples.html"
+                        title="previous chapter">Quick examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="10min.html"
+                        title="next chapter">Miller in 10 minutes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/features.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="10min.html" title="Miller in 10 minutes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quick-examples.html" title="Quick examples"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Features</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

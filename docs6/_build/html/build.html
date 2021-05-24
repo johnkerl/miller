@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Building from source &#8212; Miller 5.10.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Why?" href="why.html" />
+    <link rel="prev" title="Documents by release" href="release-docs.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="why.html" title="Why?"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="release-docs.html" title="Documents by release"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Building from source</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="building-from-source">
+<h1>Building from source<a class="headerlink" href="#building-from-source" title="Permalink to this headline">¶</a></h1>
+<p>Please also see <a class="reference internal" href="install.html"><span class="doc">Installation</span></a> for information about pre-built executables.</p>
+<div class="section" id="miller-license">
+<h2>Miller license<a class="headerlink" href="#miller-license" title="Permalink to this headline">¶</a></h2>
+<p>Two-clause BSD license <a class="reference external" href="https://github.com/johnkerl/miller/blob/master/LICENSE.txt">https://github.com/johnkerl/miller/blob/master/LICENSE.txt</a>.</p>
+</div>
+<div class="section" id="from-release-tarball-using-autoconfig">
+<h2>From release tarball using autoconfig<a class="headerlink" href="#from-release-tarball-using-autoconfig" title="Permalink to this headline">¶</a></h2>
+<p>Miller allows you the option of using GNU <code class="docutils literal notranslate"><span class="pre">autoconfigure</span></code> to build portably.</p>
+<p>Grateful acknowledgement: Miller’s GNU autoconfig work was done by the generous and expert efforts of <a class="reference external" href="https://github.com/0-wiz-0/">Thomas Klausner</a>.</p>
+<ul class="simple">
+<li><p>Obtain <code class="docutils literal notranslate"><span class="pre">mlr-i.j.k.tar.gz</span></code> from <a class="reference external" href="https://github.com/johnkerl/miller/tags">https://github.com/johnkerl/miller/tags</a>, replacing <code class="docutils literal notranslate"><span class="pre">i.j.k</span></code> with the desired release, e.g. <code class="docutils literal notranslate"><span class="pre">2.2.1</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">zxvf</span> <span class="pre">mlr-i.j.k.tar.gz</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">mlr-i.j.k</span></code></p></li>
+<li><p>Install the following packages using your system’s package manager (<code class="docutils literal notranslate"><span class="pre">apt-get</span></code>, <code class="docutils literal notranslate"><span class="pre">yum</span> <span class="pre">install</span></code>, etc.): <strong>flex</strong></p></li>
+<li><p>Various configuration options of your choice, e.g.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">./configure</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./configure</span> <span class="pre">--prefix=/usr/local</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./configure</span> <span class="pre">--prefix=$HOME/pkgs</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./configure</span> <span class="pre">CC=clang</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./configure</span> <span class="pre">--disable-shared</span></code> (to make a statically linked executable)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./configure</span> <span class="pre">'CFLAGS=-Wall</span> <span class="pre">-std=gnu99</span> <span class="pre">-O3'</span></code></p></li>
+<li><p>etc.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span></code> creates the <code class="docutils literal notranslate"><span class="pre">c/mlr</span></code> executable</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">check</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code> copies the <code class="docutils literal notranslate"><span class="pre">c/mlr</span></code> executable to your prefix’s <code class="docutils literal notranslate"><span class="pre">bin</span></code> subdirectory.</p></li>
+</ul>
+</div>
+<div class="section" id="from-git-clone-using-autoconfig">
+<h2>From git clone using autoconfig<a class="headerlink" href="#from-git-clone-using-autoconfig" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/johnkerl/miller</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">miller</span></code></p></li>
+<li><p>Install the following packages using your system’s package manager (<code class="docutils literal notranslate"><span class="pre">apt-get</span></code>, <code class="docutils literal notranslate"><span class="pre">yum</span> <span class="pre">install</span></code>, etc.): <strong>automake autoconf libtool flex</strong></p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">autoreconf</span> <span class="pre">-fiv</span></code>. (This is necessary when building from head as discussed in <a class="reference external" href="https://github.com/johnkerl/miller/issues/131">https://github.com/johnkerl/miller/issues/131</a>.)</p></li>
+<li><p>Then continue from “Install the following … ” as above.</p></li>
+</ul>
+</div>
+<div class="section" id="without-using-autoconfig">
+<h2>Without using autoconfig<a class="headerlink" href="#without-using-autoconfig" title="Permalink to this headline">¶</a></h2>
+<p>GNU autoconfig is familiar to many users, and indeed plenty of folks won’t bother to use an open-source software package which doesn’t have autoconfig support. And this is for good reason: GNU autoconfig allows us to build software on a wide diversity of platforms. For this reason I’m happy that Miller supports autoconfig.</p>
+<p>But, many others (myself included!) find autoconfig confusing: if it works without errors, great, but if not, the <code class="docutils literal notranslate"><span class="pre">./configure</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span></code> output can be exceedingly difficult to decipher. And this also can be a turn-off for using open-source software: if you can’t figure out the build errors, you may just keep walking. For this reason I’m happy that Miller allows you to build without autoconfig. (Of course, if you have any build errors, feel free to contact me at <a class="reference external" href="mailto:kerl&#46;john&#46;r+miller&#37;&#52;&#48;gmail&#46;com">mailto:kerl<span>&#46;</span>john<span>&#46;</span>r+miller<span>&#64;</span>gmail<span>&#46;</span>com</a> – or, better, open an issue with “New Issue” at <a class="reference external" href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>.)</p>
+<p>Steps:</p>
+<ul class="simple">
+<li><p>Obtain a release tarball or git clone.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span></code> into the <code class="docutils literal notranslate"><span class="pre">c</span></code> subdirectory.</p></li>
+<li><p>Edit the <code class="docutils literal notranslate"><span class="pre">INSTALLDIR</span></code> in <code class="docutils literal notranslate"><span class="pre">Makefile.no-autoconfig</span></code>.</p></li>
+<li><p>To change the C compiler, edit the <code class="docutils literal notranslate"><span class="pre">CC=</span></code> lines in <code class="docutils literal notranslate"><span class="pre">Makefile.no-autoconfig</span></code> and <code class="docutils literal notranslate"><span class="pre">dsls/Makefile.no-autoconfig</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-f</span> <span class="pre">Makefile.no-autoconfig</span></code> creates the <code class="docutils literal notranslate"><span class="pre">mlr</span></code> executable and runs unit/regression tests (i.e. the equivalent of both <code class="docutils literal notranslate"><span class="pre">make</span></code> and <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">check</span></code> using autoconfig).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code> copies the <code class="docutils literal notranslate"><span class="pre">mlr</span></code> executable to your install directory.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">Makefile.no-autoconfig</span></code> is simple: little more than <code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">*.c</span></code>.  Customzing is less automatic than autoconfig, but more transparent. I expect this makefile to work with few modifications on a large fraction of modern Linux/BSD-like systems: I’m aware of successful use with <code class="docutils literal notranslate"><span class="pre">gcc</span></code> and <code class="docutils literal notranslate"><span class="pre">clang</span></code>, on Ubuntu 12.04 LTS, SELinux, Darwin (MacOS Yosemite), and FreeBSD.</p>
+</div>
+<div class="section" id="windows">
+<h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
+<p><em>Disclaimer: I’m now relying exclusively on</em> <a class="reference external" href="https://ci.appveyor.com/project/johnkerl/miller">Appveyor</a> <em>for Windows builds; I haven’t built from source using MSYS in quite a while.</em></p>
+<p>Miller has been built on Windows using MSYS2: <a class="reference external" href="http://www.msys2.org/">http://www.msys2.org/</a>.  You can install MSYS2 and build Miller from its source code within MSYS2, and then you can use the binary from outside MSYS2.  You can also use a precompiled binary (see above).</p>
+<p>You will first need to install MSYS2: <a class="reference external" href="http://www.msys2.org/">http://www.msys2.org/</a>.  Then, start an MSYS2 shell, e.g. (supposing you installed MSYS2 to <code class="docutils literal notranslate"><span class="pre">C:\msys2\</span></code>) run <code class="docutils literal notranslate"><span class="pre">C:\msys2\mingw64.exe</span></code>.  Within the MSYS2 shell, you can run the following to install dependent packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pacman</span> <span class="o">-</span><span class="n">Syu</span>
+<span class="n">pacman</span> <span class="o">-</span><span class="n">Su</span>
+<span class="n">pacman</span> <span class="o">-</span><span class="n">S</span> <span class="n">base</span><span class="o">-</span><span class="n">devel</span>
+<span class="n">pacman</span> <span class="o">-</span><span class="n">S</span> <span class="n">msys2</span><span class="o">-</span><span class="n">devel</span>
+<span class="n">pacman</span> <span class="o">-</span><span class="n">S</span> <span class="n">mingw</span><span class="o">-</span><span class="n">w64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="n">toolchain</span>
+<span class="n">pacman</span> <span class="o">-</span><span class="n">S</span> <span class="n">mingw</span><span class="o">-</span><span class="n">w64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="n">pcre</span>
+<span class="n">pacman</span> <span class="o">-</span><span class="n">S</span> <span class="n">msys2</span><span class="o">-</span><span class="n">runtime</span>
+</pre></div>
+</div>
+<p>The list of dependent packages may be also found in <strong>appveyor.yml</strong> in the Miller base directory.</p>
+<p>Then, simply run <strong>msys2-build.sh</strong> which is a thin wrapper around <code class="docutils literal notranslate"><span class="pre">./configure</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span></code> which accommodates certain Windows/MSYS2 idiosyncracies.</p>
+<p>There is a unit-test false-negative issue involving the semantics of the <code class="docutils literal notranslate"><span class="pre">mkstemp</span></code> library routine but a <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-k</span></code> in the <code class="docutils literal notranslate"><span class="pre">c</span></code> subdirectory has been producing a <code class="docutils literal notranslate"><span class="pre">mlr.exe</span></code> for me.</p>
+<p>Within MSYS2 you can run <code class="docutils literal notranslate"><span class="pre">mlr</span></code>: simply copy it from the <code class="docutils literal notranslate"><span class="pre">c</span></code> subdirectory to your desired location somewhere within your MSYS2 <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>.  To run <code class="docutils literal notranslate"><span class="pre">mlr</span></code> outside of MSYS2, just as with precompiled binaries as described above, you’ll need <code class="docutils literal notranslate"><span class="pre">msys-2.0.dll</span></code>.  One way to do this is to augment your path:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="o">&gt;</span> <span class="nb">set</span> <span class="n">PATH</span><span class="o">=%</span><span class="n">PATH</span><span class="o">%</span><span class="p">;</span>\<span class="n">msys64</span>\<span class="n">mingw64</span>\<span class="nb">bin</span>
+</pre></div>
+</div>
+<p>Another way to do it is to copy the Miller executable and the DLL to the same directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="o">&gt;</span> <span class="n">mkdir</span> \<span class="n">mbin</span>
+<span class="n">C</span><span class="p">:</span>\<span class="o">&gt;</span> <span class="n">copy</span> \<span class="n">msys64</span>\<span class="n">mingw64</span>\<span class="nb">bin</span>\<span class="n">msys</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="n">dll</span> \<span class="n">mbin</span>
+<span class="n">C</span><span class="p">:</span>\<span class="o">&gt;</span> <span class="n">copy</span> \<span class="n">msys64</span>\<span class="n">wherever</span>\<span class="n">you</span>\<span class="n">installed</span>\<span class="n">miller</span>\<span class="n">c</span>\<span class="n">mlr</span><span class="o">.</span><span class="n">exe</span> \<span class="n">mbin</span>
+<span class="n">C</span><span class="p">:</span>\<span class="o">&gt;</span> <span class="nb">set</span> <span class="n">PATH</span><span class="o">=%</span><span class="n">PATH</span><span class="o">%</span><span class="p">;</span>\<span class="n">mbin</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="in-case-of-problems">
+<h2>In case of problems<a class="headerlink" href="#in-case-of-problems" title="Permalink to this headline">¶</a></h2>
+<p>If you have any build errors, feel free to contact me at <a class="reference external" href="mailto:kerl&#46;john&#46;r+miller&#37;&#52;&#48;gmail&#46;com">mailto:kerl<span>&#46;</span>john<span>&#46;</span>r+miller<span>&#64;</span>gmail<span>&#46;</span>com</a> – or, better, open an issue with “New Issue” at <a class="reference external" href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>.</p>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="required-external-dependencies">
+<h3>Required external dependencies<a class="headerlink" href="#required-external-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>These are necessary to produce the <code class="docutils literal notranslate"><span class="pre">mlr</span></code> executable.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gcc</span></code>, <code class="docutils literal notranslate"><span class="pre">clang</span></code>, etc. (or presumably other compilers; please open an issue or send me a pull request if you have information for me about other 21st-century compilers)</p></li>
+<li><p>The standard C library</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flex</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">automake</span></code>, <code class="docutils literal notranslate"><span class="pre">autoconf</span></code>, and <code class="docutils literal notranslate"><span class="pre">libtool</span></code>, if you build with autoconfig</p></li>
+</ul>
+</div>
+<div class="section" id="optional-external-dependencies">
+<h3>Optional external dependencies<a class="headerlink" href="#optional-external-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>This documentation pageset is built using Sphinx. Please see <cite>./README.md</cite> for details.</p>
+</div>
+<div class="section" id="internal-dependencies">
+<h3>Internal dependencies<a class="headerlink" href="#internal-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>These are included within the <a class="reference external" href="https://github.com/johnkerl/miller">Miller source tree</a> and do not need to be separately installed (and in fact any separate installation will not be picked up in the Miller build):</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> for pseudorandom-number generation: <a class="reference external" href="https://github.com/johnkerl/miller/blob/master/c/lib/mtrand.c">C implementation by Nishimura and Matsumoto</a> with license terms respected.</p></li>
+<li><p><a class="reference external" href="http://www.jera.com/techinfo/jtns/jtn002.html">MinUnit</a> for unit-testing, with as-is-no-warranty license <a class="reference external" href="http://www.jera.com/techinfo/jtns/jtn002.html#License">http://www.jera.com/techinfo/jtns/jtn002.html#License</a>, <a class="reference external" href="https://github.com/johnkerl/miller/blob/master/c/lib/minunit.h">https://github.com/johnkerl/miller/blob/master/c/lib/minunit.h</a>.</p></li>
+<li><p>The <a class="reference external" href="http://www.hwaci.com/sw/lemon/">Lemon parser-generator</a>, the author of which explicitly disclaims copyright.</p></li>
+<li><p>The <a class="reference external" href="https://github.com/udp/json-parser">udp JSON parser</a>, with BSD2 license.</p></li>
+<li><p>The <a class="reference external" href="https://github.com/sheredom/utf8.h">sheredom UTF-8 library</a>, which is free and unencumbered software released into the public domain.</p></li>
+<li><p>The NetBSD <code class="docutils literal notranslate"><span class="pre">strptime</span></code> (needed for the Windows/MSYS2 port since MSYS2 lacks this), with BSD license.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="creating-a-new-release-for-developers">
+<h2>Creating a new release: for developers<a class="headerlink" href="#creating-a-new-release-for-developers" title="Permalink to this headline">¶</a></h2>
+<p>At present I’m the primary developer so this is just my checklist for making new releases.</p>
+<p>In this example I am using version 3.4.0; of course that will change for subsequent revisions.</p>
+<ul class="simple">
+<li><p>Update version found in <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--version</span></code> and <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">mlr</span></code>:</p>
+<ul>
+<li><p>Edit <code class="docutils literal notranslate"><span class="pre">configure.ac</span></code>, <code class="docutils literal notranslate"><span class="pre">c/mlrvers.h</span></code>, <code class="docutils literal notranslate"><span class="pre">miller.spec</span></code>, and <code class="docutils literal notranslate"><span class="pre">docs/conf.py</span></code> from <code class="docutils literal notranslate"><span class="pre">3.3.2-dev</span></code> to <code class="docutils literal notranslate"><span class="pre">3.4.0</span></code>.</p></li>
+<li><p>Do a fresh <code class="docutils literal notranslate"><span class="pre">autoreconf</span> <span class="pre">-fiv</span></code> and commit the output. (Preferably on a Linux host, rather than MacOS, to reduce needless diffs in autogen build files.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-C</span> <span class="pre">c</span> <span class="pre">-f</span> <span class="pre">Makefile.no-autoconfig</span> <span class="pre">installhome</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span> <span class="pre">-C</span> <span class="pre">man</span> <span class="pre">-f</span> <span class="pre">Makefile.no-autoconfig</span> <span class="pre">installhome</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span> <span class="pre">-C</span> <span class="pre">docs</span> <span class="pre">-f</span> <span class="pre">Makefile.no-autoconfig</span> <span class="pre">html</span></code></p></li>
+<li><p>The ordering is important: the first build creates <code class="docutils literal notranslate"><span class="pre">mlr</span></code>; the second runs <code class="docutils literal notranslate"><span class="pre">mlr</span></code> to create <code class="docutils literal notranslate"><span class="pre">manpage.txt</span></code>; the third includes <code class="docutils literal notranslate"><span class="pre">manpage.txt</span></code> into one of its outputs.</p></li>
+<li><p>Commit and push.</p></li>
+</ul>
+</li>
+<li><p>Create the release tarball and SRPM:</p>
+<ul>
+<li><p>On buildbox: <code class="docutils literal notranslate"><span class="pre">./configure</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span> <span class="pre">distcheck</span></code></p></li>
+<li><p>On buildbox: make SRPM as in <a class="reference external" href="https://github.com/johnkerl/miller/blob/master/README-RPM.md">https://github.com/johnkerl/miller/blob/master/README-RPM.md</a></p></li>
+<li><p>On all buildboxes: <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">c</span></code> and <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-f</span> <span class="pre">Makefile.no-autoconfig</span> <span class="pre">mlr.static</span></code>. Then copy <code class="docutils literal notranslate"><span class="pre">mlr.static</span></code> to <code class="docutils literal notranslate"><span class="pre">../mlr.{arch}</span></code>. (This may require as prerequisite <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">yum</span> <span class="pre">install</span> <span class="pre">glibc-static</span></code> or the like.)</p></li>
+<li><p>For static binaries, please do <code class="docutils literal notranslate"><span class="pre">ldd</span> <span class="pre">mlr.static</span></code> and make sure it says <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">a</span> <span class="pre">dynamic</span> <span class="pre">executable</span></code>.</p></li>
+<li><p>Then <code class="docutils literal notranslate"><span class="pre">mv</span> <span class="pre">mlr.static</span> <span class="pre">../mlr.linux_x86_64</span></code></p></li>
+<li><p>Pull back release tarball <code class="docutils literal notranslate"><span class="pre">mlr-3.4.0.tar.gz</span></code> and SRPM <code class="docutils literal notranslate"><span class="pre">miller-3.4.0-1.el6.src.rpm</span></code> from buildbox, and <code class="docutils literal notranslate"><span class="pre">mlr.{arch}</span></code> binaries from whatever buildboxes.</p></li>
+<li><p>Download <code class="docutils literal notranslate"><span class="pre">mlr.exe</span></code> and <code class="docutils literal notranslate"><span class="pre">msys-2.0.dll</span></code> from <a class="reference external" href="https://ci.appveyor.com/project/johnkerl/miller/build/artifacts">https://ci.appveyor.com/project/johnkerl/miller/build/artifacts</a>.</p></li>
+</ul>
+</li>
+<li><p>Create the Github release tag:</p>
+<ul>
+<li><p>Don’t forget the <code class="docutils literal notranslate"><span class="pre">v</span></code> in <code class="docutils literal notranslate"><span class="pre">v3.4.0</span></code></p></li>
+<li><p>Write the release notes</p></li>
+<li><p>Attach the release tarball, SRPM, and binaries. Double-check assets were successfully uploaded.</p></li>
+<li><p>Publish the release</p></li>
+</ul>
+</li>
+<li><p>Check the release-specific docs:</p>
+<ul>
+<li><p>Look at <a class="reference external" href="https://miller.readthedocs.io">https://miller.readthedocs.io</a> for new-version docs, after a few minutes’ propagation time.</p></li>
+</ul>
+</li>
+<li><p>Notify:</p>
+<ul>
+<li><p>Submit <code class="docutils literal notranslate"><span class="pre">brew</span></code> pull request; notify any other distros which don’t appear to have autoupdated since the previous release (notes below)</p></li>
+<li><p>Similarly for <code class="docutils literal notranslate"><span class="pre">macports</span></code>: <a class="reference external" href="https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile">https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile</a>.</p></li>
+<li><p>Social-media updates.</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">upstream</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Homebrew</span><span class="o">/</span><span class="n">homebrew</span><span class="o">-</span><span class="n">core</span> <span class="c1"># one-time setup only</span>
+<span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+<span class="n">git</span> <span class="n">rebase</span> <span class="n">upstream</span><span class="o">/</span><span class="n">master</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">miller</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">shasum</span> <span class="o">-</span><span class="n">a</span> <span class="mi">256</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">mlr</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mf">0.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">edit</span> <span class="n">Formula</span><span class="o">/</span><span class="n">miller</span><span class="o">.</span><span class="n">rb</span>
+<span class="c1"># Test the URL from the line like</span>
+<span class="c1">#   url &quot;https://github.com/johnkerl/miller/releases/download/v3.4.0/mlr-3.4.0.tar.gz&quot;</span>
+<span class="c1"># in a browser for typos</span>
+<span class="c1"># A &#39;@BrewTestBot Test this please&#39; comment within the homebrew-core pull request will restart the homebrew travis build</span>
+<span class="n">git</span> <span class="n">add</span> <span class="n">Formula</span><span class="o">/</span><span class="n">miller</span><span class="o">.</span><span class="n">rb</span>
+<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s1">&#39;miller 3.4.0&#39;</span>
+<span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">miller</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">0</span>
+<span class="p">(</span><span class="n">submit</span> <span class="n">the</span> <span class="n">pull</span> <span class="n">request</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Afterwork:</p>
+<ul>
+<li><p>Edit <code class="docutils literal notranslate"><span class="pre">configure.ac</span></code> and <code class="docutils literal notranslate"><span class="pre">c/mlrvers.h</span></code> to change version from <code class="docutils literal notranslate"><span class="pre">3.4.0</span></code> to <code class="docutils literal notranslate"><span class="pre">3.4.0-dev</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-C</span> <span class="pre">c</span> <span class="pre">-f</span> <span class="pre">Makefile.no-autoconfig</span> <span class="pre">installhome</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span> <span class="pre">-C</span> <span class="pre">doc</span> <span class="pre">-f</span> <span class="pre">Makefile.no-autoconfig</span> <span class="pre">all</span> <span class="pre">installhome</span></code></p></li>
+<li><p>Commit and push.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="misc-development-notes">
+<h2>Misc. development notes<a class="headerlink" href="#misc-development-notes" title="Permalink to this headline">¶</a></h2>
+<p>I use terminal width 120 and tabwidth 4.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Building from source</a><ul>
+<li><a class="reference internal" href="#miller-license">Miller license</a></li>
+<li><a class="reference internal" href="#from-release-tarball-using-autoconfig">From release tarball using autoconfig</a></li>
+<li><a class="reference internal" href="#from-git-clone-using-autoconfig">From git clone using autoconfig</a></li>
+<li><a class="reference internal" href="#without-using-autoconfig">Without using autoconfig</a></li>
+<li><a class="reference internal" href="#windows">Windows</a></li>
+<li><a class="reference internal" href="#in-case-of-problems">In case of problems</a></li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a><ul>
+<li><a class="reference internal" href="#required-external-dependencies">Required external dependencies</a></li>
+<li><a class="reference internal" href="#optional-external-dependencies">Optional external dependencies</a></li>
+<li><a class="reference internal" href="#internal-dependencies">Internal dependencies</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#creating-a-new-release-for-developers">Creating a new release: for developers</a></li>
+<li><a class="reference internal" href="#misc-development-notes">Misc. development notes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="release-docs.html"
+                        title="previous chapter">Documents by release</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="why.html"
+                        title="next chapter">Why?</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/build.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="why.html" title="Why?"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="release-docs.html" title="Documents by release"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Building from source</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

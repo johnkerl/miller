@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookbook part 3: Stats with and without out-of-stream variables &#8212; Miller 5.10.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Mixing with other languages" href="data-sharing.html" />
+    <link rel="prev" title="Cookbook part 2: Random things, and some math" href="cookbook2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="data-sharing.html" title="Mixing with other languages"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cookbook2.html" title="Cookbook part 2: Random things, and some math"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Cookbook part 3: Stats with and without out-of-stream variables</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cookbook-part-3-stats-with-and-without-out-of-stream-variables">
+<h1>Cookbook part 3: Stats with and without out-of-stream variables<a class="headerlink" href="#cookbook-part-3-stats-with-and-without-out-of-stream-variables" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>One of Miller’s strengths is its compact notation: for example, given input of the form</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ head -n 5 ../data/medium
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre></div>
+</div>
+<p>you can simply do</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --oxtab stats1 -a sum -f x ../data/medium
+x_sum 4986.019682
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint stats1 -a sum -f x -g b ../data/medium
+b   x_sum
+pan 965.763670
+wye 1023.548470
+zee 979.742016
+eks 1016.772857
+hat 1000.192668
+</pre></div>
+</div>
+<p>rather than the more tedious</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --oxtab put -q &#39;
+  @x_sum += $x;
+  end {
+    emit @x_sum
+  }
+&#39; data/medium
+x_sum 4986.019682
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint put -q &#39;
+  @x_sum[$b] += $x;
+  end {
+    emit @x_sum, &quot;b&quot;
+  }
+&#39; data/medium
+b   x_sum
+pan 965.763670
+wye 1023.548470
+zee 979.742016
+eks 1016.772857
+hat 1000.192668
+</pre></div>
+</div>
+<p>The former (<code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">stats1</span></code> et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.</p>
+<p>Nonetheless, out-of-stream variables (which I whimsically call <em>oosvars</em>), begin/end blocks, and emit statements give you the ability to implement logic – if you wish to do so – which isn’t present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at <a class="reference external" href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a> to get it implemented directly in C as a Miller verb of its own.)</p>
+<p>The following examples compute some things using oosvars which are already computable using Miller verbs, by way of providing food for thought.</p>
+</div>
+<div class="section" id="mean-without-with-oosvars">
+<h2>Mean without/with oosvars<a class="headerlink" href="#mean-without-with-oosvars" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint stats1 -a mean -f x data/medium
+x_mean
+0.498602
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint put -q &#39;
+  @x_sum += $x;
+  @x_count += 1;
+  end {
+    @x_mean = @x_sum / @x_count;
+    emit @x_mean
+  }
+&#39; data/medium
+x_mean
+0.498602
+</pre></div>
+</div>
+</div>
+<div class="section" id="keyed-mean-without-with-oosvars">
+<h2>Keyed mean without/with oosvars<a class="headerlink" href="#keyed-mean-without-with-oosvars" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint stats1 -a mean -f x -g a,b data/medium
+a   b   x_mean
+pan pan 0.513314
+eks pan 0.485076
+wye wye 0.491501
+eks wye 0.483895
+wye pan 0.499612
+zee pan 0.519830
+eks zee 0.495463
+zee wye 0.514267
+hat wye 0.493813
+pan wye 0.502362
+zee eks 0.488393
+hat zee 0.509999
+hat eks 0.485879
+wye hat 0.497730
+pan eks 0.503672
+eks eks 0.522799
+hat hat 0.479931
+hat pan 0.464336
+zee zee 0.512756
+pan hat 0.492141
+pan zee 0.496604
+zee hat 0.467726
+wye zee 0.505907
+eks hat 0.500679
+wye eks 0.530604
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint put -q &#39;
+  @x_sum[$a][$b] += $x;
+  @x_count[$a][$b] += 1;
+  end{
+    for ((a, b), v in @x_sum) {
+      @x_mean[a][b] = @x_sum[a][b] / @x_count[a][b];
+    }
+    emit @x_mean, &quot;a&quot;, &quot;b&quot;
+  }
+&#39; data/medium
+a   b   x_mean
+pan pan 0.513314
+pan wye 0.502362
+pan eks 0.503672
+pan hat 0.492141
+pan zee 0.496604
+eks pan 0.485076
+eks wye 0.483895
+eks zee 0.495463
+eks eks 0.522799
+eks hat 0.500679
+wye wye 0.491501
+wye pan 0.499612
+wye hat 0.497730
+wye zee 0.505907
+wye eks 0.530604
+zee pan 0.519830
+zee wye 0.514267
+zee eks 0.488393
+zee zee 0.512756
+zee hat 0.467726
+hat wye 0.493813
+hat zee 0.509999
+hat eks 0.485879
+hat hat 0.479931
+hat pan 0.464336
+</pre></div>
+</div>
+</div>
+<div class="section" id="variance-and-standard-deviation-without-with-oosvars">
+<h2>Variance and standard deviation without/with oosvars<a class="headerlink" href="#variance-and-standard-deviation-without-with-oosvars" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium
+x_count  10000
+x_sum    4986.019682
+x_mean   0.498602
+x_var    0.084270
+x_stddev 0.290293
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat variance.mlr
+@n += 1;
+@sumx += $x;
+@sumx2 += $x**2;
+end {
+  @mean = @sumx / @n;
+  @var = (@sumx2 - @mean * (2 * @sumx - @n * @mean)) / (@n - 1);
+  @stddev = sqrt(@var);
+  emitf @n, @sumx, @sumx2, @mean, @var, @stddev
+}
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --oxtab put -q -f variance.mlr data/medium
+n      10000
+sumx   4986.019682
+sumx2  3328.652400
+mean   0.498602
+var    0.084270
+stddev 0.290293
+</pre></div>
+</div>
+<p>You can also do this keyed, of course, imitating the keyed-mean example above.</p>
+</div>
+<div class="section" id="min-max-without-with-oosvars">
+<h2>Min/max without/with oosvars<a class="headerlink" href="#min-max-without-with-oosvars" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --oxtab stats1 -a min,max -f x data/medium
+x_min 0.000045
+x_max 0.999953
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --oxtab put -q &#39;@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}&#39; data/medium
+x_min 0.000045
+x_max 0.999953
+</pre></div>
+</div>
+</div>
+<div class="section" id="keyed-min-max-without-with-oosvars">
+<h2>Keyed min/max without/with oosvars<a class="headerlink" href="#keyed-min-max-without-with-oosvars" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint stats1 -a min,max -f x -g a data/medium
+a   x_min    x_max
+pan 0.000204 0.999403
+eks 0.000692 0.998811
+wye 0.000187 0.999823
+zee 0.000549 0.999490
+hat 0.000045 0.999953
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint --from data/medium put -q &#39;
+  @min[$a] = min(@min[$a], $x);
+  @max[$a] = max(@max[$a], $x);
+  end{
+    emit (@min, @max), &quot;a&quot;;
+  }
+&#39;
+a   min      max
+pan 0.000204 0.999403
+eks 0.000692 0.998811
+wye 0.000187 0.999823
+zee 0.000549 0.999490
+hat 0.000045 0.999953
+</pre></div>
+</div>
+</div>
+<div class="section" id="delta-without-with-oosvars">
+<h2>Delta without/with oosvars<a class="headerlink" href="#delta-without-with-oosvars" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint step -a delta -f x data/small
+a   b   i x                   y                   x_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  0
+eks pan 2 0.7586799647899636  0.5221511083334797  0.411890
+wye wye 3 0.20460330576630303 0.33831852551664776 -0.554077
+eks wye 4 0.38139939387114097 0.13418874328430463 0.176796
+wye pan 5 0.5732889198020006  0.8636244699032729  0.191890
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint put &#39;$x_delta = is_present(@last) ? $x - @last : 0; @last = $x&#39; data/small
+a   b   i x                   y                   x_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  0
+eks pan 2 0.7586799647899636  0.5221511083334797  0.411890
+wye wye 3 0.20460330576630303 0.33831852551664776 -0.554077
+eks wye 4 0.38139939387114097 0.13418874328430463 0.176796
+wye pan 5 0.5732889198020006  0.8636244699032729  0.191890
+</pre></div>
+</div>
+</div>
+<div class="section" id="keyed-delta-without-with-oosvars">
+<h2>Keyed delta without/with oosvars<a class="headerlink" href="#keyed-delta-without-with-oosvars" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint step -a delta -f x -g a data/small
+a   b   i x                   y                   x_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  0
+eks pan 2 0.7586799647899636  0.5221511083334797  0
+wye wye 3 0.20460330576630303 0.33831852551664776 0
+eks wye 4 0.38139939387114097 0.13418874328430463 -0.377281
+wye pan 5 0.5732889198020006  0.8636244699032729  0.368686
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint put &#39;$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x&#39; data/small
+a   b   i x                   y                   x_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  0
+eks pan 2 0.7586799647899636  0.5221511083334797  0
+wye wye 3 0.20460330576630303 0.33831852551664776 0
+eks wye 4 0.38139939387114097 0.13418874328430463 -0.377281
+wye pan 5 0.5732889198020006  0.8636244699032729  0.368686
+</pre></div>
+</div>
+</div>
+<div class="section" id="exponentially-weighted-moving-averages-without-with-oosvars">
+<h2>Exponentially weighted moving averages without/with oosvars<a class="headerlink" href="#exponentially-weighted-moving-averages-without-with-oosvars" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint step -a ewma -d 0.1 -f x data/small
+a   b   i x                   y                   x_ewma_0.1
+pan pan 1 0.3467901443380824  0.7268028627434533  0.346790
+eks pan 2 0.7586799647899636  0.5221511083334797  0.387979
+wye wye 3 0.20460330576630303 0.33831852551664776 0.369642
+eks wye 4 0.38139939387114097 0.13418874328430463 0.370817
+wye pan 5 0.5732889198020006  0.8636244699032729  0.391064
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint put &#39;
+  begin{ @a=0.1 };
+  $e = NR==1 ? $x : @a * $x + (1 - @a) * @e;
+  @e=$e
+&#39; data/small
+a   b   i x                   y                   e
+pan pan 1 0.3467901443380824  0.7268028627434533  0.346790
+eks pan 2 0.7586799647899636  0.5221511083334797  0.387979
+wye wye 3 0.20460330576630303 0.33831852551664776 0.369642
+eks wye 4 0.38139939387114097 0.13418874328430463 0.370817
+wye pan 5 0.5732889198020006  0.8636244699032729  0.391064
+</pre></div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cookbook part 3: Stats with and without out-of-stream variables</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#mean-without-with-oosvars">Mean without/with oosvars</a></li>
+<li><a class="reference internal" href="#keyed-mean-without-with-oosvars">Keyed mean without/with oosvars</a></li>
+<li><a class="reference internal" href="#variance-and-standard-deviation-without-with-oosvars">Variance and standard deviation without/with oosvars</a></li>
+<li><a class="reference internal" href="#min-max-without-with-oosvars">Min/max without/with oosvars</a></li>
+<li><a class="reference internal" href="#keyed-min-max-without-with-oosvars">Keyed min/max without/with oosvars</a></li>
+<li><a class="reference internal" href="#delta-without-with-oosvars">Delta without/with oosvars</a></li>
+<li><a class="reference internal" href="#keyed-delta-without-with-oosvars">Keyed delta without/with oosvars</a></li>
+<li><a class="reference internal" href="#exponentially-weighted-moving-averages-without-with-oosvars">Exponentially weighted moving averages without/with oosvars</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cookbook2.html"
+                        title="previous chapter">Cookbook part 2: Random things, and some math</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data-sharing.html"
+                        title="next chapter">Mixing with other languages</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cookbook3.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="data-sharing.html" title="Mixing with other languages"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cookbook2.html" title="Cookbook part 2: Random things, and some math"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Cookbook part 3: Stats with and without out-of-stream variables</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

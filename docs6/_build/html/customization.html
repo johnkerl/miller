@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customization: .mlrrc &#8212; Miller 5.10.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="install.html" />
+    <link rel="prev" title="Data-diving examples" href="data-examples.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data-examples.html" title="Data-diving examples"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Customization: .mlrrc</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="customization-mlrrc">
+<h1>Customization: .mlrrc<a class="headerlink" href="#customization-mlrrc" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="how-to-use-mlrrc">
+<h2>How to use .mlrrc<a class="headerlink" href="#how-to-use-mlrrc" title="Permalink to this headline">¶</a></h2>
+<p>Suppose you always use CSV files. Then instead of always having to type <code class="docutils literal notranslate"><span class="pre">--csv</span></code> as in</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mlr</span> <span class="o">--</span><span class="n">csv</span> <span class="n">cut</span> <span class="o">-</span><span class="n">x</span> <span class="o">-</span><span class="n">f</span> <span class="n">extra</span> <span class="n">mydata</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mlr</span> <span class="o">--</span><span class="n">csv</span> <span class="n">sort</span> <span class="o">-</span><span class="n">n</span> <span class="nb">id</span> <span class="n">mydata</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+<p>and so on, you can instead put the following into your <code class="docutils literal notranslate"><span class="pre">$HOME/.mlrrc</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">csv</span>
+</pre></div>
+</div>
+<p>Then you can just type things like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mlr</span> <span class="n">cut</span> <span class="o">-</span><span class="n">x</span> <span class="o">-</span><span class="n">f</span> <span class="n">extra</span> <span class="n">mydata</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mlr</span> <span class="n">sort</span> <span class="o">-</span><span class="n">n</span> <span class="nb">id</span> <span class="n">mydata</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+<p>and the <code class="docutils literal notranslate"><span class="pre">--csv</span></code> part will automatically be understood. (If you do want to process, say, a JSON file then <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--json</span> <span class="pre">...</span></code> at the command line will override the default from your <code class="docutils literal notranslate"><span class="pre">.mlrrc</span></code>.)</p>
+</div>
+<div class="section" id="what-you-can-put-in-your-mlrrc">
+<h2>What you can put in your .mlrrc<a class="headerlink" href="#what-you-can-put-in-your-mlrrc" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>You can include any command-line flags, except the “terminal” ones such as <code class="docutils literal notranslate"><span class="pre">--help</span></code>.</p></li>
+<li><p>The formatting rule is you need to put one flag beginning with <code class="docutils literal notranslate"><span class="pre">--</span></code> per line: for example, <code class="docutils literal notranslate"><span class="pre">--csv</span></code> on one line and <code class="docutils literal notranslate"><span class="pre">--nr-progress-mod</span> <span class="pre">1000</span></code> on a separate line.</p></li>
+<li><p>Since every line starts with a <code class="docutils literal notranslate"><span class="pre">--</span></code> option, you can leave off the initial <code class="docutils literal notranslate"><span class="pre">--</span></code> if you want. For example, <code class="docutils literal notranslate"><span class="pre">ojson</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">--ojson</span></code>, and <code class="docutils literal notranslate"><span class="pre">nr-progress-mod</span> <span class="pre">1000</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">--nr-progress-mod</span> <span class="pre">1000</span></code>.</p></li>
+<li><p>Comments are from a <code class="docutils literal notranslate"><span class="pre">#</span></code> to the end of the line.</p></li>
+<li><p>Empty lines are ignored – including lines which are empty after comments are removed.</p></li>
+</ul>
+<p>Here is an example <code class="docutils literal notranslate"><span class="pre">.mlrrc</span> <span class="pre">file</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># These are my preferred default settings for Miller</span>
+
+<span class="c1"># Input and output formats are CSV by default (unless otherwise specified</span>
+<span class="c1"># on the mlr command line):</span>
+<span class="n">csv</span>
+
+<span class="c1"># If a data line has fewer fields than the header line, instead of erroring</span>
+<span class="c1"># (which is the default), just insert empty values for the missing ones:</span>
+<span class="n">allow</span><span class="o">-</span><span class="n">ragged</span><span class="o">-</span><span class="n">csv</span><span class="o">-</span><span class="nb">input</span>
+
+<span class="c1"># These are no-ops for CSV, but when I do use JSON output, I want these</span>
+<span class="c1"># pretty-printing options to be used:</span>
+<span class="n">jvstack</span>
+<span class="n">jlistwrap</span>
+
+<span class="c1"># Use &quot;@&quot;, rather than &quot;#&quot;, for comments within data files:</span>
+<span class="n">skip</span><span class="o">-</span><span class="n">comments</span><span class="o">-</span><span class="k">with</span> <span class="o">@</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="where-to-put-your-mlrrc">
+<h2>Where to put your .mlrrc<a class="headerlink" href="#where-to-put-your-mlrrc" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>If the environment variable <code class="docutils literal notranslate"><span class="pre">MLRRC</span></code> is set:</p>
+<ul>
+<li><p>If its value is <code class="docutils literal notranslate"><span class="pre">__none__</span></code> then no <code class="docutils literal notranslate"><span class="pre">.mlrrc</span></code> files are processed.  (This is nice for things like regression testing.)</p></li>
+<li><p>Otherwise, its value (as a filename) is loaded and processed. If there are syntax errors, they abort <code class="docutils literal notranslate"><span class="pre">mlr</span></code> with a usage message (as if you had mistyped something on the command line). If the file can’t be loaded at all, though, it is silently skipped.</p></li>
+<li><p>Any <code class="docutils literal notranslate"><span class="pre">.mlrrc</span></code> in your home directory or current directory is ignored whenever <code class="docutils literal notranslate"><span class="pre">MLRRC</span></code> is set in the environment.</p></li>
+<li><p>Example line in your shell’s rc file: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">MLRRC=/path/to/my/mlrrc</span></code></p></li>
+</ul>
+</li>
+<li><p>Otherwise:</p>
+<ul>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">$HOME/.mlrrc</span></code> exists, it’s processed as above.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">./.mlrrc</span></code> exists, it’s then also processed as above.</p></li>
+<li><p>The idea is you can have all your settings in your <code class="docutils literal notranslate"><span class="pre">$HOME/.mlrrc</span></code>, then override maybe one or two for your current directory if you like.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Customization: .mlrrc</a><ul>
+<li><a class="reference internal" href="#how-to-use-mlrrc">How to use .mlrrc</a></li>
+<li><a class="reference internal" href="#what-you-can-put-in-your-mlrrc">What you can put in your .mlrrc</a></li>
+<li><a class="reference internal" href="#where-to-put-your-mlrrc">Where to put your .mlrrc</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data-examples.html"
+                        title="previous chapter">Data-diving examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Installation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/customization.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data-examples.html" title="Data-diving examples"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Customization: .mlrrc</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

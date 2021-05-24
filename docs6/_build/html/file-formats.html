@@ -1,0 +1,643 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File formats &#8212; Miller 5.10.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Record-heterogeneity" href="record-heterogeneity.html" />
+    <link rel="prev" title="Unix-toolkit context" href="feature-comparison.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="record-heterogeneity.html" title="Record-heterogeneity"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="feature-comparison.html" title="Unix-toolkit context"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">File formats</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="file-formats">
+<h1>File formats<a class="headerlink" href="#file-formats" title="Permalink to this headline">¶</a></h1>
+<p>Miller handles name-indexed data using several formats: some you probably know by name, such as CSV, TSV, and JSON – and other formats you’re likely already seeing and using in your structured data. Additionally, Miller gives you the option of including comments within your data.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --usage-data-format-examples
+  DKVP: delimited key-value pairs (Miller default format)
+  +---------------------+
+  | apple=1,bat=2,cog=3 | Record 1: &quot;apple&quot; =&gt; &quot;1&quot;, &quot;bat&quot; =&gt; &quot;2&quot;, &quot;cog&quot; =&gt; &quot;3&quot;
+  | dish=7,egg=8,flint  | Record 2: &quot;dish&quot; =&gt; &quot;7&quot;, &quot;egg&quot; =&gt; &quot;8&quot;, &quot;3&quot; =&gt; &quot;flint&quot;
+  +---------------------+
+
+  NIDX: implicitly numerically indexed (Unix-toolkit style)
+  +---------------------+
+  | the quick brown     | Record 1: &quot;1&quot; =&gt; &quot;the&quot;, &quot;2&quot; =&gt; &quot;quick&quot;, &quot;3&quot; =&gt; &quot;brown&quot;
+  | fox jumped          | Record 2: &quot;1&quot; =&gt; &quot;fox&quot;, &quot;2&quot; =&gt; &quot;jumped&quot;
+  +---------------------+
+
+  CSV/CSV-lite: comma-separated values with separate header line
+  +---------------------+
+  | apple,bat,cog       |
+  | 1,2,3               | Record 1: &quot;apple =&gt; &quot;1&quot;, &quot;bat&quot; =&gt; &quot;2&quot;, &quot;cog&quot; =&gt; &quot;3&quot;
+  | 4,5,6               | Record 2: &quot;apple&quot; =&gt; &quot;4&quot;, &quot;bat&quot; =&gt; &quot;5&quot;, &quot;cog&quot; =&gt; &quot;6&quot;
+  +---------------------+
+
+  Tabular JSON: nested objects are supported, although arrays within them are not:
+  +---------------------+
+  | {                   |
+  |  &quot;apple&quot;: 1,        | Record 1: &quot;apple&quot; =&gt; &quot;1&quot;, &quot;bat&quot; =&gt; &quot;2&quot;, &quot;cog&quot; =&gt; &quot;3&quot;
+  |  &quot;bat&quot;: 2,          |
+  |  &quot;cog&quot;: 3           |
+  | }                   |
+  | {                   |
+  |   &quot;dish&quot;: {         | Record 2: &quot;dish:egg&quot; =&gt; &quot;7&quot;, &quot;dish:flint&quot; =&gt; &quot;8&quot;, &quot;garlic&quot; =&gt; &quot;&quot;
+  |     &quot;egg&quot;: 7,       |
+  |     &quot;flint&quot;: 8      |
+  |   },                |
+  |   &quot;garlic&quot;: &quot;&quot;      |
+  | }                   |
+  +---------------------+
+
+  PPRINT: pretty-printed tabular
+  +---------------------+
+  | apple bat cog       |
+  | 1     2   3         | Record 1: &quot;apple =&gt; &quot;1&quot;, &quot;bat&quot; =&gt; &quot;2&quot;, &quot;cog&quot; =&gt; &quot;3&quot;
+  | 4     5   6         | Record 2: &quot;apple&quot; =&gt; &quot;4&quot;, &quot;bat&quot; =&gt; &quot;5&quot;, &quot;cog&quot; =&gt; &quot;6&quot;
+  +---------------------+
+
+  XTAB: pretty-printed transposed tabular
+  +---------------------+
+  | apple 1             | Record 1: &quot;apple&quot; =&gt; &quot;1&quot;, &quot;bat&quot; =&gt; &quot;2&quot;, &quot;cog&quot; =&gt; &quot;3&quot;
+  | bat   2             |
+  | cog   3             |
+  |                     |
+  | dish 7              | Record 2: &quot;dish&quot; =&gt; &quot;7&quot;, &quot;egg&quot; =&gt; &quot;8&quot;
+  | egg  8              |
+  +---------------------+
+
+  Markdown tabular (supported for output only):
+  +-----------------------+
+  | | apple | bat | cog | |
+  | | ---   | --- | --- | |
+  | | 1     | 2   | 3   | | Record 1: &quot;apple =&gt; &quot;1&quot;, &quot;bat&quot; =&gt; &quot;2&quot;, &quot;cog&quot; =&gt; &quot;3&quot;
+  | | 4     | 5   | 6   | | Record 2: &quot;apple&quot; =&gt; &quot;4&quot;, &quot;bat&quot; =&gt; &quot;5&quot;, &quot;cog&quot; =&gt; &quot;6&quot;
+  +-----------------------+
+</pre></div>
+</div>
+</div>
+<div class="section" id="csv-tsv-asv-usv-etc">
+<span id="file-formats-csv"></span><h2>CSV/TSV/ASV/USV/etc.<a class="headerlink" href="#csv-tsv-asv-usv-etc" title="Permalink to this headline">¶</a></h2>
+<p>When <code class="docutils literal notranslate"><span class="pre">mlr</span></code> is invoked with the <code class="docutils literal notranslate"><span class="pre">--csv</span></code> or <code class="docutils literal notranslate"><span class="pre">--csvlite</span></code> option, key names are found on the first record and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See <a class="reference internal" href="record-heterogeneity.html"><span class="doc">Record-heterogeneity</span></a> for how Miller handles changes of field names within a single data stream.</p>
+<p>Miller has record separator <code class="docutils literal notranslate"><span class="pre">RS</span></code> and field separator <code class="docutils literal notranslate"><span class="pre">FS</span></code>, just as <code class="docutils literal notranslate"><span class="pre">awk</span></code> does.  For TSV, use <code class="docutils literal notranslate"><span class="pre">--fs</span> <span class="pre">tab</span></code>; to convert TSV to CSV, use <code class="docutils literal notranslate"><span class="pre">--ifs</span> <span class="pre">tab</span> <span class="pre">--ofs</span> <span class="pre">comma</span></code>, etc.  (See also <a class="reference internal" href="reference.html#reference-separators"><span class="std std-ref">Record/field/pair separators</span></a>.)</p>
+<p><strong>TSV (tab-separated values):</strong> the following are synonymous pairs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--tsv</span></code> and <code class="docutils literal notranslate"><span class="pre">--csv</span> <span class="pre">--fs</span> <span class="pre">tab</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--itsv</span></code> and <code class="docutils literal notranslate"><span class="pre">--icsv</span> <span class="pre">--ifs</span> <span class="pre">tab</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--otsv</span></code> and <code class="docutils literal notranslate"><span class="pre">--ocsv</span> <span class="pre">--ofs</span> <span class="pre">tab</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--tsvlite</span></code> and <code class="docutils literal notranslate"><span class="pre">--csvlite</span> <span class="pre">--fs</span> <span class="pre">tab</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--itsvlite</span></code> and <code class="docutils literal notranslate"><span class="pre">--icsvlite</span> <span class="pre">--ifs</span> <span class="pre">tab</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--otsvlite</span></code> and <code class="docutils literal notranslate"><span class="pre">--ocsvlite</span> <span class="pre">--ofs</span> <span class="pre">tab</span></code></p></li>
+</ul>
+<p><strong>ASV (ASCII-separated values):</strong> the flags <code class="docutils literal notranslate"><span class="pre">--asv</span></code>, <code class="docutils literal notranslate"><span class="pre">--iasv</span></code>, <code class="docutils literal notranslate"><span class="pre">--oasv</span></code>, <code class="docutils literal notranslate"><span class="pre">--asvlite</span></code>, <code class="docutils literal notranslate"><span class="pre">--iasvlite</span></code>, and <code class="docutils literal notranslate"><span class="pre">--oasvlite</span></code> are analogous except they use ASCII FS and RS 0x1f and 0x1e, respectively.</p>
+<p><strong>USV (Unicode-separated values):</strong> likewise, the flags <code class="docutils literal notranslate"><span class="pre">--usv</span></code>, <code class="docutils literal notranslate"><span class="pre">--iusv</span></code>, <code class="docutils literal notranslate"><span class="pre">--ousv</span></code>, <code class="docutils literal notranslate"><span class="pre">--usvlite</span></code>, <code class="docutils literal notranslate"><span class="pre">--iusvlite</span></code>, and <code class="docutils literal notranslate"><span class="pre">--ousvlite</span></code> use Unicode FS and RS U+241F (UTF-8 0x0xe2909f) and U+241E (UTF-8 0xe2909e), respectively.</p>
+<p>Miller’s <code class="docutils literal notranslate"><span class="pre">--csv</span></code> flag supports <a class="reference external" href="https://tools.ietf.org/html/rfc4180&quot;">RFC-4180 CSV</a>. This includes CRLF line-terminators by default, regardless of platform.</p>
+<p>Here are the differences between CSV and CSV-lite:</p>
+<ul class="simple">
+<li><p>CSV supports <a class="reference external" href="https://tools.ietf.org/html/rfc4180">RFC-4180</a>-style double-quoting, including the ability to have commas and/or LF/CRLF line-endings contained within an input field; CSV-lite does not.</p></li>
+<li><p>CSV does not allow heterogeneous data; CSV-lite does (see also <a class="reference internal" href="record-heterogeneity.html"><span class="doc">Record-heterogeneity</span></a>).</p></li>
+<li><p>The CSV-lite input-reading code is fractionally more efficient than the CSV input-reader.</p></li>
+</ul>
+<p>Here are things they have in common:</p>
+<ul class="simple">
+<li><p>The ability to specify record/field separators other than the default, e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">--implicit-csv-header</span></code> flag for input and the <code class="docutils literal notranslate"><span class="pre">--headerless-csv-output</span></code> flag for output.</p></li>
+</ul>
+</div>
+<div class="section" id="dkvp-key-value-pairs">
+<span id="file-formats-dkvp"></span><h2>DKVP: Key-value pairs<a class="headerlink" href="#dkvp-key-value-pairs" title="Permalink to this headline">¶</a></h2>
+<p>Miller’s default file format is DKVP, for <strong>delimited key-value pairs</strong>. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre></div>
+</div>
+<p>Such data are easy to generate, e.g. in Ruby with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">puts</span> <span class="s2">&quot;host=#</span><span class="si">{hostname}</span><span class="s2">,seconds=#{t2-t1},message=#</span><span class="si">{msg}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">puts</span> <span class="n">mymap</span><span class="o">.</span><span class="n">collect</span><span class="p">{</span><span class="o">|</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">|</span> <span class="s2">&quot;#</span><span class="si">{k}</span><span class="s2">=#</span><span class="si">{v}</span><span class="s2">&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or <code class="docutils literal notranslate"><span class="pre">print</span></code> statements in various languages, e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="s2">&quot;type=3,user=$USER,date=$date</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;type=3,user=$USER,date=$date</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Fields lacking an IPS will have positional index (starting at 1) used as the key, as in NIDX format. For example, <code class="docutils literal notranslate"><span class="pre">dish=7,egg=8,flint</span></code> is parsed as <code class="docutils literal notranslate"><span class="pre">&quot;dish&quot;</span> <span class="pre">=&gt;</span> <span class="pre">&quot;7&quot;,</span> <span class="pre">&quot;egg&quot;</span> <span class="pre">=&gt;</span> <span class="pre">&quot;8&quot;,</span> <span class="pre">&quot;3&quot;</span> <span class="pre">=&gt;</span> <span class="pre">&quot;flint&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">dish,egg,flint</span></code> is parsed as <code class="docutils literal notranslate"><span class="pre">&quot;1&quot;</span> <span class="pre">=&gt;</span> <span class="pre">&quot;dish&quot;,</span> <span class="pre">&quot;2&quot;</span> <span class="pre">=&gt;</span> <span class="pre">&quot;egg&quot;,</span> <span class="pre">&quot;3&quot;</span> <span class="pre">=&gt;</span> <span class="pre">&quot;flint&quot;</span></code>.</p>
+<p>As discussed in <a class="reference internal" href="record-heterogeneity.html"><span class="doc">Record-heterogeneity</span></a>, Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">resource</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="p">,</span><span class="n">loadsec</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span><span class="n">ok</span><span class="o">=</span><span class="n">true</span>
+<span class="n">record_count</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">resource</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">resource</span><span class="o">=/</span><span class="n">some</span><span class="o">/</span><span class="n">other</span><span class="o">/</span><span class="n">path</span><span class="p">,</span><span class="n">loadsec</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span><span class="n">ok</span><span class="o">=</span><span class="n">false</span>
+</pre></div>
+</div>
+<p>etc. and I just log them as needed. Then later, I can use <code class="docutils literal notranslate"><span class="pre">grep</span></code>, <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--opprint</span> <span class="pre">group-like</span></code>, etc.
+to analyze my logs.</p>
+<p>See <a class="reference internal" href="reference.html"><span class="doc">Main reference</span></a> regarding how to specify separators other than the default equals-sign and comma.</p>
+</div>
+<div class="section" id="nidx-index-numbered-toolkit-style">
+<span id="file-formats-nidx"></span><h2>NIDX: Index-numbered (toolkit style)<a class="headerlink" href="#nidx-index-numbered-toolkit-style" title="Permalink to this headline">¶</a></h2>
+<p>With <code class="docutils literal notranslate"><span class="pre">--inidx</span> <span class="pre">--ifs</span> <span class="pre">'</span> <span class="pre">'</span> <span class="pre">--repifs</span></code>, Miller splits lines on whitespace and assigns integer field names starting with 1. This recapitulates Unix-toolkit behavior.</p>
+<p>Example with index-numbered output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+
+$ mlr --onidx --ofs &#39; &#39; cat data/small
+pan pan 1 0.3467901443380824 0.7268028627434533
+eks pan 2 0.7586799647899636 0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006 0.8636244699032729
+</pre></div>
+</div>
+<p>Example with index-numbered input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat data/mydata.txt
+oh say can you see
+by the dawn&#39;s
+early light
+
+$ mlr --inidx --ifs &#39; &#39; --odkvp cat data/mydata.txt
+1=oh,2=say,3=can,4=you,5=see
+1=by,2=the,3=dawn&#39;s
+1=early,2=light
+</pre></div>
+</div>
+<p>Example with index-numbered input and output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat data/mydata.txt
+oh say can you see
+by the dawn&#39;s
+early light
+
+$ mlr --nidx --fs &#39; &#39; --repifs cut -f 2,3 data/mydata.txt
+say can
+the dawn&#39;s
+light
+</pre></div>
+</div>
+</div>
+<div class="section" id="tabular-json">
+<span id="file-formats-json"></span><h2>Tabular JSON<a class="headerlink" href="#tabular-json" title="Permalink to this headline">¶</a></h2>
+<p>JSON is a format which supports arbitrarily deep nesting of “objects” (hashmaps) and “arrays” (lists), while Miller is a tool for handling <strong>tabular data</strong> only. This means Miller cannot (and should not) handle arbitrary JSON. (Check out <a class="reference external" href="https://stedolan.github.io/jq/">jq</a>.)</p>
+<p>But if you have tabular data represented in JSON then Miller can handle that for you.</p>
+<div class="section" id="single-level-json-objects">
+<h3>Single-level JSON objects<a class="headerlink" href="#single-level-json-objects" title="Permalink to this headline">¶</a></h3>
+<p>An <strong>array of single-level objects</strong> is, quite simply, <strong>a table</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --json head -n 2 then cut -f color,shape data/json-example-1.json
+{ &quot;color&quot;: &quot;yellow&quot;, &quot;shape&quot;: &quot;triangle&quot; }
+{ &quot;color&quot;: &quot;red&quot;, &quot;shape&quot;: &quot;square&quot; }
+
+$ mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json
+{
+  &quot;color&quot;: &quot;yellow&quot;,
+  &quot;u&quot;: 0.6321695890307647,
+  &quot;v&quot;: 0.9887207810889004
+}
+{
+  &quot;color&quot;: &quot;red&quot;,
+  &quot;u&quot;: 0.21966833570651523,
+  &quot;v&quot;: 0.001257332190235938
+}
+
+$ mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json
+shape    u_mean   u_stddev u_count
+triangle 0.583995 0.131184 3
+square   0.409355 0.365428 4
+circle   0.366013 0.209094 3
+</pre></div>
+</div>
+</div>
+<div class="section" id="nested-json-objects">
+<h3>Nested JSON objects<a class="headerlink" href="#nested-json-objects" title="Permalink to this headline">¶</a></h3>
+<p>Additionally, Miller can <strong>tabularize nested objects by concatentating keys</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --json --jvstack head -n 2 data/json-example-2.json
+{
+  &quot;flag&quot;: 1,
+  &quot;i&quot;: 11,
+  &quot;attributes&quot;: {
+    &quot;color&quot;: &quot;yellow&quot;,
+    &quot;shape&quot;: &quot;triangle&quot;
+  },
+  &quot;values&quot;: {
+    &quot;u&quot;: 0.632170,
+    &quot;v&quot;: 0.988721,
+    &quot;w&quot;: 0.436498,
+    &quot;x&quot;: 5.798188
+  }
+}
+{
+  &quot;flag&quot;: 1,
+  &quot;i&quot;: 15,
+  &quot;attributes&quot;: {
+    &quot;color&quot;: &quot;red&quot;,
+    &quot;shape&quot;: &quot;square&quot;
+  },
+  &quot;values&quot;: {
+    &quot;u&quot;: 0.219668,
+    &quot;v&quot;: 0.001257,
+    &quot;w&quot;: 0.792778,
+    &quot;x&quot;: 2.944117
+  }
+}
+
+$ mlr --ijson --opprint head -n 4 data/json-example-2.json
+flag i  attributes:color attributes:shape values:u values:v values:w values:x
+1    11 yellow           triangle         0.632170 0.988721 0.436498 5.798188
+1    15 red              square           0.219668 0.001257 0.792778 2.944117
+1    16 red              circle           0.209017 0.290052 0.138103 5.065034
+0    48 red              square           0.956274 0.746720 0.775542 7.117831
+</pre></div>
+</div>
+<p>Note in particular that as far as Miller’s <code class="docutils literal notranslate"><span class="pre">put</span></code> and <code class="docutils literal notranslate"><span class="pre">filter</span></code>, as well as other I/O formats, are concerned, these are simply field names with colons in them:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --json --jvstack head -n 1 then put &#39;${values:uv} = ${values:u} * ${values:v}&#39; data/json-example-2.json
+{
+  &quot;flag&quot;: 1,
+  &quot;i&quot;: 11,
+  &quot;attributes&quot;: {
+    &quot;color&quot;: &quot;yellow&quot;,
+    &quot;shape&quot;: &quot;triangle&quot;
+  },
+  &quot;values&quot;: {
+    &quot;u&quot;: 0.632170,
+    &quot;v&quot;: 0.988721,
+    &quot;w&quot;: 0.436498,
+    &quot;x&quot;: 5.798188,
+    &quot;uv&quot;: 0.625040
+  }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="arrays">
+<h3>Arrays<a class="headerlink" href="#arrays" title="Permalink to this headline">¶</a></h3>
+<p>Arrays aren’t supported in Miller’s <code class="docutils literal notranslate"><span class="pre">put</span></code>/<code class="docutils literal notranslate"><span class="pre">filter</span></code> DSL. By default, JSON arrays are read in as integer-keyed maps.</p>
+<p>Suppose we have arrays like this in our input data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat data/json-example-3.json
+{
+  &quot;label&quot;: &quot;orange&quot;,
+  &quot;values&quot;: [12.2, 13.8, 17.2]
+}
+{
+  &quot;label&quot;: &quot;purple&quot;,
+  &quot;values&quot;: [27.0, 32.4]
+}
+</pre></div>
+</div>
+<p>Then integer indices (starting from 0 and counting up) are used as map keys:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --ijson --oxtab cat data/json-example-3.json
+label    orange
+values:0 12.2
+values:1 13.8
+values:2 17.2
+
+label    purple
+values:0 27.0
+values:1 32.4
+</pre></div>
+</div>
+<p>When the data are written back out as JSON, field names are re-expanded as above, but what were arrays on input are now maps on output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --json --jvstack cat data/json-example-3.json
+{
+  &quot;label&quot;: &quot;orange&quot;,
+  &quot;values&quot;: {
+    &quot;0&quot;: 12.2,
+    &quot;1&quot;: 13.8,
+    &quot;2&quot;: 17.2
+  }
+}
+{
+  &quot;label&quot;: &quot;purple&quot;,
+  &quot;values&quot;: {
+    &quot;0&quot;: 27.0,
+    &quot;1&quot;: 32.4
+  }
+}
+</pre></div>
+</div>
+<p>This is non-ideal, but it allows Miller (5.x release being latest as of this writing) to handle JSON arrays at all.</p>
+<p>You might also use <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--json-skip-arrays-on-input</span></code> or <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--json-fatal-arrays-on-input</span></code>.</p>
+<p>To truly handle JSON, please use a JSON-processing tool such as <a class="reference external" href="https://stedolan.github.io/jq/">jq</a>.</p>
+</div>
+<div class="section" id="formatting-json-options">
+<h3>Formatting JSON options<a class="headerlink" href="#formatting-json-options" title="Permalink to this headline">¶</a></h3>
+<p>JSON isn’t a parameterized format, so <code class="docutils literal notranslate"><span class="pre">RS</span></code>, <code class="docutils literal notranslate"><span class="pre">FS</span></code>, <code class="docutils literal notranslate"><span class="pre">PS</span></code> aren’t specifiable. Nonetheless, you can do the following:</p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--jvstack</span></code> to pretty-print JSON objects with multi-line (vertically stacked) spacing. By default, each Miller record (JSON object) is one per line.</p></li>
+<li><p>Keystroke-savers: <code class="docutils literal notranslate"><span class="pre">--jsonx</span></code> simply means <code class="docutils literal notranslate"><span class="pre">--json</span> <span class="pre">--jvstack</span></code>, and <code class="docutils literal notranslate"><span class="pre">--ojsonx</span></code> simply means <code class="docutils literal notranslate"><span class="pre">--ojson</span> <span class="pre">--jvstack</span></code>.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--jlistwrap</span></code> to print the sequence of JSON objects wrapped in an outermost <code class="docutils literal notranslate"><span class="pre">[</span></code> and <code class="docutils literal notranslate"><span class="pre">]</span></code>. By default, these aren’t printed.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--jquoteall</span></code> to double-quote all object values. By default, integers, floating-point numbers, and booleans <code class="docutils literal notranslate"><span class="pre">true</span></code> and <code class="docutils literal notranslate"><span class="pre">false</span></code> are not double-quoted when they appear as JSON-object keys.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--jflatsep</span> <span class="pre">yourstringhere</span></code> to specify the string used for key concatenation: this defaults to a single colon.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--jofmt</span></code> to force Miller to apply the global <code class="docutils literal notranslate"><span class="pre">--ofmt</span></code> to floating-point values.  First note: please use sprintf-style codes for double precision, e.g. ending in <code class="docutils literal notranslate"><span class="pre">%lf</span></code>, <code class="docutils literal notranslate"><span class="pre">%le</span></code>, or <code class="docutils literal notranslate"><span class="pre">%lg</span></code>.  Miller floats are double-precision so behavior using <code class="docutils literal notranslate"><span class="pre">%f</span></code>, <code class="docutils literal notranslate"><span class="pre">%d</span></code>, etc. is undefined.  Second note: <code class="docutils literal notranslate"><span class="pre">0.123</span></code> is valid JSON; <code class="docutils literal notranslate"><span class="pre">.123</span></code> is not. Thus this feature allows you to emit JSON which may be unparseable by other tools.</p></li>
+</ul>
+<p>Again, please see <a class="reference external" href="https://stedolan.github.io/jq/">jq</a> for a truly powerful, JSON-specific tool.</p>
+</div>
+<div class="section" id="json-non-streaming">
+<h3>JSON non-streaming<a class="headerlink" href="#json-non-streaming" title="Permalink to this headline">¶</a></h3>
+<p>The JSON parser Miller uses does not return until all input is parsed: in particular this means that, unlike for other file formats, Miller does not (at present) handle JSON files in <code class="docutils literal notranslate"><span class="pre">tail</span> <span class="pre">-f</span></code> contexts.</p>
+</div>
+</div>
+<div class="section" id="pprint-pretty-printed-tabular">
+<span id="file-formats-pprint"></span><h2>PPRINT: Pretty-printed tabular<a class="headerlink" href="#pprint-pretty-printed-tabular" title="Permalink to this headline">¶</a></h2>
+<p>Miller’s pretty-print format is like CSV, but column-aligned.  For example, compare</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --ocsv cat data/small
+a,b,i,x,y
+pan,pan,1,0.3467901443380824,0.7268028627434533
+eks,pan,2,0.7586799647899636,0.5221511083334797
+wye,wye,3,0.20460330576630303,0.33831852551664776
+eks,wye,4,0.38139939387114097,0.13418874328430463
+wye,pan,5,0.5732889198020006,0.8636244699032729
+
+$ mlr --opprint cat data/small
+a   b   i x                   y
+pan pan 1 0.3467901443380824  0.7268028627434533
+eks pan 2 0.7586799647899636  0.5221511083334797
+wye wye 3 0.20460330576630303 0.33831852551664776
+eks wye 4 0.38139939387114097 0.13418874328430463
+wye pan 5 0.5732889198020006  0.8636244699032729
+</pre></div>
+</div>
+<p>Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won’t work on <code class="docutils literal notranslate"><span class="pre">tail</span> <span class="pre">-f</span></code> contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.</p>
+<p>See <a class="reference internal" href="record-heterogeneity.html"><span class="doc">Record-heterogeneity</span></a> for how Miller handles changes of field names within a single data stream.</p>
+<p>For output only (this isn’t supported in the input-scanner as of 5.0.0) you can use <code class="docutils literal notranslate"><span class="pre">--barred</span></code> with pprint output format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --opprint --barred cat data/small
++-----+-----+---+---------------------+---------------------+
+| a   | b   | i | x                   | y                   |
++-----+-----+---+---------------------+---------------------+
+| pan | pan | 1 | 0.3467901443380824  | 0.7268028627434533  |
+| eks | pan | 2 | 0.7586799647899636  | 0.5221511083334797  |
+| wye | wye | 3 | 0.20460330576630303 | 0.33831852551664776 |
+| eks | wye | 4 | 0.38139939387114097 | 0.13418874328430463 |
+| wye | pan | 5 | 0.5732889198020006  | 0.8636244699032729  |
++-----+-----+---+---------------------+---------------------+
+</pre></div>
+</div>
+</div>
+<div class="section" id="xtab-vertical-tabular">
+<span id="file-formats-xtab"></span><h2>XTAB: Vertical tabular<a class="headerlink" href="#xtab-vertical-tabular" title="Permalink to this headline">¶</a></h2>
+<p>This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
+<a class="reference external" href="https://github.com/twosigma/ngrid/">ngrid</a> for an entirely different, very powerful option). Namely:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ grep -v &#39;^#&#39; /etc/passwd | head -n 6 | mlr --nidx --fs : --opprint cat
+1          2 3  4  5                          6               7
+nobody     * -2 -2 Unprivileged User          /var/empty      /usr/bin/false
+root       * 0  0  System Administrator       /var/root       /bin/sh
+daemon     * 1  1  System Services            /var/root       /usr/bin/false
+_uucp      * 4  4  Unix to Unix Copy Protocol /var/spool/uucp /usr/sbin/uucico
+_taskgated * 13 13 Task Gate Daemon           /var/empty      /usr/bin/false
+_networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
+
+$ grep -v &#39;^#&#39; /etc/passwd | head -n 2 | mlr --nidx --fs : --oxtab cat
+1 nobody
+2 *
+3 -2
+4 -2
+5 Unprivileged User
+6 /var/empty
+7 /usr/bin/false
+
+1 root
+2 *
+3 0
+4 0
+5 System Administrator
+6 /var/root
+7 /bin/sh
+
+$ grep -v &#39;^#&#39; /etc/passwd | head -n 2 | \
+  mlr --nidx --fs : --ojson --jvstack --jlistwrap label name,password,uid,gid,gecos,home_dir,shell
+[
+{
+  &quot;name&quot;: &quot;nobody&quot;,
+  &quot;password&quot;: &quot;*&quot;,
+  &quot;uid&quot;: -2,
+  &quot;gid&quot;: -2,
+  &quot;gecos&quot;: &quot;Unprivileged User&quot;,
+  &quot;home_dir&quot;: &quot;/var/empty&quot;,
+  &quot;shell&quot;: &quot;/usr/bin/false&quot;
+}
+,{
+  &quot;name&quot;: &quot;root&quot;,
+  &quot;password&quot;: &quot;*&quot;,
+  &quot;uid&quot;: 0,
+  &quot;gid&quot;: 0,
+  &quot;gecos&quot;: &quot;System Administrator&quot;,
+  &quot;home_dir&quot;: &quot;/var/root&quot;,
+  &quot;shell&quot;: &quot;/bin/sh&quot;
+}
+]
+</pre></div>
+</div>
+</div>
+<div class="section" id="markdown-tabular">
+<h2>Markdown tabular<a class="headerlink" href="#markdown-tabular" title="Permalink to this headline">¶</a></h2>
+<p>Markdown format looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --omd cat data/small
+| a | b | i | x | y |
+| --- | --- | --- | --- | --- |
+| pan | pan | 1 | 0.3467901443380824 | 0.7268028627434533 |
+| eks | pan | 2 | 0.7586799647899636 | 0.5221511083334797 |
+| wye | wye | 3 | 0.20460330576630303 | 0.33831852551664776 |
+| eks | wye | 4 | 0.38139939387114097 | 0.13418874328430463 |
+| wye | pan | 5 | 0.5732889198020006 | 0.8636244699032729 |
+</pre></div>
+</div>
+<p>which renders like this when dropped into various web tools (e.g. github comments):</p>
+<img alt="_images/omd.png" src="_images/omd.png" />
+<p>As of Miller 4.3.0, markdown format is supported only for output, not input.</p>
+</div>
+<div class="section" id="data-conversion-keystroke-savers">
+<h2>Data-conversion keystroke-savers<a class="headerlink" href="#data-conversion-keystroke-savers" title="Permalink to this headline">¶</a></h2>
+<p>While you can do format conversion using <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--icsv</span> <span class="pre">--ojson</span> <span class="pre">cat</span> <span class="pre">myfile.csv</span></code>, there are also keystroke-savers for this purpose, such as <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--c2j</span> <span class="pre">cat</span> <span class="pre">myfile.csv</span></code>.  For a complete list:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --usage-format-conversion-keystroke-saver-options
+As keystroke-savers for format-conversion you may use the following:
+        --c2t --c2d --c2n --c2j --c2x --c2p --c2m
+  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
+  --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
+  --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
+  --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
+  --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
+  --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
+The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
+PPRINT, and markdown, respectively. Note that markdown format is available for
+output only.
+</pre></div>
+</div>
+</div>
+<div class="section" id="autodetect-of-line-endings">
+<h2>Autodetect of line endings<a class="headerlink" href="#autodetect-of-line-endings" title="Permalink to this headline">¶</a></h2>
+<p>Default line endings (<code class="docutils literal notranslate"><span class="pre">--irs</span></code> and <code class="docutils literal notranslate"><span class="pre">--ors</span></code>) are <code class="docutils literal notranslate"><span class="pre">'auto'</span></code> which means <strong>autodetect from the input file format</strong>, as long as the input file(s) have lines ending in either LF (also known as linefeed, <code class="docutils literal notranslate"><span class="pre">'\n'</span></code>, <code class="docutils literal notranslate"><span class="pre">0x0a</span></code>, Unix-style) or CRLF (also known as carriage-return/linefeed pairs, <code class="docutils literal notranslate"><span class="pre">'\r\n'</span></code>, <code class="docutils literal notranslate"><span class="pre">0x0d</span> <span class="pre">0x0a</span></code>, Windows style).</p>
+<p><strong>If both IRS and ORS are auto (which is the default) then LF input will lead to LF output and CRLF input will lead to CRLF output, regardless of the platform you’re running on.</strong></p>
+<p>The line-ending autodetector triggers on the first line ending detected in the input stream. E.g. if you specify a CRLF-terminated file on the command line followed by an LF-terminated file then autodetected line endings will be CRLF.</p>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">--ors</span> <span class="pre">{something</span> <span class="pre">else}</span></code> with (default or explicitly specified) <code class="docutils literal notranslate"><span class="pre">--irs</span> <span class="pre">auto</span></code> then line endings are autodetected on input and set to what you specify on output.</p>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">--irs</span> <span class="pre">{something</span> <span class="pre">else}</span></code> with (default or explicitly specified) <code class="docutils literal notranslate"><span class="pre">--ors</span> <span class="pre">auto</span></code> then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.</p>
+<p>See also <a class="reference internal" href="reference.html#reference-separators"><span class="std std-ref">Record/field/pair separators</span></a> for more information about record/field/pair separators.</p>
+</div>
+<div class="section" id="comments-in-data">
+<h2>Comments in data<a class="headerlink" href="#comments-in-data" title="Permalink to this headline">¶</a></h2>
+<p>You can include comments within your data files, and either have them ignored, or passed directly through to the standard output as soon as they are encountered:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --usage-comments-in-data
+  --skip-comments                 Ignore commented lines (prefixed by &quot;#&quot;)
+                                  within the input.
+  --skip-comments-with {string}   Ignore commented lines within input, with
+                                  specified prefix.
+  --pass-comments                 Immediately print commented lines (prefixed by &quot;#&quot;)
+                                  within the input.
+  --pass-comments-with {string}   Immediately print commented lines within input, with
+                                  specified prefix.
+Notes:
+* Comments are only honored at the start of a line.
+* In the absence of any of the above four options, comments are data like
+  any other text.
+* When pass-comments is used, comment lines are written to standard output
+  immediately upon being read; they are not part of the record stream.
+  Results may be counterintuitive. A suggestion is to place comments at the
+  start of data files.
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat data/budget.csv
+# Asana -- here are the budget figures you asked for!
+type,quantity
+purple,456.78
+green,678.12
+orange,123.45
+
+$ mlr --skip-comments --icsv --opprint sort -nr quantity data/budget.csv
+type   quantity
+green  678.12
+purple 456.78
+orange 123.45
+
+$ mlr --pass-comments --icsv --opprint sort -nr quantity data/budget.csv
+# Asana -- here are the budget figures you asked for!
+type   quantity
+green  678.12
+purple 456.78
+orange 123.45
+</pre></div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">File formats</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#csv-tsv-asv-usv-etc">CSV/TSV/ASV/USV/etc.</a></li>
+<li><a class="reference internal" href="#dkvp-key-value-pairs">DKVP: Key-value pairs</a></li>
+<li><a class="reference internal" href="#nidx-index-numbered-toolkit-style">NIDX: Index-numbered (toolkit style)</a></li>
+<li><a class="reference internal" href="#tabular-json">Tabular JSON</a><ul>
+<li><a class="reference internal" href="#single-level-json-objects">Single-level JSON objects</a></li>
+<li><a class="reference internal" href="#nested-json-objects">Nested JSON objects</a></li>
+<li><a class="reference internal" href="#arrays">Arrays</a></li>
+<li><a class="reference internal" href="#formatting-json-options">Formatting JSON options</a></li>
+<li><a class="reference internal" href="#json-non-streaming">JSON non-streaming</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pprint-pretty-printed-tabular">PPRINT: Pretty-printed tabular</a></li>
+<li><a class="reference internal" href="#xtab-vertical-tabular">XTAB: Vertical tabular</a></li>
+<li><a class="reference internal" href="#markdown-tabular">Markdown tabular</a></li>
+<li><a class="reference internal" href="#data-conversion-keystroke-savers">Data-conversion keystroke-savers</a></li>
+<li><a class="reference internal" href="#autodetect-of-line-endings">Autodetect of line endings</a></li>
+<li><a class="reference internal" href="#comments-in-data">Comments in data</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="feature-comparison.html"
+                        title="previous chapter">Unix-toolkit context</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="record-heterogeneity.html"
+                        title="next chapter">Record-heterogeneity</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/file-formats.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="record-heterogeneity.html" title="Record-heterogeneity"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="feature-comparison.html" title="Unix-toolkit context"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">File formats</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

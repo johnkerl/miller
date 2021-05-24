@@ -1,0 +1,74 @@
+..
+    PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
+
+Quick examples
+================================================================
+
+.. image:: coverart/cover-combined.png
+
+Column select::
+
+    % mlr --csv cut -f hostname,uptime mydata.csv
+
+Add new columns as function of other columns::
+
+    % mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
+
+Row filter::
+
+    % mlr --csv filter '$status != "down" && $upsec >= 10000' *.csv
+
+Apply column labels and pretty-print::
+
+    % grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
+
+Join multiple data sources on key columns::
+
+    % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
+
+Multiple formats including JSON::
+
+    % mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
+
+Aggregate per-column statistics::
+
+    % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
+
+Linear regression::
+
+    % mlr stats2 -a linreg-pca -f u,v -g shape data/*
+
+Aggregate custom per-column statistics::
+
+    % mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
+
+Iterate over data using DSL expressions::
+
+    % mlr --from estimates.tbl put '
+      for (k,v in $*) {
+        if (is_numeric(v) && k =~ "^[t-z].*$") {
+          $sum += v; $count += 1
+        }
+      }
+      $mean = $sum / $count # no assignment if count unset
+    '
+
+Run DSL expressions from a script file::
+
+    % mlr --from infile.dat put -f analyze.mlr
+
+Split/reduce output to multiple filenames::
+
+    % mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'
+
+Compressed I/O::
+
+    % mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'
+
+Interoperate with other data-processing tools using standard pipes::
+
+    % mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
+
+Tap/trace::
+
+    % mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'

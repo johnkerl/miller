@@ -1,0 +1,164 @@
+Cookbook part 2: Random things, and some math
+================================================================
+
+Randomly selecting words from a list
+----------------------------------------------------------------
+
+Given this `word list <https://github.com/johnkerl/miller/blob/master/docs/data/english-words.txt>`_, first take a look to see what the first few lines look like:
+
+::
+
+    $ head data/english-words.txt
+    a
+    aa
+    aal
+    aalii
+    aam
+    aardvark
+    aardwolf
+    aba
+    abac
+    abaca
+
+Then the following will randomly sample ten words with four to eight characters in them:
+
+::
+
+    $ mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10
+    thionine
+    birchman
+    mildewy
+    avigate
+    addedly
+    abaze
+    askant
+    aiming
+    insulant
+    coinmate
+
+Randomly generating jabberwocky words
+----------------------------------------------------------------
+
+These are simple *n*-grams as `described here <http://johnkerl.org/randspell/randspell-slides-ts.pdf>`_. Some common functions are `located here <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngfuncs.mlr.txt>`_. Then here are scripts for `1-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng1.mlr.txt>`_ `2-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng2.mlr.txt>`_ `3-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng3.mlr.txt>`_ `4-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng4.mlr.txt>`_, and `5-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng5.mlr.txt>`_.
+
+The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
+
+::
+
+    $ mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr
+    beard
+    plastinguish
+    politicially
+    noise
+    loan
+    country
+    controductionary
+    suppery
+    lose
+    lessors
+    dollar
+    judge
+    rottendence
+    lessenger
+    diffendant
+    suggestional
+
+Program timing
+----------------------------------------------------------------
+
+This admittedly artificial example demonstrates using Miller time and stats functions to introspectively acquire some information about Miller's own runtime. The ``delta`` function computes the difference between successive timestamps.
+
+::
+
+POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
+
+Computing interquartile ranges
+----------------------------------------------------------------
+
+For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
+
+::
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/iqr1.sh)HERE
+
+For wildcarded field names, first compute p25 and p75, then loop over field names with ``p25`` in them:
+
+::
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/iqrn.sh)HERE
+
+Computing weighted means
+----------------------------------------------------------------
+
+This might be more elegantly implemented as an option within the ``stats1`` verb. Meanwhile, it's expressible within the DSL:
+
+::
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/weighted-mean.sh)HERE
+
+Generating random numbers from various distributions
+----------------------------------------------------------------
+
+Here we can chain together a few simple building blocks:
+
+::
+
+POKI_RUN_COMMAND{{cat expo-sample.sh}}HERE
+
+Namely:
+
+* Set the Miller random-number seed so this webdoc looks the same every time I regenerate it.
+* Use pretty-printed tabular output.
+* Use pretty-printed tabular output.
+* Use ``seqgen`` to produce 100,000 records ``i=0``, ``i=1``, etc.
+* Send those to a ``put`` step which defines an inverse-transform-sampling function and calls it twice, then computes the sum and product of samples.
+* Send those to a histogram, and from there to a bar-plotter. This is just for visualization; you could just as well output CSV and send that off to your own plotting tool, etc.
+
+The output is as follows:
+
+::
+
+POKI_RUN_COMMAND{{sh expo-sample.sh}}HERE
+
+Sieve of Eratosthenes
+----------------------------------------------------------------
+
+The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`_ is a standard introductory programming topic. The idea is to find all primes up to some *N* by making a list of the numbers 1 to *N*, then striking out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all multiples of 4 except 4 itself, and so on. Whatever survives that without getting marked is a prime. This is easy enough in Miller. Notice that here all the work is in ``begin`` and ``end`` statements; there is no file input (so we use ``mlr -n`` to keep Miller from waiting for input data).
+
+::
+
+POKI_RUN_COMMAND{{cat programs/sieve.mlr}}HERE
+
+::
+
+POKI_RUN_COMMAND{{mlr -n put -f programs/sieve.mlr}}HERE
+
+Mandelbrot-set generator
+----------------------------------------------------------------
+
+The `Mandelbrot set <http://en.wikipedia.org/wiki/Mandelbrot_set>`_ is also easily expressed. This isn't an important case of data-processing in the vein for which Miller was designed, but it is an example of Miller as a general-purpose programming language -- a test case for the expressiveness of the language.
+
+The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the Wikipedia article); how to render them is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
+
+::
+
+POKI_RUN_COMMAND{{cat programs/mand.mlr}}HERE
+
+At standard resolution this makes a nice little ASCII plot:
+
+::
+
+POKI_RUN_COMMAND{{mlr -n put -f ./programs/mand.mlr}}HERE
+
+But using a very small font size (as small as my Mac will let me go), and by choosing the coordinates to zoom in on a particular part of the complex plane, we can get a nice little picture:
+
+::
+
+    #!/bin/bash
+    # Get the number of rows and columns from the terminal window dimensions
+    iheight=$(stty size | mlr --nidx --fs space cut -f 1)
+    iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
+    echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheight,iwidth=$iwidth" \
+    | mlr put -f programs/mand.mlr
+
+.. image:: pix/mand.png

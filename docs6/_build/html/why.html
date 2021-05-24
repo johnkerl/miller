@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Why? &#8212; Miller 5.10.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Why call it Miller?" href="etymology.html" />
+    <link rel="prev" title="Building from source" href="build.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="etymology.html" title="Why call it Miller?"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="build.html" title="Building from source"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Why?</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="why">
+<h1>Why?<a class="headerlink" href="#why" title="Permalink to this headline">¶</a></h1>
+<p>Someone asked me the other day about design, tradeoffs, thought process, why I felt it necessary to build Miller, etc. Here are some answers.</p>
+<div class="section" id="who-is-miller-for">
+<h2>Who is Miller for?<a class="headerlink" href="#who-is-miller-for" title="Permalink to this headline">¶</a></h2>
+<p>For background, I’m a software engineer, with a heavy devops bent and a non-trivial amount of data-engineering in my career. <strong>Initially I wrote Miller mainly for myself:</strong> I’m coder-friendly (being a coder); I’m Github-friendly; most of my data are well-structured or easily structurable (TSV-formatted SQL-query output, CSV files, log files, JSON data structures); I care about interoperability between all the various formats Miller supports (I’ve encountered them all); I do all my work on Linux or OSX.</p>
+<p>But now there’s this neat little tool <strong>which seems to be useful for people in various disciplines</strong>. I don’t even know entirely <em>who</em>. I can click through Github starrers and read a bit about what they seem to do, but not everyone that uses Miller is even <em>on</em> Github (or stars things). I’ve gotten a lot of feature requests through Github – but only from people who are Github users.  Not everyone’s a coder (it seems like a lot of Miller’s Github starrers are devops folks like myself, or data-science-ish people, or biology/genomics folks.) A lot of people care 100% about CSV. And so on.</p>
+<p>So I wonder (please drop a note at <a class="reference external" href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>) does Miller do what you need? Do you use it for all sorts of things, or just one or two nice things? Are there things you wish it did but it doesn’t? Is it almost there, or just nowhere near what you want? Are there not enough features or way too many? Are the docs too complicated; do you have a hard time finding out how to do what you want? Should I think differently about what this tool even <em>is</em> in the first place? Should I think differently about who it’s for?</p>
+</div>
+<div class="section" id="what-was-miller-created-to-do">
+<h2>What was Miller created to do?<a class="headerlink" href="#what-was-miller-created-to-do" title="Permalink to this headline">¶</a></h2>
+<p>First: there are tools like <code class="docutils literal notranslate"><span class="pre">xsv</span></code> which handles CSV marvelously and <code class="docutils literal notranslate"><span class="pre">jq</span></code> which handles JSON marvelously, and so on – but I over the years of my career in the software industry I’ve found myself, and others, doing a lot of ad-hoc things which really were fundamentally the same <em>except</em> for format. So the number one thing about Miller is doing common things while supporting <strong>multiple formats</strong>: (a) ingest a list of records where a record is a list of key-value pairs (however represented in the input files); (b) transform that stream of records; (c) emit the transformed stream – either in the same format as input, or in a different format.</p>
+<p>Second thing, a lot like the first: just as I didn’t want to build something only for a single file format, I didn’t want to build something only for one problem domain. In my work doing software engineering, devops, data engineering, etc. I saw a lot of commonalities and I wanted to <strong>solve as many problems simultaneously as possible</strong>.</p>
+<p>Third: it had to be <strong>streaming</strong>. As time goes by and we (some of us, sometimes) have machines with tens or hundreds of GB of RAM, it’s maybe less important, but I’m unhappy with tools which ingest all data, then do stuff, then emit all data. One reason is to be able to handle files bigger than available RAM. Another reason is to be able to handle input which trickles in, e.g.  you have some process emitting data now and then and you can pipe it to Miller and it will emit transformed records one at a time.</p>
+<p>Fourth: it had to be <strong>fast</strong>. This precludes all sorts of very nice things written in Ruby, for example. I love Ruby as a very expressive language, and I have several very useful little utility scripts written in Ruby. But a few years ago I ported over some of my old tried-and-true C programs and the lines-of-code count was a <em>lot</em> lower – it was great! Until I ran them on multi-GB files and realized they took 60x as long to complete.  So I couldn’t write Miller in Ruby, or in languages like it. I was going to have to do something in a low-level language in order to make it performant. I did simple experiments in several languages, and nothing was as fast as C, so I used C.</p>
+<p>Fifth thing: I wanted Miller to be <strong>pipe-friendly and interoperate with other command-line tools</strong>.  Since the basic paradigm is ingest records, transform records, emit records – where the input and output formats can be the same or different, and the transform can be complex, or just pass-through – this means you can use it to transform data, or re-format it, or both. So if you just want to do data-cleaning/prep/formatting and do all the “real” work in R, you can. If you just want a little glue script between other tools you can get that. And if you want to do non-trivial data-reduction in Miller you can.</p>
+<p>Sixth thing: Must have <strong>comprehensive documentation and unit-test</strong>. Since Miller handles a lot of formats and solves a lot of problems, there’s a lot to test and a lot to keep working correctly as I add features or optimize. And I wanted it to be able to explain itself – not only through web docs like the one you’re reading but also through <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">mlr</span></code> and <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--help</span></code>, <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">sort</span> <span class="pre">--help</span></code>, etc.</p>
+<p>Seventh thing: <strong>Must have a domain-specific language</strong> (DSL) <strong>but also must let you do common things without it</strong>. All those little verbs Miller has to help you <em>avoid</em> having to write for-loops are great. I use them for keystroke-saving: <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">stats1</span> <span class="pre">-a</span> <span class="pre">mean,stddev,min,max</span> <span class="pre">-f</span> <span class="pre">quantity</span></code>, for example, without you having to write for-loops or define accumulator variables. But you also have to be able to break out of that and write arbitrary code when you want to: <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'$distance</span> <span class="pre">=</span> <span class="pre">$rate</span> <span class="pre">*</span> <span class="pre">$time'</span></code> or anything else you can think up. In Perl/AWK/etc.  it’s all DSL. In xsv et al.  it’s all verbs. In Miller I like having the combination.</p>
+<p>Eighth thing: It’s an <strong>awful lot of fun to write</strong>. In my experience I didn’t find any tools which do multi-format, streaming, efficient, multi-purpose, with DSL and non-DSL, so I wrote one. But I don’t guarantee it’s unique in the world. It fills a niche in the world (people use it) but it also fills a niche in my life.</p>
+</div>
+<div class="section" id="tradeoffs">
+<h2>Tradeoffs<a class="headerlink" href="#tradeoffs" title="Permalink to this headline">¶</a></h2>
+<p>Miller is command-line-only by design. People who want a graphical user interface won’t find it here.  This is in part (a) accommodating my personal preferences, and in part (b) guided by my experience/belief that the command line is very expressive. Steep learning curve, yes. I consider that price worth paying.</p>
+<p>Another tradeoff: supporting lists of records – each with only one depth – keeps me supporting only what can be expressed in <em>all</em> of those formats.  E.g. in JSON you can have lists of lists of lists which Miller just doesn’t handle. So Miller can’t (and won’t) handle arbitrary JSON because it only handles tabular data which can be expressed in a variety of formats.</p>
+<p>A third tradeoff is doing build-from-scratch in a low-level language. It’d be quicker to write (but slower to run) if written in a high-level language. If Miller were written in Python, it would be implemented in significantly fewer lines of code than its current C implementation. The DSL would just be an <code class="docutils literal notranslate"><span class="pre">eval</span></code> of Python code. And it would run slower, but maybe not enough slower to be a problem for most folks. Later I found out about the <a class="reference external" href="https://github.com/turicas/rows">rows</a> tool – if you find Miller useful, you should check out <code class="docutils literal notranslate"><span class="pre">rows</span></code> as well.</p>
+<p>A fourth tradeoff is in the DSL (more visibly so in 5.0.0 but already in pre-5.0.0): how much to make it dynamically typed – so you can just say y=x+1 with a minimum number of keystrokes – vs. having it do a good job of telling you when you’ve made a typo. This is a common paradigm across <em>all</em> languages.  Some like Ruby you don’t declare anything and they’re quick to code little stuff in but programs of even a few thousand lines (which isn’t large in the software world) become insanely unmanageable.  Then Java at the other extreme which is very typesafe but you have to type in a lot of punctuation, angle brackets, datatypes, repetition, etc. just to be able to get anything done. And some in the middle like Go which are typesafe but with type inference which aim to do the best of both. In the Miller (5.0.0) DSL you get <code class="docutils literal notranslate"><span class="pre">y=x+1</span></code> by default but you can have things like <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">y</span> <span class="pre">=</span> <span class="pre">x+1</span></code> etc. so the typesafety is opt-in. See also <a class="reference internal" href="reference-dsl.html#reference-dsl-type-checking"><span class="std std-ref">Type-checking</span></a> for more information on type-checking.</p>
+</div>
+<div class="section" id="related-tools">
+<h2>Related tools<a class="headerlink" href="#related-tools" title="Permalink to this headline">¶</a></h2>
+<p>Here’s a comprehensive list: <a class="reference external" href="https://github.com/dbohdan/structured-text-tools">https://github.com/dbohdan/structured-text-tools</a>. It doesn’t mention <a class="reference external" href="https://github.com/turicas/rows">rows</a> so here’s a plug for that as well.</p>
+</div>
+<div class="section" id="moving-forward">
+<h2>Moving forward<a class="headerlink" href="#moving-forward" title="Permalink to this headline">¶</a></h2>
+<p>I originally aimed Miller at people who already know what <code class="docutils literal notranslate"><span class="pre">sed</span></code>/<code class="docutils literal notranslate"><span class="pre">awk</span></code>/<code class="docutils literal notranslate"><span class="pre">cut</span></code>/<code class="docutils literal notranslate"><span class="pre">sort</span></code>/<code class="docutils literal notranslate"><span class="pre">join</span></code> are and wanted some options. But as time goes by I realize that tools like this can be useful to folks who <em>don’t</em> know what those things are; people who aren’t primarily coders; people who are scientists, or data scientists. These days some journalists do data analysis.  So moving forward in terms of docs, I am working on having more cookbook, follow-by-example stuff in addition to the existing language-reference kinds of stuff.  And continuing to seek out input from people who use Miller on where to go next.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Why?</a><ul>
+<li><a class="reference internal" href="#who-is-miller-for">Who is Miller for?</a></li>
+<li><a class="reference internal" href="#what-was-miller-created-to-do">What was Miller created to do?</a></li>
+<li><a class="reference internal" href="#tradeoffs">Tradeoffs</a></li>
+<li><a class="reference internal" href="#related-tools">Related tools</a></li>
+<li><a class="reference internal" href="#moving-forward">Moving forward</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="build.html"
+                        title="previous chapter">Building from source</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="etymology.html"
+                        title="next chapter">Why call it Miller?</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/why.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="etymology.html" title="Why call it Miller?"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="build.html" title="Building from source"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Why?</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Miller in 10 minutes &#8212; Miller 5.10.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Unix-toolkit context" href="feature-comparison.html" />
+    <link rel="prev" title="Features" href="features.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="feature-comparison.html" title="Unix-toolkit context"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="features.html" title="Features"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Miller in 10 minutes</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="miller-in-10-minutes">
+<h1>Miller in 10 minutes<a class="headerlink" href="#miller-in-10-minutes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="csv-file-examples">
+<h2>CSV-file examples<a class="headerlink" href="#csv-file-examples" title="Permalink to this headline">¶</a></h2>
+<p>Suppose you have this CSV data file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat example.csv
+color,shape,flag,index,quantity,rate
+yellow,triangle,1,11,43.6498,9.8870
+red,square,1,15,79.2778,0.0130
+red,circle,1,16,13.8103,2.9010
+red,square,0,48,77.5542,7.4670
+purple,triangle,0,51,81.2290,8.5910
+red,square,0,64,77.1991,9.5310
+purple,triangle,0,65,80.1405,5.8240
+yellow,circle,1,73,63.9785,4.2370
+yellow,circle,1,87,63.5058,8.3350
+purple,square,0,91,72.3735,8.2430
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">cat</span></code> is like cat – it passes the data through unmodified:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --csv cat example.csv
+color,shape,flag,index,quantity,rate
+yellow,triangle,1,11,43.6498,9.8870
+red,square,1,15,79.2778,0.0130
+red,circle,1,16,13.8103,2.9010
+red,square,0,48,77.5542,7.4670
+purple,triangle,0,51,81.2290,8.5910
+red,square,0,64,77.1991,9.5310
+purple,triangle,0,65,80.1405,5.8240
+yellow,circle,1,73,63.9785,4.2370
+yellow,circle,1,87,63.5058,8.3350
+purple,square,0,91,72.3735,8.2430
+</pre></div>
+</div>
+<p>but it can also do format conversion (here, you can pretty-print in tabular format):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint cat example.csv
+color  shape    flag index quantity rate
+yellow triangle 1    11    43.6498  9.8870
+red    square   1    15    79.2778  0.0130
+red    circle   1    16    13.8103  2.9010
+red    square   0    48    77.5542  7.4670
+purple triangle 0    51    81.2290  8.5910
+red    square   0    64    77.1991  9.5310
+purple triangle 0    65    80.1405  5.8240
+yellow circle   1    73    63.9785  4.2370
+yellow circle   1    87    63.5058  8.3350
+purple square   0    91    72.3735  8.2430
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">head</span></code> and <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">tail</span></code> count records rather than lines. Whethere you’re getting the first few records or the last few, the CSV header is included either way:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --csv head -n 4 example.csv
+color,shape,flag,index,quantity,rate
+yellow,triangle,1,11,43.6498,9.8870
+red,square,1,15,79.2778,0.0130
+red,circle,1,16,13.8103,2.9010
+red,square,0,48,77.5542,7.4670
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --csv tail -n 4 example.csv
+color,shape,flag,index,quantity,rate
+purple,triangle,0,65,80.1405,5.8240
+yellow,circle,1,73,63.9785,4.2370
+yellow,circle,1,87,63.5058,8.3350
+purple,square,0,91,72.3735,8.2430
+</pre></div>
+</div>
+<p>You can sort primarily alphabetically on one field, then secondarily numerically descending on another field:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint sort -f shape -nr index example.csv
+color  shape    flag index quantity rate
+yellow circle   1    87    63.5058  8.3350
+yellow circle   1    73    63.9785  4.2370
+red    circle   1    16    13.8103  2.9010
+purple square   0    91    72.3735  8.2430
+red    square   0    64    77.1991  9.5310
+red    square   0    48    77.5542  7.4670
+red    square   1    15    79.2778  0.0130
+purple triangle 0    65    80.1405  5.8240
+purple triangle 0    51    81.2290  8.5910
+yellow triangle 1    11    43.6498  9.8870
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">cut</span></code> to retain only specified fields, in the same order they appeared in the input data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint cut -f flag,shape example.csv
+shape    flag
+triangle 1
+square   1
+circle   1
+square   0
+triangle 0
+square   0
+triangle 0
+circle   1
+circle   1
+square   0
+</pre></div>
+</div>
+<p>You can also use <code class="docutils literal notranslate"><span class="pre">cut</span> <span class="pre">-o</span></code> to retain only specified fields in your preferred order:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint cut -o -f flag,shape example.csv
+flag shape
+1    triangle
+1    square
+1    circle
+0    square
+0    triangle
+0    square
+0    triangle
+1    circle
+1    circle
+0    square
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">cut</span> <span class="pre">-x</span></code> to omit fields you don’t care about:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint cut -x -f flag,shape example.csv
+color  index quantity rate
+yellow 11    43.6498  9.8870
+red    15    79.2778  0.0130
+red    16    13.8103  2.9010
+red    48    77.5542  7.4670
+purple 51    81.2290  8.5910
+red    64    77.1991  9.5310
+purple 65    80.1405  5.8240
+yellow 73    63.9785  4.2370
+yellow 87    63.5058  8.3350
+purple 91    72.3735  8.2430
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">filter</span></code> to keep only records you care about:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint filter &#39;$color == &quot;red&quot;&#39; example.csv
+color shape  flag index quantity rate
+red   square 1    15    79.2778  0.0130
+red   circle 1    16    13.8103  2.9010
+red   square 0    48    77.5542  7.4670
+red   square 0    64    77.1991  9.5310
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint filter &#39;$color == &quot;red&quot; &amp;&amp; $flag == 1&#39; example.csv
+color shape  flag index quantity rate
+red   square 1    15    79.2778  0.0130
+red   circle 1    16    13.8103  2.9010
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">put</span></code> to create new fields which are computed from other fields:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint put &#39;$ratio = $quantity / $rate; $color_shape = $color . &quot;_&quot; . $shape&#39; example.csv
+color  shape    flag index quantity rate   ratio       color_shape
+yellow triangle 1    11    43.6498  9.8870 4.414868    yellow_triangle
+red    square   1    15    79.2778  0.0130 6098.292308 red_square
+red    circle   1    16    13.8103  2.9010 4.760531    red_circle
+red    square   0    48    77.5542  7.4670 10.386260   red_square
+purple triangle 0    51    81.2290  8.5910 9.455127    purple_triangle
+red    square   0    64    77.1991  9.5310 8.099790    red_square
+purple triangle 0    65    80.1405  5.8240 13.760388   purple_triangle
+yellow circle   1    73    63.9785  4.2370 15.099953   yellow_circle
+yellow circle   1    87    63.5058  8.3350 7.619172    yellow_circle
+purple square   0    91    72.3735  8.2430 8.779995    purple_square
+</pre></div>
+</div>
+<p>Even though Miller’s main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use <code class="docutils literal notranslate"><span class="pre">$[[3]]</span></code> to access the name of field 3 or <code class="docutils literal notranslate"><span class="pre">$[[[3]]]</span></code> to access the value of field 3:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint put &#39;$[[3]] = &quot;NEW&quot;&#39; example.csv
+color  shape    NEW index quantity rate
+yellow triangle 1   11    43.6498  9.8870
+red    square   1   15    79.2778  0.0130
+red    circle   1   16    13.8103  2.9010
+red    square   0   48    77.5542  7.4670
+purple triangle 0   51    81.2290  8.5910
+red    square   0   64    77.1991  9.5310
+purple triangle 0   65    80.1405  5.8240
+yellow circle   1   73    63.9785  4.2370
+yellow circle   1   87    63.5058  8.3350
+purple square   0   91    72.3735  8.2430
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint put &#39;$[[[3]]] = &quot;NEW&quot;&#39; example.csv
+color  shape    flag index quantity rate
+yellow triangle NEW  11    43.6498  9.8870
+red    square   NEW  15    79.2778  0.0130
+red    circle   NEW  16    13.8103  2.9010
+red    square   NEW  48    77.5542  7.4670
+purple triangle NEW  51    81.2290  8.5910
+red    square   NEW  64    77.1991  9.5310
+purple triangle NEW  65    80.1405  5.8240
+yellow circle   NEW  73    63.9785  4.2370
+yellow circle   NEW  87    63.5058  8.3350
+purple square   NEW  91    72.3735  8.2430
+</pre></div>
+</div>
+</div>
+<div class="section" id="json-file-examples">
+<h2>JSON-file examples<a class="headerlink" href="#json-file-examples" title="Permalink to this headline">¶</a></h2>
+<p>OK, CSV and pretty-print are fine. But Miller can also convert between a few other formats – let’s take a look at JSON output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --ojson put &#39;$ratio = $quantity/$rate; $shape = toupper($shape)&#39; example.csv
+{ &quot;color&quot;: &quot;yellow&quot;, &quot;shape&quot;: &quot;TRIANGLE&quot;, &quot;flag&quot;: 1, &quot;index&quot;: 11, &quot;quantity&quot;: 43.6498, &quot;rate&quot;: 9.8870, &quot;ratio&quot;: 4.414868 }
+{ &quot;color&quot;: &quot;red&quot;, &quot;shape&quot;: &quot;SQUARE&quot;, &quot;flag&quot;: 1, &quot;index&quot;: 15, &quot;quantity&quot;: 79.2778, &quot;rate&quot;: 0.0130, &quot;ratio&quot;: 6098.292308 }
+{ &quot;color&quot;: &quot;red&quot;, &quot;shape&quot;: &quot;CIRCLE&quot;, &quot;flag&quot;: 1, &quot;index&quot;: 16, &quot;quantity&quot;: 13.8103, &quot;rate&quot;: 2.9010, &quot;ratio&quot;: 4.760531 }
+{ &quot;color&quot;: &quot;red&quot;, &quot;shape&quot;: &quot;SQUARE&quot;, &quot;flag&quot;: 0, &quot;index&quot;: 48, &quot;quantity&quot;: 77.5542, &quot;rate&quot;: 7.4670, &quot;ratio&quot;: 10.386260 }
+{ &quot;color&quot;: &quot;purple&quot;, &quot;shape&quot;: &quot;TRIANGLE&quot;, &quot;flag&quot;: 0, &quot;index&quot;: 51, &quot;quantity&quot;: 81.2290, &quot;rate&quot;: 8.5910, &quot;ratio&quot;: 9.455127 }
+{ &quot;color&quot;: &quot;red&quot;, &quot;shape&quot;: &quot;SQUARE&quot;, &quot;flag&quot;: 0, &quot;index&quot;: 64, &quot;quantity&quot;: 77.1991, &quot;rate&quot;: 9.5310, &quot;ratio&quot;: 8.099790 }
+{ &quot;color&quot;: &quot;purple&quot;, &quot;shape&quot;: &quot;TRIANGLE&quot;, &quot;flag&quot;: 0, &quot;index&quot;: 65, &quot;quantity&quot;: 80.1405, &quot;rate&quot;: 5.8240, &quot;ratio&quot;: 13.760388 }
+{ &quot;color&quot;: &quot;yellow&quot;, &quot;shape&quot;: &quot;CIRCLE&quot;, &quot;flag&quot;: 1, &quot;index&quot;: 73, &quot;quantity&quot;: 63.9785, &quot;rate&quot;: 4.2370, &quot;ratio&quot;: 15.099953 }
+{ &quot;color&quot;: &quot;yellow&quot;, &quot;shape&quot;: &quot;CIRCLE&quot;, &quot;flag&quot;: 1, &quot;index&quot;: 87, &quot;quantity&quot;: 63.5058, &quot;rate&quot;: 8.3350, &quot;ratio&quot;: 7.619172 }
+{ &quot;color&quot;: &quot;purple&quot;, &quot;shape&quot;: &quot;SQUARE&quot;, &quot;flag&quot;: 0, &quot;index&quot;: 91, &quot;quantity&quot;: 72.3735, &quot;rate&quot;: 8.2430, &quot;ratio&quot;: 8.779995 }
+</pre></div>
+</div>
+<p>Or, JSON output with vertical-formatting flags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --ojson tail -n 2 example.csv
+{ &quot;color&quot;: &quot;yellow&quot;, &quot;shape&quot;: &quot;circle&quot;, &quot;flag&quot;: 1, &quot;index&quot;: 87, &quot;quantity&quot;: 63.5058, &quot;rate&quot;: 8.3350 }
+{ &quot;color&quot;: &quot;purple&quot;, &quot;shape&quot;: &quot;square&quot;, &quot;flag&quot;: 0, &quot;index&quot;: 91, &quot;quantity&quot;: 72.3735, &quot;rate&quot;: 8.2430 }
+</pre></div>
+</div>
+</div>
+<div class="section" id="sorts-and-stats">
+<h2>Sorts and stats<a class="headerlink" href="#sorts-and-stats" title="Permalink to this headline">¶</a></h2>
+<p>Now suppose you want to sort the data on a given column, <em>and then</em> take the top few in that ordering. You can use Miller’s <code class="docutils literal notranslate"><span class="pre">then</span></code> feature to pipe commands together.</p>
+<p>Here are the records with the top three <code class="docutils literal notranslate"><span class="pre">index</span></code> values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint sort -f shape -nr index then head -n 3 example.csv
+color  shape  flag index quantity rate
+yellow circle 1    87    63.5058  8.3350
+yellow circle 1    73    63.9785  4.2370
+red    circle 1    16    13.8103  2.9010
+</pre></div>
+</div>
+<p>Lots of Miller commands take a <code class="docutils literal notranslate"><span class="pre">-g</span></code> option for group-by: here, <code class="docutils literal notranslate"><span class="pre">head</span> <span class="pre">-n</span> <span class="pre">1</span> <span class="pre">-g</span> <span class="pre">shape</span></code> outputs the first record for each distinct value of the <code class="docutils literal notranslate"><span class="pre">shape</span></code> field. This means we’re finding the record with highest <code class="docutils literal notranslate"><span class="pre">index</span></code> field for each distinct <code class="docutils literal notranslate"><span class="pre">shape</span></code> field:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
+color  shape    flag index quantity rate
+yellow circle   1    87    63.5058  8.3350
+purple square   0    91    72.3735  8.2430
+purple triangle 0    65    80.1405  5.8240
+</pre></div>
+</div>
+<p>Statistics can be computed with or without group-by field(s):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
+shape    quantity_count quantity_min quantity_mean quantity_max
+triangle 3              43.649800    68.339767     81.229000
+square   4              72.373500    76.601150     79.277800
+circle   3              13.810300    47.098200     63.978500
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
+shape    color  quantity_count quantity_min quantity_mean quantity_max
+triangle yellow 1              43.649800    43.649800     43.649800
+square   red    3              77.199100    78.010367     79.277800
+circle   red    1              13.810300    13.810300     13.810300
+triangle purple 2              80.140500    80.684750     81.229000
+circle   yellow 2              63.505800    63.742150     63.978500
+square   purple 1              72.373500    72.373500     72.373500
+</pre></div>
+</div>
+<p>If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
+rate_p0   0.013000
+rate_p10  2.901000
+rate_p25  4.237000
+rate_p50  8.243000
+rate_p75  8.591000
+rate_p90  9.887000
+rate_p99  9.887000
+rate_p100 9.887000
+</pre></div>
+</div>
+</div>
+<div class="section" id="choices-for-printing-to-files">
+<span id="min-choices-for-printing-to-files"></span><h2>Choices for printing to files<a class="headerlink" href="#choices-for-printing-to-files" title="Permalink to this headline">¶</a></h2>
+<p>Often we want to print output to the screen. Miller does this by default, as we’ve seen in the previous examples.</p>
+<p>Sometimes we want to print output to another file: just use <strong>&gt; outputfilenamegoeshere</strong> at the end of your command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">mlr</span> <span class="o">--</span><span class="n">icsv</span> <span class="o">--</span><span class="n">opprint</span> <span class="n">cat</span> <span class="n">example</span><span class="o">.</span><span class="n">csv</span> <span class="o">&gt;</span> <span class="n">newfile</span><span class="o">.</span><span class="n">csv</span>
+<span class="c1"># Output goes to the new file;</span>
+<span class="c1"># nothing is printed to the screen.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">cat</span> <span class="n">newfile</span><span class="o">.</span><span class="n">csv</span>
+<span class="n">color</span>  <span class="n">shape</span>    <span class="n">flag</span> <span class="n">index</span> <span class="n">quantity</span> <span class="n">rate</span>
+<span class="n">yellow</span> <span class="n">triangle</span> <span class="mi">1</span>    <span class="mi">11</span>    <span class="mf">43.6498</span>  <span class="mf">9.8870</span>
+<span class="n">red</span>    <span class="n">square</span>   <span class="mi">1</span>    <span class="mi">15</span>    <span class="mf">79.2778</span>  <span class="mf">0.0130</span>
+<span class="n">red</span>    <span class="n">circle</span>   <span class="mi">1</span>    <span class="mi">16</span>    <span class="mf">13.8103</span>  <span class="mf">2.9010</span>
+<span class="n">red</span>    <span class="n">square</span>   <span class="mi">0</span>    <span class="mi">48</span>    <span class="mf">77.5542</span>  <span class="mf">7.4670</span>
+<span class="n">purple</span> <span class="n">triangle</span> <span class="mi">0</span>    <span class="mi">51</span>    <span class="mf">81.2290</span>  <span class="mf">8.5910</span>
+<span class="n">red</span>    <span class="n">square</span>   <span class="mi">0</span>    <span class="mi">64</span>    <span class="mf">77.1991</span>  <span class="mf">9.5310</span>
+<span class="n">purple</span> <span class="n">triangle</span> <span class="mi">0</span>    <span class="mi">65</span>    <span class="mf">80.1405</span>  <span class="mf">5.8240</span>
+<span class="n">yellow</span> <span class="n">circle</span>   <span class="mi">1</span>    <span class="mi">73</span>    <span class="mf">63.9785</span>  <span class="mf">4.2370</span>
+<span class="n">yellow</span> <span class="n">circle</span>   <span class="mi">1</span>    <span class="mi">87</span>    <span class="mf">63.5058</span>  <span class="mf">8.3350</span>
+<span class="n">purple</span> <span class="n">square</span>   <span class="mi">0</span>    <span class="mi">91</span>    <span class="mf">72.3735</span>  <span class="mf">8.2430</span>
+</pre></div>
+</div>
+<p>Other times we just want our files to be <strong>changed in-place</strong>: just use <strong>mlr -I</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">cp</span> <span class="n">example</span><span class="o">.</span><span class="n">csv</span> <span class="n">newfile</span><span class="o">.</span><span class="n">txt</span>
+
+<span class="o">%</span> <span class="n">cat</span> <span class="n">newfile</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">color</span><span class="p">,</span><span class="n">shape</span><span class="p">,</span><span class="n">flag</span><span class="p">,</span><span class="n">index</span><span class="p">,</span><span class="n">quantity</span><span class="p">,</span><span class="n">rate</span>
+<span class="n">yellow</span><span class="p">,</span><span class="n">triangle</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mf">43.6498</span><span class="p">,</span><span class="mf">9.8870</span>
+<span class="n">red</span><span class="p">,</span><span class="n">square</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mf">79.2778</span><span class="p">,</span><span class="mf">0.0130</span>
+<span class="n">red</span><span class="p">,</span><span class="n">circle</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mf">13.8103</span><span class="p">,</span><span class="mf">2.9010</span>
+<span class="n">red</span><span class="p">,</span><span class="n">square</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">48</span><span class="p">,</span><span class="mf">77.5542</span><span class="p">,</span><span class="mf">7.4670</span>
+<span class="n">purple</span><span class="p">,</span><span class="n">triangle</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">51</span><span class="p">,</span><span class="mf">81.2290</span><span class="p">,</span><span class="mf">8.5910</span>
+<span class="n">red</span><span class="p">,</span><span class="n">square</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mf">77.1991</span><span class="p">,</span><span class="mf">9.5310</span>
+<span class="n">purple</span><span class="p">,</span><span class="n">triangle</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">65</span><span class="p">,</span><span class="mf">80.1405</span><span class="p">,</span><span class="mf">5.8240</span>
+<span class="n">yellow</span><span class="p">,</span><span class="n">circle</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">73</span><span class="p">,</span><span class="mf">63.9785</span><span class="p">,</span><span class="mf">4.2370</span>
+<span class="n">yellow</span><span class="p">,</span><span class="n">circle</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">87</span><span class="p">,</span><span class="mf">63.5058</span><span class="p">,</span><span class="mf">8.3350</span>
+<span class="n">purple</span><span class="p">,</span><span class="n">square</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">91</span><span class="p">,</span><span class="mf">72.3735</span><span class="p">,</span><span class="mf">8.2430</span>
+
+<span class="o">%</span> <span class="n">mlr</span> <span class="o">-</span><span class="n">I</span> <span class="o">--</span><span class="n">icsv</span> <span class="o">--</span><span class="n">opprint</span> <span class="n">cat</span> <span class="n">newfile</span><span class="o">.</span><span class="n">txt</span>
+
+<span class="o">%</span> <span class="n">cat</span> <span class="n">newfile</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">color</span>  <span class="n">shape</span>    <span class="n">flag</span> <span class="n">index</span> <span class="n">quantity</span> <span class="n">rate</span>
+<span class="n">yellow</span> <span class="n">triangle</span> <span class="mi">1</span>    <span class="mi">11</span>    <span class="mf">43.6498</span>  <span class="mf">9.8870</span>
+<span class="n">red</span>    <span class="n">square</span>   <span class="mi">1</span>    <span class="mi">15</span>    <span class="mf">79.2778</span>  <span class="mf">0.0130</span>
+<span class="n">red</span>    <span class="n">circle</span>   <span class="mi">1</span>    <span class="mi">16</span>    <span class="mf">13.8103</span>  <span class="mf">2.9010</span>
+<span class="n">red</span>    <span class="n">square</span>   <span class="mi">0</span>    <span class="mi">48</span>    <span class="mf">77.5542</span>  <span class="mf">7.4670</span>
+<span class="n">purple</span> <span class="n">triangle</span> <span class="mi">0</span>    <span class="mi">51</span>    <span class="mf">81.2290</span>  <span class="mf">8.5910</span>
+<span class="n">red</span>    <span class="n">square</span>   <span class="mi">0</span>    <span class="mi">64</span>    <span class="mf">77.1991</span>  <span class="mf">9.5310</span>
+<span class="n">purple</span> <span class="n">triangle</span> <span class="mi">0</span>    <span class="mi">65</span>    <span class="mf">80.1405</span>  <span class="mf">5.8240</span>
+<span class="n">yellow</span> <span class="n">circle</span>   <span class="mi">1</span>    <span class="mi">73</span>    <span class="mf">63.9785</span>  <span class="mf">4.2370</span>
+<span class="n">yellow</span> <span class="n">circle</span>   <span class="mi">1</span>    <span class="mi">87</span>    <span class="mf">63.5058</span>  <span class="mf">8.3350</span>
+<span class="n">purple</span> <span class="n">square</span>   <span class="mi">0</span>    <span class="mi">91</span>    <span class="mf">72.3735</span>  <span class="mf">8.2430</span>
+</pre></div>
+</div>
+<p>Also using <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">-I</span></code> you can bulk-operate on lots of files: e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mlr</span> <span class="o">-</span><span class="n">I</span> <span class="o">--</span><span class="n">csv</span> <span class="n">cut</span> <span class="o">-</span><span class="n">x</span> <span class="o">-</span><span class="n">f</span> <span class="n">unwanted_column_name</span> <span class="o">*.</span><span class="n">csv</span>
+</pre></div>
+</div>
+<p>If you like, you can first copy off your original data somewhere else, before doing in-place operations.</p>
+<p>Lastly, using <code class="docutils literal notranslate"><span class="pre">tee</span></code> within <code class="docutils literal notranslate"><span class="pre">put</span></code>, you can split your input data into separate files per one or more field names:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mlr --csv --from example.csv put -q &#39;tee &gt; $shape.&quot;.csv&quot;, $*&#39;
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat circle.csv
+color,shape,flag,index,quantity,rate
+red,circle,1,16,13.8103,2.9010
+yellow,circle,1,73,63.9785,4.2370
+yellow,circle,1,87,63.5058,8.3350
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat square.csv
+color,shape,flag,index,quantity,rate
+red,square,1,15,79.2778,0.0130
+red,square,0,48,77.5542,7.4670
+red,square,0,64,77.1991,9.5310
+purple,square,0,91,72.3735,8.2430
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat triangle.csv
+color,shape,flag,index,quantity,rate
+yellow,triangle,1,11,43.6498,9.8870
+purple,triangle,0,51,81.2290,8.5910
+purple,triangle,0,65,80.1405,5.8240
+</pre></div>
+</div>
+</div>
+<div class="section" id="other-format-examples">
+<h2>Other-format examples<a class="headerlink" href="#other-format-examples" title="Permalink to this headline">¶</a></h2>
+<p>What’s a CSV file, really? It’s an array of rows, or <em>records</em>, each being a list of key-value pairs, or <em>fields</em>: for CSV it so happens that all the keys are shared in the header line and the values vary data line by data line.</p>
+<p>For example, if you have:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span><span class="p">,</span><span class="n">flag</span><span class="p">,</span><span class="n">index</span>
+<span class="n">circle</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">24</span>
+<span class="n">square</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">36</span>
+</pre></div>
+</div>
+<p>then that’s a way of saying:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span><span class="o">=</span><span class="n">circle</span><span class="p">,</span><span class="n">flag</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="mi">24</span>
+<span class="n">shape</span><span class="o">=</span><span class="n">square</span><span class="p">,</span><span class="n">flag</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="mi">36</span>
+</pre></div>
+</div>
+<p>Data written this way are called <strong>DKVP</strong>, for <em>delimited key-value pairs</em>.</p>
+<p>We’ve also already seen other ways to write the same data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CSV</span>                               <span class="n">PPRINT</span>                 <span class="n">JSON</span>
+<span class="n">shape</span><span class="p">,</span><span class="n">flag</span><span class="p">,</span><span class="n">index</span>                  <span class="n">shape</span>  <span class="n">flag</span> <span class="n">index</span>      <span class="p">[</span>
+<span class="n">circle</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">24</span>                       <span class="n">circle</span> <span class="mi">1</span>    <span class="mi">24</span>           <span class="p">{</span>
+<span class="n">square</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">36</span>                       <span class="n">square</span> <span class="mi">0</span>    <span class="mi">36</span>             <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span>
+                                                             <span class="s2">&quot;flag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                                                             <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">24</span>
+                                                           <span class="p">},</span>
+<span class="n">DKVP</span>                              <span class="n">XTAB</span>                     <span class="p">{</span>
+<span class="n">shape</span><span class="o">=</span><span class="n">circle</span><span class="p">,</span><span class="n">flag</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="mi">24</span>      <span class="n">shape</span> <span class="n">circle</span>               <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;square&quot;</span><span class="p">,</span>
+<span class="n">shape</span><span class="o">=</span><span class="n">square</span><span class="p">,</span><span class="n">flag</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="mi">36</span>      <span class="n">flag</span>  <span class="mi">1</span>                    <span class="s2">&quot;flag&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                  <span class="n">index</span> <span class="mi">24</span>                   <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">36</span>
+                                                           <span class="p">}</span>
+                                  <span class="n">shape</span> <span class="n">square</span>           <span class="p">]</span>
+                                  <span class="n">flag</span>  <span class="mi">0</span>
+                                  <span class="n">index</span> <span class="mi">36</span>
+</pre></div>
+</div>
+<p>Anything we can do with CSV input data, we can do with any other format input data.  And you can read from one format, do any record-processing, and output to the same format as the input, or to a different output format.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Miller in 10 minutes</a><ul>
+<li><a class="reference internal" href="#csv-file-examples">CSV-file examples</a></li>
+<li><a class="reference internal" href="#json-file-examples">JSON-file examples</a></li>
+<li><a class="reference internal" href="#sorts-and-stats">Sorts and stats</a></li>
+<li><a class="reference internal" href="#choices-for-printing-to-files">Choices for printing to files</a></li>
+<li><a class="reference internal" href="#other-format-examples">Other-format examples</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="features.html"
+                        title="previous chapter">Features</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="feature-comparison.html"
+                        title="next chapter">Unix-toolkit context</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/10min.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="feature-comparison.html" title="Unix-toolkit context"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="features.html" title="Features"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 5.10.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Miller in 10 minutes</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>
