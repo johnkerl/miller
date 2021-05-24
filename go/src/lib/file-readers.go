@@ -12,7 +12,9 @@
 //
 // * An indication to use an in-process encoding reader (gzip or bzip2, etc).
 //
-// If a prepipe is specified, it is used; else the encoding is used.
+// If a prepipe is specified, it is used; else if an encoding is specified, it
+// is used; otherwise the file suffix (.bz2, .gz, .z) is consulted; otherwise
+// the file is treated as text.
 // ================================================================
 
 package lib
@@ -22,15 +24,15 @@ import (
 	"compress/bzip2"
 	"compress/gzip"
 	"compress/zlib"
-	"errors"
 	"io"
 	"os"
+	"strings"
 )
 
 type TFileInputEncoding int
 
 const (
-	FileInputEncodingCat TFileInputEncoding = iota
+	FileInputEncodingDefault TFileInputEncoding = iota
 	FileInputEncodingBzip2
 	FileInputEncodingGzip
 	FileInputEncodingZlib
@@ -54,7 +56,7 @@ func OpenFileForRead(
 		if err != nil {
 			return nil, err
 		}
-		return openEncodedHandleForRead(handle, encoding)
+		return openEncodedHandleForRead(handle, encoding, filename)
 	}
 }
 
@@ -70,7 +72,7 @@ func OpenStdin(
 	if prepipe != "" {
 		return openPrepipedHandleForRead("", prepipe)
 	} else {
-		return openEncodedHandleForRead(os.Stdin, encoding)
+		return openEncodedHandleForRead(os.Stdin, encoding, "")
 	}
 }
 
@@ -114,14 +116,13 @@ func escapeFileNameForPopen(filename string) string {
 	}
 }
 
+// TODO: comment
 func openEncodedHandleForRead(
 	handle *os.File,
 	encoding TFileInputEncoding,
+	filename string,
 ) (io.ReadCloser, error) {
 	switch encoding {
-	case FileInputEncodingCat:
-		return handle, nil
-		break
 	case FileInputEncodingBzip2:
 		return NewBZip2ReadCloser(handle), nil
 		break
@@ -132,8 +133,21 @@ func openEncodedHandleForRead(
 		return zlib.NewReader(handle)
 		break
 	}
-	InternalCodingErrorIf(true) // should not have been reached
-	return nil, errors.New("to make the compiler happy")
+
+	InternalCodingErrorIf(encoding != FileInputEncodingDefault)
+
+	if strings.HasSuffix(filename, ".bz2") {
+		return NewBZip2ReadCloser(handle), nil
+	}
+	if strings.HasSuffix(filename, ".gz") {
+		return gzip.NewReader(handle)
+	}
+	if strings.HasSuffix(filename, ".z") {
+		return zlib.NewReader(handle)
+	}
+
+	// Pass along os.Stdin or os.Open(filename)
+	return handle, nil
 }
 
 // ----------------------------------------------------------------
@@ -156,4 +170,23 @@ func (this *BZip2ReadCloser) Read(p []byte) (n int, err error) {
 
 func (this *BZip2ReadCloser) Close() error {
 	return this.originalHandle.Close()
+}
+
+// ----------------------------------------------------------------
+// Reading past end of files opened with os.Open returns the error which is
+// io.EOF. Reading past close of pipes opened with popen (e.g. Miller's
+// prepipe, where the file isn't 'foo.dat' but rather the process 'gunzip <
+// foo.dat |') returns not io.EOF but an error with 'file already closed'
+// within it. See also
+// https://stackoverflow.com/questions/47486128/why-does-io-pipe-continue-to-block-even-when-eof-is-reached
+func IsEOF(err error) bool {
+	if err == nil {
+		return false
+	} else if err == io.EOF {
+		return true
+	} else if strings.Contains(err.Error(), "file already closed") {
+		return true
+	} else {
+		return false
+	}
 }

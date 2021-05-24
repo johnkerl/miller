@@ -82,7 +82,7 @@ func (this *RecordReaderCSV) processHandle(
 		if needHeader {
 			// TODO: make this a helper function
 			csvRecord, err := csvReader.Read()
-			if err == io.EOF {
+			if lib.IsEOF(err) {
 				break
 			}
 			if err != nil && csvRecord == nil {
@@ -98,7 +98,7 @@ func (this *RecordReaderCSV) processHandle(
 		}
 
 		csvRecord, err := csvReader.Read()
-		if err == io.EOF {
+		if lib.IsEOF(err) {
 			break
 		}
 		if err != nil && csvRecord == nil {

@@ -87,7 +87,7 @@ func (this *RecordReaderXTAB) processHandle(
 	eof := false
 	for !eof {
 		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
-		if err == io.EOF {
+		if lib.IsEOF(err) {
 			err = nil
 			eof = true
 

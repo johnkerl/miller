@@ -17,16 +17,18 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 
+! get doc6 going sooner than later! lots accumulating ...
+
 * blocker: prepipe
-  - gzin; bz2in ...
+  k gzin; bz2in ...
     handle, err = gzip.NewReader(handle)
     handle, err = bzip2.NewReader(handle)
   ? gzout, bz2out -- ? make sure this works through tee? bleah ...
   - n.b. brew install pigz, then pigz -z
-  - needs prepipe per se
+  k needs prepipe per se
   - needs UT cases for non-pipe readers
   - needs UT cases for pre-pipe readers
-  ! auto-detect for .gz .bz2 .z -- ?
+  k auto-detect for .gz .bz2 .z -- ?
   ? zip -- but that is an archive case too not just an encoding case
     ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
     ? as 6.1 follow-on work -- ?
@@ -94,6 +96,9 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 * non-blocker: commenting passes ...
+
+* future:
+  - separate out InputFormat into per-file & have autodetect on file endings -- ?
 
 * non-blocker: new functions:
   o new columns-to-arrays and arrays-to-columns for stan format
@@ -646,3 +651,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o --prepipe-foo
   o local-alias suggestions
 * make an io.ReadCloser wrapper for bzip2
+* doc autodetect for .bz2/.gz/.z

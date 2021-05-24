@@ -152,7 +152,7 @@ func DefaultReaderOptions() TReaderOptions {
 		IRS:               "\n",
 		IFS:               ",",
 		IPS:               "=",
-		FileInputEncoding: lib.FileInputEncodingCat,
+		FileInputEncoding: lib.FileInputEncodingDefault,
 	}
 }
 

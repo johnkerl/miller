@@ -155,7 +155,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	eof := false
 	for !eof {
 		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
-		if err == io.EOF {
+		if lib.IsEOF(err) {
 			err = nil
 			eof = true
 		} else if err != nil {
@@ -252,7 +252,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	eof := false
 	for !eof {
 		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
-		if err == io.EOF {
+		if lib.IsEOF(err) {
 			err = nil
 			eof = true
 		} else if err != nil {

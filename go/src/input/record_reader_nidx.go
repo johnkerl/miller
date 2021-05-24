@@ -71,7 +71,7 @@ func (this *RecordReaderNIDX) processHandle(
 
 	for !eof {
 		line, err := lineReader.ReadString('\n') // TODO: auto-detect
-		if err == io.EOF {
+		if lib.IsEOF(err) {
 			err = nil
 			eof = true
 		} else if err != nil {

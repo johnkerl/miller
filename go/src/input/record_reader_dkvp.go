@@ -70,21 +70,11 @@ func (this *RecordReaderDKVP) processHandle(
 	eof := false
 	for !eof {
 		line, err := lineReader.ReadString('\n') // TODO: auto-detect
-		if err == io.EOF {
+		if lib.IsEOF(err) {
 			err = nil
 			eof = true
 		} else if err != nil {
-
-			// xxx fix
-			// xxx comment multiple places
-			// xxx do this only if this.readerOptions.Prepipe != ""
-			// xxx libify even that
-			if strings.Contains(err.Error(), "file already closed") {
-				err = nil
-				eof = true
-			} else {
-				errorChannel <- err
-			}
+			errorChannel <- err
 		} else {
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, "\n")
