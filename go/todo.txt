@@ -19,14 +19,6 @@ TOP OF LIST:
 
 ! get doc6 going sooner than later! lots accumulating ...
 
-* blocker: prepipe
-  ! olh re --gzin 1st, then prepipe afterward
-    - also suffix-inference
-  - n.b. brew install pigz, then pigz -z
-  k needs prepipe per se
-  - needs UT cases for non-pipe readers
-  - needs UT cases for pre-pipe readers
-
 * blockers:
   o markdown writer
   o --x2m iospecs
@@ -651,3 +643,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o local-alias suggestions
 * make an io.ReadCloser wrapper for bzip2
 * doc autodetect for .bz2/.gz/.z
+* zlib: n.b. brew install pigz, then pigz -z
