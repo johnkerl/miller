@@ -644,3 +644,4 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * make an io.ReadCloser wrapper for bzip2
 * doc autodetect for .bz2/.gz/.z
 * zlib: n.b. brew install pigz, then pigz -z
+* find a way to legitimize regtest/cases-non-windows for GHA
