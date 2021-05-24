@@ -180,11 +180,35 @@ func ParseReaderOptions(
 		// the command-line user experience.
 		argi += 1
 
-		//	} else if args[argi] == "--prepipe" {
-		//		CheckArgCount(args, argi, argc, 2);
-		//		readerOptions.prepipe = args[argi+1];
-		//		argi += 2;
-		//
+	} else if args[argi] == "--prepipe" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.Prepipe = args[argi+1]
+		argi += 2
+
+	} else if args[argi] == "--prepipe-gunzip" {
+		readerOptions.Prepipe = "gunzip"
+		argi += 1
+
+	} else if args[argi] == "--prepipe-zcat" {
+		readerOptions.Prepipe = "zcat"
+		argi += 1
+
+	} else if args[argi] == "--prepipe-bz2" {
+		readerOptions.Prepipe = "bz2"
+		argi += 1
+
+	} else if args[argi] == "--gzin" {
+		readerOptions.FileInputEncoding = lib.FileInputEncodingGzip
+		argi += 1
+
+	} else if args[argi] == "--zin" {
+		readerOptions.FileInputEncoding = lib.FileInputEncodingZlib
+		argi += 1
+
+	} else if args[argi] == "--bz2in" {
+		readerOptions.FileInputEncoding = lib.FileInputEncodingBzip2
+		argi += 1
+
 		//	} else if args[argi] == "--skip-comments" {
 		//		readerOptions.comment_string = DEFAULT_COMMENT_STRING;
 		//		readerOptions.comment_handling = SKIP_COMMENTS;

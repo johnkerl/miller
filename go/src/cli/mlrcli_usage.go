@@ -59,10 +59,10 @@ func mainUsageLong(o *os.File, argv0 string) {
 	mainUsageFormatConversionKeystrokeSaverOptions(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "COMPRESSED-DATA OPTIONS:\N");
-	//	mainUsageCompressedDataOptions(o, argv0);
-	//	fmt.Fprintf(o, "\n");
-	//
+	fmt.Fprintf(o, "COMPRESSED-DATA OPTIONS:\n")
+	mainUsageCompressedDataOptions(o, argv0)
+	fmt.Fprintf(o, "\n")
+
 	//	fmt.Fprintf(o, "SEPARATOR OPTIONS:\n");
 	//	mainUsageSeparatorOptions(o, argv0);
 	//	fmt.Fprintf(o, "\n");
@@ -364,25 +364,33 @@ func mainUsageFormatConversionKeystrokeSaverOptions(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "output only.\n")
 }
 
-//func mainUsageCompressedDataOptions(o *os.File, argv0 string) {
-//	fmt.Fprintf(o, "  --prepipe {command} This allows Miller to handle compressed inputs. You can do\n");
-//	fmt.Fprintf(o, "  without this for single input files, e.g. \"gunzip < myfile.csv.gz | %s ...\".\n",
-//		argv0);
-//	fmt.Fprintf(o, "  However, when multiple input files are present, between-file separations are\n");
-//	fmt.Fprintf(o, "  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can\n");
-//	fmt.Fprintf(o, "  specify an action to be taken on each input file. This pre-pipe command must\n");
-//	fmt.Fprintf(o, "  be able to read from standard input; it will be invoked with\n");
-//	fmt.Fprintf(o, "    {command} < {filename}.\n");
-//	fmt.Fprintf(o, "  Examples:\n");
-//	fmt.Fprintf(o, "    %s --prepipe 'gunzip'\n", argv0);
-//	fmt.Fprintf(o, "    %s --prepipe 'zcat -cf'\n", argv0);
-//	fmt.Fprintf(o, "    %s --prepipe 'xz -cd'\n", argv0);
-//	fmt.Fprintf(o, "    %s --prepipe cat\n", argv0);
-//	fmt.Fprintf(o, "  Note that this feature is quite general and is not limited to decompression\n");
-//	fmt.Fprintf(o, "  utilities. You can use it to apply per-file filters of your choice.\n");
-//	fmt.Fprintf(o, "  For output compression (or other) utilities, simply pipe the output:\n");
-//	fmt.Fprintf(o, "    %s ... | {your compression command}\n", argv0);
-//}
+// TODO: ---gzip --bz2in --zin as well
+func mainUsageCompressedDataOptions(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "  Decompression done within the Miller process itself:\n")
+	fmt.Fprintf(o, "  --gzin  Uncompress gzip within the Miller process. Done by default if file ends in \".gz\".\n")
+	fmt.Fprintf(o, "  --bz2in Uncompress bz2ip within the Miller process. Done by default if file ends in \".bz2\".\n")
+	fmt.Fprintf(o, "  --zin   Uncompress zlib within the Miller process. Done by default if file ends in \".z\".\n")
+	fmt.Fprintf(o, "  Decompression done outside the Miller processn")
+	fmt.Fprintf(o, "  --prepipe {command} You can, of course, already do without this for single input files,\n")
+	fmt.Fprintf(o, "  e.g. \"gunzip < myfile.csv.gz | %s ...\".\n", argv0)
+	fmt.Fprintf(o, "  However, when multiple input files are present, between-file separations are\n")
+	fmt.Fprintf(o, "  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can\n")
+	fmt.Fprintf(o, "  specify an action to be taken on each input file. This prepipe command must\n")
+	fmt.Fprintf(o, "  be able to read from standard input; it will be invoked with\n")
+	fmt.Fprintf(o, "    {command} < {filename}.\n")
+	fmt.Fprintf(o, "  Examples:\n")
+	fmt.Fprintf(o, "    %s --prepipe 'gunzip'\n", argv0)
+	fmt.Fprintf(o, "    %s --prepipe 'zcat -cf'\n", argv0)
+	fmt.Fprintf(o, "    %s --prepipe 'xz -cd'\n", argv0)
+	fmt.Fprintf(o, "    %s --prepipe cat\n", argv0)
+	fmt.Fprintf(o, "  Note that this feature is quite general and is not limited to decompression\n")
+	fmt.Fprintf(o, "  utilities. You can use it to apply per-file filters of your choice.\n")
+	fmt.Fprintf(o, "  For output compression (or other) utilities, simply pipe the output:\n")
+	fmt.Fprintf(o, "    %s ... | {your compression command}\n", argv0)
+	fmt.Fprintf(o, "  Lastly, note that if --prepipe is specified, it replaces any decisions that might\n")
+	fmt.Fprintf(o, "  have been made based on the file suffix. Also, --gzin/--bz2in/--zin are ignored\n")
+	fmt.Fprintf(o, "  if --prepipe is also specified.\n")
+}
 
 //func mainUsageSeparatorOptions(o *os.File, argv0 string) {
 //	fmt.Fprintf(o, "  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'\n");

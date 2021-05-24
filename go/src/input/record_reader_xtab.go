@@ -5,11 +5,11 @@ import (
 	"container/list"
 	"errors"
 	"io"
-	"os"
 	"regexp"
 	"strings"
 
 	"miller/src/cliutil"
+	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -44,11 +44,21 @@ func (this *RecordReaderXTAB) Read(
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
-			handle := os.Stdin
+			handle, err := lib.OpenStdin(
+				this.readerOptions.Prepipe,
+				this.readerOptions.FileInputEncoding,
+			)
+			if err != nil {
+				errorChannel <- err
+			}
 			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 		} else {
 			for _, filename := range filenames {
-				handle, err := os.Open(filename)
+				handle, err := lib.OpenFileForRead(
+					filename,
+					this.readerOptions.Prepipe,
+					this.readerOptions.FileInputEncoding,
+				)
 				if err != nil {
 					errorChannel <- err
 				} else {
@@ -62,7 +72,7 @@ func (this *RecordReaderXTAB) Read(
 }
 
 func (this *RecordReaderXTAB) processHandle(
-	handle *os.File,
+	handle io.Reader,
 	filename string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
@@ -77,7 +87,7 @@ func (this *RecordReaderXTAB) processHandle(
 	eof := false
 	for !eof {
 		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
-		if err == io.EOF {
+		if lib.IsEOF(err) {
 			err = nil
 			eof = true
 

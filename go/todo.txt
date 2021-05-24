@@ -17,6 +17,12 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 
+! get doc6 going sooner than later! lots accumulating ...
+
+* blockers:
+  o markdown writer
+  o --x2m iospecs
+
 * blockers:
   o fix emit
 
@@ -41,7 +47,9 @@ TOP OF LIST:
   o system
   o regextract regextract_or_else
 
-! blocker: localtime functions
+* blocker: comment-handling
+
+* blocker: localtime functions
 
 * strptime w/ ...00.Z -> error
 * strptime/strftime experiments ...
@@ -66,9 +74,6 @@ TOP OF LIST:
   - no other callsites?!?!?!
   - note hexfmt for non-ints -- especially floats -- ?!?
 
-* blocker: prepipe
-  - gzin; bz2in ...
-
 * blocker: misctests
   ? wut
     mlr --from regtest/input/s.dkvp put -q 'begin{@sum=[0m0]} @sum[1+NR%2] += $i; end{dump}'
@@ -78,10 +83,18 @@ TOP OF LIST:
 ----------------------------------------------------------------
 * non-blocker: commenting passes ...
 
+* future:
+  - separate out InputFormat into per-file & have autodetect on file endings -- ?
+
 * non-blocker: new functions:
   o new columns-to-arrays and arrays-to-columns for stan format
 
 * non-blocker: smarter head-stop etc https://github.com/johnkerl/miller/issues/291
+
+? gzout, bz2out -- ? make sure this works through tee? bleah ...
+? zip -- but that is an archive case too not just an encoding case
+  ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
+  ? as 6.1 follow-on work -- ?
 
 ----------------------------------------------------------------
 
@@ -628,3 +641,7 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * OLH re no --prepipe and --load/--mload in .mlrrc for vulnerability avoidance
   o --prepipe-foo
   o local-alias suggestions
+* make an io.ReadCloser wrapper for bzip2
+* doc autodetect for .bz2/.gz/.z
+* zlib: n.b. brew install pigz, then pigz -z
+* find a way to legitimize regtest/cases-non-windows for GHA

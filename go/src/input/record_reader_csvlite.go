@@ -23,7 +23,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 	"strconv"
 	"strings"
 
@@ -80,7 +79,13 @@ func (this *RecordReaderCSVLite) Read(
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
-			handle := os.Stdin
+			handle, err := lib.OpenStdin(
+				this.readerOptions.Prepipe,
+				this.readerOptions.FileInputEncoding,
+			)
+			if err != nil {
+				errorChannel <- err
+			}
 			if this.readerOptions.UseImplicitCSVHeader {
 				this.processHandleImplicitCSVHeader(
 					handle,
@@ -100,7 +105,11 @@ func (this *RecordReaderCSVLite) Read(
 			}
 		} else {
 			for _, filename := range filenames {
-				handle, err := os.Open(filename)
+				handle, err := lib.OpenFileForRead(
+					filename,
+					this.readerOptions.Prepipe,
+					this.readerOptions.FileInputEncoding,
+				)
 				if err != nil {
 					errorChannel <- err
 				} else {
@@ -131,7 +140,7 @@ func (this *RecordReaderCSVLite) Read(
 
 // ----------------------------------------------------------------
 func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
-	handle *os.File,
+	handle io.Reader,
 	filename string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
@@ -146,7 +155,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	eof := false
 	for !eof {
 		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
-		if err == io.EOF {
+		if lib.IsEOF(err) {
 			err = nil
 			eof = true
 		} else if err != nil {
@@ -228,7 +237,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 
 // ----------------------------------------------------------------
 func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
-	handle *os.File,
+	handle io.Reader,
 	filename string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
@@ -243,7 +252,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	eof := false
 	for !eof {
 		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
-		if err == io.EOF {
+		if lib.IsEOF(err) {
 			err = nil
 			eof = true
 		} else if err != nil {
