@@ -14,6 +14,8 @@ func Create(writerOptions *cliutil.TWriterOptions) IRecordWriter {
 		return NewRecordWriterDKVP(writerOptions)
 	case "json":
 		return NewRecordWriterJSON(writerOptions)
+	case "markdown":
+		return NewRecordWriterMarkdown(writerOptions)
 	case "nidx":
 		return NewRecordWriterNIDX(writerOptions)
 	case "pprint":

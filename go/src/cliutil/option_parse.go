@@ -356,10 +356,10 @@ func ParseWriterOptions(
 		writerOptions.ORS = USV_RS
 		argi += 1
 
-		//	} else if args[argi] == "--omd" {
-		//		writerOptions.OutputFileFormat = "markdown";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--omd" {
+		writerOptions.OutputFileFormat = "markdown"
+		argi += 1
+
 	} else if args[argi] == "--odkvp" {
 		writerOptions.OutputFileFormat = "dkvp"
 		argi += 1
@@ -605,12 +605,12 @@ func ParseReaderWriterOptions(
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "xtab"
 		argi += 1
-		//	} else if args[argi] == "--c2m" {
-		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.IRS       = "auto";
-		//		writerOptions.OutputFileFormat = "markdown";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--c2m" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "markdown"
+		argi += 1
+
 	} else if args[argi] == "--t2c" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
@@ -656,13 +656,13 @@ func ParseReaderWriterOptions(
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "xtab"
 		argi += 1
-		//	} else if args[argi] == "--t2m" {
-		//		readerOptions.InputFileFormat = "csv";
-		//		readerOptions.IFS       = "\t";
-		//		readerOptions.IRS       = "auto";
-		//		writerOptions.OutputFileFormat = "markdown";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--t2m" {
+		readerOptions.InputFileFormat = "csv"
+		readerOptions.IFS = "\t"
+		readerOptions.IRS = "auto"
+		writerOptions.OutputFileFormat = "markdown"
+		argi += 1
+
 	} else if args[argi] == "--d2c" {
 		readerOptions.InputFileFormat = "dkvp"
 		writerOptions.OutputFileFormat = "csv"
@@ -696,11 +696,11 @@ func ParseReaderWriterOptions(
 		readerOptions.InputFileFormat = "dkvp"
 		writerOptions.OutputFileFormat = "xtab"
 		argi += 1
-		//	} else if args[argi] == "--d2m" {
-		//		readerOptions.InputFileFormat = "dkvp";
-		//		writerOptions.OutputFileFormat = "markdown";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--d2m" {
+		readerOptions.InputFileFormat = "dkvp"
+		writerOptions.OutputFileFormat = "markdown"
+		argi += 1
+
 	} else if args[argi] == "--n2c" {
 		readerOptions.InputFileFormat = "nidx"
 		writerOptions.OutputFileFormat = "csv"
@@ -734,11 +734,11 @@ func ParseReaderWriterOptions(
 		readerOptions.InputFileFormat = "nidx"
 		writerOptions.OutputFileFormat = "xtab"
 		argi += 1
-		//	} else if args[argi] == "--n2m" {
-		//		readerOptions.InputFileFormat = "nidx";
-		//		writerOptions.OutputFileFormat = "markdown";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--n2m" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "markdown"
+		argi += 1
+
 	} else if args[argi] == "--j2c" {
 		readerOptions.InputFileFormat = "json"
 		writerOptions.OutputFileFormat = "csv"
@@ -771,11 +771,11 @@ func ParseReaderWriterOptions(
 		readerOptions.InputFileFormat = "json"
 		writerOptions.OutputFileFormat = "xtab"
 		argi += 1
-		//	} else if args[argi] == "--j2m" {
-		//		readerOptions.InputFileFormat = "json";
-		//		writerOptions.OutputFileFormat = "markdown";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--j2m" {
+		readerOptions.InputFileFormat = "json"
+		writerOptions.OutputFileFormat = "markdown"
+		argi += 1
+
 	} else if args[argi] == "--p2c" {
 		readerOptions.InputFileFormat = "pprint"
 		readerOptions.IFS = " "
@@ -809,12 +809,12 @@ func ParseReaderWriterOptions(
 		readerOptions.IFS = " "
 		writerOptions.OutputFileFormat = "xtab"
 		argi += 1
-		//	} else if args[argi] == "--p2m" {
-		//		readerOptions.InputFileFormat        = "pprint";
-		//		readerOptions.IFS              = " ";
-		//		writerOptions.OutputFileFormat        = "markdown";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--p2m" {
+		readerOptions.InputFileFormat = "pprint"
+		readerOptions.IFS = " "
+		writerOptions.OutputFileFormat = "markdown"
+		argi += 1
+
 	} else if args[argi] == "--x2c" {
 		readerOptions.InputFileFormat = "xtab"
 		writerOptions.OutputFileFormat = "csv"
@@ -847,11 +847,11 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "pprint"
 		writerOptions.BarredPprintOutput = true
 		argi += 1
-		//	} else if args[argi] == "--x2m" {
-		//		readerOptions.InputFileFormat = "xtab";
-		//		writerOptions.OutputFileFormat = "markdown";
-		//		argi += 1;
-		//
+	} else if args[argi] == "--x2m" {
+		readerOptions.InputFileFormat = "xtab"
+		writerOptions.OutputFileFormat = "markdown"
+		argi += 1
+
 	} else if args[argi] == "-N" {
 		readerOptions.UseImplicitCSVHeader = true
 		writerOptions.HeaderlessCSVOutput = true
