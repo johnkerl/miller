@@ -16,7 +16,7 @@ but it can also do format conversion (here, you can pretty-print in tabular form
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint cat example.csv}}HERE
 
-``mlr head`` and ``mlr tail`` count records rather than lines. Whethere you're getting the first few records or the last few, the CSV header is included either way::
+``mlr head`` and ``mlr tail`` count records rather than lines. Whether you're getting the first few records or the last few, the CSV header is included either way::
 
 POKI_RUN_COMMAND{{mlr --csv head -n 4 example.csv}}HERE
 
@@ -66,10 +66,6 @@ JSON-file examples
 OK, CSV and pretty-print are fine. But Miller can also convert between a few other formats -- let's take a look at JSON output::
 
 POKI_RUN_COMMAND{{mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv}}HERE
-
-Or, JSON output with vertical-formatting flags::
-
-POKI_RUN_COMMAND{{mlr --icsv --ojson tail -n 2 example.csv}}HERE
 
 Sorts and stats
 ^^^^^^^^^^^^^^^

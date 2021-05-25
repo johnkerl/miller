@@ -40,6 +40,8 @@ What you can put in your .mlrrc
 
 * You can include any command-line flags, except the "terminal" ones such as ``--help``.
 
+* The ``--prepipe``, ``--load``, and ``--mload`` flags aren't allowed in ``.mlrrc`` as they control code execution, and could result in your scripts running things you don't expect if you receive data from someone with a ``.mlrrc`` in it.
+
 * The formatting rule is you need to put one flag beginning with ``--`` per line: for example, ``--csv`` on one line and ``--nr-progress-mod 1000`` on a separate line.
 
 * Since every line starts with a ``--`` option, you can leave off the initial ``--`` if you want. For example, ``ojson`` is the same as ``--ojson``, and ``nr-progress-mod 1000`` is the same as ``--nr-progress-mod 1000``.

@@ -4,7 +4,11 @@ set -euo pipefail
 
 # Use poki to run the live-code bits within the markup files. See README.md for details.
 
-names=$(echo *.rst.in | sed 's/\.rst\.in//g')
+if [ $# -ge 1 ]; then
+  names="$@"
+else
+  names=$(echo *.rst.in | sed 's/\.rst\.in//g')
+fi
 
 for name in $names; do
   echo BUILDING $name

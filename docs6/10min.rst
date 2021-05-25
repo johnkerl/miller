@@ -52,7 +52,7 @@ but it can also do format conversion (here, you can pretty-print in tabular form
     yellow circle   1    87    63.5058  8.3350
     purple square   0    91    72.3735  8.2430
 
-``mlr head`` and ``mlr tail`` count records rather than lines. Whethere you're getting the first few records or the last few, the CSV header is included either way::
+``mlr head`` and ``mlr tail`` count records rather than lines. Whether you're getting the first few records or the last few, the CSV header is included either way::
 
     $ mlr --csv head -n 4 example.csv
     color,shape,flag,index,quantity,rate
@@ -207,12 +207,6 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     { "color": "yellow", "shape": "CIRCLE", "flag": 1, "index": 73, "quantity": 63.9785, "rate": 4.2370, "ratio": 15.099953 }
     { "color": "yellow", "shape": "CIRCLE", "flag": 1, "index": 87, "quantity": 63.5058, "rate": 8.3350, "ratio": 7.619172 }
     { "color": "purple", "shape": "SQUARE", "flag": 0, "index": 91, "quantity": 72.3735, "rate": 8.2430, "ratio": 8.779995 }
-
-Or, JSON output with vertical-formatting flags::
-
-    $ mlr --icsv --ojson tail -n 2 example.csv
-    { "color": "yellow", "shape": "circle", "flag": 1, "index": 87, "quantity": 63.5058, "rate": 8.3350 }
-    { "color": "purple", "shape": "square", "flag": 0, "index": 91, "quantity": 72.3735, "rate": 8.2430 }
 
 Sorts and stats
 ^^^^^^^^^^^^^^^
