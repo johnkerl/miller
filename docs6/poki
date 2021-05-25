@@ -1,0 +1,104 @@
+#!/usr/bin/env ruby
+
+$us = File.basename $0
+
+require 'getoptlong'
+require 'fileutils'
+require 'json'
+
+# ----------------------------------------------------------------
+# This is used to run live code for Miller Sphinx docs.
+# * Edit foo.rst.in
+# * Run this script to generate foo.rst
+# * The caller should chmod 400 the foo.rst file
+# * See README.md for more information.
+
+def main
+  input_handle = $stdin
+  output_handle = $stdout
+
+  output_handle.puts("..")
+  output_handle.puts("    PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.")
+  output_handle.puts("")
+
+  input_handle.readlines.each do |content_line|
+
+    if content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
+      included_file_name = $1
+      include_escaped(included_file_name, output_handle)
+
+    elsif content_line =~ /POKI_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)HERE/
+      included_file_name = $1
+      cmd = File.readlines(included_file_name).join('')
+      run_command(cmd, output_handle)
+
+    elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)HERE/
+      cmd = $1
+      run_content_generator(cmd, output_handle)
+
+    elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
+       cmd = $1
+       run_command(cmd, output_handle)
+
+    elsif content_line =~ /POKI_RUN_COMMAND_TOLERATING_ERROR{{(.+)}}HERE/
+      cmd = $1
+      run_command_tolerating_error(cmd, output_handle)
+
+    elsif content_line =~ /POKI/
+      #raise "Unhandled poki line #{content_line}"
+      $stderr.puts "Unhandled poki line <<#{content_line}>>"
+      output_handle.write(content_line)
+    else
+      output_handle.write(content_line)
+    end
+  end
+end
+
+# ----------------------------------------------------------------
+def include_escaped(included_file_name, output_handle)
+  write_card(File.readlines(included_file_name), output_handle)
+end
+
+# ----------------------------------------------------------------
+def run_command(cmd, output_handle)
+  cmd_output = `#{cmd} 2>&1`
+  status = $?.to_i
+  if status != 0
+    raise "\"#{cmd}\" exited with non-zero code #{status}."
+  end
+  # The command can be multi-line
+  cmd_lines = cmd.split(/\n/)
+  cmd_line_1 = cmd_lines.shift
+  write_card(['$ '+cmd_line_1] + cmd_lines + cmd_output.split(/\n/), output_handle)
+end
+
+# ----------------------------------------------------------------
+def run_command_tolerating_error(cmd, output_handle)
+  cmd_output = `#{cmd} 2>&1`
+  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
+end
+
+# ----------------------------------------------------------------
+def run_content_generator(cmd, output_handle)
+  cmd_output = `#{cmd} 2>&1`
+  status = $?.to_i
+  if status != 0
+    raise "\"#{cmd}\" exited with non-zero code #{status}."
+  end
+  output_handle.puts(cmd_output)
+end
+
+# ----------------------------------------------------------------
+def write_card(content_lines, output_handle)
+  content_lines.each do |content_line|
+    # The callsite should do the "::", blank line, then this, then blank line
+    # in order to adhere to Sphinx code-block syntax. (Another option would be
+    # us here doing the ::, blank line, , then the content line, then the other
+    # blank line.)
+    output_handle.write('    ') # four leading spaces for Sphinx, on each line
+    output_handle.puts(content_line)
+  end
+end
+
+# ================================================================
+main()

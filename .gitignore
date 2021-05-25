@@ -82,6 +82,7 @@ push2
 data/.gitignore
 
 docs/_build
+docs6/_build
 
 c/mlr.static
 miller-*.src.rpm

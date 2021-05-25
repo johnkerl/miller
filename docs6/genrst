@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Use poki to run the live-code bits within the markup files. See README.md for details.
+
+if [ $# -ge 1 ]; then
+  names="$@"
+  names=$(echo "$names" | sed 's/\.rst\.in//g')
+else
+  names=$(echo *.rst.in | sed 's/\.rst\.in//g')
+fi
+
+for name in $names; do
+  echo BUILDING $name
+  if [ -f $name.rst ]; then # Won't exist yet on first run
+    chmod u+w $name.rst
+  fi
+  poki < $name.rst.in > $name.rst
+  chmod 400 $name.rst
+done

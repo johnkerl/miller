@@ -18,10 +18,27 @@ TOP OF LIST:
 ----------------------------------------------------------------
 
 ! get doc6 going sooner than later! lots accumulating ...
+  o big:
+    ? quick-examples needs fewer inputs, and outputs for all retained inputs
+      ? or q-e more links to 10min
+    ! thruout pitch the docs at primarily the first whenever possible:
+      - ruby-level user w/o heavy sysadm
+      - sysadm w/o dev
+        > do not assume people know awk! XD
+      - devs
+    - in that vein re-think the faq -- split up, and/or move down
+    - likewise cookbook2/3 -- overly nerdy; perhaps just annoying
+    - re-work data-sharing <-> SQL ...
+  o little:
+    - unset multiple lvalues in the BNF
+    - list at end of todo.txt
+
+* blocker: jsonx back-compat
 
 * blockers:
   o markdown writer
   o --x2m iospecs
+  o file-formats: colon -> dot
 
 * blockers:
   o fix emit
@@ -358,14 +375,13 @@ NITS/NON-IMMEDIATE:
 * record-readers are fully in-channel/loop; record-writers are multi with in-channel/loop being
   done by ChannelWriter, which is very small. opportunity to refactor.
 * address all manner of xxx and TODO comments
+
+----------------------------------------------------------------
+TBF:
 * throughout -- 'map' used too much -- 'mapping/mapper' -> 'transform' or something?
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
-* mlr --help-for w/ stdout redirect for manpage -- ?
 * mlr verb -h -> stdout & exit 0
 * cst printer with reflect.TypeOf -- ?
-* godoc ...
-* mlrdoc false && 4, true || 4 because of short-circuiting requirement
-* update whyc.html with efficiency notes from go/README.md
 ? makefile for build-dsl: if $bnf newer than productionstable.go
 * I/O perf delta between C & Go is smaller for CSV, middle for DKVP, large for JSON -- debug
 * neaten/error-proof:
@@ -374,7 +390,6 @@ NITS/NON-IMMEDIATE:
   o inrec *types.Mlrmap is good for default no-copy across channels ... needs
     a big red flag though for things like the repeat verb (maybe *only* that one ...)
 ! clean up the AST API. ish! :^/
-* doc: no boolish truthy falsy
 * json:
   d thorough UT for json mlrval-parser including various expect-fail error cases
   d doc re no jlistwrap on input if they want get streaming input
@@ -391,52 +406,35 @@ NITS/NON-IMMEDIATE:
 ? dsl/ast.go -> parsing/ast.go? then, put new-ast ctor -> parsing package
   o if so, update r.mds
 * keep or get rid of $[[[ ]]] ... ?
-* 1-up note from mlrval_collections -> doc6
-  o substr -- not backward-compatible
-  o example of key-stringify to get truly awkish associative-array behavior
-  o also $1 vs $[1] -- the former 'sticks' with input-data ordering.
-  o moral: miller is a name-indexed tool as its primary purpose. positional
-    indexing is supported but it can be confusing.
-* mlrdoc: there should have always been a >>> and >>>=, and now there are
 ! head early-out -- cite the relevant issue & fix the right way ...
 * relnotes: label b,i,x vs x,i,b change
-* doc note 'array' is now a keyword
 * dump is now redundant? print @*
 * double-check dump CR-terminators depending on expression type
 * good example of wording for why/when to make a breaking release:
   https://webpack.js.org/blog/2020-10-10-webpack-5-release/
 * unset, unassign, remove -- too many different names. also assign/put ... maybe stick w/ 2?
 * make truncate() UTF8-friendly
-* document array-unset as shiftback
-! error if UDF has same name as built-in
 * huge commenting pass
 * profile mlr sort
 * go exe 17MB, wut. try to discover. (gocc presumably but verify.)
 * fill-down make columns required. also, --all.
 * check triple-dash at mlr fill-down-h ; check others
-* doc that multi-arg print interleaves spaces; they can strcat to avoid
 * clean up unused exitCode arg in sort/put usage.
   o also document pre/post conditions for flag and non-flag usages x all mappers
 * need to fix up ;; and start-with-; handling in the grammar so multiple put -f/-e work right :^/
 ? emit @x or emit x -- should make k/v pairs w/ "x" & value -- ? check against C impl
 i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older (emitp 3.5.0).
   if i were starting clean-slate, i'd have had just a single `emit`.
-* doc one-variable for is over keys for maps, elements for arrays
 * asserting_{type}: os.Exit(1) -> return nil, err flow?
 * test put/filter w/ various combinations of -s/-e/-f
-* more text examples in mlr-put doc
 * mt_void keep-or-not .......
   o check dispo matrices
   o if keep, need careful MT_VOID at from-string constructor -- ? or not ?
   o comment clearly regardless
-* window.mlr, window2.mlr -> doc somewhere
 * bitwise_and_dispositions et al should not have _absn for collections -- _erro instead
 * fmtnum: auto-replace %l_, %ll_ -> no l/ll for backwards compatibility, and comment accordingly
-* mlrdoc for new go-only verbs
 * ast-parex separate mlr auxents entrypoint?
 * port u/window*.mlr from mlrc to mlrgo (actually, fix mlrgo of course)
-* doc: substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290.
-  o xref to 1-up note.
 * line/column caret at parse-error messages -- would require some GOCC refactoring
   in order to get the full DSL string and the line/number info into the same method
 * csvlite rd/wr: comment for USV/ASV too. no need for escaping then.
@@ -448,9 +446,6 @@ i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older
   o intended as a heterogenity feature ...
   o consider a --errors or --strict mode; something
 * note about non-determinism for DSL print/dump vs record output-stream now ...
-* mlrdoc the ?? and ??? operators
-* document --jvstack is now the default; --no-jvstack
-* doc about put -S/-F cannot make sense anymore
 * put/filter updates:
   o filter statement needn't come last anymore: '$u = 1; NR > 5; $v = 2'
   o put 'NR > 3' and put 'filter NR > 3' are the same.
@@ -465,7 +460,6 @@ i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older
   o ....
   o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
 i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
-* doc: string index/slice access on RHS
 * substr(7,5) -- "" or error?
 * write up re auto-deepen logic -- foo[NR] -- should create a map not an array unless already array
   o idea is arrays are created with explicit array literals, then extended as such
@@ -497,9 +491,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   o export GOPATH=$(pwd); godoc -http=:6060
     http://localhost:6060/pkg/miller/
 
-* x flagSet. can't be supported everywhere, so don't confuse the user by
-  supporting it some places and not others.
-
 * maybe split Context into varying & non-varying -- separate structs entirely
 
 * idea: records as mlrmap -> mlrval?
@@ -517,36 +508,12 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   > also needs UT per se (not just regression)
 * cli-doc --no-auto-flatten and --no-auto-unflatten
 * note (fix? doc?) flatten of '$x={}' expands to nothing. not invertible.
-* doc: --jvquoteall --jknquoteint no-ops
-* back-incompat:
-  mlr -n put $vflag '@x=1; dump > stdout, @x'
-  mlr -n put $vflag '@x=1; dump > stdout @x'
 * parex print regtest -- what about new ast-node types?
 * all case-files could use top-notes
-* doc-note: 'emit > stdout, @foo' and 'emit @foo' are not the same:
-  o the former allows put --oxxx
-  o the former is not necessarily in sync with the output record stream
 * dev-note on why `int` not `int64` -- processor-arch & those who most need it get it
-* document tee -p
 * doc auto-flatten/auto-unflatten -- incl narrative from mlrcli_parse.go
 * doc6: default flatsep is now "." not ":" in keeping with JSON culture
 ? allow [[...]] / [[[...]]] at assignment LHS
-
-* why no flagSet:
-
-	Unlike other transformers, we can't use flagSet here. The syntax of 'mlr
-	sort' is it needs to take things like 'mlr sort -f a -n b -n c', i.e.
-	first sort lexically on field a, then numerically on field b, then
-	lexically on field c. The flagSet API would let the '-f c' clobber the
-	'-f a', while we want both.
-
-	Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
-	and 'mlr filter' is they need to be able to take -f and/or -e more than
-	once, and Go flags can't handle that.
-
-* doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.
-* doc re two-arg flatten
-* doc md5/sha1/sha256/sha512
 
 * readeropts/writeropts/readerwriteropts -> cliutil funcs
   o then put into join.go, put.go, & repl
@@ -615,9 +582,81 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * port format-specific default separators from C. E.g. NIDX's IFS should default to space.
 * 0035.cmd
   begin{@x=1} func f(x) { dump; print "hello"; tee  > ENV["outdir"]."/udf-x", $* } $o=f($i)
+? ENV as entire string-string map at RHS/LHS -- ?
+
+* OLH re no --prepipe and --load/--mload in .mlrrc for vulnerability avoidance
+  o --prepipe-foo
+  o local-alias suggestions
+* make an io.ReadCloser wrapper for bzip2
+* zlib: n.b. brew install pigz, then pigz -z
+* find a way to legitimize regtest/cases-non-windows for GHA
+
+----------------------------------------------------------------
+DOC6:
+
+* mlr --help-for w/ stdout redirect for manpage -- ?
+* godoc ...
+* mlrdoc false && 4, true || 4 because of short-circuiting requirement
+* doc: no boolish truthy falsy
+* 1-up note from mlrval_collections -> doc6
+  o substr -- not backward-compatible
+  o example of key-stringify to get truly awkish associative-array behavior
+  o also $1 vs $[1] -- the former 'sticks' with input-data ordering.
+  o moral: miller is a name-indexed tool as its primary purpose. positional
+    indexing is supported but it can be confusing.
+* mlrdoc: there should have always been a >>> and >>>=, and now there are
+* doc note 'array' is now a keyword
+* document array-unset as shiftback
+* error if UDF has same name as built-in
+* doc that multi-arg print interleaves spaces; they can strcat to avoid
+* doc one-variable for is over keys for maps, elements for arrays
+* more text examples in mlr-put doc
+* window.mlr, window2.mlr -> doc somewhere
+* mlrdoc for new go-only verbs
+* doc: substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290.
+  o xref to 1-up note.
+* mlrdoc the ?? and ??? operators
+* document --jvstack is now the default; --no-jvstack
+* doc about put -S/-F cannot make sense anymore
+* doc: string index/slice access on RHS
+* why not flagSet. can't be supported everywhere, so don't confuse the user by
+  supporting it some places and not others.
+* doc: --jvquoteall --jknquoteint no-ops
+* back-incompat:
+  mlr -n put $vflag '@x=1; dump > stdout, @x'
+  mlr -n put $vflag '@x=1; dump > stdout @x'
+
+* doc-note: 'emit > stdout, @foo' and 'emit @foo' are not the same:
+  o the former allows put --oxxx
+  o the former is not necessarily in sync with the output record stream
+* document tee -p
+
+* why no flagSet:
+
+	Unlike other transformers, we can't use flagSet here. The syntax of 'mlr
+	sort' is it needs to take things like 'mlr sort -f a -n b -n c', i.e.
+	first sort lexically on field a, then numerically on field b, then
+	lexically on field c. The flagSet API would let the '-f c' clobber the
+	'-f a', while we want both.
+
+	Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
+	and 'mlr filter' is they need to be able to take -f and/or -e more than
+	once, and Go flags can't handle that.
+
+* doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.
+* doc re two-arg flatten
+* doc md5/sha1/sha256/sha512
+* doc autodetect for .bz2/.gz/.z
+* sec2gmt --millis/--micros/--nanos doc
+* doc --mfrom
+* sort-within-records --recursive doc
+* doc re --load/--mload at mlrmain & repl
+* doc re put -f dirname will load dirname/*.mlr
+  mlr --opprint --from foo.dat --load u/stdlib/ put '$f=fibo($i); $g=factorial($i)'
+  mlr --opprint --from foo.dat put -f u/stdlib/ -e '$f=fibo($i); $g=factorial($i)'
+
 * docs nest simplers now that we have getoptish
 * doc for DSL hostname/os/version functions
-? ENV as entire string-string map at RHS/LHS -- ?
 * mongo examples to doc :D
 * doc for array auto-extend:
   - fill with absent is not ok
@@ -631,17 +670,3 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
       should make the sum non-numeric."
   - use JSON null here
   - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
-* sec2gmt --millis/--micros/--nanos doc
-* doc --mfrom
-* sort-within-records --recursive doc
-* doc re --load/--mload at mlrmain & repl
-* doc re put -f dirname will load dirname/*.mlr
-  mlr --opprint --from foo.dat --load u/stdlib/ put '$f=fibo($i); $g=factorial($i)'
-  mlr --opprint --from foo.dat put -f u/stdlib/ -e '$f=fibo($i); $g=factorial($i)'
-* OLH re no --prepipe and --load/--mload in .mlrrc for vulnerability avoidance
-  o --prepipe-foo
-  o local-alias suggestions
-* make an io.ReadCloser wrapper for bzip2
-* doc autodetect for .bz2/.gz/.z
-* zlib: n.b. brew install pigz, then pigz -z
-* find a way to legitimize regtest/cases-non-windows for GHA

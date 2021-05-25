@@ -376,9 +376,9 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		//	} else if args[argi] == "--usage-functions" {
 		//		mainUsageFunctions(os.Stdout, lib.MlrExeName(), "");
 		//		return true;
-		//	} else if args[argi] == "--usage-data-format-examples" {
+	} else if args[argi] == "--usage-data-format-examples" {
 		mainUsageDataFormatExamples(os.Stdout, lib.MlrExeName())
-		//		return true;
+		return true
 	} else if args[argi] == "--usage-data-format-options" {
 		mainUsageDataFormatOptions(os.Stdout, lib.MlrExeName())
 		return true

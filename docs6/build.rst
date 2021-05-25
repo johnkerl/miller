@@ -1,0 +1,131 @@
+..
+    PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
+
+Building from source
+================================================================
+
+Please also see :doc:`install` for information about pre-built executables.
+
+Miller license
+----------------------------------------------------------------
+
+Two-clause BSD license https://github.com/johnkerl/miller/blob/master/LICENSE.txt.
+
+From release tarball
+----------------------------------------------------------------
+
+* Obtain ``mlr-i.j.k.tar.gz`` from https://github.com/johnkerl/miller/tags, replacing ``i.j.k`` with the desired release, e.g. ``2.2.1``.
+* ``tar zxvf mlr-i.j.k.tar.gz``
+* ``cd mlr-i.j.k``
+* Install the following packages using your system's package manager (``apt-get``, ``yum install``, etc.): **flex**
+* Various configuration options of your choice, e.g.
+
+  * ``./configure``
+  * ``./configure --prefix=/usr/local``
+  * ``./configure --prefix=$HOME/pkgs``
+  * ``./configure CC=clang``
+  * ``./configure --disable-shared`` (to make a statically linked executable)
+  * ``./configure 'CFLAGS=-Wall -std=gnu99 -O3'``
+  * etc.
+
+* ``make`` creates the ``c/mlr`` executable
+* ``make check``
+* ``make install`` copies the ``c/mlr`` executable to your prefix's ``bin`` subdirectory.
+
+From git clone
+----------------------------------------------------------------
+
+* ``git clone https://github.com/johnkerl/miller``
+* ``cd miller/go``
+* ``./build``
+
+In case of problems
+----------------------------------------------------------------
+
+If you have any build errors, feel free to contact me at mailto:kerl.john.r+miller@gmail.com -- or, better, open an issue with "New Issue" at https://github.com/johnkerl/miller/issues.
+
+Dependencies
+----------------------------------------------------------------
+
+Required external dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+These are necessary to produce the ``mlr`` executable.
+
+* Go version 1.16 or higher
+
+Optional external dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This documentation pageset is built using Sphinx. Please see `./README.md` for details.
+
+Creating a new release: for developers
+----------------------------------------------------------------
+
+At present I'm the primary developer so this is just my checklist for making new releases.
+
+In this example I am using version 3.4.0; of course that will change for subsequent revisions.
+
+* Update version found in ``mlr --version`` and ``man mlr``:
+
+  * Edit ``configure.ac``, ``c/mlrvers.h``, ``miller.spec``, and ``docs/conf.py`` from ``3.3.2-dev`` to ``3.4.0``.
+  * Do a fresh ``autoreconf -fiv`` and commit the output. (Preferably on a Linux host, rather than MacOS, to reduce needless diffs in autogen build files.)
+  * ``make -C c -f Makefile.no-autoconfig installhome && make -C man -f Makefile.no-autoconfig installhome && make -C docs -f Makefile.no-autoconfig html``
+  * The ordering is important: the first build creates ``mlr``; the second runs ``mlr`` to create ``manpage.txt``; the third includes ``manpage.txt`` into one of its outputs.
+  * Commit and push.
+
+* Create the release tarball and SRPM:
+
+  * On buildbox: ``./configure && make distcheck``
+  * On buildbox: make SRPM as in https://github.com/johnkerl/miller/blob/master/README-RPM.md
+  * On all buildboxes: ``cd c`` and ``make -f Makefile.no-autoconfig mlr.static``. Then copy ``mlr.static`` to ``../mlr.{arch}``. (This may require as prerequisite ``sudo yum install glibc-static`` or the like.)
+  * For static binaries, please do ``ldd mlr.static`` and make sure it says ``not a dynamic executable``.
+  * Then ``mv mlr.static ../mlr.linux_x86_64``
+  * Pull back release tarball ``mlr-3.4.0.tar.gz`` and SRPM ``miller-3.4.0-1.el6.src.rpm`` from buildbox, and ``mlr.{arch}`` binaries from whatever buildboxes.
+  * Download ``mlr.exe`` and ``msys-2.0.dll`` from https://ci.appveyor.com/project/johnkerl/miller/build/artifacts.
+
+* Create the Github release tag:
+
+  * Don't forget the ``v`` in ``v3.4.0``
+  * Write the release notes
+  * Attach the release tarball, SRPM, and binaries. Double-check assets were successfully uploaded.
+  * Publish the release
+
+* Check the release-specific docs:
+
+  * Look at https://miller.readthedocs.io for new-version docs, after a few minutes' propagation time.
+
+* Notify:
+
+  * Submit ``brew`` pull request; notify any other distros which don't appear to have autoupdated since the previous release (notes below)
+  * Similarly for ``macports``: https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile.
+  * Social-media updates.
+
+::
+
+    git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
+    git fetch upstream
+    git rebase upstream/master
+    git checkout -b miller-3.4.0
+    shasum -a 256 /path/to/mlr-3.4.0.tar.gz
+    edit Formula/miller.rb
+    # Test the URL from the line like
+    #   url "https://github.com/johnkerl/miller/releases/download/v3.4.0/mlr-3.4.0.tar.gz"
+    # in a browser for typos
+    # A '@BrewTestBot Test this please' comment within the homebrew-core pull request will restart the homebrew travis build
+    git add Formula/miller.rb
+    git commit -m 'miller 3.4.0'
+    git push -u origin miller-3.4.0
+    (submit the pull request)
+
+* Afterwork:
+
+  * Edit ``configure.ac`` and ``c/mlrvers.h`` to change version from ``3.4.0`` to ``3.4.0-dev``.
+  * ``make -C c -f Makefile.no-autoconfig installhome && make -C doc -f Makefile.no-autoconfig all installhome``
+  * Commit and push.
+
+
+Misc. development notes
+----------------------------------------------------------------
+
+I use terminal width 120 and tabwidth 4.

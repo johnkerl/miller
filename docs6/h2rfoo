@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Tries to do the low-hanging fruit for v1 html to v2 rst.
+
+cat "$@" \
+  | sed \
+    -e 's:<p>::g' \
+    -e 's:</p>::g' \
+    -e 's:<p/>::g' \
+    -e 's:<b>:**:g' \
+    -e 's:</b>:**:g' \
+    -e 's:<i>:*:g' \
+    -e 's:</i>:*:g' \
+    -e 's:<code>:``:g' \
+    -e 's:</code>:``:g' \
+    -e 's:<tt>:``:g' \
+    -e 's:</tt>:``:g' \
+    -e 's:<li>:* :g' \
+    -e 's:<li/>:* :g' \
+    -e 's:</li>::g' \
+    -e "s:&rsquo;:':g" \
+    -e 's:&ldquo;:":g' \
+    -e 's:&rdquo;:":g' \
+    -e 's:&mdash;:--:g' \
+    -e 's:&amp;:\&:g' \
+    -e 's:&gt;:>:g' \
+    -e 's:&lt;:<:g' \
+    -e 's:<span class="boldmaroon">:**:g' \
+    -e 's:</span>:**:g' \
+  | h1foo \
+  | h2foo \
+  | pokifoo \
+  | sed 's/^  *//' \
+  | grep -v '<ul>' \
+  | grep -v '</ul>' \
+  | grep -v '^<button' \
+  | grep -v 'body_section_toggle' \
+  | scrunch

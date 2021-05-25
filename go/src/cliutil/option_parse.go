@@ -367,10 +367,10 @@ func ParseWriterOptions(
 	} else if args[argi] == "--ojson" {
 		writerOptions.OutputFileFormat = "json"
 		argi += 1
-		//	} else if args[argi] == "--ojsonx" {
-		//		writerOptions.OutputFileFormat = "json";
-		//		writerOptions.stack_json_output_vertically = true;
-		//		argi += 1;
+	} else if args[argi] == "--ojsonx" {
+		// --jvstack is now the default in Miller 6 so this is just for backward compatibility
+		writerOptions.OutputFileFormat = "json"
+		argi += 1
 
 	} else if args[argi] == "--onidx" {
 		writerOptions.OutputFileFormat = "nidx"
@@ -536,12 +536,12 @@ func ParseReaderWriterOptions(
 		readerOptions.InputFileFormat = "json"
 		writerOptions.OutputFileFormat = "json"
 		argi += 1
-		//	} else if args[argi] == "--jsonx" {
-		//		readerOptions.InputFileFormat = "json";
-		//		writerOptions.OutputFileFormat = "json";
-		//		writerOptions.stack_json_output_vertically = true;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--jsonx" {
+		// --jvstack is now the default in Miller 6 so this is just for backward compatibility
+		readerOptions.InputFileFormat = "json"
+		writerOptions.OutputFileFormat = "json"
+		argi += 1
+
 	} else if args[argi] == "--nidx" {
 		readerOptions.InputFileFormat = "nidx"
 		writerOptions.OutputFileFormat = "nidx"
