@@ -16,7 +16,6 @@ TOP OF LIST:
   o golang static-analysis tool -- ?
 
 ----------------------------------------------------------------
-
 ! get doc6 going sooner than later! lots accumulating ...
   o big:
     ? quick-examples needs fewer inputs, and outputs for all retained inputs
@@ -30,15 +29,13 @@ TOP OF LIST:
     - likewise cookbook2/3 -- overly nerdy; perhaps just annoying
     - re-work data-sharing <-> SQL ...
   o little:
+    - file-formats: colon -> dot
     - unset multiple lvalues in the BNF
     - list at end of todo.txt
+    - maybe mlr -> mlrc as live-todo & 6make by default -- ?
+----------------------------------------------------------------
 
 * blocker: jsonx back-compat
-
-* blockers:
-  o markdown writer
-  o --x2m iospecs
-  o file-formats: colon -> dot
 
 * blockers:
   o fix emit
@@ -60,8 +57,8 @@ TOP OF LIST:
 * blocker: remaining verbs:
   o format-values
 
-* blocker: remaining functions:
-  o system
+----------------------------------------------------------------
+
   o regextract regextract_or_else
 
 * blocker: comment-handling
@@ -590,6 +587,8 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * make an io.ReadCloser wrapper for bzip2
 * zlib: n.b. brew install pigz, then pigz -z
 * find a way to legitimize regtest/cases-non-windows for GHA
+  - prepipe
+  - system function
 
 ----------------------------------------------------------------
 DOC6:
