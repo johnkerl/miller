@@ -159,7 +159,7 @@ The command-line option ``--ofmt {format string}`` is the global number format f
 
     --ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf
 
-These are just C ``printf`` formats applied to double-precision numbers.  Please don't use ``%s`` or ``%d``. Additionally, if you use leading width (e.g. ``%18.12lf``) then the output will contain embedded whitespace, which may not be what you want if you pipe the output to something else, particularly CSV. I use Miller's pretty-print format (``mlr --opprint``) to column-align numerical data.
+These are just familiar ``printf`` formats applied to double-precision numbers.  Please don't use ``%s`` or ``%d``. Additionally, if you use leading width (e.g. ``%18.12lf``) then the output will contain embedded whitespace, which may not be what you want if you pipe the output to something else, particularly CSV. I use Miller's pretty-print format (``mlr --opprint``) to column-align numerical data.
 
 To apply formatting to a single field, overriding the global ``ofmt``, use ``fmtnum`` function within ``mlr put``. For example:
 

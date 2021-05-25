@@ -33,6 +33,17 @@ Details
    cookbook3
    data-sharing
 
+Background
+----------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   why
+   etymology
+   originality
+   performance
+
 Reference
 ----------------------------------------------------------------
 
@@ -45,17 +56,6 @@ Reference
    manpage
    release-docs
    build
-
-Background
-----------------------------------------------------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   why
-   etymology
-   originality
-   performance
 
 Index
 ----------------------------------------------------------------

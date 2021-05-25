@@ -22,7 +22,7 @@ Example:
     a=eks,x_sum=1.140079
     a=wye,x_sum=0.777892
 
-* Verbs are coded in C
+* Verbs are coded in Go
 * They run a bit faster
 * They take fewer keystrokes
 * There is less to learn

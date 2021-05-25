@@ -38,6 +38,6 @@ including but not limited to the familiar CSV, TSV, and JSON.  (Miller can handl
 
 * Miller has high-throughput **performance** on par with the Unix toolkit
 
-* Not unlike `jq <https://stedolan.github.io/jq/>`_ (for JSON), Miller is written in portable, modern C, with **zero runtime dependencies**.  You can download or compile a single binary, ``scp`` it to a faraway machine, and expect it to work.
+* Not unlike `jq <https://stedolan.github.io/jq/>`_ (for JSON), Miller is written in Go which is a portable, modern language, and Miller has no runtime dependencies.  You can download or compile a single binary, ``scp`` it to a faraway machine, and expect it to work.
 
 Releases and release notes: https://github.com/johnkerl/miller/releases.

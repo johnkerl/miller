@@ -16,7 +16,7 @@ Example:
 
 POKI_RUN_COMMAND{{mlr stats1 -a sum -f x -g a data/small}}HERE
 
-* Verbs are coded in C
+* Verbs are coded in Go
 * They run a bit faster
 * They take fewer keystrokes
 * There is less to learn

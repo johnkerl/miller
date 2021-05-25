@@ -43,7 +43,7 @@ The numeric-conversion rule is simple:
 * If that doesn't succeed, try to scan as float (``"1.0"`` should be float);
 * If that doesn't succeed, leave the value as a string (``"1x"`` is string).
 
-This is a sensible default: you should be able to put ``'$z = $x + $y'`` without having to write ``'$z = int($x) + float($y)'``.  Also note that default output format for floating-point numbers created by ``put`` (and other verbs such as ``stats1``) is six decimal places; you can override this using ``mlr --ofmt``.  Also note that Miller uses your system's C library functions whenever possible: e.g. ``sscanf`` for converting strings to integer or floating-point.
+This is a sensible default: you should be able to put ``'$z = $x + $y'`` without having to write ``'$z = int($x) + float($y)'``.  Also note that default output format for floating-point numbers created by ``put`` (and other verbs such as ``stats1``) is six decimal places; you can override this using ``mlr --ofmt``.  Also note that Miller uses your system's Go library functions whenever possible: e.g. ``sscanf`` for converting strings to integer or floating-point.
 
 But now suppose you have data like these:
 

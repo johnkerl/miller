@@ -36,7 +36,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum-grouped.sh)HERE
 
 The former (``mlr stats1`` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
 
-Nonetheless, out-of-stream variables (which I whimsically call *oosvars*), begin/end blocks, and emit statements give you the ability to implement logic -- if you wish to do so -- which isn't present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at https://github.com/johnkerl/miller/issues to get it implemented directly in C as a Miller verb of its own.)
+Nonetheless, out-of-stream variables (which I whimsically call *oosvars*), begin/end blocks, and emit statements give you the ability to implement logic -- if you wish to do so -- which isn't present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at https://github.com/johnkerl/miller/issues to get it implemented directly in Go as a Miller verb of its own.)
 
 The following examples compute some things using oosvars which are already computable using Miller verbs, by way of providing food for thought.
 
