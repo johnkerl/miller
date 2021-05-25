@@ -335,9 +335,6 @@ regex-match operator: try '$y = ~$x'.`,
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_STRING
 
-	// TODO:
-	// system : help: `Run command string, yielding its stdout minus final carriage return.
-
 	{
 		name:       ".",
 		class:      FUNC_CLASS_STRING,
@@ -1505,6 +1502,13 @@ See also arrayify.`,
 		class:    FUNC_CLASS_SYSTEM,
 		help:     `Returns the operating-system name as a string.`,
 		zaryFunc: types.MlrvalOS,
+	},
+
+	{
+		name:      "system",
+		class:     FUNC_CLASS_SYSTEM,
+		help:      `Run command string, yielding its stdout minus final carriage return.`,
+		unaryFunc: types.MlrvalSystem,
 	},
 
 	{

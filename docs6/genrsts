@@ -1,0 +1,2 @@
+#!/bin/bash
+for rstin in *.rst.in; do genrst $rstin; done
