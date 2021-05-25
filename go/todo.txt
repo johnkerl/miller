@@ -59,9 +59,12 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 
+* blocker: remaining functions:
   o regextract regextract_or_else
 
 * blocker: comment-handling
+  o really easy for all but JSON
+  o for JSON, if comments-mode, layer in a line-filtering io.Reader
 
 * blocker: localtime functions
 
