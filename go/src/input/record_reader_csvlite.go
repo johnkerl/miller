@@ -38,21 +38,13 @@ type RecordReaderCSVLite struct {
 
 	// TODO: from reader options
 	allowRepeatIFS bool
-
-	// TODO: port from C
-	//	comment_handling_t comment_handling;
-	//	char*  comment_string;
 }
 
 // ----------------------------------------------------------------
 func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
-		readerOptions:  readerOptions,
-		allowRepeatIFS: false,
-
-		// TODO: port from C
-		//	pstate->comment_handling        = comment_handling;
-		//	pstate->comment_string          = comment_string;
+		readerOptions:     readerOptions,
+		allowRepeatIFS:    false,
 		emptyStringMlrval: types.MlrvalFromString(""),
 	}
 }
@@ -60,12 +52,8 @@ func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReader
 // ----------------------------------------------------------------
 func NewRecordReaderPPRINT(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
-		readerOptions:  readerOptions,
-		allowRepeatIFS: true,
-
-		// TODO: port from C
-		//	pstate->comment_handling        = comment_handling;
-		//	pstate->comment_string          = comment_string;
+		readerOptions:     readerOptions,
+		allowRepeatIFS:    true,
 		emptyStringMlrval: types.MlrvalFromString(""),
 	}
 }

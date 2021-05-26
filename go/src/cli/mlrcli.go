@@ -211,16 +211,9 @@ package cli
 //	readerOptions.IFS                            = nil;
 //	readerOptions.ips                            = nil;
 //	readerOptions.input_json_flatten_separator   = nil;
-//	readerOptions.json_array_ingest              = JSON_ARRAY_INGEST_UNSPECIFIED;
 //
 //	readerOptions.allow_repeat_ifs               = NEITHER_TRUE_NOR_FALSE;
 //	readerOptions.allow_repeat_ips               = NEITHER_TRUE_NOR_FALSE;
-//	readerOptions.use_implicit_csv_header        = NEITHER_TRUE_NOR_FALSE;
-//	readerOptions.allow_ragged_csv_input         = NEITHER_TRUE_NOR_FALSE;
-//
-//	readerOptions.prepipe                        = nil;
-//	readerOptions.comment_handling               = COMMENTS_ARE_DATA;
-//	readerOptions.comment_string                 = nil;
 //
 //	readerOptions.generator_opts.field_name     = "i";
 //	readerOptions.generator_opts.start          = 0LL;

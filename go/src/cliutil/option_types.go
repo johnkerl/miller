@@ -19,6 +19,15 @@ import (
 //	long long step;
 //} generator_opts_t;
 
+type TCommentHandling int
+
+const (
+	CommentsAreData TCommentHandling = iota
+	SkipComments
+	PassComments
+)
+const DEFAULT_COMMENT_STRING = "#"
+
 // ----------------------------------------------------------------
 type TReaderOptions struct {
 	InputFileFormat string
@@ -33,10 +42,10 @@ type TReaderOptions struct {
 	//	allow_repeat_ips bool;
 	UseImplicitCSVHeader bool
 	AllowRaggedCSVInput  bool
-	//
-	//	comment_handling_t comment_handling;
-	//	comment_string string;
-	//
+
+	CommentHandling TCommentHandling
+	CommentString   string
+
 	//	// Fake internal-data-generator 'reader'
 	//	generator_opts_t generator_opts;
 
@@ -152,6 +161,7 @@ func DefaultReaderOptions() TReaderOptions {
 		IRS:               "\n",
 		IFS:               ",",
 		IPS:               "=",
+		CommentHandling:   CommentsAreData,
 		FileInputEncoding: lib.FileInputEncodingDefault,
 	}
 }

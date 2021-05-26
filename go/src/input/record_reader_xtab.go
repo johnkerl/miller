@@ -22,8 +22,6 @@ type RecordReaderXTAB struct {
 	// 	int    allow_repeat_ips;
 	// 	int    do_auto_line_term;
 	// 	int    at_eof;
-	// 	comment_handling_t comment_handling;
-	// 	char*  comment_string;
 }
 
 // ----------------------------------------------------------------
