@@ -99,28 +99,43 @@ func (this *RecordReaderXTAB) processHandle(
 				inputChannel <- types.NewRecordAndContext(record, context)
 				linesForRecord = list.New()
 			}
-		} else if err != nil {
+			continue
+		}
+
+		if err != nil {
 			errorChannel <- err
+			break
+		}
+
+		// xxx temp pending autodetect, and pending more windows-port work
+
+		if strings.HasPrefix(line, this.readerOptions.CommentString) {
+			if this.readerOptions.CommentHandling == cliutil.PassComments {
+				// xxx push to ochan
+				inputChannel <- types.NewOutputString(line, context)
+				continue
+			} else if this.readerOptions.CommentHandling == cliutil.SkipComments {
+				continue
+			}
+			// else comments are data
+		}
+
+		// This is how to do a chomp:
+		line = strings.TrimRight(line, this.readerOptions.IRS)
+
+		if line != "" {
+			linesForRecord.PushBack(line)
+
 		} else {
-			// This is how to do a chomp:
-			line = strings.TrimRight(line, this.readerOptions.IRS)
-
-			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r")
-
-			if line == "" {
-				if linesForRecord.Len() > 0 {
-					record, err := this.recordFromXTABLines(linesForRecord)
-					if err != nil {
-						errorChannel <- err
-						return
-					}
-					context.UpdateForInputRecord()
-					inputChannel <- types.NewRecordAndContext(record, context)
-					linesForRecord = list.New()
+			if linesForRecord.Len() > 0 {
+				record, err := this.recordFromXTABLines(linesForRecord)
+				if err != nil {
+					errorChannel <- err
+					return
 				}
-			} else {
-				linesForRecord.PushBack(line)
+				context.UpdateForInputRecord()
+				inputChannel <- types.NewRecordAndContext(record, context)
+				linesForRecord = list.New()
 			}
 		}
 	}
