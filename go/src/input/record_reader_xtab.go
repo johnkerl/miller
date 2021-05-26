@@ -84,7 +84,8 @@ func (this *RecordReaderXTAB) processHandle(
 
 	eof := false
 	for !eof {
-		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
+		//line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
+		line, err := lineReader.ReadString('\n')
 		if lib.IsEOF(err) {
 			err = nil
 			eof = true
@@ -120,9 +121,9 @@ func (this *RecordReaderXTAB) processHandle(
 
 		// xxx temp pending autodetect, and pending more windows-port work
 		// This is how to do a chomp:
-		//line = strings.TrimRight(line, this.readerOptions."\n")
-		//line = strings.TrimRight(line, this.readerOptions."\r")
-		line = strings.TrimRight(line, this.readerOptions.IRS)
+		line = strings.TrimRight(line, "\n")
+		line = strings.TrimRight(line, "\r")
+		//line = strings.TrimRight(line, this.readerOptions.IRS)
 
 		if line != "" {
 			linesForRecord.PushBack(line)
