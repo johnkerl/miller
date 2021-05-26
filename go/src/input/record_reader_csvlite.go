@@ -34,7 +34,6 @@ import (
 // ----------------------------------------------------------------
 type RecordReaderCSVLite struct {
 	readerOptions     *cliutil.TReaderOptions
-	allowRepeatIFS    bool // true for PPRINT
 	emptyStringMlrval types.Mlrval
 }
 
