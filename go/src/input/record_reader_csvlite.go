@@ -153,6 +153,17 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, this.readerOptions.IRS)
 
+			// Check for comments-in-data feature
+			if strings.HasPrefix(line, this.readerOptions.CommentString) {
+				if this.readerOptions.CommentHandling == cliutil.PassComments {
+					inputChannel <- types.NewOutputString(line, context)
+					continue
+				} else if this.readerOptions.CommentHandling == cliutil.SkipComments {
+					continue
+				}
+				// else comments are data
+			}
+
 			// xxx temp pending autodetect, and pending more windows-port work
 			line = strings.TrimRight(line, "\r")
 
@@ -249,6 +260,17 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			inputLineNumber++
 			// This is how to do a chomp:
 			line = strings.TrimRight(line, this.readerOptions.IRS)
+
+			// Check for comments-in-data feature
+			if strings.HasPrefix(line, this.readerOptions.CommentString) {
+				if this.readerOptions.CommentHandling == cliutil.PassComments {
+					inputChannel <- types.NewOutputString(line, context)
+					continue
+				} else if this.readerOptions.CommentHandling == cliutil.SkipComments {
+					continue
+				}
+				// else comments are data
+			}
 
 			// xxx temp pending autodetect, and pending more windows-port work
 			line = strings.TrimRight(line, "\r")

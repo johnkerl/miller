@@ -82,6 +82,7 @@ func (this *RecordReaderNIDX) processHandle(
 			break
 		}
 
+		// Check for comments-in-data feature
 		if strings.HasPrefix(line, this.readerOptions.CommentString) {
 			if this.readerOptions.CommentHandling == cliutil.PassComments {
 				inputChannel <- types.NewOutputString(line, context)
