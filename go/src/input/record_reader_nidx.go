@@ -74,33 +74,46 @@ func (this *RecordReaderNIDX) processHandle(
 		if lib.IsEOF(err) {
 			err = nil
 			eof = true
-		} else if err != nil {
-			errorChannel <- err
-		} else {
-			// This is how to do a chomp:
-			line = strings.TrimRight(line, "\n")
-
-			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r")
-
-			record := recordFromNIDXLine(&line, &this.readerOptions.IFS)
-
-			context.UpdateForInputRecord()
-			inputChannel <- types.NewRecordAndContext(
-				record,
-				context,
-			)
+			break
 		}
+
+		if err != nil {
+			errorChannel <- err
+			break
+		}
+
+		if strings.HasPrefix(line, this.readerOptions.CommentString) {
+			if this.readerOptions.CommentHandling == cliutil.PassComments {
+				inputChannel <- types.NewOutputString(line, context)
+				continue
+			} else if this.readerOptions.CommentHandling == cliutil.SkipComments {
+				continue
+			}
+			// else comments are data
+		}
+
+		// xxx temp pending autodetect, and pending more windows-port work
+		// This is how to do a chomp:
+		line = strings.TrimRight(line, "\n")
+		line = strings.TrimRight(line, "\r")
+
+		record := recordFromNIDXLine(line, this.readerOptions.IFS)
+
+		context.UpdateForInputRecord()
+		inputChannel <- types.NewRecordAndContext(
+			record,
+			context,
+		)
 	}
 }
 
 // ----------------------------------------------------------------
 func recordFromNIDXLine(
-	line *string,
-	ifs *string,
+	line string,
+	ifs string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	values := lib.SplitString(*line, *ifs) // TODO: repifs ...
+	values := lib.SplitString(line, ifs) // TODO: repifs ...
 	var i int = 0
 	for _, value := range values {
 		i++

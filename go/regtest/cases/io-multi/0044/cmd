@@ -1,1 +1,1 @@
-mlr --icsvlite --ojson --allow-ragged-csv-input cat regtest/input/ragged-long.csv
+mlr --icsvlite --allow-ragged-csv-input --ojson --jvstack cat regtest/input/ragged-long.csv

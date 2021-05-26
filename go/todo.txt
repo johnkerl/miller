@@ -35,6 +35,12 @@ TOP OF LIST:
     - maybe mlr -> mlrc as live-todo & 6make by default -- ?
 ----------------------------------------------------------------
 
+* c bug:
+  ../c/mlr --jlistwrap --ojson --jvstack --from regtest/input/s.dkvp head -n 0
+  ]
+
+* blocker: nidx ifs space & find out why not caught sooner
+
 * blocker: jsonx back-compat
 
 * blockers:

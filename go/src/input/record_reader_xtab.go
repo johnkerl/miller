@@ -107,11 +107,8 @@ func (this *RecordReaderXTAB) processHandle(
 			break
 		}
 
-		// xxx temp pending autodetect, and pending more windows-port work
-
 		if strings.HasPrefix(line, this.readerOptions.CommentString) {
 			if this.readerOptions.CommentHandling == cliutil.PassComments {
-				// xxx push to ochan
 				inputChannel <- types.NewOutputString(line, context)
 				continue
 			} else if this.readerOptions.CommentHandling == cliutil.SkipComments {
@@ -120,7 +117,10 @@ func (this *RecordReaderXTAB) processHandle(
 			// else comments are data
 		}
 
+		// xxx temp pending autodetect, and pending more windows-port work
 		// This is how to do a chomp:
+		//line = strings.TrimRight(line, this.readerOptions."\n")
+		//line = strings.TrimRight(line, this.readerOptions."\r")
 		line = strings.TrimRight(line, this.readerOptions.IRS)
 
 		if line != "" {

@@ -1,1 +1,1 @@
-mlr --ixtab --ojson cat regtest/input/test-1.xtab
+mlr --ixtab --ojson --jvstack cat regtest/input/test-1.xtab

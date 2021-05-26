@@ -1,1 +1,1 @@
-mlr --jlistwrap --ojson --from regtest/input/s.dkvp head -n 2
+mlr --jlistwrap --ojson --jvstack --from regtest/input/s.dkvp head -n 2
