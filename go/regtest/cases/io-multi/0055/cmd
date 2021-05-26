@@ -1,1 +1,1 @@
-mlr --ojson --from regtest/input/s.dkvp head -n 2
+mlr --ojson --jvstack --from regtest/input/s.dkvp head -n 2

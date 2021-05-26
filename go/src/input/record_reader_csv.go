@@ -1,11 +1,13 @@
 package input
 
 import (
+	"bytes"
 	"encoding/csv"
 	"errors"
 	"fmt"
 	"io"
 	"strconv"
+	"strings"
 
 	"miller/src/cliutil"
 	"miller/src/lib"
@@ -91,6 +93,12 @@ func (this *RecordReaderCSV) processHandle(
 				errorChannel <- err
 				return
 			}
+
+			isData := this.maybeConsumeComment(csvRecord, context, inputChannel)
+			if !isData {
+				continue
+			}
+
 			header = csvRecord
 			rowNumber++
 
@@ -108,6 +116,11 @@ func (this *RecordReaderCSV) processHandle(
 			return
 		}
 		rowNumber++
+
+		isData := this.maybeConsumeComment(csvRecord, context, inputChannel)
+		if !isData {
+			continue
+		}
 
 		if header == nil { // implicit CSV header
 			n := len(csvRecord)
@@ -170,4 +183,72 @@ func (this *RecordReaderCSV) processHandle(
 			context,
 		)
 	}
+}
+
+// maybeConsumeComment returns true if the CSV record should be processed as
+// data, false otherwise.
+func (this *RecordReaderCSV) maybeConsumeComment(
+	csvRecord []string,
+	context *types.Context,
+	inputChannel chan<- *types.RecordAndContext,
+) bool {
+	if this.readerOptions.CommentHandling == cliutil.CommentsAreData {
+		// Nothing is to be construed as a comment
+		return true
+	}
+
+	if len(csvRecord) < 1 {
+		// Not a comment
+		return true
+	}
+	leader := csvRecord[0]
+
+	if !strings.HasPrefix(leader, this.readerOptions.CommentString) {
+		// Not a comment
+		return true
+	}
+
+	// Is a comment
+	if this.readerOptions.CommentHandling == cliutil.PassComments {
+		// What we want to do here is simple enough: write the record back into
+		// a buffer -- basically string-join on IFS but with csvWriter's
+		// double-quote handling -- and then pass the resulting string along
+		// down-channel to the goroutine which writes strings.
+		//
+		// However, sadly, bytes.Buffer does not implement io.Writer because
+		// its Write method has pointer receiver. So we have a WorkaroundBuffer
+		// struct below which has non-pointer receiver.
+		buffer := NewWorkaroundBuffer()
+		csvWriter := csv.NewWriter(buffer)
+		csvWriter.Comma = rune(this.readerOptions.IFS[0]) // xxx temp
+		csvWriter.Write(csvRecord)
+		csvWriter.Flush()
+		inputChannel <- types.NewOutputString(buffer.String(), context)
+	} else /* this.readerOptions.CommentHandling == cliutil.SkipComments */ {
+		// discard entirely
+	}
+	return false
+}
+
+// ----------------------------------------------------------------
+// As noted above: wraps a bytes.Buffer, whose Write method has pointer
+// receiver, in a struct with non-pointer receiver so that it implements
+// io.Writer.
+type WorkaroundBuffer struct {
+	pbuffer *bytes.Buffer
+}
+
+func NewWorkaroundBuffer() WorkaroundBuffer {
+	var buffer bytes.Buffer
+	return WorkaroundBuffer{
+		pbuffer: &buffer,
+	}
+}
+
+func (this WorkaroundBuffer) Write(p []byte) (n int, err error) {
+	return this.pbuffer.Write(p)
+}
+
+func (this WorkaroundBuffer) String() string {
+	return this.pbuffer.String()
 }

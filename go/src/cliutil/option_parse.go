@@ -209,28 +209,28 @@ func ParseReaderOptions(
 		readerOptions.FileInputEncoding = lib.FileInputEncodingBzip2
 		argi += 1
 
-		//	} else if args[argi] == "--skip-comments" {
-		//		readerOptions.comment_string = DEFAULT_COMMENT_STRING;
-		//		readerOptions.comment_handling = SKIP_COMMENTS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--skip-comments-with" {
-		//		CheckArgCount(args, argi, argc, 2);
-		//		readerOptions.comment_string = args[argi+1];
-		//		readerOptions.comment_handling = SKIP_COMMENTS;
-		//		argi += 2;
-		//
-		//	} else if args[argi] == "--pass-comments" {
-		//		readerOptions.comment_string = DEFAULT_COMMENT_STRING;
-		//		readerOptions.comment_handling = PASS_COMMENTS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--pass-comments-with" {
-		//		CheckArgCount(args, argi, argc, 2);
-		//		readerOptions.comment_string = args[argi+1];
-		//		readerOptions.comment_handling = PASS_COMMENTS;
-		//		argi += 2;
-		//
+	} else if args[argi] == "--skip-comments" {
+		readerOptions.CommentString = DEFAULT_COMMENT_STRING
+		readerOptions.CommentHandling = SkipComments
+		argi += 1
+
+	} else if args[argi] == "--skip-comments-with" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.CommentString = args[argi+1]
+		readerOptions.CommentHandling = SkipComments
+		argi += 2
+
+	} else if args[argi] == "--pass-comments" {
+		readerOptions.CommentString = DEFAULT_COMMENT_STRING
+		readerOptions.CommentHandling = PassComments
+		argi += 1
+
+	} else if args[argi] == "--pass-comments-with" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.CommentString = args[argi+1]
+		readerOptions.CommentHandling = PassComments
+		argi += 2
+
 	}
 	*pargi = argi
 	return argi != oargi

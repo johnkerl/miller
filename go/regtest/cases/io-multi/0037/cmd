@@ -1,1 +1,1 @@
-mlr --icsvlite --ojson cat regtest/input/s.csv
+mlr --icsvlite --ojson --jvstack cat regtest/input/s.csv

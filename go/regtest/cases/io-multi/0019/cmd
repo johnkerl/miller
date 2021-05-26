@@ -1,1 +1,1 @@
-mlr --inidx --oxtab cat ./${CASEDIR}/input
+mlr --inidx --ifs space --oxtab cat ./${CASEDIR}/input

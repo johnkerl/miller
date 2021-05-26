@@ -22,8 +22,6 @@ type RecordReaderXTAB struct {
 	// 	int    allow_repeat_ips;
 	// 	int    do_auto_line_term;
 	// 	int    at_eof;
-	// 	comment_handling_t comment_handling;
-	// 	char*  comment_string;
 }
 
 // ----------------------------------------------------------------
@@ -86,7 +84,8 @@ func (this *RecordReaderXTAB) processHandle(
 
 	eof := false
 	for !eof {
-		line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
+		//line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
+		line, err := lineReader.ReadString('\n')
 		if lib.IsEOF(err) {
 			err = nil
 			eof = true
@@ -101,28 +100,44 @@ func (this *RecordReaderXTAB) processHandle(
 				inputChannel <- types.NewRecordAndContext(record, context)
 				linesForRecord = list.New()
 			}
-		} else if err != nil {
+			continue
+		}
+
+		if err != nil {
 			errorChannel <- err
+			break
+		}
+
+		// Check for comments-in-data feature
+		if strings.HasPrefix(line, this.readerOptions.CommentString) {
+			if this.readerOptions.CommentHandling == cliutil.PassComments {
+				inputChannel <- types.NewOutputString(line, context)
+				continue
+			} else if this.readerOptions.CommentHandling == cliutil.SkipComments {
+				continue
+			}
+			// else comments are data
+		}
+
+		// xxx temp pending autodetect, and pending more windows-port work
+		// This is how to do a chomp:
+		line = strings.TrimRight(line, "\n")
+		line = strings.TrimRight(line, "\r")
+		//line = strings.TrimRight(line, this.readerOptions.IRS)
+
+		if line != "" {
+			linesForRecord.PushBack(line)
+
 		} else {
-			// This is how to do a chomp:
-			line = strings.TrimRight(line, this.readerOptions.IRS)
-
-			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r")
-
-			if line == "" {
-				if linesForRecord.Len() > 0 {
-					record, err := this.recordFromXTABLines(linesForRecord)
-					if err != nil {
-						errorChannel <- err
-						return
-					}
-					context.UpdateForInputRecord()
-					inputChannel <- types.NewRecordAndContext(record, context)
-					linesForRecord = list.New()
+			if linesForRecord.Len() > 0 {
+				record, err := this.recordFromXTABLines(linesForRecord)
+				if err != nil {
+					errorChannel <- err
+					return
 				}
-			} else {
-				linesForRecord.PushBack(line)
+				context.UpdateForInputRecord()
+				inputChannel <- types.NewRecordAndContext(record, context)
+				linesForRecord = list.New()
 			}
 		}
 	}

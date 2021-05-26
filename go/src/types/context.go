@@ -54,7 +54,11 @@ func (this *RecordAndContext) Copy() *RecordAndContext {
 	}
 }
 
-// For print/dump/etc to insert strings sequenced into the record-output stream.
+// For print/dump/etc to insert strings sequenced into the record-output
+// stream.  This avoids race conditions between different goroutines printing
+// to stdout: we have a single designated goroutine printing to stdout. This
+// makes output more predictable and intuitive for users; it also makes our
+// regression tests run reliably the same each time.
 func NewOutputString(
 	outputString string,
 	context *Context,

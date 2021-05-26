@@ -1,0 +1,1 @@
+mlr --skip-comments --inidx --ifs space --oxtab cat regtest/input/comments/comments2.nidx
