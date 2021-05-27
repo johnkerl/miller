@@ -35,16 +35,12 @@ import (
 type RecordReaderCSVLite struct {
 	readerOptions     *cliutil.TReaderOptions
 	emptyStringMlrval types.Mlrval
-
-	// TODO: from reader options
-	allowRepeatIFS bool
 }
 
 // ----------------------------------------------------------------
 func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
 		readerOptions:     readerOptions,
-		allowRepeatIFS:    false,
 		emptyStringMlrval: types.MlrvalFromString(""),
 	}
 }
@@ -53,7 +49,6 @@ func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReader
 func NewRecordReaderPPRINT(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
 		readerOptions:     readerOptions,
-		allowRepeatIFS:    true,
 		emptyStringMlrval: types.MlrvalFromString(""),
 	}
 }
@@ -174,7 +169,7 @@ func (this *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			}
 
 			fields := lib.SplitString(line, this.readerOptions.IFS)
-			if this.allowRepeatIFS {
+			if this.readerOptions.AllowRepeatIFS {
 				fields = this.stripEmpties(fields)
 			}
 			if headerStrings == nil {
@@ -283,7 +278,7 @@ func (this *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			}
 
 			fields := lib.SplitString(line, this.readerOptions.IFS)
-			if this.allowRepeatIFS {
+			if this.readerOptions.AllowRepeatIFS {
 				fields = this.stripEmpties(fields)
 			}
 			if headerStrings == nil {

@@ -31,15 +31,21 @@ const DEFAULT_COMMENT_STRING = "#"
 // ----------------------------------------------------------------
 type TReaderOptions struct {
 	InputFileFormat string
-	IRS             string
 	IFS             string
 	IPS             string
+	IRS             string
+	AllowRepeatIFS  bool
+	AllowRepeatIPS  bool
 
-	//	char* input_json_flatten_separator;
-	//	json_array_ingest_t  json_array_ingest;
+	// If unspecified on the command line, these take input-format-dependent
+	// defaults.  E.g. default FS is comma for DKVP but space for NIDX;
+	// default AllowRepeatIFS is false for CSV but true for PPRINT.
+	IFSWasSpecified            bool
+	IPSWasSpecified            bool
+	IRSWasSpecified            bool
+	AllowRepeatIFSWasSpecified bool
+	AllowRepeatIPSWasSpecified bool
 
-	//	allow_repeat_ifs bool;
-	//	allow_repeat_ips bool;
 	UseImplicitCSVHeader bool
 	AllowRaggedCSVInput  bool
 
@@ -62,6 +68,12 @@ type TWriterOptions struct {
 	OFS              string
 	OPS              string
 	OFLATSEP         string
+
+	// If unspecified on the command line, these take input-format-dependent
+	// defaults.  E.g. default FS is comma for DKVP but space for NIDX.
+	OFSWasSpecified bool
+	OPSWasSpecified bool
+	ORSWasSpecified bool
 
 	HeaderlessCSVOutput      bool
 	BarredPprintOutput       bool

@@ -59,48 +59,8 @@ func ParseCommandLine(args []string) (
 		}
 	}
 
-	// xxx to do
-	//	cli_apply_defaults(popts);
-
-	//	lhmss_t* default_rses = get_default_rses();
-	//	lhmss_t* default_fses = get_default_fses();
-	//	lhmss_t* default_pses = get_default_pses();
-	//	lhmsll_t* default_repeat_ifses = get_default_repeat_ifses();
-	//	lhmsll_t* default_repeat_ipses = get_default_repeat_ipses();
-	//
-	//	if (options.ReaderOptions.IRS == nil)
-	//		options.ReaderOptions.IRS = lhmss_get_or_die(default_rses, options.ReaderOptions.InputFileFormat);
-	//	if (options.ReaderOptions.IFS == nil)
-	//		options.ReaderOptions.IFS = lhmss_get_or_die(default_fses, options.ReaderOptions.InputFileFormat);
-	//	if (options.ReaderOptions.ips == nil)
-	//		options.ReaderOptions.ips = lhmss_get_or_die(default_pses, options.ReaderOptions.InputFileFormat);
-	//
-	//	if (options.ReaderOptions.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
-	//		options.ReaderOptions.allow_repeat_ifs = lhmsll_get_or_die(default_repeat_ifses, options.ReaderOptions.InputFileFormat);
-	//	if (options.ReaderOptions.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
-	//		options.ReaderOptions.allow_repeat_ips = lhmsll_get_or_die(default_repeat_ipses, options.ReaderOptions.InputFileFormat);
-	//
-	//	if (options.WriterOptions.ORS == nil)
-	//		options.WriterOptions.ORS = lhmss_get_or_die(default_rses, options.WriterOptions.OutputFileFormat);
-	//	if (options.WriterOptions.OFS == nil)
-	//		options.WriterOptions.OFS = lhmss_get_or_die(default_fses, options.WriterOptions.OutputFileFormat);
-	//	if (options.WriterOptions.ops == nil)
-	//		options.WriterOptions.ops = lhmss_get_or_die(default_pses, options.WriterOptions.OutputFileFormat);
-	//
-	//	if options.WriterOptions.OutputFileFormat == "pprint") && len(options.WriterOptions.OFS) != 1) {
-	//		fmt.Fprintf(os.Stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
-	//			lib.MlrExeName(), options.WriterOptions.OFS);
-	//		return nil;
-	//	}
-
-	//	// Construct the transformer list for single use, e.g. the normal streaming case wherein the
-	//	// transformers operate on all input files. Also retain information needed to construct them
-	//	// for each input file, for in-place mode.
-	//	options.transformer_argb = argi;
-	//	options.original_argv = args;
-	//	options.non_in_place_argv = copy_argv(args);
-	//	options.argc = argc;
-	//	*pptransformer_list = cli_parse_transformers(options.non_in_place_argv, &argi, argc, popts);
+	cliutil.ApplyReaderOptionDefaults(&options.ReaderOptions)
+	cliutil.ApplyWriterOptionDefaults(&options.WriterOptions)
 
 	recordTransformers, ignoresInput, err := parseTransformers(args, &argi, argc, &options)
 	if err != nil {
