@@ -2,10 +2,15 @@
 TOP OF LIST:
 
 * repifs fix
+* default ifs per ifmt fix
 * defer json comment-handling
 * vers-docs
 * c bug: ../c/mlr --jlistwrap --ojson --jvstack --from regtest/input/s.dkvp head -n 0 -> ]
 * starrer survey
+
+* fmt-dep:
+  o --repifs
+  o --repips
 
 * mlr -k
   o c,go
