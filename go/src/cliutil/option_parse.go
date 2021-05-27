@@ -22,7 +22,7 @@ const ASV_FS_FOR_HELP = "0x1f"
 const ASV_RS_FOR_HELP = "0x1e"
 const USV_FS_FOR_HELP = "U+241F (UTF-8 0xe2909f)"
 const USV_RS_FOR_HELP = "U+241E (UTF-8 0xe2909e)"
-const DEFAULT_JSON_FLATTEN_SEPARATOR = ":"
+const DEFAULT_JSON_FLATTEN_SEPARATOR = "."
 
 // Returns true if the current flag was handled. Exported for use by join.
 func ParseReaderOptions(
@@ -34,25 +34,33 @@ func ParseReaderOptions(
 	argi := *pargi
 	oargi := argi
 
-	if args[argi] == "--irs" {
-		CheckArgCount(args, argi, argc, 2)
-		readerOptions.IRS = SeparatorFromArg(args[argi+1])
-		argi += 2
-
-	} else if args[argi] == "--ifs" {
+	if args[argi] == "--ifs" {
 		CheckArgCount(args, argi, argc, 2)
 		readerOptions.IFS = SeparatorFromArg(args[argi+1])
+		readerOptions.IFSWasSpecified = true
 		argi += 2
 
 	} else if args[argi] == "--ips" {
 		CheckArgCount(args, argi, argc, 2)
 		readerOptions.IPS = SeparatorFromArg(args[argi+1])
+		readerOptions.IPSWasSpecified = true
 		argi += 2
 
-		//	} else if args[argi] == "--repifs" {
-		//		readerOptions.allow_repeat_ifs = true;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--irs" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.IRS = SeparatorFromArg(args[argi+1])
+		readerOptions.IRSWasSpecified = true
+		argi += 2
+
+	} else if args[argi] == "--repifs" {
+		readerOptions.AllowRepeatIFS = true
+		readerOptions.AllowRepeatIFSWasSpecified = true
+		argi += 1
+
+	} else if args[argi] == "--repips" {
+		readerOptions.AllowRepeatIPS = true
+		readerOptions.AllowRepeatIPSWasSpecified = true
+		argi += 1
 
 	} else if args[argi] == "--json-fatal-arrays-on-input" {
 		// No-op pass-through for backward compatibility with Miller 5
@@ -119,34 +127,44 @@ func ParseReaderOptions(
 	} else if args[argi] == "--itsv" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
+		readerOptions.IFSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--itsvlite" {
 		readerOptions.InputFileFormat = "csvlite"
 		readerOptions.IFS = "\t"
+		readerOptions.IFSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--iasv" {
 		readerOptions.InputFileFormat = "csvlite"
 		readerOptions.IFS = ASV_FS
 		readerOptions.IRS = ASV_RS
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--iasvlite" {
 		readerOptions.InputFileFormat = "csvlite"
 		readerOptions.IFS = ASV_FS
 		readerOptions.IRS = ASV_RS
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--iusv" {
 		readerOptions.InputFileFormat = "csvlite"
 		readerOptions.IFS = USV_FS
 		readerOptions.IRS = USV_RS
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--iusvlite" {
 		readerOptions.InputFileFormat = "csvlite"
 		readerOptions.IFS = USV_FS
 		readerOptions.IRS = USV_RS
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--idkvp" {
@@ -168,6 +186,7 @@ func ParseReaderOptions(
 	} else if args[argi] == "--ipprint" {
 		readerOptions.InputFileFormat = "pprint"
 		readerOptions.IFS = " "
+		readerOptions.IFSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--mmap" {
@@ -249,11 +268,13 @@ func ParseWriterOptions(
 	if args[argi] == "--ors" {
 		CheckArgCount(args, argi, argc, 2)
 		writerOptions.ORS = SeparatorFromArg(args[argi+1])
+		writerOptions.ORSWasSpecified = true
 		argi += 2
 
 	} else if args[argi] == "--ofs" {
 		CheckArgCount(args, argi, argc, 2)
 		writerOptions.OFS = SeparatorFromArg(args[argi+1])
+		writerOptions.OFSWasSpecified = true
 		argi += 2
 
 	} else if args[argi] == "--headerless-csv-output" {
@@ -262,6 +283,7 @@ func ParseWriterOptions(
 	} else if args[argi] == "--ops" {
 		CheckArgCount(args, argi, argc, 2)
 		writerOptions.OPS = SeparatorFromArg(args[argi+1])
+		writerOptions.OPSWasSpecified = true
 		argi += 2
 
 	} else if args[argi] == "--oflatsep" {
@@ -325,35 +347,45 @@ func ParseWriterOptions(
 	} else if args[argi] == "--otsv" {
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.OFS = "\t"
+		writerOptions.OFSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--otsvlite" {
 		writerOptions.OutputFileFormat = "csvlite"
 		writerOptions.OFS = "\t"
+		writerOptions.OFSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--oasv" {
 		writerOptions.OutputFileFormat = "csvlite"
 		writerOptions.OFS = ASV_FS
 		writerOptions.ORS = ASV_RS
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--oasvlite" {
 		writerOptions.OutputFileFormat = "csvlite"
 		writerOptions.OFS = ASV_FS
 		writerOptions.ORS = ASV_RS
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--ousv" {
 		writerOptions.OutputFileFormat = "csvlite"
 		writerOptions.OFS = USV_FS
 		writerOptions.ORS = USV_RS
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--ousvlite" {
 		writerOptions.OutputFileFormat = "csvlite"
 		writerOptions.OFS = USV_FS
 		writerOptions.ORS = USV_RS
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--omd" {
@@ -375,6 +407,7 @@ func ParseWriterOptions(
 	} else if args[argi] == "--onidx" {
 		writerOptions.OutputFileFormat = "nidx"
 		writerOptions.OFS = " "
+		writerOptions.OFSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--oxtab" {
@@ -438,39 +471,48 @@ func ParseReaderWriterOptions(
 		CheckArgCount(args, argi, argc, 2)
 		readerOptions.IRS = SeparatorFromArg(args[argi+1])
 		writerOptions.ORS = SeparatorFromArg(args[argi+1])
+		readerOptions.IRSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 2
 
 	} else if args[argi] == "--fs" {
 		CheckArgCount(args, argi, argc, 2)
 		readerOptions.IFS = SeparatorFromArg(args[argi+1])
 		writerOptions.OFS = SeparatorFromArg(args[argi+1])
+		readerOptions.IFSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
 		argi += 2
 
-		//	} else if args[argi] == "-p" {
-		//		readerOptions.InputFileFormat = "nidx";
-		//		writerOptions.OutputFileFormat = "nidx";
-		//		readerOptions.IFS = " ";
-		//		writerOptions.OFS = " ";
-		//		readerOptions.allow_repeat_ifs = true;
-		//		argi += 1;
-		//
+	} else if args[argi] == "-p" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "nidx"
+		readerOptions.IFS = " "
+		writerOptions.OFS = " "
+		readerOptions.IFSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
+		readerOptions.AllowRepeatIFS = true
+		readerOptions.AllowRepeatIFSWasSpecified = true
+		argi += 1
+
 	} else if args[argi] == "--ps" {
 		CheckArgCount(args, argi, argc, 2)
 		readerOptions.IPS = SeparatorFromArg(args[argi+1])
 		writerOptions.OPS = SeparatorFromArg(args[argi+1])
+		readerOptions.IPSWasSpecified = true
+		writerOptions.OPSWasSpecified = true
 		argi += 2
 
-		//	} else if args[argi] == "--io" {
-		//		CheckArgCount(args, argi, argc, 2);
-		//		if (!lhmss_has_key(get_default_rses(), args[argi+1])) {
-		//			fmt.Fprintf(os.Stderr, "%s: unrecognized I/O format \"%s\".\n",
-		//				lib.MlrExeName(), args[argi+1]);
-		//			os.Exit(1);
-		//		}
-		//		readerOptions.InputFileFormat = args[argi+1];
-		//		writerOptions.OutputFileFormat = args[argi+1];
-		//		argi += 2;
-		//
+	} else if args[argi] == "--io" {
+		CheckArgCount(args, argi, argc, 2)
+		if defaultFSes[args[argi+1]] == "" {
+			fmt.Fprintf(os.Stderr, "%s: unrecognized I/O format \"%s\".\n",
+				lib.MlrExeName(), args[argi+1])
+			os.Exit(1)
+		}
+		readerOptions.InputFileFormat = args[argi+1]
+		writerOptions.OutputFileFormat = args[argi+1]
+		argi += 2
+
 	} else if args[argi] == "--csv" {
 		readerOptions.InputFileFormat = "csv"
 		writerOptions.OutputFileFormat = "csv"
@@ -486,6 +528,8 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "csv"
 		readerOptions.IFS = "\t"
 		writerOptions.OFS = "\t"
+		readerOptions.IFSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--tsvlite" || args[argi] == "-t" {
@@ -493,40 +537,63 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "csvlite"
 		readerOptions.IFS = "\t"
 		writerOptions.OFS = "\t"
+		readerOptions.IFSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
 		argi += 1
 
-		//	} else if args[argi] == "--asv" {
-		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
-		//		readerOptions.IFS = ASV_FS;
-		//		writerOptions.OFS = ASV_FS;
-		//		readerOptions.IRS = ASV_RS;
-		//		writerOptions.ORS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--asvlite" {
-		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
-		//		readerOptions.IFS = ASV_FS;
-		//		writerOptions.OFS = ASV_FS;
-		//		readerOptions.IRS = ASV_RS;
-		//		writerOptions.ORS = ASV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--usv" {
-		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
-		//		readerOptions.IFS = USV_FS;
-		//		writerOptions.OFS = USV_FS;
-		//		readerOptions.IRS = USV_RS;
-		//		writerOptions.ORS = USV_RS;
-		//		argi += 1;
-		//
-		//	} else if args[argi] == "--usvlite" {
-		//		readerOptions.InputFileFormat = writerOptions.OutputFileFormat = "csvlite";
-		//		readerOptions.IFS = USV_FS;
-		//		writerOptions.OFS = USV_FS;
-		//		readerOptions.IRS = USV_RS;
-		//		writerOptions.ORS = USV_RS;
-		//		argi += 1;
-		//
+	} else if args[argi] == "--asv" {
+		readerOptions.InputFileFormat = "csvlite"
+		writerOptions.OutputFileFormat = "csvlite"
+		readerOptions.IFS = ASV_FS
+		writerOptions.OFS = ASV_FS
+		readerOptions.IRS = ASV_RS
+		writerOptions.ORS = ASV_RS
+		readerOptions.IFSWasSpecified = true
+
+		readerOptions.IRSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
+		argi += 1
+
+	} else if args[argi] == "--asvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		writerOptions.OutputFileFormat = "csvlite"
+		readerOptions.IFS = ASV_FS
+		writerOptions.OFS = ASV_FS
+		readerOptions.IRS = ASV_RS
+		writerOptions.ORS = ASV_RS
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
+		argi += 1
+
+	} else if args[argi] == "--usv" {
+		readerOptions.InputFileFormat = "csvlite"
+		writerOptions.OutputFileFormat = "csvlite"
+		readerOptions.IFS = USV_FS
+		writerOptions.OFS = USV_FS
+		readerOptions.IRS = USV_RS
+		writerOptions.ORS = USV_RS
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
+		argi += 1
+
+	} else if args[argi] == "--usvlite" {
+		readerOptions.InputFileFormat = "csvlite"
+		writerOptions.OutputFileFormat = "csvlite"
+		readerOptions.IFS = USV_FS
+		writerOptions.OFS = USV_FS
+		readerOptions.IRS = USV_RS
+		writerOptions.ORS = USV_RS
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
+		argi += 1
+
 	} else if args[argi] == "--dkvp" {
 		readerOptions.InputFileFormat = "dkvp"
 		writerOptions.OutputFileFormat = "dkvp"
@@ -547,15 +614,19 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "nidx"
 		readerOptions.IFS = " "
 		writerOptions.OFS = " "
+		readerOptions.IFSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
 		argi += 1
 
-		//	} else if args[argi] == "-T" {
-		//		readerOptions.InputFileFormat = "nidx";
-		//		writerOptions.OutputFileFormat = "nidx";
-		//		readerOptions.IFS = "\t";
-		//		writerOptions.OFS = "\t";
-		//		argi += 1;
-		//
+	} else if args[argi] == "-T" {
+		readerOptions.InputFileFormat = "nidx"
+		writerOptions.OutputFileFormat = "nidx"
+		readerOptions.IFS = "\t"
+		writerOptions.OFS = "\t"
+		readerOptions.IFSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
+		argi += 1
+
 	} else if args[argi] == "--xtab" {
 		readerOptions.InputFileFormat = "xtab"
 		writerOptions.OutputFileFormat = "xtab"
@@ -564,6 +635,7 @@ func ParseReaderWriterOptions(
 	} else if args[argi] == "--pprint" {
 		readerOptions.InputFileFormat = "pprint"
 		readerOptions.IFS = " "
+		readerOptions.IFSWasSpecified = true
 		writerOptions.OutputFileFormat = "pprint"
 		argi += 1
 	} else if args[argi] == "--c2t" {
@@ -572,43 +644,54 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
 		writerOptions.OFS = "\t"
+		readerOptions.IRSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--c2d" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "dkvp"
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--c2n" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "nidx"
 		writerOptions.OFS = " "
+		readerOptions.IRSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--c2j" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "json"
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--c2p" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "pprint"
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--c2b" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "pprint"
 		writerOptions.BarredPprintOutput = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--c2x" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "xtab"
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--c2m" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "markdown"
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--t2c" {
@@ -617,12 +700,17 @@ func ParseReaderWriterOptions(
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--t2d" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "dkvp"
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--t2n" {
 		readerOptions.InputFileFormat = "csv"
@@ -630,18 +718,25 @@ func ParseReaderWriterOptions(
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "nidx"
 		writerOptions.OFS = " "
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--t2j" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "json"
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--t2p" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "pprint"
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--t2b" {
 		readerOptions.InputFileFormat = "csv"
@@ -649,18 +744,24 @@ func ParseReaderWriterOptions(
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "pprint"
 		writerOptions.BarredPprintOutput = true
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--t2x" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "xtab"
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--t2m" {
 		readerOptions.InputFileFormat = "csv"
 		readerOptions.IFS = "\t"
 		readerOptions.IRS = "auto"
 		writerOptions.OutputFileFormat = "markdown"
+		readerOptions.IFSWasSpecified = true
+		readerOptions.IRSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--d2c" {
@@ -673,11 +774,14 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
 		writerOptions.OFS = "\t"
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--d2n" {
 		readerOptions.InputFileFormat = "dkvp"
 		writerOptions.OutputFileFormat = "nidx"
 		writerOptions.OFS = " "
+		writerOptions.OFSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--d2j" {
 		readerOptions.InputFileFormat = "dkvp"
@@ -704,14 +808,16 @@ func ParseReaderWriterOptions(
 	} else if args[argi] == "--n2c" {
 		readerOptions.InputFileFormat = "nidx"
 		writerOptions.OutputFileFormat = "csv"
-		writerOptions.OFS = " "
 		writerOptions.ORS = "auto"
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--n2t" {
 		readerOptions.InputFileFormat = "nidx"
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
 		writerOptions.OFS = "\t"
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--n2d" {
 		readerOptions.InputFileFormat = "nidx"
@@ -743,12 +849,15 @@ func ParseReaderWriterOptions(
 		readerOptions.InputFileFormat = "json"
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--j2t" {
 		readerOptions.InputFileFormat = "json"
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
 		writerOptions.OFS = "\t"
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--j2d" {
 		readerOptions.InputFileFormat = "json"
@@ -781,6 +890,8 @@ func ParseReaderWriterOptions(
 		readerOptions.IFS = " "
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
+		readerOptions.IFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--p2t" {
 		readerOptions.InputFileFormat = "pprint"
@@ -788,43 +899,54 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
 		writerOptions.OFS = "\t"
+		readerOptions.IFSWasSpecified = true
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--p2d" {
 		readerOptions.InputFileFormat = "pprint"
 		readerOptions.IFS = " "
 		writerOptions.OutputFileFormat = "dkvp"
+		readerOptions.IFSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--p2n" {
 		readerOptions.InputFileFormat = "pprint"
 		readerOptions.IFS = " "
 		writerOptions.OutputFileFormat = "nidx"
+		readerOptions.IFSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--p2j" {
 		readerOptions.InputFileFormat = "pprint"
 		readerOptions.IFS = " "
 		writerOptions.OutputFileFormat = "json"
+		readerOptions.IFSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--p2x" {
 		readerOptions.InputFileFormat = "pprint"
 		readerOptions.IFS = " "
 		writerOptions.OutputFileFormat = "xtab"
+		readerOptions.IFSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--p2m" {
 		readerOptions.InputFileFormat = "pprint"
 		readerOptions.IFS = " "
 		writerOptions.OutputFileFormat = "markdown"
+		readerOptions.IFSWasSpecified = true
 		argi += 1
 
 	} else if args[argi] == "--x2c" {
 		readerOptions.InputFileFormat = "xtab"
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--x2t" {
 		readerOptions.InputFileFormat = "xtab"
 		writerOptions.OutputFileFormat = "csv"
 		writerOptions.ORS = "auto"
 		writerOptions.OFS = "\t"
+		writerOptions.OFSWasSpecified = true
+		writerOptions.ORSWasSpecified = true
 		argi += 1
 	} else if args[argi] == "--x2d" {
 		readerOptions.InputFileFormat = "xtab"
@@ -952,4 +1074,93 @@ func ParseMiscOptions(
 	}
 	*pargi = argi
 	return argi != oargi
+}
+
+// ----------------------------------------------------------------
+// E.g. if IFS isn't specified, it's space for NIDX and comma for DKVP, etc.
+
+var defaultFSes = map[string]string{
+	// "gen" : // TODO
+	"csv":      ",",
+	"csvlite":  ",",
+	"dkvp":     ",",
+	"json":     ",", // not honored; not parameterizable in JSON format
+	"nidx":     " ",
+	"markdown": " ",
+	"pprint":   " ",
+	"xtab":     "\n", // todo: windows-dependent ...
+}
+
+var defaultPSes = map[string]string{
+	"csv":      "=",
+	"csvlite":  "=",
+	"dkvp":     "=",
+	"json":     "=", // not honored; not parameterizable in JSON format
+	"markdown": "=",
+	"nidx":     "=",
+	"pprint":   "=",
+	"xtab":     " ", // todo: windows-dependent ...
+}
+
+var defaultRSes = map[string]string{
+	"csv":      "\n",
+	"csvlite":  "\n",
+	"dkvp":     "\n",
+	"json":     "\n", // not honored; not parameterizable in JSON format
+	"markdown": "\n",
+	"nidx":     "\n",
+	"pprint":   "\n",
+	"xtab":     "\n\n", // todo: maybe jettison the idea of this being alterable
+}
+
+var defaultAllowRepeatIFSes = map[string]bool{
+	"csv":      false,
+	"csvlite":  false,
+	"dkvp":     false,
+	"json":     false,
+	"markdown": false,
+	"nidx":     false,
+	"pprint":   true,
+	"xtab":     false,
+}
+
+var defaultAllowRepeatIPSes = map[string]bool{
+	"csv":      false,
+	"csvlite":  false,
+	"dkvp":     false,
+	"json":     false,
+	"markdown": false,
+	"nidx":     false,
+	"pprint":   false,
+	"xtab":     true,
+}
+
+func ApplyReaderOptionDefaults(readerOptions *TReaderOptions) {
+	if !readerOptions.IFSWasSpecified {
+		readerOptions.IFS = defaultFSes[readerOptions.InputFileFormat]
+	}
+	if !readerOptions.IPSWasSpecified {
+		readerOptions.IPS = defaultPSes[readerOptions.InputFileFormat]
+	}
+	if !readerOptions.IRSWasSpecified {
+		readerOptions.IRS = defaultRSes[readerOptions.InputFileFormat]
+	}
+	if !readerOptions.AllowRepeatIFSWasSpecified {
+		readerOptions.AllowRepeatIFS = defaultAllowRepeatIFSes[readerOptions.InputFileFormat]
+	}
+	if !readerOptions.AllowRepeatIPSWasSpecified {
+		readerOptions.AllowRepeatIPS = defaultAllowRepeatIPSes[readerOptions.InputFileFormat]
+	}
+}
+
+func ApplyWriterOptionDefaults(writerOptions *TWriterOptions) {
+	if !writerOptions.OFSWasSpecified {
+		writerOptions.OFS = defaultFSes[writerOptions.OutputFileFormat]
+	}
+	if !writerOptions.OPSWasSpecified {
+		writerOptions.OPS = defaultPSes[writerOptions.OutputFileFormat]
+	}
+	if !writerOptions.ORSWasSpecified {
+		writerOptions.ORS = defaultRSes[writerOptions.OutputFileFormat]
+	}
 }

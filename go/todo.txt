@@ -11,6 +11,10 @@ TOP OF LIST:
 * fmt-dep:
   o --repifs
   o --repips
+  o --ifs
+  o --ips
+  o --irs
+  o format-matrix regtest -- surface
 
 * mlr -k
   o c,go
