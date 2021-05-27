@@ -1,20 +1,9 @@
 ================================================================
 TOP OF LIST:
 
-* repifs fix
-* default ifs per ifmt fix
 * defer json comment-handling
 * vers-docs
-* c bug: ../c/mlr --jlistwrap --ojson --jvstack --from regtest/input/s.dkvp head -n 0 -> ]
-* starrer survey
-
-* fmt-dep:
-  o --repifs
-  o --repips
-  o --ifs
-  o --ips
-  o --irs
-  o format-matrix regtest -- surface
+w starrer survey
 
 * mlr -k
   o c,go
@@ -49,8 +38,6 @@ TOP OF LIST:
     - list at end of todo.txt
     - maybe mlr -> mlrc as live-todo & 6make by default -- ?
 ----------------------------------------------------------------
-
-* blocker: nidx ifs space & find out why not caught sooner
 
 * blocker: jsonx back-compat
 
