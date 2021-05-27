@@ -47,9 +47,6 @@ w starrer survey
 * blockers:
   o convert regtest/cases-pending-windows
 
-* blockers:
-  o repifs, for nidx & pprint both
-
 * case auxfiles: cat them too
 
 * blocker: regexes
