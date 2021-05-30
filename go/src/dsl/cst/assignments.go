@@ -56,12 +56,12 @@ func NewAssignmentNode(
 	}
 }
 
-func (this *AssignmentNode) Execute(
+func (node *AssignmentNode) Execute(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
-	rvalue := this.rvalueNode.Evaluate(state)
+	rvalue := node.rvalueNode.Evaluate(state)
 	if !rvalue.IsAbsent() {
-		err := this.lvalueNode.Assign(rvalue, state)
+		err := node.lvalueNode.Assign(rvalue, state)
 		if err != nil {
 			return nil, err
 		}
@@ -105,7 +105,7 @@ func NewUnsetNode(
 	}
 }
 
-func (this *UnsetNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	this.lvalueNode.Unassign(state)
+func (node *UnsetNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	node.lvalueNode.Unassign(state)
 	return nil, nil
 }

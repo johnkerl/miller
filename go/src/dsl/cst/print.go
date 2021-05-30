@@ -301,9 +301,9 @@ func (root *RootNode) buildPrintxStatementNode(
 }
 
 // ----------------------------------------------------------------
-func (this *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	if len(this.expressionEvaluables) == 0 {
-		this.printToRedirectFunc(this.terminator, state)
+func (node *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	if len(node.expressionEvaluables) == 0 {
+		node.printToRedirectFunc(node.terminator, state)
 	} else {
 		// 5x faster than fmt.Print() separately: note that os.Stdout is
 		// non-buffered in Go whereas stdout is buffered in C.
@@ -313,7 +313,7 @@ func (this *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 		// Plus: we never have to worry about forgetting to do fflush(). :)
 		var buffer bytes.Buffer
 
-		for i, expressionEvaluable := range this.expressionEvaluables {
+		for i, expressionEvaluable := range node.expressionEvaluables {
 			if i > 0 {
 				buffer.WriteString(" ")
 			}
@@ -322,14 +322,14 @@ func (this *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 				buffer.WriteString(evaluation.String())
 			}
 		}
-		buffer.WriteString(this.terminator)
-		this.printToRedirectFunc(buffer.String(), state)
+		buffer.WriteString(node.terminator)
+		node.printToRedirectFunc(buffer.String(), state)
 	}
 	return nil, nil
 }
 
 // ----------------------------------------------------------------
-func (this *PrintStatementNode) printToStdout(
+func (node *PrintStatementNode) printToStdout(
 	outputString string,
 	state *runtime.State,
 ) error {
@@ -347,7 +347,7 @@ func (this *PrintStatementNode) printToStdout(
 }
 
 // ----------------------------------------------------------------
-func (this *PrintStatementNode) printToStderr(
+func (node *PrintStatementNode) printToStderr(
 	outputString string,
 	state *runtime.State,
 ) error {
@@ -356,11 +356,11 @@ func (this *PrintStatementNode) printToStderr(
 }
 
 // ----------------------------------------------------------------
-func (this *PrintStatementNode) printToFileOrPipe(
+func (node *PrintStatementNode) printToFileOrPipe(
 	outputString string,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
@@ -371,6 +371,6 @@ func (this *PrintStatementNode) printToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.WriteString(outputString, outputFileName)
+	node.outputHandlerManager.WriteString(outputString, outputFileName)
 	return nil
 }

@@ -125,7 +125,7 @@ type FullSrecRvalueNode struct {
 func (root *RootNode) BuildFullSrecRvalueNode() *FullSrecRvalueNode {
 	return &FullSrecRvalueNode{}
 }
-func (this *FullSrecRvalueNode) Evaluate(
+func (node *FullSrecRvalueNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	// For normal DSL use the CST validator will prohibit this from being
@@ -150,10 +150,10 @@ func (root *RootNode) BuildDirectOosvarRvalueNode(variableName string) *DirectOo
 		variableName: variableName,
 	}
 }
-func (this *DirectOosvarRvalueNode) Evaluate(
+func (node *DirectOosvarRvalueNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	value := state.Oosvars.Get(this.variableName)
+	value := state.Oosvars.Get(node.variableName)
 	if value == nil {
 		return types.MLRVAL_ABSENT
 	} else {
@@ -168,7 +168,7 @@ type FullOosvarRvalueNode struct {
 func (root *RootNode) BuildFullOosvarRvalueNode() *FullOosvarRvalueNode {
 	return &FullOosvarRvalueNode{}
 }
-func (this *FullOosvarRvalueNode) Evaluate(
+func (node *FullOosvarRvalueNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromMap(state.Oosvars)
@@ -184,10 +184,10 @@ func (root *RootNode) BuildLocalVariableNode(variableName string) *LocalVariable
 		stackVariable: runtime.NewStackVariable(variableName),
 	}
 }
-func (this *LocalVariableNode) Evaluate(
+func (node *LocalVariableNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	value := state.Stack.Get(this.stackVariable)
+	value := state.Stack.Get(node.stackVariable)
 	if value == nil {
 		return types.MLRVAL_ABSENT
 	} else {
@@ -205,10 +205,10 @@ func (root *RootNode) BuildStringLiteralNode(literal string) *StringLiteralNode 
 		literal: types.MlrvalFromString(literal),
 	}
 }
-func (this *StringLiteralNode) Evaluate(
+func (node *StringLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return &this.literal
+	return &node.literal
 }
 
 // ----------------------------------------------------------------
@@ -221,10 +221,10 @@ func (root *RootNode) BuildIntLiteralNode(literal string) *IntLiteralNode {
 		literal: types.MlrvalPointerFromIntString(literal),
 	}
 }
-func (this *IntLiteralNode) Evaluate(
+func (node *IntLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return this.literal
+	return node.literal
 }
 
 // ----------------------------------------------------------------
@@ -237,10 +237,10 @@ func (root *RootNode) BuildFloatLiteralNode(literal string) *FloatLiteralNode {
 		literal: types.MlrvalPointerFromFloat64String(literal),
 	}
 }
-func (this *FloatLiteralNode) Evaluate(
+func (node *FloatLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return this.literal
+	return node.literal
 }
 
 // ----------------------------------------------------------------
@@ -253,10 +253,10 @@ func (root *RootNode) BuildBoolLiteralNode(literal string) *BoolLiteralNode {
 		literal: types.MlrvalFromBoolString(literal),
 	}
 }
-func (this *BoolLiteralNode) Evaluate(
+func (node *BoolLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return &this.literal
+	return &node.literal
 }
 
 // ----------------------------------------------------------------
@@ -269,10 +269,10 @@ func (root *RootNode) BuildNullLiteralNode() *NullLiteralNode {
 		literal: types.MLRVAL_NULL,
 	}
 }
-func (this *NullLiteralNode) Evaluate(
+func (node *NullLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return this.literal
+	return node.literal
 }
 
 // ================================================================
@@ -336,7 +336,7 @@ type FILENAMENode struct {
 func (root *RootNode) BuildFILENAMENode() *FILENAMENode {
 	return &FILENAMENode{}
 }
-func (this *FILENAMENode) Evaluate(
+func (node *FILENAMENode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromString(state.Context.FILENAME)
@@ -349,7 +349,7 @@ type FILENUMNode struct {
 func (root *RootNode) BuildFILENUMNode() *FILENUMNode {
 	return &FILENUMNode{}
 }
-func (this *FILENUMNode) Evaluate(
+func (node *FILENUMNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromInt(state.Context.FILENUM)
@@ -362,7 +362,7 @@ type NFNode struct {
 func (root *RootNode) BuildNFNode() *NFNode {
 	return &NFNode{}
 }
-func (this *NFNode) Evaluate(
+func (node *NFNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromInt(state.Inrec.FieldCount)
@@ -375,7 +375,7 @@ type NRNode struct {
 func (root *RootNode) BuildNRNode() *NRNode {
 	return &NRNode{}
 }
-func (this *NRNode) Evaluate(
+func (node *NRNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromInt(state.Context.NR)
@@ -388,7 +388,7 @@ type FNRNode struct {
 func (root *RootNode) BuildFNRNode() *FNRNode {
 	return &FNRNode{}
 }
-func (this *FNRNode) Evaluate(
+func (node *FNRNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromInt(state.Context.FNR)
@@ -401,7 +401,7 @@ type IRSNode struct {
 func (root *RootNode) BuildIRSNode() *IRSNode {
 	return &IRSNode{}
 }
-func (this *IRSNode) Evaluate(
+func (node *IRSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromString(state.Context.IRS)
@@ -414,7 +414,7 @@ type IFSNode struct {
 func (root *RootNode) BuildIFSNode() *IFSNode {
 	return &IFSNode{}
 }
-func (this *IFSNode) Evaluate(
+func (node *IFSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromString(state.Context.IFS)
@@ -427,7 +427,7 @@ type IPSNode struct {
 func (root *RootNode) BuildIPSNode() *IPSNode {
 	return &IPSNode{}
 }
-func (this *IPSNode) Evaluate(
+func (node *IPSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromString(state.Context.IPS)
@@ -440,7 +440,7 @@ type ORSNode struct {
 func (root *RootNode) BuildORSNode() *ORSNode {
 	return &ORSNode{}
 }
-func (this *ORSNode) Evaluate(
+func (node *ORSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromString(state.Context.ORS)
@@ -453,7 +453,7 @@ type OFSNode struct {
 func (root *RootNode) BuildOFSNode() *OFSNode {
 	return &OFSNode{}
 }
-func (this *OFSNode) Evaluate(
+func (node *OFSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromString(state.Context.OFS)
@@ -466,7 +466,7 @@ type OPSNode struct {
 func (root *RootNode) BuildOPSNode() *OPSNode {
 	return &OPSNode{}
 }
-func (this *OPSNode) Evaluate(
+func (node *OPSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromString(state.Context.OPS)
@@ -479,7 +479,7 @@ type OFLATSEPNode struct {
 func (root *RootNode) BuildOFLATSEPNode() *OFLATSEPNode {
 	return &OFLATSEPNode{}
 }
-func (this *OFLATSEPNode) Evaluate(
+func (node *OFLATSEPNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromString(state.Context.OFLATSEP)
@@ -513,7 +513,7 @@ type MathPINode struct {
 func (root *RootNode) BuildMathPINode() *MathPINode {
 	return &MathPINode{}
 }
-func (this *MathPINode) Evaluate(
+func (node *MathPINode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromFloat64(math.Pi)
@@ -526,7 +526,7 @@ type MathENode struct {
 func (root *RootNode) BuildMathENode() *MathENode {
 	return &MathENode{}
 }
-func (this *MathENode) Evaluate(
+func (node *MathENode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromFloat64(math.E)
@@ -544,7 +544,7 @@ func (root *RootNode) BuildArraySliceEmptyLowerIndexNode(
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceEmptyLowerIndex)
 	return &LiteralOneNode{}, nil
 }
-func (this *LiteralOneNode) Evaluate(
+func (node *LiteralOneNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromInt(1)
@@ -564,7 +564,7 @@ func (root *RootNode) BuildArraySliceEmptyUpperIndexNode(
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceEmptyUpperIndex)
 	return &LiteralEmptyStringNode{}, nil
 }
-func (this *LiteralEmptyStringNode) Evaluate(
+func (node *LiteralEmptyStringNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return types.MlrvalPointerFromString("")
@@ -581,7 +581,7 @@ type PanicNode struct {
 func (root *RootNode) BuildPanicNode(astNode *dsl.ASTNode) (*PanicNode, error) {
 	return &PanicNode{}, nil
 }
-func (this *PanicNode) Evaluate(
+func (node *PanicNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	lib.InternalCodingErrorPanic("Panic token was evaluated, not short-circuited.")

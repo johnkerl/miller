@@ -118,8 +118,8 @@ func (root *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, erro
 }
 
 // ----------------------------------------------------------------
-func (this *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	for _, ifItem := range this.ifItems {
+func (node *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	for _, ifItem := range node.ifItems {
 		condition := types.MLRVAL_TRUE
 		if ifItem.conditionNode != nil {
 			condition = ifItem.conditionNode.Evaluate(state)

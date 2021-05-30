@@ -256,45 +256,45 @@ func (root *RootNode) buildEmittableNode(
 }
 
 // ================================================================
-func (this *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	return this.executorFunc(state)
+func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	return node.executorFunc(state)
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeNonIndexed(
+func (node *EmitXStatementNode) executeNonIndexed(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
 
 	newrec := types.NewMlrmapAsRecord()
 
-	for i, emitEvaluable := range this.emitEvaluables {
+	for i, emitEvaluable := range node.emitEvaluables {
 		emittable := emitEvaluable.Evaluate(state)
 		if emittable.IsAbsent() {
 			continue
 		}
 
-		if this.isEmitP {
-			newrec.PutCopy(this.names[i], emittable)
+		if node.isEmitP {
+			newrec.PutCopy(node.names[i], emittable)
 		} else {
 			if emittable.IsMap() {
 				newrec.Merge(emittable.GetMap())
 			} else {
-				newrec.PutCopy(this.names[i], emittable)
+				newrec.PutCopy(node.names[i], emittable)
 			}
 		}
 	}
 
-	err := this.emitToRedirectFunc(newrec, state)
+	err := node.emitToRedirectFunc(newrec, state)
 
 	return nil, err
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeIndexed(
+func (node *EmitXStatementNode) executeIndexed(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
-	emittableMaps := make([]*types.Mlrmap, len(this.emitEvaluables))
-	for i, emitEvaluable := range this.emitEvaluables {
+	emittableMaps := make([]*types.Mlrmap, len(node.emitEvaluables))
+	for i, emitEvaluable := range node.emitEvaluables {
 		emittable := emitEvaluable.Evaluate(state)
 		if emittable.IsAbsent() {
 			return nil, nil
@@ -304,11 +304,11 @@ func (this *EmitXStatementNode) executeIndexed(
 		}
 		emittableMaps[i] = emittable.GetMap()
 	}
-	indices := make([]*types.Mlrval, len(this.indexEvaluables))
+	indices := make([]*types.Mlrval, len(node.indexEvaluables))
 
 	// TODO: libify this
-	for i, _ := range this.indexEvaluables {
-		indices[i] = this.indexEvaluables[i].Evaluate(state)
+	for i, _ := range node.indexEvaluables {
+		indices[i] = node.indexEvaluables[i].Evaluate(state)
 		if indices[i].IsAbsent() {
 			return nil, nil
 		}
@@ -318,8 +318,8 @@ func (this *EmitXStatementNode) executeIndexed(
 		}
 	}
 
-	return this.executeIndexedAux(
-		this.names,
+	return node.executeIndexedAux(
+		node.names,
 		types.NewMlrmapAsRecord(),
 		emittableMaps,
 		indices,
@@ -328,7 +328,7 @@ func (this *EmitXStatementNode) executeIndexed(
 }
 
 // Recurses over indices.
-func (this *EmitXStatementNode) executeIndexedAux(
+func (node *EmitXStatementNode) executeIndexedAux(
 	mapNames []string,
 	templateRecord *types.Mlrmap,
 	emittableMaps []*types.Mlrmap,
@@ -366,7 +366,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 
 		if nextLevelMaps[0] != nil && len(indices) >= 2 {
 			// recurse
-			this.executeIndexedAux(
+			node.executeIndexedAux(
 				mapNames,
 				newrec,
 				nextLevelMaps,
@@ -375,7 +375,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 			)
 		} else {
 			// end of recursion
-			if this.isEmitP {
+			if node.isEmitP {
 				for i, nextLevel := range nextLevels {
 					if nextLevel != nil {
 						newrec.PutCopy(mapNames[i], nextLevel)
@@ -393,7 +393,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 				}
 			}
 
-			err := this.emitToRedirectFunc(newrec, state)
+			err := node.emitToRedirectFunc(newrec, state)
 			if err != nil {
 				return nil, err
 			}
@@ -404,7 +404,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) emitToRecordStream(
+func (node *EmitXStatementNode) emitToRecordStream(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
@@ -418,11 +418,11 @@ func (this *EmitXStatementNode) emitToRecordStream(
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) emitToFileOrPipe(
+func (node *EmitXStatementNode) emitToFileOrPipe(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
@@ -433,7 +433,7 @@ func (this *EmitXStatementNode) emitToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	return this.outputHandlerManager.WriteRecordAndContext(
+	return node.outputHandlerManager.WriteRecordAndContext(
 		types.NewRecordAndContext(outrec, state.Context),
 		outputFileName,
 	)

@@ -138,10 +138,10 @@ func (root *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 	return retval, nil
 }
 
-func (this *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	newrec := types.NewMlrmapAsRecord()
-	for i, emitfEvaluable := range this.emitfEvaluables {
-		emitfName := this.emitfNames[i]
+	for i, emitfEvaluable := range node.emitfEvaluables {
+		emitfName := node.emitfNames[i]
 		emitfValue := emitfEvaluable.Evaluate(state)
 
 		if !emitfValue.IsAbsent() {
@@ -149,7 +149,7 @@ func (this *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 		}
 	}
 
-	err := this.emitfToRedirectFunc(newrec, state)
+	err := node.emitfToRedirectFunc(newrec, state)
 
 	return nil, err
 }
@@ -177,7 +177,7 @@ func getNameFromNamedNode(astNode *dsl.ASTNode, description string) (string, err
 }
 
 // ----------------------------------------------------------------
-func (this *EmitFStatementNode) emitfToRecordStream(
+func (node *EmitFStatementNode) emitfToRecordStream(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
@@ -191,11 +191,11 @@ func (this *EmitFStatementNode) emitfToRecordStream(
 }
 
 // ----------------------------------------------------------------
-func (this *EmitFStatementNode) emitfToFileOrPipe(
+func (node *EmitFStatementNode) emitfToFileOrPipe(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
@@ -206,7 +206,7 @@ func (this *EmitFStatementNode) emitfToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	return this.outputHandlerManager.WriteRecordAndContext(
+	return node.outputHandlerManager.WriteRecordAndContext(
 		types.NewRecordAndContext(outrec, state.Context),
 		outputFileName,
 	)

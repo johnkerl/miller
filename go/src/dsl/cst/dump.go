@@ -158,7 +158,7 @@ func (root *RootNode) buildDumpxStatementNode(
 }
 
 // ----------------------------------------------------------------
-func (this *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	// 5x faster than fmt.Dump() separately: note that os.Stdout is
 	// non-buffered in Go whereas stdout is buffered in C.
 	//
@@ -167,7 +167,7 @@ func (this *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload,
 	// Plus: we never have to worry about forgetting to do fflush(). :)
 	var buffer bytes.Buffer
 
-	for _, expressionEvaluable := range this.expressionEvaluables {
+	for _, expressionEvaluable := range node.expressionEvaluables {
 		evaluation := expressionEvaluable.Evaluate(state)
 		if !evaluation.IsAbsent() {
 			s := evaluation.String()
@@ -178,12 +178,12 @@ func (this *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload,
 		}
 	}
 	outputString := buffer.String()
-	this.dumpToRedirectFunc(outputString, state)
+	node.dumpToRedirectFunc(outputString, state)
 	return nil, nil
 }
 
 // ----------------------------------------------------------------
-func (this *DumpStatementNode) dumpToStdout(
+func (node *DumpStatementNode) dumpToStdout(
 	outputString string,
 	state *runtime.State,
 ) error {
@@ -201,7 +201,7 @@ func (this *DumpStatementNode) dumpToStdout(
 }
 
 // ----------------------------------------------------------------
-func (this *DumpStatementNode) dumpToStderr(
+func (node *DumpStatementNode) dumpToStderr(
 	outputString string,
 	state *runtime.State,
 ) error {
@@ -210,11 +210,11 @@ func (this *DumpStatementNode) dumpToStderr(
 }
 
 // ----------------------------------------------------------------
-func (this *DumpStatementNode) dumpToFileOrPipe(
+func (node *DumpStatementNode) dumpToFileOrPipe(
 	outputString string,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
@@ -225,6 +225,6 @@ func (this *DumpStatementNode) dumpToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.WriteString(outputString, outputFileName)
+	node.outputHandlerManager.WriteString(outputString, outputFileName)
 	return nil
 }

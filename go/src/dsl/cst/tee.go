@@ -140,8 +140,8 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 }
 
 // ----------------------------------------------------------------
-func (this *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	expression := this.expressionEvaluable.Evaluate(state)
+func (node *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	expression := node.expressionEvaluable.Evaluate(state)
 	if !expression.IsMap() {
 		return nil, errors.New(
 			fmt.Sprintf(
@@ -150,16 +150,16 @@ func (this *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, 
 			),
 		)
 	}
-	err := this.teeToRedirectFunc(expression.GetMap(), state)
+	err := node.teeToRedirectFunc(expression.GetMap(), state)
 	return nil, err
 }
 
 // ----------------------------------------------------------------
-func (this *TeeStatementNode) teeToFileOrPipe(
+func (node *TeeStatementNode) teeToFileOrPipe(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
@@ -170,7 +170,7 @@ func (this *TeeStatementNode) teeToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	return this.outputHandlerManager.WriteRecordAndContext(
+	return node.outputHandlerManager.WriteRecordAndContext(
 		types.NewRecordAndContext(outrec, state.Context),
 		outputFileName,
 	)
