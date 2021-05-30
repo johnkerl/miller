@@ -22,7 +22,7 @@ func NewRecordReaderDKVP(readerOptions *cliutil.TReaderOptions) *RecordReaderDKV
 	}
 }
 
-func (this *RecordReaderDKVP) Read(
+func (reader *RecordReaderDKVP) Read(
 	filenames []string,
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
@@ -31,24 +31,24 @@ func (this *RecordReaderDKVP) Read(
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
 			handle, err := lib.OpenStdin(
-				this.readerOptions.Prepipe,
-				this.readerOptions.FileInputEncoding,
+				reader.readerOptions.Prepipe,
+				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
 				errorChannel <- err
 			}
-			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
 					filename,
-					this.readerOptions.Prepipe,
-					this.readerOptions.FileInputEncoding,
+					reader.readerOptions.Prepipe,
+					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
 					errorChannel <- err
 				} else {
-					this.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
 					handle.Close()
 				}
 			}
@@ -57,7 +57,7 @@ func (this *RecordReaderDKVP) Read(
 	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
-func (this *RecordReaderDKVP) processHandle(
+func (reader *RecordReaderDKVP) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
@@ -81,11 +81,11 @@ func (this *RecordReaderDKVP) processHandle(
 		}
 
 		// Check for comments-in-data feature
-		if strings.HasPrefix(line, this.readerOptions.CommentString) {
-			if this.readerOptions.CommentHandling == cliutil.PassComments {
+		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+			if reader.readerOptions.CommentHandling == cliutil.PassComments {
 				inputChannel <- types.NewOutputString(line, context)
 				continue
-			} else if this.readerOptions.CommentHandling == cliutil.SkipComments {
+			} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
 				continue
 			}
 			// else comments are data
@@ -97,7 +97,7 @@ func (this *RecordReaderDKVP) processHandle(
 		// xxx temp pending autodetect, and pending more windows-port work
 		line = strings.TrimRight(line, "\r")
 
-		record := this.recordFromDKVPLine(&line)
+		record := reader.recordFromDKVPLine(&line)
 		context.UpdateForInputRecord()
 		inputChannel <- types.NewRecordAndContext(
 			record,
@@ -107,13 +107,13 @@ func (this *RecordReaderDKVP) processHandle(
 }
 
 // ----------------------------------------------------------------
-func (this *RecordReaderDKVP) recordFromDKVPLine(
+func (reader *RecordReaderDKVP) recordFromDKVPLine(
 	line *string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	pairs := lib.SplitString(*line, this.readerOptions.IFS)
+	pairs := lib.SplitString(*line, reader.readerOptions.IFS)
 	for i, pair := range pairs {
-		kv := strings.SplitN(pair, this.readerOptions.IPS, 2)
+		kv := strings.SplitN(pair, reader.readerOptions.IPS, 2)
 		// TODO check length 0. also, check input is empty since "".split() -> [""] not []
 		if len(kv) == 1 {
 			// E.g the pair has no equals sign: "a" rather than "a=1" or

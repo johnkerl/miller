@@ -29,7 +29,7 @@ func NewRecordReaderCSV(readerOptions *cliutil.TReaderOptions) *RecordReaderCSV 
 }
 
 // ----------------------------------------------------------------
-func (this *RecordReaderCSV) Read(
+func (reader *RecordReaderCSV) Read(
 	filenames []string,
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
@@ -38,24 +38,24 @@ func (this *RecordReaderCSV) Read(
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
 			handle, err := lib.OpenStdin(
-				this.readerOptions.Prepipe,
-				this.readerOptions.FileInputEncoding,
+				reader.readerOptions.Prepipe,
+				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
 				errorChannel <- err
 			}
-			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
 					filename,
-					this.readerOptions.Prepipe,
-					this.readerOptions.FileInputEncoding,
+					reader.readerOptions.Prepipe,
+					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
 					errorChannel <- err
 				} else {
-					this.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
 					handle.Close()
 				}
 			}
@@ -65,7 +65,7 @@ func (this *RecordReaderCSV) Read(
 }
 
 // ----------------------------------------------------------------
-func (this *RecordReaderCSV) processHandle(
+func (reader *RecordReaderCSV) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
@@ -73,12 +73,12 @@ func (this *RecordReaderCSV) processHandle(
 	errorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
-	needHeader := !this.readerOptions.UseImplicitCSVHeader
+	needHeader := !reader.readerOptions.UseImplicitCSVHeader
 	var header []string = nil
 	var rowNumber int = 0
 
 	csvReader := csv.NewReader(handle)
-	csvReader.Comma = rune(this.readerOptions.IFS[0]) // xxx temp
+	csvReader.Comma = rune(reader.readerOptions.IFS[0]) // xxx temp
 
 	for {
 		if needHeader {
@@ -94,7 +94,7 @@ func (this *RecordReaderCSV) processHandle(
 				return
 			}
 
-			isData := this.maybeConsumeComment(csvRecord, context, inputChannel)
+			isData := reader.maybeConsumeComment(csvRecord, context, inputChannel)
 			if !isData {
 				continue
 			}
@@ -117,7 +117,7 @@ func (this *RecordReaderCSV) processHandle(
 		}
 		rowNumber++
 
-		isData := this.maybeConsumeComment(csvRecord, context, inputChannel)
+		isData := reader.maybeConsumeComment(csvRecord, context, inputChannel)
 		if !isData {
 			continue
 		}
@@ -143,7 +143,7 @@ func (this *RecordReaderCSV) processHandle(
 			}
 
 		} else {
-			if !this.readerOptions.AllowRaggedCSVInput {
+			if !reader.readerOptions.AllowRaggedCSVInput {
 				err := errors.New(
 					fmt.Sprintf(
 						"Miller: CSV header/data length mismatch %d != %d "+
@@ -170,7 +170,7 @@ func (this *RecordReaderCSV) processHandle(
 				if nh > nd {
 					// if header longer than data: use "" values
 					for i = nd; i < nh; i++ {
-						record.PutCopy(header[i], &this.emptyStringMlrval)
+						record.PutCopy(header[i], &reader.emptyStringMlrval)
 					}
 				}
 			}
@@ -187,12 +187,12 @@ func (this *RecordReaderCSV) processHandle(
 
 // maybeConsumeComment returns true if the CSV record should be processed as
 // data, false otherwise.
-func (this *RecordReaderCSV) maybeConsumeComment(
+func (reader *RecordReaderCSV) maybeConsumeComment(
 	csvRecord []string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 ) bool {
-	if this.readerOptions.CommentHandling == cliutil.CommentsAreData {
+	if reader.readerOptions.CommentHandling == cliutil.CommentsAreData {
 		// Nothing is to be construed as a comment
 		return true
 	}
@@ -203,13 +203,13 @@ func (this *RecordReaderCSV) maybeConsumeComment(
 	}
 	leader := csvRecord[0]
 
-	if !strings.HasPrefix(leader, this.readerOptions.CommentString) {
+	if !strings.HasPrefix(leader, reader.readerOptions.CommentString) {
 		// Not a comment
 		return true
 	}
 
 	// Is a comment
-	if this.readerOptions.CommentHandling == cliutil.PassComments {
+	if reader.readerOptions.CommentHandling == cliutil.PassComments {
 		// What we want to do here is simple enough: write the record back into
 		// a buffer -- basically string-join on IFS but with csvWriter's
 		// double-quote handling -- and then pass the resulting string along
@@ -220,11 +220,11 @@ func (this *RecordReaderCSV) maybeConsumeComment(
 		// struct below which has non-pointer receiver.
 		buffer := NewWorkaroundBuffer()
 		csvWriter := csv.NewWriter(buffer)
-		csvWriter.Comma = rune(this.readerOptions.IFS[0]) // xxx temp
+		csvWriter.Comma = rune(reader.readerOptions.IFS[0]) // xxx temp
 		csvWriter.Write(csvRecord)
 		csvWriter.Flush()
 		inputChannel <- types.NewOutputString(buffer.String(), context)
-	} else /* this.readerOptions.CommentHandling == cliutil.SkipComments */ {
+	} else /* reader.readerOptions.CommentHandling == cliutil.SkipComments */ {
 		// discard entirely
 	}
 	return false
@@ -245,10 +245,10 @@ func NewWorkaroundBuffer() WorkaroundBuffer {
 	}
 }
 
-func (this WorkaroundBuffer) Write(p []byte) (n int, err error) {
-	return this.pbuffer.Write(p)
+func (wb WorkaroundBuffer) Write(p []byte) (n int, err error) {
+	return wb.pbuffer.Write(p)
 }
 
-func (this WorkaroundBuffer) String() string {
-	return this.pbuffer.String()
+func (wb WorkaroundBuffer) String() string {
+	return wb.pbuffer.String()
 }

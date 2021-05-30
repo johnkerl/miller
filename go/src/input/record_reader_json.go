@@ -22,7 +22,7 @@ func NewRecordReaderJSON(readerOptions *cliutil.TReaderOptions) *RecordReaderJSO
 	}
 }
 
-func (this *RecordReaderJSON) Read(
+func (reader *RecordReaderJSON) Read(
 	filenames []string,
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
@@ -31,24 +31,24 @@ func (this *RecordReaderJSON) Read(
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
 			handle, err := lib.OpenStdin(
-				this.readerOptions.Prepipe,
-				this.readerOptions.FileInputEncoding,
+				reader.readerOptions.Prepipe,
+				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
 				errorChannel <- err
 			}
-			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
 					filename,
-					this.readerOptions.Prepipe,
-					this.readerOptions.FileInputEncoding,
+					reader.readerOptions.Prepipe,
+					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
 					errorChannel <- err
 				} else {
-					this.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
 					handle.Close()
 				}
 			}
@@ -57,7 +57,7 @@ func (this *RecordReaderJSON) Read(
 	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
-func (this *RecordReaderJSON) processHandle(
+func (reader *RecordReaderJSON) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
