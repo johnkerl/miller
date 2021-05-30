@@ -19,22 +19,22 @@ type TopKeeper struct {
 
 // ----------------------------------------------------------------
 func NewTopKeeper(capacity int, doMax bool) *TopKeeper {
-	this := &TopKeeper{
+	keeper := &TopKeeper{
 		TopValues:             make([]*types.Mlrval, capacity),
 		TopRecordsAndContexts: make([]*types.RecordAndContext, capacity),
 		size:                  0,
 		capacity:              capacity,
 	}
 	if doMax {
-		this.bsearchFunc = types.BsearchMlrvalArrayForDescendingInsert
+		keeper.bsearchFunc = types.BsearchMlrvalArrayForDescendingInsert
 	} else {
-		this.bsearchFunc = types.BsearchMlrvalArrayForAscendingInsert
+		keeper.bsearchFunc = types.BsearchMlrvalArrayForAscendingInsert
 	}
-	return this
+	return keeper
 }
 
-func (this *TopKeeper) GetSize() int {
-	return this.size
+func (keeper *TopKeeper) GetSize() int {
+	return keeper.size
 }
 
 // ----------------------------------------------------------------
@@ -69,26 +69,26 @@ func (this *TopKeeper) GetSize() int {
 // Our caller, the 'top' verb, feeds us records. We keep them or not; in the
 // latter case, the Go runtime GCs them.
 
-func (this *TopKeeper) Add(value *types.Mlrval, recordAndContext *types.RecordAndContext) {
-	destidx := this.bsearchFunc(&this.TopValues, this.size, value)
+func (keeper *TopKeeper) Add(value *types.Mlrval, recordAndContext *types.RecordAndContext) {
+	destidx := keeper.bsearchFunc(&keeper.TopValues, keeper.size, value)
 
-	if this.size < this.capacity {
-		for i := this.size - 1; i >= destidx; i-- {
-			this.TopValues[i+1] = this.TopValues[i]
-			this.TopRecordsAndContexts[i+1] = this.TopRecordsAndContexts[i]
+	if keeper.size < keeper.capacity {
+		for i := keeper.size - 1; i >= destidx; i-- {
+			keeper.TopValues[i+1] = keeper.TopValues[i]
+			keeper.TopRecordsAndContexts[i+1] = keeper.TopRecordsAndContexts[i]
 		}
-		this.TopValues[destidx] = value.Copy()
-		this.TopRecordsAndContexts[destidx] = recordAndContext.Copy() // might be nil
-		this.size++
+		keeper.TopValues[destidx] = value.Copy()
+		keeper.TopRecordsAndContexts[destidx] = recordAndContext.Copy() // might be nil
+		keeper.size++
 	} else {
-		if destidx >= this.capacity {
+		if destidx >= keeper.capacity {
 			return
 		}
-		for i := this.size - 2; i >= destidx; i-- {
-			this.TopValues[i+1] = this.TopValues[i]
-			this.TopRecordsAndContexts[i+1] = this.TopRecordsAndContexts[i]
+		for i := keeper.size - 2; i >= destidx; i-- {
+			keeper.TopValues[i+1] = keeper.TopValues[i]
+			keeper.TopRecordsAndContexts[i+1] = keeper.TopRecordsAndContexts[i]
 		}
-		this.TopValues[destidx] = value.Copy()
-		this.TopRecordsAndContexts[destidx] = recordAndContext.Copy()
+		keeper.TopValues[destidx] = value.Copy()
+		keeper.TopRecordsAndContexts[destidx] = recordAndContext.Copy()
 	}
 }
