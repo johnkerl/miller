@@ -1537,8 +1537,8 @@ func NewBuiltinFunctionManager() *BuiltinFunctionManager {
 	}
 }
 
-func (this *BuiltinFunctionManager) LookUp(functionName string) *BuiltinFunctionInfo {
-	return this.hashTable[functionName]
+func (manager *BuiltinFunctionManager) LookUp(functionName string) *BuiltinFunctionInfo {
+	return manager.hashTable[functionName]
 }
 
 func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinFunctionInfo {
@@ -1562,15 +1562,15 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 }
 
 // ----------------------------------------------------------------
-func (this *BuiltinFunctionManager) ListBuiltinFunctionsRaw(o *os.File) {
-	for _, builtinFunctionInfo := range *this.lookupTable {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionsRaw(o *os.File) {
+	for _, builtinFunctionInfo := range *manager.lookupTable {
 		fmt.Fprintln(o, builtinFunctionInfo.name)
 	}
 }
 
 // ----------------------------------------------------------------
-func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
-	this.ListBuiltinFunctionUsagesDecorated(
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
+	manager.ListBuiltinFunctionUsagesDecorated(
 		o,
 		func(functionName string) { fmt.Print(functionName) }, // no decoration
 	)
@@ -1579,11 +1579,11 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
 // ListBuiltinFunctionUsagesDecorated is like ListBuiltinFunctionUsages but
 // allows the caller to specify a wrapping function around the function names
 // -- capitalization, ANSI color, etc.
-func (this *BuiltinFunctionManager) ListBuiltinFunctionUsagesDecorated(
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesDecorated(
 	o *os.File,
 	nameEmitter func(string),
 ) {
-	for i, builtinFunctionInfo := range *this.lookupTable {
+	for i, builtinFunctionInfo := range *manager.lookupTable {
 		if i > 0 {
 			fmt.Fprintln(o)
 		}
@@ -1597,23 +1597,23 @@ func (this *BuiltinFunctionManager) ListBuiltinFunctionUsagesDecorated(
 	}
 }
 
-func (this *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string, o *os.File) {
-	if !this.TryListBuiltinFunctionUsage(functionName, o) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string, o *os.File) {
+	if !manager.TryListBuiltinFunctionUsage(functionName, o) {
 		fmt.Fprintf(os.Stderr, "Function \"%s\" not found.\n", functionName)
 	}
 }
 
-func (this *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName string, o *os.File) bool {
-	builtinFunctionInfo := this.LookUp(functionName)
+func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName string, o *os.File) bool {
+	builtinFunctionInfo := manager.LookUp(functionName)
 	if builtinFunctionInfo == nil {
-		this.listBuiltinFunctionUsageApproximate(functionName, o)
+		manager.listBuiltinFunctionUsageApproximate(functionName, o)
 		return false
 	}
-	this.listBuiltinFunctionUsageExact(builtinFunctionInfo, o)
+	manager.listBuiltinFunctionUsageExact(builtinFunctionInfo, o)
 	return true
 }
 
-func (this *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
+func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
 	builtinFunctionInfo *BuiltinFunctionInfo,
 	o *os.File,
 ) {
@@ -1626,12 +1626,12 @@ func (this *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
 	)
 }
 
-func (this *BuiltinFunctionManager) listBuiltinFunctionUsageApproximate(
+func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageApproximate(
 	text string,
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "No exact match for \"%s\". Inexact matches:\n", text)
-	for _, builtinFunctionInfo := range *this.lookupTable {
+	for _, builtinFunctionInfo := range *manager.lookupTable {
 		if strings.Contains(builtinFunctionInfo.name, text) {
 			fmt.Fprintf(o, "  %s\n", builtinFunctionInfo.name)
 		}
