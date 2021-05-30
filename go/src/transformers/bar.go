@@ -164,7 +164,7 @@ func NewTransformerBar(
 	blankString string,
 ) (*TransformerBar, error) {
 
-	this := &TransformerBar{
+	tr := &TransformerBar{
 		fieldNames:  fieldNames,
 		lo:          lo,
 		hi:          hi,
@@ -174,41 +174,41 @@ func NewTransformerBar(
 		blankString: blankString,
 	}
 
-	this.bars = make([]string, width+1)
-	for i := 0; i <= this.width; i++ {
+	tr.bars = make([]string, width+1)
+	for i := 0; i <= tr.width; i++ {
 		var bar = ""
 		if i == 0 {
-			bar = this.oobString + strings.Repeat(this.blankString, width-1)
+			bar = tr.oobString + strings.Repeat(tr.blankString, width-1)
 		} else if i < width {
-			bar = strings.Repeat(this.fillString, i) + strings.Repeat(this.blankString, width-i)
+			bar = strings.Repeat(tr.fillString, i) + strings.Repeat(tr.blankString, width-i)
 		} else {
-			bar = strings.Repeat(this.fillString, width-1) + this.oobString
+			bar = strings.Repeat(tr.fillString, width-1) + tr.oobString
 		}
 
-		this.bars[i] = bar
+		tr.bars[i] = bar
 	}
 
 	if doAuto {
-		this.recordTransformerFunc = this.processAuto
-		this.recordsForAutoMode = list.New()
+		tr.recordTransformerFunc = tr.processAuto
+		tr.recordsForAutoMode = list.New()
 	} else {
-		this.recordTransformerFunc = this.processNoAuto
-		this.recordsForAutoMode = nil
+		tr.recordTransformerFunc = tr.processNoAuto
+		tr.recordsForAutoMode = nil
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerBar) Transform(
+func (tr *TransformerBar) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerBar) simpleBar(
+func (tr *TransformerBar) simpleBar(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -216,14 +216,14 @@ func (this *TransformerBar) simpleBar(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerBar) processNoAuto(
+func (tr *TransformerBar) processNoAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		for _, fieldName := range this.fieldNames {
+		for _, fieldName := range tr.fieldNames {
 			mvalue := inrec.Get(fieldName)
 			if mvalue == nil {
 				continue
@@ -232,14 +232,14 @@ func (this *TransformerBar) processNoAuto(
 			if !ok {
 				continue
 			}
-			idx := int(float64(this.width) * (floatValue - this.lo) / (this.hi - this.lo))
+			idx := int(float64(tr.width) * (floatValue - tr.lo) / (tr.hi - tr.lo))
 			if idx < 0 {
 				idx = 0
 			}
-			if idx > this.width {
-				idx = this.width
+			if idx > tr.width {
+				idx = tr.width
 			}
-			value := types.MlrvalFromString(this.bars[idx])
+			value := types.MlrvalFromString(tr.bars[idx])
 			inrec.PutReference(fieldName, &value)
 		}
 
@@ -250,25 +250,25 @@ func (this *TransformerBar) processNoAuto(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerBar) processAuto(
+func (tr *TransformerBar) processAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		this.recordsForAutoMode.PushBack(inrecAndContext.Copy())
+		tr.recordsForAutoMode.PushBack(inrecAndContext.Copy())
 		return
 	}
 
 	// Else, end of stream
 
 	// Loop over field names to be barred
-	for _, fieldName := range this.fieldNames {
+	for _, fieldName := range tr.fieldNames {
 		lo := 0.0
 		hi := 0.0
 
 		// The first pass computes lo and hi from the data
 		onFirst := true
-		for e := this.recordsForAutoMode.Front(); e != nil; e = e.Next() {
+		for e := tr.recordsForAutoMode.Front(); e != nil; e = e.Next() {
 			recordAndContexts := e.Value.(*types.RecordAndContext)
 			record := recordAndContexts.Record
 			mvalue := record.Get(fieldName)
@@ -298,7 +298,7 @@ func (this *TransformerBar) processAuto(
 		slo := fmt.Sprintf("%g", lo)
 		shi := fmt.Sprintf("%g", hi)
 
-		for e := this.recordsForAutoMode.Front(); e != nil; e = e.Next() {
+		for e := tr.recordsForAutoMode.Front(); e != nil; e = e.Next() {
 			recordAndContext := e.Value.(*types.RecordAndContext)
 			record := recordAndContext.Record
 			mvalue := record.Get(fieldName)
@@ -310,19 +310,19 @@ func (this *TransformerBar) processAuto(
 				continue
 			}
 
-			idx := int((float64(this.width) * (floatValue - lo) / (hi - lo)))
+			idx := int((float64(tr.width) * (floatValue - lo) / (hi - lo)))
 			if idx < 0 {
 				idx = 0
 			}
-			if idx > this.width {
-				idx = this.width
+			if idx > tr.width {
+				idx = tr.width
 			}
 
 			var buffer bytes.Buffer // faster than fmt.Print() separately
 			buffer.WriteString("[")
 			buffer.WriteString(slo)
 			buffer.WriteString("]")
-			buffer.WriteString(this.bars[idx])
+			buffer.WriteString(tr.bars[idx])
 			buffer.WriteString("[")
 			buffer.WriteString(shi)
 			buffer.WriteString("]")
@@ -331,7 +331,7 @@ func (this *TransformerBar) processAuto(
 		}
 	}
 
-	for e := this.recordsForAutoMode.Front(); e != nil; e = e.Next() {
+	for e := tr.recordsForAutoMode.Front(); e != nil; e = e.Next() {
 		recordAndContext := e.Value.(*types.RecordAndContext)
 		outputChannel <- recordAndContext
 	}

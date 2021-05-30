@@ -109,21 +109,21 @@ func NewTransformerLabel(
 		uniquenessChecker[newName] = true
 	}
 
-	this := &TransformerLabel{
+	tr := &TransformerLabel{
 		newNames: newNames,
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerLabel) Transform(
+func (tr *TransformerLabel) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		inrec.Label(this.newNames)
+		inrec.Label(tr.newNames)
 	}
 	outputChannel <- inrecAndContext // including end-of-stream marker
 }

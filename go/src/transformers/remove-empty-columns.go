@@ -80,38 +80,38 @@ type TransformerRemoveEmptyColumns struct {
 }
 
 func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) {
-	this := &TransformerRemoveEmptyColumns{
+	tr := &TransformerRemoveEmptyColumns{
 		recordsAndContexts:      list.New(),
 		namesWithNonEmptyValues: make(map[string]bool),
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRemoveEmptyColumns) Transform(
+func (tr *TransformerRemoveEmptyColumns) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		this.recordsAndContexts.PushBack(inrecAndContext)
+		tr.recordsAndContexts.PushBack(inrecAndContext)
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if !pe.Value.IsEmpty() {
-				this.namesWithNonEmptyValues[pe.Key] = true
+				tr.namesWithNonEmptyValues[pe.Key] = true
 			}
 		}
 
 	} else { // end of record stream
 
-		for e := this.recordsAndContexts.Front(); e != nil; e = e.Next() {
+		for e := tr.recordsAndContexts.Front(); e != nil; e = e.Next() {
 			outrecAndContext := e.Value.(*types.RecordAndContext)
 			outrec := outrecAndContext.Record
 
 			newrec := types.NewMlrmapAsRecord()
 
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				_, ok := this.namesWithNonEmptyValues[pe.Key]
+				_, ok := tr.namesWithNonEmptyValues[pe.Key]
 				if ok {
 					// Transferring ownership from old record to new record; no copy needed
 					newrec.PutReference(pe.Key, pe.Value)

@@ -140,7 +140,7 @@ func NewTransformerReorder(
 	afterFieldName string,
 ) (*TransformerReorder, error) {
 
-	this := &TransformerReorder{
+	tr := &TransformerReorder{
 		fieldNames:      fieldNames,
 		fieldNamesSet:   lib.StringListToSet(fieldNames),
 		beforeFieldName: beforeFieldName,
@@ -148,35 +148,35 @@ func NewTransformerReorder(
 	}
 
 	if putAtEnd {
-		this.recordTransformerFunc = this.reorderToEnd
+		tr.recordTransformerFunc = tr.reorderToEnd
 	} else if beforeFieldName != "" {
-		this.recordTransformerFunc = this.reorderBefore
+		tr.recordTransformerFunc = tr.reorderBefore
 	} else if afterFieldName != "" {
-		this.recordTransformerFunc = this.reorderAfter
+		tr.recordTransformerFunc = tr.reorderAfter
 	} else {
-		this.recordTransformerFunc = this.reorderToStart
-		lib.ReverseStringList(this.fieldNames)
+		tr.recordTransformerFunc = tr.reorderToStart
+		lib.ReverseStringList(tr.fieldNames)
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReorder) Transform(
+func (tr *TransformerReorder) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReorder) reorderToStart(
+func (tr *TransformerReorder) reorderToStart(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		for _, fieldName := range this.fieldNames {
+		for _, fieldName := range tr.fieldNames {
 			inrec.MoveToHead(fieldName)
 		}
 		outputChannel <- inrecAndContext
@@ -187,13 +187,13 @@ func (this *TransformerReorder) reorderToStart(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReorder) reorderToEnd(
+func (tr *TransformerReorder) reorderToEnd(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		for _, fieldName := range this.fieldNames {
+		for _, fieldName := range tr.fieldNames {
 			inrec.MoveToTail(fieldName)
 		}
 		outputChannel <- inrecAndContext
@@ -203,13 +203,13 @@ func (this *TransformerReorder) reorderToEnd(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReorder) reorderBefore(
+func (tr *TransformerReorder) reorderBefore(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		if inrec.Get(this.beforeFieldName) == nil {
+		if inrec.Get(tr.beforeFieldName) == nil {
 			outputChannel <- inrecAndContext
 			return
 		}
@@ -221,33 +221,33 @@ func (this *TransformerReorder) reorderBefore(
 		// * We will use outrec.PutReference not output.PutCopy since inrec will be GC'ed
 
 		for ; pe != nil; pe = pe.Next {
-			if pe.Key == this.beforeFieldName {
+			if pe.Key == tr.beforeFieldName {
 				break
 			}
-			if !this.fieldNamesSet[pe.Key] {
+			if !tr.fieldNamesSet[pe.Key] {
 				outrec.PutReference(pe.Key, pe.Value)
 			}
 		}
 
-		for _, fieldName := range this.fieldNames {
+		for _, fieldName := range tr.fieldNames {
 			value := inrec.Get(fieldName)
 			if value != nil {
 				outrec.PutReference(fieldName, value)
 			}
 		}
 
-		value := inrec.Get(this.beforeFieldName)
+		value := inrec.Get(tr.beforeFieldName)
 		if value != nil {
-			outrec.PutReference(this.beforeFieldName, value)
+			outrec.PutReference(tr.beforeFieldName, value)
 		}
 
 		for ; pe != nil; pe = pe.Next {
-			if pe.Key != this.beforeFieldName && !this.fieldNamesSet[pe.Key] {
+			if pe.Key != tr.beforeFieldName && !tr.fieldNamesSet[pe.Key] {
 				outrec.PutReference(pe.Key, pe.Value)
 			}
 		}
 
-		for _, fieldName := range this.fieldNames {
+		for _, fieldName := range tr.fieldNames {
 			inrec.MoveToHead(fieldName)
 		}
 		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
@@ -258,13 +258,13 @@ func (this *TransformerReorder) reorderBefore(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReorder) reorderAfter(
+func (tr *TransformerReorder) reorderAfter(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		if inrec.Get(this.afterFieldName) == nil {
+		if inrec.Get(tr.afterFieldName) == nil {
 			outputChannel <- inrecAndContext
 			return
 		}
@@ -276,20 +276,20 @@ func (this *TransformerReorder) reorderAfter(
 		// * We will use outrec.PutReference not output.PutCopy since inrec will be GC'ed
 
 		for ; pe != nil; pe = pe.Next {
-			if pe.Key == this.afterFieldName {
+			if pe.Key == tr.afterFieldName {
 				break
 			}
-			if !this.fieldNamesSet[pe.Key] {
+			if !tr.fieldNamesSet[pe.Key] {
 				outrec.PutReference(pe.Key, pe.Value)
 			}
 		}
 
-		value := inrec.Get(this.afterFieldName)
+		value := inrec.Get(tr.afterFieldName)
 		if value != nil {
-			outrec.PutReference(this.afterFieldName, value)
+			outrec.PutReference(tr.afterFieldName, value)
 		}
 
-		for _, fieldName := range this.fieldNames {
+		for _, fieldName := range tr.fieldNames {
 			value := inrec.Get(fieldName)
 			if value != nil {
 				outrec.PutReference(fieldName, value)
@@ -297,12 +297,12 @@ func (this *TransformerReorder) reorderAfter(
 		}
 
 		for ; pe != nil; pe = pe.Next {
-			if pe.Key != this.afterFieldName && !this.fieldNamesSet[pe.Key] {
+			if pe.Key != tr.afterFieldName && !tr.fieldNamesSet[pe.Key] {
 				outrec.PutReference(pe.Key, pe.Value)
 			}
 		}
 
-		for _, fieldName := range this.fieldNames {
+		for _, fieldName := range tr.fieldNames {
 			inrec.MoveToHead(fieldName)
 		}
 		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)

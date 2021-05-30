@@ -123,21 +123,21 @@ func NewTransformerFlatten(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFlatten) Transform(
+func (tr *TransformerFlatten) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFlatten) flattenAll(
+func (tr *TransformerFlatten) flattenAll(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		oFlatSep := this.oFlatSep
+		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
 			oFlatSep = inrecAndContext.Context.OFLATSEP
 		}
@@ -149,17 +149,17 @@ func (this *TransformerFlatten) flattenAll(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFlatten) flattenSome(
+func (tr *TransformerFlatten) flattenSome(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		oFlatSep := this.oFlatSep
+		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
 			oFlatSep = inrecAndContext.Context.OFLATSEP
 		}
-		inrec.FlattenFields(this.fieldNameSet, oFlatSep)
+		inrec.FlattenFields(tr.fieldNameSet, oFlatSep)
 		outputChannel <- inrecAndContext
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker

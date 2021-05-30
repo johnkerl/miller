@@ -81,15 +81,15 @@ type TransformerGroupLike struct {
 
 func NewTransformerGroupLike() (*TransformerGroupLike, error) {
 
-	this := &TransformerGroupLike{
+	tr := &TransformerGroupLike{
 		recordListsByGroup: lib.NewOrderedMap(),
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerGroupLike) Transform(
+func (tr *TransformerGroupLike) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -98,16 +98,16 @@ func (this *TransformerGroupLike) Transform(
 
 		groupingKey := inrec.GetKeysJoined()
 
-		recordListForGroup := this.recordListsByGroup.Get(groupingKey)
+		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil { // first time
 			recordListForGroup = list.New()
-			this.recordListsByGroup.Put(groupingKey, recordListForGroup)
+			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
 
 		recordListForGroup.(*list.List).PushBack(inrecAndContext)
 
 	} else {
-		for outer := this.recordListsByGroup.Head; outer != nil; outer = outer.Next {
+		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
 			recordListForGroup := outer.Value.(*list.List)
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				outputChannel <- inner.Value.(*types.RecordAndContext)

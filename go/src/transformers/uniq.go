@@ -284,7 +284,7 @@ func NewTransformerUniq(
 	uniqifyEntireRecords bool,
 ) (*TransformerUniq, error) {
 
-	this := &TransformerUniq{
+	tr := &TransformerUniq{
 		fieldNames:      fieldNames,
 		showCounts:      showCounts,
 		outputFieldName: outputFieldName,
@@ -299,37 +299,37 @@ func NewTransformerUniq(
 
 	if uniqifyEntireRecords {
 		if showCounts {
-			this.recordTransformerFunc = this.transformUniqifyEntireRecordsShowCounts
+			tr.recordTransformerFunc = tr.transformUniqifyEntireRecordsShowCounts
 		} else if showNumDistinctOnly {
-			this.recordTransformerFunc = this.transformUniqifyEntireRecordsShowNumDistinctOnly
+			tr.recordTransformerFunc = tr.transformUniqifyEntireRecordsShowNumDistinctOnly
 		} else {
-			this.recordTransformerFunc = this.transformUniqifyEntireRecords
+			tr.recordTransformerFunc = tr.transformUniqifyEntireRecords
 		}
 	} else if !doLashed {
-		this.recordTransformerFunc = this.transformUnlashed
+		tr.recordTransformerFunc = tr.transformUnlashed
 	} else if showNumDistinctOnly {
-		this.recordTransformerFunc = this.transformNumDistinctOnly
+		tr.recordTransformerFunc = tr.transformNumDistinctOnly
 	} else if showCounts {
-		this.recordTransformerFunc = this.transformWithCounts
+		tr.recordTransformerFunc = tr.transformWithCounts
 	} else {
-		this.recordTransformerFunc = this.transformWithoutCounts
+		tr.recordTransformerFunc = tr.transformWithoutCounts
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUniq) Transform(
+func (tr *TransformerUniq) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
 // Print each unique record only once, with uniqueness counts.  This means
 // non-streaming, with output at end of stream.
-func (this *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
+func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -337,21 +337,21 @@ func (this *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 		inrec := inrecAndContext.Record
 
 		recordAsString := inrec.String()
-		icount, present := this.uniqifiedRecordCounts.GetWithCheck(recordAsString)
+		icount, present := tr.uniqifiedRecordCounts.GetWithCheck(recordAsString)
 		if !present { // first time seen
-			this.uniqifiedRecordCounts.Put(recordAsString, 1)
-			this.uniqifiedRecords.Put(recordAsString, inrecAndContext.Copy())
+			tr.uniqifiedRecordCounts.Put(recordAsString, 1)
+			tr.uniqifiedRecords.Put(recordAsString, inrecAndContext.Copy())
 		} else { // have seen before
-			this.uniqifiedRecordCounts.Put(recordAsString, icount.(int)+1)
+			tr.uniqifiedRecordCounts.Put(recordAsString, icount.(int)+1)
 		}
 
 	} else { // end of record stream
 
-		for pe := this.uniqifiedRecords.Head; pe != nil; pe = pe.Next {
+		for pe := tr.uniqifiedRecords.Head; pe != nil; pe = pe.Next {
 			outrecAndContext := pe.Value.(*types.RecordAndContext)
-			icount := this.uniqifiedRecordCounts.Get(pe.Key)
+			icount := tr.uniqifiedRecordCounts.Get(pe.Key)
 			mcount := types.MlrvalPointerFromInt(icount.(int))
-			outrecAndContext.Record.PrependReference(this.outputFieldName, mcount)
+			outrecAndContext.Record.PrependReference(tr.outputFieldName, mcount)
 			outputChannel <- outrecAndContext
 		}
 
@@ -363,22 +363,22 @@ func (this *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 // ----------------------------------------------------------------
 // Print count of unique records.  This means non-streaming, with output at end
 // of stream.
-func (this *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
+func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		recordAsString := inrec.String()
-		if !this.uniqifiedRecordCounts.Has(recordAsString) {
-			this.uniqifiedRecordCounts.Put(recordAsString, 1)
+		if !tr.uniqifiedRecordCounts.Has(recordAsString) {
+			tr.uniqifiedRecordCounts.Put(recordAsString, 1)
 		}
 
 	} else { // end of record stream
 		outrec := types.NewMlrmapAsRecord()
 		outrec.PutReference(
-			this.outputFieldName,
-			types.MlrvalPointerFromInt(this.uniqifiedRecordCounts.FieldCount),
+			tr.outputFieldName,
+			types.MlrvalPointerFromInt(tr.uniqifiedRecordCounts.FieldCount),
 		)
 		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 
@@ -388,7 +388,7 @@ func (this *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 
 // ----------------------------------------------------------------
 // Print each unique record only once (on first occurrence).
-func (this *TransformerUniq) transformUniqifyEntireRecords(
+func (tr *TransformerUniq) transformUniqifyEntireRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -396,8 +396,8 @@ func (this *TransformerUniq) transformUniqifyEntireRecords(
 		inrec := inrecAndContext.Record
 
 		recordAsString := inrec.String()
-		if !this.uniqifiedRecordCounts.Has(recordAsString) {
-			this.uniqifiedRecordCounts.Put(recordAsString, 1)
+		if !tr.uniqifiedRecordCounts.Has(recordAsString) {
+			tr.uniqifiedRecordCounts.Put(recordAsString, 1)
 			outputChannel <- inrecAndContext
 		}
 
@@ -408,20 +408,20 @@ func (this *TransformerUniq) transformUniqifyEntireRecords(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUniq) transformUnlashed(
+func (tr *TransformerUniq) transformUnlashed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		for _, fieldName := range this.fieldNames {
+		for _, fieldName := range tr.fieldNames {
 			var countsForFieldName *lib.OrderedMap = nil
-			iCountsForFieldName, present := this.unlashedCounts.GetWithCheck(fieldName)
+			iCountsForFieldName, present := tr.unlashedCounts.GetWithCheck(fieldName)
 			if !present {
 				countsForFieldName = lib.NewOrderedMap()
-				this.unlashedCounts.Put(fieldName, countsForFieldName)
-				this.unlashedCountValues.Put(fieldName, lib.NewOrderedMap())
+				tr.unlashedCounts.Put(fieldName, countsForFieldName)
+				tr.unlashedCountValues.Put(fieldName, lib.NewOrderedMap())
 			} else {
 				countsForFieldName = iCountsForFieldName.(*lib.OrderedMap)
 			}
@@ -431,7 +431,7 @@ func (this *TransformerUniq) transformUnlashed(
 				fieldValueString := fieldValue.String()
 				if !countsForFieldName.Has(fieldValueString) {
 					countsForFieldName.Put(fieldValueString, 1)
-					this.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Put(fieldValueString, fieldValue.Copy())
+					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Put(fieldValueString, fieldValue.Copy())
 				} else {
 					countsForFieldName.Put(fieldValueString, countsForFieldName.Get(fieldValueString).(int)+1)
 				}
@@ -440,7 +440,7 @@ func (this *TransformerUniq) transformUnlashed(
 
 	} else { // end of record stream
 
-		for pe := this.unlashedCounts.Head; pe != nil; pe = pe.Next {
+		for pe := tr.unlashedCounts.Head; pe != nil; pe = pe.Next {
 			fieldName := pe.Key
 			countsForFieldName := pe.Value.(*lib.OrderedMap)
 			for pf := countsForFieldName.Head; pf != nil; pf = pf.Next {
@@ -449,7 +449,7 @@ func (this *TransformerUniq) transformUnlashed(
 				outrec.PutReference("field", types.MlrvalPointerFromString(fieldName))
 				outrec.PutCopy(
 					"value",
-					this.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Get(fieldValueString).(*types.Mlrval),
+					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Get(fieldValueString).(*types.Mlrval),
 				)
 				outrec.PutReference("count", types.MlrvalPointerFromInt(pf.Value.(int)))
 				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
@@ -461,20 +461,20 @@ func (this *TransformerUniq) transformUnlashed(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUniq) transformNumDistinctOnly(
+func (tr *TransformerUniq) transformNumDistinctOnly(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.fieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.fieldNames)
 		if ok {
-			iCount, present := this.countsByGroup.GetWithCheck(groupingKey)
+			iCount, present := tr.countsByGroup.GetWithCheck(groupingKey)
 			if !present {
-				this.countsByGroup.Put(groupingKey, 1)
+				tr.countsByGroup.Put(groupingKey, 1)
 			} else {
-				this.countsByGroup.Put(groupingKey, iCount.(int)+1)
+				tr.countsByGroup.Put(groupingKey, iCount.(int)+1)
 			}
 		}
 
@@ -482,7 +482,7 @@ func (this *TransformerUniq) transformNumDistinctOnly(
 		outrec := types.NewMlrmapAsRecord()
 		outrec.PutReference(
 			"count",
-			types.MlrvalPointerFromInt(this.countsByGroup.FieldCount),
+			types.MlrvalPointerFromInt(tr.countsByGroup.FieldCount),
 		)
 		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 
@@ -491,38 +491,38 @@ func (this *TransformerUniq) transformNumDistinctOnly(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUniq) transformWithCounts(
+func (tr *TransformerUniq) transformWithCounts(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(this.fieldNames)
+		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(tr.fieldNames)
 		if ok {
-			iCount, present := this.countsByGroup.GetWithCheck(groupingKey)
+			iCount, present := tr.countsByGroup.GetWithCheck(groupingKey)
 			if !present {
-				this.countsByGroup.Put(groupingKey, 1)
-				this.valuesByGroup.Put(groupingKey, selectedValues)
+				tr.countsByGroup.Put(groupingKey, 1)
+				tr.valuesByGroup.Put(groupingKey, selectedValues)
 			} else {
-				this.countsByGroup.Put(groupingKey, iCount.(int)+1)
+				tr.countsByGroup.Put(groupingKey, iCount.(int)+1)
 			}
 		}
 
 	} else { // end of record stream
 
-		for pa := this.countsByGroup.Head; pa != nil; pa = pa.Next {
+		for pa := tr.countsByGroup.Head; pa != nil; pa = pa.Next {
 			outrec := types.NewMlrmapAsRecord()
-			valuesForGroup := this.valuesByGroup.Get(pa.Key).([]*types.Mlrval)
-			for i, fieldName := range this.fieldNames {
+			valuesForGroup := tr.valuesByGroup.Get(pa.Key).([]*types.Mlrval)
+			for i, fieldName := range tr.fieldNames {
 				outrec.PutCopy(
 					fieldName,
 					valuesForGroup[i],
 				)
 			}
-			if this.showCounts {
+			if tr.showCounts {
 				outrec.PutReference(
-					this.outputFieldName,
+					tr.outputFieldName,
 					types.MlrvalPointerFromInt(pa.Value.(int)),
 				)
 			}
@@ -534,25 +534,25 @@ func (this *TransformerUniq) transformWithCounts(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUniq) transformWithoutCounts(
+func (tr *TransformerUniq) transformWithoutCounts(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(this.fieldNames)
+		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(tr.fieldNames)
 		if !ok {
 			return
 		}
 
-		iCount, present := this.countsByGroup.GetWithCheck(groupingKey)
+		iCount, present := tr.countsByGroup.GetWithCheck(groupingKey)
 		if !present {
-			this.countsByGroup.Put(groupingKey, 1)
-			this.valuesByGroup.Put(groupingKey, selectedValues)
+			tr.countsByGroup.Put(groupingKey, 1)
+			tr.valuesByGroup.Put(groupingKey, selectedValues)
 			outrec := types.NewMlrmapAsRecord()
 
-			for i, fieldName := range this.fieldNames {
+			for i, fieldName := range tr.fieldNames {
 				outrec.PutCopy(
 					fieldName,
 					selectedValues[i],
@@ -562,7 +562,7 @@ func (this *TransformerUniq) transformWithoutCounts(
 			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 
 		} else {
-			this.countsByGroup.Put(groupingKey, iCount.(int)+1)
+			tr.countsByGroup.Put(groupingKey, iCount.(int)+1)
 		}
 
 	} else { // end of record stream

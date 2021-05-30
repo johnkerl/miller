@@ -184,30 +184,30 @@ func NewTransformerSeqgen(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSeqgen) Transform(
+func (tr *TransformerSeqgen) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	counter := this.start
+	counter := tr.start
 	context := types.NewContext(nil)
 	context.UpdateForStartOfFile("seqgen")
 
 	for {
-		this.mdone = this.doneComparator(counter, this.stop)
-		done, _ := this.mdone.GetBoolValue()
+		tr.mdone = tr.doneComparator(counter, tr.stop)
+		done, _ := tr.mdone.GetBoolValue()
 		if done {
 			break
 		}
 
 		outrec := types.NewMlrmapAsRecord()
-		outrec.PutCopy(this.fieldName, counter)
+		outrec.PutCopy(tr.fieldName, counter)
 
 		context.UpdateForInputRecord()
 
 		outrecAndContext := types.NewRecordAndContext(outrec, context)
 		outputChannel <- outrecAndContext
 
-		counter = types.MlrvalBinaryPlus(counter, this.step)
+		counter = types.MlrvalBinaryPlus(counter, tr.step)
 	}
 
 	outputChannel <- types.NewEndOfStreamMarker(context)

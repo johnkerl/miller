@@ -78,12 +78,12 @@ type TransformerSkipTrivialRecords struct {
 }
 
 func NewTransformerSkipTrivialRecords() (*TransformerSkipTrivialRecords, error) {
-	this := &TransformerSkipTrivialRecords{}
-	return this, nil
+	tr := &TransformerSkipTrivialRecords{}
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSkipTrivialRecords) Transform(
+func (tr *TransformerSkipTrivialRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

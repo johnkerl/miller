@@ -77,12 +77,12 @@ type TransformerAltkv struct {
 }
 
 func NewTransformerAltkv() (*TransformerAltkv, error) {
-	this := &TransformerAltkv{}
-	return this, nil
+	tr := &TransformerAltkv{}
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerAltkv) Transform(
+func (tr *TransformerAltkv) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

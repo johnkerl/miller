@@ -96,38 +96,38 @@ func NewTransformerGroupBy(
 	groupByFieldNames []string,
 ) (*TransformerGroupBy, error) {
 
-	this := &TransformerGroupBy{
+	tr := &TransformerGroupBy{
 		groupByFieldNames: groupByFieldNames,
 
 		recordListsByGroup: lib.NewOrderedMap(),
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerGroupBy) Transform(
+func (tr *TransformerGroupBy) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if !ok {
 			return
 		}
 
-		recordListForGroup := this.recordListsByGroup.Get(groupingKey)
+		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil {
 			recordListForGroup = list.New()
-			this.recordListsByGroup.Put(groupingKey, recordListForGroup)
+			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
 		}
 
 		recordListForGroup.(*list.List).PushBack(inrecAndContext)
 
 	} else {
-		for outer := this.recordListsByGroup.Head; outer != nil; outer = outer.Next {
+		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
 			recordListForGroup := outer.Value.(*list.List)
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				outputChannel <- inner.Value.(*types.RecordAndContext)

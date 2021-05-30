@@ -133,22 +133,22 @@ func NewTransformerJSONStringify(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerJSONStringify) Transform(
+func (tr *TransformerJSONStringify) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerJSONStringify) jsonStringifyAll(
+func (tr *TransformerJSONStringify) jsonStringifyAll(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			pe.JSONStringifyInPlace(this.jsonFormatting)
+			pe.JSONStringifyInPlace(tr.jsonFormatting)
 		}
 		outputChannel <- inrecAndContext
 	} else {
@@ -157,15 +157,15 @@ func (this *TransformerJSONStringify) jsonStringifyAll(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerJSONStringify) jsonStringifySome(
+func (tr *TransformerJSONStringify) jsonStringifySome(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if this.fieldNameSet[pe.Key] {
-				pe.JSONStringifyInPlace(this.jsonFormatting)
+			if tr.fieldNameSet[pe.Key] {
+				pe.JSONStringifyInPlace(tr.jsonFormatting)
 			}
 		}
 		outputChannel <- inrecAndContext

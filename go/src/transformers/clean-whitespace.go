@@ -109,29 +109,29 @@ func NewTransformerCleanWhitespace(
 	doValues bool,
 ) (*TransformerCleanWhitespace, error) {
 
-	this := &TransformerCleanWhitespace{}
+	tr := &TransformerCleanWhitespace{}
 
 	if doKeys && doValues {
-		this.recordTransformerFunc = this.cleanWhitespaceInKeysAndValues
+		tr.recordTransformerFunc = tr.cleanWhitespaceInKeysAndValues
 	} else if doKeys {
-		this.recordTransformerFunc = this.cleanWhitespaceInKeys
+		tr.recordTransformerFunc = tr.cleanWhitespaceInKeys
 	} else {
-		this.recordTransformerFunc = this.cleanWhitespaceInValues
+		tr.recordTransformerFunc = tr.cleanWhitespaceInValues
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCleanWhitespace) Transform(
+func (tr *TransformerCleanWhitespace) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
+func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -154,7 +154,7 @@ func (this *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCleanWhitespace) cleanWhitespaceInKeys(
+func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -176,7 +176,7 @@ func (this *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCleanWhitespace) cleanWhitespaceInValues(
+func (tr *TransformerCleanWhitespace) cleanWhitespaceInValues(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

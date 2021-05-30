@@ -239,7 +239,7 @@ func NewTransformerNest(
 	doAcrossFields bool,
 ) (*TransformerNest, error) {
 
-	this := &TransformerNest{
+	tr := &TransformerNest{
 		fieldName: fieldName,
 		nestedFS:  cliutil.SeparatorFromArg(nestedFS), // "pipe" -> "|", etc
 		nestedPS:  cliutil.SeparatorFromArg(nestedPS),
@@ -256,23 +256,23 @@ func NewTransformerNest(
 		)
 		os.Exit(1)
 	}
-	this.regex = regex
+	tr.regex = regex
 
 	// For implode across records
-	this.otherKeysToOtherValuesToBuckets = lib.NewOrderedMap()
+	tr.otherKeysToOtherValuesToBuckets = lib.NewOrderedMap()
 
 	if doExplode {
 		if doPairs {
 			if doAcrossFields {
-				this.recordTransformerFunc = this.explodePairsAcrossFields
+				tr.recordTransformerFunc = tr.explodePairsAcrossFields
 			} else {
-				this.recordTransformerFunc = this.explodePairsAcrossRecords
+				tr.recordTransformerFunc = tr.explodePairsAcrossRecords
 			}
 		} else {
 			if doAcrossFields {
-				this.recordTransformerFunc = this.explodeValuesAcrossFields
+				tr.recordTransformerFunc = tr.explodeValuesAcrossFields
 			} else {
-				this.recordTransformerFunc = this.explodeValuesAcrossRecords
+				tr.recordTransformerFunc = tr.explodeValuesAcrossRecords
 			}
 		}
 	} else {
@@ -281,33 +281,33 @@ func NewTransformerNest(
 			// Should have been caught in CLI-parser.
 		} else {
 			if doAcrossFields {
-				this.recordTransformerFunc = this.implodeValuesAcrossFields
+				tr.recordTransformerFunc = tr.implodeValuesAcrossFields
 			} else {
-				this.recordTransformerFunc = this.implodeValueAcrossRecords
+				tr.recordTransformerFunc = tr.implodeValueAcrossRecords
 			}
 		}
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerNest) Transform(
+func (tr *TransformerNest) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerNest) explodeValuesAcrossFields(
+func (tr *TransformerNest) explodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 
 		inrec := inrecAndContext.Record
-		originalEntry := inrec.GetEntry(this.fieldName)
+		originalEntry := inrec.GetEntry(tr.fieldName)
 		if originalEntry == nil {
 			outputChannel <- inrecAndContext
 			return
@@ -318,10 +318,10 @@ func (this *TransformerNest) explodeValuesAcrossFields(
 		svalue := mvalue.String()
 
 		// Not lib.SplitString so 'x=' will map to 'x_1=', rather than no field at all
-		pieces := strings.Split(svalue, this.nestedFS)
+		pieces := strings.Split(svalue, tr.nestedFS)
 		i := 1
 		for _, piece := range pieces {
-			key := this.fieldName + "_" + strconv.Itoa(i)
+			key := tr.fieldName + "_" + strconv.Itoa(i)
 			value := types.MlrvalPointerFromString(piece)
 			recordEntry = inrec.PutReferenceAfter(recordEntry, key, value)
 			i++
@@ -336,13 +336,13 @@ func (this *TransformerNest) explodeValuesAcrossFields(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerNest) explodeValuesAcrossRecords(
+func (tr *TransformerNest) explodeValuesAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		mvalue := inrec.Get(this.fieldName)
+		mvalue := inrec.Get(tr.fieldName)
 		if mvalue == nil {
 			outputChannel <- inrecAndContext
 			return
@@ -350,10 +350,10 @@ func (this *TransformerNest) explodeValuesAcrossRecords(
 		svalue := mvalue.String()
 
 		// Not lib.SplitString so 'x=' will map to 'x=', rather than no field at all
-		pieces := strings.Split(svalue, this.nestedFS)
+		pieces := strings.Split(svalue, tr.nestedFS)
 		for _, piece := range pieces {
 			outrec := inrec.Copy()
-			outrec.PutReference(this.fieldName, types.MlrvalPointerFromString(piece))
+			outrec.PutReference(tr.fieldName, types.MlrvalPointerFromString(piece))
 			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 		}
 
@@ -363,14 +363,14 @@ func (this *TransformerNest) explodeValuesAcrossRecords(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerNest) explodePairsAcrossFields(
+func (tr *TransformerNest) explodePairsAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 
 		inrec := inrecAndContext.Record
-		originalEntry := inrec.GetEntry(this.fieldName)
+		originalEntry := inrec.GetEntry(tr.fieldName)
 		if originalEntry == nil {
 			outputChannel <- inrecAndContext
 			return
@@ -380,9 +380,9 @@ func (this *TransformerNest) explodePairsAcrossFields(
 		svalue := mvalue.String()
 
 		recordEntry := originalEntry
-		pieces := lib.SplitString(svalue, this.nestedFS)
+		pieces := lib.SplitString(svalue, tr.nestedFS)
 		for _, piece := range pieces {
-			pair := strings.SplitN(piece, this.nestedPS, 2)
+			pair := strings.SplitN(piece, tr.nestedPS, 2)
 			if len(pair) == 2 { // there is a pair
 				recordEntry = inrec.PutReferenceAfter(
 					recordEntry,
@@ -392,7 +392,7 @@ func (this *TransformerNest) explodePairsAcrossFields(
 			} else { // there is not a pair
 				recordEntry = inrec.PutReferenceAfter(
 					recordEntry,
-					this.fieldName,
+					tr.fieldName,
 					types.MlrvalPointerFromString(piece),
 				)
 			}
@@ -407,32 +407,32 @@ func (this *TransformerNest) explodePairsAcrossFields(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerNest) explodePairsAcrossRecords(
+func (tr *TransformerNest) explodePairsAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		mvalue := inrec.Get(this.fieldName)
+		mvalue := inrec.Get(tr.fieldName)
 		if mvalue == nil {
 			outputChannel <- inrecAndContext
 			return
 		}
 
 		svalue := mvalue.String()
-		pieces := lib.SplitString(svalue, this.nestedFS)
+		pieces := lib.SplitString(svalue, tr.nestedFS)
 		for _, piece := range pieces {
 			outrec := inrec.Copy()
 
-			originalEntry := outrec.GetEntry(this.fieldName)
+			originalEntry := outrec.GetEntry(tr.fieldName)
 
 			// Put the new field where the old one was -- unless there's already a field with the new
 			// name, in which case replace its value.
-			pair := strings.SplitN(piece, this.nestedPS, 2)
+			pair := strings.SplitN(piece, tr.nestedPS, 2)
 			if len(pair) == 2 { // there is a pair
 				outrec.PutReferenceAfter(originalEntry, pair[0], types.MlrvalPointerFromString(pair[1]))
 			} else { // there is not a pair
-				outrec.PutReferenceAfter(originalEntry, this.fieldName, types.MlrvalPointerFromString(piece))
+				outrec.PutReferenceAfter(originalEntry, tr.fieldName, types.MlrvalPointerFromString(piece))
 			}
 
 			outrec.Unlink(originalEntry)
@@ -445,7 +445,7 @@ func (this *TransformerNest) explodePairsAcrossRecords(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerNest) implodeValuesAcrossFields(
+func (tr *TransformerNest) implodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -456,9 +456,9 @@ func (this *TransformerNest) implodeValuesAcrossFields(
 		fieldCount := 0
 		var buffer bytes.Buffer
 		for pe := inrec.Head; pe != nil; /* increment in loop */ {
-			if this.regex.MatchString(pe.Key) {
+			if tr.regex.MatchString(pe.Key) {
 				if fieldCount > 0 {
-					buffer.WriteString(this.nestedFS)
+					buffer.WriteString(tr.nestedFS)
 				}
 				buffer.WriteString(pe.Value.String())
 				fieldCount++
@@ -478,9 +478,9 @@ func (this *TransformerNest) implodeValuesAcrossFields(
 		if fieldCount > 0 {
 			newValue := types.MlrvalPointerFromString(buffer.String())
 			if previousEntry == nil { // No record before the unlinked one, i.e. list-head.
-				inrec.PrependReference(this.fieldName, newValue)
+				inrec.PrependReference(tr.fieldName, newValue)
 			} else {
-				inrec.PutReferenceAfter(previousEntry, this.fieldName, newValue)
+				inrec.PutReferenceAfter(previousEntry, tr.fieldName, newValue)
 			}
 		}
 
@@ -492,14 +492,14 @@ func (this *TransformerNest) implodeValuesAcrossFields(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerNest) implodeValueAcrossRecords(
+func (tr *TransformerNest) implodeValueAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		originalEntry := inrec.GetEntry(this.fieldName)
+		originalEntry := inrec.GetEntry(tr.fieldName)
 		if originalEntry == nil {
 			outputChannel <- inrecAndContext
 			return
@@ -507,13 +507,13 @@ func (this *TransformerNest) implodeValueAcrossRecords(
 
 		fieldValueCopy := originalEntry.Value.Copy()
 
-		// Don't unset this.fieldName in the record, so we can implode in-place at the end.
+		// Don't unset tr.fieldName in the record, so we can implode in-place at the end.
 		otherKeysJoined := inrec.GetKeysJoinedExcept(originalEntry)
 		var otherValuesToBuckets *lib.OrderedMap = nil
-		iOtherValuesToBuckets := this.otherKeysToOtherValuesToBuckets.Get(otherKeysJoined)
+		iOtherValuesToBuckets := tr.otherKeysToOtherValuesToBuckets.Get(otherKeysJoined)
 		if iOtherValuesToBuckets == nil {
 			otherValuesToBuckets = lib.NewOrderedMap()
-			this.otherKeysToOtherValuesToBuckets.Put(otherKeysJoined, otherValuesToBuckets)
+			tr.otherKeysToOtherValuesToBuckets.Put(otherKeysJoined, otherValuesToBuckets)
 		} else {
 			otherValuesToBuckets = iOtherValuesToBuckets.(*lib.OrderedMap)
 		}
@@ -529,12 +529,12 @@ func (this *TransformerNest) implodeValueAcrossRecords(
 		}
 
 		pair := types.NewMlrmapAsRecord()
-		pair.PutReference(this.fieldName, fieldValueCopy)
+		pair.PutReference(tr.fieldName, fieldValueCopy)
 		bucket.pairs.PushBack(pair)
 
 	} else { // end of input stream
 
-		for pe := this.otherKeysToOtherValuesToBuckets.Head; pe != nil; pe = pe.Next {
+		for pe := tr.otherKeysToOtherValuesToBuckets.Head; pe != nil; pe = pe.Next {
 			otherValuesToBuckets := pe.Value.(*lib.OrderedMap)
 			for pf := otherValuesToBuckets.Head; pf != nil; pf = pf.Next {
 				var buffer bytes.Buffer
@@ -546,14 +546,14 @@ func (this *TransformerNest) implodeValueAcrossRecords(
 				for pg := bucket.pairs.Front(); pg != nil; pg = pg.Next() {
 					pr := pg.Value.(*types.Mlrmap)
 					if i > 0 {
-						buffer.WriteString(this.nestedFS)
+						buffer.WriteString(tr.nestedFS)
 					}
 					i++
 					buffer.WriteString(pr.Head.Value.String())
 				}
 
-				// this.fieldName was already present so we'll overwrite it in-place here.
-				outrec.PutReference(this.fieldName, types.MlrvalPointerFromString(buffer.String()))
+				// tr.fieldName was already present so we'll overwrite it in-place here.
+				outrec.PutReference(tr.fieldName, types.MlrvalPointerFromString(buffer.String()))
 				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 			}
 		}

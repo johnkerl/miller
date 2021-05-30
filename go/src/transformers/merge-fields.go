@@ -258,7 +258,7 @@ func NewTransformerMergeFields(
 		}
 	}
 
-	this := &TransformerMergeFields{
+	tr := &TransformerMergeFields{
 		accumulatorNameList:       accumulatorNameList,
 		valueFieldNameList:        valueFieldNameList,
 		outputFieldBasename:       outputFieldBasename,
@@ -268,7 +268,7 @@ func NewTransformerMergeFields(
 		namedAccumulators:         lib.NewOrderedMap(),
 	}
 
-	this.valueFieldNameRegexes = make([]*regexp.Regexp, len(valueFieldNameList))
+	tr.valueFieldNameRegexes = make([]*regexp.Regexp, len(valueFieldNameList))
 	for i, regexString := range valueFieldNameList {
 		// Handles "a.*b"i Miller case-insensitive-regex specification
 		regex, err := lib.CompileMillerRegex(regexString)
@@ -280,42 +280,42 @@ func NewTransformerMergeFields(
 			)
 			os.Exit(1)
 		}
-		this.valueFieldNameRegexes[i] = regex
+		tr.valueFieldNameRegexes[i] = regex
 	}
 
 	for _, accumulatorName := range accumulatorNameList {
-		accumulator := this.accumulatorFactory.MakeNamedAccumulator(
+		accumulator := tr.accumulatorFactory.MakeNamedAccumulator(
 			accumulatorName,
 			"", // grouping-key used for stats1, not here
 			outputFieldBasename,
 			doInterpolatedPercentiles,
 		)
-		this.namedAccumulators.Put(accumulatorName, accumulator)
+		tr.namedAccumulators.Put(accumulatorName, accumulator)
 	}
 
 	if doWhich == e_MERGE_BY_NAME_LIST {
-		this.recordTransformerFunc = this.transformByNameList
+		tr.recordTransformerFunc = tr.transformByNameList
 	} else if doWhich == e_MERGE_BY_NAME_REGEX {
-		this.recordTransformerFunc = this.transformByNameRegex
+		tr.recordTransformerFunc = tr.transformByNameRegex
 	} else if doWhich == e_MERGE_BY_COLLAPSING {
-		this.recordTransformerFunc = this.transformByCollapsing
+		tr.recordTransformerFunc = tr.transformByCollapsing
 	} else {
 		lib.InternalCodingErrorIf(true)
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerMergeFields) Transform(
+func (tr *TransformerMergeFields) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerMergeFields) transformByNameList(
+func (tr *TransformerMergeFields) transformByNameList(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -326,35 +326,35 @@ func (this *TransformerMergeFields) transformByNameList(
 
 	inrec := inrecAndContext.Record
 
-	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+	for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 		accumulator.Reset() // re-use from one record to the next
 	}
 
-	for _, valueFieldName := range this.valueFieldNameList {
+	for _, valueFieldName := range tr.valueFieldNameList {
 		mvalue := inrec.Get(valueFieldName)
 		if mvalue == nil { // key not present
 			continue
 		}
 
 		if mvalue.IsEmpty() { // key present with empty value
-			if !this.keepInputFields {
+			if !tr.keepInputFields {
 				inrec.Remove(valueFieldName)
 			}
 			continue
 		}
 
-		for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
 			accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 			accumulator.Ingest(mvalue)
 		}
 
-		if !this.keepInputFields {
+		if !tr.keepInputFields {
 			inrec.Remove(valueFieldName)
 		}
 	}
 
-	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+	for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 		key, value := accumulator.Emit()
 		inrec.PutReference(key, value)
@@ -364,7 +364,7 @@ func (this *TransformerMergeFields) transformByNameList(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerMergeFields) transformByNameRegex(
+func (tr *TransformerMergeFields) transformByNameRegex(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -375,7 +375,7 @@ func (this *TransformerMergeFields) transformByNameRegex(
 
 	inrec := inrecAndContext.Record
 
-	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+	for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 		accumulator.Reset() // re-use from one record to the next
 	}
@@ -384,7 +384,7 @@ func (this *TransformerMergeFields) transformByNameRegex(
 		valueFieldName := pe.Key
 
 		matched := false
-		for _, valueFieldNameRegex := range this.valueFieldNameRegexes {
+		for _, valueFieldNameRegex := range tr.valueFieldNameRegexes {
 			if valueFieldNameRegex.MatchString(pe.Key) {
 				matched = true
 				break
@@ -403,7 +403,7 @@ func (this *TransformerMergeFields) transformByNameRegex(
 		}
 
 		if mvalue.IsEmpty() { // Key present with empty value
-			if !this.keepInputFields { // We are modifying the record while iterating over it.
+			if !tr.keepInputFields { // We are modifying the record while iterating over it.
 				next := pe.Next
 				inrec.Unlink(pe)
 				pe = next
@@ -413,12 +413,12 @@ func (this *TransformerMergeFields) transformByNameRegex(
 			continue
 		}
 
-		for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+		for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
 			accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 			accumulator.Ingest(mvalue)
 		}
 
-		if !this.keepInputFields { // We are modifying the record while iterating over it.
+		if !tr.keepInputFields { // We are modifying the record while iterating over it.
 			next := pe.Next
 			inrec.Unlink(pe)
 			pe = next
@@ -427,7 +427,7 @@ func (this *TransformerMergeFields) transformByNameRegex(
 		}
 	}
 
-	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+	for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		accumulator := pa.Value.(*utils.Stats1NamedAccumulator)
 		key, value := accumulator.Emit()
 		inrec.PutReference(key, value)
@@ -443,7 +443,7 @@ func (this *TransformerMergeFields) transformByNameRegex(
 // b_in_y  4     b_sum_x 8
 // b_out_x 8
 
-func (this *TransformerMergeFields) transformByCollapsing(
+func (tr *TransformerMergeFields) transformByCollapsing(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -453,7 +453,7 @@ func (this *TransformerMergeFields) transformByCollapsing(
 	}
 
 	inrec := inrecAndContext.Record
-	this.accumulatorFactory.Reset() // discard cached percentile-keepers
+	tr.accumulatorFactory.Reset() // discard cached percentile-keepers
 
 	// Ordered map from short name to accumulator name to accumulator
 	collapseAccumulators := lib.NewOrderedMap()
@@ -463,7 +463,7 @@ func (this *TransformerMergeFields) transformByCollapsing(
 
 		matched := false
 		shortName := ""
-		for _, valueFieldNameRegex := range this.valueFieldNameRegexes {
+		for _, valueFieldNameRegex := range tr.valueFieldNameRegexes {
 			matched = valueFieldNameRegex.MatchString(pe.Key)
 			if matched {
 				shortName = lib.RegexReplaceOnce(valueFieldNameRegex, valueFieldName, "")
@@ -482,7 +482,7 @@ func (this *TransformerMergeFields) transformByCollapsing(
 		}
 
 		if mvalue.IsEmpty() { // key present with empty value
-			if !this.keepInputFields { // We are modifying the record while iterating over it.
+			if !tr.keepInputFields { // We are modifying the record while iterating over it.
 				next := pe.Next
 				inrec.Unlink(pe)
 				pe = next
@@ -496,12 +496,12 @@ func (this *TransformerMergeFields) transformByCollapsing(
 		iNamedAccumulators := collapseAccumulators.Get(shortName)
 		if iNamedAccumulators == nil {
 			namedAccumulators = lib.NewOrderedMap()
-			for _, accumulatorName := range this.accumulatorNameList {
-				accumulator := this.accumulatorFactory.MakeNamedAccumulator(
+			for _, accumulatorName := range tr.accumulatorNameList {
+				accumulator := tr.accumulatorFactory.MakeNamedAccumulator(
 					accumulatorName,
 					"", // grouping-key used for stats1, not here
 					shortName,
-					this.doInterpolatedPercentiles,
+					tr.doInterpolatedPercentiles,
 				)
 				namedAccumulators.Put(accumulatorName, accumulator)
 			}
@@ -515,7 +515,7 @@ func (this *TransformerMergeFields) transformByCollapsing(
 			accumulator.Ingest(mvalue)
 		}
 
-		if !this.keepInputFields { // We are modifying the record while iterating over it.
+		if !tr.keepInputFields { // We are modifying the record while iterating over it.
 			next := pe.Next
 			inrec.Unlink(pe)
 			pe = next

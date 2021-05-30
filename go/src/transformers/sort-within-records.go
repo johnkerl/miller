@@ -89,26 +89,26 @@ func NewTransformerSortWithinRecords(
 	doRecurse bool,
 ) (*TransformerSortWithinRecords, error) {
 
-	this := &TransformerSortWithinRecords{}
+	tr := &TransformerSortWithinRecords{}
 	if doRecurse {
-		this.recordTransformerFunc = this.transformRecursively
+		tr.recordTransformerFunc = tr.transformRecursively
 	} else {
-		this.recordTransformerFunc = this.transformNonrecursively
+		tr.recordTransformerFunc = tr.transformNonrecursively
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSortWithinRecords) Transform(
+func (tr *TransformerSortWithinRecords) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSortWithinRecords) transformNonrecursively(
+func (tr *TransformerSortWithinRecords) transformNonrecursively(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -120,7 +120,7 @@ func (this *TransformerSortWithinRecords) transformNonrecursively(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSortWithinRecords) transformRecursively(
+func (tr *TransformerSortWithinRecords) transformRecursively(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

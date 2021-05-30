@@ -137,35 +137,35 @@ func NewTransformerRepeat(
 	repeatCountFieldName string,
 ) (*TransformerRepeat, error) {
 
-	this := &TransformerRepeat{
+	tr := &TransformerRepeat{
 		repeatCount:          repeatCount,
 		repeatCountFieldName: repeatCountFieldName,
 	}
 
 	if repeatCountSource == repeatCountFromInt {
-		this.recordTransformerFunc = this.repeatByCount
+		tr.recordTransformerFunc = tr.repeatByCount
 	} else {
-		this.recordTransformerFunc = this.repeatByFieldName
+		tr.recordTransformerFunc = tr.repeatByFieldName
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRepeat) Transform(
+func (tr *TransformerRepeat) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRepeat) repeatByCount(
+func (tr *TransformerRepeat) repeatByCount(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		for i := 0; i < this.repeatCount; i++ {
+		for i := 0; i < tr.repeatCount; i++ {
 			outputChannel <- types.NewRecordAndContext(
 				inrecAndContext.Record.Copy(),
 				&inrecAndContext.Context,
@@ -177,12 +177,12 @@ func (this *TransformerRepeat) repeatByCount(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRepeat) repeatByFieldName(
+func (tr *TransformerRepeat) repeatByFieldName(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		fieldValue := inrecAndContext.Record.Get(this.repeatCountFieldName)
+		fieldValue := inrecAndContext.Record.Get(tr.repeatCountFieldName)
 		if fieldValue == nil {
 			return
 		}

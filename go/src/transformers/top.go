@@ -146,7 +146,7 @@ func NewTransformerTop(
 	outputFieldName string,
 ) (*TransformerTop, error) {
 
-	this := &TransformerTop{
+	tr := &TransformerTop{
 		topCount:          topCount,
 		valueFieldNames:   valueFieldNames,
 		groupByFieldNames: groupByFieldNames,
@@ -158,48 +158,48 @@ func NewTransformerTop(
 		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerTop) Transform(
+func (tr *TransformerTop) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		this.ingest(inrecAndContext)
+		tr.ingest(inrecAndContext)
 	} else {
-		this.emit(inrecAndContext, outputChannel)
+		tr.emit(inrecAndContext, outputChannel)
 	}
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerTop) ingest(
+func (tr *TransformerTop) ingest(
 	inrecAndContext *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 
 	// ["s", "t"]
-	valueFieldValues, fok := inrec.ReferenceSelectedValues(this.valueFieldNames)
-	groupingKey, groupByFieldValues, gok := inrec.GetSelectedValuesAndJoined(this.groupByFieldNames)
+	valueFieldValues, fok := inrec.ReferenceSelectedValues(tr.valueFieldNames)
+	groupingKey, groupByFieldValues, gok := inrec.GetSelectedValuesAndJoined(tr.groupByFieldNames)
 
 	// Heterogeneous-data case -- not all sought fields were present in record
 	if !fok || !gok {
 		return
 	}
-	iSecondLevel := this.groups.Get(groupingKey)
+	iSecondLevel := tr.groups.Get(groupingKey)
 	var secondLevel *lib.OrderedMap = nil
 	if iSecondLevel == nil {
 		secondLevel = lib.NewOrderedMap()
-		this.groups.Put(groupingKey, secondLevel)
-		this.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
+		tr.groups.Put(groupingKey, secondLevel)
+		tr.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
 	} else {
 		secondLevel = iSecondLevel.(*lib.OrderedMap)
 	}
 
 	// for "x", "y" and "1", "2"
-	for i, _ := range this.valueFieldNames {
-		valueFieldName := this.valueFieldNames[i]
+	for i, _ := range tr.valueFieldNames {
+		valueFieldName := tr.valueFieldNames[i]
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue.IsVoid() {
 			// Key present with null value
@@ -209,14 +209,14 @@ func (this *TransformerTop) ingest(
 		iTopKeeper := secondLevel.Get(valueFieldName)
 		var topKeeper *utils.TopKeeper
 		if iTopKeeper == nil {
-			topKeeper = utils.NewTopKeeper(this.topCount, this.doMax)
+			topKeeper = utils.NewTopKeeper(tr.topCount, tr.doMax)
 			secondLevel.Put(valueFieldName, topKeeper)
 		} else {
 			topKeeper = iTopKeeper.(*utils.TopKeeper)
 		}
 
 		var maybeRecordAndContext *types.RecordAndContext = nil
-		if this.showFullRecords {
+		if tr.showFullRecords {
 			maybeRecordAndContext = inrecAndContext
 		}
 		topKeeper.Add(
@@ -228,19 +228,19 @@ func (this *TransformerTop) ingest(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerTop) emit(
+func (tr *TransformerTop) emit(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	for pa := this.groups.Head; pa != nil; pa = pa.Next {
+	for pa := tr.groups.Head; pa != nil; pa = pa.Next {
 		groupingKey := pa.Key
 		secondLevel := pa.Value.(*lib.OrderedMap)
-		groupByFieldValues := this.groupingKeysToGroupByFieldValues[groupingKey]
+		groupByFieldValues := tr.groupingKeysToGroupByFieldValues[groupingKey]
 
 		// Above we required that there be only one value field in the
 		// show-full-records case. That's because here, we print each record at most
 		// once, which would need a change in the format presented as output.
-		if this.showFullRecords {
+		if tr.showFullRecords {
 			for pb := secondLevel.Head; pb != nil; pb = pb.Next {
 				topKeeper := pb.Value.(*utils.TopKeeper)
 				for i := 0; i < topKeeper.GetSize(); i++ {
@@ -250,12 +250,12 @@ func (this *TransformerTop) emit(
 
 		} else {
 
-			for i := 0; i < this.topCount; i++ {
+			for i := 0; i < tr.topCount; i++ {
 				newrec := types.NewMlrmapAsRecord()
 
 				// Add in a=s,b=t fields:
-				for j, _ := range this.groupByFieldNames {
-					newrec.PutCopy(this.groupByFieldNames[j], groupByFieldValues[j])
+				for j, _ := range tr.groupByFieldNames {
+					newrec.PutCopy(tr.groupByFieldNames[j], groupByFieldValues[j])
 				}
 
 				// Add in fields such as x_top_1=#
@@ -265,10 +265,10 @@ func (this *TransformerTop) emit(
 					topKeeper := pb.Value.(*utils.TopKeeper)
 					key := valueFieldName + "_top"
 					if i < topKeeper.GetSize() {
-						newrec.PutReference(this.outputFieldName, types.MlrvalPointerFromInt(i+1))
+						newrec.PutReference(tr.outputFieldName, types.MlrvalPointerFromInt(i+1))
 						newrec.PutReference(key, topKeeper.TopValues[i].Copy())
 					} else {
-						newrec.PutReference(this.outputFieldName, types.MlrvalPointerFromInt(i+1))
+						newrec.PutReference(tr.outputFieldName, types.MlrvalPointerFromInt(i+1))
 						newrec.PutCopy(key, types.MLRVAL_VOID)
 					}
 				}

@@ -232,7 +232,7 @@ func NewTransformerReshape(
 	splitOutValueFieldName string,
 ) (*TransformerReshape, error) {
 
-	this := &TransformerReshape{
+	tr := &TransformerReshape{
 		inputFieldNames:      inputFieldNames,
 		outputKeyFieldName:   outputKeyFieldName,
 		outputValueFieldName: outputValueFieldName,
@@ -243,7 +243,7 @@ func NewTransformerReshape(
 	}
 
 	if inputFieldRegexStrings != nil {
-		this.inputFieldRegexes = make([]*regexp.Regexp, len(inputFieldRegexStrings))
+		tr.inputFieldRegexes = make([]*regexp.Regexp, len(inputFieldRegexStrings))
 		// TODO: make a library function for string-array to regex-array
 		for i, inputFieldRegexString := range inputFieldRegexStrings {
 			regex, err := lib.CompileMillerRegex(inputFieldRegexString)
@@ -255,40 +255,40 @@ func NewTransformerReshape(
 				)
 				os.Exit(1)
 			}
-			this.inputFieldRegexes[i] = regex
+			tr.inputFieldRegexes[i] = regex
 		}
 	}
 
 	if splitOutKeyFieldName == "" {
-		if this.inputFieldRegexes == nil {
-			this.recordTransformerFunc = this.wideToLongNoRegex
+		if tr.inputFieldRegexes == nil {
+			tr.recordTransformerFunc = tr.wideToLongNoRegex
 		} else {
-			this.recordTransformerFunc = this.wideToLongRegex
+			tr.recordTransformerFunc = tr.wideToLongRegex
 		}
 	} else {
-		this.recordTransformerFunc = this.longToWide
+		tr.recordTransformerFunc = tr.longToWide
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReshape) Transform(
+func (tr *TransformerReshape) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReshape) wideToLongNoRegex(
+func (tr *TransformerReshape) wideToLongNoRegex(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		pairs := types.NewMlrmap()
-		for _, inputFieldName := range this.inputFieldNames {
+		for _, inputFieldName := range tr.inputFieldNames {
 			value := inrec.Get(inputFieldName)
 			if value != nil {
 				// Reference, not copy, since the inrec will be freed here, or everything else will
@@ -306,8 +306,8 @@ func (this *TransformerReshape) wideToLongNoRegex(
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
-				outrec.PutReference(this.outputKeyFieldName, types.MlrvalPointerFromString(pf.Key))
-				outrec.PutReference(this.outputValueFieldName, pf.Value)
+				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalPointerFromString(pf.Key))
+				outrec.PutReference(tr.outputValueFieldName, pf.Value)
 				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 			}
 		}
@@ -318,7 +318,7 @@ func (this *TransformerReshape) wideToLongNoRegex(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReshape) wideToLongRegex(
+func (tr *TransformerReshape) wideToLongRegex(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -327,7 +327,7 @@ func (this *TransformerReshape) wideToLongRegex(
 		pairs := types.NewMlrmap()
 
 		for pd := inrec.Head; pd != nil; pd = pd.Next {
-			for _, inputFieldRegex := range this.inputFieldRegexes {
+			for _, inputFieldRegex := range tr.inputFieldRegexes {
 				if inputFieldRegex.MatchString(pd.Key) {
 					// Reference, not copy, since the inrec will be freed here, or everything else will
 					pairs.PutReference(pd.Key, pd.Value)
@@ -346,8 +346,8 @@ func (this *TransformerReshape) wideToLongRegex(
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
-				outrec.PutReference(this.outputKeyFieldName, types.MlrvalPointerFromString(pf.Key))
-				outrec.PutReference(this.outputValueFieldName, pf.Value)
+				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalPointerFromString(pf.Key))
+				outrec.PutReference(tr.outputValueFieldName, pf.Value)
 				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 			}
 		}
@@ -358,31 +358,31 @@ func (this *TransformerReshape) wideToLongRegex(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerReshape) longToWide(
+func (tr *TransformerReshape) longToWide(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		splitOutKeyFieldValue := inrec.Get(this.splitOutKeyFieldName)
-		splitOutValueFieldValue := inrec.Get(this.splitOutValueFieldName)
+		splitOutKeyFieldValue := inrec.Get(tr.splitOutKeyFieldName)
+		splitOutValueFieldValue := inrec.Get(tr.splitOutValueFieldName)
 		if splitOutKeyFieldValue == nil || splitOutValueFieldValue == nil {
 			outputChannel <- inrecAndContext
 			return
 		}
 
-		inrec.Remove(this.splitOutKeyFieldName)
-		inrec.Remove(this.splitOutValueFieldName)
+		inrec.Remove(tr.splitOutKeyFieldName)
+		inrec.Remove(tr.splitOutValueFieldName)
 
-		// Don't unset this.fieldName in the record, so we can implode in-place at the end.
+		// Don't unset tr.fieldName in the record, so we can implode in-place at the end.
 		otherKeysJoined := inrec.GetKeysJoined()
 		var otherValuesToBuckets *lib.OrderedMap = nil
 
-		iOtherValuesToBuckets := this.otherKeysToOtherValuesToBuckets.Get(otherKeysJoined)
+		iOtherValuesToBuckets := tr.otherKeysToOtherValuesToBuckets.Get(otherKeysJoined)
 		if iOtherValuesToBuckets == nil {
 			otherValuesToBuckets = lib.NewOrderedMap()
-			this.otherKeysToOtherValuesToBuckets.Put(otherKeysJoined, otherValuesToBuckets)
+			tr.otherKeysToOtherValuesToBuckets.Put(otherKeysJoined, otherValuesToBuckets)
 		} else {
 			otherValuesToBuckets = iOtherValuesToBuckets.(*lib.OrderedMap)
 		}
@@ -401,7 +401,7 @@ func (this *TransformerReshape) longToWide(
 
 	} else {
 
-		for pe := this.otherKeysToOtherValuesToBuckets.Head; pe != nil; pe = pe.Next {
+		for pe := tr.otherKeysToOtherValuesToBuckets.Head; pe != nil; pe = pe.Next {
 			otherValuesToBuckets := pe.Value.(*lib.OrderedMap)
 			for pf := otherValuesToBuckets.Head; pf != nil; pf = pf.Next {
 				bucket := pf.Value.(*tReshapeBucket)

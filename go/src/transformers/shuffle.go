@@ -83,28 +83,28 @@ type TransformerShuffle struct {
 
 func NewTransformerShuffle() (*TransformerShuffle, error) {
 
-	this := &TransformerShuffle{
+	tr := &TransformerShuffle{
 		recordsAndContexts: list.New(),
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerShuffle) Transform(
+func (tr *TransformerShuffle) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
 	if !inrecAndContext.EndOfStream {
-		this.recordsAndContexts.PushBack(inrecAndContext)
+		tr.recordsAndContexts.PushBack(inrecAndContext)
 
 	} else { // end of record stream
 		// Knuth shuffle:
 		// * Initial permutation is identity.
 		// * Make a pseudorandom permutation using pseudorandom swaps in the image map.
 		// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int.
-		n := this.recordsAndContexts.Len()
+		n := tr.recordsAndContexts.Len()
 		images := make([]int, n)
 		for i := 0; i < n; i++ {
 			images[i] = i
@@ -126,12 +126,12 @@ func (this *TransformerShuffle) Transform(
 		// Move the record-pointers from linked list to array.
 		array := make([]*types.RecordAndContext, n)
 		for i := 0; i < n; i++ {
-			head := this.recordsAndContexts.Front()
+			head := tr.recordsAndContexts.Front()
 			if head == nil {
 				break
 			}
 			array[i] = head.Value.(*types.RecordAndContext)
-			this.recordsAndContexts.Remove(head)
+			tr.recordsAndContexts.Remove(head)
 		}
 
 		// Transfer from input array to output list. Because permutations are one-to-one maps,

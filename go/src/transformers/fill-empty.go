@@ -85,14 +85,14 @@ type TransformerFillEmpty struct {
 }
 
 func NewTransformerFillEmpty(fillString string) (*TransformerFillEmpty, error) {
-	this := &TransformerFillEmpty{
+	tr := &TransformerFillEmpty{
 		fillValue: types.MlrvalPointerFromString(fillString),
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFillEmpty) Transform(
+func (tr *TransformerFillEmpty) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -101,7 +101,7 @@ func (this *TransformerFillEmpty) Transform(
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			if pe.Value.IsEmpty() {
-				pe.Value = this.fillValue
+				pe.Value = tr.fillValue
 			}
 		}
 

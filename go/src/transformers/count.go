@@ -122,7 +122,7 @@ func NewTransformerCount(
 	outputFieldName string,
 ) (*TransformerCount, error) {
 
-	this := &TransformerCount{
+	tr := &TransformerCount{
 		groupByFieldNames: groupByFieldNames,
 		showCountsOnly:    showCountsOnly,
 		outputFieldName:   outputFieldName,
@@ -133,33 +133,33 @@ func NewTransformerCount(
 	}
 
 	if groupByFieldNames == nil {
-		this.recordTransformerFunc = this.countUngrouped
+		tr.recordTransformerFunc = tr.countUngrouped
 	} else {
-		this.recordTransformerFunc = this.countGrouped
+		tr.recordTransformerFunc = tr.countGrouped
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCount) Transform(
+func (tr *TransformerCount) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCount) countUngrouped(
+func (tr *TransformerCount) countUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		this.ungroupedCount++
+		tr.ungroupedCount++
 	} else {
 		newrec := types.NewMlrmapAsRecord()
-		mcount := types.MlrvalFromInt(this.ungroupedCount)
-		newrec.PutCopy(this.outputFieldName, &mcount)
+		mcount := types.MlrvalFromInt(tr.ungroupedCount)
+		newrec.PutCopy(tr.outputFieldName, &mcount)
 
 		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
 
@@ -168,7 +168,7 @@ func (this *TransformerCount) countUngrouped(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCount) countGrouped(
+func (tr *TransformerCount) countGrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -176,34 +176,34 @@ func (this *TransformerCount) countGrouped(
 		inrec := inrecAndContext.Record
 
 		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(
-			this.groupByFieldNames,
+			tr.groupByFieldNames,
 		)
 		if !ok { // Current record does not have specified fields; ignore
 			return
 		}
 
-		if !this.groupedCounts.Has(groupingKey) {
+		if !tr.groupedCounts.Has(groupingKey) {
 			var count int = 1
-			this.groupedCounts.Put(groupingKey, count)
-			this.groupingValues.Put(groupingKey, selectedValues)
+			tr.groupedCounts.Put(groupingKey, count)
+			tr.groupingValues.Put(groupingKey, selectedValues)
 		} else {
-			this.groupedCounts.Put(
+			tr.groupedCounts.Put(
 				groupingKey,
-				this.groupedCounts.Get(groupingKey).(int)+1,
+				tr.groupedCounts.Get(groupingKey).(int)+1,
 			)
 		}
 
 	} else {
-		if this.showCountsOnly {
+		if tr.showCountsOnly {
 			newrec := types.NewMlrmapAsRecord()
-			mcount := types.MlrvalFromInt(this.groupedCounts.FieldCount)
-			newrec.PutCopy(this.outputFieldName, &mcount)
+			mcount := types.MlrvalFromInt(tr.groupedCounts.FieldCount)
+			newrec.PutCopy(tr.outputFieldName, &mcount)
 
 			outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
 			outputChannel <- outrecAndContext
 
 		} else {
-			for outer := this.groupedCounts.Head; outer != nil; outer = outer.Next {
+			for outer := tr.groupedCounts.Head; outer != nil; outer = outer.Next {
 				groupingKey := outer.Key
 				newrec := types.NewMlrmapAsRecord()
 
@@ -214,16 +214,16 @@ func (this *TransformerCount) countGrouped(
 				// * Grouping values for key is ["foo", "bar"]
 				// Here we populate a record with "a=foo,b=bar".
 
-				groupingValuesForKey := this.groupingValues.Get(groupingKey).([]*types.Mlrval)
+				groupingValuesForKey := tr.groupingValues.Get(groupingKey).([]*types.Mlrval)
 				i := 0
 				for _, groupingValueForKey := range groupingValuesForKey {
-					newrec.PutCopy(this.groupByFieldNames[i], groupingValueForKey)
+					newrec.PutCopy(tr.groupByFieldNames[i], groupingValueForKey)
 					i++
 				}
 
 				countForGroup := outer.Value.(int)
 				mcount := types.MlrvalFromInt(countForGroup)
-				newrec.PutCopy(this.outputFieldName, &mcount)
+				newrec.PutCopy(tr.outputFieldName, &mcount)
 
 				outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
 				outputChannel <- outrecAndContext
