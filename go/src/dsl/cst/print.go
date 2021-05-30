@@ -164,36 +164,36 @@ type PrintStatementNode struct {
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildPrintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildPrintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePrintStatement)
-	return this.buildPrintxStatementNode(
+	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stdout,
 		"\n",
 	)
 }
 
-func (this *RootNode) BuildPrintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildPrintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePrintnStatement)
-	return this.buildPrintxStatementNode(
+	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stdout,
 		"",
 	)
 }
 
-func (this *RootNode) BuildEprintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEprintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEprintStatement)
-	return this.buildPrintxStatementNode(
+	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stderr,
 		"\n",
 	)
 }
 
-func (this *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEprintnStatement)
-	return this.buildPrintxStatementNode(
+	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stderr,
 		"",
@@ -203,7 +203,7 @@ func (this *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutab
 // ----------------------------------------------------------------
 // Common code for building print/eprint/printn/eprintn nodes
 
-func (this *RootNode) buildPrintxStatementNode(
+func (root *RootNode) buildPrintxStatementNode(
 	astNode *dsl.ASTNode,
 	defaultOutputStream *os.File,
 	terminator string,
@@ -220,12 +220,12 @@ func (this *RootNode) buildPrintxStatementNode(
 	if expressionsNode.Type == dsl.NodeTypeNoOp {
 		// Just 'print' without 'print $something'
 		expressionEvaluables = make([]IEvaluable, 1)
-		expressionEvaluable := this.BuildStringLiteralNode("")
+		expressionEvaluable := root.BuildStringLiteralNode("")
 		expressionEvaluables[0] = expressionEvaluable
 	} else if expressionsNode.Type == dsl.NodeTypeFunctionCallsite {
 		expressionEvaluables = make([]IEvaluable, len(expressionsNode.Children))
 		for i, childNode := range expressionsNode.Children {
-			expressionEvaluable, err := this.BuildEvaluableNode(childNode)
+			expressionEvaluable, err := root.BuildEvaluableNode(childNode)
 			if err != nil {
 				return nil, err
 			}
@@ -269,17 +269,17 @@ func (this *RootNode) buildPrintxStatementNode(
 		} else {
 			retval.printToRedirectFunc = retval.printToFileOrPipe
 
-			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
 			if err != nil {
 				return nil, err
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(
@@ -294,7 +294,7 @@ func (this *RootNode) buildPrintxStatementNode(
 	// Register this with the CST root node so that open file descriptrs can be
 	// closed, etc at end of stream.
 	if retval.outputHandlerManager != nil {
-		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+		root.RegisterOutputHandlerManager(retval.outputHandlerManager)
 	}
 
 	return retval, nil

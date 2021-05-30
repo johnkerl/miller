@@ -20,11 +20,11 @@ type EnvironmentVariableNode struct {
 	nameEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildEnvironmentVariableNode(astNode *dsl.ASTNode) (*EnvironmentVariableNode, error) {
+func (root *RootNode) BuildEnvironmentVariableNode(astNode *dsl.ASTNode) (*EnvironmentVariableNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEnvironmentVariable)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	nameEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
+	nameEvaluable, err := root.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}

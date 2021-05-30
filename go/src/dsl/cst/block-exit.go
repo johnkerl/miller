@@ -17,7 +17,7 @@ import (
 type BreakNode struct {
 }
 
-func (this *RootNode) BuildBreakNode(astNode *dsl.ASTNode) (*BreakNode, error) {
+func (root *RootNode) BuildBreakNode(astNode *dsl.ASTNode) (*BreakNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeBreak)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
@@ -36,7 +36,7 @@ func (this *BreakNode) Execute(state *runtime.State) (*BlockExitPayload, error) 
 type ContinueNode struct {
 }
 
-func (this *RootNode) BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, error) {
+func (root *RootNode) BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeContinue)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
@@ -56,13 +56,13 @@ type ReturnNode struct {
 	returnValueExpression IEvaluable
 }
 
-func (this *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error) {
+func (root *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeReturn)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	if len(astNode.Children) == 0 {
 		return &ReturnNode{returnValueExpression: nil}, nil
 	} else if len(astNode.Children) == 1 {
-		returnValueExpression, err := this.BuildEvaluableNode(astNode.Children[0])
+		returnValueExpression, err := root.BuildEvaluableNode(astNode.Children[0])
 		if err != nil {
 			return nil, err
 		}

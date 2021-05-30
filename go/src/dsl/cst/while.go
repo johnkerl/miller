@@ -28,15 +28,15 @@ func NewWhileLoopNode(
 	}
 }
 
-func (this *RootNode) BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, error) {
+func (root *RootNode) BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeWhileLoop)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
-	conditionNode, err := this.BuildEvaluableNode(astNode.Children[0])
+	conditionNode, err := root.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
-	statementBlockNode, err := this.BuildStatementBlockNode(astNode.Children[1])
+	statementBlockNode, err := root.BuildStatementBlockNode(astNode.Children[1])
 	if err != nil {
 		return nil, err
 	}
@@ -98,15 +98,15 @@ func NewDoWhileLoopNode(
 	}
 }
 
-func (this *RootNode) BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNode, error) {
+func (root *RootNode) BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDoWhileLoop)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
-	statementBlockNode, err := this.BuildStatementBlockNode(astNode.Children[0])
+	statementBlockNode, err := root.BuildStatementBlockNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
-	conditionNode, err := this.BuildEvaluableNode(astNode.Children[1])
+	conditionNode, err := root.BuildEvaluableNode(astNode.Children[1])
 	if err != nil {
 		return nil, err
 	}

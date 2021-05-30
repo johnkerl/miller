@@ -43,17 +43,17 @@ type DumpStatementNode struct {
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDumpStatement)
-	return this.buildDumpxStatementNode(
+	return root.buildDumpxStatementNode(
 		astNode,
 		os.Stdout,
 	)
 }
 
-func (this *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEdumpStatement)
-	return this.buildDumpxStatementNode(
+	return root.buildDumpxStatementNode(
 		astNode,
 		os.Stderr,
 	)
@@ -62,7 +62,7 @@ func (this *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable
 // ----------------------------------------------------------------
 // Common code for building dump/edump nodes
 
-func (this *RootNode) buildDumpxStatementNode(
+func (root *RootNode) buildDumpxStatementNode(
 	astNode *dsl.ASTNode,
 	defaultOutputStream *os.File,
 ) (IExecutable, error) {
@@ -78,12 +78,12 @@ func (this *RootNode) buildDumpxStatementNode(
 	if expressionsNode.Type == dsl.NodeTypeNoOp {
 		// Just 'dump' without 'dump $something'
 		expressionEvaluables = make([]IEvaluable, 1)
-		expressionEvaluable := this.BuildFullOosvarRvalueNode()
+		expressionEvaluable := root.BuildFullOosvarRvalueNode()
 		expressionEvaluables[0] = expressionEvaluable
 	} else if expressionsNode.Type == dsl.NodeTypeFunctionCallsite {
 		expressionEvaluables = make([]IEvaluable, len(expressionsNode.Children))
 		for i, childNode := range expressionsNode.Children {
-			expressionEvaluable, err := this.BuildEvaluableNode(childNode)
+			expressionEvaluable, err := root.BuildEvaluableNode(childNode)
 			if err != nil {
 				return nil, err
 			}
@@ -126,17 +126,17 @@ func (this *RootNode) buildDumpxStatementNode(
 		} else {
 			retval.dumpToRedirectFunc = retval.dumpToFileOrPipe
 
-			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
 			if err != nil {
 				return nil, err
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(
@@ -151,7 +151,7 @@ func (this *RootNode) buildDumpxStatementNode(
 	// Register this with the CST root node so that open file descriptrs can be
 	// closed, etc at end of stream.
 	if retval.outputHandlerManager != nil {
-		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+		root.RegisterOutputHandlerManager(retval.outputHandlerManager)
 	}
 
 	return retval, nil

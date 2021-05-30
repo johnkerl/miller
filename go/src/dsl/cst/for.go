@@ -69,7 +69,7 @@ func NewForLoopOneVariableNode(
 //                         * LocalVariable "k"
 //                         * LocalVariable "v"
 
-func (this *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoopOneVariableNode, error) {
+func (root *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoopOneVariableNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopOneVariable)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
 
@@ -83,12 +83,12 @@ func (this *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoo
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
 	// detected at CST-build time)
-	indexableNode, err := this.BuildEvaluableNode(indexableASTNode)
+	indexableNode, err := root.BuildEvaluableNode(indexableASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	statementBlockNode, err := this.BuildStatementBlockNode(blockASTNode)
+	statementBlockNode, err := root.BuildStatementBlockNode(blockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -246,7 +246,7 @@ func NewForLoopTwoVariableNode(
 //                         * LocalVariable "k"
 //                         * LocalVariable "v"
 
-func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoopTwoVariableNode, error) {
+func (root *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoopTwoVariableNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopTwoVariable)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
@@ -267,12 +267,12 @@ func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
 	// detected at CST-build time)
-	indexableNode, err := this.BuildEvaluableNode(indexableASTNode)
+	indexableNode, err := root.BuildEvaluableNode(indexableASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	statementBlockNode, err := this.BuildStatementBlockNode(blockASTNode)
+	statementBlockNode, err := root.BuildStatementBlockNode(blockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -438,7 +438,7 @@ func NewForLoopMultivariableNode(
 //         * full record "$*"
 //         * statement block
 
-func (this *RootNode) BuildForLoopMultivariableNode(
+func (root *RootNode) BuildForLoopMultivariableNode(
 	astNode *dsl.ASTNode,
 ) (*ForLoopMultivariableNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopMultivariable)
@@ -465,12 +465,12 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
 	// detected at CST-build time)
-	indexableNode, err := this.BuildEvaluableNode(indexableASTNode)
+	indexableNode, err := root.BuildEvaluableNode(indexableASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	statementBlockNode, err := this.BuildStatementBlockNode(blockASTNode)
+	statementBlockNode, err := root.BuildStatementBlockNode(blockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -778,7 +778,7 @@ func NewTripleForLoopNode(
 //                     * DirectFieldValue "i"
 //                     * LocalVariable "i"
 
-func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
+func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeTripleForLoop)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
@@ -792,7 +792,7 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 	lib.InternalCodingErrorIf(updateBlockASTNode.Type != dsl.NodeTypeStatementBlock)
 	lib.InternalCodingErrorIf(bodyBlockASTNode.Type != dsl.NodeTypeStatementBlock)
 
-	startBlockNode, err := this.BuildStatementBlockNode(startBlockASTNode)
+	startBlockNode, err := root.BuildStatementBlockNode(startBlockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -812,7 +812,7 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 						"Miller: the non-final triple-for continutation statements must be assignments.",
 					)
 				}
-				precontinuationAssignment, err := this.BuildAssignmentNode(
+				precontinuationAssignment, err := root.BuildAssignmentNode(
 					continuationExpressionASTNode.Children[i],
 				)
 				if err != nil {
@@ -835,18 +835,18 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 			}
 		}
 		lib.InternalCodingErrorIf(len(bareBooleanASTNode.Children) != 1)
-		continuationExpressionNode, err = this.BuildEvaluableNode(bareBooleanASTNode.Children[0])
+		continuationExpressionNode, err = root.BuildEvaluableNode(bareBooleanASTNode.Children[0])
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	updateBlockNode, err := this.BuildStatementBlockNode(updateBlockASTNode)
+	updateBlockNode, err := root.BuildStatementBlockNode(updateBlockASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	bodyBlockNode, err := this.BuildStatementBlockNode(bodyBlockASTNode)
+	bodyBlockNode, err := root.BuildStatementBlockNode(bodyBlockASTNode)
 	if err != nil {
 		return nil, err
 	}

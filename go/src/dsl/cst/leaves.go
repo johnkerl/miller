@@ -15,7 +15,7 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildLeafNode(
+func (root *RootNode) BuildLeafNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Children != nil)
@@ -24,25 +24,25 @@ func (this *RootNode) BuildLeafNode(
 	switch astNode.Type {
 
 	case dsl.NodeTypeDirectFieldValue:
-		return this.BuildDirectFieldRvalueNode(sval), nil
+		return root.BuildDirectFieldRvalueNode(sval), nil
 		break
 	case dsl.NodeTypeFullSrec:
-		return this.BuildFullSrecRvalueNode(), nil
+		return root.BuildFullSrecRvalueNode(), nil
 		break
 
 	case dsl.NodeTypeDirectOosvarValue:
-		return this.BuildDirectOosvarRvalueNode(sval), nil
+		return root.BuildDirectOosvarRvalueNode(sval), nil
 		break
 	case dsl.NodeTypeFullOosvar:
-		return this.BuildFullOosvarRvalueNode(), nil
+		return root.BuildFullOosvarRvalueNode(), nil
 		break
 
 	case dsl.NodeTypeLocalVariable:
-		return this.BuildLocalVariableNode(sval), nil
+		return root.BuildLocalVariableNode(sval), nil
 		break
 
 	case dsl.NodeTypeStringLiteral:
-		return this.BuildStringLiteralNode(sval), nil
+		return root.BuildStringLiteralNode(sval), nil
 		break
 	case dsl.NodeTypeRegexCaseInsensitive:
 		// StringLiteral nodes like '"abc"' entered by the user come in from
@@ -51,36 +51,36 @@ func (this *RootNode) BuildLeafNode(
 		// intact. We let the sub/regextract/etc functions deal with this.
 		// (The alternative would be to make a separate Mlrval type separate
 		// from string.)
-		return this.BuildStringLiteralNode(sval), nil
+		return root.BuildStringLiteralNode(sval), nil
 		break
 	case dsl.NodeTypeIntLiteral:
-		return this.BuildIntLiteralNode(sval), nil
+		return root.BuildIntLiteralNode(sval), nil
 		break
 	case dsl.NodeTypeFloatLiteral:
-		return this.BuildFloatLiteralNode(sval), nil
+		return root.BuildFloatLiteralNode(sval), nil
 		break
 	case dsl.NodeTypeBoolLiteral:
-		return this.BuildBoolLiteralNode(sval), nil
+		return root.BuildBoolLiteralNode(sval), nil
 		break
 	case dsl.NodeTypeNullLiteral:
-		return this.BuildNullLiteralNode(), nil
+		return root.BuildNullLiteralNode(), nil
 		break
 	case dsl.NodeTypeContextVariable:
-		return this.BuildContextVariableNode(astNode)
+		return root.BuildContextVariableNode(astNode)
 		break
 	case dsl.NodeTypeConstant:
-		return this.BuildConstantNode(astNode)
+		return root.BuildConstantNode(astNode)
 		break
 
 	case dsl.NodeTypeArraySliceEmptyLowerIndex:
-		return this.BuildArraySliceEmptyLowerIndexNode(astNode)
+		return root.BuildArraySliceEmptyLowerIndexNode(astNode)
 		break
 	case dsl.NodeTypeArraySliceEmptyUpperIndex:
-		return this.BuildArraySliceEmptyUpperIndexNode(astNode)
+		return root.BuildArraySliceEmptyUpperIndexNode(astNode)
 		break
 
 	case dsl.NodeTypePanic:
-		return this.BuildPanicNode(astNode)
+		return root.BuildPanicNode(astNode)
 		break
 	}
 
@@ -94,12 +94,12 @@ type DirectFieldRvalueNode struct {
 	fieldName string
 }
 
-func (this *RootNode) BuildDirectFieldRvalueNode(fieldName string) *DirectFieldRvalueNode {
+func (root *RootNode) BuildDirectFieldRvalueNode(fieldName string) *DirectFieldRvalueNode {
 	return &DirectFieldRvalueNode{
 		fieldName: fieldName,
 	}
 }
-func (this *DirectFieldRvalueNode) Evaluate(
+func (node *DirectFieldRvalueNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	// For normal DSL use the CST validator will prohibit this from being
@@ -110,7 +110,7 @@ func (this *DirectFieldRvalueNode) Evaluate(
 	if state.Inrec == nil {
 		return types.MLRVAL_ABSENT
 	}
-	value := state.Inrec.Get(this.fieldName)
+	value := state.Inrec.Get(node.fieldName)
 	if value == nil {
 		return types.MLRVAL_ABSENT
 	} else {
@@ -122,7 +122,7 @@ func (this *DirectFieldRvalueNode) Evaluate(
 type FullSrecRvalueNode struct {
 }
 
-func (this *RootNode) BuildFullSrecRvalueNode() *FullSrecRvalueNode {
+func (root *RootNode) BuildFullSrecRvalueNode() *FullSrecRvalueNode {
 	return &FullSrecRvalueNode{}
 }
 func (this *FullSrecRvalueNode) Evaluate(
@@ -145,7 +145,7 @@ type DirectOosvarRvalueNode struct {
 	variableName string
 }
 
-func (this *RootNode) BuildDirectOosvarRvalueNode(variableName string) *DirectOosvarRvalueNode {
+func (root *RootNode) BuildDirectOosvarRvalueNode(variableName string) *DirectOosvarRvalueNode {
 	return &DirectOosvarRvalueNode{
 		variableName: variableName,
 	}
@@ -165,7 +165,7 @@ func (this *DirectOosvarRvalueNode) Evaluate(
 type FullOosvarRvalueNode struct {
 }
 
-func (this *RootNode) BuildFullOosvarRvalueNode() *FullOosvarRvalueNode {
+func (root *RootNode) BuildFullOosvarRvalueNode() *FullOosvarRvalueNode {
 	return &FullOosvarRvalueNode{}
 }
 func (this *FullOosvarRvalueNode) Evaluate(
@@ -179,7 +179,7 @@ type LocalVariableNode struct {
 	stackVariable *runtime.StackVariable
 }
 
-func (this *RootNode) BuildLocalVariableNode(variableName string) *LocalVariableNode {
+func (root *RootNode) BuildLocalVariableNode(variableName string) *LocalVariableNode {
 	return &LocalVariableNode{
 		stackVariable: runtime.NewStackVariable(variableName),
 	}
@@ -200,7 +200,7 @@ type StringLiteralNode struct {
 	literal types.Mlrval
 }
 
-func (this *RootNode) BuildStringLiteralNode(literal string) *StringLiteralNode {
+func (root *RootNode) BuildStringLiteralNode(literal string) *StringLiteralNode {
 	return &StringLiteralNode{
 		literal: types.MlrvalFromString(literal),
 	}
@@ -216,7 +216,7 @@ type IntLiteralNode struct {
 	literal *types.Mlrval
 }
 
-func (this *RootNode) BuildIntLiteralNode(literal string) *IntLiteralNode {
+func (root *RootNode) BuildIntLiteralNode(literal string) *IntLiteralNode {
 	return &IntLiteralNode{
 		literal: types.MlrvalPointerFromIntString(literal),
 	}
@@ -232,7 +232,7 @@ type FloatLiteralNode struct {
 	literal *types.Mlrval
 }
 
-func (this *RootNode) BuildFloatLiteralNode(literal string) *FloatLiteralNode {
+func (root *RootNode) BuildFloatLiteralNode(literal string) *FloatLiteralNode {
 	return &FloatLiteralNode{
 		literal: types.MlrvalPointerFromFloat64String(literal),
 	}
@@ -248,7 +248,7 @@ type BoolLiteralNode struct {
 	literal types.Mlrval
 }
 
-func (this *RootNode) BuildBoolLiteralNode(literal string) *BoolLiteralNode {
+func (root *RootNode) BuildBoolLiteralNode(literal string) *BoolLiteralNode {
 	return &BoolLiteralNode{
 		literal: types.MlrvalFromBoolString(literal),
 	}
@@ -264,7 +264,7 @@ type NullLiteralNode struct {
 	literal *types.Mlrval
 }
 
-func (this *RootNode) BuildNullLiteralNode() *NullLiteralNode {
+func (root *RootNode) BuildNullLiteralNode() *NullLiteralNode {
 	return &NullLiteralNode{
 		literal: types.MLRVAL_NULL,
 	}
@@ -276,50 +276,50 @@ func (this *NullLiteralNode) Evaluate(
 }
 
 // ================================================================
-func (this *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func (root *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Token == nil)
 	sval := string(astNode.Token.Lit)
 
 	switch sval {
 
 	case "FILENAME":
-		return this.BuildFILENAMENode(), nil
+		return root.BuildFILENAMENode(), nil
 		break
 	case "FILENUM":
-		return this.BuildFILENUMNode(), nil
+		return root.BuildFILENUMNode(), nil
 		break
 
 	case "NF":
-		return this.BuildNFNode(), nil
+		return root.BuildNFNode(), nil
 		break
 	case "NR":
-		return this.BuildNRNode(), nil
+		return root.BuildNRNode(), nil
 		break
 	case "FNR":
-		return this.BuildFNRNode(), nil
+		return root.BuildFNRNode(), nil
 		break
 
 	case "IRS":
-		return this.BuildIRSNode(), nil
+		return root.BuildIRSNode(), nil
 		break
 	case "IFS":
-		return this.BuildIFSNode(), nil
+		return root.BuildIFSNode(), nil
 		break
 	case "IPS":
-		return this.BuildIPSNode(), nil
+		return root.BuildIPSNode(), nil
 		break
 
 	case "ORS":
-		return this.BuildORSNode(), nil
+		return root.BuildORSNode(), nil
 		break
 	case "OFS":
-		return this.BuildOFSNode(), nil
+		return root.BuildOFSNode(), nil
 		break
 	case "OPS":
-		return this.BuildOPSNode(), nil
+		return root.BuildOPSNode(), nil
 		break
 	case "OFLATSEP":
-		return this.BuildOFLATSEPNode(), nil
+		return root.BuildOFLATSEPNode(), nil
 		break
 
 	}
@@ -333,7 +333,7 @@ func (this *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable
 type FILENAMENode struct {
 }
 
-func (this *RootNode) BuildFILENAMENode() *FILENAMENode {
+func (root *RootNode) BuildFILENAMENode() *FILENAMENode {
 	return &FILENAMENode{}
 }
 func (this *FILENAMENode) Evaluate(
@@ -346,7 +346,7 @@ func (this *FILENAMENode) Evaluate(
 type FILENUMNode struct {
 }
 
-func (this *RootNode) BuildFILENUMNode() *FILENUMNode {
+func (root *RootNode) BuildFILENUMNode() *FILENUMNode {
 	return &FILENUMNode{}
 }
 func (this *FILENUMNode) Evaluate(
@@ -359,7 +359,7 @@ func (this *FILENUMNode) Evaluate(
 type NFNode struct {
 }
 
-func (this *RootNode) BuildNFNode() *NFNode {
+func (root *RootNode) BuildNFNode() *NFNode {
 	return &NFNode{}
 }
 func (this *NFNode) Evaluate(
@@ -372,7 +372,7 @@ func (this *NFNode) Evaluate(
 type NRNode struct {
 }
 
-func (this *RootNode) BuildNRNode() *NRNode {
+func (root *RootNode) BuildNRNode() *NRNode {
 	return &NRNode{}
 }
 func (this *NRNode) Evaluate(
@@ -385,7 +385,7 @@ func (this *NRNode) Evaluate(
 type FNRNode struct {
 }
 
-func (this *RootNode) BuildFNRNode() *FNRNode {
+func (root *RootNode) BuildFNRNode() *FNRNode {
 	return &FNRNode{}
 }
 func (this *FNRNode) Evaluate(
@@ -398,7 +398,7 @@ func (this *FNRNode) Evaluate(
 type IRSNode struct {
 }
 
-func (this *RootNode) BuildIRSNode() *IRSNode {
+func (root *RootNode) BuildIRSNode() *IRSNode {
 	return &IRSNode{}
 }
 func (this *IRSNode) Evaluate(
@@ -411,7 +411,7 @@ func (this *IRSNode) Evaluate(
 type IFSNode struct {
 }
 
-func (this *RootNode) BuildIFSNode() *IFSNode {
+func (root *RootNode) BuildIFSNode() *IFSNode {
 	return &IFSNode{}
 }
 func (this *IFSNode) Evaluate(
@@ -424,7 +424,7 @@ func (this *IFSNode) Evaluate(
 type IPSNode struct {
 }
 
-func (this *RootNode) BuildIPSNode() *IPSNode {
+func (root *RootNode) BuildIPSNode() *IPSNode {
 	return &IPSNode{}
 }
 func (this *IPSNode) Evaluate(
@@ -437,7 +437,7 @@ func (this *IPSNode) Evaluate(
 type ORSNode struct {
 }
 
-func (this *RootNode) BuildORSNode() *ORSNode {
+func (root *RootNode) BuildORSNode() *ORSNode {
 	return &ORSNode{}
 }
 func (this *ORSNode) Evaluate(
@@ -450,7 +450,7 @@ func (this *ORSNode) Evaluate(
 type OFSNode struct {
 }
 
-func (this *RootNode) BuildOFSNode() *OFSNode {
+func (root *RootNode) BuildOFSNode() *OFSNode {
 	return &OFSNode{}
 }
 func (this *OFSNode) Evaluate(
@@ -463,7 +463,7 @@ func (this *OFSNode) Evaluate(
 type OPSNode struct {
 }
 
-func (this *RootNode) BuildOPSNode() *OPSNode {
+func (root *RootNode) BuildOPSNode() *OPSNode {
 	return &OPSNode{}
 }
 func (this *OPSNode) Evaluate(
@@ -476,7 +476,7 @@ func (this *OPSNode) Evaluate(
 type OFLATSEPNode struct {
 }
 
-func (this *RootNode) BuildOFLATSEPNode() *OFLATSEPNode {
+func (root *RootNode) BuildOFLATSEPNode() *OFLATSEPNode {
 	return &OFLATSEPNode{}
 }
 func (this *OFLATSEPNode) Evaluate(
@@ -486,17 +486,17 @@ func (this *OFLATSEPNode) Evaluate(
 }
 
 // ================================================================
-func (this *RootNode) BuildConstantNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func (root *RootNode) BuildConstantNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Token == nil)
 	sval := string(astNode.Token.Lit)
 
 	switch sval {
 
 	case "M_PI":
-		return this.BuildMathPINode(), nil
+		return root.BuildMathPINode(), nil
 		break
 	case "M_E":
-		return this.BuildMathENode(), nil
+		return root.BuildMathENode(), nil
 		break
 
 	}
@@ -510,7 +510,7 @@ func (this *RootNode) BuildConstantNode(astNode *dsl.ASTNode) (IEvaluable, error
 type MathPINode struct {
 }
 
-func (this *RootNode) BuildMathPINode() *MathPINode {
+func (root *RootNode) BuildMathPINode() *MathPINode {
 	return &MathPINode{}
 }
 func (this *MathPINode) Evaluate(
@@ -523,7 +523,7 @@ func (this *MathPINode) Evaluate(
 type MathENode struct {
 }
 
-func (this *RootNode) BuildMathENode() *MathENode {
+func (root *RootNode) BuildMathENode() *MathENode {
 	return &MathENode{}
 }
 func (this *MathENode) Evaluate(
@@ -538,7 +538,7 @@ type LiteralOneNode struct {
 
 // In array slices like 'myarray[:4]', the lower index is always 1 since Miller
 // user-space indices are 1-up.
-func (this *RootNode) BuildArraySliceEmptyLowerIndexNode(
+func (root *RootNode) BuildArraySliceEmptyLowerIndexNode(
 	astNode *dsl.ASTNode,
 ) (*LiteralOneNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceEmptyLowerIndex)
@@ -558,7 +558,7 @@ type LiteralEmptyStringNode struct {
 // the length of the array, since Miller user-space indices are 1-up. However,
 // we don't have access to the array length in this AST node so we return ""
 // so the slice-index CST node can compute it.
-func (this *RootNode) BuildArraySliceEmptyUpperIndexNode(
+func (root *RootNode) BuildArraySliceEmptyUpperIndexNode(
 	astNode *dsl.ASTNode,
 ) (*LiteralEmptyStringNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceEmptyUpperIndex)
@@ -578,7 +578,7 @@ func (this *LiteralEmptyStringNode) Evaluate(
 type PanicNode struct {
 }
 
-func (this *RootNode) BuildPanicNode(astNode *dsl.ASTNode) (*PanicNode, error) {
+func (root *RootNode) BuildPanicNode(astNode *dsl.ASTNode) (*PanicNode, error) {
 	return &PanicNode{}, nil
 }
 func (this *PanicNode) Evaluate(

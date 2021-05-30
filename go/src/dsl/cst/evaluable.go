@@ -18,54 +18,54 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func (root *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 
 	if astNode.Children == nil {
-		return this.BuildLeafNode(astNode)
+		return root.BuildLeafNode(astNode)
 	}
 
 	switch astNode.Type {
 
 	case dsl.NodeTypeArrayLiteral: // [...]
-		return this.BuildArrayLiteralNode(astNode)
+		return root.BuildArrayLiteralNode(astNode)
 
 	case dsl.NodeTypeMapLiteral: // {...}
-		return this.BuildMapLiteralNode(astNode)
+		return root.BuildMapLiteralNode(astNode)
 
 	case dsl.NodeTypeArrayOrMapIndexAccess: // x[...]
-		return this.BuildArrayOrMapIndexAccessNode(astNode)
+		return root.BuildArrayOrMapIndexAccessNode(astNode)
 
 	case dsl.NodeTypeArraySliceAccess: // myarray[lo:hi]
-		return this.BuildArraySliceAccessNode(astNode)
+		return root.BuildArraySliceAccessNode(astNode)
 
 	case dsl.NodeTypePositionalFieldName: // $[[...]]
-		return this.BuildPositionalFieldNameNode(astNode)
+		return root.BuildPositionalFieldNameNode(astNode)
 
 	case dsl.NodeTypePositionalFieldValue: // $[[[...]]]
-		return this.BuildPositionalFieldValueNode(astNode)
+		return root.BuildPositionalFieldValueNode(astNode)
 
 	case dsl.NodeTypeArrayOrMapPositionalNameAccess: // mymap[[...]]]
-		return this.BuildArrayOrMapPositionalNameAccessNode(astNode)
+		return root.BuildArrayOrMapPositionalNameAccessNode(astNode)
 
 	case dsl.NodeTypeArrayOrMapPositionalValueAccess: // mymap[[[...]]]
-		return this.BuildArrayOrMapPositionalValueAccessNode(astNode)
+		return root.BuildArrayOrMapPositionalValueAccessNode(astNode)
 
 	case dsl.NodeTypeIndirectFieldValue: // $[...]
-		return this.BuildIndirectFieldValueNode(astNode)
+		return root.BuildIndirectFieldValueNode(astNode)
 	case dsl.NodeTypeIndirectOosvarValue: // $[...]
-		return this.BuildIndirectOosvarValueNode(astNode)
+		return root.BuildIndirectOosvarValueNode(astNode)
 
 	case dsl.NodeTypeEnvironmentVariable: // ENV["NAME"]
-		return this.BuildEnvironmentVariableNode(astNode)
+		return root.BuildEnvironmentVariableNode(astNode)
 
 	// Operators are just functions with infix syntax so we treat them like
 	// functions in the CST. (The distinction between infix syntax, e.g.
 	// '1+2', and prefix syntax, e.g. 'plus(1,2)' disappears post-parse -- both
 	// parse to the same-shape AST.)
 	case dsl.NodeTypeOperator:
-		return this.BuildFunctionCallsiteNode(astNode)
+		return root.BuildFunctionCallsiteNode(astNode)
 	case dsl.NodeTypeFunctionCallsite:
-		return this.BuildFunctionCallsiteNode(astNode)
+		return root.BuildFunctionCallsiteNode(astNode)
 
 	}
 
@@ -79,13 +79,13 @@ type IndirectFieldValueNode struct {
 	fieldNameEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildIndirectFieldValueNode(
+func (root *RootNode) BuildIndirectFieldValueNode(
 	astNode *dsl.ASTNode,
 ) (*IndirectFieldValueNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectFieldValue)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	fieldNameEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
+	fieldNameEvaluable, err := root.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
@@ -93,6 +93,7 @@ func (this *RootNode) BuildIndirectFieldValueNode(
 		fieldNameEvaluable: fieldNameEvaluable,
 	}, nil
 }
+
 func (this *IndirectFieldValueNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval { // TODO: err
@@ -128,13 +129,13 @@ type IndirectOosvarValueNode struct {
 	oosvarNameEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildIndirectOosvarValueNode(
+func (root *RootNode) BuildIndirectOosvarValueNode(
 	astNode *dsl.ASTNode,
 ) (*IndirectOosvarValueNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIndirectOosvarValue)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 1)
-	oosvarNameEvaluable, err := this.BuildEvaluableNode(astNode.Children[0])
+	oosvarNameEvaluable, err := root.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}

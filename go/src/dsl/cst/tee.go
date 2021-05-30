@@ -70,7 +70,7 @@ type TeeStatementNode struct {
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeTeeStatement)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 	expressionNode := astNode.Children[0]
@@ -80,7 +80,7 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 	// Expresosin to be teed, which is $*.
 
 	lib.InternalCodingErrorIf(expressionNode.Type != dsl.NodeTypeFullSrec)
-	expressionEvaluable := this.BuildFullSrecRvalueNode()
+	expressionEvaluable := root.BuildFullSrecRvalueNode()
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Redirection targets (the thing after > >> |, if any).
@@ -100,26 +100,26 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 
 	if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 		retval.teeToRedirectFunc = retval.teeToFileOrPipe
-		retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(this.recordWriterOptions)
-		retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stdout)")
+		retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(root.recordWriterOptions)
+		retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stdout)")
 	} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
 		retval.teeToRedirectFunc = retval.teeToFileOrPipe
-		retval.outputHandlerManager = output.NewStderrWriteHandlerManager(this.recordWriterOptions)
-		retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stderr)")
+		retval.outputHandlerManager = output.NewStderrWriteHandlerManager(root.recordWriterOptions)
+		retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stderr)")
 	} else {
 		retval.teeToRedirectFunc = retval.teeToFileOrPipe
 
-		retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+		retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
 		if err != nil {
 			return nil, err
 		}
 
 		if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-			retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
+			retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
 		} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-			retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
+			retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
 		} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-			retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
+			retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 		} else {
 			return nil, errors.New(
 				fmt.Sprintf(
@@ -133,7 +133,7 @@ func (this *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 	// Register this with the CST root node so that open file descriptrs can be
 	// closed, etc at end of stream.
 	if retval.outputHandlerManager != nil {
-		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+		root.RegisterOutputHandlerManager(retval.outputHandlerManager)
 	}
 
 	return retval, nil

@@ -77,13 +77,13 @@ type EmitXStatementNode struct {
 	isEmitP bool
 }
 
-func (this *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitStatement)
-	return this.buildEmitXStatementNode(astNode, false)
+	return root.buildEmitXStatementNode(astNode, false)
 }
-func (this *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitPStatement)
-	return this.buildEmitXStatementNode(astNode, true)
+	return root.buildEmitXStatementNode(astNode, true)
 }
 
 // ----------------------------------------------------------------
@@ -98,7 +98,7 @@ func (this *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable
 // oosvar/localvar/fieldname/map, so we can use their names as keys in the
 // emitted record.
 
-func (this *RootNode) buildEmitXStatementNode(
+func (root *RootNode) buildEmitXStatementNode(
 	astNode *dsl.ASTNode,
 	isEmitP bool,
 ) (IExecutable, error) {
@@ -120,7 +120,7 @@ func (this *RootNode) buildEmitXStatementNode(
 	names = make([]string, numEmittables)
 	emitEvaluables = make([]IEvaluable, numEmittables)
 	for i, emittableNode := range emittablesNode.Children {
-		name, emitEvaluable, err := this.buildEmittableNode(emittableNode)
+		name, emitEvaluable, err := root.buildEmittableNode(emittableNode)
 		if err != nil {
 			return nil, err
 		}
@@ -138,7 +138,7 @@ func (this *RootNode) buildEmitXStatementNode(
 		numKeys := len(keysNode.Children)
 		indexEvaluables = make([]IEvaluable, numKeys)
 		for i, keyNode := range keysNode.Children {
-			indexEvaluable, err := this.BuildEvaluableNode(keyNode)
+			indexEvaluable, err := root.BuildEvaluableNode(keyNode)
 			if err != nil {
 				return nil, err
 			}
@@ -174,26 +174,26 @@ func (this *RootNode) buildEmitXStatementNode(
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
-			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(this.recordWriterOptions)
-			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stdout)")
+			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(root.recordWriterOptions)
+			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stdout)")
 		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
-			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(this.recordWriterOptions)
-			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stderr)")
+			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(root.recordWriterOptions)
+			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stderr)")
 		} else {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
 
-			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
 			if err != nil {
 				return nil, err
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(
@@ -208,7 +208,7 @@ func (this *RootNode) buildEmitXStatementNode(
 	// Register this with the CST root node so that open file descriptrs can be
 	// closed, etc at end of stream.
 	if retval.outputHandlerManager != nil {
-		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+		root.RegisterOutputHandlerManager(retval.outputHandlerManager)
 	}
 
 	return retval, nil
@@ -218,7 +218,7 @@ func (this *RootNode) buildEmitXStatementNode(
 // This is a helper method for deciding whether an emittable node is a named
 // variable or a map.
 
-func (this *RootNode) buildEmittableNode(
+func (root *RootNode) buildEmittableNode(
 	astNode *dsl.ASTNode,
 ) (name string, emitEvaluable IEvaluable, err error) {
 	name = "_"
@@ -250,7 +250,7 @@ func (this *RootNode) buildEmittableNode(
 	// ;
 	// ----------------------------------------------------------------
 
-	emitEvaluable, err = this.BuildEvaluableNode(astNode)
+	emitEvaluable, err = root.BuildEvaluableNode(astNode)
 
 	return name, emitEvaluable, err
 }

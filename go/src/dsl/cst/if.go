@@ -70,7 +70,7 @@ type IfItem struct {
 //                     * DirectFieldValue "z"
 //                     * IntLiteral "900"
 
-func (this *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, error) {
+func (root *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeIfChain)
 
 	ifItems := make([]*IfItem, 0)
@@ -82,11 +82,11 @@ func (this *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, erro
 		token := string(astChild.Token.Lit) // "if", "elif", "else"
 		if token == "if" || token == "elif" {
 			lib.InternalCodingErrorIf(len(astChild.Children) != 2)
-			conditionNode, err := this.BuildEvaluableNode(astChild.Children[0])
+			conditionNode, err := root.BuildEvaluableNode(astChild.Children[0])
 			if err != nil {
 				return nil, err
 			}
-			statementBlockNode, err := this.BuildStatementBlockNode(astChild.Children[1])
+			statementBlockNode, err := root.BuildStatementBlockNode(astChild.Children[1])
 			if err != nil {
 				return nil, err
 			}
@@ -99,7 +99,7 @@ func (this *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, erro
 		} else if token == "else" {
 			lib.InternalCodingErrorIf(len(astChild.Children) != 1)
 			var conditionNode IEvaluable = nil
-			statementBlockNode, err := this.BuildStatementBlockNode(astChild.Children[0])
+			statementBlockNode, err := root.BuildStatementBlockNode(astChild.Children[0])
 			if err != nil {
 				return nil, err
 			}

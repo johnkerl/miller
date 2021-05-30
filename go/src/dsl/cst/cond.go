@@ -22,15 +22,15 @@ type CondBlockNode struct {
 // ----------------------------------------------------------------
 // Sample AST:
 
-func (this *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, error) {
+func (root *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeCondBlock)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
-	conditionNode, err := this.BuildEvaluableNode(astNode.Children[0])
+	conditionNode, err := root.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
-	statementBlockNode, err := this.BuildStatementBlockNode(astNode.Children[1])
+	statementBlockNode, err := root.BuildStatementBlockNode(astNode.Children[1])
 	if err != nil {
 		return nil, err
 	}
