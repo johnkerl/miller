@@ -58,12 +58,12 @@ func NewUDFCallsite(
 	}
 }
 
-func (this *UDFCallsite) Evaluate(
+func (site *UDFCallsite) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	lib.InternalCodingErrorIf(this.argumentNodes == nil)
-	lib.InternalCodingErrorIf(this.udf == nil)
-	lib.InternalCodingErrorIf(this.udf.functionBody == nil)
+	lib.InternalCodingErrorIf(site.argumentNodes == nil)
+	lib.InternalCodingErrorIf(site.udf == nil)
+	lib.InternalCodingErrorIf(site.udf.functionBody == nil)
 
 	// Evaluate and pair up the callsite arguments with our parameters,
 	// positionally.
@@ -109,13 +109,13 @@ func (this *UDFCallsite) Evaluate(
 	// we push a new frameset and DefineTypedAtScope using the callee's frameset.
 
 	// Evaluate the arguments
-	numArguments := len(this.udf.signature.typeGatedParameterNames)
+	numArguments := len(site.udf.signature.typeGatedParameterNames)
 	arguments := make([]*types.Mlrval, numArguments)
 
-	for i, _ := range this.udf.signature.typeGatedParameterNames {
-		arguments[i] = this.argumentNodes[i].Evaluate(state)
+	for i, _ := range site.udf.signature.typeGatedParameterNames {
+		arguments[i] = site.argumentNodes[i].Evaluate(state)
 
-		err := this.udf.signature.typeGatedParameterNames[i].Check(arguments[i])
+		err := site.udf.signature.typeGatedParameterNames[i].Check(arguments[i])
 		if err != nil {
 			// TODO: put error-return in the Evaluate API
 			fmt.Fprint(os.Stderr, err)
@@ -129,8 +129,8 @@ func (this *UDFCallsite) Evaluate(
 
 	for i, _ := range arguments {
 		err := state.Stack.DefineTypedAtScope(
-			runtime.NewStackVariable(this.udf.signature.typeGatedParameterNames[i].Name),
-			this.udf.signature.typeGatedParameterNames[i].TypeName,
+			runtime.NewStackVariable(site.udf.signature.typeGatedParameterNames[i].Name),
+			site.udf.signature.typeGatedParameterNames[i].TypeName,
 			arguments[i],
 		)
 		// TODO: put error-return in the Evaluate API
@@ -141,13 +141,13 @@ func (this *UDFCallsite) Evaluate(
 	}
 
 	// Execute the function body.
-	blockExitPayload, err := this.udf.functionBody.Execute(state)
+	blockExitPayload, err := site.udf.functionBody.Execute(state)
 
 	// TODO: rethink error-propagation here: blockExitPayload.blockReturnValue
 	// being MT_ERROR should be mapped to MT_ERROR here (nominally,
 	// data-dependent). But error-return could be something not data-dependent.
 	if err != nil {
-		err = this.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ERROR)
+		err = site.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ERROR)
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
@@ -157,7 +157,7 @@ func (this *UDFCallsite) Evaluate(
 
 	// Fell off end of function with no return
 	if blockExitPayload == nil {
-		err = this.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
+		err = site.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
@@ -169,7 +169,7 @@ func (this *UDFCallsite) Evaluate(
 	// continue not in a loop, or return-void, both of which should have been
 	// reported as syntax errors during the parsing pass.
 	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
-		err = this.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
+		err = site.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
@@ -181,7 +181,7 @@ func (this *UDFCallsite) Evaluate(
 	// their UDF but we lost the return value.
 	lib.InternalCodingErrorIf(blockExitPayload.blockReturnValue == nil)
 
-	err = this.udf.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
+	err = site.udf.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
 	if err != nil {
 		// TODO: put error-return in the Evaluate API
 		fmt.Fprint(os.Stderr, err)
@@ -201,8 +201,8 @@ func NewUDFManager() *UDFManager {
 	}
 }
 
-func (this *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF, error) {
-	udf := this.functions[functionName]
+func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF, error) {
+	udf := manager.functions[functionName]
 	if udf == nil {
 		return nil, nil
 	}
@@ -220,12 +220,12 @@ func (this *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF, er
 	return udf, nil
 }
 
-func (this *UDFManager) Install(udf *UDF) {
-	this.functions[udf.signature.funcOrSubrName] = udf
+func (manager *UDFManager) Install(udf *UDF) {
+	manager.functions[udf.signature.funcOrSubrName] = udf
 }
 
-func (this *UDFManager) ExistsByName(name string) bool {
-	_, ok := this.functions[name]
+func (manager *UDFManager) ExistsByName(name string) bool {
+	_, ok := manager.functions[name]
 	return ok
 }
 
@@ -268,7 +268,7 @@ func (this *UDFManager) ExistsByName(name string) bool {
 //         * FunctionCallsite "f"
 //             * DirectFieldValue "x"
 
-func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
+func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFunctionDefinition)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
@@ -284,8 +284,8 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 		)
 	}
 
-	if !this.allowUDFUDSRedefinitions {
-		if this.udfManager.ExistsByName(functionName) {
+	if !root.allowUDFUDSRedefinitions {
+		if root.udfManager.ExistsByName(functionName) {
 			return errors.New(
 				fmt.Sprintf(
 					"Miller: function named \"%s\" has already been defined.",
@@ -341,14 +341,14 @@ func (this *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 
 	signature := NewSignature(functionName, arity, typeGatedParameterNames, typeGatedReturnValue)
 
-	functionBody, err := this.BuildStatementBlockNode(functionBodyASTNode)
+	functionBody, err := root.BuildStatementBlockNode(functionBodyASTNode)
 	if err != nil {
 		return err
 	}
 
 	udf := NewUDF(signature, functionBody)
 
-	this.udfManager.Install(udf)
+	root.udfManager.Install(udf)
 
 	return nil
 }
