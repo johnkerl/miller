@@ -82,7 +82,7 @@ func NewTransformerNothing() (*TransformerNothing, error) {
 	return &TransformerNothing{}, nil
 }
 
-func (this *TransformerNothing) Transform(
+func (tr *TransformerNothing) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

@@ -27,14 +27,14 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *Repl) handleDSLStringImmediate(dslString string, doWarnings bool) error {
-	return this.handleDSLStringAux(dslString, true, doWarnings)
+func (repl *Repl) handleDSLStringImmediate(dslString string, doWarnings bool) error {
+	return repl.handleDSLStringAux(dslString, true, doWarnings)
 }
-func (this *Repl) handleDSLStringBulk(dslString string, doWarnings bool) error {
-	return this.handleDSLStringAux(dslString, false, doWarnings)
+func (repl *Repl) handleDSLStringBulk(dslString string, doWarnings bool) error {
+	return repl.handleDSLStringAux(dslString, false, doWarnings)
 }
 
-func (this *Repl) handleDSLStringAux(
+func (repl *Repl) handleDSLStringAux(
 	dslString string,
 	isReplImmediate bool, // False for load-from-file or non-immediate multi-line; true otherwise
 	doWarnings bool,
@@ -43,20 +43,20 @@ func (this *Repl) handleDSLStringAux(
 		return nil
 	}
 
-	astRootNode, err := this.BuildASTFromStringWithMessage(dslString)
+	astRootNode, err := repl.BuildASTFromStringWithMessage(dslString)
 	if err != nil {
 		// Error message already printed out
 		return err
 	}
 
-	this.cstRootNode.ResetForREPL()
+	repl.cstRootNode.ResetForREPL()
 
 	// For load-from-file / non-immediate multi-line, each statement not in
 	// begin/end, and not a user-defined function/subroutine, is recorded in
 	// the "main block" to be executed later when the user asks to do so. For
 	// single-line/interactive mode, begin/end statements and UDF/UDS are
 	// recorded, but any other statements are executed immediately.
-	err = this.cstRootNode.IngestAST(
+	err = repl.cstRootNode.IngestAST(
 		astRootNode,
 		false, /*isFilter*/
 		isReplImmediate,
@@ -67,30 +67,30 @@ func (this *Repl) handleDSLStringAux(
 		return err
 	}
 
-	err = this.cstRootNode.Resolve()
+	err = repl.cstRootNode.Resolve()
 	if err != nil {
 		return err
 	}
 
 	if isReplImmediate {
-		outrec, err := this.cstRootNode.ExecuteREPLImmediate(this.runtimeState)
+		outrec, err := repl.cstRootNode.ExecuteREPLImmediate(repl.runtimeState)
 		if err != nil {
 			return err
 		}
-		this.runtimeState.Inrec = outrec
+		repl.runtimeState.Inrec = outrec
 
 		// The filter expression for the main Miller DSL is any non-assignment
 		// statment like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for
 		// interactive expressions to be printed to the terminal. For the main DSL,
 		// the default is types.MlrvalFromTrue(); for the REPL, the default is
 		// types.MLRVAL_VOID.
-		filterExpression := this.runtimeState.FilterExpression
+		filterExpression := repl.runtimeState.FilterExpression
 		if filterExpression.IsVoid() {
 			// nothing to print
 		} else {
 			fmt.Println(filterExpression.String())
 		}
-		this.runtimeState.FilterExpression = types.MLRVAL_VOID
+		repl.runtimeState.FilterExpression = types.MLRVAL_VOID
 	}
 
 	return nil

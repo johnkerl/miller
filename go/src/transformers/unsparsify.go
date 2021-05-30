@@ -119,31 +119,31 @@ func NewTransformerUnsparsify(
 		fieldNamesSeen.Put(specifiedFieldName, specifiedFieldName)
 	}
 
-	this := &TransformerUnsparsify{
+	tr := &TransformerUnsparsify{
 		fillerMlrval:       types.MlrvalFromString(fillerString),
 		recordsAndContexts: list.New(),
 		fieldNamesSeen:     fieldNamesSeen,
 	}
 
 	if specifiedFieldNames == nil {
-		this.recordTransformerFunc = this.mapNonStreaming
+		tr.recordTransformerFunc = tr.mapNonStreaming
 	} else {
-		this.recordTransformerFunc = this.mapStreaming
+		tr.recordTransformerFunc = tr.mapStreaming
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUnsparsify) Transform(
+func (tr *TransformerUnsparsify) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUnsparsify) mapNonStreaming(
+func (tr *TransformerUnsparsify) mapNonStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -151,21 +151,21 @@ func (this *TransformerUnsparsify) mapNonStreaming(
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			key := pe.Key
-			if !this.fieldNamesSeen.Has(key) {
-				this.fieldNamesSeen.Put(key, key)
+			if !tr.fieldNamesSeen.Has(key) {
+				tr.fieldNamesSeen.Put(key, key)
 			}
 		}
-		this.recordsAndContexts.PushBack(inrecAndContext)
+		tr.recordsAndContexts.PushBack(inrecAndContext)
 	} else {
-		for e := this.recordsAndContexts.Front(); e != nil; e = e.Next() {
+		for e := tr.recordsAndContexts.Front(); e != nil; e = e.Next() {
 			outrecAndContext := e.Value.(*types.RecordAndContext)
 			outrec := outrecAndContext.Record
 
 			newrec := types.NewMlrmapAsRecord()
-			for pe := this.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
+			for pe := tr.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
 				fieldName := pe.Key
 				if !outrec.Has(fieldName) {
-					newrec.PutCopy(fieldName, &this.fillerMlrval)
+					newrec.PutCopy(fieldName, &tr.fillerMlrval)
 				} else {
 					newrec.PutReference(fieldName, outrec.Get(fieldName))
 				}
@@ -179,16 +179,16 @@ func (this *TransformerUnsparsify) mapNonStreaming(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUnsparsify) mapStreaming(
+func (tr *TransformerUnsparsify) mapStreaming(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		for pe := this.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
+		for pe := tr.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
 			if !inrec.Has(pe.Key) {
-				inrec.PutCopy(pe.Key, &this.fillerMlrval)
+				inrec.PutCopy(pe.Key, &tr.fillerMlrval)
 			}
 		}
 

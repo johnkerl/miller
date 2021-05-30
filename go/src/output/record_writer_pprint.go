@@ -33,7 +33,7 @@ func NewRecordWriterPPRINT(writerOptions *cliutil.TWriterOptions) *RecordWriterP
 }
 
 // ----------------------------------------------------------------
-func (this *RecordWriterPPRINT) Write(
+func (writer *RecordWriterPPRINT) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
 ) {
@@ -45,43 +45,43 @@ func (this *RecordWriterPPRINT) Write(
 
 	if outrec != nil { // Not end of record stream
 
-		if this.lastJoinedHeader == nil {
+		if writer.lastJoinedHeader == nil {
 			// First output record:
 			// * New batch
 			// * No old batch to print
-			this.batch.PushBack(outrec)
+			writer.batch.PushBack(outrec)
 			temp := strings.Join(outrec.GetKeys(), ",")
-			this.lastJoinedHeader = &temp
+			writer.lastJoinedHeader = &temp
 		} else {
 			// May or may not continue the same homogeneous batch
 			joinedHeader := strings.Join(outrec.GetKeys(), ",")
-			if *this.lastJoinedHeader != joinedHeader {
+			if *writer.lastJoinedHeader != joinedHeader {
 				// Print and free old batch
-				if this.writeHeterogenousList(this.batch, this.writerOptions.BarredPprintOutput, ostream) {
+				if writer.writeHeterogenousList(writer.batch, writer.writerOptions.BarredPprintOutput, ostream) {
 					// Print a newline
 					ostream.Write([]byte("\n"))
 				}
 				// Start a new batch
-				this.batch = list.New()
-				this.batch.PushBack(outrec)
-				this.lastJoinedHeader = &joinedHeader
+				writer.batch = list.New()
+				writer.batch.PushBack(outrec)
+				writer.lastJoinedHeader = &joinedHeader
 			} else {
 				// Continue the batch
-				this.batch.PushBack(outrec)
+				writer.batch.PushBack(outrec)
 			}
 		}
 
 	} else { // End of record stream
 
-		if this.batch.Front() != nil {
-			this.writeHeterogenousList(this.batch, this.writerOptions.BarredPprintOutput, ostream)
+		if writer.batch.Front() != nil {
+			writer.writeHeterogenousList(writer.batch, writer.writerOptions.BarredPprintOutput, ostream)
 		}
 	}
 }
 
 // ----------------------------------------------------------------
 // Returns false if there was nothing but empty record(s), e.g. 'mlr gap -n 10'.
-func (this *RecordWriterPPRINT) writeHeterogenousList(
+func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	records *list.List,
 	barred bool,
 	ostream io.WriteCloser,
@@ -118,9 +118,9 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 			}
 		}
 		if barred {
-			this.writeHeterogenousListBarred(records, maxWidths, ostream)
+			writer.writeHeterogenousListBarred(records, maxWidths, ostream)
 		} else {
-			this.writeHeterogenousListNonBarred(records, maxWidths, ostream)
+			writer.writeHeterogenousListNonBarred(records, maxWidths, ostream)
 		}
 		return true
 	}
@@ -136,7 +136,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousList(
 // eks wye 4  -0.38139939387114097 0.13418874328430463
 // wye pan 5  0.5732889198020006   0.8636244699032729
 
-func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
+func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 	records *list.List,
 	maxWidths map[string]int,
 	ostream io.WriteCloser,
@@ -150,7 +150,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 		if onFirst {
 			var buffer bytes.Buffer // faster than fmt.Print() separately
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				if !this.writerOptions.RightAlignedPprintOutput {
+				if !writer.writerOptions.RightAlignedPprintOutput {
 					if pe.Next != nil {
 						buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[pe.Key], pe.Key))
 					} else {
@@ -176,7 +176,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 			if s == "" {
 				s = "-"
 			}
-			if !this.writerOptions.RightAlignedPprintOutput {
+			if !writer.writerOptions.RightAlignedPprintOutput {
 				if pe.Next != nil {
 					buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[pe.Key], s))
 				} else {
@@ -210,7 +210,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 // TODO: for better performance, uuse string-buffer as in DKVP for this and all
 // record-writers
 
-func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
+func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 	records *list.List,
 	maxWidths map[string]int,
 	ostream io.WriteCloser,
@@ -248,7 +248,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 
 			buffer.WriteString(verticalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				if !this.writerOptions.RightAlignedPprintOutput {
+				if !writer.writerOptions.RightAlignedPprintOutput {
 					buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[pe.Key], pe.Key))
 				} else {
 					buffer.WriteString(fmt.Sprintf("%*s", maxWidths[pe.Key], pe.Key))
@@ -281,7 +281,7 @@ func (this *RecordWriterPPRINT) writeHeterogenousListBarred(
 		buffer.WriteString(verticalStart)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
-			if !this.writerOptions.RightAlignedPprintOutput {
+			if !writer.writerOptions.RightAlignedPprintOutput {
 				buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[pe.Key], s))
 			} else {
 				buffer.WriteString(fmt.Sprintf("%*s", maxWidths[pe.Key], s))

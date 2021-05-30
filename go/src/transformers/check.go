@@ -82,7 +82,7 @@ func NewTransformerCheck() (*TransformerCheck, error) {
 	return &TransformerCheck{}, nil
 }
 
-func (this *TransformerCheck) Transform(
+func (tr *TransformerCheck) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {

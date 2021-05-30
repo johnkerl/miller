@@ -28,15 +28,15 @@ func NewWhileLoopNode(
 	}
 }
 
-func (this *RootNode) BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, error) {
+func (root *RootNode) BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeWhileLoop)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
-	conditionNode, err := this.BuildEvaluableNode(astNode.Children[0])
+	conditionNode, err := root.BuildEvaluableNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
-	statementBlockNode, err := this.BuildStatementBlockNode(astNode.Children[1])
+	statementBlockNode, err := root.BuildStatementBlockNode(astNode.Children[1])
 	if err != nil {
 		return nil, err
 	}
@@ -48,9 +48,9 @@ func (this *RootNode) BuildWhileLoopNode(astNode *dsl.ASTNode) (*WhileLoopNode, 
 }
 
 // ----------------------------------------------------------------
-func (this *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	for {
-		condition := this.conditionNode.Evaluate(state)
+		condition := node.conditionNode.Evaluate(state)
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.
@@ -59,7 +59,7 @@ func (this *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, err
 		if boolValue != true {
 			break
 		}
-		blockExitPayload, err := this.statementBlockNode.Execute(state)
+		blockExitPayload, err := node.statementBlockNode.Execute(state)
 		if err != nil {
 			return nil, err
 		}
@@ -98,15 +98,15 @@ func NewDoWhileLoopNode(
 	}
 }
 
-func (this *RootNode) BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNode, error) {
+func (root *RootNode) BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDoWhileLoop)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 
-	statementBlockNode, err := this.BuildStatementBlockNode(astNode.Children[0])
+	statementBlockNode, err := root.BuildStatementBlockNode(astNode.Children[0])
 	if err != nil {
 		return nil, err
 	}
-	conditionNode, err := this.BuildEvaluableNode(astNode.Children[1])
+	conditionNode, err := root.BuildEvaluableNode(astNode.Children[1])
 	if err != nil {
 		return nil, err
 	}
@@ -118,9 +118,9 @@ func (this *RootNode) BuildDoWhileLoopNode(astNode *dsl.ASTNode) (*DoWhileLoopNo
 }
 
 // ----------------------------------------------------------------
-func (this *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	for {
-		blockExitPayload, err := this.statementBlockNode.Execute(state)
+		blockExitPayload, err := node.statementBlockNode.Execute(state)
 		if err != nil {
 			return nil, err
 		}
@@ -140,7 +140,7 @@ func (this *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, e
 		// TODO: handle return statements
 		// TODO: runtime errors for any other types
 
-		condition := this.conditionNode.Evaluate(state)
+		condition := node.conditionNode.Evaluate(state)
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.

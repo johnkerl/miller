@@ -69,7 +69,7 @@ func NewForLoopOneVariableNode(
 //                         * LocalVariable "k"
 //                         * LocalVariable "v"
 
-func (this *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoopOneVariableNode, error) {
+func (root *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoopOneVariableNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopOneVariable)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 3)
 
@@ -83,12 +83,12 @@ func (this *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoo
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
 	// detected at CST-build time)
-	indexableNode, err := this.BuildEvaluableNode(indexableASTNode)
+	indexableNode, err := root.BuildEvaluableNode(indexableASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	statementBlockNode, err := this.BuildStatementBlockNode(blockASTNode)
+	statementBlockNode, err := root.BuildStatementBlockNode(blockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -115,8 +115,8 @@ func (this *RootNode) BuildForLoopOneVariableNode(astNode *dsl.ASTNode) (*ForLoo
 //   '
 //
 
-func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	indexMlrval := this.indexableNode.Evaluate(state)
+func (node *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	indexMlrval := node.indexableNode.Evaluate(state)
 
 	if indexMlrval.IsMap() {
 
@@ -128,12 +128,12 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(this.indexVariable, &mapkey)
+			err := state.Stack.SetAtScope(node.indexVariable, &mapkey)
 			if err != nil {
 				return nil, err
 			}
 			// The loop body will push its own frame
-			blockExitPayload, err := this.statementBlockNode.Execute(state)
+			blockExitPayload, err := node.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err
 			}
@@ -163,12 +163,12 @@ func (this *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		state.Stack.PushStackFrame()
 		defer state.Stack.PopStackFrame()
 		for _, element := range arrayval {
-			err := state.Stack.SetAtScope(this.indexVariable, &element)
+			err := state.Stack.SetAtScope(node.indexVariable, &element)
 			if err != nil {
 				return nil, err
 			}
 			// The loop body will push its own frame
-			blockExitPayload, err := this.statementBlockNode.Execute(state)
+			blockExitPayload, err := node.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err
 			}
@@ -246,7 +246,7 @@ func NewForLoopTwoVariableNode(
 //                         * LocalVariable "k"
 //                         * LocalVariable "v"
 
-func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoopTwoVariableNode, error) {
+func (root *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoopTwoVariableNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopTwoVariable)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
@@ -267,12 +267,12 @@ func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
 	// detected at CST-build time)
-	indexableNode, err := this.BuildEvaluableNode(indexableASTNode)
+	indexableNode, err := root.BuildEvaluableNode(indexableASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	statementBlockNode, err := this.BuildStatementBlockNode(blockASTNode)
+	statementBlockNode, err := root.BuildStatementBlockNode(blockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -300,8 +300,8 @@ func (this *RootNode) BuildForLoopTwoVariableNode(astNode *dsl.ASTNode) (*ForLoo
 //   '
 //
 
-func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	indexMlrval := this.indexableNode.Evaluate(state)
+func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	indexMlrval := node.indexableNode.Evaluate(state)
 
 	if indexMlrval.IsMap() {
 
@@ -313,16 +313,16 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(this.keyIndexVariable, &mapkey)
+			err := state.Stack.SetAtScope(node.keyIndexVariable, &mapkey)
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(this.valueIndexVariable, pe.Value)
+			err = state.Stack.SetAtScope(node.valueIndexVariable, pe.Value)
 			if err != nil {
 				return nil, err
 			}
 			// The loop body will push its own frame
-			blockExitPayload, err := this.statementBlockNode.Execute(state)
+			blockExitPayload, err := node.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err
 			}
@@ -354,16 +354,16 @@ func (this *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			err := state.Stack.SetAtScope(this.keyIndexVariable, &mindex)
+			err := state.Stack.SetAtScope(node.keyIndexVariable, &mindex)
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(this.valueIndexVariable, &element)
+			err = state.Stack.SetAtScope(node.valueIndexVariable, &element)
 			if err != nil {
 				return nil, err
 			}
 			// The loop body will push its own frame
-			blockExitPayload, err := this.statementBlockNode.Execute(state)
+			blockExitPayload, err := node.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err
 			}
@@ -438,7 +438,7 @@ func NewForLoopMultivariableNode(
 //         * full record "$*"
 //         * statement block
 
-func (this *RootNode) BuildForLoopMultivariableNode(
+func (root *RootNode) BuildForLoopMultivariableNode(
 	astNode *dsl.ASTNode,
 ) (*ForLoopMultivariableNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeForLoopMultivariable)
@@ -465,12 +465,12 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 
 	// TODO: error if loop-over node isn't map/array (inasmuch as can be
 	// detected at CST-build time)
-	indexableNode, err := this.BuildEvaluableNode(indexableASTNode)
+	indexableNode, err := root.BuildEvaluableNode(indexableASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	statementBlockNode, err := this.BuildStatementBlockNode(blockASTNode)
+	statementBlockNode, err := root.BuildStatementBlockNode(blockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -498,8 +498,8 @@ func (this *RootNode) BuildForLoopMultivariableNode(
 //   '
 //
 
-func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	indexMlrval := this.indexableNode.Evaluate(state)
+func (node *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	indexMlrval := node.indexableNode.Evaluate(state)
 
 	// Make a frame for the loop variables
 	state.Stack.PushStackFrame()
@@ -510,7 +510,7 @@ func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 	// from any of the latter is a break from all.  However, at this point, the
 	// break has been "broken" and should not be returned to the caller.
 	// Return-statements should, though.
-	blockExitPayload, err := this.executeOuter(indexMlrval, this.keyIndexVariables, state)
+	blockExitPayload, err := node.executeOuter(indexMlrval, node.keyIndexVariables, state)
 	if blockExitPayload == nil {
 		return nil, err
 	} else {
@@ -523,13 +523,13 @@ func (this *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 }
 
 // ----------------------------------------------------------------
-func (this *ForLoopMultivariableNode) executeOuter(
+func (node *ForLoopMultivariableNode) executeOuter(
 	mlrval *types.Mlrval,
 	keyIndexVariables []*runtime.StackVariable,
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
 	if len(keyIndexVariables) == 1 {
-		return this.executeInner(mlrval, keyIndexVariables[0], state)
+		return node.executeInner(mlrval, keyIndexVariables[0], state)
 	}
 	// else, recurse
 
@@ -544,7 +544,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 				return nil, err
 			}
 
-			blockExitPayload, err := this.executeOuter(pe.Value, keyIndexVariables[1:], state)
+			blockExitPayload, err := node.executeOuter(pe.Value, keyIndexVariables[1:], state)
 			if err != nil {
 				return nil, err
 			}
@@ -577,7 +577,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 				return nil, err
 			}
 
-			blockExitPayload, err := this.executeOuter(&element, keyIndexVariables[1:], state)
+			blockExitPayload, err := node.executeOuter(&element, keyIndexVariables[1:], state)
 			if err != nil {
 				return nil, err
 			}
@@ -616,7 +616,7 @@ func (this *ForLoopMultivariableNode) executeOuter(
 }
 
 // ----------------------------------------------------------------
-func (this *ForLoopMultivariableNode) executeInner(
+func (node *ForLoopMultivariableNode) executeInner(
 	mlrval *types.Mlrval,
 	keyIndexVariable *runtime.StackVariable,
 	state *runtime.State,
@@ -631,13 +631,13 @@ func (this *ForLoopMultivariableNode) executeInner(
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(this.valueIndexVariable, pe.Value)
+			err = state.Stack.SetAtScope(node.valueIndexVariable, pe.Value)
 			if err != nil {
 				return nil, err
 			}
 
 			// The loop body will push its own frame
-			blockExitPayload, err := this.statementBlockNode.Execute(state)
+			blockExitPayload, err := node.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err
 			}
@@ -669,13 +669,13 @@ func (this *ForLoopMultivariableNode) executeInner(
 			if err != nil {
 				return nil, err
 			}
-			err = state.Stack.SetAtScope(this.valueIndexVariable, &element)
+			err = state.Stack.SetAtScope(node.valueIndexVariable, &element)
 			if err != nil {
 				return nil, err
 			}
 
 			// The loop body will push its own frame
-			blockExitPayload, err := this.statementBlockNode.Execute(state)
+			blockExitPayload, err := node.statementBlockNode.Execute(state)
 			if err != nil {
 				return nil, err
 			}
@@ -778,7 +778,7 @@ func NewTripleForLoopNode(
 //                     * DirectFieldValue "i"
 //                     * LocalVariable "i"
 
-func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
+func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLoopNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeTripleForLoop)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 4)
 
@@ -792,7 +792,7 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 	lib.InternalCodingErrorIf(updateBlockASTNode.Type != dsl.NodeTypeStatementBlock)
 	lib.InternalCodingErrorIf(bodyBlockASTNode.Type != dsl.NodeTypeStatementBlock)
 
-	startBlockNode, err := this.BuildStatementBlockNode(startBlockASTNode)
+	startBlockNode, err := root.BuildStatementBlockNode(startBlockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -812,7 +812,7 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 						"Miller: the non-final triple-for continutation statements must be assignments.",
 					)
 				}
-				precontinuationAssignment, err := this.BuildAssignmentNode(
+				precontinuationAssignment, err := root.BuildAssignmentNode(
 					continuationExpressionASTNode.Children[i],
 				)
 				if err != nil {
@@ -835,18 +835,18 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 			}
 		}
 		lib.InternalCodingErrorIf(len(bareBooleanASTNode.Children) != 1)
-		continuationExpressionNode, err = this.BuildEvaluableNode(bareBooleanASTNode.Children[0])
+		continuationExpressionNode, err = root.BuildEvaluableNode(bareBooleanASTNode.Children[0])
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	updateBlockNode, err := this.BuildStatementBlockNode(updateBlockASTNode)
+	updateBlockNode, err := root.BuildStatementBlockNode(updateBlockASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	bodyBlockNode, err := this.BuildStatementBlockNode(bodyBlockASTNode)
+	bodyBlockNode, err := root.BuildStatementBlockNode(bodyBlockASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -875,7 +875,7 @@ func (this *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 //   '
 //
 
-func (this *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	// Make a frame for the loop variables.
 	state.Stack.PushStackFrame()
 	defer state.Stack.PopStackFrame()
@@ -883,22 +883,22 @@ func (this *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 	// Use ExecuteFrameless here, otherwise the start-statements would be
 	// within an ephemeral, isolated frame and not accessible to the remaining
 	// parts of the for-loop.
-	_, err := this.startBlockNode.ExecuteFrameless(state)
+	_, err := node.startBlockNode.ExecuteFrameless(state)
 	if err != nil {
 		return nil, err
 	}
 
 	for {
-		if this.precontinuationAssignments != nil {
-			for _, precontinuationAssignment := range this.precontinuationAssignments {
+		if node.precontinuationAssignments != nil {
+			for _, precontinuationAssignment := range node.precontinuationAssignments {
 				_, err := precontinuationAssignment.Execute(state)
 				if err != nil {
 					return nil, err
 				}
 			}
 		}
-		if this.continuationExpressionNode != nil { // empty is true
-			continuationValue := this.continuationExpressionNode.Evaluate(state)
+		if node.continuationExpressionNode != nil { // empty is true
+			continuationValue := node.continuationExpressionNode.Evaluate(state)
 			boolValue, isBool := continuationValue.GetBoolValue()
 			if !isBool {
 				// TODO: propagate line-number context
@@ -909,7 +909,7 @@ func (this *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 			}
 		}
 
-		blockExitPayload, err := this.bodyBlockNode.Execute(state)
+		blockExitPayload, err := node.bodyBlockNode.Execute(state)
 		if err != nil {
 			return nil, err
 		}
@@ -930,7 +930,7 @@ func (this *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 
 		// The loop body will push its own frame.
 		state.Stack.PushStackFrame()
-		_, err = this.updateBlockNode.ExecuteFrameless(state)
+		_, err = node.updateBlockNode.ExecuteFrameless(state)
 		if err != nil {
 			state.Stack.PopStackFrame()
 			return nil, err

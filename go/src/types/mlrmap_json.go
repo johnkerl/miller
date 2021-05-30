@@ -11,9 +11,9 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) MarshalJSON(jsonFormatting TJSONFormatting) ([]byte, error) {
+func (mlrmap *Mlrmap) MarshalJSON(jsonFormatting TJSONFormatting) ([]byte, error) {
 	var buffer bytes.Buffer
-	mapBytes, err := this.marshalJSONAux(jsonFormatting, 1)
+	mapBytes, err := mlrmap.marshalJSONAux(jsonFormatting, 1)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (this *Mlrmap) MarshalJSON(jsonFormatting TJSONFormatting) ([]byte, error) 
 }
 
 // For a map we only write from opening curly brace to closing curly brace.  In
-// nested-map contexts, this particular map might be written with a comma
+// nested-map contexts, mlrmap particular map might be written with a comma
 // immediately after its closing curly brace, or a newline, and only the caller
 // can know that.
 //
@@ -38,21 +38,21 @@ func (this *Mlrmap) MarshalJSON(jsonFormatting TJSONFormatting) ([]byte, error) 
 //   "b": 2  <-- element nesting depth is 1 for root-level map
 // }         <-- closing curly brace nesting depth is 0 for root-level map
 
-func (this *Mlrmap) marshalJSONAux(
+func (mlrmap *Mlrmap) marshalJSONAux(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
 ) ([]byte, error) {
 	if jsonFormatting == JSON_MULTILINE {
-		return this.marshalJSONAuxMultiline(jsonFormatting, elementNestingDepth)
+		return mlrmap.marshalJSONAuxMultiline(jsonFormatting, elementNestingDepth)
 	} else if jsonFormatting == JSON_SINGLE_LINE {
-		return this.marshalJSONAuxSingleLine(jsonFormatting, elementNestingDepth)
+		return mlrmap.marshalJSONAuxSingleLine(jsonFormatting, elementNestingDepth)
 	} else {
 		lib.InternalCodingErrorIf(true)
 		return nil, nil // not reached
 	}
 }
 
-func (this *Mlrmap) marshalJSONAuxMultiline(
+func (mlrmap *Mlrmap) marshalJSONAuxMultiline(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
 ) ([]byte, error) {
@@ -62,11 +62,11 @@ func (this *Mlrmap) marshalJSONAuxMultiline(
 	// Write empty map as '{}'. For anything else, opening curly brace in a
 	// line of its own, one key-value pair per line, closing curly brace on a
 	// line of its own.
-	if this.Head != nil {
+	if mlrmap.Head != nil {
 		buffer.WriteString("\n")
 	}
 
-	for pe := this.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		// Write the key which is necessarily string-valued in Miller, and in
 		// JSON for that matter :)
 		for i := 0; i < elementNestingDepth; i++ {
@@ -92,7 +92,7 @@ func (this *Mlrmap) marshalJSONAuxMultiline(
 	}
 
 	// Write empty map as '{}'.
-	if this.Head != nil {
+	if mlrmap.Head != nil {
 		for i := 0; i < elementNestingDepth-1; i++ {
 			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
 		}
@@ -102,7 +102,7 @@ func (this *Mlrmap) marshalJSONAuxMultiline(
 	return buffer.Bytes(), nil
 }
 
-func (this *Mlrmap) marshalJSONAuxSingleLine(
+func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
 ) ([]byte, error) {
@@ -110,7 +110,7 @@ func (this *Mlrmap) marshalJSONAuxSingleLine(
 
 	buffer.WriteString("{")
 
-	for pe := this.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		// Write the key which is necessarily string-valued in Miller, and in
 		// JSON for that matter :)
 		buffer.WriteString("\"")
@@ -139,23 +139,23 @@ func (this *Mlrmap) marshalJSONAuxSingleLine(
 
 // ----------------------------------------------------------------
 // JSON-stringifies a single field of a record
-func (this *MlrmapEntry) JSONStringifyInPlace(
+func (entry *MlrmapEntry) JSONStringifyInPlace(
 	jsonFormatting TJSONFormatting,
 ) {
-	outputBytes, err := this.Value.MarshalJSON(jsonFormatting)
+	outputBytes, err := entry.Value.MarshalJSON(jsonFormatting)
 	if err != nil {
-		this.Value = MLRVAL_ERROR
+		entry.Value = MLRVAL_ERROR
 	} else {
-		this.Value = MlrvalPointerFromString(string(outputBytes))
+		entry.Value = MlrvalPointerFromString(string(outputBytes))
 	}
 }
 
 // ----------------------------------------------------------------
 // JSON-parses a single field of a record
-func (this *MlrmapEntry) JSONParseInPlace() {
-	input := this.Value.String()
-	err := this.Value.UnmarshalJSON([]byte(input))
+func (entry *MlrmapEntry) JSONParseInPlace() {
+	input := entry.Value.String()
+	err := entry.Value.UnmarshalJSON([]byte(input))
 	if err != nil {
-		this.Value = MLRVAL_ERROR
+		entry.Value = MLRVAL_ERROR
 	}
 }

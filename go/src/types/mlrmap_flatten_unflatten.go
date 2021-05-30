@@ -35,60 +35,60 @@ import (
 // default on ALL Miller records whenever we convert to/from JSON. So, the
 // default path should be fast.
 
-func (this *Mlrmap) Flatten(separator string) {
-	if !this.isFlattenable() { // fast path: don't modify the record at all
+func (mlrmap *Mlrmap) Flatten(separator string) {
+	if !mlrmap.isFlattenable() { // fast path: don't modify the record at all
 		return
 	}
 
-	that := NewMlrmapAsRecord()
+	other := NewMlrmapAsRecord()
 
-	for pe := this.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		if pe.Value.IsArrayOrMap() {
 			pieces := pe.Value.FlattenToMap(pe.Key, separator)
 			for pf := pieces.GetMap().Head; pf != nil; pf = pf.Next {
-				that.PutReference(pf.Key, pf.Value)
+				other.PutReference(pf.Key, pf.Value)
 			}
 		} else {
-			that.PutReference(pe.Key, pe.Value)
+			other.PutReference(pe.Key, pe.Value)
 		}
 	}
 
-	*this = *that
+	*mlrmap = *other
 }
 
 // ----------------------------------------------------------------
 // For mlr flatten -f.
 
-func (this *Mlrmap) FlattenFields(
+func (mlrmap *Mlrmap) FlattenFields(
 	fieldNameSet map[string]bool,
 	separator string,
 ) {
-	if !this.isFlattenable() { // fast path
+	if !mlrmap.isFlattenable() { // fast path
 		return
 	}
 
-	that := NewMlrmapAsRecord()
+	other := NewMlrmapAsRecord()
 
-	for pe := this.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		if pe.Value.IsArrayOrMap() && fieldNameSet[pe.Key] {
 			pieces := pe.Value.FlattenToMap(pe.Key, separator)
 			for pf := pieces.GetMap().Head; pf != nil; pf = pf.Next {
-				that.PutReference(pf.Key, pf.Value)
+				other.PutReference(pf.Key, pf.Value)
 			}
 		} else {
-			that.PutReference(pe.Key, pe.Value)
+			other.PutReference(pe.Key, pe.Value)
 		}
 	}
 
-	*this = *that
+	*mlrmap = *other
 }
 
 // ----------------------------------------------------------------
 // Optimization for Flatten, to avoid needless data motion in the case
 // where all field values are non-collections.
 
-func (this *Mlrmap) isFlattenable() bool {
-	for pe := this.Head; pe != nil; pe = pe.Next {
+func (mlrmap *Mlrmap) isFlattenable() bool {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		if pe.Value.IsArrayOrMap() {
 			return true
 		}
@@ -97,51 +97,51 @@ func (this *Mlrmap) isFlattenable() bool {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) Unflatten(separator string) {
-	that := NewMlrmapAsRecord()
+func (mlrmap *Mlrmap) Unflatten(separator string) {
+	other := NewMlrmapAsRecord()
 
-	for pe := this.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		if strings.Contains(pe.Key, separator) {
 			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
-			that.PutIndexed(
+			other.PutIndexed(
 				MakePointerArray(arrayOfIndices.arrayval),
 				unflattenTerminal(pe.Value).Copy(),
 			)
 		} else {
-			that.PutReference(pe.Key, unflattenTerminal(pe.Value))
+			other.PutReference(pe.Key, unflattenTerminal(pe.Value))
 		}
 	}
 
-	*this = *that
+	*mlrmap = *other
 }
 
 // ----------------------------------------------------------------
 // For mlr unflatten -f.
-func (this *Mlrmap) UnflattenFields(
+func (mlrmap *Mlrmap) UnflattenFields(
 	fieldNameSet map[string]bool,
 	separator string,
 ) {
-	that := NewMlrmapAsRecord()
+	other := NewMlrmapAsRecord()
 
-	for pe := this.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		if strings.Contains(pe.Key, separator) {
 			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
 			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
 			baseIndex := arrayOfIndices.arrayval[0].String()
 			if fieldNameSet[baseIndex] {
-				that.PutIndexed(
+				other.PutIndexed(
 					MakePointerArray(arrayOfIndices.arrayval),
 					unflattenTerminal(pe.Value).Copy(),
 				)
 			} else {
-				that.PutReference(pe.Key, unflattenTerminal(pe.Value))
+				other.PutReference(pe.Key, unflattenTerminal(pe.Value))
 			}
 		} else {
-			that.PutReference(pe.Key, unflattenTerminal(pe.Value))
+			other.PutReference(pe.Key, unflattenTerminal(pe.Value))
 		}
 	}
 
-	*this = *that
+	*mlrmap = *other
 }
 
 // ----------------------------------------------------------------

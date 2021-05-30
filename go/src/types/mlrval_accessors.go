@@ -9,12 +9,12 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *Mlrval) GetType() MVType {
-	return this.mvtype
+func (mv *Mlrval) GetType() MVType {
+	return mv.mvtype
 }
 
-func (this *Mlrval) GetTypeName() string {
-	return TYPE_NAMES[this.mvtype]
+func (mv *Mlrval) GetTypeName() string {
+	return TYPE_NAMES[mv.mvtype]
 }
 
 func GetTypeName(mvtype MVType) string {
@@ -22,28 +22,28 @@ func GetTypeName(mvtype MVType) string {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) IsLegit() bool {
-	return this.mvtype > MT_VOID
+func (mv *Mlrval) IsLegit() bool {
+	return mv.mvtype > MT_VOID
 }
 
-func (this *Mlrval) IsErrorOrAbsent() bool {
-	return this.mvtype == MT_ERROR || this.mvtype == MT_ABSENT
+func (mv *Mlrval) IsErrorOrAbsent() bool {
+	return mv.mvtype == MT_ERROR || mv.mvtype == MT_ABSENT
 }
 
-func (this *Mlrval) IsError() bool {
-	return this.mvtype == MT_ERROR
+func (mv *Mlrval) IsError() bool {
+	return mv.mvtype == MT_ERROR
 }
 
-func (this *Mlrval) IsAbsent() bool {
-	return this.mvtype == MT_ABSENT
+func (mv *Mlrval) IsAbsent() bool {
+	return mv.mvtype == MT_ABSENT
 }
 
-func (this *Mlrval) IsVoid() bool {
-	return this.mvtype == MT_VOID
+func (mv *Mlrval) IsVoid() bool {
+	return mv.mvtype == MT_VOID
 }
 
-func (this *Mlrval) IsErrorOrVoid() bool {
-	return this.mvtype == MT_ERROR || this.mvtype == MT_VOID
+func (mv *Mlrval) IsErrorOrVoid() bool {
+	return mv.mvtype == MT_ERROR || mv.mvtype == MT_VOID
 }
 
 // * Error is non-empty
@@ -52,146 +52,146 @@ func (this *Mlrval) IsErrorOrVoid() bool {
 // * Void is empty
 // * Empty string is empty
 // * Int/float/bool/array/map are all non-empty
-func (this *Mlrval) IsEmpty() bool {
-	if this.mvtype == MT_VOID {
+func (mv *Mlrval) IsEmpty() bool {
+	if mv.mvtype == MT_VOID {
 		return true
-	} else if this.mvtype == MT_STRING {
-		return this.printrep == ""
+	} else if mv.mvtype == MT_STRING {
+		return mv.printrep == ""
 	} else {
 		return false
 	}
 }
 
-func (this *Mlrval) IsString() bool {
-	return this.mvtype == MT_STRING
+func (mv *Mlrval) IsString() bool {
+	return mv.mvtype == MT_STRING
 }
 
-func (this *Mlrval) IsStringOrVoid() bool {
-	return this.mvtype == MT_STRING || this.mvtype == MT_VOID
+func (mv *Mlrval) IsStringOrVoid() bool {
+	return mv.mvtype == MT_STRING || mv.mvtype == MT_VOID
 }
 
-func (this *Mlrval) IsInt() bool {
-	return this.mvtype == MT_INT
+func (mv *Mlrval) IsInt() bool {
+	return mv.mvtype == MT_INT
 }
 
-func (this *Mlrval) IsFloat() bool {
-	return this.mvtype == MT_FLOAT
+func (mv *Mlrval) IsFloat() bool {
+	return mv.mvtype == MT_FLOAT
 }
 
-func (this *Mlrval) IsNumeric() bool {
-	return this.mvtype == MT_INT || this.mvtype == MT_FLOAT
+func (mv *Mlrval) IsNumeric() bool {
+	return mv.mvtype == MT_INT || mv.mvtype == MT_FLOAT
 }
 
-func (this *Mlrval) IsIntZero() bool {
-	return this.mvtype == MT_INT && this.intval == 0
+func (mv *Mlrval) IsIntZero() bool {
+	return mv.mvtype == MT_INT && mv.intval == 0
 }
 
-func (this *Mlrval) IsBool() bool {
-	return this.mvtype == MT_BOOL
+func (mv *Mlrval) IsBool() bool {
+	return mv.mvtype == MT_BOOL
 }
 
-func (this *Mlrval) IsTrue() bool {
-	return this.mvtype == MT_BOOL && this.boolval == true
+func (mv *Mlrval) IsTrue() bool {
+	return mv.mvtype == MT_BOOL && mv.boolval == true
 }
-func (this *Mlrval) IsFalse() bool {
-	return this.mvtype == MT_BOOL && this.boolval == false
+func (mv *Mlrval) IsFalse() bool {
+	return mv.mvtype == MT_BOOL && mv.boolval == false
 }
 
-func (this *Mlrval) IsArray() bool {
-	return this.mvtype == MT_ARRAY
+func (mv *Mlrval) IsArray() bool {
+	return mv.mvtype == MT_ARRAY
 }
-func (this *Mlrval) IsMap() bool {
-	return this.mvtype == MT_MAP
+func (mv *Mlrval) IsMap() bool {
+	return mv.mvtype == MT_MAP
 }
-func (this *Mlrval) IsArrayOrMap() bool {
-	return this.mvtype == MT_ARRAY || this.mvtype == MT_MAP
+func (mv *Mlrval) IsArrayOrMap() bool {
+	return mv.mvtype == MT_ARRAY || mv.mvtype == MT_MAP
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) GetIntValue() (intValue int, isInt bool) {
-	if this.mvtype == MT_INT {
-		return this.intval, true
+func (mv *Mlrval) GetIntValue() (intValue int, isInt bool) {
+	if mv.mvtype == MT_INT {
+		return mv.intval, true
 	} else {
 		return -999, false
 	}
 }
 
-func (this *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
-	if this.mvtype == MT_FLOAT {
-		return this.floatval, true
+func (mv *Mlrval) GetFloatValue() (floatValue float64, isFloat bool) {
+	if mv.mvtype == MT_FLOAT {
+		return mv.floatval, true
 	} else {
 		return -777.0, false
 	}
 }
 
-func (this *Mlrval) GetNumericToFloatValue() (floatValue float64, isFloat bool) {
-	if this.mvtype == MT_FLOAT {
-		return this.floatval, true
-	} else if this.mvtype == MT_INT {
-		return float64(this.intval), true
+func (mv *Mlrval) GetNumericToFloatValue() (floatValue float64, isFloat bool) {
+	if mv.mvtype == MT_FLOAT {
+		return mv.floatval, true
+	} else if mv.mvtype == MT_INT {
+		return float64(mv.intval), true
 	} else {
 		return -888.0, false
 	}
 }
 
-func (this *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {
-	floatValue, ok := this.GetNumericToFloatValue()
+func (mv *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {
+	floatValue, ok := mv.GetNumericToFloatValue()
 	if !ok {
 		fmt.Fprintf(
 			os.Stderr,
 			"%s: couldn't parse \"%s\" as number.",
-			lib.MlrExeName(), this.String(),
+			lib.MlrExeName(), mv.String(),
 		)
 		os.Exit(1)
 	}
 	return floatValue
 }
 
-func (this *Mlrval) AssertNumeric() {
-	_ = this.GetNumericToFloatValueOrDie()
+func (mv *Mlrval) AssertNumeric() {
+	_ = mv.GetNumericToFloatValueOrDie()
 }
 
-func (this *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
-	if this.mvtype == MT_BOOL {
-		return this.boolval, true
+func (mv *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
+	if mv.mvtype == MT_BOOL {
+		return mv.boolval, true
 	} else {
 		return false, false
 	}
 }
 
-func (this *Mlrval) GetArray() []Mlrval {
-	if this.mvtype == MT_ARRAY {
-		return this.arrayval
+func (mv *Mlrval) GetArray() []Mlrval {
+	if mv.mvtype == MT_ARRAY {
+		return mv.arrayval
 	} else {
 		return nil
 	}
 }
 
-func (this *Mlrval) GetArrayLength() (int, bool) {
-	if this.mvtype == MT_ARRAY {
-		return len(this.arrayval), true
+func (mv *Mlrval) GetArrayLength() (int, bool) {
+	if mv.mvtype == MT_ARRAY {
+		return len(mv.arrayval), true
 	} else {
 		return -999, false
 	}
 }
 
-func (this *Mlrval) GetMap() *Mlrmap {
-	if this.mvtype == MT_MAP {
-		return this.mapval
+func (mv *Mlrval) GetMap() *Mlrmap {
+	if mv.mvtype == MT_MAP {
+		return mv.mapval
 	} else {
 		return nil
 	}
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) Copy() *Mlrval {
-	that := *this
-	if this.mvtype == MT_MAP {
-		that.mapval = this.mapval.Copy()
-	} else if this.mvtype == MT_ARRAY {
-		that.arrayval = CopyMlrvalArray(this.arrayval)
+func (mv *Mlrval) Copy() *Mlrval {
+	other := *mv
+	if mv.mvtype == MT_MAP {
+		other.mapval = mv.mapval.Copy()
+	} else if mv.mvtype == MT_ARRAY {
+		other.arrayval = CopyMlrvalArray(mv.arrayval)
 	}
-	return &that
+	return &other
 }
 
 func CopyMlrvalArray(input []Mlrval) []Mlrval {
@@ -213,19 +213,19 @@ func CopyMlrvalPointerArray(input []*Mlrval) []*Mlrval {
 // ---------------------------------------------------------------
 // For the flatten verb and DSL function.
 
-func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
+func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 	retval := NewMlrmap()
 
-	if this.mvtype == MT_MAP {
+	if mv.mvtype == MT_MAP {
 		// Without this, the for-loop below is zero-pass and fields with "{}"
 		// values would disappear entirely in a JSON-to-CSV conversion.
-		if this.mapval.FieldCount == 0 {
+		if mv.mapval.FieldCount == 0 {
 			if prefix != "" {
 				retval.PutCopy(prefix, MlrvalPointerFromString("{}"))
 			}
 		}
 
-		for pe := this.mapval.Head; pe != nil; pe = pe.Next {
+		for pe := mv.mapval.Head; pe != nil; pe = pe.Next {
 			nextPrefix := pe.Key
 			if prefix != "" {
 				nextPrefix = prefix + delimiter + nextPrefix
@@ -241,16 +241,16 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 			}
 		}
 
-	} else if this.mvtype == MT_ARRAY {
+	} else if mv.mvtype == MT_ARRAY {
 		// Without this, the for-loop below is zero-pass and fields with "[]"
 		// values would disappear entirely in a JSON-to-CSV conversion.
-		if len(this.arrayval) == 0 {
+		if len(mv.arrayval) == 0 {
 			if prefix != "" {
 				retval.PutCopy(prefix, MlrvalPointerFromString("[]"))
 			}
 		}
 
-		for zindex, value := range this.arrayval {
+		for zindex, value := range mv.arrayval {
 			nextPrefix := strconv.Itoa(zindex + 1) // Miller user-space indices are 1-up
 			if prefix != "" {
 				nextPrefix = prefix + delimiter + nextPrefix
@@ -267,7 +267,7 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 		}
 
 	} else {
-		retval.PutCopy(prefix, this.Copy())
+		retval.PutCopy(prefix, mv.Copy())
 	}
 
 	return MlrvalFromMapReferenced(retval)
@@ -276,10 +276,10 @@ func (this *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 // ----------------------------------------------------------------
 // Used by stats1.
 
-func (this *Mlrval) Increment() {
-	if this.mvtype == MT_INT {
-		this.intval++
-	} else if this.mvtype == MT_FLOAT {
-		this.floatval++
+func (mv *Mlrval) Increment() {
+	if mv.mvtype == MT_INT {
+		mv.intval++
+	} else if mv.mvtype == MT_FLOAT {
+		mv.floatval++
 	}
 }

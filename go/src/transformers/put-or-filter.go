@@ -433,43 +433,43 @@ func BuildASTFromString(dslString string) (*dsl.AST, error) {
 	return astRootNode, nil
 }
 
-func (this *TransformerPut) Transform(
+func (tr *TransformerPut) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.runtimeState.OutputChannel = outputChannel
+	tr.runtimeState.OutputChannel = outputChannel
 
 	inrec := inrecAndContext.Record
 	context := inrecAndContext.Context
 	if !inrecAndContext.EndOfStream {
 
 		// Execute the begin { ... } before the first input record
-		this.callCount++
-		if this.callCount == 1 {
-			this.runtimeState.Update(nil, &context)
-			err := this.cstRootNode.ExecuteBeginBlocks(this.runtimeState)
+		tr.callCount++
+		if tr.callCount == 1 {
+			tr.runtimeState.Update(nil, &context)
+			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
 			}
-			this.executedBeginBlocks = true
+			tr.executedBeginBlocks = true
 		}
 
-		this.runtimeState.Update(inrec, &context)
+		tr.runtimeState.Update(inrec, &context)
 
 		// Execute the main block on the current input record
-		outrec, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
+		outrec, err := tr.cstRootNode.ExecuteMainBlock(tr.runtimeState)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 
-		if !this.suppressOutputRecord {
-			filterBool, isBool := this.runtimeState.FilterExpression.GetBoolValue()
+		if !tr.suppressOutputRecord {
+			filterBool, isBool := tr.runtimeState.FilterExpression.GetBoolValue()
 			if !isBool {
 				filterBool = false
 			}
-			wantToEmit := lib.BooleanXOR(filterBool, this.invertFilter)
+			wantToEmit := lib.BooleanXOR(filterBool, tr.invertFilter)
 			if wantToEmit {
 				outputChannel <- types.NewRecordAndContext(
 					outrec,
@@ -479,12 +479,12 @@ func (this *TransformerPut) Transform(
 		}
 
 	} else {
-		this.runtimeState.Update(nil, &context)
+		tr.runtimeState.Update(nil, &context)
 
 		// If there were no input records then we never executed the
 		// begin-blocks. Do so now.
-		if this.executedBeginBlocks == false {
-			err := this.cstRootNode.ExecuteBeginBlocks(this.runtimeState)
+		if tr.executedBeginBlocks == false {
+			err := tr.cstRootNode.ExecuteBeginBlocks(tr.runtimeState)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
@@ -492,7 +492,7 @@ func (this *TransformerPut) Transform(
 		}
 
 		// Execute the end { ... } after the last input record
-		err := this.cstRootNode.ExecuteEndBlocks(this.runtimeState)
+		err := tr.cstRootNode.ExecuteEndBlocks(tr.runtimeState)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -500,7 +500,7 @@ func (this *TransformerPut) Transform(
 
 		// Send all registered OutputHandlerManager instances the end-of-stream
 		// indicator.
-		this.cstRootNode.ProcessEndOfStream()
+		tr.cstRootNode.ProcessEndOfStream()
 
 		outputChannel <- types.NewEndOfStreamMarker(&context)
 	}

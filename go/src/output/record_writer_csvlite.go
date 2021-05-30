@@ -26,7 +26,7 @@ func NewRecordWriterCSVLite(writerOptions *cliutil.TWriterOptions) *RecordWriter
 	}
 }
 
-func (this *RecordWriterCSVLite) Write(
+func (writer *RecordWriterCSVLite) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
 ) {
@@ -36,39 +36,39 @@ func (this *RecordWriterCSVLite) Write(
 	}
 
 	if outrec.FieldCount == 0 {
-		if !this.justWroteEmptyLine {
-			ostream.Write([]byte(this.writerOptions.ORS))
+		if !writer.justWroteEmptyLine {
+			ostream.Write([]byte(writer.writerOptions.ORS))
 		}
 		joinedHeader := ""
-		this.lastJoinedHeader = &joinedHeader
-		this.justWroteEmptyLine = true
+		writer.lastJoinedHeader = &joinedHeader
+		writer.justWroteEmptyLine = true
 		return
 	}
 
 	needToPrintHeader := false
 	joinedHeader := strings.Join(outrec.GetKeys(), ",")
-	if this.lastJoinedHeader == nil || *this.lastJoinedHeader != joinedHeader {
-		if this.lastJoinedHeader != nil {
-			if !this.justWroteEmptyLine {
-				ostream.Write([]byte(this.writerOptions.ORS))
+	if writer.lastJoinedHeader == nil || *writer.lastJoinedHeader != joinedHeader {
+		if writer.lastJoinedHeader != nil {
+			if !writer.justWroteEmptyLine {
+				ostream.Write([]byte(writer.writerOptions.ORS))
 			}
-			this.justWroteEmptyLine = true
+			writer.justWroteEmptyLine = true
 		}
-		this.lastJoinedHeader = &joinedHeader
+		writer.lastJoinedHeader = &joinedHeader
 		needToPrintHeader = true
 	}
 
-	if needToPrintHeader && !this.writerOptions.HeaderlessCSVOutput {
+	if needToPrintHeader && !writer.writerOptions.HeaderlessCSVOutput {
 		var buffer bytes.Buffer // faster than fmt.Print() separately
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(pe.Key)
 
 			if pe.Next != nil {
-				buffer.WriteString(this.writerOptions.OFS)
+				buffer.WriteString(writer.writerOptions.OFS)
 			}
 		}
 
-		buffer.WriteString(this.writerOptions.ORS)
+		buffer.WriteString(writer.writerOptions.ORS)
 		ostream.Write(buffer.Bytes())
 	}
 
@@ -76,11 +76,11 @@ func (this *RecordWriterCSVLite) Write(
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
-			buffer.WriteString(this.writerOptions.OFS)
+			buffer.WriteString(writer.writerOptions.OFS)
 		}
 	}
-	buffer.WriteString(this.writerOptions.ORS)
+	buffer.WriteString(writer.writerOptions.ORS)
 	ostream.Write(buffer.Bytes())
 
-	this.justWroteEmptyLine = false
+	writer.justWroteEmptyLine = false
 }

@@ -17,7 +17,7 @@ import (
 type BreakNode struct {
 }
 
-func (this *RootNode) BuildBreakNode(astNode *dsl.ASTNode) (*BreakNode, error) {
+func (root *RootNode) BuildBreakNode(astNode *dsl.ASTNode) (*BreakNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeBreak)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
@@ -25,7 +25,7 @@ func (this *RootNode) BuildBreakNode(astNode *dsl.ASTNode) (*BreakNode, error) {
 	return &BreakNode{}, nil
 }
 
-func (this *BreakNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *BreakNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	return &BlockExitPayload{
 		BLOCK_EXIT_BREAK,
 		nil,
@@ -36,7 +36,7 @@ func (this *BreakNode) Execute(state *runtime.State) (*BlockExitPayload, error) 
 type ContinueNode struct {
 }
 
-func (this *RootNode) BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, error) {
+func (root *RootNode) BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeContinue)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 0)
@@ -44,7 +44,7 @@ func (this *RootNode) BuildContinueNode(astNode *dsl.ASTNode) (*ContinueNode, er
 	return &ContinueNode{}, nil
 }
 
-func (this *ContinueNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *ContinueNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	return &BlockExitPayload{
 		BLOCK_EXIT_CONTINUE,
 		nil,
@@ -56,13 +56,13 @@ type ReturnNode struct {
 	returnValueExpression IEvaluable
 }
 
-func (this *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error) {
+func (root *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeReturn)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	if len(astNode.Children) == 0 {
 		return &ReturnNode{returnValueExpression: nil}, nil
 	} else if len(astNode.Children) == 1 {
-		returnValueExpression, err := this.BuildEvaluableNode(astNode.Children[0])
+		returnValueExpression, err := root.BuildEvaluableNode(astNode.Children[0])
 		if err != nil {
 			return nil, err
 		}
@@ -73,15 +73,15 @@ func (this *RootNode) BuildReturnNode(astNode *dsl.ASTNode) (*ReturnNode, error)
 	return nil, errors.New("Internal coding error: Statement should not be reached.")
 }
 
-func (this *ReturnNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	if this.returnValueExpression == nil {
+func (node *ReturnNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	if node.returnValueExpression == nil {
 		return &BlockExitPayload{
 			BLOCK_EXIT_RETURN_VOID,
 			nil,
 		}, nil
 	} else {
 		// The return value can be of type MT_ERROR but we do not use Go-level error return here.
-		returnValue := this.returnValueExpression.Evaluate(state)
+		returnValue := node.returnValueExpression.Evaluate(state)
 		return &BlockExitPayload{
 			BLOCK_EXIT_RETURN_VALUE,
 			returnValue.Copy(),

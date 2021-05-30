@@ -114,15 +114,15 @@ func NewTransformerJSONParse(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerJSONParse) Transform(
+func (tr *TransformerJSONParse) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerJSONParse) jsonParseAll(
+func (tr *TransformerJSONParse) jsonParseAll(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -138,14 +138,14 @@ func (this *TransformerJSONParse) jsonParseAll(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerJSONParse) jsonParseSome(
+func (tr *TransformerJSONParse) jsonParseSome(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if this.fieldNameSet[pe.Key] {
+			if tr.fieldNameSet[pe.Key] {
 				pe.JSONParseInPlace()
 			}
 		}

@@ -161,7 +161,7 @@ func NewTransformerHistogram(
 		}
 	}
 
-	this := &TransformerHistogram{
+	tr := &TransformerHistogram{
 		valueFieldNames: valueFieldNames,
 		countsByField:   countsByField,
 		outputPrefix:    outputPrefix,
@@ -169,48 +169,48 @@ func NewTransformerHistogram(
 	}
 
 	if !doAuto {
-		this.recordTransformerFunc = this.transformNonAuto
-		this.lo = lo
-		this.hi = hi
-		this.mul = float64(nbins) / (hi - lo)
+		tr.recordTransformerFunc = tr.transformNonAuto
+		tr.lo = lo
+		tr.hi = hi
+		tr.mul = float64(nbins) / (hi - lo)
 	} else {
-		this.vectorsByFieldName = make(map[string][]float64)
+		tr.vectorsByFieldName = make(map[string][]float64)
 		for _, valueFieldName := range valueFieldNames {
-			this.vectorsByFieldName[valueFieldName] = make([]float64, 0, histogramVectorInitialSize)
+			tr.vectorsByFieldName[valueFieldName] = make([]float64, 0, histogramVectorInitialSize)
 		}
 
-		this.recordTransformerFunc = this.transformAuto
+		tr.recordTransformerFunc = tr.transformAuto
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerHistogram) Transform(
+func (tr *TransformerHistogram) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerHistogram) transformNonAuto(
+func (tr *TransformerHistogram) transformNonAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		this.ingestNonAuto(inrecAndContext)
+		tr.ingestNonAuto(inrecAndContext)
 	} else {
-		this.emitNonAuto(&inrecAndContext.Context, outputChannel)
+		tr.emitNonAuto(&inrecAndContext.Context, outputChannel)
 		outputChannel <- inrecAndContext // end-of-stream marker
 	}
 }
 
-func (this *TransformerHistogram) ingestNonAuto(
+func (tr *TransformerHistogram) ingestNonAuto(
 	inrecAndContext *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
-	for _, valueFieldName := range this.valueFieldNames {
+	for _, valueFieldName := range tr.valueFieldNames {
 		stringValue := inrec.Get(valueFieldName)
 		if stringValue != nil {
 			floatValue, ok := stringValue.GetNumericToFloatValue()
@@ -222,41 +222,41 @@ func (this *TransformerHistogram) ingestNonAuto(
 				)
 				os.Exit(1)
 			}
-			if (floatValue >= this.lo) && (floatValue < this.hi) {
-				idx := int((floatValue - this.lo) * this.mul)
-				this.countsByField[valueFieldName][idx]++
-			} else if floatValue == this.hi {
-				idx := this.nbins - 1
-				this.countsByField[valueFieldName][idx]++
+			if (floatValue >= tr.lo) && (floatValue < tr.hi) {
+				idx := int((floatValue - tr.lo) * tr.mul)
+				tr.countsByField[valueFieldName][idx]++
+			} else if floatValue == tr.hi {
+				idx := tr.nbins - 1
+				tr.countsByField[valueFieldName][idx]++
 			}
 		}
 	}
 }
 
-func (this *TransformerHistogram) emitNonAuto(
+func (tr *TransformerHistogram) emitNonAuto(
 	endOfStreamContext *types.Context,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	countFieldNames := make(map[string]string)
-	for _, valueFieldName := range this.valueFieldNames {
-		countFieldNames[valueFieldName] = this.outputPrefix + valueFieldName + "_count"
+	for _, valueFieldName := range tr.valueFieldNames {
+		countFieldNames[valueFieldName] = tr.outputPrefix + valueFieldName + "_count"
 	}
-	for i := 0; i < this.nbins; i++ {
+	for i := 0; i < tr.nbins; i++ {
 		outrec := types.NewMlrmapAsRecord()
 
 		outrec.PutReference(
-			this.outputPrefix+"bin_lo",
-			types.MlrvalPointerFromFloat64((this.lo+float64(i))/this.mul),
+			tr.outputPrefix+"bin_lo",
+			types.MlrvalPointerFromFloat64((tr.lo+float64(i))/tr.mul),
 		)
 		outrec.PutReference(
-			this.outputPrefix+"bin_hi",
-			types.MlrvalPointerFromFloat64((this.lo+float64(i+1))/this.mul),
+			tr.outputPrefix+"bin_hi",
+			types.MlrvalPointerFromFloat64((tr.lo+float64(i+1))/tr.mul),
 		)
 
-		for _, valueFieldName := range this.valueFieldNames {
+		for _, valueFieldName := range tr.valueFieldNames {
 			outrec.PutReference(
 				countFieldNames[valueFieldName],
-				types.MlrvalPointerFromInt(this.countsByField[valueFieldName][i]),
+				types.MlrvalPointerFromInt(tr.countsByField[valueFieldName][i]),
 			)
 		}
 
@@ -265,43 +265,43 @@ func (this *TransformerHistogram) emitNonAuto(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerHistogram) transformAuto(
+func (tr *TransformerHistogram) transformAuto(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		this.ingestAuto(inrecAndContext)
+		tr.ingestAuto(inrecAndContext)
 	} else {
-		this.emitAuto(&inrecAndContext.Context, outputChannel)
+		tr.emitAuto(&inrecAndContext.Context, outputChannel)
 		outputChannel <- inrecAndContext // end-of-stream marker
 	}
 }
 
-func (this *TransformerHistogram) ingestAuto(
+func (tr *TransformerHistogram) ingestAuto(
 	inrecAndContext *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
-	for _, valueFieldName := range this.valueFieldNames {
+	for _, valueFieldName := range tr.valueFieldNames {
 		mvalue := inrec.Get(valueFieldName)
 		if mvalue != nil {
 			value := mvalue.GetNumericToFloatValueOrDie()
-			this.vectorsByFieldName[valueFieldName] = append(this.vectorsByFieldName[valueFieldName], value)
+			tr.vectorsByFieldName[valueFieldName] = append(tr.vectorsByFieldName[valueFieldName], value)
 		}
 	}
 }
 
-func (this *TransformerHistogram) emitAuto(
+func (tr *TransformerHistogram) emitAuto(
 	endOfStreamContext *types.Context,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	haveLoHi := false
 	lo := 0.0
 	hi := 1.0
-	nbins := this.nbins
+	nbins := tr.nbins
 
 	// Limits pass
-	for _, valueFieldName := range this.valueFieldNames {
-		vector := this.vectorsByFieldName[valueFieldName]
+	for _, valueFieldName := range tr.valueFieldNames {
+		vector := tr.vectorsByFieldName[valueFieldName]
 		n := len(vector)
 		for i := 0; i < n; i++ {
 			value := vector[i]
@@ -322,9 +322,9 @@ func (this *TransformerHistogram) emitAuto(
 
 	// Binning pass
 	mul := float64(nbins) / (hi - lo)
-	for _, valueFieldName := range this.valueFieldNames {
-		vector := this.vectorsByFieldName[valueFieldName]
-		counts := this.countsByField[valueFieldName]
+	for _, valueFieldName := range tr.valueFieldNames {
+		vector := tr.vectorsByFieldName[valueFieldName]
+		counts := tr.countsByField[valueFieldName]
 		lib.InternalCodingErrorIf(counts == nil)
 		n := len(vector)
 		for i := 0; i < n; i++ {
@@ -341,26 +341,26 @@ func (this *TransformerHistogram) emitAuto(
 
 	// Emission pass
 	countFieldNames := make(map[string]string)
-	for _, valueFieldName := range this.valueFieldNames {
-		countFieldNames[valueFieldName] = this.outputPrefix + valueFieldName + "_count"
+	for _, valueFieldName := range tr.valueFieldNames {
+		countFieldNames[valueFieldName] = tr.outputPrefix + valueFieldName + "_count"
 	}
 
 	for i := 0; i < nbins; i++ {
 		outrec := types.NewMlrmapAsRecord()
 
 		outrec.PutReference(
-			this.outputPrefix+"bin_lo",
+			tr.outputPrefix+"bin_lo",
 			types.MlrvalPointerFromFloat64((lo+float64(i))/mul),
 		)
 		outrec.PutReference(
-			this.outputPrefix+"bin_hi",
+			tr.outputPrefix+"bin_hi",
 			types.MlrvalPointerFromFloat64((lo+float64(i+1))/mul),
 		)
 
-		for _, valueFieldName := range this.valueFieldNames {
+		for _, valueFieldName := range tr.valueFieldNames {
 			outrec.PutReference(
 				countFieldNames[valueFieldName],
-				types.MlrvalPointerFromInt(this.countsByField[valueFieldName][i]),
+				types.MlrvalPointerFromInt(tr.countsByField[valueFieldName][i]),
 			)
 		}
 

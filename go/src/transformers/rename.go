@@ -152,14 +152,14 @@ func NewTransformerRename(
 		oldToNewNames.Put(oldName, newName)
 	}
 
-	this := &TransformerRename{}
+	tr := &TransformerRename{}
 
 	if !doRegexes {
-		this.oldToNewNames = oldToNewNames
-		this.doGsub = false
-		this.recordTransformerFunc = this.transformWithoutRegexes
+		tr.oldToNewNames = oldToNewNames
+		tr.doGsub = false
+		tr.recordTransformerFunc = tr.transformWithoutRegexes
 	} else {
-		this.regexesAndReplacements = list.New()
+		tr.regexesAndReplacements = list.New()
 		for pe := oldToNewNames.Head; pe != nil; pe = pe.Next {
 			regexString := pe.Key
 			regex := lib.CompileMillerRegexOrDie(regexString)
@@ -168,25 +168,25 @@ func NewTransformerRename(
 				regex:       regex,
 				replacement: replacement,
 			}
-			this.regexesAndReplacements.PushBack(&regexAndReplacement)
+			tr.regexesAndReplacements.PushBack(&regexAndReplacement)
 		}
-		this.doGsub = doGsub
-		this.recordTransformerFunc = this.transformWithRegexes
+		tr.doGsub = doGsub
+		tr.recordTransformerFunc = tr.transformWithRegexes
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRename) Transform(
+func (tr *TransformerRename) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRename) transformWithoutRegexes(
+func (tr *TransformerRename) transformWithoutRegexes(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -194,8 +194,8 @@ func (this *TransformerRename) transformWithoutRegexes(
 		inrec := inrecAndContext.Record
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if this.oldToNewNames.Has(pe.Key) {
-				newName := this.oldToNewNames.Get(pe.Key).(string)
+			if tr.oldToNewNames.Has(pe.Key) {
+				newName := tr.oldToNewNames.Get(pe.Key).(string)
 				inrec.Rename(pe.Key, newName)
 			}
 
@@ -205,21 +205,21 @@ func (this *TransformerRename) transformWithoutRegexes(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRename) transformWithRegexes(
+func (tr *TransformerRename) transformWithRegexes(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		for pr := this.regexesAndReplacements.Front(); pr != nil; pr = pr.Next() {
+		for pr := tr.regexesAndReplacements.Front(); pr != nil; pr = pr.Next() {
 			regexAndReplacement := pr.Value.(*tRegexAndReplacement)
 			regex := regexAndReplacement.regex
 			replacement := regexAndReplacement.replacement
 
 			for pe := inrec.Head; pe != nil; pe = pe.Next {
 				oldName := pe.Key
-				if this.doGsub {
+				if tr.doGsub {
 					newName := regex.ReplaceAllString(oldName, replacement)
 					if newName != oldName {
 						inrec.Rename(oldName, newName)

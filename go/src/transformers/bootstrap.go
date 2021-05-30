@@ -93,21 +93,21 @@ type TransformerBootstrap struct {
 }
 
 func NewTransformerBootstrap(nout int) (*TransformerBootstrap, error) {
-	this := &TransformerBootstrap{
+	tr := &TransformerBootstrap{
 		recordsAndContexts: list.New(),
 		nout:               nout,
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerBootstrap) Transform(
+func (tr *TransformerBootstrap) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
 	if !inrecAndContext.EndOfStream {
-		this.recordsAndContexts.PushBack(inrecAndContext)
+		tr.recordsAndContexts.PushBack(inrecAndContext)
 		return
 	}
 
@@ -135,8 +135,8 @@ func (this *TransformerBootstrap) Transform(
 	// For that reason, this transformer must copy all output.
 
 	// TODO: Go list Len() maxes at 2^31. We should track this ourselves in an int.
-	nin := this.recordsAndContexts.Len()
-	nout := this.nout
+	nin := tr.recordsAndContexts.Len()
+	nout := tr.nout
 	if nout == -1 {
 		nout = nin
 	}
@@ -150,12 +150,12 @@ func (this *TransformerBootstrap) Transform(
 	// Make an array of pointers into the input list.
 	recordArray := make([]*types.RecordAndContext, nin)
 	for i := 0; i < nin; i++ {
-		head := this.recordsAndContexts.Front()
+		head := tr.recordsAndContexts.Front()
 		if head == nil {
 			break
 		}
 		recordArray[i] = head.Value.(*types.RecordAndContext)
-		this.recordsAndContexts.Remove(head)
+		tr.recordsAndContexts.Remove(head)
 	}
 
 	// Do the sample-with-replacment, reading from random indices in the input

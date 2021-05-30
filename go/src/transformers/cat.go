@@ -117,7 +117,7 @@ func NewTransformerCat(
 		doCounters = true
 	}
 
-	this := &TransformerCat{
+	tr := &TransformerCat{
 		doCounters:        doCounters,
 		groupByFieldNames: groupByFieldNames,
 		counter:           0,
@@ -126,28 +126,28 @@ func NewTransformerCat(
 	}
 
 	if !doCounters {
-		this.recordTransformerFunc = this.simpleCat
+		tr.recordTransformerFunc = tr.simpleCat
 	} else {
 		if groupByFieldNames == nil {
-			this.recordTransformerFunc = this.countersUngrouped
+			tr.recordTransformerFunc = tr.countersUngrouped
 		} else {
-			this.recordTransformerFunc = this.countersGrouped
+			tr.recordTransformerFunc = tr.countersGrouped
 		}
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCat) Transform(
+func (tr *TransformerCat) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCat) simpleCat(
+func (tr *TransformerCat) simpleCat(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -155,45 +155,45 @@ func (this *TransformerCat) simpleCat(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCat) countersUngrouped(
+func (tr *TransformerCat) countersUngrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		this.counter++
-		key := this.counterFieldName
-		value := types.MlrvalFromInt(this.counter)
+		tr.counter++
+		key := tr.counterFieldName
+		value := types.MlrvalFromInt(tr.counter)
 		inrec.PrependCopy(key, &value)
 	}
 	outputChannel <- inrecAndContext
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCat) countersGrouped(
+func (tr *TransformerCat) countersGrouped(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		var counter int = 0
 		if !ok {
 			// Treat as unkeyed
-			this.counter++
-			counter = this.counter
+			tr.counter++
+			counter = tr.counter
 		} else {
-			counter, ok = this.countsByGroup[groupingKey]
+			counter, ok = tr.countsByGroup[groupingKey]
 			if ok {
 				counter++
 			} else {
 				counter = 1
 			}
-			this.countsByGroup[groupingKey] = counter
+			tr.countsByGroup[groupingKey] = counter
 		}
 
-		key := this.counterFieldName
+		key := tr.counterFieldName
 		value := types.MlrvalFromInt(counter)
 		inrec.PrependCopy(key, &value)
 	}

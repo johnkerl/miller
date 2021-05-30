@@ -105,43 +105,43 @@ func NewTransformerTail(
 	groupByFieldNames []string,
 ) (*TransformerTail, error) {
 
-	this := &TransformerTail{
+	tr := &TransformerTail{
 		tailCount:         tailCount,
 		groupByFieldNames: groupByFieldNames,
 
 		recordListsByGroup: lib.NewOrderedMap(),
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerTail) Transform(
+func (tr *TransformerTail) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if !ok {
 			return
 		}
 
-		irecordListForGroup := this.recordListsByGroup.Get(groupingKey)
+		irecordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if irecordListForGroup == nil { // first time
 			irecordListForGroup = list.New()
-			this.recordListsByGroup.Put(groupingKey, irecordListForGroup)
+			tr.recordListsByGroup.Put(groupingKey, irecordListForGroup)
 		}
 		recordListForGroup := irecordListForGroup.(*list.List)
 
 		recordListForGroup.PushBack(inrecAndContext)
-		for recordListForGroup.Len() > this.tailCount {
+		for recordListForGroup.Len() > tr.tailCount {
 			recordListForGroup.Remove(recordListForGroup.Front())
 		}
 
 	} else {
-		for outer := this.recordListsByGroup.Head; outer != nil; outer = outer.Next {
+		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
 			recordListForGroup := outer.Value.(*list.List)
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				outputChannel <- inner.Value.(*types.RecordAndContext)

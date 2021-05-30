@@ -125,41 +125,41 @@ func NewTransformerFillDown(
 	doAll bool,
 	onlyIfAbsent bool,
 ) (*TransformerFillDown, error) {
-	this := &TransformerFillDown{
+	tr := &TransformerFillDown{
 		fillDownFieldNames: fillDownFieldNames,
 		onlyIfAbsent:       onlyIfAbsent,
 		lastNonNullValues:  make(map[string]*types.Mlrval),
 	}
 
 	if doAll {
-		this.recordTransformerFunc = this.transformAll
+		tr.recordTransformerFunc = tr.transformAll
 	} else {
-		this.recordTransformerFunc = this.transformSpecified
+		tr.recordTransformerFunc = tr.transformSpecified
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFillDown) Transform(
+func (tr *TransformerFillDown) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFillDown) transformSpecified(
+func (tr *TransformerFillDown) transformSpecified(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		for _, fillDownFieldName := range this.fillDownFieldNames {
+		for _, fillDownFieldName := range tr.fillDownFieldNames {
 			present := false
 			value := inrec.Get(fillDownFieldName)
-			if this.onlyIfAbsent {
+			if tr.onlyIfAbsent {
 				present = value != nil
 			} else {
 				present = value != nil && !value.IsEmpty()
@@ -167,10 +167,10 @@ func (this *TransformerFillDown) transformSpecified(
 
 			if present {
 				// Remember it for a subsequent record lacking this field
-				this.lastNonNullValues[fillDownFieldName] = value.Copy()
+				tr.lastNonNullValues[fillDownFieldName] = value.Copy()
 			} else {
 				// Reuse previously seen value, if any
-				prev, ok := this.lastNonNullValues[fillDownFieldName]
+				prev, ok := tr.lastNonNullValues[fillDownFieldName]
 				if ok {
 					inrec.PutCopy(fillDownFieldName, prev)
 				}
@@ -185,7 +185,7 @@ func (this *TransformerFillDown) transformSpecified(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFillDown) transformAll(
+func (tr *TransformerFillDown) transformAll(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -196,7 +196,7 @@ func (this *TransformerFillDown) transformAll(
 			fillDownFieldName := pe.Key
 			present := false
 			value := inrec.Get(fillDownFieldName)
-			if this.onlyIfAbsent {
+			if tr.onlyIfAbsent {
 				present = value != nil
 			} else {
 				present = value != nil && !value.IsEmpty()
@@ -204,10 +204,10 @@ func (this *TransformerFillDown) transformAll(
 
 			if present {
 				// Remember it for a subsequent record lacking this field
-				this.lastNonNullValues[fillDownFieldName] = value.Copy()
+				tr.lastNonNullValues[fillDownFieldName] = value.Copy()
 			} else {
 				// Reuse previously seen value, if any
-				prev, ok := this.lastNonNullValues[fillDownFieldName]
+				prev, ok := tr.lastNonNullValues[fillDownFieldName]
 				if ok {
 					inrec.PutCopy(fillDownFieldName, prev)
 				}

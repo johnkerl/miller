@@ -52,7 +52,7 @@ type EmitFStatementNode struct {
 //             * direct oosvar value "c"
 //         * no-op
 
-func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitFStatement)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2)
 	expressionsNode := astNode.Children[0]
@@ -70,7 +70,7 @@ func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 		if err != nil {
 			return nil, err
 		}
-		emitfEvaluable, err := this.BuildEvaluableNode(childNode)
+		emitfEvaluable, err := root.BuildEvaluableNode(childNode)
 		if err != nil {
 			return nil, err
 		}
@@ -98,26 +98,26 @@ func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe
-			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(this.recordWriterOptions)
-			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stdout)")
+			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(root.recordWriterOptions)
+			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stdout)")
 		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
 			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe
-			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(this.recordWriterOptions)
-			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stderr)")
+			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(root.recordWriterOptions)
+			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stderr)")
 		} else {
 			retval.emitfToRedirectFunc = retval.emitfToFileOrPipe
 
-			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
 			if err != nil {
 				return nil, err
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(
@@ -132,16 +132,16 @@ func (this *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 	// Register this with the CST root node so that open file descriptrs can be
 	// closed, etc at end of stream.
 	if retval.outputHandlerManager != nil {
-		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+		root.RegisterOutputHandlerManager(retval.outputHandlerManager)
 	}
 
 	return retval, nil
 }
 
-func (this *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	newrec := types.NewMlrmapAsRecord()
-	for i, emitfEvaluable := range this.emitfEvaluables {
-		emitfName := this.emitfNames[i]
+	for i, emitfEvaluable := range node.emitfEvaluables {
+		emitfName := node.emitfNames[i]
 		emitfValue := emitfEvaluable.Evaluate(state)
 
 		if !emitfValue.IsAbsent() {
@@ -149,7 +149,7 @@ func (this *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 		}
 	}
 
-	err := this.emitfToRedirectFunc(newrec, state)
+	err := node.emitfToRedirectFunc(newrec, state)
 
 	return nil, err
 }
@@ -177,7 +177,7 @@ func getNameFromNamedNode(astNode *dsl.ASTNode, description string) (string, err
 }
 
 // ----------------------------------------------------------------
-func (this *EmitFStatementNode) emitfToRecordStream(
+func (node *EmitFStatementNode) emitfToRecordStream(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
@@ -191,11 +191,11 @@ func (this *EmitFStatementNode) emitfToRecordStream(
 }
 
 // ----------------------------------------------------------------
-func (this *EmitFStatementNode) emitfToFileOrPipe(
+func (node *EmitFStatementNode) emitfToFileOrPipe(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
@@ -206,7 +206,7 @@ func (this *EmitFStatementNode) emitfToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	return this.outputHandlerManager.WriteRecordAndContext(
+	return node.outputHandlerManager.WriteRecordAndContext(
 		types.NewRecordAndContext(outrec, state.Context),
 		outputFileName,
 	)

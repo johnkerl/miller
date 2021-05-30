@@ -252,14 +252,14 @@ func Wrap(inode interface{}) (*ASTNode, error) {
 	return node, nil
 }
 
-func (this *ASTNode) CheckArity(
+func (node *ASTNode) CheckArity(
 	arity int,
 ) error {
-	if len(this.Children) != arity {
+	if len(node.Children) != arity {
 		return errors.New(
 			fmt.Sprintf(
 				"AST node arity %d, expected %d",
-				len(this.Children), arity,
+				len(node.Children), arity,
 			),
 		)
 	} else {

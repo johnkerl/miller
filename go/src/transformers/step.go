@@ -184,7 +184,7 @@ func NewTransformerStep(
 		}
 	}
 
-	this := &TransformerStep{
+	tr := &TransformerStep{
 		stepperNames:      stepperNames,
 		valueFieldNames:   valueFieldNames,
 		groupByFieldNames: groupByFieldNames,
@@ -193,7 +193,7 @@ func NewTransformerStep(
 		groups:            make(map[string]map[string]map[string]tStepper),
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
@@ -226,7 +226,7 @@ func NewTransformerStep(
 //   }
 // }
 
-func (this *TransformerStep) Transform(
+func (tr *TransformerStep) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -240,25 +240,25 @@ func (this *TransformerStep) Transform(
 	// Group-by field names are ["a", "b"]
 	// Input data {"a": "s", "b": "t", "x": 3.4, "y": 5.6}
 	// Grouping key is "s,t"
-	groupingKey, gok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+	groupingKey, gok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 	if !gok { // current record doesn't have fields to be stepped; pass it along
 		outputChannel <- inrecAndContext
 		return
 	}
 
 	// Create the data structure on first reference
-	groupToAccField := this.groups[groupingKey]
+	groupToAccField := tr.groups[groupingKey]
 	if groupToAccField == nil {
 		// Populate the groups data structure on first reference if needed
 		groupToAccField = make(map[string]map[string]tStepper)
-		this.groups[groupingKey] = groupToAccField
+		tr.groups[groupingKey] = groupToAccField
 	}
 
 	// [3.4, 5.6]
-	valueFieldValues, _ := inrec.ReferenceSelectedValues(this.valueFieldNames)
+	valueFieldValues, _ := inrec.ReferenceSelectedValues(tr.valueFieldNames)
 
 	// for x=3.4 and y=5.6:
-	for i, valueFieldName := range this.valueFieldNames {
+	for i, valueFieldName := range tr.valueFieldNames {
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue == nil { // not present in the current record
 			continue
@@ -271,14 +271,14 @@ func (this *TransformerStep) Transform(
 		}
 
 		// for "delta", "rsum":
-		for _, stepperName := range this.stepperNames {
+		for _, stepperName := range tr.stepperNames {
 			stepper, present := accFieldToAccState[stepperName]
 			if !present {
 				stepper = allocateStepper(
 					stepperName,
 					valueFieldName,
-					this.stringAlphas,
-					this.ewmaSuffixes,
+					tr.stringAlphas,
+					tr.ewmaSuffixes,
 				)
 				if stepper == nil {
 					// TODO: parameterize verb name
@@ -362,20 +362,20 @@ func stepperDeltaAlloc(
 	}
 }
 
-func (this *tStepperDelta) process(
+func (stepper *tStepperDelta) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
 	delta := types.MlrvalPointerFromInt(0)
-	if this.previous != nil {
-		delta = types.MlrvalBinaryMinus(valueFieldValue, this.previous)
+	if stepper.previous != nil {
+		delta = types.MlrvalBinaryMinus(valueFieldValue, stepper.previous)
 	}
-	inrec.PutCopy(this.outputFieldName, delta)
+	inrec.PutCopy(stepper.outputFieldName, delta)
 
-	this.previous = valueFieldValue.Copy()
+	stepper.previous = valueFieldValue.Copy()
 
 	// TODO: from C impl: if input is empty:
-	// lrec_put(prec, this.output_field_name, "", NO_FREE);
+	// lrec_put(prec, stepper.output_field_name, "", NO_FREE);
 }
 
 // ================================================================
@@ -395,18 +395,18 @@ func stepperShiftAlloc(
 	}
 }
 
-func (this *tStepperShift) process(
+func (stepper *tStepperShift) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	if this.previous == nil {
+	if stepper.previous == nil {
 		shift := types.MLRVAL_VOID
-		inrec.PutCopy(this.outputFieldName, shift)
+		inrec.PutCopy(stepper.outputFieldName, shift)
 	} else {
-		inrec.PutCopy(this.outputFieldName, this.previous)
-		this.previous = valueFieldValue.Copy()
+		inrec.PutCopy(stepper.outputFieldName, stepper.previous)
+		stepper.previous = valueFieldValue.Copy()
 	}
-	this.previous = valueFieldValue.Copy()
+	stepper.previous = valueFieldValue.Copy()
 }
 
 // ================================================================
@@ -426,17 +426,17 @@ func stepperFromFirstAlloc(
 	}
 }
 
-func (this *tStepperFromFirst) process(
+func (stepper *tStepperFromFirst) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
 	fromFirst := types.MlrvalPointerFromInt(0)
-	if this.first == nil {
-		this.first = valueFieldValue.Copy()
+	if stepper.first == nil {
+		stepper.first = valueFieldValue.Copy()
 	} else {
-		fromFirst = types.MlrvalBinaryMinus(valueFieldValue, this.first)
+		fromFirst = types.MlrvalBinaryMinus(valueFieldValue, stepper.first)
 	}
-	inrec.PutCopy(this.outputFieldName, fromFirst)
+	inrec.PutCopy(stepper.outputFieldName, fromFirst)
 }
 
 // ================================================================
@@ -456,17 +456,17 @@ func stepperRatioAlloc(
 	}
 }
 
-func (this *tStepperRatio) process(
+func (stepper *tStepperRatio) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
 	ratio := types.MlrvalPointerFromInt(1)
-	if this.previous != nil {
-		ratio = types.MlrvalDivide(valueFieldValue, this.previous)
+	if stepper.previous != nil {
+		ratio = types.MlrvalDivide(valueFieldValue, stepper.previous)
 	}
-	inrec.PutCopy(this.outputFieldName, ratio)
+	inrec.PutCopy(stepper.outputFieldName, ratio)
 
-	this.previous = valueFieldValue.Copy()
+	stepper.previous = valueFieldValue.Copy()
 }
 
 // ================================================================
@@ -486,12 +486,12 @@ func stepperRsumAlloc(
 	}
 }
 
-func (this *tStepperRsum) process(
+func (stepper *tStepperRsum) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	this.rsum = types.MlrvalBinaryPlus(valueFieldValue, this.rsum)
-	inrec.PutCopy(this.outputFieldName, this.rsum)
+	stepper.rsum = types.MlrvalBinaryPlus(valueFieldValue, stepper.rsum)
+	inrec.PutCopy(stepper.outputFieldName, stepper.rsum)
 }
 
 // ================================================================
@@ -513,12 +513,12 @@ func stepperCounterAlloc(
 	}
 }
 
-func (this *tStepperCounter) process(
+func (stepper *tStepperCounter) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	this.counter = types.MlrvalBinaryPlus(this.counter, this.one)
-	inrec.PutCopy(this.outputFieldName, this.counter)
+	stepper.counter = types.MlrvalBinaryPlus(stepper.counter, stepper.one)
+	inrec.PutCopy(stepper.outputFieldName, stepper.counter)
 }
 
 // ----------------------------------------------------------------
@@ -580,25 +580,25 @@ func stepperEWMAAlloc(
 	}
 }
 
-func (this *tStepperEWMA) process(
+func (stepper *tStepperEWMA) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	if !this.havePrevs {
-		for i, _ := range this.alphas {
-			inrec.PutCopy(this.outputFieldNames[i], valueFieldValue)
-			this.prevs[i] = valueFieldValue.Copy()
+	if !stepper.havePrevs {
+		for i, _ := range stepper.alphas {
+			inrec.PutCopy(stepper.outputFieldNames[i], valueFieldValue)
+			stepper.prevs[i] = valueFieldValue.Copy()
 		}
-		this.havePrevs = true
+		stepper.havePrevs = true
 	} else {
-		for i, _ := range this.alphas {
+		for i, _ := range stepper.alphas {
 			curr := valueFieldValue.Copy()
 			// xxx pending pointer-output refactor
-			product1 := types.MlrvalTimes(curr, &this.alphas[i])
-			product2 := types.MlrvalTimes(this.prevs[i], &this.oneMinusAlphas[i])
+			product1 := types.MlrvalTimes(curr, &stepper.alphas[i])
+			product2 := types.MlrvalTimes(stepper.prevs[i], &stepper.oneMinusAlphas[i])
 			next := types.MlrvalBinaryPlus(product1, product2)
-			inrec.PutCopy(this.outputFieldNames[i], next)
-			this.prevs[i] = next
+			inrec.PutCopy(stepper.outputFieldNames[i], next)
+			stepper.prevs[i] = next
 		}
 	}
 }

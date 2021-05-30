@@ -152,6 +152,6 @@ func TypeNameToMask(typeName string) (mask int, present bool) {
 	}
 }
 
-func (this *Mlrval) GetTypeBit() int {
-	return 1 << this.mvtype
+func (mv *Mlrval) GetTypeBit() int {
+	return 1 << mv.mvtype
 }

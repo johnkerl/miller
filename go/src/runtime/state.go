@@ -30,10 +30,10 @@ func NewEmptyState() *State {
 	}
 }
 
-func (this *State) Update(
+func (state *State) Update(
 	inrec *types.Mlrmap,
 	context *types.Context,
 ) {
-	this.Inrec = inrec
-	this.Context = context
+	state.Inrec = inrec
+	state.Context = context
 }

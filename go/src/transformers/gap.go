@@ -112,7 +112,7 @@ func NewTransformerGap(
 	groupByFieldNames []string,
 ) (*TransformerGap, error) {
 
-	this := &TransformerGap{
+	tr := &TransformerGap{
 		gapCount:          gapCount,
 		groupByFieldNames: groupByFieldNames,
 
@@ -121,61 +121,61 @@ func NewTransformerGap(
 	}
 
 	if groupByFieldNames == nil {
-		this.recordTransformerFunc = this.mapUnkeyed
+		tr.recordTransformerFunc = tr.mapUnkeyed
 	} else {
-		this.recordTransformerFunc = this.mapKeyed
+		tr.recordTransformerFunc = tr.mapKeyed
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerGap) Transform(
+func (tr *TransformerGap) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
-func (this *TransformerGap) mapUnkeyed(
+func (tr *TransformerGap) mapUnkeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		if this.recordCount > 0 && this.recordCount%this.gapCount == 0 {
+		if tr.recordCount > 0 && tr.recordCount%tr.gapCount == 0 {
 			newrec := types.NewMlrmapAsRecord()
 			outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
 		}
 		outputChannel <- inrecAndContext
 
-		this.recordCount++
+		tr.recordCount++
 
 	} else {
 		outputChannel <- inrecAndContext
 	}
 }
 
-func (this *TransformerGap) mapKeyed(
+func (tr *TransformerGap) mapKeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if !ok {
 			groupingKey = ""
 		}
 
-		if groupingKey != this.previousGroupingKey && this.recordCount > 0 {
+		if groupingKey != tr.previousGroupingKey && tr.recordCount > 0 {
 			newrec := types.NewMlrmapAsRecord()
 			outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
 		}
 
 		outputChannel <- inrecAndContext
 
-		this.previousGroupingKey = groupingKey
-		this.recordCount++
+		tr.previousGroupingKey = groupingKey
+		tr.recordCount++
 
 	} else {
 		outputChannel <- inrecAndContext

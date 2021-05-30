@@ -157,17 +157,17 @@ func NewTransformerTee(
 	}, nil
 }
 
-func (this *TransformerTee) Transform(
+func (tr *TransformerTee) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		err := this.fileOutputHandler.WriteRecordAndContext(inrecAndContext)
+		err := tr.fileOutputHandler.WriteRecordAndContext(inrecAndContext)
 		if err != nil {
 			fmt.Fprintf(
 				os.Stderr,
 				"%s: error writing to tee \"%s\":\n",
-				lib.MlrExeName(), this.filenameOrCommandForDisplay,
+				lib.MlrExeName(), tr.filenameOrCommandForDisplay,
 			)
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -175,12 +175,12 @@ func (this *TransformerTee) Transform(
 
 		outputChannel <- inrecAndContext
 	} else {
-		err := this.fileOutputHandler.Close()
+		err := tr.fileOutputHandler.Close()
 		if err != nil {
 			fmt.Fprintf(
 				os.Stderr,
 				"%s: error closing tee \"%s\":\n",
-				lib.MlrExeName(), this.filenameOrCommandForDisplay,
+				lib.MlrExeName(), tr.filenameOrCommandForDisplay,
 			)
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

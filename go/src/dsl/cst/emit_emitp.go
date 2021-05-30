@@ -77,13 +77,13 @@ type EmitXStatementNode struct {
 	isEmitP bool
 }
 
-func (this *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitStatement)
-	return this.buildEmitXStatementNode(astNode, false)
+	return root.buildEmitXStatementNode(astNode, false)
 }
-func (this *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEmitPStatement)
-	return this.buildEmitXStatementNode(astNode, true)
+	return root.buildEmitXStatementNode(astNode, true)
 }
 
 // ----------------------------------------------------------------
@@ -98,7 +98,7 @@ func (this *RootNode) BuildEmitPStatementNode(astNode *dsl.ASTNode) (IExecutable
 // oosvar/localvar/fieldname/map, so we can use their names as keys in the
 // emitted record.
 
-func (this *RootNode) buildEmitXStatementNode(
+func (root *RootNode) buildEmitXStatementNode(
 	astNode *dsl.ASTNode,
 	isEmitP bool,
 ) (IExecutable, error) {
@@ -120,7 +120,7 @@ func (this *RootNode) buildEmitXStatementNode(
 	names = make([]string, numEmittables)
 	emitEvaluables = make([]IEvaluable, numEmittables)
 	for i, emittableNode := range emittablesNode.Children {
-		name, emitEvaluable, err := this.buildEmittableNode(emittableNode)
+		name, emitEvaluable, err := root.buildEmittableNode(emittableNode)
 		if err != nil {
 			return nil, err
 		}
@@ -138,7 +138,7 @@ func (this *RootNode) buildEmitXStatementNode(
 		numKeys := len(keysNode.Children)
 		indexEvaluables = make([]IEvaluable, numKeys)
 		for i, keyNode := range keysNode.Children {
-			indexEvaluable, err := this.BuildEvaluableNode(keyNode)
+			indexEvaluable, err := root.BuildEvaluableNode(keyNode)
 			if err != nil {
 				return nil, err
 			}
@@ -174,26 +174,26 @@ func (this *RootNode) buildEmitXStatementNode(
 
 		if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStdout {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
-			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(this.recordWriterOptions)
-			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stdout)")
+			retval.outputHandlerManager = output.NewStdoutWriteHandlerManager(root.recordWriterOptions)
+			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stdout)")
 		} else if redirectorTargetNode.Type == dsl.NodeTypeRedirectTargetStderr {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
-			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(this.recordWriterOptions)
-			retval.redirectorTargetEvaluable = this.BuildStringLiteralNode("(stderr)")
+			retval.outputHandlerManager = output.NewStderrWriteHandlerManager(root.recordWriterOptions)
+			retval.redirectorTargetEvaluable = root.BuildStringLiteralNode("(stderr)")
 		} else {
 			retval.emitToRedirectFunc = retval.emitToFileOrPipe
 
-			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
 			if err != nil {
 				return nil, err
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(
@@ -208,7 +208,7 @@ func (this *RootNode) buildEmitXStatementNode(
 	// Register this with the CST root node so that open file descriptrs can be
 	// closed, etc at end of stream.
 	if retval.outputHandlerManager != nil {
-		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+		root.RegisterOutputHandlerManager(retval.outputHandlerManager)
 	}
 
 	return retval, nil
@@ -218,7 +218,7 @@ func (this *RootNode) buildEmitXStatementNode(
 // This is a helper method for deciding whether an emittable node is a named
 // variable or a map.
 
-func (this *RootNode) buildEmittableNode(
+func (root *RootNode) buildEmittableNode(
 	astNode *dsl.ASTNode,
 ) (name string, emitEvaluable IEvaluable, err error) {
 	name = "_"
@@ -250,51 +250,51 @@ func (this *RootNode) buildEmittableNode(
 	// ;
 	// ----------------------------------------------------------------
 
-	emitEvaluable, err = this.BuildEvaluableNode(astNode)
+	emitEvaluable, err = root.BuildEvaluableNode(astNode)
 
 	return name, emitEvaluable, err
 }
 
 // ================================================================
-func (this *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	return this.executorFunc(state)
+func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	return node.executorFunc(state)
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeNonIndexed(
+func (node *EmitXStatementNode) executeNonIndexed(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
 
 	newrec := types.NewMlrmapAsRecord()
 
-	for i, emitEvaluable := range this.emitEvaluables {
+	for i, emitEvaluable := range node.emitEvaluables {
 		emittable := emitEvaluable.Evaluate(state)
 		if emittable.IsAbsent() {
 			continue
 		}
 
-		if this.isEmitP {
-			newrec.PutCopy(this.names[i], emittable)
+		if node.isEmitP {
+			newrec.PutCopy(node.names[i], emittable)
 		} else {
 			if emittable.IsMap() {
 				newrec.Merge(emittable.GetMap())
 			} else {
-				newrec.PutCopy(this.names[i], emittable)
+				newrec.PutCopy(node.names[i], emittable)
 			}
 		}
 	}
 
-	err := this.emitToRedirectFunc(newrec, state)
+	err := node.emitToRedirectFunc(newrec, state)
 
 	return nil, err
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) executeIndexed(
+func (node *EmitXStatementNode) executeIndexed(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
-	emittableMaps := make([]*types.Mlrmap, len(this.emitEvaluables))
-	for i, emitEvaluable := range this.emitEvaluables {
+	emittableMaps := make([]*types.Mlrmap, len(node.emitEvaluables))
+	for i, emitEvaluable := range node.emitEvaluables {
 		emittable := emitEvaluable.Evaluate(state)
 		if emittable.IsAbsent() {
 			return nil, nil
@@ -304,11 +304,11 @@ func (this *EmitXStatementNode) executeIndexed(
 		}
 		emittableMaps[i] = emittable.GetMap()
 	}
-	indices := make([]*types.Mlrval, len(this.indexEvaluables))
+	indices := make([]*types.Mlrval, len(node.indexEvaluables))
 
 	// TODO: libify this
-	for i, _ := range this.indexEvaluables {
-		indices[i] = this.indexEvaluables[i].Evaluate(state)
+	for i, _ := range node.indexEvaluables {
+		indices[i] = node.indexEvaluables[i].Evaluate(state)
 		if indices[i].IsAbsent() {
 			return nil, nil
 		}
@@ -318,8 +318,8 @@ func (this *EmitXStatementNode) executeIndexed(
 		}
 	}
 
-	return this.executeIndexedAux(
-		this.names,
+	return node.executeIndexedAux(
+		node.names,
 		types.NewMlrmapAsRecord(),
 		emittableMaps,
 		indices,
@@ -328,7 +328,7 @@ func (this *EmitXStatementNode) executeIndexed(
 }
 
 // Recurses over indices.
-func (this *EmitXStatementNode) executeIndexedAux(
+func (node *EmitXStatementNode) executeIndexedAux(
 	mapNames []string,
 	templateRecord *types.Mlrmap,
 	emittableMaps []*types.Mlrmap,
@@ -366,7 +366,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 
 		if nextLevelMaps[0] != nil && len(indices) >= 2 {
 			// recurse
-			this.executeIndexedAux(
+			node.executeIndexedAux(
 				mapNames,
 				newrec,
 				nextLevelMaps,
@@ -375,7 +375,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 			)
 		} else {
 			// end of recursion
-			if this.isEmitP {
+			if node.isEmitP {
 				for i, nextLevel := range nextLevels {
 					if nextLevel != nil {
 						newrec.PutCopy(mapNames[i], nextLevel)
@@ -393,7 +393,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 				}
 			}
 
-			err := this.emitToRedirectFunc(newrec, state)
+			err := node.emitToRedirectFunc(newrec, state)
 			if err != nil {
 				return nil, err
 			}
@@ -404,7 +404,7 @@ func (this *EmitXStatementNode) executeIndexedAux(
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) emitToRecordStream(
+func (node *EmitXStatementNode) emitToRecordStream(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
@@ -418,11 +418,11 @@ func (this *EmitXStatementNode) emitToRecordStream(
 }
 
 // ----------------------------------------------------------------
-func (this *EmitXStatementNode) emitToFileOrPipe(
+func (node *EmitXStatementNode) emitToFileOrPipe(
 	outrec *types.Mlrmap,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
@@ -433,7 +433,7 @@ func (this *EmitXStatementNode) emitToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	return this.outputHandlerManager.WriteRecordAndContext(
+	return node.outputHandlerManager.WriteRecordAndContext(
 		types.NewRecordAndContext(outrec, state.Context),
 		outputFileName,
 	)

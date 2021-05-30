@@ -7,17 +7,17 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) Print() {
-	this.Fprint(os.Stdout)
+func (mlrmap *Mlrmap) Print() {
+	mlrmap.Fprint(os.Stdout)
 	os.Stdout.WriteString("\n")
 }
-func (this *Mlrmap) Fprint(file *os.File) {
-	(*file).WriteString(this.ToDKVPString())
+func (mlrmap *Mlrmap) Fprint(file *os.File) {
+	(*file).WriteString(mlrmap.ToDKVPString())
 }
 
-func (this *Mlrmap) ToDKVPString() string {
+func (mlrmap *Mlrmap) ToDKVPString() string {
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
-	for pe := this.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(pe.Key)
 		buffer.WriteString("=")
 		buffer.WriteString(pe.Value.String())
@@ -30,9 +30,9 @@ func (this *Mlrmap) ToDKVPString() string {
 
 // ----------------------------------------------------------------
 // Must have non-pointer receiver in order to implement the fmt.Stringer
-// interface to make this printable via fmt.Println et al.
-func (this Mlrmap) String() string {
-	bytes, err := this.MarshalJSON(JSON_MULTILINE)
+// interface to make mlrmap printable via fmt.Println et al.
+func (mlrmap Mlrmap) String() string {
+	bytes, err := mlrmap.MarshalJSON(JSON_MULTILINE)
 	if err != nil {
 		return "Mlrmap: could not not marshal self to JSON"
 	} else {
@@ -41,16 +41,16 @@ func (this Mlrmap) String() string {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrmap) Dump() {
-	fmt.Printf("FIELD COUNT: %d\n", this.FieldCount)
-	fmt.Printf("HEAD:        %p\n", this.Head)
-	fmt.Printf("TAIL:        %p\n", this.Tail)
+func (mlrmap *Mlrmap) Dump() {
+	fmt.Printf("FIELD COUNT: %d\n", mlrmap.FieldCount)
+	fmt.Printf("HEAD:        %p\n", mlrmap.Head)
+	fmt.Printf("TAIL:        %p\n", mlrmap.Tail)
 	fmt.Printf("KEYS TO ENTRIES:\n")
-	for k, e := range this.keysToEntries {
+	for k, e := range mlrmap.keysToEntries {
 		fmt.Printf("  %-10s %#v\n", k, e)
 	}
 	fmt.Printf("LIST:\n")
-	for pe := this.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		fmt.Printf("  key: \"%s\" value: %-20s prev:%p self:%p next:%p\n",
 			pe.Key, pe.Value.String(), pe.Prev, pe, pe.Next,
 		)

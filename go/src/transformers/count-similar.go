@@ -108,45 +108,45 @@ func NewTransformerCountSimilar(
 	groupByFieldNames []string,
 	counterFieldName string,
 ) (*TransformerCountSimilar, error) {
-	this := &TransformerCountSimilar{
+	tr := &TransformerCountSimilar{
 		groupByFieldNames:  groupByFieldNames,
 		counterFieldName:   counterFieldName,
 		recordListsByGroup: lib.NewOrderedMap(),
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCountSimilar) Transform(
+func (tr *TransformerCountSimilar) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if !ok { // This particular record doesn't have the specified fields; ignore
 			return
 		}
 
-		irecordListForGroup := this.recordListsByGroup.Get(groupingKey)
+		irecordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if irecordListForGroup == nil { // first time
 			irecordListForGroup = list.New()
-			this.recordListsByGroup.Put(groupingKey, irecordListForGroup)
+			tr.recordListsByGroup.Put(groupingKey, irecordListForGroup)
 		}
 		recordListForGroup := irecordListForGroup.(*list.List)
 
 		recordListForGroup.PushBack(inrecAndContext)
 	} else {
 
-		for outer := this.recordListsByGroup.Head; outer != nil; outer = outer.Next {
+		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
 			recordListForGroup := outer.Value.(*list.List)
 			// TODO: make 64-bit friendly
 			groupSize := recordListForGroup.Len()
 			mgroupSize := types.MlrvalFromInt(int(groupSize))
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				recordAndContext := inner.Value.(*types.RecordAndContext)
-				recordAndContext.Record.PutCopy(this.counterFieldName, &mgroupSize)
+				recordAndContext.Record.PutCopy(tr.counterFieldName, &mgroupSize)
 
 				outputChannel <- recordAndContext
 			}

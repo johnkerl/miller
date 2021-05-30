@@ -79,14 +79,14 @@ type TransformerRegularize struct {
 }
 
 func NewTransformerRegularize() (*TransformerRegularize, error) {
-	this := &TransformerRegularize{
+	tr := &TransformerRegularize{
 		make(map[string][]string),
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerRegularize) Transform(
+func (tr *TransformerRegularize) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -95,9 +95,9 @@ func (this *TransformerRegularize) Transform(
 		currentFieldNames := inrec.GetKeys()
 		currentSortedFieldNames := lib.SortedStrings(currentFieldNames)
 		currentSortedFieldNamesJoined := strings.Join(currentSortedFieldNames, ",")
-		previousSortedFieldNames := this.sortedToOriginal[currentSortedFieldNamesJoined]
+		previousSortedFieldNames := tr.sortedToOriginal[currentSortedFieldNamesJoined]
 		if previousSortedFieldNames == nil {
-			this.sortedToOriginal[currentSortedFieldNamesJoined] = currentFieldNames
+			tr.sortedToOriginal[currentSortedFieldNamesJoined] = currentFieldNames
 			outputChannel <- inrecAndContext
 		} else {
 			outrec := types.NewMlrmapAsRecord()

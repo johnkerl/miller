@@ -255,7 +255,7 @@ func NewTransformerSort(
 	comparatorFuncs []types.ComparatorFunc,
 ) (*TransformerSort, error) {
 
-	this := &TransformerSort{
+	tr := &TransformerSort{
 		groupByFieldNames: groupByFieldNames,
 		comparatorFuncs:   comparatorFuncs,
 
@@ -264,7 +264,7 @@ func NewTransformerSort(
 		spillGroup:         list.New(),
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
@@ -273,7 +273,7 @@ type GroupingKeysAndMlrvals struct {
 	mlrvals     []*types.Mlrval
 }
 
-func (this *TransformerSort) Transform(
+func (tr *TransformerSort) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -281,18 +281,18 @@ func (this *TransformerSort) Transform(
 		inrec := inrecAndContext.Record
 
 		groupingKey, selectedValues, ok := inrec.GetSelectedValuesAndJoined(
-			this.groupByFieldNames,
+			tr.groupByFieldNames,
 		)
 		if !ok {
-			this.spillGroup.PushBack(inrecAndContext)
+			tr.spillGroup.PushBack(inrecAndContext)
 			return
 		}
 
-		recordListForGroup := this.recordListsByGroup.Get(groupingKey)
+		recordListForGroup := tr.recordListsByGroup.Get(groupingKey)
 		if recordListForGroup == nil {
 			recordListForGroup = list.New()
-			this.recordListsByGroup.Put(groupingKey, recordListForGroup)
-			this.groupHeads.Put(groupingKey, selectedValues)
+			tr.recordListsByGroup.Put(groupingKey, recordListForGroup)
+			tr.groupHeads.Put(groupingKey, selectedValues)
 		}
 
 		recordListForGroup.(*list.List).PushBack(inrecAndContext)
@@ -313,11 +313,11 @@ func (this *TransformerSort) Transform(
 		//   [ "eks,2", ["eks', 2]
 		// ]
 
-		groupingKeysAndMlrvals := groupHeadsToArray(this.groupHeads)
+		groupingKeysAndMlrvals := groupHeadsToArray(tr.groupHeads)
 
 		// Go sort API: for ascending sort, return true if element i < element j.
 		sort.Slice(groupingKeysAndMlrvals, func(i, j int) bool {
-			for k, comparator := range this.comparatorFuncs {
+			for k, comparator := range tr.comparatorFuncs {
 				result := comparator(
 					groupingKeysAndMlrvals[i].mlrvals[k],
 					groupingKeysAndMlrvals[j].mlrvals[k],
@@ -333,14 +333,14 @@ func (this *TransformerSort) Transform(
 
 		// Now output the groups
 		for _, groupingKeyAndMlrvals := range groupingKeysAndMlrvals {
-			iRecordsInGroup := this.recordListsByGroup.Get(groupingKeyAndMlrvals.groupingKey)
+			iRecordsInGroup := tr.recordListsByGroup.Get(groupingKeyAndMlrvals.groupingKey)
 			recordsInGroup := iRecordsInGroup.(*list.List)
 			for iRecord := recordsInGroup.Front(); iRecord != nil; iRecord = iRecord.Next() {
 				outputChannel <- iRecord.Value.(*types.RecordAndContext)
 			}
 		}
 
-		for iRecord := this.spillGroup.Front(); iRecord != nil; iRecord = iRecord.Next() {
+		for iRecord := tr.spillGroup.Front(); iRecord != nil; iRecord = iRecord.Next() {
 			outputChannel <- iRecord.Value.(*types.RecordAndContext)
 		}
 

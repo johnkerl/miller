@@ -24,7 +24,7 @@ import (
 //   o On a next pass, we will walk that list resolving against all encountered
 //     UDF definitions. (It will be an error then if it's still unresolvable.)
 
-func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+func (root *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(
 		astNode.Type != dsl.NodeTypeFunctionCallsite &&
 			astNode.Type != dsl.NodeTypeOperator,
@@ -37,7 +37,7 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Look for a builtin function with the given name.
 
-	builtinFunctionCallsiteNode, err := this.BuildBuiltinFunctionCallsiteNode(astNode)
+	builtinFunctionCallsiteNode, err := root.BuildBuiltinFunctionCallsiteNode(astNode)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 	// Look for a user-defined function with the given name.
 
 	callsiteArity := len(astNode.Children)
-	udf, err := this.udfManager.LookUp(functionName, callsiteArity)
+	udf, err := root.udfManager.LookUp(functionName, callsiteArity)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 	// paired up with the parameters within he function definition at runtime.
 	argumentNodes := make([]IEvaluable, callsiteArity)
 	for i, argumentASTNode := range astNode.Children {
-		argumentNode, err := this.BuildEvaluableNode(argumentASTNode)
+		argumentNode, err := root.BuildEvaluableNode(argumentASTNode)
 		if err != nil {
 			return nil, err
 		}
@@ -79,7 +79,7 @@ func (this *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 		// it's defined.
 		udf = NewUnresolvedUDF(functionName, callsiteArity)
 		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)
-		this.rememberUnresolvedFunctionCallsite(udfCallsiteNode)
+		root.rememberUnresolvedFunctionCallsite(udfCallsiteNode)
 		return udfCallsiteNode, nil
 	} else {
 		udfCallsiteNode := NewUDFCallsite(argumentNodes, udf)

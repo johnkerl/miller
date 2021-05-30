@@ -182,7 +182,7 @@ func NewTransformerFraction(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerFraction) Transform(
+func (tr *TransformerFraction) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -190,28 +190,28 @@ func (this *TransformerFraction) Transform(
 		inrec := inrecAndContext.Record
 
 		// Append records into a single output list (so that this verb is order-preserving).
-		this.recordsAndContexts.PushBack(inrecAndContext)
+		tr.recordsAndContexts.PushBack(inrecAndContext)
 
 		// Accumulate sums of fraction-field values grouped by group-by field names
-		groupingKey, hasAll := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, hasAll := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 
 		if hasAll {
-			sumsForGroup := this.sums[groupingKey]
+			sumsForGroup := tr.sums[groupingKey]
 			var cumusForGroup map[string]*types.Mlrval = nil
 			if sumsForGroup == nil {
 				sumsForGroup = make(map[string]*types.Mlrval)
-				this.sums[groupingKey] = sumsForGroup
+				tr.sums[groupingKey] = sumsForGroup
 				cumusForGroup = make(map[string]*types.Mlrval)
-				this.cumus[groupingKey] = cumusForGroup
+				tr.cumus[groupingKey] = cumusForGroup
 			}
-			for _, fractionFieldName := range this.fractionFieldNames {
+			for _, fractionFieldName := range tr.fractionFieldNames {
 				value := inrec.Get(fractionFieldName)
 				if value != nil {
 					value.AssertNumeric() // may fatal the process
 					sum := sumsForGroup[fractionFieldName]
 					if sum == nil { // First value for group
 						sumsForGroup[fractionFieldName] = value.Copy()
-						cumusForGroup[fractionFieldName] = this.zero
+						cumusForGroup[fractionFieldName] = tr.zero
 					} else {
 						sumsForGroup[fractionFieldName] = types.MlrvalBinaryPlus(sum, value)
 					}
@@ -224,21 +224,21 @@ func (this *TransformerFraction) Transform(
 		endOfStreamContext := inrecAndContext.Context
 
 		for {
-			element := this.recordsAndContexts.Front()
+			element := tr.recordsAndContexts.Front()
 			if element == nil {
 				break
 			}
-			this.recordsAndContexts.Remove(element)
+			tr.recordsAndContexts.Remove(element)
 			recordAndContext := element.Value.(*types.RecordAndContext)
 			outrec := recordAndContext.Record
 
-			groupingKey, hasAll := outrec.GetSelectedValuesJoined(this.groupByFieldNames)
+			groupingKey, hasAll := outrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 			if hasAll {
-				sumsForGroup := this.sums[groupingKey]
-				cumusForGroup := this.cumus[groupingKey]
+				sumsForGroup := tr.sums[groupingKey]
+				cumusForGroup := tr.cumus[groupingKey]
 				lib.InternalCodingErrorIf(sumsForGroup == nil) // should have been populated on pass 1
 
-				for _, fractionFieldName := range this.fractionFieldNames {
+				for _, fractionFieldName := range tr.fractionFieldNames {
 					value := outrec.Get(fractionFieldName)
 					if value != nil {
 						value.AssertNumeric() // may fatal the process
@@ -247,7 +247,7 @@ func (this *TransformerFraction) Transform(
 						var cumu *types.Mlrval = nil
 						var outputValue *types.Mlrval = nil
 
-						if this.doCumu {
+						if tr.doCumu {
 							cumu = cumusForGroup[fractionFieldName]
 							numerator = types.MlrvalBinaryPlus(value, cumu)
 						} else {
@@ -255,19 +255,19 @@ func (this *TransformerFraction) Transform(
 						}
 
 						denominator := sumsForGroup[fractionFieldName]
-						if !types.MlrvalEqualsAsBool(value, this.zero) {
+						if !types.MlrvalEqualsAsBool(value, tr.zero) {
 							outputValue = types.MlrvalDivide(numerator, denominator)
-							outputValue = types.MlrvalTimes(outputValue, this.multiplier)
+							outputValue = types.MlrvalTimes(outputValue, tr.multiplier)
 						} else {
 							outputValue = types.MLRVAL_ERROR
 						}
 
 						outrec.PutCopy(
-							fractionFieldName+this.outputFieldNameSuffix,
+							fractionFieldName+tr.outputFieldNameSuffix,
 							outputValue,
 						)
 
-						if this.doCumu {
+						if tr.doCumu {
 							cumusForGroup[fractionFieldName] = types.MlrvalBinaryPlus(cumu, value)
 						}
 					}

@@ -70,22 +70,22 @@ func NewRegTester(
 	}
 }
 
-func (this *RegTester) resetCounts() {
-	this.directoryPassCount = 0
-	this.directoryFailCount = 0
-	this.casePassCount = 0
-	this.caseFailCount = 0
+func (regtester *RegTester) resetCounts() {
+	regtester.directoryPassCount = 0
+	regtester.directoryFailCount = 0
+	regtester.casePassCount = 0
+	regtester.caseFailCount = 0
 }
 
 // ----------------------------------------------------------------
 // Top-level entrypoint for the regtester. See the usage function in entry.go
 // for semantics.
 
-func (this *RegTester) Execute(
+func (regtester *RegTester) Execute(
 	paths []string,
 ) bool {
 
-	this.resetCounts()
+	regtester.resetCounts()
 
 	if len(paths) == 0 {
 		paths = []string{DefaultPath}
@@ -95,45 +95,45 @@ func (this *RegTester) Execute(
 	for _, path := range paths {
 		fmt.Printf("  %s\n", path)
 	}
-	fmt.Printf("Using executable: %s\n", this.exeName)
+	fmt.Printf("Using executable: %s\n", regtester.exeName)
 	fmt.Println()
 
 	for _, path := range paths {
-		this.executeSinglePath(path)
+		regtester.executeSinglePath(path)
 	}
 
-	if this.failCaseNames.Len() > 0 && this.firstNFailsToShow > 0 {
+	if regtester.failCaseNames.Len() > 0 && regtester.firstNFailsToShow > 0 {
 		fmt.Println()
 		fmt.Println("RERUNS OF FIRST FAILED CASE FILES:")
 		verbosityLevel := 3
 		i := 0
-		for e := this.failCaseNames.Front(); e != nil; e = e.Next() {
-			this.executeSingleCmdFile(e.Value.(string), verbosityLevel)
+		for e := regtester.failCaseNames.Front(); e != nil; e = e.Next() {
+			regtester.executeSingleCmdFile(e.Value.(string), verbosityLevel)
 			i++
-			if i >= this.firstNFailsToShow {
+			if i >= regtester.firstNFailsToShow {
 				break
 			}
 		}
 	}
 
-	if this.failDirNames.Len() > 0 {
+	if regtester.failDirNames.Len() > 0 {
 		fmt.Println()
 		fmt.Println("FAILED CASE DIRECTORIES:")
-		for e := this.failDirNames.Front(); e != nil; e = e.Next() {
+		for e := regtester.failDirNames.Front(); e != nil; e = e.Next() {
 			fmt.Printf("  %s/\n", e.Value.(string))
 		}
 	}
 
 	fmt.Println()
-	fmt.Printf("NUMBER OF CASES            PASSED %d\n", this.casePassCount)
-	fmt.Printf("NUMBER OF CASES            FAILED %d\n", this.caseFailCount)
-	fmt.Printf("NUMBER OF CASE-DIRECTORIES PASSED %d\n", this.directoryPassCount)
-	fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", this.directoryFailCount)
+	fmt.Printf("NUMBER OF CASES            PASSED %d\n", regtester.casePassCount)
+	fmt.Printf("NUMBER OF CASES            FAILED %d\n", regtester.caseFailCount)
+	fmt.Printf("NUMBER OF CASE-DIRECTORIES PASSED %d\n", regtester.directoryPassCount)
+	fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", regtester.directoryFailCount)
 	fmt.Println()
 
 	// Directory count may be zero if we were invoked with all paths on the
 	// command line being .cmd files.
-	if this.casePassCount > 0 && this.caseFailCount == 0 {
+	if regtester.casePassCount > 0 && regtester.caseFailCount == 0 {
 		platform.PrintHiGreen("PASS")
 		fmt.Printf(" overall\n")
 		return true
@@ -148,7 +148,7 @@ func (this *RegTester) Execute(
 // Recursively invoked routine to process either a single .cmd file, or a
 // directory of such, or a directory of directories.
 
-func (this *RegTester) executeSinglePath(
+func (regtester *RegTester) executeSinglePath(
 	path string,
 ) bool {
 	handle, err := os.Stat(path)
@@ -158,25 +158,25 @@ func (this *RegTester) executeSinglePath(
 	}
 	mode := handle.Mode()
 	if mode.IsDir() {
-		passed, hasCaseSubdirectories := this.executeSingleDirectory(path)
+		passed, hasCaseSubdirectories := regtester.executeSingleDirectory(path)
 		if hasCaseSubdirectories {
 			if passed {
-				this.directoryPassCount++
+				regtester.directoryPassCount++
 			} else {
-				this.directoryFailCount++
-				this.failDirNames.PushBack(path)
+				regtester.directoryFailCount++
+				regtester.failDirNames.PushBack(path)
 			}
 		}
 		return passed
 	} else if mode.IsRegular() {
 		basename := filepath.Base(path)
 		if basename == CmdName {
-			passed := this.executeSingleCmdFile(path, this.verbosityLevel)
+			passed := regtester.executeSingleCmdFile(path, regtester.verbosityLevel)
 			if passed {
-				this.casePassCount++
+				regtester.casePassCount++
 			} else {
-				this.caseFailCount++
-				this.failCaseNames.PushBack(path)
+				regtester.caseFailCount++
+				regtester.failCaseNames.PushBack(path)
 			}
 			return passed
 		}
@@ -188,14 +188,14 @@ func (this *RegTester) executeSinglePath(
 }
 
 // ----------------------------------------------------------------
-func (this *RegTester) executeSingleDirectory(
+func (regtester *RegTester) executeSingleDirectory(
 	dirName string,
 ) (bool, bool) {
 	passed := true
 	// TODO: comment
-	hasCaseSubdirectories := this.hasCaseSubdirectories(dirName)
+	hasCaseSubdirectories := regtester.hasCaseSubdirectories(dirName)
 
-	if hasCaseSubdirectories && this.verbosityLevel >= 1 {
+	if hasCaseSubdirectories && regtester.verbosityLevel >= 1 {
 		fmt.Printf("%s BEGIN %s/\n", MajorSeparator, dirName)
 	}
 
@@ -209,7 +209,7 @@ func (this *RegTester) executeSingleDirectory(
 			entry := &entries[i]
 			path := dirName + "/" + (*entry).Name()
 
-			ok := this.executeSinglePath(path)
+			ok := regtester.executeSinglePath(path)
 			if !ok {
 				passed = false
 			}
@@ -229,7 +229,7 @@ func (this *RegTester) executeSingleDirectory(
 		}
 	}
 
-	if !hasCaseSubdirectories && this.verbosityLevel >= 1 {
+	if !hasCaseSubdirectories && regtester.verbosityLevel >= 1 {
 		fmt.Printf("%s END   %s/\n", MajorSeparator, dirName)
 		fmt.Println()
 	}
@@ -246,7 +246,7 @@ func (this *RegTester) executeSingleDirectory(
 // TODO: don't print container-of-containers, via entries.any.isCaseDirectory
 // or somesuch.
 
-func (this *RegTester) hasCaseSubdirectories(
+func (regtester *RegTester) hasCaseSubdirectories(
 	dirName string,
 ) bool {
 
@@ -259,24 +259,24 @@ func (this *RegTester) hasCaseSubdirectories(
 	for i := range entries {
 		entry := &entries[i]
 		path := dirName + "/" + (*entry).Name()
-		if this.isCaseDirectory(path) {
+		if regtester.isCaseDirectory(path) {
 			return true
 		}
 	}
 	return false
 }
 
-func (this *RegTester) isCaseDirectory(
+func (regtester *RegTester) isCaseDirectory(
 	dirName string,
 ) bool {
 	cmdFilePath := dirName + string(filepath.Separator) + CmdName
-	return this.FileExists(cmdFilePath)
+	return regtester.FileExists(cmdFilePath)
 }
 
 // ----------------------------------------------------------------
 // This is the main regression-test logic for a single .cmd file (a single mlr
 // invocation) and its associated supporting files.
-func (this *RegTester) executeSingleCmdFile(
+func (regtester *RegTester) executeSingleCmdFile(
 	cmdFilePath string,
 	verbosityLevel int,
 ) bool {
@@ -292,7 +292,7 @@ func (this *RegTester) executeSingleCmdFile(
 	// case.
 	caseDir := filepath.Dir(cmdFilePath)
 
-	cmd, err := this.loadFile(cmdFilePath, caseDir)
+	cmd, err := regtester.loadFile(cmdFilePath, caseDir)
 	if err != nil {
 		if verbosityLevel >= 2 {
 			fmt.Printf("%s: %v\n", cmdFilePath, err)
@@ -308,7 +308,7 @@ func (this *RegTester) executeSingleCmdFile(
 	expectFailFileName := caseDir + slash + ShouldFailName
 	postCompareFileName := caseDir + slash + PostCompareName
 
-	cmd, err = this.loadFile(cmdFilePath, caseDir)
+	cmd, err = regtester.loadFile(cmdFilePath, caseDir)
 	if err != nil {
 		if verbosityLevel >= 2 {
 			fmt.Printf("%s: %v\n", cmdFilePath, err)
@@ -323,7 +323,7 @@ func (this *RegTester) executeSingleCmdFile(
 
 	// The .env needn't exist (most test cases don't have one) in which case
 	// the returned map will be empty.
-	envKeyValuePairs, err := this.loadEnvFile(envFileName, caseDir)
+	envKeyValuePairs, err := regtester.loadEnvFile(envFileName, caseDir)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -331,7 +331,7 @@ func (this *RegTester) executeSingleCmdFile(
 
 	// The .precopy needn't exist (most test cases don't have one) in which case
 	// the returned map will be empty.
-	preCopySrcDestPairs, err := this.loadStringPairFile(preCopyFileName, caseDir)
+	preCopySrcDestPairs, err := regtester.loadStringPairFile(preCopyFileName, caseDir)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -358,7 +358,7 @@ func (this *RegTester) executeSingleCmdFile(
 		if verbosityLevel >= 3 {
 			fmt.Printf("%s: copy %s to %s\n", cmdFilePath, src, dst)
 		}
-		err := this.copyFile(src, dst, caseDir)
+		err := regtester.copyFile(src, dst, caseDir)
 		if err != nil {
 			fmt.Printf("%s: %v\n", dst, err)
 			passed = false
@@ -367,7 +367,7 @@ func (this *RegTester) executeSingleCmdFile(
 
 	// ****************************************************************
 	// HERE IS WHERE WE RUN THE MILLER COMMAND LINE FOR THE TEST CASE
-	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(this.exeName, cmd)
+	actualStdout, actualStderr, actualExitCode, err := RunMillerCommand(regtester.exeName, cmd)
 	// ****************************************************************
 
 	// Unset any case-specific environment variables after running the case.
@@ -383,13 +383,13 @@ func (this *RegTester) executeSingleCmdFile(
 
 	// The .postcmp needn't exist (most test cases don't have one) in which case
 	// the returned map will be empty.
-	postCompareExpectedActualPairs, err := this.loadStringPairFile(postCompareFileName, caseDir)
+	postCompareExpectedActualPairs, err := regtester.loadStringPairFile(postCompareFileName, caseDir)
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 
-	if this.doPopulate {
+	if regtester.doPopulate {
 		// Populate mode: write out the actual stdout/stderr/exit-code to disk
 		// as expected values for subsequent runs.
 
@@ -398,35 +398,35 @@ func (this *RegTester) executeSingleCmdFile(
 		actualStderr = strings.ReplaceAll(actualStderr, "\r\n", "\n")
 
 		// Write the .expout file
-		err = this.storeFile(expectedStdoutFileName, actualStdout)
+		err = regtester.storeFile(expectedStdoutFileName, actualStdout)
 		if err != nil {
 			fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
 			passed = false
 		} else {
-			if this.verbosityLevel >= 1 {
+			if regtester.verbosityLevel >= 1 {
 				fmt.Printf("wrote %s\n", expectedStdoutFileName)
 			}
 		}
 
 		// Write the .experr file
-		err = this.storeFile(expectedStderrFileName, actualStderr)
+		err = regtester.storeFile(expectedStderrFileName, actualStderr)
 		if err != nil {
 			fmt.Printf("%s: %v\n", expectedStderrFileName, err)
 			passed = false
 		} else {
-			if this.verbosityLevel >= 1 {
+			if regtester.verbosityLevel >= 1 {
 				fmt.Printf("wrote %s\n", expectedStdoutFileName)
 			}
 		}
 
 		// Write the .should-fail file
 		if actualExitCode != 0 {
-			err = this.storeFile(expectFailFileName, "")
+			err = regtester.storeFile(expectFailFileName, "")
 			if err != nil {
 				fmt.Printf("%s: %v\n", expectedStderrFileName, err)
 				passed = false
 			} else {
-				if this.verbosityLevel >= 1 {
+				if regtester.verbosityLevel >= 1 {
 					fmt.Printf("wrote %s\n", expectedStdoutFileName)
 				}
 			}
@@ -438,7 +438,7 @@ func (this *RegTester) executeSingleCmdFile(
 			expectedFileName := pair.first
 			actualFileName := pair.second
 
-			err := this.copyFile(actualFileName, expectedFileName, caseDir)
+			err := regtester.copyFile(actualFileName, expectedFileName, caseDir)
 			if err != nil {
 				fmt.Printf("Could not copy %s to %s: %v\n", actualFileName, expectedFileName, err)
 				passed = false
@@ -452,7 +452,7 @@ func (this *RegTester) executeSingleCmdFile(
 		// Verify mode: check actuals against expecteds
 
 		// Load the .expout file
-		expectedStdout, err := this.loadFile(expectedStdoutFileName, caseDir)
+		expectedStdout, err := regtester.loadFile(expectedStdoutFileName, caseDir)
 		if err != nil {
 			if verbosityLevel >= 2 {
 				fmt.Printf("%s: %v\n", expectedStdoutFileName, err)
@@ -461,7 +461,7 @@ func (this *RegTester) executeSingleCmdFile(
 		}
 
 		// Load the .experr file
-		expectedStderr, err := this.loadFile(expectedStderrFileName, caseDir)
+		expectedStderr, err := regtester.loadFile(expectedStderrFileName, caseDir)
 		if err != nil {
 			if verbosityLevel >= 2 {
 				fmt.Printf("%s: %v\n", expectedStderrFileName, err)
@@ -471,7 +471,7 @@ func (this *RegTester) executeSingleCmdFile(
 
 		// Load the .should-fail file
 		expectedExitCode := 0
-		if this.FileExists(expectFailFileName) {
+		if regtester.FileExists(expectFailFileName) {
 			expectedExitCode = 1
 		}
 
@@ -550,7 +550,7 @@ func (this *RegTester) executeSingleCmdFile(
 			pair := pe.Value.(stringPair)
 			expectedFileName := pair.first
 			actualFileName := pair.second
-			ok, err := this.compareFiles(expectedFileName, actualFileName, caseDir)
+			ok, err := regtester.compareFiles(expectedFileName, actualFileName, caseDir)
 			if err != nil {
 				fmt.Printf("%s: %v\n", cmdFilePath, err)
 				passed = false
@@ -608,7 +608,7 @@ func (this *RegTester) executeSingleCmdFile(
 }
 
 // ----------------------------------------------------------------
-func (this *RegTester) FileExists(fileName string) bool {
+func (regtester *RegTester) FileExists(fileName string) bool {
 	fileInfo, err := os.Stat(fileName)
 	if err != nil {
 		return false
@@ -616,7 +616,7 @@ func (this *RegTester) FileExists(fileName string) bool {
 	return !fileInfo.IsDir()
 }
 
-func (this *RegTester) loadFile(
+func (regtester *RegTester) loadFile(
 	fileName string,
 	caseDir string,
 ) (string, error) {
@@ -629,7 +629,7 @@ func (this *RegTester) loadFile(
 	return contents, nil
 }
 
-func (this *RegTester) storeFile(
+func (regtester *RegTester) storeFile(
 	fileName string,
 	contents string,
 ) error {
@@ -640,32 +640,32 @@ func (this *RegTester) storeFile(
 	return nil
 }
 
-func (this *RegTester) copyFile(
+func (regtester *RegTester) copyFile(
 	src string,
 	dst string,
 	caseDir string,
 ) error {
-	contents, err := this.loadFile(src, caseDir)
+	contents, err := regtester.loadFile(src, caseDir)
 	if err != nil {
 		return err
 	}
-	err = this.storeFile(dst, contents)
+	err = regtester.storeFile(dst, contents)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (this *RegTester) compareFiles(
+func (regtester *RegTester) compareFiles(
 	expectedFileName string,
 	actualFileName string,
 	caseDir string,
 ) (bool, error) {
-	expectedContents, err := this.loadFile(expectedFileName, caseDir)
+	expectedContents, err := regtester.loadFile(expectedFileName, caseDir)
 	if err != nil {
 		return false, err
 	}
-	actualContents, err := this.loadFile(actualFileName, caseDir)
+	actualContents, err := regtester.loadFile(actualFileName, caseDir)
 	if err != nil {
 		return false, err
 	}
@@ -677,7 +677,7 @@ func (this *RegTester) compareFiles(
 }
 
 // ----------------------------------------------------------------
-func (this *RegTester) loadEnvFile(
+func (regtester *RegTester) loadEnvFile(
 	filename string,
 	caseDir string,
 ) (*lib.OrderedMap, error) {
@@ -689,7 +689,7 @@ func (this *RegTester) loadEnvFile(
 	}
 
 	// If the file does exist and isn't loadable, that's an error.
-	contents, err := this.loadFile(filename, caseDir)
+	contents, err := regtester.loadFile(filename, caseDir)
 	if err != nil {
 		return nil, err
 	}
@@ -716,7 +716,7 @@ func (this *RegTester) loadEnvFile(
 }
 
 // ----------------------------------------------------------------
-func (this *RegTester) loadStringPairFile(
+func (regtester *RegTester) loadStringPairFile(
 	filename string,
 	caseDir string,
 ) (*list.List, error) {
@@ -728,7 +728,7 @@ func (this *RegTester) loadStringPairFile(
 	}
 
 	// If the file does exist and isn't loadable, that's an error.
-	contents, err := this.loadFile(filename, caseDir)
+	contents, err := regtester.loadFile(filename, caseDir)
 	if err != nil {
 		return nil, err
 	}

@@ -18,7 +18,7 @@ func NewRecordWriterNIDX(writerOptions *cliutil.TWriterOptions) *RecordWriterNID
 	}
 }
 
-func (this *RecordWriterNIDX) Write(
+func (writer *RecordWriterNIDX) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
 ) {
@@ -31,9 +31,9 @@ func (this *RecordWriterNIDX) Write(
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
-			buffer.WriteString(this.writerOptions.OFS)
+			buffer.WriteString(writer.writerOptions.OFS)
 		}
 	}
-	buffer.WriteString(this.writerOptions.ORS)
+	buffer.WriteString(writer.writerOptions.ORS)
 	ostream.Write(buffer.Bytes())
 }

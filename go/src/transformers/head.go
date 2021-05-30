@@ -111,7 +111,7 @@ func NewTransformerHead(
 	groupByFieldNames []string,
 ) (*TransformerHead, error) {
 
-	this := &TransformerHead{
+	tr := &TransformerHead{
 		headCount:         headCount,
 		groupByFieldNames: groupByFieldNames,
 
@@ -120,29 +120,29 @@ func NewTransformerHead(
 	}
 
 	if groupByFieldNames == nil {
-		this.recordTransformerFunc = this.mapUnkeyed
+		tr.recordTransformerFunc = tr.mapUnkeyed
 	} else {
-		this.recordTransformerFunc = this.mapKeyed
+		tr.recordTransformerFunc = tr.mapKeyed
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerHead) Transform(
+func (tr *TransformerHead) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
-func (this *TransformerHead) mapUnkeyed(
+func (tr *TransformerHead) mapUnkeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
-		this.unkeyedRecordCount++
-		if this.unkeyedRecordCount <= this.headCount {
+		tr.unkeyedRecordCount++
+		if tr.unkeyedRecordCount <= tr.headCount {
 			outputChannel <- inrecAndContext
 		}
 	} else {
@@ -150,28 +150,28 @@ func (this *TransformerHead) mapUnkeyed(
 	}
 }
 
-func (this *TransformerHead) mapKeyed(
+func (tr *TransformerHead) mapKeyed(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if !ok {
 			return
 		}
 
-		count, present := this.keyedRecordCounts[groupingKey]
+		count, present := tr.keyedRecordCounts[groupingKey]
 		if !present { // first time
-			this.keyedRecordCounts[groupingKey] = 1
+			tr.keyedRecordCounts[groupingKey] = 1
 			count = 1
 		} else {
-			this.keyedRecordCounts[groupingKey] += 1
+			tr.keyedRecordCounts[groupingKey] += 1
 			count += 1
 		}
 
-		if count <= this.headCount {
+		if count <= tr.headCount {
 			outputChannel <- inrecAndContext
 		}
 

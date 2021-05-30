@@ -45,15 +45,15 @@ func newOrderedMapEntry(key *string, value interface{}) *orderedMapEntry {
 }
 
 // ----------------------------------------------------------------
-func (this *OrderedMap) Has(key string) bool {
-	return this.findEntry(&key) != nil
+func (omap *OrderedMap) Has(key string) bool {
+	return omap.findEntry(&key) != nil
 }
 
-func (this *OrderedMap) findEntry(key *string) *orderedMapEntry {
-	if this.keysToEntries != nil {
-		return this.keysToEntries[*key]
+func (omap *OrderedMap) findEntry(key *string) *orderedMapEntry {
+	if omap.keysToEntries != nil {
+		return omap.keysToEntries[*key]
 	} else {
-		for pe := this.Head; pe != nil; pe = pe.Next {
+		for pe := omap.Head; pe != nil; pe = pe.Next {
 			if pe.Key == *key {
 				return pe
 			}
@@ -63,31 +63,31 @@ func (this *OrderedMap) findEntry(key *string) *orderedMapEntry {
 }
 
 // ----------------------------------------------------------------
-func (this *OrderedMap) Put(key string, value interface{}) {
-	pe := this.findEntry(&key)
+func (omap *OrderedMap) Put(key string, value interface{}) {
+	pe := omap.findEntry(&key)
 	if pe == nil {
 		pe = newOrderedMapEntry(&key, value)
-		if this.Head == nil {
-			this.Head = pe
-			this.Tail = pe
+		if omap.Head == nil {
+			omap.Head = pe
+			omap.Tail = pe
 		} else {
-			pe.Prev = this.Tail
+			pe.Prev = omap.Tail
 			pe.Next = nil
-			this.Tail.Next = pe
-			this.Tail = pe
+			omap.Tail.Next = pe
+			omap.Tail = pe
 		}
-		if this.keysToEntries != nil {
-			this.keysToEntries[key] = pe
+		if omap.keysToEntries != nil {
+			omap.keysToEntries[key] = pe
 		}
-		this.FieldCount++
+		omap.FieldCount++
 	} else {
 		pe.Value = value
 	}
 }
 
 // ----------------------------------------------------------------
-func (this *OrderedMap) Get(key string) interface{} {
-	pe := this.findEntry(&key)
+func (omap *OrderedMap) Get(key string) interface{} {
+	pe := omap.findEntry(&key)
 	if pe == nil {
 		return nil
 	} else {
@@ -99,8 +99,8 @@ func (this *OrderedMap) Get(key string) interface{} {
 // The Get is sufficient for pointer values -- the caller can check if the
 // return value is nil. For int/string values (which are non-nullable) we have
 // this method.
-func (this *OrderedMap) GetWithCheck(key string) (interface{}, bool) {
-	pe := this.findEntry(&key)
+func (omap *OrderedMap) GetWithCheck(key string) (interface{}, bool) {
+	pe := omap.findEntry(&key)
 	if pe == nil {
 		return nil, false
 	} else {
@@ -110,44 +110,44 @@ func (this *OrderedMap) GetWithCheck(key string) (interface{}, bool) {
 }
 
 // ----------------------------------------------------------------
-func (this *OrderedMap) Clear() {
-	this.FieldCount = 0
-	this.Head = nil
-	this.Tail = nil
+func (omap *OrderedMap) Clear() {
+	omap.FieldCount = 0
+	omap.Head = nil
+	omap.Tail = nil
 }
 
 // ----------------------------------------------------------------
 // Returns true if it was found and removed
-func (this *OrderedMap) Remove(key string) bool {
-	pe := this.findEntry(&key)
+func (omap *OrderedMap) Remove(key string) bool {
+	pe := omap.findEntry(&key)
 	if pe == nil {
 		return false
 	} else {
-		this.unlink(pe)
+		omap.unlink(pe)
 		return true
 	}
 }
 
 // ----------------------------------------------------------------
-func (this *OrderedMap) unlink(pe *orderedMapEntry) {
-	if pe == this.Head {
-		if pe == this.Tail {
-			this.Head = nil
-			this.Tail = nil
+func (omap *OrderedMap) unlink(pe *orderedMapEntry) {
+	if pe == omap.Head {
+		if pe == omap.Tail {
+			omap.Head = nil
+			omap.Tail = nil
 		} else {
-			this.Head = pe.Next
+			omap.Head = pe.Next
 			pe.Next.Prev = nil
 		}
 	} else {
 		pe.Prev.Next = pe.Next
-		if pe == this.Tail {
-			this.Tail = pe.Prev
+		if pe == omap.Tail {
+			omap.Tail = pe.Prev
 		} else {
 			pe.Next.Prev = pe.Prev
 		}
 	}
-	if this.keysToEntries != nil {
-		delete(this.keysToEntries, pe.Key)
+	if omap.keysToEntries != nil {
+		delete(omap.keysToEntries, pe.Key)
 	}
-	this.FieldCount--
+	omap.FieldCount--
 }

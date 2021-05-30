@@ -57,10 +57,10 @@ func NewUDSCallsite(
 	}
 }
 
-func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	lib.InternalCodingErrorIf(this.argumentNodes == nil)
-	lib.InternalCodingErrorIf(this.uds == nil)
-	lib.InternalCodingErrorIf(this.uds.subroutineBody == nil)
+func (site *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	lib.InternalCodingErrorIf(site.argumentNodes == nil)
+	lib.InternalCodingErrorIf(site.uds == nil)
+	lib.InternalCodingErrorIf(site.uds.subroutineBody == nil)
 
 	// Evaluate and pair up the callsite arguments with our parameters,
 	// positionally.
@@ -106,10 +106,10 @@ func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	// we push a new frameset and DefineTypedAtScope using the callee's frameset.
 
 	// Evaluate the arguments
-	arguments := make([]*types.Mlrval, len(this.uds.signature.typeGatedParameterNames))
+	arguments := make([]*types.Mlrval, len(site.uds.signature.typeGatedParameterNames))
 
-	for i, typeGatedParameterName := range this.uds.signature.typeGatedParameterNames {
-		arguments[i] = this.argumentNodes[i].Evaluate(state)
+	for i, typeGatedParameterName := range site.uds.signature.typeGatedParameterNames {
+		arguments[i] = site.argumentNodes[i].Evaluate(state)
 
 		err := typeGatedParameterName.Check(arguments[i])
 		if err != nil {
@@ -123,8 +123,8 @@ func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 
 	for i, _ := range arguments {
 		err := state.Stack.DefineTypedAtScope(
-			runtime.NewStackVariable(this.uds.signature.typeGatedParameterNames[i].Name),
-			this.uds.signature.typeGatedParameterNames[i].TypeName,
+			runtime.NewStackVariable(site.uds.signature.typeGatedParameterNames[i].Name),
+			site.uds.signature.typeGatedParameterNames[i].TypeName,
 			arguments[i],
 		)
 		if err != nil {
@@ -133,7 +133,7 @@ func (this *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	}
 
 	// Execute the subroutine body.
-	blockExitPayload, err := this.uds.subroutineBody.Execute(state)
+	blockExitPayload, err := site.uds.subroutineBody.Execute(state)
 
 	if err != nil {
 		return nil, err
@@ -167,8 +167,8 @@ func NewUDSManager() *UDSManager {
 	}
 }
 
-func (this *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UDS, error) {
-	uds := this.subroutines[subroutineName]
+func (manager *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UDS, error) {
+	uds := manager.subroutines[subroutineName]
 	if uds == nil {
 		return nil, nil
 	}
@@ -186,12 +186,12 @@ func (this *UDSManager) LookUp(subroutineName string, callsiteArity int) (*UDS, 
 	return uds, nil
 }
 
-func (this *UDSManager) Install(uds *UDS) {
-	this.subroutines[uds.signature.funcOrSubrName] = uds
+func (manager *UDSManager) Install(uds *UDS) {
+	manager.subroutines[uds.signature.funcOrSubrName] = uds
 }
 
-func (this *UDSManager) ExistsByName(name string) bool {
-	_, ok := this.subroutines[name]
+func (manager *UDSManager) ExistsByName(name string) bool {
+	_, ok := manager.subroutines[name]
 	return ok
 }
 
@@ -234,15 +234,15 @@ func (this *UDSManager) ExistsByName(name string) bool {
 //         * SubroutineCallsite "f"
 //             * DirectFieldValue "x"
 
-func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
+func (root *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeSubroutineDefinition)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
 	subroutineName := string(astNode.Token.Lit)
 
-	if !this.allowUDFUDSRedefinitions {
-		if this.udsManager.ExistsByName(subroutineName) {
+	if !root.allowUDFUDSRedefinitions {
+		if root.udsManager.ExistsByName(subroutineName) {
 			return errors.New(
 				fmt.Sprintf(
 					"Miller: subroutine named \"%s\" has already been defined.",
@@ -287,14 +287,14 @@ func (this *RootNode) BuildAndInstallUDS(astNode *dsl.ASTNode) error {
 
 	signature := NewSignature(subroutineName, arity, typeGatedParameterNames, nil)
 
-	subroutineBody, err := this.BuildStatementBlockNode(subroutineBodyASTNode)
+	subroutineBody, err := root.BuildStatementBlockNode(subroutineBodyASTNode)
 	if err != nil {
 		return err
 	}
 
 	uds := NewUDS(signature, subroutineBody)
 
-	this.udsManager.Install(uds)
+	root.udsManager.Install(uds)
 
 	return nil
 }

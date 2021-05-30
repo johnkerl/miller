@@ -124,42 +124,42 @@ func NewTransformerDecimate(
 		remainderToKeep = 0
 	}
 
-	this := &TransformerDecimate{
+	tr := &TransformerDecimate{
 		decimateCount:     decimateCount,
 		remainderToKeep:   remainderToKeep,
 		groupByFieldNames: groupByFieldNames,
 		countsByGroup:     make(map[string]int),
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerDecimate) Transform(
+func (tr *TransformerDecimate) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if !ok {
 			return // This particular record doesn't have the specified fields; ignore
 		}
 
-		countForGroup, ok := this.countsByGroup[groupingKey]
+		countForGroup, ok := tr.countsByGroup[groupingKey]
 		if !ok {
 			countForGroup = 0
-			this.countsByGroup[groupingKey] = countForGroup
+			tr.countsByGroup[groupingKey] = countForGroup
 		}
 
-		remainder := countForGroup % this.decimateCount
-		if remainder == this.remainderToKeep {
+		remainder := countForGroup % tr.decimateCount
+		if remainder == tr.remainderToKeep {
 			outputChannel <- inrecAndContext
 		}
 
 		countForGroup++
-		this.countsByGroup[groupingKey] = countForGroup
+		tr.countsByGroup[groupingKey] = countForGroup
 
 	} else {
 		outputChannel <- inrecAndContext // Emit the stream-terminating null record

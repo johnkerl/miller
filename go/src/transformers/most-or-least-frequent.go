@@ -184,7 +184,7 @@ func NewTransformerMostOrLeastFrequent(
 	outputFieldName string,
 	descending bool,
 ) (*TransformerMostOrLeastFrequent, error) {
-	this := &TransformerMostOrLeastFrequent{
+	tr := &TransformerMostOrLeastFrequent{
 		groupByFieldNames: groupByFieldNames,
 		maxOutputLength:   maxOutputLength,
 		showCounts:        showCounts,
@@ -194,25 +194,25 @@ func NewTransformerMostOrLeastFrequent(
 		valuesForGroup:    make(map[string][]*types.Mlrval),
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerMostOrLeastFrequent) Transform(
+func (tr *TransformerMostOrLeastFrequent) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if !ok {
 			return
 		}
 
-		this.countsByGroup[groupingKey]++
-		if this.valuesForGroup[groupingKey] == nil {
-			selectedValues, _ := inrec.GetSelectedValues(this.groupByFieldNames)
-			this.valuesForGroup[groupingKey] = selectedValues
+		tr.countsByGroup[groupingKey]++
+		if tr.valuesForGroup[groupingKey] == nil {
+			selectedValues, _ := inrec.GetSelectedValues(tr.groupByFieldNames)
+			tr.valuesForGroup[groupingKey] = selectedValues
 		}
 
 	} else {
@@ -221,11 +221,11 @@ func (this *TransformerMostOrLeastFrequent) Transform(
 		// be O(log n) and there would be m of them.)
 
 		// Copy keys and counters from hashmap to array for sorting
-		inputLength := len(this.countsByGroup)
+		inputLength := len(tr.countsByGroup)
 
 		sortPairs := make([]tMostOrLeastFrequentSortPair, inputLength)
 		i := 0
-		for groupingKey, count := range this.countsByGroup {
+		for groupingKey, count := range tr.countsByGroup {
 			sortPairs[i].groupingKey = groupingKey
 			sortPairs[i].count = count
 			i++
@@ -233,7 +233,7 @@ func (this *TransformerMostOrLeastFrequent) Transform(
 
 		// Sort by count
 		// Go sort API: for ascending sort, return true if element i < element j.
-		if this.descending {
+		if tr.descending {
 
 			sort.Slice(sortPairs, func(i, j int) bool {
 				return sortPairs[i].count > sortPairs[j].count
@@ -249,21 +249,21 @@ func (this *TransformerMostOrLeastFrequent) Transform(
 
 		// Emit top n
 		outputLength := inputLength
-		if inputLength > this.maxOutputLength {
-			outputLength = this.maxOutputLength
+		if inputLength > tr.maxOutputLength {
+			outputLength = tr.maxOutputLength
 		}
 		for i := 0; i < outputLength; i++ {
 			outrec := types.NewMlrmapAsRecord()
-			groupByFieldValues := this.valuesForGroup[sortPairs[i].groupingKey]
-			for j, _ := range this.groupByFieldNames {
+			groupByFieldValues := tr.valuesForGroup[sortPairs[i].groupingKey]
+			for j, _ := range tr.groupByFieldNames {
 				outrec.PutCopy(
-					this.groupByFieldNames[j],
+					tr.groupByFieldNames[j],
 					groupByFieldValues[j],
 				)
 			}
 
-			if this.showCounts {
-				outrec.PutReference(this.outputFieldName, types.MlrvalPointerFromInt(sortPairs[i].count))
+			if tr.showCounts {
+				outrec.PutReference(tr.outputFieldName, types.MlrvalPointerFromInt(sortPairs[i].count))
 			}
 			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 		}

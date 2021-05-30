@@ -43,17 +43,17 @@ type DumpStatementNode struct {
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildDumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDumpStatement)
-	return this.buildDumpxStatementNode(
+	return root.buildDumpxStatementNode(
 		astNode,
 		os.Stdout,
 	)
 }
 
-func (this *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEdumpStatement)
-	return this.buildDumpxStatementNode(
+	return root.buildDumpxStatementNode(
 		astNode,
 		os.Stderr,
 	)
@@ -62,7 +62,7 @@ func (this *RootNode) BuildEdumpStatementNode(astNode *dsl.ASTNode) (IExecutable
 // ----------------------------------------------------------------
 // Common code for building dump/edump nodes
 
-func (this *RootNode) buildDumpxStatementNode(
+func (root *RootNode) buildDumpxStatementNode(
 	astNode *dsl.ASTNode,
 	defaultOutputStream *os.File,
 ) (IExecutable, error) {
@@ -78,12 +78,12 @@ func (this *RootNode) buildDumpxStatementNode(
 	if expressionsNode.Type == dsl.NodeTypeNoOp {
 		// Just 'dump' without 'dump $something'
 		expressionEvaluables = make([]IEvaluable, 1)
-		expressionEvaluable := this.BuildFullOosvarRvalueNode()
+		expressionEvaluable := root.BuildFullOosvarRvalueNode()
 		expressionEvaluables[0] = expressionEvaluable
 	} else if expressionsNode.Type == dsl.NodeTypeFunctionCallsite {
 		expressionEvaluables = make([]IEvaluable, len(expressionsNode.Children))
 		for i, childNode := range expressionsNode.Children {
-			expressionEvaluable, err := this.BuildEvaluableNode(childNode)
+			expressionEvaluable, err := root.BuildEvaluableNode(childNode)
 			if err != nil {
 				return nil, err
 			}
@@ -126,17 +126,17 @@ func (this *RootNode) buildDumpxStatementNode(
 		} else {
 			retval.dumpToRedirectFunc = retval.dumpToFileOrPipe
 
-			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
 			if err != nil {
 				return nil, err
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(
@@ -151,14 +151,14 @@ func (this *RootNode) buildDumpxStatementNode(
 	// Register this with the CST root node so that open file descriptrs can be
 	// closed, etc at end of stream.
 	if retval.outputHandlerManager != nil {
-		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+		root.RegisterOutputHandlerManager(retval.outputHandlerManager)
 	}
 
 	return retval, nil
 }
 
 // ----------------------------------------------------------------
-func (this *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	// 5x faster than fmt.Dump() separately: note that os.Stdout is
 	// non-buffered in Go whereas stdout is buffered in C.
 	//
@@ -167,7 +167,7 @@ func (this *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload,
 	// Plus: we never have to worry about forgetting to do fflush(). :)
 	var buffer bytes.Buffer
 
-	for _, expressionEvaluable := range this.expressionEvaluables {
+	for _, expressionEvaluable := range node.expressionEvaluables {
 		evaluation := expressionEvaluable.Evaluate(state)
 		if !evaluation.IsAbsent() {
 			s := evaluation.String()
@@ -178,12 +178,12 @@ func (this *DumpStatementNode) Execute(state *runtime.State) (*BlockExitPayload,
 		}
 	}
 	outputString := buffer.String()
-	this.dumpToRedirectFunc(outputString, state)
+	node.dumpToRedirectFunc(outputString, state)
 	return nil, nil
 }
 
 // ----------------------------------------------------------------
-func (this *DumpStatementNode) dumpToStdout(
+func (node *DumpStatementNode) dumpToStdout(
 	outputString string,
 	state *runtime.State,
 ) error {
@@ -201,7 +201,7 @@ func (this *DumpStatementNode) dumpToStdout(
 }
 
 // ----------------------------------------------------------------
-func (this *DumpStatementNode) dumpToStderr(
+func (node *DumpStatementNode) dumpToStderr(
 	outputString string,
 	state *runtime.State,
 ) error {
@@ -210,11 +210,11 @@ func (this *DumpStatementNode) dumpToStderr(
 }
 
 // ----------------------------------------------------------------
-func (this *DumpStatementNode) dumpToFileOrPipe(
+func (node *DumpStatementNode) dumpToFileOrPipe(
 	outputString string,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
@@ -225,6 +225,6 @@ func (this *DumpStatementNode) dumpToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.WriteString(outputString, outputFileName)
+	node.outputHandlerManager.WriteString(outputString, outputFileName)
 	return nil
 }

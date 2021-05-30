@@ -22,7 +22,7 @@ func NewRecordReaderNIDX(readerOptions *cliutil.TReaderOptions) *RecordReaderNID
 	}
 }
 
-func (this *RecordReaderNIDX) Read(
+func (reader *RecordReaderNIDX) Read(
 	filenames []string,
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
@@ -31,24 +31,24 @@ func (this *RecordReaderNIDX) Read(
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
 			handle, err := lib.OpenStdin(
-				this.readerOptions.Prepipe,
-				this.readerOptions.FileInputEncoding,
+				reader.readerOptions.Prepipe,
+				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
 				errorChannel <- err
 			}
-			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
 					filename,
-					this.readerOptions.Prepipe,
-					this.readerOptions.FileInputEncoding,
+					reader.readerOptions.Prepipe,
+					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
 					errorChannel <- err
 				} else {
-					this.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
 					handle.Close()
 				}
 			}
@@ -57,7 +57,7 @@ func (this *RecordReaderNIDX) Read(
 	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
-func (this *RecordReaderNIDX) processHandle(
+func (reader *RecordReaderNIDX) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
@@ -83,11 +83,11 @@ func (this *RecordReaderNIDX) processHandle(
 		}
 
 		// Check for comments-in-data feature
-		if strings.HasPrefix(line, this.readerOptions.CommentString) {
-			if this.readerOptions.CommentHandling == cliutil.PassComments {
+		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+			if reader.readerOptions.CommentHandling == cliutil.PassComments {
 				inputChannel <- types.NewOutputString(line, context)
 				continue
-			} else if this.readerOptions.CommentHandling == cliutil.SkipComments {
+			} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
 				continue
 			}
 			// else comments are data
@@ -98,7 +98,7 @@ func (this *RecordReaderNIDX) processHandle(
 		line = strings.TrimRight(line, "\n")
 		line = strings.TrimRight(line, "\r")
 
-		record := recordFromNIDXLine(line, this.readerOptions.IFS)
+		record := recordFromNIDXLine(line, reader.readerOptions.IFS)
 
 		context.UpdateForInputRecord()
 		inputChannel <- types.NewRecordAndContext(

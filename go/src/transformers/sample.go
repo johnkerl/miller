@@ -111,35 +111,35 @@ func NewTransformerSample(
 	sampleCount int,
 	groupByFieldNames []string,
 ) (*TransformerSample, error) {
-	this := &TransformerSample{
+	tr := &TransformerSample{
 		sampleCount:       sampleCount,
 		groupByFieldNames: groupByFieldNames,
 		bucketsByGroup:    lib.NewOrderedMap(),
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSample) Transform(
+func (tr *TransformerSample) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		groupingKey, ok := inrec.GetSelectedValuesJoined(this.groupByFieldNames)
+		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 		if ok {
-			sampleBucket := this.bucketsByGroup.Get(groupingKey)
+			sampleBucket := tr.bucketsByGroup.Get(groupingKey)
 			if sampleBucket == nil {
-				sampleBucket = newSampleBucket(this.sampleCount)
-				this.bucketsByGroup.Put(groupingKey, sampleBucket)
+				sampleBucket = newSampleBucket(tr.sampleCount)
+				tr.bucketsByGroup.Put(groupingKey, sampleBucket)
 			}
 			sampleBucket.(*sampleBucketType).handleRecord(inrecAndContext, inrecAndContext.Context.NR)
 		} // else, specified keys aren't present in this record, so ignore it
 
 	} else { // end of record stream
 
-		for pe := this.bucketsByGroup.Head; pe != nil; pe = pe.Next {
+		for pe := tr.bucketsByGroup.Head; pe != nil; pe = pe.Next {
 			sampleBucket := pe.Value.(*sampleBucketType)
 			for i := 0; i < sampleBucket.nused; i++ {
 				outputChannel <- sampleBucket.recordsAndContexts[i]
@@ -165,23 +165,23 @@ func newSampleBucket(sampleCount int) *sampleBucketType {
 // This is the reservoir-sampling algorithm.  Here we retain an input record
 // (if retained in the sample) or let it be GC'ed (if not retained in the
 // sample).
-func (this *sampleBucketType) handleRecord(
+func (t *sampleBucketType) handleRecord(
 	inrecAndContext *types.RecordAndContext,
 	recordNumber int,
 ) {
-	if this.nused < this.nalloc {
+	if t.nused < t.nalloc {
 		// Always accept new entries until the bucket is full.
 		//
 		// Note: we need to copy the record since Go is concurrent and all
 		// Miller transformers execute in their own goroutine -- if we just keep a
 		// pointer, a downstream transformer mutate the pointed-to record between
 		// our saving it and our re-using it.
-		this.recordsAndContexts[this.nused] = inrecAndContext.Copy()
-		this.nused++
+		t.recordsAndContexts[t.nused] = inrecAndContext.Copy()
+		t.nused++
 	} else {
 		r := int(lib.RandInt63()) % recordNumber
-		if r < this.nalloc {
-			this.recordsAndContexts[r] = inrecAndContext.Copy()
+		if r < t.nalloc {
+			t.recordsAndContexts[r] = inrecAndContext.Copy()
 		}
 	}
 }

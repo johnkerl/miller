@@ -26,7 +26,7 @@ func NewRecordWriterMarkdown(writerOptions *cliutil.TWriterOptions) *RecordWrite
 }
 
 // ----------------------------------------------------------------
-func (this *RecordWriterMarkdown) Write(
+func (writer *RecordWriterMarkdown) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
 ) {
@@ -35,34 +35,34 @@ func (this *RecordWriterMarkdown) Write(
 	}
 
 	currentJoinedHeader := outrec.GetKeysJoined()
-	if this.lastJoinedHeader != "" {
-		if currentJoinedHeader != this.lastJoinedHeader {
-			this.lastJoinedHeader = ""
-			if this.numHeaderLinesOutput > 0 {
-				fmt.Fprintf(ostream, this.writerOptions.ORS)
+	if writer.lastJoinedHeader != "" {
+		if currentJoinedHeader != writer.lastJoinedHeader {
+			writer.lastJoinedHeader = ""
+			if writer.numHeaderLinesOutput > 0 {
+				fmt.Fprintf(ostream, writer.writerOptions.ORS)
 			}
 		}
 	}
 
 	var buffer bytes.Buffer
 
-	if this.lastJoinedHeader == "" {
+	if writer.lastJoinedHeader == "" {
 		buffer.WriteString("|")
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(" ")
 			buffer.WriteString(pe.Key)
 			buffer.WriteString(" |")
 		}
-		buffer.WriteString(this.writerOptions.ORS)
+		buffer.WriteString(writer.writerOptions.ORS)
 
 		buffer.WriteString("|")
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(" --- |")
 		}
-		buffer.WriteString(this.writerOptions.ORS)
+		buffer.WriteString(writer.writerOptions.ORS)
 
-		this.lastJoinedHeader = currentJoinedHeader
-		this.numHeaderLinesOutput++
+		writer.lastJoinedHeader = currentJoinedHeader
+		writer.numHeaderLinesOutput++
 	}
 
 	buffer.WriteString("|")
@@ -71,7 +71,7 @@ func (this *RecordWriterMarkdown) Write(
 		buffer.WriteString(pe.Value.String())
 		buffer.WriteString(" |")
 	}
-	buffer.WriteString(this.writerOptions.ORS)
+	buffer.WriteString(writer.writerOptions.ORS)
 
 	fmt.Fprint(ostream, buffer.String())
 }

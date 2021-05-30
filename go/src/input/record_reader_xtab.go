@@ -34,7 +34,7 @@ func NewRecordReaderXTAB(readerOptions *cliutil.TReaderOptions) *RecordReaderXTA
 }
 
 // ----------------------------------------------------------------
-func (this *RecordReaderXTAB) Read(
+func (reader *RecordReaderXTAB) Read(
 	filenames []string,
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
@@ -43,24 +43,24 @@ func (this *RecordReaderXTAB) Read(
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
 			handle, err := lib.OpenStdin(
-				this.readerOptions.Prepipe,
-				this.readerOptions.FileInputEncoding,
+				reader.readerOptions.Prepipe,
+				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
 				errorChannel <- err
 			}
-			this.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
 					filename,
-					this.readerOptions.Prepipe,
-					this.readerOptions.FileInputEncoding,
+					reader.readerOptions.Prepipe,
+					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
 					errorChannel <- err
 				} else {
-					this.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
 					handle.Close()
 				}
 			}
@@ -69,7 +69,7 @@ func (this *RecordReaderXTAB) Read(
 	inputChannel <- types.NewEndOfStreamMarker(&context)
 }
 
-func (this *RecordReaderXTAB) processHandle(
+func (reader *RecordReaderXTAB) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
@@ -84,14 +84,14 @@ func (this *RecordReaderXTAB) processHandle(
 
 	eof := false
 	for !eof {
-		//line, err := lineReader.ReadString(this.readerOptions.IRS[0]) // xxx temp
+		//line, err := lineReader.ReadString(reader.readerOptions.IRS[0]) // xxx temp
 		line, err := lineReader.ReadString('\n')
 		if lib.IsEOF(err) {
 			err = nil
 			eof = true
 
 			if linesForRecord.Len() > 0 {
-				record, err := this.recordFromXTABLines(linesForRecord)
+				record, err := reader.recordFromXTABLines(linesForRecord)
 				if err != nil {
 					errorChannel <- err
 					return
@@ -109,11 +109,11 @@ func (this *RecordReaderXTAB) processHandle(
 		}
 
 		// Check for comments-in-data feature
-		if strings.HasPrefix(line, this.readerOptions.CommentString) {
-			if this.readerOptions.CommentHandling == cliutil.PassComments {
+		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+			if reader.readerOptions.CommentHandling == cliutil.PassComments {
 				inputChannel <- types.NewOutputString(line, context)
 				continue
-			} else if this.readerOptions.CommentHandling == cliutil.SkipComments {
+			} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
 				continue
 			}
 			// else comments are data
@@ -123,14 +123,14 @@ func (this *RecordReaderXTAB) processHandle(
 		// This is how to do a chomp:
 		line = strings.TrimRight(line, "\n")
 		line = strings.TrimRight(line, "\r")
-		//line = strings.TrimRight(line, this.readerOptions.IRS)
+		//line = strings.TrimRight(line, reader.readerOptions.IRS)
 
 		if line != "" {
 			linesForRecord.PushBack(line)
 
 		} else {
 			if linesForRecord.Len() > 0 {
-				record, err := this.recordFromXTABLines(linesForRecord)
+				record, err := reader.recordFromXTABLines(linesForRecord)
 				if err != nil {
 					errorChannel <- err
 					return
@@ -144,7 +144,7 @@ func (this *RecordReaderXTAB) processHandle(
 }
 
 // ----------------------------------------------------------------
-func (this *RecordReaderXTAB) recordFromXTABLines(
+func (reader *RecordReaderXTAB) recordFromXTABLines(
 	lines *list.List,
 ) (*types.Mlrmap, error) {
 	record := types.NewMlrmap()
@@ -153,7 +153,7 @@ func (this *RecordReaderXTAB) recordFromXTABLines(
 		line := entry.Value.(string)
 
 		// TODO -- incorporate IFS
-		kv := this.ifsRegex.Split(line, 2)
+		kv := reader.ifsRegex.Split(line, 2)
 		if len(kv) < 1 {
 			return nil, errors.New("Miller: internal coding error in XTAB reader")
 		}

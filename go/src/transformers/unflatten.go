@@ -122,21 +122,21 @@ func NewTransformerUnflatten(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUnflatten) Transform(
+func (tr *TransformerUnflatten) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUnflatten) unflattenAll(
+func (tr *TransformerUnflatten) unflattenAll(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		oFlatSep := this.oFlatSep
+		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
 			oFlatSep = inrecAndContext.Context.OFLATSEP
 		}
@@ -148,17 +148,17 @@ func (this *TransformerUnflatten) unflattenAll(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerUnflatten) unflattenSome(
+func (tr *TransformerUnflatten) unflattenSome(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		oFlatSep := this.oFlatSep
+		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
 			oFlatSep = inrecAndContext.Context.OFLATSEP
 		}
-		inrec.UnflattenFields(this.fieldNameSet, oFlatSep)
+		inrec.UnflattenFields(tr.fieldNameSet, oFlatSep)
 		outputChannel <- inrecAndContext
 	} else {
 		outputChannel <- inrecAndContext // end-of-stream marker

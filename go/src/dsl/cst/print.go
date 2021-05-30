@@ -164,36 +164,36 @@ type PrintStatementNode struct {
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildPrintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildPrintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePrintStatement)
-	return this.buildPrintxStatementNode(
+	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stdout,
 		"\n",
 	)
 }
 
-func (this *RootNode) BuildPrintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildPrintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePrintnStatement)
-	return this.buildPrintxStatementNode(
+	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stdout,
 		"",
 	)
 }
 
-func (this *RootNode) BuildEprintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEprintStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEprintStatement)
-	return this.buildPrintxStatementNode(
+	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stderr,
 		"\n",
 	)
 }
 
-func (this *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeEprintnStatement)
-	return this.buildPrintxStatementNode(
+	return root.buildPrintxStatementNode(
 		astNode,
 		os.Stderr,
 		"",
@@ -203,7 +203,7 @@ func (this *RootNode) BuildEprintnStatementNode(astNode *dsl.ASTNode) (IExecutab
 // ----------------------------------------------------------------
 // Common code for building print/eprint/printn/eprintn nodes
 
-func (this *RootNode) buildPrintxStatementNode(
+func (root *RootNode) buildPrintxStatementNode(
 	astNode *dsl.ASTNode,
 	defaultOutputStream *os.File,
 	terminator string,
@@ -220,12 +220,12 @@ func (this *RootNode) buildPrintxStatementNode(
 	if expressionsNode.Type == dsl.NodeTypeNoOp {
 		// Just 'print' without 'print $something'
 		expressionEvaluables = make([]IEvaluable, 1)
-		expressionEvaluable := this.BuildStringLiteralNode("")
+		expressionEvaluable := root.BuildStringLiteralNode("")
 		expressionEvaluables[0] = expressionEvaluable
 	} else if expressionsNode.Type == dsl.NodeTypeFunctionCallsite {
 		expressionEvaluables = make([]IEvaluable, len(expressionsNode.Children))
 		for i, childNode := range expressionsNode.Children {
-			expressionEvaluable, err := this.BuildEvaluableNode(childNode)
+			expressionEvaluable, err := root.BuildEvaluableNode(childNode)
 			if err != nil {
 				return nil, err
 			}
@@ -269,17 +269,17 @@ func (this *RootNode) buildPrintxStatementNode(
 		} else {
 			retval.printToRedirectFunc = retval.printToFileOrPipe
 
-			retval.redirectorTargetEvaluable, err = this.BuildEvaluableNode(redirectorTargetNode)
+			retval.redirectorTargetEvaluable, err = root.BuildEvaluableNode(redirectorTargetNode)
 			if err != nil {
 				return nil, err
 			}
 
 			if redirectorNode.Type == dsl.NodeTypeRedirectWrite {
-				retval.outputHandlerManager = output.NewFileWritetHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileWritetHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectAppend {
-				retval.outputHandlerManager = output.NewFileAppendHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewFileAppendHandlerManager(root.recordWriterOptions)
 			} else if redirectorNode.Type == dsl.NodeTypeRedirectPipe {
-				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(this.recordWriterOptions)
+				retval.outputHandlerManager = output.NewPipeWriteHandlerManager(root.recordWriterOptions)
 			} else {
 				return nil, errors.New(
 					fmt.Sprintf(
@@ -294,16 +294,16 @@ func (this *RootNode) buildPrintxStatementNode(
 	// Register this with the CST root node so that open file descriptrs can be
 	// closed, etc at end of stream.
 	if retval.outputHandlerManager != nil {
-		this.RegisterOutputHandlerManager(retval.outputHandlerManager)
+		root.RegisterOutputHandlerManager(retval.outputHandlerManager)
 	}
 
 	return retval, nil
 }
 
 // ----------------------------------------------------------------
-func (this *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	if len(this.expressionEvaluables) == 0 {
-		this.printToRedirectFunc(this.terminator, state)
+func (node *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	if len(node.expressionEvaluables) == 0 {
+		node.printToRedirectFunc(node.terminator, state)
 	} else {
 		// 5x faster than fmt.Print() separately: note that os.Stdout is
 		// non-buffered in Go whereas stdout is buffered in C.
@@ -313,7 +313,7 @@ func (this *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 		// Plus: we never have to worry about forgetting to do fflush(). :)
 		var buffer bytes.Buffer
 
-		for i, expressionEvaluable := range this.expressionEvaluables {
+		for i, expressionEvaluable := range node.expressionEvaluables {
 			if i > 0 {
 				buffer.WriteString(" ")
 			}
@@ -322,14 +322,14 @@ func (this *PrintStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 				buffer.WriteString(evaluation.String())
 			}
 		}
-		buffer.WriteString(this.terminator)
-		this.printToRedirectFunc(buffer.String(), state)
+		buffer.WriteString(node.terminator)
+		node.printToRedirectFunc(buffer.String(), state)
 	}
 	return nil, nil
 }
 
 // ----------------------------------------------------------------
-func (this *PrintStatementNode) printToStdout(
+func (node *PrintStatementNode) printToStdout(
 	outputString string,
 	state *runtime.State,
 ) error {
@@ -347,7 +347,7 @@ func (this *PrintStatementNode) printToStdout(
 }
 
 // ----------------------------------------------------------------
-func (this *PrintStatementNode) printToStderr(
+func (node *PrintStatementNode) printToStderr(
 	outputString string,
 	state *runtime.State,
 ) error {
@@ -356,11 +356,11 @@ func (this *PrintStatementNode) printToStderr(
 }
 
 // ----------------------------------------------------------------
-func (this *PrintStatementNode) printToFileOrPipe(
+func (node *PrintStatementNode) printToFileOrPipe(
 	outputString string,
 	state *runtime.State,
 ) error {
-	redirectorTarget := this.redirectorTargetEvaluable.Evaluate(state)
+	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)
 	if !redirectorTarget.IsString() {
 		return errors.New(
 			fmt.Sprintf(
@@ -371,6 +371,6 @@ func (this *PrintStatementNode) printToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
-	this.outputHandlerManager.WriteString(outputString, outputFileName)
+	node.outputHandlerManager.WriteString(outputString, outputFileName)
 	return nil
 }

@@ -12,7 +12,7 @@ import (
 )
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildStatementNode(
+func (root *RootNode) BuildStatementNode(
 	astNode *dsl.ASTNode,
 ) (IExecutable, error) {
 
@@ -21,44 +21,44 @@ func (this *RootNode) BuildStatementNode(
 	switch astNode.Type {
 
 	case dsl.NodeTypeAssignment:
-		statement, err = this.BuildAssignmentNode(astNode)
+		statement, err = root.BuildAssignmentNode(astNode)
 		if err != nil {
 			return nil, err
 		}
 
 	case dsl.NodeTypeUnset:
-		statement, err = this.BuildUnsetNode(astNode)
+		statement, err = root.BuildUnsetNode(astNode)
 		if err != nil {
 			return nil, err
 		}
 
 	case dsl.NodeTypeFilterStatement:
-		return this.BuildFilterStatementNode(astNode)
+		return root.BuildFilterStatementNode(astNode)
 	case dsl.NodeTypeBareBoolean:
-		return this.BuildFilterStatementNode(astNode)
+		return root.BuildFilterStatementNode(astNode)
 
 	case dsl.NodeTypePrintStatement:
-		return this.BuildPrintStatementNode(astNode)
+		return root.BuildPrintStatementNode(astNode)
 	case dsl.NodeTypePrintnStatement:
-		return this.BuildPrintnStatementNode(astNode)
+		return root.BuildPrintnStatementNode(astNode)
 	case dsl.NodeTypeEprintStatement:
-		return this.BuildEprintStatementNode(astNode)
+		return root.BuildEprintStatementNode(astNode)
 	case dsl.NodeTypeEprintnStatement:
-		return this.BuildEprintnStatementNode(astNode)
+		return root.BuildEprintnStatementNode(astNode)
 
 	case dsl.NodeTypeDumpStatement:
-		return this.BuildDumpStatementNode(astNode)
+		return root.BuildDumpStatementNode(astNode)
 	case dsl.NodeTypeEdumpStatement:
-		return this.BuildEdumpStatementNode(astNode)
+		return root.BuildEdumpStatementNode(astNode)
 
 	case dsl.NodeTypeTeeStatement:
-		return this.BuildTeeStatementNode(astNode)
+		return root.BuildTeeStatementNode(astNode)
 	case dsl.NodeTypeEmitFStatement:
-		return this.BuildEmitFStatementNode(astNode)
+		return root.BuildEmitFStatementNode(astNode)
 	case dsl.NodeTypeEmitStatement:
-		return this.BuildEmitStatementNode(astNode)
+		return root.BuildEmitStatementNode(astNode)
 	case dsl.NodeTypeEmitPStatement:
-		return this.BuildEmitPStatementNode(astNode)
+		return root.BuildEmitPStatementNode(astNode)
 
 	case dsl.NodeTypeBeginBlock:
 		return nil, errors.New(
@@ -70,21 +70,21 @@ func (this *RootNode) BuildStatementNode(
 		)
 
 	case dsl.NodeTypeIfChain:
-		return this.BuildIfChainNode(astNode)
+		return root.BuildIfChainNode(astNode)
 	case dsl.NodeTypeCondBlock:
-		return this.BuildCondBlockNode(astNode)
+		return root.BuildCondBlockNode(astNode)
 	case dsl.NodeTypeWhileLoop:
-		return this.BuildWhileLoopNode(astNode)
+		return root.BuildWhileLoopNode(astNode)
 	case dsl.NodeTypeDoWhileLoop:
-		return this.BuildDoWhileLoopNode(astNode)
+		return root.BuildDoWhileLoopNode(astNode)
 	case dsl.NodeTypeForLoopOneVariable:
-		return this.BuildForLoopOneVariableNode(astNode)
+		return root.BuildForLoopOneVariableNode(astNode)
 	case dsl.NodeTypeForLoopTwoVariable:
-		return this.BuildForLoopTwoVariableNode(astNode)
+		return root.BuildForLoopTwoVariableNode(astNode)
 	case dsl.NodeTypeForLoopMultivariable:
-		return this.BuildForLoopMultivariableNode(astNode)
+		return root.BuildForLoopMultivariableNode(astNode)
 	case dsl.NodeTypeTripleForLoop:
-		return this.BuildTripleForLoopNode(astNode)
+		return root.BuildTripleForLoopNode(astNode)
 
 	case dsl.NodeTypeFunctionDefinition:
 		return nil, errors.New(
@@ -95,14 +95,14 @@ func (this *RootNode) BuildStatementNode(
 			"Miller: subroutines may only be declared at top level.",
 		)
 	case dsl.NodeTypeSubroutineCallsite:
-		return this.BuildSubroutineCallsiteNode(astNode)
+		return root.BuildSubroutineCallsiteNode(astNode)
 
 	case dsl.NodeTypeBreak:
-		return this.BuildBreakNode(astNode)
+		return root.BuildBreakNode(astNode)
 	case dsl.NodeTypeContinue:
-		return this.BuildContinueNode(astNode)
+		return root.BuildContinueNode(astNode)
 	case dsl.NodeTypeReturn:
-		return this.BuildReturnNode(astNode)
+		return root.BuildReturnNode(astNode)
 
 	default:
 		return nil, errors.New(

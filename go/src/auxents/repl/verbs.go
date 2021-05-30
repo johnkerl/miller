@@ -57,7 +57,7 @@ func init() {
 
 // ----------------------------------------------------------------
 // No hash-table acceleration; things here are small, and the tool is interactive.
-func (this *Repl) findHandler(verbName string) *handlerInfo {
+func (repl *Repl) findHandler(verbName string) *handlerInfo {
 	for _, entry := range handlerLookupTable {
 		for _, entryVerbName := range entry.verbNames {
 			if entryVerbName == verbName {
@@ -70,7 +70,7 @@ func (this *Repl) findHandler(verbName string) *handlerInfo {
 
 // ----------------------------------------------------------------
 // Handles a single non-DSL statement like ':open foo.dat' or ':help'.
-func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
+func (repl *Repl) handleNonDSLLine(trimmedLine string) bool {
 	args := strings.Fields(trimmedLine)
 	if len(args) == 0 {
 		return false
@@ -84,20 +84,20 @@ func (this *Repl) handleNonDSLLine(trimmedLine string) bool {
 	if !strings.HasPrefix(verbName, ":") {
 		return false
 	}
-	handler := this.findHandler(verbName)
+	handler := repl.findHandler(verbName)
 	if handler == nil {
 		fmt.Printf("REPL verb %s not found.\n", verbName)
 		return true
 	}
 
-	if !handler.handlerFunc(this, args) {
-		handler.usageFunc(this)
+	if !handler.handlerFunc(repl, args) {
+		handler.usageFunc(repl)
 	}
 	return true
 }
 
 // ----------------------------------------------------------------
-func usageLoad(this *Repl) {
+func usageLoad(repl *Repl) {
 	fmt.Println(":load {one or more filenames containing Miller DSL statements}")
 	fmt.Println("If a filename is a directory, all \"*.mlr\" files will be loaded from within it.")
 	fmt.Print(
@@ -105,11 +105,11 @@ func usageLoad(this *Repl) {
 ':begin' or ':end', respectively, to execute them.) User-defined functions and
 subroutines ('func' and 'subr') are parsed and saved. Other statements are
 saved in a 'main' block.  (You can then type ':main' to execute them on any
-given record. See :open and :read for more on how to do this.)
+given record. See :open and :read for more on how to do repl.)
 `)
 }
 
-func handleLoad(this *Repl, args []string) bool {
+func handleLoad(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) < 1 {
 		return false
@@ -124,7 +124,7 @@ func handleLoad(this *Repl, args []string) bool {
 		}
 
 		for _, dslString := range dslStrings {
-			err = this.handleDSLStringBulk(dslString, this.doWarnings)
+			err = repl.handleDSLStringBulk(dslString, repl.doWarnings)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -134,10 +134,10 @@ func handleLoad(this *Repl, args []string) bool {
 }
 
 // ----------------------------------------------------------------
-func usageOpen(this *Repl) {
+func usageOpen(repl *Repl) {
 	fmt.Printf(
 		":open {one or more data-file names in the format specifed by %s %s}.\n",
-		this.exeName, this.replName,
+		repl.exeName, repl.replName,
 	)
 	fmt.Print(
 		`Then you can type :read to load the next record. Then any interactive
@@ -150,10 +150,10 @@ each record will be taken from standard input when you type :read.
 
 }
 
-func handleOpen(this *Repl, args []string) bool {
+func handleOpen(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
-	if openFilesPreCheck(this, args) {
-		this.openFiles(args)
+	if openFilesPreCheck(repl, args) {
+		repl.openFiles(args)
 	}
 	return true
 }
@@ -164,7 +164,7 @@ func handleOpen(this *Repl, args []string) bool {
 // use, if the user types ':open nonesuch' then we want to proactively say
 // something instead of waiting to show them an error only when they type
 // ':read'.
-func openFilesPreCheck(this *Repl, args []string) bool {
+func openFilesPreCheck(repl *Repl, args []string) bool {
 	if len(args) == 0 {
 		// Zero file names is stdin, which is readable
 	}
@@ -172,13 +172,13 @@ func openFilesPreCheck(this *Repl, args []string) bool {
 		fileInfo, err := os.Stat(arg)
 		if err != nil {
 			fmt.Printf("%s %s: could not open \"%s\"\n",
-				this.exeName, this.replName, arg,
+				repl.exeName, repl.replName, arg,
 			)
 			return false
 		}
 		if fileInfo.IsDir() {
 			fmt.Printf("%s %s: \"%s\" is a directory.\n",
-				this.exeName, this.replName, arg,
+				repl.exeName, repl.replName, arg,
 			)
 			return false
 		}
@@ -187,56 +187,56 @@ func openFilesPreCheck(this *Repl, args []string) bool {
 }
 
 // Also invoked from the main entry-point, hence split out as a separate method.
-func (this *Repl) openFiles(filenames []string) {
+func (repl *Repl) openFiles(filenames []string) {
 	// Remember for :reopen
-	this.options.FileNames = filenames
+	repl.options.FileNames = filenames
 
-	this.inputChannel = make(chan *types.RecordAndContext, 10)
-	this.errorChannel = make(chan error, 1)
+	repl.inputChannel = make(chan *types.RecordAndContext, 10)
+	repl.errorChannel = make(chan error, 1)
 
-	go this.recordReader.Read(
+	go repl.recordReader.Read(
 		filenames,
-		*this.runtimeState.Context,
-		this.inputChannel,
-		this.errorChannel,
+		*repl.runtimeState.Context,
+		repl.inputChannel,
+		repl.errorChannel,
 	)
 }
 
 // ----------------------------------------------------------------
-func usageReopen(this *Repl) {
+func usageReopen(repl *Repl) {
 	fmt.Println(":reopen with no arguments.")
 	fmt.Println("Like :open with the same filenames you provided at the time you typed :open.")
 }
 
-func handleReopen(this *Repl, args []string) bool {
+func handleReopen(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) != 0 {
 		return false
 	}
 
-	if openFilesPreCheck(this, this.options.FileNames) {
-		this.openFiles(this.options.FileNames)
+	if openFilesPreCheck(repl, repl.options.FileNames) {
+		repl.openFiles(repl.options.FileNames)
 	}
 	return true
 }
 
 // ----------------------------------------------------------------
-func usageRead(this *Repl) {
+func usageRead(repl *Repl) {
 	fmt.Println(":read with no arguments.")
 	fmt.Printf(
 		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
-		this.exeName, this.replName,
+		repl.exeName, repl.replName,
 	)
 	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
 	fmt.Println("write it out using :write.")
 }
 
-func handleRead(this *Repl, args []string) bool {
+func handleRead(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) != 0 {
 		return false
 	}
-	if this.inputChannel == nil {
+	if repl.inputChannel == nil {
 		fmt.Println("No open files")
 		return true
 	}
@@ -245,22 +245,22 @@ func handleRead(this *Repl, args []string) bool {
 	var err error = nil
 
 	select {
-	case recordAndContext = <-this.inputChannel:
+	case recordAndContext = <-repl.inputChannel:
 		break
-	case err = <-this.errorChannel:
+	case err = <-repl.errorChannel:
 		break
 	}
 
 	if err != nil {
 		fmt.Println(err)
-		this.inputChannel = nil
-		this.errorChannel = nil
+		repl.inputChannel = nil
+		repl.errorChannel = nil
 		return true
 	}
 
 	if recordAndContext != nil {
 		skipOrProcessRecord(
-			this,
+			repl,
 			recordAndContext,
 			false, // processingNotSkipping -- since we will let the user interact with this record
 			false, // testingByFilterExpression -- since we're just stepping by 1
@@ -271,26 +271,26 @@ func handleRead(this *Repl, args []string) bool {
 }
 
 // ----------------------------------------------------------------
-func usageContext(this *Repl) {
+func usageContext(repl *Repl) {
 	fmt.Println(":context with no arguments.")
 	fmt.Println("Displays the current context variables: NR, FNR, FILENUM, FILENAME.")
 }
 
-func handleContext(this *Repl, args []string) bool {
+func handleContext(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) != 0 {
 		return false
 	}
-	fmt.Println(this.runtimeState.Context.GetStatusString())
+	fmt.Println(repl.runtimeState.Context.GetStatusString())
 	return true
 }
 
 // ----------------------------------------------------------------
-func usageSkip(this *Repl) {
+func usageSkip(repl *Repl) {
 	fmt.Println(":skip {n} to read n records without invoking :main statements or printing the records.")
 	fmt.Printf(
 		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
-		this.exeName, this.replName,
+		repl.exeName, repl.replName,
 	)
 	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
 	fmt.Println("write it out using :write.")
@@ -300,8 +300,8 @@ func usageSkip(this *Repl) {
 	fmt.Println("Or: ':skip until intr' which means keep skipping until you type control-C to interrupt.")
 }
 
-func handleSkip(this *Repl, args []string) bool {
-	if this.inputChannel == nil {
+func handleSkip(repl *Repl, args []string) bool {
+	if repl.inputChannel == nil {
 		fmt.Println("No open files")
 		return true
 	}
@@ -316,7 +316,7 @@ func handleSkip(this *Repl, args []string) bool {
 		if !ok {
 			fmt.Printf("Could not parse \"%s\" as integer.\n", args[0])
 		} else {
-			handleSkipOrProcessN(this, n, false)
+			handleSkipOrProcessN(repl, n, false)
 		}
 		return true
 	} else if args[0] != "until" && args[0] != "u" {
@@ -329,17 +329,17 @@ func handleSkip(this *Repl, args []string) bool {
 		if len(args) == 1 && args[0] == "intr" {
 			dslString = "false"
 		}
-		handleSkipOrProcessUntil(this, dslString, false)
+		handleSkipOrProcessUntil(repl, dslString, false)
 		return true
 	}
 }
 
 // ----------------------------------------------------------------
-func usageProcess(this *Repl) {
+func usageProcess(repl *Repl) {
 	fmt.Println(":process {n} to read n records, invoking :main statements on them, and printing the records.")
 	fmt.Printf(
 		"Reads in the next record from file(s) listed by :open, or by %s %s.\n",
-		this.exeName, this.replName,
+		repl.exeName, repl.replName,
 	)
 	fmt.Println("Then you can operate on it with interactive statements, or :main, and you can")
 	fmt.Println("write it out using :write.")
@@ -349,8 +349,8 @@ func usageProcess(this *Repl) {
 	fmt.Println("Or: ':process until intr' which means keep processing until you type control-C to interrupt.")
 }
 
-func handleProcess(this *Repl, args []string) bool {
-	if this.inputChannel == nil {
+func handleProcess(repl *Repl, args []string) bool {
+	if repl.inputChannel == nil {
 		fmt.Println("No open files")
 		return true
 	}
@@ -365,7 +365,7 @@ func handleProcess(this *Repl, args []string) bool {
 		if !ok {
 			fmt.Printf("Could not parse \"%s\" as integer.\n", args[0])
 		} else {
-			handleSkipOrProcessN(this, n, true)
+			handleSkipOrProcessN(repl, n, true)
 		}
 		return true
 	} else if args[0] != "until" && args[0] != "u" {
@@ -378,36 +378,36 @@ func handleProcess(this *Repl, args []string) bool {
 		if len(args) == 1 && args[0] == "intr" {
 			dslString = "false"
 		}
-		handleSkipOrProcessUntil(this, dslString, true)
+		handleSkipOrProcessUntil(repl, dslString, true)
 		return true
 	}
 }
 
 // ----------------------------------------------------------------
-func handleSkipOrProcessN(this *Repl, n int, processingNotSkipping bool) {
+func handleSkipOrProcessN(repl *Repl, n int, processingNotSkipping bool) {
 	var recordAndContext *types.RecordAndContext = nil
 	var err error = nil
 
 	for i := 1; i <= n; i++ {
 		select {
-		case recordAndContext = <-this.inputChannel:
+		case recordAndContext = <-repl.inputChannel:
 			break
-		case err = <-this.errorChannel:
+		case err = <-repl.errorChannel:
 			break
-		case _ = <-this.appSignalNotificationChannel: // user typed control-C
+		case _ = <-repl.appSignalNotificationChannel: // user typed control-C
 			break
 		}
 
 		if err != nil {
 			fmt.Println(err)
-			this.inputChannel = nil
-			this.errorChannel = nil
+			repl.inputChannel = nil
+			repl.errorChannel = nil
 			return
 		}
 
 		if recordAndContext != nil {
 			shouldBreak := skipOrProcessRecord(
-				this,
+				repl,
 				recordAndContext,
 				processingNotSkipping,
 				false, // testingByFilterExpression -- since we're counting to N
@@ -419,25 +419,25 @@ func handleSkipOrProcessN(this *Repl, n int, processingNotSkipping bool) {
 	}
 }
 
-func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkipping bool) {
-	astRootNode, err := this.BuildASTFromStringWithMessage(dslString)
+func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkipping bool) {
+	astRootNode, err := repl.BuildASTFromStringWithMessage(dslString)
 	if err != nil {
 		// Error message already printed out
 		return
 	}
 
-	err = this.cstRootNode.IngestAST(
+	err = repl.cstRootNode.IngestAST(
 		astRootNode,
 		false, /*isFilter*/
 		true,  /*isReplImmediate*/
-		this.doWarnings,
+		repl.doWarnings,
 		false, // warningsAreFatal
 	)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	err = this.cstRootNode.Resolve()
+	err = repl.cstRootNode.Resolve()
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -448,11 +448,11 @@ func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkippin
 	for {
 		doubleBreak := false
 		select {
-		case recordAndContext = <-this.inputChannel:
+		case recordAndContext = <-repl.inputChannel:
 			break
-		case err = <-this.errorChannel:
+		case err = <-repl.errorChannel:
 			break
-		case _ = <-this.appSignalNotificationChannel: // user typed control-C
+		case _ = <-repl.appSignalNotificationChannel: // user typed control-C
 			doubleBreak = true
 			break
 		}
@@ -462,14 +462,14 @@ func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkippin
 
 		if err != nil {
 			fmt.Println(err)
-			this.inputChannel = nil
-			this.errorChannel = nil
+			repl.inputChannel = nil
+			repl.errorChannel = nil
 			return
 		}
 
 		if recordAndContext != nil {
 			shouldBreak := skipOrProcessRecord(
-				this,
+				repl,
 				recordAndContext,
 				processingNotSkipping,
 				true, // testingByFilterExpression -- since we're continuing until the filter expresssion is true
@@ -496,50 +496,50 @@ func handleSkipOrProcessUntil(this *Repl, dslString string, processingNotSkippin
 
 // Return value is true if an end-of-loop condition has been detected.
 func skipOrProcessRecord(
-	this *Repl,
+	repl *Repl,
 	recordAndContext *types.RecordAndContext,
 	processingNotSkipping bool, // TODO: make this an enum
 	testingByFilterExpression bool, // TODO: make this an enum
 ) bool { // TODO: make this an enum
 
 	// Acquire incremented NR/FNR/FILENAME/etc
-	this.runtimeState.Update(recordAndContext.Record, &recordAndContext.Context)
+	repl.runtimeState.Update(recordAndContext.Record, &recordAndContext.Context)
 
 	// End-of-stream marker
 	if recordAndContext.EndOfStream == true {
 		fmt.Println("End of record stream")
-		this.inputChannel = nil
-		this.errorChannel = nil
+		repl.inputChannel = nil
+		repl.errorChannel = nil
 		return true
 	}
 
 	// Strings to be printed from put/filter DSL print/dump/etc statements.
 	if recordAndContext.Record == nil {
 		if processingNotSkipping {
-			fmt.Fprint(this.outputStream, recordAndContext.OutputString)
+			fmt.Fprint(repl.outputStream, recordAndContext.OutputString)
 		}
 		return false
 	}
 
 	// Non-nil record to be printed
 	if processingNotSkipping {
-		outrec, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
+		outrec, err := repl.cstRootNode.ExecuteMainBlock(repl.runtimeState)
 		if err != nil {
 			fmt.Println(err)
 			return true
 		}
-		this.runtimeState.Inrec = outrec
-		writeRecord(this, this.runtimeState.Inrec)
+		repl.runtimeState.Inrec = outrec
+		writeRecord(repl, repl.runtimeState.Inrec)
 	}
 
 	if testingByFilterExpression {
-		_, err := this.cstRootNode.ExecuteREPLImmediate(this.runtimeState)
+		_, err := repl.cstRootNode.ExecuteREPLImmediate(repl.runtimeState)
 		if err != nil {
 			fmt.Println(err)
 			return true
 		}
 
-		filterBool, isBool := this.runtimeState.FilterExpression.GetBoolValue()
+		filterBool, isBool := repl.runtimeState.FilterExpression.GetBoolValue()
 		if !isBool {
 			filterBool = false
 		}
@@ -551,61 +551,61 @@ func skipOrProcessRecord(
 }
 
 // ----------------------------------------------------------------
-func usageWrite(this *Repl) {
+func usageWrite(repl *Repl) {
 	fmt.Println(":write with no arguments.")
 	fmt.Println("Sends the current record (maybe modifed by statements you enter)")
 	fmt.Printf("to standard output, with format as specified by %s %s.\n",
-		this.exeName, this.replName)
+		repl.exeName, repl.replName)
 }
-func handleWrite(this *Repl, args []string) bool {
+func handleWrite(repl *Repl, args []string) bool {
 	if len(args) != 1 {
 		return false
 	}
-	writeRecord(this, this.runtimeState.Inrec)
+	writeRecord(repl, repl.runtimeState.Inrec)
 	return true
 }
 
-func writeRecord(this *Repl, outrec *types.Mlrmap) {
+func writeRecord(repl *Repl, outrec *types.Mlrmap) {
 	if outrec != nil {
 		// E.g. '{"req": {"method": "GET", "path": "/api/check"}}' becomes
 		// req.method=GET,req.path=/api/check.
-		if this.options.WriterOptions.AutoFlatten {
-			outrec.Flatten(this.options.WriterOptions.OFLATSEP)
+		if repl.options.WriterOptions.AutoFlatten {
+			outrec.Flatten(repl.options.WriterOptions.OFLATSEP)
 		}
 		// E.g.  req.method=GET,req.path=/api/check becomes
 		// '{"req": {"method": "GET", "path": "/api/check"}}'
-		if this.options.WriterOptions.AutoUnflatten {
-			outrec.Unflatten(this.options.WriterOptions.OFLATSEP)
+		if repl.options.WriterOptions.AutoUnflatten {
+			outrec.Unflatten(repl.options.WriterOptions.OFLATSEP)
 		}
 	}
-	this.recordWriter.Write(outrec, this.outputStream)
+	repl.recordWriter.Write(outrec, repl.outputStream)
 }
 
 // ----------------------------------------------------------------
-func usageReadWrite(this *Repl) {
+func usageReadWrite(repl *Repl) {
 	fmt.Println(":rw with no arguments.")
 	fmt.Println("Same as ':r' followed by ':w'.")
 }
-func handleReadWrite(this *Repl, args []string) bool {
-	if !handleRead(this, args) {
+func handleReadWrite(repl *Repl, args []string) bool {
+	if !handleRead(repl, args) {
 		return false
 	}
-	if !handleWrite(this, args) {
+	if !handleWrite(repl, args) {
 		return false
 	}
 	return true
 }
 
 // ----------------------------------------------------------------
-func usageRedirectWrite(this *Repl) {
+func usageRedirectWrite(repl *Repl) {
 	fmt.Println(":> {filename} sends record-write output to the specified file.")
 	fmt.Println(":> with no arguments sends record-write output to stdout.")
 }
-func handleRedirectWrite(this *Repl, args []string) bool {
+func handleRedirectWrite(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) == 0 {
 		// TODO: fclose old if not already os.Stdout
-		this.outputStream = os.Stdout
+		repl.outputStream = os.Stdout
 		return true
 	}
 
@@ -622,23 +622,23 @@ func handleRedirectWrite(this *Repl, args []string) bool {
 	if err != nil {
 		fmt.Printf(
 			"%s %s: couldn't open \"%s\" for write.\n",
-			this.exeName, this.replName, filename,
+			repl.exeName, repl.replName, filename,
 		)
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
 
 	// TODO: fclose old if not already os.Stdout
-	this.outputStream = handle
+	repl.outputStream = handle
 
 	return true
 }
 
 // ----------------------------------------------------------------
-func usageRedirectAppend(this *Repl) {
+func usageRedirectAppend(repl *Repl) {
 	fmt.Println(":>> {filename}")
 	fmt.Println("Appends record-write output to the specified file.")
 }
-func handleRedirectAppend(this *Repl, args []string) bool {
+func handleRedirectAppend(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) != 1 {
 		return false
@@ -653,28 +653,28 @@ func handleRedirectAppend(this *Repl, args []string) bool {
 	if err != nil {
 		fmt.Printf(
 			"%s %s: couldn't open \"%s\" for write.\n",
-			this.exeName, this.replName, filename,
+			repl.exeName, repl.replName, filename,
 		)
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
 
 	// TODO: fclose old if not already os.Stdout
-	this.outputStream = handle
+	repl.outputStream = handle
 
 	return true
 }
 
 // ----------------------------------------------------------------
-func usageBegin(this *Repl) {
+func usageBegin(repl *Repl) {
 	fmt.Println(":begin with no arguments.")
 	fmt.Println("Executes any begin {...} blocks which have been entered.")
 }
-func handleBegin(this *Repl, args []string) bool {
+func handleBegin(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) != 0 {
 		return false
 	}
-	err := this.cstRootNode.ExecuteBeginBlocks(this.runtimeState)
+	err := repl.cstRootNode.ExecuteBeginBlocks(repl.runtimeState)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -682,17 +682,17 @@ func handleBegin(this *Repl, args []string) bool {
 }
 
 // ----------------------------------------------------------------
-func usageMain(this *Repl) {
+func usageMain(repl *Repl) {
 	fmt.Println(":main with no arguments.")
 	fmt.Println("Executes any statements outside of begin/end/func/subr which have been entered")
 	fmt.Println("with :load or multi-line input.")
 }
-func handleMain(this *Repl, args []string) bool {
+func handleMain(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) != 0 {
 		return false
 	}
-	_, err := this.cstRootNode.ExecuteMainBlock(this.runtimeState)
+	_, err := repl.cstRootNode.ExecuteMainBlock(repl.runtimeState)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -700,16 +700,16 @@ func handleMain(this *Repl, args []string) bool {
 }
 
 // ----------------------------------------------------------------
-func usageEnd(this *Repl) {
+func usageEnd(repl *Repl) {
 	fmt.Println(":end with no arguments.")
 	fmt.Println("Executes any end {...} blocks which have been entered.")
 }
-func handleEnd(this *Repl, args []string) bool {
+func handleEnd(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) != 0 {
 		return false
 	}
-	err := this.cstRootNode.ExecuteEndBlocks(this.runtimeState)
+	err := repl.cstRootNode.ExecuteEndBlocks(repl.runtimeState)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -717,7 +717,7 @@ func handleEnd(this *Repl, args []string) bool {
 }
 
 // ----------------------------------------------------------------
-func usageASTPrint(this *Repl) {
+func usageASTPrint(repl *Repl) {
 	fmt.Println(":astprint {format option}")
 	fmt.Println("Shows the AST (abstract syntax tree) associated with DSL statements entered in.")
 	fmt.Println("Format options:")
@@ -726,20 +726,20 @@ func usageASTPrint(this *Repl) {
 	fmt.Println("indent Prints AST as an indented tree expression.")
 	fmt.Println("none   Disables AST printing. (This is the default.)")
 }
-func handleASTPrint(this *Repl, args []string) bool {
+func handleASTPrint(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) != 1 {
 		return false
 	}
 	style := args[0]
 	if style == "parex" {
-		this.astPrintMode = ASTPrintParex
+		repl.astPrintMode = ASTPrintParex
 	} else if style == "parex1" {
-		this.astPrintMode = ASTPrintParexOneLine
+		repl.astPrintMode = ASTPrintParexOneLine
 	} else if style == "indent" {
-		this.astPrintMode = ASTPrintIndent
+		repl.astPrintMode = ASTPrintIndent
 	} else if style == "none" {
-		this.astPrintMode = ASTPrintNone
+		repl.astPrintMode = ASTPrintNone
 	} else {
 		fmt.Printf("Unrecognized style %s: see ':help :astprint'.\n", style)
 	}
@@ -747,24 +747,24 @@ func handleASTPrint(this *Repl, args []string) bool {
 }
 
 // ----------------------------------------------------------------
-func usageBlocks(this *Repl) {
+func usageBlocks(repl *Repl) {
 	fmt.Println(":blocks with no arguments.")
 	fmt.Println("Shows the number of begin{...} blocks that have been loaded, the number")
 	fmt.Println("of main-block statements that have been loaded with :load or non-immediate")
 	fmt.Println("multi-line input, and the number of end{...} blocks that have been loaded.")
 
 }
-func handleBlocks(this *Repl, args []string) bool {
+func handleBlocks(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) != 0 {
 		return false
 	}
-	this.cstRootNode.ShowBlockReport()
+	repl.cstRootNode.ShowBlockReport()
 	return true
 }
 
 // ----------------------------------------------------------------
-func usageQuit(this *Repl) {
+func usageQuit(repl *Repl) {
 	fmt.Println(":quit with no arguments.")
 	fmt.Println("Ends the Miller REPL session.")
 }
@@ -773,7 +773,7 @@ func usageQuit(this *Repl) {
 // though, to expose it for on-line help.
 
 // ----------------------------------------------------------------
-func usageHelp(this *Repl) {
+func usageHelp(repl *Repl) {
 	fmt.Println("Options:")
 	fmt.Println(":help intro")
 	fmt.Println(":help examples")
@@ -786,28 +786,28 @@ func usageHelp(this *Repl) {
 	fmt.Println(":help {function name}, e.g. :help sec2gmt")
 }
 
-func handleHelp(this *Repl, args []string) bool {
+func handleHelp(repl *Repl, args []string) bool {
 	args = args[1:] // Strip off verb ':help'
 	if len(args) == 0 {
-		usageHelp(this)
+		usageHelp(repl)
 		return true
 	}
 
 	for _, arg := range args {
-		handleHelpSingle(this, arg)
+		handleHelpSingle(repl, arg)
 	}
 
 	return true
 }
 
-func handleHelpSingle(this *Repl, arg string) {
+func handleHelpSingle(repl *Repl, arg string) {
 	if arg == "intro" {
-		showREPLIntro(this)
+		showREPLIntro(repl)
 		return
 	}
 
 	if arg == "examples" {
-		showREPLExamples(this)
+		showREPLExamples(repl)
 		return
 	}
 
@@ -825,7 +825,7 @@ func handleHelpSingle(this *Repl, arg string) {
 				fmt.Println()
 			}
 			PrintHighlightString(strings.Join(entry.verbNames, " or "))
-			entry.usageFunc(this)
+			entry.usageFunc(repl)
 		}
 		return
 	}
@@ -867,16 +867,16 @@ func handleHelpSingle(this *Repl, arg string) {
 		return
 	}
 
-	nonDSLHandler := this.findHandler(arg)
+	nonDSLHandler := repl.findHandler(arg)
 	if nonDSLHandler != nil {
-		nonDSLHandler.usageFunc(this)
+		nonDSLHandler.usageFunc(repl)
 		return
 	}
 
 	fmt.Printf("No help available for %s\n", arg)
 }
 
-func showREPLIntro(this *Repl) {
+func showREPLIntro(repl *Repl) {
 	PrintHighlightString("What the Miller REPL is:\n")
 	fmt.Println(
 		`The Miller REPL (read-evaluate-print loop) is an interactive counterpart
@@ -895,7 +895,7 @@ to record-processing using the put/filter DSL (domain-specific language).`)
 * Specify statements to be executed on each record -- which are anything outside of begin/end/func/subr.
 * Example:
   %s --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y end {print "GOODBYE"}`,
-		this.exeName)
+		repl.exeName)
 	fmt.Println()
 	fmt.Println()
 
@@ -957,7 +957,7 @@ etc. depending on your platform.`)
 }
 
 // ----------------------------------------------------------------
-func showREPLExamples(this *Repl) {
+func showREPLExamples(repl *Repl) {
 	PrintHighlightString("Immediately executed statements:\n")
 	fmt.Println(
 		`[mlr] 1+2

@@ -131,23 +131,23 @@ func NewTransformerGrep(
 	regexp *regexp.Regexp,
 	invert bool,
 ) (*TransformerGrep, error) {
-	this := &TransformerGrep{
+	tr := &TransformerGrep{
 		regexp: regexp,
 		invert: invert,
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerGrep) Transform(
+func (tr *TransformerGrep) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		inrecAsString := inrec.ToDKVPString()
-		matches := this.regexp.Match([]byte(inrecAsString))
-		if this.invert {
+		matches := tr.regexp.Match([]byte(inrecAsString))
+		if tr.invert {
 			if !matches {
 				outputChannel <- inrecAndContext
 			}

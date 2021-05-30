@@ -109,7 +109,7 @@ func ValidateStats2AccumulatorName(
 	return false
 }
 
-func (this *Stats2AccumulatorFactory) Make(
+func (factory *Stats2AccumulatorFactory) Make(
 	valueFieldName1 string,
 	valueFieldName2 string,
 	accumulatorName string,
@@ -163,56 +163,56 @@ func NewStats2LinRegOLSAccumulator(
 	}
 }
 
-func (this *Stats2LinRegOLSAccumulator) Ingest(
+func (acc *Stats2LinRegOLSAccumulator) Ingest(
 	x float64,
 	y float64,
 ) {
-	this.count++
-	this.sumx += x
-	this.sumy += y
-	this.sumx2 += x * x
-	this.sumxy += x * y
+	acc.count++
+	acc.sumx += x
+	acc.sumy += y
+	acc.sumx2 += x * x
+	acc.sumxy += x * y
 }
 
-func (this *Stats2LinRegOLSAccumulator) Populate(
+func (acc *Stats2LinRegOLSAccumulator) Populate(
 	valueFieldName1 string,
 	valueFieldName2 string,
 	outrec *types.Mlrmap,
 ) {
-	if this.count < 2 {
-		outrec.PutCopy(this.mOutputFieldName, types.MLRVAL_VOID)
-		outrec.PutCopy(this.bOutputFieldName, types.MLRVAL_VOID)
+	if acc.count < 2 {
+		outrec.PutCopy(acc.mOutputFieldName, types.MLRVAL_VOID)
+		outrec.PutCopy(acc.bOutputFieldName, types.MLRVAL_VOID)
 	} else {
 
-		m, b := lib.GetLinearRegressionOLS(this.count, this.sumx, this.sumx2, this.sumxy, this.sumy)
+		m, b := lib.GetLinearRegressionOLS(acc.count, acc.sumx, acc.sumx2, acc.sumxy, acc.sumy)
 
-		outrec.PutReference(this.mOutputFieldName, types.MlrvalPointerFromFloat64(m))
-		outrec.PutReference(this.bOutputFieldName, types.MlrvalPointerFromFloat64(b))
+		outrec.PutReference(acc.mOutputFieldName, types.MlrvalPointerFromFloat64(m))
+		outrec.PutReference(acc.bOutputFieldName, types.MlrvalPointerFromFloat64(b))
 	}
-	outrec.PutReference(this.nOutputFieldName, types.MlrvalPointerFromInt(this.count))
+	outrec.PutReference(acc.nOutputFieldName, types.MlrvalPointerFromInt(acc.count))
 }
 
-func (this *Stats2LinRegOLSAccumulator) Fit(
+func (acc *Stats2LinRegOLSAccumulator) Fit(
 	x float64,
 	y float64,
 	outrec *types.Mlrmap,
 ) {
 
-	if !this.fitReady {
+	if !acc.fitReady {
 		// Idea for hold-and-fit in stats2.go is:
 		// * We've ingested say 10,000 records
 		// * After the end of those we compute m and b
 		// * Then for all 10,000 records we compute y = m*x + b
 		// The fitReady flag keeps us from recomputing the linear fit 10,000 times
-		this.m, this.b = lib.GetLinearRegressionOLS(this.count, this.sumx, this.sumx2, this.sumxy, this.sumy)
-		this.fitReady = true
+		acc.m, acc.b = lib.GetLinearRegressionOLS(acc.count, acc.sumx, acc.sumx2, acc.sumxy, acc.sumy)
+		acc.fitReady = true
 	}
 
-	if this.count < 2 {
-		outrec.PutCopy(this.fitOutputFieldName, types.MLRVAL_VOID)
+	if acc.count < 2 {
+		outrec.PutCopy(acc.fitOutputFieldName, types.MLRVAL_VOID)
 	} else {
-		yfit := this.m*x + this.b
-		outrec.PutReference(this.fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
+		yfit := acc.m*x + acc.b
+		outrec.PutReference(acc.fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
 	}
 }
 
@@ -251,52 +251,52 @@ func NewStats2LogiRegAccumulator(
 	}
 }
 
-func (this *Stats2LogiRegAccumulator) Ingest(
+func (acc *Stats2LogiRegAccumulator) Ingest(
 	x float64,
 	y float64,
 ) {
-	this.xs = append(this.xs, x) // append is smart about cap-increase via doubling
-	this.ys = append(this.ys, y) // append is smart about cap-increase via doubling
+	acc.xs = append(acc.xs, x) // append is smart about cap-increase via doubling
+	acc.ys = append(acc.ys, y) // append is smart about cap-increase via doubling
 }
 
-func (this *Stats2LogiRegAccumulator) Populate(
+func (acc *Stats2LogiRegAccumulator) Populate(
 	valueFieldName1 string,
 	valueFieldName2 string,
 	outrec *types.Mlrmap,
 ) {
 
-	if len(this.xs) < 2 {
-		outrec.PutCopy(this.mOutputFieldName, types.MLRVAL_VOID)
-		outrec.PutCopy(this.bOutputFieldName, types.MLRVAL_VOID)
+	if len(acc.xs) < 2 {
+		outrec.PutCopy(acc.mOutputFieldName, types.MLRVAL_VOID)
+		outrec.PutCopy(acc.bOutputFieldName, types.MLRVAL_VOID)
 	} else {
-		m, b := lib.LogisticRegression(this.xs, this.ys)
-		outrec.PutCopy(this.mOutputFieldName, types.MlrvalPointerFromFloat64(m))
-		outrec.PutCopy(this.bOutputFieldName, types.MlrvalPointerFromFloat64(b))
+		m, b := lib.LogisticRegression(acc.xs, acc.ys)
+		outrec.PutCopy(acc.mOutputFieldName, types.MlrvalPointerFromFloat64(m))
+		outrec.PutCopy(acc.bOutputFieldName, types.MlrvalPointerFromFloat64(b))
 	}
-	outrec.PutReference(this.nOutputFieldName, types.MlrvalPointerFromInt(len(this.xs)))
+	outrec.PutReference(acc.nOutputFieldName, types.MlrvalPointerFromInt(len(acc.xs)))
 }
 
-func (this *Stats2LogiRegAccumulator) Fit(
+func (acc *Stats2LogiRegAccumulator) Fit(
 	x float64,
 	y float64,
 	outrec *types.Mlrmap,
 ) {
 
-	if !this.fitReady {
+	if !acc.fitReady {
 		// Idea for hold-and-fit in stats2.go is:
 		// * We've ingested say 10,000 records
 		// * After the end of those we compute m and b
 		// * Then for all 10,000 records we compute y = m*x + b
 		// The fitReady flag keeps us from recomputing the linear fit 10,000 times
-		this.m, this.b = lib.LogisticRegression(this.xs, this.ys)
-		this.fitReady = true
+		acc.m, acc.b = lib.LogisticRegression(acc.xs, acc.ys)
+		acc.fitReady = true
 	}
 
-	if len(this.xs) < 2 {
-		outrec.PutCopy(this.fitOutputFieldName, types.MLRVAL_VOID)
+	if len(acc.xs) < 2 {
+		outrec.PutCopy(acc.fitOutputFieldName, types.MLRVAL_VOID)
 	} else {
-		yfit := 1.0 / (1.0 + math.Exp(-this.m*x-this.b))
-		outrec.PutReference(this.fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
+		yfit := 1.0 / (1.0 + math.Exp(-acc.m*x-acc.b))
+		outrec.PutReference(acc.fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
 	}
 }
 
@@ -332,43 +332,43 @@ func NewStats2R2Accumulator(
 	}
 }
 
-func (this *Stats2R2Accumulator) Ingest(
+func (acc *Stats2R2Accumulator) Ingest(
 	x float64,
 	y float64,
 ) {
-	this.count++
-	this.sumx += x
-	this.sumy += y
-	this.sumx2 += x * x
-	this.sumxy += x * y
-	this.sumy2 += y * y
+	acc.count++
+	acc.sumx += x
+	acc.sumy += y
+	acc.sumx2 += x * x
+	acc.sumxy += x * y
+	acc.sumy2 += y * y
 }
 
-func (this *Stats2R2Accumulator) Populate(
+func (acc *Stats2R2Accumulator) Populate(
 	valueFieldName1 string,
 	valueFieldName2 string,
 	outrec *types.Mlrmap,
 ) {
 
-	if this.count < 2 {
-		outrec.PutCopy(this.r2OutputFieldName, types.MLRVAL_VOID)
+	if acc.count < 2 {
+		outrec.PutCopy(acc.r2OutputFieldName, types.MLRVAL_VOID)
 	} else {
-		n := float64(this.count)
-		sumx := this.sumx
-		sumy := this.sumy
-		sumx2 := this.sumx2
-		sumy2 := this.sumy2
-		sumxy := this.sumxy
+		n := float64(acc.count)
+		sumx := acc.sumx
+		sumy := acc.sumy
+		sumx2 := acc.sumx2
+		sumy2 := acc.sumy2
+		sumxy := acc.sumxy
 		numerator := n*sumxy - sumx*sumy
 		numerator = numerator * numerator
 		denominator := (n*sumx2 - sumx*sumx) * (n*sumy2 - sumy*sumy)
 		output := numerator / denominator
-		outrec.PutReference(this.r2OutputFieldName, types.MlrvalPointerFromFloat64(output))
+		outrec.PutReference(acc.r2OutputFieldName, types.MlrvalPointerFromFloat64(output))
 	}
 }
 
 // Trivial function; there is no fit-feature here
-func (this *Stats2R2Accumulator) Fit(
+func (acc *Stats2R2Accumulator) Fit(
 	x float64,
 	y float64,
 	outrec *types.Mlrmap,
@@ -473,42 +473,42 @@ func NewStats2CorrCovAccumulator(
 	}
 }
 
-func (this *Stats2CorrCovAccumulator) Ingest(
+func (acc *Stats2CorrCovAccumulator) Ingest(
 	x float64,
 	y float64,
 ) {
-	this.count++
-	this.sumx += x
-	this.sumy += y
-	this.sumx2 += x * x
-	this.sumxy += x * y
-	this.sumy2 += y * y
+	acc.count++
+	acc.sumx += x
+	acc.sumy += y
+	acc.sumx2 += x * x
+	acc.sumxy += x * y
+	acc.sumy2 += y * y
 }
 
-func (this *Stats2CorrCovAccumulator) Populate(
+func (acc *Stats2CorrCovAccumulator) Populate(
 	valueFieldName1 string,
 	valueFieldName2 string,
 	outrec *types.Mlrmap,
 ) {
 
-	if this.doWhich == DO_COVX {
-		key00 := this.covx00OutputFieldName
-		key01 := this.covx01OutputFieldName
-		key10 := this.covx10OutputFieldName
-		key11 := this.covx11OutputFieldName
-		if this.count < 2 {
+	if acc.doWhich == DO_COVX {
+		key00 := acc.covx00OutputFieldName
+		key01 := acc.covx01OutputFieldName
+		key10 := acc.covx10OutputFieldName
+		key11 := acc.covx11OutputFieldName
+		if acc.count < 2 {
 			outrec.PutCopy(key00, types.MLRVAL_VOID)
 			outrec.PutCopy(key01, types.MLRVAL_VOID)
 			outrec.PutCopy(key10, types.MLRVAL_VOID)
 			outrec.PutCopy(key11, types.MLRVAL_VOID)
 		} else {
 			Q := lib.GetCovMatrix(
-				this.count,
-				this.sumx,
-				this.sumx2,
-				this.sumy,
-				this.sumy2,
-				this.sumxy,
+				acc.count,
+				acc.sumx,
+				acc.sumx2,
+				acc.sumy,
+				acc.sumy2,
+				acc.sumxy,
 			)
 			outrec.PutReference(key00, types.MlrvalPointerFromFloat64(Q[0][0]))
 			outrec.PutReference(key01, types.MlrvalPointerFromFloat64(Q[0][1]))
@@ -516,26 +516,26 @@ func (this *Stats2CorrCovAccumulator) Populate(
 			outrec.PutReference(key11, types.MlrvalPointerFromFloat64(Q[1][1]))
 		}
 
-	} else if this.doWhich == DO_LINREG_PCA {
-		keym := this.pca_mOutputFieldName
-		keyb := this.pca_bOutputFieldName
-		keyn := this.pca_nOutputFieldName
-		keyq := this.pca_qOutputFieldName
+	} else if acc.doWhich == DO_LINREG_PCA {
+		keym := acc.pca_mOutputFieldName
+		keyb := acc.pca_bOutputFieldName
+		keyn := acc.pca_nOutputFieldName
+		keyq := acc.pca_qOutputFieldName
 
-		keyl1 := this.pca_l1OutputFieldName
-		keyl2 := this.pca_l2OutputFieldName
-		keyv11 := this.pca_v11OutputFieldName
-		keyv12 := this.pca_v12OutputFieldName
-		keyv21 := this.pca_v21OutputFieldName
-		keyv22 := this.pca_v22OutputFieldName
+		keyl1 := acc.pca_l1OutputFieldName
+		keyl2 := acc.pca_l2OutputFieldName
+		keyv11 := acc.pca_v11OutputFieldName
+		keyv12 := acc.pca_v12OutputFieldName
+		keyv21 := acc.pca_v21OutputFieldName
+		keyv22 := acc.pca_v22OutputFieldName
 
-		if this.count < 2 {
+		if acc.count < 2 {
 			outrec.PutCopy(keym, types.MLRVAL_VOID)
 			outrec.PutCopy(keyb, types.MLRVAL_VOID)
 			outrec.PutCopy(keyn, types.MLRVAL_VOID)
 			outrec.PutCopy(keyq, types.MLRVAL_VOID)
 
-			if this.doVerbose {
+			if acc.doVerbose {
 
 				outrec.PutCopy(keyl1, types.MLRVAL_VOID)
 				outrec.PutCopy(keyl2, types.MLRVAL_VOID)
@@ -546,26 +546,26 @@ func (this *Stats2CorrCovAccumulator) Populate(
 			}
 		} else {
 			Q := lib.GetCovMatrix(
-				this.count,
-				this.sumx,
-				this.sumx2,
-				this.sumy,
-				this.sumy2,
-				this.sumxy,
+				acc.count,
+				acc.sumx,
+				acc.sumx2,
+				acc.sumy,
+				acc.sumy2,
+				acc.sumxy,
 			)
 
 			l1, l2, v1, v2 := lib.GetRealSymmetricEigensystem(Q)
 
-			x_mean := this.sumx / float64(this.count)
-			y_mean := this.sumy / float64(this.count)
+			x_mean := acc.sumx / float64(acc.count)
+			y_mean := acc.sumy / float64(acc.count)
 			m, b, q := lib.GetLinearRegressionPCA(l1, l2, v1, v2, x_mean, y_mean)
 
 			outrec.PutReference(keym, types.MlrvalPointerFromFloat64(m))
 			outrec.PutReference(keyb, types.MlrvalPointerFromFloat64(b))
-			outrec.PutReference(keyn, types.MlrvalPointerFromInt(this.count))
+			outrec.PutReference(keyn, types.MlrvalPointerFromInt(acc.count))
 			outrec.PutReference(keyq, types.MlrvalPointerFromFloat64(q))
 
-			if this.doVerbose {
+			if acc.doVerbose {
 				outrec.PutReference(keyl1, types.MlrvalPointerFromFloat64(l1))
 				outrec.PutReference(keyl2, types.MlrvalPointerFromFloat64(l2))
 				outrec.PutReference(keyv11, types.MlrvalPointerFromFloat64(v1[0]))
@@ -575,17 +575,17 @@ func (this *Stats2CorrCovAccumulator) Populate(
 			}
 		}
 	} else {
-		key := this.corrOutputFieldName
-		if this.doWhich == DO_COV {
-			key = this.covOutputFieldName
+		key := acc.corrOutputFieldName
+		if acc.doWhich == DO_COV {
+			key = acc.covOutputFieldName
 		}
-		if this.count < 2 {
+		if acc.count < 2 {
 			outrec.PutCopy(key, types.MLRVAL_VOID)
 		} else {
-			output := lib.GetCov(this.count, this.sumx, this.sumy, this.sumxy)
-			if this.doWhich == DO_CORR {
-				sigmax := math.Sqrt(lib.GetVar(this.count, this.sumx, this.sumx2))
-				sigmay := math.Sqrt(lib.GetVar(this.count, this.sumy, this.sumy2))
+			output := lib.GetCov(acc.count, acc.sumx, acc.sumy, acc.sumxy)
+			if acc.doWhich == DO_CORR {
+				sigmax := math.Sqrt(lib.GetVar(acc.count, acc.sumx, acc.sumx2))
+				sigmay := math.Sqrt(lib.GetVar(acc.count, acc.sumy, acc.sumy2))
 				output = output / sigmax / sigmay
 			}
 			outrec.PutReference(key, types.MlrvalPointerFromFloat64(output))
@@ -593,36 +593,36 @@ func (this *Stats2CorrCovAccumulator) Populate(
 	}
 }
 
-func (this *Stats2CorrCovAccumulator) Fit(
+func (acc *Stats2CorrCovAccumulator) Fit(
 	x float64,
 	y float64,
 	outrec *types.Mlrmap,
 ) {
-	if this.doWhich != DO_LINREG_PCA {
+	if acc.doWhich != DO_LINREG_PCA {
 		return
 	}
 
-	if !this.fitReady {
+	if !acc.fitReady {
 		// Idea for hold-and-fit in stats2.go is:
 		// * We've ingested say 10,000 records
 		// * After the end of those we compute m and b
 		// * Then for all 10,000 records we compute y = m*x + b
 		// The fitReady flag keeps us from recomputing the linear fit 10,000 times
-		Q := lib.GetCovMatrix(this.count, this.sumx, this.sumx2, this.sumy, this.sumy2, this.sumxy)
+		Q := lib.GetCovMatrix(acc.count, acc.sumx, acc.sumx2, acc.sumy, acc.sumy2, acc.sumxy)
 
 		l1, l2, v1, v2 := lib.GetRealSymmetricEigensystem(Q)
 
-		x_mean := this.sumx / float64(this.count)
-		y_mean := this.sumy / float64(this.count)
-		this.m, this.b, this.q = lib.GetLinearRegressionPCA(l1, l2, v1, v2, x_mean, y_mean)
+		x_mean := acc.sumx / float64(acc.count)
+		y_mean := acc.sumy / float64(acc.count)
+		acc.m, acc.b, acc.q = lib.GetLinearRegressionPCA(l1, l2, v1, v2, x_mean, y_mean)
 
-		this.fitReady = true
+		acc.fitReady = true
 	}
-	if this.count < 2 {
-		outrec.PutCopy(this.pca_fitOutputFieldName, types.MLRVAL_VOID)
+	if acc.count < 2 {
+		outrec.PutCopy(acc.pca_fitOutputFieldName, types.MLRVAL_VOID)
 	} else {
-		yfit := this.m*x + this.b
-		outrec.PutCopy(this.pca_fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
+		yfit := acc.m*x + acc.b
+		outrec.PutCopy(acc.pca_fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
 	}
 }
 

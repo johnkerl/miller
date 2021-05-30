@@ -163,19 +163,19 @@ func NewTransformerHavingFields(
 	regexString string,
 ) (*TransformerHavingFields, error) {
 
-	this := &TransformerHavingFields{}
+	tr := &TransformerHavingFields{}
 
 	if fieldNames != nil {
-		this.fieldNames = fieldNames
-		this.numFieldNames = len(fieldNames)
-		this.fieldNameSet = lib.StringListToSet(fieldNames)
+		tr.fieldNames = fieldNames
+		tr.numFieldNames = len(fieldNames)
+		tr.fieldNameSet = lib.StringListToSet(fieldNames)
 
 		if havingFieldsCriterion == havingFieldsAtLeast {
-			this.recordTransformerFunc = this.transformHavingFieldsAtLeast
+			tr.recordTransformerFunc = tr.transformHavingFieldsAtLeast
 		} else if havingFieldsCriterion == havingFieldsWhichAre {
-			this.recordTransformerFunc = this.transformHavingFieldsWhichAre
+			tr.recordTransformerFunc = tr.transformHavingFieldsWhichAre
 		} else if havingFieldsCriterion == havingFieldsAtMost {
-			this.recordTransformerFunc = this.transformHavingFieldsAtMost
+			tr.recordTransformerFunc = tr.transformHavingFieldsAtMost
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
@@ -195,32 +195,32 @@ func NewTransformerHavingFields(
 			os.Exit(1)
 			// return nil, err
 		}
-		this.regex = regex
+		tr.regex = regex
 
 		if havingFieldsCriterion == havingAllFieldsMatching {
-			this.recordTransformerFunc = this.transformHavingAllFieldsMatching
+			tr.recordTransformerFunc = tr.transformHavingAllFieldsMatching
 		} else if havingFieldsCriterion == havingAnyFieldsMatching {
-			this.recordTransformerFunc = this.transformHavingAnyFieldsMatching
+			tr.recordTransformerFunc = tr.transformHavingAnyFieldsMatching
 		} else if havingFieldsCriterion == havingNoFieldsMatching {
-			this.recordTransformerFunc = this.transformHavingNoFieldsMatching
+			tr.recordTransformerFunc = tr.transformHavingNoFieldsMatching
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerHavingFields) Transform(
+func (tr *TransformerHavingFields) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerHavingFields) transformHavingFieldsAtLeast(
+func (tr *TransformerHavingFields) transformHavingFieldsAtLeast(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -228,9 +228,9 @@ func (this *TransformerHavingFields) transformHavingFieldsAtLeast(
 		inrec := inrecAndContext.Record
 		numFound := 0
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if this.fieldNameSet[pe.Key] {
+			if tr.fieldNameSet[pe.Key] {
 				numFound++
-				if numFound == this.numFieldNames {
+				if numFound == tr.numFieldNames {
 					outputChannel <- inrecAndContext
 					return
 				}
@@ -242,17 +242,17 @@ func (this *TransformerHavingFields) transformHavingFieldsAtLeast(
 	}
 }
 
-func (this *TransformerHavingFields) transformHavingFieldsWhichAre(
+func (tr *TransformerHavingFields) transformHavingFieldsWhichAre(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		if inrec.FieldCount != this.numFieldNames {
+		if inrec.FieldCount != tr.numFieldNames {
 			return
 		}
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if !this.fieldNameSet[pe.Key] {
+			if !tr.fieldNameSet[pe.Key] {
 				return
 			}
 		}
@@ -262,14 +262,14 @@ func (this *TransformerHavingFields) transformHavingFieldsWhichAre(
 	}
 }
 
-func (this *TransformerHavingFields) transformHavingFieldsAtMost(
+func (tr *TransformerHavingFields) transformHavingFieldsAtMost(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if !this.fieldNameSet[pe.Key] {
+			if !tr.fieldNameSet[pe.Key] {
 				return
 			}
 		}
@@ -280,14 +280,14 @@ func (this *TransformerHavingFields) transformHavingFieldsAtMost(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerHavingFields) transformHavingAllFieldsMatching(
+func (tr *TransformerHavingFields) transformHavingAllFieldsMatching(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if !this.regex.MatchString(pe.Key) {
+			if !tr.regex.MatchString(pe.Key) {
 				return
 			}
 		}
@@ -297,14 +297,14 @@ func (this *TransformerHavingFields) transformHavingAllFieldsMatching(
 	}
 }
 
-func (this *TransformerHavingFields) transformHavingAnyFieldsMatching(
+func (tr *TransformerHavingFields) transformHavingAnyFieldsMatching(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if this.regex.MatchString(pe.Key) {
+			if tr.regex.MatchString(pe.Key) {
 				outputChannel <- inrecAndContext
 				return
 			}
@@ -314,14 +314,14 @@ func (this *TransformerHavingFields) transformHavingAnyFieldsMatching(
 	}
 }
 
-func (this *TransformerHavingFields) transformHavingNoFieldsMatching(
+func (tr *TransformerHavingFields) transformHavingNoFieldsMatching(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if this.regex.MatchString(pe.Key) {
+			if tr.regex.MatchString(pe.Key) {
 				return
 			}
 		}

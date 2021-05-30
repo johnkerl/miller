@@ -135,23 +135,23 @@ func NewTransformerCut(
 	doRegexes bool,
 ) (*TransformerCut, error) {
 
-	this := &TransformerCut{}
+	tr := &TransformerCut{}
 
 	if !doRegexes {
-		this.fieldNameList = fieldNames
-		this.fieldNameSet = lib.StringListToSet(fieldNames)
+		tr.fieldNameList = fieldNames
+		tr.fieldNameSet = lib.StringListToSet(fieldNames)
 		if !doComplement {
 			if !doArgOrder {
-				this.recordTransformerFunc = this.includeWithInputOrder
+				tr.recordTransformerFunc = tr.includeWithInputOrder
 			} else {
-				this.recordTransformerFunc = this.includeWithArgOrder
+				tr.recordTransformerFunc = tr.includeWithArgOrder
 			}
 		} else {
-			this.recordTransformerFunc = this.exclude
+			tr.recordTransformerFunc = tr.exclude
 		}
 	} else {
-		this.doComplement = doComplement
-		this.regexes = make([]*regexp.Regexp, len(fieldNames))
+		tr.doComplement = doComplement
+		tr.regexes = make([]*regexp.Regexp, len(fieldNames))
 		for i, regexString := range fieldNames {
 			// Handles "a.*b"i Miller case-insensitive-regex specification
 			regex, err := lib.CompileMillerRegex(regexString)
@@ -163,25 +163,25 @@ func NewTransformerCut(
 				)
 				os.Exit(1)
 			}
-			this.regexes[i] = regex
+			tr.regexes[i] = regex
 		}
-		this.recordTransformerFunc = this.processWithRegexes
+		tr.recordTransformerFunc = tr.processWithRegexes
 	}
 
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCut) Transform(
+func (tr *TransformerCut) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	this.recordTransformerFunc(inrecAndContext, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputChannel)
 }
 
 // ----------------------------------------------------------------
 // mlr cut -f a,b,c
-func (this *TransformerCut) includeWithInputOrder(
+func (tr *TransformerCut) includeWithInputOrder(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -190,7 +190,7 @@ func (this *TransformerCut) includeWithInputOrder(
 		outrec := types.NewMlrmap()
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			fieldName := pe.Key
-			_, wanted := this.fieldNameSet[fieldName]
+			_, wanted := tr.fieldNameSet[fieldName]
 			if wanted {
 				outrec.PutReference(fieldName, pe.Value) // inrec will be GC'ed
 			}
@@ -204,14 +204,14 @@ func (this *TransformerCut) includeWithInputOrder(
 
 // ----------------------------------------------------------------
 // mlr cut -o -f a,b,c
-func (this *TransformerCut) includeWithArgOrder(
+func (tr *TransformerCut) includeWithArgOrder(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		outrec := types.NewMlrmap()
-		for _, fieldName := range this.fieldNameList {
+		for _, fieldName := range tr.fieldNameList {
 			value := inrec.Get(fieldName)
 			if value != nil {
 				outrec.PutReference(fieldName, value) // inrec will be GC'ed
@@ -226,13 +226,13 @@ func (this *TransformerCut) includeWithArgOrder(
 
 // ----------------------------------------------------------------
 // mlr cut -x -f a,b,c
-func (this *TransformerCut) exclude(
+func (tr *TransformerCut) exclude(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		for _, fieldName := range this.fieldNameList {
+		for _, fieldName := range tr.fieldNameList {
 			if inrec.Has(fieldName) {
 				inrec.Remove(fieldName)
 			}
@@ -242,7 +242,7 @@ func (this *TransformerCut) exclude(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerCut) processWithRegexes(
+func (tr *TransformerCut) processWithRegexes(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
@@ -251,14 +251,14 @@ func (this *TransformerCut) processWithRegexes(
 		newrec := types.NewMlrmapAsRecord()
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			matchesAny := false
-			for _, regex := range this.regexes {
+			for _, regex := range tr.regexes {
 				if regex.MatchString(pe.Key) {
 					matchesAny = true
 					break
 				}
 			}
 			// Boolean XOR is spelt '!=' in Go
-			if matchesAny != this.doComplement {
+			if matchesAny != tr.doComplement {
 				// Pointer-motion is OK since the inrec is being hereby discarded.
 				// We're simply transferring ownership to the newrec.
 				newrec.PutReference(pe.Key, pe.Value)

@@ -90,20 +90,20 @@ type TransformerSec2GMTDate struct {
 func NewTransformerSec2GMTDate(
 	fieldNames string,
 ) (*TransformerSec2GMTDate, error) {
-	this := &TransformerSec2GMTDate{
+	tr := &TransformerSec2GMTDate{
 		fieldNameList: lib.SplitString(fieldNames, ","),
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSec2GMTDate) Transform(
+func (tr *TransformerSec2GMTDate) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		for _, fieldName := range this.fieldNameList {
+		for _, fieldName := range tr.fieldNameList {
 			value := inrec.Get(fieldName)
 			if value != nil {
 				inrec.PutReference(fieldName, types.MlrvalSec2GMTDate(value))

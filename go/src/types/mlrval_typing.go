@@ -36,15 +36,15 @@ func NewTypeGatedMlrvalName(
 	}, nil
 }
 
-func (this *TypeGatedMlrvalName) Check(value *Mlrval) error {
+func (tname *TypeGatedMlrvalName) Check(value *Mlrval) error {
 	bit := value.GetTypeBit()
-	if bit&this.TypeMask != 0 {
+	if bit&tname.TypeMask != 0 {
 		return nil
 	} else {
 		return errors.New(
 			fmt.Sprintf(
 				"Miller: couldn't assign variable %s %s from value %s %s\n",
-				this.TypeName, this.Name, value.GetTypeName(), value.String(),
+				tname.TypeName, tname.Name, value.GetTypeName(), value.String(),
 			),
 		)
 	}
@@ -77,29 +77,29 @@ func NewTypeGatedMlrvalVariable(
 	}, nil
 }
 
-func (this *TypeGatedMlrvalVariable) GetName() string {
-	return this.typeGatedMlrvalName.Name
+func (tvar *TypeGatedMlrvalVariable) GetName() string {
+	return tvar.typeGatedMlrvalName.Name
 }
 
-func (this *TypeGatedMlrvalVariable) GetValue() *Mlrval {
-	return this.value
+func (tvar *TypeGatedMlrvalVariable) GetValue() *Mlrval {
+	return tvar.value
 }
 
-func (this *TypeGatedMlrvalVariable) ValueString() string {
-	return this.value.String()
+func (tvar *TypeGatedMlrvalVariable) ValueString() string {
+	return tvar.value.String()
 }
 
-func (this *TypeGatedMlrvalVariable) Assign(value *Mlrval) error {
-	err := this.typeGatedMlrvalName.Check(value)
+func (tvar *TypeGatedMlrvalVariable) Assign(value *Mlrval) error {
+	err := tvar.typeGatedMlrvalName.Check(value)
 	if err != nil {
 		return err
 	}
 
 	// TODO: revisit copy-reduction
-	this.value = value.Copy()
+	tvar.value = value.Copy()
 	return nil
 }
 
-func (this *TypeGatedMlrvalVariable) Unassign() {
-	this.value = MLRVAL_ABSENT
+func (tvar *TypeGatedMlrvalVariable) Unassign() {
+	tvar.value = MLRVAL_ABSENT
 }

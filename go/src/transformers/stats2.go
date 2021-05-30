@@ -211,7 +211,7 @@ func NewTransformerStats2(
 		}
 	}
 
-	this := &TransformerStats2{
+	tr := &TransformerStats2{
 		accumulatorNameList:              accumulatorNameList,
 		valueFieldNameList:               valueFieldNameList,
 		groupByFieldNameList:             groupByFieldNameList,
@@ -223,7 +223,7 @@ func NewTransformerStats2(
 		groupingKeysToGroupByFieldValues: lib.NewOrderedMap(),
 		recordGroups:                     lib.NewOrderedMap(),
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ================================================================
@@ -262,26 +262,26 @@ func NewTransformerStats2(
 // ================================================================
 
 // ----------------------------------------------------------------
-func (this *TransformerStats2) Transform(
+func (tr *TransformerStats2) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 
-		this.ingest(inrecAndContext)
+		tr.ingest(inrecAndContext)
 
-		if this.doIterativeStats {
+		if tr.doIterativeStats {
 			// The input record is modified in this case, with new fields appended
 			outputChannel <- inrecAndContext
 		}
-		// if this.doHoldAndFit, the input record is held by the ingestor
+		// if tr.doHoldAndFit, the input record is held by the ingestor
 
 	} else { // end of record stream
-		if !this.doIterativeStats { // in the iterative case, already emitted per-record
-			if this.doHoldAndFit {
-				this.fit(outputChannel)
+		if !tr.doIterativeStats { // in the iterative case, already emitted per-record
+			if tr.doHoldAndFit {
+				tr.fit(outputChannel)
 			} else {
-				this.emit(outputChannel, &inrecAndContext.Context)
+				tr.emit(outputChannel, &inrecAndContext.Context)
 			}
 		}
 		outputChannel <- inrecAndContext // end-of-stream marker
@@ -289,40 +289,40 @@ func (this *TransformerStats2) Transform(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerStats2) ingest(
+func (tr *TransformerStats2) ingest(
 	inrecAndContext *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 
 	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
 	// then groupingKey is the string "circle,blue".
-	groupingKey, groupByFieldValues, ok := inrec.GetSelectedValuesAndJoined(this.groupByFieldNameList)
+	groupingKey, groupByFieldValues, ok := inrec.GetSelectedValuesAndJoined(tr.groupByFieldNameList)
 	if !ok {
 		return
 	}
 
-	this.groupingKeysToGroupByFieldValues.Put(groupingKey, groupByFieldValues)
+	tr.groupingKeysToGroupByFieldValues.Put(groupingKey, groupByFieldValues)
 
-	groupToValueFields := this.namedAccumulators.Get(groupingKey)
+	groupToValueFields := tr.namedAccumulators.Get(groupingKey)
 	if groupToValueFields == nil {
 		groupToValueFields = lib.NewOrderedMap()
-		this.namedAccumulators.Put(groupingKey, groupToValueFields)
+		tr.namedAccumulators.Put(groupingKey, groupToValueFields)
 	}
 
-	if this.doHoldAndFit { // Retain the input record in memory, for fitting and delivery at end of stream
-		groupToRecords := this.recordGroups.Get(groupingKey)
+	if tr.doHoldAndFit { // Retain the input record in memory, for fitting and delivery at end of stream
+		groupToRecords := tr.recordGroups.Get(groupingKey)
 		if groupToRecords == nil {
 			groupToRecords = list.New()
-			this.recordGroups.Put(groupingKey, groupToRecords)
+			tr.recordGroups.Put(groupingKey, groupToRecords)
 		}
 		groupToRecords.(*list.List).PushBack(inrecAndContext)
 	}
 
 	// for [["x","y"]]
-	n := len(this.valueFieldNameList)
+	n := len(tr.valueFieldNameList)
 	for i := 0; i < n; i += 2 {
-		valueFieldName1 := this.valueFieldNameList[i]
-		valueFieldName2 := this.valueFieldNameList[i+1]
+		valueFieldName1 := tr.valueFieldNameList[i]
+		valueFieldName2 := tr.valueFieldNameList[i+1]
 
 		key := valueFieldName1 + stats2KeySeparator + valueFieldName2
 
@@ -342,14 +342,14 @@ func (this *TransformerStats2) ingest(
 		}
 
 		// for ["corr", "cov"]
-		for _, accumulatorName := range this.accumulatorNameList {
+		for _, accumulatorName := range tr.accumulatorNameList {
 			accumulator := valueFieldsToAccumulator.(*lib.OrderedMap).Get(accumulatorName)
 			if accumulator == nil {
-				accumulator = this.accumulatorFactory.Make(
+				accumulator = tr.accumulatorFactory.Make(
 					valueFieldName1,
 					valueFieldName2,
 					accumulatorName,
-					this.doVerbose,
+					tr.doVerbose,
 				)
 				if accumulator == nil {
 					fmt.Fprintf(os.Stderr, "%s %s: accumulator \"%s\" not found.\n",
@@ -365,8 +365,8 @@ func (this *TransformerStats2) ingest(
 			)
 		}
 
-		if this.doIterativeStats {
-			this.populateRecord(
+		if tr.doIterativeStats {
+			tr.populateRecord(
 				inrecAndContext.Record,
 				valueFieldName1,
 				valueFieldName2,
@@ -377,22 +377,22 @@ func (this *TransformerStats2) ingest(
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerStats2) emit(
+func (tr *TransformerStats2) emit(
 	outputChannel chan<- *types.RecordAndContext,
 	context *types.Context,
 ) {
-	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+	for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		outrec := types.NewMlrmapAsRecord()
 
 		// Add in a=s,b=t fields:
 		groupingKey := pa.Key
-		groupByFieldValues := this.groupingKeysToGroupByFieldValues.Get(groupingKey).([]*types.Mlrval)
-		for i, groupByFieldName := range this.groupByFieldNameList {
+		groupByFieldValues := tr.groupingKeysToGroupByFieldValues.Get(groupingKey).([]*types.Mlrval)
+		for i, groupByFieldName := range tr.groupByFieldNameList {
 			outrec.PutReference(groupByFieldName, groupByFieldValues[i].Copy())
 		}
 
 		// Add in fields such as x_y_corr, etc.
-		groupToValueFields := this.namedAccumulators.Get(groupingKey).(*lib.OrderedMap)
+		groupToValueFields := tr.namedAccumulators.Get(groupingKey).(*lib.OrderedMap)
 
 		// For "x","y"
 		for pc := groupToValueFields.Head; pc != nil; pc = pc.Next {
@@ -402,7 +402,7 @@ func (this *TransformerStats2) emit(
 			valueFieldName2 := pairs[1]
 			valueFieldsToAccumulator := pc.Value.(*lib.OrderedMap)
 
-			this.populateRecord(outrec, valueFieldName1, valueFieldName2, valueFieldsToAccumulator)
+			tr.populateRecord(outrec, valueFieldName1, valueFieldName2, valueFieldsToAccumulator)
 
 			// For "corr", "linreg"
 			for pd := valueFieldsToAccumulator.Head; pd != nil; pd = pd.Next {
@@ -415,7 +415,7 @@ func (this *TransformerStats2) emit(
 	}
 }
 
-func (this *TransformerStats2) populateRecord(
+func (tr *TransformerStats2) populateRecord(
 	outrec *types.Mlrmap,
 	valueFieldName1 string,
 	valueFieldName2 string,
@@ -428,13 +428,13 @@ func (this *TransformerStats2) populateRecord(
 	}
 }
 
-func (this *TransformerStats2) fit(
+func (tr *TransformerStats2) fit(
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	for pa := this.namedAccumulators.Head; pa != nil; pa = pa.Next {
+	for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
 		groupingKey := pa.Key
 		groupToValueFields := pa.Value.(*lib.OrderedMap)
-		recordsAndContexts := this.recordGroups.Get(groupingKey).(*list.List)
+		recordsAndContexts := tr.recordGroups.Get(groupingKey).(*list.List)
 
 		for recordsAndContexts.Front() != nil {
 			recordAndContext := recordsAndContexts.Remove(recordsAndContexts.Front()).(*types.RecordAndContext)

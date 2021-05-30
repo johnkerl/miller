@@ -131,29 +131,29 @@ func NewTransformerSec2GMT(
 	preDivide float64,
 	numDecimalPlaces int,
 ) (*TransformerSec2GMT, error) {
-	this := &TransformerSec2GMT{
+	tr := &TransformerSec2GMT{
 		fieldNameList:    lib.SplitString(fieldNames, ","),
 		preDivide:        preDivide,
 		numDecimalPlaces: numDecimalPlaces,
 	}
-	return this, nil
+	return tr, nil
 }
 
 // ----------------------------------------------------------------
-func (this *TransformerSec2GMT) Transform(
+func (tr *TransformerSec2GMT) Transform(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		for _, fieldName := range this.fieldNameList {
+		for _, fieldName := range tr.fieldNameList {
 			value := inrec.Get(fieldName)
 			if value != nil {
 				floatval, ok := value.GetNumericToFloatValue()
 				if ok {
 					newValue := types.MlrvalFromString(lib.Sec2GMT(
-						floatval/this.preDivide,
-						this.numDecimalPlaces,
+						floatval/tr.preDivide,
+						tr.numDecimalPlaces,
 					))
 					inrec.PutReference(fieldName, &newValue)
 				}

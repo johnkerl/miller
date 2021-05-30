@@ -25,7 +25,7 @@ import (
 //   o On a next pass, we will walk that list resolving against all encountered
 //     UDS definitions. (It will be an error then if it's still unresolvable.)
 
-func (this *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecutable, error) {
+func (root *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecutable, error) {
 	lib.InternalCodingErrorIf(
 		astNode.Type != dsl.NodeTypeSubroutineCallsite &&
 			astNode.Type != dsl.NodeTypeOperator,
@@ -39,7 +39,7 @@ func (this *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecut
 	// Look for a user-defined subroutine with the given name.
 
 	callsiteArity := len(astNode.Children)
-	uds, err := this.udsManager.LookUp(subroutineName, callsiteArity)
+	uds, err := root.udsManager.LookUp(subroutineName, callsiteArity)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (this *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecut
 	// paired up with the parameters within he subroutine definition at runtime.
 	argumentNodes := make([]IEvaluable, callsiteArity)
 	for i, argumentASTNode := range astNode.Children {
-		argumentNode, err := this.BuildEvaluableNode(argumentASTNode)
+		argumentNode, err := root.BuildEvaluableNode(argumentASTNode)
 		if err != nil {
 			return nil, err
 		}
@@ -69,7 +69,7 @@ func (this *RootNode) BuildSubroutineCallsiteNode(astNode *dsl.ASTNode) (IExecut
 		// it's defined.
 		uds = NewUnresolvedUDS(subroutineName, callsiteArity)
 		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
-		this.rememberUnresolvedSubroutineCallsite(udsCallsiteNode)
+		root.rememberUnresolvedSubroutineCallsite(udsCallsiteNode)
 		return udsCallsiteNode, nil
 	} else {
 		udsCallsiteNode := NewUDSCallsite(argumentNodes, uds)
