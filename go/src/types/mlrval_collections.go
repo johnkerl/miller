@@ -78,14 +78,14 @@ import (
 
 // ================================================================
 // TODO: copy-reduction refactor
-func (this *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
-	if this.mvtype != MT_ARRAY {
+func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
+	if mv.mvtype != MT_ARRAY {
 		return *MLRVAL_ERROR
 	}
 	if mindex.mvtype != MT_INT {
 		return *MLRVAL_ERROR
 	}
-	value := arrayGetAliased(&this.arrayval, mindex.intval)
+	value := arrayGetAliased(&mv.arrayval, mindex.intval)
 	if value == nil {
 		return *MLRVAL_ABSENT
 	} else {
@@ -95,12 +95,12 @@ func (this *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 // TODO: make this return error so caller can do 'if err == nil { ... }'
-func (this *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
-	if this.mvtype != MT_ARRAY {
+func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
+	if mv.mvtype != MT_ARRAY {
 		fmt.Fprintf(
 			os.Stderr,
 			"Miller: expected array as indexed item in ArrayPut; got %s\n",
-			this.GetTypeName(),
+			mv.GetTypeName(),
 		)
 		os.Exit(1)
 	}
@@ -115,12 +115,12 @@ func (this *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 		os.Exit(1)
 	}
 
-	ok := arrayPutAliased(&this.arrayval, mindex.intval, value)
+	ok := arrayPutAliased(&mv.arrayval, mindex.intval, value)
 	if !ok {
 		fmt.Fprintf(
 			os.Stderr,
 			"Miller: array index %d out of bounds %d..%d\n",
-			mindex.intval, 1, len(this.arrayval),
+			mindex.intval, 1, len(mv.arrayval),
 		)
 		os.Exit(1)
 	}
@@ -207,22 +207,22 @@ func UnaliasArrayLengthIndex(n int, mindex int) (int, bool) {
 
 // ----------------------------------------------------------------
 // TODO: thinking about capacity-resizing
-func (this *Mlrval) ArrayAppend(value *Mlrval) {
-	if this.mvtype != MT_ARRAY {
+func (mv *Mlrval) ArrayAppend(value *Mlrval) {
+	if mv.mvtype != MT_ARRAY {
 		// TODO: need to be careful about semantics here.
 		// Silent no-ops are not good UX ...
 		return
 	}
-	this.arrayval = append(this.arrayval, *value)
+	mv.arrayval = append(mv.arrayval, *value)
 }
 
 // ================================================================
-func (this *Mlrval) MapGet(key *Mlrval) Mlrval {
-	if this.mvtype != MT_MAP {
+func (mv *Mlrval) MapGet(key *Mlrval) Mlrval {
+	if mv.mvtype != MT_MAP {
 		return *MLRVAL_ERROR
 	}
 
-	mval, err := this.mapval.GetWithMlrvalIndex(key)
+	mval, err := mv.mapval.GetWithMlrvalIndex(key)
 	if err != nil { // xxx maybe error-return in the API
 		return *MLRVAL_ERROR
 	}
@@ -235,17 +235,17 @@ func (this *Mlrval) MapGet(key *Mlrval) Mlrval {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
-	if this.mvtype != MT_MAP {
+func (mv *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
+	if mv.mvtype != MT_MAP {
 		// TODO: need to be careful about semantics here.
 		// Silent no-ops are not good UX ...
 		return
 	}
 
 	if key.mvtype == MT_STRING {
-		this.mapval.PutCopy(key.printrep, value)
+		mv.mapval.PutCopy(key.printrep, value)
 	} else if key.mvtype == MT_INT {
-		this.mapval.PutCopy(key.String(), value)
+		mv.mapval.PutCopy(key.String(), value)
 	}
 	// TODO: need to be careful about semantics here.
 	// Silent no-ops are not good UX ...
@@ -287,26 +287,26 @@ func (this *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 //
 // See also indexed-lvalues.md.
 
-func (this *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
+func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
 
-	if this.mvtype == MT_MAP {
-		return putIndexedOnMap(this.mapval, indices, rvalue)
+	if mv.mvtype == MT_MAP {
+		return putIndexedOnMap(mv.mapval, indices, rvalue)
 
-	} else if this.mvtype == MT_ARRAY {
-		return putIndexedOnArray(&this.arrayval, indices, rvalue)
+	} else if mv.mvtype == MT_ARRAY {
+		return putIndexedOnArray(&mv.arrayval, indices, rvalue)
 
 	} else {
 		baseIndex := indices[0]
 		if baseIndex.mvtype == MT_STRING {
-			*this = MlrvalEmptyMap()
-			return putIndexedOnMap(this.mapval, indices, rvalue)
+			*mv = MlrvalEmptyMap()
+			return putIndexedOnMap(mv.mapval, indices, rvalue)
 		} else if baseIndex.mvtype == MT_INT {
-			*this = MlrvalEmptyArray()
-			return putIndexedOnArray(&this.arrayval, indices, rvalue)
+			*mv = MlrvalEmptyArray()
+			return putIndexedOnArray(&mv.arrayval, indices, rvalue)
 		} else {
 			return errors.New(
-				"Miller: only maps and arrays are indexable; got " + this.GetTypeName(),
+				"Miller: only maps and arrays are indexable; got " + mv.GetTypeName(),
 			)
 		}
 	}
@@ -439,14 +439,14 @@ func putIndexedOnArray(
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) RemoveIndexed(indices []*Mlrval) error {
+func (mv *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
 
-	if this.mvtype == MT_MAP {
-		return removeIndexedOnMap(this.mapval, indices)
+	if mv.mvtype == MT_MAP {
+		return removeIndexedOnMap(mv.mapval, indices)
 
-	} else if this.mvtype == MT_ARRAY {
-		return removeIndexedOnArray(&this.arrayval, indices)
+	} else if mv.mvtype == MT_ARRAY {
+		return removeIndexedOnArray(&mv.arrayval, indices)
 
 	} else {
 		return errors.New(
