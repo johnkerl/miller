@@ -32,11 +32,11 @@ func MlrvalPointerFromString(input string) *Mlrval {
 	if input == "" {
 		return MLRVAL_VOID
 	}
-	var this Mlrval
-	this.mvtype = MT_STRING
-	this.printrep = input
-	this.printrepValid = true
-	return &this
+	var mv Mlrval
+	mv.mvtype = MT_STRING
+	mv.printrep = input
+	mv.printrepValid = true
+	return &mv
 }
 
 // xxx comment why two -- one for from parsed user data; other for from math ops
@@ -44,20 +44,20 @@ func MlrvalPointerFromIntString(input string) *Mlrval {
 	ival, ok := lib.TryIntFromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
 	lib.InternalCodingErrorIf(!ok)
-	var this Mlrval
-	this.mvtype = MT_INT
-	this.printrep = input
-	this.printrepValid = true
-	this.intval = ival
-	return &this
+	var mv Mlrval
+	mv.mvtype = MT_INT
+	mv.printrep = input
+	mv.printrepValid = true
+	mv.intval = ival
+	return &mv
 }
 
 func MlrvalPointerFromInt(input int) *Mlrval {
-	var this Mlrval
-	this.mvtype = MT_INT
-	this.printrepValid = false
-	this.intval = input
-	return &this
+	var mv Mlrval
+	mv.mvtype = MT_INT
+	mv.printrepValid = false
+	mv.intval = input
+	return &mv
 }
 
 // xxx comment why two -- one for from parsed user data; other for from math ops
@@ -66,20 +66,20 @@ func MlrvalPointerFromFloat64String(input string) *Mlrval {
 	fval, ok := lib.TryFloat64FromString(input)
 	// xxx comment assummption is input-string already deemed parseable so no error return
 	lib.InternalCodingErrorIf(!ok)
-	var this Mlrval
-	this.mvtype = MT_FLOAT
-	this.printrep = input
-	this.printrepValid = true
-	this.floatval = fval
-	return &this
+	var mv Mlrval
+	mv.mvtype = MT_FLOAT
+	mv.printrep = input
+	mv.printrepValid = true
+	mv.floatval = fval
+	return &mv
 }
 
 func MlrvalPointerFromFloat64(input float64) *Mlrval {
-	var this Mlrval
-	this.mvtype = MT_FLOAT
-	this.printrepValid = false
-	this.floatval = input
-	return &this
+	var mv Mlrval
+	mv.mvtype = MT_FLOAT
+	mv.printrepValid = false
+	mv.floatval = input
+	return &mv
 }
 
 func MlrvalPointerFromBool(input bool) *Mlrval {
@@ -128,59 +128,59 @@ func MlrvalPointerFromInferredType(input string) *Mlrval {
 }
 
 func MlrvalPointerFromEmptyMap() *Mlrval {
-	var this Mlrval
-	this.mvtype = MT_MAP
-	this.printrepValid = false
-	this.mapval = NewMlrmap()
-	return &this
+	var mv Mlrval
+	mv.mvtype = MT_MAP
+	mv.printrepValid = false
+	mv.mapval = NewMlrmap()
+	return &mv
 }
 
 // ----------------------------------------------------------------
 // Does not copy the data. We can make a SetFromArrayLiteralCopy if needed
 // using values.CopyMlrvalArray().
 func MlrvalPointerFromArrayLiteralReference(input []Mlrval) *Mlrval {
-	var this Mlrval
-	this.mvtype = MT_ARRAY
-	this.printrepValid = false
-	this.arrayval = input
-	return &this
+	var mv Mlrval
+	mv.mvtype = MT_ARRAY
+	mv.printrepValid = false
+	mv.arrayval = input
+	return &mv
 }
 
 func MlrvalPointerFromMap(that *Mlrmap) *Mlrval {
-	this := MlrvalPointerFromEmptyMap()
+	mv := MlrvalPointerFromEmptyMap()
 	if that == nil {
 		// TODO maybe return 2nd-arg error in the API
 		return MLRVAL_ERROR
 	}
 
 	for pe := that.Head; pe != nil; pe = pe.Next {
-		this.mapval.PutCopy(pe.Key, pe.Value)
+		mv.mapval.PutCopy(pe.Key, pe.Value)
 	}
-	return this
+	return mv
 }
 
 // Like previous but doesn't copy. Only safe when the argument's sole purpose
 // is to be passed into here.
 func MlrvalPointerFromMapReferenced(that *Mlrmap) *Mlrval {
-	this := MlrvalPointerFromEmptyMap()
+	mv := MlrvalPointerFromEmptyMap()
 	if that == nil {
 		// xxx maybe return 2nd-arg error in the API
 		return MLRVAL_ERROR
 	}
 
 	for pe := that.Head; pe != nil; pe = pe.Next {
-		this.mapval.PutReference(pe.Key, pe.Value)
+		mv.mapval.PutReference(pe.Key, pe.Value)
 	}
-	return this
+	return mv
 }
 
 // TODO: comment not MLRVAL_PENDING constants since this intended to be mutated
 // by the JSON parser.
 func MlrvalPointerFromPending() *Mlrval {
-	var this Mlrval
-	this.mvtype = MT_PENDING
-	this.printrepValid = false
-	return &this
+	var mv Mlrval
+	mv.mvtype = MT_PENDING
+	mv.printrepValid = false
+	return &mv
 }
 
 // ----------------------------------------------------------------
@@ -416,17 +416,17 @@ func MlrvalEmptyMap() Mlrval {
 // Like previous but doesn't copy. Only safe when the argument's sole purpose
 // is to be passed into here.
 func MlrvalFromMapReferenced(that *Mlrmap) Mlrval {
-	this := MlrvalEmptyMap()
+	mv := MlrvalEmptyMap()
 	if that == nil {
 		// xxx maybe return 2nd-arg error in the API
 		return *MLRVAL_ERROR
 	}
 
 	for pe := that.Head; pe != nil; pe = pe.Next {
-		this.mapval.PutReference(pe.Key, pe.Value)
+		mv.mapval.PutReference(pe.Key, pe.Value)
 	}
 
-	return this
+	return mv
 }
 
 // ----------------------------------------------------------------
