@@ -46,22 +46,22 @@ func getPrompt2() string {
 	return prompt2
 }
 
-func (this *Repl) printStartupBanner() {
-	if this.inputIsTerminal {
+func (repl *Repl) printStartupBanner() {
+	if repl.inputIsTerminal {
 		// TODO: inhibit if mlr repl -q
 		fmt.Printf("Miller %s for %s:%s:%s\n", version.STRING, runtime.GOOS, runtime.GOARCH, runtime.Version())
 		fmt.Printf("Type ':help' for on-line help; ':quit' to quit.\n")
 	}
 }
 
-func (this *Repl) printPrompt1() {
-	if this.inputIsTerminal && this.showPrompts {
-		fmt.Print(this.prompt1)
+func (repl *Repl) printPrompt1() {
+	if repl.inputIsTerminal && repl.showPrompts {
+		fmt.Print(repl.prompt1)
 	}
 }
 
-func (this *Repl) printPrompt2() {
-	if this.inputIsTerminal && this.showPrompts {
-		fmt.Print(this.prompt2)
+func (repl *Repl) printPrompt2() {
+	if repl.inputIsTerminal && repl.showPrompts {
+		fmt.Print(repl.prompt2)
 	}
 }

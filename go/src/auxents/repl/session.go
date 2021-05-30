@@ -142,15 +142,15 @@ func controlCHandler(sysToSignalHandlerChannel chan os.Signal, appSignalNotifica
 }
 
 // ----------------------------------------------------------------
-func (this *Repl) handleSession(istream *os.File) {
-	if this.showStartupBanner {
-		this.printStartupBanner()
+func (repl *Repl) handleSession(istream *os.File) {
+	if repl.showStartupBanner {
+		repl.printStartupBanner()
 	}
 
 	lineReader := bufio.NewReader(istream)
 
 	for {
-		this.printPrompt1()
+		repl.printPrompt1()
 
 		line, err := lineReader.ReadString('\n')
 		if err == io.EOF {
@@ -158,7 +158,7 @@ func (this *Repl) handleSession(istream *os.File) {
 		}
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s %s: %v", this.exeName, this.replName, err)
+			fmt.Fprintf(os.Stderr, "%s %s: %v", repl.exeName, repl.replName, err)
 			os.Exit(1)
 		}
 
@@ -168,7 +168,7 @@ func (this *Repl) handleSession(istream *os.File) {
 		doneDraining := false
 		for {
 			select {
-			case _ = <-this.appSignalNotificationChannel:
+			case _ = <-repl.appSignalNotificationChannel:
 				line = "" // Ignore any partially-entered line -- a ^C should do that
 			default:
 				doneDraining = true
@@ -182,16 +182,16 @@ func (this *Repl) handleSession(istream *os.File) {
 		trimmedLine := strings.TrimSpace(line)
 
 		if trimmedLine == "<" {
-			this.handleMultiLine(lineReader, ">", true) // multi-line immediate
+			repl.handleMultiLine(lineReader, ">", true) // multi-line immediate
 		} else if trimmedLine == "<<" {
-			this.handleMultiLine(lineReader, ">>", false) // multi-line non-immediate
+			repl.handleMultiLine(lineReader, ">>", false) // multi-line non-immediate
 		} else if trimmedLine == ":quit" || trimmedLine == ":q" {
 			break
-		} else if this.handleNonDSLLine(trimmedLine) {
+		} else if repl.handleNonDSLLine(trimmedLine) {
 			// Handled in that method.
 		} else {
 			// We need the non-trimmed line here since the DSL syntax for comments is '#.*\n'.
-			err = this.handleDSLStringImmediate(line, this.doWarnings)
+			err = repl.handleDSLStringImmediate(line, repl.doWarnings)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
 			}
@@ -202,14 +202,14 @@ func (this *Repl) handleSession(istream *os.File) {
 // ----------------------------------------------------------------
 // Context: the "<" or "<<" has already been seen. we read until ">" or ">>".
 
-func (this *Repl) handleMultiLine(
+func (repl *Repl) handleMultiLine(
 	lineReader *bufio.Reader,
 	terminator string,
 	doImmediate bool,
 ) {
 	var buffer bytes.Buffer
 	for {
-		this.printPrompt2()
+		repl.printPrompt2()
 
 		line, err := lineReader.ReadString('\n')
 		if err == io.EOF {
@@ -217,7 +217,7 @@ func (this *Repl) handleMultiLine(
 		}
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s %s: %v\n", this.exeName, this.replName, err)
+			fmt.Fprintf(os.Stderr, "%s %s: %v\n", repl.exeName, repl.replName, err)
 			os.Exit(1)
 		}
 
@@ -230,9 +230,9 @@ func (this *Repl) handleMultiLine(
 
 	var err error = nil
 	if doImmediate {
-		err = this.handleDSLStringImmediate(dslString, this.doWarnings)
+		err = repl.handleDSLStringImmediate(dslString, repl.doWarnings)
 	} else {
-		err = this.handleDSLStringBulk(dslString, this.doWarnings)
+		err = repl.handleDSLStringBulk(dslString, repl.doWarnings)
 	}
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
