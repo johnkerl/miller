@@ -22,8 +22,8 @@ import (
 //                 * direct field value "x"
 //             * int literal "1"
 
-func (this *AST) Print() {
-	this.RootNode.Print()
+func (node *AST) Print() {
+	node.RootNode.Print()
 }
 
 // Parenthesized-expression print.
@@ -39,8 +39,8 @@ func (this *AST) Print() {
 //     )
 // )
 
-func (this *AST) PrintParex() {
-	this.RootNode.PrintParex()
+func (node *AST) PrintParex() {
+	node.RootNode.PrintParex()
 }
 
 // Parenthesized-expression print, all on one line.
@@ -48,33 +48,33 @@ func (this *AST) PrintParex() {
 //
 // (statement-block (= $y (+ (* 2 $x) 1)))
 
-func (this *AST) PrintParexOneLine() {
-	this.RootNode.PrintParexOneLine()
+func (node *AST) PrintParexOneLine() {
+	node.RootNode.PrintParexOneLine()
 }
 
 // ================================================================
 // Indent-style multiline print.
-func (this *ASTNode) Print() {
-	this.PrintAux(0)
+func (node *ASTNode) Print() {
+	node.PrintAux(0)
 }
 
-func (this *ASTNode) PrintAux(depth int) {
+func (node *ASTNode) PrintAux(depth int) {
 	// Indent
 	for i := 0; i < depth; i++ {
 		fmt.Print("    ")
 	}
 
 	// Token text (if non-nil) and token type
-	tok := this.Token
-	fmt.Print("* " + this.Type)
+	tok := node.Token
+	fmt.Print("* " + node.Type)
 	if tok != nil {
 		fmt.Printf(" \"%s\"", string(tok.Lit))
 	}
 	fmt.Println()
 
 	// Children, indented one level further
-	if this.Children != nil {
-		for _, child := range this.Children {
+	if node.Children != nil {
+		for _, child := range node.Children {
 			child.PrintAux(depth + 1)
 		}
 	}
@@ -83,26 +83,26 @@ func (this *ASTNode) PrintAux(depth int) {
 // ----------------------------------------------------------------
 // Parenthesized-expression print.
 
-func (this *ASTNode) PrintParex() {
-	this.PrintParexAux(0)
+func (node *ASTNode) PrintParex() {
+	node.PrintParexAux(0)
 }
 
-func (this *ASTNode) PrintParexAux(depth int) {
-	if this.IsLeaf() {
+func (node *ASTNode) PrintParexAux(depth int) {
+	if node.IsLeaf() {
 		for i := 0; i < depth; i++ {
 			fmt.Print("    ")
 		}
-		fmt.Println(this.Text())
+		fmt.Println(node.Text())
 
-	} else if this.ChildrenAreAllLeaves() {
+	} else if node.ChildrenAreAllLeaves() {
 		// E.g. (= sum 0) or (+ 1 2)
 		for i := 0; i < depth; i++ {
 			fmt.Print("    ")
 		}
 		fmt.Print("(")
-		fmt.Print(this.Text())
+		fmt.Print(node.Text())
 
-		for _, child := range this.Children {
+		for _, child := range node.Children {
 			fmt.Print(" ")
 			fmt.Print(child.Text())
 		}
@@ -114,10 +114,10 @@ func (this *ASTNode) PrintParexAux(depth int) {
 			fmt.Print("    ")
 		}
 		fmt.Print("(")
-		fmt.Println(this.Text())
+		fmt.Println(node.Text())
 
 		// Children on their own lines
-		for _, child := range this.Children {
+		for _, child := range node.Children {
 			child.PrintParexAux(depth + 1)
 		}
 
@@ -132,18 +132,18 @@ func (this *ASTNode) PrintParexAux(depth int) {
 // ----------------------------------------------------------------
 // Parenthesized-expression print, all on one line.
 
-func (this *ASTNode) PrintParexOneLine() {
-	this.PrintParexOneLineAux()
+func (node *ASTNode) PrintParexOneLine() {
+	node.PrintParexOneLineAux()
 	fmt.Println()
 }
 
-func (this *ASTNode) PrintParexOneLineAux() {
-	if this.IsLeaf() {
-		fmt.Print(this.Text())
+func (node *ASTNode) PrintParexOneLineAux() {
+	if node.IsLeaf() {
+		fmt.Print(node.Text())
 	} else {
 		fmt.Print("(")
-		fmt.Print(this.Text())
-		for _, child := range this.Children {
+		fmt.Print(node.Text())
+		for _, child := range node.Children {
 			fmt.Print(" ")
 			child.PrintParexOneLineAux()
 		}
@@ -152,12 +152,12 @@ func (this *ASTNode) PrintParexOneLineAux() {
 }
 
 // ----------------------------------------------------------------
-func (this *ASTNode) IsLeaf() bool {
-	return this.Children == nil || len(this.Children) == 0
+func (node *ASTNode) IsLeaf() bool {
+	return node.Children == nil || len(node.Children) == 0
 }
 
-func (this *ASTNode) ChildrenAreAllLeaves() bool {
-	for _, child := range this.Children {
+func (node *ASTNode) ChildrenAreAllLeaves() bool {
+	for _, child := range node.Children {
 		if !child.IsLeaf() {
 			return false
 		}
@@ -170,13 +170,13 @@ func (this *ASTNode) ChildrenAreAllLeaves() bool {
 // in them. In this method we use custom mappings to always get a
 // whitespace-free representation of the content of a single AST node.
 
-func (this *ASTNode) Text() string {
+func (node *ASTNode) Text() string {
 	tokenText := ""
-	if this.Token != nil {
-		tokenText = string(this.Token.Lit)
+	if node.Token != nil {
+		tokenText = string(node.Token.Lit)
 	}
 
-	switch this.Type {
+	switch node.Type {
 
 	case NodeTypeStringLiteral:
 		return "\"" + strings.ReplaceAll(tokenText, "\"", "\\\"") + "\""
