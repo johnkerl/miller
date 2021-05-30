@@ -18,7 +18,7 @@ func NewRecordWriterDKVP(writerOptions *cliutil.TWriterOptions) *RecordWriterDKV
 	}
 }
 
-func (this *RecordWriterDKVP) Write(
+func (writer *RecordWriterDKVP) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
 ) {
@@ -28,19 +28,19 @@ func (this *RecordWriterDKVP) Write(
 	}
 
 	if outrec.FieldCount == 0 {
-		ostream.Write([]byte(this.writerOptions.ORS))
+		ostream.Write([]byte(writer.writerOptions.ORS))
 		return
 	}
 
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(pe.Key)
-		buffer.WriteString(this.writerOptions.OPS)
+		buffer.WriteString(writer.writerOptions.OPS)
 		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
-			buffer.WriteString(this.writerOptions.OFS)
+			buffer.WriteString(writer.writerOptions.OFS)
 		}
 	}
-	buffer.WriteString(this.writerOptions.ORS)
+	buffer.WriteString(writer.writerOptions.ORS)
 	ostream.Write(buffer.Bytes())
 }

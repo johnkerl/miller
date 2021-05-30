@@ -21,7 +21,7 @@ func NewRecordWriterXTAB(writerOptions *cliutil.TWriterOptions) *RecordWriterXTA
 	}
 }
 
-func (this *RecordWriterXTAB) Write(
+func (writer *RecordWriterXTAB) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
 ) {
@@ -41,8 +41,8 @@ func (this *RecordWriterXTAB) Write(
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 
 	// Put a blank line between records, but not before the first or after the last
-	if this.onFirst {
-		this.onFirst = false
+	if writer.onFirst {
+		writer.onFirst = false
 	} else {
 		buffer.WriteString("\n")
 	}

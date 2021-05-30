@@ -116,53 +116,53 @@ func NewStderrWriteHandlerManager(
 }
 
 // ----------------------------------------------------------------
-func (this *MultiOutputHandlerManager) WriteString(
+func (manager *MultiOutputHandlerManager) WriteString(
 	outputString string,
 	filename string,
 ) error {
-	outputHandler, err := this.getOutputHandlerFor(filename)
+	outputHandler, err := manager.getOutputHandlerFor(filename)
 	if err != nil {
 		return err
 	}
 	return outputHandler.WriteString(outputString)
 }
 
-func (this *MultiOutputHandlerManager) WriteRecordAndContext(
+func (manager *MultiOutputHandlerManager) WriteRecordAndContext(
 	outrecAndContext *types.RecordAndContext,
 	filename string,
 ) error {
-	outputHandler, err := this.getOutputHandlerFor(filename)
+	outputHandler, err := manager.getOutputHandlerFor(filename)
 	if err != nil {
 		return err
 	}
 	return outputHandler.WriteRecordAndContext(outrecAndContext)
 }
 
-func (this *MultiOutputHandlerManager) getOutputHandlerFor(
+func (manager *MultiOutputHandlerManager) getOutputHandlerFor(
 	filename string,
 ) (OutputHandler, error) {
-	if this.singleHandler != nil {
-		return this.singleHandler, nil
+	if manager.singleHandler != nil {
+		return manager.singleHandler, nil
 	}
 
 	// TODO: LRU with close and re-open in case too many files are open
-	outputHandler := this.outputHandlers[filename]
+	outputHandler := manager.outputHandlers[filename]
 	if outputHandler == nil {
 		var err error = nil
-		if this.pipe {
+		if manager.pipe {
 			outputHandler, err = NewPipeWriteOutputHandler(
 				filename,
-				this.recordWriterOptions,
+				manager.recordWriterOptions,
 			)
 			if err != nil {
 				return nil, err
 			}
 			if outputHandler != nil {
 			}
-		} else if this.append {
+		} else if manager.append {
 			outputHandler, err = NewFileAppendOutputHandler(
 				filename,
-				this.recordWriterOptions,
+				manager.recordWriterOptions,
 			)
 			if err != nil {
 				return nil, err
@@ -170,26 +170,26 @@ func (this *MultiOutputHandlerManager) getOutputHandlerFor(
 		} else {
 			outputHandler, err = NewFileWriteOutputHandler(
 				filename,
-				this.recordWriterOptions,
+				manager.recordWriterOptions,
 			)
 			if err != nil {
 				return nil, err
 			}
 		}
-		this.outputHandlers[filename] = outputHandler
+		manager.outputHandlers[filename] = outputHandler
 	}
 	return outputHandler, nil
 }
 
-func (this *MultiOutputHandlerManager) Close() []error {
+func (manager *MultiOutputHandlerManager) Close() []error {
 	errs := make([]error, 0)
-	if this.singleHandler != nil {
-		err := this.singleHandler.Close()
+	if manager.singleHandler != nil {
+		err := manager.singleHandler.Close()
 		if err != nil {
 			errs = append(errs, err)
 		}
 	}
-	for _, outputHandler := range this.outputHandlers {
+	for _, outputHandler := range manager.outputHandlers {
 		err := outputHandler.Close()
 		if err != nil {
 			errs = append(errs, err)
@@ -319,73 +319,73 @@ func newStderrOutputHandler(
 }
 
 // ----------------------------------------------------------------
-func (this *FileOutputHandler) WriteString(outputString string) error {
-	_, err := this.handle.Write([]byte(outputString))
+func (handler *FileOutputHandler) WriteString(outputString string) error {
+	_, err := handler.handle.Write([]byte(outputString))
 	return err
 }
 
 // ----------------------------------------------------------------
-func (this *FileOutputHandler) WriteRecordAndContext(
+func (handler *FileOutputHandler) WriteRecordAndContext(
 	outrecAndContext *types.RecordAndContext,
 ) error {
 	// Lazily create the record-writer and output channel.
-	if this.recordWriter == nil {
-		err := this.setUpRecordWriter()
+	if handler.recordWriter == nil {
+		err := handler.setUpRecordWriter()
 		if err != nil {
 			return err
 		}
 	}
 
-	this.recordOutputChannel <- outrecAndContext
+	handler.recordOutputChannel <- outrecAndContext
 	return nil
 }
 
-func (this *FileOutputHandler) setUpRecordWriter() error {
-	if this.recordWriter != nil {
+func (handler *FileOutputHandler) setUpRecordWriter() error {
+	if handler.recordWriter != nil {
 		return nil
 	}
 
-	recordWriter := Create(this.recordWriterOptions)
+	recordWriter := Create(handler.recordWriterOptions)
 	if recordWriter == nil {
 		return errors.New(
-			"Output format not found: " + this.recordWriterOptions.OutputFileFormat,
+			"Output format not found: " + handler.recordWriterOptions.OutputFileFormat,
 		)
 	}
-	this.recordWriter = recordWriter
+	handler.recordWriter = recordWriter
 
-	this.recordOutputChannel = make(chan *types.RecordAndContext, 1)
-	this.recordDoneChannel = make(chan bool, 1)
+	handler.recordOutputChannel = make(chan *types.RecordAndContext, 1)
+	handler.recordDoneChannel = make(chan bool, 1)
 
 	go ChannelWriter(
-		this.recordOutputChannel,
-		this.recordWriter,
-		this.recordDoneChannel,
-		this.handle,
+		handler.recordOutputChannel,
+		handler.recordWriter,
+		handler.recordDoneChannel,
+		handler.handle,
 	)
 
 	return nil
 }
 
 // ----------------------------------------------------------------
-func (this *FileOutputHandler) Close() error {
-	if this.recordOutputChannel != nil {
+func (handler *FileOutputHandler) Close() error {
+	if handler.recordOutputChannel != nil {
 		// TODO: see if we need a real context
 		emptyContext := types.Context{}
-		this.recordOutputChannel <- types.NewEndOfStreamMarker(&emptyContext)
+		handler.recordOutputChannel <- types.NewEndOfStreamMarker(&emptyContext)
 
 		// Wait for the output channel to drain
 		done := false
 		for !done {
 			select {
-			case _ = <-this.recordDoneChannel:
+			case _ = <-handler.recordDoneChannel:
 				done = true
 				break
 			}
 		}
 	}
 
-	if this.closeable {
-		return this.handle.Close()
+	if handler.closeable {
+		return handler.handle.Close()
 	} else {
 		return nil
 	}

@@ -27,7 +27,7 @@ func NewRecordWriterCSV(writerOptions *cliutil.TWriterOptions) *RecordWriterCSV 
 	}
 }
 
-func (this *RecordWriterCSV) Write(
+func (writer *RecordWriterCSV) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
 ) {
@@ -36,42 +36,42 @@ func (this *RecordWriterCSV) Write(
 		return
 	}
 
-	if this.csvWriter == nil {
-		this.csvWriter = csv.NewWriter(ostream)
-		this.csvWriter.Comma = rune(this.writerOptions.OFS[0]) // xxx temp
+	if writer.csvWriter == nil {
+		writer.csvWriter = csv.NewWriter(ostream)
+		writer.csvWriter.Comma = rune(writer.writerOptions.OFS[0]) // xxx temp
 	}
 
 	if outrec.FieldCount == 0 {
-		if !this.justWroteEmptyLine {
+		if !writer.justWroteEmptyLine {
 			ostream.Write([]byte("\n"))
 		}
 		joinedHeader := ""
-		this.lastJoinedHeader = &joinedHeader
-		this.justWroteEmptyLine = true
+		writer.lastJoinedHeader = &joinedHeader
+		writer.justWroteEmptyLine = true
 		return
 	}
 
 	needToPrintHeader := false
 	joinedHeader := strings.Join(outrec.GetKeys(), ",")
-	if this.lastJoinedHeader == nil || *this.lastJoinedHeader != joinedHeader {
-		if this.lastJoinedHeader != nil {
-			if !this.justWroteEmptyLine {
+	if writer.lastJoinedHeader == nil || *writer.lastJoinedHeader != joinedHeader {
+		if writer.lastJoinedHeader != nil {
+			if !writer.justWroteEmptyLine {
 				ostream.Write([]byte("\n"))
 			}
-			this.justWroteEmptyLine = true
+			writer.justWroteEmptyLine = true
 		}
-		this.lastJoinedHeader = &joinedHeader
+		writer.lastJoinedHeader = &joinedHeader
 		needToPrintHeader = true
 	}
 
-	if needToPrintHeader && !this.writerOptions.HeaderlessCSVOutput {
+	if needToPrintHeader && !writer.writerOptions.HeaderlessCSVOutput {
 		fields := make([]string, outrec.FieldCount)
 		i := 0
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			fields[i] = pe.Key
 			i++
 		}
-		this.csvWriter.Write(fields)
+		writer.csvWriter.Write(fields)
 	}
 
 	fields := make([]string, outrec.FieldCount)
@@ -80,7 +80,7 @@ func (this *RecordWriterCSV) Write(
 		fields[i] = pe.Value.String()
 		i++
 	}
-	this.csvWriter.Write(fields)
-	this.csvWriter.Flush()
-	this.justWroteEmptyLine = false
+	writer.csvWriter.Write(fields)
+	writer.csvWriter.Flush()
+	writer.justWroteEmptyLine = false
 }
