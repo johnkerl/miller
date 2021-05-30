@@ -1,9 +1,18 @@
 ================================================================
 TOP OF LIST:
 
+* fix release-docs brokelinks
+  o also jko/md or somesuch
+    - check search box ...
+* note: GOOS=linux go build mlr.go
+  o only if same arch ...
+* iconv note
+
 * defer json comment-handling
 * vers-docs
 w starrer survey
+* rst bold
+  https://stackoverflow.com/questions/26366552/bold-code-in-rst
 
 * prepipex
 
@@ -378,9 +387,11 @@ NITS/NON-IMMEDIATE:
 * record-readers are fully in-channel/loop; record-writers are multi with in-channel/loop being
   done by ChannelWriter, which is very small. opportunity to refactor.
 * address all manner of xxx and TODO comments
+* empty csv ... reminder ...
 
 ----------------------------------------------------------------
 TBF:
+* delve
 * throughout -- 'map' used too much -- 'mapping/mapper' -> 'transform' or something?
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
 * mlr verb -h -> stdout & exit 0
