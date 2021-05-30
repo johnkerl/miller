@@ -19,12 +19,12 @@ func NewStatementBlockNode() *StatementBlockNode {
 }
 
 // ----------------------------------------------------------------
-func (this *StatementBlockNode) AppendStatementNode(executable IExecutable) {
-	this.executables = append(this.executables, executable)
+func (node *StatementBlockNode) AppendStatementNode(executable IExecutable) {
+	node.executables = append(node.executables, executable)
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
+func (root *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 	astBeginOrEndNode *dsl.ASTNode,
 ) (*StatementBlockNode, error) {
 
@@ -64,7 +64,7 @@ func (this *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 
 	astStatementBlockNode := astBeginOrEndNode.Children[0]
 	lib.InternalCodingErrorIf(astStatementBlockNode.Type != dsl.NodeTypeStatementBlock)
-	statementBlockNode, err := this.BuildStatementBlockNode(astStatementBlockNode)
+	statementBlockNode, err := root.BuildStatementBlockNode(astStatementBlockNode)
 	if err != nil {
 		return nil, err
 	} else {
@@ -73,7 +73,7 @@ func (this *RootNode) BuildStatementBlockNodeFromBeginOrEnd(
 }
 
 // ----------------------------------------------------------------
-func (this *RootNode) BuildStatementBlockNode(
+func (root *RootNode) BuildStatementBlockNode(
 	astNode *dsl.ASTNode,
 ) (*StatementBlockNode, error) {
 
@@ -84,7 +84,7 @@ func (this *RootNode) BuildStatementBlockNode(
 	astChildren := astNode.Children
 
 	for _, astChild := range astChildren {
-		statement, err := this.BuildStatementNode(astChild)
+		statement, err := root.BuildStatementNode(astChild)
 		if err != nil {
 			return nil, err
 		}
@@ -94,10 +94,10 @@ func (this *RootNode) BuildStatementBlockNode(
 }
 
 // ----------------------------------------------------------------
-func (this *StatementBlockNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+func (node *StatementBlockNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	state.Stack.PushStackFrame()
 	defer state.Stack.PopStackFrame()
-	for _, statement := range this.executables {
+	for _, statement := range node.executables {
 		blockExitPayload, err := statement.Execute(state)
 		if err != nil {
 			return nil, err
@@ -120,8 +120,8 @@ func (this *StatementBlockNode) Execute(state *runtime.State) (*BlockExitPayload
 // the 'i = 0' and 'i += 1' are StatementBlocks and if they pushed their
 // own stack frame then the 'i=0' would be in an evanescent, isolated frame.
 
-func (this *StatementBlockNode) ExecuteFrameless(state *runtime.State) (*BlockExitPayload, error) {
-	for _, statement := range this.executables {
+func (node *StatementBlockNode) ExecuteFrameless(state *runtime.State) (*BlockExitPayload, error) {
+	for _, statement := range node.executables {
 		blockExitPayload, err := statement.Execute(state)
 		if err != nil {
 			return nil, err

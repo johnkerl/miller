@@ -164,12 +164,12 @@ func NewBZip2ReadCloser(handle *os.File) *BZip2ReadCloser {
 	}
 }
 
-func (this *BZip2ReadCloser) Read(p []byte) (n int, err error) {
-	return this.bzip2Handle.Read(p)
+func (rc *BZip2ReadCloser) Read(p []byte) (n int, err error) {
+	return rc.bzip2Handle.Read(p)
 }
 
-func (this *BZip2ReadCloser) Close() error {
-	return this.originalHandle.Close()
+func (rc *BZip2ReadCloser) Close() error {
+	return rc.originalHandle.Close()
 }
 
 // ----------------------------------------------------------------

@@ -40,12 +40,12 @@ func NewRecordAndContext(
 }
 
 // For the record-readers to update their initial context as each new record is read.
-func (this *RecordAndContext) Copy() *RecordAndContext {
-	if this == nil {
+func (rac *RecordAndContext) Copy() *RecordAndContext {
+	if rac == nil {
 		return nil
 	}
-	recordCopy := this.Record.Copy()
-	contextCopy := this.Context
+	recordCopy := rac.Record.Copy()
+	contextCopy := rac.Context
 	return &RecordAndContext{
 		Record:       recordCopy,
 		Context:      contextCopy,
@@ -142,37 +142,37 @@ func NewContext(options *cliutil.TOptions) *Context {
 }
 
 // For the record-readers to update their initial context as each new file is opened.
-func (this *Context) UpdateForStartOfFile(filename string) {
-	this.FILENAME = filename
-	this.FILENUM++
-	this.FNR = 0
+func (context *Context) UpdateForStartOfFile(filename string) {
+	context.FILENAME = filename
+	context.FILENUM++
+	context.FNR = 0
 }
 
 // For the record-readers to update their initial context as each new record is read.
-func (this *Context) UpdateForInputRecord() {
-	this.NR++
-	this.FNR++
+func (context *Context) UpdateForInputRecord() {
+	context.NR++
+	context.FNR++
 }
 
-func (this *Context) Copy() *Context {
-	that := *this
+func (context *Context) Copy() *Context {
+	that := *context
 	return &that
 }
 
-func (this *Context) GetStatusString() string {
+func (context *Context) GetStatusString() string {
 
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	buffer.WriteString("FILENAME=\"")
-	buffer.WriteString(this.FILENAME)
+	buffer.WriteString(context.FILENAME)
 
 	buffer.WriteString("\",FILENUM=")
-	buffer.WriteString(strconv.Itoa(this.FILENUM))
+	buffer.WriteString(strconv.Itoa(context.FILENUM))
 
 	buffer.WriteString(",NR=")
-	buffer.WriteString(strconv.Itoa(this.NR))
+	buffer.WriteString(strconv.Itoa(context.NR))
 
 	buffer.WriteString(",FNR=")
-	buffer.WriteString(strconv.Itoa(this.FNR))
+	buffer.WriteString(strconv.Itoa(context.FNR))
 
 	return buffer.String()
 }
