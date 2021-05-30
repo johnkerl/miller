@@ -17,7 +17,7 @@ type ArrayLiteralNode struct {
 	evaluables []IEvaluable
 }
 
-func (this *RootNode) BuildArrayLiteralNode(
+func (node *RootNode) BuildArrayLiteralNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayLiteral)
@@ -28,7 +28,7 @@ func (this *RootNode) BuildArrayLiteralNode(
 	evaluables := make([]IEvaluable, len(astNode.Children))
 
 	for i, astChild := range astNode.Children {
-		element, err := this.BuildEvaluableNode(astChild)
+		element, err := node.BuildEvaluableNode(astChild)
 		if err != nil {
 			return nil, err
 		}
@@ -40,12 +40,12 @@ func (this *RootNode) BuildArrayLiteralNode(
 	}, nil
 }
 
-func (this *ArrayLiteralNode) Evaluate(
+func (node *ArrayLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	mlrvals := make([]types.Mlrval, len(this.evaluables))
-	for i, _ := range this.evaluables {
-		mlrvals[i] = *this.evaluables[i].Evaluate(state)
+	mlrvals := make([]types.Mlrval, len(node.evaluables))
+	for i, _ := range node.evaluables {
+		mlrvals[i] = *node.evaluables[i].Evaluate(state)
 	}
 	return types.MlrvalPointerFromArrayLiteralReference(mlrvals)
 }
@@ -56,7 +56,7 @@ type ArrayOrMapIndexAccessNode struct {
 	indexEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildArrayOrMapIndexAccessNode(
+func (node *RootNode) BuildArrayOrMapIndexAccessNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapIndexAccess)
@@ -65,11 +65,11 @@ func (this *RootNode) BuildArrayOrMapIndexAccessNode(
 	baseASTNode := astNode.Children[0]
 	indexASTNode := astNode.Children[1]
 
-	baseEvaluable, err := this.BuildEvaluableNode(baseASTNode)
+	baseEvaluable, err := node.BuildEvaluableNode(baseASTNode)
 	if err != nil {
 		return nil, err
 	}
-	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
+	indexEvaluable, err := node.BuildEvaluableNode(indexASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -80,11 +80,11 @@ func (this *RootNode) BuildArrayOrMapIndexAccessNode(
 	}, nil
 }
 
-func (this *ArrayOrMapIndexAccessNode) Evaluate(
+func (node *ArrayOrMapIndexAccessNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	baseMlrval := this.baseEvaluable.Evaluate(state)
-	indexMlrval := this.indexEvaluable.Evaluate(state)
+	baseMlrval := node.baseEvaluable.Evaluate(state)
+	indexMlrval := node.indexEvaluable.Evaluate(state)
 
 	// Base-is-array and index-is-int will be checked there
 	if baseMlrval.IsArray() {
@@ -107,7 +107,7 @@ type ArraySliceAccessNode struct {
 	upperIndexEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildArraySliceAccessNode(
+func (node *RootNode) BuildArraySliceAccessNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArraySliceAccess)
@@ -117,17 +117,17 @@ func (this *RootNode) BuildArraySliceAccessNode(
 	lowerIndexASTNode := astNode.Children[1]
 	upperIndexASTNode := astNode.Children[2]
 
-	baseEvaluable, err := this.BuildEvaluableNode(baseASTNode)
+	baseEvaluable, err := node.BuildEvaluableNode(baseASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	lowerIndexEvaluable, err := this.BuildEvaluableNode(lowerIndexASTNode)
+	lowerIndexEvaluable, err := node.BuildEvaluableNode(lowerIndexASTNode)
 	if err != nil {
 		return nil, err
 	}
 
-	upperIndexEvaluable, err := this.BuildEvaluableNode(upperIndexASTNode)
+	upperIndexEvaluable, err := node.BuildEvaluableNode(upperIndexASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -139,12 +139,12 @@ func (this *RootNode) BuildArraySliceAccessNode(
 	}, nil
 }
 
-func (this *ArraySliceAccessNode) Evaluate(
+func (node *ArraySliceAccessNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	baseMlrval := this.baseEvaluable.Evaluate(state)
-	lowerIndexMlrval := this.lowerIndexEvaluable.Evaluate(state)
-	upperIndexMlrval := this.upperIndexEvaluable.Evaluate(state)
+	baseMlrval := node.baseEvaluable.Evaluate(state)
+	lowerIndexMlrval := node.lowerIndexEvaluable.Evaluate(state)
+	upperIndexMlrval := node.upperIndexEvaluable.Evaluate(state)
 
 	if baseMlrval.IsAbsent() {
 		return types.MLRVAL_ABSENT
@@ -220,7 +220,7 @@ type PositionalFieldNameNode struct {
 	indexEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildPositionalFieldNameNode(
+func (node *RootNode) BuildPositionalFieldNameNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldName)
@@ -228,7 +228,7 @@ func (this *RootNode) BuildPositionalFieldNameNode(
 
 	indexASTNode := astNode.Children[0]
 
-	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
+	indexEvaluable, err := node.BuildEvaluableNode(indexASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -239,10 +239,10 @@ func (this *RootNode) BuildPositionalFieldNameNode(
 }
 
 // TODO: code-dedupe these next four Evaluate methods
-func (this *PositionalFieldNameNode) Evaluate(
+func (node *PositionalFieldNameNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	indexMlrval := this.indexEvaluable.Evaluate(state)
+	indexMlrval := node.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
 		return types.MLRVAL_ABSENT
 	}
@@ -267,7 +267,7 @@ type PositionalFieldValueNode struct {
 	indexEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildPositionalFieldValueNode(
+func (node *RootNode) BuildPositionalFieldValueNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypePositionalFieldValue)
@@ -275,7 +275,7 @@ func (this *RootNode) BuildPositionalFieldValueNode(
 
 	indexASTNode := astNode.Children[0]
 
-	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
+	indexEvaluable, err := node.BuildEvaluableNode(indexASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -285,10 +285,10 @@ func (this *RootNode) BuildPositionalFieldValueNode(
 	}, nil
 }
 
-func (this *PositionalFieldValueNode) Evaluate(
+func (node *PositionalFieldValueNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	indexMlrval := this.indexEvaluable.Evaluate(state)
+	indexMlrval := node.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
 		return types.MLRVAL_ABSENT
 	}
@@ -314,7 +314,7 @@ type ArrayOrMapPositionalNameAccessNode struct {
 	indexEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildArrayOrMapPositionalNameAccessNode(
+func (node *RootNode) BuildArrayOrMapPositionalNameAccessNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalNameAccess)
@@ -323,11 +323,11 @@ func (this *RootNode) BuildArrayOrMapPositionalNameAccessNode(
 	baseASTNode := astNode.Children[0]
 	indexASTNode := astNode.Children[1]
 
-	baseEvaluable, err := this.BuildEvaluableNode(baseASTNode)
+	baseEvaluable, err := node.BuildEvaluableNode(baseASTNode)
 	if err != nil {
 		return nil, err
 	}
-	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
+	indexEvaluable, err := node.BuildEvaluableNode(indexASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -338,11 +338,11 @@ func (this *RootNode) BuildArrayOrMapPositionalNameAccessNode(
 	}, nil
 }
 
-func (this *ArrayOrMapPositionalNameAccessNode) Evaluate(
+func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	baseMlrval := this.baseEvaluable.Evaluate(state)
-	indexMlrval := this.indexEvaluable.Evaluate(state)
+	baseMlrval := node.baseEvaluable.Evaluate(state)
+	indexMlrval := node.indexEvaluable.Evaluate(state)
 
 	if indexMlrval.IsAbsent() {
 		return types.MLRVAL_ABSENT
@@ -386,7 +386,7 @@ type ArrayOrMapPositionalValueAccessNode struct {
 	indexEvaluable IEvaluable
 }
 
-func (this *RootNode) BuildArrayOrMapPositionalValueAccessNode(
+func (node *RootNode) BuildArrayOrMapPositionalValueAccessNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeArrayOrMapPositionalValueAccess)
@@ -395,11 +395,11 @@ func (this *RootNode) BuildArrayOrMapPositionalValueAccessNode(
 	baseASTNode := astNode.Children[0]
 	indexASTNode := astNode.Children[1]
 
-	baseEvaluable, err := this.BuildEvaluableNode(baseASTNode)
+	baseEvaluable, err := node.BuildEvaluableNode(baseASTNode)
 	if err != nil {
 		return nil, err
 	}
-	indexEvaluable, err := this.BuildEvaluableNode(indexASTNode)
+	indexEvaluable, err := node.BuildEvaluableNode(indexASTNode)
 	if err != nil {
 		return nil, err
 	}
@@ -410,11 +410,11 @@ func (this *RootNode) BuildArrayOrMapPositionalValueAccessNode(
 	}, nil
 }
 
-func (this *ArrayOrMapPositionalValueAccessNode) Evaluate(
+func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	baseMlrval := this.baseEvaluable.Evaluate(state)
-	indexMlrval := this.indexEvaluable.Evaluate(state)
+	baseMlrval := node.baseEvaluable.Evaluate(state)
+	indexMlrval := node.indexEvaluable.Evaluate(state)
 
 	if indexMlrval.IsAbsent() {
 		return types.MLRVAL_ABSENT
@@ -471,7 +471,7 @@ type MapLiteralNode struct {
 	evaluablePairs []*EvaluablePair
 }
 
-func (this *RootNode) BuildMapLiteralNode(
+func (node *RootNode) BuildMapLiteralNode(
 	astNode *dsl.ASTNode,
 ) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeMapLiteral)
@@ -486,11 +486,11 @@ func (this *RootNode) BuildMapLiteralNode(
 		astKey := astChild.Children[0]
 		astValue := astChild.Children[1]
 
-		cstKey, err := this.BuildEvaluableNode(astKey)
+		cstKey, err := node.BuildEvaluableNode(astKey)
 		if err != nil {
 			return nil, err
 		}
-		cstValue, err := this.BuildEvaluableNode(astValue)
+		cstValue, err := node.BuildEvaluableNode(astValue)
 		if err != nil {
 			return nil, err
 		}
@@ -502,14 +502,14 @@ func (this *RootNode) BuildMapLiteralNode(
 	}, nil
 }
 
-func (this *MapLiteralNode) Evaluate(
+func (node *MapLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	output := types.MlrvalPointerFromEmptyMap()
 
-	for i, _ := range this.evaluablePairs {
-		key := this.evaluablePairs[i].Key.Evaluate(state)
-		value := this.evaluablePairs[i].Value.Evaluate(state)
+	for i, _ := range node.evaluablePairs {
+		key := node.evaluablePairs[i].Key.Evaluate(state)
+		value := node.evaluablePairs[i].Value.Evaluate(state)
 
 		if !value.IsAbsent() {
 			output.MapPut(key, value)
