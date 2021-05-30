@@ -22,8 +22,8 @@ import (
 //                 * direct field value "x"
 //             * int literal "1"
 
-func (node *AST) Print() {
-	node.RootNode.Print()
+func (ast *AST) Print() {
+	ast.RootNode.Print()
 }
 
 // Parenthesized-expression print.
@@ -39,8 +39,8 @@ func (node *AST) Print() {
 //     )
 // )
 
-func (node *AST) PrintParex() {
-	node.RootNode.PrintParex()
+func (ast *AST) PrintParex() {
+	ast.RootNode.PrintParex()
 }
 
 // Parenthesized-expression print, all on one line.
@@ -48,8 +48,8 @@ func (node *AST) PrintParex() {
 //
 // (statement-block (= $y (+ (* 2 $x) 1)))
 
-func (node *AST) PrintParexOneLine() {
-	node.RootNode.PrintParexOneLine()
+func (ast *AST) PrintParexOneLine() {
+	ast.RootNode.PrintParexOneLine()
 }
 
 // ================================================================

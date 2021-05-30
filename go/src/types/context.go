@@ -155,8 +155,8 @@ func (context *Context) UpdateForInputRecord() {
 }
 
 func (context *Context) Copy() *Context {
-	that := *context
-	return &that
+	other := *context
+	return &other
 }
 
 func (context *Context) GetStatusString() string {

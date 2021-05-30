@@ -109,8 +109,8 @@ func NewMlrmapMaybeHashed(wantHashing bool) *Mlrmap {
 	}
 }
 
-func (this *Mlrmap) isHashed() bool {
-	return this.keysToEntries != nil
+func (mlrmap *Mlrmap) isHashed() bool {
+	return mlrmap.keysToEntries != nil
 }
 
 // ----------------------------------------------------------------

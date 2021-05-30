@@ -146,14 +146,14 @@ func MlrvalPointerFromArrayLiteralReference(input []Mlrval) *Mlrval {
 	return &mv
 }
 
-func MlrvalPointerFromMap(that *Mlrmap) *Mlrval {
+func MlrvalPointerFromMap(mlrmap *Mlrmap) *Mlrval {
 	mv := MlrvalPointerFromEmptyMap()
-	if that == nil {
+	if mlrmap == nil {
 		// TODO maybe return 2nd-arg error in the API
 		return MLRVAL_ERROR
 	}
 
-	for pe := that.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		mv.mapval.PutCopy(pe.Key, pe.Value)
 	}
 	return mv
@@ -161,14 +161,14 @@ func MlrvalPointerFromMap(that *Mlrmap) *Mlrval {
 
 // Like previous but doesn't copy. Only safe when the argument's sole purpose
 // is to be passed into here.
-func MlrvalPointerFromMapReferenced(that *Mlrmap) *Mlrval {
+func MlrvalPointerFromMapReferenced(mlrmap *Mlrmap) *Mlrval {
 	mv := MlrvalPointerFromEmptyMap()
-	if that == nil {
+	if mlrmap == nil {
 		// xxx maybe return 2nd-arg error in the API
 		return MLRVAL_ERROR
 	}
 
-	for pe := that.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		mv.mapval.PutReference(pe.Key, pe.Value)
 	}
 	return mv
@@ -415,14 +415,14 @@ func MlrvalEmptyMap() Mlrval {
 
 // Like previous but doesn't copy. Only safe when the argument's sole purpose
 // is to be passed into here.
-func MlrvalFromMapReferenced(that *Mlrmap) Mlrval {
+func MlrvalFromMapReferenced(mlrmap *Mlrmap) Mlrval {
 	mv := MlrvalEmptyMap()
-	if that == nil {
+	if mlrmap == nil {
 		// xxx maybe return 2nd-arg error in the API
 		return *MLRVAL_ERROR
 	}
 
-	for pe := that.Head; pe != nil; pe = pe.Next {
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		mv.mapval.PutReference(pe.Key, pe.Value)
 	}
 

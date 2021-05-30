@@ -184,14 +184,14 @@ func (this *Mlrval) GetMap() *Mlrmap {
 }
 
 // ----------------------------------------------------------------
-func (this *Mlrval) Copy() *Mlrval {
-	that := *this
-	if this.mvtype == MT_MAP {
-		that.mapval = this.mapval.Copy()
-	} else if this.mvtype == MT_ARRAY {
-		that.arrayval = CopyMlrvalArray(this.arrayval)
+func (mv *Mlrval) Copy() *Mlrval {
+	other := *mv
+	if mv.mvtype == MT_MAP {
+		other.mapval = mv.mapval.Copy()
+	} else if mv.mvtype == MT_ARRAY {
+		other.arrayval = CopyMlrvalArray(mv.arrayval)
 	}
-	return &that
+	return &other
 }
 
 func CopyMlrvalArray(input []Mlrval) []Mlrval {
