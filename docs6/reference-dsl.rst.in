@@ -8,8 +8,6 @@ Here's comparison of verbs and ``put``/``filter`` DSL expressions:
 
 Example:
 
-::
-
 POKI_RUN_COMMAND{{mlr stats1 -a sum -f x -g a data/small}}HERE
 
 * Verbs are coded in Go
@@ -19,8 +17,6 @@ POKI_RUN_COMMAND{{mlr stats1 -a sum -f x -g a data/small}}HERE
 * Their customization is limited to each verb's options
 
 Example:
-
-::
 
 POKI_RUN_COMMAND{{mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small}}HERE
 
@@ -34,19 +30,13 @@ Please see :doc:`reference-verbs` for information on verbs other than ``put`` an
 
 The essential usages of ``mlr filter`` and ``mlr put`` are for record-selection and record-updating expressions, respectively. For example, given the following input data:
 
-::
-
 POKI_RUN_COMMAND{{cat data/small}}HERE
 
 you might retain only the records whose ``a`` field has value ``eks``:
 
-::
-
 POKI_RUN_COMMAND{{mlr filter '$a == "eks"' data/small}}HERE
 
 or you might add a new field which is a function of existing fields:
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$ab = $a . "_" . $b ' data/small}}HERE
 
@@ -70,17 +60,11 @@ Expression formatting
 
 Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
 
-::
-
 POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'}}HERE
 
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
 
@@ -91,32 +75,20 @@ Expressions from files
 
 The simplest way to enter expressions for ``put`` and ``filter`` is between single quotes on the command line, e.g.
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-1.sh)HERE
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-2.sh)HERE
 
 You may, though, find it convenient to put expressions into files for reuse, and read them
 **using the -f option**. For example:
 
-::
-
 POKI_RUN_COMMAND{{cat data/fe-example-3.mlr}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-3.mlr}}HERE
 
 If you have some of the logic in a file and you want to write the rest on the command line, you can **use the -f and -e options together**:
 
-::
-
 POKI_RUN_COMMAND{{cat data/fe-example-4.mlr}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'}}HERE
 
@@ -131,45 +103,38 @@ Semicolons, commas, newlines, and curly braces
 
 Miller uses **semicolons as statement separators**, not statement terminators. This means you can write:
 
-::
-
 POKI_INCLUDE_ESCAPED(data/semicolon-example.txt)HERE
 
 Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
 
-::
-
 POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'}}HERE
-
-::
 
 POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'}}HERE
 
 Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
 
-::
-
 POKI_INCLUDE_ESCAPED(data/newline-example.txt)HERE
 
 **Trailing commas** are allowed in function/subroutine definitions, function/subroutine callsites, and map literals. This is intended for (although not restricted to) the multi-line case:
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/trailing-commas.sh)HERE
 
 Bodies for all compound statements must be enclosed in **curly braces**, even if the body is a single statement:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     mlr put 'if ($x == 1) $y = 2' # Syntax error
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     mlr put 'if ($x == 1) { $y = 2 }' # This is OK
 
 Bodies for compound statements may be empty:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
 
@@ -195,11 +160,7 @@ These are written all in capital letters, such as ``NR``, ``NF``, ``FILENAME``, 
 
 Namely, Miller supports the following five built-in variables for :doc:`filter and put <reference-dsl>`, all ``awk``-inspired: ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME``, as well as the mathematical constants ``M_PI`` and ``M_E``.  Lastly, the ``ENV`` hashmap allows read access to environment variables, e.g.  ``ENV["HOME"]`` or ``ENV["foo_".$hostname]``.
 
-::
-
 POKI_RUN_COMMAND{{mlr filter 'FNR == 2' data/small*}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$fnr = FNR' data/small*}}HERE
 
@@ -207,11 +168,7 @@ Their values of ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME`` change fr
 
 Their **scope is global**: you can refer to them in any ``filter`` or ``put`` statement. Their values are assigned by the input-record reader:
 
-::
-
 POKI_RUN_COMMAND{{mlr --csv put '$nr = NR' data/a.csv}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv}}HERE
 
@@ -228,11 +185,7 @@ If field names have **special characters** such as ``.`` then you can use braces
 
 You may also use a **computed field name** in square brackets, e.g.
 
-::
-
 POKI_RUN_COMMAND{{echo a=3,b=4 | mlr filter '$["x"] < 0.5'}}HERE
-
-::
 
 POKI_RUN_COMMAND{{echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'}}HERE
 
@@ -255,37 +208,21 @@ Use ``$[[3]]`` to access the name of field 3.  More generally, any expression ev
 
 Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third field. This has the shorter equivalent notation ``$[[[3]]]``.
 
-::
-
 POKI_RUN_COMMAND{{mlr cat data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$[[3]] = "NEW"' data/small}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr put '$[[[3]]] = "NEW"' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$NEW = $[[NR]]' data/small}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr put '$NEW = $[[[NR]]]' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$[[[NR]]] = "NEW"' data/small}}HERE
 
 Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than ``NF`` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
 
-::
-
 POKI_RUN_COMMAND{{mlr put '$[[6]] = "NEW"' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$[[[6]]] = "NEW"' data/small}}HERE
 
@@ -300,17 +237,11 @@ Just as for field names in stream records, if you want to define out-of-stream v
 
 You may use a **computed key** in square brackets, e.g.
 
-::
-
 POKI_RUN_COMMAND{{echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'}}HERE
 
 Out-of-stream variables are **scoped** to the ``put`` command in which they appear.  In particular, if you have two or more ``put`` commands separated by ``then``, each put will have its own set of out-of-stream variables:
 
-::
-
 POKI_RUN_COMMAND{{cat data/a.dkvp}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '@sum += $a; end {emit @sum}' then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp}}HERE
 
@@ -323,25 +254,17 @@ Indexed out-of-stream variables
 
 Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of the ``-g`` (group-by) option which ``mlr stats1`` and various other Miller commands have:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)HERE
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)HERE
 
 Indices can be arbitrarily deep -- here there are two or more of them:
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)HERE
 
 The idea is that ``stats1``, and other Miller verbs, encapsulate frequently-used patterns with a minimum of keystroking (and run a little faster), whereas using out-of-stream variables you have more flexibility and control in what you do.
 
 Begin/end blocks can be mixed with pattern/action blocks. For example:
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)HERE
 
@@ -353,8 +276,6 @@ Local variables
 Local variables are similar to out-of-stream variables, except that their extent is limited to the expressions in which they appear (and their basenames can't be computed using square brackets). There are three kinds of local variables: **arguments** to functions/subroutines, **variables bound within for-loops**, and **locals** defined within control blocks. They may be untyped using ``var``, or typed using ``num``, ``int``, ``float``, ``str``, ``bool``, and ``map``.
 
 For example:
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)HERE
 
@@ -384,21 +305,13 @@ Things which are perhaps surprising compared to other languages:
 
 The following example demonstrates the scope rules:
 
-::
-
 POKI_RUN_COMMAND{{cat data/scope-example.mlr}}HERE
 
-::
-
 POKI_RUN_COMMAND{{cat data/scope-example.dat}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr}}HERE
 
 And this example demonstrates the type-declaration rules:
-
-::
 
 POKI_RUN_COMMAND{{cat data/type-decl-example.mlr}}HERE
 
@@ -409,19 +322,13 @@ Miller's ``put``/``filter`` DSL has four kinds of hashmaps. **Stream records** a
 
 For example, the following swaps the input stream's ``a`` and ``i`` fields, modifies ``y``, and drops the rest:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-1.sh)HERE
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-2.sh)HERE
 
 Like out-of-stream and local variables, map literals can be multi-level:
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-3.sh)HERE
 
@@ -443,11 +350,7 @@ Type-test and type-assertion expressions
 
 The following ``is...`` functions take a value and return a boolean indicating whether the argument is of the indicated type. The ``assert_...`` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
-::
-
 POKI_RUN_COMMAND{{mlr -F | grep ^is}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr -F | grep ^assert}}HERE
 
@@ -460,7 +363,7 @@ Local variables can be defined either untyped as in ``x = 1``, or typed as in ``
 
 The reason for ``num`` is that ``int`` and ``float`` typedecls are very precise:
 
-::
+.. code-block::
 
     float a = 0;   # Runtime error since 0 is int not float
     int   b = 1.0; # Runtime error since 1.0 is float not int
@@ -471,7 +374,7 @@ A suggestion is to use ``num`` for general use when you want numeric content, an
 
 The ``var`` type declaration indicates no type restrictions, e.g. ``var x = 1`` has the same type restrictions on ``x`` as ``x = 1``. The difference is in intentional shadowing: if you have ``x = 1`` in outer scope and ``x = 2`` in inner scope (e.g. within a for-loop or an if-statement) then outer-scope ``x`` has value 2 after the second assignment.  But if you have ``var x = 2`` in the inner scope, then you are declaring a variable scoped to the inner block.) For example:
 
-::
+.. code-block::
 
     x = 1;
     if (NR == 4) {
@@ -479,7 +382,7 @@ The ``var`` type declaration indicates no type restrictions, e.g. ``var x = 1`` 
     }
     print x; # Value of x is now two
 
-::
+.. code-block::
 
     x = 1;
     if (NR == 4) {
@@ -489,7 +392,7 @@ The ``var`` type declaration indicates no type restrictions, e.g. ``var x = 1`` 
 
 Likewise function arguments can optionally be typed, with type enforced when the function is called:
 
-::
+.. code-block::
 
     func f(map m, int i) {
       ...
@@ -504,7 +407,7 @@ Likewise function arguments can optionally be typed, with type enforced when the
 
 Thirdly, function return values can be type-checked at the point of ``return`` using ``:`` and a typedecl after the parameter list:
 
-::
+.. code-block::
 
     func f(map m, int i): bool {
       ...
@@ -541,30 +444,20 @@ There are three remaining kinds of variable assignment using out-of-stream varia
 
 Example recursive copy of out-of-stream variables:
 
-::
-
 POKI_RUN_COMMAND{{mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small}}HERE
 
 Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
-
-::
 
 POKI_RUN_COMMAND{{mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small}}HERE
 
 Example of full stream record assigned to an out-of-stream variable, finding the record for which the ``x`` field has the largest value in the input stream:
 
-::
-
 POKI_RUN_COMMAND{{cat data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --opprint put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small}}HERE
 
 Keywords for filter and put
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
 
 POKI_RUN_COMMAND{{mlr --help-all-keywords}}HERE
 
@@ -573,7 +466,7 @@ Operator precedence
 
 Operators are listed in order of decreasing precedence, highest first.
 
-::
+.. code-block::
 
     Operators              Associativity
     ---------              -------------
@@ -615,29 +508,17 @@ Pattern-action blocks
 
 These are reminiscent of ``awk`` syntax.  They can be used to allow assignments to be done only when appropriate -- e.g. for math-function domain restrictions, regex-matching, and so on:
 
-::
-
 POKI_RUN_COMMAND{{mlr cat data/put-gating-example-1.dkvp}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr cat data/put-gating-example-2.dkvp}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp}}HERE
 
 This produces heteregenous output which Miller, of course, has no problems with (see :doc:`record-heterogeneity`).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes ``put`` to evaluate the boolean expression (along with any side effects, namely, regex-captures ``\1``, ``\2``, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
 
-::
-
 POKI_RUN_COMMAND{{mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp}}HERE
 
@@ -646,17 +527,15 @@ If-statements
 
 These are again reminiscent of ``awk``. Pattern-action blocks are a special case of ``if`` with no ``elif`` or ``else`` blocks, no ``if`` keyword, and parentheses optional around the boolean expression:
 
-::
+.. code-block::
 
     mlr put 'NR == 4 {$foo = "bar"}'
 
-::
+.. code-block::
 
     mlr put 'if (NR == 4) {$foo = "bar"}'
 
 Compound statements use ``elif`` (rather than ``elsif`` or ``else if``):
-
-::
 
 POKI_INCLUDE_ESCAPED(data/if-chain.sh)HERE
 
@@ -665,11 +544,7 @@ While and do-while loops
 
 Miller's ``while`` and ``do-while`` are unsurprising in comparison to various languages, as are ``break`` and ``continue``:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-1.sh)HERE
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-2.sh)HERE
 
@@ -688,11 +563,7 @@ Key-only for-loops
 
 The ``key`` variable is always bound to the *key* of key-value pairs:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-1.sh)HERE
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-2.sh)HERE
 
@@ -703,15 +574,9 @@ Key-value for-loops
 
 Single-level keys may be gotten at using either ``for(k,v)`` or ``for((k),v)``; multi-level keys may be gotten at using ``for((k1,k2,k3),v)`` and so on.  The ``v`` variable will be bound to to a scalar value (a string or a number) if the map stops at that level, or to a map-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
-::
-
 POKI_RUN_COMMAND{{cat data/for-srec-example.tbl}}HERE
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'}}HERE
 
@@ -719,39 +584,25 @@ Note that the value of the current field in the for-loop can be gotten either us
 
 Important note: to avoid inconsistent looping behavior in case you're setting new fields (and/or unsetting existing ones) while looping over the record, **Miller makes a copy of the record before the loop: loop variables are bound from the copy and all other reads/writes involve the record itself**:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-2.sh)HERE
 
 It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-3.sh)HERE
 
 You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after ``in``, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
 
-::
-
 POKI_INCLUDE_ESCAPED(data/for-oosvar-example-0a.txt)HERE
 
 That's confusing in the abstract, so a concrete example is in order. Suppose the out-of-stream variable ``@myvar`` is populated as follows:
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0b.sh)HERE
 
 Then we can get at various values as follows:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0c.sh)HERE
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0d.sh)HERE
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0e.sh)HERE
 
@@ -760,11 +611,7 @@ C-style triple-for loops
 
 These are supported as follows:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-1.sh)HERE
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-2.sh)HERE
 
@@ -785,31 +632,21 @@ Begin/end blocks
 
 Miller supports an ``awk``-like ``begin/end`` syntax.  The statements in the ``begin`` block are executed before any input records are read; the statements in the ``end`` block are executed after the last input record is read.  (If you want to execute some statement at the start of each file, not at the start of the first file as with ``begin``, you might use a pattern/action block of the form ``FNR == 1 { ... }``.) All statements outside of ``begin`` or ``end`` are, of course, executed on every input record. Semicolons separate statements inside or outside of begin/end blocks; semicolons are required between begin/end block bodies and any subsequent statement.  For example:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-1.sh)HERE
 
 Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in ``awk``, where they'd default to 0 either way), the above can be written more succinctly as
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-2.sh)HERE
 
 The **put -q** option is a shorthand which suppresses printing of each output record, with only ``emit`` statements being output. So to get only summary outputs, one could write
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-3.sh)HERE
 
 We can do similarly with multiple out-of-stream variables:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-4.sh)HERE
 
 This is of course not much different than
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-5.sh)HERE
 
@@ -890,31 +727,19 @@ Details:
 
 * The ``print`` and ``dump`` keywords produce output immediately to standard output, or to specified file(s) or pipe-to command if present.
 
-::
-
 POKI_RUN_COMMAND{{mlr --help-keyword print}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --help-keyword dump}}HERE
 
 * ``mlr put`` sends the current record (possibly modified by the ``put`` expression) to the output record stream. Records are then input to the following verb in a ``then``-chain (if any), else printed to standard output (unless ``put -q``). The **tee** keyword *additionally* writes the output record to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
-::
-
 POKI_RUN_COMMAND{{mlr --help-keyword tee}}HERE
 
 * ``mlr put``'s ``emitf``, ``emitp``, and ``emit`` send out-of-stream variables to the output record stream. These are then input to the following verb in a ``then``-chain (if any), else printed to standard output. When redirected with ``>``, ``>>``, or ``|``, they *instead* write the out-of-stream variable(s) to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
-::
-
 POKI_RUN_COMMAND{{mlr --help-keyword emitf}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr --help-keyword emitp}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --help-keyword emit}}HERE
 
@@ -927,88 +752,50 @@ There are three variants: ``emitf``, ``emit``, and ``emitp``. Keep in mind that 
 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For ``emitf`` these mustn't have indexing using ``@name[...]``. Example:
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small}}HERE
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
 
-::
-
 POKI_RUN_COMMAND{{cat data/small}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q '@sum += $x; end { dump }' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put -q '@sum += $x; end { emit @sum }' data/small}}HERE
 
 If it's indexed then use as many names after ``emit`` as there are indices:
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a] += $x; end { dump }' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small}}HERE
 
 Now for **emitp**: if you have as many names following ``emit`` as there are levels in the out-of-stream variable's hashmap, then ``emit`` and ``emitp`` do the same thing. Where they differ is when you don't specify as many names as there are hashmap levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: ``emitp`` includes full prefixing (hence the ``p`` in ``emitp``) while ``emit`` takes the deepest hashmap key as the output-record key:
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
 
 Use **--oflatsep** to specify the character which joins multilevel
 keys for ``emitp`` (it defaults to a colon):
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
 
@@ -1017,8 +804,6 @@ Multi-emit statements
 
 You can emit **multiple map-valued expressions side-by-side** by
 including their names in parentheses:
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/emit-lashed.sh)HERE
 
@@ -1029,15 +814,9 @@ Emit-all statements
 
 Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-stream variables. You can use the following idiom to get various accumulators output side-by-side (reminiscent of ``mlr stats1``):
 
-::
-
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'}}HERE
 
@@ -1046,21 +825,13 @@ Unset statements
 
 You can clear a map key by assigning the empty string as its value: ``$x=""`` or ``@x=""``. Using ``unset`` you can remove the key entirely. Examples:
 
-::
-
 POKI_RUN_COMMAND{{cat data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put 'unset $x, $a' data/small}}HERE
 
 This can also be done, of course, using ``mlr cut -x``. You can also clear out-of-stream or local variables, at the base name level, or at an indexed sublevel:
 
-::
-
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small}}HERE
 
@@ -1071,21 +842,13 @@ Filter statements
 
 You can use ``filter`` within ``put``. In fact, the following two are synonymous:
 
-::
-
 POKI_RUN_COMMAND{{mlr filter 'NR==2 || NR==3' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put 'filter NR==2 || NR==3' data/small}}HERE
 
 The former, of course, is much easier to type. But the latter allows you to define more complex expressions for the filter, and/or do other things in addition to the filter:
 
-::
-
 POKI_RUN_COMMAND{{mlr put '@running_sum += $x; filter @running_sum > 1.3' data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$z = $x * $y; filter $z > 0.3' data/small}}HERE
 
@@ -1113,8 +876,6 @@ User-defined functions
 
 Here's the obligatory example of a recursive function to compute the factorial function:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/factorial-example.sh)HERE
 
 Properties of user-defined functions:
@@ -1141,8 +902,6 @@ User-defined subroutines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Example:
-
-::
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/subr-example.sh)HERE
 

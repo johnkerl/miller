@@ -8,19 +8,11 @@ File-format awareness
 
 Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header line is written once:
 
-::
-
 POKI_RUN_COMMAND{{cat data/a.csv}}HERE
-
-::
 
 POKI_RUN_COMMAND{{cat data/b.csv}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr --csv cat data/a.csv data/b.csv}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --csv sort -nr b data/a.csv data/b.csv}}HERE
 

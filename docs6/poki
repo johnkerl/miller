@@ -56,7 +56,7 @@ end
 
 # ----------------------------------------------------------------
 def include_escaped(included_file_name, output_handle)
-  write_card(File.readlines(included_file_name), output_handle)
+  write_card(false, File.readlines(included_file_name), output_handle)
 end
 
 # ----------------------------------------------------------------
@@ -69,13 +69,13 @@ def run_command(cmd, output_handle)
   # The command can be multi-line
   cmd_lines = cmd.split(/\n/)
   cmd_line_1 = cmd_lines.shift
-  write_card(['$ '+cmd_line_1] + cmd_lines + cmd_output.split(/\n/), output_handle)
+  write_card(true, ['$ '+cmd_line_1] + cmd_lines + cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------
 def run_command_tolerating_error(cmd, output_handle)
   cmd_output = `#{cmd} 2>&1`
-  write_card(['$ '+cmd] + cmd_output.split(/\n/), output_handle)
+  write_card(true, ['$ '+cmd] + cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------
@@ -89,7 +89,12 @@ def run_content_generator(cmd, output_handle)
 end
 
 # ----------------------------------------------------------------
-def write_card(content_lines, output_handle)
+def write_card(highlight_first_line, content_lines, output_handle)
+  output_handle.puts('.. code-block::')
+  if highlight_first_line
+    output_handle.puts('   :emphasize-lines: 1,1') # 'hll' in _static/*.css
+  end
+  output_handle.puts
   content_lines.each do |content_line|
     # The callsite should do the "::", blank line, then this, then blank line
     # in order to adhere to Sphinx code-block syntax. (Another option would be

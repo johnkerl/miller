@@ -6,8 +6,6 @@ Miller handles name-indexed data using several formats: some you probably know b
 Examples
 ----------------------------------------------------------------
 
-::
-
 POKI_RUN_COMMAND{{mlr --usage-data-format-examples}}HERE
 
 .. _file-formats-csv:
@@ -53,27 +51,27 @@ Here are things they have in common:
 DKVP: Key-value pairs
 ----------------------------------------------------------------
 
-Miller's default file format is DKVP, for **delimited key-value pairs**. Example::
+Miller's default file format is DKVP, for **delimited key-value pairs**. Example:
 
 POKI_RUN_COMMAND{{mlr cat data/small}}HERE
 
 Such data are easy to generate, e.g. in Ruby with
 
-::
+.. code-block::
 
   puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
 
-::
+.. code-block::
 
   puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
 
 or ``print`` statements in various languages, e.g.
 
-::
+.. code-block::
 
     echo "type=3,user=$USER,date=$date\n";
 
-::
+.. code-block::
 
     logger.log("type=3,user=$USER,date=$date\n");
 
@@ -81,7 +79,7 @@ Fields lacking an IPS will have positional index (starting at 1) used as the key
 
 As discussed in :doc:`record-heterogeneity`, Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
 
-::
+.. code-block::
 
     resource=/path/to/file,loadsec=0.45,ok=true
     record_count=100, resource=/path/to/file
@@ -101,23 +99,17 @@ With ``--inidx --ifs ' ' --repifs``, Miller splits lines on whitespace and assig
 
 Example with index-numbered output:
 
-::
-
 POKI_RUN_COMMAND{{cat data/small}}HERE
 
 POKI_RUN_COMMAND{{mlr --onidx --ofs ' ' cat data/small}}HERE
 
 Example with index-numbered input:
 
-::
-
 POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
 
 POKI_RUN_COMMAND{{mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt}}HERE
 
 Example with index-numbered input and output:
-
-::
 
 POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
 
@@ -137,8 +129,6 @@ Single-level JSON objects
 
 An **array of single-level objects** is, quite simply, **a table**:
 
-::
-
 POKI_RUN_COMMAND{{mlr --json head -n 2 then cut -f color,shape data/json-example-1.json}}HERE
 
 POKI_RUN_COMMAND{{mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json}}HERE
@@ -150,13 +140,11 @@ Nested JSON objects
 
 Additionally, Miller can **tabularize nested objects by concatentating keys**:
 
-::
-
 POKI_RUN_COMMAND{{mlr --json --jvstack head -n 2 data/json-example-2.json}}HERE
 
 POKI_RUN_COMMAND{{mlr --ijson --opprint head -n 4 data/json-example-2.json}}HERE
 
-Note in particular that as far as Miller's ``put`` and ``filter``, as well as other I/O formats, are concerned, these are simply field names with colons in them::
+Note in particular that as far as Miller's ``put`` and ``filter``, as well as other I/O formats, are concerned, these are simply field names with colons in them:
 
 POKI_RUN_COMMAND{{mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json}}HERE
 
@@ -165,15 +153,15 @@ Arrays
 
 Arrays aren't supported in Miller's ``put``/``filter`` DSL. By default, JSON arrays are read in as integer-keyed maps.
 
-Suppose we have arrays like this in our input data::
+Suppose we have arrays like this in our input data:
 
 POKI_RUN_COMMAND{{cat data/json-example-3.json}}HERE
 
-Then integer indices (starting from 0 and counting up) are used as map keys::
+Then integer indices (starting from 0 and counting up) are used as map keys:
 
 POKI_RUN_COMMAND{{mlr --ijson --oxtab cat data/json-example-3.json}}HERE
 
-When the data are written back out as JSON, field names are re-expanded as above, but what were arrays on input are now maps on output::
+When the data are written back out as JSON, field names are re-expanded as above, but what were arrays on input are now maps on output:
 
 POKI_RUN_COMMAND{{mlr --json --jvstack cat data/json-example-3.json}}HERE
 
@@ -214,8 +202,6 @@ PPRINT: Pretty-printed tabular
 
 Miller's pretty-print format is like CSV, but column-aligned.  For example, compare
 
-::
-
 POKI_RUN_COMMAND{{mlr --ocsv cat data/small}}HERE
 
 POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
@@ -224,7 +210,7 @@ Note that while Miller is a line-at-a-time processor and retains input lines in 
 
 See :doc:`record-heterogeneity` for how Miller handles changes of field names within a single data stream.
 
-For output only (this isn't supported in the input-scanner as of 5.0.0) you can use ``--barred`` with pprint output format::
+For output only (this isn't supported in the input-scanner as of 5.0.0) you can use ``--barred`` with pprint output format:
 
 POKI_RUN_COMMAND{{mlr --opprint --barred cat data/small}}HERE
 
@@ -234,7 +220,7 @@ XTAB: Vertical tabular
 ----------------------------------------------------------------
 
 This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
-`ngrid <https://github.com/twosigma/ngrid/>`_ for an entirely different, very powerful option). Namely::
+`ngrid <https://github.com/twosigma/ngrid/>`_ for an entirely different, very powerful option). Namely:
 
 POKI_INCLUDE_ESCAPED(data/system-file-opprint-example.txt)HERE
 
@@ -245,7 +231,7 @@ POKI_INCLUDE_ESCAPED(data/system-file-ojson-example.txt)HERE
 Markdown tabular
 ----------------------------------------------------------------
 
-Markdown format looks like this::
+Markdown format looks like this:
 
 POKI_RUN_COMMAND{{mlr --omd cat data/small}}HERE
 
@@ -258,7 +244,7 @@ As of Miller 4.3.0, markdown format is supported only for output, not input.
 Data-conversion keystroke-savers
 ----------------------------------------------------------------
 
-While you can do format conversion using ``mlr --icsv --ojson cat myfile.csv``, there are also keystroke-savers for this purpose, such as ``mlr --c2j cat myfile.csv``.  For a complete list::
+While you can do format conversion using ``mlr --icsv --ojson cat myfile.csv``, there are also keystroke-savers for this purpose, such as ``mlr --c2j cat myfile.csv``.  For a complete list:
 
 POKI_RUN_COMMAND{{mlr --usage-format-conversion-keystroke-saver-options}}HERE
 
@@ -280,11 +266,11 @@ See also :ref:`reference-separators` for more information about record/field/pai
 Comments in data
 ----------------------------------------------------------------
 
-You can include comments within your data files, and either have them ignored, or passed directly through to the standard output as soon as they are encountered::
+You can include comments within your data files, and either have them ignored, or passed directly through to the standard output as soon as they are encountered:
 
 POKI_RUN_COMMAND{{mlr --usage-comments-in-data}}HERE
 
-Examples::
+Examples:
 
 POKI_RUN_COMMAND{{cat data/budget.csv}}HERE
 

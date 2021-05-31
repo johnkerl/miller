@@ -3,7 +3,7 @@ td.linenos pre { color: #000000; background-color: #f0f0f0; padding: 0 5px 0 5px
 span.linenos { color: #000000; background-color: #f0f0f0; padding: 0 5px 0 5px; }
 td.linenos pre.special { color: #000000; background-color: #ffffc0; padding: 0 5px 0 5px; }
 span.linenos.special { color: #000000; background-color: #ffffc0; padding: 0 5px 0 5px; }
-.highlight .hll { background-color: #ffffcc }
+.highlight .hll { background-color: #c5b690; font-weight: bold; } /* CHANGED */
 /*.highlight { background: #eeffcc; }*/
 /* CHANGE ME */
 .highlight { background: #eae2cb; }

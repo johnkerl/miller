@@ -8,7 +8,10 @@ SQL-output examples
 
 I like to produce SQL-query output with header-column and tab delimiter: this is CSV but with a tab instead of a comma, also known as TSV. Then I post-process with ``mlr --tsv`` or ``mlr --tsvlite``.  This means I can do some (or all, or none) of my data processing within SQL queries, and some (or none, or all) of my data processing using Miller -- whichever is most convenient for my needs at the moment.
 
-For example, using default output formatting in ``mysql`` we get formatting like Miller's ``--opprint --barred``::
+For example, using default output formatting in ``mysql`` we get formatting like Miller's ``--opprint --barred``:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mysql --database=mydb -e 'show columns in mytable'
     +------------------+--------------+------+-----+---------+-------+
@@ -21,7 +24,10 @@ For example, using default output formatting in ``mysql`` we get formatting like
     | last_update_time | int(11)      | YES  |     | NULL    |       |
     +------------------+--------------+------+-----+---------+-------+
 
-Using ``mysql``'s ``-B`` we get TSV output::
+Using ``mysql``'s ``-B`` we get TSV output:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --opprint cat
     Field            Type         Null Key Default Extra
@@ -31,7 +37,10 @@ Using ``mysql``'s ``-B`` we get TSV output::
     assigned_to      bigint(20)   YES -   NULL -
     last_update_time int(11)      YES -   NULL -
 
-Since Miller handles TSV output, we can do as much or as little processing as we want in the SQL query, then send the rest on to Miller. This includes outputting as JSON, doing further selects/joins in Miller, doing stats, etc.  etc.::
+Since Miller handles TSV output, we can do as much or as little processing as we want in the SQL query, then send the rest on to Miller. This includes outputting as JSON, doing further selects/joins in Miller, doing stats, etc.  etc.:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson --jlistwrap --jvstack cat
     [
@@ -77,6 +86,9 @@ Since Miller handles TSV output, we can do as much or as little processing as we
       }
     ]
 
+.. code-block::
+   :emphasize-lines: 1,1
+
     $ mysql --database=mydb -B -e 'select * from mytable' > query.tsv
 
     $ mlr --from query.tsv --t2p stats1 -a count -f id -g category,assigned_to
@@ -98,7 +110,9 @@ SQL-input examples
 
 One use of NIDX (value-only, no keys) format is for loading up SQL tables.
 
-Create and load SQL table::
+Create and load SQL table:
+
+.. code-block::
 
     mysql> CREATE TABLE abixy(
       a VARCHAR(32),
@@ -139,7 +153,10 @@ Create and load SQL table::
     | pan  | wye  |   10 |  0.5026260055412137 |  0.9526183602969864 |
     +------+------+------+---------------------+---------------------+
 
-Aggregate counts within SQL::
+Aggregate counts within SQL:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     mysql> SELECT a, b, COUNT(*) AS count FROM abixy GROUP BY a, b ORDER BY COUNT DESC;
     +------+------+-------+
@@ -173,7 +190,10 @@ Aggregate counts within SQL::
     +------+------+-------+
     25 rows in set (0.01 sec)
 
-Aggregate counts within Miller::
+Aggregate counts within Miller:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --opprint uniq -c -g a,b then sort -nr count data/medium
     a   b   count
@@ -193,7 +213,10 @@ Aggregate counts within Miller::
     hat pan 363
     eks zee 357
 
-Pipe SQL output to aggregate counts within Miller::
+Pipe SQL output to aggregate counts within Miller:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mysql -D miller -B -e 'select * from abixy' | mlr --itsv --opprint uniq -c -g a,b then sort -nr count
     a   b   count

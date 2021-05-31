@@ -18,8 +18,6 @@ Also try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable c
 Diagnosing delimiter specifications
 ----------------------------------------------------------------
 
-::
-
 POKI_INCLUDE_ESCAPED(data/delimiter-examples.txt)HERE
 
 How do I suppress numeric conversion?
@@ -29,11 +27,7 @@ How do I suppress numeric conversion?
 
 Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input records is to parse them as integer, if possible, then as float, if possible, else leave them as string:
 
-::
-
 POKI_RUN_COMMAND{{cat data/scan-example-1.tbl}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-1.tbl}}HERE
 
@@ -47,11 +41,7 @@ This is a sensible default: you should be able to put ``'$z = $x + $y'`` without
 
 But now suppose you have data like these:
 
-::
-
 POKI_RUN_COMMAND{{cat data/scan-example-2.tbl}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl}}HERE
 
@@ -69,8 +59,6 @@ Taken individually the rules make sense; taken collectively they produce a mishm
 
 The solution is to **use the -S flag** for ``mlr put`` and/or ``mlr filter``. Then all field values are left as string. You can type-coerce on demand using syntax like ``'$z = int($x) + float($y)'``. (See also :doc:`reference-dsl`; see also https://github.com/johnkerl/miller/issues/150.)
 
-::
-
 POKI_RUN_COMMAND{{mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl}}HERE
 
 How do I examine then-chaining?
@@ -80,27 +68,19 @@ Then-chaining found in Miller is intended to function the same as Unix pipes, bu
 
 First, look at the input data:
 
-::
-
 POKI_RUN_COMMAND{{cat data/then-example.csv}}HERE
 
 Next, run the first step of your command, omitting anything from the first ``then`` onward:
 
-::
-
 POKI_RUN_COMMAND{{mlr --icsv --opprint count-distinct -f Status,Payment_Type data/then-example.csv}}HERE
 
 After that, run it with the next ``then`` step included:
-
-::
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.csv}}HERE
 
 Now if you use ``then`` to include another verb after that, the columns ``Status``, ``Payment_Type``, and ``count`` will be the input to that verb.
 
 Note, by the way, that you'll get the same results using pipes:
-
-::
 
 POKI_RUN_COMMAND{{mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv | mlr --icsv --opprint sort -nr count}}HERE
 
@@ -109,31 +89,17 @@ I assigned $9 and it's not 9th
 
 Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data.
 
-::
-
 POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp cat}}HERE
-
-::
 
 POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'}}HERE
 
-::
-
 POKI_RUN_COMMAND{{echo x,y,z | mlr --nidx cat}}HERE
-
-::
 
 POKI_RUN_COMMAND{{echo x,y,z | mlr --csv --implicit-csv-header cat}}HERE
 
-::
-
 POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp rename 2,999}}HERE
 
-::
-
 POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp rename 2,newname}}HERE
-
-::
 
 POKI_RUN_COMMAND{{echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2}}HERE
 
@@ -142,13 +108,9 @@ How can I filter by date?
 
 Given input like
 
-::
-
 POKI_RUN_COMMAND{{cat dates.csv}}HERE
 
 we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the :ref:`reference-dsl-strptime` format-string.  For example:
-
-::
 
 POKI_RUN_COMMAND{{mlr --csv filter 'strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")' dates.csv}}HERE
 
@@ -159,38 +121,26 @@ How can I handle commas-as-data in various formats?
 
 :doc:`CSV <file-formats>` handles this well and by design:
 
-::
-
 POKI_RUN_COMMAND{{cat commas.csv}}HERE
 
 Likewise :ref:`file-formats-json`:
-
-::
 
 POKI_RUN_COMMAND{{mlr --icsv --ojson cat commas.csv}}HERE
 
 For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no escaping for carriage returns, but commas work fine:
 
-::
-
 POKI_RUN_COMMAND{{mlr --icsv --oxtab cat commas.csv}}HERE
 
 But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <file-formats-nidx>`, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
-
-::
 
 POKI_RUN_COMMAND{{mlr --icsv --odkvp cat commas.csv}}HERE
 
 One solution is to use a different delimiter, such as a pipe character:
 
-::
-
 POKI_RUN_COMMAND{{mlr --icsv --odkvp --ofs pipe cat commas.csv}}HERE
 
 To be extra-sure to avoid data/delimiter clashes, you can also use control
 characters as delimiters -- here, control-A:
-
-::
 
 POKI_RUN_COMMAND{{mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v}}HERE
 
@@ -199,16 +149,12 @@ How can I handle field names with special symbols in them?
 
 Simply surround the field names with curly braces:
 
-::
-
 POKI_RUN_COMMAND{{echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'}}HERE
 
 How to escape '?' in regexes?
 ----------------------------------------------------------------
 
 One way is to use square brackets; an alternative is to use simple string-substitution rather than a regular expression.
-
-::
 
 POKI_RUN_COMMAND{{cat data/question.dat}}HERE
 POKI_RUN_COMMAND{{mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat}}HERE
@@ -221,19 +167,13 @@ How can I put single-quotes into strings?
 
 This is a little tricky due to the shell's handling of quotes. For simplicity, let's first put an update script into a file:
 
-::
-
 POKI_INCLUDE_ESCAPED(data/single-quote-example.mlr)HERE
-
-::
 
 POKI_RUN_COMMAND{{echo a=bcd | mlr put -f data/single-quote-example.mlr}}HERE
 
 So, it's simple: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
 
 Without putting the update expression in a file, it's messier:
-
-::
 
 POKI_RUN_COMMAND{{echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'}}HERE
 
@@ -252,19 +192,13 @@ Why doesn't mlr cut put fields in the order I want?
 
 Example: columns ``x,i,a`` were requested but they appear here in the order ``a,i,x``:
 
-::
-
 POKI_RUN_COMMAND{{cat data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr cut -f x,i,a data/small}}HERE
 
 The issue is that Miller's ``cut``, by default, outputs cut fields in the order they appear in the input data. This design decision was made intentionally to parallel the Unix/Linux system ``cut`` command, which has the same semantics.
 
 The solution is to use the ``-o`` option:
-
-::
 
 POKI_RUN_COMMAND{{mlr cut -o -f x,i,a data/small}}HERE
 
@@ -273,31 +207,21 @@ NR is not consecutive after then-chaining
 
 Given this input data:
 
-::
-
 POKI_RUN_COMMAND{{cat data/small}}HERE
 
 why don't I see ``NR=1`` and ``NR=2`` here??
-
-::
 
 POKI_RUN_COMMAND{{mlr filter '$x > 0.5' then put '$NR = NR' data/small}}HERE
 
 The reason is that ``NR`` is computed for the original input records and isn't dynamically updated. By contrast, ``NF`` is dynamically updated: it's the number of fields in the current record, and if you add/remove a field, the value of ``NF`` will change:
 
-::
-
 POKI_RUN_COMMAND{{echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'}}HERE
 
 ``NR``, by contrast (and ``FNR`` as well), retains the value from the original input stream, and records may be dropped by a ``filter`` within a ``then``-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows:
 
-::
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/dynamic-nr.sh)HERE
 
 Or, simply use ``mlr cat -n``:
-
-::
 
 POKI_RUN_COMMAND{{mlr filter '$x > 0.5' then cat -n data/small}}HERE
 
@@ -308,23 +232,15 @@ Why am I not seeing all possible joins occur?
 
 For example, the right file here has nine records, and the left file should add in the ``hostname`` column -- so the join output should also have 9 records:
 
-::
-
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-u-left.csv}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-u-right.csv}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv}}HERE
 
 The issue is that Miller's ``join``, by default (before 5.1.0), took input sorted (lexically ascending) by the sort keys on both the left and right files.  This design decision was made intentionally to parallel the Unix/Linux system ``join`` command, which has the same semantics. The benefit of this default is that the joiner program can stream through the left and right files, needing to load neither entirely into memory. The drawback, of course, is that is requires sorted input.
 
 The solution (besides pre-sorting the input files on the join keys) is to simply use **mlr join -u** (which is now the default). This loads the left file entirely into memory (while the right file is still streamed one line at a time) and does all possible joins without requiring sorted input:
-
-::
 
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv}}HERE
 
@@ -335,29 +251,19 @@ How to rectangularize after joins with unpaired?
 
 Suppose you have the following two data files:
 
-::
-
 POKI_INCLUDE_ESCAPED(data/color-codes.csv)HERE
-
-::
 
 POKI_INCLUDE_ESCAPED(data/color-names.csv)HERE
 
 Joining on color the results are as expected:
 
-::
-
 POKI_RUN_COMMAND{{mlr --csv join -j id -f data/color-codes.csv data/color-names.csv}}HERE
 
 However, if we ask for left-unpaireds, since there's no ``color`` column, we get a row not having the same column names as the other:
 
-::
-
 POKI_RUN_COMMAND{{mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv}}HERE
 
 To fix this, we can use **unsparsify**:
-
-::
 
 POKI_RUN_COMMAND{{mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv}}HERE
 
@@ -372,13 +278,13 @@ XML, JSON, etc. are, by contrast, all **recursive** or **nested** data structure
 
 Now, you can put tabular data into these formats -- since list-of-key-value-pairs is one of the things representable in XML or JSON. Example:
 
-::
+.. code-block::
 
     # DKVP
     x=1,y=2
     z=3
 
-::
+.. code-block::
 
     # XML
     <table>
@@ -397,7 +303,7 @@ Now, you can put tabular data into these formats -- since list-of-key-value-pair
       </record>
     </table>
 
-::
+.. code-block::
 
     # JSON
     [{"x":1,"y":2},{"z":3}]
