@@ -1,1 +1,1 @@
-mlr --from regtest/input/s.dkvp put 'NR == 2 { $z = 100 }'
+mlr --from regtest/input/s.dkvp put -f ${CASEDIR}/mlr

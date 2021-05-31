@@ -1,1 +1,1 @@
-mlr --oxtab put -q '@sum[$a] += $x; end{dump;emit @sum     }'  regtest/input/abixy-wide
+mlr --oxtab put -q -f ${CASEDIR}/mlr  regtest/input/abixy-wide

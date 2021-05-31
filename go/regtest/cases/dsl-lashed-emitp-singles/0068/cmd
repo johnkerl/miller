@@ -1,1 +1,1 @@
-mlr         --from regtest/input/abixy-het --opprint put -q 'func f(a, b) { return a . "_" . b } emit (f($a, $b), f($x, $y))'
+mlr         --from regtest/input/abixy-het --opprint put -q -f ${CASEDIR}/mlr

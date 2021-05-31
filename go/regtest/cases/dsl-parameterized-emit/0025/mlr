@@ -1,0 +1,1 @@
+@sum[$a] += $x;        end {emitp  @sum               }

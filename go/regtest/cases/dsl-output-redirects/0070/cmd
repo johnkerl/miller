@@ -1,1 +1,1 @@
-mlr --from regtest/input/abixy --opprint put --ojson '@x=NR; emit > stdout, @x'
+mlr --from regtest/input/abixy --opprint put --ojson -f ${CASEDIR}/mlr

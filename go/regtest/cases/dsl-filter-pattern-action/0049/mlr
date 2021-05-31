@@ -1,0 +1,1 @@
+$y = ssub($x, "nonesuch", "1234")

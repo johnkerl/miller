@@ -1,0 +1,1 @@
+@sum[$a][$b] += $x; end{dump;emitp  @sum     }

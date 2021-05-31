@@ -1,0 +1,1 @@
+@sum     += $x; end{dump;emitp  @sum     }
