@@ -158,7 +158,7 @@ bootstrap
 
 The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
 
-.. code-block::
+.. code-block:: bash
 
     $ mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -169,7 +169,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     blue   0.517717 1470
     orange 0.490532 303
 
-.. code-block::
+.. code-block:: bash
 
     $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -180,7 +180,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     blue   0.512529 1496
     orange 0.521030 321
 
-.. code-block::
+.. code-block:: bash
 
     $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -191,7 +191,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     green  0.496803 1075
     purple 0.486337 1199
 
-.. code-block::
+.. code-block:: bash
 
     $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count

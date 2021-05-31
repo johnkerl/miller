@@ -6,38 +6,38 @@ Prebuilt executables via package managers
 
 `Homebrew <https://brew.sh/>`_ installation support for OSX is available via
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     brew update && brew install miller
 
 ...and also via `MacPorts <https://www.macports.org/>`_:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     sudo port selfupdate && sudo port install miller
 
 You may already have the ``mlr`` executable available in your platform's package manager on NetBSD, Debian Linux, Ubuntu Xenial and upward, Arch Linux, or perhaps other distributions. For example, on various Linux distributions you might do one of the following:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     sudo apt-get install miller
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     sudo apt install miller
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     sudo yum install miller
 
 On Windows, Miller is available via `Chocolatey <https://chocolatey.org/>`_:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     choco install miller

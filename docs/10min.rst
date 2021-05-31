@@ -344,14 +344,14 @@ Often we want to print output to the screen. Miller does this by default, as we'
 
 Sometimes we want to print output to another file: just use **> outputfilenamegoeshere** at the end of your command:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     % mlr --icsv --opprint cat example.csv > newfile.csv
     # Output goes to the new file;
     # nothing is printed to the screen.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     % cat newfile.csv
@@ -369,12 +369,12 @@ Sometimes we want to print output to another file: just use **> outputfilenamego
 
 Other times we just want our files to be **changed in-place**: just use **mlr -I**:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     % cp example.csv newfile.txt
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     % cat newfile.txt
@@ -390,12 +390,12 @@ Other times we just want our files to be **changed in-place**: just use **mlr -I
     yellow,circle,1,87,63.5058,8.3350
     purple,square,0,91,72.3735,8.2430
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     % mlr -I --icsv --opprint cat newfile.txt
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     % cat newfile.txt
@@ -413,7 +413,7 @@ Other times we just want our files to be **changed in-place**: just use **mlr -I
 
 Also using ``mlr -I`` you can bulk-operate on lots of files: e.g.:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     mlr -I --csv cut -x -f unwanted_column_name *.csv
@@ -462,7 +462,7 @@ What's a CSV file, really? It's an array of rows, or *records*, each being a lis
 
 For example, if you have:
 
-.. code-block::
+.. code-block:: bash
 
     shape,flag,index
     circle,1,24
@@ -470,7 +470,7 @@ For example, if you have:
 
 then that's a way of saying:
 
-.. code-block::
+.. code-block:: bash
 
     shape=circle,flag=1,index=24
     shape=square,flag=0,index=36
@@ -479,7 +479,7 @@ Data written this way are called **DKVP**, for *delimited key-value pairs*.
 
 We've also already seen other ways to write the same data:
 
-.. code-block::
+.. code-block:: bash
 
     CSV                               PPRINT                 JSON
     shape,flag,index                  shape  flag index      [

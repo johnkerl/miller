@@ -9,7 +9,7 @@ Randomly selecting words from a list
 
 Given this `word list <https://github.com/johnkerl/miller/blob/master/docs/data/english-words.txt>`_, first take a look to see what the first few lines look like:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ head data/english-words.txt
@@ -26,7 +26,7 @@ Given this `word list <https://github.com/johnkerl/miller/blob/master/docs/data/
 
 Then the following will randomly sample ten words with four to eight characters in them:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10
@@ -48,7 +48,7 @@ These are simple *n*-grams as `described here <http://johnkerl.org/randspell/ran
 
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr
@@ -526,7 +526,7 @@ At standard resolution this makes a nice little ASCII plot:
 
 But using a very small font size (as small as my Mac will let me go), and by choosing the coordinates to zoom in on a particular part of the complex plane, we can get a nice little picture:
 
-.. code-block::
+.. code-block:: bash
 
     #!/bin/bash
     # Get the number of rows and columns from the terminal window dimensions

@@ -670,13 +670,13 @@ XML, JSON, etc. are, by contrast, all **recursive** or **nested** data structure
 
 Now, you can put tabular data into these formats -- since list-of-key-value-pairs is one of the things representable in XML or JSON. Example:
 
-.. code-block::
+.. code-block:: bash
 
     # DKVP
     x=1,y=2
     z=3
 
-.. code-block::
+.. code-block:: bash
 
     # XML
     <table>
@@ -695,7 +695,7 @@ Now, you can put tabular data into these formats -- since list-of-key-value-pair
       </record>
     </table>
 
-.. code-block::
+.. code-block:: bash
 
     # JSON
     [{"x":1,"y":2},{"z":3}]
