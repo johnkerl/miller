@@ -11,20 +11,23 @@ File-format awareness
 
 Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header line is written once:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat data/a.csv
     a,b,c
     1,2,3
     4,5,6
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat data/b.csv
     a,b,c
     7,8,9
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --csv cat data/a.csv data/b.csv
     a,b,c
@@ -32,7 +35,8 @@ Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header l
     4,5,6
     7,8,9
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --csv sort -nr b data/a.csv data/b.csv
     a,b,c

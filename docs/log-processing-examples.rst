@@ -10,7 +10,10 @@ Again, all the examples in the CSV section apply here -- just change the input-f
 
 Writing a program -- in any language whatsoever -- you can have it print out log lines as it goes along, with items for various events jumbled together. After the program has finished running you can sort it all out, filter it, analyze it, and learn from it.
 
-Suppose your program has printed something like this::
+Suppose your program has printed something like this:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat log.txt
     op=enter,time=1472819681
@@ -57,7 +60,10 @@ Suppose your program has printed something like this::
     op=cache,type=A9,hit=0
     time=1472819742,batch_size=100,num_filtered=728
 
-Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system ``grep`` command, or Miller's ``having-fields``, or ``is_present``, we can pick out the parts we want and analyze them::
+Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system ``grep`` command, or Miller's ``having-fields``, or ``is_present``, we can pick out the parts we want and analyze them:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ grep op=cache log.txt \
       | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
@@ -66,7 +72,8 @@ Each print statement simply contains local information: the current timestamp, w
     A4   0.714286
     A9   0.090909
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --from log.txt --opprint \
       filter 'is_present($batch_size)' \
@@ -80,7 +87,10 @@ Each print statement simply contains local information: the current timestamp, w
     2016-09-02T12:35:36Z 100        612          16         58
     2016-09-02T12:35:42Z 100        728          6          116
 
-Alternatively, we can simply group the similar data for a better look::
+Alternatively, we can simply group the similar data for a better look:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --opprint group-like log.txt
     op    time
@@ -132,7 +142,8 @@ Alternatively, we can simply group the similar data for a better look::
     1472819736 100        612
     1472819742 100        728
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --opprint group-like then sec2gmt time log.txt
     op    time

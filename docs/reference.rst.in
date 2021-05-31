@@ -10,8 +10,6 @@ Command overview
 Whereas the Unix toolkit is made of the separate executables ``cat``, ``tail``, ``cut``,
 ``sort``, etc., Miller has subcommands, or **verbs**, invoked as follows:
 
-::
-
 POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 
 These fall into categories as follows:
@@ -34,7 +32,7 @@ Formats
 
 Options:
 
-::
+.. code-block::
 
     --dkvp    --idkvp    --odkvp
     --nidx    --inidx    --onidx
@@ -46,11 +44,7 @@ Options:
 
 These are as discussed in :doc:`file-formats`, with the exception of ``--right`` which makes pretty-printed output right-aligned:
 
-::
-
 POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr --opprint --right cat data/small}}HERE
 
@@ -78,14 +72,14 @@ Compression
 
 Options:
 
-::
+.. code-block::
 
     --prepipe {command}
 
 
 The prepipe command is anything which reads from standard input and produces data acceptable to Miller. Nominally this allows you to use whichever decompression utilities you have installed on your system, on a per-file basis. If the command has flags, quote them: e.g. ``mlr --prepipe 'zcat -cf'``. Examples:
 
-::
+.. code-block::
 
     # These two produce the same output:
     $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime
@@ -94,14 +88,14 @@ The prepipe command is anything which reads from standard input and produces dat
     $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz
     $ mlr --prepipe gunzip --idkvp --oxtab cut -f hostname,uptime myfile1.dat.gz myfile2.dat.gz
 
-::
+.. code-block::
 
     # Similar to the above, but with compressed output as well as input:
     $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime | gzip > outfile.csv.gz
     $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz | gzip > outfile.csv.gz
     $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz | gzip > outfile.csv.gz
 
-::
+.. code-block::
 
     # Similar to the above, but with different compression tools for input and output:
     $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime | xz -z > outfile.csv.xz
@@ -117,7 +111,7 @@ Miller has record separators ``IRS`` and ``ORS``, field separators ``IFS`` and `
 
 Options:
 
-::
+.. code-block::
 
     --rs --irs --ors
     --fs --ifs --ofs --repifs
@@ -138,7 +132,7 @@ Number formatting
 
 The command-line option ``--ofmt {format string}`` is the global number format for commands which generate numeric output, e.g. ``stats1``, ``stats2``, ``histogram``, and ``step``, as well as ``mlr put``. Examples:
 
-::
+.. code-block::
 
     --ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf
 
@@ -146,17 +140,11 @@ These are just C ``printf`` formats applied to double-precision numbers.  Please
 
 To apply formatting to a single field, overriding the global ``ofmt``, use ``fmtnum`` function within ``mlr put``. For example:
 
-::
-
 POKI_RUN_COMMAND{{echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'}}HERE
-
-::
 
 POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'}}HERE
 
 Input conversion from hexadecimal is done automatically on fields handled by ``mlr put`` and ``mlr filter`` as long as the field value begins with "0x".  To apply output conversion to hexadecimal on a single column, you may use ``fmtnum``, or the keystroke-saving ``hexfmt`` function. Example:
-
-::
 
 POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'}}HERE
 
@@ -175,21 +163,19 @@ then-chaining
 
 In accord with the `Unix philosophy <http://en.wikipedia.org/wiki/Unix_philosophy>`_, you can pipe data into or out of Miller. For example:
 
-::
+.. code-block::
 
     mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
 
 You can, if you like, instead simply chain commands together using the ``then`` keyword:
 
-::
+.. code-block::
 
     mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
 
 (You can precede the very first verb with ``then``, if you like, for symmetry.)
 
 Here's a performance comparison:
-
-::
 
 POKI_INCLUDE_ESCAPED(data/then-chaining-performance.txt)HERE
 
@@ -202,45 +188,25 @@ Auxiliary commands
 
 There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables but they're delivered within the main Miller executable for convenience.
 
-::
-
 POKI_RUN_COMMAND{{mlr aux-list}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr lecat --help}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr termcvt --help}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr hex --help}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr unhex --help}}HERE
 
 Examples:
 
-::
-
 POKI_RUN_COMMAND{{echo 'Hello, world!' | mlr lecat --mono}}HERE
-
-::
 
 POKI_RUN_COMMAND{{echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr hex data/budget.csv}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr hex -r data/budget.csv}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex}}HERE
 
@@ -286,45 +252,27 @@ Rules for null-handling:
 
 * Records with one or more empty sort-field values sort after records with all sort-field values present:
 
-::
-
 POKI_RUN_COMMAND{{mlr cat data/sort-null.dat}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr sort -n  a data/sort-null.dat}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr sort -nr a data/sort-null.dat}}HERE
 
 * Functions/operators which have one or more *empty* arguments produce empty output: e.g.
 
-::
-
 POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$x+$y'}}HERE
 
-::
-
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=$x+$y'}}HERE
-
-::
 
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'}}HERE
 
 with the exception that the ``min`` and ``max`` functions are special: if one argument is non-null, it wins:
 
-::
-
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'}}HERE
 
 * Functions of *absent* variables (e.g. ``mlr put '$y = log10($nonesuch)'``) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
 
-::
-
 POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'}}HERE
-
-::
 
 POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'}}HERE
 
@@ -342,21 +290,13 @@ The reasoning is as follows:
 
 Since absent plus absent is absent (and likewise for other operators), accumulations such as ``@sum += $x`` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with ``is_present``:
 
-::
-
 POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
 
-::
-
 POKI_RUN_COMMAND{{mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp}}HERE
 
 If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
-
-::
 
 POKI_RUN_COMMAND{{mlr --print-type-arithmetic-info}}HERE
 
@@ -414,11 +354,7 @@ For ``filter`` and ``put``, if the regular expression is a string literal (the n
 
 Example:
 
-::
-
 POKI_RUN_COMMAND{{cat data/regex-in-data.dat}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr filter '$name =~ $regex' data/regex-in-data.dat}}HERE
 
@@ -429,25 +365,25 @@ Regex captures of the form ``\0`` through ``\9`` are supported as
 
 * Captures have in-function context for ``sub`` and ``gsub``. For example, the first ``\1,\2`` pair belong to the first ``sub`` and the second ``\1,\2`` pair belong to the second ``sub``:
 
-::
+.. code-block::
 
     mlr put '$b = sub($a, "(..)_(...)", "\2-\1"); $c = sub($a, "(..)_(.)(..)", ":\1:\2:\3")'
 
 * Captures endure for the entirety of a ``put`` for the ``=~`` and ``!=~`` operators. For example, here the ``\1,\2`` are set by the ``=~`` operator and are used by both subsequent assignment statements:
 
-::
+.. code-block::
 
     mlr put '$a =~ "(..)_(....); $b = "left_\1"; $c = "right_\2"'
 
 * The captures are not retained across multiple puts. For example, here the ``\1,\2`` won't be expanded from the regex capture:
 
-::
+.. code-block::
 
     mlr put '$a =~ "(..)_(....)' then {... something else ...} then put '$b = "left_\1"; $c = "right_\2"'
 
 * Captures are ignored in ``filter`` for the ``=~`` and ``!=~`` operators. For example, there is no mechanism provided to refer to the first ``(..)`` as ``\1`` or to the second ``(....)`` as ``\2`` in the following filter statement:
 
-::
+.. code-block::
 
     mlr filter '$a =~ "(..)_(....)'
 
@@ -477,7 +413,7 @@ The short of it is that Miller does this transparently for you so you needn't th
 
 Implementation details of this, for the interested: integer adds and subtracts overflow by at most one bit so it suffices to check sign-changes. Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers, converting only to float precisely when the result is less than -2\ :sup:`63` or greater than 2\ :sup:`63`\ -1.  Multiplies, on the other hand, can overflow by a word size and a sign-change technique does not suffice to detect overflow. Instead Miller tests whether the floating-point product exceeds the representable integer range. Now, 64-bit integers have 64-bit precision while IEEE-doubles have only 52-bit mantissas -- so, there are 53 bits including implicit leading one.  The following experiment explicitly demonstrates the resolution at this range:
 
-::
+.. code-block::
 
     64-bit integer     64-bit integer     Casted to double           Back to 64-bit
     in hex           in decimal                                    integer
@@ -506,10 +442,6 @@ On-line help
 
 Examples:
 
-::
-
 POKI_RUN_COMMAND{{mlr --help}}HERE
-
-::
 
 POKI_RUN_COMMAND{{mlr sort --help}}HERE

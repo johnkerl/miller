@@ -4,43 +4,73 @@
 Quick examples
 ================================================================
 
-Column select::
+Column select:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --csv cut -f hostname,uptime mydata.csv
 
-Add new columns as function of other columns::
+Add new columns as function of other columns:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
 
-Row filter::
+Row filter:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --csv filter '$status != "down" && $upsec >= 10000' *.csv
 
-Apply column labels and pretty-print::
+Apply column labels and pretty-print:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
 
-Join multiple data sources on key columns::
+Join multiple data sources on key columns:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
 
-Multiple formats including JSON::
+Multiple formats including JSON:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
 
-Aggregate per-column statistics::
+Aggregate per-column statistics:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
 
-Linear regression::
+Linear regression:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr stats2 -a linreg-pca -f u,v -g shape data/*
 
-Aggregate custom per-column statistics::
+Aggregate custom per-column statistics:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
 
-Iterate over data using DSL expressions::
+Iterate over data using DSL expressions:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --from estimates.tbl put '
       for (k,v in $*) {
@@ -51,22 +81,37 @@ Iterate over data using DSL expressions::
       $mean = $sum / $count # no assignment if count unset
     '
 
-Run DSL expressions from a script file::
+Run DSL expressions from a script file:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --from infile.dat put -f analyze.mlr
 
-Split/reduce output to multiple filenames::
+Split/reduce output to multiple filenames:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'
 
-Compressed I/O::
+Compressed I/O:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'
 
-Interoperate with other data-processing tools using standard pipes::
+Interoperate with other data-processing tools using standard pipes:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
 
-Tap/trace::
+Tap/trace:
+
+.. code-block::
+   :emphasize-lines: 1,1
 
     % mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'

@@ -747,6 +747,7 @@ table.highlighttable td.code {
 
 .highlight .hll {
     display: block;
+    font-style: bold; /* CHANGED */
 }
 
 div.highlight pre,

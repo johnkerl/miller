@@ -16,7 +16,8 @@ CSV and pretty-print
 
 Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get CSV per se as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite is that the former is RFC4180-compliant, while the latter readily handles heterogeneous data (which is non-compliant). For example:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
@@ -25,7 +26,8 @@ Miller simply prints a newline and a new header when there is a schema change. W
     record_count=150,resource=/path/to/second/file
     resource=/some/other/path,loadsec=0.97,ok=false
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --ocsvlite cat data/het.dkvp
     resource,loadsec,ok
@@ -43,7 +45,8 @@ Miller simply prints a newline and a new header when there is a schema change. W
     resource,loadsec,ok
     /some/other/path,0.97,false
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --opprint cat data/het.dkvp
     resource      loadsec ok
@@ -63,7 +66,8 @@ Miller simply prints a newline and a new header when there is a schema change. W
 
 Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes -- you can use ``--allow-ragged-csv-input`` (or keystroke-saver ``--ragged``). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat data/ragged.csv
     a,b,c
@@ -71,7 +75,8 @@ Miller handles explicit header changes as just shown. If your CSV input contains
     4,5
     6,7,8,9
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv
     a 1
@@ -89,7 +94,8 @@ Miller handles explicit header changes as just shown. If your CSV input contains
 
 You may also find Miller's ``group-like`` feature handy (see also :doc:`reference`):
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --ocsvlite group-like data/het.dkvp
     resource,loadsec,ok
@@ -101,7 +107,8 @@ You may also find Miller's ``group-like`` feature handy (see also :doc:`referenc
     100,/path/to/file
     150,/path/to/second/file
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --opprint group-like data/het.dkvp
     resource             loadsec ok
@@ -118,7 +125,8 @@ Key-value-pair, vertical-tabular, and index-numbered formats
 
 For these formats, record-heterogeneity comes naturally:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
@@ -127,7 +135,8 @@ For these formats, record-heterogeneity comes naturally:
     record_count=150,resource=/path/to/second/file
     resource=/some/other/path,loadsec=0.97,ok=false
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --onidx --ofs ' ' cat data/het.dkvp
     /path/to/file 0.45 true
@@ -136,7 +145,8 @@ For these formats, record-heterogeneity comes naturally:
     150 /path/to/second/file
     /some/other/path 0.97 false
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --oxtab cat data/het.dkvp
     resource /path/to/file
@@ -157,7 +167,8 @@ For these formats, record-heterogeneity comes naturally:
     loadsec  0.97
     ok       false
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --oxtab group-like data/het.dkvp
     resource /path/to/file
@@ -183,7 +194,8 @@ For processing
 
 Miller operates on specified fields and takes the rest along: for example, if you are sorting on the ``count`` field then all records in the input stream must have a ``count`` field but the other fields can vary, and moreover the sorted-on field name(s) don't need to be in the same position on each line:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat data/sort-het.dkvp
     count=500,color=green
@@ -194,7 +206,8 @@ Miller operates on specified fields and takes the rest along: for example, if yo
     count=100,color=green
     count=450
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr sort -n count data/sort-het.dkvp
     count=100,color=green

@@ -9,7 +9,8 @@ Randomly selecting words from a list
 
 Given this `word list <https://github.com/johnkerl/miller/blob/master/docs/data/english-words.txt>`_, first take a look to see what the first few lines look like:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ head data/english-words.txt
     a
@@ -25,7 +26,8 @@ Given this `word list <https://github.com/johnkerl/miller/blob/master/docs/data/
 
 Then the following will randomly sample ten words with four to eight characters in them:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10
     thionine
@@ -46,7 +48,8 @@ These are simple *n*-grams as `described here <http://johnkerl.org/randspell/ran
 
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr
     beard
@@ -71,7 +74,7 @@ Program timing
 
 This admittedly artificial example demonstrates using Miller time and stats functions to introspectively acquire some information about Miller's own runtime. The ``delta`` function computes the difference between successive timestamps.
 
-::
+.. code-block::
 
     $ ruby -e '10000.times{|i|puts "i=#{i+1}"}' > lines.txt
     
@@ -106,7 +109,8 @@ Computing interquartile ranges
 
 For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --oxtab stats1 -f x -a p25,p75 \
         then put '$x_iqr = $x_p75 - $x_p25' \
@@ -117,7 +121,8 @@ For one or more specified field names, simply compute p25 and p75, then write th
 
 For wildcarded field names, first compute p25 and p75, then loop over field names with ``p25`` in them:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \
         then put 'for (k,v in $*) {
@@ -141,7 +146,8 @@ Computing weighted means
 
 This might be more elegantly implemented as an option within the ``stats1`` verb. Meanwhile, it's expressible within the DSL:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr --from data/medium put -q '
       # Using the y field for weighting in this example
@@ -178,7 +184,8 @@ Generating random numbers from various distributions
 
 Here we can chain together a few simple building blocks:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat expo-sample.sh
     # Generate 100,000 pairs of independent and identically distributed
@@ -220,7 +227,8 @@ Namely:
 
 The output is as follows:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ sh expo-sample.sh
     bin_lo   bin_hi   u_count                        s_count                         p_count
@@ -280,7 +288,8 @@ Sieve of Eratosthenes
 
 The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`_ is a standard introductory programming topic. The idea is to find all primes up to some *N* by making a list of the numbers 1 to *N*, then striking out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all multiples of 4 except 4 itself, and so on. Whatever survives that without getting marked is a prime. This is easy enough in Miller. Notice that here all the work is in ``begin`` and ``end`` statements; there is no file input (so we use ``mlr -n`` to keep Miller from waiting for input data).
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat programs/sieve.mlr
     # ================================================================
@@ -316,7 +325,8 @@ The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`
       }
     }
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr -n put -f programs/sieve.mlr
     2
@@ -352,7 +362,8 @@ The `Mandelbrot set <http://en.wikipedia.org/wiki/Mandelbrot_set>`_ is also easi
 
 The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the Wikipedia article); how to render them is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ cat programs/mand.mlr
     # Mandelbrot set generator: simple example of Miller DSL as programming language.
@@ -458,7 +469,8 @@ The (approximate) computation of points in the complex plane which are and aren'
 
 At standard resolution this makes a nice little ASCII plot:
 
-::
+.. code-block::
+   :emphasize-lines: 1,1
 
     $ mlr -n put -f ./programs/mand.mlr
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -514,7 +526,7 @@ At standard resolution this makes a nice little ASCII plot:
 
 But using a very small font size (as small as my Mac will let me go), and by choosing the coordinates to zoom in on a particular part of the complex plane, we can get a nice little picture:
 
-::
+.. code-block::
 
     #!/bin/bash
     # Get the number of rows and columns from the terminal window dimensions
