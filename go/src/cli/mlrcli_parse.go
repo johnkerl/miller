@@ -330,33 +330,33 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 	} else if args[argi] == "--usage-help-options" {
 		mainUsageHelpOptions(os.Stdout, lib.MlrExeName())
 		return true
-		//	} else if args[argi] == "--usage-mlrrc" {
-		//		mainUsageMlrrc(os.Stdout, lib.MlrExeName());
-		//		return true;
-		//	} else if args[argi] == "--usage-functions" {
-		//		mainUsageFunctions(os.Stdout, lib.MlrExeName(), "");
-		//		return true;
+	} else if args[argi] == "--usage-mlrrc" {
+		mainUsageMlrrc(os.Stdout, lib.MlrExeName())
+		return true
+	} else if args[argi] == "--usage-functions" {
+		mainUsageFunctions(os.Stdout)
+		return true
 	} else if args[argi] == "--usage-data-format-examples" {
 		mainUsageDataFormatExamples(os.Stdout, lib.MlrExeName())
 		return true
 	} else if args[argi] == "--usage-data-format-options" {
 		mainUsageDataFormatOptions(os.Stdout, lib.MlrExeName())
 		return true
-		//	} else if args[argi] == "--usage-comments-in-data" {
-		//		mainUsageCommentsInData(os.Stdout, lib.MlrExeName());
-		//		return true;
+	} else if args[argi] == "--usage-comments-in-data" {
+		mainUsageCommentsInData(os.Stdout, lib.MlrExeName())
+		return true
 	} else if args[argi] == "--usage-format-conversion-keystroke-saver-options" {
 		mainUsageFormatConversionKeystrokeSaverOptions(os.Stdout, lib.MlrExeName())
 		return true
-		//	} else if args[argi] == "--usage-compressed-data-options" {
-		//		mainUsageCompressedDataOptions(os.Stdout, lib.MlrExeName());
-		//		return true;
+	} else if args[argi] == "--usage-compressed-data-options" {
+		mainUsageCompressedDataOptions(os.Stdout, lib.MlrExeName())
+		return true
 		//	} else if args[argi] == "--usage-separator-options" {
 		//		mainUsageSeparatorOptions(os.Stdout, lib.MlrExeName());
 		//		return true;
-		//	} else if args[argi] == "--usage-csv-options" {
-		//		mainUsageCsvOptions(os.Stdout, lib.MlrExeName());
-		//		return true;
+	} else if args[argi] == "--usage-csv-options" {
+		mainUsageCsvOptions(os.Stdout, lib.MlrExeName())
+		return true
 		//	} else if args[argi] == "--usage-double-quoting" {
 		//		mainUsageDoubleQuoting(os.Stdout, lib.MlrExeName());
 		//		return true;
@@ -369,9 +369,9 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 	} else if args[argi] == "--usage-then-chaining" {
 		mainUsageThenChaining(os.Stdout, lib.MlrExeName())
 		return true
-		//	} else if args[argi] == "--usage-auxents" {
-		//		mainUsageAuxents(os.Stdout, lib.MlrExeName());
-		//		return true;
+	} else if args[argi] == "--usage-auxents" {
+		mainUsageAuxents(os.Stdout)
+		return true
 	} else if args[argi] == "--usage-see-also" {
 		mainUsageSeeAlso(os.Stdout, lib.MlrExeName())
 		return true

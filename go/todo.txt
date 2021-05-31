@@ -1,9 +1,12 @@
 ================================================================
 TOP OF LIST:
 
+* emit * regex * fmtnum * cli-audits *
+
 ! check issues
 
-* prepipex
+* --prepipex
+* --nr-progress-mod
 
 * mlr -k
   o c,go
@@ -401,6 +404,7 @@ NITS/NON-IMMEDIATE:
 TBF:
 * delve
 * throughout -- 'map' used too much -- 'mapping/mapper' -> 'transform' or something?
+* cli/cliutil import structure -- rethink entirely
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
 * mlr verb -h -> stdout & exit 0
 * cst printer with reflect.TypeOf -- ?

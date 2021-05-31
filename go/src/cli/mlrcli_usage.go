@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	//"miller/src/auxents"
 	"miller/src/cliutil"
+	"miller/src/dsl/cst"
 	"miller/src/lib"
 	"miller/src/version"
 )
@@ -43,18 +45,18 @@ func mainUsageLong(o *os.File, argv0 string) {
 	listAllVerbs(o, "  ")
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "FUNCTIONS FOR THE FILTER AND PUT VERBS:\n");
-	//	mainUsageFunctions(o, argv0, "  ");
-	//	fmt.Fprintf(o, "\n");
+	fmt.Fprintf(o, "FUNCTIONS FOR THE FILTER AND PUT VERBS:\n")
+	mainUsageFunctions(o)
+	fmt.Fprintf(o, "\n")
 
 	fmt.Fprintf(o, "DATA-FORMAT OPTIONS, FOR INPUT, OUTPUT, OR BOTH:\n")
 	mainUsageDataFormatOptions(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "COMMENTS IN DATA:\N");
-	//	mainUsageCommentsInData(o, argv0);
-	//	fmt.Fprintf(o, "\n");
-	//
+	fmt.Fprintf(o, "COMMENTS IN DATA:\n")
+	mainUsageCommentsInData(o, argv0)
+	fmt.Fprintf(o, "\n")
+
 	fmt.Fprintf(o, "FORMAT-CONVERSION KEYSTROKE-SAVER OPTIONS:\n")
 	mainUsageFormatConversionKeystrokeSaverOptions(o, argv0)
 	fmt.Fprintf(o, "\n")
@@ -87,10 +89,10 @@ func mainUsageLong(o *os.File, argv0 string) {
 	mainUsageThenChaining(o, argv0)
 	fmt.Fprintf(o, "\n")
 
-	//	fmt.Fprintf(o, "AUXILIARY COMMANDS:\N");
-	//	mainUsageAuxents(o, argv0);
-	//	fmt.Fprintf(o, "\n");
-	//
+	fmt.Fprintf(o, "AUXILIARY COMMANDS:\n")
+	mainUsageAuxents(o)
+	fmt.Fprintf(o, "\n")
+
 	fmt.Fprintf(o, "SEE ALSO:\n")
 	mainUsageSeeAlso(o, argv0)
 }
@@ -171,14 +173,12 @@ func mainUsageMlrrc(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "https://miller.readthedocs.io/en/latest/customization.html\n")
 }
 
-//func mainUsageFunctions(o *os.File, argv0 string, char* leader) {
-//	fmgr_t* pfmgr = fmgr_alloc();
-//	fmgr_list_functions(pfmgr, o, leader);
-//	fmgr_free(pfmgr, nil);
-//	fmt.Fprintf(o, "\n");
-//	fmt.Fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
-//}
+func mainUsageFunctions(o *os.File) {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
+	fmt.Fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
+}
 
+// TODO: rid of argv0 throughout, replacing with lib.MlrExeName()
 func mainUsageDataFormatExamples(o *os.File, argv0 string) {
 	fmt.Fprintf(o,
 		`  DKVP: delimited key-value pairs (Miller default format)
@@ -329,26 +329,26 @@ func mainUsageDataFormatOptions(o *os.File, argv0 string) {
 	fmt.Println()
 }
 
-//func mainUsageCommentsInData(o *os.File, argv0 string) {
-//	fmt.Fprintf(o, "  --skip-comments                 Ignore commented lines (prefixed by \"%s\")\n",
-//		DEFAULT_COMMENT_STRING);
-//	fmt.Fprintf(o, "                                  within the input.\n");
-//	fmt.Fprintf(o, "  --skip-comments-with {string}   Ignore commented lines within input, with\n");
-//	fmt.Fprintf(o, "                                  specified prefix.\n");
-//	fmt.Fprintf(o, "  --pass-comments                 Immediately print commented lines (prefixed by \"%s\")\n",
-//		DEFAULT_COMMENT_STRING);
-//	fmt.Fprintf(o, "                                  within the input.\n");
-//	fmt.Fprintf(o, "  --pass-comments-with {string}   Immediately print commented lines within input, with\n");
-//	fmt.Fprintf(o, "                                  specified prefix.\n");
-//	fmt.Fprintf(o, "Notes:\n");
-//	fmt.Fprintf(o, "* Comments are only honored at the start of a line.\n");
-//	fmt.Fprintf(o, "* In the absence of any of the above four options, comments are data like\n");
-//	fmt.Fprintf(o, "  any other text.\n");
-//	fmt.Fprintf(o, "* When pass-comments is used, comment lines are written to standard output\n");
-//	fmt.Fprintf(o, "  immediately upon being read; they are not part of the record stream.\n");
-//	fmt.Fprintf(o, "  Results may be counterintuitive. A suggestion is to place comments at the\n");
-//	fmt.Fprintf(o, "  start of data files.\n");
-//}
+func mainUsageCommentsInData(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "  --skip-comments                 Ignore commented lines (prefixed by \"%s\")\n",
+		cliutil.DEFAULT_COMMENT_STRING)
+	fmt.Fprintf(o, "                                  within the input.\n")
+	fmt.Fprintf(o, "  --skip-comments-with {string}   Ignore commented lines within input, with\n")
+	fmt.Fprintf(o, "                                  specified prefix.\n")
+	fmt.Fprintf(o, "  --pass-comments                 Immediately print commented lines (prefixed by \"%s\")\n",
+		cliutil.DEFAULT_COMMENT_STRING)
+	fmt.Fprintf(o, "                                  within the input.\n")
+	fmt.Fprintf(o, "  --pass-comments-with {string}   Immediately print commented lines within input, with\n")
+	fmt.Fprintf(o, "                                  specified prefix.\n")
+	fmt.Fprintf(o, "Notes:\n")
+	fmt.Fprintf(o, "* Comments are only honored at the start of a line.\n")
+	fmt.Fprintf(o, "* In the absence of any of the above four options, comments are data like\n")
+	fmt.Fprintf(o, "  any other text.\n")
+	fmt.Fprintf(o, "* When pass-comments is used, comment lines are written to standard output\n")
+	fmt.Fprintf(o, "  immediately upon being read; they are not part of the record stream.\n")
+	fmt.Fprintf(o, "  Results may be counterintuitive. A suggestion is to place comments at the\n")
+	fmt.Fprintf(o, "  start of data files.\n")
+}
 
 func mainUsageFormatConversionKeystrokeSaverOptions(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "As keystroke-savers for format-conversion you may use the following:\n")
@@ -534,11 +534,19 @@ func mainUsageThenChaining(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0)
 }
 
-//func mainUsageAuxents(o *os.File, argv0 string) {
-//	fmt.Fprintf(o, "Miller has a few otherwise-standalone executables packaged within it.\n");
-//	fmt.Fprintf(o, "They do not participate in any other parts of Miller.\n");
-//	show_aux_entries(o);
-//}
+func mainUsageAuxents(o *os.File) {
+	fmt.Fprintf(o, "Miller has a few otherwise-standalone executables packaged within it.\n")
+	fmt.Fprintf(o, "They do not participate in any other parts of Miller.\n")
+	fmt.Fprintf(o, "Please use \"%s aux-list\" for more information.\n", lib.MlrExeName())
+	// TODO:
+	// package miller/src/cli
+	// imports miller/src/entrypoint
+	// imports miller/src/auxents
+	// imports miller/src/auxents/repl
+	// imports miller/src/cli
+	// imports miller/src/auxents: import cycle not allowed
+	//auxents.ShowAuxEntries(o)
+}
 
 func mainUsageSeeAlso(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "For more information please see http://johnkerl.org/miller/doc and/or\n")
