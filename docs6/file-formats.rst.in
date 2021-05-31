@@ -57,21 +57,21 @@ POKI_RUN_COMMAND{{mlr cat data/small}}HERE
 
 Such data are easy to generate, e.g. in Ruby with
 
-.. code-block::
+.. code-block:: none
 
   puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
 
-.. code-block::
+.. code-block:: none
 
   puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
 
 or ``print`` statements in various languages, e.g.
 
-.. code-block::
+.. code-block:: none
 
     echo "type=3,user=$USER,date=$date\n";
 
-.. code-block::
+.. code-block:: none
 
     logger.log("type=3,user=$USER,date=$date\n");
 
@@ -79,7 +79,7 @@ Fields lacking an IPS will have positional index (starting at 1) used as the key
 
 As discussed in :doc:`record-heterogeneity`, Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
 
-.. code-block::
+.. code-block:: none
 
     resource=/path/to/file,loadsec=0.45,ok=true
     record_count=100, resource=/path/to/file

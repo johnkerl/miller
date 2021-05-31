@@ -11,7 +11,7 @@ DKVP I/O in Python
 
 Here are the I/O routines:
 
-.. code-block:: bash
+.. code-block:: none
 
     #!/usr/bin/env python
     
@@ -74,7 +74,7 @@ Here are the I/O routines:
 
 And here is an example using them:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat polyglot-dkvp-io/example.py
@@ -115,7 +115,7 @@ And here is an example using them:
 
 Run as-is:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ python polyglot-dkvp-io/example.py < data/small
@@ -127,7 +127,7 @@ Run as-is:
 
 Run as-is, then pipe to Miller for pretty-printing:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ python polyglot-dkvp-io/example.py < data/small | mlr --opprint cat
@@ -143,7 +143,7 @@ DKVP I/O in Ruby
 
 Here are the I/O routines:
 
-.. code-block:: bash
+.. code-block:: none
 
     #!/usr/bin/env ruby
     
@@ -200,7 +200,7 @@ Here are the I/O routines:
 
 And here is an example using them:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat polyglot-dkvp-io/example.rb
@@ -231,7 +231,7 @@ And here is an example using them:
 
 Run as-is:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small
@@ -243,7 +243,7 @@ Run as-is:
 
 Run as-is, then pipe to Miller for pretty-printing:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small | mlr --opprint cat
@@ -269,7 +269,7 @@ Running shell commands
 
 The :ref:`reference-dsl-system` DSL function allows you to run a specific shell command and put its output -- minus the final newline -- into a record field. The command itself is any string, either a literal string, or a concatenation of strings, perhaps including other field values or what have you.
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$o = system("echo hello world")' data/small
@@ -280,7 +280,7 @@ The :ref:`reference-dsl-system` DSL function allows you to run a specific shell 
     eks wye 4 0.38139939387114097 0.13418874328430463 hello world
     wye pan 5 0.5732889198020006  0.8636244699032729  hello world
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$o = system("echo {" . NR . "}")' data/small
@@ -291,7 +291,7 @@ The :ref:`reference-dsl-system` DSL function allows you to run a specific shell 
     eks wye 4 0.38139939387114097 0.13418874328430463 {4}
     wye pan 5 0.5732889198020006  0.8636244699032729  {5}
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$o = system("echo -n ".$a."| sha1sum")' data/small
@@ -307,7 +307,7 @@ Note that running a subprocess on every record takes a non-trivial amount of tim
 ..
     hard-coded, not live-code, since %N doesn't exist on all platforms
 
-.. code-block:: bash
+.. code-block:: none
 
     $ mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small
     a   b   i x                   y                   t                    t_delta
@@ -317,7 +317,7 @@ Note that running a subprocess on every record takes a non-trivial amount of tim
     eks wye 4 0.38139939387114097 0.13418874328430463 1568774318.516547441 0.000929
     wye pan 5 0.5732889198020006  0.8636244699032729  1568774318.517518828 0.000971
 
-.. code-block:: bash
+.. code-block:: none
 
     $ mlr --opprint put '$t=systime()' then step -a delta -f t data/small
     a   b   i x                   y                   t                 t_delta

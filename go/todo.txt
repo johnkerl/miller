@@ -6,6 +6,7 @@ TOP OF LIST:
 ! genrst fixup !
 * rst bold
   https://stackoverflow.com/questions/26366552/bold-code-in-rst
+  syntax none ...
 
 * prepipex
 

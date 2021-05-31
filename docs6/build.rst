@@ -101,7 +101,7 @@ In this example I am using version 3.4.0; of course that will change for subsequ
   * Similarly for ``macports``: https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile.
   * Social-media updates.
 
-.. code-block::
+.. code-block:: none
 
     git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
     git fetch upstream

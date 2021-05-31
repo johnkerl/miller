@@ -67,7 +67,7 @@ Note that running a subprocess on every record takes a non-trivial amount of tim
 ..
     hard-coded, not live-code, since %N doesn't exist on all platforms
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small
@@ -78,7 +78,7 @@ Note that running a subprocess on every record takes a non-trivial amount of tim
     eks wye 4 0.38139939387114097 0.13418874328430463 1568774318.516547441 0.000929
     wye pan 5 0.5732889198020006  0.8636244699032729  1568774318.517518828 0.000971
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$t=systime()' then step -a delta -f t data/small

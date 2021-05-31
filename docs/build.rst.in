@@ -69,7 +69,7 @@ Miller has been built on Windows using MSYS2: http://www.msys2.org/.  You can in
 
 You will first need to install MSYS2: http://www.msys2.org/.  Then, start an MSYS2 shell, e.g. (supposing you installed MSYS2 to ``C:\msys2\``) run ``C:\msys2\mingw64.exe``.  Within the MSYS2 shell, you can run the following to install dependent packages:
 
-.. code-block:: bash
+.. code-block:: none
 
     pacman -Syu
     pacman -Su
@@ -87,13 +87,13 @@ There is a unit-test false-negative issue involving the semantics of the ``mkste
 
 Within MSYS2 you can run ``mlr``: simply copy it from the ``c`` subdirectory to your desired location somewhere within your MSYS2 ``$PATH``.  To run ``mlr`` outside of MSYS2, just as with precompiled binaries as described above, you'll need ``msys-2.0.dll``.  One way to do this is to augment your path:
 
-.. code-block:: bash
+.. code-block:: none
 
     C:\> set PATH=%PATH%;\msys64\mingw64\bin
 
 Another way to do it is to copy the Miller executable and the DLL to the same directory:
 
-.. code-block:: bash
+.. code-block:: none
 
     C:\> mkdir \mbin
     C:\> copy \msys64\mingw64\bin\msys-2.0.dll \mbin
@@ -178,7 +178,7 @@ In this example I am using version 3.4.0; of course that will change for subsequ
   * Similarly for ``macports``: https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile.
   * Social-media updates.
 
-.. code-block:: bash
+.. code-block:: none
 
     git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
     git fetch upstream

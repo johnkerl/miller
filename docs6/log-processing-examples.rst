@@ -12,7 +12,7 @@ Writing a program -- in any language whatsoever -- you can have it print out log
 
 Suppose your program has printed something like this:
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat log.txt
@@ -62,7 +62,7 @@ Suppose your program has printed something like this:
 
 Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system ``grep`` command, or Miller's ``having-fields``, or ``is_present``, we can pick out the parts we want and analyze them:
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ grep op=cache log.txt \
@@ -72,7 +72,7 @@ Each print statement simply contains local information: the current timestamp, w
     A4   0.714286
     A9   0.090909
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --from log.txt --opprint \
@@ -89,7 +89,7 @@ Each print statement simply contains local information: the current timestamp, w
 
 Alternatively, we can simply group the similar data for a better look:
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint group-like log.txt
@@ -142,7 +142,7 @@ Alternatively, we can simply group the similar data for a better look:
     1472819736 100        612
     1472819742 100        728
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint group-like then sec2gmt time log.txt

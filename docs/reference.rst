@@ -13,7 +13,7 @@ Command overview
 Whereas the Unix toolkit is made of the separate executables ``cat``, ``tail``, ``cut``,
 ``sort``, etc., Miller has subcommands, or **verbs**, invoked as follows:
 
-.. code-block:: bash
+.. code-block:: none
 
     mlr tac *.dat
     mlr cut --complement -f os_version *.dat
@@ -39,7 +39,7 @@ Formats
 
 Options:
 
-.. code-block:: bash
+.. code-block:: none
 
     --dkvp    --idkvp    --odkvp
     --nidx    --inidx    --onidx
@@ -51,7 +51,7 @@ Options:
 
 These are as discussed in :doc:`file-formats`, with the exception of ``--right`` which makes pretty-printed output right-aligned:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint cat data/small
@@ -62,7 +62,7 @@ These are as discussed in :doc:`file-formats`, with the exception of ``--right``
     eks wye 4 0.38139939387114097 0.13418874328430463
     wye pan 5 0.5732889198020006  0.8636244699032729
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint --right cat data/small
@@ -97,14 +97,14 @@ Compression
 
 Options:
 
-.. code-block:: bash
+.. code-block:: none
 
     --prepipe {command}
 
 
 The prepipe command is anything which reads from standard input and produces data acceptable to Miller. Nominally this allows you to use whichever decompression utilities you have installed on your system, on a per-file basis. If the command has flags, quote them: e.g. ``mlr --prepipe 'zcat -cf'``. Examples:
 
-.. code-block:: bash
+.. code-block:: none
 
     # These two produce the same output:
     $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime
@@ -113,14 +113,14 @@ The prepipe command is anything which reads from standard input and produces dat
     $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz
     $ mlr --prepipe gunzip --idkvp --oxtab cut -f hostname,uptime myfile1.dat.gz myfile2.dat.gz
 
-.. code-block:: bash
+.. code-block:: none
 
     # Similar to the above, but with compressed output as well as input:
     $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime | gzip > outfile.csv.gz
     $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz | gzip > outfile.csv.gz
     $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz | gzip > outfile.csv.gz
 
-.. code-block:: bash
+.. code-block:: none
 
     # Similar to the above, but with different compression tools for input and output:
     $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime | xz -z > outfile.csv.xz
@@ -136,7 +136,7 @@ Miller has record separators ``IRS`` and ``ORS``, field separators ``IFS`` and `
 
 Options:
 
-.. code-block:: bash
+.. code-block:: none
 
     --rs --irs --ors
     --fs --ifs --ofs --repifs
@@ -157,7 +157,7 @@ Number formatting
 
 The command-line option ``--ofmt {format string}`` is the global number format for commands which generate numeric output, e.g. ``stats1``, ``stats2``, ``histogram``, and ``step``, as well as ``mlr put``. Examples:
 
-.. code-block:: bash
+.. code-block:: none
 
     --ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf
 
@@ -165,13 +165,13 @@ These are just C ``printf`` formats applied to double-precision numbers.  Please
 
 To apply formatting to a single field, overriding the global ``ofmt``, use ``fmtnum`` function within ``mlr put``. For example:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'
     x=3.1,y=4.3,z=13.330000
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'
@@ -179,7 +179,7 @@ To apply formatting to a single field, overriding the global ``ofmt``, use ``fmt
 
 Input conversion from hexadecimal is done automatically on fields handled by ``mlr put`` and ``mlr filter`` as long as the field value begins with "0x".  To apply output conversion to hexadecimal on a single column, you may use ``fmtnum``, or the keystroke-saving ``hexfmt`` function. Example:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
@@ -200,13 +200,13 @@ then-chaining
 
 In accord with the `Unix philosophy <http://en.wikipedia.org/wiki/Unix_philosophy>`_, you can pipe data into or out of Miller. For example:
 
-.. code-block:: bash
+.. code-block:: none
 
     mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
 
 You can, if you like, instead simply chain commands together using the ``then`` keyword:
 
-.. code-block:: bash
+.. code-block:: none
 
     mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
 
@@ -214,7 +214,7 @@ You can, if you like, instead simply chain commands together using the ``then`` 
 
 Here's a performance comparison:
 
-.. code-block:: bash
+.. code-block:: none
 
     % cat piped.sh
     mlr cut -x -f i,y data/big | mlr sort -n y > /dev/null
@@ -242,7 +242,7 @@ Auxiliary commands
 
 There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables but they're delivered within the main Miller executable for convenience.
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr aux-list
@@ -255,7 +255,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
       netbsd-strptime
     For more information, please invoke mlr {subcommand} --help
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr lecat --help
@@ -266,7 +266,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
     --mono: don't try to colorize the output
     -h or --help: print this message
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr termcvt --help
@@ -283,7 +283,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
     Zero file names means read from standard input.
     Output is always to standard output; files are not written in-place.
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr hex --help
@@ -294,7 +294,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
     -r: print only raw hex without leading offset indicators or trailing ASCII dump.
     -h or --help: print this message
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr unhex --help
@@ -306,19 +306,19 @@ There are a few nearly-standalone programs which have nothing to do with the res
 
 Examples:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'Hello, world!' | mlr lecat --mono
     Hello, world![LF]
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
     Hello, world![CR][LF]
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr hex data/budget.csv
@@ -330,7 +330,7 @@ Examples:
     00000050: 38 0a 67 72  65 65 6e 2c  36 37 38 2e  31 32 0a 6f |8.green,678.12.o|
     00000060: 72 61 6e 67  65 2c 31 32  33 2e 34 35  0a          |range,123.45.|
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr hex -r data/budget.csv
@@ -342,7 +342,7 @@ Examples:
     38 0a 67 72  65 65 6e 2c  36 37 38 2e  31 32 0a 6f 
     72 61 6e 67  65 2c 31 32  33 2e 34 35  0a          
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
@@ -394,7 +394,7 @@ Rules for null-handling:
 
 * Records with one or more empty sort-field values sort after records with all sort-field values present:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr cat data/sort-null.dat
@@ -404,7 +404,7 @@ Rules for null-handling:
     x=9,b=10
     a=5,b=7
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr sort -n  a data/sort-null.dat
@@ -414,7 +414,7 @@ Rules for null-handling:
     a=,b=4
     x=9,b=10
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr sort -nr a data/sort-null.dat
@@ -426,19 +426,19 @@ Rules for null-handling:
 
 * Functions/operators which have one or more *empty* arguments produce empty output: e.g.
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x=2,y=3' | mlr put '$a=$x+$y'
     x=2,y=3,a=5
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x=,y=3' | mlr put '$a=$x+$y'
     x=,y=3,a=
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
@@ -446,7 +446,7 @@ Rules for null-handling:
 
 with the exception that the ``min`` and ``max`` functions are special: if one argument is non-null, it wins:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
@@ -454,13 +454,13 @@ with the exception that the ``min`` and ``max`` functions are special: if one ar
 
 * Functions of *absent* variables (e.g. ``mlr put '$y = log10($nonesuch)'``) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
     x=2,y=3,b=3,c=5
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
@@ -480,7 +480,7 @@ The reasoning is as follows:
 
 Since absent plus absent is absent (and likewise for other operators), accumulations such as ``@sum += $x`` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with ``is_present``:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr cat data/het.dkvp
@@ -490,7 +490,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
     record_count=150,resource=/path/to/second/file
     resource=/some/other/path,loadsec=0.97,ok=false
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
@@ -500,7 +500,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
     record_count=150,resource=/path/to/second/file
     resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970.000000
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
@@ -512,7 +512,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
 
 If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --print-type-arithmetic-info
@@ -580,7 +580,7 @@ For ``filter`` and ``put``, if the regular expression is a string literal (the n
 
 Example:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat data/regex-in-data.dat
@@ -588,7 +588,7 @@ Example:
     name=bill,regex=^b[ou]ll$
     name=bull,regex=^b[ou]ll$
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr filter '$name =~ $regex' data/regex-in-data.dat
@@ -602,25 +602,25 @@ Regex captures of the form ``\0`` through ``\9`` are supported as
 
 * Captures have in-function context for ``sub`` and ``gsub``. For example, the first ``\1,\2`` pair belong to the first ``sub`` and the second ``\1,\2`` pair belong to the second ``sub``:
 
-.. code-block:: bash
+.. code-block:: none
 
     mlr put '$b = sub($a, "(..)_(...)", "\2-\1"); $c = sub($a, "(..)_(.)(..)", ":\1:\2:\3")'
 
 * Captures endure for the entirety of a ``put`` for the ``=~`` and ``!=~`` operators. For example, here the ``\1,\2`` are set by the ``=~`` operator and are used by both subsequent assignment statements:
 
-.. code-block:: bash
+.. code-block:: none
 
     mlr put '$a =~ "(..)_(....); $b = "left_\1"; $c = "right_\2"'
 
 * The captures are not retained across multiple puts. For example, here the ``\1,\2`` won't be expanded from the regex capture:
 
-.. code-block:: bash
+.. code-block:: none
 
     mlr put '$a =~ "(..)_(....)' then {... something else ...} then put '$b = "left_\1"; $c = "right_\2"'
 
 * Captures are ignored in ``filter`` for the ``=~`` and ``!=~`` operators. For example, there is no mechanism provided to refer to the first ``(..)`` as ``\1`` or to the second ``(....)`` as ``\2`` in the following filter statement:
 
-.. code-block:: bash
+.. code-block:: none
 
     mlr filter '$a =~ "(..)_(....)'
 
@@ -650,7 +650,7 @@ The short of it is that Miller does this transparently for you so you needn't th
 
 Implementation details of this, for the interested: integer adds and subtracts overflow by at most one bit so it suffices to check sign-changes. Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers, converting only to float precisely when the result is less than -2\ :sup:`63` or greater than 2\ :sup:`63`\ -1.  Multiplies, on the other hand, can overflow by a word size and a sign-change technique does not suffice to detect overflow. Instead Miller tests whether the floating-point product exceeds the representable integer range. Now, 64-bit integers have 64-bit precision while IEEE-doubles have only 52-bit mantissas -- so, there are 53 bits including implicit leading one.  The following experiment explicitly demonstrates the resolution at this range:
 
-.. code-block:: bash
+.. code-block:: none
 
     64-bit integer     64-bit integer     Casted to double           Back to 64-bit
     in hex           in decimal                                    integer
@@ -679,7 +679,7 @@ On-line help
 
 Examples:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --help
@@ -1105,7 +1105,7 @@ Examples:
     For more information please see http://johnkerl.org/miller/doc and/or
     http://github.com/johnkerl/miller. This is Miller version v5.10.2-dev.
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr sort --help

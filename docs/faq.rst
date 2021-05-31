@@ -21,7 +21,7 @@ Also try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable c
 Diagnosing delimiter specifications
 ----------------------------------------------------------------
 
-.. code-block:: bash
+.. code-block:: none
 
     # Use the `file` command to see if there are CR/LF terminators (in this case,
     # there are not):
@@ -88,7 +88,7 @@ How do I suppress numeric conversion?
 
 Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input records is to parse them as integer, if possible, then as float, if possible, else leave them as string:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat data/scan-example-1.tbl
@@ -98,7 +98,7 @@ Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input r
     3x
     hello
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-1.tbl
@@ -118,7 +118,7 @@ This is a sensible default: you should be able to put ``'$z = $x + $y'`` without
 
 But now suppose you have data like these:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat data/scan-example-2.tbl
@@ -134,7 +134,7 @@ But now suppose you have data like these:
     0009
     0010
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
@@ -164,7 +164,7 @@ Taken individually the rules make sense; taken collectively they produce a mishm
 
 The solution is to **use the -S flag** for ``mlr put`` and/or ``mlr filter``. Then all field values are left as string. You can type-coerce on demand using syntax like ``'$z = int($x) + float($y)'``. (See also :doc:`reference-dsl`; see also https://github.com/johnkerl/miller/issues/150.)
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
@@ -187,7 +187,7 @@ Then-chaining found in Miller is intended to function the same as Unix pipes, bu
 
 First, look at the input data:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat data/then-example.csv
@@ -200,7 +200,7 @@ First, look at the input data:
 
 Next, run the first step of your command, omitting anything from the first ``then`` onward:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint count-distinct -f Status,Payment_Type data/then-example.csv
@@ -212,7 +212,7 @@ Next, run the first step of your command, omitting anything from the first ``the
 
 After that, run it with the next ``then`` step included:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.csv
@@ -226,7 +226,7 @@ Now if you use ``then`` to include another verb after that, the columns ``Status
 
 Note, by the way, that you'll get the same results using pipes:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv | mlr --icsv --opprint sort -nr count
@@ -241,44 +241,44 @@ I assigned $9 and it's not 9th
 
 Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data.
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo x,y,z | mlr --dkvp cat
     1=x,2=y,3=z
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'
     1=x,2=y,3=z,6=a,4=b,55=cde
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo x,y,z | mlr --nidx cat
     x,y,z
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo x,y,z | mlr --csv --implicit-csv-header cat
     1,2,3
     x,y,z
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo x,y,z | mlr --dkvp rename 2,999
     1=x,999=y,3=z
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo x,y,z | mlr --dkvp rename 2,newname
     1=x,newname=y,3=z
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2
@@ -290,7 +290,7 @@ How can I filter by date?
 
 Given input like
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat dates.csv
@@ -301,7 +301,7 @@ Given input like
 
 we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the :ref:`reference-dsl-strptime` format-string.  For example:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv filter 'strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")' dates.csv
@@ -315,7 +315,7 @@ How can I handle commas-as-data in various formats?
 
 :doc:`CSV <file-formats>` handles this well and by design:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat commas.csv
@@ -325,7 +325,7 @@ How can I handle commas-as-data in various formats?
 
 Likewise :ref:`file-formats-json`:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --ojson cat commas.csv
@@ -334,7 +334,7 @@ Likewise :ref:`file-formats-json`:
 
 For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no escaping for carriage returns, but commas work fine:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --oxtab cat commas.csv
@@ -346,7 +346,7 @@ For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no esca
 
 But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <file-formats-nidx>`, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --odkvp cat commas.csv
@@ -355,7 +355,7 @@ But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <fil
 
 One solution is to use a different delimiter, such as a pipe character:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --odkvp --ofs pipe cat commas.csv
@@ -365,7 +365,7 @@ One solution is to use a different delimiter, such as a pipe character:
 To be extra-sure to avoid data/delimiter clashes, you can also use control
 characters as delimiters -- here, control-A:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
@@ -377,7 +377,7 @@ How can I handle field names with special symbols in them?
 
 Simply surround the field names with curly braces:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
@@ -388,19 +388,19 @@ How to escape '?' in regexes?
 
 One way is to use square brackets; an alternative is to use simple string-substitution rather than a regular expression.
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat data/question.dat
     a=is it?,b=it is!
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat
     a is it?
     b it is!
     c is it ...
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat
@@ -415,11 +415,11 @@ How can I put single-quotes into strings?
 
 This is a little tricky due to the shell's handling of quotes. For simplicity, let's first put an update script into a file:
 
-.. code-block:: bash
+.. code-block:: none
 
     $a = "It's OK, I said, then 'for now'."
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo a=bcd | mlr put -f data/single-quote-example.mlr
@@ -429,7 +429,7 @@ So, it's simple: Miller's DSL uses double quotes for strings, and you can put si
 
 Without putting the update expression in a file, it's messier:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
@@ -450,7 +450,7 @@ Why doesn't mlr cut put fields in the order I want?
 
 Example: columns ``x,i,a`` were requested but they appear here in the order ``a,i,x``:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat data/small
@@ -460,7 +460,7 @@ Example: columns ``x,i,a`` were requested but they appear here in the order ``a,
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr cut -f x,i,a data/small
@@ -474,7 +474,7 @@ The issue is that Miller's ``cut``, by default, outputs cut fields in the order 
 
 The solution is to use the ``-o`` option:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr cut -o -f x,i,a data/small
@@ -489,7 +489,7 @@ NR is not consecutive after then-chaining
 
 Given this input data:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat data/small
@@ -501,7 +501,7 @@ Given this input data:
 
 why don't I see ``NR=1`` and ``NR=2`` here??
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr filter '$x > 0.5' then put '$NR = NR' data/small
@@ -510,7 +510,7 @@ why don't I see ``NR=1`` and ``NR=2`` here??
 
 The reason is that ``NR`` is computed for the original input records and isn't dynamically updated. By contrast, ``NF`` is dynamically updated: it's the number of fields in the current record, and if you add/remove a field, the value of ``NF`` will change:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'
@@ -518,7 +518,7 @@ The reason is that ``NR`` is computed for the original input records and isn't d
 
 ``NR``, by contrast (and ``FNR`` as well), retains the value from the original input stream, and records may be dropped by a ``filter`` within a ``then``-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint --from data/small put '
@@ -538,7 +538,7 @@ The reason is that ``NR`` is computed for the original input records and isn't d
 
 Or, simply use ``mlr cat -n``:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr filter '$x > 0.5' then cat -n data/small
@@ -552,7 +552,7 @@ Why am I not seeing all possible joins occur?
 
 For example, the right file here has nine records, and the left file should add in the ``hostname`` column -- so the join output should also have 9 records:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsvlite --opprint cat data/join-u-left.csv
@@ -561,7 +561,7 @@ For example, the right file here has nine records, and the left file should add 
     zenith.west.our.org   10.3.1.27
     apoapsis.east.our.org 10.4.5.94
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsvlite --opprint cat data/join-u-right.csv
@@ -576,7 +576,7 @@ For example, the right file here has nine records, and the left file should add 
     10.3.1.18 1448762598 73425
     10.4.5.94 1448762599 12200
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
@@ -590,7 +590,7 @@ The issue is that Miller's ``join``, by default (before 5.1.0), took input sorte
 
 The solution (besides pre-sorting the input files on the join keys) is to simply use **mlr join -u** (which is now the default). This loads the left file entirely into memory (while the right file is still streamed one line at a time) and does all possible joins without requiring sorted input:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
@@ -612,14 +612,14 @@ How to rectangularize after joins with unpaired?
 
 Suppose you have the following two data files:
 
-.. code-block:: bash
+.. code-block:: none
 
     id,code
     3,0000ff
     2,00ff00
     4,ff0000
 
-.. code-block:: bash
+.. code-block:: none
 
     id,color
     4,red
@@ -627,7 +627,7 @@ Suppose you have the following two data files:
 
 Joining on color the results are as expected:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv join -j id -f data/color-codes.csv data/color-names.csv
@@ -637,7 +637,7 @@ Joining on color the results are as expected:
 
 However, if we ask for left-unpaireds, since there's no ``color`` column, we get a row not having the same column names as the other:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv
@@ -650,7 +650,7 @@ However, if we ask for left-unpaireds, since there's no ``color`` column, we get
 
 To fix this, we can use **unsparsify**:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv
@@ -670,13 +670,13 @@ XML, JSON, etc. are, by contrast, all **recursive** or **nested** data structure
 
 Now, you can put tabular data into these formats -- since list-of-key-value-pairs is one of the things representable in XML or JSON. Example:
 
-.. code-block:: bash
+.. code-block:: none
 
     # DKVP
     x=1,y=2
     z=3
 
-.. code-block:: bash
+.. code-block:: none
 
     # XML
     <table>
@@ -695,7 +695,7 @@ Now, you can put tabular data into these formats -- since list-of-key-value-pair
       </record>
     </table>
 
-.. code-block:: bash
+.. code-block:: none
 
     # JSON
     [{"x":1,"y":2},{"z":3}]

@@ -9,7 +9,7 @@ CSV-file examples
 
 Suppose you have this CSV data file:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat example.csv
@@ -27,7 +27,7 @@ Suppose you have this CSV data file:
 
 ``mlr cat`` is like cat -- it passes the data through unmodified:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv cat example.csv
@@ -45,7 +45,7 @@ Suppose you have this CSV data file:
 
 but it can also do format conversion (here, you can pretty-print in tabular format):
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint cat example.csv
@@ -63,7 +63,7 @@ but it can also do format conversion (here, you can pretty-print in tabular form
 
 ``mlr head`` and ``mlr tail`` count records rather than lines. Whethere you're getting the first few records or the last few, the CSV header is included either way:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv head -n 4 example.csv
@@ -73,7 +73,7 @@ but it can also do format conversion (here, you can pretty-print in tabular form
     red,circle,1,16,13.8103,2.9010
     red,square,0,48,77.5542,7.4670
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv tail -n 4 example.csv
@@ -85,7 +85,7 @@ but it can also do format conversion (here, you can pretty-print in tabular form
 
 You can sort primarily alphabetically on one field, then secondarily numerically descending on another field:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint sort -f shape -nr index example.csv
@@ -103,7 +103,7 @@ You can sort primarily alphabetically on one field, then secondarily numerically
 
 You can use ``cut`` to retain only specified fields, in the same order they appeared in the input data:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint cut -f flag,shape example.csv
@@ -121,7 +121,7 @@ You can use ``cut`` to retain only specified fields, in the same order they appe
 
 You can also use ``cut -o`` to retain only specified fields in your preferred order:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint cut -o -f flag,shape example.csv
@@ -139,7 +139,7 @@ You can also use ``cut -o`` to retain only specified fields in your preferred or
 
 You can use ``cut -x`` to omit fields you don't care about:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint cut -x -f flag,shape example.csv
@@ -157,7 +157,7 @@ You can use ``cut -x`` to omit fields you don't care about:
 
 You can use ``filter`` to keep only records you care about:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint filter '$color == "red"' example.csv
@@ -167,7 +167,7 @@ You can use ``filter`` to keep only records you care about:
     red   square 0    48    77.5542  7.4670
     red   square 0    64    77.1991  9.5310
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint filter '$color == "red" && $flag == 1' example.csv
@@ -177,7 +177,7 @@ You can use ``filter`` to keep only records you care about:
 
 You can use ``put`` to create new fields which are computed from other fields:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
@@ -195,7 +195,7 @@ You can use ``put`` to create new fields which are computed from other fields:
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use ``$[[3]]`` to access the name of field 3 or ``$[[[3]]]`` to access the value of field 3:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv
@@ -211,7 +211,7 @@ Even though Miller's main selling point is name-indexing, sometimes you really w
     yellow circle   1   87    63.5058  8.3350
     purple square   0   91    72.3735  8.2430
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv
@@ -232,7 +232,7 @@ JSON-file examples
 
 OK, CSV and pretty-print are fine. But Miller can also convert between a few other formats -- let's take a look at JSON output:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv
@@ -249,7 +249,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
 
 Or, JSON output with vertical-formatting flags:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --ojsonx tail -n 2 example.csv
@@ -277,7 +277,7 @@ Now suppose you want to sort the data on a given column, *and then* take the top
 
 Here are the records with the top three ``index`` values:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint sort -f shape -nr index then head -n 3 example.csv
@@ -288,7 +288,7 @@ Here are the records with the top three ``index`` values:
 
 Lots of Miller commands take a ``-g`` option for group-by: here, ``head -n 1 -g shape`` outputs the first record for each distinct value of the ``shape`` field. This means we're finding the record with highest ``index`` field for each distinct ``shape`` field:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
@@ -299,7 +299,7 @@ Lots of Miller commands take a ``-g`` option for group-by: here, ``head -n 1 -g 
 
 Statistics can be computed with or without group-by field(s):
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
@@ -308,7 +308,7 @@ Statistics can be computed with or without group-by field(s):
     square   4              72.373500    76.601150     79.277800
     circle   3              13.810300    47.098200     63.978500
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
@@ -322,7 +322,7 @@ Statistics can be computed with or without group-by field(s):
 
 If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
@@ -344,14 +344,14 @@ Often we want to print output to the screen. Miller does this by default, as we'
 
 Sometimes we want to print output to another file: just use **> outputfilenamegoeshere** at the end of your command:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     % mlr --icsv --opprint cat example.csv > newfile.csv
     # Output goes to the new file;
     # nothing is printed to the screen.
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     % cat newfile.csv
@@ -369,12 +369,12 @@ Sometimes we want to print output to another file: just use **> outputfilenamego
 
 Other times we just want our files to be **changed in-place**: just use **mlr -I**:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     % cp example.csv newfile.txt
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     % cat newfile.txt
@@ -390,12 +390,12 @@ Other times we just want our files to be **changed in-place**: just use **mlr -I
     yellow,circle,1,87,63.5058,8.3350
     purple,square,0,91,72.3735,8.2430
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     % mlr -I --icsv --opprint cat newfile.txt
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     % cat newfile.txt
@@ -413,7 +413,7 @@ Other times we just want our files to be **changed in-place**: just use **mlr -I
 
 Also using ``mlr -I`` you can bulk-operate on lots of files: e.g.:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     mlr -I --csv cut -x -f unwanted_column_name *.csv
@@ -422,12 +422,12 @@ If you like, you can first copy off your original data somewhere else, before do
 
 Lastly, using ``tee`` within ``put``, you can split your input data into separate files per one or more field names:
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat circle.csv
@@ -436,7 +436,7 @@ Lastly, using ``tee`` within ``put``, you can split your input data into separat
     yellow,circle,1,73,63.9785,4.2370
     yellow,circle,1,87,63.5058,8.3350
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat square.csv
@@ -446,7 +446,7 @@ Lastly, using ``tee`` within ``put``, you can split your input data into separat
     red,square,0,64,77.1991,9.5310
     purple,square,0,91,72.3735,8.2430
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat triangle.csv
@@ -462,7 +462,7 @@ What's a CSV file, really? It's an array of rows, or *records*, each being a lis
 
 For example, if you have:
 
-.. code-block:: bash
+.. code-block:: none
 
     shape,flag,index
     circle,1,24
@@ -470,7 +470,7 @@ For example, if you have:
 
 then that's a way of saying:
 
-.. code-block:: bash
+.. code-block:: none
 
     shape=circle,flag=1,index=24
     shape=square,flag=0,index=36
@@ -479,7 +479,7 @@ Data written this way are called **DKVP**, for *delimited key-value pairs*.
 
 We've also already seen other ways to write the same data:
 
-.. code-block:: bash
+.. code-block:: none
 
     CSV                               PPRINT                 JSON
     shape,flag,index                  shape  flag index      [

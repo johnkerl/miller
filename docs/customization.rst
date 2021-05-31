@@ -9,30 +9,30 @@ How to use .mlrrc
 
 Suppose you always use CSV files. Then instead of always having to type ``--csv`` as in
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     mlr --csv cut -x -f extra mydata.csv
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     mlr --csv sort -n id mydata.csv
 
 and so on, you can instead put the following into your ``$HOME/.mlrrc``:
 
-.. code-block:: bash
+.. code-block:: none
 
     --csv
 
 Then you can just type things like
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     mlr cut -x -f extra mydata.csv
 
-.. code-block:: bash
+.. code-block:: none
    :emphasize-lines: 1,1
 
     mlr sort -n id mydata.csv
@@ -54,7 +54,7 @@ What you can put in your .mlrrc
 
 Here is an example ``.mlrrc file``:
 
-.. code-block:: bash
+.. code-block:: none
 
     # These are my preferred default settings for Miller
     

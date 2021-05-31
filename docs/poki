@@ -90,7 +90,7 @@ end
 
 # ----------------------------------------------------------------
 def write_card(highlight_first_line, content_lines, output_handle)
-  output_handle.puts('.. code-block:: bash')
+  output_handle.puts('.. code-block:: none')
   if highlight_first_line
     output_handle.puts('   :emphasize-lines: 1,1') # 'hll' in _static/*.css
   end

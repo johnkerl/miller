@@ -13,7 +13,7 @@ I like to produce SQL-query output with header-column and tab delimiter: this is
 
 For example, using default output formatting in ``mysql`` we get formatting like Miller's ``--opprint --barred``:
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mysql --database=mydb -e 'show columns in mytable'
@@ -29,7 +29,7 @@ For example, using default output formatting in ``mysql`` we get formatting like
 
 Using ``mysql``'s ``-B`` we get TSV output:
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --opprint cat
@@ -42,7 +42,7 @@ Using ``mysql``'s ``-B`` we get TSV output:
 
 Since Miller handles TSV output, we can do as much or as little processing as we want in the SQL query, then send the rest on to Miller. This includes outputting as JSON, doing further selects/joins in Miller, doing stats, etc.  etc.:
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson --jlistwrap --jvstack cat
@@ -89,7 +89,7 @@ Since Miller handles TSV output, we can do as much or as little processing as we
       }
     ]
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mysql --database=mydb -B -e 'select * from mytable' > query.tsv
@@ -115,7 +115,7 @@ One use of NIDX (value-only, no keys) format is for loading up SQL tables.
 
 Create and load SQL table:
 
-.. code-block::
+.. code-block:: none
 
     mysql> CREATE TABLE abixy(
       a VARCHAR(32),
@@ -158,7 +158,7 @@ Create and load SQL table:
 
 Aggregate counts within SQL:
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     mysql> SELECT a, b, COUNT(*) AS count FROM abixy GROUP BY a, b ORDER BY COUNT DESC;
@@ -195,7 +195,7 @@ Aggregate counts within SQL:
 
 Aggregate counts within Miller:
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint uniq -c -g a,b then sort -nr count data/medium
@@ -218,7 +218,7 @@ Aggregate counts within Miller:
 
 Pipe SQL output to aggregate counts within Miller:
 
-.. code-block::
+.. code-block:: none
    :emphasize-lines: 1,1
 
     $ mysql -D miller -B -e 'select * from abixy' | mlr --itsv --opprint uniq -c -g a,b then sort -nr count
