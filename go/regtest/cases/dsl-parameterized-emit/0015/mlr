@@ -1,0 +1,1 @@
+@sum += $i;        end {emitf @sum }

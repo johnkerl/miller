@@ -1,0 +1,1 @@
+@a=$a; @b=$b; emitf > "${CASEDIR}/out.".$a.$b, @a, @b

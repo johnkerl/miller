@@ -1,0 +1,1 @@
+@v = $x;        end {emitp @v }

@@ -1,0 +1,1 @@
+@a[NR]=$a; @b[NR]=$b; emit > stdout, (@a, @b), "NR"

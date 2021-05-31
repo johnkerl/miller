@@ -1,0 +1,1 @@
+@a[NR]=$a; @b[NR]=$b; emitp > stderr, (@a, @b), "NR"

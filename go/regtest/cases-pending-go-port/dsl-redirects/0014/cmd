@@ -1,1 +1,0 @@
-mlr put -q 'print > "${CASEDIR}/out.".$a, "abi:".$a.$b.$i' regtest/input/abixy

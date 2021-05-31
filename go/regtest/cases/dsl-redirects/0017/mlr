@@ -1,0 +1,1 @@
+print > stdout, "abi:".$a.$b.$i
