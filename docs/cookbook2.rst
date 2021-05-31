@@ -74,7 +74,7 @@ Program timing
 
 This admittedly artificial example demonstrates using Miller time and stats functions to introspectively acquire some information about Miller's own runtime. The ``delta`` function computes the difference between successive timestamps.
 
-.. code-block::
+.. code-block:: bash
 
     $ ruby -e '10000.times{|i|puts "i=#{i+1}"}' > lines.txt
     
@@ -109,7 +109,7 @@ Computing interquartile ranges
 
 For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab stats1 -f x -a p25,p75 \
@@ -121,7 +121,7 @@ For one or more specified field names, simply compute p25 and p75, then write th
 
 For wildcarded field names, first compute p25 and p75, then loop over field names with ``p25`` in them:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \
@@ -146,7 +146,7 @@ Computing weighted means
 
 This might be more elegantly implemented as an option within the ``stats1`` verb. Meanwhile, it's expressible within the DSL:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/medium put -q '
@@ -184,7 +184,7 @@ Generating random numbers from various distributions
 
 Here we can chain together a few simple building blocks:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat expo-sample.sh
@@ -227,7 +227,7 @@ Namely:
 
 The output is as follows:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ sh expo-sample.sh
@@ -288,7 +288,7 @@ Sieve of Eratosthenes
 
 The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`_ is a standard introductory programming topic. The idea is to find all primes up to some *N* by making a list of the numbers 1 to *N*, then striking out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all multiples of 4 except 4 itself, and so on. Whatever survives that without getting marked is a prime. This is easy enough in Miller. Notice that here all the work is in ``begin`` and ``end`` statements; there is no file input (so we use ``mlr -n`` to keep Miller from waiting for input data).
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat programs/sieve.mlr
@@ -325,7 +325,7 @@ The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`
       }
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr -n put -f programs/sieve.mlr
@@ -362,7 +362,7 @@ The `Mandelbrot set <http://en.wikipedia.org/wiki/Mandelbrot_set>`_ is also easi
 
 The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the Wikipedia article); how to render them is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat programs/mand.mlr
@@ -469,7 +469,7 @@ The (approximate) computation of points in the complex plane which are and aren'
 
 At standard resolution this makes a nice little ASCII plot:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr -n put -f ./programs/mand.mlr

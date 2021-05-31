@@ -11,7 +11,7 @@ Here's comparison of verbs and ``put``/``filter`` DSL expressions:
 
 Example:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr stats1 -a sum -f x -g a data/small
@@ -27,7 +27,7 @@ Example:
 
 Example:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
@@ -45,7 +45,7 @@ Please see :doc:`reference-verbs` for information on verbs other than ``put`` an
 
 The essential usages of ``mlr filter`` and ``mlr put`` are for record-selection and record-updating expressions, respectively. For example, given the following input data:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/small
@@ -57,7 +57,7 @@ The essential usages of ``mlr filter`` and ``mlr put`` are for record-selection 
 
 you might retain only the records whose ``a`` field has value ``eks``:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr filter '$a == "eks"' data/small
@@ -66,7 +66,7 @@ you might retain only the records whose ``a`` field has value ``eks``:
 
 or you might add a new field which is a function of existing fields:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$ab = $a . "_" . $b ' data/small
@@ -96,7 +96,7 @@ Expression formatting
 
 Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'
@@ -114,7 +114,7 @@ Multiple expressions may be given, separated by semicolons, and each may refer t
 
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '
@@ -136,7 +136,7 @@ Newlines within the expression are ignored, which can help increase legibility o
     hat wye 10002 0.321507044286237609 0.568893318795083758 5  9  4   2       data/small2
     pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium
@@ -150,7 +150,7 @@ Expressions from files
 
 The simplest way to enter expressions for ``put`` and ``filter`` is between single quotes on the command line, e.g.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'
@@ -160,7 +160,7 @@ The simplest way to enter expressions for ``put`` and ``filter`` is between sing
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put 'func f(a, b) { return sqrt(a**2 + b**2) } $xy = f($x, $y)'
@@ -173,7 +173,7 @@ The simplest way to enter expressions for ``put`` and ``filter`` is between sing
 You may, though, find it convenient to put expressions into files for reuse, and read them
 **using the -f option**. For example:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/fe-example-3.mlr
@@ -182,7 +182,7 @@ You may, though, find it convenient to put expressions into files for reuse, and
     }
     $xy = f($x, $y)
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put -f data/fe-example-3.mlr
@@ -194,7 +194,7 @@ You may, though, find it convenient to put expressions into files for reuse, and
 
 If you have some of the logic in a file and you want to write the rest on the command line, you can **use the -f and -e options together**:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/fe-example-4.mlr
@@ -202,7 +202,7 @@ If you have some of the logic in a file and you want to write the rest on the co
       return sqrt(a**2 + b**2)
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'
@@ -223,7 +223,7 @@ Semicolons, commas, newlines, and curly braces
 
 Miller uses **semicolons as statement separators**, not statement terminators. This means you can write:
 
-.. code-block::
+.. code-block:: bash
 
     mlr put 'x=1'
     mlr put 'x=1;$y=2'
@@ -232,13 +232,13 @@ Miller uses **semicolons as statement separators**, not statement terminators. T
 
 Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'
     x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'
@@ -246,7 +246,7 @@ Semicolons are optional after closing curly braces (which close conditionals and
 
 Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
 
-.. code-block::
+.. code-block:: bash
 
     mlr put '
       $x = 1
@@ -260,7 +260,7 @@ Semicolons are required between statements even if those statements are on separ
 
 **Trailing commas** are allowed in function/subroutine definitions, function/subroutine callsites, and map literals. This is intended for (although not restricted to) the multi-line case:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --csvlite --from data/a.csv put '
@@ -322,7 +322,7 @@ These are written all in capital letters, such as ``NR``, ``NF``, ``FILENAME``, 
 
 Namely, Miller supports the following five built-in variables for :doc:`filter and put <reference-dsl>`, all ``awk``-inspired: ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME``, as well as the mathematical constants ``M_PI`` and ``M_E``.  Lastly, the ``ENV`` hashmap allows read access to environment variables, e.g.  ``ENV["HOME"]`` or ``ENV["foo_".$hostname]``.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr filter 'FNR == 2' data/small*
@@ -330,7 +330,7 @@ Namely, Miller supports the following five built-in variables for :doc:`filter a
     1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
     a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$fnr = FNR' data/small*
@@ -355,7 +355,7 @@ Their values of ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME`` change fr
 
 Their **scope is global**: you can refer to them in any ``filter`` or ``put`` statement. Their values are assigned by the input-record reader:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --csv put '$nr = NR' data/a.csv
@@ -363,7 +363,7 @@ Their **scope is global**: you can refer to them in any ``filter`` or ``put`` st
     1,2,3,1
     4,5,6,2
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
@@ -388,12 +388,12 @@ If field names have **special characters** such as ``.`` then you can use braces
 
 You may also use a **computed field name** in square brackets, e.g.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ echo a=3,b=4 | mlr filter '$["x"] < 0.5'
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
@@ -418,7 +418,7 @@ Use ``$[[3]]`` to access the name of field 3.  More generally, any expression ev
 
 Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third field. This has the shorter equivalent notation ``$[[[3]]]``.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr cat data/small
@@ -428,7 +428,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$[[3]] = "NEW"' data/small
@@ -438,7 +438,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
     a=eks,b=wye,NEW=4,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,NEW=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$[[[3]]] = "NEW"' data/small
@@ -448,7 +448,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
     a=eks,b=wye,i=NEW,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,i=NEW,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$NEW = $[[NR]]' data/small
@@ -458,7 +458,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=x
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=y
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$NEW = $[[[NR]]]' data/small
@@ -468,7 +468,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=0.381399
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=0.863624
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$[[[NR]]] = "NEW"' data/small
@@ -480,7 +480,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
 
 Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than ``NF`` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$[[6]] = "NEW"' data/small
@@ -490,7 +490,7 @@ Right-hand side accesses to non-existent fields -- i.e. with index less than 1 o
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$[[[6]]] = "NEW"' data/small
@@ -511,7 +511,7 @@ Just as for field names in stream records, if you want to define out-of-stream v
 
 You may use a **computed key** in square brackets, e.g.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
@@ -519,14 +519,14 @@ You may use a **computed key** in square brackets, e.g.
 
 Out-of-stream variables are **scoped** to the ``put`` command in which they appear.  In particular, if you have two or more ``put`` commands separated by ``then``, each put will have its own set of out-of-stream variables:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/a.dkvp
     a=1,b=2,c=3
     a=4,b=5,c=6
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '@sum += $a; end {emit @sum}' then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
@@ -544,7 +544,7 @@ Indexed out-of-stream variables
 
 Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of the ``-g`` (group-by) option which ``mlr stats1`` and various other Miller commands have:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '
@@ -566,7 +566,7 @@ Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of t
     a=zee,x_sum=1.125680
     a=hat,x_sum=0.031442
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr stats1 -a count,sum -f x -g a ../data/small
@@ -578,7 +578,7 @@ Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of t
 
 Indices can be arbitrarily deep -- here there are two or more of them:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/medium put -q '
@@ -618,7 +618,7 @@ The idea is that ``stats1``, and other Miller verbs, encapsulate frequently-used
 
 Begin/end blocks can be mixed with pattern/action blocks. For example:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '
@@ -651,7 +651,7 @@ Local variables are similar to out-of-stream variables, except that their extent
 
 For example:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ # Here I'm using a specified random-number seed so this example always
@@ -707,7 +707,7 @@ Things which are perhaps surprising compared to other languages:
 
 The following example demonstrates the scope rules:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/scope-example.mlr
@@ -735,7 +735,7 @@ The following example demonstrates the scope rules:
     $outer_c = c;
     $outer_d = d;    # there is no outer d defined so no assignment happens
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/scope-example.dat
@@ -743,7 +743,7 @@ The following example demonstrates the scope rules:
     n=2,x=456
     n=3,x=789
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr
@@ -771,7 +771,7 @@ The following example demonstrates the scope rules:
 
 And this example demonstrates the type-declaration rules:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/type-decl-example.mlr
@@ -820,7 +820,7 @@ Miller's ``put``/``filter`` DSL has four kinds of hashmaps. **Stream records** a
 
 For example, the following swaps the input stream's ``a`` and ``i`` fields, modifies ``y``, and drops the rest:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '
@@ -839,7 +839,7 @@ For example, the following swaps the input stream's ``a`` and ``i`` fields, modi
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put '
@@ -857,7 +857,7 @@ Likewise, you can assign map literals to out-of-stream variables or local variab
 
 Like out-of-stream and local variables, map literals can be multi-level:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put -q '
@@ -905,7 +905,7 @@ Type-test and type-assertion expressions
 
 The following ``is...`` functions take a value and return a boolean indicating whether the argument is of the indicated type. The ``assert_...`` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr -F | grep ^is
@@ -926,7 +926,7 @@ The following ``is...`` functions take a value and return a boolean indicating w
     is_present
     is_string
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr -F | grep ^assert
@@ -1037,7 +1037,7 @@ There are three remaining kinds of variable assignment using out-of-stream varia
 
 Example recursive copy of out-of-stream variables:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small
@@ -1060,7 +1060,7 @@ Example recursive copy of out-of-stream variables:
 
 Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
@@ -1072,7 +1072,7 @@ Example of out-of-stream variable assigned to full stream record, where the 2nd 
 
 Example of full stream record assigned to an out-of-stream variable, finding the record for which the ``x`` field has the largest value in the input stream:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/small
@@ -1082,7 +1082,7 @@ Example of full stream record assigned to an out-of-stream variable, finding the
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small
@@ -1092,7 +1092,7 @@ Example of full stream record assigned to an out-of-stream variable, finding the
 Keywords for filter and put
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --help-all-keywords
@@ -1437,7 +1437,7 @@ Pattern-action blocks
 
 These are reminiscent of ``awk`` syntax.  They can be used to allow assignments to be done only when appropriate -- e.g. for math-function domain restrictions, regex-matching, and so on:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr cat data/put-gating-example-1.dkvp
@@ -1447,7 +1447,7 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
     x=2
     x=3
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
@@ -1457,7 +1457,7 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
     x=2,y=0.301030,z=0.548662
     x=3,y=0.477121,z=0.690740
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr cat data/put-gating-example-2.dkvp
@@ -1465,7 +1465,7 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
     a=some other name
     a=xyz_789
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
@@ -1475,7 +1475,7 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
 
 This produces heteregenous output which Miller, of course, has no problems with (see :doc:`record-heterogeneity`).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes ``put`` to evaluate the boolean expression (along with any side effects, namely, regex-captures ``\1``, ``\2``, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
@@ -1485,7 +1485,7 @@ This produces heteregenous output which Miller, of course, has no problems with 
     x=2,y=0.301030,z=0.548662
     x=3,y=0.477121,z=0.690740
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
@@ -1508,7 +1508,7 @@ These are again reminiscent of ``awk``. Pattern-action blocks are a special case
 
 Compound statements use ``elif`` (rather than ``elsif`` or ``else if``):
 
-.. code-block::
+.. code-block:: bash
 
     mlr put '
       if (NR == 2) {
@@ -1527,7 +1527,7 @@ While and do-while loops
 
 Miller's ``while`` and ``do-while`` are unsurprising in comparison to various languages, as are ``break`` and ``continue``:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ echo x=1,y=2 | mlr put '
@@ -1538,7 +1538,7 @@ Miller's ``while`` and ``do-while`` are unsurprising in comparison to various la
     '
     x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ echo x=1,y=2 | mlr put '
@@ -1567,7 +1567,7 @@ Key-only for-loops
 
 The ``key`` variable is always bound to the *key* of key-value pairs:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put '
@@ -1614,7 +1614,7 @@ The ``key`` variable is always bound to the *key* of key-value pairs:
       key:y  value:0.863624
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr -n put '
@@ -1635,7 +1635,7 @@ Key-value for-loops
 
 Single-level keys may be gotten at using either ``for(k,v)`` or ``for((k),v)``; multi-level keys may be gotten at using ``for((k1,k2,k3),v)`` and so on.  The ``v`` variable will be bound to to a scalar value (a string or a number) if the map stops at that level, or to a map-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/for-srec-example.tbl
@@ -1644,7 +1644,7 @@ Single-level keys may be gotten at using either ``for(k,v)`` or ``for((k),v)``; 
     red    green  120 11  195
     yellow blue   140 0   240
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --pprint --from data/for-srec-example.tbl put '
@@ -1663,7 +1663,7 @@ Single-level keys may be gotten at using either ``for(k,v)`` or ``for((k),v)``; 
     red    green  120 11  195 326  326  326
     yellow blue   140 0   240 380  380  380
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
@@ -1678,7 +1678,7 @@ Note that the value of the current field in the for-loop can be gotten either us
 
 Important note: to avoid inconsistent looping behavior in case you're setting new fields (and/or unsetting existing ones) while looping over the record, **Miller makes a copy of the record before the loop: loop variables are bound from the copy and all other reads/writes involve the record itself**:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put '
@@ -1700,7 +1700,7 @@ Important note: to avoid inconsistent looping behavior in case you're setting ne
 
 It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put '
@@ -1721,7 +1721,7 @@ It can be confusing to modify the stream record while iterating over a copy of i
 
 You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after ``in``, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
 
-.. code-block::
+.. code-block:: bash
 
     # Parentheses are optional for single key:
     for (k1,           v in @a["b"]["c"]) { ... }
@@ -1734,7 +1734,7 @@ You can also start iterating on sub-hashmaps of an out-of-stream or local variab
 
 That's confusing in the abstract, so a concrete example is in order. Suppose the out-of-stream variable ``@myvar`` is populated as follows:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr -n put --jknquoteint -q '
@@ -1763,7 +1763,7 @@ That's confusing in the abstract, so a concrete example is in order. Suppose the
 
 Then we can get at various values as follows:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr -n put --jknquoteint -q '
@@ -1786,7 +1786,7 @@ Then we can get at various values as follows:
     key=3,valuetype=map
     key=6,valuetype=map
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr -n put --jknquoteint -q '
@@ -1809,7 +1809,7 @@ Then we can get at various values as follows:
     key1=3,key2=4,valuetype=int
     key1=6,key2=7,valuetype=map
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr -n put --jknquoteint -q '
@@ -1836,7 +1836,7 @@ C-style triple-for loops
 
 These are supported as follows:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put '
@@ -1853,7 +1853,7 @@ These are supported as follows:
     eks wye 4 0.38139939387114097 0.13418874328430463 10
     wye pan 5 0.5732889198020006  0.8636244699032729  15
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put '
@@ -1890,7 +1890,7 @@ Begin/end blocks
 
 Miller supports an ``awk``-like ``begin/end`` syntax.  The statements in the ``begin`` block are executed before any input records are read; the statements in the ``end`` block are executed after the last input record is read.  (If you want to execute some statement at the start of each file, not at the start of the first file as with ``begin``, you might use a pattern/action block of the form ``FNR == 1 { ... }``.) All statements outside of ``begin`` or ``end`` are, of course, executed on every input record. Semicolons separate statements inside or outside of begin/end blocks; semicolons are required between begin/end block bodies and any subsequent statement.  For example:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '
@@ -1912,7 +1912,7 @@ Miller supports an ``awk``-like ``begin/end`` syntax.  The statements in the ``b
 
 Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in ``awk``, where they'd default to 0 either way), the above can be written more succinctly as
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '
@@ -1933,7 +1933,7 @@ Since uninitialized out-of-stream variables default to 0 for addition/substracti
 
 The **put -q** option is a shorthand which suppresses printing of each output record, with only ``emit`` statements being output. So to get only summary outputs, one could write
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '
@@ -1944,7 +1944,7 @@ The **put -q** option is a shorthand which suppresses printing of each output re
 
 We can do similarly with multiple out-of-stream variables:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '
@@ -1960,7 +1960,7 @@ We can do similarly with multiple out-of-stream variables:
 
 This is of course not much different than
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr stats1 -a count,sum -f x ../data/small
@@ -2043,7 +2043,7 @@ Details:
 
 * The ``print`` and ``dump`` keywords produce output immediately to standard output, or to specified file(s) or pipe-to command if present.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword print
@@ -2052,7 +2052,7 @@ Details:
       Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
       Example: mlr --from f.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword dump
@@ -2076,7 +2076,7 @@ Details:
 
 * ``mlr put`` sends the current record (possibly modified by the ``put`` expression) to the output record stream. Records are then input to the following verb in a ``then``-chain (if any), else printed to standard output (unless ``put -q``). The **tee** keyword *additionally* writes the output record to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword tee
@@ -2107,7 +2107,7 @@ Details:
 
 * ``mlr put``'s ``emitf``, ``emitp``, and ``emit`` send out-of-stream variables to the output record stream. These are then input to the following verb in a ``then``-chain (if any), else printed to standard output. When redirected with ``>``, ``>>``, or ``|``, they *instead* write the out-of-stream variable(s) to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword emitf
@@ -2138,7 +2138,7 @@ Details:
     
       Please see http://johnkerl.org/miller/doc for more information.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword emitp
@@ -2171,7 +2171,7 @@ Details:
     
       Please see http://johnkerl.org/miller/doc for more information.
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword emit
@@ -2214,7 +2214,7 @@ There are three variants: ``emitf``, ``emit``, and ``emitp``. Keep in mind that 
 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For ``emitf`` these mustn't have indexing using ``@name[...]``. Example:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small
@@ -2222,7 +2222,7 @@ Use **emitf** to output several out-of-stream variables side-by-side in the same
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/small
@@ -2232,7 +2232,7 @@ Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum += $x; end { dump }' data/small
@@ -2240,7 +2240,7 @@ Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get
       "sum": 2.264762
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum += $x; end { emit @sum }' data/small
@@ -2248,7 +2248,7 @@ Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get
 
 If it's indexed then use as many names after ``emit`` as there are indices:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a] += $x; end { dump }' data/small
@@ -2260,7 +2260,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
       }
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
@@ -2268,7 +2268,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
     a=eks,sum=1.140079
     a=wye,sum=0.777892
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
@@ -2288,7 +2288,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
       }
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
@@ -2298,7 +2298,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
     a=wye,b=wye,sum=0.204603
     a=wye,b=pan,sum=0.573289
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
@@ -2328,7 +2328,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
       }
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small
@@ -2340,7 +2340,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
 
 Now for **emitp**: if you have as many names following ``emit`` as there are levels in the out-of-stream variable's hashmap, then ``emit`` and ``emitp`` do the same thing. Where they differ is when you don't specify as many names as there are hashmap levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: ``emitp`` includes full prefixing (hence the ``p`` in ``emitp``) while ``emit`` takes the deepest hashmap key as the output-record key:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
@@ -2360,7 +2360,7 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
       }
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
@@ -2368,7 +2368,7 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
     a=eks,pan=0.758680,wye=0.381399
     a=wye,wye=0.204603,pan=0.573289
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
@@ -2376,7 +2376,7 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
     pan=0.758680,wye=0.381399
     wye=0.204603,pan=0.573289
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
@@ -2384,13 +2384,13 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
     a=eks,sum:pan=0.758680,sum:wye=0.381399
     a=wye,sum:wye=0.204603,sum:pan=0.573289
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
     sum:pan:pan=0.346790,sum:eks:pan=0.758680,sum:eks:wye=0.381399,sum:wye:wye=0.204603,sum:wye:pan=0.573289
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
@@ -2403,7 +2403,7 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
 Use **--oflatsep** to specify the character which joins multilevel
 keys for ``emitp`` (it defaults to a colon):
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
@@ -2411,13 +2411,13 @@ keys for ``emitp`` (it defaults to a colon):
     a=eks,sum/pan=0.758680,sum/wye=0.381399
     a=wye,sum/wye=0.204603,sum/pan=0.573289
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
     sum/pan/pan=0.346790,sum/eks/pan=0.758680,sum/eks/wye=0.381399,sum/wye/wye=0.204603,sum/wye/pan=0.573289
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
@@ -2433,7 +2433,7 @@ Multi-emit statements
 You can emit **multiple map-valued expressions side-by-side** by
 including their names in parentheses:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/medium --opprint put -q '
@@ -2480,7 +2480,7 @@ Emit-all statements
 
 Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-stream variables. You can use the following idiom to get various accumulators output side-by-side (reminiscent of ``mlr stats1``):
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'
@@ -2491,7 +2491,7 @@ Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-strea
     wye wye 0.204603 1
     wye pan 0.573289 1
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'
@@ -2509,7 +2509,7 @@ Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-strea
     wye wye 1
     wye pan 1
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'
@@ -2525,7 +2525,7 @@ Unset statements
 
 You can clear a map key by assigning the empty string as its value: ``$x=""`` or ``@x=""``. Using ``unset`` you can remove the key entirely. Examples:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/small
@@ -2535,7 +2535,7 @@ You can clear a map key by assigning the empty string as its value: ``$x=""`` or
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put 'unset $x, $a' data/small
@@ -2547,7 +2547,7 @@ You can clear a map key by assigning the empty string as its value: ``$x=""`` or
 
 This can also be done, of course, using ``mlr cut -x``. You can also clear out-of-stream or local variables, at the base name level, or at an indexed sublevel:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small
@@ -2569,7 +2569,7 @@ This can also be done, of course, using ``mlr cut -x``. You can also clear out-o
     {
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small
@@ -2607,14 +2607,14 @@ Filter statements
 
 You can use ``filter`` within ``put``. In fact, the following two are synonymous:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr filter 'NR==2 || NR==3' data/small
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put 'filter NR==2 || NR==3' data/small
@@ -2623,7 +2623,7 @@ You can use ``filter`` within ``put``. In fact, the following two are synonymous
 
 The former, of course, is much easier to type. But the latter allows you to define more complex expressions for the filter, and/or do other things in addition to the filter:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '@running_sum += $x; filter @running_sum > 1.3' data/small
@@ -2631,7 +2631,7 @@ The former, of course, is much easier to type. But the latter allows you to defi
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr put '$z = $x * $y; filter $z > 0.3' data/small
@@ -4914,7 +4914,7 @@ User-defined functions
 
 Here's the obligatory example of a recursive function to compute the factorial function:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint --from data/small put '
@@ -4963,7 +4963,7 @@ User-defined subroutines
 
 Example:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint --from data/small put -q '

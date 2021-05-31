@@ -9,7 +9,7 @@ Overview
 
 One of Miller's strengths is its compact notation: for example, given input of the form
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ head -n 5 ../data/medium
@@ -21,7 +21,7 @@ One of Miller's strengths is its compact notation: for example, given input of t
 
 you can simply do
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab stats1 -a sum -f x ../data/medium
@@ -29,7 +29,7 @@ you can simply do
 
 or
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint stats1 -a sum -f x -g b ../data/medium
@@ -42,7 +42,7 @@ or
 
 rather than the more tedious
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put -q '
@@ -55,7 +55,7 @@ rather than the more tedious
 
 or
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put -q '
@@ -80,14 +80,14 @@ The following examples compute some things using oosvars which are already compu
 Mean without/with oosvars
 ----------------------------------------------------------------
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint stats1 -a mean -f x data/medium
     x_mean
     0.498602
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put -q '
@@ -104,7 +104,7 @@ Mean without/with oosvars
 Keyed mean without/with oosvars
 ----------------------------------------------------------------
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint stats1 -a mean -f x -g a,b data/medium
@@ -135,7 +135,7 @@ Keyed mean without/with oosvars
     eks hat 0.500679
     wye eks 0.530604
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put -q '
@@ -178,7 +178,7 @@ Keyed mean without/with oosvars
 Variance and standard deviation without/with oosvars
 ----------------------------------------------------------------
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium
@@ -188,7 +188,7 @@ Variance and standard deviation without/with oosvars
     x_var    0.084270
     x_stddev 0.290293
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat variance.mlr
@@ -202,7 +202,7 @@ Variance and standard deviation without/with oosvars
       emitf @n, @sumx, @sumx2, @mean, @var, @stddev
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put -q -f variance.mlr data/medium
@@ -218,14 +218,14 @@ You can also do this keyed, of course, imitating the keyed-mean example above.
 Min/max without/with oosvars
 ----------------------------------------------------------------
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab stats1 -a min,max -f x data/medium
     x_min 0.000045
     x_max 0.999953
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium
@@ -235,7 +235,7 @@ Min/max without/with oosvars
 Keyed min/max without/with oosvars
 ----------------------------------------------------------------
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint stats1 -a min,max -f x -g a data/medium
@@ -246,7 +246,7 @@ Keyed min/max without/with oosvars
     zee 0.000549 0.999490
     hat 0.000045 0.999953
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint --from data/medium put -q '
@@ -266,7 +266,7 @@ Keyed min/max without/with oosvars
 Delta without/with oosvars
 ----------------------------------------------------------------
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint step -a delta -f x data/small
@@ -277,7 +277,7 @@ Delta without/with oosvars
     eks wye 4 0.38139939387114097 0.13418874328430463 0.176796
     wye pan 5 0.5732889198020006  0.8636244699032729  0.191890
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small
@@ -291,7 +291,7 @@ Delta without/with oosvars
 Keyed delta without/with oosvars
 ----------------------------------------------------------------
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint step -a delta -f x -g a data/small
@@ -302,7 +302,7 @@ Keyed delta without/with oosvars
     eks wye 4 0.38139939387114097 0.13418874328430463 -0.377281
     wye pan 5 0.5732889198020006  0.8636244699032729  0.368686
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small
@@ -316,7 +316,7 @@ Keyed delta without/with oosvars
 Exponentially weighted moving averages without/with oosvars
 ----------------------------------------------------------------
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint step -a ewma -d 0.1 -f x data/small
@@ -327,7 +327,7 @@ Exponentially weighted moving averages without/with oosvars
     eks wye 4 0.38139939387114097 0.13418874328430463 0.370817
     wye pan 5 0.5732889198020006  0.8636244699032729  0.391064
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '

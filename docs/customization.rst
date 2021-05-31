@@ -54,7 +54,7 @@ What you can put in your .mlrrc
 
 Here is an example ``.mlrrc file``:
 
-.. code-block::
+.. code-block:: bash
 
     # These are my preferred default settings for Miller
     

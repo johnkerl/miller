@@ -9,7 +9,7 @@ Miller handles name-indexed data using several formats: some you probably know b
 Examples
 ----------------------------------------------------------------
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --usage-data-format-examples
@@ -118,7 +118,7 @@ DKVP: Key-value pairs
 
 Miller's default file format is DKVP, for **delimited key-value pairs**. Example:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr cat data/small
@@ -172,7 +172,7 @@ With ``--inidx --ifs ' ' --repifs``, Miller splits lines on whitespace and assig
 
 Example with index-numbered output:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/small
@@ -182,7 +182,7 @@ Example with index-numbered output:
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --onidx --ofs ' ' cat data/small
@@ -194,7 +194,7 @@ Example with index-numbered output:
 
 Example with index-numbered input:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/mydata.txt
@@ -202,7 +202,7 @@ Example with index-numbered input:
     by the dawn's
     early light
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt
@@ -212,7 +212,7 @@ Example with index-numbered input:
 
 Example with index-numbered input and output:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/mydata.txt
@@ -220,7 +220,7 @@ Example with index-numbered input and output:
     by the dawn's
     early light
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt
@@ -242,14 +242,14 @@ Single-level JSON objects
 
 An **array of single-level objects** is, quite simply, **a table**:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --json head -n 2 then cut -f color,shape data/json-example-1.json
     { "color": "yellow", "shape": "triangle" }
     { "color": "red", "shape": "square" }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json
@@ -264,7 +264,7 @@ An **array of single-level objects** is, quite simply, **a table**:
       "v": 0.001257332190235938
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json
@@ -278,7 +278,7 @@ Nested JSON objects
 
 Additionally, Miller can **tabularize nested objects by concatentating keys**:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --json --jvstack head -n 2 data/json-example-2.json
@@ -311,7 +311,7 @@ Additionally, Miller can **tabularize nested objects by concatentating keys**:
       }
     }
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --ijson --opprint head -n 4 data/json-example-2.json
@@ -323,7 +323,7 @@ Additionally, Miller can **tabularize nested objects by concatentating keys**:
 
 Note in particular that as far as Miller's ``put`` and ``filter``, as well as other I/O formats, are concerned, these are simply field names with colons in them:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json
@@ -350,7 +350,7 @@ Arrays aren't supported in Miller's ``put``/``filter`` DSL. By default, JSON arr
 
 Suppose we have arrays like this in our input data:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/json-example-3.json
@@ -365,7 +365,7 @@ Suppose we have arrays like this in our input data:
 
 Then integer indices (starting from 0 and counting up) are used as map keys:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --ijson --oxtab cat data/json-example-3.json
@@ -380,7 +380,7 @@ Then integer indices (starting from 0 and counting up) are used as map keys:
 
 When the data are written back out as JSON, field names are re-expanded as above, but what were arrays on input are now maps on output:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --json --jvstack cat data/json-example-3.json
@@ -437,7 +437,7 @@ PPRINT: Pretty-printed tabular
 
 Miller's pretty-print format is like CSV, but column-aligned.  For example, compare
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --ocsv cat data/small
@@ -448,7 +448,7 @@ Miller's pretty-print format is like CSV, but column-aligned.  For example, comp
     eks,wye,4,0.38139939387114097,0.13418874328430463
     wye,pan,5,0.5732889198020006,0.8636244699032729
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint cat data/small
@@ -465,7 +465,7 @@ See :doc:`record-heterogeneity` for how Miller handles changes of field names wi
 
 For output only (this isn't supported in the input-scanner as of 5.0.0) you can use ``--barred`` with pprint output format:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --opprint --barred cat data/small
@@ -487,7 +487,7 @@ XTAB: Vertical tabular
 This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
 `ngrid <https://github.com/twosigma/ngrid/>`_ for an entirely different, very powerful option). Namely:
 
-.. code-block::
+.. code-block:: bash
 
     $ grep -v '^#' /etc/passwd | head -n 6 | mlr --nidx --fs : --opprint cat
     1          2 3  4  5                          6               7
@@ -498,7 +498,7 @@ This is perhaps most useful for looking a very wide and/or multi-column data whi
     _taskgated * 13 13 Task Gate Daemon           /var/empty      /usr/bin/false
     _networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
 
-.. code-block::
+.. code-block:: bash
 
     $ grep -v '^#' /etc/passwd | head -n 2 | mlr --nidx --fs : --oxtab cat
     1 nobody
@@ -517,7 +517,7 @@ This is perhaps most useful for looking a very wide and/or multi-column data whi
     6 /var/root
     7 /bin/sh
 
-.. code-block::
+.. code-block:: bash
 
     $ grep -v '^#' /etc/passwd | head -n 2 | \
       mlr --nidx --fs : --ojson --jvstack --jlistwrap label name,password,uid,gid,gecos,home_dir,shell
@@ -547,7 +547,7 @@ Markdown tabular
 
 Markdown format looks like this:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --omd cat data/small
@@ -570,7 +570,7 @@ Data-conversion keystroke-savers
 
 While you can do format conversion using ``mlr --icsv --ojson cat myfile.csv``, there are also keystroke-savers for this purpose, such as ``mlr --c2j cat myfile.csv``.  For a complete list:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --usage-format-conversion-keystroke-saver-options
@@ -606,7 +606,7 @@ Comments in data
 
 You can include comments within your data files, and either have them ignored, or passed directly through to the standard output as soon as they are encountered:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --usage-comments-in-data
@@ -629,7 +629,7 @@ You can include comments within your data files, and either have them ignored, o
 
 Examples:
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ cat data/budget.csv
@@ -639,7 +639,7 @@ Examples:
     green,678.12
     orange,123.45
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --skip-comments --icsv --opprint sort -nr quantity data/budget.csv
@@ -648,7 +648,7 @@ Examples:
     purple 456.78
     orange 123.45
 
-.. code-block::
+.. code-block:: bash
    :emphasize-lines: 1,1
 
     $ mlr --pass-comments --icsv --opprint sort -nr quantity data/budget.csv
