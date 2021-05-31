@@ -1,16 +1,8 @@
 ================================================================
 TOP OF LIST:
 
-* fix release-docs brokelinks
-  o also jko/md or somesuch
-    - check search box ...
-* note: GOOS=linux go build mlr.go
-  o only if same arch ...
-* iconv note
+! check issues
 
-* defer json comment-handling
-* vers-docs
-w starrer survey
 * rst bold
   https://stackoverflow.com/questions/26366552/bold-code-in-rst
 
@@ -22,6 +14,10 @@ w starrer survey
   o OLH re limitations
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
+
+* iconv note
+* defer json comment-handling
+w starrer survey
 
 * json-triple-quote -- what can be done here?
 
@@ -50,13 +46,12 @@ w starrer survey
     - maybe mlr -> mlrc as live-todo & 6make by default -- ?
 ----------------------------------------------------------------
 
-* blocker: jsonx back-compat
+* future:
+  - separate out InputFormat into per-file (or tbd) & have autodetect on file endings -- ?
+  - maybe a TBD reader -- ?
 
 * blockers:
   o fix emit
-
-* blockers:
-  o convert regtest/cases-pending-windows
 
 * case auxfiles: cat them too
 
@@ -66,8 +61,19 @@ w starrer survey
     - rename -r
   ! separate DSL/non-DSL string-literal handlers
 
+* blockers:
+  o convert regtest/cases-pending-windows
+  w after regex
+
+* blocker: smart fmtnum
+  - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
+  - ofmt needs to go through this sanitizer logic -- prohibit '%s' for example
+  - no other callsites?!?!?!
+  - note hexfmt for non-ints -- especially floats -- ?!?
+
 * blocker: remaining verbs:
   o format-values
+  w after fmtnum
 
 ----------------------------------------------------------------
 
@@ -96,13 +102,6 @@ w starrer survey
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
-* blocker: smart fmtnum
-  - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
-  - fmtnum
-  - ofmt needs to go through this sanitizer logic -- prohibit '%s' for example
-  - no other callsites?!?!?!
-  - note hexfmt for non-ints -- especially floats -- ?!?
-
 * blocker: misctests
   ? wut
     mlr --from regtest/input/s.dkvp put -q 'begin{@sum=[0m0]} @sum[1+NR%2] += $i; end{dump}'
@@ -111,9 +110,6 @@ w starrer survey
 
 ----------------------------------------------------------------
 * non-blocker: commenting passes ...
-
-* future:
-  - separate out InputFormat into per-file & have autodetect on file endings -- ?
 
 * non-blocker: new functions:
   o new columns-to-arrays and arrays-to-columns for stan format
@@ -686,3 +682,4 @@ DOC6:
       should make the sum non-numeric."
   - use JSON null here
   - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
+* update build-notes, incl miller-releases-by-doc
