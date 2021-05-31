@@ -358,7 +358,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 		fmt.Println("Command:")
 		fmt.Println(cmd)
 
-		mlr, err := this.loadFile(mlrFileName, caseDir)
+		mlr, err := regtester.loadFile(mlrFileName, caseDir)
 		if err == nil {
 			fmt.Println("Miller DSL script:")
 			fmt.Println(mlr)

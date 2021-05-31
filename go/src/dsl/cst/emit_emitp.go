@@ -442,7 +442,7 @@ func (node *EmitXStatementNode) executeIndexedAux(
 			if node.isEmitP {
 				for i, nextLevel := range nextLevels {
 					if nextLevel != nil {
-						if this.isFullOosvars[i] {
+						if node.isFullOosvars[i] {
 							// See extended comment for the non-indexed case, above.
 							top := nextLevel.GetMap()
 							lib.InternalCodingErrorIf(top == nil)
