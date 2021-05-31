@@ -3,11 +3,6 @@ TOP OF LIST:
 
 ! check issues
 
-! genrst fixup !
-* rst bold
-  https://stackoverflow.com/questions/26366552/bold-code-in-rst
-  syntax none ...
-
 * prepipex
 
 * mlr -k
@@ -688,3 +683,4 @@ DOC6:
   - use JSON null here
   - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
 * update build-notes, incl miller-releases-by-doc
+* doclink re https://readthedocs.org/projects/miller/ & https://github.com/johnkerl/miller/settings/hooks
