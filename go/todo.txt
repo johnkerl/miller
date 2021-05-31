@@ -29,7 +29,7 @@ w starrer survey
     ? quick-examples needs fewer inputs, and outputs for all retained inputs
       ? or q-e more links to 10min
     ! thruout pitch the docs at primarily the first whenever possible:
-      - ruby-level user w/o heavy sysadm
+      - python/ruby-level user w/o heavy sysadm
       - sysadm w/o dev
         > do not assume people know awk! XD
       - devs
@@ -37,10 +37,22 @@ w starrer survey
     - likewise cookbook2/3 -- overly nerdy; perhaps just annoying
     - re-work data-sharing <-> SQL ...
   o little:
+    - stats1 -r
+      cookbook2.rst.in
+    - mlr --print-type-arithmetic-info
+      reference.rst.in
+    - mlr --help-all-keywords
+      reference-dsl.rst.in
+    - mlr format-values --help
+      reference-verbs.rst.in
+    - mlr --usage-comments-in-data
+      file-formats.rst.in
     - file-formats: colon -> dot
     - unset multiple lvalues in the BNF
+      faq.rst.in
     - list at end of todo.txt
     - maybe mlr -> mlrc as live-todo & 6make by default -- ?
+    - trailing space on pprint right
 ----------------------------------------------------------------
 
 * blockers:
