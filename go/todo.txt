@@ -46,10 +46,6 @@ w starrer survey
     - maybe mlr -> mlrc as live-todo & 6make by default -- ?
 ----------------------------------------------------------------
 
-* future:
-  - separate out InputFormat into per-file (or tbd) & have autodetect on file endings -- ?
-  - maybe a TBD reader -- ?
-
 * blockers:
   o fix emit
 
@@ -120,6 +116,13 @@ w starrer survey
 ? zip -- but that is an archive case too not just an encoding case
   ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
   ? as 6.1 follow-on work -- ?
+
+* future:
+  - separate out InputFormat into per-file (or tbd) & have autodetect on file endings -- ?
+  - maybe a TBD reader -- ?
+  - InputFormat into Context
+  - TBD writer -- defer factory until first context?
+  - deeper refactor pulling format out of reader/writer options entirely -- ?
 
 ----------------------------------------------------------------
 
