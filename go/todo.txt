@@ -4,8 +4,7 @@ TOP OF LIST:
 * emit * regex * fmtnum * localtime * cli-audits *
 
 ! check issues
-
-* format-values -- re-scan w/ printrep+comment if parseable
+! regtest/cases/verb-label/0001/0001
 
 * --prepipex
 * --nr-progress-mod
