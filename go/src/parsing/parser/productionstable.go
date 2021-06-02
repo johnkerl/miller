@@ -360,13 +360,25 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Unset : unset Lvalue	<< dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeUnset) >>`,
+		String: `Unset : unset FcnArgs	<< dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          X[0],
+          dsl.NodeTypeUnset,
+        ),
+        X[1],
+      ) >>`,
 		Id:         "Unset",
 		NTType:     7,
 		Index:      34,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeUnary(X[0], X[1], dsl.NodeTypeUnset)
+			return dsl.AdoptChildren(
+				dsl.NewASTNodeNestable(
+					X[0],
+					dsl.NodeTypeUnset,
+				),
+				X[1],
+			)
 		},
 	},
 	ProdTabEntry{

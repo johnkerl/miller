@@ -75,37 +75,38 @@ func (root *RootNode) BuildUnsetNode(
 ) (*UnsetNode, error) {
 
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeUnset)
-	err := astNode.CheckArity(1)
-	if err != nil {
-		return nil, err
-	}
 
-	lhsASTNode := astNode.Children[0]
+	lvalueNodes := make([]IAssignable, len(astNode.Children))
 
-	lvalueNode, err := root.BuildAssignableNode(lhsASTNode)
-	if err != nil {
-		return nil, err
+	for i, lhsASTNode := range astNode.Children {
+		lvalueNode, err := root.BuildAssignableNode(lhsASTNode)
+		if err != nil {
+			return nil, err
+		}
+		lvalueNodes[i] = lvalueNode
 	}
 
 	return &UnsetNode{
-		lvalueNode: lvalueNode,
+		lvalueNodes: lvalueNodes,
 	}, nil
 }
 
 // ----------------------------------------------------------------
 type UnsetNode struct {
-	lvalueNode IAssignable
+	lvalueNodes []IAssignable
 }
 
 func NewUnsetNode(
-	lvalueNode IAssignable,
+	lvalueNodes []IAssignable,
 ) *UnsetNode {
 	return &UnsetNode{
-		lvalueNode: lvalueNode,
+		lvalueNodes: lvalueNodes,
 	}
 }
 
 func (node *UnsetNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	node.lvalueNode.Unassign(state)
+	for _, lvalueNode := range node.lvalueNodes {
+		lvalueNode.Unassign(state)
+	}
 	return nil, nil
 }
