@@ -197,6 +197,36 @@ Options:
 -s Separator, defaulting to mlr --oflatsep value.
 -h|--help Show this message.
 ================================================================
+Usage: mlr format-values [options]
+Applies format strings to all field values, depending on autodetected type.
+* If a field value is detected to be integer, applies integer format.
+* Else, if a field value is detected to be float, applies float format.
+* Else, applies string format.
+
+Note: this is a low-keystroke way to apply formatting to many fields. To get
+finer control, please see the fmtnum function within the mlr put DSL.
+
+Note: this verb lets you apply arbitrary format strings, which can produce
+undefined behavior and/or program crashes.  See your system's "man printf".
+
+Options:
+-i {integer format} Defaults to "%d".
+                    Examples: "%06lld", "%08llx".
+                    Note that Miller integers are long long so you must use
+                    formats which apply to long long, e.g. with ll in them.
+                    Undefined behavior results otherwise.
+-f {float format}   Defaults to "%f".
+                    Examples: "%8.3lf", "%.6le".
+                    Note that Miller floats are double-precision so you must
+                    use formats which apply to double, e.g. with l[efg] in them.
+                    Undefined behavior results otherwise.
+-s {string format}  Defaults to "%s".
+                    Examples: "_%s", "%08s".
+                    Note that you must use formats which apply to string, e.g.
+                    with s in them. Undefined behavior results otherwise.
+-n                  Coerce field values autodetected as int to float, and then
+                    apply the float format.
+================================================================
 Usage: mlr fraction [options]
 For each record's value in specified fields, computes the ratio of that
 value to the sum of values in that field over all input records.

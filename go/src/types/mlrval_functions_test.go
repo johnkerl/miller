@@ -1,6 +1,6 @@
 // ================================================================
 // Most Miller tests (thousands of them) are command-line-driven via
-// reg0test/run. Here are some cases needing special focus.
+// mlr regtest. Here are some cases needing special focus.
 // ================================================================
 
 package types
