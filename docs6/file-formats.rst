@@ -246,8 +246,14 @@ An **array of single-level objects** is, quite simply, **a table**:
    :emphasize-lines: 1,1
 
     $ mlr --json head -n 2 then cut -f color,shape data/json-example-1.json
-    { "color": "yellow", "shape": "triangle" }
-    { "color": "red", "shape": "square" }
+    {
+      "color": "yellow",
+      "shape": "triangle"
+    }
+    {
+      "color": "red",
+      "shape": "square"
+    }
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -268,10 +274,10 @@ An **array of single-level objects** is, quite simply, **a table**:
    :emphasize-lines: 1,1
 
     $ mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json
-    shape    u_mean   u_stddev u_count
-    triangle 0.583995 0.131184 3
-    square   0.409355 0.365428 4
-    circle   0.366013 0.209094 3
+    shape    u_mean              u_stddev            u_count
+    triangle 0.5839952367477192  0.13118354465618046 3
+    square   0.409355036804889   0.3654281755508655  4
+    circle   0.36601268553826866 0.2090944565900053  3
 
 Nested JSON objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -315,7 +321,7 @@ Additionally, Miller can **tabularize nested objects by concatentating keys**:
    :emphasize-lines: 1,1
 
     $ mlr --ijson --opprint head -n 4 data/json-example-2.json
-    flag i  attributes:color attributes:shape values:u values:v values:w values:x
+    flag i  attributes.color attributes.shape values.u values.v values.w values.x
     1    11 yellow           triangle         0.632170 0.988721 0.436498 5.798188
     1    15 red              square           0.219668 0.001257 0.792778 2.944117
     1    16 red              circle           0.209017 0.290052 0.138103 5.065034
@@ -338,8 +344,7 @@ Note in particular that as far as Miller's ``put`` and ``filter``, as well as ot
         "u": 0.632170,
         "v": 0.988721,
         "w": 0.436498,
-        "x": 5.798188,
-        "uv": 0.625040
+        "x": 5.798188
       }
     }
 
@@ -370,13 +375,13 @@ Then integer indices (starting from 0 and counting up) are used as map keys:
 
     $ mlr --ijson --oxtab cat data/json-example-3.json
     label    orange
-    values:0 12.2
-    values:1 13.8
-    values:2 17.2
+    values.1 12.2
+    values.2 13.8
+    values.3 17.2
     
     label    purple
-    values:0 27.0
-    values:1 32.4
+    values.1 27.0
+    values.2 32.4
 
 When the data are written back out as JSON, field names are re-expanded as above, but what were arrays on input are now maps on output:
 
@@ -386,18 +391,11 @@ When the data are written back out as JSON, field names are re-expanded as above
     $ mlr --json --jvstack cat data/json-example-3.json
     {
       "label": "orange",
-      "values": {
-        "0": 12.2,
-        "1": 13.8,
-        "2": 17.2
-      }
+      "values": [12.2, 13.8, 17.2]
     }
     {
       "label": "purple",
-      "values": {
-        "0": 27.0,
-        "1": 32.4
-      }
+      "values": [27.0, 32.4]
     }
 
 This is non-ideal, but it allows Miller (5.x release being latest as of this writing) to handle JSON arrays at all.

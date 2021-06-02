@@ -1,7 +1,6 @@
 package types
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 )
@@ -90,7 +89,9 @@ func newMlrvalFormatter(
 		return newMlrvalFormatterToString(userLevelFormatString), nil
 	}
 
-	return nil, errors.New("TBD") // TODO
+	// TODO: finish porting
+	// return nil, errors.New("TBD") // TODO
+	return newMlrvalFormatterToString(userLevelFormatString), nil
 }
 
 // ----------------------------------------------------------------

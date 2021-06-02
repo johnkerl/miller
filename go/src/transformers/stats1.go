@@ -116,6 +116,10 @@ func transformerStats1ParseCLI(
 		} else if opt == "-f" {
 			valueFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
+		} else if opt == "--fr" {
+			// TODO: port field-name regexing from C to Go
+			valueFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+
 		} else if opt == "-g" {
 			groupByFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 

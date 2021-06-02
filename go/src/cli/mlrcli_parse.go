@@ -275,10 +275,11 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 	} else if args[argi] == "--help" {
 		mainUsageLong(os.Stdout, lib.MlrExeName())
 		return true
-		//	} else if args[argi] == "--print-type-arithmetic-info" {
+	} else if args[argi] == "--print-type-arithmetic-info" {
+		fmt.Println("TODO: port printTypeArithmeticInfo")
 		//		printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
-		//		return true;
-		//
+		return true
+
 	} else if args[argi] == "--help-all-verbs" || args[argi] == "--usage-all-verbs" {
 		usageAllVerbs(lib.MlrExeName())
 	} else if args[argi] == "--list-all-verbs" || args[argi] == "-l" {
@@ -305,17 +306,20 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		argi++
 		return true
 
-		//	} else if args[argi] == "--list-all-keywords-raw" || args[argi] == "-K" {
+	} else if args[argi] == "--list-all-keywords-raw" || args[argi] == "-K" {
+		fmt.Println("TOD: port mlr_dsl_list_all_keywords_raw")
 		//		mlr_dsl_list_all_keywords_raw(os.Stdout);
-		//		return true;
-		//	} else if args[argi] == "--help-all-keywords" || args[argi] == "-k" {
+		return true
+	} else if args[argi] == "--help-all-keywords" || args[argi] == "-k" {
+		fmt.Println("TOD: port mlr_dsl_list_all_keywords")
 		//		mlr_dsl_keyword_usage(os.Stdout, nil);
-		//		return true;
-		//	} else if args[argi] == "--help-keyword" || args[argi] == "--hk" {
-		//		cliutil.CheckArgCount(args, argi, argc, 2);
+		return true
+	} else if args[argi] == "--help-keyword" || args[argi] == "--hk" {
+		cliutil.CheckArgCount(args, argi, argc, 2)
+		fmt.Println("TOD: port mlr_dsl_keyword_usage")
 		//		mlr_dsl_keyword_usage(os.Stdout, args[argi+1]);
-		//		return true;
-		//
+		return true
+
 		//	// main-usage subsections, individually accessible for the benefit of
 		//	// the manpage-autogenerator
 	} else if args[argi] == "--usage-synopsis" {

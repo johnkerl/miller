@@ -68,9 +68,9 @@ Each print statement simply contains local information: the current timestamp, w
     $ grep op=cache log.txt \
       | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
     type hit_mean
-    A1   0.857143
-    A4   0.714286
-    A9   0.090909
+    A1   0.8571428571428571
+    A4   0.7142857142857143
+    A9   0.09090909090909091
 
 .. code-block:: none
    :emphasize-lines: 1,1

@@ -516,3 +516,198 @@ why don't I see ``NR=1`` and ``NR=2`` here??
 
 The reason is that ``NR`` is computed for the original input records and isn't dynamically updated. By contrast, ``NF`` is dynamically updated: it's the number of fields in the current record, and if you add/remove a field, the value of ``NF`` will change:
 
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'
+    nf1=3,u=4,nf2=5,nf3=3
+
+``NR``, by contrast (and ``FNR`` as well), retains the value from the original input stream, and records may be dropped by a ``filter`` within a ``then``-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ mlr --opprint --from data/small put '
+      begin{ @nr1 = 0 }
+      @nr1 += 1;
+      $nr1 = @nr1
+    ' \
+    then filter '$x>0.5' \
+    then put '
+      begin{ @nr2 = 0 }
+      @nr2 += 1;
+      $nr2 = @nr2
+    '
+    a   b   i x                  y                  nr1 nr2
+    eks pan 2 0.7586799647899636 0.5221511083334797 2   1
+    wye pan 5 0.5732889198020006 0.8636244699032729 5   2
+
+Or, simply use ``mlr cat -n``:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ mlr filter '$x > 0.5' then cat -n data/small
+    n=1,a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+    n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+
+Why am I not seeing all possible joins occur?
+----------------------------------------------------------------
+
+**This section describes behavior before Miller 5.1.0. As of 5.1.0, -u is the default.**
+
+For example, the right file here has nine records, and the left file should add in the ``hostname`` column -- so the join output should also have 9 records:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ mlr --icsvlite --opprint cat data/join-u-left.csv
+    hostname              ipaddr
+    nadir.east.our.org    10.3.1.18
+    zenith.west.our.org   10.3.1.27
+    apoapsis.east.our.org 10.4.5.94
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ mlr --icsvlite --opprint cat data/join-u-right.csv
+    ipaddr    timestamp  bytes
+    10.3.1.27 1448762579 4568
+    10.3.1.18 1448762578 8729
+    10.4.5.94 1448762579 17445
+    10.3.1.27 1448762589 12
+    10.3.1.18 1448762588 44558
+    10.4.5.94 1448762589 8899
+    10.3.1.27 1448762599 0
+    10.3.1.18 1448762598 73425
+    10.4.5.94 1448762599 12200
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
+    ipaddr    hostname              timestamp  bytes
+    10.3.1.27 zenith.west.our.org   1448762579 4568
+    10.4.5.94 apoapsis.east.our.org 1448762579 17445
+    10.4.5.94 apoapsis.east.our.org 1448762589 8899
+    10.4.5.94 apoapsis.east.our.org 1448762599 12200
+
+The issue is that Miller's ``join``, by default (before 5.1.0), took input sorted (lexically ascending) by the sort keys on both the left and right files.  This design decision was made intentionally to parallel the Unix/Linux system ``join`` command, which has the same semantics. The benefit of this default is that the joiner program can stream through the left and right files, needing to load neither entirely into memory. The drawback, of course, is that is requires sorted input.
+
+The solution (besides pre-sorting the input files on the join keys) is to simply use **mlr join -u** (which is now the default). This loads the left file entirely into memory (while the right file is still streamed one line at a time) and does all possible joins without requiring sorted input:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
+    ipaddr    hostname              timestamp  bytes
+    10.3.1.27 zenith.west.our.org   1448762579 4568
+    10.3.1.18 nadir.east.our.org    1448762578 8729
+    10.4.5.94 apoapsis.east.our.org 1448762579 17445
+    10.3.1.27 zenith.west.our.org   1448762589 12
+    10.3.1.18 nadir.east.our.org    1448762588 44558
+    10.4.5.94 apoapsis.east.our.org 1448762589 8899
+    10.3.1.27 zenith.west.our.org   1448762599 0
+    10.3.1.18 nadir.east.our.org    1448762598 73425
+    10.4.5.94 apoapsis.east.our.org 1448762599 12200
+
+General advice is to make sure the left-file is relatively small, e.g. containing name-to-number mappings, while saving large amounts of data for the right file.
+
+How to rectangularize after joins with unpaired?
+----------------------------------------------------------------
+
+Suppose you have the following two data files:
+
+.. code-block:: none
+
+    id,code
+    3,0000ff
+    2,00ff00
+    4,ff0000
+
+.. code-block:: none
+
+    id,color
+    4,red
+    2,green
+
+Joining on color the results are as expected:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ mlr --csv join -j id -f data/color-codes.csv data/color-names.csv
+    id,code,color
+    4,ff0000,red
+    2,00ff00,green
+
+However, if we ask for left-unpaireds, since there's no ``color`` column, we get a row not having the same column names as the other:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv
+    id,code,color
+    4,ff0000,red
+    2,00ff00,green
+    
+    id,code
+    3,0000ff
+
+To fix this, we can use **unsparsify**:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    $ mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv
+    id,code,color
+    4,ff0000,red
+    2,00ff00,green
+    3,0000ff,
+
+Thanks to @aborruso for the tip!
+
+What about XML or JSON file formats?
+----------------------------------------------------------------
+
+Miller handles **tabular data**, which is a list of records each having fields which are key-value pairs. Miller also doesn't require that each record have the same field names (see also :doc:`record-heterogeneity`). Regardless, tabular data is a **non-recursive data structure**.
+
+XML, JSON, etc. are, by contrast, all **recursive** or **nested** data structures. For example, in JSON you can represent a hash map whose values are lists of lists.
+
+Now, you can put tabular data into these formats -- since list-of-key-value-pairs is one of the things representable in XML or JSON. Example:
+
+.. code-block:: none
+
+    # DKVP
+    x=1,y=2
+    z=3
+
+.. code-block:: none
+
+    # XML
+    <table>
+      <record>
+        <field>
+          <key> x </key> <value> 1 </value>
+        </field>
+        <field>
+          <key> y </key> <value> 2 </value>
+        </field>
+      </record>
+      <record>
+        <field>
+          <key> z </key> <value> 3 </value>
+        </field>
+      </record>
+    </table>
+
+.. code-block:: none
+
+    # JSON
+    [{"x":1,"y":2},{"z":3}]
+
+However, a tool like Miller which handles non-recursive data is never going to be able to handle full XML/JSON semantics -- only a small subset.  If tabular data represented in XML/JSON/etc are sufficiently well-structured, it may be easy to grep/sed out the data into a simpler text form -- this is a general text-processing problem.
+
+Miller does support tabular data represented in JSON: please see :doc:`file-formats`.  See also `jq <https://stedolan.github.io/jq/>`_ for a truly powerful, JSON-specific tool.
+
+For XML, my suggestion is to use a tool like `ff-extractor <http://ff-extractor.sourceforge.net>`_ to do format conversion.
