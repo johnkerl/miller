@@ -18,7 +18,12 @@ TOP OF LIST:
 
 * iconv note
 * defer json comment-handling
-w starrer survey
+
+w survey
+  o summary to GHD thread
+  o note go-port status ...
+  o RFHs
+  o gradual implements ...
 
 * json-triple-quote -- what can be done here?
 
