@@ -15,9 +15,9 @@ Example:
    :emphasize-lines: 1,1
 
     $ mlr stats1 -a sum -f x -g a data/small
-    a=pan,x_sum=0.346790
-    a=eks,x_sum=1.140079
-    a=wye,x_sum=0.777892
+    a=pan,x_sum=0.3467901443380824
+    a=eks,x_sum=1.1400793586611044
+    a=wye,x_sum=0.7778922255683036
 
 * Verbs are coded in Go
 * They run a bit faster
@@ -31,9 +31,9 @@ Example:
    :emphasize-lines: 1,1
 
     $ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
-    a=pan,x_sum=0.346790
-    a=eks,x_sum=1.140079
-    a=wye,x_sum=0.777892
+    a=pan,x_sum=0.3467901443380824
+    a=eks,x_sum=1.1400793586611044
+    a=wye,x_sum=0.7778922255683036
 
 * You get to write your own DSL expressions
 * They run a bit slower
@@ -141,7 +141,7 @@ Newlines within the expression are ignored, which can help increase legibility o
 
     $ mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium
     x_y_corr
-    -0.747994
+    -0.7479940285189345
 
 .. _reference-dsl-expressions-from-files:
 
@@ -154,21 +154,21 @@ The simplest way to enter expressions for ``put`` and ``filter`` is between sing
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'
-    a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
-    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
-    a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
-    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
-    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
+    a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
+    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
+    a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
+    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
+    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put 'func f(a, b) { return sqrt(a**2 + b**2) } $xy = f($x, $y)'
-    a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
-    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
-    a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
-    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
-    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
+    a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
+    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
+    a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
+    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
+    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
 
 You may, though, find it convenient to put expressions into files for reuse, and read them
 **using the -f option**. For example:
@@ -186,11 +186,11 @@ You may, though, find it convenient to put expressions into files for reuse, and
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put -f data/fe-example-3.mlr
-    a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
-    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
-    a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
-    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
-    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
+    a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
+    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
+    a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
+    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
+    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
 
 If you have some of the logic in a file and you want to write the rest on the command line, you can **use the -f and -e options together**:
 
@@ -206,11 +206,11 @@ If you have some of the logic in a file and you want to write the rest on the co
    :emphasize-lines: 1,1
 
     $ mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'
-    a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
-    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
-    a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
-    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
-    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
+    a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
+    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
+    a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
+    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
+    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
 
 A suggested use-case here is defining functions in files, and calling them from command-line expressions.
 
@@ -281,8 +281,8 @@ Semicolons are required between statements even if those statements are on separ
       }
     '
     s,t,u,v
-    3,-1,5.000000,1
-    9,-1,41.000000,2
+    3,-1,5,1
+    9,-1,41,2
 
 Bodies for all compound statements must be enclosed in **curly braces**, even if the body is a single statement:
 
@@ -468,8 +468,8 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=pan
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=pan
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=3
-    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=0.381399
-    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=0.863624
+    a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=0.38139939387114097
+    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=0.8636244699032729
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -563,21 +563,21 @@ Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of t
     a=wye,x_count=2
     a=zee,x_count=2
     a=hat,x_count=1
-    a=pan,x_sum=0.849416
-    a=eks,x_sum=1.751863
-    a=wye,x_sum=0.777892
-    a=zee,x_sum=1.125680
-    a=hat,x_sum=0.031442
+    a=pan,x_sum=0.8494161498792961
+    a=eks,x_sum=1.75186341922895
+    a=wye,x_sum=0.7778922255683036
+    a=zee,x_sum=1.1256801691982772
+    a=hat,x_sum=0.03144187646093577
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr stats1 -a count,sum -f x -g a ../data/small
-    a=pan,x_count=2,x_sum=0.849416
-    a=eks,x_count=3,x_sum=1.751863
-    a=wye,x_count=2,x_sum=0.777892
-    a=zee,x_count=2,x_sum=1.125680
-    a=hat,x_count=1,x_sum=0.031442
+    a=pan,x_count=2,x_sum=0.8494161498792961
+    a=eks,x_count=3,x_sum=1.75186341922895
+    a=wye,x_count=2,x_sum=0.7778922255683036
+    a=zee,x_count=2,x_sum=1.1256801691982772
+    a=hat,x_count=1,x_sum=0.03144187646093577
 
 Indices can be arbitrarily deep -- here there are two or more of them:
 
@@ -591,31 +591,31 @@ Indices can be arbitrarily deep -- here there are two or more of them:
         emit (@x_count, @x_sum), "a", "b";
       }
     '
-    a=pan,b=pan,x_count=427,x_sum=219.185129
-    a=pan,b=wye,x_count=395,x_sum=198.432931
-    a=pan,b=eks,x_count=429,x_sum=216.075228
-    a=pan,b=hat,x_count=417,x_sum=205.222776
-    a=pan,b=zee,x_count=413,x_sum=205.097518
-    a=eks,b=pan,x_count=371,x_sum=179.963030
-    a=eks,b=wye,x_count=407,x_sum=196.945286
-    a=eks,b=zee,x_count=357,x_sum=176.880365
-    a=eks,b=eks,x_count=413,x_sum=215.916097
-    a=eks,b=hat,x_count=417,x_sum=208.783171
-    a=wye,b=wye,x_count=377,x_sum=185.295850
-    a=wye,b=pan,x_count=392,x_sum=195.847900
-    a=wye,b=hat,x_count=426,x_sum=212.033183
-    a=wye,b=zee,x_count=385,x_sum=194.774048
-    a=wye,b=eks,x_count=386,x_sum=204.812961
-    a=zee,b=pan,x_count=389,x_sum=202.213804
-    a=zee,b=wye,x_count=455,x_sum=233.991394
-    a=zee,b=eks,x_count=391,x_sum=190.961778
-    a=zee,b=zee,x_count=403,x_sum=206.640635
-    a=zee,b=hat,x_count=409,x_sum=191.300006
-    a=hat,b=wye,x_count=423,x_sum=208.883010
-    a=hat,b=zee,x_count=385,x_sum=196.349450
-    a=hat,b=eks,x_count=389,x_sum=189.006793
-    a=hat,b=hat,x_count=381,x_sum=182.853532
-    a=hat,b=pan,x_count=363,x_sum=168.553807
+    a=pan,b=pan,x_count=427,x_sum=219.1851288316854
+    a=pan,b=wye,x_count=395,x_sum=198.43293070748447
+    a=pan,b=eks,x_count=429,x_sum=216.07522773165525
+    a=pan,b=hat,x_count=417,x_sum=205.22277621488686
+    a=pan,b=zee,x_count=413,x_sum=205.09751802331917
+    a=eks,b=pan,x_count=371,x_sum=179.96303047250723
+    a=eks,b=wye,x_count=407,x_sum=196.9452860713734
+    a=eks,b=zee,x_count=357,x_sum=176.8803651584733
+    a=eks,b=eks,x_count=413,x_sum=215.91609712937984
+    a=eks,b=hat,x_count=417,x_sum=208.783170520597
+    a=wye,b=wye,x_count=377,x_sum=185.29584980261419
+    a=wye,b=pan,x_count=392,x_sum=195.84790012056564
+    a=wye,b=hat,x_count=426,x_sum=212.0331829346132
+    a=wye,b=zee,x_count=385,x_sum=194.77404756708714
+    a=wye,b=eks,x_count=386,x_sum=204.8129608356315
+    a=zee,b=pan,x_count=389,x_sum=202.21380378504267
+    a=zee,b=wye,x_count=455,x_sum=233.9913939194868
+    a=zee,b=eks,x_count=391,x_sum=190.9617780631925
+    a=zee,b=zee,x_count=403,x_sum=206.64063510417319
+    a=zee,b=hat,x_count=409,x_sum=191.30000620900935
+    a=hat,b=wye,x_count=423,x_sum=208.8830097609959
+    a=hat,b=zee,x_count=385,x_sum=196.3494502965293
+    a=hat,b=eks,x_count=389,x_sum=189.0067933716193
+    a=hat,b=hat,x_count=381,x_sum=182.8535323148762
+    a=hat,b=pan,x_count=363,x_sum=168.5538067327806
 
 The idea is that ``stats1``, and other Miller verbs, encapsulate frequently-used patterns with a minimum of keystroking (and run a little faster), whereas using out-of-stream variables you have more flexibility and control in what you do.
 
@@ -640,9 +640,9 @@ Begin/end blocks can be mixed with pattern/action blocks. For example:
     ' data/put-gating-example-1.dkvp
     x=-1
     x=0
-    x=1,y=0.000000,z=0.000000
-    x=2,y=0.301030,z=0.548662
-    x=3,y=0.477121,z=0.690740
+    x=1,y=0,z=0
+    x=2,y=0.3010299956639812,z=0.5486620049392715
+    x=3,y=0.4771212547196624,z=0.6907396432228734
     num_total=5,num_positive=3
 
 .. _reference-dsl-local-variables:
@@ -673,16 +673,16 @@ For example:
       num o = f(10, 20);                      # local to the top-level scope
       $o = o;
     '
-    i=1,o=14.662901
-    i=2,o=17.881983
-    i=3,o=14.586560
-    i=4,o=16.402409
-    i=5,o=16.336598
-    i=6,o=14.622701
-    i=7,o=15.983753
-    i=8,o=13.852177
-    i=9,o=15.472899
-    i=10,o=15.643912
+    i=1,o=15.952526011537227
+    i=2,o=12.782237754999116
+    i=3,o=15.126606630220966
+    i=4,o=14.794357488895775
+    i=5,o=15.168665974047421
+    i=6,o=16.20662783079942
+    i=7,o=13.966128063060479
+    i=8,o=13.99248245928659
+    i=9,o=15.784270485515197
+    i=10,o=15.37686787628025
 
 Things which are completely unsurprising, resembling many other languages:
 
@@ -834,11 +834,11 @@ For example, the following swaps the input stream's ``a`` and ``i`` fields, modi
       }
     ' data/small
     a i   y
-    1 pan 7.268029
-    2 eks 5.221511
-    3 wye 3.383185
-    4 eks 1.341887
-    5 wye 8.636245
+    1 pan 7.268028627434533
+    2 eks 5.221511083334796
+    3 wye 3.3831852551664774
+    4 eks 1.3418874328430463
+    5 wye 8.63624469903273
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
 
@@ -852,11 +852,11 @@ Likewise, you can assign map literals to out-of-stream variables or local variab
       }
       $* = f({"a": $a, "x": $x});
     '
-    a=pan,x=69.358029
-    a=eks,x=151.735993
-    a=wye,x=40.920661
-    a=eks,x=76.279879
-    a=wye,x=114.657784
+    a=pan,x=69.35802886761648
+    a=eks,x=151.73599295799272
+    a=wye,x=40.92066115326061
+    a=eks,x=76.2798787742282
+    a=wye,x=114.65778396040011
 
 Like out-of-stream and local variables, map literals can be multi-level:
 
@@ -913,16 +913,19 @@ The following ``is...`` functions take a value and return a boolean indicating w
 
     $ mlr -F | grep ^is
     is_absent
+    is_array
     is_bool
     is_boolean
     is_empty
     is_empty_map
+    is_error
     is_float
     is_int
     is_map
     is_nonempty_map
     is_not_empty
     is_not_map
+    is_not_array
     is_not_null
     is_null
     is_numeric
@@ -934,8 +937,10 @@ The following ``is...`` functions take a value and return a boolean indicating w
 
     $ mlr -F | grep ^assert
     asserting_absent
+    asserting_array
     asserting_bool
     asserting_boolean
+    asserting_error
     asserting_empty
     asserting_empty_map
     asserting_float
@@ -944,6 +949,7 @@ The following ``is...`` functions take a value and return a boolean indicating w
     asserting_nonempty_map
     asserting_not_empty
     asserting_not_map
+    asserting_not_array
     asserting_not_null
     asserting_null
     asserting_numeric
@@ -1046,17 +1052,17 @@ Example recursive copy of out-of-stream variables:
     $ mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small
     {
       "v": {
-        "sum": 2.264762,
+        "sum": 2.264761728567491,
         "count": 5
       }
     }
     {
       "v": {
-        "sum": 2.264762,
+        "sum": 2.264761728567491,
         "count": 5
       },
       "w": {
-        "sum": 2.264762,
+        "sum": 2.264761728567491,
         "count": 5
       }
     }
@@ -1099,299 +1105,7 @@ Keywords for filter and put
    :emphasize-lines: 1,1
 
     $ mlr --help-all-keywords
-    all: used in "emit", "emitp", and "unset" as a synonym for @*
-    
-    begin: defines a block of statements to be executed before input records
-    are ingested. The body statements must be wrapped in curly braces.
-    Example: 'begin { @count = 0 }'
-    
-    bool: declares a boolean local variable in the current curly-braced scope.
-    Type-checking happens at assignment: 'bool b = 1' is an error.
-    
-    break: causes execution to continue after the body of the current
-    for/while/do-while loop.
-    
-    call: used for invoking a user-defined subroutine.
-    Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
-    
-    continue: causes execution to skip the remaining statements in the body of
-    the current for/while/do-while loop. For-loop increments are still applied.
-    
-    do: with "while", introduces a do-while loop. The body statements must be wrapped
-    in curly braces.
-    
-    dump: prints all currently defined out-of-stream variables immediately
-      to stdout as JSON.
-    
-      With >, >>, or |, the data do not become part of the output record stream but
-      are instead redirected.
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
-      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
-      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
-      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
-    
-    edump: prints all currently defined out-of-stream variables immediately
-      to stderr as JSON.
-    
-      Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
-    
-    elif: the way Miller spells "else if". The body statements must be wrapped
-    in curly braces.
-    
-    else: terminates an if/elif/elif chain. The body statements must be wrapped
-    in curly braces.
-    
-    emit: inserts an out-of-stream variable into the output record stream. Hashmap
-      indices present in the data but not slotted by emit arguments are not output.
-    
-      With >, >>, or |, the data do not become part of the output record stream but
-      are instead redirected.
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-      etc., to control the format of the output if the output is redirected. See also mlr -h.
-    
-      Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, $*'
-      Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, mapexcept($*, "a")'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
-      Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit > "tap-".$a.$b.".dat", @sums'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >  "mytap.dat", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >> "mytap.dat", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip > mytap.dat.gz", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
-    
-      Please see http://johnkerl.org/miller/doc for more information.
-    
-    emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
-      output record stream.
-    
-      With >, >>, or |, the data do not become part of the output record stream but
-      are instead redirected.
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-      etc., to control the format of the output if the output is redirected. See also mlr -h.
-    
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
-      Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf > "tap-".$i.".dat", @a'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > "mytap.dat", @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> "mytap.dat", @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > stderr, @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
-    
-      Please see http://johnkerl.org/miller/doc for more information.
-    
-    emitp: inserts an out-of-stream variable into the output record stream.
-      Hashmap indices present in the data but not slotted by emitp arguments are
-      output concatenated with ":".
-    
-      With >, >>, or |, the data do not become part of the output record stream but
-      are instead redirected.
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-      etc., to control the format of the output if the output is redirected. See also mlr -h.
-    
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
-      Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp > "tap-".$a.$b.".dat", @sums'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >  "mytap.dat", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >> "mytap.dat", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip > mytap.dat.gz", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
-    
-      Please see http://johnkerl.org/miller/doc for more information.
-    
-    end: defines a block of statements to be executed after input records
-    are ingested. The body statements must be wrapped in curly braces.
-    Example: 'end { emit @count }'
-    Example: 'end { eprint "Final count is " . @count }'
-    
-    eprint: prints expression immediately to stderr.
-      Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
-      Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
-      Example: mlr --from f.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
-    
-    eprintn: prints expression immediately to stderr, without trailing newline.
-      Example: mlr --from f.dat put -q 'eprintn "The sum of x and y is ".($x+$y); eprint ""'
-    
-    false: the boolean literal value.
-    
-    filter: includes/excludes the record in the output record stream.
-    
-      Example: mlr --from f.dat put 'filter (NR == 2 || $x > 5.4)'
-    
-      Instead of put with 'filter false' you can simply use put -q.  The following
-      uses the input record to accumulate data but only prints the running sum
-      without printing the input record:
-    
-      Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
-    
-    float: declares a floating-point local variable in the current curly-braced scope.
-    Type-checking happens at assignment: 'float x = 0' is an error.
-    
-    for: defines a for-loop using one of three styles. The body statements must
-    be wrapped in curly braces.
-    For-loop over stream record:
-      Example:  'for (k, v in $*) { ... }'
-    For-loop over out-of-stream variables:
-      Example: 'for (k, v in @counts) { ... }'
-      Example: 'for ((k1, k2), v in @counts) { ... }'
-      Example: 'for ((k1, k2, k3), v in @*) { ... }'
-    C-style for-loop:
-      Example:  'for (var i = 0, var b = 1; i < 10; i += 1, b *= 2) { ... }'
-    
-    func: used for defining a user-defined function.
-    Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
-    
-    if: starts an if/elif/elif chain. The body statements must be wrapped
-    in curly braces.
-    
-    in: used in for-loops over stream records or out-of-stream variables.
-    
-    int: declares an integer local variable in the current curly-braced scope.
-    Type-checking happens at assignment: 'int x = 0.0' is an error.
-    
-    map: declares an map-valued local variable in the current curly-braced scope.
-    Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
-    always OK. map b = a is OK or not depending on whether a is a map.
-    
-    num: declares an int/float local variable in the current curly-braced scope.
-    Type-checking happens at assignment: 'num b = true' is an error.
-    
-    print: prints expression immediately to stdout.
-      Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
-      Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
-      Example: mlr --from f.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
-    
-    printn: prints expression immediately to stdout, without trailing newline.
-      Example: mlr --from f.dat put -q 'printn "."; end { print "" }'
-    
-    return: specifies the return value from a user-defined function.
-    Omitted return statements (including via if-branches) result in an absent-null
-    return value, which in turns results in a skipped assignment to an LHS.
-    
-    stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
-      to print to standard error.
-    
-    stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
-      to print to standard output.
-    
-    str: declares a string local variable in the current curly-braced scope.
-    Type-checking happens at assignment.
-    
-    subr: used for defining a subroutine.
-    Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
-    
-    tee: prints the current record to specified file.
-      This is an immediate print to the specified file (except for pprint format
-      which of course waits until the end of the input stream to format all output).
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-      etc., to control the format of the output. See also mlr -h.
-    
-      emit with redirect and tee with redirect are identical, except tee can only
-      output $*.
-    
-      Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
-      Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
-      Example: mlr --from f.dat put 'tee >  stderr, $*'
-      Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
-      Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] > /tmp/data-".$a, $*'
-      Example: mlr --from f.dat put -q 'tee | "gzip > /tmp/data-".$a.".gz", $*'
-      Example: mlr --from f.dat put -q --ojson 'tee | "gzip > /tmp/data-".$a.".gz", $*'
-    
-    true: the boolean literal value.
-    
-    unset: clears field(s) from the current record, or an out-of-stream or local variable.
-    
-      Example: mlr --from f.dat put 'unset $x'
-      Example: mlr --from f.dat put 'unset $*'
-      Example: mlr --from f.dat put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
-      Example: mlr --from f.dat put '...; unset @sums'
-      Example: mlr --from f.dat put '...; unset @sums["green"]'
-      Example: mlr --from f.dat put '...; unset @*'
-    
-    var: declares an untyped local variable in the current curly-braced scope.
-    Examples: 'var a=1', 'var xyz=""'
-    
-    while: introduces a while loop, or with "do", introduces a do-while loop.
-    The body statements must be wrapped in curly braces.
-    
-    ENV: access to environment variables by name, e.g. '$home = ENV["HOME"]'
-    
-    FILENAME: evaluates to the name of the current file being processed.
-    
-    FILENUM: evaluates to the number of the current file being processed,
-    starting with 1.
-    
-    FNR: evaluates to the number of the current record within the current file
-    being processed, starting with 1. Resets at the start of each file.
-    
-    IFS: evaluates to the input field separator from the command line.
-    
-    IPS: evaluates to the input pair separator from the command line.
-    
-    IRS: evaluates to the input record separator from the command line,
-    or to LF or CRLF from the input data if in autodetect mode (which is
-    the default).
-    
-    M_E: the mathematical constant e.
-    
-    M_PI: the mathematical constant pi.
-    
-    NF: evaluates to the number of fields in the current record.
-    
-    NR: evaluates to the number of the current record over all files
-    being processed, starting with 1. Does not reset at the start of each file.
-    
-    OFS: evaluates to the output field separator from the command line.
-    
-    OPS: evaluates to the output pair separator from the command line.
-    
-    ORS: evaluates to the output record separator from the command line,
-    or to LF or CRLF from the input data if in autodetect mode (which is
-    the default).
+    TOD: port mlr_dsl_list_all_keywords
 
 Operator precedence
 ----------------------------------------------------------------
@@ -1456,9 +1170,9 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
     $ mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
     x=-1
     x=0
-    x=1,y=0.000000,z=0.000000
-    x=2,y=0.301030,z=0.548662
-    x=3,y=0.477121,z=0.690740
+    x=1,y=0,z=0
+    x=2,y=0.3010299956639812,z=0.5486620049392715
+    x=3,y=0.4771212547196624,z=0.6907396432228734
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -1472,9 +1186,9 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
    :emphasize-lines: 1,1
 
     $ mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
-    a=abc_123,b=left_abc,c=right_123
+    a=abc_123,b=left_\1,c=right_\2
     a=some other name
-    a=xyz_789,b=left_xyz,c=right_789
+    a=xyz_789,b=left_\1,c=right_\2
 
 This produces heteregenous output which Miller, of course, has no problems with (see :doc:`record-heterogeneity`).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes ``put`` to evaluate the boolean expression (along with any side effects, namely, regex-captures ``\1``, ``\2``, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
 
@@ -1482,19 +1196,16 @@ This produces heteregenous output which Miller, of course, has no problems with 
    :emphasize-lines: 1,1
 
     $ mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
-    x=-1,y=nan,z=nan
-    x=0,y=-inf,z=nan
-    x=1,y=0.000000,z=0.000000
-    x=2,y=0.301030,z=0.548662
-    x=3,y=0.477121,z=0.690740
+    x=1,y=0,z=0
+    x=2,y=0.3010299956639812,z=0.5486620049392715
+    x=3,y=0.4771212547196624,z=0.6907396432228734
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
-    a=abc_123,b=left_abc,c=right_123
-    a=some other name,b=left_,c=right_
-    a=xyz_789,b=left_xyz,c=right_789
+    a=abc_123,b=left_\1,c=right_\2
+    a=xyz_789,b=left_\1,c=right_\2
 
 If-statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1585,36 +1296,36 @@ The ``key`` variable is always bound to the *key* of key-value pairs:
       key:a  value:pan
       key:b  value:pan
       key:i  value:1
-      key:x  value:0.346790
-      key:y  value:0.726803
+      key:x  value:0.3467901443380824
+      key:y  value:0.7268028627434533
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     NR = 2
       key:a  value:eks
       key:b  value:pan
       key:i  value:2
-      key:x  value:0.758680
-      key:y  value:0.522151
+      key:x  value:0.7586799647899636
+      key:y  value:0.5221511083334797
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     NR = 3
       key:a  value:wye
       key:b  value:wye
       key:i  value:3
-      key:x  value:0.204603
-      key:y  value:0.338319
+      key:x  value:0.20460330576630303
+      key:y  value:0.33831852551664776
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
     NR = 4
       key:a  value:eks
       key:b  value:wye
       key:i  value:4
-      key:x  value:0.381399
-      key:y  value:0.134189
+      key:x  value:0.38139939387114097
+      key:y  value:0.13418874328430463
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
     NR = 5
       key:a  value:wye
       key:b  value:pan
       key:i  value:5
-      key:x  value:0.573289
-      key:y  value:0.863624
+      key:x  value:0.5732889198020006
+      key:y  value:0.8636244699032729
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 .. code-block:: none
@@ -1694,12 +1405,12 @@ Important note: to avoid inconsistent looping behavior in case you're setting ne
         }
       }
     '
-    a   b   i x                   y                   sum1     sum2
-    pan pan 1 0.3467901443380824  0.7268028627434533  2.073593 8.294372
-    eks pan 2 0.7586799647899636  0.5221511083334797  3.280831 13.123324
-    wye wye 3 0.20460330576630303 0.33831852551664776 3.542922 14.171687
-    eks wye 4 0.38139939387114097 0.13418874328430463 4.515588 18.062353
-    wye pan 5 0.5732889198020006  0.8636244699032729  6.436913 25.747654
+    a   b   i x                   y                   sum1               sum2
+    pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356 8.294372028326142
+    eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443  13.123324292493772
+    wye wye 3 0.20460330576630303 0.33831852551664776 3.5429218312829507 14.171687325131803
+    eks wye 4 0.38139939387114097 0.13418874328430463 4.515588137155445  18.06235254862178
+    wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273  25.747653558821092
 
 It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
 
@@ -1716,11 +1427,11 @@ It can be confusing to modify the stream record while iterating over a copy of i
       $sum = sum
     '
     a   b   i x                   y                   sum
-    pan pan 1 0.3467901443380824  0.7268028627434533  2.073593
-    eks pan 2 0.7586799647899636  0.5221511083334797  3.280831
-    wye wye 3 0.20460330576630303 0.33831852551664776 3.542922
-    eks wye 4 0.38139939387114097 0.13418874328430463 4.515588
-    wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
+    pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356
+    eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443
+    wye wye 3 0.20460330576630303 0.33831852551664776 3.5429218312829507
+    eks wye 4 0.38139939387114097 0.13418874328430463 4.515588137155445
+    wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273
 
 You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after ``in``, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
 
@@ -1752,13 +1463,13 @@ That's confusing in the abstract, so a concrete example is in order. Suppose the
     '
     {
       "myvar": {
-        1: 2,
-        3: {
-          4: 5
+        "1": 2,
+        "3": {
+          "4": 5
         },
-        6: {
-          7: {
-            8: 9
+        "6": {
+          "7": {
+            "8": 9
           }
         }
       }
@@ -1911,7 +1622,7 @@ Miller supports an ``awk``-like ``begin/end`` syntax.  The statements in the ``b
     a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
     a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
     a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-    x_sum=4.536294
+    x_sum=4.536293840335763
 
 Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in ``awk``, where they'd default to 0 either way), the above can be written more succinctly as
 
@@ -1932,7 +1643,7 @@ Since uninitialized out-of-stream variables default to 0 for addition/substracti
     a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
     a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
     a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-    x_sum=4.536294
+    x_sum=4.536293840335763
 
 The **put -q** option is a shorthand which suppresses printing of each output record, with only ``emit`` statements being output. So to get only summary outputs, one could write
 
@@ -1943,7 +1654,7 @@ The **put -q** option is a shorthand which suppresses printing of each output re
       @x_sum += $x;
       end { emit @x_sum }
     ' ../data/small
-    x_sum=4.536294
+    x_sum=4.536293840335763
 
 We can do similarly with multiple out-of-stream variables:
 
@@ -1959,7 +1670,7 @@ We can do similarly with multiple out-of-stream variables:
       }
     ' ../data/small
     x_count=10
-    x_sum=4.536294
+    x_sum=4.536293840335763
 
 This is of course not much different than
 
@@ -1967,7 +1678,7 @@ This is of course not much different than
    :emphasize-lines: 1,1
 
     $ mlr stats1 -a count,sum -f x ../data/small
-    x_count=10,x_sum=4.536294
+    x_count=10,x_sum=4.536293840335763
 
 Note that it's a syntax error for begin/end blocks to refer to field names (beginning with ``$``), since these execute outside the context of input records.
 
@@ -2050,32 +1761,13 @@ Details:
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword print
-    print: prints expression immediately to stdout.
-      Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
-      Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
-      Example: mlr --from f.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+    TOD: port mlr_dsl_keyword_usage
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword dump
-    dump: prints all currently defined out-of-stream variables immediately
-      to stdout as JSON.
-    
-      With >, >>, or |, the data do not become part of the output record stream but
-      are instead redirected.
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
-      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
-      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
-      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
+    TOD: port mlr_dsl_keyword_usage
 
 * ``mlr put`` sends the current record (possibly modified by the ``put`` expression) to the output record stream. Records are then input to the following verb in a ``then``-chain (if any), else printed to standard output (unless ``put -q``). The **tee** keyword *additionally* writes the output record to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
@@ -2083,30 +1775,7 @@ Details:
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword tee
-    tee: prints the current record to specified file.
-      This is an immediate print to the specified file (except for pprint format
-      which of course waits until the end of the input stream to format all output).
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-      etc., to control the format of the output. See also mlr -h.
-    
-      emit with redirect and tee with redirect are identical, except tee can only
-      output $*.
-    
-      Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
-      Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
-      Example: mlr --from f.dat put 'tee >  stderr, $*'
-      Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
-      Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] > /tmp/data-".$a, $*'
-      Example: mlr --from f.dat put -q 'tee | "gzip > /tmp/data-".$a.".gz", $*'
-      Example: mlr --from f.dat put -q --ojson 'tee | "gzip > /tmp/data-".$a.".gz", $*'
+    TOD: port mlr_dsl_keyword_usage
 
 * ``mlr put``'s ``emitf``, ``emitp``, and ``emit`` send out-of-stream variables to the output record stream. These are then input to the following verb in a ``then``-chain (if any), else printed to standard output. When redirected with ``>``, ``>>``, or ``|``, they *instead* write the out-of-stream variable(s) to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
@@ -2114,99 +1783,19 @@ Details:
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword emitf
-    emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
-      output record stream.
-    
-      With >, >>, or |, the data do not become part of the output record stream but
-      are instead redirected.
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-      etc., to control the format of the output if the output is redirected. See also mlr -h.
-    
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
-      Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf > "tap-".$i.".dat", @a'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > "mytap.dat", @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> "mytap.dat", @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > stderr, @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
-      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
-    
-      Please see http://johnkerl.org/miller/doc for more information.
+    TOD: port mlr_dsl_keyword_usage
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword emitp
-    emitp: inserts an out-of-stream variable into the output record stream.
-      Hashmap indices present in the data but not slotted by emitp arguments are
-      output concatenated with ":".
-    
-      With >, >>, or |, the data do not become part of the output record stream but
-      are instead redirected.
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-      etc., to control the format of the output if the output is redirected. See also mlr -h.
-    
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
-      Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp > "tap-".$a.$b.".dat", @sums'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >  "mytap.dat", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >> "mytap.dat", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip > mytap.dat.gz", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
-    
-      Please see http://johnkerl.org/miller/doc for more information.
+    TOD: port mlr_dsl_keyword_usage
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --help-keyword emit
-    emit: inserts an out-of-stream variable into the output record stream. Hashmap
-      indices present in the data but not slotted by emit arguments are not output.
-    
-      With >, >>, or |, the data do not become part of the output record stream but
-      are instead redirected.
-    
-      The > and >> are for write and append, as in the shell, but (as with awk) the
-      file-overwrite for > is on first write, not per record. The | is for piping to
-      a process which will process the data. There will be one open file for each
-      distinct file name (for > and >>) or one subordinate process for each distinct
-      value of the piped-to command (for |). Output-formatting flags are taken from
-      the main command line.
-    
-      You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-      etc., to control the format of the output if the output is redirected. See also mlr -h.
-    
-      Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, $*'
-      Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, mapexcept($*, "a")'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
-      Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit > "tap-".$a.$b.".dat", @sums'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >  "mytap.dat", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >> "mytap.dat", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip > mytap.dat.gz", @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
-      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
-    
-      Please see http://johnkerl.org/miller/doc for more information.
+    TOD: port mlr_dsl_keyword_usage
 
 .. _reference-dsl-emit-statements:
 
@@ -2221,7 +1810,7 @@ Use **emitf** to output several out-of-stream variables side-by-side in the same
    :emphasize-lines: 1,1
 
     $ mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small
-    count=5,x_sum=2.264762,y_sum=2.585086
+    count=5,x_sum=2.264761728567491,y_sum=2.585085709781158
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
 
@@ -2240,14 +1829,14 @@ Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get
 
     $ mlr put -q '@sum += $x; end { dump }' data/small
     {
-      "sum": 2.264762
+      "sum": 2.264761728567491
     }
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum += $x; end { emit @sum }' data/small
-    sum=2.264762
+    sum=2.264761728567491
 
 If it's indexed then use as many names after ``emit`` as there are indices:
 
@@ -2257,9 +1846,9 @@ If it's indexed then use as many names after ``emit`` as there are indices:
     $ mlr put -q '@sum[$a] += $x; end { dump }' data/small
     {
       "sum": {
-        "pan": 0.346790,
-        "eks": 1.140079,
-        "wye": 0.777892
+        "pan": 0.3467901443380824,
+        "eks": 1.1400793586611044,
+        "wye": 0.7778922255683036
       }
     }
 
@@ -2267,9 +1856,9 @@ If it's indexed then use as many names after ``emit`` as there are indices:
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
-    a=pan,sum=0.346790
-    a=eks,sum=1.140079
-    a=wye,sum=0.777892
+    a=pan,sum=0.3467901443380824
+    a=eks,sum=1.1400793586611044
+    a=wye,sum=0.7778922255683036
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -2278,15 +1867,15 @@ If it's indexed then use as many names after ``emit`` as there are indices:
     {
       "sum": {
         "pan": {
-          "pan": 0.346790
+          "pan": 0.3467901443380824
         },
         "eks": {
-          "pan": 0.758680,
-          "wye": 0.381399
+          "pan": 0.7586799647899636,
+          "wye": 0.38139939387114097
         },
         "wye": {
-          "wye": 0.204603,
-          "pan": 0.573289
+          "wye": 0.20460330576630303,
+          "pan": 0.5732889198020006
         }
       }
     }
@@ -2295,11 +1884,11 @@ If it's indexed then use as many names after ``emit`` as there are indices:
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
-    a=pan,b=pan,sum=0.346790
-    a=eks,b=pan,sum=0.758680
-    a=eks,b=wye,sum=0.381399
-    a=wye,b=wye,sum=0.204603
-    a=wye,b=pan,sum=0.573289
+    a=pan,b=pan,sum=0.3467901443380824
+    a=eks,b=pan,sum=0.7586799647899636
+    a=eks,b=wye,sum=0.38139939387114097
+    a=wye,b=wye,sum=0.20460330576630303
+    a=wye,b=pan,sum=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -2309,23 +1898,23 @@ If it's indexed then use as many names after ``emit`` as there are indices:
       "sum": {
         "pan": {
           "pan": {
-            "1": 0.346790
+            "1": 0.3467901443380824
           }
         },
         "eks": {
           "pan": {
-            "2": 0.758680
+            "2": 0.7586799647899636
           },
           "wye": {
-            "4": 0.381399
+            "4": 0.38139939387114097
           }
         },
         "wye": {
           "wye": {
-            "3": 0.204603
+            "3": 0.20460330576630303
           },
           "pan": {
-            "5": 0.573289
+            "5": 0.5732889198020006
           }
         }
       }
@@ -2335,11 +1924,11 @@ If it's indexed then use as many names after ``emit`` as there are indices:
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small
-    a=pan,b=pan,i=1,sum=0.346790
-    a=eks,b=pan,i=2,sum=0.758680
-    a=eks,b=wye,i=4,sum=0.381399
-    a=wye,b=wye,i=3,sum=0.204603
-    a=wye,b=pan,i=5,sum=0.573289
+    a=pan,b=pan,i=1,sum=0.3467901443380824
+    a=eks,b=pan,i=2,sum=0.7586799647899636
+    a=eks,b=wye,i=4,sum=0.38139939387114097
+    a=wye,b=wye,i=3,sum=0.20460330576630303
+    a=wye,b=pan,i=5,sum=0.5732889198020006
 
 Now for **emitp**: if you have as many names following ``emit`` as there are levels in the out-of-stream variable's hashmap, then ``emit`` and ``emitp`` do the same thing. Where they differ is when you don't specify as many names as there are hashmap levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: ``emitp`` includes full prefixing (hence the ``p`` in ``emitp``) while ``emit`` takes the deepest hashmap key as the output-record key:
 
@@ -2350,15 +1939,15 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
     {
       "sum": {
         "pan": {
-          "pan": 0.346790
+          "pan": 0.3467901443380824
         },
         "eks": {
-          "pan": 0.758680,
-          "wye": 0.381399
+          "pan": 0.7586799647899636,
+          "wye": 0.38139939387114097
         },
         "wye": {
-          "wye": 0.204603,
-          "pan": 0.573289
+          "wye": 0.20460330576630303,
+          "pan": 0.5732889198020006
         }
       }
     }
@@ -2367,41 +1956,39 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
-    a=pan,pan=0.346790
-    a=eks,pan=0.758680,wye=0.381399
-    a=wye,wye=0.204603,pan=0.573289
+    a=pan,pan=0.3467901443380824
+    a=eks,pan=0.7586799647899636,wye=0.38139939387114097
+    a=wye,wye=0.20460330576630303,pan=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
-    pan=0.346790
-    pan=0.758680,wye=0.381399
-    wye=0.204603,pan=0.573289
+    pan.pan=0.3467901443380824,eks.pan=0.7586799647899636,eks.wye=0.38139939387114097,wye.wye=0.20460330576630303,wye.pan=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
-    a=pan,sum:pan=0.346790
-    a=eks,sum:pan=0.758680,sum:wye=0.381399
-    a=wye,sum:wye=0.204603,sum:pan=0.573289
+    a=pan,sum.pan=0.3467901443380824
+    a=eks,sum.pan=0.7586799647899636,sum.wye=0.38139939387114097
+    a=wye,sum.wye=0.20460330576630303,sum.pan=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-    sum:pan:pan=0.346790,sum:eks:pan=0.758680,sum:eks:wye=0.381399,sum:wye:wye=0.204603,sum:wye:pan=0.573289
+    sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.38139939387114097,sum.wye.wye=0.20460330576630303,sum.wye.pan=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-    sum:pan:pan 0.346790
-    sum:eks:pan 0.758680
-    sum:eks:wye 0.381399
-    sum:wye:wye 0.204603
-    sum:wye:pan 0.573289
+    sum.pan.pan 0.3467901443380824
+    sum.eks.pan 0.7586799647899636
+    sum.eks.wye 0.38139939387114097
+    sum.wye.wye 0.20460330576630303
+    sum.wye.pan 0.5732889198020006
 
 Use **--oflatsep** to specify the character which joins multilevel
 keys for ``emitp`` (it defaults to a colon):
@@ -2410,25 +1997,25 @@ keys for ``emitp`` (it defaults to a colon):
    :emphasize-lines: 1,1
 
     $ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
-    a=pan,sum/pan=0.346790
-    a=eks,sum/pan=0.758680,sum/wye=0.381399
-    a=wye,sum/wye=0.204603,sum/pan=0.573289
+    a=pan,sum.pan=0.3467901443380824
+    a=eks,sum.pan=0.7586799647899636,sum.wye=0.38139939387114097
+    a=wye,sum.wye=0.20460330576630303,sum.pan=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-    sum/pan/pan=0.346790,sum/eks/pan=0.758680,sum/eks/wye=0.381399,sum/wye/wye=0.204603,sum/wye/pan=0.573289
+    sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.38139939387114097,sum.wye.wye=0.20460330576630303,sum.wye.pan=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-    sum/pan/pan 0.346790
-    sum/eks/pan 0.758680
-    sum/eks/wye 0.381399
-    sum/wye/wye 0.204603
-    sum/wye/pan 0.573289
+    sum.pan.pan 0.3467901443380824
+    sum.eks.pan 0.7586799647899636
+    sum.eks.wye 0.38139939387114097
+    sum.wye.wye 0.20460330576630303
+    sum.wye.pan 0.5732889198020006
 
 Multi-emit statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2449,32 +2036,32 @@ including their names in parentheses:
           emit (@x_sum, @x_count, @x_mean), "a", "b"
       }
     '
-    a   b   x_sum      x_count x_mean
-    pan pan 219.185129 427     0.513314
-    pan wye 198.432931 395     0.502362
-    pan eks 216.075228 429     0.503672
-    pan hat 205.222776 417     0.492141
-    pan zee 205.097518 413     0.496604
-    eks pan 179.963030 371     0.485076
-    eks wye 196.945286 407     0.483895
-    eks zee 176.880365 357     0.495463
-    eks eks 215.916097 413     0.522799
-    eks hat 208.783171 417     0.500679
-    wye wye 185.295850 377     0.491501
-    wye pan 195.847900 392     0.499612
-    wye hat 212.033183 426     0.497730
-    wye zee 194.774048 385     0.505907
-    wye eks 204.812961 386     0.530604
-    zee pan 202.213804 389     0.519830
-    zee wye 233.991394 455     0.514267
-    zee eks 190.961778 391     0.488393
-    zee zee 206.640635 403     0.512756
-    zee hat 191.300006 409     0.467726
-    hat wye 208.883010 423     0.493813
-    hat zee 196.349450 385     0.509999
-    hat eks 189.006793 389     0.485879
-    hat hat 182.853532 381     0.479931
-    hat pan 168.553807 363     0.464336
+    a   b   x_sum              x_count x_mean
+    pan pan 219.1851288316854  427     0.5133141190437597
+    pan wye 198.43293070748447 395     0.5023618498923658
+    pan eks 216.07522773165525 429     0.5036718595143479
+    pan hat 205.22277621488686 417     0.492140950155604
+    pan zee 205.09751802331917 413     0.4966041598627583
+    eks pan 179.96303047250723 371     0.48507555383425127
+    eks wye 196.9452860713734  407     0.4838950517724162
+    eks zee 176.8803651584733  357     0.49546320772681596
+    eks eks 215.91609712937984 413     0.5227992666570941
+    eks hat 208.783170520597   417     0.5006790659966355
+    wye wye 185.29584980261419 377     0.49150092785839306
+    wye pan 195.84790012056564 392     0.4996119901034838
+    wye hat 212.0331829346132  426     0.4977304763723314
+    wye zee 194.77404756708714 385     0.5059066170573692
+    wye eks 204.8129608356315  386     0.5306035254809106
+    zee pan 202.21380378504267 389     0.5198298297816007
+    zee wye 233.9913939194868  455     0.5142667998230479
+    zee eks 190.9617780631925  391     0.4883932942792647
+    zee zee 206.64063510417319 403     0.5127559183726382
+    zee hat 191.30000620900935 409     0.46772617655014515
+    hat wye 208.8830097609959  423     0.49381326184632596
+    hat zee 196.3494502965293  385     0.5099985721987774
+    hat eks 189.0067933716193  389     0.48587864619953547
+    hat hat 182.8535323148762  381     0.47993053101017374
+    hat pan 168.5538067327806  363     0.4643355557376876
 
 What this does is walk through the first out-of-stream variable (``@x_sum`` in this example) as usual, then for each keylist found (e.g. ``pan,wye``), include the values for the remaining out-of-stream variables (here, ``@x_count`` and ``@x_mean``). You should use this when all out-of-stream variables in the emit statement have **the same shape and the same keylists**.
 
@@ -2487,41 +2074,47 @@ Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-strea
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'
-    a   b   sum      count
-    pan pan 0.346790 1
-    eks pan 0.758680 1
-    eks wye 0.381399 1
-    wye wye 0.204603 1
-    wye pan 0.573289 1
+    a b   pan.sum            pan.count
+    v pan 0.3467901443380824 1
+    
+    a b   pan.sum            pan.count wye.sum             wye.count
+    v eks 0.7586799647899636 1         0.38139939387114097 1
+    
+    a b   wye.sum             wye.count pan.sum            pan.count
+    v wye 0.20460330576630303 1         0.5732889198020006 1
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'
-    a   b   sum
-    pan pan 0.346790
-    eks pan 0.758680
-    eks wye 0.381399
-    wye wye 0.204603
-    wye pan 0.573289
+    a   b   pan
+    sum pan 0.3467901443380824
     
-    a   b   count
-    pan pan 1
-    eks pan 1
-    eks wye 1
-    wye wye 1
-    wye pan 1
+    a   b   pan                wye
+    sum eks 0.7586799647899636 0.38139939387114097
+    
+    a   b   wye                 pan
+    sum wye 0.20460330576630303 0.5732889198020006
+    
+    a     b   pan
+    count pan 1
+    
+    a     b   pan wye
+    count eks 1   1
+    
+    a     b   wye pan
+    count wye 1   1
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'
-    a   b   sum      count
-    pan pan 0.346790 1
-    eks pan 0.758680 1
-    eks wye 0.381399 1
-    wye wye 0.204603 1
-    wye pan 0.573289 1
+    a   b   sum                 count
+    pan pan 0.3467901443380824  1
+    eks pan 0.7586799647899636  1
+    eks wye 0.38139939387114097 1
+    wye wye 0.20460330576630303 1
+    wye pan 0.5732889198020006  1
 
 Unset statements
 ----------------------------------------------------------------
@@ -2557,20 +2150,19 @@ This can also be done, of course, using ``mlr cut -x``. You can also clear out-o
     {
       "sum": {
         "pan": {
-          "pan": 0.346790
+          "pan": 0.3467901443380824
         },
         "eks": {
-          "pan": 0.758680,
-          "wye": 0.381399
+          "pan": 0.7586799647899636,
+          "wye": 0.38139939387114097
         },
         "wye": {
-          "wye": 0.204603,
-          "pan": 0.573289
+          "wye": 0.20460330576630303,
+          "pan": 0.5732889198020006
         }
       }
     }
-    {
-    }
+    {}
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -2579,26 +2171,26 @@ This can also be done, of course, using ``mlr cut -x``. You can also clear out-o
     {
       "sum": {
         "pan": {
-          "pan": 0.346790
+          "pan": 0.3467901443380824
         },
         "eks": {
-          "pan": 0.758680,
-          "wye": 0.381399
+          "pan": 0.7586799647899636,
+          "wye": 0.38139939387114097
         },
         "wye": {
-          "wye": 0.204603,
-          "pan": 0.573289
+          "wye": 0.20460330576630303,
+          "pan": 0.5732889198020006
         }
       }
     }
     {
       "sum": {
         "pan": {
-          "pan": 0.346790
+          "pan": 0.3467901443380824
         },
         "wye": {
-          "wye": 0.204603,
-          "pan": 0.573289
+          "wye": 0.20460330576630303,
+          "pan": 0.5732889198020006
         }
       }
     }
@@ -2638,357 +2230,14 @@ The former, of course, is much easier to type. But the latter allows you to defi
    :emphasize-lines: 1,1
 
     $ mlr put '$z = $x * $y; filter $z > 0.3' data/small
-    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=0.396146
-    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.495106
+    a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=0.3961455844854848
+    a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.4951063394654227
 
 Built-in functions for filter and put, summary
 ----------------------------------------------------------------
 
-+----------------------------+------------+----------+
-| ``Name``                   | Class      | #Args    |
-+============================+============+==========+
-| ``+``                      | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``+``                      | arithmetic | 1        |
-+----------------------------+------------+----------+
-| ``-``                      | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``-``                      | arithmetic | 1        |
-+----------------------------+------------+----------+
-| ``*``                      | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``/``                      | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``//``                     | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``.+``                     | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``.+``                     | arithmetic | 1        |
-+----------------------------+------------+----------+
-| ``.-``                     | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``.-``                     | arithmetic | 1        |
-+----------------------------+------------+----------+
-| ``.*``                     | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``./``                     | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``.//``                    | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``%``                      | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``**``                     | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``|``                      | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``^``                      | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``&``                      | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``~``                      | arithmetic | 1        |
-+----------------------------+------------+----------+
-| ``<<``                     | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``>>``                     | arithmetic | 2        |
-+----------------------------+------------+----------+
-| ``bitcount``               | arithmetic | 1        |
-+----------------------------+------------+----------+
-| ``==``                     | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``!=``                     | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``=~``                     | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``!=~``                    | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``>``                      | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``>=``                     | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``<``                      | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``<=``                     | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``&&``                     | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``||``                     | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``^^``                     | boolean    | 2        |
-+----------------------------+------------+----------+
-| ``!``                      | boolean    | 1        |
-+----------------------------+------------+----------+
-| ``? :``                    | boolean    | 3        |
-+----------------------------+------------+----------+
-| ``.``                      | string     | 2        |
-+----------------------------+------------+----------+
-| ``gsub``                   | string     | 3        |
-+----------------------------+------------+----------+
-| ``regextract``             | string     | 2        |
-+----------------------------+------------+----------+
-| ``regextract_or_else``     | string     | 3        |
-+----------------------------+------------+----------+
-| ``strlen``                 | string     | 1        |
-+----------------------------+------------+----------+
-| ``sub``                    | string     | 3        |
-+----------------------------+------------+----------+
-| ``ssub``                   | string     | 3        |
-+----------------------------+------------+----------+
-| ``substr``                 | string     | 3        |
-+----------------------------+------------+----------+
-| ``tolower``                | string     | 1        |
-+----------------------------+------------+----------+
-| ``toupper``                | string     | 1        |
-+----------------------------+------------+----------+
-| ``truncate``               | string     | 2        |
-+----------------------------+------------+----------+
-| ``capitalize``             | string     | 1        |
-+----------------------------+------------+----------+
-| ``lstrip``                 | string     | 1        |
-+----------------------------+------------+----------+
-| ``rstrip``                 | string     | 1        |
-+----------------------------+------------+----------+
-| ``strip``                  | string     | 1        |
-+----------------------------+------------+----------+
-| ``collapse_whitespace``    | string     | 1        |
-+----------------------------+------------+----------+
-| ``clean_whitespace``       | string     | 1        |
-+----------------------------+------------+----------+
-| ``system``                 | string     | 1        |
-+----------------------------+------------+----------+
-| ``abs``                    | math       | 1        |
-+----------------------------+------------+----------+
-| ``acos``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``acosh``                  | math       | 1        |
-+----------------------------+------------+----------+
-| ``asin``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``asinh``                  | math       | 1        |
-+----------------------------+------------+----------+
-| ``atan``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``atan2``                  | math       | 2        |
-+----------------------------+------------+----------+
-| ``atanh``                  | math       | 1        |
-+----------------------------+------------+----------+
-| ``cbrt``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``ceil``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``cos``                    | math       | 1        |
-+----------------------------+------------+----------+
-| ``cosh``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``erf``                    | math       | 1        |
-+----------------------------+------------+----------+
-| ``erfc``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``exp``                    | math       | 1        |
-+----------------------------+------------+----------+
-| ``expm1``                  | math       | 1        |
-+----------------------------+------------+----------+
-| ``floor``                  | math       | 1        |
-+----------------------------+------------+----------+
-| ``invqnorm``               | math       | 1        |
-+----------------------------+------------+----------+
-| ``log``                    | math       | 1        |
-+----------------------------+------------+----------+
-| ``log10``                  | math       | 1        |
-+----------------------------+------------+----------+
-| ``log1p``                  | math       | 1        |
-+----------------------------+------------+----------+
-| ``logifit``                | math       | 3        |
-+----------------------------+------------+----------+
-| ``madd``                   | math       | 3        |
-+----------------------------+------------+----------+
-| ``max``                    | math       | variadic |
-+----------------------------+------------+----------+
-| ``mexp``                   | math       | 3        |
-+----------------------------+------------+----------+
-| ``min``                    | math       | variadic |
-+----------------------------+------------+----------+
-| ``mmul``                   | math       | 3        |
-+----------------------------+------------+----------+
-| ``msub``                   | math       | 3        |
-+----------------------------+------------+----------+
-| ``pow``                    | math       | 2        |
-+----------------------------+------------+----------+
-| ``qnorm``                  | math       | 1        |
-+----------------------------+------------+----------+
-| ``round``                  | math       | 1        |
-+----------------------------+------------+----------+
-| ``roundm``                 | math       | 2        |
-+----------------------------+------------+----------+
-| ``sgn``                    | math       | 1        |
-+----------------------------+------------+----------+
-| ``sin``                    | math       | 1        |
-+----------------------------+------------+----------+
-| ``sinh``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``sqrt``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``tan``                    | math       | 1        |
-+----------------------------+------------+----------+
-| ``tanh``                   | math       | 1        |
-+----------------------------+------------+----------+
-| ``urand``                  | math       | 0        |
-+----------------------------+------------+----------+
-| ``urandrange``             | math       | 2        |
-+----------------------------+------------+----------+
-| ``urand32``                | math       | 0        |
-+----------------------------+------------+----------+
-| ``urandint``               | math       | 2        |
-+----------------------------+------------+----------+
-| ``dhms2fsec``              | time       | 1        |
-+----------------------------+------------+----------+
-| ``dhms2sec``               | time       | 1        |
-+----------------------------+------------+----------+
-| ``fsec2dhms``              | time       | 1        |
-+----------------------------+------------+----------+
-| ``fsec2hms``               | time       | 1        |
-+----------------------------+------------+----------+
-| ``gmt2sec``                | time       | 1        |
-+----------------------------+------------+----------+
-| ``localtime2sec``          | time       | 1        |
-+----------------------------+------------+----------+
-| ``hms2fsec``               | time       | 1        |
-+----------------------------+------------+----------+
-| ``hms2sec``                | time       | 1        |
-+----------------------------+------------+----------+
-| ``sec2dhms``               | time       | 1        |
-+----------------------------+------------+----------+
-| ``sec2gmt``                | time       | 1        |
-+----------------------------+------------+----------+
-| ``sec2gmt``                | time       | 2        |
-+----------------------------+------------+----------+
-| ``sec2gmtdate``            | time       | 1        |
-+----------------------------+------------+----------+
-| ``sec2localtime``          | time       | 1        |
-+----------------------------+------------+----------+
-| ``sec2localtime``          | time       | 2        |
-+----------------------------+------------+----------+
-| ``sec2localdate``          | time       | 1        |
-+----------------------------+------------+----------+
-| ``sec2hms``                | time       | 1        |
-+----------------------------+------------+----------+
-| ``strftime``               | time       | 2        |
-+----------------------------+------------+----------+
-| ``strftime_local``         | time       | 2        |
-+----------------------------+------------+----------+
-| ``strptime``               | time       | 2        |
-+----------------------------+------------+----------+
-| ``strptime_local``         | time       | 2        |
-+----------------------------+------------+----------+
-| ``systime``                | time       | 0        |
-+----------------------------+------------+----------+
-| ``is_absent``              | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_bool``                | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_boolean``             | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_empty``               | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_empty_map``           | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_float``               | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_int``                 | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_map``                 | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_nonempty_map``        | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_not_empty``           | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_not_map``             | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_not_null``            | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_null``                | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_numeric``             | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_present``             | typing     | 1        |
-+----------------------------+------------+----------+
-| ``is_string``              | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_absent``       | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_bool``         | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_boolean``      | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_empty``        | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_empty_map``    | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_float``        | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_int``          | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_map``          | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_nonempty_map`` | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_not_empty``    | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_not_map``      | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_not_null``     | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_null``         | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_numeric``      | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_present``      | typing     | 1        |
-+----------------------------+------------+----------+
-| ``asserting_string``       | typing     | 1        |
-+----------------------------+------------+----------+
-| ``boolean``                | conversion | 1        |
-+----------------------------+------------+----------+
-| ``float``                  | conversion | 1        |
-+----------------------------+------------+----------+
-| ``fmtnum``                 | conversion | 2        |
-+----------------------------+------------+----------+
-| ``hexfmt``                 | conversion | 1        |
-+----------------------------+------------+----------+
-| ``int``                    | conversion | 1        |
-+----------------------------+------------+----------+
-| ``string``                 | conversion | 1        |
-+----------------------------+------------+----------+
-| ``typeof``                 | conversion | 1        |
-+----------------------------+------------+----------+
-| ``depth``                  | maps       | 1        |
-+----------------------------+------------+----------+
-| ``haskey``                 | maps       | 2        |
-+----------------------------+------------+----------+
-| ``joink``                  | maps       | 2        |
-+----------------------------+------------+----------+
-| ``joinkv``                 | maps       | 3        |
-+----------------------------+------------+----------+
-| ``joinv``                  | maps       | 2        |
-+----------------------------+------------+----------+
-| ``leafcount``              | maps       | 1        |
-+----------------------------+------------+----------+
-| ``length``                 | maps       | 1        |
-+----------------------------+------------+----------+
-| ``mapdiff``                | maps       | variadic |
-+----------------------------+------------+----------+
-| ``mapexcept``              | maps       | variadic |
-+----------------------------+------------+----------+
-| ``mapselect``              | maps       | variadic |
-+----------------------------+------------+----------+
-| ``mapsum``                 | maps       | variadic |
-+----------------------------+------------+----------+
-| ``splitkv``                | maps       | 3        |
-+----------------------------+------------+----------+
-| ``splitkvx``               | maps       | 3        |
-+----------------------------+------------+----------+
-| ``splitnv``                | maps       | 2        |
-+----------------------------+------------+----------+
-| ``splitnvx``               | maps       | 2        |
-+----------------------------+------------+----------+
+mlr: option "--list-all-functions-as-table" not recognized.
+Please run "mlr --help" for usage information.
 
 Built-in functions for filter and put
 ----------------------------------------------------------------
@@ -3005,9 +2254,7 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    + (class=arithmetic #args=2): Addition.
-    
-    + (class=arithmetic #args=1): Unary plus.
+    +  (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
 
 
 
@@ -3018,9 +2265,7 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    - (class=arithmetic #args=2): Subtraction.
-    
-    - (class=arithmetic #args=1): Unary minus.
+    -  (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
 
 
 
@@ -3031,7 +2276,7 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    * (class=arithmetic #args=2): Multiplication.
+    *  (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
 
 
 
@@ -3042,7 +2287,7 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    / (class=arithmetic #args=2): Division.
+    /  (class=arithmetic #args=2) Division. Integer / integer is floating-point.
 
 
 
@@ -3053,77 +2298,7 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    // (class=arithmetic #args=2): Integer division: rounds to negative (pythonic).
-
-
-
-.. _reference-dsl-.+:
-
-.+
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    .+ (class=arithmetic #args=2): Addition, with integer-to-integer overflow
-    
-    .+ (class=arithmetic #args=1): Unary plus, with integer-to-integer overflow.
-
-
-
-.. _reference-dsl-.-:
-
-.-
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    .- (class=arithmetic #args=2): Subtraction, with integer-to-integer overflow.
-    
-    .- (class=arithmetic #args=1): Unary minus, with integer-to-integer overflow.
-
-
-
-.. _reference-dsl-.*:
-
-.*
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    .* (class=arithmetic #args=2): Multiplication, with integer-to-integer overflow.
-
-
-
-.. _reference-dsl-./:
-
-./
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    ./ (class=arithmetic #args=2): Division, with integer-to-integer overflow.
-
-
-
-.. _reference-dsl-.//:
-
-.//
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    .// (class=arithmetic #args=2): Integer division: rounds to negative (pythonic), with integer-to-integer overflow.
-
-
-
-.. _reference-dsl-%:
-
-%
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    % (class=arithmetic #args=2): Remainder; never negative-valued (pythonic).
+    //  (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
 
 
 
@@ -3134,41 +2309,62 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    ** (class=arithmetic #args=2): Exponentiation; same as pow, but as an infix
-    operator.
+    **  (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
 
 
 
-.. _reference-dsl-bitwise-or:
+.. _reference-dsl-.+:
 
-\|
+.+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
-    | (class=arithmetic #args=2): Bitwise OR.
+    .+  (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
 
 
 
-.. _reference-dsl-^:
+.. _reference-dsl-.-:
 
-^
+.-
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
-    ^ (class=arithmetic #args=2): Bitwise XOR.
+    .-  (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
 
 
 
-.. _reference-dsl-&:
+.. _reference-dsl-.*:
 
-&
+.*
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
-    & (class=arithmetic #args=2): Bitwise AND.
+    .*  (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
+
+
+
+.. _reference-dsl-./:
+
+./
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    ./  (class=arithmetic #args=2) Integer division; not pythonic.
+
+
+
+.. _reference-dsl-%:
+
+%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    %  (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
 
 
 
@@ -3179,8 +2375,41 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    ~ (class=arithmetic #args=1): Bitwise NOT. Beware '$y=~$x' since =~ is the
+    ~  (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
     regex-match operator: try '$y = ~$x'.
+
+
+
+.. _reference-dsl-&:
+
+&
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    &  (class=arithmetic #args=2) Bitwise AND.
+
+
+
+.. _reference-dsl-bitwise-or:
+
+\|
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    |  (class=arithmetic #args=2) Bitwise OR.
+
+
+
+.. _reference-dsl-^:
+
+^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    ^  (class=arithmetic #args=2) Bitwise XOR.
 
 
 
@@ -3191,7 +2420,7 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    << (class=arithmetic #args=2): Bitwise left-shift.
+    <<  (class=arithmetic #args=2) Bitwise left-shift.
 
 
 
@@ -3202,136 +2431,18 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    >> (class=arithmetic #args=2): Bitwise right-shift.
+    >>  (class=arithmetic #args=2) Bitwise signed right-shift.
 
 
 
-.. _reference-dsl-==:
+.. _reference-dsl->>>:
 
-==
+>>>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
-    == (class=boolean #args=2): String/numeric equality. Mixing number and string
-    results in string compare.
-
-
-
-.. _reference-dsl-!=:
-
-!=
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    != (class=boolean #args=2): String/numeric inequality. Mixing number and string
-    results in string compare.
-
-
-
-.. _reference-dsl-=~:
-
-=~
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    =~ (class=boolean #args=2): String (left-hand side) matches regex (right-hand
-    side), e.g. '$name =~ "^a.*b$"'.
-
-
-
-.. _reference-dsl-!=~:
-
-!=~
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    !=~ (class=boolean #args=2): String (left-hand side) does not match regex
-    (right-hand side), e.g. '$name !=~ "^a.*b$"'.
-
-
-
-.. _reference-dsl->:
-
->
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    > (class=boolean #args=2): String/numeric greater-than. Mixing number and string
-    results in string compare.
-
-
-
-.. _reference-dsl->=:
-
->=
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    >= (class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
-    and string results in string compare.
-
-
-
-.. _reference-dsl-<:
-
-<
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    < (class=boolean #args=2): String/numeric less-than. Mixing number and string
-    results in string compare.
-
-
-
-.. _reference-dsl-<=:
-
-<=
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    <= (class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
-    and string results in string compare.
-
-
-
-.. _reference-dsl-&&:
-
-&&
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    && (class=boolean #args=2): Logical AND.
-
-
-
-.. _reference-dsl-||:
-
-||
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    || (class=boolean #args=2): Logical OR.
-
-
-
-.. _reference-dsl-^^:
-
-^^
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    ^^ (class=boolean #args=2): Logical XOR.
+    >>>  (class=arithmetic #args=2) Bitwise unsigned right-shift.
 
 
 
@@ -3342,7 +2453,150 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    ! (class=boolean #args=1): Logical negation.
+    !  (class=boolean #args=1) Logical negation.
+
+
+
+.. _reference-dsl-==:
+
+==
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    ==  (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
+
+
+
+.. _reference-dsl-!=:
+
+!=
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    !=  (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
+
+
+
+.. _reference-dsl->:
+
+>
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    >  (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
+
+
+
+.. _reference-dsl->=:
+
+>=
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    >=  (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
+
+
+
+.. _reference-dsl-<:
+
+<
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    <  (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
+
+
+
+.. _reference-dsl-<=:
+
+<=
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    <=  (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
+
+
+
+.. _reference-dsl-=~:
+
+=~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    =~  (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
+
+
+
+.. _reference-dsl-!=~:
+
+!=~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    !=~  (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
+
+
+
+.. _reference-dsl-&&:
+
+&&
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    &&  (class=boolean #args=2) Logical AND.
+
+
+
+.. _reference-dsl-||:
+
+||
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    ||  (class=boolean #args=2) Logical OR.
+
+
+
+.. _reference-dsl-^^:
+
+^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    ^^  (class=boolean #args=2) Logical XOR.
+
+
+
+.. _reference-dsl-??:
+
+??
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    ??  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
+
+
+
+.. _reference-dsl-???:
+
+???
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    ???  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
 
 
 
@@ -3353,7 +2607,7 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    ? : (class=boolean #args=3): Ternary operator.
+    ?:  (class=boolean #args=3) Standard ternary operator.
 
 
 
@@ -3364,7 +2618,7 @@ You can get a list of all functions using **mlr -F**.
 
 ::
 
-    . (class=string #args=2): String concatenation.
+    .  (class=string #args=2) String concatenation.
 
 
 
@@ -3375,7 +2629,7 @@ abs
 
 ::
 
-    abs (class=math #args=1): Absolute value.
+    abs  (class=math #args=1) Absolute value.
 
 
 
@@ -3386,7 +2640,7 @@ acos
 
 ::
 
-    acos (class=math #args=1): Inverse trigonometric cosine.
+    acos  (class=math #args=1) Inverse trigonometric cosine.
 
 
 
@@ -3397,7 +2651,30 @@ acosh
 
 ::
 
-    acosh (class=math #args=1): Inverse hyperbolic cosine.
+    acosh  (class=math #args=1) Inverse hyperbolic cosine.
+
+
+
+.. _reference-dsl-append:
+
+append
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    append  (class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
+
+
+
+.. _reference-dsl-arrayify:
+
+arrayify
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    arrayify  (class=maps/arrays #args=1) Walks through a nested map/array, converting any map with consecutive keys
+    "1", "2", ... into an array. Useful to wrap the output of unflatten.
 
 
 
@@ -3408,7 +2685,7 @@ asin
 
 ::
 
-    asin (class=math #args=1): Inverse trigonometric sine.
+    asin  (class=math #args=1) Inverse trigonometric sine.
 
 
 
@@ -3419,7 +2696,7 @@ asinh
 
 ::
 
-    asinh (class=math #args=1): Inverse hyperbolic sine.
+    asinh  (class=math #args=1) Inverse hyperbolic sine.
 
 
 
@@ -3430,8 +2707,20 @@ asserting_absent
 
 ::
 
-    asserting_absent (class=typing #args=1): Returns argument if it is absent in the input data, else
-    throws an error.
+    asserting_absent  (class=typing #args=1) Aborts with an error if is_absent on the argument returns false,
+    else returns its argument.
+
+
+
+.. _reference-dsl-asserting_array:
+
+asserting_array
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    asserting_array  (class=typing #args=1) Aborts with an error if is_array on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3442,8 +2731,8 @@ asserting_bool
 
 ::
 
-    asserting_bool (class=typing #args=1): Returns argument if it is present with boolean value, else
-    throws an error.
+    asserting_bool  (class=typing #args=1) Aborts with an error if is_bool on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3454,8 +2743,8 @@ asserting_boolean
 
 ::
 
-    asserting_boolean (class=typing #args=1): Returns argument if it is present with boolean value, else
-    throws an error.
+    asserting_boolean  (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3466,8 +2755,8 @@ asserting_empty
 
 ::
 
-    asserting_empty (class=typing #args=1): Returns argument if it is present in input with empty value,
-    else throws an error.
+    asserting_empty  (class=typing #args=1) Aborts with an error if is_empty on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3478,8 +2767,20 @@ asserting_empty_map
 
 ::
 
-    asserting_empty_map (class=typing #args=1): Returns argument if it is a map with empty value, else
-    throws an error.
+    asserting_empty_map  (class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false,
+    else returns its argument.
+
+
+
+.. _reference-dsl-asserting_error:
+
+asserting_error
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    asserting_error  (class=typing #args=1) Aborts with an error if is_error on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3490,8 +2791,8 @@ asserting_float
 
 ::
 
-    asserting_float (class=typing #args=1): Returns argument if it is present with float value, else
-    throws an error.
+    asserting_float  (class=typing #args=1) Aborts with an error if is_float on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3502,8 +2803,8 @@ asserting_int
 
 ::
 
-    asserting_int (class=typing #args=1): Returns argument if it is present with int value, else
-    throws an error.
+    asserting_int  (class=typing #args=1) Aborts with an error if is_int on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3514,7 +2815,8 @@ asserting_map
 
 ::
 
-    asserting_map (class=typing #args=1): Returns argument if it is a map, else throws an error.
+    asserting_map  (class=typing #args=1) Aborts with an error if is_map on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3525,8 +2827,20 @@ asserting_nonempty_map
 
 ::
 
-    asserting_nonempty_map (class=typing #args=1): Returns argument if it is a non-empty map, else throws
-    an error.
+    asserting_nonempty_map  (class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false,
+    else returns its argument.
+
+
+
+.. _reference-dsl-asserting_not_array:
+
+asserting_not_array
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    asserting_not_array  (class=typing #args=1) Aborts with an error if is_not_array on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3537,8 +2851,8 @@ asserting_not_empty
 
 ::
 
-    asserting_not_empty (class=typing #args=1): Returns argument if it is present in input with non-empty
-    value, else throws an error.
+    asserting_not_empty  (class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3549,7 +2863,8 @@ asserting_not_map
 
 ::
 
-    asserting_not_map (class=typing #args=1): Returns argument if it is not a map, else throws an error.
+    asserting_not_map  (class=typing #args=1) Aborts with an error if is_not_map on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3560,8 +2875,8 @@ asserting_not_null
 
 ::
 
-    asserting_not_null (class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent),
-    else throws an error.
+    asserting_not_null  (class=typing #args=1) Aborts with an error if is_not_null on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3572,8 +2887,8 @@ asserting_null
 
 ::
 
-    asserting_null (class=typing #args=1): Returns argument if it is null (empty or absent), else throws
-    an error.
+    asserting_null  (class=typing #args=1) Aborts with an error if is_null on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3584,8 +2899,8 @@ asserting_numeric
 
 ::
 
-    asserting_numeric (class=typing #args=1): Returns argument if it is present with int or float value,
-    else throws an error.
+    asserting_numeric  (class=typing #args=1) Aborts with an error if is_numeric on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3596,8 +2911,8 @@ asserting_present
 
 ::
 
-    asserting_present (class=typing #args=1): Returns argument if it is present in input, else throws
-    an error.
+    asserting_present  (class=typing #args=1) Aborts with an error if is_present on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3608,8 +2923,8 @@ asserting_string
 
 ::
 
-    asserting_string (class=typing #args=1): Returns argument if it is present with string (including
-    empty-string) value, else throws an error.
+    asserting_string  (class=typing #args=1) Aborts with an error if is_string on the argument returns false,
+    else returns its argument.
 
 
 
@@ -3620,7 +2935,7 @@ atan
 
 ::
 
-    atan (class=math #args=1): One-argument arctangent.
+    atan  (class=math #args=1) One-argument arctangent.
 
 
 
@@ -3631,7 +2946,7 @@ atan2
 
 ::
 
-    atan2 (class=math #args=2): Two-argument arctangent.
+    atan2  (class=math #args=2) Two-argument arctangent.
 
 
 
@@ -3642,7 +2957,7 @@ atanh
 
 ::
 
-    atanh (class=math #args=1): Inverse hyperbolic tangent.
+    atanh  (class=math #args=1) Inverse hyperbolic tangent.
 
 
 
@@ -3653,7 +2968,7 @@ bitcount
 
 ::
 
-    bitcount (class=arithmetic #args=1): Count of 1-bits
+    bitcount  (class=arithmetic #args=1) Count of 1-bits.
 
 
 
@@ -3664,7 +2979,7 @@ boolean
 
 ::
 
-    boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
+    boolean  (class=conversion #args=1) Convert int/float/bool/string to boolean.
 
 
 
@@ -3675,7 +2990,7 @@ capitalize
 
 ::
 
-    capitalize (class=string #args=1): Convert string's first character to uppercase.
+    capitalize  (class=string #args=1) Convert string's first character to uppercase.
 
 
 
@@ -3686,7 +3001,7 @@ cbrt
 
 ::
 
-    cbrt (class=math #args=1): Cube root.
+    cbrt  (class=math #args=1) Cube root.
 
 
 
@@ -3697,7 +3012,7 @@ ceil
 
 ::
 
-    ceil (class=math #args=1): Ceiling: nearest integer at or above.
+    ceil  (class=math #args=1) Ceiling: nearest integer at or above.
 
 
 
@@ -3708,7 +3023,7 @@ clean_whitespace
 
 ::
 
-    clean_whitespace (class=string #args=1): Same as collapse_whitespace and strip.
+    clean_whitespace  (class=string #args=1) Same as collapse_whitespace and strip.
 
 
 
@@ -3719,7 +3034,7 @@ collapse_whitespace
 
 ::
 
-    collapse_whitespace (class=string #args=1): Strip repeated whitespace from string.
+    collapse_whitespace  (class=string #args=1) Strip repeated whitespace from string.
 
 
 
@@ -3730,7 +3045,7 @@ cos
 
 ::
 
-    cos (class=math #args=1): Trigonometric cosine.
+    cos  (class=math #args=1) Trigonometric cosine.
 
 
 
@@ -3741,7 +3056,7 @@ cosh
 
 ::
 
-    cosh (class=math #args=1): Hyperbolic cosine.
+    cosh  (class=math #args=1) Hyperbolic cosine.
 
 
 
@@ -3752,7 +3067,7 @@ depth
 
 ::
 
-    depth (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
+    depth  (class=maps/arrays #args=1) Prints maximum depth of map/array. Scalars have depth 0.
 
 
 
@@ -3763,8 +3078,8 @@ dhms2fsec
 
 ::
 
-    dhms2fsec (class=time #args=1): Recovers floating-point seconds as in
-    dhms2fsec("5d18h53m20.250000s") = 500000.250000
+    dhms2fsec  (class=time #args=1) Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
+    
 
 
 
@@ -3775,8 +3090,8 @@ dhms2sec
 
 ::
 
-    dhms2sec (class=time #args=1): Recovers integer seconds as in
-    dhms2sec("5d18h53m20s") = 500000
+    dhms2sec  (class=time #args=1) Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
+    
 
 
 
@@ -3787,7 +3102,7 @@ erf
 
 ::
 
-    erf (class=math #args=1): Error function.
+    erf  (class=math #args=1) Error function.
 
 
 
@@ -3798,7 +3113,7 @@ erfc
 
 ::
 
-    erfc (class=math #args=1): Complementary error function.
+    erfc  (class=math #args=1) Complementary error function.
 
 
 
@@ -3809,7 +3124,7 @@ exp
 
 ::
 
-    exp (class=math #args=1): Exponential function e**x.
+    exp  (class=math #args=1) Exponential function e**x.
 
 
 
@@ -3820,7 +3135,22 @@ expm1
 
 ::
 
-    expm1 (class=math #args=1): e**x - 1.
+    expm1  (class=math #args=1) e**x - 1.
+
+
+
+.. _reference-dsl-flatten:
+
+flatten
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    flatten  (class=maps/arrays #args=3) Flattens multi-level maps to single-level ones. Examples:
+    flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+    flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+    Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
+    Useful for nested JSON-like structures for non-JSON file formats like CSV.
 
 
 
@@ -3831,7 +3161,7 @@ float
 
 ::
 
-    float (class=conversion #args=1): Convert int/float/bool/string to float.
+    float  (class=conversion #args=1) Convert int/float/bool/string to float.
 
 
 
@@ -3842,7 +3172,7 @@ floor
 
 ::
 
-    floor (class=math #args=1): Floor: nearest integer at or below.
+    floor  (class=math #args=1) Floor: nearest integer at or below.
 
 
 
@@ -3853,9 +3183,8 @@ fmtnum
 
 ::
 
-    fmtnum (class=conversion #args=2): Convert int/float/bool to string using
-    printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'. WARNING: Miller numbers
-    are all long long or double. If you use formats like %d or %f, behavior is undefined.
+    fmtnum  (class=conversion #args=2) Convert int/float/bool to string using
+    printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
 
 
 
@@ -3866,8 +3195,8 @@ fsec2dhms
 
 ::
 
-    fsec2dhms (class=time #args=1): Formats floating-point seconds as in
-    fsec2dhms(500000.25) = "5d18h53m20.250000s"
+    fsec2dhms  (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
+    
 
 
 
@@ -3878,8 +3207,30 @@ fsec2hms
 
 ::
 
-    fsec2hms (class=time #args=1): Formats floating-point seconds as in
-    fsec2hms(5000.25) = "01:23:20.250000"
+    fsec2hms  (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
+    
+
+
+
+.. _reference-dsl-get_keys:
+
+get_keys
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    get_keys  (class=maps/arrays #args=1) Returns array of keys of map or array
+
+
+
+.. _reference-dsl-get_values:
+
+get_values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    get_values  (class=maps/arrays #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
 
 
 
@@ -3890,8 +3241,7 @@ gmt2sec
 
 ::
 
-    gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since
-    the epoch.
+    gmt2sec  (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
 
 
 
@@ -3902,8 +3252,7 @@ gsub
 
 ::
 
-    gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
-    (replace all).
+    gsub  (class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
 
 
 
@@ -3914,8 +3263,9 @@ haskey
 
 ::
 
-    haskey (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
-    'haskey(mymap, mykey)'. Error if 1st argument is not a map.
+    haskey  (class=maps/arrays #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+    'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
+    Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
 
 
 
@@ -3926,7 +3276,7 @@ hexfmt
 
 ::
 
-    hexfmt (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
+    hexfmt  (class=conversion #args=1) Convert int to hex string, e.g. 255 to "0xff".
 
 
 
@@ -3937,8 +3287,8 @@ hms2fsec
 
 ::
 
-    hms2fsec (class=time #args=1): Recovers floating-point seconds as in
-    hms2fsec("01:23:20.250000") = 5000.250000
+    hms2fsec  (class=time #args=1) Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000
+    
 
 
 
@@ -3949,8 +3299,19 @@ hms2sec
 
 ::
 
-    hms2sec (class=time #args=1): Recovers integer seconds as in
-    hms2sec("01:23:20") = 5000
+    hms2sec  (class=time #args=1) Recovers integer seconds as in hms2sec("01:23:20") = 5000
+    
+
+
+
+.. _reference-dsl-hostname:
+
+hostname
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    hostname  (class=system #args=0) Returns the hostname as a string.
 
 
 
@@ -3961,7 +3322,7 @@ int
 
 ::
 
-    int (class=conversion #args=1): Convert int/float/bool/string to int.
+    int  (class=conversion #args=1) Convert int/float/bool/string to int.
 
 
 
@@ -3972,8 +3333,8 @@ invqnorm
 
 ::
 
-    invqnorm (class=math #args=1): Inverse of normal cumulative distribution
-    function. Note that invqorm(urand()) is normally distributed.
+    invqnorm  (class=math #args=1) Inverse of normal cumulative distribution function.
+    Note that invqorm(urand()) is normally distributed.
 
 
 
@@ -3984,7 +3345,18 @@ is_absent
 
 ::
 
-    is_absent (class=typing #args=1): False if field is present in input, true otherwise
+    is_absent  (class=typing #args=1) False if field is present in input, true otherwise
+
+
+
+.. _reference-dsl-is_array:
+
+is_array
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    is_array  (class=typing #args=1) True if argument is an array.
 
 
 
@@ -3995,7 +3367,7 @@ is_bool
 
 ::
 
-    is_bool (class=typing #args=1): True if field is present with boolean value. Synonymous with is_boolean.
+    is_bool  (class=typing #args=1) True if field is present with boolean value. Synonymous with is_boolean.
 
 
 
@@ -4006,7 +3378,7 @@ is_boolean
 
 ::
 
-    is_boolean (class=typing #args=1): True if field is present with boolean value. Synonymous with is_bool.
+    is_boolean  (class=typing #args=1) True if field is present with boolean value. Synonymous with is_bool.
 
 
 
@@ -4017,7 +3389,7 @@ is_empty
 
 ::
 
-    is_empty (class=typing #args=1): True if field is present in input with empty string value, false otherwise.
+    is_empty  (class=typing #args=1) True if field is present in input with empty string value, false otherwise.
 
 
 
@@ -4028,7 +3400,18 @@ is_empty_map
 
 ::
 
-    is_empty_map (class=typing #args=1): True if argument is a map which is empty.
+    is_empty_map  (class=typing #args=1) True if argument is a map which is empty.
+
+
+
+.. _reference-dsl-is_error:
+
+is_error
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    is_error  (class=typing #args=1) True if if argument is an error, such as taking string length of an integer.
 
 
 
@@ -4039,7 +3422,7 @@ is_float
 
 ::
 
-    is_float (class=typing #args=1): True if field is present with value inferred to be float
+    is_float  (class=typing #args=1) True if field is present with value inferred to be float
 
 
 
@@ -4050,7 +3433,7 @@ is_int
 
 ::
 
-    is_int (class=typing #args=1): True if field is present with value inferred to be int 
+    is_int  (class=typing #args=1) True if field is present with value inferred to be int
 
 
 
@@ -4061,7 +3444,7 @@ is_map
 
 ::
 
-    is_map (class=typing #args=1): True if argument is a map.
+    is_map  (class=typing #args=1) True if argument is a map.
 
 
 
@@ -4072,7 +3455,18 @@ is_nonempty_map
 
 ::
 
-    is_nonempty_map (class=typing #args=1): True if argument is a map which is non-empty.
+    is_nonempty_map  (class=typing #args=1) True if argument is a map which is non-empty.
+
+
+
+.. _reference-dsl-is_not_array:
+
+is_not_array
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    is_not_array  (class=typing #args=1) True if argument is not an array.
 
 
 
@@ -4083,7 +3477,7 @@ is_not_empty
 
 ::
 
-    is_not_empty (class=typing #args=1): False if field is present in input with empty value, true otherwise
+    is_not_empty  (class=typing #args=1) False if field is present in input with empty value, true otherwise
 
 
 
@@ -4094,7 +3488,7 @@ is_not_map
 
 ::
 
-    is_not_map (class=typing #args=1): True if argument is not a map.
+    is_not_map  (class=typing #args=1) True if argument is not a map.
 
 
 
@@ -4105,7 +3499,7 @@ is_not_null
 
 ::
 
-    is_not_null (class=typing #args=1): False if argument is null (empty or absent), true otherwise.
+    is_not_null  (class=typing #args=1) False if argument is null (empty or absent), true otherwise.
 
 
 
@@ -4116,7 +3510,7 @@ is_null
 
 ::
 
-    is_null (class=typing #args=1): True if argument is null (empty or absent), false otherwise.
+    is_null  (class=typing #args=1) True if argument is null (empty or absent), false otherwise.
 
 
 
@@ -4127,7 +3521,7 @@ is_numeric
 
 ::
 
-    is_numeric (class=typing #args=1): True if field is present with value inferred to be int or float
+    is_numeric  (class=typing #args=1) True if field is present with value inferred to be int or float
 
 
 
@@ -4138,7 +3532,7 @@ is_present
 
 ::
 
-    is_present (class=typing #args=1): True if field is present in input, false otherwise.
+    is_present  (class=typing #args=1) True if field is present in input, false otherwise.
 
 
 
@@ -4149,7 +3543,7 @@ is_string
 
 ::
 
-    is_string (class=typing #args=1): True if field is present with string (including empty-string) value
+    is_string  (class=typing #args=1) True if field is present with string (including empty-string) value
 
 
 
@@ -4160,7 +3554,9 @@ joink
 
 ::
 
-    joink (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
+    joink  (class=conversion #args=2) Makes string from map/array keys. Examples:
+    joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
+    joink([1,2,3], ",") = "1,2,3".
 
 
 
@@ -4171,7 +3567,9 @@ joinkv
 
 ::
 
-    joinkv (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'
+    joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs. Examples:
+    joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
+    joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 
 
 
@@ -4182,7 +3580,32 @@ joinv
 
 ::
 
-    joinv (class=maps #args=2): Makes string from map values. E.g. 'joinv(mymap, ",")'.
+    joinv  (class=conversion #args=2) Makes string from map/array values.
+    joinv([3,4,5], ",") = "3,4,5"
+    joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
+
+
+
+.. _reference-dsl-json_parse:
+
+json_parse
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    json_parse  (class=maps/arrays #args=1) Converts value from JSON-formatted string.
+
+
+
+.. _reference-dsl-json_stringify:
+
+json_stringify
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    json_stringify  (class=maps/arrays #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
+    With optional second boolean argument set to true, produces multiline output.
 
 
 
@@ -4193,8 +3616,8 @@ leafcount
 
 ::
 
-    leafcount (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps,
-    same as length.
+    leafcount  (class=maps/arrays #args=1) Counts total number of terminal values in map/array. For single-level
+    map/array, same as length.
 
 
 
@@ -4205,19 +3628,7 @@ length
 
 ::
 
-    length (class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
-
-
-
-.. _reference-dsl-localtime2sec:
-
-localtime2sec
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    localtime2sec (class=time #args=1): Parses local timestamp as integer seconds since
-    the epoch. Consults $TZ environment variable.
+    length  (class=maps/arrays #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
 
 
 
@@ -4228,7 +3639,7 @@ log
 
 ::
 
-    log (class=math #args=1): Natural (base-e) logarithm.
+    log  (class=math #args=1) Natural (base-e) logarithm.
 
 
 
@@ -4239,7 +3650,7 @@ log10
 
 ::
 
-    log10 (class=math #args=1): Base-10 logarithm.
+    log10  (class=math #args=1) Base-10 logarithm.
 
 
 
@@ -4250,7 +3661,7 @@ log1p
 
 ::
 
-    log1p (class=math #args=1): log(1-x).
+    log1p  (class=math #args=1) log(1-x).
 
 
 
@@ -4261,8 +3672,8 @@ logifit
 
 ::
 
-    logifit (class=math #args=3): Given m and b from logistic regression, compute
-    fit: $yhat=logifit($x,$m,$b).
+    logifit  (class=math #args=3)  Given m and b from logistic regression, compute fit:
+    $yhat=logifit($x,$m,$b).
 
 
 
@@ -4273,7 +3684,7 @@ lstrip
 
 ::
 
-    lstrip (class=string #args=1): Strip leading whitespace from string.
+    lstrip  (class=string #args=1) Strip leading whitespace from string.
 
 
 
@@ -4284,7 +3695,7 @@ madd
 
 ::
 
-    madd (class=math #args=3): a + b mod m (integers)
+    madd  (class=arithmetic #args=3) a + b mod m (integers)
 
 
 
@@ -4295,8 +3706,9 @@ mapdiff
 
 ::
 
-    mapdiff (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg.
-    With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
+    mapdiff  (class=maps/arrays #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
+    With 2 or more, returns copy of arg 1 with all keys from any of remaining
+    argument maps removed.
 
 
 
@@ -4307,8 +3719,10 @@ mapexcept
 
 ::
 
-    mapexcept (class=maps variadic): Returns a map with keys from remaining arguments, if any, unset.
-    E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
+    mapexcept  (class=maps/arrays #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
+    Remaining arguments can be strings or arrays of string.
+    E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
+    and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
 
 
 
@@ -4319,8 +3733,10 @@ mapselect
 
 ::
 
-    mapselect (class=maps variadic): Returns a map with only keys from remaining arguments set.
-    E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
+    mapselect  (class=maps/arrays #args=variadic) Returns a map with only keys from remaining arguments set.
+    Remaining arguments can be strings or arrays of string.
+    E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
+    and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
 
 
 
@@ -4331,8 +3747,9 @@ mapsum
 
 ::
 
-    mapsum (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
-    key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
+    mapsum  (class=maps/arrays #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with
+    key-value pairs from all arguments. Rightmost collisions win, e.g.
+    'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 
 
 
@@ -4343,7 +3760,18 @@ max
 
 ::
 
-    max (class=math variadic): max of n numbers; null loses
+    max  (class=math #args=variadic) Max of n numbers; null loses.
+
+
+
+.. _reference-dsl-md5:
+
+md5
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    md5  (class=hashing #args=1) MD5 hash.
 
 
 
@@ -4354,7 +3782,7 @@ mexp
 
 ::
 
-    mexp (class=math #args=3): a ** b mod m (integers)
+    mexp  (class=arithmetic #args=3) a ** b mod m (integers)
 
 
 
@@ -4365,7 +3793,7 @@ min
 
 ::
 
-    min (class=math variadic): Min of n numbers; null loses
+    min  (class=math #args=variadic) Min of n numbers; null loses.
 
 
 
@@ -4376,7 +3804,7 @@ mmul
 
 ::
 
-    mmul (class=math #args=3): a * b mod m (integers)
+    mmul  (class=arithmetic #args=3) a * b mod m (integers)
 
 
 
@@ -4387,7 +3815,18 @@ msub
 
 ::
 
-    msub (class=math #args=3): a - b mod m (integers)
+    msub  (class=arithmetic #args=3) a - b mod m (integers)
+
+
+
+.. _reference-dsl-os:
+
+os
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    os  (class=system #args=0) Returns the operating-system name as a string.
 
 
 
@@ -4398,7 +3837,7 @@ pow
 
 ::
 
-    pow (class=math #args=2): Exponentiation; same as **.
+    pow  (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
 
 
 
@@ -4409,7 +3848,7 @@ qnorm
 
 ::
 
-    qnorm (class=math #args=1): Normal cumulative distribution function.
+    qnorm  (class=math #args=1) Normal cumulative distribution function.
 
 
 
@@ -4420,8 +3859,7 @@ regextract
 
 ::
 
-    regextract (class=string #args=2): Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
-    .
+    regextract  (class=string #args=2) Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
 
 
 
@@ -4432,8 +3870,7 @@ regextract_or_else
 
 ::
 
-    regextract_or_else (class=string #args=3): Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
-    .
+    regextract_or_else  (class=string #args=3) Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
 
 
 
@@ -4444,7 +3881,7 @@ round
 
 ::
 
-    round (class=math #args=1): Round to nearest integer.
+    round  (class=math #args=1) Round to nearest integer.
 
 
 
@@ -4455,8 +3892,8 @@ roundm
 
 ::
 
-    roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
-    the same as round($x/$m)*$m
+    roundm  (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is
+    the same as round($x/$m)*$m.
 
 
 
@@ -4467,7 +3904,7 @@ rstrip
 
 ::
 
-    rstrip (class=string #args=1): Strip trailing whitespace from string.
+    rstrip  (class=string #args=1) Strip trailing whitespace from string.
 
 
 
@@ -4478,8 +3915,8 @@ sec2dhms
 
 ::
 
-    sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
-    = "5d18h53m20s"
+    sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
+    
 
 
 
@@ -4490,13 +3927,10 @@ sec2gmt
 
 ::
 
-    sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
+    sec2gmt  (class=time #args=1,2) Formats seconds since epoch (integer part)
     as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-    Leaves non-numbers as-is.
-    
-    sec2gmt (class=time #args=2): Formats seconds since epoch as GMT timestamp with n
-    decimal places for seconds, e.g. sec2gmt(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
-    Leaves non-numbers as-is.
+    Leaves non-numbers as-is. With second integer argument n, includes n decimal places
+    for the seconds part
 
 
 
@@ -4507,9 +3941,10 @@ sec2gmtdate
 
 ::
 
-    sec2gmtdate (class=time #args=1): Formats seconds since epoch (integer part)
+    sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part)
     as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
     Leaves non-numbers as-is.
+    
 
 
 
@@ -4520,38 +3955,8 @@ sec2hms
 
 ::
 
-    sec2hms (class=time #args=1): Formats integer seconds as in
-    sec2hms(5000) = "01:23:20"
-
-
-
-.. _reference-dsl-sec2localdate:
-
-sec2localdate
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    sec2localdate (class=time #args=1): Formats seconds since epoch (integer part)
-    as local timestamp with year-month-date, e.g. sec2localdate(1440768801.7) = "2015-08-28".
-    Consults $TZ environment variable. Leaves non-numbers as-is.
-
-
-
-.. _reference-dsl-sec2localtime:
-
-sec2localtime
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    sec2localtime (class=time #args=1): Formats seconds since epoch (integer part)
-    as local timestamp, e.g. sec2localtime(1440768801.7) = "2015-08-28T13:33:21Z".
-    Consults $TZ environment variable. Leaves non-numbers as-is.
+    sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
     
-    sec2localtime (class=time #args=2): Formats seconds since epoch as local timestamp with n
-    decimal places for seconds, e.g. sec2localtime(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
-    Consults $TZ environment variable. Leaves non-numbers as-is.
 
 
 
@@ -4562,8 +3967,40 @@ sgn
 
 ::
 
-    sgn (class=math #args=1): +1 for positive input, 0 for zero input, -1 for
-    negative input.
+    sgn  (class=math #args=1)  +1, 0, -1 for positive, zero, negative input respectively.
+
+
+
+.. _reference-dsl-sha1:
+
+sha1
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    sha1  (class=hashing #args=1) SHA1 hash.
+
+
+
+.. _reference-dsl-sha256:
+
+sha256
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    sha256  (class=hashing #args=1) SHA256 hash.
+
+
+
+.. _reference-dsl-sha512:
+
+sha512
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    sha512  (class=hashing #args=1) SHA512 hash.
 
 
 
@@ -4574,7 +4011,7 @@ sin
 
 ::
 
-    sin (class=math #args=1): Trigonometric sine.
+    sin  (class=math #args=1) Trigonometric sine.
 
 
 
@@ -4585,7 +4022,31 @@ sinh
 
 ::
 
-    sinh (class=math #args=1): Hyperbolic sine.
+    sinh  (class=math #args=1) Hyperbolic sine.
+
+
+
+.. _reference-dsl-splita:
+
+splita
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    splita  (class=conversion #args=2) Splits string into array with type inference. Example:
+    splita("3,4,5", ",") = [3,4,5]
+
+
+
+.. _reference-dsl-splitax:
+
+splitax
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    splitax  (class=conversion #args=2) Splits string into array without type inference. Example:
+    splita("3,4,5", ",") = ["3","4","5"]
 
 
 
@@ -4596,8 +4057,8 @@ splitkv
 
 ::
 
-    splitkv (class=maps #args=3): Splits string by separators into map with type inference.
-    E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
+    splitkv  (class=conversion #args=3) Splits string by separators into map with type inference. Example:
+    splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 
 
 
@@ -4608,9 +4069,9 @@ splitkvx
 
 ::
 
-    splitkvx (class=maps #args=3): Splits string by separators into map without type inference (keys and
-    values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives
-    '{"a" : "1", "b" : "2", "c" : "3"}'.
+    splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and
+    values are strings). Example:
+    splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 
 
 
@@ -4621,8 +4082,8 @@ splitnv
 
 ::
 
-    splitnv (class=maps #args=2): Splits string by separator into integer-indexed map with type inference.
-    E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
+    splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example:
+    splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 
 
 
@@ -4633,8 +4094,9 @@ splitnvx
 
 ::
 
-    splitnvx (class=maps #args=2): Splits string by separator into integer-indexed map without type
-    inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
+    splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type
+    inference (values are strings). Example:
+    splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 
 
 
@@ -4645,7 +4107,7 @@ sqrt
 
 ::
 
-    sqrt (class=math #args=1): Square root.
+    sqrt  (class=math #args=1) Square root.
 
 
 
@@ -4656,7 +4118,7 @@ ssub
 
 ::
 
-    ssub (class=string #args=3): Like sub but does no regexing. No characters are special.
+    ssub  (class=string #args=3) Like sub but does no regexing. No characters are special.
 
 
 
@@ -4667,24 +4129,14 @@ strftime
 
 ::
 
-    strftime (class=time #args=2): Formats seconds since the epoch as timestamp, e.g.
-    strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
-    strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
-    Format strings are as in the C library (please see "man strftime" on your system),
-    with the Miller-specific addition of "%1S" through "%9S" which format the seconds
-    with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
-    See also strftime_local.
-
-
-
-.. _reference-dsl-strftime_local:
-
-strftime_local
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    strftime_local (class=time #args=2): Like strftime but consults the $TZ environment variable to get local time zone.
+    strftime  (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.
+    	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
+    	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
+    	Format strings are as in the C library (please see "man strftime" on your system),
+    	with the Miller-specific addition of "%1S" through "%9S" which format the seconds
+    	with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
+    	See also strftime_local.
+    
 
 
 
@@ -4695,7 +4147,7 @@ string
 
 ::
 
-    string (class=conversion #args=1): Convert int/float/bool/string to string.
+    string  (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
 
 
 
@@ -4706,7 +4158,7 @@ strip
 
 ::
 
-    strip (class=string #args=1): Strip leading and trailing whitespace from string.
+    strip  (class=string #args=1) Strip leading and trailing whitespace from string.
 
 
 
@@ -4717,7 +4169,7 @@ strlen
 
 ::
 
-    strlen (class=string #args=1): String length.
+    strlen  (class=string #args=1) String length.
 
 
 
@@ -4728,21 +4180,11 @@ strptime
 
 ::
 
-    strptime (class=time #args=2): Parses timestamp as floating-point seconds since the epoch,
-    e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
-    and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
-    See also strptime_local.
-
-
-
-.. _reference-dsl-strptime_local:
-
-strptime_local
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    strptime_local (class=time #args=2): Like strptime, but consults $TZ environment variable to find and use local timezone.
+    strptime  (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch,
+    	e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
+    	and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
+    	See also strptime_local.
+    
 
 
 
@@ -4753,8 +4195,7 @@ sub
 
 ::
 
-    sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
-    (replace once).
+    sub  (class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace once).
 
 
 
@@ -4765,8 +4206,33 @@ substr
 
 ::
 
-    substr (class=string #args=3): substr(s,m,n) gives substring of s from 0-up position m to n 
+    substr  (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
+    with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
+    Arrays are new in Miller 6; the substr function is older.
+
+
+
+.. _reference-dsl-substr0:
+
+substr0
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    substr0  (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
     inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
+
+
+
+.. _reference-dsl-substr1:
+
+substr1
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    substr1  (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
+    inclusive. Negative indices -len .. -1 alias to 1 .. len.
 
 
 
@@ -4777,7 +4243,7 @@ system
 
 ::
 
-    system (class=string #args=1): Run command string, yielding its stdout minus final carriage return.
+    system  (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
 
 
 
@@ -4788,8 +4254,18 @@ systime
 
 ::
 
-    systime (class=time #args=0): Floating-point seconds since the epoch,
-    e.g. 1440768801.748936.
+    systime  (class=time #args=0) help string will go here
+
+
+
+.. _reference-dsl-systimeint:
+
+systimeint
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    systimeint  (class=time #args=0) help string will go here
 
 
 
@@ -4800,7 +4276,7 @@ tan
 
 ::
 
-    tan (class=math #args=1): Trigonometric tangent.
+    tan  (class=math #args=1) Trigonometric tangent.
 
 
 
@@ -4811,7 +4287,7 @@ tanh
 
 ::
 
-    tanh (class=math #args=1): Hyperbolic tangent.
+    tanh  (class=math #args=1) Hyperbolic tangent.
 
 
 
@@ -4822,7 +4298,7 @@ tolower
 
 ::
 
-    tolower (class=string #args=1): Convert string to lowercase.
+    tolower  (class=string #args=1) Convert string to lowercase.
 
 
 
@@ -4833,7 +4309,7 @@ toupper
 
 ::
 
-    toupper (class=string #args=1): Convert string to uppercase.
+    toupper  (class=string #args=1) Convert string to uppercase.
 
 
 
@@ -4844,7 +4320,7 @@ truncate
 
 ::
 
-    truncate (class=string #args=2): Truncates string first argument to max length of int second argument.
+    truncate  (class=string #args=2) Truncates string first argument to max length of int second argument.
 
 
 
@@ -4855,8 +4331,32 @@ typeof
 
 ::
 
-    typeof (class=conversion #args=1): Convert argument to type of argument (e.g.
-    MT_STRING). For debug.
+    typeof  (class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
+
+
+
+.. _reference-dsl-unflatten:
+
+unflatten
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    unflatten  (class=maps/arrays #args=2) Reverses flatten. Example:
+    unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}}.
+    Useful for nested JSON-like structures for non-JSON file formats like CSV.
+    See also arrayify.
+
+
+
+.. _reference-dsl-uptime:
+
+uptime
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    uptime  (class=time #args=0) help string will go here
 
 
 
@@ -4867,7 +4367,7 @@ urand
 
 ::
 
-    urand (class=math #args=0): Floating-point numbers uniformly distributed on the unit interval.
+    urand  (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
     Int-valued example: '$n=floor(20+urand()*11)'.
 
 
@@ -4879,8 +4379,7 @@ urand32
 
 ::
 
-    urand32 (class=math #args=0): Integer uniformly distributed 0 and 2**32-1
-    inclusive.
+    urand32  (class=math #args=0) Integer uniformly distributed 0 and 2**32-1 inclusive.
 
 
 
@@ -4891,8 +4390,7 @@ urandint
 
 ::
 
-    urandint (class=math #args=2): Integer uniformly distributed between inclusive
-    integer endpoints.
+    urandint  (class=math #args=2) Integer uniformly distributed between inclusive integer endpoints.
 
 
 
@@ -4903,7 +4401,18 @@ urandrange
 
 ::
 
-    urandrange (class=math #args=2): Floating-point numbers uniformly distributed on the interval [a, b).
+    urandrange  (class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
+
+
+
+.. _reference-dsl-version:
+
+version
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    version  (class=system #args=0) Returns the Miller version as a string.
 
 
 
@@ -4934,12 +4443,12 @@ Here's the obligatory example of a recursive function to compute the factorial f
         $ox = f($x + NR);
         $oi = f($i);
     '
-    a   b   i x                   y                   ox         oi
-    pan pan 1 0.3467901443380824  0.7268028627434533  0.467054   1
-    eks pan 2 0.7586799647899636  0.5221511083334797  3.680838   2
-    wye wye 3 0.20460330576630303 0.33831852551664776 1.741251   6
-    eks wye 4 0.38139939387114097 0.13418874328430463 18.588349  24
-    wye pan 5 0.5732889198020006  0.8636244699032729  211.387310 120
+    a   b   i x                   y                   ox                  oi
+    pan pan 1 0.3467901443380824  0.7268028627434533  0.46705354854811026 1
+    eks pan 2 0.7586799647899636  0.5221511083334797  3.680838410072862   2
+    wye wye 3 0.20460330576630303 0.33831852551664776 1.7412511955594865  6
+    eks wye 4 0.38139939387114097 0.13418874328430463 18.588348778962008  24
+    wye pan 5 0.5732889198020006  0.8636244699032729  211.38730958519247  120
 
 Properties of user-defined functions:
 
