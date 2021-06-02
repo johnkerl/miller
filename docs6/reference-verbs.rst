@@ -19,9 +19,9 @@ Example:
    :emphasize-lines: 1,1
 
     $ mlr stats1 -a sum -f x -g a data/small
-    a=pan,x_sum=0.346790
-    a=eks,x_sum=1.140079
-    a=wye,x_sum=0.777892
+    a=pan,x_sum=0.3467901443380824
+    a=eks,x_sum=1.1400793586611044
+    a=wye,x_sum=0.7778922255683036
 
 * Verbs are coded in Go
 * They run a bit faster
@@ -35,9 +35,9 @@ Example:
    :emphasize-lines: 1,1
 
     $ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
-    a=pan,x_sum=0.346790
-    a=eks,x_sum=1.140079
-    a=wye,x_sum=0.777892
+    a=pan,x_sum=0.3467901443380824
+    a=eks,x_sum=1.1400793586611044
+    a=wye,x_sum=0.7778922255683036
 
 * You get to write your own DSL expressions
 * They run a bit slower
@@ -56,8 +56,10 @@ Map list of values to alternating key/value pairs.
    :emphasize-lines: 1,1
 
     $ mlr altkv -h
-    Usage: mlr altkv [no options]
+    Usage: mlr altkv [options]
     Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
+    Options:
+    -h|--help Show this message.
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -87,14 +89,17 @@ Cheesy bar-charting.
     bar plots. These align best with --opprint or --oxtab output format.
     Options:
     -f   {a,b,c}      Field names to convert to bars.
-    -c   {character}  Fill character: default '*'.
-    -x   {character}  Out-of-bounds character: default '#'.
-    -b   {character}  Blank character: default '.'.
     --lo {lo}         Lower-limit value for min-width bar: default '0.000000'.
     --hi {hi}         Upper-limit value for max-width bar: default '100.000000'.
     -w   {n}          Bar-field width: default '40'.
     --auto            Automatically computes limits, ignoring --lo and --hi.
                       Holds all records in memory before producing any output.
+    -c   {character}  Fill character: default '*'.
+    -x   {character}  Out-of-bounds character: default '#'.
+    -b   {character}  Blank character: default '.'.
+    Nominally the fill, out-of-bounds, and blank characters will be strings of length 1.
+    However you can make them all longer if you so desire.
+    -h|--help Show this message.
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -133,12 +138,12 @@ Cheesy bar-charting.
    :emphasize-lines: 1,1
 
     $ mlr --opprint bar --auto -f x,y data/small
-    a   b   i x                                                           y
-    pan pan 1 [0.204603]**********..............................[0.75868] [0.134189]********************************........[0.863624]
-    eks pan 2 [0.204603]***************************************#[0.75868] [0.134189]*********************...................[0.863624]
-    wye wye 3 [0.204603]#.......................................[0.75868] [0.134189]***********.............................[0.863624]
-    eks wye 4 [0.204603]************............................[0.75868] [0.134189]#.......................................[0.863624]
-    wye pan 5 [0.204603]**************************..............[0.75868] [0.134189]***************************************#[0.863624]
+    a   b   i x                                                                                 y
+    pan pan 1 [0.20460330576630303]**********..............................[0.7586799647899636] [0.13418874328430463]********************************........[0.8636244699032729]
+    eks pan 2 [0.20460330576630303]***************************************#[0.7586799647899636] [0.13418874328430463]*********************...................[0.8636244699032729]
+    wye wye 3 [0.20460330576630303]#.......................................[0.7586799647899636] [0.13418874328430463]***********.............................[0.8636244699032729]
+    eks wye 4 [0.20460330576630303]************............................[0.7586799647899636] [0.13418874328430463]#.......................................[0.8636244699032729]
+    wye pan 5 [0.20460330576630303]**************************..............[0.7586799647899636] [0.13418874328430463]***************************************#[0.8636244699032729]
 
 .. _reference-verbs-bootstrap:
 
@@ -151,10 +156,11 @@ bootstrap
     $ mlr bootstrap --help
     Usage: mlr bootstrap [options]
     Emits an n-sample, with replacement, of the input records.
-    Options:
-    -n {number} Number of samples to output. Defaults to number of input records.
-                Must be non-negative.
     See also mlr sample and mlr shuffle.
+    Options:
+     -n Number of samples to output. Defaults to number of input records.
+        Must be non-negative.
+    -h|--help Show this message.
 
 The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
 
@@ -216,11 +222,10 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
     Usage: mlr cat [options]
     Passes input records directly to output. Most useful for format conversion.
     Options:
-    -n        Prepend field "n" to each record with record-counter starting at 1
-    -g {comma-separated field name(s)} When used with -n/-N, writes record-counters
-              keyed by specified field name(s).
-    -v        Write a low-level record-structure dump to stderr.
-    -N {name} Prepend field {name} to each record with record-counter starting at 1
+    -n         Prepend field "n" to each record with record-counter starting at 1.
+    -N {name}  Prepend field {name} to each record with record-counter starting at 1.
+    -g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c
+    -h|--help Show this message.
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -302,9 +307,11 @@ check
    :emphasize-lines: 1,1
 
     $ mlr check --help
-    Usage: mlr check
+    Usage: mlr check [options]
     Consumes records without printing any output.
     Useful for doing a well-formatted check on input data.
+    Options:
+    -h|--help Show this message.
 
 .. _reference-verbs-clean-whitespace:
 
@@ -316,7 +323,7 @@ clean-whitespace
 
     $ mlr clean-whitespace --help
     Usage: mlr clean-whitespace [options]
-    For each record, for each field in the record, whitespace-cleans the keys and
+    For each record, for each field in the record, whitespace-cleans the keys and/or
     values. Whitespace-cleaning entails stripping leading and trailing whitespace,
     and replacing multiple whitespace with singles. For finer-grained control,
     please see the DSL functions lstrip, rstrip, strip, collapse_whitespace,
@@ -327,38 +334,75 @@ clean-whitespace
     -v|--values-only  Do not touch keys.
     It is an error to specify -k as well as -v -- to clean keys and values,
     leave off -k as well as -v.
+    -h|--help Show this message.
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --ojson cat data/clean-whitespace.csv
-    { "  Name  ": "  Ann  Simons", " Preference  ": "  blue  " }
-    { "  Name  ": "Bob Wang  ", " Preference  ": " red       " }
-    { "  Name  ": " Carol  Vee", " Preference  ": "    yellow" }
+    {
+      "  Name  ": "  Ann  Simons",
+      " Preference  ": "  blue  "
+    }
+    {
+      "  Name  ": "Bob Wang  ",
+      " Preference  ": " red       "
+    }
+    {
+      "  Name  ": " Carol  Vee",
+      " Preference  ": "    yellow"
+    }
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv
-    { "Name": "  Ann  Simons", "Preference": "  blue  " }
-    { "Name": "Bob Wang  ", "Preference": " red       " }
-    { "Name": " Carol  Vee", "Preference": "    yellow" }
+    {
+      "Name": "  Ann  Simons",
+      "Preference": "  blue  "
+    }
+    {
+      "Name": "Bob Wang  ",
+      "Preference": " red       "
+    }
+    {
+      "Name": " Carol  Vee",
+      "Preference": "    yellow"
+    }
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv
-    { "  Name  ": "Ann Simons", " Preference  ": "blue" }
-    { "  Name  ": "Bob Wang", " Preference  ": "red" }
-    { "  Name  ": "Carol Vee", " Preference  ": "yellow" }
+    {
+      "  Name  ": "Ann Simons",
+      " Preference  ": "blue"
+    }
+    {
+      "  Name  ": "Bob Wang",
+      " Preference  ": "red"
+    }
+    {
+      "  Name  ": "Carol Vee",
+      " Preference  ": "yellow"
+    }
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv
-    { "Name": "Ann Simons", "Preference": "blue" }
-    { "Name": "Bob Wang", "Preference": "red" }
-    { "Name": "Carol Vee", "Preference": "yellow" }
+    {
+      "Name": "Ann Simons",
+      "Preference": "blue"
+    }
+    {
+      "Name": "Bob Wang",
+      "Preference": "red"
+    }
+    {
+      "Name": "Carol Vee",
+      "Preference": "yellow"
+    }
 
 Function links:
 
@@ -379,11 +423,11 @@ count
     $ mlr count --help
     Usage: mlr count [options]
     Prints number of records, optionally grouped by distinct values for specified field names.
-    
     Options:
-    -g {a,b,c}    Field names for distinct count.
-    -n            Show only the number of distinct values. Not interesting without -g.
-    -o {name}     Field name for output count. Default "count".
+    -g {a,b,c} Optional group-by-field names for counts, e.g. a,b,c
+    -n {n} Show only the number of distinct values. Not interesting without -g.
+    -o {name} Field name for output-count. Default "count".
+    -h|--help Show this message.
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -568,11 +612,12 @@ count-similar
 
     $ mlr count-similar --help
     Usage: mlr count-similar [options]
-    Ingests all records, then emits each record augmented by a count of 
+    Ingests all records, then emits each record augmented by a count of
     the number of other records having the same group-by field values.
     Options:
-    -g {d,e,f} Group-by-field names for counts.
-    -o {name}  Field name for output count. Default "count".
+    -g {a,b,c} Group-by-field names for counts, e.g. a,b,c
+    -o {name} Field name for output-counts. Defaults to "count".
+    -h|--help Show this message.
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -663,14 +708,16 @@ cut
     $ mlr cut --help
     Usage: mlr cut [options]
     Passes through input records with specified fields included/excluded.
-    -f {a,b,c}       Field names to include for cut.
-    -o               Retain fields in the order specified here in the argument list.
-                     Default is to retain them in the order found in the input data.
-    -x|--complement  Exclude, rather than include, field names specified by -f.
-    -r               Treat field names as regular expressions. "ab", "a.*b" will
-                     match any field name containing the substring "ab" or matching
-                     "a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may
-                     be used. The -o flag is ignored when -r is present.
+    Options:
+     -f {a,b,c} Comma-separated field names for cut, e.g. a,b,c.
+     -o Retain fields in the order specified here in the argument list.
+        Default is to retain them in the order found in the input data.
+     -x|--complement  Exclude, rather than include, field names specified by -f.
+     -r Treat field names as regular expressions. "ab", "a.*b" will
+       match any field name containing the substring "ab" or matching
+       "a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may
+       be used. The -o flag is ignored when -r is present.
+    -h|--help Show this message.
     Examples:
       mlr cut -f hostname,status
       mlr cut -x -f hostname,status
@@ -722,11 +769,13 @@ decimate
 
     $ mlr decimate --help
     Usage: mlr decimate [options]
-    -n {count}    Decimation factor; default 10
-    -b            Decimate by printing first of every n.
-    -e            Decimate by printing last of every n (default).
-    -g {a,b,c}    Optional group-by-field names for decimate counts
     Passes through one of every n records, optionally by category.
+    Options:
+     -b Decimate by printing first of every n.
+     -e Decimate by printing last of every n (default).
+     -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.
+     -n {n} Decimation factor (default 10).
+    -h|--help Show this message.
 
 .. _reference-verbs-fill-down:
 
@@ -788,88 +837,58 @@ filter
    :emphasize-lines: 1,1
 
     $ mlr filter --help
-    Usage: mlr filter [options] {expression}
-    Prints records for which {expression} evaluates to true.
-    If there are multiple semicolon-delimited expressions, all of them are
-    evaluated and the last one is used as the filter criterion.
+    Usage: mlr put [options] {DSL expression}
+    Options:
+    -f {file name} File containing a DSL expression. If the filename is a directory,
+       all *.mlr files in that directory are loaded.
     
-    Conversion options:
-    -S: Keeps field values as strings with no type inference to int or float.
-    -F: Keeps field values as strings or floats with no inference to int.
-    All field values are type-inferred to int/float/string unless this behavior is
-    suppressed with -S or -F.
+    -e {expression} You can use this after -f to add an expression. Example use
+       case: define functions/subroutines in a file you specify with -f, then call
+       them with an expression you specify with -e.
     
-    Output/formatting options:
-    --oflatsep {string}: Separator to use when flattening multi-level @-variables
-        to output records for emit. Default ":".
-    --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
-    --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
-    Any of the output-format command-line flags (see mlr -h). Example: using
-      mlr --icsv --opprint ... then put --ojson 'tee > "mytap-".$a.".dat", $*' then ...
-    the input is CSV, the output is pretty-print tabular, but the tee-file output
-    is written in JSON format.
-    --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
-        record.
-    
-    Expression-specification options:
-    -f {filename}: the DSL expression is taken from the specified file rather
-        than from the command line. Outer single quotes wrapping the expression
-        should not be placed in the file. If -f is specified more than once,
-        all input files specified using -f are concatenated to produce the expression.
-        (For example, you can define functions in one file and call them from another.)
-    -e {expression}: You can use this after -f to add an expression. Example use
-        case: define functions/subroutines in a file you specify with -f, then call
-        them with an expression you specify with -e.
     (If you mix -e and -f then the expressions are evaluated in the order encountered.
     Since the expression pieces are simply concatenated, please be sure to use intervening
     semicolons to separate expressions.)
     
-    -s name=value: Predefines out-of-stream variable @name to have value "value".
-        Thus mlr filter put -s foo=97 '$column += @foo' is like
-        mlr filter put 'begin {@foo = 97} $column += @foo'.
-        The value part is subject to type-inferencing as specified by -S/-F.
+    -s name=value: Predefines out-of-stream variable @name to have 
+        Thus mlr put -s foo=97 '$column += @foo' is like
+        mlr put 'begin {@foo = 97} $column += @foo'.
+        The value part is subject to type-inferencing.
         May be specified more than once, e.g. -s name1=value1 -s name2=value2.
         Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
     
-    Tracing options:
-    -v: Prints the expressions's AST (abstract syntax tree), which gives
-        full transparency on the precedence and associativity rules of
-        Miller's grammar, to stdout.
-    -a: Prints a low-level stack-allocation trace to stdout.
-    -t: Prints a low-level parser trace to stderr.
-    -T: Prints a every statement to stderr as it is executed.
+    -x (default false) Prints records for which {expression} evaluates to false, not true,
+       i.e. invert the sense of the filter expression.
     
-    Other options:
-    -x: Prints records for which {expression} evaluates to false.
+    -q Does not include the modified record in the output stream.
+       Useful for when all desired output is in begin and/or end blocks.
     
-    Please use a dollar sign for field names and double-quotes for string
-    literals. If field names have special characters such as "." then you might
-    use braces, e.g. '${field.name}'. Miller built-in variables are
-    NF NR FNR FILENUM FILENAME M_PI M_E, and ENV["namegoeshere"] to access environment
-    variables. The environment-variable name may be an expression, e.g. a field
-    value.
+    -S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+       by the record-readers before filter/put is executed. Supported as no-op pass-through
+       flags for backward compatibility.
     
-    Use # to comment to end of line.
+    -h|--help Show this message.
     
-    Examples:
-      mlr filter 'log10($count) > 4.0'
-      mlr filter 'FNR == 2'         (second record in each file)
-      mlr filter 'urand() < 0.001'  (subsampling)
-      mlr filter '$color != "blue" && $value > 4.2'
-      mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'
-      mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
-      mlr filter '$ab = $a+$b; $cd = $c+$d; $ab != $cd'
-      mlr filter '
-        NR == 1 ||
-       #NR == 2 ||
-        NR == 3
-      '
+    Parser-info options:
     
-    Please see https://miller.readthedocs.io/en/latest/reference.html for more information
-    including function list. Or "mlr -f". Please also see "mlr grep" which is
-    useful when you don't yet know which field name(s) you're looking for.
-    Please see in particular:
-      http://www.johnkerl.org/miller/doc/reference-verbs.html#filter
+    -w Print warnings about things like uninitialized variables.
+    
+    -W Same as -w, but exit the process if there are any warnings.
+    
+    -p Prints the expressions's AST (abstract syntax tree), which gives full
+      transparency on the precedence and associativity rules of Miller's grammar,
+      to stdout.
+    
+    -d Like -p but uses a parenthesized-expression format for the AST.
+    
+    -D Like -d but with output all on one line.
+    
+    -E Echo DSL expression before printing parse-tree
+    
+    -v Same as -E -p.
+    
+    -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
+       only want to look at parser information.
 
 Features which filter shares with put
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -898,12 +917,12 @@ format-values
     undefined behavior and/or program crashes.  See your system's "man printf".
     
     Options:
-    -i {integer format} Defaults to "%lld".
+    -i {integer format} Defaults to "%d".
                         Examples: "%06lld", "%08llx".
                         Note that Miller integers are long long so you must use
                         formats which apply to long long, e.g. with ll in them.
                         Undefined behavior results otherwise.
-    -f {float format}   Defaults to "%lf".
+    -f {float format}   Defaults to "%f".
                         Examples: "%8.3lf", "%.6le".
                         Note that Miller floats are double-precision so you must
                         use formats which apply to double, e.g. with l[efg] in them.
@@ -941,23 +960,23 @@ format-values
    :emphasize-lines: 1,1
 
     $ mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small
-    a     b     i        x            y
-    XpanX XpanX 00000001 3.467901e-01 7.268029e-01
-    XeksX XpanX 00000002 7.586800e-01 5.221511e-01
-    XwyeX XwyeX 00000003 2.046033e-01 3.383185e-01
-    XeksX XwyeX 00000004 3.813994e-01 1.341887e-01
-    XwyeX XpanX 00000005 5.732889e-01 8.636245e-01
+    a     b     i                   x                      y
+    XpanX XpanX %!l(int=00000001)lx %!l(float64=0.34679)e  %!l(float64=0.726803)e
+    XeksX XpanX %!l(int=00000002)lx %!l(float64=0.75868)e  %!l(float64=0.522151)e
+    XwyeX XwyeX %!l(int=00000003)lx %!l(float64=0.204603)e %!l(float64=0.338319)e
+    XeksX XwyeX %!l(int=00000004)lx %!l(float64=0.381399)e %!l(float64=0.134189)e
+    XwyeX XpanX %!l(int=00000005)lx %!l(float64=0.573289)e %!l(float64=0.863624)e
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small
-    a     b     i            x            y
-    XpanX XpanX 1.000000e+00 3.467901e-01 7.268029e-01
-    XeksX XpanX 2.000000e+00 7.586800e-01 5.221511e-01
-    XwyeX XwyeX 3.000000e+00 2.046033e-01 3.383185e-01
-    XeksX XwyeX 4.000000e+00 3.813994e-01 1.341887e-01
-    XwyeX XpanX 5.000000e+00 5.732889e-01 8.636245e-01
+    a     b     i               x                      y
+    XpanX XpanX %!l(float64=1)e %!l(float64=0.34679)e  %!l(float64=0.726803)e
+    XeksX XpanX %!l(float64=2)e %!l(float64=0.75868)e  %!l(float64=0.522151)e
+    XwyeX XwyeX %!l(float64=3)e %!l(float64=0.204603)e %!l(float64=0.338319)e
+    XeksX XwyeX %!l(float64=4)e %!l(float64=0.381399)e %!l(float64=0.134189)e
+    XwyeX XpanX %!l(float64=5)e %!l(float64=0.573289)e %!l(float64=0.863624)e
 
 .. _reference-verbs-fraction:
 
@@ -1013,18 +1032,18 @@ Then we can see what each record's ``n`` contributes to the total ``n``:
 
     $ mlr --opprint fraction -f n data/fraction-example.csv
     u      v      n    n_fraction
-    female red    2458 0.326384
-    female green  192  0.025495
-    female blue   337  0.044748
-    female purple 468  0.062143
-    female yellow 3    0.000398
-    female orange 17   0.002257
-    male   red    143  0.018988
-    male   green  227  0.030142
-    male   blue   2034 0.270084
-    male   purple 12   0.001593
-    male   yellow 1192 0.158279
-    male   orange 448  0.059487
+    female red    2458 0.32638427831629263
+    female green  192  0.025494622228123754
+    female blue   337  0.04474837338998805
+    female purple 468  0.06214314168105165
+    female yellow 3    0.00039835347231443366
+    female orange 17   0.002257336343115124
+    male   red    143  0.018988182180321337
+    male   green  227  0.03014207940512548
+    male   blue   2034 0.270083654229186
+    male   purple 12   0.0015934138892577346
+    male   yellow 1192 0.15827911299960165
+    male   orange 448  0.0594874518656221
 
 Using ``-g`` we can split those out by gender, or by color:
 
@@ -1033,36 +1052,36 @@ Using ``-g`` we can split those out by gender, or by color:
 
     $ mlr --opprint fraction -f n -g u data/fraction-example.csv
     u      v      n    n_fraction
-    female red    2458 0.707338
-    female green  192  0.055252
-    female blue   337  0.096978
-    female purple 468  0.134676
-    female yellow 3    0.000863
-    female orange 17   0.004892
-    male   red    143  0.035256
-    male   green  227  0.055966
-    male   blue   2034 0.501479
-    male   purple 12   0.002959
-    male   yellow 1192 0.293886
-    male   orange 448  0.110454
+    female red    2458 0.7073381294964028
+    female green  192  0.05525179856115108
+    female blue   337  0.09697841726618706
+    female purple 468  0.13467625899280575
+    female yellow 3    0.0008633093525179857
+    female orange 17   0.004892086330935252
+    male   red    143  0.035256410256410256
+    male   green  227  0.05596646942800789
+    male   blue   2034 0.5014792899408284
+    male   purple 12   0.0029585798816568047
+    male   yellow 1192 0.2938856015779093
+    male   orange 448  0.11045364891518737
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint fraction -f n -g v data/fraction-example.csv
     u      v      n    n_fraction
-    female red    2458 0.945021
-    female green  192  0.458234
-    female blue   337  0.142134
-    female purple 468  0.975000
-    female yellow 3    0.002510
-    female orange 17   0.036559
-    male   red    143  0.054979
-    male   green  227  0.541766
-    male   blue   2034 0.857866
-    male   purple 12   0.025000
-    male   yellow 1192 0.997490
-    male   orange 448  0.963441
+    female red    2458 0.9450211457131872
+    female green  192  0.45823389021479716
+    female blue   337  0.1421341206242092
+    female purple 468  0.975
+    female yellow 3    0.002510460251046025
+    female orange 17   0.03655913978494624
+    male   red    143  0.05497885428681276
+    male   green  227  0.5417661097852029
+    male   blue   2034 0.8578658793757908
+    male   purple 12   0.025
+    male   yellow 1192 0.9974895397489539
+    male   orange 448  0.9634408602150538
 
 We can see, for example, that 70.9% of females have red (on the left) while 94.5% of reds are for females.
 
@@ -1073,18 +1092,18 @@ To convert fractions to percents, you may use ``-p``:
 
     $ mlr --opprint fraction -f n -p data/fraction-example.csv
     u      v      n    n_percent
-    female red    2458 32.638428
-    female green  192  2.549462
-    female blue   337  4.474837
-    female purple 468  6.214314
-    female yellow 3    0.039835
-    female orange 17   0.225734
-    male   red    143  1.898818
-    male   green  227  3.014208
-    male   blue   2034 27.008365
-    male   purple 12   0.159341
-    male   yellow 1192 15.827911
-    male   orange 448  5.948745
+    female red    2458 32.638427831629265
+    female green  192  2.5494622228123753
+    female blue   337  4.474837338998805
+    female purple 468  6.214314168105165
+    female yellow 3    0.039835347231443365
+    female orange 17   0.2257336343115124
+    male   red    143  1.8988182180321338
+    male   green  227  3.014207940512548
+    male   blue   2034 27.0083654229186
+    male   purple 12   0.15934138892577346
+    male   yellow 1192 15.827911299960165
+    male   orange 448  5.94874518656221
 
 Another often-used idiom is to convert from a point distribution to a cumulative distribution, also known as "running sums". Here, you can use ``-c``:
 
@@ -1093,17 +1112,17 @@ Another often-used idiom is to convert from a point distribution to a cumulative
 
     $ mlr --opprint fraction -f n -p -c data/fraction-example.csv
     u      v      n    n_cumulative_percent
-    female red    2458 32.638428
-    female green  192  35.187890
-    female blue   337  39.662727
-    female purple 468  45.877042
-    female yellow 3    45.916877
-    female orange 17   46.142611
-    male   red    143  48.041429
-    male   green  227  51.055637
-    male   blue   2034 78.064002
-    male   purple 12   78.223344
-    male   yellow 1192 94.051255
+    female red    2458 32.638427831629265
+    female green  192  35.18789005444164
+    female blue   337  39.66272739344044
+    female purple 468  45.87704156154561
+    female yellow 3    45.916876908777056
+    female orange 17   46.142610543088566
+    male   red    143  48.041428761120706
+    male   green  227  51.05563670163325
+    male   blue   2034 78.06400212455186
+    male   purple 12   78.22334351347763
+    male   yellow 1192 94.0512548134378
     male   orange 448  100
 
 .. code-block:: none
@@ -1111,17 +1130,17 @@ Another often-used idiom is to convert from a point distribution to a cumulative
 
     $ mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv
     u      v      n    n_cumulative_percent
-    female red    2458 70.733813
-    female green  192  76.258993
-    female blue   337  85.956835
-    female purple 468  99.424460
-    female yellow 3    99.510791
+    female red    2458 70.73381294964028
+    female green  192  76.2589928057554
+    female blue   337  85.9568345323741
+    female purple 468  99.42446043165467
+    female yellow 3    99.51079136690647
     female orange 17   100
-    male   red    143  3.525641
-    male   green  227  9.122288
-    male   blue   2034 59.270217
-    male   purple 12   59.566075
-    male   yellow 1192 88.954635
+    male   red    143  3.5256410256410255
+    male   green  227  9.122287968441814
+    male   blue   2034 59.27021696252466
+    male   purple 12   59.56607495069034
+    male   yellow 1192 88.95463510848126
     male   orange 448  100
 
 .. _reference-verbs-grep:
@@ -1134,10 +1153,11 @@ grep
 
     $ mlr grep -h
     Usage: mlr grep [options] {regular expression}
-    Passes through records which match {regex}.
+    Passes through records which match the regular expression.
     Options:
-    -i    Use case-insensitive search.
-    -v    Invert: pass through records which do not match the regex.
+    -i  Use case-insensitive search.
+    -v  Invert: pass through records which do not match the regex.
+    -h|--help Show this message.
     Note that "mlr filter" is more powerful, but requires you to know field names.
     By contrast, "mlr grep" allows you to regex-match the entire record. It does
     this by formatting each record in memory as DKVP, using command-line-specified
@@ -1159,8 +1179,9 @@ group-by
    :emphasize-lines: 1,1
 
     $ mlr group-by --help
-    Usage: mlr group-by {comma-separated field names}
-    Outputs records in batches having identical values at specified field names.
+    Usage: mlr group-by [options] {comma-separated field names}
+    Outputs records in batches having identical values at specified field names.Options:
+    -h|--help Show this message.
 
 This is similar to ``sort`` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear.
 
@@ -1197,8 +1218,9 @@ group-like
    :emphasize-lines: 1,1
 
     $ mlr group-like --help
-    Usage: mlr group-like
-    Outputs records in batches having identical field names.
+    Usage: mlr group-like [options]
+    Outputs records in batches having identical field names.Options:
+    -h|--help Show this message.
 
 This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in :doc:`record-heterogeneity` -- in particular, in preparation for CSV or pretty-print output.
 
@@ -1289,11 +1311,11 @@ head
 
     $ mlr head --help
     Usage: mlr head [options]
-    -n {count}    Head count to print; default 10
-    -g {a,b,c}    Optional group-by-field names for head counts
     Passes through the first n records, optionally by category.
-    Without -g, ceases consuming more input (i.e. is fast) when n
-    records have been read.
+    Options:
+    -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
+    -n {n} Head-count to print. Default 10.
+    -h|--help Show this message.
 
 Note that ``head`` is distinct from :ref:`reference-verbs-top` -- ``head`` shows fields which appear first in the data stream; ``top`` shows fields which are numerically largest (or smallest).
 
@@ -1327,6 +1349,7 @@ histogram
    :emphasize-lines: 1,1
 
     $ mlr histogram --help
+    Just a histogram. Input values < lo or > hi are not counted.
     Usage: mlr histogram [options]
     -f {a,b,c}    Value-field names for histogram counts
     --lo {lo}     Histogram low value
@@ -1335,7 +1358,7 @@ histogram
     --auto        Automatically computes limits, ignoring --lo and --hi.
                   Holds all values in memory before producing any output.
     -o {prefix}   Prefix for output field name. Default: no prefix.
-    Just a histogram. Input values < lo or > hi are not counted.
+    -h|--help Show this message.
 
 This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use ``--lo 0.0 --hi 1.0 --nbins 10 -f x``.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has ``0.0 &le; x < 0.1``, bin 1 has ``0.1 &le; x < 0.2``, etc., but bin 9 has ``0.9 &le; x &le; 1.0``.
 
@@ -1343,33 +1366,33 @@ This is just a histogram; there's not too much to say here. A note about binning
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium
-    bin_lo   bin_hi   x_count x2_count x3_count
-    0.000000 0.100000 1072    3231     4661
-    0.100000 0.200000 938     1254     1184
-    0.200000 0.300000 1037    988      845
-    0.300000 0.400000 988     832      676
-    0.400000 0.500000 950     774      576
-    0.500000 0.600000 1002    692      476
-    0.600000 0.700000 1007    591      438
-    0.700000 0.800000 1007    560      420
-    0.800000 0.900000 986     571      383
-    0.900000 1.000000 1013    507      341
+    bin_lo bin_hi x_count x2_count x3_count
+    0      0.1    1072    3231     4661
+    0.1    0.2    938     1254     1184
+    0.2    0.3    1037    988      845
+    0.3    0.4    988     832      676
+    0.4    0.5    950     774      576
+    0.5    0.6    1002    692      476
+    0.6    0.7    1007    591      438
+    0.7    0.8    1007    560      420
+    0.8    0.9    986     571      383
+    0.9    1      1013    507      341
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ data/medium
     my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
-    0.000000  0.100000  1072       3231        4661
-    0.100000  0.200000  938        1254        1184
-    0.200000  0.300000  1037       988         845
-    0.300000  0.400000  988        832         676
-    0.400000  0.500000  950        774         576
-    0.500000  0.600000  1002       692         476
-    0.600000  0.700000  1007       591         438
-    0.700000  0.800000  1007       560         420
-    0.800000  0.900000  986        571         383
-    0.900000  1.000000  1013       507         341
+    0         0.1       1072       3231        4661
+    0.1       0.2       938        1254        1184
+    0.2       0.3       1037       988         845
+    0.3       0.4       988        832         676
+    0.4       0.5       950        774         576
+    0.5       0.6       1002       692         476
+    0.6       0.7       1007       591         438
+    0.7       0.8       1007       560         420
+    0.8       0.9       986        571         383
+    0.9       1         1013       507         341
 
 .. _reference-verbs-join:
 
@@ -1380,52 +1403,25 @@ join
    :emphasize-lines: 1,1
 
     $ mlr join --help
-    Usage: mlr join [options]
-    Joins records from specified left file name with records from all file names
-    at the end of the Miller argument list.
-    Functionality is essentially the same as the system "join" command, but for
-    record streams.
+    Usage: mlr sort {flags}
+    Sorts records primarily by the first specified field, secondarily by the second
+    field, and so on.  (Any records not having all specified sort keys will appear
+    at the end of the output, in the order they were encountered, regardless of the
+    specified sort order.) The sort is stable: records that compare equal will sort
+    in the order they were encountered in the input record stream.
+    
     Options:
-      -f {left file name}
-      -j {a,b,c}   Comma-separated join-field names for output
-      -l {a,b,c}   Comma-separated join-field names for left input file;
-                   defaults to -j values if omitted.
-      -r {a,b,c}   Comma-separated join-field names for right input file(s);
-                   defaults to -j values if omitted.
-      --lp {text}  Additional prefix for non-join output field names from
-                   the left file
-      --rp {text}  Additional prefix for non-join output field names from
-                   the right file(s)
-      --np         Do not emit paired records
-      --ul         Emit unpaired records from the left file
-      --ur         Emit unpaired records from the right file(s)
-      -s|--sorted-input  Require sorted input: records must be sorted
-                   lexically by their join-field names, else not all records will
-                   be paired. The only likely use case for this is with a left
-                   file which is too big to fit into system memory otherwise.
-      -u           Enable unsorted input. (This is the default even without -u.)
-                   In this case, the entire left file will be loaded into memory.
-      --prepipe {command} As in main input options; see mlr --help for details.
-                   If you wish to use a prepipe command for the main input as well
-                   as here, it must be specified there as well as here.
-    File-format options default to those for the right file names on the Miller
-    argument list, but may be overridden for the left file as follows. Please see
-    the main "mlr --help" for more information on syntax for these arguments:
-      -i {one of csv,dkvp,nidx,pprint,xtab}
-      --irs {record-separator character}
-      --ifs {field-separator character}
-      --ips {pair-separator character}
-      --repifs
-      --repips
-      --implicit-csv-header
-      --no-implicit-csv-header
-    For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will
-    be specified CSV as well unless you override with 'mlr --csv ... join --ijson -l foo' etc.
-    Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be
-    expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.
-    Please use "mlr --usage-separator-options" for information on specifying separators.
-    Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
-    including examples.
+    -f  {comma-separated field names}  Lexical ascending
+    -n  {comma-separated field names}  Numerical ascending; nulls sort last
+    -nf {comma-separated field names}  Same as -n
+    -r  {comma-separated field names}  Lexical descending
+    -nr {comma-separated field names}  Numerical descending; nulls sort first
+    -h|--help Show this message.
+    
+    Example:
+      mlr sort -f a,b -nr x,y,z
+    which is the same as:
+      mlr sort -f a -f b -nr x -nr y -nr z
 
 Examples:
 
@@ -1575,14 +1571,14 @@ label
    :emphasize-lines: 1,1
 
     $ mlr label --help
-    Usage: mlr label {new1,new2,new3,...}
+    Usage: mlr label [options] {new1,new2,new3,...}
     Given n comma-separated names, renames the first n fields of each record to
     have the respective name. (Fields past the nth are left with their original
     names.) Particularly useful with --inidx or --implicit-csv-header, to give
     useful names to otherwise integer-indexed fields.
-    Examples:
-      "echo 'a b c d' | mlr --inidx --odkvp cat"       gives "1=a,2=b,3=c,4=d"
-      "echo 'a b c d' | mlr --inidx --odkvp label s,t" gives "s=a,t=b,3=c,4=d"
+    
+    Options:
+    -h|--help Show this message.
 
 See also :ref:`reference-verbs-rename`.
 
@@ -1720,18 +1716,18 @@ merge-fields
     specified fields.
     Options:
     -a {sum,count,...}  Names of accumulators. One or more of:
-      count     Count instances of fields
-      mode      Find most-frequently-occurring values for fields; first-found wins tie
-      antimode  Find least-frequently-occurring values for fields; first-found wins tie
-      sum       Compute sums of specified fields
-      mean      Compute averages (sample means) of specified fields
-      stddev    Compute sample standard deviation of specified fields
-      var       Compute sample variance of specified fields
-      meaneb    Estimate error bars for averages (assuming no sample autocorrelation)
-      skewness  Compute sample skewness of specified fields
-      kurtosis  Compute sample kurtosis of specified fields
-      min       Compute minimum values of specified fields
-      max       Compute maximum values of specified fields
+      count    Count instances of fields
+      mode     Find most-frequently-occurring values for fields; first-found wins tie
+      antimode Find least-frequently-occurring values for fields; first-found wins tie
+      sum      Compute sums of specified fields
+      mean     Compute averages (sample means) of specified fields
+      var      Compute sample variance of specified fields
+      stddev   Compute sample standard deviation of specified fields
+      meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
+      skewness Compute sample skewness of specified fields
+      kurtosis Compute sample kurtosis of specified fields
+      min      Compute minimum values of specified fields
+      max      Compute maximum values of specified fields
     -f {a,b,c}  Value-field names on which to compute statistics. Requires -o.
     -r {a,b,c}  Regular expressions for value-field names on which to compute
                 statistics. Requires -o.
@@ -1743,7 +1739,6 @@ merge-fields
     -o {name}   Output field basename for -f/-r.
     -k          Keep the input fields which contributed to the output statistics;
                 the default is to omit them.
-    -F          Computes integerable things (e.g. count) in floating point.
     
     String-valued data make sense unless arithmetic on them is required,
     e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
@@ -1838,8 +1833,8 @@ most-frequent
     square   red    1874
     triangle red    1560
     circle   red    1207
-    square   yellow 589
     square   blue   589
+    square   yellow 589
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -1920,9 +1915,11 @@ nothing
    :emphasize-lines: 1,1
 
     $ mlr nothing -h
-    Usage: mlr nothing
+    Usage: mlr nothing [options]
     Drops all input records. Useful for testing, or after tee/print/etc. have
     produced other output.
+    Options:
+    -h|--help Show this message.
 
 .. _reference-verbs-put:
 
@@ -1933,99 +1930,58 @@ put
    :emphasize-lines: 1,1
 
     $ mlr put --help
-    Usage: mlr put [options] {expression}
-    Adds/updates specified field(s). Expressions are semicolon-separated and must
-    either be assignments, or evaluate to boolean.  Booleans with following
-    statements in curly braces control whether those statements are executed;
-    booleans without following curly braces do nothing except side effects (e.g.
-    regex-captures into \1, \2, etc.).
+    Usage: mlr put [options] {DSL expression}
+    Options:
+    -f {file name} File containing a DSL expression. If the filename is a directory,
+       all *.mlr files in that directory are loaded.
     
-    Conversion options:
-    -S: Keeps field values as strings with no type inference to int or float.
-    -F: Keeps field values as strings or floats with no inference to int.
-    All field values are type-inferred to int/float/string unless this behavior is
-    suppressed with -S or -F.
+    -e {expression} You can use this after -f to add an expression. Example use
+       case: define functions/subroutines in a file you specify with -f, then call
+       them with an expression you specify with -e.
     
-    Output/formatting options:
-    --oflatsep {string}: Separator to use when flattening multi-level @-variables
-        to output records for emit. Default ":".
-    --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
-    --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
-    Any of the output-format command-line flags (see mlr -h). Example: using
-      mlr --icsv --opprint ... then put --ojson 'tee > "mytap-".$a.".dat", $*' then ...
-    the input is CSV, the output is pretty-print tabular, but the tee-file output
-    is written in JSON format.
-    --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
-        record.
-    
-    Expression-specification options:
-    -f {filename}: the DSL expression is taken from the specified file rather
-        than from the command line. Outer single quotes wrapping the expression
-        should not be placed in the file. If -f is specified more than once,
-        all input files specified using -f are concatenated to produce the expression.
-        (For example, you can define functions in one file and call them from another.)
-    -e {expression}: You can use this after -f to add an expression. Example use
-        case: define functions/subroutines in a file you specify with -f, then call
-        them with an expression you specify with -e.
     (If you mix -e and -f then the expressions are evaluated in the order encountered.
     Since the expression pieces are simply concatenated, please be sure to use intervening
     semicolons to separate expressions.)
     
-    -s name=value: Predefines out-of-stream variable @name to have value "value".
-        Thus mlr put put -s foo=97 '$column += @foo' is like
-        mlr put put 'begin {@foo = 97} $column += @foo'.
-        The value part is subject to type-inferencing as specified by -S/-F.
+    -s name=value: Predefines out-of-stream variable @name to have 
+        Thus mlr put -s foo=97 '$column += @foo' is like
+        mlr put 'begin {@foo = 97} $column += @foo'.
+        The value part is subject to type-inferencing.
         May be specified more than once, e.g. -s name1=value1 -s name2=value2.
         Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
     
-    Tracing options:
-    -v: Prints the expressions's AST (abstract syntax tree), which gives
-        full transparency on the precedence and associativity rules of
-        Miller's grammar, to stdout.
-    -a: Prints a low-level stack-allocation trace to stdout.
-    -t: Prints a low-level parser trace to stderr.
-    -T: Prints a every statement to stderr as it is executed.
+    -x (default false) Prints records for which {expression} evaluates to false, not true,
+       i.e. invert the sense of the filter expression.
     
-    Other options:
-    -q: Does not include the modified record in the output stream. Useful for when
-        all desired output is in begin and/or end blocks.
+    -q Does not include the modified record in the output stream.
+       Useful for when all desired output is in begin and/or end blocks.
     
-    Please use a dollar sign for field names and double-quotes for string
-    literals. If field names have special characters such as "." then you might
-    use braces, e.g. '${field.name}'. Miller built-in variables are
-    NF NR FNR FILENUM FILENAME M_PI M_E, and ENV["namegoeshere"] to access environment
-    variables. The environment-variable name may be an expression, e.g. a field
-    value.
+    -S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+       by the record-readers before filter/put is executed. Supported as no-op pass-through
+       flags for backward compatibility.
     
-    Use # to comment to end of line.
+    -h|--help Show this message.
     
-    Examples:
-      mlr put '$y = log10($x); $z = sqrt($y)'
-      mlr put '$x>0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x > 0.0
-      mlr put '$x>0.0;  $y=log10($x); $z=sqrt($y)'   # does all three statements
-      mlr put '$a =~ "([a-z]+)_([0-9]+);  $b = "left_\1"; $c = "right_\2"'
-      mlr put '$a =~ "([a-z]+)_([0-9]+) { $b = "left_\1"; $c = "right_\2" }'
-      mlr put '$filename = FILENAME'
-      mlr put '$colored_shape = $color . "_" . $shape'
-      mlr put '$y = cos($theta); $z = atan2($y, $x)'
-      mlr put '$name = sub($name, "http.*com"i, "")'
-      mlr put -q '@sum += $x; end {emit @sum}'
-      mlr put -q '@sum[$a] += $x; end {emit @sum, "a"}'
-      mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}'
-      mlr put -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'
-      mlr put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
-      mlr put '
-        $x = 1;
-       #$y = 2;
-        $z = 3
-      '
+    Parser-info options:
     
-    Please see also 'mlr -k' for examples using redirected output.
+    -w Print warnings about things like uninitialized variables.
     
-    Please see https://miller.readthedocs.io/en/latest/reference.html for more information
-    including function list. Or "mlr -f".
-    Please see in particular:
-      http://www.johnkerl.org/miller/doc/reference-verbs.html#put
+    -W Same as -w, but exit the process if there are any warnings.
+    
+    -p Prints the expressions's AST (abstract syntax tree), which gives full
+      transparency on the precedence and associativity rules of Miller's grammar,
+      to stdout.
+    
+    -d Like -p but uses a parenthesized-expression format for the AST.
+    
+    -D Like -d but with output all on one line.
+    
+    -E Echo DSL expression before printing parse-tree
+    
+    -v Same as -E -p.
+    
+    -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
+       only want to look at parser information.
 
 Features which put shares with filter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2041,12 +1997,9 @@ regularize
    :emphasize-lines: 1,1
 
     $ mlr regularize --help
-    Usage: mlr regularize
-    For records seen earlier in the data stream with same field names in
-    a different order, outputs them with field names in the previously
-    encountered order.
-    Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8
-    output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8
+    Usage: mlr regularize [options]
+    Outputs records sorted lexically ascending by keys.Options:
+    -h|--help Show this message.
 
 This exists since hash-map software in various languages and tools encountered in the wild does not always print similar rows with fields in the same order: ``mlr regularize`` helps clean that up.
 
@@ -2061,8 +2014,10 @@ remove-empty-columns
    :emphasize-lines: 1,1
 
     $ mlr remove-empty-columns --help
-    Usage: mlr remove-empty-columns
+    Usage: mlr remove-empty-columns [options]
     Omits fields which are empty on every input row. Non-streaming.
+    Options:
+    -h|--help Show this message.
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -2106,6 +2061,7 @@ rename
                case-insensitivity.
     -g         Do global replacement within each field name rather than
                first-match replacement.
+    -h|--help Show this message.
     Examples:
     mlr rename old_name,new_name'
     mlr rename old_name_1,new_name_1,old_name_2,new_name_2'
@@ -2170,15 +2126,18 @@ reorder
 
     $ mlr reorder --help
     Usage: mlr reorder [options]
+    Moves specified names to start of record, or end of record.
+    Options:
+    -e Put specified field names at record end: default is to put them at record start.
     -f {a,b,c} Field names to reorder.
-    -e         Put specified field names at record end: default is to put
-               them at record start.
     -b {x}     Put field names specified with -f before field name specified by {x},
                if any. If {x} isn't present in a given record, the specified fields
                will not be moved.
     -a {x}     Put field names specified with -f after field name specified by {x},
                if any. If {x} isn't present in a given record, the specified fields
                will not be moved.
+    -h|--help Show this message.
+    
     Examples:
     mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
     mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
@@ -2232,9 +2191,10 @@ repeat
     Usage: mlr repeat [options]
     Copies input records to output records multiple times.
     Options must be exactly one of the following:
-      -n {repeat count}  Repeat each input record this many times.
-      -f {field name}    Same, but take the repeat count from the specified
-                         field name of each input record.
+    -n {repeat count}  Repeat each input record this many times.
+    -f {field name}    Same, but take the repeat count from the specified
+                       field name of each input record.
+    -h|--help Show this message.
     Example:
       echo x=0 | mlr repeat -n 4 then put '$x=urand()'
     produces:
@@ -2363,9 +2323,11 @@ sample
     $ mlr sample --help
     Usage: mlr sample [options]
     Reservoir sampling (subsampling without replacement), optionally by category.
-    -k {count}    Required: number of records to output, total, or by group if using -g.
-    -g {a,b,c}    Optional: group-by-field names for samples.
     See also mlr bootstrap and mlr shuffle.
+    Options:
+    -g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.
+    -k {k} Required: number of records to output in total, or by group if using -g.
+    -h|--help Show this message.
 
 This is reservoir-sampling: select *k* items from *n* with
 uniform probability and no repeats in the sample. (If *n* is less than
@@ -2439,9 +2401,13 @@ sec2gmt
     more than a keystroke-saver for the sec2gmt function:
       mlr sec2gmt time1,time2
     is the same as
-      mlr put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'
+      mlr put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'
     Options:
     -1 through -9: format the seconds using 1..9 decimal places, respectively.
+    --millis Input numbers are treated as milliseconds since the epoch.
+    --micros Input numbers are treated as microseconds since the epoch.
+    --nanos  Input numbers are treated as nanoseconds since the epoch.
+    -h|--help Show this message.
 
 .. _reference-verbs-sec2gmtdate:
 
@@ -2452,13 +2418,13 @@ sec2gmtdate
    :emphasize-lines: 1,1
 
     $ mlr sec2gmtdate -h
-    Usage: mlr sec2gmtdate {comma-separated list of field names}
+    Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
     Replaces a numeric field representing seconds since the epoch with the
     corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
     This is nothing more than a keystroke-saver for the sec2gmtdate function:
-      mlr sec2gmtdate time1,time2
+      ../c/mlr sec2gmtdate time1,time2
     is the same as
-      mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+      ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
 
 .. _reference-verbs-seqgen:
 
@@ -2470,12 +2436,16 @@ seqgen
 
     $ mlr seqgen -h
     Usage: mlr seqgen [options]
+    Passes input records directly to output. Most useful for format conversion.
     Produces a sequence of counters.  Discards the input record stream. Produces
-    output as specified by the following options:
-    -f {name} Field name for counters; default "i".
-    --start {number} Inclusive start value; default "1".
-    --stop  {number} Inclusive stop value; default "100".
-    --step  {number} Step value; default "1".
+    output as specified by the options
+    
+    Options:
+    -f {name} (default "i") Field name for counters.
+    --start {value} (default 1) Inclusive start value.
+    --step {value} (default 1) Step value.
+    --stop {value} (default 100) Inclusive stop value.
+    -h|--help Show this message.
     Start, stop, and/or step may be floating-point. Output is integer if start,
     stop, and step are all integers. Step may be negative. It may not be zero
     unless start == stop.
@@ -2526,10 +2496,11 @@ shuffle
    :emphasize-lines: 1,1
 
     $ mlr shuffle -h
-    Usage: mlr shuffle {no options}
+    Usage: mlr shuffle [options]
     Outputs records randomly permuted. No output records are produced until
-    all input records are read.
-    See also mlr bootstrap and mlr sample.
+    all input records are read. See also mlr bootstrap and mlr sample.
+    Options:
+    -h|--help Show this message.
 
 .. _reference-verbs-skip-trivial-records:
 
@@ -2541,9 +2512,10 @@ skip-trivial-records
 
     $ mlr skip-trivial-records -h
     Usage: mlr skip-trivial-records [options]
-    Passes through all records except:
-    * those with zero fields;
-    * those for which all fields have empty value.
+    Passes through all records except those with zero fields,
+    or those for which all fields have empty value.
+    Options:
+    -h|--help Show this message.
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -2574,17 +2546,19 @@ sort
 
     $ mlr sort --help
     Usage: mlr sort {flags}
-    Flags:
-      -f  {comma-separated field names}  Lexical ascending
-      -n  {comma-separated field names}  Numerical ascending; nulls sort last
-      -nf {comma-separated field names}  Same as -n
-      -r  {comma-separated field names}  Lexical descending
-      -nr {comma-separated field names}  Numerical descending; nulls sort first
     Sorts records primarily by the first specified field, secondarily by the second
     field, and so on.  (Any records not having all specified sort keys will appear
     at the end of the output, in the order they were encountered, regardless of the
     specified sort order.) The sort is stable: records that compare equal will sort
     in the order they were encountered in the input record stream.
+    
+    Options:
+    -f  {comma-separated field names}  Lexical ascending
+    -n  {comma-separated field names}  Numerical ascending; nulls sort last
+    -nf {comma-separated field names}  Same as -n
+    -r  {comma-separated field names}  Lexical descending
+    -nr {comma-separated field names}  Numerical descending; nulls sort first
+    -h|--help Show this message.
     
     Example:
       mlr sort -f a,b -nr x,y,z
@@ -2681,8 +2655,11 @@ sort-within-records
    :emphasize-lines: 1,1
 
     $ mlr sort-within-records -h
-    Usage: mlr sort-within-records [no options]
+    Usage: mlr sort-within-records [options]
     Outputs records sorted lexically ascending by keys.
+    Options:
+    -r        Recursively sort subobjects/submaps, e.g. for JSON input.
+    -h|--help Show this message.
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -2721,9 +2698,21 @@ sort-within-records
    :emphasize-lines: 1,1
 
     $ mlr --json sort-within-records data/sort-within-records.json
-    { "a": 1, "b": 2, "c": 3 }
-    { "a": 5, "b": 4, "c": 6 }
-    { "a": 9, "b": 8, "c": 7 }
+    {
+      "a": 1,
+      "b": 2,
+      "c": 3
+    }
+    {
+      "a": 5,
+      "b": 4,
+      "c": 6
+    }
+    {
+      "a": 9,
+      "b": 8,
+      "c": 7
+    }
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -2747,43 +2736,44 @@ stats1
     Computes univariate statistics for one or more given fields, accumulated across
     the input record stream.
     Options:
-    -a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or
-                        one or more of:
-       count     Count instances of fields
-       mode      Find most-frequently-occurring values for fields; first-found wins tie
-       antimode  Find least-frequently-occurring values for fields; first-found wins tie
-       sum       Compute sums of specified fields
-       mean      Compute averages (sample means) of specified fields
-       stddev    Compute sample standard deviation of specified fields
-       var       Compute sample variance of specified fields
-       meaneb    Estimate error bars for averages (assuming no sample autocorrelation)
-       skewness  Compute sample skewness of specified fields
-       kurtosis  Compute sample kurtosis of specified fields
-       min       Compute minimum values of specified fields
-       max       Compute maximum values of specified fields
+    -a {sum,count,...} Names of accumulators: one or more of:
+      median   This is the same as p50
+      p10 p25.2 p50 p98 p100 etc.
+      TODO: flags for interpolated percentiles
+      count    Count instances of fields
+      mode     Find most-frequently-occurring values for fields; first-found wins tie
+      antimode Find least-frequently-occurring values for fields; first-found wins tie
+      sum      Compute sums of specified fields
+      mean     Compute averages (sample means) of specified fields
+      var      Compute sample variance of specified fields
+      stddev   Compute sample standard deviation of specified fields
+      meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
+      skewness Compute sample skewness of specified fields
+      kurtosis Compute sample kurtosis of specified fields
+      min      Compute minimum values of specified fields
+      max      Compute maximum values of specified fields
+    
     -f {a,b,c}   Value-field names on which to compute statistics
-    --fr {regex} Regex for value-field names on which to compute statistics
-                 (compute statistics on values in all field names matching regex)
-    --fx {regex} Inverted regex for value-field names on which to compute statistics
-                 (compute statistics on values in all field names not matching regex)
     -g {d,e,f}   Optional group-by-field names
-    --gr {regex} Regex for optional group-by-field names
-                 (group by values in field names matching regex)
-    --gx {regex} Inverted regex for optional group-by-field names
-                 (group by values in field names not matching regex)
-    --grfx {regex} Shorthand for --gr {regex} --fx {that same regex}
-    -i           Use interpolated percentiles, like R's type=7; default like type=1.
-                 Not sensical for string-valued fields.
+    
+    -i           Use interpolated percentiles, like R's type=7; default like type=1.\n");
+                 Not sensical for string-valued fields.\n");
     -s           Print iterative stats. Useful in tail -f contexts (in which
                  case please avoid pprint-format output since end of input
                  stream will never be seen).
-    -F           Computes integerable things (e.g. count) in floating point.
+    -h|--help    Show this message.
+    [TODO: more]
     Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
+     mlr stats1
     Example: mlr stats1 -a count,mode -f size
+     mlr stats1
     Example: mlr stats1 -a count,mode -f size -g shape
+     mlr stats1
     Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'
-             This computes count and mode statistics on all field names beginning
+     mlr stats1
+            This computes count and mode statistics on all field names beginning
              with a through h, grouped by all field names starting with k.
+    
     Notes:
     * p50 and median are synonymous.
     * min and max output the same results as p0 and p100, respectively, but use
@@ -2804,44 +2794,44 @@ optionally categorized by one or more other fields.
 
     $ mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium
     x_count 10000
-    x_sum   4986.019682
-    x_min   0.000045
-    x_p10   0.093322
-    x_p50   0.501159
-    x_mean  0.498602
-    x_p90   0.900794
-    x_max   0.999953
+    x_sum   4986.019681679581
+    x_min   4.509679127584487e-05
+    x_p10   0.09332217805283527
+    x_p50   0.5011592202840128
+    x_mean  0.49860196816795804
+    x_p90   0.900794437962015
+    x_max   0.999952670371898
     y_count 10000
-    y_sum   5062.057445
-    y_min   0.000088
-    y_p10   0.102132
-    y_p50   0.506021
-    y_mean  0.506206
-    y_p90   0.905366
-    y_max   0.999965
+    y_sum   5062.057444929905
+    y_min   8.818962627266114e-05
+    y_p10   0.10213207378968225
+    y_p50   0.5060212582772865
+    y_mean  0.5062057444929905
+    y_p90   0.9053657573378745
+    y_max   0.9999648102177897
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium
-    b   x_mean   y_mean
-    eks 0.506361 0.510293
-    hat 0.487899 0.513118
-    pan 0.497304 0.499599
-    wye 0.497593 0.504596
-    zee 0.504242 0.502997
+    b   x_mean             y_mean
+    eks 0.5063609846272304 0.510292657158104
+    hat 0.4878988625336502 0.5131176341556505
+    pan 0.4973036405471583 0.49959885012092725
+    wye 0.4975928392133964 0.5045964890907357
+    zee 0.5042419022900586 0.5029967546798116
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp
-    color  u_p50    u_p99    v_p50    v_p99    ur       vr
-    yellow 0.501019 0.989046 0.520630 0.987034 1.974069 1.895845
-    red    0.485038 0.990054 0.492586 0.994444 2.041189 2.018823
-    purple 0.501319 0.988893 0.504571 0.988287 1.972582 1.958668
-    green  0.502015 0.990764 0.505359 0.990175 1.973574 1.959350
-    blue   0.525226 0.992655 0.485170 0.993873 1.889958 2.048505
-    orange 0.483548 0.993635 0.480913 0.989102 2.054884 2.056717
+    color  u_p50               u_p99              v_p50               v_p99              ur                 vr
+    yellow 0.5010187906650703  0.9890464545334569 0.5206303554834582  0.9870337429747029 1.9740705797093183 1.8958436298977264
+    red    0.48503770531462564 0.9900536015797581 0.49258608624814926 0.9944442307252868 2.0411889441410493 2.0188232239761583
+    purple 0.501319018852234   0.9888929892441335 0.5045708384576747  0.9882869130316426 1.9725822321846005 1.9586683131600438
+    green  0.5020151016389706  0.9907635833945612 0.5053591509128329  0.9901745564521951 1.9735732653458684 1.9593482272234264
+    blue   0.525225660059      0.9926547550299167 0.48516993577967726 0.993872833141726  1.8899586035427312 2.0485045750919286
+    orange 0.4835478569328253  0.9936350141409035 0.48091255603363914 0.9891023960550895 2.0548845370623567 2.0567198415711636
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -2874,13 +2864,13 @@ stats2
     Computes bivariate statistics for one or more given field-name pairs,
     accumulated across the input record stream.
     -a {linreg-ols,corr,...}  Names of accumulators: one or more of:
-      linreg-pca   Linear regression using principal component analysis
-      linreg-ols   Linear regression using ordinary least squares
-      r2           Quality metric for linreg-ols (linreg-pca emits its own)
-      logireg      Logistic regression
-      corr         Sample correlation
-      cov          Sample covariance
-      covx         Sample-covariance matrix
+      linreg-ols Linear regression using ordinary least squares
+      linreg-pca Linear regression using principal component analysis
+      r2       Quality metric for linreg-ols (linreg-pca emits its own)
+      logireg  Logistic regression
+      corr     Sample correlation
+      cov      Sample covariance
+      covx     Sample-covariance matrix
     -f {a,b,c,d}   Value-field name-pairs on which to compute statistics.
                    There must be an even number of names.
     -g {e,f,g}     Optional group-by-field names.
@@ -2904,25 +2894,25 @@ fields, optionally categorized by one or more fields.
    :emphasize-lines: 1,1
 
     $ mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium
-    x_y_cov    0.000043
-    x_y_corr   0.000504
-    y_y_cov    0.084611
-    y_y_corr   1.000000
-    x2_xy_cov  0.041884
-    x2_xy_corr 0.630174
-    x2_y2_cov  -0.000310
-    x2_y2_corr -0.003425
+    x_y_cov    4.2574820827444476e-05
+    x_y_corr   0.0005042001844467462
+    y_y_cov    0.08461122467974003
+    y_y_corr   1
+    x2_xy_cov  0.04188382281779374
+    x2_xy_corr 0.630174342037994
+    x2_y2_cov  -0.00030953725962542085
+    x2_y2_corr -0.0034249088761121966
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium
-    a   x_y_ols_m x_y_ols_b x_y_ols_n x_y_r2   y_y_ols_m y_y_ols_b y_y_ols_n y_y_r2   xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_r2
-    pan 0.017026  0.500403  2081      0.000287 1.000000  0.000000  2081      1.000000 0.878132    0.119082    2081        0.417498
-    eks 0.040780  0.481402  1965      0.001646 1.000000  0.000000  1965      1.000000 0.897873    0.107341    1965        0.455632
-    wye -0.039153 0.525510  1966      0.001505 1.000000  0.000000  1966      1.000000 0.853832    0.126745    1966        0.389917
-    zee 0.002781  0.504307  2047      0.000008 1.000000  0.000000  2047      1.000000 0.852444    0.124017    2047        0.393566
-    hat -0.018621 0.517901  1941      0.000352 1.000000  0.000000  1941      1.000000 0.841230    0.135573    1941        0.368794
+    a   x_y_ols_m             x_y_ols_b           x_y_ols_n x_y_r2                 y_y_ols_m y_y_ols_b y_y_ols_n y_y_r2 xy_y2_ols_m        xy_y2_ols_b         xy_y2_ols_n xy_y2_r2
+    pan 0.01702551273681908   0.5004028922897639  2081      0.00028691820445814767 1         0         2081      1      0.8781320866715662 0.11908230147563566 2081        0.41749827377311266
+    eks 0.0407804923685586    0.48140207967651016 1965      0.0016461239223448587  1         0         1965      1      0.8978728611690183 0.10734054433612333 1965        0.45563223864254526
+    wye -0.03915349075204814  0.5255096523974456  1966      0.0015051268704373607  1         0         1966      1      0.8538317334220835 0.1267454301662969  1966        0.38991721818599295
+    zee 0.0027812364960399147 0.5043070448033061  2047      7.751652858786137e-06  1         0         2047      1      0.8524439912011013 0.12401684308018937 2047        0.39356598090006495
+    hat -0.018620577041095078 0.5179005397264935  1941      0.0003520036646055585  1         0         1941      1      0.8412305086345014 0.13557328318623216 1941        0.3687944261732265
 
 Here's an example simple line-fit. The ``x`` and ``y``
 fields of the ``data/medium`` dataset are just independent uniformly
@@ -2984,32 +2974,32 @@ We can do a linear regression on count remaining as a function of time: with ``c
 
     $ mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat
     color                   green
-    upsec_count_pca_m       -32.756917
-    upsec_count_pca_b       1213.722730
+    upsec_count_pca_m       -32.75691673397728
+    upsec_count_pca_b       1213.7227296044375
     upsec_count_pca_n       24
-    upsec_count_pca_quality 0.999984
-    donesec                 37.052410
+    upsec_count_pca_quality 0.9999839351341062
+    donesec                 37.052410624028525
     
     color                   red
-    upsec_count_pca_m       -37.367646
-    upsec_count_pca_b       3810.133400
+    upsec_count_pca_m       -37.367646434187435
+    upsec_count_pca_b       3810.1334002923936
     upsec_count_pca_n       30
-    upsec_count_pca_quality 0.999989
-    donesec                 101.963431
+    upsec_count_pca_quality 0.9999894618183773
+    donesec                 101.9634299688333
     
     color                   blue
-    upsec_count_pca_m       -29.231212
-    upsec_count_pca_b       2698.932820
+    upsec_count_pca_m       -29.2312120633493
+    upsec_count_pca_b       2698.9328203182517
     upsec_count_pca_n       25
-    upsec_count_pca_quality 0.999959
-    donesec                 92.330514
+    upsec_count_pca_quality 0.9999590846136102
+    donesec                 92.33051350964094
     
     color                   purple
-    upsec_count_pca_m       -39.030097
-    upsec_count_pca_b       979.988341
+    upsec_count_pca_m       -39.03009744795354
+    upsec_count_pca_b       979.9883413064914
     upsec_count_pca_n       21
-    upsec_count_pca_quality 0.999991
-    donesec                 25.108529
+    upsec_count_pca_quality 0.9999908956206317
+    donesec                 25.10852919630297
 
 .. _reference-verbs-step:
 
@@ -3021,9 +3011,7 @@ step
 
     $ mlr step --help
     Usage: mlr step [options]
-    Computes values dependent on the previous record, optionally grouped
-    by category.
-    
+    Computes values dependent on the previous record, optionally grouped by category.
     Options:
     -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
       delta    Compute differences in field(s) between successive records
@@ -3033,9 +3021,12 @@ step
       rsum     Compute running sums of field(s) between successive records
       counter  Count instances of field(s) between successive records
       ewma     Exponentially weighted moving average over successive records
+    
     -f {a,b,c} Value-field names on which to compute statistics
     -g {d,e,f} Optional group-by-field names
     -F         Computes integerable things (e.g. counter) in floating point.
+               As of Miller 6 this happens automatically, but the flag is accepted
+               as a no-op for backward compatibility with Miller 5 and below.
     -d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no
                smoothing), near under under 1 is light smoothing, near over 0 is
                heavy smoothing. Multiple weights may be specified, e.g.
@@ -3044,6 +3035,7 @@ step
     -o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to
                the -d values. If supplied, the number of -o values must be the same
                as the number of -d values.
+    -h|--help Show this message.
     
     Examples:
       mlr step -a rsum -f request_size
@@ -3062,81 +3054,81 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
    :emphasize-lines: 1,1
 
     $ mlr --opprint step -a shift,delta,rsum,counter -f x data/medium | head -15
-    a   b   i     x                      y                      x_shift                x_delta   x_rsum      x_counter
-    pan pan 1     0.3467901443380824     0.7268028627434533     -                      0         0.346790    1
-    eks pan 2     0.7586799647899636     0.5221511083334797     0.3467901443380824     0.411890  1.105470    2
-    wye wye 3     0.20460330576630303    0.33831852551664776    0.7586799647899636     -0.554077 1.310073    3
-    eks wye 4     0.38139939387114097    0.13418874328430463    0.20460330576630303    0.176796  1.691473    4
-    wye pan 5     0.5732889198020006     0.8636244699032729     0.38139939387114097    0.191890  2.264762    5
-    zee pan 6     0.5271261600918548     0.49322128674835697    0.5732889198020006     -0.046163 2.791888    6
-    eks zee 7     0.6117840605678454     0.1878849191181694     0.5271261600918548     0.084658  3.403672    7
-    zee wye 8     0.5985540091064224     0.976181385699006      0.6117840605678454     -0.013230 4.002226    8
-    hat wye 9     0.03144187646093577    0.7495507603507059     0.5985540091064224     -0.567112 4.033668    9
-    pan wye 10    0.5026260055412137     0.9526183602969864     0.03144187646093577    0.471184  4.536294    10
-    pan pan 11    0.7930488423451967     0.6505816637259333     0.5026260055412137     0.290423  5.329343    11
-    zee pan 12    0.3676141320555616     0.23614420670296965    0.7930488423451967     -0.425435 5.696957    12
-    eks pan 13    0.4915175580479536     0.7709126592971468     0.3676141320555616     0.123903  6.188474    13
-    eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.029221  6.709213    14
+    a   b   i     x                      y                      x_shift                x_delta                 x_rsum             x_counter
+    pan pan 1     0.3467901443380824     0.7268028627434533     -                      0                       0.3467901443380824 1
+    eks pan 2     0.7586799647899636     0.5221511083334797     0.3467901443380824     0.41188982045188116     1.105470109128046  2
+    wye wye 3     0.20460330576630303    0.33831852551664776    0.7586799647899636     -0.5540766590236605     1.3100734148943491 3
+    eks wye 4     0.38139939387114097    0.13418874328430463    0.20460330576630303    0.17679608810483793     1.6914728087654902 4
+    wye pan 5     0.5732889198020006     0.8636244699032729     0.38139939387114097    0.19188952593085962     2.264761728567491  5
+    zee pan 6     0.5271261600918548     0.49322128674835697    0.5732889198020006     -0.04616275971014583    2.7918878886593457 6
+    eks zee 7     0.6117840605678454     0.1878849191181694     0.5271261600918548     0.08465790047599064     3.403671949227191  7
+    zee wye 8     0.5985540091064224     0.976181385699006      0.6117840605678454     -0.013230051461422976   4.0022259583336135 8
+    hat wye 9     0.03144187646093577    0.7495507603507059     0.5985540091064224     -0.5671121326454867     4.033667834794549  9
+    pan wye 10    0.5026260055412137     0.9526183602969864     0.03144187646093577    0.47118412908027796     4.536293840335763  10
+    pan pan 11    0.7930488423451967     0.6505816637259333     0.5026260055412137     0.29042283680398295     5.32934268268096   11
+    zee pan 12    0.3676141320555616     0.23614420670296965    0.7930488423451967     -0.4254347102896351     5.696956814736522  12
+    eks pan 13    0.4915175580479536     0.7709126592971468     0.3676141320555616     0.12390342599239201     6.1884743727844755 13
+    eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.02922067379257154     6.709212604625001  14
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15
-    a   b   i     x                      y                      x_shift                x_delta   x_rsum      x_counter
-    pan pan 1     0.3467901443380824     0.7268028627434533     -                      0         0.346790    1
-    eks pan 2     0.7586799647899636     0.5221511083334797     -                      0         0.758680    1
-    wye wye 3     0.20460330576630303    0.33831852551664776    -                      0         0.204603    1
-    eks wye 4     0.38139939387114097    0.13418874328430463    0.7586799647899636     -0.377281 1.140079    2
-    wye pan 5     0.5732889198020006     0.8636244699032729     0.20460330576630303    0.368686  0.777892    2
-    zee pan 6     0.5271261600918548     0.49322128674835697    -                      0         0.527126    1
-    eks zee 7     0.6117840605678454     0.1878849191181694     0.38139939387114097    0.230385  1.751863    3
-    zee wye 8     0.5985540091064224     0.976181385699006      0.5271261600918548     0.071428  1.125680    2
-    hat wye 9     0.03144187646093577    0.7495507603507059     -                      0         0.031442    1
-    pan wye 10    0.5026260055412137     0.9526183602969864     0.3467901443380824     0.155836  0.849416    2
-    pan pan 11    0.7930488423451967     0.6505816637259333     0.5026260055412137     0.290423  1.642465    3
-    zee pan 12    0.3676141320555616     0.23614420670296965    0.5985540091064224     -0.230940 1.493294    3
-    eks pan 13    0.4915175580479536     0.7709126592971468     0.6117840605678454     -0.120267 2.243381    4
-    eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.029221  2.764119    5
+    a   b   i     x                      y                      x_shift                x_delta                 x_rsum              x_counter
+    pan pan 1     0.3467901443380824     0.7268028627434533     -                      0                       0.3467901443380824  1
+    eks pan 2     0.7586799647899636     0.5221511083334797     -                      0                       0.7586799647899636  1
+    wye wye 3     0.20460330576630303    0.33831852551664776    -                      0                       0.20460330576630303 1
+    eks wye 4     0.38139939387114097    0.13418874328430463    0.7586799647899636     -0.3772805709188226     1.1400793586611044  2
+    wye pan 5     0.5732889198020006     0.8636244699032729     0.20460330576630303    0.36868561403569755     0.7778922255683036  2
+    zee pan 6     0.5271261600918548     0.49322128674835697    -                      0                       0.5271261600918548  1
+    eks zee 7     0.6117840605678454     0.1878849191181694     0.38139939387114097    0.23038466669670443     1.75186341922895    3
+    zee wye 8     0.5985540091064224     0.976181385699006      0.5271261600918548     0.07142784901456767     1.1256801691982772  2
+    hat wye 9     0.03144187646093577    0.7495507603507059     -                      0                       0.03144187646093577 1
+    pan wye 10    0.5026260055412137     0.9526183602969864     0.3467901443380824     0.1558358612031313      0.8494161498792961  2
+    pan pan 11    0.7930488423451967     0.6505816637259333     0.5026260055412137     0.29042283680398295     1.6424649922244927  3
+    zee pan 12    0.3676141320555616     0.23614420670296965    0.5985540091064224     -0.23093987705086083    1.4932943012538389  3
+    eks pan 13    0.4915175580479536     0.7709126592971468     0.6117840605678454     -0.1202665025198918     2.2433809772769036  4
+    eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.02922067379257154     2.7641192091174287  5
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint step -a ewma -f x -d 0.1,0.9 data/medium | head -15
-    a   b   i     x                      y                      x_ewma_0.1 x_ewma_0.9
-    pan pan 1     0.3467901443380824     0.7268028627434533     0.346790   0.346790
-    eks pan 2     0.7586799647899636     0.5221511083334797     0.387979   0.717491
-    wye wye 3     0.20460330576630303    0.33831852551664776    0.369642   0.255892
-    eks wye 4     0.38139939387114097    0.13418874328430463    0.370817   0.368849
-    wye pan 5     0.5732889198020006     0.8636244699032729     0.391064   0.552845
-    zee pan 6     0.5271261600918548     0.49322128674835697    0.404671   0.529698
-    eks zee 7     0.6117840605678454     0.1878849191181694     0.425382   0.603575
-    zee wye 8     0.5985540091064224     0.976181385699006      0.442699   0.599056
-    hat wye 9     0.03144187646093577    0.7495507603507059     0.401573   0.088203
-    pan wye 10    0.5026260055412137     0.9526183602969864     0.411679   0.461184
-    pan pan 11    0.7930488423451967     0.6505816637259333     0.449816   0.759862
-    zee pan 12    0.3676141320555616     0.23614420670296965    0.441596   0.406839
-    eks pan 13    0.4915175580479536     0.7709126592971468     0.446588   0.483050
-    eks zee 14    0.5207382318405251     0.34141681118811673    0.454003   0.516969
+    a   b   i     x                      y                      x_ewma_0.1          x_ewma_0.9
+    pan pan 1     0.3467901443380824     0.7268028627434533     0.3467901443380824  0.3467901443380824
+    eks pan 2     0.7586799647899636     0.5221511083334797     0.3879791263832706  0.7174909827447755
+    wye wye 3     0.20460330576630303    0.33831852551664776    0.36964154432157387 0.25589207346415027
+    eks wye 4     0.38139939387114097    0.13418874328430463    0.37081732927653055 0.3688486618304419
+    wye pan 5     0.5732889198020006     0.8636244699032729     0.3910644883290776  0.5528448940048447
+    zee pan 6     0.5271261600918548     0.49322128674835697    0.4046706555053553  0.5296980334831537
+    eks zee 7     0.6117840605678454     0.1878849191181694     0.4253819960116043  0.6035754578593763
+    zee wye 8     0.5985540091064224     0.976181385699006      0.44269919732108615 0.5990561539817179
+    hat wye 9     0.03144187646093577    0.7495507603507059     0.40157346523507115 0.08820330421301396
+    pan wye 10    0.5026260055412137     0.9526183602969864     0.41167871926568544 0.46118373540839375
+    pan pan 11    0.7930488423451967     0.6505816637259333     0.44981573157363663 0.7598623316515164
+    zee pan 12    0.3676141320555616     0.23614420670296965    0.4415955716218291  0.4068389520151571
+    eks pan 13    0.4915175580479536     0.7709126592971468     0.4465877702644416  0.48304969744467396
+    eks zee 14    0.5207382318405251     0.34141681118811673    0.4540028164220499  0.51696937840094
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough data/medium | head -15
-    a   b   i     x                      y                      x_ewma_smooth x_ewma_rough
-    pan pan 1     0.3467901443380824     0.7268028627434533     0.346790      0.346790
-    eks pan 2     0.7586799647899636     0.5221511083334797     0.387979      0.717491
-    wye wye 3     0.20460330576630303    0.33831852551664776    0.369642      0.255892
-    eks wye 4     0.38139939387114097    0.13418874328430463    0.370817      0.368849
-    wye pan 5     0.5732889198020006     0.8636244699032729     0.391064      0.552845
-    zee pan 6     0.5271261600918548     0.49322128674835697    0.404671      0.529698
-    eks zee 7     0.6117840605678454     0.1878849191181694     0.425382      0.603575
-    zee wye 8     0.5985540091064224     0.976181385699006      0.442699      0.599056
-    hat wye 9     0.03144187646093577    0.7495507603507059     0.401573      0.088203
-    pan wye 10    0.5026260055412137     0.9526183602969864     0.411679      0.461184
-    pan pan 11    0.7930488423451967     0.6505816637259333     0.449816      0.759862
-    zee pan 12    0.3676141320555616     0.23614420670296965    0.441596      0.406839
-    eks pan 13    0.4915175580479536     0.7709126592971468     0.446588      0.483050
-    eks zee 14    0.5207382318405251     0.34141681118811673    0.454003      0.516969
+    a   b   i     x                      y                      x_ewma_smooth       x_ewma_rough
+    pan pan 1     0.3467901443380824     0.7268028627434533     0.3467901443380824  0.3467901443380824
+    eks pan 2     0.7586799647899636     0.5221511083334797     0.3879791263832706  0.7174909827447755
+    wye wye 3     0.20460330576630303    0.33831852551664776    0.36964154432157387 0.25589207346415027
+    eks wye 4     0.38139939387114097    0.13418874328430463    0.37081732927653055 0.3688486618304419
+    wye pan 5     0.5732889198020006     0.8636244699032729     0.3910644883290776  0.5528448940048447
+    zee pan 6     0.5271261600918548     0.49322128674835697    0.4046706555053553  0.5296980334831537
+    eks zee 7     0.6117840605678454     0.1878849191181694     0.4253819960116043  0.6035754578593763
+    zee wye 8     0.5985540091064224     0.976181385699006      0.44269919732108615 0.5990561539817179
+    hat wye 9     0.03144187646093577    0.7495507603507059     0.40157346523507115 0.08820330421301396
+    pan wye 10    0.5026260055412137     0.9526183602969864     0.41167871926568544 0.46118373540839375
+    pan pan 11    0.7930488423451967     0.6505816637259333     0.44981573157363663 0.7598623316515164
+    zee pan 12    0.3676141320555616     0.23614420670296965    0.4415955716218291  0.4068389520151571
+    eks pan 13    0.4915175580479536     0.7709126592971468     0.4465877702644416  0.48304969744467396
+    eks zee 14    0.5207382318405251     0.34141681118811673    0.4540028164220499  0.51696937840094
 
 
 Example deriving uptime-delta from system uptime:
@@ -3164,8 +3156,10 @@ tac
    :emphasize-lines: 1,1
 
     $ mlr tac --help
-    Usage: mlr tac
+    Usage: mlr tac [options]
     Prints records in reverse order from the order in which they were encountered.
+    Options:
+    -h|--help Show this message.
 
 Prints the records in the input stream in reverse order. Note: this requires Miller to retain all input records in memory before any output records are produced.
 
@@ -3212,9 +3206,11 @@ tail
 
     $ mlr tail --help
     Usage: mlr tail [options]
-    -n {count}    Tail count to print; default 10
-    -g {a,b,c}    Optional group-by-field names for tail counts
     Passes through the last n records, optionally by category.
+    Options:
+    -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
+    -n {n} Head-count to print. Default 10.
+    -h|--help Show this message.
 
 Prints the last *n* records in the input stream, optionally by category.
 
@@ -3247,16 +3243,15 @@ tee
 
     $ mlr tee --help
     Usage: mlr tee [options] {filename}
-    Passes through input records (like mlr cat) but also writes to specified output
-    file, using output-format flags from the command line (e.g. --ocsv). See also
-    the "tee" keyword within mlr put, which allows data-dependent filenames.
     Options:
-    -a:          append to existing file, if any, rather than overwriting.
-    --no-fflush: don't call fflush() after every record.
+    -a    Append to existing file, if any, rather than overwriting.
+    -p    Treat filename as a pipe-to command.
     Any of the output-format command-line flags (see mlr -h). Example: using
       mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
     the input is CSV, the output is pretty-print tabular, but the tee-file output
     is written in JSON format.
+    
+    -h|--help Show this message.
 
 .. _reference-verbs-top:
 
@@ -3287,36 +3282,36 @@ Note that ``top`` is distinct from :ref:`reference-verbs-head` -- ``head`` shows
 
     $ mlr --opprint top -n 4 -f x data/medium
     top_idx x_top
-    1       0.999953
-    2       0.999823
-    3       0.999733
-    4       0.999563
+    1       0.999952670371898
+    2       0.9998228522652893
+    3       0.99973332327313
+    4       0.9995625801977208
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint top -n 4 -f x -o someothername data/medium
     someothername x_top
-    1             0.999953
-    2             0.999823
-    3             0.999733
-    4             0.999563
+    1             0.999952670371898
+    2             0.9998228522652893
+    3             0.99973332327313
+    4             0.9995625801977208
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
     a   top_idx x_top
-    eks 1       0.998811
-    eks 2       0.998534
-    hat 1       0.999953
-    hat 2       0.999733
-    pan 1       0.999403
-    pan 2       0.999044
-    wye 1       0.999823
-    wye 2       0.999264
-    zee 1       0.999490
-    zee 2       0.999438
+    eks 1       0.9988110946859143
+    eks 2       0.9985342548358704
+    hat 1       0.999952670371898
+    hat 2       0.99973332327313
+    pan 1       0.9994029107062516
+    pan 2       0.9990440068491747
+    wye 1       0.9998228522652893
+    wye 2       0.9992635865771493
+    zee 1       0.9994904324789629
+    zee 2       0.9994378171787394
 
 .. _reference-verbs-uniq:
 
@@ -3541,15 +3536,14 @@ unsparsify
     $ mlr unsparsify --help
     Usage: mlr unsparsify [options]
     Prints records with the union of field names over all input records.
-    For field names absent in a given record but present in others, fills in a
-    value. Without -f, this verb retains all input before producing any output.
-    
+    For field names absent in a given record but present in others, fills in
+    a value. This verb retains all input before producing any output.
     Options:
     --fill-with {filler string}  What to fill absent fields with. Defaults to
                                  the empty string.
     -f {a,b,c} Specify field names to be operated on. Any other fields won't be
-                                 modified, and operation will be streaming.
-    
+               modified, and operation will be streaming.
+    -h|--help  Show this message.
     Example: if the input is two records, one being 'a=1,b=2' and the other
     being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
     'a=,b=3,c=4'.
@@ -3569,10 +3563,38 @@ Examples:
    :emphasize-lines: 1,1
 
     $ mlr --json unsparsify data/sparse.json
-    { "a": 1, "b": 2, "v": 3, "u": "", "x": "", "w": "" }
-    { "a": "", "b": 2, "v": "", "u": 1, "x": "", "w": "" }
-    { "a": 1, "b": "", "v": 2, "u": "", "x": 3, "w": "" }
-    { "a": "", "b": "", "v": 1, "u": "", "x": "", "w": 2 }
+    {
+      "a": 1,
+      "b": 2,
+      "v": 3,
+      "u": "",
+      "x": "",
+      "w": ""
+    }
+    {
+      "a": "",
+      "b": 2,
+      "v": "",
+      "u": 1,
+      "x": "",
+      "w": ""
+    }
+    {
+      "a": 1,
+      "b": "",
+      "v": 2,
+      "u": "",
+      "x": 3,
+      "w": ""
+    }
+    {
+      "a": "",
+      "b": "",
+      "v": 1,
+      "u": "",
+      "x": "",
+      "w": 2
+    }
 
 .. code-block:: none
    :emphasize-lines: 1,1
