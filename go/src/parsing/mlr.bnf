@@ -447,8 +447,16 @@ Assignment
 ;
 
 Unset
-  : unset Lvalue
-    << dsl.NewASTNodeUnary($0, $1, dsl.NodeTypeUnset) >>
+  : unset FcnArgs
+    <<
+      dsl.AdoptChildren(
+        dsl.NewASTNodeNestable(
+          $0,
+          dsl.NodeTypeUnset,
+        ),
+        $1,
+      )
+    >>
 ;
 
 // Semantically there are far fewer things which are valid lvalues than valid
