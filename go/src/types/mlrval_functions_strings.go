@@ -1,7 +1,6 @@
 package types
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -289,37 +288,51 @@ func MlrvalHexfmt(input1 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 func fmtnum_is(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromString(
-		fmt.Sprintf(
-			input2.printrep,
-			input1.intval,
-		),
-	)
+	if !input2.IsString() {
+		return MLRVAL_ERROR
+	}
+	formatString := input2.printrep
+	formatter, err := GetMlrvalFormatter(formatString)
+	if err != nil {
+		return MLRVAL_ERROR
+	}
+
+	return formatter.Format(input1)
 }
 
 func fmtnum_fs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromString(
-		fmt.Sprintf(
-			input2.printrep,
-			input1.floatval,
-		),
-	)
+	if !input2.IsString() {
+		return MLRVAL_ERROR
+	}
+	formatString := input2.printrep
+	formatter, err := GetMlrvalFormatter(formatString)
+	if err != nil {
+		return MLRVAL_ERROR
+	}
+
+	return formatter.Format(input1)
 }
 
 func fmtnum_bs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromString(
-		fmt.Sprintf(
-			input2.printrep,
-			lib.BoolToInt(input1.boolval),
-		),
-	)
+	if !input2.IsString() {
+		return MLRVAL_ERROR
+	}
+	formatString := input2.printrep
+	formatter, err := GetMlrvalFormatter(formatString)
+	if err != nil {
+		return MLRVAL_ERROR
+	}
+
+	intMv := MlrvalPointerFromInt(lib.BoolToInt(input1.boolval))
+
+	return formatter.Format(intMv)
 }
 
 var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING     INT    FLOAT  BOOL   ARRAY  MAP
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*ABSENT */ {_erro, _absn, _erro, _erro, _absn, _erro, _erro, _erro, _erro, _erro},
-	/*NULL   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _erro, _erro, _erro},
+	/*NULL   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*VOID   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*STRING */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*INT    */ {_erro, _absn, _erro, _erro, fmtnum_is, _erro, _erro, _erro, _erro, _erro},

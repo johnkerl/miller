@@ -255,11 +255,11 @@ Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully general
         "x": $y,
       };
     ' data/small
-    z=0.346790,KEYFIELD=pan,i=1,b=pan,y=0.346790,x=0.726803
-    z=0.758680,KEYFIELD=eks,i=3,b=pan,y=0.758680,x=0.522151
-    z=0.204603,KEYFIELD=wye,i=6,b=wye,y=0.204603,x=0.338319
-    z=0.381399,KEYFIELD=eks,i=10,b=wye,y=0.381399,x=0.134189
-    z=0.573289,KEYFIELD=wye,i=15,b=pan,y=0.573289,x=0.863624
+    z=0.3467901443380824,KEYFIELD=pan,i=1,b=pan,y=0.3467901443380824,x=0.7268028627434533
+    z=0.7586799647899636,KEYFIELD=eks,i=3,b=pan,y=0.7586799647899636,x=0.5221511083334797
+    z=0.20460330576630303,KEYFIELD=wye,i=6,b=wye,y=0.20460330576630303,x=0.33831852551664776
+    z=0.38139939387114097,KEYFIELD=eks,i=10,b=wye,y=0.38139939387114097,x=0.13418874328430463
+    z=0.5732889198020006,KEYFIELD=wye,i=15,b=pan,y=0.5732889198020006,x=0.8636244699032729
 
 Numbering and renumbering records
 ----------------------------------------------------------------
@@ -368,9 +368,9 @@ A second option is to flag badly formatted data within the output stream:
 
     $ mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
     name   reachable format_ok
-    barney false     true
-    betty  true      true
-    fred   true      true
+    barney false     false
+    betty  true      false
+    fred   true      false
     wilma  1         false
 
 Or perhaps to flag badly formatted data outside the output stream:
@@ -379,6 +379,9 @@ Or perhaps to flag badly formatted data outside the output stream:
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
+    Malformed at NR=1
+    Malformed at NR=2
+    Malformed at NR=3
     Malformed at NR=4
     name   reachable
     barney false
@@ -392,11 +395,7 @@ A third way is to abort the process on first instance of bad data:
    :emphasize-lines: 1,1
 
     $ mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv
-    mlr: string type-assertion failed at NR=4 FNR=4 FILENAME=data/het-bool.csv
-    name,reachable
-    barney,false
-    betty,true
-    fred,true
+    Miller: is_string type-assertion failed at NR=1 FNR=1 FILENAME=data/het-bool.csv
 
 Splitting nested fields
 ----------------------------------------------------------------
@@ -549,9 +548,9 @@ Then, join on the key field(s), and use unsparsify to zero-fill counters absent 
     color  previous_count current_count count_delta
     red    3472           3467          -5
     orange 694            670           -24
-    yellow 0              27            27
+    yellow 0              27            (error)
     blue   6838           6944          106
-    purple 12             0             -12
+    purple 12             0             (error)
 
 Finding missing dates
 ----------------------------------------------------------------
@@ -589,16 +588,16 @@ Since there are 1372 lines in the data file, some automation is called for. To f
       then put '$datestamp = strptime($date, "%Y-%m-%d")' \
       then step -a delta -f datestamp \
     | head
-    n=1,date=2012-03-05,qoh=10055,datestamp=1330905600.000000,datestamp_delta=0
-    n=2,date=2012-03-06,qoh=10486,datestamp=1330992000.000000,datestamp_delta=86400.000000
-    n=3,date=2012-03-07,qoh=10430,datestamp=1331078400.000000,datestamp_delta=86400.000000
-    n=4,date=2012-03-08,qoh=10674,datestamp=1331164800.000000,datestamp_delta=86400.000000
-    n=5,date=2012-03-09,qoh=10880,datestamp=1331251200.000000,datestamp_delta=86400.000000
-    n=6,date=2012-03-10,qoh=10718,datestamp=1331337600.000000,datestamp_delta=86400.000000
-    n=7,date=2012-03-11,qoh=10795,datestamp=1331424000.000000,datestamp_delta=86400.000000
-    n=8,date=2012-03-12,qoh=11043,datestamp=1331510400.000000,datestamp_delta=86400.000000
-    n=9,date=2012-03-13,qoh=11177,datestamp=1331596800.000000,datestamp_delta=86400.000000
-    n=10,date=2012-03-14,qoh=11498,datestamp=1331683200.000000,datestamp_delta=86400.000000
+    n=1,date=2012-03-05,qoh=10055,datestamp=1.3309056e+09,datestamp_delta=0
+    n=2,date=2012-03-06,qoh=10486,datestamp=1.330992e+09,datestamp_delta=86400
+    n=3,date=2012-03-07,qoh=10430,datestamp=1.3310784e+09,datestamp_delta=86400
+    n=4,date=2012-03-08,qoh=10674,datestamp=1.3311648e+09,datestamp_delta=86400
+    n=5,date=2012-03-09,qoh=10880,datestamp=1.3312512e+09,datestamp_delta=86400
+    n=6,date=2012-03-10,qoh=10718,datestamp=1.3313376e+09,datestamp_delta=86400
+    n=7,date=2012-03-11,qoh=10795,datestamp=1.331424e+09,datestamp_delta=86400
+    n=8,date=2012-03-12,qoh=11043,datestamp=1.3315104e+09,datestamp_delta=86400
+    n=9,date=2012-03-13,qoh=11177,datestamp=1.3315968e+09,datestamp_delta=86400
+    n=10,date=2012-03-14,qoh=11498,datestamp=1.3316832e+09,datestamp_delta=86400
 
 Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
 
@@ -610,8 +609,8 @@ Then, filter for adjacent difference not being 86400 (the number of seconds in a
       then put '$datestamp = strptime($date, "%Y-%m-%d")' \
       then step -a delta -f datestamp \
       then filter '$datestamp_delta != 86400 && $n != 1'
-    n=774,date=2014-04-19,qoh=130140,datestamp=1397865600.000000,datestamp_delta=259200.000000
-    n=1119,date=2015-03-31,qoh=181625,datestamp=1427760000.000000,datestamp_delta=172800.000000
+    n=774,date=2014-04-19,qoh=130140,datestamp=1.3978656e+09,datestamp_delta=259200
+    n=1119,date=2015-03-31,qoh=181625,datestamp=1.42776e+09,datestamp_delta=172800
 
 Given this, it's now easy to see where the gaps are:
 
@@ -676,12 +675,12 @@ For example, mapping numeric values down a column to the percentage between thei
         emit (@x, @x_pct), "NR"
       }
     '
-    NR x        x_pct
-    1  0.346790 25.661943
-    2  0.758680 100.000000
-    3  0.204603 0.000000
-    4  0.381399 31.908236
-    5  0.573289 66.540542
+    NR x                   x_pct
+    1  0.3467901443380824  25.66194338926441
+    2  0.7586799647899636  100
+    3  0.20460330576630303 0
+    4  0.38139939387114097 31.90823602213647
+    5  0.5732889198020006  66.54054236562845
 
 Two-pass algorithms: line-number ratios
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -702,12 +701,12 @@ Similarly, finding the total record count requires first reading through all the
         emit @records,"I"
       }
     ' then reorder -f I,N,PCT
-    I N PCT a   b   i x                   y
-    1 5 20  pan pan 1 0.3467901443380824  0.7268028627434533
-    2 5 40  eks pan 2 0.7586799647899636  0.5221511083334797
-    3 5 60  wye wye 3 0.20460330576630303 0.33831852551664776
-    4 5 80  eks wye 4 0.38139939387114097 0.13418874328430463
-    5 5 100 wye pan 5 0.5732889198020006  0.8636244699032729
+    I N PCT     a   b   i x                   y
+    1 5 (error) pan pan 1 0.3467901443380824  0.7268028627434533
+    2 5 (error) eks pan 2 0.7586799647899636  0.5221511083334797
+    3 5 (error) wye wye 3 0.20460330576630303 0.33831852551664776
+    4 5 (error) eks wye 4 0.38139939387114097 0.13418874328430463
+    5 5 (error) wye pan 5 0.5732889198020006  0.8636244699032729
 
 Two-pass algorithms: records having max value
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -895,7 +894,7 @@ Miller handles compliant CSV: in particular, it's an error if the number of data
     '
     a,b,c
     1,2,3
-    4,5,
+    4,5
     6,7,8,9
 
 or, more simply,
@@ -911,7 +910,7 @@ or, more simply,
     '
     a,b,c
     1,2,3
-    4,5,
+    4,5
     6,7,8,9
 
 Feature-counting
@@ -958,19 +957,57 @@ Then
    :emphasize-lines: 1,1
 
     $ mlr --json put -q -f data/feature-count.mlr data/features.json
-    { "record_count": 12 }
-    { "key": "qoh", "key_counts": 8 }
-    { "key": "rate", "key_counts": 8 }
-    { "key": "latency", "key_counts": 7 }
-    { "key": "name", "key_counts": 4 }
-    { "key": "uid", "key_counts": 3 }
-    { "key": "uid2", "key_counts": 1 }
-    { "key": "qoh", "key_fraction": 0.666667 }
-    { "key": "rate", "key_fraction": 0.666667 }
-    { "key": "latency", "key_fraction": 0.583333 }
-    { "key": "name", "key_fraction": 0.333333 }
-    { "key": "uid", "key_fraction": 0.250000 }
-    { "key": "uid2", "key_fraction": 0.083333 }
+    {
+      "record_count": 12
+    }
+    {
+      "key": "qoh",
+      "key_counts": 8
+    }
+    {
+      "key": "rate",
+      "key_counts": 8
+    }
+    {
+      "key": "latency",
+      "key_counts": 7
+    }
+    {
+      "key": "name",
+      "key_counts": 4
+    }
+    {
+      "key": "uid",
+      "key_counts": 3
+    }
+    {
+      "key": "uid2",
+      "key_counts": 1
+    }
+    {
+      "key": "qoh",
+      "key_fraction": 0.6666666666666666
+    }
+    {
+      "key": "rate",
+      "key_fraction": 0.6666666666666666
+    }
+    {
+      "key": "latency",
+      "key_fraction": 0.5833333333333334
+    }
+    {
+      "key": "name",
+      "key_fraction": 0.3333333333333333
+    }
+    {
+      "key": "uid",
+      "key_fraction": 0.25
+    }
+    {
+      "key": "uid2",
+      "key_fraction": 0.08333333333333333
+    }
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -988,12 +1025,12 @@ Then
     uid2    1
     
     key     key_fraction
-    qoh     0.666667
-    rate    0.666667
-    latency 0.583333
-    name    0.333333
-    uid     0.250000
-    uid2    0.083333
+    qoh     0.6666666666666666
+    rate    0.6666666666666666
+    latency 0.5833333333333334
+    name    0.3333333333333333
+    uid     0.25
+    uid2    0.08333333333333333
 
 Unsparsing
 ----------------------------------------------------------------
@@ -1048,10 +1085,38 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
    :emphasize-lines: 1,1
 
     $ mlr --json put -q -f data/unsparsify.mlr data/sparse.json
-    { "a": 1, "b": 2, "v": 3, "u": "", "x": "", "w": "" }
-    { "a": "", "b": 2, "v": "", "u": 1, "x": "", "w": "" }
-    { "a": 1, "b": "", "v": 2, "u": "", "x": 3, "w": "" }
-    { "a": "", "b": "", "v": 1, "u": "", "x": "", "w": 2 }
+    {
+      "a": 1,
+      "b": 2,
+      "v": 3,
+      "u": "",
+      "x": "",
+      "w": ""
+    }
+    {
+      "a": "",
+      "b": 2,
+      "v": "",
+      "u": 1,
+      "x": "",
+      "w": ""
+    }
+    {
+      "a": 1,
+      "b": "",
+      "v": 2,
+      "u": "",
+      "x": 3,
+      "w": ""
+    }
+    {
+      "a": "",
+      "b": "",
+      "v": 1,
+      "u": "",
+      "x": "",
+      "w": 2
+    }
 
 .. code-block:: none
    :emphasize-lines: 1,1

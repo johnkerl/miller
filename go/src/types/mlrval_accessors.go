@@ -38,6 +38,10 @@ func (mv *Mlrval) IsAbsent() bool {
 	return mv.mvtype == MT_ABSENT
 }
 
+func (mv *Mlrval) IsNull() bool {
+	return mv.mvtype == MT_NULL
+}
+
 func (mv *Mlrval) IsVoid() bool {
 	return mv.mvtype == MT_VOID
 }

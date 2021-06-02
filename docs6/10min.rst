@@ -181,17 +181,17 @@ You can use ``put`` to create new fields which are computed from other fields:
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
-    color  shape    flag index quantity rate   ratio       color_shape
-    yellow triangle 1    11    43.6498  9.8870 4.414868    yellow_triangle
-    red    square   1    15    79.2778  0.0130 6098.292308 red_square
-    red    circle   1    16    13.8103  2.9010 4.760531    red_circle
-    red    square   0    48    77.5542  7.4670 10.386260   red_square
-    purple triangle 0    51    81.2290  8.5910 9.455127    purple_triangle
-    red    square   0    64    77.1991  9.5310 8.099790    red_square
-    purple triangle 0    65    80.1405  5.8240 13.760388   purple_triangle
-    yellow circle   1    73    63.9785  4.2370 15.099953   yellow_circle
-    yellow circle   1    87    63.5058  8.3350 7.619172    yellow_circle
-    purple square   0    91    72.3735  8.2430 8.779995    purple_square
+    color  shape    flag index quantity rate   ratio              color_shape
+    yellow triangle 1    11    43.6498  9.8870 4.414868008496004  yellow_triangle
+    red    square   1    15    79.2778  0.0130 6098.292307692308  red_square
+    red    circle   1    16    13.8103  2.9010 4.760530851430541  red_circle
+    red    square   0    48    77.5542  7.4670 10.386259541984733 red_square
+    purple triangle 0    51    81.2290  8.5910 9.455127458968688  purple_triangle
+    red    square   0    64    77.1991  9.5310 8.099790158430384  red_square
+    purple triangle 0    65    80.1405  5.8240 13.760388049450551 purple_triangle
+    yellow circle   1    73    63.9785  4.2370 15.09995279679018  yellow_circle
+    yellow circle   1    87    63.5058  8.3350 7.619172165566886  yellow_circle
+    purple square   0    91    72.3735  8.2430 8.779995147397793  purple_square
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use ``$[[3]]`` to access the name of field 3 or ``$[[[3]]]`` to access the value of field 3:
 
@@ -236,16 +236,96 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
    :emphasize-lines: 1,1
 
     $ mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv
-    { "color": "yellow", "shape": "TRIANGLE", "flag": 1, "index": 11, "quantity": 43.6498, "rate": 9.8870, "ratio": 4.414868 }
-    { "color": "red", "shape": "SQUARE", "flag": 1, "index": 15, "quantity": 79.2778, "rate": 0.0130, "ratio": 6098.292308 }
-    { "color": "red", "shape": "CIRCLE", "flag": 1, "index": 16, "quantity": 13.8103, "rate": 2.9010, "ratio": 4.760531 }
-    { "color": "red", "shape": "SQUARE", "flag": 0, "index": 48, "quantity": 77.5542, "rate": 7.4670, "ratio": 10.386260 }
-    { "color": "purple", "shape": "TRIANGLE", "flag": 0, "index": 51, "quantity": 81.2290, "rate": 8.5910, "ratio": 9.455127 }
-    { "color": "red", "shape": "SQUARE", "flag": 0, "index": 64, "quantity": 77.1991, "rate": 9.5310, "ratio": 8.099790 }
-    { "color": "purple", "shape": "TRIANGLE", "flag": 0, "index": 65, "quantity": 80.1405, "rate": 5.8240, "ratio": 13.760388 }
-    { "color": "yellow", "shape": "CIRCLE", "flag": 1, "index": 73, "quantity": 63.9785, "rate": 4.2370, "ratio": 15.099953 }
-    { "color": "yellow", "shape": "CIRCLE", "flag": 1, "index": 87, "quantity": 63.5058, "rate": 8.3350, "ratio": 7.619172 }
-    { "color": "purple", "shape": "SQUARE", "flag": 0, "index": 91, "quantity": 72.3735, "rate": 8.2430, "ratio": 8.779995 }
+    {
+      "color": "yellow",
+      "shape": "TRIANGLE",
+      "flag": 1,
+      "index": 11,
+      "quantity": 43.6498,
+      "rate": 9.8870,
+      "ratio": 4.414868008496004
+    }
+    {
+      "color": "red",
+      "shape": "SQUARE",
+      "flag": 1,
+      "index": 15,
+      "quantity": 79.2778,
+      "rate": 0.0130,
+      "ratio": 6098.292307692308
+    }
+    {
+      "color": "red",
+      "shape": "CIRCLE",
+      "flag": 1,
+      "index": 16,
+      "quantity": 13.8103,
+      "rate": 2.9010,
+      "ratio": 4.760530851430541
+    }
+    {
+      "color": "red",
+      "shape": "SQUARE",
+      "flag": 0,
+      "index": 48,
+      "quantity": 77.5542,
+      "rate": 7.4670,
+      "ratio": 10.386259541984733
+    }
+    {
+      "color": "purple",
+      "shape": "TRIANGLE",
+      "flag": 0,
+      "index": 51,
+      "quantity": 81.2290,
+      "rate": 8.5910,
+      "ratio": 9.455127458968688
+    }
+    {
+      "color": "red",
+      "shape": "SQUARE",
+      "flag": 0,
+      "index": 64,
+      "quantity": 77.1991,
+      "rate": 9.5310,
+      "ratio": 8.099790158430384
+    }
+    {
+      "color": "purple",
+      "shape": "TRIANGLE",
+      "flag": 0,
+      "index": 65,
+      "quantity": 80.1405,
+      "rate": 5.8240,
+      "ratio": 13.760388049450551
+    }
+    {
+      "color": "yellow",
+      "shape": "CIRCLE",
+      "flag": 1,
+      "index": 73,
+      "quantity": 63.9785,
+      "rate": 4.2370,
+      "ratio": 15.09995279679018
+    }
+    {
+      "color": "yellow",
+      "shape": "CIRCLE",
+      "flag": 1,
+      "index": 87,
+      "quantity": 63.5058,
+      "rate": 8.3350,
+      "ratio": 7.619172165566886
+    }
+    {
+      "color": "purple",
+      "shape": "SQUARE",
+      "flag": 0,
+      "index": 91,
+      "quantity": 72.3735,
+      "rate": 8.2430,
+      "ratio": 8.779995147397793
+    }
 
 Sorts and stats
 ^^^^^^^^^^^^^^^
@@ -280,22 +360,22 @@ Statistics can be computed with or without group-by field(s):
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
-    shape    quantity_count quantity_min quantity_mean quantity_max
-    triangle 3              43.649800    68.339767     81.229000
-    square   4              72.373500    76.601150     79.277800
-    circle   3              13.810300    47.098200     63.978500
+    shape    quantity_count quantity_min quantity_mean     quantity_max
+    triangle 3              43.6498      68.33976666666666 81.229
+    square   4              72.3735      76.60114999999999 79.2778
+    circle   3              13.8103      47.0982           63.9785
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
-    shape    color  quantity_count quantity_min quantity_mean quantity_max
-    triangle yellow 1              43.649800    43.649800     43.649800
-    square   red    3              77.199100    78.010367     79.277800
-    circle   red    1              13.810300    13.810300     13.810300
-    triangle purple 2              80.140500    80.684750     81.229000
-    circle   yellow 2              63.505800    63.742150     63.978500
-    square   purple 1              72.373500    72.373500     72.373500
+    shape    color  quantity_count quantity_min quantity_mean      quantity_max
+    triangle yellow 1              43.6498      43.6498            43.6498
+    square   red    3              77.1991      78.01036666666666  79.2778
+    circle   red    1              13.8103      13.8103            13.8103
+    triangle purple 2              80.1405      80.68475000000001  81.229
+    circle   yellow 2              63.5058      63.742149999999995 63.9785
+    square   purple 1              72.3735      72.3735            72.3735
 
 If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:
 
@@ -303,14 +383,14 @@ If your output has a lot of columns, you can use XTAB format to line things up v
    :emphasize-lines: 1,1
 
     $ mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
-    rate_p0   0.013000
-    rate_p10  2.901000
-    rate_p25  4.237000
-    rate_p50  8.243000
-    rate_p75  8.591000
-    rate_p90  9.887000
-    rate_p99  9.887000
-    rate_p100 9.887000
+    rate_p0   0.0130
+    rate_p10  2.9010
+    rate_p25  4.2370
+    rate_p50  8.2430
+    rate_p75  8.5910
+    rate_p90  9.8870
+    rate_p99  9.8870
+    rate_p100 9.8870
 
 .. _10min-choices-for-printing-to-files:
 

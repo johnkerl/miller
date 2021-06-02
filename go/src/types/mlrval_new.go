@@ -136,6 +136,38 @@ func MlrvalPointerFromEmptyMap() *Mlrval {
 }
 
 // ----------------------------------------------------------------
+// Used by MlrvalFormatter (fmtnum DSL function, format-values verb, etc).
+// Each mlrval has printrep and a printrepValid for its original string, then a
+// type-code like MT_INT or MT_FLOAT, and type-specific storage like intval or
+// floatval.
+//
+// If the user has taken a mlrval with original string "3.14" and formatted it
+// with "%.4f" then its printrep will be "3.1400" but its type should still be
+// MT_FLOAT.
+//
+// If on the other hand the user has formatted the same mlrval with "[[%.4f]]"
+// then its printrep will be "[[3.1400]]" and it will be MT_STRING.
+// This method supports that.
+
+func MlrvalTryPointerFromFloatString(input string) *Mlrval {
+	_, fok := lib.TryFloat64FromString(input)
+	if fok {
+		return MlrvalPointerFromFloat64String(input)
+	} else {
+		return MlrvalPointerFromString(input)
+	}
+}
+
+func MlrvalTryPointerFromIntString(input string) *Mlrval {
+	_, iok := lib.TryIntFromString(input)
+	if iok {
+		return MlrvalPointerFromIntString(input)
+	} else {
+		return MlrvalPointerFromString(input)
+	}
+}
+
+// ----------------------------------------------------------------
 // Does not copy the data. We can make a SetFromArrayLiteralCopy if needed
 // using values.CopyMlrvalArray().
 func MlrvalPointerFromArrayLiteralReference(input []Mlrval) *Mlrval {

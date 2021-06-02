@@ -31,13 +31,14 @@ echo UNIT TESTS
 go test -v miller/src/...
 # 'go test' (with no arguments) is the same as 'mlr regtest'
 
-echo
-echo ================================================================
-echo REGRESSION TESTS v2 MAIN
-echo
-mlr regtest $verbose regtest/cases regtest/cases-pending-windows
-
 if [ "$do_wips" = "true" ]; then
+
+  echo
+  echo ================================================================
+  echo REGRESSION TESTS v2 MAIN
+  echo
+  mlr regtest $verbose regtest/cases regtest/cases-pending-windows
+
   echo
   echo ================================================================
   echo REGRESSION TESTS v2 PENDING GO PORT
