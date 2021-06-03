@@ -3,9 +3,9 @@ TOP OF LIST:
 
 * emit * regex * fmtnum * localtime * cli-audits *
 
-! check issues
+* --nr-progress-mod * mlr -k *
 
-* --nr-progress-mod
+! check issues
 
 * mlr -k
   o c,go
@@ -14,8 +14,9 @@ TOP OF LIST:
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
 
-* iconv note
 * defer json comment-handling
+
+* json-triple-quote -- what can be done here?
 
 w survey
   o summary to GHD thread
@@ -26,14 +27,6 @@ w survey
   o head -n1 / tail -n1 -- special-case? but not head -n10 since getopts to head -n -1 -0 ...
   o --from=foo => split (at getopt-level) to --from foo
 
-* json-triple-quote -- what can be done here?
-
-* tools/perf:
-  o https://eng.uber.com/pprof-go-profiler/
-  o profile mlr --j2x cat mappings.json
-  o golang static-analysis tool -- ?
-
-----------------------------------------------------------------
 ! how-to-help guide
   - testing
   - doc mods
@@ -41,6 +34,7 @@ w survey
   - community
   > backport to docs5
 
+----------------------------------------------------------------
 ! get doc6 going sooner than later! lots accumulating ...
   o big:
     ? quick-examples needs fewer inputs, and outputs for all retained inputs
@@ -95,11 +89,6 @@ w survey
 * blockers:
   o convert regtest/cases-pending-windows
   w after regex
-
-* blocker: smart fmtnum
-  - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
-  - ofmt needs to go through this sanitizer logic -- prohibit '%s' for example
-  - note hexfmt for non-ints -- especially floats -- ?!?
 
 ----------------------------------------------------------------
 
@@ -382,6 +371,11 @@ NITS/NON-IMMEDIATE:
 ----------------------------------------------------------------
 TBF:
 * delve
+* tools/perf:
+  o https://eng.uber.com/pprof-go-profiler/
+  o profile mlr --j2x cat mappings.json
+  o golang static-analysis tool -- ?
+* iconv note
 * throughout -- 'map' used too much -- 'mapping/mapper' -> 'transform' or something?
 * cli/cliutil import structure -- rethink entirely
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
