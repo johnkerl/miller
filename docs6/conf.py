@@ -22,7 +22,7 @@ copyright = '2020, John Kerl'
 author = 'John Kerl'
 
 # The full version, including alpha/beta/rc tags
-release = '5.10.2'
+release = '6.0.0-alpha'
 
 # -- General configuration ---------------------------------------------------
 master_doc = 'index'

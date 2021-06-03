@@ -1,7 +1,7 @@
 Miller Docs v2
 ================================================================
 
-Overview
+Getting started
 ----------------------------------------------------------------
 
 .. toctree::
@@ -9,40 +9,61 @@ Overview
 
    quick-examples
    10min
+   data-diving-examples
+   customization
+   installation
+   community
+
+About
+----------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
    features
    feature-comparison
    file-formats
    record-heterogeneity
-   customization
-   install
    internationalization
-   contact
-
-Details
-----------------------------------------------------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   faq
-   sql-examples
-   log-processing-examples
-   data-examples
-   cookbook
-   cookbook2
-   cookbook3
-   data-sharing
-
-Background
-----------------------------------------------------------------
-
-.. toctree::
-   :maxdepth: 1
-
    why
    etymology
    originality
    performance
+   contact
+
+FAQs and recipes
+----------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   shapes-of-data
+   csv-with-and-without-headers
+   operating-on-all-fields
+   special-symbols-and-formatting
+   dates-and-times
+   then-chaining
+   joins
+
+To be refactored
+----------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   cookbook
+   cookbook2
+   cookbook3
+
+Integrations
+----------------------------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   sql-examples
+   log-processing-examples
+   data-sharing
 
 Reference
 ----------------------------------------------------------------
