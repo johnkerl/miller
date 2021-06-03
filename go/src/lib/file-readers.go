@@ -47,10 +47,11 @@ const (
 func OpenFileForRead(
 	filename string,
 	prepipe string,
+	prepipeIsRaw bool,
 	encoding TFileInputEncoding, // ignored if prepipe is non-empty
 ) (io.ReadCloser, error) {
 	if prepipe != "" {
-		return openPrepipedHandleForRead(filename, prepipe)
+		return openPrepipedHandleForRead(filename, prepipe, prepipeIsRaw)
 	} else {
 		handle, err := os.Open(filename)
 		if err != nil {
@@ -67,10 +68,11 @@ func OpenFileForRead(
 // a compression encoding, this ends up being simply os.Stdin.
 func OpenStdin(
 	prepipe string,
+	prepipeIsRaw bool,
 	encoding TFileInputEncoding, // ignored if prepipe is non-empty
 ) (io.ReadCloser, error) {
 	if prepipe != "" {
-		return openPrepipedHandleForRead("", prepipe)
+		return openPrepipedHandleForRead("", prepipe, prepipeIsRaw)
 	} else {
 		return openEncodedHandleForRead(os.Stdin, encoding, "")
 	}
@@ -79,6 +81,7 @@ func OpenStdin(
 func openPrepipedHandleForRead(
 	filename string,
 	prepipe string,
+	prepipeIsRaw bool,
 ) (io.ReadCloser, error) {
 	escapedFilename := escapeFileNameForPopen(filename)
 
@@ -86,7 +89,11 @@ func openPrepipedHandleForRead(
 	if filename == "" { // stdin
 		command = prepipe
 	} else {
-		command = prepipe + " < " + escapedFilename
+		if prepipeIsRaw {
+			command = prepipe + " " + escapedFilename
+		} else {
+			command = prepipe + " < " + escapedFilename
+		}
 	}
 
 	return OpenInboundHalfPipe(command)

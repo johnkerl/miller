@@ -202,18 +202,28 @@ func ParseReaderOptions(
 	} else if args[argi] == "--prepipe" {
 		CheckArgCount(args, argi, argc, 2)
 		readerOptions.Prepipe = args[argi+1]
+		readerOptions.PrepipeIsRaw = false
+		argi += 2
+
+	} else if args[argi] == "--prepipex" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.Prepipe = args[argi+1]
+		readerOptions.PrepipeIsRaw = true
 		argi += 2
 
 	} else if args[argi] == "--prepipe-gunzip" {
 		readerOptions.Prepipe = "gunzip"
+		readerOptions.PrepipeIsRaw = false
 		argi += 1
 
 	} else if args[argi] == "--prepipe-zcat" {
 		readerOptions.Prepipe = "zcat"
+		readerOptions.PrepipeIsRaw = false
 		argi += 1
 
 	} else if args[argi] == "--prepipe-bz2" {
 		readerOptions.Prepipe = "bz2"
+		readerOptions.PrepipeIsRaw = false
 		argi += 1
 
 	} else if args[argi] == "--gzin" {

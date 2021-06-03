@@ -483,7 +483,7 @@ func handleMlrrcLine(
 	argi := 0
 	argc := len(args)
 
-	if args[0] == "--prepipe" {
+	if args[0] == "--prepipe" || args[0] == "--prepipex" {
 		// Don't allow code execution via .mlrrc
 		return false
 	} else if args[0] == "--load" || args[0] == "--mload" {

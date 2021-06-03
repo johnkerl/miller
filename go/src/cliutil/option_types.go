@@ -57,6 +57,11 @@ type TReaderOptions struct {
 
 	// For out-of-process handling of compressed data, via popen
 	Prepipe string
+	// For most things like gunzip we do 'gunzip < filename | mlr ...' if
+	// filename is present, else 'gunzip | mlr ...' if reading from stdin.
+	// However some commands like 'unzip -qc' are weird so this option lets
+	// people give the command and we won't insert the '<'.
+	PrepipeIsRaw bool
 	// For in-process gunzip/bunzip2/zcat (distinct from prepipe)
 	FileInputEncoding lib.TFileInputEncoding
 }
