@@ -85,36 +85,6 @@ w survey
 * case auxfiles: cat them too
 
 ----------------------------------------------------------------
-* need int/float
-  llx -> x etc
-  https://golang.org/pkg/fmt/
-
-  pre-stuff
-
-  %
-
-  +-0' space
-
-  ll|l
-  %%
-  bdiouxDOUX fegFEG s
-
-  post-stuff
-
-* callsites:
-  o fmtnum($mv, "%d")
-    - numeric only
-  o --ofmt
-    - numeric only
-  o format-values verb
-    - -i, -f, -s
-
-* pieces:
-  o given user-level format string
-  o factory-something to make methods which take a mlrval/type & a Go-internal format string
-  o methods which take a mlrval/type & a Go-internal format string
-
-----------------------------------------------------------------
 
 * blocker: regexes
   o finish stats1 -r
@@ -129,12 +99,7 @@ w survey
 * blocker: smart fmtnum
   - poor-person's initial version: lld/llx -> d/x; lf/le/lg -> f/e/g ...
   - ofmt needs to go through this sanitizer logic -- prohibit '%s' for example
-  - no other callsites?!?!?!
   - note hexfmt for non-ints -- especially floats -- ?!?
-
-* blocker: remaining verbs:
-  o format-values
-  w after fmtnum
 
 ----------------------------------------------------------------
 
@@ -162,12 +127,6 @@ w survey
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
-
-* blocker: misctests
-  ? wut
-    mlr --from regtest/input/s.dkvp put -q 'begin{@sum=[0m0]} @sum[1+NR%2] += $i; end{dump}'
-  ? space/-
-    regtest/cases-pending-go-port//dsl-lashed-emitp-singles/0051/cmd
 
 ----------------------------------------------------------------
 * non-blocker: commenting passes ...
@@ -305,17 +264,6 @@ emitp/emitf:
 * ./regtest/cases/case-c-dsl-indirect-oosvar-assignments.sh
   _:t:u=1 vs t:u=1 on emitp @*
 
-* check more
-  ./regtest/cases/case-c-dsl-absent-empty.sh
-  ./regtest/cases/case-c-dsl-break-continue.sh
-  ./regtest/cases/case-c-dsl-for-oosvar-loops.sh
-  ./regtest/cases/case-dsl-functional-tests.sh
-  ./regtest/cases/case-c-dsl-indirect-oosvar-assignments.sh
-  ./regtest/cases/case-c-dsl-lashed-emitp-singles.sh
-  ./regtest/cases/case-c-dsl-mapvar-emit.sh
-  ./regtest/cases/case-c-dsl-oosvar-assignments.sh
-  u/rr ./regtest/cases/case-c-dsl-type-predicates.sh
-
 * new emitx punctuation-syntax -- decide x 4
   o to support (from C impl):
     x MD_TOKEN_ALL
@@ -333,28 +281,6 @@ emitp/emitf:
 ! se-q reads
 
 * stats1: actualize -S and -F -- ?
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! smart fmtnum w/ state-machine on chars, and casts, etc -- decouple from raw sprintf
-  o use:
-    - %
-    - 0 - " " + "'"
-    - number for min field width
-    - "." and precision width
-    - s   d i o u x X   e E f F g G
-    - "%%"
-  o need a parser for validity, and a mapper to Go-builtin formats
-  o need to pull out the printed type & use that for casting/ignoring. examples:
-    - %d int: ok
-    - %d float: int(x) then ok
-    - %d string: convert to %s
-    - %f int: float(x) then ok
-    - %f float: as is
-    - %f string: convert to %s
-    - %s int: convert to %d
-    - %s float: convert to %f
-    - %s string: ok
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
