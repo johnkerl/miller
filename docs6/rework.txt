@@ -1,0 +1,40 @@
+
+----------------------------------------------------------------
+INTEGRATIONS
+cookbook.rst.in-Parsing log-file output
+
+----------------------------------------------------------------
+DATA-CLEANING EXAMMPLES
+cookbook.rst.in-Data-cleaning examples
+
+----------------------------------------------------------------
+TBF
+
+cookbook.rst.in-Showing differences between successive queries
+cookbook.rst.in-Feature-counting
+cookbook.rst.in-Unsparsing
+
+----------------------------------------------------------------
+ESOTERICA
+
+cookbook.rst.in-Memoization with out-of-stream variables
+cookbook.rst.in-Two-pass algorithms
+
+cookbook2.rst.in-Randomly selecting words from a list
+cookbook2.rst.in-Randomly generating jabberwocky words
+cookbook2.rst.in-Program timing
+cookbook2.rst.in-Computing interquartile ranges
+cookbook2.rst.in-Computing weighted means
+cookbook2.rst.in-Generating random numbers from various distributions
+cookbook2.rst.in-Sieve of Eratosthenes
+cookbook2.rst.in-Mandelbrot-set generator
+
+cookbook3.rst.in-Overview
+cookbook3.rst.in-Mean without/with oosvars
+cookbook3.rst.in-Keyed mean without/with oosvars
+cookbook3.rst.in-Variance and standard deviation without/with oosvars
+cookbook3.rst.in-Min/max without/with oosvars
+cookbook3.rst.in-Keyed min/max without/with oosvars
+cookbook3.rst.in-Delta without/with oosvars
+cookbook3.rst.in-Keyed delta without/with oosvars
+cookbook3.rst.in-Exponentially weighted moving averages without/with oosvars

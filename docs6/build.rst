@@ -4,7 +4,7 @@
 Building from source
 ================================================================
 
-Please also see :doc:`install` for information about pre-built executables.
+Please also see :doc:`installation` for information about pre-built executables.
 
 Miller license
 ----------------------------------------------------------------
@@ -14,30 +14,20 @@ Two-clause BSD license https://github.com/johnkerl/miller/blob/master/LICENSE.tx
 From release tarball
 ----------------------------------------------------------------
 
-* Obtain ``mlr-i.j.k.tar.gz`` from https://github.com/johnkerl/miller/tags, replacing ``i.j.k`` with the desired release, e.g. ``2.2.1``.
+* Obtain ``mlr-i.j.k.tar.gz`` from https://github.com/johnkerl/miller/tags, replacing ``i.j.k`` with the desired release, e.g. ``6.1.0``.
 * ``tar zxvf mlr-i.j.k.tar.gz``
 * ``cd mlr-i.j.k``
-* Install the following packages using your system's package manager (``apt-get``, ``yum install``, etc.): **flex**
-* Various configuration options of your choice, e.g.
-
-  * ``./configure``
-  * ``./configure --prefix=/usr/local``
-  * ``./configure --prefix=$HOME/pkgs``
-  * ``./configure CC=clang``
-  * ``./configure --disable-shared`` (to make a statically linked executable)
-  * ``./configure 'CFLAGS=-Wall -std=gnu99 -O3'``
-  * etc.
-
-* ``make`` creates the ``c/mlr`` executable
-* ``make check``
-* ``make install`` copies the ``c/mlr`` executable to your prefix's ``bin`` subdirectory.
+* ``cd go``
+* ``./build`` creates the ``go/mlr`` executable and runs regression tests
+* ``go build mlr.go`` creates the ``go/mlr`` executable without running regression tests
 
 From git clone
 ----------------------------------------------------------------
 
 * ``git clone https://github.com/johnkerl/miller``
 * ``cd miller/go``
-* ``./build``
+* ``./build`` creates the ``go/mlr`` executable and runs regression tests
+* ``go build mlr.go`` creates the ``go/mlr`` executable without running regression tests
 
 In case of problems
 ----------------------------------------------------------------
@@ -53,6 +43,7 @@ Required external dependencies
 These are necessary to produce the ``mlr`` executable.
 
 * Go version 1.16 or higher
+* Others packaged within ``go.mod`` and ``go.sum`` which you don't need to deal with manually -- the Go build process handles them for us
 
 Optional external dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -64,31 +55,29 @@ Creating a new release: for developers
 
 At present I'm the primary developer so this is just my checklist for making new releases.
 
-In this example I am using version 3.4.0; of course that will change for subsequent revisions.
+In this example I am using version 6.1.0 to 6.2.0; of course that will change for subsequent revisions.
 
 * Update version found in ``mlr --version`` and ``man mlr``:
 
-  * Edit ``configure.ac``, ``c/mlrvers.h``, ``miller.spec``, and ``docs/conf.py`` from ``3.3.2-dev`` to ``3.4.0``.
-  * Do a fresh ``autoreconf -fiv`` and commit the output. (Preferably on a Linux host, rather than MacOS, to reduce needless diffs in autogen build files.)
-  * ``make -C c -f Makefile.no-autoconfig installhome && make -C man -f Makefile.no-autoconfig installhome && make -C docs -f Makefile.no-autoconfig html``
+  * Edit ``go/src/version/version.go`` from ``6.1.0-dev`` to ``6.2.0``.
+  * Likewise ``docs6/conf.py``
+  * ``cd ../docs6``
+  * ``export PATH=../go:$PATH``
+  * ``make html``
   * The ordering is important: the first build creates ``mlr``; the second runs ``mlr`` to create ``manpage.txt``; the third includes ``manpage.txt`` into one of its outputs.
   * Commit and push.
 
 * Create the release tarball and SRPM:
 
-  * On buildbox: ``./configure && make distcheck``
-  * On buildbox: make SRPM as in https://github.com/johnkerl/miller/blob/master/README-RPM.md
-  * On all buildboxes: ``cd c`` and ``make -f Makefile.no-autoconfig mlr.static``. Then copy ``mlr.static`` to ``../mlr.{arch}``. (This may require as prerequisite ``sudo yum install glibc-static`` or the like.)
-  * For static binaries, please do ``ldd mlr.static`` and make sure it says ``not a dynamic executable``.
-  * Then ``mv mlr.static ../mlr.linux_x86_64``
-  * Pull back release tarball ``mlr-3.4.0.tar.gz`` and SRPM ``miller-3.4.0-1.el6.src.rpm`` from buildbox, and ``mlr.{arch}`` binaries from whatever buildboxes.
-  * Download ``mlr.exe`` and ``msys-2.0.dll`` from https://ci.appveyor.com/project/johnkerl/miller/build/artifacts.
+  * TBD for the Go port ...
+  * Linux/MacOS/Windows binaries from GitHub Actions ...
+  * Pull back release tarball ``mlr-6.2.0.tar.gz`` from buildbox, and ``mlr.{arch}`` binaries from whatever buildboxes.
 
 * Create the Github release tag:
 
-  * Don't forget the ``v`` in ``v3.4.0``
+  * Don't forget the ``v`` in ``v6.2.0``
   * Write the release notes
-  * Attach the release tarball, SRPM, and binaries. Double-check assets were successfully uploaded.
+  * Attach the release tarball and binaries. Double-check assets were successfully uploaded.
   * Publish the release
 
 * Check the release-specific docs:
@@ -106,22 +95,23 @@ In this example I am using version 3.4.0; of course that will change for subsequ
     git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
     git fetch upstream
     git rebase upstream/master
-    git checkout -b miller-3.4.0
-    shasum -a 256 /path/to/mlr-3.4.0.tar.gz
+    git checkout -b miller-6.1.0
+    shasum -a 256 /path/to/mlr-6.1.0.tar.gz
     edit Formula/miller.rb
     # Test the URL from the line like
-    #   url "https://github.com/johnkerl/miller/releases/download/v3.4.0/mlr-3.4.0.tar.gz"
+    #   url "https://github.com/johnkerl/miller/releases/download/v6.1.0/mlr-6.1.0.tar.gz"
     # in a browser for typos
     # A '@BrewTestBot Test this please' comment within the homebrew-core pull request will restart the homebrew travis build
     git add Formula/miller.rb
-    git commit -m 'miller 3.4.0'
-    git push -u origin miller-3.4.0
+    git commit -m 'miller 6.1.0'
+    git push -u origin miller-6.1.0
     (submit the pull request)
 
 * Afterwork:
 
-  * Edit ``configure.ac`` and ``c/mlrvers.h`` to change version from ``3.4.0`` to ``3.4.0-dev``.
-  * ``make -C c -f Makefile.no-autoconfig installhome && make -C doc -f Makefile.no-autoconfig all installhome``
+  * Edit ``go/src/version/version.go`` and ``docs6/conf.py`` to change version from ``6.2.0`` to ``6.2.0-dev``.
+  * ``cd go``
+  * ``./build``
   * Commit and push.
 
 
