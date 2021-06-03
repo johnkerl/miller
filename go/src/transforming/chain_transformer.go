@@ -34,6 +34,7 @@ func ChainTransformer(
 		}
 
 		go runSingleTransformer(
+			i == 0,
 			ichan,
 			recordTransformer,
 			ochan,
@@ -42,6 +43,7 @@ func ChainTransformer(
 }
 
 func runSingleTransformer(
+	isFirst bool,
 	inputChannel <-chan *types.RecordAndContext,
 	recordTransformer IRecordTransformer,
 	outputChannel chan<- *types.RecordAndContext,
@@ -65,6 +67,7 @@ func runSingleTransformer(
 
 		if recordAndContext.EndOfStream == true || recordAndContext.Record != nil {
 			recordTransformer.Transform(recordAndContext, outputChannel)
+			// TODO: nr progress mod
 		} else {
 			outputChannel <- recordAndContext
 		}

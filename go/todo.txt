@@ -5,7 +5,6 @@ TOP OF LIST:
 
 ! check issues
 
-* --prepipex
 * --nr-progress-mod
 
 * mlr -k
@@ -32,12 +31,12 @@ w survey
   o golang static-analysis tool -- ?
 
 ----------------------------------------------------------------
-! community page
 ! how-to-help guide
   - testing
   - doc mods
   - dev
   - community
+  > backport to docs5
 
 ! get doc6 going sooner than later! lots accumulating ...
   o big:
@@ -52,7 +51,7 @@ w survey
     - likewise cookbook2/3 -- overly nerdy; perhaps just annoying
     - re-work data-sharing <-> SQL ...
   o little:
-    - stats1 -r
+    - stats1 --fr
       cookbook2.rst.in
     - mlr --print-type-arithmetic-info
       reference.rst.in
