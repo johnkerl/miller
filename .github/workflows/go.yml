@@ -1,4 +1,4 @@
-name: Go
+name: Miller-Go
 
 on:
   push:
@@ -30,3 +30,11 @@ jobs:
       # using `-v`, `-vv`, or `-vvv`. Commit changes to this file and re-push to GitHub
       # and let the GitHub Actions re-run.
       run: cd go && go test -v miller/src/... && ./mlr regtest -s 5
+
+    - name: PrepareArtifact
+      run: mkdir -p bin/${{matrix.os}} && cp go/mlr bin/${{matrix.os}}
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: miller-binary
+        path: bin/${{matrix.os}}/mlr

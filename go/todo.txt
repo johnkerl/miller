@@ -3,7 +3,7 @@ TOP OF LIST:
 
 * emit * regex * fmtnum * localtime *
 * --nr-progress-mod * mlr -k *
-* cli-audits * doc6 * survey * check issues *
+* gha binaries * cli-audits * doc6 * survey * check issues *
 
 ----------------------------------------------------------------
 * mlr -k
