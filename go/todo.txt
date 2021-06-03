@@ -1,12 +1,11 @@
 ================================================================
 TOP OF LIST:
 
-* emit * regex * fmtnum * localtime * cli-audits *
-
+* emit * regex * fmtnum * localtime *
 * --nr-progress-mod * mlr -k *
+* cli-audits * doc6 * survey * check issues *
 
-! check issues
-
+----------------------------------------------------------------
 * mlr -k
   o c,go
   o various test cases
@@ -73,9 +72,6 @@ w survey
       > c2 & c3 are all esoterica
 ----------------------------------------------------------------
 
-* blockers:
-  o fix emit
-
 * case auxfiles: cat them too
 
 ----------------------------------------------------------------
@@ -95,9 +91,7 @@ w survey
 * blocker: remaining functions:
   o regextract regextract_or_else
 
-* blocker: comment-handling
-  o really easy for all but JSON
-  o for JSON, if comments-mode, layer in a line-filtering io.Reader
+* blocker: JSON comment-handling
 
 * blocker: localtime functions
 
@@ -117,7 +111,7 @@ w survey
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
-----------------------------------------------------------------
+================================================================
 * non-blocker: commenting passes ...
 
 * non-blocker: new functions:
