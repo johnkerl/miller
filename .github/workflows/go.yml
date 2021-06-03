@@ -31,19 +31,15 @@ jobs:
       # and let the GitHub Actions re-run.
       run: cd go && go test -v miller/src/... && ./mlr regtest -s 5
 
-    - name: PrepareArtifact
-      run: |
-        os="${{matrix.os}}"
-        mkdir -p "bin/$os"
-        if [[ "$os" == "Windows" ]]; then
-          cp go/mlr.exe bin/"$os"
-        else
-          cp go/mlr bin/"$os"
-        fi
+    - name: PrepareArtifactNonWindows
+      if: matrix.os != 'windows-latest'
+      run: mkdir -p bin/${{matrix.os}} && cp go/mlr bin/${{matrix.os}}
+
+    - name: PrepareArtifactWindows
+      if: matrix.os == 'windows-latest'
+      run: mkdir -p bin/${{matrix.os}} && cp go/mlr.exe bin/${{matrix.os}}
 
     - uses: actions/upload-artifact@v2
       with:
         name: mlr-${{matrix.os}}
-        path: bin/${{matrix.os}}/mlr
-
-
+        path: bin/${{matrix.os}}/*
