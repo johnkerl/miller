@@ -119,6 +119,9 @@ type TWriterOptions struct {
 	// which is how we write out nested data structures for non-nested formats
 	// (all but JSON) -- unless the user explicitly asks to suppress that.
 	AutoFlatten bool
+
+	// For floating-point numbers: "" means use the Go default.
+	FPOFMT string
 }
 
 // ----------------------------------------------------------------
@@ -150,8 +153,6 @@ type TOptions struct {
 	//	int     argc;
 	//	int     transformer_argb;
 	//
-	//
-	//	char* ofmt;
 	//	nr_progress_mod int64u;
 	DoInPlace bool // mlr -I
 	NoInput   bool // mlr -n
@@ -196,5 +197,6 @@ func DefaultWriterOptions() TWriterOptions {
 		JSONOutputMultiline:       true,
 		AutoUnflatten:             true,
 		AutoFlatten:               true,
+		FPOFMT:                    "",
 	}
 }

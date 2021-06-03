@@ -326,6 +326,11 @@ func ParseWriterOptions(
 		writerOptions.AutoUnflatten = false
 		argi += 1
 
+	} else if args[argi] == "--ofmt" {
+		CheckArgCount(args, argi, argc, 2)
+		writerOptions.FPOFMT = args[argi+1]
+		argi += 2
+
 	} else if args[argi] == "--jknquoteint" {
 		// No-op pass-through for backward compatibility with Miller 5
 		argi += 1
@@ -1043,11 +1048,6 @@ func ParseMiscOptions(
 			argi += 1
 		}
 
-		//	} else if args[argi] == "--ofmt" {
-		//		CheckArgCount(args, argi, argc, 2);
-		//		options.ofmt = args[argi+1];
-		//		argi += 2;
-		//
 		//	} else if args[argi] == "--nr-progress-mod" {
 		//		CheckArgCount(args, argi, argc, 2);
 		//		if (sscanf(args[argi+1], "%lld", &options.nr_progress_mod) != 1) {

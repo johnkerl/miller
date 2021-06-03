@@ -76,10 +76,10 @@ func mainUsageLong(o *os.File, argv0 string) {
 	//	fmt.Fprintf(o, "DOUBLE-QUOTING FOR CSV OUTPUT:\n");
 	//	mainUsageDoubleQuoting(o, argv0);
 	//	fmt.Fprintf(o, "\n");
-	//
-	//	fmt.Fprintf(o, "NUMERICAL FORMATTING:\n");
-	//	mainUsageNumericalFormatting(o, argv0);
-	//	fmt.Fprintf(o, "\n");
+
+	fmt.Fprintf(o, "NUMERICAL FORMATTING:\n")
+	mainUsageNumericalFormatting(o, argv0)
+	fmt.Fprintf(o, "\n")
 
 	fmt.Fprintf(o, "OTHER OPTIONS:\n")
 	mainUsageOtherOptions(o, argv0)
@@ -490,13 +490,13 @@ func mainUsageCsvOptions(o *os.File, argv0 string) {
 //	fmt.Fprintf(o, "                     was-quoted-on-input flag.\n");
 //}
 
-//func mainUsageNumericalFormatting(o *os.File, argv0 string) {
-//	fmt.Fprintf(o, "  --ofmt {format}    E.g. %%.18lf, %%.0lf. Please use sprintf-style codes for\n");
-//	fmt.Fprintf(o, "                     double-precision. Applies to verbs which compute new\n");
-//	fmt.Fprintf(o, "                     values, e.g. put, stats1, stats2. See also the fmtnum\n");
-//	fmt.Fprintf(o, "                     function within mlr put (mlr --help-all-functions).\n");
-//	fmt.Fprintf(o, "                     Defaults to %s.\n", DEFAULT_OFMT);
-//}
+func mainUsageNumericalFormatting(o *os.File, argv0 string) {
+	// TODO: update comment
+	fmt.Fprintf(o, "  --ofmt {format}    E.g. %%.18f, %%.0f, %%9.6e. Please use sprintf-style codes for\n")
+	fmt.Fprintf(o, "                     floating-point nummbers. If not specified, default formatting is used.\n")
+	fmt.Fprintf(o, "                     See also the fmtnum function within mlr put (mlr --help-all-functions);\n")
+	fmt.Fprintf(o, "                     see also the format-values function.\n")
+}
 
 // TODO
 func mainUsageOtherOptions(o *os.File, argv0 string) {
