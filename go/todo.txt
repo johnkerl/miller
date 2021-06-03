@@ -4,7 +4,6 @@ TOP OF LIST:
 * emit * regex * fmtnum * localtime * cli-audits *
 
 ! check issues
-! regtest/cases/verb-label/0001/0001
 
 * --prepipex
 * --nr-progress-mod
@@ -33,6 +32,13 @@ w survey
   o golang static-analysis tool -- ?
 
 ----------------------------------------------------------------
+! community page
+! how-to-help guide
+  - testing
+  - doc mods
+  - dev
+  - community
+
 ! get doc6 going sooner than later! lots accumulating ...
   o big:
     ? quick-examples needs fewer inputs, and outputs for all retained inputs
@@ -62,6 +68,13 @@ w survey
     - list at end of todo.txt
     - maybe mlr -> mlrc as live-todo & 6make by default -- ?
     - trailing space on pprint right
+  o plan:
+    - first landing page w/ toplinks -- ?
+    - current FAQ -> esoterica (mostly ...) & distill new FAQ from GH issues/discussions
+    - integrations section: log-processing, sql, mixing
+    - cookbook 1/2/3 total teardown/rebuild:
+      > data-cleaning examples -> full section -- ?
+      > c2 & c3 are all esoterica
 ----------------------------------------------------------------
 
 * blockers:

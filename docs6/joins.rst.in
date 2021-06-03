@@ -1,0 +1,65 @@
+Joins
+=====
+
+Why am I not seeing all possible joins occur?
+----------------------------------------------------------------
+
+**This section describes behavior before Miller 5.1.0. As of 5.1.0, -u is the default.**
+
+For example, the right file here has nine records, and the left file should add in the ``hostname`` column -- so the join output should also have 9 records:
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-u-left.csv}}HERE
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-u-right.csv}}HERE
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv}}HERE
+
+The issue is that Miller's ``join``, by default (before 5.1.0), took input sorted (lexically ascending) by the sort keys on both the left and right files.  This design decision was made intentionally to parallel the Unix/Linux system ``join`` command, which has the same semantics. The benefit of this default is that the joiner program can stream through the left and right files, needing to load neither entirely into memory. The drawback, of course, is that is requires sorted input.
+
+The solution (besides pre-sorting the input files on the join keys) is to simply use **mlr join -u** (which is now the default). This loads the left file entirely into memory (while the right file is still streamed one line at a time) and does all possible joins without requiring sorted input:
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv}}HERE
+
+General advice is to make sure the left-file is relatively small, e.g. containing name-to-number mappings, while saving large amounts of data for the right file.
+
+How to rectangularize after joins with unpaired?
+----------------------------------------------------------------
+
+Suppose you have the following two data files:
+
+POKI_INCLUDE_ESCAPED(data/color-codes.csv)HERE
+
+POKI_INCLUDE_ESCAPED(data/color-names.csv)HERE
+
+Joining on color the results are as expected:
+
+POKI_RUN_COMMAND{{mlr --csv join -j id -f data/color-codes.csv data/color-names.csv}}HERE
+
+However, if we ask for left-unpaireds, since there's no ``color`` column, we get a row not having the same column names as the other:
+
+POKI_RUN_COMMAND{{mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv}}HERE
+
+To fix this, we can use **unsparsify**:
+
+POKI_RUN_COMMAND{{mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv}}HERE
+
+Thanks to @aborruso for the tip!
+
+Doing multiple joins
+----------------------------------------------------------------
+
+Suppose we have the following data:
+
+POKI_RUN_COMMAND{{cat multi-join/input.csv}}HERE
+
+And we want to augment the ``id`` column with lookups from the following data files:
+
+POKI_RUN_COMMAND{{cat multi-join/name-lookup.csv}}HERE
+
+POKI_RUN_COMMAND{{cat multi-join/status-lookup.csv}}HERE
+
+We can run the input file through multiple ``join`` commands in a ``then``-chain:
+
+POKI_RUN_COMMAND{{mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id then join -f multi-join/status-lookup.csv -j id multi-join/input.csv}}HERE
+
+.. _cookbook-data-cleaning-examples:
