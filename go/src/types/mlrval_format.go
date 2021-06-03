@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -61,6 +62,7 @@ func GetMlrvalFormatter(
 // ----------------------------------------------------------------
 type IMlrvalFormatter interface {
 	Format(mlrval *Mlrval) *Mlrval
+	FormatFloat(floatValue float64) string // for --ofmt
 }
 
 func newMlrvalFormatter(
@@ -119,6 +121,10 @@ func (formatter *mlrvalFormatterToFloat) Format(mlrval *Mlrval) *Mlrval {
 	return mlrval
 }
 
+func (formatter *mlrvalFormatterToFloat) FormatFloat(floatValue float64) string {
+	return fmt.Sprintf(formatter.goFormatString, floatValue)
+}
+
 // ----------------------------------------------------------------
 type mlrvalFormatterToInt struct {
 	goFormatString string
@@ -144,6 +150,10 @@ func (formatter *mlrvalFormatterToInt) Format(mlrval *Mlrval) *Mlrval {
 	return mlrval
 }
 
+func (formatter *mlrvalFormatterToInt) FormatFloat(floatValue float64) string {
+	return fmt.Sprintf(formatter.goFormatString, int(floatValue))
+}
+
 // ----------------------------------------------------------------
 type mlrvalFormatterToString struct {
 	goFormatString string
@@ -162,4 +172,8 @@ func (formatter *mlrvalFormatterToString) Format(mlrval *Mlrval) *Mlrval {
 			mlrval.String(),
 		),
 	)
+}
+
+func (formatter *mlrvalFormatterToString) FormatFloat(floatValue float64) string {
+	return strconv.FormatFloat(floatValue, 'g', -1, 64)
 }

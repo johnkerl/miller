@@ -6,6 +6,19 @@ import (
 	"strconv"
 )
 
+// Empty string means use default format.
+// Set from the CLI parser using mlr --ofmt.
+var mlrvalFloatOutputFormatter IMlrvalFormatter = nil
+
+func SetMlrvalFloatOutputFormat(formatString string) error {
+	formatter, err := GetMlrvalFormatter(formatString)
+	if err != nil {
+		return err
+	}
+	mlrvalFloatOutputFormatter = formatter
+	return nil
+}
+
 // See mlrval.go for more about JIT-formatting of string backings
 func (mv *Mlrval) setPrintRep() {
 	if !mv.printrepValid {
@@ -37,7 +50,6 @@ func (mv *Mlrval) setPrintRep() {
 			mv.printrep = strconv.Itoa(mv.intval)
 			break
 		case MT_FLOAT:
-			// xxx temp -- OFMT etc ...
 			mv.printrep = strconv.FormatFloat(mv.floatval, 'g', -1, 64)
 			break
 		case MT_BOOL:
@@ -78,6 +90,11 @@ func (mv *Mlrval) setPrintRep() {
 // Must have non-pointer receiver in order to implement the fmt.Stringer
 // interface to make this printable via fmt.Println et al.
 func (mv Mlrval) String() string {
-	mv.setPrintRep()
-	return mv.printrep
+	if mv.mvtype == MT_FLOAT && mlrvalFloatOutputFormatter != nil {
+		// Use the format string from global --ofmt, if supplied
+		return mlrvalFloatOutputFormatter.FormatFloat(mv.floatval)
+	} else {
+		mv.setPrintRep()
+		return mv.printrep
+	}
 }
