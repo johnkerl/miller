@@ -13,6 +13,7 @@ import (
 	"miller/src/lib"
 	"miller/src/transformers"
 	"miller/src/transforming"
+	"miller/src/types"
 	"miller/src/version"
 )
 
@@ -61,6 +62,14 @@ func ParseCommandLine(args []string) (
 
 	cliutil.ApplyReaderOptionDefaults(&options.ReaderOptions)
 	cliutil.ApplyWriterOptionDefaults(&options.WriterOptions)
+
+	// Set an optional global formatter for floating-point values
+	if options.WriterOptions.FPOFMT != "" {
+		err = types.SetMlrvalFloatOutputFormat(options.WriterOptions.FPOFMT)
+		if err != nil {
+			return options, recordTransformers, err
+		}
+	}
 
 	recordTransformers, ignoresInput, err := parseTransformers(args, &argi, argc, &options)
 	if err != nil {
