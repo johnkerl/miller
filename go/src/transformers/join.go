@@ -46,6 +46,7 @@ type tJoinOptions struct {
 
 	leftFileName string
 	prepipe      string
+	prepipeIsRaw bool
 
 	// These allow the joiner to have its own different format/delimiter for the left-file:
 	joinReaderOptions cliutil.TReaderOptions
@@ -67,6 +68,7 @@ func newJoinOptions() *tJoinOptions {
 
 		leftFileName: "",
 		prepipe:      "",
+		prepipeIsRaw: false,
 	}
 }
 
@@ -105,6 +107,7 @@ func transformerJoinUsage(
 		lib.MlrExeName())
 	fmt.Fprintf(o, "               If you wish to use a prepipe command for the main input as well\n")
 	fmt.Fprintf(o, "               as here, it must be specified there as well as here.\n")
+	fmt.Fprintf(o, "  --prepipex {command} Likewise.\n")
 	fmt.Fprintf(o, "File-format options default to those for the right file names on the Miller\n")
 	fmt.Fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n")
 	fmt.Fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments:\n", lib.MlrExeName())
@@ -163,6 +166,11 @@ func transformerJoinParseCLI(
 
 		} else if opt == "--prepipe" {
 			opts.prepipe = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.prepipeIsRaw = false
+
+		} else if opt == "--prepipex" {
+			opts.prepipe = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.prepipeIsRaw = true
 
 		} else if opt == "-f" {
 			opts.leftFileName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)

@@ -32,6 +32,7 @@ func (reader *RecordReaderJSON) Read(
 		if len(filenames) == 0 { // read from stdin
 			handle, err := lib.OpenStdin(
 				reader.readerOptions.Prepipe,
+				reader.readerOptions.PrepipeIsRaw,
 				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
@@ -43,6 +44,7 @@ func (reader *RecordReaderJSON) Read(
 				handle, err := lib.OpenFileForRead(
 					filename,
 					reader.readerOptions.Prepipe,
+					reader.readerOptions.PrepipeIsRaw,
 					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
