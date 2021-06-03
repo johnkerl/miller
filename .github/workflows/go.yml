@@ -43,7 +43,7 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: bin/${{matrix.os}}/mlr
+        name: mlr-${{matrix.os}}
         path: bin/${{matrix.os}}/mlr
 
 
