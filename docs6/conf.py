@@ -87,4 +87,25 @@ html_static_path = ['_static']
 #
 # * This all relies on symlinks being propagated through GitHub version
 #   control, readthedocs, and Sphinx build at readthedocs.
-html_extra_path = ['sphinx-hack']
+
+html_extra_path = [
+  'sphinx-hack',
+  '10-1.sh',
+  '10-2.sh',
+  'circle.csv',
+  'commas.csv',
+  'dates.csv',
+  'example.csv',
+  'expo-sample.sh',
+  'log.txt',
+  'make.bat',
+  'manpage.txt',
+  'oosvar-example-ewma.sh',
+  'oosvar-example-sum-grouped.sh',
+  'oosvar-example-sum.sh',
+  'sample_mlrrc',
+  'square.csv',
+  'triangle.csv',
+  'variance.mlr',
+  'verb-example-ewma.sh',
+]
