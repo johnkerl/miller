@@ -4,7 +4,7 @@ Cookbook part 2: Random things, and some math
 Randomly selecting words from a list
 ----------------------------------------------------------------
 
-Given this `word list <https://github.com/johnkerl/miller/blob/master/docs/data/english-words.txt>`_, first take a look to see what the first few lines look like:
+Given this `word list <./data/english-words.txt>`_, first take a look to see what the first few lines look like:
 
 .. code-block:: none
    :emphasize-lines: 1,1

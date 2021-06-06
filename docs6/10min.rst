@@ -14,16 +14,16 @@ Suppose you have this CSV data file:
 
     $ cat example.csv
     color,shape,flag,index,quantity,rate
-    yellow,triangle,1,11,43.6498,9.8870
-    red,square,1,15,79.2778,0.0130
-    red,circle,1,16,13.8103,2.9010
-    red,square,0,48,77.5542,7.4670
-    purple,triangle,0,51,81.2290,8.5910
-    red,square,0,64,77.1991,9.5310
-    purple,triangle,0,65,80.1405,5.8240
-    yellow,circle,1,73,63.9785,4.2370
-    yellow,circle,1,87,63.5058,8.3350
-    purple,square,0,91,72.3735,8.2430
+    yellow,triangle,true,11,43.6498,9.8870
+    red,square,true,15,79.2778,0.0130
+    red,circle,true,16,13.8103,2.9010
+    red,square,false,48,77.5542,7.4670
+    purple,triangle,false,51,81.2290,8.5910
+    red,square,false,64,77.1991,9.5310
+    purple,triangle,false,65,80.1405,5.8240
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
+    purple,square,false,91,72.3735,8.2430
 
 ``mlr cat`` is like cat -- it passes the data through unmodified:
 
@@ -32,16 +32,16 @@ Suppose you have this CSV data file:
 
     $ mlr --csv cat example.csv
     color,shape,flag,index,quantity,rate
-    yellow,triangle,1,11,43.6498,9.8870
-    red,square,1,15,79.2778,0.0130
-    red,circle,1,16,13.8103,2.9010
-    red,square,0,48,77.5542,7.4670
-    purple,triangle,0,51,81.2290,8.5910
-    red,square,0,64,77.1991,9.5310
-    purple,triangle,0,65,80.1405,5.8240
-    yellow,circle,1,73,63.9785,4.2370
-    yellow,circle,1,87,63.5058,8.3350
-    purple,square,0,91,72.3735,8.2430
+    yellow,triangle,true,11,43.6498,9.8870
+    red,square,true,15,79.2778,0.0130
+    red,circle,true,16,13.8103,2.9010
+    red,square,false,48,77.5542,7.4670
+    purple,triangle,false,51,81.2290,8.5910
+    red,square,false,64,77.1991,9.5310
+    purple,triangle,false,65,80.1405,5.8240
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
+    purple,square,false,91,72.3735,8.2430
 
 but it can also do format conversion (here, you can pretty-print in tabular format):
 
@@ -49,17 +49,17 @@ but it can also do format conversion (here, you can pretty-print in tabular form
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint cat example.csv
-    color  shape    flag index quantity rate
-    yellow triangle 1    11    43.6498  9.8870
-    red    square   1    15    79.2778  0.0130
-    red    circle   1    16    13.8103  2.9010
-    red    square   0    48    77.5542  7.4670
-    purple triangle 0    51    81.2290  8.5910
-    red    square   0    64    77.1991  9.5310
-    purple triangle 0    65    80.1405  5.8240
-    yellow circle   1    73    63.9785  4.2370
-    yellow circle   1    87    63.5058  8.3350
-    purple square   0    91    72.3735  8.2430
+    color  shape    flag  index quantity rate
+    yellow triangle true  11    43.6498  9.8870
+    red    square   true  15    79.2778  0.0130
+    red    circle   true  16    13.8103  2.9010
+    red    square   false 48    77.5542  7.4670
+    purple triangle false 51    81.2290  8.5910
+    red    square   false 64    77.1991  9.5310
+    purple triangle false 65    80.1405  5.8240
+    yellow circle   true  73    63.9785  4.2370
+    yellow circle   true  87    63.5058  8.3350
+    purple square   false 91    72.3735  8.2430
 
 ``mlr head`` and ``mlr tail`` count records rather than lines. Whether you're getting the first few records or the last few, the CSV header is included either way:
 
@@ -68,20 +68,20 @@ but it can also do format conversion (here, you can pretty-print in tabular form
 
     $ mlr --csv head -n 4 example.csv
     color,shape,flag,index,quantity,rate
-    yellow,triangle,1,11,43.6498,9.8870
-    red,square,1,15,79.2778,0.0130
-    red,circle,1,16,13.8103,2.9010
-    red,square,0,48,77.5542,7.4670
+    yellow,triangle,true,11,43.6498,9.8870
+    red,square,true,15,79.2778,0.0130
+    red,circle,true,16,13.8103,2.9010
+    red,square,false,48,77.5542,7.4670
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --csv tail -n 4 example.csv
     color,shape,flag,index,quantity,rate
-    purple,triangle,0,65,80.1405,5.8240
-    yellow,circle,1,73,63.9785,4.2370
-    yellow,circle,1,87,63.5058,8.3350
-    purple,square,0,91,72.3735,8.2430
+    purple,triangle,false,65,80.1405,5.8240
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
+    purple,square,false,91,72.3735,8.2430
 
 You can sort primarily alphabetically on one field, then secondarily numerically descending on another field:
 
@@ -89,17 +89,17 @@ You can sort primarily alphabetically on one field, then secondarily numerically
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint sort -f shape -nr index example.csv
-    color  shape    flag index quantity rate
-    yellow circle   1    87    63.5058  8.3350
-    yellow circle   1    73    63.9785  4.2370
-    red    circle   1    16    13.8103  2.9010
-    purple square   0    91    72.3735  8.2430
-    red    square   0    64    77.1991  9.5310
-    red    square   0    48    77.5542  7.4670
-    red    square   1    15    79.2778  0.0130
-    purple triangle 0    65    80.1405  5.8240
-    purple triangle 0    51    81.2290  8.5910
-    yellow triangle 1    11    43.6498  9.8870
+    color  shape    flag  index quantity rate
+    yellow circle   true  87    63.5058  8.3350
+    yellow circle   true  73    63.9785  4.2370
+    red    circle   true  16    13.8103  2.9010
+    purple square   false 91    72.3735  8.2430
+    red    square   false 64    77.1991  9.5310
+    red    square   false 48    77.5542  7.4670
+    red    square   true  15    79.2778  0.0130
+    purple triangle false 65    80.1405  5.8240
+    purple triangle false 51    81.2290  8.5910
+    yellow triangle true  11    43.6498  9.8870
 
 You can use ``cut`` to retain only specified fields, in the same order they appeared in the input data:
 
@@ -108,16 +108,16 @@ You can use ``cut`` to retain only specified fields, in the same order they appe
 
     $ mlr --icsv --opprint cut -f flag,shape example.csv
     shape    flag
-    triangle 1
-    square   1
-    circle   1
-    square   0
-    triangle 0
-    square   0
-    triangle 0
-    circle   1
-    circle   1
-    square   0
+    triangle true
+    square   true
+    circle   true
+    square   false
+    triangle false
+    square   false
+    triangle false
+    circle   true
+    circle   true
+    square   false
 
 You can also use ``cut -o`` to retain only specified fields in your preferred order:
 
@@ -125,17 +125,17 @@ You can also use ``cut -o`` to retain only specified fields in your preferred or
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint cut -o -f flag,shape example.csv
-    flag shape
-    1    triangle
-    1    square
-    1    circle
-    0    square
-    0    triangle
-    0    square
-    0    triangle
-    1    circle
-    1    circle
-    0    square
+    flag  shape
+    true  triangle
+    true  square
+    true  circle
+    false square
+    false triangle
+    false square
+    false triangle
+    true  circle
+    true  circle
+    false square
 
 You can use ``cut -x`` to omit fields you don't care about:
 
@@ -161,19 +161,16 @@ You can use ``filter`` to keep only records you care about:
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint filter '$color == "red"' example.csv
-    color shape  flag index quantity rate
-    red   square 1    15    79.2778  0.0130
-    red   circle 1    16    13.8103  2.9010
-    red   square 0    48    77.5542  7.4670
-    red   square 0    64    77.1991  9.5310
+    color shape  flag  index quantity rate
+    red   square true  15    79.2778  0.0130
+    red   circle true  16    13.8103  2.9010
+    red   square false 48    77.5542  7.4670
+    red   square false 64    77.1991  9.5310
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint filter '$color == "red" && $flag == 1' example.csv
-    color shape  flag index quantity rate
-    red   square 1    15    79.2778  0.0130
-    red   circle 1    16    13.8103  2.9010
 
 You can use ``put`` to create new fields which are computed from other fields:
 
@@ -181,17 +178,17 @@ You can use ``put`` to create new fields which are computed from other fields:
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
-    color  shape    flag index quantity rate   ratio              color_shape
-    yellow triangle 1    11    43.6498  9.8870 4.414868008496004  yellow_triangle
-    red    square   1    15    79.2778  0.0130 6098.292307692308  red_square
-    red    circle   1    16    13.8103  2.9010 4.760530851430541  red_circle
-    red    square   0    48    77.5542  7.4670 10.386259541984733 red_square
-    purple triangle 0    51    81.2290  8.5910 9.455127458968688  purple_triangle
-    red    square   0    64    77.1991  9.5310 8.099790158430384  red_square
-    purple triangle 0    65    80.1405  5.8240 13.760388049450551 purple_triangle
-    yellow circle   1    73    63.9785  4.2370 15.09995279679018  yellow_circle
-    yellow circle   1    87    63.5058  8.3350 7.619172165566886  yellow_circle
-    purple square   0    91    72.3735  8.2430 8.779995147397793  purple_square
+    color  shape    flag  index quantity rate   ratio              color_shape
+    yellow triangle true  11    43.6498  9.8870 4.414868008496004  yellow_triangle
+    red    square   true  15    79.2778  0.0130 6098.292307692308  red_square
+    red    circle   true  16    13.8103  2.9010 4.760530851430541  red_circle
+    red    square   false 48    77.5542  7.4670 10.386259541984733 red_square
+    purple triangle false 51    81.2290  8.5910 9.455127458968688  purple_triangle
+    red    square   false 64    77.1991  9.5310 8.099790158430384  red_square
+    purple triangle false 65    80.1405  5.8240 13.760388049450551 purple_triangle
+    yellow circle   true  73    63.9785  4.2370 15.09995279679018  yellow_circle
+    yellow circle   true  87    63.5058  8.3350 7.619172165566886  yellow_circle
+    purple square   false 91    72.3735  8.2430 8.779995147397793  purple_square
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use ``$[[3]]`` to access the name of field 3 or ``$[[[3]]]`` to access the value of field 3:
 
@@ -199,17 +196,17 @@ Even though Miller's main selling point is name-indexing, sometimes you really w
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv
-    color  shape    NEW index quantity rate
-    yellow triangle 1   11    43.6498  9.8870
-    red    square   1   15    79.2778  0.0130
-    red    circle   1   16    13.8103  2.9010
-    red    square   0   48    77.5542  7.4670
-    purple triangle 0   51    81.2290  8.5910
-    red    square   0   64    77.1991  9.5310
-    purple triangle 0   65    80.1405  5.8240
-    yellow circle   1   73    63.9785  4.2370
-    yellow circle   1   87    63.5058  8.3350
-    purple square   0   91    72.3735  8.2430
+    color  shape    NEW   index quantity rate
+    yellow triangle true  11    43.6498  9.8870
+    red    square   true  15    79.2778  0.0130
+    red    circle   true  16    13.8103  2.9010
+    red    square   false 48    77.5542  7.4670
+    purple triangle false 51    81.2290  8.5910
+    red    square   false 64    77.1991  9.5310
+    purple triangle false 65    80.1405  5.8240
+    yellow circle   true  73    63.9785  4.2370
+    yellow circle   true  87    63.5058  8.3350
+    purple square   false 91    72.3735  8.2430
 
 .. code-block:: none
    :emphasize-lines: 1,1
@@ -239,7 +236,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "yellow",
       "shape": "TRIANGLE",
-      "flag": 1,
+      "flag": true,
       "index": 11,
       "quantity": 43.6498,
       "rate": 9.8870,
@@ -248,7 +245,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "red",
       "shape": "SQUARE",
-      "flag": 1,
+      "flag": true,
       "index": 15,
       "quantity": 79.2778,
       "rate": 0.0130,
@@ -257,7 +254,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "red",
       "shape": "CIRCLE",
-      "flag": 1,
+      "flag": true,
       "index": 16,
       "quantity": 13.8103,
       "rate": 2.9010,
@@ -266,7 +263,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "red",
       "shape": "SQUARE",
-      "flag": 0,
+      "flag": false,
       "index": 48,
       "quantity": 77.5542,
       "rate": 7.4670,
@@ -275,7 +272,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "purple",
       "shape": "TRIANGLE",
-      "flag": 0,
+      "flag": false,
       "index": 51,
       "quantity": 81.2290,
       "rate": 8.5910,
@@ -284,7 +281,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "red",
       "shape": "SQUARE",
-      "flag": 0,
+      "flag": false,
       "index": 64,
       "quantity": 77.1991,
       "rate": 9.5310,
@@ -293,7 +290,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "purple",
       "shape": "TRIANGLE",
-      "flag": 0,
+      "flag": false,
       "index": 65,
       "quantity": 80.1405,
       "rate": 5.8240,
@@ -302,7 +299,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "yellow",
       "shape": "CIRCLE",
-      "flag": 1,
+      "flag": true,
       "index": 73,
       "quantity": 63.9785,
       "rate": 4.2370,
@@ -311,7 +308,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "yellow",
       "shape": "CIRCLE",
-      "flag": 1,
+      "flag": true,
       "index": 87,
       "quantity": 63.5058,
       "rate": 8.3350,
@@ -320,7 +317,7 @@ OK, CSV and pretty-print are fine. But Miller can also convert between a few oth
     {
       "color": "purple",
       "shape": "SQUARE",
-      "flag": 0,
+      "flag": false,
       "index": 91,
       "quantity": 72.3735,
       "rate": 8.2430,
@@ -339,9 +336,9 @@ Here are the records with the top three ``index`` values:
 
     $ mlr --icsv --opprint sort -f shape -nr index then head -n 3 example.csv
     color  shape  flag index quantity rate
-    yellow circle 1    87    63.5058  8.3350
-    yellow circle 1    73    63.9785  4.2370
-    red    circle 1    16    13.8103  2.9010
+    yellow circle true 87    63.5058  8.3350
+    yellow circle true 73    63.9785  4.2370
+    red    circle true 16    13.8103  2.9010
 
 Lots of Miller commands take a ``-g`` option for group-by: here, ``head -n 1 -g shape`` outputs the first record for each distinct value of the ``shape`` field. This means we're finding the record with highest ``index`` field for each distinct ``shape`` field:
 
@@ -349,10 +346,10 @@ Lots of Miller commands take a ``-g`` option for group-by: here, ``head -n 1 -g 
    :emphasize-lines: 1,1
 
     $ mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
-    color  shape    flag index quantity rate
-    yellow circle   1    87    63.5058  8.3350
-    purple square   0    91    72.3735  8.2430
-    purple triangle 0    65    80.1405  5.8240
+    color  shape    flag  index quantity rate
+    yellow circle   true  87    63.5058  8.3350
+    purple square   false 91    72.3735  8.2430
+    purple triangle false 65    80.1405  5.8240
 
 Statistics can be computed with or without group-by field(s):
 
@@ -490,28 +487,28 @@ Lastly, using ``tee`` within ``put``, you can split your input data into separat
 
     $ cat circle.csv
     color,shape,flag,index,quantity,rate
-    red,circle,1,16,13.8103,2.9010
-    yellow,circle,1,73,63.9785,4.2370
-    yellow,circle,1,87,63.5058,8.3350
+    red,circle,true,16,13.8103,2.9010
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat square.csv
     color,shape,flag,index,quantity,rate
-    red,square,1,15,79.2778,0.0130
-    red,square,0,48,77.5542,7.4670
-    red,square,0,64,77.1991,9.5310
-    purple,square,0,91,72.3735,8.2430
+    red,square,true,15,79.2778,0.0130
+    red,square,false,48,77.5542,7.4670
+    red,square,false,64,77.1991,9.5310
+    purple,square,false,91,72.3735,8.2430
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
     $ cat triangle.csv
     color,shape,flag,index,quantity,rate
-    yellow,triangle,1,11,43.6498,9.8870
-    purple,triangle,0,51,81.2290,8.5910
-    purple,triangle,0,65,80.1405,5.8240
+    yellow,triangle,true,11,43.6498,9.8870
+    purple,triangle,false,51,81.2290,8.5910
+    purple,triangle,false,65,80.1405,5.8240
 
 Other-format examples
 ^^^^^^^^^^^^^^^^^^^^^

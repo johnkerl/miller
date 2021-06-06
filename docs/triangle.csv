@@ -1,4 +1,4 @@
 color,shape,flag,index,quantity,rate
-yellow,triangle,1,11,43.6498,9.8870
-purple,triangle,0,51,81.2290,8.5910
-purple,triangle,0,65,80.1405,5.8240
+yellow,triangle,true,11,43.6498,9.8870
+purple,triangle,false,51,81.2290,8.5910
+purple,triangle,false,65,80.1405,5.8240
