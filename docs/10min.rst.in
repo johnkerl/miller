@@ -4,7 +4,7 @@ Miller in 10 minutes
 CSV-file examples
 ^^^^^^^^^^^^^^^^^
 
-Suppose you have this CSV data file:
+Suppose you have this CSV data file (`example.csv <./example.csv>`_):
 
 POKI_RUN_COMMAND{{cat example.csv}}HERE
 
