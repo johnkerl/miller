@@ -410,7 +410,7 @@ static void mapper_stats1_free(mapper_t* pmapper, context_t* _) {
 // In the non-iterative case, produce output only at the end of the input stream.
 static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
-	if (pinrec != NULL) {
+	if (pinrec != NULL) { // Not end of record stream
 		pstate->pgroup_by_ingestor(pinrec, pstate);
 		if (pstate->do_iterative_stats) {
 			// The input record is modified in this case, with new fields appended
@@ -419,10 +419,12 @@ static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvst
 			lrec_free(pinrec);
 			return NULL;
 		}
-	} else if (!pstate->do_iterative_stats) {
-		return pstate->pemitter(pstate);
-	} else {
-		return NULL;
+	} else { // End of record stream
+		if (!pstate->do_iterative_stats) {
+			return pstate->pemitter(pstate);
+		} else {
+			return sllv_single(NULL); // emit end-of-stream marker
+		}
 	}
 }
 
