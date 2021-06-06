@@ -55,3 +55,36 @@ html_theme = 'classic'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# ----------------------------------------------------------------
+# Include code-sample files in the Sphinx build tree.
+# See also https://github.com/johnkerl/miller/issues/560.
+#
+# There is a problem, and an opportunity for a hack.
+#
+# * Our data files are in ./data/* (and a few other subdirs of .).
+#
+# * We want them copied to ./_build/data/* so that we can symlink from our doc
+#   files (written in ./*.rst. autogenned to HTML in ./_build/html/*.html) to
+#   relative paths like ./data/a.csv.
+#
+# * If we use html_extra_path = ['data'] then the files like ./data/a.csv
+#   are copied to _build/html/a.csv -- one directory 'down'. This means that
+#   example Miller commands are shown in the generated HTML using 'mlr --csv
+#   cat data/a.csv' but 'data/a.csv' doesn't exist relative to _build/html.
+#   This is bad enough for local Sphinx builds but worse for readthedocs
+#   (https://miller.readthedocs.io) since *only* _build/html files are put into
+#   readthedocs.
+#
+# * In our Makefile it's easy enough to do some cp -a commands from ./data
+#   to ./_build_html/data etc. for local Sphinx builds -- however, readthedocs
+#   doesn't use the Makefile at all, only this conf.py file.
+#
+# * Hence the hack: we have a subdir ./sphinx-hack which has a symlink
+#   ./sphinx-hack/data pointing to ./data. So when the Sphinx build executes
+#   html_extra_path and removes one directory level, it's an 'extra' level we
+#   can do without.
+#
+# * This all relies on symlinks being propagated through GitHub version
+#   control, readthedocs, and Sphinx build at readthedocs.
+html_extra_path = ['sphinx-hack']
