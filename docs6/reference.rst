@@ -1131,6 +1131,9 @@ Examples:
       specify an action to be taken on each input file. This prepipe command must
       be able to read from standard input; it will be invoked with
         {command} < {filename}.
+      --prepipex {command} Like --prepipe with one exception: doesn't insert '<' between
+      command and filename at runtime. Useful for some commands like 'unzip -qc' which don't
+      read standard input.
       Examples:
         mlr --prepipe 'gunzip'
         mlr --prepipe 'zcat -cf'
@@ -1160,6 +1163,12 @@ Examples:
                          the implicit-header case.
       --headerless-csv-output   Print only CSV data lines.
       -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.
+    
+    NUMERICAL FORMATTING:
+      --ofmt {format}    E.g. %.18f, %.0f, %9.6e. Please use sprintf-style codes for
+                         floating-point nummbers. If not specified, default formatting is used.
+                         See also the fmtnum function within mlr put (mlr --help-all-functions);
+                         see also the format-values function.
     
     OTHER OPTIONS:
       --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
