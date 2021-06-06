@@ -7,7 +7,7 @@ CSV, with and without headers
 Headerless CSV on input or output
 ----------------------------------------------------------------
 
-Sometimes we get CSV files which lack a header. For example:
+Sometimes we get CSV files which lack a header. For example (`data/headerless.csv <./data/headerless.csv>`_):
 
 .. code-block:: none
    :emphasize-lines: 1,1

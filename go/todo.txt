@@ -6,6 +6,12 @@ TOP OF LIST:
 * gha binaries * cli-audits * doc6 * survey * check issues *
 
 ----------------------------------------------------------------
+doclink etc:
+* colored-shapes.dkvp -> csv; also mkdat2
+* data/small -> csv throughout. and/or just use example.csv
+----------------------------------------------------------------
+
+----------------------------------------------------------------
 * mlr -k
   o c,go
   o various test cases

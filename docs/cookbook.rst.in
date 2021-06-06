@@ -4,7 +4,7 @@ Cookbook part 1: common patterns
 Headerless CSV on input or output
 ----------------------------------------------------------------
 
-Sometimes we get CSV files which lack a header. For example:
+Sometimes we get CSV files which lack a header. For example (`data/headerless.csv <./data/headerless.csv>`_):
 
 POKI_RUN_COMMAND{{cat data/headerless.csv}}HERE
 
