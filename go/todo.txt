@@ -5,7 +5,6 @@ TOP OF LIST:
 * --nr-progress-mod * mlr -k *
 * gha binaries * cli-audits * doc6 * survey * check issues *
 * split up mlr -h
-* mlr hex double eof -- ?
 * snk postntn
 
 ----------------------------------------------------------------

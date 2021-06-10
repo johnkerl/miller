@@ -99,7 +99,8 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 		}
 
 		// io.ErrUnexpectedEOF is the normal case when the file size isn't an
-		// exact multiple of our buffer size.
+		// exact multiple of our buffer size. We'll break the loop after
+		// hex-dumping this last, partial fragment.
 		if err != nil && err != io.ErrUnexpectedEOF {
 			fmt.Fprintln(os.Stderr, "mlr hex:", err)
 			os.Exit(1)
@@ -141,7 +142,16 @@ func hexDumpFile(istream *os.File, doRaw bool) {
 		// Print line end
 		fmt.Printf("\n")
 
-		offset += numBytesRead
+		// Break the loop if this was the last, partial fragment.  If we don't
+		// break here we'll go back to the top of the loop and try the next
+		// read and get EOF -- which works fine if the input is a file. But if
+		// the input is at the terminal, the user will have to control-D twice
+		// which will be unsettling.
+		if numBytesRead < bufferSize {
+			eof = true
+			break
+		}
 
+		offset += numBytesRead
 	}
 }
