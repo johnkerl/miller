@@ -76,6 +76,17 @@ Reference
    reference
    reference-verbs
    reference-dsl
+   reference-dsl-syntax
+   reference-dsl-variables
+   reference-dsl-operators
+   reference-dsl-control-structures
+   reference-dsl-user-defined-functions
+   reference-dsl-builtin-functions
+   reference-dsl-output-statements
+   reference-dsl-unset-statements
+   reference-dsl-filter-statements
+   reference-dsl-errors
+   reference-dsl-complexity
    manpage
    release-docs
    installation

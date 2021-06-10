@@ -1,0 +1,14 @@
+DSL reference: filter statements
+================================================================
+
+You can use ``filter`` within ``put``. In fact, the following two are synonymous:
+
+POKI_RUN_COMMAND{{mlr filter 'NR==2 || NR==3' data/small}}HERE
+
+POKI_RUN_COMMAND{{mlr put 'filter NR==2 || NR==3' data/small}}HERE
+
+The former, of course, is much easier to type. But the latter allows you to define more complex expressions for the filter, and/or do other things in addition to the filter:
+
+POKI_RUN_COMMAND{{mlr put '@running_sum += $x; filter @running_sum > 1.3' data/small}}HERE
+
+POKI_RUN_COMMAND{{mlr put '$z = $x * $y; filter $z > 0.3' data/small}}HERE

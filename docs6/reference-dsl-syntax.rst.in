@@ -1,0 +1,86 @@
+DSL reference: syntax
+================================================================
+
+Expression formatting
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
+
+POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'}}HERE
+
+Newlines within the expression are ignored, which can help increase legibility of complex expressions:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)HERE
+
+POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
+
+.. _reference-dsl-expressions-from-files:
+
+Expressions from files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The simplest way to enter expressions for ``put`` and ``filter`` is between single quotes on the command line, e.g.
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-1.sh)HERE
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-2.sh)HERE
+
+You may, though, find it convenient to put expressions into files for reuse, and read them
+**using the -f option**. For example:
+
+POKI_RUN_COMMAND{{cat data/fe-example-3.mlr}}HERE
+
+POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-3.mlr}}HERE
+
+If you have some of the logic in a file and you want to write the rest on the command line, you can **use the -f and -e options together**:
+
+POKI_RUN_COMMAND{{cat data/fe-example-4.mlr}}HERE
+
+POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'}}HERE
+
+A suggested use-case here is defining functions in files, and calling them from command-line expressions.
+
+Another suggested use-case is putting default parameter values in files, e.g. using ``begin{@count=is_present(@count)?@count:10}`` in the file, where you can precede that using ``begin{@count=40}`` using ``-e``.
+
+Moreover, you can have one or more ``-f`` expressions (maybe one function per file, for example) and one or more ``-e`` expressions on the command line.  If you mix ``-f`` and ``-e`` then the expressions are evaluated in the order encountered. (Since the expressions are all simply concatenated together in order, don't forget intervening semicolons: e.g. not ``mlr put -e '$x=1' -e '$y=2 ...'`` but rather ``mlr put -e '$x=1;' -e '$y=2' ...``.)
+
+Semicolons, commas, newlines, and curly braces
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Miller uses **semicolons as statement separators**, not statement terminators. This means you can write:
+
+POKI_INCLUDE_ESCAPED(data/semicolon-example.txt)HERE
+
+Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
+
+POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'}}HERE
+
+POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'}}HERE
+
+Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
+
+POKI_INCLUDE_ESCAPED(data/newline-example.txt)HERE
+
+**Trailing commas** are allowed in function/subroutine definitions, function/subroutine callsites, and map literals. This is intended for (although not restricted to) the multi-line case:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/trailing-commas.sh)HERE
+
+Bodies for all compound statements must be enclosed in **curly braces**, even if the body is a single statement:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    mlr put 'if ($x == 1) $y = 2' # Syntax error
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    mlr put 'if ($x == 1) { $y = 2 }' # This is OK
+
+Bodies for compound statements may be empty:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
+
