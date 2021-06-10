@@ -151,7 +151,7 @@ POKI_RUN_COMMAND{{mlr --json --jvstack head -n 1 then put '${values:uv} = ${valu
 Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Arrays aren't supported in Miller's ``put``/``filter`` DSL. By default, JSON arrays are read in as integer-keyed maps.
+Arrays (TODO: update for Miller6) aren't supported in Miller's ``put``/``filter`` DSL. By default, JSON arrays are read in as integer-keyed maps.
 
 Suppose we have arrays like this in our input data:
 

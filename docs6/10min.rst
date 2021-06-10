@@ -4,31 +4,28 @@
 Miller in 10 minutes
 ====================
 
-CSV-file examples
-^^^^^^^^^^^^^^^^^
+Obtaining Miller
+^^^^^^^^^^^^^^^^
 
-Suppose you have this CSV data file:
+You can install Miller for various platforms as follows:
 
-.. code-block:: none
-   :emphasize-lines: 1,1
+* Linux: ``yum install miller`` or ``apt-get install miller`` depending on your flavor of Linux
+* MacOS: ``brew install miller`` or ``port install miller`` depending on your preference of `Homebrew <https://brew.sh>`_ or `MacPorts <https://macports.org>`_.
+* Windows: ``choco install miller``  using `Chocolatey <https://chocolatey.org>`_.
+* See also :doc:`build` if you prefer -- in particular, if your platform's package manager doesn't have the latest release.
 
-    $ cat example.csv
-    color,shape,flag,index,quantity,rate
-    yellow,triangle,true,11,43.6498,9.8870
-    red,square,true,15,79.2778,0.0130
-    red,circle,true,16,13.8103,2.9010
-    red,square,false,48,77.5542,7.4670
-    purple,triangle,false,51,81.2290,8.5910
-    red,square,false,64,77.1991,9.5310
-    purple,triangle,false,65,80.1405,5.8240
-    yellow,circle,true,73,63.9785,4.2370
-    yellow,circle,true,87,63.5058,8.3350
-    purple,square,false,91,72.3735,8.2430
-
-``mlr cat`` is like cat -- it passes the data through unmodified:
+As a first check, you should be able to run ``mlr --version`` at your system's command prompt and see something like the following:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
+
+    $ mlr --version
+    Miller v6.0.0-dev
+
+As a second check, given (`example.csv <./example.csv>`_) you should be able to do
+
+.. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --csv cat example.csv
     color,shape,flag,index,quantity,rate
@@ -43,10 +40,51 @@ Suppose you have this CSV data file:
     yellow,circle,true,87,63.5058,8.3350
     purple,square,false,91,72.3735,8.2430
 
-but it can also do format conversion (here, you can pretty-print in tabular format):
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ mlr --icsv --opprint cat example.csv
+    color  shape    flag  index quantity rate
+    yellow triangle true  11    43.6498  9.8870
+    red    square   true  15    79.2778  0.0130
+    red    circle   true  16    13.8103  2.9010
+    red    square   false 48    77.5542  7.4670
+    purple triangle false 51    81.2290  8.5910
+    red    square   false 64    77.1991  9.5310
+    purple triangle false 65    80.1405  5.8240
+    yellow circle   true  73    63.9785  4.2370
+    yellow circle   true  87    63.5058  8.3350
+    purple square   false 91    72.3735  8.2430
+
+If you run into issues on these checks, please check out the resources on the :doc:`community` page for help.
+
+Miller verbs
+^^^^^^^^^^^^
+
+Let's take a quick look at some of the most useful Miller verbs -- file-format-aware, name-index-empowered equivalents of standard system commands.
+
+``mlr cat`` is like system ``cat`` (or ``type`` on Windows) -- it passes the data through unmodified:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
+
+    $ mlr --csv cat example.csv
+    color,shape,flag,index,quantity,rate
+    yellow,triangle,true,11,43.6498,9.8870
+    red,square,true,15,79.2778,0.0130
+    red,circle,true,16,13.8103,2.9010
+    red,square,false,48,77.5542,7.4670
+    purple,triangle,false,51,81.2290,8.5910
+    red,square,false,64,77.1991,9.5310
+    purple,triangle,false,65,80.1405,5.8240
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
+    purple,square,false,91,72.3735,8.2430
+
+But ``mlr cat`` can also do format conversion -- for example, you can pretty-print in tabular format:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint cat example.csv
     color  shape    flag  index quantity rate
@@ -64,7 +102,7 @@ but it can also do format conversion (here, you can pretty-print in tabular form
 ``mlr head`` and ``mlr tail`` count records rather than lines. Whether you're getting the first few records or the last few, the CSV header is included either way:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv head -n 4 example.csv
     color,shape,flag,index,quantity,rate
@@ -74,7 +112,7 @@ but it can also do format conversion (here, you can pretty-print in tabular form
     red,square,false,48,77.5542,7.4670
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv tail -n 4 example.csv
     color,shape,flag,index,quantity,rate
@@ -83,10 +121,49 @@ but it can also do format conversion (here, you can pretty-print in tabular form
     yellow,circle,true,87,63.5058,8.3350
     purple,square,false,91,72.3735,8.2430
 
-You can sort primarily alphabetically on one field, then secondarily numerically descending on another field:
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ mlr --icsv --ojson tail -n 2 example.csv
+    {
+      "color": "yellow",
+      "shape": "circle",
+      "flag": true,
+      "index": 87,
+      "quantity": 63.5058,
+      "rate": 8.3350
+    }
+    {
+      "color": "purple",
+      "shape": "square",
+      "flag": false,
+      "index": 91,
+      "quantity": 72.3735,
+      "rate": 8.2430
+    }
+
+You can sort on a single field:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
+
+    $ mlr --icsv --opprint sort -f shape example.csv
+    color  shape    flag  index quantity rate
+    red    circle   true  16    13.8103  2.9010
+    yellow circle   true  73    63.9785  4.2370
+    yellow circle   true  87    63.5058  8.3350
+    red    square   true  15    79.2778  0.0130
+    red    square   false 48    77.5542  7.4670
+    red    square   false 64    77.1991  9.5310
+    purple square   false 91    72.3735  8.2430
+    yellow triangle true  11    43.6498  9.8870
+    purple triangle false 51    81.2290  8.5910
+    purple triangle false 65    80.1405  5.8240
+
+Or, you can sort primarily alphabetically on one field, then secondarily numerically descending on another field, and so on:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint sort -f shape -nr index example.csv
     color  shape    flag  index quantity rate
@@ -101,10 +178,10 @@ You can sort primarily alphabetically on one field, then secondarily numerically
     purple triangle false 51    81.2290  8.5910
     yellow triangle true  11    43.6498  9.8870
 
-You can use ``cut`` to retain only specified fields, in the same order they appeared in the input data:
+If there are fields you don't want to see in your data, you can use ``cut`` to keep only the ones you want, in the same order they appeared in the input data:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint cut -f flag,shape example.csv
     shape    flag
@@ -119,10 +196,10 @@ You can use ``cut`` to retain only specified fields, in the same order they appe
     circle   true
     square   false
 
-You can also use ``cut -o`` to retain only specified fields in your preferred order:
+You can also use ``cut -o`` to keep specified fields, but in your preferred order:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint cut -o -f flag,shape example.csv
     flag  shape
@@ -140,7 +217,7 @@ You can also use ``cut -o`` to retain only specified fields in your preferred or
 You can use ``cut -x`` to omit fields you don't care about:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint cut -x -f flag,shape example.csv
     color  index quantity rate
@@ -158,7 +235,7 @@ You can use ``cut -x`` to omit fields you don't care about:
 You can use ``filter`` to keep only records you care about:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint filter '$color == "red"' example.csv
     color shape  flag  index quantity rate
@@ -168,14 +245,17 @@ You can use ``filter`` to keep only records you care about:
     red   square false 64    77.1991  9.5310
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint filter '$color == "red" && $flag == 1' example.csv
+    $ mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv
+    color shape  flag index quantity rate
+    red   square true 15    79.2778  0.0130
+    red   circle true 16    13.8103  2.9010
 
 You can use ``put`` to create new fields which are computed from other fields:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
     color  shape    flag  index quantity rate   ratio              color_shape
@@ -193,7 +273,7 @@ You can use ``put`` to create new fields which are computed from other fields:
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use ``$[[3]]`` to access the name of field 3 or ``$[[[3]]]`` to access the value of field 3:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv
     color  shape    NEW   index quantity rate
@@ -209,7 +289,7 @@ Even though Miller's main selling point is name-indexing, sometimes you really w
     purple square   false 91    72.3735  8.2430
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv
     color  shape    flag index quantity rate
@@ -224,105 +304,93 @@ Even though Miller's main selling point is name-indexing, sometimes you really w
     yellow circle   NEW  87    63.5058  8.3350
     purple square   NEW  91    72.3735  8.2430
 
-JSON-file examples
-^^^^^^^^^^^^^^^^^^
+You can find the full list of verbs at the :doc:`reference-verbs` page.
 
-OK, CSV and pretty-print are fine. But Miller can also convert between a few other formats -- let's take a look at JSON output:
+Multiple input files
+^^^^^^^^^^^^^^^^^^^^
+
+Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files (`data/a.csv <data/a.csv>`_) and (`data/b.csv <data/b.csv>`_), the system ``cat`` command will repeat header lines:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv
-    {
-      "color": "yellow",
-      "shape": "TRIANGLE",
-      "flag": true,
-      "index": 11,
-      "quantity": 43.6498,
-      "rate": 9.8870,
-      "ratio": 4.414868008496004
-    }
-    {
-      "color": "red",
-      "shape": "SQUARE",
-      "flag": true,
-      "index": 15,
-      "quantity": 79.2778,
-      "rate": 0.0130,
-      "ratio": 6098.292307692308
-    }
-    {
-      "color": "red",
-      "shape": "CIRCLE",
-      "flag": true,
-      "index": 16,
-      "quantity": 13.8103,
-      "rate": 2.9010,
-      "ratio": 4.760530851430541
-    }
-    {
-      "color": "red",
-      "shape": "SQUARE",
-      "flag": false,
-      "index": 48,
-      "quantity": 77.5542,
-      "rate": 7.4670,
-      "ratio": 10.386259541984733
-    }
-    {
-      "color": "purple",
-      "shape": "TRIANGLE",
-      "flag": false,
-      "index": 51,
-      "quantity": 81.2290,
-      "rate": 8.5910,
-      "ratio": 9.455127458968688
-    }
-    {
-      "color": "red",
-      "shape": "SQUARE",
-      "flag": false,
-      "index": 64,
-      "quantity": 77.1991,
-      "rate": 9.5310,
-      "ratio": 8.099790158430384
-    }
-    {
-      "color": "purple",
-      "shape": "TRIANGLE",
-      "flag": false,
-      "index": 65,
-      "quantity": 80.1405,
-      "rate": 5.8240,
-      "ratio": 13.760388049450551
-    }
-    {
-      "color": "yellow",
-      "shape": "CIRCLE",
-      "flag": true,
-      "index": 73,
-      "quantity": 63.9785,
-      "rate": 4.2370,
-      "ratio": 15.09995279679018
-    }
-    {
-      "color": "yellow",
-      "shape": "CIRCLE",
-      "flag": true,
-      "index": 87,
-      "quantity": 63.5058,
-      "rate": 8.3350,
-      "ratio": 7.619172165566886
-    }
-    {
-      "color": "purple",
-      "shape": "SQUARE",
-      "flag": false,
-      "index": 91,
-      "quantity": 72.3735,
-      "rate": 8.2430,
-      "ratio": 8.779995147397793
-    }
+    $ cat data/a.csv
+    X,Y,Z
+    m,n,o
+    p,q,r
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ cat data/b.csv
+    X,Y,Z
+    g,h,i
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ cat data/a.csv data/b.csv
+    X,Y,Z
+    m,n,o
+    p,q,r
+    X,Y,Z
+    g,h,i
+
+However, ``mlr cat`` will not:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ mlr --csv cat data/a.csv data/b.csv
+    X,Y,Z
+    m,n,o
+    p,q,r
+    g,h,i
+
+Chaining verbs together
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Often we want to chain queries together -- for example, sorting by a field and taking the top few values. We can do this using pipes:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ mlr --csv sort -nr index example.csv | mlr --icsv --opprint head -n 3
+    color  shape  flag  index quantity rate
+    purple square false 91    72.3735  8.2430
+    yellow circle true  87    63.5058  8.3350
+    yellow circle true  73    63.9785  4.2370
+
+This works fine -- but Miller also lets you chain verbs together using the word ``then``. Think of this as a Miller-internal pipe that lets you use fewer keystrokes:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ mlr --icsv --opprint sort -nr index then head -n 3 example.csv
+    color  shape  flag  index quantity rate
+    purple square false 91    72.3735  8.2430
+    yellow circle true  87    63.5058  8.3350
+    yellow circle true  73    63.9785  4.2370
+
+As another convenience, you can put the filename first using ``--from``. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ mlr --icsv --opprint --from example.csv sort -nr index then head -n 3
+    color  shape  flag  index quantity rate
+    purple square false 91    72.3735  8.2430
+    yellow circle true  87    63.5058  8.3350
+    yellow circle true  73    63.9785  4.2370
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ mlr --icsv --opprint --from example.csv sort -nr index then head -n 3 then cut -f shape,quantity
+    shape  quantity
+    square 72.3735
+    circle 63.5058
+    circle 63.9785
 
 Sorts and stats
 ^^^^^^^^^^^^^^^
@@ -332,18 +400,18 @@ Now suppose you want to sort the data on a given column, *and then* take the top
 Here are the records with the top three ``index`` values:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint sort -f shape -nr index then head -n 3 example.csv
-    color  shape  flag index quantity rate
-    yellow circle true 87    63.5058  8.3350
-    yellow circle true 73    63.9785  4.2370
-    red    circle true 16    13.8103  2.9010
+    $ mlr --icsv --opprint sort -nr index then head -n 3 example.csv
+    color  shape  flag  index quantity rate
+    purple square false 91    72.3735  8.2430
+    yellow circle true  87    63.5058  8.3350
+    yellow circle true  73    63.9785  4.2370
 
 Lots of Miller commands take a ``-g`` option for group-by: here, ``head -n 1 -g shape`` outputs the first record for each distinct value of the ``shape`` field. This means we're finding the record with highest ``index`` field for each distinct ``shape`` field:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
     color  shape    flag  index quantity rate
@@ -354,7 +422,7 @@ Lots of Miller commands take a ``-g`` option for group-by: here, ``head -n 1 -g 
 Statistics can be computed with or without group-by field(s):
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
     shape    quantity_count quantity_min quantity_mean     quantity_max
@@ -363,7 +431,7 @@ Statistics can be computed with or without group-by field(s):
     circle   3              13.8103      47.0982           63.9785
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
     shape    color  quantity_count quantity_min quantity_mean      quantity_max
@@ -377,7 +445,7 @@ Statistics can be computed with or without group-by field(s):
 If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
     rate_p0   0.0130
@@ -389,131 +457,21 @@ If your output has a lot of columns, you can use XTAB format to line things up v
     rate_p99  9.8870
     rate_p100 9.8870
 
-.. _10min-choices-for-printing-to-files:
 
-Choices for printing to files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File formats and format conversion
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Often we want to print output to the screen. Miller does this by default, as we've seen in the previous examples.
+Miller supports the following formats:
 
-Sometimes we want to print output to another file: just use **> outputfilenamegoeshere** at the end of your command:
+* CSV (comma-separared values)
+* TSV (tab-separated values)
+* JSON (JavaScript Object Notation)
+* PPRINT (pretty-printed tabular)
+* XTAB (vertical-tabular or sideways-tabular)
+* NIDX (numerically indexed, label-free, with implicit labels ``"1"``, ``"2"``, etc.)
+* DKVP (delimited key-value pairs).
 
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % mlr --icsv --opprint cat example.csv > newfile.csv
-    # Output goes to the new file;
-    # nothing is printed to the screen.
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % cat newfile.csv
-    color  shape    flag index quantity rate
-    yellow triangle 1    11    43.6498  9.8870
-    red    square   1    15    79.2778  0.0130
-    red    circle   1    16    13.8103  2.9010
-    red    square   0    48    77.5542  7.4670
-    purple triangle 0    51    81.2290  8.5910
-    red    square   0    64    77.1991  9.5310
-    purple triangle 0    65    80.1405  5.8240
-    yellow circle   1    73    63.9785  4.2370
-    yellow circle   1    87    63.5058  8.3350
-    purple square   0    91    72.3735  8.2430
-
-Other times we just want our files to be **changed in-place**: just use **mlr -I**:
-
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % cp example.csv newfile.txt
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % cat newfile.txt
-    color,shape,flag,index,quantity,rate
-    yellow,triangle,1,11,43.6498,9.8870
-    red,square,1,15,79.2778,0.0130
-    red,circle,1,16,13.8103,2.9010
-    red,square,0,48,77.5542,7.4670
-    purple,triangle,0,51,81.2290,8.5910
-    red,square,0,64,77.1991,9.5310
-    purple,triangle,0,65,80.1405,5.8240
-    yellow,circle,1,73,63.9785,4.2370
-    yellow,circle,1,87,63.5058,8.3350
-    purple,square,0,91,72.3735,8.2430
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % mlr -I --icsv --opprint cat newfile.txt
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % cat newfile.txt
-    color  shape    flag index quantity rate
-    yellow triangle 1    11    43.6498  9.8870
-    red    square   1    15    79.2778  0.0130
-    red    circle   1    16    13.8103  2.9010
-    red    square   0    48    77.5542  7.4670
-    purple triangle 0    51    81.2290  8.5910
-    red    square   0    64    77.1991  9.5310
-    purple triangle 0    65    80.1405  5.8240
-    yellow circle   1    73    63.9785  4.2370
-    yellow circle   1    87    63.5058  8.3350
-    purple square   0    91    72.3735  8.2430
-
-Also using ``mlr -I`` you can bulk-operate on lots of files: e.g.:
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    mlr -I --csv cut -x -f unwanted_column_name *.csv
-
-If you like, you can first copy off your original data somewhere else, before doing in-place operations.
-
-Lastly, using ``tee`` within ``put``, you can split your input data into separate files per one or more field names:
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    $ mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    $ cat circle.csv
-    color,shape,flag,index,quantity,rate
-    red,circle,true,16,13.8103,2.9010
-    yellow,circle,true,73,63.9785,4.2370
-    yellow,circle,true,87,63.5058,8.3350
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    $ cat square.csv
-    color,shape,flag,index,quantity,rate
-    red,square,true,15,79.2778,0.0130
-    red,square,false,48,77.5542,7.4670
-    red,square,false,64,77.1991,9.5310
-    purple,square,false,91,72.3735,8.2430
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    $ cat triangle.csv
-    color,shape,flag,index,quantity,rate
-    yellow,triangle,true,11,43.6498,9.8870
-    purple,triangle,false,51,81.2290,8.5910
-    purple,triangle,false,65,80.1405,5.8240
-
-Other-format examples
-^^^^^^^^^^^^^^^^^^^^^
-
-What's a CSV file, really? It's an array of rows, or *records*, each being a list of key-value pairs, or *fields*: for CSV it so happens that all the keys are shared in the header line and the values vary data line by data line.
+What's a CSV file, really? It's an array of rows, or *records*, each being a list of key-value pairs, or *fields*: for CSV it so happens that all the keys are shared in the header line and the values vary from one data line to another.
 
 For example, if you have:
 
@@ -530,10 +488,7 @@ then that's a way of saying:
     shape=circle,flag=1,index=24
     shape=square,flag=0,index=36
 
-Data written this way are called **DKVP**, for *delimited key-value pairs*.
-
-We've also already seen other ways to write the same data:
-
+Other ways to write the same data:
 
 .. code-block:: none
 
@@ -554,3 +509,128 @@ We've also already seen other ways to write the same data:
                                       index 36
 
 Anything we can do with CSV input data, we can do with any other format input data.  And you can read from one format, do any record-processing, and output to the same format as the input, or to a different output format.
+
+How to specify these to Miller:
+
+* If you use ``--csv`` or ``--json`` or ``--pprint``, etc., then Miller will use that format for input and output.
+* If you use ``--icsv`` and ``--ojson`` (note the extra ``i`` and ``o``) then Miller will use CSV for input and JSON for output, etc.  See also :doc:`keystroke-savers` for even shorter options like ``--c2j``.
+
+You can read more about this at the :doc:`file-formats` page.
+
+Choices for printing to files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Often we want to print output to the screen. Miller does this by default, as we've seen in the previous examples.
+
+Sometimes, though, we want to print output to another file. Just use **> outputfilenamegoeshere** at the end of your command:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % mlr --icsv --opprint cat example.csv > newfile.csv
+    # Output goes to the new file;
+    # nothing is printed to the screen.
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % cat newfile.csv
+    color  shape    flag     index quantity rate
+    yellow triangle true     11    43.6498  9.8870
+    red    square   true     15    79.2778  0.0130
+    red    circle   true     16    13.8103  2.9010
+    red    square   false    48    77.5542  7.4670
+    purple triangle false    51    81.2290  8.5910
+    red    square   false    64    77.1991  9.5310
+    purple triangle false    65    80.1405  5.8240
+    yellow circle   true     73    63.9785  4.2370
+    yellow circle   true     87    63.5058  8.3350
+    purple square   false    91    72.3735  8.2430
+
+Other times we just want our files to be **changed in-place**: just use **mlr -I**:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % cp example.csv newfile.txt
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % cat newfile.txt
+    color,shape,flag,index,quantity,rate
+    yellow,triangle,true,11,43.6498,9.8870
+    red,square,true,15,79.2778,0.0130
+    red,circle,true,16,13.8103,2.9010
+    red,square,false,48,77.5542,7.4670
+    purple,triangle,false,51,81.2290,8.5910
+    red,square,false,64,77.1991,9.5310
+    purple,triangle,false,65,80.1405,5.8240
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
+    purple,square,false,91,72.3735,8.2430
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % mlr -I --csv sort -f shape newfile.txt
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % cat newfile.txt
+    color,shape,flag,index,quantity,rate
+    red,circle,true,16,13.8103,2.9010
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
+    red,square,true,15,79.2778,0.0130
+    red,square,false,48,77.5542,7.4670
+    red,square,false,64,77.1991,9.5310
+    purple,square,false,91,72.3735,8.2430
+    yellow,triangle,true,11,43.6498,9.8870
+    purple,triangle,false,51,81.2290,8.5910
+    purple,triangle,false,65,80.1405,5.8240
+
+Also using ``mlr -I`` you can bulk-operate on lots of files: e.g.:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    mlr -I --csv cut -x -f unwanted_column_name *.csv
+
+If you like, you can first copy off your original data somewhere else, before doing in-place operations.
+
+Lastly, using ``tee`` within ``put``, you can split your input data into separate files per one or more field names:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ cat circle.csv
+    color,shape,flag,index,quantity,rate
+    red,circle,true,16,13.8103,2.9010
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ cat square.csv
+    color,shape,flag,index,quantity,rate
+    red,square,true,15,79.2778,0.0130
+    red,square,false,48,77.5542,7.4670
+    red,square,false,64,77.1991,9.5310
+    purple,square,false,91,72.3735,8.2430
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ cat triangle.csv
+    color,shape,flag,index,quantity,rate
+    yellow,triangle,true,11,43.6498,9.8870
+    purple,triangle,false,51,81.2290,8.5910
+    purple,triangle,false,65,80.1405,5.8240

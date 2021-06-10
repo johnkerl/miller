@@ -1,0 +1,40 @@
+Cookbook4: to be filed
+======================
+
+DKVP I/O in Python
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Here are the I/O routines:
+
+POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.py)HERE
+
+And here is an example using them:
+
+POKI_RUN_COMMAND{{cat polyglot-dkvp-io/example.py}}HERE
+
+Run as-is:
+
+POKI_RUN_COMMAND{{python polyglot-dkvp-io/example.py < data/small}}HERE
+
+Run as-is, then pipe to Miller for pretty-printing:
+
+POKI_RUN_COMMAND{{python polyglot-dkvp-io/example.py < data/small | mlr --opprint cat}}HERE
+
+DKVP I/O in Ruby
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Here are the I/O routines:
+
+POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.rb)HERE
+
+And here is an example using them:
+
+POKI_RUN_COMMAND{{cat polyglot-dkvp-io/example.rb}}HERE
+
+Run as-is:
+
+POKI_RUN_COMMAND{{ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small}}HERE
+
+Run as-is, then pipe to Miller for pretty-printing:
+
+POKI_RUN_COMMAND{{ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small | mlr --opprint cat}}HERE

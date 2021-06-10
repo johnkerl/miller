@@ -10,7 +10,7 @@ How can I filter by date?
 Given input like
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat dates.csv
     date,event
@@ -21,7 +21,7 @@ Given input like
 we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the :ref:`reference-dsl-strptime` format-string.  For example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv filter 'strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")' dates.csv
     date,event
@@ -35,7 +35,7 @@ Finding missing dates
 Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ head -n 10 data/miss-date.csv
     date,qoh
@@ -50,7 +50,7 @@ Suppose you have some date-stamped data which may (or may not) be missing entrie
     2012-03-13,11177
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ wc -l data/miss-date.csv
         1372 data/miss-date.csv
@@ -58,7 +58,7 @@ Suppose you have some date-stamped data which may (or may not) be missing entrie
 Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using ``strptime``, then compute adjacent differences (the ``cat -n`` simply inserts record-counters):
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-5
 
     $ mlr --from data/miss-date.csv --icsv \
       cat -n \
@@ -79,7 +79,7 @@ Since there are 1372 lines in the data file, some automation is called for. To f
 Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-5
 
     $ mlr --from data/miss-date.csv --icsv \
       cat -n \
@@ -92,7 +92,7 @@ Then, filter for adjacent difference not being 86400 (the number of seconds in a
 Given this, it's now easy to see where the gaps are:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv
     n=770,1=2014-04-12,2=129435
@@ -108,7 +108,7 @@ Given this, it's now easy to see where the gaps are:
     n=780,1=2014-04-24,2=131026
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv
     n=1115,1=2015-03-25,2=181006

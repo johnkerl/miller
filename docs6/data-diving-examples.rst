@@ -12,7 +12,7 @@ The `flins.csv <data/flins.csv>`_ file is some sample data obtained from https:/
 Vertical-tabular format is good for a quick look at CSV data layout -- seeing what columns you have to work with:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ head -n 2 data/flins.csv | mlr --icsv --oxtab cat
     county   Seminole
@@ -23,7 +23,7 @@ Vertical-tabular format is good for a quick look at CSV data layout -- seeing wh
 A few simple queries:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head
     county     count
@@ -35,31 +35,31 @@ A few simple queries:
     St. Johns  1
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line
 
 Categorization of total insured value:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012
     tiv_2012_min tiv_2012_mean          tiv_2012_max
     19757.91     1.0615314637499999e+06 2.78555163e+06
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/flins.csv --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
     county
@@ -71,7 +71,7 @@ Categorization of total insured value:
     St. Johns
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
     tiv_2011_tiv_2012_corr  0.9353629581411828
@@ -81,7 +81,7 @@ Categorization of total insured value:
     tiv_2011_tiv_2012_r2    0.8749038634626236
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
     county     tiv_2011_tiv_2012_corr tiv_2011_tiv_2012_ols_m tiv_2011_tiv_2012_ols_b tiv_2011_tiv_2012_ols_n tiv_2011_tiv_2012_r2
@@ -108,13 +108,13 @@ The `colored-shapes.dkvp <https://github.com/johnkerl/miller/blob/master/docs/da
 Peek at the data:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ wc -l data/colored-shapes.dkvp
        10078 data/colored-shapes.dkvp
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ head -n 6 data/colored-shapes.dkvp | mlr --opprint cat
     color  shape    flag i  u                   v                    w                   x
@@ -130,7 +130,7 @@ Look at uncategorized stats (using `creach <https://github.com/johnkerl/scripts/
 Here it looks reasonable that ``u`` is unit-uniform; something's up with ``v`` but we can't yet see what:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
     flag_min  0
@@ -148,7 +148,7 @@ Here it looks reasonable that ``u`` is unit-uniform; something's up with ``v`` b
 The histogram shows the different distribution of 0/1 flags:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp
     bin_lo                bin_hi              flag_count u_count v_count
@@ -168,7 +168,7 @@ The histogram shows the different distribution of 0/1 flags:
 Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probablities from the data-generator script:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
     color  flag_min flag_mean           flag_max u_min                  u_mean              u_max              v_min                 v_mean              v_max
@@ -180,7 +180,7 @@ Look at univariate stats by color and shape. In particular, color-dependent flag
     yellow 0        0.8924274593064402  1        0.001300228762057487   0.49712912165196765 0.99992313390574   0.0007109695568577878 0.510626599360317   0.9999189897724752
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
     shape    flag_min flag_mean           flag_max u_min                  u_mean              u_max              v_min                 v_mean              v_max
@@ -191,14 +191,14 @@ Look at univariate stats by color and shape. In particular, color-dependent flag
 Look at bivariate stats by color and shape. In particular, ``u,v`` pairwise correlation for red circles pops out:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp
                u_v_corr              w_x_corr 
     0.13341803768384553 -0.011319938208638764 
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp
      color    shape              u_v_corr               w_x_corr 

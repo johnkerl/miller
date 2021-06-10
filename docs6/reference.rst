@@ -52,7 +52,7 @@ Options:
 These are as discussed in :doc:`file-formats`, with the exception of ``--right`` which makes pretty-printed output right-aligned:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint cat data/small
     a   b   i x                   y
@@ -63,7 +63,7 @@ These are as discussed in :doc:`file-formats`, with the exception of ``--right``
     wye pan 5 0.5732889198020006  0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --right cat data/small
       a   b i                   x                   y 
@@ -166,13 +166,13 @@ These are just familiar ``printf`` formats applied to double-precision numbers. 
 To apply formatting to a single field, overriding the global ``ofmt``, use ``fmtnum`` function within ``mlr put``. For example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'
     x=3.1,y=4.3,z=%!l(float64=00013.33)f
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'
     x=0xffff,y=0xff,z=%!l(int=16711425)lx
@@ -180,7 +180,7 @@ To apply formatting to a single field, overriding the global ``ofmt``, use ``fmt
 Input conversion from hexadecimal is done automatically on fields handled by ``mlr put`` and ``mlr filter`` as long as the field value begins with "0x".  To apply output conversion to hexadecimal on a single column, you may use ``fmtnum``, or the keystroke-saving ``hexfmt`` function. Example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
     x=0xffff,y=0xff,z=0xfeff01
@@ -245,7 +245,7 @@ Auxiliary commands
 There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables but they're delivered within the main Miller executable for convenience.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr aux-list
     Available subcommands:
@@ -259,7 +259,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
     For more information, please invoke mlr {subcommand} --help.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr lecat --help
     Usage: mlr lecat [options] {zero or more file names}
@@ -270,7 +270,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
     -h or --help: print this message
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr termcvt --help
     Usage: mlr termcvt [option] {zero or more file names}
@@ -287,7 +287,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
     Output is always to standard output; files are not written in-place.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr hex --help
     Usage: mlr hex [options] {zero or more file names}
@@ -298,7 +298,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
     -h or --help: print this message
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr unhex --help
     Usage: mlr unhex [options] {zero or more file names}
@@ -311,19 +311,19 @@ There are a few nearly-standalone programs which have nothing to do with the res
 Examples:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'Hello, world!' | mlr lecat --mono
     Hello, world![LF]
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
     Hello, world![CR][LF]
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr hex data/budget.csv
     00000000: 23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20 |# Asana -- here |
@@ -335,7 +335,7 @@ Examples:
     00000060: 72 61 6e 67  65 2c 31 32  33 2e 34 35  0a          |range,123.45.|
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr hex -r data/budget.csv
     23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20 
@@ -347,7 +347,7 @@ Examples:
     72 61 6e 67  65 2c 31 32  33 2e 34 35  0a          
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
     #*Asana*--*here*are*the*budget*figures*you*asked*for!
@@ -399,7 +399,7 @@ Rules for null-handling:
 * Records with one or more empty sort-field values sort after records with all sort-field values present:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cat data/sort-null.dat
     a=3,b=2
@@ -409,7 +409,7 @@ Rules for null-handling:
     a=5,b=7
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sort -n  a data/sort-null.dat
     a=1,b=8
@@ -419,7 +419,7 @@ Rules for null-handling:
     x=9,b=10
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sort -nr a data/sort-null.dat
     a=,b=4
@@ -431,19 +431,19 @@ Rules for null-handling:
 * Functions/operators which have one or more *empty* arguments produce empty output: e.g.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'x=2,y=3' | mlr put '$a=$x+$y'
     x=2,y=3,a=5
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'x=,y=3' | mlr put '$a=$x+$y'
     x=,y=3,a=
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
     x=,y=3,a=,b=1.0986122886681096
@@ -451,7 +451,7 @@ Rules for null-handling:
 with the exception that the ``min`` and ``max`` functions are special: if one argument is non-null, it wins:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
     x=,y=3,a=3,b=
@@ -459,13 +459,13 @@ with the exception that the ``min`` and ``max`` functions are special: if one ar
 * Functions of *absent* variables (e.g. ``mlr put '$y = log10($nonesuch)'``) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
     x=2,y=3,b=3,c=5
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
     x=2,y=3,a=2,b=3
@@ -485,7 +485,7 @@ The reasoning is as follows:
 Since absent plus absent is absent (and likewise for other operators), accumulations such as ``@sum += $x`` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with ``is_present``:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
@@ -495,7 +495,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
     resource=/some/other/path,loadsec=0.97,ok=false
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450
@@ -505,7 +505,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
     resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450
@@ -517,7 +517,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
 If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --print-type-arithmetic-info
     TODO: port printTypeArithmeticInfo
@@ -577,7 +577,7 @@ For ``filter`` and ``put``, if the regular expression is a string literal (the n
 Example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/regex-in-data.dat
     name=jane,regex=^j.*e$
@@ -585,7 +585,7 @@ Example:
     name=bull,regex=^b[ou]ll$
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr filter '$name =~ $regex' data/regex-in-data.dat
     name=jane,regex=^j.*e$
@@ -680,7 +680,7 @@ On-line help
 Examples:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --help
     Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
@@ -1216,7 +1216,7 @@ Examples:
     http://github.com/johnkerl/miller. This is Miller version v6.0.0-dev.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sort --help
     Usage: mlr sort {flags}

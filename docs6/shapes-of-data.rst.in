@@ -75,7 +75,7 @@ The other is to keep your own counter within the ``put`` DSL:
 
 POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small}}HERE
 
-rhe difference is a matter of taste (although ``mlr cat -n`` puts the counter first).
+The difference is a matter of taste (although ``mlr cat -n`` puts the counter first).
 
 Splitting nested fields
 ----------------------------------------------------------------
@@ -100,7 +100,7 @@ while another is to loop over the same map from ``splitnv`` and use it (with ``p
 
 POKI_RUN_COMMAND{{mlr --from data/nested.tsv --itsv --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'}}HERE
 
-rOKI_RUN_COMMAND{{mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'}}HERE
+POKI_RUN_COMMAND{{mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'}}HERE
 
 Options for dealing with duplicate rows
 ----------------------------------------------------------------

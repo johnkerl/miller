@@ -1,6 +1,0 @@
-#!/bin/bash
-if [ $# -ge 1 ]; then
-  for rstin; do genrst $rstin; done
-else
-  for rstin in *.rst.in; do genrst $rstin; done
-fi

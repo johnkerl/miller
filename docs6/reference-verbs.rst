@@ -16,7 +16,7 @@ Here's a comparison of verbs and ``put``/``filter`` DSL expressions:
 Example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr stats1 -a sum -f x -g a data/small
     a=pan,x_sum=0.3467901443380824
@@ -32,7 +32,7 @@ Example:
 Example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
     a=pan,x_sum=0.3467901443380824
@@ -53,7 +53,7 @@ altkv
 Map list of values to alternating key/value pairs.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr altkv -h
     Usage: mlr altkv [options]
@@ -62,13 +62,13 @@ Map list of values to alternating key/value pairs.
     -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'a,b,c,d,e,f' | mlr altkv
     a=b,c=d,e=f
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'a,b,c,d,e,f,g' | mlr altkv
     a=b,c=d,e=f,4=g
@@ -81,7 +81,7 @@ bar
 Cheesy bar-charting.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr bar -h
     Usage: mlr bar [options]
@@ -102,7 +102,7 @@ Cheesy bar-charting.
     -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint cat data/small
     a   b   i x                   y
@@ -113,7 +113,7 @@ Cheesy bar-charting.
     wye pan 5 0.5732889198020006  0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint bar --lo 0 --hi 1 -f x,y data/small
     a   b   i x                                        y
@@ -124,7 +124,7 @@ Cheesy bar-charting.
     wye pan 5 **********************.................. **********************************......
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small
     a   b   i x                                        y
@@ -135,7 +135,7 @@ Cheesy bar-charting.
     wye pan 5 **********************************...... ***************************************#
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint bar --auto -f x,y data/small
     a   b   i x                                                                                 y
@@ -151,7 +151,7 @@ bootstrap
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr bootstrap --help
     Usage: mlr bootstrap [options]
@@ -216,7 +216,7 @@ cat
 Most useful for format conversions (see :doc:`file-formats`, and concatenating multiple same-schema CSV files to have the same header:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cat -h
     Usage: mlr cat [options]
@@ -228,56 +228,56 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
     -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/a.csv
-    a,b,c
-    1,2,3
-    4,5,6
+    X,Y,Z
+    m,n,o
+    p,q,r
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/b.csv
-    a,b,c
-    7,8,9
+    X,Y,Z
+    g,h,i
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv cat data/a.csv data/b.csv
-    a,b,c
-    1,2,3
-    4,5,6
-    7,8,9
+    X,Y,Z
+    m,n,o
+    p,q,r
+    g,h,i
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --oxtab cat data/a.csv data/b.csv
-    a 1
-    b 2
-    c 3
+    X m
+    Y n
+    Z o
     
-    a 4
-    b 5
-    c 6
+    X p
+    Y q
+    Z r
     
-    a 7
-    b 8
-    c 9
+    X g
+    Y h
+    Z i
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv cat -n data/a.csv data/b.csv
-    n,a,b,c
-    1,1,2,3
-    2,4,5,6
-    3,7,8,9
+    n,X,Y,Z
+    1,m,n,o
+    2,p,q,r
+    3,g,h,i
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint cat data/small
     a   b   i x                   y
@@ -288,7 +288,7 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
     wye pan 5 0.5732889198020006  0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint cat -n -g a data/small
     n a   b   i x                   y
@@ -304,7 +304,7 @@ check
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr check --help
     Usage: mlr check [options]
@@ -319,7 +319,7 @@ clean-whitespace
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr clean-whitespace --help
     Usage: mlr clean-whitespace [options]
@@ -337,7 +337,7 @@ clean-whitespace
     -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --ojson cat data/clean-whitespace.csv
     {
@@ -354,7 +354,7 @@ clean-whitespace
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv
     {
@@ -371,7 +371,7 @@ clean-whitespace
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv
     {
@@ -388,7 +388,7 @@ clean-whitespace
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv
     {
@@ -418,7 +418,7 @@ count
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count --help
     Usage: mlr count [options]
@@ -430,13 +430,13 @@ count
     -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count data/medium
     count=10000
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count -g a data/medium
     a=pan,count=2081
@@ -446,13 +446,13 @@ count
     a=hat,count=1941
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count -n -g a data/medium
     count=5
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count -g b data/medium
     b=pan,count=1942
@@ -462,13 +462,13 @@ count
     b=hat,count=2050
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count -n -g b data/medium
     count=5
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count -g a,b data/medium
     a=pan,b=pan,count=427
@@ -503,7 +503,7 @@ count-distinct
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count-distinct --help
     Usage: mlr count-distinct [options]
@@ -522,7 +522,7 @@ count-distinct
                   values separately.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count-distinct -f a,b then sort -nr count data/medium
     a=zee,b=wye,count=455
@@ -552,7 +552,7 @@ count-distinct
     a=eks,b=zee,count=357
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count-distinct -u -f a,b data/medium
     field=a,value=pan,count=2081
@@ -567,7 +567,7 @@ count-distinct
     field=b,value=hat,count=2050
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium
     a=zee,b=wye,someothername=455
@@ -597,7 +597,7 @@ count-distinct
     a=eks,b=zee,someothername=357
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count-distinct -n -f a,b data/medium
     count=25
@@ -608,7 +608,7 @@ count-similar
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr count-similar --help
     Usage: mlr count-similar [options]
@@ -620,7 +620,7 @@ count-similar
     -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint head -n 20 data/medium
     a   b   i  x                   y
@@ -646,7 +646,7 @@ count-similar
     eks wye 20 0.38245149780530685 0.4730652428100751
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint head -n 20 then count-similar -g a data/medium
     a   b   i  x                   y                    count
@@ -672,7 +672,7 @@ count-similar
     hat zee 18 0.05727869223575699 0.13343527626645157  2
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium
     a   b   i  x                   y                    count
@@ -703,7 +703,7 @@ cut
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cut --help
     Usage: mlr cut [options]
@@ -726,7 +726,7 @@ cut
       mlr cut -r -f '^status$,"sda[0-9]"i' (this is case-insensitive)
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint cat data/small
     a   b   i x                   y
@@ -737,7 +737,7 @@ cut
     wye pan 5 0.5732889198020006  0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint cut -f y,x,i data/small
     i x                   y
@@ -748,13 +748,13 @@ cut
     5 0.5732889198020006  0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'a=1,b=2,c=3' | mlr cut -f b,c,a
     a=1,b=2,c=3
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a
     b=2,c=3,a=1
@@ -765,7 +765,7 @@ decimate
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr decimate --help
     Usage: mlr decimate [options]
@@ -783,7 +783,7 @@ fill-down
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr fill-down --help
     Usage: mlr fill-down [options]
@@ -802,7 +802,7 @@ fill-down
      -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/fill-down.csv
     a,b,c
@@ -811,7 +811,7 @@ fill-down
     7,,9
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv fill-down -f b data/fill-down.csv
     a,b,c
@@ -820,7 +820,7 @@ fill-down
     7,5,9
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv fill-down -a -f b data/fill-down.csv
     a,b,c
@@ -834,7 +834,7 @@ filter
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr filter --help
     Usage: mlr put [options] {DSL expression}
@@ -901,7 +901,7 @@ format-values
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr format-values --help
     Usage: mlr format-values [options]
@@ -935,7 +935,7 @@ format-values
                         apply the float format.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint format-values data/small
     a   b   i x        y
@@ -946,7 +946,7 @@ format-values
     wye pan 5 0.573289 0.863624
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint format-values -n data/small
     a   b   i        x        y
@@ -957,7 +957,7 @@ format-values
     wye pan 5.000000 0.573289 0.863624
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small
     a     b     i                   x                      y
@@ -968,7 +968,7 @@ format-values
     XwyeX XpanX %!l(int=00000005)lx %!l(float64=0.573289)e %!l(float64=0.863624)e
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small
     a     b     i               x                      y
@@ -984,7 +984,7 @@ fraction
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr fraction --help
     Usage: mlr fraction [options]
@@ -1028,7 +1028,7 @@ For example, suppose you have the following CSV file:
 Then we can see what each record's ``n`` contributes to the total ``n``:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint fraction -f n data/fraction-example.csv
     u      v      n    n_fraction
@@ -1048,7 +1048,7 @@ Then we can see what each record's ``n`` contributes to the total ``n``:
 Using ``-g`` we can split those out by gender, or by color:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint fraction -f n -g u data/fraction-example.csv
     u      v      n    n_fraction
@@ -1066,7 +1066,7 @@ Using ``-g`` we can split those out by gender, or by color:
     male   orange 448  0.11045364891518737
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint fraction -f n -g v data/fraction-example.csv
     u      v      n    n_fraction
@@ -1088,7 +1088,7 @@ We can see, for example, that 70.9% of females have red (on the left) while 94.5
 To convert fractions to percents, you may use ``-p``:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint fraction -f n -p data/fraction-example.csv
     u      v      n    n_percent
@@ -1108,7 +1108,7 @@ To convert fractions to percents, you may use ``-p``:
 Another often-used idiom is to convert from a point distribution to a cumulative distribution, also known as "running sums". Here, you can use ``-c``:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint fraction -f n -p -c data/fraction-example.csv
     u      v      n    n_cumulative_percent
@@ -1126,7 +1126,7 @@ Another often-used idiom is to convert from a point distribution to a cumulative
     male   orange 448  100
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv
     u      v      n    n_cumulative_percent
@@ -1149,7 +1149,7 @@ grep
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr grep -h
     Usage: mlr grep [options] {regular expression}
@@ -1176,7 +1176,7 @@ group-by
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr group-by --help
     Usage: mlr group-by [options] {comma-separated field names}
@@ -1186,7 +1186,7 @@ group-by
 This is similar to ``sort`` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint group-by a data/small
     a   b   i x                   y
@@ -1197,7 +1197,7 @@ This is similar to ``sort`` but with less work. Namely, Miller's sort has three 
     wye pan 5 0.5732889198020006  0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint sort -f a data/small
     a   b   i x                   y
@@ -1215,7 +1215,7 @@ group-like
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr group-like --help
     Usage: mlr group-like [options]
@@ -1225,7 +1225,7 @@ group-like
 This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in :doc:`record-heterogeneity` -- in particular, in preparation for CSV or pretty-print output.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
@@ -1235,7 +1235,7 @@ This groups together records having the same schema (i.e. same ordered list of f
     resource=/some/other/path,loadsec=0.97,ok=false
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint group-like data/het.dkvp
     resource             loadsec ok
@@ -1253,7 +1253,7 @@ having-fields
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr having-fields --help
     Usage: mlr having-fields [options]
@@ -1274,7 +1274,7 @@ having-fields
 Similar to :ref:`reference-verbs-group-like`, this retains records with specified schema.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
@@ -1284,7 +1284,7 @@ Similar to :ref:`reference-verbs-group-like`, this retains records with specifie
     resource=/some/other/path,loadsec=0.97,ok=false
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr having-fields --at-least resource data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
@@ -1294,7 +1294,7 @@ Similar to :ref:`reference-verbs-group-like`, this retains records with specifie
     resource=/some/other/path,loadsec=0.97,ok=false
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr having-fields --which-are resource,ok,loadsec data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
@@ -1307,7 +1307,7 @@ head
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr head --help
     Usage: mlr head [options]
@@ -1320,7 +1320,7 @@ head
 Note that ``head`` is distinct from :ref:`reference-verbs-top` -- ``head`` shows fields which appear first in the data stream; ``top`` shows fields which are numerically largest (or smallest).
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint head -n 4 data/medium
     a   b   i x                   y
@@ -1330,7 +1330,7 @@ Note that ``head`` is distinct from :ref:`reference-verbs-top` -- ``head`` shows
     eks wye 4 0.38139939387114097 0.13418874328430463
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint head -n 1 -g b data/medium
     a   b   i  x                   y
@@ -1346,7 +1346,7 @@ histogram
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr histogram --help
     Just a histogram. Input values < lo or > hi are not counted.
@@ -1363,7 +1363,7 @@ histogram
 This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use ``--lo 0.0 --hi 1.0 --nbins 10 -f x``.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has ``0.0 &le; x < 0.1``, bin 1 has ``0.1 &le; x < 0.2``, etc., but bin 9 has ``0.9 &le; x &le; 1.0``.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium
     bin_lo bin_hi x_count x2_count x3_count
@@ -1379,7 +1379,7 @@ This is just a histogram; there's not too much to say here. A note about binning
     0.9    1      1013    507      341
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ data/medium
     my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
@@ -1400,7 +1400,7 @@ join
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr join --help
     Usage: mlr sort {flags}
@@ -1428,7 +1428,7 @@ Examples:
 Join larger table with IDs with smaller ID-to-name lookup table, showing only paired records:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsvlite --opprint cat data/join-left-example.csv
     id  name
@@ -1439,7 +1439,7 @@ Join larger table with IDs with smaller ID-to-name lookup table, showing only pa
     500 edgar
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsvlite --opprint cat data/join-right-example.csv
     status  idcode
@@ -1465,7 +1465,7 @@ Join larger table with IDs with smaller ID-to-name lookup table, showing only pa
     present 300
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsvlite --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
     id  name  status
@@ -1492,7 +1492,7 @@ Join larger table with IDs with smaller ID-to-name lookup table, showing only pa
 Same, but with sorting the input first:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsvlite --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
     id  name  status
@@ -1519,7 +1519,7 @@ Same, but with sorting the input first:
 Same, but showing only unpaired records:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsvlite --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
     status  idcode
@@ -1531,7 +1531,7 @@ Same, but showing only unpaired records:
 Use prefixing options to disambiguate between otherwise identical non-join field names:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv
     a b c
@@ -1541,7 +1541,7 @@ Use prefixing options to disambiguate between otherwise identical non-join field
     1 4 5
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
     a left_b left_c right_b right_c
@@ -1553,7 +1553,7 @@ Use prefixing options to disambiguate between otherwise identical non-join field
 Use zero join columns:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
     left_a left_b left_c right_a right_b right_c
@@ -1568,7 +1568,7 @@ label
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr label --help
     Usage: mlr label [options] {new1,new2,new3,...}
@@ -1601,7 +1601,7 @@ Example: Files such as ``/etc/passwd``, ``/etc/group``, and so on have implicit 
 Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using ``--implicit-csv-header`` and ``label``:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/headerless.csv
     John,23,present
@@ -1610,7 +1610,7 @@ Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of i
     Carol,45,present
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr  --csv --implicit-csv-header cat data/headerless.csv
     1,2,3
@@ -1620,7 +1620,7 @@ Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of i
     Carol,45,present
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr  --csv --implicit-csv-header label name,age,status data/headerless.csv
     name,age,status
@@ -1630,7 +1630,7 @@ Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of i
     Carol,45,present
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv
     name  age status
@@ -1645,7 +1645,7 @@ least-frequent
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr least-frequent -h
     Usage: mlr least-frequent [options]
@@ -1659,7 +1659,7 @@ least-frequent
     See also "mlr most-frequent".
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5
     shape    count
@@ -1668,7 +1668,7 @@ least-frequent
     square   4115
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5
     shape    color  count
@@ -1679,7 +1679,7 @@ least-frequent
     circle   purple 289
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -o someothername
     shape    color  someothername
@@ -1690,7 +1690,7 @@ least-frequent
     circle   purple 289
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b
     shape    color
@@ -1708,7 +1708,7 @@ merge-fields
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr merge-fields --help
     Usage: mlr merge-fields [options]
@@ -1760,7 +1760,7 @@ This is like ``mlr stats1`` but all accumulation is done across fields within ea
 Examples:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csvlite --opprint cat data/inout.csv
     a_in a_out b_in b_out
@@ -1769,7 +1769,7 @@ Examples:
     220  888   705  831
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv
     a_min a_max a_sum b_min b_max b_sum
@@ -1778,7 +1778,7 @@ Examples:
     220   888   1108  705   831   1536
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv
     a_in a_out b_in b_out a_sum b_sum
@@ -1792,7 +1792,7 @@ most-frequent
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr most-frequent -h
     Usage: mlr most-frequent [options]
@@ -1806,7 +1806,7 @@ most-frequent
     See also "mlr least-frequent".
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5
     shape    count
@@ -1815,18 +1815,18 @@ most-frequent
     circle   2591
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5
     shape    color  count
     square   red    1874
     triangle red    1560
     circle   red    1207
-    square   yellow 589
     square   blue   589
+    square   yellow 589
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -o someothername
     shape    color  someothername
@@ -1837,7 +1837,7 @@ most-frequent
     square   yellow 589
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b
     shape    color
@@ -1855,7 +1855,7 @@ nest
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr nest -h
     Usage: mlr nest [options]
@@ -1912,7 +1912,7 @@ nothing
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr nothing -h
     Usage: mlr nothing [options]
@@ -1927,7 +1927,7 @@ put
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr put --help
     Usage: mlr put [options] {DSL expression}
@@ -1994,7 +1994,7 @@ regularize
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr regularize --help
     Usage: mlr regularize [options]
@@ -2011,7 +2011,7 @@ remove-empty-columns
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr remove-empty-columns --help
     Usage: mlr remove-empty-columns [options]
@@ -2020,7 +2020,7 @@ remove-empty-columns
     -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/remove-empty-columns.csv
     a,b,c,d,e
@@ -2029,7 +2029,7 @@ remove-empty-columns
     3,,5,,7
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv remove-empty-columns data/remove-empty-columns.csv
     a,c,e
@@ -2045,7 +2045,7 @@ rename
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr rename --help
     Usage: mlr rename [options] {old1,new1,old2,new2,...}
@@ -2071,7 +2071,7 @@ rename
     mlr rename -r '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint cat data/small
     a   b   i x                   y
@@ -2082,7 +2082,7 @@ rename
     wye pan 5 0.5732889198020006  0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint rename i,INDEX,b,COLUMN2 data/small
     a   COLUMN2 INDEX x                   y
@@ -2095,7 +2095,7 @@ rename
 As discussed in :doc:`performance`, ``sed`` is significantly faster than Miller at doing this. However, Miller is format-aware, so it knows to do renames only within specified field keys and not any others, nor in field values which may happen to contain the same pattern. Example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ sed 's/y/COLUMN5/g' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
@@ -2105,7 +2105,7 @@ As discussed in :doc:`performance`, ``sed`` is significantly faster than Miller 
     a=wCOLUMN5e,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr rename y,COLUMN5 data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
@@ -2122,7 +2122,7 @@ reorder
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr reorder --help
     Usage: mlr reorder [options]
@@ -2147,7 +2147,7 @@ example when you have highly multi-column data and you want to bring a field or
 two to the front of line where you can give a quick visual scan.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint cat data/small
     a   b   i x                   y
@@ -2158,7 +2158,7 @@ two to the front of line where you can give a quick visual scan.
     wye pan 5 0.5732889198020006  0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint reorder -f i,b data/small
     i b   a   x                   y
@@ -2169,7 +2169,7 @@ two to the front of line where you can give a quick visual scan.
     5 pan wye 0.5732889198020006  0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint reorder -e -f i,b data/small
     a   x                   y                   i b
@@ -2185,7 +2185,7 @@ repeat
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr repeat --help
     Usage: mlr repeat [options]
@@ -2219,7 +2219,7 @@ above example using ``urand()``; two, for reconstructing individual
 samples from data which has been count-aggregated:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/repeat-example.dat
     color=blue,count=5
@@ -2227,7 +2227,7 @@ samples from data which has been count-aggregated:
     color=green,count=3
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr repeat -f count then cut -x -f count data/repeat-example.dat
     color=blue
@@ -2253,7 +2253,7 @@ reshape
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr reshape --help
     Usage: mlr reshape [options]
@@ -2318,7 +2318,7 @@ sample
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sample --help
     Usage: mlr sample [options]
@@ -2392,7 +2392,7 @@ sec2gmt
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sec2gmt -h
     Usage: mlr sec2gmt [options] {comma-separated list of field names}
@@ -2415,7 +2415,7 @@ sec2gmtdate
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sec2gmtdate -h
     Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
@@ -2432,7 +2432,7 @@ seqgen
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr seqgen -h
     Usage: mlr seqgen [options]
@@ -2451,7 +2451,7 @@ seqgen
     unless start == stop.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr seqgen --stop 10
     i=1
@@ -2466,7 +2466,7 @@ seqgen
     i=10
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr seqgen --start 20 --stop 40 --step 4
     i=20
@@ -2477,7 +2477,7 @@ seqgen
     i=40
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr seqgen --start 40 --stop 20 --step -4
     i=40
@@ -2493,7 +2493,7 @@ shuffle
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr shuffle -h
     Usage: mlr shuffle [options]
@@ -2508,7 +2508,7 @@ skip-trivial-records
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr skip-trivial-records -h
     Usage: mlr skip-trivial-records [options]
@@ -2518,7 +2518,7 @@ skip-trivial-records
     -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/trivial-records.csv
     a,b,c
@@ -2528,7 +2528,7 @@ skip-trivial-records
     ,8,9
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv skip-trivial-records data/trivial-records.csv
     a,b,c
@@ -2542,7 +2542,7 @@ sort
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sort --help
     Usage: mlr sort {flags}
@@ -2568,7 +2568,7 @@ sort
 Example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint sort -f a -nr x data/small
     a   b   i x                   y
@@ -2581,7 +2581,7 @@ Example:
 Here's an example filtering log data: suppose multiple threads (labeled here by color) are all logging progress counts to a single log file. The log file is (by nature) chronological, so the progress of various threads is interleaved:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ head -n 10 data/multicountdown.dat
     upsec=0.002,color=green,count=1203
@@ -2600,7 +2600,7 @@ We can group these by thread by sorting on the thread ID (here,
 timestamps within each thread's log data are still chronological:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ head -n 20 data/multicountdown.dat | mlr --opprint sort -f color
     upsec              color  count
@@ -2629,7 +2629,7 @@ Any records not having all specified sort keys will appear at the end of the out
 were encountered, regardless of the specified sort order:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sort -n  x data/sort-missing.dkvp
     x=1
@@ -2638,7 +2638,7 @@ were encountered, regardless of the specified sort order:
     a=3
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sort -nr x data/sort-missing.dkvp
     x=4
@@ -2652,7 +2652,7 @@ sort-within-records
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr sort-within-records -h
     Usage: mlr sort-within-records [options]
@@ -2662,7 +2662,7 @@ sort-within-records
     -h|--help Show this message.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/sort-within-records.json
     {
@@ -2682,7 +2682,7 @@ sort-within-records
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --ijson --opprint cat data/sort-within-records.json
     a b c
@@ -2695,7 +2695,7 @@ sort-within-records
     7 8 9
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --json sort-within-records data/sort-within-records.json
     {
@@ -2715,7 +2715,7 @@ sort-within-records
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --ijson --opprint sort-within-records data/sort-within-records.json
     a b c
@@ -2729,7 +2729,7 @@ stats1
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr stats1 --help
     Usage: mlr stats1 [options]
@@ -2790,7 +2790,7 @@ These are simple univariate statistics on one or more number-valued fields
 optionally categorized by one or more other fields.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium
     x_count 10000
@@ -2811,7 +2811,7 @@ optionally categorized by one or more other fields.
     y_max   0.9999648102177897
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium
     b   x_mean             y_mean
@@ -2822,7 +2822,7 @@ optionally categorized by one or more other fields.
     zee 0.5042419022900586 0.5029967546798116
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp
     color  u_p50               u_p99              v_p50               v_p99              ur                 vr
@@ -2834,7 +2834,7 @@ optionally categorized by one or more other fields.
     orange 0.4835478569328253  0.9936350141409035 0.48091255603363914 0.9891023960550895 2.0548845370623567 2.0567198415711636
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp
     shape    count
@@ -2843,7 +2843,7 @@ optionally categorized by one or more other fields.
     circle   2591
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp
     shape    color_mode
@@ -2857,7 +2857,7 @@ stats2
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr stats2 --help
     Usage: mlr stats2 [options]
@@ -2891,7 +2891,7 @@ These are simple bivariate statistics on one or more pairs of number-valued
 fields, optionally categorized by one or more fields.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium
     x_y_cov    4.2574820827444476e-05
@@ -2904,7 +2904,7 @@ fields, optionally categorized by one or more fields.
     x2_y2_corr -0.0034249088761121966
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium
     a   x_y_ols_m             x_y_ols_b           x_y_ols_n x_y_r2                 y_y_ols_m y_y_ols_b y_y_ols_n y_y_r2 xy_y2_ols_m        xy_y2_ols_b         xy_y2_ols_n xy_y2_r2
@@ -2953,7 +2953,7 @@ I use `pgr <https://github.com/johnkerl/pgr>`_ for plotting; here's a screenshot
 Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file, with number of work units left to do in the ``count`` field and accumulated seconds in the ``upsec`` field, labeled by the ``color`` field:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ head -n 10 data/multicountdown.dat
     upsec=0.002,color=green,count=1203
@@ -2970,7 +2970,7 @@ Here's an example estimating time-to-completion for a set of jobs. Input data co
 We can do a linear regression on count remaining as a function of time: with ``c = m*u+b`` we want to find the time when the count goes to zero, i.e. ``u=-b/m``.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat
     color                   green
@@ -3007,7 +3007,7 @@ step
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr step --help
     Usage: mlr step [options]
@@ -3051,7 +3051,7 @@ step
 Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``stats2``, and ``histogram`` which compute aggregate output. The ``step`` command is intermediate: it allows the option of adding fields which are functions of fields from previous records. Rsum is short for *running sum*.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint step -a shift,delta,rsum,counter -f x data/medium | head -15
     a   b   i     x                      y                      x_shift                x_delta                 x_rsum             x_counter
@@ -3071,7 +3071,7 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
     eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.02922067379257154     6.709212604625001  14
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15
     a   b   i     x                      y                      x_shift                x_delta                 x_rsum              x_counter
@@ -3091,7 +3091,7 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
     eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.02922067379257154     2.7641192091174287  5
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint step -a ewma -f x -d 0.1,0.9 data/medium | head -15
     a   b   i     x                      y                      x_ewma_0.1          x_ewma_0.9
@@ -3111,7 +3111,7 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
     eks zee 14    0.5207382318405251     0.34141681118811673    0.4540028164220499  0.51696937840094
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough data/medium | head -15
     a   b   i     x                      y                      x_ewma_smooth       x_ewma_rough
@@ -3153,7 +3153,7 @@ tac
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr tac --help
     Usage: mlr tac [options]
@@ -3164,37 +3164,37 @@ tac
 Prints the records in the input stream in reverse order. Note: this requires Miller to retain all input records in memory before any output records are produced.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint cat data/a.csv
-    a b c
-    1 2 3
-    4 5 6
+    X Y Z
+    m n o
+    p q r
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint cat data/b.csv
-    a b c
-    7 8 9
+    X Y Z
+    g h i
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint tac data/a.csv data/b.csv
-    a b c
-    7 8 9
-    4 5 6
-    1 2 3
+    X Y Z
+    g h i
+    p q r
+    m n o
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv
-    a b c filename
-    7 8 9 data/b.csv
-    4 5 6 data/a.csv
-    1 2 3 data/a.csv
+    X Y Z filename
+    g h i data/b.csv
+    p q r data/a.csv
+    m n o data/a.csv
 
 .. _reference-verbs-tail:
 
@@ -3202,7 +3202,7 @@ tail
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr tail --help
     Usage: mlr tail [options]
@@ -3215,7 +3215,7 @@ tail
 Prints the last *n* records in the input stream, optionally by category.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint tail -n 4 data/colored-shapes.dkvp
     color  shape    flag i     u                    v                   w                   x
@@ -3225,7 +3225,7 @@ Prints the last *n* records in the input stream, optionally by category.
     yellow circle   1    99994 0.764950884927175    0.25284227383991364 0.49969878539567425 5.013809741826425
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp
     color  shape    flag i     u                  v                   w                   x
@@ -3239,7 +3239,7 @@ tee
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr tee --help
     Usage: mlr tee [options] {filename}
@@ -3259,7 +3259,7 @@ top
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr top --help
     Usage: mlr top [options]
@@ -3278,7 +3278,7 @@ top
 Note that ``top`` is distinct from :ref:`reference-verbs-head` -- ``head`` shows fields which appear first in the data stream; ``top`` shows fields which are numerically largest (or smallest).
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint top -n 4 -f x data/medium
     top_idx x_top
@@ -3288,7 +3288,7 @@ Note that ``top`` is distinct from :ref:`reference-verbs-head` -- ``head`` shows
     4       0.9995625801977208
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint top -n 4 -f x -o someothername data/medium
     someothername x_top
@@ -3298,7 +3298,7 @@ Note that ``top`` is distinct from :ref:`reference-verbs-head` -- ``head`` shows
     4             0.9995625801977208
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
     a   top_idx x_top
@@ -3319,7 +3319,7 @@ uniq
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr uniq --help
     Usage: mlr uniq [options]
@@ -3339,13 +3339,13 @@ uniq
 There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to specify group-by columns.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ wc -l data/colored-shapes.dkvp
        10078 data/colored-shapes.dkvp
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr uniq -g color,shape data/colored-shapes.dkvp
     color=yellow,shape=triangle
@@ -3368,7 +3368,7 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
     color=orange,shape=circle
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp
     color  shape    count
@@ -3392,7 +3392,7 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
     yellow triangle 468
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint uniq -g color,shape -c -o someothername then sort -nr someothername data/colored-shapes.dkvp
     color  shape    someothername
@@ -3416,7 +3416,7 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
     orange circle   68
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp
     count
@@ -3425,7 +3425,7 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
 The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`` instead:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/repeats.dkvp
     color=red,shape=square,flag=0
@@ -3487,13 +3487,13 @@ The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`
     color=purple,shape=square,flag=0
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ wc -l data/repeats.dkvp
           57 data/repeats.dkvp
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint uniq -a data/repeats.dkvp
     color  shape    flag
@@ -3506,14 +3506,14 @@ The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`
     yellow triangle 1
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint uniq -a -n data/repeats.dkvp
     count
     7
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint uniq -a -c data/repeats.dkvp
     count color  shape    flag
@@ -3531,7 +3531,7 @@ unsparsify
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr unsparsify --help
     Usage: mlr unsparsify [options]
@@ -3551,7 +3551,7 @@ unsparsify
 Examples:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/sparse.json
     {"a":1,"b":2,"v":3}
@@ -3560,7 +3560,7 @@ Examples:
     {"v":1,"w":2}
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --json unsparsify data/sparse.json
     {
@@ -3597,7 +3597,7 @@ Examples:
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --ijson --opprint unsparsify data/sparse.json
     a b v u x w
@@ -3607,7 +3607,7 @@ Examples:
     - - 1 - - 2
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --ijson --opprint unsparsify --fill-with missing data/sparse.json
     a       b       v       u       x       w
@@ -3617,7 +3617,7 @@ Examples:
     missing missing 1       missing missing 2
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --ijson --opprint unsparsify -f a,b,u data/sparse.json
     a b v u
@@ -3633,7 +3633,7 @@ Examples:
     1 2 - - -
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json
     a b v u w x

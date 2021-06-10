@@ -1,5 +1,5 @@
-Miller Docs v2
-================================================================
+Miller Documentation
+====================
 
 Getting started
 ----------------------------------------------------------------
@@ -7,14 +7,13 @@ Getting started
 .. toctree::
    :maxdepth: 1
 
-   quick-examples
+   introduction
    10min
-   data-diving-examples
-   customization
-   installation
+   keystroke-savers
+   programming-language
    community
 
-About
+Miller in more detail
 ----------------------------------------------------------------
 
 .. toctree::
@@ -25,11 +24,7 @@ About
    file-formats
    record-heterogeneity
    internationalization
-   why
-   etymology
-   originality
-   performance
-   contact
+   customization
 
 FAQs and recipes
 ----------------------------------------------------------------
@@ -44,6 +39,7 @@ FAQs and recipes
    dates-and-times
    then-chaining
    joins
+   shell-commands
 
 To be refactored
 ----------------------------------------------------------------
@@ -51,19 +47,25 @@ To be refactored
 .. toctree::
    :maxdepth: 1
 
+   quick-examples
+   data-diving-examples
    cookbook
    cookbook2
    cookbook3
+   cookbook4
+   sql-examples
+   log-processing-examples
 
-Integrations
+Background
 ----------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 1
 
-   sql-examples
-   log-processing-examples
-   data-sharing
+   why
+   etymology
+   originality
+   performance
 
 Reference
 ----------------------------------------------------------------
@@ -76,6 +78,7 @@ Reference
    reference-dsl
    manpage
    release-docs
+   installation
    build
 
 Index

@@ -4,7 +4,7 @@
 Unix-toolkit context
 ================================================================
 
-How does Miller fit within the Unix toolkit (`grep`, `sed`, `awk`, etc.)?
+How does Miller fit within the Unix toolkit (``grep``, ``sed``, ``awk``, etc.)?
 
 File-format awareness
 ----------------------------------------------------------------
@@ -12,37 +12,37 @@ File-format awareness
 Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header line is written once:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/a.csv
-    a,b,c
-    1,2,3
-    4,5,6
+    X,Y,Z
+    m,n,o
+    p,q,r
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/b.csv
-    a,b,c
-    7,8,9
+    X,Y,Z
+    g,h,i
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv cat data/a.csv data/b.csv
-    a,b,c
-    1,2,3
-    4,5,6
-    7,8,9
+    X,Y,Z
+    m,n,o
+    p,q,r
+    g,h,i
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv sort -nr b data/a.csv data/b.csv
-    a,b,c
-    7,8,9
-    4,5,6
-    1,2,3
+    X,Y,Z
+    m,n,o
+    p,q,r
+    g,h,i
 
 Likewise with ``mlr sort``, ``mlr tac``, and so on.
 

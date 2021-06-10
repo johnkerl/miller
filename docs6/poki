@@ -40,6 +40,10 @@ def main
        cmd = $1
        run_command(cmd, output_handle)
 
+    elsif content_line =~ /POKI_SHOW_COMMAND{{(.+)}}HERE/
+       cmd = $1
+       show_command(cmd, output_handle)
+
     elsif content_line =~ /POKI_RUN_COMMAND_TOLERATING_ERROR{{(.+)}}HERE/
       cmd = $1
       run_command_tolerating_error(cmd, output_handle)
@@ -56,7 +60,7 @@ end
 
 # ----------------------------------------------------------------
 def include_escaped(included_file_name, output_handle)
-  write_card(false, File.readlines(included_file_name), output_handle)
+  write_card(false, [], File.readlines(included_file_name), output_handle)
 end
 
 # ----------------------------------------------------------------
@@ -69,13 +73,21 @@ def run_command(cmd, output_handle)
   # The command can be multi-line
   cmd_lines = cmd.split(/\n/)
   cmd_line_1 = cmd_lines.shift
-  write_card(true, ['$ '+cmd_line_1] + cmd_lines + cmd_output.split(/\n/), output_handle)
+  write_card(true, ['$ '+cmd_line_1] + cmd_lines, cmd_output.split(/\n/), output_handle)
+end
+
+# ----------------------------------------------------------------
+def show_command(cmd, output_handle)
+  # The command can be multi-line
+  cmd_lines = cmd.split(/\n/)
+  cmd_line_1 = cmd_lines.shift
+  write_card(true, ['$ '+cmd_line_1] + cmd_lines, [], output_handle)
 end
 
 # ----------------------------------------------------------------
 def run_command_tolerating_error(cmd, output_handle)
   cmd_output = `#{cmd} 2>&1`
-  write_card(true, ['$ '+cmd] + cmd_output.split(/\n/), output_handle)
+  write_card(true, ['$ '+cmd], cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------
@@ -89,20 +101,31 @@ def run_content_generator(cmd, output_handle)
 end
 
 # ----------------------------------------------------------------
-def write_card(highlight_first_line, content_lines, output_handle)
-  output_handle.puts('.. code-block:: none')
-  if highlight_first_line
-    output_handle.puts('   :emphasize-lines: 1,1') # 'hll' in _static/*.css
+def write_card(highlight_command_lines, command_lines, output_lines, output_handle)
+  output_handle.puts(".. code-block:: none")
+  if highlight_command_lines
+    output_handle.puts("   :emphasize-lines: 1-#{command_lines.length}") # 'hll' in _static/*.css
   end
   output_handle.puts
-  content_lines.each do |content_line|
+
+  command_lines.each do |command_line|
     # The callsite should do the "::", blank line, then this, then blank line
     # in order to adhere to Sphinx code-block syntax. (Another option would be
     # us here doing the ::, blank line, , then the content line, then the other
     # blank line.)
     output_handle.write('    ') # four leading spaces for Sphinx, on each line
-    output_handle.puts(content_line)
+    output_handle.puts(command_line)
   end
+
+  output_lines.each do |output_line|
+    # The callsite should do the "::", blank line, then this, then blank line
+    # in order to adhere to Sphinx code-block syntax. (Another option would be
+    # us here doing the ::, blank line, , then the content line, then the other
+    # blank line.)
+    output_handle.write('    ') # four leading spaces for Sphinx, on each line
+    output_handle.puts(output_line)
+  end
+
 end
 
 # ================================================================

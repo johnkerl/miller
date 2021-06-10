@@ -13,7 +13,7 @@ Writing a program -- in any language whatsoever -- you can have it print out log
 Suppose your program has printed something like this (`log.txt <./log.txt>`_):
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat log.txt
     op=enter,time=1472819681
@@ -63,7 +63,7 @@ Suppose your program has printed something like this (`log.txt <./log.txt>`_):
 Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system ``grep`` command, or Miller's ``having-fields``, or ``is_present``, we can pick out the parts we want and analyze them:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-2
 
     $ grep op=cache log.txt \
       | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
@@ -73,7 +73,7 @@ Each print statement simply contains local information: the current timestamp, w
     A9   0.09090909090909091
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-4
 
     $ mlr --from log.txt --opprint \
       filter 'is_present($batch_size)' \
@@ -90,7 +90,7 @@ Each print statement simply contains local information: the current timestamp, w
 Alternatively, we can simply group the similar data for a better look:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint group-like log.txt
     op    time
@@ -143,7 +143,7 @@ Alternatively, we can simply group the similar data for a better look:
     1472819742 100        728
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint group-like then sec2gmt time log.txt
     op    time

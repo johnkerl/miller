@@ -87,44 +87,44 @@ I assigned $9 and it's not 9th
 Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo x,y,z | mlr --dkvp cat
     1=x,2=y,3=z
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'
     1=x,2=y,3=z,6=a,4=b,55=cde
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo x,y,z | mlr --nidx cat
     x,y,z
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo x,y,z | mlr --csv --implicit-csv-header cat
     1,2,3
     x,y,z
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo x,y,z | mlr --dkvp rename 2,999
     1=x,999=y,3=z
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo x,y,z | mlr --dkvp rename 2,newname
     1=x,newname=y,3=z
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2
     3,1,2
@@ -136,7 +136,7 @@ Why doesn't mlr cut put fields in the order I want?
 Example: columns ``x,i,a`` were requested but they appear here in the order ``a,i,x``:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -146,7 +146,7 @@ Example: columns ``x,i,a`` were requested but they appear here in the order ``a,
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cut -f x,i,a data/small
     a=pan,i=1,x=0.3467901443380824
@@ -160,7 +160,7 @@ The issue is that Miller's ``cut``, by default, outputs cut fields in the order 
 The solution is to use the ``-o`` option:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr cut -o -f x,i,a data/small
     x=0.3467901443380824,i=1,a=pan
@@ -175,7 +175,7 @@ Numbering and renumbering records
 The ``awk``-like built-in variable ``NR`` is incremented for each input record:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -185,7 +185,7 @@ The ``awk``-like built-in variable ``NR`` is incremented for each input record:
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr put '$nr = NR' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nr=1
@@ -197,7 +197,7 @@ The ``awk``-like built-in variable ``NR`` is incremented for each input record:
 However, this is the record number within the original input stream -- not after any filtering you may have done:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr filter '$a == "wye"' then put '$nr = NR' data/small
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
@@ -206,7 +206,7 @@ However, this is the record number within the original input stream -- not after
 There are two good options here. One is to use the ``cat`` verb with ``-n``:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr filter '$a == "wye"' then cat -n data/small
     n=1,a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -215,13 +215,13 @@ There are two good options here. One is to use the ``cat`` verb with ``-n``:
 The other is to keep your own counter within the ``put`` DSL:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,n=1
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
 
-rhe difference is a matter of taste (although ``mlr cat -n`` puts the counter first).
+The difference is a matter of taste (although ``mlr cat -n`` puts the counter first).
 
 Splitting nested fields
 ----------------------------------------------------------------
@@ -237,7 +237,7 @@ Suppose you have a TSV file like this:
 The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv
     a	b
@@ -247,7 +247,7 @@ The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
     s	w
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv
     a	b_1
@@ -261,7 +261,7 @@ While ``mlr nest`` is simplest, let's also take a look at a few ways to do this 
 One option to split out the colon-delimited values in the ``b`` column is to use ``splitnv`` to create an integer-indexed map and loop over it, adding new fields to the current record:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/nested.tsv --itsv --oxtab put 'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
     a  x
@@ -277,7 +277,7 @@ One option to split out the colon-delimited values in the ``b`` column is to use
 while another is to loop over the same map from ``splitnv`` and use it (with ``put -q`` to suppress printing the original record) to produce multiple records:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --from data/nested.tsv --itsv --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'
     a x
@@ -292,7 +292,15 @@ while another is to loop over the same map from ``splitnv`` and use it (with ``p
     a s
     b w
 
-rOKI_RUN_COMMAND{{mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'}}HERE
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    $ mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'
+    a	b
+    x	z
+    s	u
+    s	v
+    s	w
 
 Options for dealing with duplicate rows
 ----------------------------------------------------------------
@@ -361,7 +369,7 @@ with the result that your program's output is
 The idea here is that middles starting with a 1 belong to the outer value of 1, and so on.  (For example, the outer values might be account IDs, the middle values might be invoice IDs, and the inner values might be invoice line-items.) If you want all the middle and inner lines to have the context of which outers they belong to, you can modify your software to pass all those through your methods. Alternatively, don't refactor your code just to handle some ad-hoc log-data formatting -- instead, use the following to rectangularize the data.  The idea is to use an out-of-stream variable to accumulate fields across records. Clear that variable when you see an outer ID; accumulate fields; emit output when you see the inner IDs.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-10
 
     $ mlr --from data/rect.txt put -q '
       is_present($outer) {
