@@ -6,6 +6,8 @@ TOP OF LIST:
 * gha binaries * cli-audits * doc6 * survey * check issues *
 * split up mlr -h
 * snk postntn
+* note coverart image: command/keys/values is just for illustration only
+? maybe key/value colorizer like in jq -- off when to file -- ?
 
 ----------------------------------------------------------------
 doclink etc:
