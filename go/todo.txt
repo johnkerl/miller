@@ -4,6 +4,9 @@ TOP OF LIST:
 * emit * regex * fmtnum * localtime *
 * --nr-progress-mod * mlr -k *
 * gha binaries * cli-audits * doc6 * survey * check issues *
+* split up mlr -h
+* mlr hex double eof -- ?
+* snk postntn
 
 ----------------------------------------------------------------
 doclink etc:
@@ -69,6 +72,7 @@ w survey
     - list at end of todo.txt
     - maybe mlr -> mlrc as live-todo & 6make by default -- ?
     - trailing space on pprint right
+    - sphinx more mobile-friendly somehow -- ?
   o plan:
     - first landing page w/ toplinks -- ?
     - current FAQ -> esoterica (mostly ...) & distill new FAQ from GH issues/discussions
