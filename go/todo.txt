@@ -1,6 +1,11 @@
 ================================================================
 TOP OF LIST:
 
+* sat:
+  o x genrsts x all
+  o convert all code-blocks
+  o convert all POKI...HERE
+
 * emit * regex * fmtnum * localtime *
 * --nr-progress-mod * mlr -k *
 * cli-audits * doc6 * survey * check issues *
