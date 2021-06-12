@@ -34,7 +34,7 @@ def main
         cmd = File.readlines(included_file_name).join('')
         run_command(cmd, output_handle)
 
-      elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)HERE/
+      elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)/
         cmd = $1
         run_content_generator(cmd, output_handle)
 
