@@ -13,13 +13,19 @@ You can install Miller for various platforms as follows:
 
 As a first check, you should be able to run ``mlr --version`` at your system's command prompt and see something like the following:
 
-POKI_RUN_COMMAND{{mlr --version}}HERE
+POKI_RUN_COMMAND
+mlr --version
+POKI_EOF
 
 As a second check, given (`example.csv <./example.csv>`_) you should be able to do
 
-POKI_RUN_COMMAND{{mlr --csv cat example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv cat example.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cat example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint cat example.csv
+POKI_EOF
 
 If you run into issues on these checks, please check out the resources on the :doc:`community` page for help.
 
@@ -30,55 +36,85 @@ Let's take a quick look at some of the most useful Miller verbs -- file-format-a
 
 ``mlr cat`` is like system ``cat`` (or ``type`` on Windows) -- it passes the data through unmodified:
 
-POKI_RUN_COMMAND{{mlr --csv cat example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv cat example.csv
+POKI_EOF
 
 But ``mlr cat`` can also do format conversion -- for example, you can pretty-print in tabular format:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cat example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint cat example.csv
+POKI_EOF
 
 ``mlr head`` and ``mlr tail`` count records rather than lines. Whether you're getting the first few records or the last few, the CSV header is included either way:
 
-POKI_RUN_COMMAND{{mlr --csv head -n 4 example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv head -n 4 example.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv tail -n 4 example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv tail -n 4 example.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --ojson tail -n 2 example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --ojson tail -n 2 example.csv
+POKI_EOF
 
 You can sort on a single field:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint sort -f shape example.csv
+POKI_EOF
 
 Or, you can sort primarily alphabetically on one field, then secondarily numerically descending on another field, and so on:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint sort -f shape -nr index example.csv
+POKI_EOF
 
 If there are fields you don't want to see in your data, you can use ``cut`` to keep only the ones you want, in the same order they appeared in the input data:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cut -f flag,shape example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint cut -f flag,shape example.csv
+POKI_EOF
 
 You can also use ``cut -o`` to keep specified fields, but in your preferred order:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cut -o -f flag,shape example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint cut -o -f flag,shape example.csv
+POKI_EOF
 
 You can use ``cut -x`` to omit fields you don't care about:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cut -x -f flag,shape example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint cut -x -f flag,shape example.csv
+POKI_EOF
 
 You can use ``filter`` to keep only records you care about:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red"' example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint filter '$color == "red"' example.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv
+POKI_EOF
 
 You can use ``put`` to create new fields which are computed from other fields:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
+POKI_EOF
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use ``$[[3]]`` to access the name of field 3 or ``$[[[3]]]`` to access the value of field 3:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv
+POKI_EOF
 
 You can find the full list of verbs at the :doc:`reference-verbs` page.
 
@@ -87,32 +123,48 @@ Multiple input files
 
 Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files (`data/a.csv <data/a.csv>`_) and (`data/b.csv <data/b.csv>`_), the system ``cat`` command will repeat header lines:
 
-POKI_RUN_COMMAND{{cat data/a.csv}}HERE
+POKI_RUN_COMMAND
+cat data/a.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/b.csv}}HERE
+POKI_RUN_COMMAND
+cat data/b.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/a.csv data/b.csv}}HERE
+POKI_RUN_COMMAND
+cat data/a.csv data/b.csv
+POKI_EOF
 
 However, ``mlr cat`` will not:
 
-POKI_RUN_COMMAND{{mlr --csv cat data/a.csv data/b.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv cat data/a.csv data/b.csv
+POKI_EOF
 
 Chaining verbs together
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Often we want to chain queries together -- for example, sorting by a field and taking the top few values. We can do this using pipes:
 
-POKI_RUN_COMMAND{{mlr --csv sort -nr index example.csv | mlr --icsv --opprint head -n 3}}HERE
+POKI_RUN_COMMAND
+mlr --csv sort -nr index example.csv | mlr --icsv --opprint head -n 3
+POKI_EOF
 
 This works fine -- but Miller also lets you chain verbs together using the word ``then``. Think of this as a Miller-internal pipe that lets you use fewer keystrokes:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint sort -nr index then head -n 3 example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint sort -nr index then head -n 3 example.csv
+POKI_EOF
 
 As another convenience, you can put the filename first using ``--from``. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv sort -nr index then head -n 3}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint --from example.csv sort -nr index then head -n 3
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv sort -nr index then head -n 3 then cut -f shape,quantity}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint --from example.csv sort -nr index then head -n 3 then cut -f shape,quantity
+POKI_EOF
 
 Sorts and stats
 ^^^^^^^^^^^^^^^
@@ -121,21 +173,31 @@ Now suppose you want to sort the data on a given column, *and then* take the top
 
 Here are the records with the top three ``index`` values:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint sort -nr index then head -n 3 example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint sort -nr index then head -n 3 example.csv
+POKI_EOF
 
 Lots of Miller commands take a ``-g`` option for group-by: here, ``head -n 1 -g shape`` outputs the first record for each distinct value of the ``shape`` field. This means we're finding the record with highest ``index`` field for each distinct ``shape`` field:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
+POKI_EOF
 
 Statistics can be computed with or without group-by field(s):
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
+POKI_EOF
 
 If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:
 
-POKI_RUN_COMMAND{{mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
+POKI_EOF
 
 
 File formats and format conversion
@@ -282,10 +344,18 @@ If you like, you can first copy off your original data somewhere else, before do
 
 Lastly, using ``tee`` within ``put``, you can split your input data into separate files per one or more field names:
 
-POKI_RUN_COMMAND{{mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'}}HERE
+POKI_RUN_COMMAND
+mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat circle.csv}}HERE
+POKI_RUN_COMMAND
+cat circle.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat square.csv}}HERE
+POKI_RUN_COMMAND
+cat square.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat triangle.csv}}HERE
+POKI_RUN_COMMAND
+cat triangle.csv
+POKI_EOF

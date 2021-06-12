@@ -6,19 +6,31 @@ Pattern-action blocks
 
 These are reminiscent of ``awk`` syntax.  They can be used to allow assignments to be done only when appropriate -- e.g. for math-function domain restrictions, regex-matching, and so on:
 
-POKI_RUN_COMMAND{{mlr cat data/put-gating-example-1.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr cat data/put-gating-example-1.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr cat data/put-gating-example-2.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr cat data/put-gating-example-2.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
+POKI_EOF
 
 This produces heteregenous output which Miller, of course, has no problems with (see :doc:`record-heterogeneity`).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes ``put`` to evaluate the boolean expression (along with any side effects, namely, regex-captures ``\1``, ``\2``, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
 
-POKI_RUN_COMMAND{{mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
+POKI_EOF
 
 If-statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -72,11 +84,15 @@ Key-value for-loops
 
 Single-level keys may be gotten at using either ``for(k,v)`` or ``for((k),v)``; multi-level keys may be gotten at using ``for((k1,k2,k3),v)`` and so on.  The ``v`` variable will be bound to to a scalar value (a string or a number) if the map stops at that level, or to a map-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
-POKI_RUN_COMMAND{{cat data/for-srec-example.tbl}}HERE
+POKI_RUN_COMMAND
+cat data/for-srec-example.tbl
+POKI_EOF
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)HERE
 
-POKI_RUN_COMMAND{{mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'}}HERE
+POKI_RUN_COMMAND
+mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
+POKI_EOF
 
 Note that the value of the current field in the for-loop can be gotten either using the bound variable ``value``, or through a **computed field name** using square brackets as in ``$[key]``.
 

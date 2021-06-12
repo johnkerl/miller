@@ -12,7 +12,9 @@ Here's a comparison of verbs and ``put``/``filter`` DSL expressions:
 
 Example:
 
-POKI_RUN_COMMAND{{mlr stats1 -a sum -f x -g a data/small}}HERE
+POKI_RUN_COMMAND
+mlr stats1 -a sum -f x -g a data/small
+POKI_EOF
 
 * Verbs are coded in Go
 * They run a bit faster
@@ -22,7 +24,9 @@ POKI_RUN_COMMAND{{mlr stats1 -a sum -f x -g a data/small}}HERE
 
 Example:
 
-POKI_RUN_COMMAND{{mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small}}HERE
+POKI_RUN_COMMAND
+mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
+POKI_EOF
 
 * You get to write your own DSL expressions
 * They run a bit slower
@@ -37,11 +41,17 @@ altkv
 
 Map list of values to alternating key/value pairs.
 
-POKI_RUN_COMMAND{{mlr altkv -h}}HERE
+POKI_RUN_COMMAND
+mlr altkv -h
+POKI_EOF
 
-POKI_RUN_COMMAND{{echo 'a,b,c,d,e,f' | mlr altkv}}HERE
+POKI_RUN_COMMAND
+echo 'a,b,c,d,e,f' | mlr altkv
+POKI_EOF
 
-POKI_RUN_COMMAND{{echo 'a,b,c,d,e,f,g' | mlr altkv}}HERE
+POKI_RUN_COMMAND
+echo 'a,b,c,d,e,f,g' | mlr altkv
+POKI_EOF
 
 .. _reference-verbs-bar:
 
@@ -50,22 +60,34 @@ bar
 
 Cheesy bar-charting.
 
-POKI_RUN_COMMAND{{mlr bar -h}}HERE
+POKI_RUN_COMMAND
+mlr bar -h
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint bar --lo 0 --hi 1 -f x,y data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint bar --lo 0 --hi 1 -f x,y data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint bar --auto -f x,y data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint bar --auto -f x,y data/small
+POKI_EOF
 
 .. _reference-verbs-bootstrap:
 
 bootstrap
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr bootstrap --help}}HERE
+POKI_RUN_COMMAND
+mlr bootstrap --help
+POKI_EOF
 
 The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
 
@@ -120,43 +142,71 @@ cat
 
 Most useful for format conversions (see :doc:`file-formats`, and concatenating multiple same-schema CSV files to have the same header:
 
-POKI_RUN_COMMAND{{mlr cat -h}}HERE
+POKI_RUN_COMMAND
+mlr cat -h
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/a.csv}}HERE
+POKI_RUN_COMMAND
+cat data/a.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/b.csv}}HERE
+POKI_RUN_COMMAND
+cat data/b.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv cat data/a.csv data/b.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv cat data/a.csv data/b.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --oxtab cat data/a.csv data/b.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --oxtab cat data/a.csv data/b.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv cat -n data/a.csv data/b.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv cat -n data/a.csv data/b.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint cat -n -g a data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint cat -n -g a data/small
+POKI_EOF
 
 .. _reference-verbs-check:
 
 check
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr check --help}}HERE
+POKI_RUN_COMMAND
+mlr check --help
+POKI_EOF
 
 .. _reference-verbs-clean-whitespace:
 
 clean-whitespace
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr clean-whitespace --help}}HERE
+POKI_RUN_COMMAND
+mlr clean-whitespace --help
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --ojson cat data/clean-whitespace.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --ojson cat data/clean-whitespace.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv
+POKI_EOF
 
 Function links:
 
@@ -171,89 +221,143 @@ Function links:
 count
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr count --help}}HERE
+POKI_RUN_COMMAND
+mlr count --help
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count -g a data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count -g a data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count -n -g a data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count -n -g a data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count -g b data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count -g b data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count -n -g b data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count -n -g b data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count -g a,b data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count -g a,b data/medium
+POKI_EOF
 
 .. _reference-verbs-count-distinct:
 
 count-distinct
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr count-distinct --help}}HERE
+POKI_RUN_COMMAND
+mlr count-distinct --help
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count-distinct -f a,b then sort -nr count data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count-distinct -f a,b then sort -nr count data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count-distinct -u -f a,b data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count-distinct -u -f a,b data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr count-distinct -n -f a,b data/medium}}HERE
+POKI_RUN_COMMAND
+mlr count-distinct -n -f a,b data/medium
+POKI_EOF
 
 .. _reference-verbs-count-similar:
 
 count-similar
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr count-similar --help}}HERE
+POKI_RUN_COMMAND
+mlr count-similar --help
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint head -n 20 data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint head -n 20 data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint head -n 20 then count-similar -g a data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint head -n 20 then count-similar -g a data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium
+POKI_EOF
 
 .. _reference-verbs-cut:
 
 cut
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr cut --help}}HERE
+POKI_RUN_COMMAND
+mlr cut --help
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint cut -f y,x,i data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint cut -f y,x,i data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -f b,c,a}}HERE
+POKI_RUN_COMMAND
+echo 'a=1,b=2,c=3' | mlr cut -f b,c,a
+POKI_EOF
 
-POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
+POKI_RUN_COMMAND
+echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a
+POKI_EOF
 
 .. _reference-verbs-decimate:
 
 decimate
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr decimate --help}}HERE
+POKI_RUN_COMMAND
+mlr decimate --help
+POKI_EOF
 
 .. _reference-verbs-fill-down:
 
 fill-down
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr fill-down --help}}HERE
+POKI_RUN_COMMAND
+mlr fill-down --help
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/fill-down.csv}}HERE
+POKI_RUN_COMMAND
+cat data/fill-down.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv fill-down -f b data/fill-down.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv fill-down -f b data/fill-down.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv fill-down -a -f b data/fill-down.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv fill-down -a -f b data/fill-down.csv
+POKI_EOF
 
 .. _reference-verbs-filter:
 
 filter
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr filter --help}}HERE
+POKI_RUN_COMMAND
+mlr filter --help
+POKI_EOF
 
 Features which filter shares with put
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -265,22 +369,34 @@ Please see :doc:`reference-dsl` for more information about the expression langua
 format-values
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr format-values --help}}HERE
+POKI_RUN_COMMAND
+mlr format-values --help
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint format-values data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint format-values data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint format-values -n data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint format-values -n data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small
+POKI_EOF
 
 .. _reference-verbs-fraction:
 
 fraction
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr fraction --help}}HERE
+POKI_RUN_COMMAND
+mlr fraction --help
+POKI_EOF
 
 For example, suppose you have the following CSV file:
 
@@ -288,45 +404,65 @@ POKI_INCLUDE_ESCAPED(data/fraction-example.csv)HERE
 
 Then we can see what each record's ``n`` contributes to the total ``n``:
 
-POKI_RUN_COMMAND{{mlr --opprint fraction -f n data/fraction-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --opprint fraction -f n data/fraction-example.csv
+POKI_EOF
 
 Using ``-g`` we can split those out by gender, or by color:
 
-POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g u data/fraction-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --opprint fraction -f n -g u data/fraction-example.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g v data/fraction-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --opprint fraction -f n -g v data/fraction-example.csv
+POKI_EOF
 
 We can see, for example, that 70.9% of females have red (on the left) while 94.5% of reds are for females.
 
 To convert fractions to percents, you may use ``-p``:
 
-POKI_RUN_COMMAND{{mlr --opprint fraction -f n -p data/fraction-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --opprint fraction -f n -p data/fraction-example.csv
+POKI_EOF
 
 Another often-used idiom is to convert from a point distribution to a cumulative distribution, also known as "running sums". Here, you can use ``-c``:
 
-POKI_RUN_COMMAND{{mlr --opprint fraction -f n -p -c data/fraction-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --opprint fraction -f n -p -c data/fraction-example.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv
+POKI_EOF
 
 .. _reference-verbs-grep:
 
 grep
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr grep -h}}HERE
+POKI_RUN_COMMAND
+mlr grep -h
+POKI_EOF
 
 .. _reference-verbs-group-by:
 
 group-by
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr group-by --help}}HERE
+POKI_RUN_COMMAND
+mlr group-by --help
+POKI_EOF
 
 This is similar to ``sort`` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear.
 
-POKI_RUN_COMMAND{{mlr --opprint group-by a data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint group-by a data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint sort -f a data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint sort -f a data/small
+POKI_EOF
 
 In this example, since the sort is on field ``a``, the first step is to group together all records having the same value for field ``a``; the second step is to sort the distinct ``a``-field values ``pan``, ``eks``, and ``wye`` into ``eks``, ``pan``, and ``wye``; the third step is to print out the record-list for ``a=eks``, then the record-list for ``a=pan``, then the record-list for ``a=wye``.  The group-by operation omits the middle sort and just puts like records together, for those times when a sort isn't desired. In particular, the ordering of group-by fields for group-by is the order in which they were encountered in the data stream, which in some cases may be more interesting to you.
 
@@ -335,96 +471,142 @@ In this example, since the sort is on field ``a``, the first step is to group to
 group-like
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr group-like --help}}HERE
+POKI_RUN_COMMAND
+mlr group-like --help
+POKI_EOF
 
 This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in :doc:`record-heterogeneity` -- in particular, in preparation for CSV or pretty-print output.
 
-POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr cat data/het.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint group-like data/het.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint group-like data/het.dkvp
+POKI_EOF
 
 .. _reference-verbs-having-fields:
 
 having-fields
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr having-fields --help}}HERE
+POKI_RUN_COMMAND
+mlr having-fields --help
+POKI_EOF
 
 Similar to :ref:`reference-verbs-group-like`, this retains records with specified schema.
 
-POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr cat data/het.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr having-fields --at-least resource data/het.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr having-fields --at-least resource data/het.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr having-fields --which-are resource,ok,loadsec data/het.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr having-fields --which-are resource,ok,loadsec data/het.dkvp
+POKI_EOF
 
 .. _reference-verbs-head:
 
 head
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr head --help}}HERE
+POKI_RUN_COMMAND
+mlr head --help
+POKI_EOF
 
 Note that ``head`` is distinct from :ref:`reference-verbs-top` -- ``head`` shows fields which appear first in the data stream; ``top`` shows fields which are numerically largest (or smallest).
 
-POKI_RUN_COMMAND{{mlr --opprint head -n 4 data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint head -n 4 data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint head -n 1 -g b data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint head -n 1 -g b data/medium
+POKI_EOF
 
 .. _reference-verbs-histogram:
 
 histogram
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr histogram --help}}HERE
+POKI_RUN_COMMAND
+mlr histogram --help
+POKI_EOF
 
 This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use ``--lo 0.0 --hi 1.0 --nbins 10 -f x``.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has ``0.0 &le; x < 0.1``, bin 1 has ``0.1 &le; x < 0.2``, etc., but bin 9 has ``0.9 &le; x &le; 1.0``.
 
-POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ data/medium
+POKI_EOF
 
 .. _reference-verbs-join:
 
 join
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr join --help}}HERE
+POKI_RUN_COMMAND
+mlr join --help
+POKI_EOF
 
 Examples:
 
 Join larger table with IDs with smaller ID-to-name lookup table, showing only paired records:
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-left-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsvlite --opprint cat data/join-left-example.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-right-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsvlite --opprint cat data/join-right-example.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsvlite --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+POKI_EOF
 
 Same, but with sorting the input first:
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsvlite --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+POKI_EOF
 
 Same, but showing only unpaired records:
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsvlite --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+POKI_EOF
 
 Use prefixing options to disambiguate between otherwise identical non-join field names:
 
-POKI_RUN_COMMAND{{mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+POKI_EOF
 
 Use zero join columns:
 
-POKI_RUN_COMMAND{{mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+POKI_EOF
 
 .. _reference-verbs-label:
 
 label
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr label --help}}HERE
+POKI_RUN_COMMAND
+mlr label --help
+POKI_EOF
 
 See also :ref:`reference-verbs-rename`.
 
@@ -434,28 +616,46 @@ POKI_INCLUDE_ESCAPED(data/label-example.txt)HERE
 
 Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using ``--implicit-csv-header`` and ``label``:
 
-POKI_RUN_COMMAND{{cat data/headerless.csv}}HERE
+POKI_RUN_COMMAND
+cat data/headerless.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr  --csv --implicit-csv-header cat data/headerless.csv}}HERE
+POKI_RUN_COMMAND
+mlr  --csv --implicit-csv-header cat data/headerless.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr  --csv --implicit-csv-header label name,age,status data/headerless.csv}}HERE
+POKI_RUN_COMMAND
+mlr  --csv --implicit-csv-header label name,age,status data/headerless.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv
+POKI_EOF
 
 .. _reference-verbs-least-frequent:
 
 least-frequent
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr least-frequent -h}}HERE
+POKI_RUN_COMMAND
+mlr least-frequent -h
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5}}HERE
+POKI_RUN_COMMAND
+mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5}}HERE
+POKI_RUN_COMMAND
+mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -o someothername}}HERE
+POKI_RUN_COMMAND
+mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -o someothername
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b}}HERE
+POKI_RUN_COMMAND
+mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b
+POKI_EOF
 
 See also :ref:`reference-verbs-most-frequent`.
 
@@ -464,32 +664,50 @@ See also :ref:`reference-verbs-most-frequent`.
 merge-fields
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr merge-fields --help}}HERE
+POKI_RUN_COMMAND
+mlr merge-fields --help
+POKI_EOF
 
 This is like ``mlr stats1`` but all accumulation is done across fields within each given record: horizontal rather than vertical statistics, if you will.
 
 Examples:
 
-POKI_RUN_COMMAND{{mlr --csvlite --opprint cat data/inout.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csvlite --opprint cat data/inout.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv
+POKI_EOF
 
 .. _reference-verbs-most-frequent:
 
 most-frequent
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr most-frequent -h}}HERE
+POKI_RUN_COMMAND
+mlr most-frequent -h
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5}}HERE
+POKI_RUN_COMMAND
+mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5}}HERE
+POKI_RUN_COMMAND
+mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -o someothername}}HERE
+POKI_RUN_COMMAND
+mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -o someothername
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b}}HERE
+POKI_RUN_COMMAND
+mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b
+POKI_EOF
 
 See also :ref:`reference-verbs-least-frequent`.
 
@@ -498,21 +716,27 @@ See also :ref:`reference-verbs-least-frequent`.
 nest
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr nest -h}}HERE
+POKI_RUN_COMMAND
+mlr nest -h
+POKI_EOF
 
 .. _reference-verbs-nothing:
 
 nothing
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr nothing -h}}HERE
+POKI_RUN_COMMAND
+mlr nothing -h
+POKI_EOF
 
 .. _reference-verbs-put:
 
 put
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr put --help}}HERE
+POKI_RUN_COMMAND
+mlr put --help
+POKI_EOF
 
 Features which put shares with filter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -524,7 +748,9 @@ Please see the :doc:`reference-dsl` for more information about the expression la
 regularize
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr regularize --help}}HERE
+POKI_RUN_COMMAND
+mlr regularize --help
+POKI_EOF
 
 This exists since hash-map software in various languages and tools encountered in the wild does not always print similar rows with fields in the same order: ``mlr regularize`` helps clean that up.
 
@@ -535,11 +761,17 @@ See also :ref:`reference-verbs-reorder`.
 remove-empty-columns
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr remove-empty-columns --help}}HERE
+POKI_RUN_COMMAND
+mlr remove-empty-columns --help
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/remove-empty-columns.csv}}HERE
+POKI_RUN_COMMAND
+cat data/remove-empty-columns.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv remove-empty-columns data/remove-empty-columns.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv remove-empty-columns data/remove-empty-columns.csv
+POKI_EOF
 
 Since this verb needs to read all records to see if any of them has a non-empty value for a given field name, it is non-streaming: it will ingest all records before writing any.
 
@@ -548,17 +780,27 @@ Since this verb needs to read all records to see if any of them has a non-empty 
 rename
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr rename --help}}HERE
+POKI_RUN_COMMAND
+mlr rename --help
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint rename i,INDEX,b,COLUMN2 data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint rename i,INDEX,b,COLUMN2 data/small
+POKI_EOF
 
 As discussed in :doc:`performance`, ``sed`` is significantly faster than Miller at doing this. However, Miller is format-aware, so it knows to do renames only within specified field keys and not any others, nor in field values which may happen to contain the same pattern. Example:
 
-POKI_RUN_COMMAND{{sed 's/y/COLUMN5/g' data/small}}HERE
+POKI_RUN_COMMAND
+sed 's/y/COLUMN5/g' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr rename y,COLUMN5 data/small}}HERE
+POKI_RUN_COMMAND
+mlr rename y,COLUMN5 data/small
+POKI_EOF
 
 See also :ref:`reference-verbs-label`.
 
@@ -567,32 +809,46 @@ See also :ref:`reference-verbs-label`.
 reorder
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr reorder --help}}HERE
+POKI_RUN_COMMAND
+mlr reorder --help
+POKI_EOF
 
 This pivots specified field names to the start or end of the record -- for
 example when you have highly multi-column data and you want to bring a field or
 two to the front of line where you can give a quick visual scan.
 
-POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint reorder -f i,b data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint reorder -f i,b data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint reorder -e -f i,b data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint reorder -e -f i,b data/small
+POKI_EOF
 
 .. _reference-verbs-repeat:
 
 repeat
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr repeat --help}}HERE
+POKI_RUN_COMMAND
+mlr repeat --help
+POKI_EOF
 
 This is useful in at least two ways: one, as a data-generator as in the
 above example using ``urand()``; two, for reconstructing individual
 samples from data which has been count-aggregated:
 
-POKI_RUN_COMMAND{{cat data/repeat-example.dat}}HERE
+POKI_RUN_COMMAND
+cat data/repeat-example.dat
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr repeat -f count then cut -x -f count data/repeat-example.dat}}HERE
+POKI_RUN_COMMAND
+mlr repeat -f count then cut -x -f count data/repeat-example.dat
+POKI_EOF
 
 After expansion with ``repeat``, such data can then be sent on to
 ``stats1 -a mode``, or (if the data are numeric) to ``stats1 -a
@@ -603,14 +859,18 @@ p10,p50,p90``, etc.
 reshape
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr reshape --help}}HERE
+POKI_RUN_COMMAND
+mlr reshape --help
+POKI_EOF
 
 .. _reference-verbs-sample:
 
 sample
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr sample --help}}HERE
+POKI_RUN_COMMAND
+mlr sample --help
+POKI_EOF
 
 This is reservoir-sampling: select *k* items from *n* with
 uniform probability and no repeats in the sample. (If *n* is less than
@@ -629,123 +889,183 @@ sampling, which works in the streaming case, is ``mlr filter 'urand() &
 sec2gmt
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr sec2gmt -h}}HERE
+POKI_RUN_COMMAND
+mlr sec2gmt -h
+POKI_EOF
 
 .. _reference-verbs-sec2gmtdate:
 
 sec2gmtdate
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr sec2gmtdate -h}}HERE
+POKI_RUN_COMMAND
+mlr sec2gmtdate -h
+POKI_EOF
 
 .. _reference-verbs-seqgen:
 
 seqgen
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr seqgen -h}}HERE
+POKI_RUN_COMMAND
+mlr seqgen -h
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr seqgen --stop 10}}HERE
+POKI_RUN_COMMAND
+mlr seqgen --stop 10
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr seqgen --start 20 --stop 40 --step 4}}HERE
+POKI_RUN_COMMAND
+mlr seqgen --start 20 --stop 40 --step 4
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr seqgen --start 40 --stop 20 --step -4}}HERE
+POKI_RUN_COMMAND
+mlr seqgen --start 40 --stop 20 --step -4
+POKI_EOF
 
 .. _reference-verbs-shuffle:
 
 shuffle
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr shuffle -h}}HERE
+POKI_RUN_COMMAND
+mlr shuffle -h
+POKI_EOF
 
 .. _reference-verbs-skip-trivial-records:
 
 skip-trivial-records
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr skip-trivial-records -h}}HERE
+POKI_RUN_COMMAND
+mlr skip-trivial-records -h
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/trivial-records.csv}}HERE
+POKI_RUN_COMMAND
+cat data/trivial-records.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv skip-trivial-records data/trivial-records.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv skip-trivial-records data/trivial-records.csv
+POKI_EOF
 
 .. _reference-verbs-sort:
 
 sort
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr sort --help}}HERE
+POKI_RUN_COMMAND
+mlr sort --help
+POKI_EOF
 
 Example:
 
-POKI_RUN_COMMAND{{mlr --opprint sort -f a -nr x data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint sort -f a -nr x data/small
+POKI_EOF
 
 Here's an example filtering log data: suppose multiple threads (labeled here by color) are all logging progress counts to a single log file. The log file is (by nature) chronological, so the progress of various threads is interleaved:
 
-POKI_RUN_COMMAND{{head -n 10 data/multicountdown.dat}}HERE
+POKI_RUN_COMMAND
+head -n 10 data/multicountdown.dat
+POKI_EOF
 
 We can group these by thread by sorting on the thread ID (here,
 ``color``). Since Miller's sort is stable, this means that
 timestamps within each thread's log data are still chronological:
 
-POKI_RUN_COMMAND{{head -n 20 data/multicountdown.dat | mlr --opprint sort -f color}}HERE
+POKI_RUN_COMMAND
+head -n 20 data/multicountdown.dat | mlr --opprint sort -f color
+POKI_EOF
 
 Any records not having all specified sort keys will appear at the end of the output, in the order they
 were encountered, regardless of the specified sort order:
 
-POKI_RUN_COMMAND{{mlr sort -n  x data/sort-missing.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr sort -n  x data/sort-missing.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr sort -nr x data/sort-missing.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr sort -nr x data/sort-missing.dkvp
+POKI_EOF
 
 .. _reference-verbs-sort-within-records:
 
 sort-within-records
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr sort-within-records -h}}HERE
+POKI_RUN_COMMAND
+mlr sort-within-records -h
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/sort-within-records.json}}HERE
+POKI_RUN_COMMAND
+cat data/sort-within-records.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint cat data/sort-within-records.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint cat data/sort-within-records.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --json sort-within-records data/sort-within-records.json}}HERE
+POKI_RUN_COMMAND
+mlr --json sort-within-records data/sort-within-records.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint sort-within-records data/sort-within-records.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint sort-within-records data/sort-within-records.json
+POKI_EOF
 
 .. _reference-verbs-stats1:
 
 stats1
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr stats1 --help}}HERE
+POKI_RUN_COMMAND
+mlr stats1 --help
+POKI_EOF
 
 These are simple univariate statistics on one or more number-valued fields
 (``count`` and ``mode`` apply to non-numeric fields as well),
 optionally categorized by one or more other fields.
 
-POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp
+POKI_EOF
 
 .. _reference-verbs-stats2:
 
 stats2
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr stats2 --help}}HERE
+POKI_RUN_COMMAND
+mlr stats2 --help
+POKI_EOF
 
 These are simple bivariate statistics on one or more pairs of number-valued
 fields, optionally categorized by one or more fields.
 
-POKI_RUN_COMMAND{{mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium
+POKI_EOF
 
 Here's an example simple line-fit. The ``x`` and ``y``
 fields of the ``data/medium`` dataset are just independent uniformly
@@ -762,28 +1082,42 @@ I use `pgr <https://github.com/johnkerl/pgr>`_ for plotting; here's a screenshot
 
 Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file, with number of work units left to do in the ``count`` field and accumulated seconds in the ``upsec`` field, labeled by the ``color`` field:
 
-POKI_RUN_COMMAND{{head -n 10 data/multicountdown.dat}}HERE
+POKI_RUN_COMMAND
+head -n 10 data/multicountdown.dat
+POKI_EOF
 
 We can do a linear regression on count remaining as a function of time: with ``c = m*u+b`` we want to find the time when the count goes to zero, i.e. ``u=-b/m``.
 
-POKI_RUN_COMMAND{{mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat}}HERE
+POKI_RUN_COMMAND
+mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat
+POKI_EOF
 
 .. _reference-verbs-step:
 
 step
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr step --help}}HERE
+POKI_RUN_COMMAND
+mlr step --help
+POKI_EOF
 
 Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``stats2``, and ``histogram`` which compute aggregate output. The ``step`` command is intermediate: it allows the option of adding fields which are functions of fields from previous records. Rsum is short for *running sum*.
 
-POKI_RUN_COMMAND{{mlr --opprint step -a shift,delta,rsum,counter -f x data/medium | head -15}}HERE
+POKI_RUN_COMMAND
+mlr --opprint step -a shift,delta,rsum,counter -f x data/medium | head -15
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15}}HERE
+POKI_RUN_COMMAND
+mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint step -a ewma -f x -d 0.1,0.9 data/medium | head -15}}HERE
+POKI_RUN_COMMAND
+mlr --opprint step -a ewma -f x -d 0.1,0.9 data/medium | head -15
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough data/medium | head -15}}HERE
+POKI_RUN_COMMAND
+mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough data/medium | head -15
+POKI_EOF
 
 
 Example deriving uptime-delta from system uptime:
@@ -795,102 +1129,164 @@ POKI_INCLUDE_ESCAPED(data/ping-delta-example.txt)HERE
 tac
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr tac --help}}HERE
+POKI_RUN_COMMAND
+mlr tac --help
+POKI_EOF
 
 Prints the records in the input stream in reverse order. Note: this requires Miller to retain all input records in memory before any output records are produced.
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/a.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint cat data/a.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/b.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint cat data/b.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint tac data/a.csv data/b.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint tac data/a.csv data/b.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv
+POKI_EOF
 
 .. _reference-verbs-tail:
 
 tail
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr tail --help}}HERE
+POKI_RUN_COMMAND
+mlr tail --help
+POKI_EOF
 
 Prints the last *n* records in the input stream, optionally by category.
 
-POKI_RUN_COMMAND{{mlr --opprint tail -n 4 data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint tail -n 4 data/colored-shapes.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp
+POKI_EOF
 
 .. _reference-verbs-tee:
 
 tee
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr tee --help}}HERE
+POKI_RUN_COMMAND
+mlr tee --help
+POKI_EOF
 
 .. _reference-verbs-top:
 
 top
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr top --help}}HERE
+POKI_RUN_COMMAND
+mlr top --help
+POKI_EOF
 
 Note that ``top`` is distinct from :ref:`reference-verbs-head` -- ``head`` shows fields which appear first in the data stream; ``top`` shows fields which are numerically largest (or smallest).
 
-POKI_RUN_COMMAND{{mlr --opprint top -n 4 -f x data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint top -n 4 -f x data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint top -n 4 -f x -o someothername data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint top -n 4 -f x -o someothername data/medium
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint top -n 2 -f x -g a then sort -f a data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
+POKI_EOF
 
 .. _reference-verbs-uniq:
 
 uniq
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr uniq --help}}HERE
+POKI_RUN_COMMAND
+mlr uniq --help
+POKI_EOF
 
 There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to specify group-by columns.
 
-POKI_RUN_COMMAND{{wc -l data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+wc -l data/colored-shapes.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr uniq -g color,shape data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr uniq -g color,shape data/colored-shapes.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c -o someothername then sort -nr someothername data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint uniq -g color,shape -c -o someothername then sort -nr someothername data/colored-shapes.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp
+POKI_EOF
 
 The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`` instead:
 
-POKI_RUN_COMMAND{{cat data/repeats.dkvp}}HERE
+POKI_RUN_COMMAND
+cat data/repeats.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{wc -l data/repeats.dkvp}}HERE
+POKI_RUN_COMMAND
+wc -l data/repeats.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint uniq -a data/repeats.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint uniq -a data/repeats.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint uniq -a -n data/repeats.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint uniq -a -n data/repeats.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint uniq -a -c data/repeats.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr --opprint uniq -a -c data/repeats.dkvp
+POKI_EOF
 
 .. _reference-verbs-unsparsify:
 
 unsparsify
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr unsparsify --help}}HERE
+POKI_RUN_COMMAND
+mlr unsparsify --help
+POKI_EOF
 
 Examples:
 
-POKI_RUN_COMMAND{{cat data/sparse.json}}HERE
+POKI_RUN_COMMAND
+cat data/sparse.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --json unsparsify data/sparse.json}}HERE
+POKI_RUN_COMMAND
+mlr --json unsparsify data/sparse.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint unsparsify data/sparse.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint unsparsify data/sparse.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint unsparsify --fill-with missing data/sparse.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint unsparsify --fill-with missing data/sparse.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint unsparsify -f a,b,u data/sparse.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint unsparsify -f a,b,u data/sparse.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json
+POKI_EOF
 

@@ -6,13 +6,17 @@ Expression formatting
 
 Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
 
-POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'}}HERE
+POKI_RUN_COMMAND
+ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'
+POKI_EOF
 
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)HERE
 
-POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
+POKI_RUN_COMMAND
+mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium
+POKI_EOF
 
 .. _reference-dsl-expressions-from-files:
 
@@ -28,15 +32,23 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-2.sh)HERE
 You may, though, find it convenient to put expressions into files for reuse, and read them
 **using the -f option**. For example:
 
-POKI_RUN_COMMAND{{cat data/fe-example-3.mlr}}HERE
+POKI_RUN_COMMAND
+cat data/fe-example-3.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-3.mlr}}HERE
+POKI_RUN_COMMAND
+mlr --from data/small put -f data/fe-example-3.mlr
+POKI_EOF
 
 If you have some of the logic in a file and you want to write the rest on the command line, you can **use the -f and -e options together**:
 
-POKI_RUN_COMMAND{{cat data/fe-example-4.mlr}}HERE
+POKI_RUN_COMMAND
+cat data/fe-example-4.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'}}HERE
+POKI_RUN_COMMAND
+mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'
+POKI_EOF
 
 A suggested use-case here is defining functions in files, and calling them from command-line expressions.
 
@@ -53,9 +65,13 @@ POKI_INCLUDE_ESCAPED(data/semicolon-example.txt)HERE
 
 Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
 
-POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'}}HERE
+POKI_RUN_COMMAND
+echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'
+POKI_EOF
 
-POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'}}HERE
+POKI_RUN_COMMAND
+echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'
+POKI_EOF
 
 Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
 

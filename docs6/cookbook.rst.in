@@ -6,21 +6,31 @@ Data-cleaning examples
 
 Here are some ways to use the type-checking options as described in :ref:`reference-dsl-type-tests-and-assertions` Suppose you have the following data file, with inconsistent typing for boolean. (Also imagine that, for the sake of discussion, we have a million-line file rather than a four-line file, so we can't see it all at once and some automation is called for.)
 
-POKI_RUN_COMMAND{{cat data/het-bool.csv}}HERE
+POKI_RUN_COMMAND
+cat data/het-bool.csv
+POKI_EOF
 
 One option is to coerce everything to boolean, or integer:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$reachable = boolean($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
+POKI_EOF
 
 A second option is to flag badly formatted data within the output stream:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
+POKI_EOF
 
 Or perhaps to flag badly formatted data outside the output stream:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND
+mlr --icsv --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
+POKI_EOF
 
 A third way is to abort the process on first instance of bad data:
 
@@ -31,21 +41,33 @@ Showing differences between successive queries
 
 Suppose you have a database query which you run at one point in time, producing the output on the left, then again later producing the output on the right:
 
-POKI_RUN_COMMAND{{cat data/previous_counters.csv}}HERE
+POKI_RUN_COMMAND
+cat data/previous_counters.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/current_counters.csv}}HERE
+POKI_RUN_COMMAND
+cat data/current_counters.csv
+POKI_EOF
 
 And, suppose you want to compute the differences in the counters between adjacent keys. Since the color names aren't all in the same order, nor are they all present on both sides, we can't just paste the two files side-by-side and do some column-four-minus-column-two arithmetic.
 
 First, rename counter columns to make them distinct:
 
-POKI_RUN_COMMAND{{mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/prevtemp.csv}}HERE
+POKI_RUN_COMMAND
+cat data/prevtemp.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/currtemp.csv}}HERE
+POKI_RUN_COMMAND
+cat data/currtemp.csv
+POKI_EOF
 
 Then, join on the key field(s), and use unsparsify to zero-fill counters absent on one side but present on the other. Use ``--ul`` and ``--ur`` to emit unpaired records (namely, purple on the left and yellow on the right):
 
@@ -75,13 +97,19 @@ Two-pass algorithms: records having max value
 
 The idea is to retain records having the largest value of ``n`` in the following data:
 
-POKI_RUN_COMMAND{{mlr --itsv --opprint cat data/maxrows.tsv}}HERE
+POKI_RUN_COMMAND
+mlr --itsv --opprint cat data/maxrows.tsv
+POKI_EOF
 
 Of course, the largest value of ``n`` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end:
 
-POKI_RUN_COMMAND{{cat data/maxrows.mlr}}HERE
+POKI_RUN_COMMAND
+cat data/maxrows.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv}}HERE
+POKI_RUN_COMMAND
+mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
+POKI_EOF
 
 Feature-counting
 ----------------------------------------------------------------
@@ -96,9 +124,13 @@ POKI_INCLUDE_ESCAPED(data/feature-count.mlr)HERE
 
 Then
 
-POKI_RUN_COMMAND{{mlr --json put -q -f data/feature-count.mlr data/features.json}}HERE
+POKI_RUN_COMMAND
+mlr --json put -q -f data/feature-count.mlr data/features.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json
+POKI_EOF
 
 Unsparsing
 ----------------------------------------------------------------
@@ -107,17 +139,27 @@ The previous section discussed how to fill out missing data fields within CSV wi
 
 For example, suppose you have JSON input like this:
 
-POKI_RUN_COMMAND{{cat data/sparse.json}}HERE
+POKI_RUN_COMMAND
+cat data/sparse.json
+POKI_EOF
 
 There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use ``put -q`` since we don't want to produce per-record output, only emitting output in the ``end`` block:
 
-POKI_RUN_COMMAND{{cat data/unsparsify.mlr}}HERE
+POKI_RUN_COMMAND
+cat data/unsparsify.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --json put -q -f data/unsparsify.mlr data/sparse.json}}HERE
+POKI_RUN_COMMAND
+mlr --json put -q -f data/unsparsify.mlr data/sparse.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
+POKI_EOF
 
 There is a keystroke-saving verb for this: :ref:`mlr unsparsify <reference-verbs-unsparsify>`.
 

@@ -73,21 +73,33 @@ Details:
 
 * The ``print`` and ``dump`` keywords produce output immediately to standard output, or to specified file(s) or pipe-to command if present.
 
-POKI_RUN_COMMAND{{mlr --help-keyword print}}HERE
+POKI_RUN_COMMAND
+mlr --help-keyword print
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --help-keyword dump}}HERE
+POKI_RUN_COMMAND
+mlr --help-keyword dump
+POKI_EOF
 
 * ``mlr put`` sends the current record (possibly modified by the ``put`` expression) to the output record stream. Records are then input to the following verb in a ``then``-chain (if any), else printed to standard output (unless ``put -q``). The **tee** keyword *additionally* writes the output record to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
-POKI_RUN_COMMAND{{mlr --help-keyword tee}}HERE
+POKI_RUN_COMMAND
+mlr --help-keyword tee
+POKI_EOF
 
 * ``mlr put``'s ``emitf``, ``emitp``, and ``emit`` send out-of-stream variables to the output record stream. These are then input to the following verb in a ``then``-chain (if any), else printed to standard output. When redirected with ``>``, ``>>``, or ``|``, they *instead* write the out-of-stream variable(s) to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
-POKI_RUN_COMMAND{{mlr --help-keyword emitf}}HERE
+POKI_RUN_COMMAND
+mlr --help-keyword emitf
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --help-keyword emitp}}HERE
+POKI_RUN_COMMAND
+mlr --help-keyword emitp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --help-keyword emit}}HERE
+POKI_RUN_COMMAND
+mlr --help-keyword emit
+POKI_EOF
 
 .. _reference-dsl-emit-statements:
 
@@ -98,52 +110,90 @@ There are three variants: ``emitf``, ``emit``, and ``emitp``. Keep in mind that 
 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For ``emitf`` these mustn't have indexing using ``@name[...]``. Example:
 
-POKI_RUN_COMMAND{{mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small
+POKI_EOF
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
 
-POKI_RUN_COMMAND{{cat data/small}}HERE
+POKI_RUN_COMMAND
+cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum += $x; end { dump }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum += $x; end { dump }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum += $x; end { emit @sum }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum += $x; end { emit @sum }' data/small
+POKI_EOF
 
 If it's indexed then use as many names after ``emit`` as there are indices:
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a] += $x; end { dump }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a] += $x; end { dump }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small
+POKI_EOF
 
 Now for **emitp**: if you have as many names following ``emit`` as there are levels in the out-of-stream variable's hashmap, then ``emit`` and ``emitp`` do the same thing. Where they differ is when you don't specify as many names as there are hashmap levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: ``emitp`` includes full prefixing (hence the ``p`` in ``emitp``) while ``emit`` takes the deepest hashmap key as the output-record key:
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+POKI_EOF
 
 Use **--oflatsep** to specify the character which joins multilevel
 keys for ``emitp`` (it defaults to a colon):
 
-POKI_RUN_COMMAND{{mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
+POKI_RUN_COMMAND
+mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+POKI_EOF
 
 Multi-emit statements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -160,9 +210,15 @@ Emit-all statements
 
 Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-stream variables. You can use the following idiom to get various accumulators output side-by-side (reminiscent of ``mlr stats1``):
 
-POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'}}HERE
+POKI_RUN_COMMAND
+mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'}}HERE
+POKI_RUN_COMMAND
+mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'}}HERE
+POKI_RUN_COMMAND
+mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'
+POKI_EOF
 

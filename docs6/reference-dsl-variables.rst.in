@@ -20,17 +20,25 @@ These are written all in capital letters, such as ``NR``, ``NF``, ``FILENAME``, 
 
 Namely, Miller supports the following five built-in variables for :doc:`filter and put <reference-dsl>`, all ``awk``-inspired: ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME``, as well as the mathematical constants ``M_PI`` and ``M_E``.  Lastly, the ``ENV`` hashmap allows read access to environment variables, e.g.  ``ENV["HOME"]`` or ``ENV["foo_".$hostname]``.
 
-POKI_RUN_COMMAND{{mlr filter 'FNR == 2' data/small*}}HERE
+POKI_RUN_COMMAND
+mlr filter 'FNR == 2' data/small*
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$fnr = FNR' data/small*}}HERE
+POKI_RUN_COMMAND
+mlr put '$fnr = FNR' data/small*
+POKI_EOF
 
 Their values of ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME`` change from one record to the next as Miller scans through your input data stream. The mathematical constants, of course, do not change; ``ENV`` is populated from the system environment variables at the time Miller starts and is read-only for the remainder of program execution.
 
 Their **scope is global**: you can refer to them in any ``filter`` or ``put`` statement. Their values are assigned by the input-record reader:
 
-POKI_RUN_COMMAND{{mlr --csv put '$nr = NR' data/a.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv put '$nr = NR' data/a.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
+POKI_EOF
 
 The **extent** is for the duration of the put/filter: in a ``begin`` statement (which executes before the first input record is consumed) you will find ``NR=1`` and in an ``end`` statement (which is executed after the last input record is consumed) you will find ``NR`` to be the total number of records ingested.
 
@@ -45,9 +53,13 @@ If field names have **special characters** such as ``.`` then you can use braces
 
 You may also use a **computed field name** in square brackets, e.g.
 
-POKI_RUN_COMMAND{{echo a=3,b=4 | mlr filter '$["x"] < 0.5'}}HERE
+POKI_RUN_COMMAND
+echo a=3,b=4 | mlr filter '$["x"] < 0.5'
+POKI_EOF
 
-POKI_RUN_COMMAND{{echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'}}HERE
+POKI_RUN_COMMAND
+echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
+POKI_EOF
 
 Notes:
 
@@ -68,23 +80,39 @@ Use ``$[[3]]`` to access the name of field 3.  More generally, any expression ev
 
 Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third field. This has the shorter equivalent notation ``$[[[3]]]``.
 
-POKI_RUN_COMMAND{{mlr cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$[[3]] = "NEW"' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put '$[[3]] = "NEW"' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$[[[3]]] = "NEW"' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put '$[[[3]]] = "NEW"' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$NEW = $[[NR]]' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put '$NEW = $[[NR]]' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$NEW = $[[[NR]]]' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put '$NEW = $[[[NR]]]' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$[[[NR]]] = "NEW"' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put '$[[[NR]]] = "NEW"' data/small
+POKI_EOF
 
 Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than ``NF`` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
 
-POKI_RUN_COMMAND{{mlr put '$[[6]] = "NEW"' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put '$[[6]] = "NEW"' data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '$[[[6]]] = "NEW"' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put '$[[[6]]] = "NEW"' data/small
+POKI_EOF
 
 Out-of-stream variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -97,13 +125,19 @@ Just as for field names in stream records, if you want to define out-of-stream v
 
 You may use a **computed key** in square brackets, e.g.
 
-POKI_RUN_COMMAND{{echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'}}HERE
+POKI_RUN_COMMAND
+echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
+POKI_EOF
 
 Out-of-stream variables are **scoped** to the ``put`` command in which they appear.  In particular, if you have two or more ``put`` commands separated by ``then``, each put will have its own set of out-of-stream variables:
 
-POKI_RUN_COMMAND{{cat data/a.dkvp}}HERE
+POKI_RUN_COMMAND
+cat data/a.dkvp
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr put '@sum += $a; end {emit @sum}' then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp}}HERE
+POKI_RUN_COMMAND
+mlr put '@sum += $a; end {emit @sum}' then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
+POKI_EOF
 
 Out-of-stream variables' **extent** is from the start to the end of the record stream, i.e. every time the ``put`` or ``filter`` statement referring to them is executed.
 
@@ -165,15 +199,23 @@ Things which are perhaps surprising compared to other languages:
 
 The following example demonstrates the scope rules:
 
-POKI_RUN_COMMAND{{cat data/scope-example.mlr}}HERE
+POKI_RUN_COMMAND
+cat data/scope-example.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{cat data/scope-example.dat}}HERE
+POKI_RUN_COMMAND
+cat data/scope-example.dat
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr}}HERE
+POKI_RUN_COMMAND
+mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr
+POKI_EOF
 
 And this example demonstrates the type-declaration rules:
 
-POKI_RUN_COMMAND{{cat data/type-decl-example.mlr}}HERE
+POKI_RUN_COMMAND
+cat data/type-decl-example.mlr
+POKI_EOF
 
 Map literals
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -210,9 +252,13 @@ Type-test and type-assertion expressions
 
 The following ``is...`` functions take a value and return a boolean indicating whether the argument is of the indicated type. The ``assert_...`` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
-POKI_RUN_COMMAND{{mlr -F | grep ^is}}HERE
+POKI_RUN_COMMAND
+mlr -F | grep ^is
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr -F | grep ^assert}}HERE
+POKI_RUN_COMMAND
+mlr -F | grep ^assert
+POKI_EOF
 
 Please see :ref:`cookbook-data-cleaning-examples` for examples of how to use these.
 
@@ -304,20 +350,30 @@ There are three remaining kinds of variable assignment using out-of-stream varia
 
 Example recursive copy of out-of-stream variables:
 
-POKI_RUN_COMMAND{{mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small
+POKI_EOF
 
 Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
 
-POKI_RUN_COMMAND{{mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small}}HERE
+POKI_RUN_COMMAND
+mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
+POKI_EOF
 
 Example of full stream record assigned to an out-of-stream variable, finding the record for which the ``x`` field has the largest value in the input stream:
 
-POKI_RUN_COMMAND{{cat data/small}}HERE
+POKI_RUN_COMMAND
+cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small
+POKI_EOF
 
 Keywords for filter and put
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-POKI_RUN_COMMAND{{mlr --help-all-keywords}}HERE
+POKI_RUN_COMMAND
+mlr --help-all-keywords
+POKI_EOF
 

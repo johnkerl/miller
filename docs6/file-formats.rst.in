@@ -6,7 +6,9 @@ Miller handles name-indexed data using several formats: some you probably know b
 Examples
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND{{mlr --usage-data-format-examples}}HERE
+POKI_RUN_COMMAND
+mlr --usage-data-format-examples
+POKI_EOF
 
 .. _file-formats-csv:
 
@@ -53,7 +55,9 @@ DKVP: Key-value pairs
 
 Miller's default file format is DKVP, for **delimited key-value pairs**. Example:
 
-POKI_RUN_COMMAND{{mlr cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr cat data/small
+POKI_EOF
 
 Such data are easy to generate, e.g. in Ruby with
 
@@ -99,21 +103,33 @@ With ``--inidx --ifs ' ' --repifs``, Miller splits lines on whitespace and assig
 
 Example with index-numbered output:
 
-POKI_RUN_COMMAND{{cat data/small}}HERE
+POKI_RUN_COMMAND
+cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --onidx --ofs ' ' cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --onidx --ofs ' ' cat data/small
+POKI_EOF
 
 Example with index-numbered input:
 
-POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
+POKI_RUN_COMMAND
+cat data/mydata.txt
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt}}HERE
+POKI_RUN_COMMAND
+mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt
+POKI_EOF
 
 Example with index-numbered input and output:
 
-POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
+POKI_RUN_COMMAND
+cat data/mydata.txt
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt}}HERE
+POKI_RUN_COMMAND
+mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt
+POKI_EOF
 
 .. _file-formats-json:
 
@@ -129,24 +145,36 @@ Single-level JSON objects
 
 An **array of single-level objects** is, quite simply, **a table**:
 
-POKI_RUN_COMMAND{{mlr --json head -n 2 then cut -f color,shape data/json-example-1.json}}HERE
+POKI_RUN_COMMAND
+mlr --json head -n 2 then cut -f color,shape data/json-example-1.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json}}HERE
+POKI_RUN_COMMAND
+mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json
+POKI_EOF
 
 Nested JSON objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Additionally, Miller can **tabularize nested objects by concatentating keys**:
 
-POKI_RUN_COMMAND{{mlr --json --jvstack head -n 2 data/json-example-2.json}}HERE
+POKI_RUN_COMMAND
+mlr --json --jvstack head -n 2 data/json-example-2.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --ijson --opprint head -n 4 data/json-example-2.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --opprint head -n 4 data/json-example-2.json
+POKI_EOF
 
 Note in particular that as far as Miller's ``put`` and ``filter``, as well as other I/O formats, are concerned, these are simply field names with colons in them:
 
-POKI_RUN_COMMAND{{mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json}}HERE
+POKI_RUN_COMMAND
+mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json
+POKI_EOF
 
 Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -155,15 +183,21 @@ Arrays (TODO: update for Miller6) aren't supported in Miller's ``put``/``filter`
 
 Suppose we have arrays like this in our input data:
 
-POKI_RUN_COMMAND{{cat data/json-example-3.json}}HERE
+POKI_RUN_COMMAND
+cat data/json-example-3.json
+POKI_EOF
 
 Then integer indices (starting from 0 and counting up) are used as map keys:
 
-POKI_RUN_COMMAND{{mlr --ijson --oxtab cat data/json-example-3.json}}HERE
+POKI_RUN_COMMAND
+mlr --ijson --oxtab cat data/json-example-3.json
+POKI_EOF
 
 When the data are written back out as JSON, field names are re-expanded as above, but what were arrays on input are now maps on output:
 
-POKI_RUN_COMMAND{{mlr --json --jvstack cat data/json-example-3.json}}HERE
+POKI_RUN_COMMAND
+mlr --json --jvstack cat data/json-example-3.json
+POKI_EOF
 
 This is non-ideal, but it allows Miller (5.x release being latest as of this writing) to handle JSON arrays at all.
 
@@ -202,9 +236,13 @@ PPRINT: Pretty-printed tabular
 
 Miller's pretty-print format is like CSV, but column-aligned.  For example, compare
 
-POKI_RUN_COMMAND{{mlr --ocsv cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --ocsv cat data/small
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint cat data/small
+POKI_EOF
 
 Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on ``tail -f`` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
 
@@ -212,7 +250,9 @@ See :doc:`record-heterogeneity` for how Miller handles changes of field names wi
 
 For output only (this isn't supported in the input-scanner as of 5.0.0) you can use ``--barred`` with pprint output format:
 
-POKI_RUN_COMMAND{{mlr --opprint --barred cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --opprint --barred cat data/small
+POKI_EOF
 
 .. _file-formats-xtab:
 
@@ -233,7 +273,9 @@ Markdown tabular
 
 Markdown format looks like this:
 
-POKI_RUN_COMMAND{{mlr --omd cat data/small}}HERE
+POKI_RUN_COMMAND
+mlr --omd cat data/small
+POKI_EOF
 
 which renders like this when dropped into various web tools (e.g. github comments):
 
@@ -246,7 +288,9 @@ Data-conversion keystroke-savers
 
 While you can do format conversion using ``mlr --icsv --ojson cat myfile.csv``, there are also keystroke-savers for this purpose, such as ``mlr --c2j cat myfile.csv``.  For a complete list:
 
-POKI_RUN_COMMAND{{mlr --usage-format-conversion-keystroke-saver-options}}HERE
+POKI_RUN_COMMAND
+mlr --usage-format-conversion-keystroke-saver-options
+POKI_EOF
 
 Autodetect of line endings
 ----------------------------------------------------------------
@@ -268,12 +312,20 @@ Comments in data
 
 You can include comments within your data files, and either have them ignored, or passed directly through to the standard output as soon as they are encountered:
 
-POKI_RUN_COMMAND{{mlr --usage-comments-in-data}}HERE
+POKI_RUN_COMMAND
+mlr --usage-comments-in-data
+POKI_EOF
 
 Examples:
 
-POKI_RUN_COMMAND{{cat data/budget.csv}}HERE
+POKI_RUN_COMMAND
+cat data/budget.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --skip-comments --icsv --opprint sort -nr quantity data/budget.csv}}HERE
+POKI_RUN_COMMAND
+mlr --skip-comments --icsv --opprint sort -nr quantity data/budget.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --pass-comments --icsv --opprint sort -nr quantity data/budget.csv}}HERE
+POKI_RUN_COMMAND
+mlr --pass-comments --icsv --opprint sort -nr quantity data/budget.csv
+POKI_EOF

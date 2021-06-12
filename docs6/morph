@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+while true
+	begin
+		line = $stdin.readline.chomp
+	rescue EOFError
+		break
+	end
+
+  if line =~ /POKI_RUN_COMMAND{{.*}}HERE/
+    line.sub!("POKI_RUN_COMMAND{{", "")
+    line.sub!("}}HERE", "")
+    puts 'POKI_RUN_COMMAND'
+    puts line
+    puts 'POKI_EOF'
+  else
+    puts line
+  end
+end

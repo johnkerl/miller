@@ -12,7 +12,9 @@ Records and fields
 
 Let's keep using the sample `example.csv <./example.csv>`_. When we type
 
-POKI_RUN_COMMAND{{mlr --c2p put '$cost = $quantity * $rate' example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --c2p put '$cost = $quantity * $rate' example.csv
+POKI_EOF
 
 a few things are happening:
 
@@ -26,15 +28,21 @@ Multi-line statements, and statements-from-file
 
 You can use more than one statement, separating them with semicolons, and optionally putting them on lines of their own:
 
-POKI_RUN_COMMAND{{mlr --c2p put '$cost = $quantity * $rate; $index = $index * 100'  example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --c2p put '$cost = $quantity * $rate; $index = $index * 100'  example.csv
+POKI_EOF
 
 POKI_INCLUDE_AND_RUN_ESCAPED(dsl-example-multiline.sh)HERE
 
 One of Miller's key features is the ability to express data-transformation right there at the keyboard, interactively. But if you find yourself using expressions repeatedly, you can put everything between the single quotes into a file and refer to that using ``put -f``:
 
-POKI_RUN_COMMAND{{cat dsl-example.mlr}}HERE
+POKI_RUN_COMMAND
+cat dsl-example.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --c2p put -f dsl-example.mlr example.csv}}HERE
+POKI_RUN_COMMAND
+mlr --c2p put -f dsl-example.mlr example.csv
+POKI_EOF
 
 This becomes particularly important on Windows. Quite a bit of effort was put into making Miller on Windows be able to handle the kinds of single-quoted expressions we're showing here, but if you get syntax-error messages on Windows using examples in this documentation, you can put the parts between single quotes into a file and refer to that using ``mlr put -f``.
 
@@ -47,15 +55,23 @@ Above we also saw that names like ``$quantity`` are bound to each record in turn
 
 To make ``begin`` and ``end`` statements useful, we need somewhere to put things that persist across the duration of the record stream, and a way to emit them. Miller uses **out-of-stream variables** (or **oosvars** for short) whose names start with an ``@`` sigil, and the **emit** keyword to write them into the output record stream:
 
-POKI_RUN_COMMAND{{mlr --c2p --from example.csv put 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'}}HERE
+POKI_RUN_COMMAND
+mlr --c2p --from example.csv put 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
+POKI_EOF
 
 If you want the end-block output to be the only output, and not include the input data, you can use ``mlr put -q``:
 
-POKI_RUN_COMMAND{{mlr --c2p --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'}}HERE
+POKI_RUN_COMMAND
+mlr --c2p --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --c2j --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'}}HERE
+POKI_RUN_COMMAND
+mlr --c2j --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --c2j --from example.csv put -q 'begin { @count = 0; @sum = 0 } @count += 1; @sum += $quantity; end {emit (@count, @sum)}'}}HERE
+POKI_RUN_COMMAND
+mlr --c2j --from example.csv put -q 'begin { @count = 0; @sum = 0 } @count += 1; @sum += $quantity; end {emit (@count, @sum)}'
+POKI_EOF
 
 We'll see in the documentation for :ref:`reference-verbs-stats1` that there's a lower-keystroking way to get counts and sums of things -- so, take this sum/count example as an indication of the kinds of things you can do using Miller's programming language.
 
@@ -70,18 +86,26 @@ Also inspired by `AWK <https://en.wikipedia.org/wiki/AWK>`_, the Miller DSL has 
 * ``NR`` -- starting from 1, counter of how many records processed so far.
 * ``FNR`` -- similar, but resets to 1 at the start of each file.
 
-POKI_RUN_COMMAND{{cat context-example.mlr}}HERE
+POKI_RUN_COMMAND
+cat context-example.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --c2p put -f context-example.mlr data/a.csv data/b.csv}}HERE
+POKI_RUN_COMMAND
+mlr --c2p put -f context-example.mlr data/a.csv data/b.csv
+POKI_EOF
 
 Functions and local variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can define your own functions:
 
-POKI_RUN_COMMAND{{cat factorial-example.mlr}}HERE
+POKI_RUN_COMMAND
+cat factorial-example.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --c2p --from example.csv put -f factorial-example.mlr -e '$fact = factorial(NR)'}}HERE
+POKI_RUN_COMMAND
+mlr --c2p --from example.csv put -f factorial-example.mlr -e '$fact = factorial(NR)'
+POKI_EOF
 
 Note that here we used the ``-f`` flag to ``put`` to load our function
 definition, and also the ``-e`` flag to add another statement on the command
@@ -94,9 +118,13 @@ If-statements, loops, and local variables
 
 Suppose you want to only compute sums conditionally -- you can use an ``if`` statement:
 
-POKI_RUN_COMMAND{{cat if-example.mlr}}HERE
+POKI_RUN_COMMAND
+cat if-example.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --c2p --from example.csv put -q -f if-example.mlr}}HERE
+POKI_RUN_COMMAND
+mlr --c2p --from example.csv put -q -f if-example.mlr
+POKI_EOF
 
 Miller's else-if is spelled ``elif``.
 
@@ -107,11 +135,17 @@ hashmaps. We haven't encountered arrays and hashmaps yet in this introduction,
 but for now it suffices to know that ``$*`` is a special variable holding the
 current record as a hashmap:
 
-POKI_RUN_COMMAND{{cat for-example.mlr}}HERE
+POKI_RUN_COMMAND
+cat for-example.mlr
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv cat data/a.csv}}HERE
+POKI_RUN_COMMAND
+mlr --csv cat data/a.csv
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --csv --from data/a.csv put -qf for-example.mlr}}HERE
+POKI_RUN_COMMAND
+mlr --csv --from data/a.csv put -qf for-example.mlr
+POKI_EOF
 
 Here we used the local variables ``k`` and ``v``. Now we've seen four kinds of variables:
 
@@ -143,6 +177,10 @@ In addition to types including string, number (int/float), arrays, and hashmaps,
 
 For example, you can sum up all the ``$a`` values across records without having to check whether they're present or not:
 
-POKI_RUN_COMMAND{{mlr --json cat absent-example.json}}HERE
+POKI_RUN_COMMAND
+mlr --json cat absent-example.json
+POKI_EOF
 
-POKI_RUN_COMMAND{{mlr --json put '@sum_of_a += $a; end {emit @sum_of_a}' absent-example.json}}HERE
+POKI_RUN_COMMAND
+mlr --json put '@sum_of_a += $a; end {emit @sum_of_a}' absent-example.json
+POKI_EOF
