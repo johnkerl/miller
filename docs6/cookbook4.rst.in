@@ -10,15 +10,21 @@ POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.py)HERE
 
 And here is an example using them:
 
-POKI_RUN_COMMAND{{cat polyglot-dkvp-io/example.py}}HERE
+POKI_RUN_COMMAND
+cat polyglot-dkvp-io/example.py
+POKI_EOF
 
 Run as-is:
 
-POKI_RUN_COMMAND{{python polyglot-dkvp-io/example.py < data/small}}HERE
+POKI_RUN_COMMAND
+python polyglot-dkvp-io/example.py < data/small
+POKI_EOF
 
 Run as-is, then pipe to Miller for pretty-printing:
 
-POKI_RUN_COMMAND{{python polyglot-dkvp-io/example.py < data/small | mlr --opprint cat}}HERE
+POKI_RUN_COMMAND
+python polyglot-dkvp-io/example.py < data/small | mlr --opprint cat
+POKI_EOF
 
 DKVP I/O in Ruby
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -29,12 +35,18 @@ POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.rb)HERE
 
 And here is an example using them:
 
-POKI_RUN_COMMAND{{cat polyglot-dkvp-io/example.rb}}HERE
+POKI_RUN_COMMAND
+cat polyglot-dkvp-io/example.rb
+POKI_EOF
 
 Run as-is:
 
-POKI_RUN_COMMAND{{ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small}}HERE
+POKI_RUN_COMMAND
+ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small
+POKI_EOF
 
 Run as-is, then pipe to Miller for pretty-printing:
 
-POKI_RUN_COMMAND{{ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small | mlr --opprint cat}}HERE
+POKI_RUN_COMMAND
+ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small | mlr --opprint cat
+POKI_EOF

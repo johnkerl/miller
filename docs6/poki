@@ -42,6 +42,10 @@ def main
          cmd = $1
          run_command(cmd, output_handle)
 
+      elsif content_line =~ /^POKI_RUN_COMMAND$/
+        cmd_lines = read_until_poki_eof(input_handle)
+        run_command_lines(cmd_lines, output_handle)
+
       elsif content_line =~ /POKI_SHOW_COMMAND{{(.+)}}HERE/
          cmd = $1
          show_command(cmd, output_handle)
@@ -64,8 +68,34 @@ def main
 end
 
 # ----------------------------------------------------------------
+def read_until_poki_eof(input_handle)
+  lines = []
+  while true
+    line = input_handle.readline.chomp
+    if line == 'POKI_EOF'
+      break
+    end
+    lines << line
+  end
+  return lines
+end
+
+# ----------------------------------------------------------------
 def include_escaped(included_file_name, output_handle)
   write_card([], File.readlines(included_file_name), output_handle)
+end
+
+# ----------------------------------------------------------------
+# The command can be multi-line
+def run_command_lines(cmd_lines, output_handle)
+  cmd = cmd_lines.join("\n")
+  cmd_output = `#{cmd} 2>&1`
+  status = $?.to_i
+  if status != 0
+    raise "\"#{cmd}\" exited with non-zero code #{status}."
+  end
+  cmd_line_1 = cmd_lines.shift
+  write_card(['$ '+cmd_line_1] + cmd_lines, cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------
