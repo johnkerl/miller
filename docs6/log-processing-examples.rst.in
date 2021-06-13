@@ -15,9 +15,9 @@ POKI_EOF
 
 Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system ``grep`` command, or Miller's ``having-fields``, or ``is_present``, we can pick out the parts we want and analyze them:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(10-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(10-1.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(10-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(10-2.sh)
 
 Alternatively, we can simply group the similar data for a better look:
 

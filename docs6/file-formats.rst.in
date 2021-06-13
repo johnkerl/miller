@@ -262,11 +262,11 @@ XTAB: Vertical tabular
 This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
 `ngrid <https://github.com/twosigma/ngrid/>`_ for an entirely different, very powerful option). Namely:
 
-POKI_INCLUDE_ESCAPED(data/system-file-opprint-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/system-file-opprint-example.txt)
 
-POKI_INCLUDE_ESCAPED(data/system-file-oxtab-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/system-file-oxtab-example.txt)
 
-POKI_INCLUDE_ESCAPED(data/system-file-ojson-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/system-file-ojson-example.txt)
 
 Markdown tabular
 ----------------------------------------------------------------

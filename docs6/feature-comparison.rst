@@ -15,34 +15,34 @@ Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header l
    :emphasize-lines: 1-1
 
     $ cat data/a.csv
-    X,Y,Z
-    m,n,o
-    p,q,r
+    a,b,c
+    1,2,3
+    4,5,6
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ cat data/b.csv
-    X,Y,Z
-    g,h,i
+    a,b,c
+    7,8,9
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --csv cat data/a.csv data/b.csv
-    X,Y,Z
-    m,n,o
-    p,q,r
-    g,h,i
+    a,b,c
+    1,2,3
+    4,5,6
+    7,8,9
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --csv sort -nr b data/a.csv data/b.csv
-    X,Y,Z
-    m,n,o
-    p,q,r
-    g,h,i
+    a,b,c
+    7,8,9
+    4,5,6
+    1,2,3
 
 Likewise with ``mlr sort``, ``mlr tac``, and so on.
 

@@ -315,26 +315,26 @@ Miller takes all the files from the command line as an input stream. But it's fo
    :emphasize-lines: 1-1
 
     $ cat data/a.csv
-    X,Y,Z
-    m,n,o
-    p,q,r
+    a,b,c
+    1,2,3
+    4,5,6
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ cat data/b.csv
-    X,Y,Z
-    g,h,i
+    a,b,c
+    7,8,9
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ cat data/a.csv data/b.csv
-    X,Y,Z
-    m,n,o
-    p,q,r
-    X,Y,Z
-    g,h,i
+    a,b,c
+    1,2,3
+    4,5,6
+    a,b,c
+    7,8,9
 
 However, ``mlr cat`` will not:
 
@@ -342,10 +342,10 @@ However, ``mlr cat`` will not:
    :emphasize-lines: 1-1
 
     $ mlr --csv cat data/a.csv data/b.csv
-    X,Y,Z
-    m,n,o
-    p,q,r
-    g,h,i
+    a,b,c
+    1,2,3
+    4,5,6
+    7,8,9
 
 Chaining verbs together
 ^^^^^^^^^^^^^^^^^^^^^^^

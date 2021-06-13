@@ -187,10 +187,10 @@ Also inspired by `AWK <https://en.wikipedia.org/wiki/AWK>`_, the Miller DSL has 
    :emphasize-lines: 1-1
 
     $ mlr --c2p put -f context-example.mlr data/a.csv data/b.csv
-    X Y Z nf nr fnr filename   filenum newnf
-    m n o 3  1  1   data/a.csv 1       8
-    p q r 3  2  2   data/a.csv 1       8
-    g h i 3  3  1   data/b.csv 2       8
+    a b c nf nr fnr filename   filenum newnf
+    1 2 3 3  1  1   data/a.csv 1       8
+    4 5 6 3  2  2   data/a.csv 1       8
+    7 8 9 3  3  1   data/b.csv 2       8
 
 Functions and local variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -283,21 +283,21 @@ current record as a hashmap:
    :emphasize-lines: 1-1
 
     $ mlr --csv cat data/a.csv
-    X,Y,Z
-    m,n,o
-    p,q,r
+    a,b,c
+    1,2,3
+    4,5,6
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --csv --from data/a.csv put -qf for-example.mlr
-    KEY IS X VALUE IS m
-    KEY IS Y VALUE IS n
-    KEY IS Z VALUE IS o
+    KEY IS a VALUE IS 1
+    KEY IS b VALUE IS 2
+    KEY IS c VALUE IS 3
     
-    KEY IS X VALUE IS p
-    KEY IS Y VALUE IS q
-    KEY IS Z VALUE IS r
+    KEY IS a VALUE IS 4
+    KEY IS b VALUE IS 5
+    KEY IS c VALUE IS 6
 
 Here we used the local variables ``k`` and ``v``. Now we've seen four kinds of variables:
 

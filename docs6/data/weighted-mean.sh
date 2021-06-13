@@ -22,4 +22,3 @@ mlr --from data/medium put -q '
     #emit mean, "a";
     emit (wmean, mean), "a";
   }'
-

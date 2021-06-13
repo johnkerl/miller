@@ -35,9 +35,9 @@ How to rectangularize after joins with unpaired?
 
 Suppose you have the following two data files:
 
-POKI_INCLUDE_ESCAPED(data/color-codes.csv)HERE
+POKI_INCLUDE_ESCAPED(data/color-codes.csv)
 
-POKI_INCLUDE_ESCAPED(data/color-names.csv)HERE
+POKI_INCLUDE_ESCAPED(data/color-names.csv)
 
 Joining on color the results are as expected:
 

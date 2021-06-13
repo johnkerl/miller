@@ -12,7 +12,7 @@ POKI_EOF
 
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)
 
 POKI_RUN_COMMAND
 mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium
@@ -25,9 +25,9 @@ Expressions from files
 
 The simplest way to enter expressions for ``put`` and ``filter`` is between single quotes on the command line, e.g.
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-1.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-2.sh)
 
 You may, though, find it convenient to put expressions into files for reuse, and read them
 **using the -f option**. For example:
@@ -61,7 +61,7 @@ Semicolons, commas, newlines, and curly braces
 
 Miller uses **semicolons as statement separators**, not statement terminators. This means you can write:
 
-POKI_INCLUDE_ESCAPED(data/semicolon-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/semicolon-example.txt)
 
 Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
 
@@ -75,11 +75,11 @@ POKI_EOF
 
 Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
 
-POKI_INCLUDE_ESCAPED(data/newline-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/newline-example.txt)
 
 **Trailing commas** are allowed in function/subroutine definitions, function/subroutine callsites, and map literals. This is intended for (although not restricted to) the multi-line case:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/trailing-commas.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/trailing-commas.sh)
 
 Bodies for all compound statements must be enclosed in **curly braces**, even if the body is a single statement:
 

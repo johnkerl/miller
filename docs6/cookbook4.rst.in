@@ -6,7 +6,7 @@ DKVP I/O in Python
 
 Here are the I/O routines:
 
-POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.py)HERE
+POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.py)
 
 And here is an example using them:
 
@@ -31,7 +31,7 @@ DKVP I/O in Ruby
 
 Here are the I/O routines:
 
-POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.rb)HERE
+POKI_INCLUDE_ESCAPED(polyglot-dkvp-io/dkvp_io.rb)
 
 And here is an example using them:
 

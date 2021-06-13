@@ -60,21 +60,21 @@ Their **scope is global**: you can refer to them in any ``filter`` or ``put`` st
    :emphasize-lines: 1-1
 
     $ mlr --csv put '$nr = NR' data/a.csv
-    X,Y,Z,nr
-    m,n,o,1
-    p,q,r,2
+    a,b,c,nr
+    1,2,3,1
+    4,5,6,2
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
-    X,Y,Z,nr
-    m,n,o,1
-    m,n,o,1
-    m,n,o,1
-    p,q,r,2
-    p,q,r,2
-    p,q,r,2
+    a,b,c,nr
+    1,2,3,1
+    1,2,3,1
+    1,2,3,1
+    4,5,6,2
+    4,5,6,2
+    4,5,6,2
 
 The **extent** is for the duration of the put/filter: in a ``begin`` statement (which executes before the first input record is consumed) you will find ``NR=1`` and in an ``end`` statement (which is executed after the last input record is consumed) you will find ``NR`` to be the total number of records ingested.
 

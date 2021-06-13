@@ -193,6 +193,9 @@ Semicolons are required between statements even if those statements are on separ
         "v": NR,
       }
     '
+    s,t,u,v
+    3,-1,5,1
+    9,-1,41,2
 
 Bodies for all compound statements must be enclosed in **curly braces**, even if the body is a single statement:
 

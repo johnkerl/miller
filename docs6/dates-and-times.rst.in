@@ -33,11 +33,11 @@ POKI_EOF
 
 Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using ``strptime``, then compute adjacent differences (the ``cat -n`` simply inserts record-counters):
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-1.sh)
 
 Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-2.sh)
 
 Given this, it's now easy to see where the gaps are:
 

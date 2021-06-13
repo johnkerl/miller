@@ -400,7 +400,7 @@ POKI_EOF
 
 For example, suppose you have the following CSV file:
 
-POKI_INCLUDE_ESCAPED(data/fraction-example.csv)HERE
+POKI_INCLUDE_ESCAPED(data/fraction-example.csv)
 
 Then we can see what each record's ``n`` contributes to the total ``n``:
 
@@ -612,7 +612,7 @@ See also :ref:`reference-verbs-rename`.
 
 Example: Files such as ``/etc/passwd``, ``/etc/group``, and so on have implicit field names which are found in section-5 manpages. These field names may be made explicit as follows:
 
-POKI_INCLUDE_ESCAPED(data/label-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/label-example.txt)
 
 Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using ``--implicit-csv-header`` and ``label``:
 
@@ -878,7 +878,7 @@ uniform probability and no repeats in the sample. (If *n* is less than
 {field names}``, produce a *k*-sample for each distinct value of the
 specified field names.
 
-POKI_INCLUDE_ESCAPED(data/sample-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/sample-example.txt)
 
 Note that no output is produced until all inputs are in. Another way to do
 sampling, which works in the streaming case, is ``mlr filter 'urand() &
@@ -1071,7 +1071,7 @@ Here's an example simple line-fit. The ``x`` and ``y``
 fields of the ``data/medium`` dataset are just independent uniformly
 distributed on the unit interval. Here we remove half the data and fit a line to it.
 
-POKI_INCLUDE_ESCAPED(data/linreg-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/linreg-example.txt)
 
 I use `pgr <https://github.com/johnkerl/pgr>`_ for plotting; here's a screenshot.
 
@@ -1122,7 +1122,7 @@ POKI_EOF
 
 Example deriving uptime-delta from system uptime:
 
-POKI_INCLUDE_ESCAPED(data/ping-delta-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/ping-delta-example.txt)
 
 .. _reference-verbs-tac:
 

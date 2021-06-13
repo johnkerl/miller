@@ -18,7 +18,7 @@ Also try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable c
 Diagnosing delimiter specifications
 ----------------------------------------------------------------
 
-POKI_INCLUDE_ESCAPED(data/delimiter-examples.txt)HERE
+POKI_INCLUDE_ESCAPED(data/delimiter-examples.txt)
 
 I assigned $9 and it's not 9th
 ----------------------------------------------------------------
@@ -112,7 +112,7 @@ Splitting nested fields
 
 Suppose you have a TSV file like this:
 
-POKI_INCLUDE_ESCAPED(data/nested.tsv)HERE
+POKI_INCLUDE_ESCAPED(data/nested.tsv)
 
 The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
 
@@ -154,20 +154,20 @@ Rectangularizing data
 
 Suppose you have a method (in whatever language) which is printing things of the form
 
-POKI_INCLUDE_ESCAPED(data/rect-outer.txt)HERE
+POKI_INCLUDE_ESCAPED(data/rect-outer.txt)
 
 and then calls another method which prints things of the form
 
-POKI_INCLUDE_ESCAPED(data/rect-middle.txt)HERE
+POKI_INCLUDE_ESCAPED(data/rect-middle.txt)
 
 and then, perhaps, that second method calls a third method which prints things of the form
 
-POKI_INCLUDE_ESCAPED(data/rect-inner.txt)HERE
+POKI_INCLUDE_ESCAPED(data/rect-inner.txt)
 
 with the result that your program's output is
 
-POKI_INCLUDE_ESCAPED(data/rect.txt)HERE
+POKI_INCLUDE_ESCAPED(data/rect.txt)
 
 The idea here is that middles starting with a 1 belong to the outer value of 1, and so on.  (For example, the outer values might be account IDs, the middle values might be invoice IDs, and the inner values might be invoice line-items.) If you want all the middle and inner lines to have the context of which outers they belong to, you can modify your software to pass all those through your methods. Alternatively, don't refactor your code just to handle some ad-hoc log-data formatting -- instead, use the following to rectangularize the data.  The idea is to use an out-of-stream variable to accumulate fields across records. Clear that variable when you see an outer ID; accumulate fields; emit output when you see the inner IDs.
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)

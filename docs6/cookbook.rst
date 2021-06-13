@@ -561,7 +561,6 @@ The recursive function for the Fibonacci sequence is famous for its computationa
       $fcount = @fcount;
     
     ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
-    
 
 produces output like this:
 

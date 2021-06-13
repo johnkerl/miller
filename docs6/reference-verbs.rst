@@ -231,50 +231,50 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
    :emphasize-lines: 1-1
 
     $ cat data/a.csv
-    X,Y,Z
-    m,n,o
-    p,q,r
+    a,b,c
+    1,2,3
+    4,5,6
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ cat data/b.csv
-    X,Y,Z
-    g,h,i
+    a,b,c
+    7,8,9
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --csv cat data/a.csv data/b.csv
-    X,Y,Z
-    m,n,o
-    p,q,r
-    g,h,i
+    a,b,c
+    1,2,3
+    4,5,6
+    7,8,9
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --icsv --oxtab cat data/a.csv data/b.csv
-    X m
-    Y n
-    Z o
+    a 1
+    b 2
+    c 3
     
-    X p
-    Y q
-    Z r
+    a 4
+    b 5
+    c 6
     
-    X g
-    Y h
-    Z i
+    a 7
+    b 8
+    c 9
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --csv cat -n data/a.csv data/b.csv
-    n,X,Y,Z
-    1,m,n,o
-    2,p,q,r
-    3,g,h,i
+    n,a,b,c
+    1,1,2,3
+    2,4,5,6
+    3,7,8,9
 
 .. code-block:: none
    :emphasize-lines: 1-1
@@ -1822,8 +1822,8 @@ most-frequent
     square   red    1874
     triangle red    1560
     circle   red    1207
-    square   yellow 589
     square   blue   589
+    square   yellow 589
 
 .. code-block:: none
    :emphasize-lines: 1-1
@@ -1833,8 +1833,8 @@ most-frequent
     square   red    1874
     triangle red    1560
     circle   red    1207
-    square   yellow 589
     square   blue   589
+    square   yellow 589
 
 .. code-block:: none
    :emphasize-lines: 1-1
@@ -1844,8 +1844,8 @@ most-frequent
     square   red
     triangle red
     circle   red
-    square   yellow
     square   blue
+    square   yellow
 
 See also :ref:`reference-verbs-least-frequent`.
 
@@ -3167,34 +3167,34 @@ Prints the records in the input stream in reverse order. Note: this requires Mil
    :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint cat data/a.csv
-    X Y Z
-    m n o
-    p q r
+    a b c
+    1 2 3
+    4 5 6
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint cat data/b.csv
-    X Y Z
-    g h i
+    a b c
+    7 8 9
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint tac data/a.csv data/b.csv
-    X Y Z
-    g h i
-    p q r
-    m n o
+    a b c
+    7 8 9
+    4 5 6
+    1 2 3
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv
-    X Y Z filename
-    g h i data/b.csv
-    p q r data/a.csv
-    m n o data/a.csv
+    a b c filename
+    7 8 9 data/b.csv
+    4 5 6 data/a.csv
+    1 2 3 data/a.csv
 
 .. _reference-verbs-tail:
 

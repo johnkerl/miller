@@ -10,7 +10,7 @@ Command overview
 Whereas the Unix toolkit is made of the separate executables ``cat``, ``tail``, ``cut``,
 ``sort``, etc., Miller has subcommands, or **verbs**, invoked as follows:
 
-POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
+POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)
 
 These fall into categories as follows:
 
@@ -189,7 +189,7 @@ You can, if you like, instead simply chain commands together using the ``then`` 
 
 Here's a performance comparison:
 
-POKI_INCLUDE_ESCAPED(data/then-chaining-performance.txt)HERE
+POKI_INCLUDE_ESCAPED(data/then-chaining-performance.txt)
 
 There are two reasons to use then-chaining: one is for performance, although I don't expect this to be a win in all cases.  Using then-chaining avoids redundant string-parsing and string-formatting at each pipeline step: instead input records are parsed once, they are fed through each pipeline stage in memory, and then output records are formatted once. On the other hand, Miller is single-threaded, while modern systems are usually multi-processor, and when streaming-data programs operate through pipes, each one can use a CPU.  Rest assured you get the same results either way.
 

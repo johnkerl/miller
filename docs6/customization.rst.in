@@ -53,7 +53,7 @@ What you can put in your .mlrrc
 
 Here is an example ``.mlrrc file``:
 
-POKI_INCLUDE_ESCAPED(sample_mlrrc)HERE
+POKI_INCLUDE_ESCAPED(sample_mlrrc)
 
 Where to put your .mlrrc
 ----------------------------------------------------------------

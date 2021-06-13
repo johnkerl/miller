@@ -201,7 +201,7 @@ Multi-emit statements
 You can emit **multiple map-valued expressions side-by-side** by
 including their names in parentheses:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/emit-lashed.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/emit-lashed.sh)
 
 What this does is walk through the first out-of-stream variable (``@x_sum`` in this example) as usual, then for each keylist found (e.g. ``pan,wye``), include the values for the remaining out-of-stream variables (here, ``@x_count`` and ``@x_mean``). You should use this when all out-of-stream variables in the emit statement have **the same shape and the same keylists**.
 

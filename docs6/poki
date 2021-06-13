@@ -27,7 +27,7 @@ def main
 
       if content_line =~ /^POKI_RUN_COMMAND$/
         cmd_lines = read_until_poki_eof(input_handle)
-        run_command_lines(cmd_lines, output_handle)
+        run_command(cmd_lines, output_handle)
 
       elsif content_line =~ /^POKI_RUN_COMMAND_TOLERATING_ERROR$/
         cmd_lines = read_until_poki_eof(input_handle)
@@ -37,20 +37,20 @@ def main
         cmd_lines = read_until_poki_eof(input_handle)
         show_command(cmd_lines, output_handle)
 
-      elsif content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
+      elsif content_line =~ /^POKI_INCLUDE_ESCAPED\(([^)]+)\)$/
         included_file_name = $1
         include_escaped(included_file_name, output_handle)
 
-      elsif content_line =~ /POKI_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)HERE/
+      elsif content_line =~ /^POKI_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)$/
         included_file_name = $1
-        cmd = File.readlines(included_file_name).join('')
-        run_command(cmd, output_handle)
+        cmd_lines = File.readlines(included_file_name).map{|line| line.chomp}
+        run_command(cmd_lines, output_handle)
 
-      elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)/
+      elsif content_line =~ /^POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)$/
         cmd = $1
         run_content_generator(cmd, output_handle)
 
-      elsif content_line =~ /POKI/
+      elsif content_line =~ /^POKI/
         raise "Unhandled poki line #{content_line}"
         output_handle.write(content_line)
 
@@ -85,7 +85,7 @@ end
 
 # ----------------------------------------------------------------
 # The command can be multi-line
-def run_command_lines(cmd_lines, output_handle)
+def run_command(cmd_lines, output_handle)
   cmd = cmd_lines.join("\n")
   cmd_output = `#{cmd} 2>&1`
   status = $?.to_i
@@ -106,20 +106,7 @@ end
 
 # ----------------------------------------------------------------
 def include_escaped(included_file_name, output_handle)
-  write_card([], File.readlines(included_file_name), output_handle)
-end
-
-# ----------------------------------------------------------------
-def run_command(cmd, output_handle)
-  cmd_output = `#{cmd} 2>&1`
-  status = $?.to_i
-  if status != 0
-    raise "\"#{cmd}\" exited with non-zero code #{status}."
-  end
-  # The command can be multi-line
-  cmd_lines = cmd.split(/\n/)
-  cmd_line_1 = cmd_lines.shift
-  write_card(['$ '+cmd_line_1] + cmd_lines, cmd_output.split(/\n/), output_handle)
+  write_card([], File.readlines(included_file_name), output_handle).map{|line| line.chomp}
 end
 
 # ----------------------------------------------------------------

@@ -55,7 +55,7 @@ POKI_EOF
 
 ``NR``, by contrast (and ``FNR`` as well), retains the value from the original input stream, and records may be dropped by a ``filter`` within a ``then``-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/dynamic-nr.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/dynamic-nr.sh)
 
 Or, simply use ``mlr cat -n``:
 

@@ -24,11 +24,11 @@ POKI_EOF
 
 rather than the more tedious
 
-POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum.sh)
 
 or
 
-POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum-grouped.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum-grouped.sh)
 
 The former (``mlr stats1`` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
 
@@ -43,7 +43,7 @@ POKI_RUN_COMMAND
 mlr --opprint stats1 -a mean -f x data/medium
 POKI_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/mean-with-oosvars.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/mean-with-oosvars.sh)
 
 Keyed mean without/with oosvars
 ----------------------------------------------------------------
@@ -52,7 +52,7 @@ POKI_RUN_COMMAND
 mlr --opprint stats1 -a mean -f x -g a,b data/medium
 POKI_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-mean-with-oosvars.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-mean-with-oosvars.sh)
 
 Variance and standard deviation without/with oosvars
 ----------------------------------------------------------------
@@ -89,7 +89,7 @@ POKI_RUN_COMMAND
 mlr --opprint stats1 -a min,max -f x -g a data/medium
 POKI_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-min-max-with-oosvars.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-min-max-with-oosvars.sh)
 
 Delta without/with oosvars
 ----------------------------------------------------------------
@@ -116,6 +116,6 @@ POKI_EOF
 Exponentially weighted moving averages without/with oosvars
 ----------------------------------------------------------------
 
-POKI_INCLUDE_AND_RUN_ESCAPED(verb-example-ewma.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(verb-example-ewma.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-ewma.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-ewma.sh)

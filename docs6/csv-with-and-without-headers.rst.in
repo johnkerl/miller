@@ -47,8 +47,8 @@ POKI_RUN_COMMAND
 cat data/ragged.csv
 POKI_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv.sh)
 
 or, more simply,
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)

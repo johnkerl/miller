@@ -47,16 +47,16 @@ These are again reminiscent of ``awk``. Pattern-action blocks are a special case
 
 Compound statements use ``elif`` (rather than ``elsif`` or ``else if``):
 
-POKI_INCLUDE_ESCAPED(data/if-chain.sh)HERE
+POKI_INCLUDE_ESCAPED(data/if-chain.sh)
 
 While and do-while loops
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Miller's ``while`` and ``do-while`` are unsurprising in comparison to various languages, as are ``break`` and ``continue``:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-1.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/while-example-2.sh)
 
 A ``break`` or ``continue`` within nested conditional blocks or if-statements will, of course, propagate to the innermost loop enclosing them, if any. A ``break`` or ``continue`` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
 The existence of ``while``, ``do-while``, and ``for`` loops in Miller's DSL means that you can create infinite-loop scenarios inadvertently.  In particular, please recall that DSL statements are executed once if in ``begin`` or ``end`` blocks, and once *per record* otherwise. For example, **while (NR < 10) will never terminate as NR is only incremented between records**.
@@ -73,9 +73,9 @@ Key-only for-loops
 
 The ``key`` variable is always bound to the *key* of key-value pairs:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-1.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-2.sh)
 
 Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in ``$[key]`` for stream records, or by indexing the looped-over variable using square brackets.
 
@@ -88,7 +88,7 @@ POKI_RUN_COMMAND
 cat data/for-srec-example.tbl
 POKI_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)
 
 POKI_RUN_COMMAND
 mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
@@ -98,36 +98,36 @@ Note that the value of the current field in the for-loop can be gotten either us
 
 Important note: to avoid inconsistent looping behavior in case you're setting new fields (and/or unsetting existing ones) while looping over the record, **Miller makes a copy of the record before the loop: loop variables are bound from the copy and all other reads/writes involve the record itself**:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-2.sh)
 
 It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-3.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-3.sh)
 
 You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after ``in``, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
 
-POKI_INCLUDE_ESCAPED(data/for-oosvar-example-0a.txt)HERE
+POKI_INCLUDE_ESCAPED(data/for-oosvar-example-0a.txt)
 
 That's confusing in the abstract, so a concrete example is in order. Suppose the out-of-stream variable ``@myvar`` is populated as follows:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0b.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0b.sh)
 
 Then we can get at various values as follows:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0c.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0c.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0d.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0d.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0e.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0e.sh)
 
 C-style triple-for loops
 ................................................................
 
 These are supported as follows:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-1.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-2.sh)
 
 Notes:
 
@@ -146,23 +146,23 @@ Begin/end blocks
 
 Miller supports an ``awk``-like ``begin/end`` syntax.  The statements in the ``begin`` block are executed before any input records are read; the statements in the ``end`` block are executed after the last input record is read.  (If you want to execute some statement at the start of each file, not at the start of the first file as with ``begin``, you might use a pattern/action block of the form ``FNR == 1 { ... }``.) All statements outside of ``begin`` or ``end`` are, of course, executed on every input record. Semicolons separate statements inside or outside of begin/end blocks; semicolons are required between begin/end block bodies and any subsequent statement.  For example:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-1.sh)
 
 Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in ``awk``, where they'd default to 0 either way), the above can be written more succinctly as
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-2.sh)
 
 The **put -q** option is a shorthand which suppresses printing of each output record, with only ``emit`` statements being output. So to get only summary outputs, one could write
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-3.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-3.sh)
 
 We can do similarly with multiple out-of-stream variables:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-4.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-4.sh)
 
 This is of course not much different than
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-5.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-5.sh)
 
 Note that it's a syntax error for begin/end blocks to refer to field names (beginning with ``$``), since these execute outside the context of input records.
 

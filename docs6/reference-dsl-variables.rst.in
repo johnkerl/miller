@@ -148,19 +148,19 @@ Indexed out-of-stream variables
 
 Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of the ``-g`` (group-by) option which ``mlr stats1`` and various other Miller commands have:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)
 
 Indices can be arbitrarily deep -- here there are two or more of them:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)
 
 The idea is that ``stats1``, and other Miller verbs, encapsulate frequently-used patterns with a minimum of keystroking (and run a little faster), whereas using out-of-stream variables you have more flexibility and control in what you do.
 
 Begin/end blocks can be mixed with pattern/action blocks. For example:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)
 
 .. _reference-dsl-local-variables:
 
@@ -171,7 +171,7 @@ Local variables are similar to out-of-stream variables, except that their extent
 
 For example:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)
 
 Things which are completely unsurprising, resembling many other languages:
 
@@ -224,15 +224,15 @@ Miller's ``put``/``filter`` DSL has four kinds of hashmaps. **Stream records** a
 
 For example, the following swaps the input stream's ``a`` and ``i`` fields, modifies ``y``, and drops the rest:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-1.sh)
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-2.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-2.sh)
 
 Like out-of-stream and local variables, map literals can be multi-level:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-3.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-3.sh)
 
 By default, map-valued expressions are dumped using JSON formatting. If you use ``dump`` to print a hashmap with integer keys and you don't want them double-quoted (JSON-style) then you can use ``mlr put --jknquoteint``. See also ``mlr put --help``.
 

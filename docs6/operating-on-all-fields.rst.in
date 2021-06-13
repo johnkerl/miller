@@ -56,4 +56,4 @@ POKI_RUN_COMMAND
 cat data/small
 POKI_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/full-reorg.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/full-reorg.sh)

@@ -55,7 +55,7 @@ How can I put single-quotes into strings?
 
 This is a little tricky due to the shell's handling of quotes. For simplicity, let's first put an update script into a file:
 
-POKI_INCLUDE_ESCAPED(data/single-quote-example.mlr)HERE
+POKI_INCLUDE_ESCAPED(data/single-quote-example.mlr)
 
 POKI_RUN_COMMAND
 echo a=bcd | mlr put -f data/single-quote-example.mlr
