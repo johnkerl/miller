@@ -37,9 +37,11 @@ Next, run the first step of your command, omitting anything from the first ``the
 After that, run it with the next ``then`` step included:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --icsv --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.csv
+    $ mlr --icsv --opprint count-distinct -f Status,Payment_Type \
+      then sort -nr count \
+      data/then-example.csv
     Status  Payment_Type count
     paid    cash         2
     pending debit        1
@@ -51,9 +53,10 @@ Now if you use ``then`` to include another verb after that, the columns ``Status
 Note, by the way, that you'll get the same results using pipes:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-2
 
-    $ mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv | mlr --icsv --opprint sort -nr count
+    $ mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv \
+    | mlr --icsv --opprint sort -nr count
     Status  Payment_Type count
     paid    cash         2
     pending debit        1

@@ -38,9 +38,13 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
     a=xyz_789
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-5
 
-    $ mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
+    $ mlr put '
+      $a =~ "([a-z]+)_([0-9]+)" {
+        $b = "left_\1"; $c = "right_\2"
+      }' \
+      data/put-gating-example-2.dkvp
     a=abc_123,b=left_\1,c=right_\2
     a=some other name
     a=xyz_789,b=left_\1,c=right_\2
@@ -56,9 +60,13 @@ This produces heteregenous output which Miller, of course, has no problems with 
     x=3,y=0.4771212547196624,z=0.6907396432228734
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-5
 
-    $ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
+    $ mlr put '
+      $a =~ "([a-z]+)_([0-9]+)";
+      $b = "left_\1";
+      $c = "right_\2"
+    ' data/put-gating-example-2.dkvp
     a=abc_123,b=left_\1,c=right_\2
     a=xyz_789,b=left_\1,c=right_\2
 

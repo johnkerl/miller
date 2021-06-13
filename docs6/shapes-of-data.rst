@@ -261,9 +261,14 @@ While ``mlr nest`` is simplest, let's also take a look at a few ways to do this 
 One option to split out the colon-delimited values in the ``b`` column is to use ``splitnv`` to create an integer-indexed map and loop over it, adding new fields to the current record:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-6
 
-    $ mlr --from data/nested.tsv --itsv --oxtab put 'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
+    $ mlr --from data/nested.tsv --itsv --oxtab put '
+      o = splitnv($b, ":");
+      for (k,v in o) {
+        $["p".k]=v
+      }
+    '
     a  x
     b  z
     p1 z
@@ -277,9 +282,15 @@ One option to split out the colon-delimited values in the ``b`` column is to use
 while another is to loop over the same map from ``splitnv`` and use it (with ``put -q`` to suppress printing the original record) to produce multiple records:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-7
 
-    $ mlr --from data/nested.tsv --itsv --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'
+    $ mlr --from data/nested.tsv --itsv --oxtab put -q '
+      o = splitnv($b, ":");
+      for (k,v in o) {
+        x = mapsum($*, {"b":v});
+        emit x
+      }
+    '
     a x
     b z
     
@@ -293,9 +304,14 @@ while another is to loop over the same map from ``splitnv`` and use it (with ``p
     b w
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-6
 
-    $ mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'
+    $ mlr --from data/nested.tsv --tsv put -q '
+      o = splitnv($b, ":");
+      for (k,v in o) {
+        x = mapsum($*, {"b":v}); emit x
+      }
+    '
     a	b
     x	z
     s	u

@@ -29,23 +29,29 @@ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
+mlr --from data/flins.csv --icsv --opprint \
+  stats1 -a min,mean,max -f tiv_2012 -g construction,line
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --from data/flins.csv --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
+mlr --from data/flins.csv --icsv --oxtab \
+  stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
+mlr --from data/flins.csv --icsv --opprint \
+  stats1 -a p95,p99,p100 -f hu_site_deductible -g county \
+  then sort -f county | head
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
+mlr --from data/flins.csv --icsv --oxtab \
+  stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
+mlr --from data/flins.csv --icsv --opprint \
+  stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
 GENRST_EOF
 
 Color/shape data
@@ -88,11 +94,15 @@ GENRST_EOF
 Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probablities from the data-generator script:
 
 GENRST_RUN_COMMAND
-mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
+mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color \
+  then sort -f color \
+  data/colored-shapes.dkvp
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
+mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape \
+  then sort -f shape \
+  data/colored-shapes.dkvp
 GENRST_EOF
 
 Look at bivariate stats by color and shape. In particular, ``u,v`` pairwise correlation for red circles pops out:
@@ -102,5 +112,7 @@ mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp
+mlr --opprint --right \
+  stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr \
+  data/colored-shapes.dkvp
 GENRST_EOF

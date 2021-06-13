@@ -165,6 +165,7 @@ bootstrap
 The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -176,6 +177,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     orange 0.490532 303
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -187,6 +189,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     orange 0.521030 321
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -198,6 +201,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     purple 0.486337 1199
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -1363,9 +1367,11 @@ histogram
 This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use ``--lo 0.0 --hi 1.0 --nbins 10 -f x``.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has ``0.0 &le; x < 0.1``, bin 1 has ``0.1 &le; x < 0.2``, etc., but bin 9 has ``0.9 &le; x &le; 1.0``.
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium
+    $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
+      then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 \
+      data/medium
     bin_lo bin_hi x_count x2_count x3_count
     0      0.1    1072    3231     4661
     0.1    0.2    938     1254     1184
@@ -1379,9 +1385,11 @@ This is just a histogram; there's not too much to say here. A note about binning
     0.9    1      1013    507      341
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ data/medium
+    $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
+      then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ \
+      data/medium
     my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
     0         0.1       1072       3231        4661
     0.1       0.2       938        1254        1184
@@ -1465,9 +1473,11 @@ Join larger table with IDs with smaller ID-to-name lookup table, showing only pa
     present 300
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --icsvlite --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+    $ mlr --icsvlite --opprint \
+      join -u -j id -r idcode -f data/join-left-example.csv \
+      data/join-right-example.csv
     id  name  status
     400 david present
     100 alice present
@@ -1492,9 +1502,11 @@ Join larger table with IDs with smaller ID-to-name lookup table, showing only pa
 Same, but with sorting the input first:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --icsvlite --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+    $ mlr --icsvlite --opprint sort -f idcode \
+      then join -j id -r idcode -f data/join-left-example.csv \
+      data/join-right-example.csv
     id  name  status
     100 alice present
     100 alice present
@@ -1519,9 +1531,11 @@ Same, but with sorting the input first:
 Same, but showing only unpaired records:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --icsvlite --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+    $ mlr --icsvlite --opprint \
+      join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv \
+      data/join-right-example.csv
     status  idcode
     missing 600
     
@@ -1822,8 +1836,8 @@ most-frequent
     square   red    1874
     triangle red    1560
     circle   red    1207
-    square   blue   589
     square   yellow 589
+    square   blue   589
 
 .. code-block:: none
    :emphasize-lines: 1-1
@@ -2822,9 +2836,11 @@ optionally categorized by one or more other fields.
     zee 0.5042419022900586 0.5029967546798116
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp
+    $ mlr --opprint stats1 -a p50,p99 -f u,v -g color \
+      then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' \
+      data/colored-shapes.dkvp
     color  u_p50               u_p99              v_p50               v_p99              ur                 vr
     yellow 0.5010187906650703  0.9890464545334569 0.5206303554834582  0.9870337429747029 1.9740705797093183 1.8958436298977264
     red    0.48503770531462564 0.9900536015797581 0.49258608624814926 0.9944442307252868 2.0411889441410493 2.0188232239761583
@@ -2891,9 +2907,11 @@ These are simple bivariate statistics on one or more pairs of number-valued
 fields, optionally categorized by one or more fields.
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium
+    $ mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
+      then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 \
+      data/medium
     x_y_cov    4.2574820827444476e-05
     x_y_corr   0.0005042001844467462
     y_y_cov    0.08461122467974003
@@ -2904,9 +2922,11 @@ fields, optionally categorized by one or more fields.
     x2_y2_corr -0.0034249088761121966
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium
+    $ mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
+      then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a \
+      data/medium
     a   x_y_ols_m             x_y_ols_b           x_y_ols_n x_y_r2                 y_y_ols_m y_y_ols_b y_y_ols_n y_y_r2 xy_y2_ols_m        xy_y2_ols_b         xy_y2_ols_n xy_y2_r2
     pan 0.01702551273681908   0.5004028922897639  2081      0.00028691820445814767 1         0         2081      1      0.8781320866715662 0.11908230147563566 2081        0.41749827377311266
     eks 0.0407804923685586    0.48140207967651016 1965      0.0016461239223448587  1         0         1965      1      0.8978728611690183 0.10734054433612333 1965        0.45563223864254526
@@ -2970,9 +2990,11 @@ Here's an example estimating time-to-completion for a set of jobs. Input data co
 We can do a linear regression on count remaining as a function of time: with ``c = m*u+b`` we want to find the time when the count goes to zero, i.e. ``u=-b/m``.
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat
+    $ mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color \
+      then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' \
+      data/multicountdown.dat
     color                   green
     upsec_count_pca_m       -32.75691673397728
     upsec_count_pca_b       1213.7227296044375
@@ -3392,9 +3414,11 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
     yellow triangle 468
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --opprint uniq -g color,shape -c -o someothername then sort -nr someothername data/colored-shapes.dkvp
+    $ mlr --opprint uniq -g color,shape -c -o someothername \
+      then sort -nr someothername \
+      data/colored-shapes.dkvp
     color  shape    someothername
     red    square   1874
     red    triangle 1560

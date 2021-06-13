@@ -56,9 +56,11 @@ A second option is to flag badly formatted data within the output stream:
 Or perhaps to flag badly formatted data outside the output stream:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --icsv --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
+    $ mlr --icsv --opprint put '
+      if (!is_string($reachable)) {eprint "Malformed at NR=".NR}
+    ' data/het-bool.csv
     Malformed at NR=1
     Malformed at NR=2
     Malformed at NR=3

@@ -330,9 +330,11 @@ Additionally, Miller can **tabularize nested objects by concatentating keys**:
 Note in particular that as far as Miller's ``put`` and ``filter``, as well as other I/O formats, are concerned, these are simply field names with colons in them:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json
+    $ mlr --json --jvstack head -n 1 \
+      then put '${values:uv} = ${values:u} * ${values:v}' \
+      data/json-example-2.json
     {
       "flag": 1,
       "i": 11,

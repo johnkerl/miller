@@ -126,9 +126,14 @@ There are three variants: ``emitf``, ``emit``, and ``emitp``. Keep in mind that 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For ``emitf`` these mustn't have indexing using ``@name[...]``. Example:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-6
 
-    $ mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small
+    $ mlr put -q '
+      @count += 1;
+      @x_sum += $x;
+      @y_sum += $y;
+      end { emitf @count, @x_sum, @y_sum}
+    ' data/small
     count=5,x_sum=2.264761728567491,y_sum=2.585085709781158
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
@@ -240,9 +245,12 @@ If it's indexed then use as many names after ``emit`` as there are indices:
     }
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-4
 
-    $ mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small
+    $ mlr put -q '
+      @sum[$a][$b][$i] += $x;
+      end { emit @sum, "a", "b", "i" }
+    ' data/small
     a=pan,b=pan,i=1,sum=0.3467901443380824
     a=eks,b=pan,i=2,sum=0.7586799647899636
     a=eks,b=wye,i=4,sum=0.38139939387114097
@@ -327,9 +335,12 @@ keys for ``emitp`` (it defaults to a colon):
     sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.38139939387114097,sum.wye.wye=0.20460330576630303,sum.wye.pan=0.5732889198020006
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-4
 
-    $ mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+    $ mlr --oxtab put -q --oflatsep / '
+      @sum[$a][$b] += $x;
+      end { emitp @sum }
+    ' data/small
     sum.pan.pan 0.3467901443380824
     sum.eks.pan 0.7586799647899636
     sum.eks.wye 0.38139939387114097
@@ -390,9 +401,13 @@ Emit-all statements
 Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-stream variables. You can use the following idiom to get various accumulators output side-by-side (reminiscent of ``mlr stats1``):
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-5
 
-    $ mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'
+    $ mlr --from data/small --opprint put -q '
+      @v[$a][$b]["sum"] += $x;
+      @v[$a][$b]["count"] += 1;
+      end{emit @*,"a","b"}
+    '
     a b   pan.sum            pan.count
     v pan 0.3467901443380824 1
     
@@ -401,37 +416,4 @@ Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-strea
     
     a b   wye.sum             wye.count pan.sum            pan.count
     v wye 0.20460330576630303 1         0.5732889198020006 1
-
-.. code-block:: none
-   :emphasize-lines: 1-1
-
-    $ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'
-    a   b   pan
-    sum pan 0.3467901443380824
-    
-    a   b   pan                wye
-    sum eks 0.7586799647899636 0.38139939387114097
-    
-    a   b   wye                 pan
-    sum wye 0.20460330576630303 0.5732889198020006
-    
-    a     b   pan
-    count pan 1
-    
-    a     b   pan wye
-    count eks 1   1
-    
-    a     b   wye pan
-    count wye 1   1
-
-.. code-block:: none
-   :emphasize-lines: 1-1
-
-    $ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'
-    a   b   sum                 count
-    pan pan 0.3467901443380824  1
-    eks pan 0.7586799647899636  1
-    eks wye 0.38139939387114097 1
-    wye wye 0.20460330576630303 1
-    wye pan 0.5732889198020006  1
 

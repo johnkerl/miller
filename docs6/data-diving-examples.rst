@@ -49,19 +49,23 @@ Categorization of total insured value:
     19757.91     1.0615314637499999e+06 2.78555163e+06
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-2
 
-    $ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
-
-.. code-block:: none
-   :emphasize-lines: 1-1
-
-    $ mlr --from data/flins.csv --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
+    $ mlr --from data/flins.csv --icsv --opprint \
+      stats1 -a min,mean,max -f tiv_2012 -g construction,line
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-2
 
-    $ mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
+    $ mlr --from data/flins.csv --icsv --oxtab \
+      stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
+
+.. code-block:: none
+   :emphasize-lines: 1-3
+
+    $ mlr --from data/flins.csv --icsv --opprint \
+      stats1 -a p95,p99,p100 -f hu_site_deductible -g county \
+      then sort -f county | head
     county
     Duval
     Highlands
@@ -71,9 +75,10 @@ Categorization of total insured value:
     St. Johns
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-2
 
-    $ mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
+    $ mlr --from data/flins.csv --icsv --oxtab \
+      stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
     tiv_2011_tiv_2012_corr  0.9353629581411828
     tiv_2011_tiv_2012_ols_m 1.0890905877734807
     tiv_2011_tiv_2012_ols_b 103095.52335638746
@@ -81,9 +86,10 @@ Categorization of total insured value:
     tiv_2011_tiv_2012_r2    0.8749038634626236
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-2
 
-    $ mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
+    $ mlr --from data/flins.csv --icsv --opprint \
+      stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
     county     tiv_2011_tiv_2012_corr tiv_2011_tiv_2012_ols_m tiv_2011_tiv_2012_ols_b tiv_2011_tiv_2012_ols_n tiv_2011_tiv_2012_r2
     Seminole   -                      -                       -                       1                       -
     Miami Dade 1                      0.9306426512386247      -2311.1543275160047     2                       0.9999999999999999
@@ -168,9 +174,11 @@ The histogram shows the different distribution of 0/1 flags:
 Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probablities from the data-generator script:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
+    $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color \
+      then sort -f color \
+      data/colored-shapes.dkvp
     color  flag_min flag_mean           flag_max u_min                  u_mean              u_max              v_min                 v_mean              v_max
     blue   0        0.5843537414965987  1        4.3912454007477564e-05 0.517717155039078   0.9999687954968421 0.0014886830387470518 0.49105642841387653 0.9995761761685742
     green  0        0.20919747520288548 1        0.00048750676198217047 0.5048610622924616  0.9999361779701204 0.0005012669003675585 0.49908475928072205 0.9996764373885353
@@ -180,9 +188,11 @@ Look at univariate stats by color and shape. In particular, color-dependent flag
     yellow 0        0.8924274593064402  1        0.001300228762057487   0.49712912165196765 0.99992313390574   0.0007109695568577878 0.510626599360317   0.9999189897724752
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
+    $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape \
+      then sort -f shape \
+      data/colored-shapes.dkvp
     shape    flag_min flag_mean           flag_max u_min                  u_mean              u_max              v_min                 v_mean              v_max
     circle   0        0.3998456194519491  1        4.3912454007477564e-05 0.49855450951394115 0.99992313390574   -0.09270905318501277  0.49552415740048406 1.0724998185026013
     square   0        0.39611178614823817 1        0.0001881939925673093  0.499385458061097   0.9999687954968421 8.930277299445954e-05 0.49653825501903986 0.9999751864255598
@@ -198,9 +208,11 @@ Look at bivariate stats by color and shape. In particular, ``u,v`` pairwise corr
     0.13341803768384553 -0.011319938208638764 
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp
+    $ mlr --opprint --right \
+      stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr \
+      data/colored-shapes.dkvp
      color    shape              u_v_corr               w_x_corr 
        red   circle    0.9807984157534667  -0.018565046320623148 
     orange   square   0.17685846147882145   -0.07104374629148885 

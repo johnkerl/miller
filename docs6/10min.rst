@@ -255,9 +255,12 @@ You can use ``filter`` to keep only records you care about:
 You can use ``put`` to create new fields which are computed from other fields:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-4
 
-    $ mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
+    $ mlr --icsv --opprint put '
+      $ratio = $quantity / $rate;
+      $color_shape = $color . "_" . $shape
+    ' example.csv
     color  shape    flag  index quantity rate   ratio              color_shape
     yellow triangle true  11    43.6498  9.8870 4.414868008496004  yellow_triangle
     red    square   true  15    79.2778  0.0130 6098.292307692308  red_square
@@ -384,9 +387,12 @@ As another convenience, you can put the filename first using ``--from``. When yo
     yellow circle true  73    63.9785  4.2370
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-4
 
-    $ mlr --icsv --opprint --from example.csv sort -nr index then head -n 3 then cut -f shape,quantity
+    $ mlr --icsv --opprint --from example.csv \
+      sort -nr index \
+      then head -n 3 \
+      then cut -f shape,quantity
     shape  quantity
     square 72.3735
     circle 63.5058

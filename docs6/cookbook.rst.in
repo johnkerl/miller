@@ -29,7 +29,9 @@ GENRST_EOF
 Or perhaps to flag badly formatted data outside the output stream:
 
 GENRST_RUN_COMMAND
-mlr --icsv --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
+mlr --icsv --opprint put '
+  if (!is_string($reachable)) {eprint "Malformed at NR=".NR}
+' data/het-bool.csv
 GENRST_EOF
 
 A third way is to abort the process on first instance of bad data:

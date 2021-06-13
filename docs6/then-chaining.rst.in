@@ -21,7 +21,9 @@ GENRST_EOF
 After that, run it with the next ``then`` step included:
 
 GENRST_RUN_COMMAND
-mlr --icsv --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.csv
+mlr --icsv --opprint count-distinct -f Status,Payment_Type \
+  then sort -nr count \
+  data/then-example.csv
 GENRST_EOF
 
 Now if you use ``then`` to include another verb after that, the columns ``Status``, ``Payment_Type``, and ``count`` will be the input to that verb.
@@ -29,7 +31,8 @@ Now if you use ``then`` to include another verb after that, the columns ``Status
 Note, by the way, that you'll get the same results using pipes:
 
 GENRST_RUN_COMMAND
-mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv | mlr --icsv --opprint sort -nr count
+mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv \
+| mlr --icsv --opprint sort -nr count
 GENRST_EOF
 
 NR is not consecutive after then-chaining

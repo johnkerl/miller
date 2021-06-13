@@ -79,7 +79,11 @@ mlr --oxtab stats1 -a min,max -f x data/medium
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium
+mlr --oxtab put -q '
+  @x_min = min(@x_min, $x);
+  @x_max = max(@x_max, $x);
+  end{emitf @x_min, @x_max}
+' data/medium
 GENRST_EOF
 
 Keyed min/max without/with oosvars
@@ -99,7 +103,10 @@ mlr --opprint step -a delta -f x data/small
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small
+mlr --opprint put '
+  $x_delta = is_present(@last) ? $x - @last : 0;
+  @last = $x
+' data/small
 GENRST_EOF
 
 Keyed delta without/with oosvars
@@ -110,7 +117,10 @@ mlr --opprint step -a delta -f x -g a data/small
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small
+mlr --opprint put '
+  $x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0;
+  @last[$a]=$x
+' data/small
 GENRST_EOF
 
 Exponentially weighted moving averages without/with oosvars

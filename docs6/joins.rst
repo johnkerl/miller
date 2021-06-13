@@ -110,9 +110,11 @@ However, if we ask for left-unpaireds, since there's no ``color`` column, we get
 To fix this, we can use **unsparsify**:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv
+    $ mlr --csv join --ul -j id -f data/color-codes.csv \
+      then unsparsify --fill-with "" \
+      data/color-names.csv
     id,code,color
     4,ff0000,red
     2,00ff00,green
@@ -162,9 +164,11 @@ And we want to augment the ``id`` column with lookups from the following data fi
 We can run the input file through multiple ``join`` commands in a ``then``-chain:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id then join -f multi-join/status-lookup.csv -j id multi-join/input.csv
+    $ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
+      then join -f multi-join/status-lookup.csv -j id \
+      multi-join/input.csv
     id status   name  task
     10 idle     Bob   chop
     20 idle     Carol puree

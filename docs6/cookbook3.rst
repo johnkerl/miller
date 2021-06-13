@@ -226,9 +226,13 @@ Min/max without/with oosvars
     x_max 0.999952670371898
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-5
 
-    $ mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium
+    $ mlr --oxtab put -q '
+      @x_min = min(@x_min, $x);
+      @x_max = max(@x_max, $x);
+      end{emitf @x_min, @x_max}
+    ' data/medium
     x_min 4.509679127584487e-05
     x_max 0.999952670371898
 
@@ -278,9 +282,12 @@ Delta without/with oosvars
     wye pan 5 0.5732889198020006  0.8636244699032729  0.19188952593085962
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-4
 
-    $ mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small
+    $ mlr --opprint put '
+      $x_delta = is_present(@last) ? $x - @last : 0;
+      @last = $x
+    ' data/small
     a   b   i x                   y                   x_delta
     pan pan 1 0.3467901443380824  0.7268028627434533  0
     eks pan 2 0.7586799647899636  0.5221511083334797  0.41188982045188116
@@ -303,9 +310,12 @@ Keyed delta without/with oosvars
     wye pan 5 0.5732889198020006  0.8636244699032729  0.36868561403569755
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-4
 
-    $ mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small
+    $ mlr --opprint put '
+      $x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0;
+      @last[$a]=$x
+    ' data/small
     a   b   i x                   y                   x_delta
     pan pan 1 0.3467901443380824  0.7268028627434533  0
     eks pan 2 0.7586799647899636  0.5221511083334797  0

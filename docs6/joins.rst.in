@@ -54,7 +54,9 @@ GENRST_EOF
 To fix this, we can use **unsparsify**:
 
 GENRST_RUN_COMMAND
-mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv
+mlr --csv join --ul -j id -f data/color-codes.csv \
+  then unsparsify --fill-with "" \
+  data/color-names.csv
 GENRST_EOF
 
 Thanks to @aborruso for the tip!
@@ -81,7 +83,9 @@ GENRST_EOF
 We can run the input file through multiple ``join`` commands in a ``then``-chain:
 
 GENRST_RUN_COMMAND
-mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id then join -f multi-join/status-lookup.csv -j id multi-join/input.csv
+mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
+  then join -f multi-join/status-lookup.csv -j id \
+  multi-join/input.csv
 GENRST_EOF
 
 .. _cookbook-data-cleaning-examples:

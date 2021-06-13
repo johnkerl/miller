@@ -103,7 +103,10 @@ GENRST_EOF
 You can use ``put`` to create new fields which are computed from other fields:
 
 GENRST_RUN_COMMAND
-mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
+mlr --icsv --opprint put '
+  $ratio = $quantity / $rate;
+  $color_shape = $color . "_" . $shape
+' example.csv
 GENRST_EOF
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use ``$[[3]]`` to access the name of field 3 or ``$[[[3]]]`` to access the value of field 3:
@@ -163,7 +166,10 @@ mlr --icsv --opprint --from example.csv sort -nr index then head -n 3
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --icsv --opprint --from example.csv sort -nr index then head -n 3 then cut -f shape,quantity
+mlr --icsv --opprint --from example.csv \
+  sort -nr index \
+  then head -n 3 \
+  then cut -f shape,quantity
 GENRST_EOF
 
 Sorts and stats

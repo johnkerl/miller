@@ -15,7 +15,9 @@ Newlines within the expression are ignored, which can help increase legibility o
 GENRST_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)
 
 GENRST_RUN_COMMAND
-mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium
+mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \
+  then stats2 -a corr -f x,y \
+  data/medium
 GENRST_EOF
 
 .. _reference-dsl-expressions-from-files:

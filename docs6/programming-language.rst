@@ -151,9 +151,14 @@ If you want the end-block output to be the only output, and not include the inpu
     }
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-6
 
-    $ mlr --c2j --from example.csv put -q 'begin { @count = 0; @sum = 0 } @count += 1; @sum += $quantity; end {emit (@count, @sum)}'
+    $ mlr --c2j --from example.csv put -q '
+      begin { @count = 0; @sum = 0 }
+      @count += 1;
+      @sum += $quantity;
+      end {emit (@count, @sum)}
+    '
     {
       "count": 10,
       "sum": 652.7185

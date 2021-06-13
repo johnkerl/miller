@@ -173,7 +173,9 @@ GENRST_EOF
 Note in particular that as far as Miller's ``put`` and ``filter``, as well as other I/O formats, are concerned, these are simply field names with colons in them:
 
 GENRST_RUN_COMMAND
-mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json
+mlr --json --jvstack head -n 1 \
+  then put '${values:uv} = ${values:u} * ${values:v}' \
+  data/json-example-2.json
 GENRST_EOF
 
 Arrays

@@ -228,9 +228,11 @@ Out-of-stream variables are **scoped** to the ``put`` command in which they appe
     a=4,b=5,c=6
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr put '@sum += $a; end {emit @sum}' then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
+    $ mlr put '@sum += $a; end {emit @sum}' \
+      then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' \
+      data/a.dkvp
     a=10,b=2,c=3
     a=40,b=5,c=6
     sum=5

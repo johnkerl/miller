@@ -92,6 +92,7 @@ GENRST_EOF
 The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -103,6 +104,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     orange 0.490532 303
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -114,6 +116,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     orange 0.521030 321
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -125,6 +128,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     purple 0.486337 1199
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
@@ -539,11 +543,15 @@ GENRST_EOF
 This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use ``--lo 0.0 --hi 1.0 --nbins 10 -f x``.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has ``0.0 &le; x < 0.1``, bin 1 has ``0.1 &le; x < 0.2``, etc., but bin 9 has ``0.9 &le; x &le; 1.0``.
 
 GENRST_RUN_COMMAND
-mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium
+mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
+  then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 \
+  data/medium
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ data/medium
+mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
+  then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ \
+  data/medium
 GENRST_EOF
 
 .. _reference-verbs-join:
@@ -568,19 +576,25 @@ mlr --icsvlite --opprint cat data/join-right-example.csv
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --icsvlite --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+mlr --icsvlite --opprint \
+  join -u -j id -r idcode -f data/join-left-example.csv \
+  data/join-right-example.csv
 GENRST_EOF
 
 Same, but with sorting the input first:
 
 GENRST_RUN_COMMAND
-mlr --icsvlite --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+mlr --icsvlite --opprint sort -f idcode \
+  then join -j id -r idcode -f data/join-left-example.csv \
+  data/join-right-example.csv
 GENRST_EOF
 
 Same, but showing only unpaired records:
 
 GENRST_RUN_COMMAND
-mlr --icsvlite --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv
+mlr --icsvlite --opprint \
+  join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv \
+  data/join-right-example.csv
 GENRST_EOF
 
 Use prefixing options to disambiguate between otherwise identical non-join field names:
@@ -1036,7 +1050,9 @@ mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp
+mlr --opprint stats1 -a p50,p99 -f u,v -g color \
+  then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' \
+  data/colored-shapes.dkvp
 GENRST_EOF
 
 GENRST_RUN_COMMAND
@@ -1060,11 +1076,15 @@ These are simple bivariate statistics on one or more pairs of number-valued
 fields, optionally categorized by one or more fields.
 
 GENRST_RUN_COMMAND
-mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium
+mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
+  then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 \
+  data/medium
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium
+mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
+  then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a \
+  data/medium
 GENRST_EOF
 
 Here's an example simple line-fit. The ``x`` and ``y``
@@ -1089,7 +1109,9 @@ GENRST_EOF
 We can do a linear regression on count remaining as a function of time: with ``c = m*u+b`` we want to find the time when the count goes to zero, i.e. ``u=-b/m``.
 
 GENRST_RUN_COMMAND
-mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat
+mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color \
+  then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' \
+  data/multicountdown.dat
 GENRST_EOF
 
 .. _reference-verbs-step:
@@ -1226,7 +1248,9 @@ mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shape
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --opprint uniq -g color,shape -c -o someothername then sort -nr someothername data/colored-shapes.dkvp
+mlr --opprint uniq -g color,shape -c -o someothername \
+  then sort -nr someothername \
+  data/colored-shapes.dkvp
 GENRST_EOF
 
 GENRST_RUN_COMMAND

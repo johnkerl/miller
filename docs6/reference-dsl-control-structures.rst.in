@@ -19,7 +19,11 @@ mlr cat data/put-gating-example-2.dkvp
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
+mlr put '
+  $a =~ "([a-z]+)_([0-9]+)" {
+    $b = "left_\1"; $c = "right_\2"
+  }' \
+  data/put-gating-example-2.dkvp
 GENRST_EOF
 
 This produces heteregenous output which Miller, of course, has no problems with (see :doc:`record-heterogeneity`).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes ``put`` to evaluate the boolean expression (along with any side effects, namely, regex-captures ``\1``, ``\2``, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
@@ -29,7 +33,11 @@ mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
+mlr put '
+  $a =~ "([a-z]+)_([0-9]+)";
+  $b = "left_\1";
+  $c = "right_\2"
+' data/put-gating-example-2.dkvp
 GENRST_EOF
 
 If-statements

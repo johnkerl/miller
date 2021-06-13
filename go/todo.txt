@@ -2,9 +2,7 @@
 TOP OF LIST:
 
 * sat:
-  o x genrsts x all
-  o convert all code-blocks
-  o convert all POKI...HERE
+  o convert all code-blocks to cardify
   o most/least-frequent: map -> odict
 
 * emit * regex * fmtnum * localtime *

@@ -111,7 +111,12 @@ There are three variants: ``emitf``, ``emit``, and ``emitp``. Keep in mind that 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For ``emitf`` these mustn't have indexing using ``@name[...]``. Example:
 
 GENRST_RUN_COMMAND
-mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small
+mlr put -q '
+  @count += 1;
+  @x_sum += $x;
+  @y_sum += $y;
+  end { emitf @count, @x_sum, @y_sum}
+' data/small
 GENRST_EOF
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
@@ -151,7 +156,10 @@ mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small
+mlr put -q '
+  @sum[$a][$b][$i] += $x;
+  end { emit @sum, "a", "b", "i" }
+' data/small
 GENRST_EOF
 
 Now for **emitp**: if you have as many names following ``emit`` as there are levels in the out-of-stream variable's hashmap, then ``emit`` and ``emitp`` do the same thing. Where they differ is when you don't specify as many names as there are hashmap levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: ``emitp`` includes full prefixing (hence the ``p`` in ``emitp``) while ``emit`` takes the deepest hashmap key as the output-record key:
@@ -192,7 +200,10 @@ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+mlr --oxtab put -q --oflatsep / '
+  @sum[$a][$b] += $x;
+  end { emitp @sum }
+' data/small
 GENRST_EOF
 
 Multi-emit statements
@@ -211,14 +222,26 @@ Emit-all statements
 Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-stream variables. You can use the following idiom to get various accumulators output side-by-side (reminiscent of ``mlr stats1``):
 
 GENRST_RUN_COMMAND
-mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'
+mlr --from data/small --opprint put -q '
+  @v[$a][$b]["sum"] += $x;
+  @v[$a][$b]["count"] += 1;
+  end{emit @*,"a","b"}
+'
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'
+mlr --from data/small --opprint put -q 'i
+  @sum[$a][$b] += $x;
+  @count[$a][$b] += 1;
+  end{emit @*,"a","b"}
+'
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'
+mlr --from data/small --opprint put -q '
+  @sum[$a][$b] += $x;
+  @count[$a][$b] += 1;
+  end{emit (@sum, @count),"a","b"}
+'
 GENRST_EOF
 

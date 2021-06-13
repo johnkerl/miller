@@ -70,7 +70,12 @@ mlr --c2j --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --c2j --from example.csv put -q 'begin { @count = 0; @sum = 0 } @count += 1; @sum += $quantity; end {emit (@count, @sum)}'
+mlr --c2j --from example.csv put -q '
+  begin { @count = 0; @sum = 0 }
+  @count += 1;
+  @sum += $quantity;
+  end {emit (@count, @sum)}
+'
 GENRST_EOF
 
 We'll see in the documentation for :ref:`reference-verbs-stats1` that there's a lower-keystroking way to get counts and sums of things -- so, take this sum/count example as an indication of the kinds of things you can do using Miller's programming language.

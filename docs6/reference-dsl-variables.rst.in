@@ -136,7 +136,9 @@ cat data/a.dkvp
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr put '@sum += $a; end {emit @sum}' then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
+mlr put '@sum += $a; end {emit @sum}' \
+  then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' \
+  data/a.dkvp
 GENRST_EOF
 
 Out-of-stream variables' **extent** is from the start to the end of the record stream, i.e. every time the ``put`` or ``filter`` statement referring to them is executed.
@@ -367,7 +369,10 @@ cat data/small
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --opprint put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small
+mlr --opprint put -q '
+  is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*};
+  end {emit @recmax}
+' data/small
 GENRST_EOF
 
 Keywords for filter and put

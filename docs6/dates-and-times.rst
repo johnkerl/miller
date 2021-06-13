@@ -21,9 +21,11 @@ Given input like
 we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the :ref:`reference-dsl-strptime` format-string.  For example:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --csv filter 'strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")' dates.csv
+    $ mlr --csv filter '
+      strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")
+    ' dates.csv
     date,event
     2018-03-07,discovery
 
