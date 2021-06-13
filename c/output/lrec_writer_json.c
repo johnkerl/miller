@@ -151,6 +151,9 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 		lrec_free(prec); // end of baton-pass
 
 	} else { // end of record stream
+		if (pstate->counter == 0) {
+			fputs(pstate->before_records_at_start_of_stream1, output_stream);
+		}
 		fputs(pstate->after_records_at_end_of_stream1, output_stream);
 		fputs(before_or_after_records, output_stream);
 	}
