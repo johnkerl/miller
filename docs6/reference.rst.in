@@ -10,7 +10,7 @@ Command overview
 Whereas the Unix toolkit is made of the separate executables ``cat``, ``tail``, ``cut``,
 ``sort``, etc., Miller has subcommands, or **verbs**, invoked as follows:
 
-POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)
+GENRST_INCLUDE_ESCAPED(data/subcommand-example.txt)
 
 These fall into categories as follows:
 
@@ -44,13 +44,13 @@ Options:
 
 These are as discussed in :doc:`file-formats`, with the exception of ``--right`` which makes pretty-printed output right-aligned:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint cat data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint --right cat data/small
-POKI_EOF
+GENRST_EOF
 
 Additional notes:
 
@@ -144,19 +144,19 @@ These are just familiar ``printf`` formats applied to double-precision numbers. 
 
 To apply formatting to a single field, overriding the global ``ofmt``, use ``fmtnum`` function within ``mlr put``. For example:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'
-POKI_EOF
+GENRST_EOF
 
 Input conversion from hexadecimal is done automatically on fields handled by ``mlr put`` and ``mlr filter`` as long as the field value begins with "0x".  To apply output conversion to hexadecimal on a single column, you may use ``fmtnum``, or the keystroke-saving ``hexfmt`` function. Example:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
-POKI_EOF
+GENRST_EOF
 
 Data transformations (verbs)
 ----------------------------------------------------------------
@@ -189,7 +189,7 @@ You can, if you like, instead simply chain commands together using the ``then`` 
 
 Here's a performance comparison:
 
-POKI_INCLUDE_ESCAPED(data/then-chaining-performance.txt)
+GENRST_INCLUDE_ESCAPED(data/then-chaining-performance.txt)
 
 There are two reasons to use then-chaining: one is for performance, although I don't expect this to be a win in all cases.  Using then-chaining avoids redundant string-parsing and string-formatting at each pipeline step: instead input records are parsed once, they are fed through each pipeline stage in memory, and then output records are formatted once. On the other hand, Miller is single-threaded, while modern systems are usually multi-processor, and when streaming-data programs operate through pipes, each one can use a CPU.  Rest assured you get the same results either way.
 
@@ -200,47 +200,47 @@ Auxiliary commands
 
 There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables but they're delivered within the main Miller executable for convenience.
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr aux-list
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr lecat --help
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr termcvt --help
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr hex --help
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr unhex --help
-POKI_EOF
+GENRST_EOF
 
 Examples:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'Hello, world!' | mlr lecat --mono
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr hex data/budget.csv
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr hex -r data/budget.csv
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
-POKI_EOF
+GENRST_EOF
 
 Data types
 ----------------------------------------------------------------
@@ -284,47 +284,47 @@ Rules for null-handling:
 
 * Records with one or more empty sort-field values sort after records with all sort-field values present:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr cat data/sort-null.dat
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr sort -n  a data/sort-null.dat
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr sort -nr a data/sort-null.dat
-POKI_EOF
+GENRST_EOF
 
 * Functions/operators which have one or more *empty* arguments produce empty output: e.g.
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'x=2,y=3' | mlr put '$a=$x+$y'
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'x=,y=3' | mlr put '$a=$x+$y'
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
-POKI_EOF
+GENRST_EOF
 
 with the exception that the ``min`` and ``max`` functions are special: if one argument is non-null, it wins:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
-POKI_EOF
+GENRST_EOF
 
 * Functions of *absent* variables (e.g. ``mlr put '$y = log10($nonesuch)'``) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
-POKI_EOF
+GENRST_EOF
 
 * Likewise, for assignment to maps, **absent-valued keys or values result in a skipped assignment**.
 
@@ -340,23 +340,23 @@ The reasoning is as follows:
 
 Since absent plus absent is absent (and likewise for other operators), accumulations such as ``@sum += $x`` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with ``is_present``:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr cat data/het.dkvp
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
-POKI_EOF
+GENRST_EOF
 
 If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --print-type-arithmetic-info
-POKI_EOF
+GENRST_EOF
 
 String literals
 ----------------------------------------------------------------
@@ -412,13 +412,13 @@ For ``filter`` and ``put``, if the regular expression is a string literal (the n
 
 Example:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/regex-in-data.dat
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr filter '$name =~ $regex' data/regex-in-data.dat
-POKI_EOF
+GENRST_EOF
 
 Regex captures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -508,10 +508,10 @@ On-line help
 
 Examples:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --help
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr sort --help
-POKI_EOF
+GENRST_EOF

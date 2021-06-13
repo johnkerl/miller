@@ -8,7 +8,7 @@ User-defined functions
 
 Here's the obligatory example of a recursive function to compute the factorial function:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/factorial-example.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/factorial-example.sh)
 
 Properties of user-defined functions:
 
@@ -35,7 +35,7 @@ User-defined subroutines
 
 Example:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/subr-example.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/subr-example.sh)
 
 Properties of user-defined subroutines:
 

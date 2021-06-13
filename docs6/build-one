@@ -4,10 +4,10 @@ set -euo pipefail
 if [ $# -ge 1 ]; then
   for name; do
     if [[ $name == *.rst.in ]]; then
-      genrst $name;
+      genrsts $name;
     fi
   done
 else
-  for rstin in *.rst.in; do genrst $rstin; done
+  for rstin in *.rst.in; do genrsts $rstin; done
 fi
 sphinx-build -M html . _build

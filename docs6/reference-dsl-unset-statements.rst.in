@@ -3,22 +3,22 @@ DSL reference: unset statements
 
 You can clear a map key by assigning the empty string as its value: ``$x=""`` or ``@x=""``. Using ``unset`` you can remove the key entirely. Examples:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put 'unset $x, $a' data/small
-POKI_EOF
+GENRST_EOF
 
 This can also be done, of course, using ``mlr cut -x``. You can also clear out-of-stream or local variables, at the base name level, or at an indexed sublevel:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small
-POKI_EOF
+GENRST_EOF
 
 If you use ``unset all`` (or ``unset @*`` which is synonymous), that will unset all out-of-stream variables which have been defined up to that point.

@@ -8,9 +8,9 @@ Here's comparison of verbs and ``put``/``filter`` DSL expressions:
 
 Example:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr stats1 -a sum -f x -g a data/small
-POKI_EOF
+GENRST_EOF
 
 * Verbs are coded in Go
 * They run a bit faster
@@ -20,9 +20,9 @@ POKI_EOF
 
 Example:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
-POKI_EOF
+GENRST_EOF
 
 * You get to write your own DSL expressions
 * They run a bit slower
@@ -34,21 +34,21 @@ Please see :doc:`reference-verbs` for information on verbs other than ``put`` an
 
 The essential usages of ``mlr filter`` and ``mlr put`` are for record-selection and record-updating expressions, respectively. For example, given the following input data:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/small
-POKI_EOF
+GENRST_EOF
 
 you might retain only the records whose ``a`` field has value ``eks``:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr filter '$a == "eks"' data/small
-POKI_EOF
+GENRST_EOF
 
 or you might add a new field which is a function of existing fields:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$ab = $a . "_" . $b ' data/small
-POKI_EOF
+GENRST_EOF
 
 The two verbs ``mlr filter`` and ``mlr put`` are essentially the same. The only differences are:
 

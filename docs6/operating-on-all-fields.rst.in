@@ -6,54 +6,54 @@ Bulk rename of fields
 
 Suppose you want to replace spaces with underscores in your column names:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/spaces.csv
-POKI_EOF
+GENRST_EOF
 
 The simplest way is to use ``mlr rename`` with ``-g`` (for global replace, not just first occurrence of space within each field) and ``-r`` for pattern-matching (rather than explicit single-column renames):
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --csv rename -g -r ' ,_'  data/spaces.csv
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv
-POKI_EOF
+GENRST_EOF
 
 You can also do this with a for-loop:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/bulk-rename-for-loop.mlr
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
-POKI_EOF
+GENRST_EOF
 
 Search-and-replace over all fields
 ----------------------------------------------------------------
 
 How to do ``$name = gsub($name, "old", "new")`` for all fields?
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/sar.csv
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/sar.mlr
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --csv put -f data/sar.mlr data/sar.csv
-POKI_EOF
+GENRST_EOF
 
 Full field renames and reassigns
 ----------------------------------------------------------------
 
 Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully generalize :ref:`mlr rename <reference-verbs-rename>`, :ref:`mlr reorder <reference-verbs-reorder>`, etc.
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/full-reorg.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/full-reorg.sh)

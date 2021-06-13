@@ -6,29 +6,29 @@ Overview
 
 One of Miller's strengths is its compact notation: for example, given input of the form
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 head -n 5 ../data/medium
-POKI_EOF
+GENRST_EOF
 
 you can simply do
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --oxtab stats1 -a sum -f x ../data/medium
-POKI_EOF
+GENRST_EOF
 
 or
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint stats1 -a sum -f x -g b ../data/medium
-POKI_EOF
+GENRST_EOF
 
 rather than the more tedious
 
-POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum.sh)
 
 or
 
-POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum-grouped.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum-grouped.sh)
 
 The former (``mlr stats1`` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
 
@@ -39,83 +39,83 @@ The following examples compute some things using oosvars which are already compu
 Mean without/with oosvars
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint stats1 -a mean -f x data/medium
-POKI_EOF
+GENRST_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/mean-with-oosvars.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/mean-with-oosvars.sh)
 
 Keyed mean without/with oosvars
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint stats1 -a mean -f x -g a,b data/medium
-POKI_EOF
+GENRST_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-mean-with-oosvars.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/keyed-mean-with-oosvars.sh)
 
 Variance and standard deviation without/with oosvars
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat variance.mlr
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --oxtab put -q -f variance.mlr data/medium
-POKI_EOF
+GENRST_EOF
 
 You can also do this keyed, of course, imitating the keyed-mean example above.
 
 Min/max without/with oosvars
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --oxtab stats1 -a min,max -f x data/medium
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium
-POKI_EOF
+GENRST_EOF
 
 Keyed min/max without/with oosvars
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint stats1 -a min,max -f x -g a data/medium
-POKI_EOF
+GENRST_EOF
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-min-max-with-oosvars.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/keyed-min-max-with-oosvars.sh)
 
 Delta without/with oosvars
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint step -a delta -f x data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small
-POKI_EOF
+GENRST_EOF
 
 Keyed delta without/with oosvars
 ----------------------------------------------------------------
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint step -a delta -f x -g a data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small
-POKI_EOF
+GENRST_EOF
 
 Exponentially weighted moving averages without/with oosvars
 ----------------------------------------------------------------
 
-POKI_INCLUDE_AND_RUN_ESCAPED(verb-example-ewma.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(verb-example-ewma.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-ewma.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(oosvar-example-ewma.sh)

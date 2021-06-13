@@ -20,25 +20,25 @@ These are written all in capital letters, such as ``NR``, ``NF``, ``FILENAME``, 
 
 Namely, Miller supports the following five built-in variables for :doc:`filter and put <reference-dsl>`, all ``awk``-inspired: ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME``, as well as the mathematical constants ``M_PI`` and ``M_E``.  Lastly, the ``ENV`` hashmap allows read access to environment variables, e.g.  ``ENV["HOME"]`` or ``ENV["foo_".$hostname]``.
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr filter 'FNR == 2' data/small*
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$fnr = FNR' data/small*
-POKI_EOF
+GENRST_EOF
 
 Their values of ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME`` change from one record to the next as Miller scans through your input data stream. The mathematical constants, of course, do not change; ``ENV`` is populated from the system environment variables at the time Miller starts and is read-only for the remainder of program execution.
 
 Their **scope is global**: you can refer to them in any ``filter`` or ``put`` statement. Their values are assigned by the input-record reader:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --csv put '$nr = NR' data/a.csv
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
-POKI_EOF
+GENRST_EOF
 
 The **extent** is for the duration of the put/filter: in a ``begin`` statement (which executes before the first input record is consumed) you will find ``NR=1`` and in an ``end`` statement (which is executed after the last input record is consumed) you will find ``NR`` to be the total number of records ingested.
 
@@ -53,13 +53,13 @@ If field names have **special characters** such as ``.`` then you can use braces
 
 You may also use a **computed field name** in square brackets, e.g.
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo a=3,b=4 | mlr filter '$["x"] < 0.5'
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
-POKI_EOF
+GENRST_EOF
 
 Notes:
 
@@ -80,39 +80,39 @@ Use ``$[[3]]`` to access the name of field 3.  More generally, any expression ev
 
 Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third field. This has the shorter equivalent notation ``$[[[3]]]``.
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr cat data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$[[3]] = "NEW"' data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$[[[3]]] = "NEW"' data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$NEW = $[[NR]]' data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$NEW = $[[[NR]]]' data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$[[[NR]]] = "NEW"' data/small
-POKI_EOF
+GENRST_EOF
 
 Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than ``NF`` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$[[6]] = "NEW"' data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '$[[[6]]] = "NEW"' data/small
-POKI_EOF
+GENRST_EOF
 
 Out-of-stream variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -125,19 +125,19 @@ Just as for field names in stream records, if you want to define out-of-stream v
 
 You may use a **computed key** in square brackets, e.g.
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
-POKI_EOF
+GENRST_EOF
 
 Out-of-stream variables are **scoped** to the ``put`` command in which they appear.  In particular, if you have two or more ``put`` commands separated by ``then``, each put will have its own set of out-of-stream variables:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/a.dkvp
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put '@sum += $a; end {emit @sum}' then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
-POKI_EOF
+GENRST_EOF
 
 Out-of-stream variables' **extent** is from the start to the end of the record stream, i.e. every time the ``put`` or ``filter`` statement referring to them is executed.
 
@@ -148,19 +148,19 @@ Indexed out-of-stream variables
 
 Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of the ``-g`` (group-by) option which ``mlr stats1`` and various other Miller commands have:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)
 
 Indices can be arbitrarily deep -- here there are two or more of them:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)
 
 The idea is that ``stats1``, and other Miller verbs, encapsulate frequently-used patterns with a minimum of keystroking (and run a little faster), whereas using out-of-stream variables you have more flexibility and control in what you do.
 
 Begin/end blocks can be mixed with pattern/action blocks. For example:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)
 
 .. _reference-dsl-local-variables:
 
@@ -171,7 +171,7 @@ Local variables are similar to out-of-stream variables, except that their extent
 
 For example:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)
 
 Things which are completely unsurprising, resembling many other languages:
 
@@ -199,23 +199,23 @@ Things which are perhaps surprising compared to other languages:
 
 The following example demonstrates the scope rules:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/scope-example.mlr
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/scope-example.dat
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr
-POKI_EOF
+GENRST_EOF
 
 And this example demonstrates the type-declaration rules:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/type-decl-example.mlr
-POKI_EOF
+GENRST_EOF
 
 Map literals
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -224,15 +224,15 @@ Miller's ``put``/``filter`` DSL has four kinds of hashmaps. **Stream records** a
 
 For example, the following swaps the input stream's ``a`` and ``i`` fields, modifies ``y``, and drops the rest:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-1.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-1.sh)
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-2.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-2.sh)
 
 Like out-of-stream and local variables, map literals can be multi-level:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-3.sh)
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-3.sh)
 
 By default, map-valued expressions are dumped using JSON formatting. If you use ``dump`` to print a hashmap with integer keys and you don't want them double-quoted (JSON-style) then you can use ``mlr put --jknquoteint``. See also ``mlr put --help``.
 
@@ -252,13 +252,13 @@ Type-test and type-assertion expressions
 
 The following ``is...`` functions take a value and return a boolean indicating whether the argument is of the indicated type. The ``assert_...`` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr -F | grep ^is
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr -F | grep ^assert
-POKI_EOF
+GENRST_EOF
 
 Please see :ref:`cookbook-data-cleaning-examples` for examples of how to use these.
 
@@ -350,30 +350,30 @@ There are three remaining kinds of variable assignment using out-of-stream varia
 
 Example recursive copy of out-of-stream variables:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small
-POKI_EOF
+GENRST_EOF
 
 Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
-POKI_EOF
+GENRST_EOF
 
 Example of full stream record assigned to an out-of-stream variable, finding the record for which the ``x`` field has the largest value in the input stream:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/small
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --opprint put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small
-POKI_EOF
+GENRST_EOF
 
 Keywords for filter and put
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --help-all-keywords
-POKI_EOF
+GENRST_EOF
 

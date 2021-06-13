@@ -25,33 +25,33 @@ def main
     begin
       content_line = input_handle.readline
 
-      if content_line =~ /^POKI_RUN_COMMAND$/
-        cmd_lines = read_until_poki_eof(input_handle)
+      if content_line =~ /^GENRST_RUN_COMMAND$/
+        cmd_lines = read_until_genrst_eof(input_handle)
         run_command(cmd_lines, output_handle)
 
-      elsif content_line =~ /^POKI_RUN_COMMAND_TOLERATING_ERROR$/
-        cmd_lines = read_until_poki_eof(input_handle)
+      elsif content_line =~ /^GENRST_RUN_COMMAND_TOLERATING_ERROR$/
+        cmd_lines = read_until_genrst_eof(input_handle)
         run_command_tolerating_error(cmd_lines, output_handle)
 
-      elsif content_line =~ /^POKI_SHOW_COMMAND$/
-        cmd_lines = read_until_poki_eof(input_handle)
+      elsif content_line =~ /^GENRST_SHOW_COMMAND$/
+        cmd_lines = read_until_genrst_eof(input_handle)
         show_command(cmd_lines, output_handle)
 
-      elsif content_line =~ /^POKI_INCLUDE_ESCAPED\(([^)]+)\)$/
+      elsif content_line =~ /^GENRST_INCLUDE_ESCAPED\(([^)]+)\)$/
         included_file_name = $1
         include_escaped(included_file_name, output_handle)
 
-      elsif content_line =~ /^POKI_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)$/
+      elsif content_line =~ /^GENRST_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)$/
         included_file_name = $1
         cmd_lines = File.readlines(included_file_name).map{|line| line.chomp}
         run_command(cmd_lines, output_handle)
 
-      elsif content_line =~ /^POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)$/
+      elsif content_line =~ /^GENRST_RUN_CONTENT_GENERATOR\(([^)]+)\)$/
         cmd = $1
         run_content_generator(cmd, output_handle)
 
-      elsif content_line =~ /^POKI/
-        raise "Unhandled poki line #{content_line}"
+      elsif content_line =~ /^GENRST/
+        raise "Unhandled genrst line #{content_line}"
         output_handle.write(content_line)
 
       else
@@ -64,13 +64,13 @@ def main
 end
 
 # ----------------------------------------------------------------
-def read_until_poki_eof(input_handle)
+def read_until_genrst_eof(input_handle)
   begin
 
     lines = []
     while true
       line = input_handle.readline.chomp
-      if line == 'POKI_EOF'
+      if line == 'GENRST_EOF'
         break
       end
       lines << line
@@ -78,7 +78,7 @@ def read_until_poki_eof(input_handle)
     return lines
 
   rescue EOFError
-    $stderr.puts 'poki: did not find POKI_EOF'
+    $stderr.puts "$0: did not find GENRST_EOF"
     exit 1
   end
 end

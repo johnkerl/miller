@@ -8,21 +8,21 @@ File-format awareness
 
 Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header line is written once:
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/a.csv
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 cat data/b.csv
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --csv cat data/a.csv data/b.csv
-POKI_EOF
+GENRST_EOF
 
-POKI_RUN_COMMAND
+GENRST_RUN_COMMAND
 mlr --csv sort -nr b data/a.csv data/b.csv
-POKI_EOF
+GENRST_EOF
 
 Likewise with ``mlr sort``, ``mlr tac``, and so on.
 

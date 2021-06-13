@@ -7,12 +7,12 @@ while true
 		break
 	end
 
-  if line =~ /POKI_RUN_COMMAND{{.*}}HERE/
-    line.sub!("POKI_RUN_COMMAND{{", "")
+  if line =~ /GENRST_RUN_COMMAND{{.*}}HERE/
+    line.sub!("GENRST_RUN_COMMAND{{", "")
     line.sub!("}}HERE", "")
-    puts 'POKI_RUN_COMMAND'
+    puts 'GENRST_RUN_COMMAND'
     puts line
-    puts 'POKI_EOF'
+    puts 'GENRST_EOF'
   else
     puts line
   end

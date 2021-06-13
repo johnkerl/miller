@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# Use poki to run the live-code bits within the markup files. See README.md for details.
+# Run the live-code bits within the markup files. See README.md for details.
 
 if [ $# -ge 1 ]; then
   names="$@"
@@ -16,6 +16,6 @@ for name in $names; do
   if [ -f $name.rst ]; then # Won't exist yet on first run
     chmod u+w $name.rst
   fi
-  poki < $name.rst.in > $name.rst
+  genrst-filter < $name.rst.in > $name.rst
   chmod 400 $name.rst
 done
