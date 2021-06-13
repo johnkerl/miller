@@ -733,7 +733,7 @@ Thirdly, function return values can be type-checked at the point of ``return`` u
 Null data: empty and absent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Please see :ref:`reference-null-data`.
+Please see :doc:`reference-main-null-data`.
 
 Aggregate variable assignments
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -792,9 +792,12 @@ Example of full stream record assigned to an out-of-stream variable, finding the
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-4
 
-    $ mlr --opprint put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small
+    $ mlr --opprint put -q '
+      is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*};
+      end {emit @recmax}
+    ' data/small
     a   b   i x                  y
     eks pan 2 0.7586799647899636 0.5221511083334797
 

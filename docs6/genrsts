@@ -12,7 +12,7 @@ else
 fi
 
 for name in $names; do
-  echo GENERATING RST: $name
+  echo Generating $name.rst
   if [ -f $name.rst ]; then # Won't exist yet on first run
     chmod u+w $name.rst
   fi

@@ -339,7 +339,7 @@ Thirdly, function return values can be type-checked at the point of ``return`` u
 Null data: empty and absent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Please see :ref:`reference-null-data`.
+Please see :doc:`reference-main-null-data`.
 
 Aggregate variable assignments
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

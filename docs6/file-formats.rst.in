@@ -92,7 +92,7 @@ As discussed in :doc:`record-heterogeneity`, Miller handles changes of field nam
 etc. and I just log them as needed. Then later, I can use ``grep``, ``mlr --opprint group-like``, etc.
 to analyze my logs.
 
-See :doc:`reference` regarding how to specify separators other than the default equals-sign and comma.
+See :doc:`reference-main-io-options` regarding how to specify separators other than the default equals-sign and comma.
 
 .. _file-formats-nidx:
 

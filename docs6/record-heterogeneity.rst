@@ -92,7 +92,7 @@ Miller handles explicit header changes as just shown. If your CSV input contains
     c 8
     4 9
 
-You may also find Miller's ``group-like`` feature handy (see also :doc:`reference`):
+You may also find Miller's ``group-like`` feature handy (see also :doc:`reference-verbs`):
 
 .. code-block:: none
    :emphasize-lines: 1-1

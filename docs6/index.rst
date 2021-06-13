@@ -73,7 +73,15 @@ Reference
 .. toctree::
    :maxdepth: 1
 
-   reference
+   reference-main-overview
+   reference-main-io-options
+   reference-main-then-chaining
+   reference-main-auxiliary-commands
+   reference-main-data-types
+   reference-main-null-data
+   reference-main-arithmetic
+   reference-main-regular-expressions
+   reference-main-online-help
    reference-verbs
    reference-dsl
    reference-dsl-syntax

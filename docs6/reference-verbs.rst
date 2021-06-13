@@ -7,7 +7,7 @@ Verbs reference
 Overview
 ----------------------------------------------------------------
 
-When you type ``mlr {something} myfile.dat``, the ``{something}`` part is called a **verb**. It specifies how you want to transform your data. (See also :ref:`reference-command-overview` for a breakdown.) The following is an alphabetical list of verbs with their descriptions.
+When you type ``mlr {something} myfile.dat``, the ``{something}`` part is called a **verb**. It specifies how you want to transform your data. (See also :doc:`reference-main-overview` for a breakdown.) The following is an alphabetical list of verbs with their descriptions.
 
 The verbs ``put`` and ``filter`` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found at :doc:`reference-dsl`.
 
@@ -1858,8 +1858,8 @@ most-frequent
     square   red
     triangle red
     circle   red
-    square   blue
     square   yellow
+    square   blue
 
 See also :ref:`reference-verbs-least-frequent`.
 

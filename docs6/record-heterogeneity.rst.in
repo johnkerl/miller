@@ -35,7 +35,7 @@ GENRST_RUN_COMMAND
 mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv
 GENRST_EOF
 
-You may also find Miller's ``group-like`` feature handy (see also :doc:`reference`):
+You may also find Miller's ``group-like`` feature handy (see also :doc:`reference-verbs`):
 
 GENRST_RUN_COMMAND
 mlr --ocsvlite group-like data/het.dkvp

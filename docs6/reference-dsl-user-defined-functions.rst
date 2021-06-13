@@ -49,7 +49,7 @@ Properties of user-defined functions:
 
 * Argument values may be reassigned: they are not read-only.
 
-* When a return value is not implicitly returned, this results in a return value of absent-null. (In the example above, if there were records for which the argument to ``f`` is non-numeric, the assignments would be skipped.) See also the section on :ref:`reference-null-data`.
+* When a return value is not implicitly returned, this results in a return value of absent-null. (In the example above, if there were records for which the argument to ``f`` is non-numeric, the assignments would be skipped.) See also the section on :doc:`reference-main-null-data`.
 
 * See the section on :ref:`reference-dsl-local-variables` for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
 

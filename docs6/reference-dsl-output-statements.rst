@@ -417,3 +417,44 @@ Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-strea
     a b   wye.sum             wye.count pan.sum            pan.count
     v wye 0.20460330576630303 1         0.5732889198020006 1
 
+.. code-block:: none
+   :emphasize-lines: 1-5
+
+    $ mlr --from data/small --opprint put -q '
+      @sum[$a][$b] += $x;
+      @count[$a][$b] += 1;
+      end{emit @*,"a","b"}
+    '
+    a   b   pan
+    sum pan 0.3467901443380824
+    
+    a   b   pan                wye
+    sum eks 0.7586799647899636 0.38139939387114097
+    
+    a   b   wye                 pan
+    sum wye 0.20460330576630303 0.5732889198020006
+    
+    a     b   pan
+    count pan 1
+    
+    a     b   pan wye
+    count eks 1   1
+    
+    a     b   wye pan
+    count wye 1   1
+
+.. code-block:: none
+   :emphasize-lines: 1-5
+
+    $ mlr --from data/small --opprint put -q '
+      @sum[$a][$b] += $x;
+      @count[$a][$b] += 1;
+      end{emit (@sum, @count),"a","b"}
+    '
+    a   b   sum                 count
+    pan pan 0.3467901443380824  1
+    eks pan 0.7586799647899636  1
+    eks wye 0.38139939387114097 1
+    wye wye 0.20460330576630303 1
+    wye pan 0.5732889198020006  1
+

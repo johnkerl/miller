@@ -230,7 +230,7 @@ mlr --from data/small --opprint put -q '
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr --from data/small --opprint put -q 'i
+mlr --from data/small --opprint put -q '
   @sum[$a][$b] += $x;
   @count[$a][$b] += 1;
   end{emit @*,"a","b"}

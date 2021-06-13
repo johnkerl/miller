@@ -50,9 +50,11 @@ Newlines within the expression are ignored, which can help increase legibility o
     pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-3
 
-    $ mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium
+    $ mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \
+      then stats2 -a corr -f x,y \
+      data/medium
     x_y_corr
     -0.7479940285189345
 
