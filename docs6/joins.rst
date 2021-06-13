@@ -12,7 +12,7 @@ Why am I not seeing all possible joins occur?
 For example, the right file here has nine records, and the left file should add in the ``hostname`` column -- so the join output should also have 9 records:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsvlite --opprint cat data/join-u-left.csv
     hostname              ipaddr
@@ -21,7 +21,7 @@ For example, the right file here has nine records, and the left file should add 
     apoapsis.east.our.org 10.4.5.94
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsvlite --opprint cat data/join-u-right.csv
     ipaddr    timestamp  bytes
@@ -36,7 +36,7 @@ For example, the right file here has nine records, and the left file should add 
     10.4.5.94 1448762599 12200
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
     ipaddr    hostname              timestamp  bytes
@@ -50,7 +50,7 @@ The issue is that Miller's ``join``, by default (before 5.1.0), took input sorte
 The solution (besides pre-sorting the input files on the join keys) is to simply use **mlr join -u** (which is now the default). This loads the left file entirely into memory (while the right file is still streamed one line at a time) and does all possible joins without requiring sorted input:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
     ipaddr    hostname              timestamp  bytes
@@ -87,7 +87,7 @@ Suppose you have the following two data files:
 Joining on color the results are as expected:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv join -j id -f data/color-codes.csv data/color-names.csv
     id,code,color
@@ -97,7 +97,7 @@ Joining on color the results are as expected:
 However, if we ask for left-unpaireds, since there's no ``color`` column, we get a row not having the same column names as the other:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv
     id,code,color
@@ -110,9 +110,11 @@ However, if we ask for left-unpaireds, since there's no ``color`` column, we get
 To fix this, we can use **unsparsify**:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-3
 
-    $ mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv
+    $ mlr --csv join --ul -j id -f data/color-codes.csv \
+      then unsparsify --fill-with "" \
+      data/color-names.csv
     id,code,color
     4,ff0000,red
     2,00ff00,green
@@ -126,7 +128,7 @@ Doing multiple joins
 Suppose we have the following data:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat multi-join/input.csv
     id,task
@@ -142,7 +144,7 @@ Suppose we have the following data:
 And we want to augment the ``id`` column with lookups from the following data files:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat multi-join/name-lookup.csv
     id,name
@@ -151,7 +153,7 @@ And we want to augment the ``id`` column with lookups from the following data fi
     20,Carol
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat multi-join/status-lookup.csv
     id,status
@@ -162,9 +164,11 @@ And we want to augment the ``id`` column with lookups from the following data fi
 We can run the input file through multiple ``join`` commands in a ``then``-chain:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-3
 
-    $ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id then join -f multi-join/status-lookup.csv -j id multi-join/input.csv
+    $ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
+      then join -f multi-join/status-lookup.csv -j id \
+      multi-join/input.csv
     id status   name  task
     10 idle     Bob   chop
     20 idle     Carol puree

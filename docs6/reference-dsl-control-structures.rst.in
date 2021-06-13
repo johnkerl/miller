@@ -1,0 +1,176 @@
+DSL reference: control structures
+================================================================
+
+Pattern-action blocks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+These are reminiscent of ``awk`` syntax.  They can be used to allow assignments to be done only when appropriate -- e.g. for math-function domain restrictions, regex-matching, and so on:
+
+GENRST_RUN_COMMAND
+mlr cat data/put-gating-example-1.dkvp
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr cat data/put-gating-example-2.dkvp
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr put '
+  $a =~ "([a-z]+)_([0-9]+)" {
+    $b = "left_\1"; $c = "right_\2"
+  }' \
+  data/put-gating-example-2.dkvp
+GENRST_EOF
+
+This produces heteregenous output which Miller, of course, has no problems with (see :doc:`record-heterogeneity`).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes ``put`` to evaluate the boolean expression (along with any side effects, namely, regex-captures ``\1``, ``\2``, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
+
+GENRST_RUN_COMMAND
+mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr put '
+  $a =~ "([a-z]+)_([0-9]+)";
+  $b = "left_\1";
+  $c = "right_\2"
+' data/put-gating-example-2.dkvp
+GENRST_EOF
+
+If-statements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+These are again reminiscent of ``awk``. Pattern-action blocks are a special case of ``if`` with no ``elif`` or ``else`` blocks, no ``if`` keyword, and parentheses optional around the boolean expression:
+
+.. code-block:: none
+
+    mlr put 'NR == 4 {$foo = "bar"}'
+
+.. code-block:: none
+
+    mlr put 'if (NR == 4) {$foo = "bar"}'
+
+Compound statements use ``elif`` (rather than ``elsif`` or ``else if``):
+
+GENRST_INCLUDE_ESCAPED(data/if-chain.sh)
+
+While and do-while loops
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Miller's ``while`` and ``do-while`` are unsurprising in comparison to various languages, as are ``break`` and ``continue``:
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/while-example-1.sh)
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/while-example-2.sh)
+
+A ``break`` or ``continue`` within nested conditional blocks or if-statements will, of course, propagate to the innermost loop enclosing them, if any. A ``break`` or ``continue`` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
+The existence of ``while``, ``do-while``, and ``for`` loops in Miller's DSL means that you can create infinite-loop scenarios inadvertently.  In particular, please recall that DSL statements are executed once if in ``begin`` or ``end`` blocks, and once *per record* otherwise. For example, **while (NR < 10) will never terminate as NR is only incremented between records**.
+
+For-loops
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+While Miller's ``while`` and ``do-while`` statements are much as in many other languages, ``for`` loops are more idiosyncratic to Miller. They are loops over key-value pairs, whether in stream records, out-of-stream variables, local variables, or map-literals: more reminiscent of ``foreach``, as in (for example) PHP. There are **for-loops over map keys** and **for-loops over key-value tuples**.  Additionally, Miller has a **C-style triple-for loop** with initialize, test, and update statements.
+
+As with ``while`` and ``do-while``, a ``break`` or ``continue`` within nested control structures will propagate to the innermost loop enclosing them, if any, and a ``break`` or ``continue`` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
+
+Key-only for-loops
+................................................................
+
+The ``key`` variable is always bound to the *key* of key-value pairs:
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-1.sh)
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-2.sh)
+
+Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in ``$[key]`` for stream records, or by indexing the looped-over variable using square brackets.
+
+Key-value for-loops
+................................................................
+
+Single-level keys may be gotten at using either ``for(k,v)`` or ``for((k),v)``; multi-level keys may be gotten at using ``for((k1,k2,k3),v)`` and so on.  The ``v`` variable will be bound to to a scalar value (a string or a number) if the map stops at that level, or to a map-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
+
+GENRST_RUN_COMMAND
+cat data/for-srec-example.tbl
+GENRST_EOF
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)
+
+GENRST_RUN_COMMAND
+mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
+GENRST_EOF
+
+Note that the value of the current field in the for-loop can be gotten either using the bound variable ``value``, or through a **computed field name** using square brackets as in ``$[key]``.
+
+Important note: to avoid inconsistent looping behavior in case you're setting new fields (and/or unsetting existing ones) while looping over the record, **Miller makes a copy of the record before the loop: loop variables are bound from the copy and all other reads/writes involve the record itself**:
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-2.sh)
+
+It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-3.sh)
+
+You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after ``in``, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
+
+GENRST_INCLUDE_ESCAPED(data/for-oosvar-example-0a.txt)
+
+That's confusing in the abstract, so a concrete example is in order. Suppose the out-of-stream variable ``@myvar`` is populated as follows:
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0b.sh)
+
+Then we can get at various values as follows:
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0c.sh)
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0d.sh)
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0e.sh)
+
+C-style triple-for loops
+................................................................
+
+These are supported as follows:
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-1.sh)
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-2.sh)
+
+Notes:
+
+* In ``for (start; continuation; update) { body }``, the start, continuation, and update statements may be empty, single statements, or multiple comma-separated statements. If the continuation is empty (e.g. ``for(i=1;;i+=1)``) it defaults to true.
+
+* In particular, you may use ``$``-variables and/or ``@``-variables in the start, continuation, and/or update steps (as well as the body, of course).
+
+* The typedecls such as ``int`` or ``num`` are optional.  If a typedecl is provided (for a local variable), it binds a variable scoped to the for-loop regardless of whether a same-name variable is present in outer scope. If a typedecl is not provided, then the variable is scoped to the for-loop if no same-name variable is present in outer scope, or if a same-name variable is present in outer scope then it is modified.
+
+* Miller has no ``++`` or ``--`` operators.
+
+* As with all for/if/while statements in Miller, the curly braces are required even if the body is a single statement, or empty.
+
+Begin/end blocks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Miller supports an ``awk``-like ``begin/end`` syntax.  The statements in the ``begin`` block are executed before any input records are read; the statements in the ``end`` block are executed after the last input record is read.  (If you want to execute some statement at the start of each file, not at the start of the first file as with ``begin``, you might use a pattern/action block of the form ``FNR == 1 { ... }``.) All statements outside of ``begin`` or ``end`` are, of course, executed on every input record. Semicolons separate statements inside or outside of begin/end blocks; semicolons are required between begin/end block bodies and any subsequent statement.  For example:
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-1.sh)
+
+Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in ``awk``, where they'd default to 0 either way), the above can be written more succinctly as
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-2.sh)
+
+The **put -q** option is a shorthand which suppresses printing of each output record, with only ``emit`` statements being output. So to get only summary outputs, one could write
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-3.sh)
+
+We can do similarly with multiple out-of-stream variables:
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-4.sh)
+
+This is of course not much different than
+
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-5.sh)
+
+Note that it's a syntax error for begin/end blocks to refer to field names (beginning with ``$``), since these execute outside the context of input records.
+

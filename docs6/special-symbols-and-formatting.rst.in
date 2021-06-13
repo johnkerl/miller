@@ -6,50 +6,68 @@ How can I handle commas-as-data in various formats?
 
 :doc:`CSV <file-formats>` handles this well and by design:
 
-POKI_RUN_COMMAND{{cat commas.csv}}HERE
+GENRST_RUN_COMMAND
+cat commas.csv
+GENRST_EOF
 
 Likewise :ref:`file-formats-json`:
 
-POKI_RUN_COMMAND{{mlr --icsv --ojson cat commas.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --ojson cat commas.csv
+GENRST_EOF
 
 For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no escaping for carriage returns, but commas work fine:
 
-POKI_RUN_COMMAND{{mlr --icsv --oxtab cat commas.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --oxtab cat commas.csv
+GENRST_EOF
 
 But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <file-formats-nidx>`, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
 
-POKI_RUN_COMMAND{{mlr --icsv --odkvp cat commas.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --odkvp cat commas.csv
+GENRST_EOF
 
 One solution is to use a different delimiter, such as a pipe character:
 
-POKI_RUN_COMMAND{{mlr --icsv --odkvp --ofs pipe cat commas.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --odkvp --ofs pipe cat commas.csv
+GENRST_EOF
 
 To be extra-sure to avoid data/delimiter clashes, you can also use control
 characters as delimiters -- here, control-A:
 
-POKI_RUN_COMMAND{{mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
+GENRST_EOF
 
 How can I handle field names with special symbols in them?
 ----------------------------------------------------------------
 
 Simply surround the field names with curly braces:
 
-POKI_RUN_COMMAND{{echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'}}HERE
+GENRST_RUN_COMMAND
+echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
+GENRST_EOF
 
 How can I put single-quotes into strings?
 ----------------------------------------------------------------
 
 This is a little tricky due to the shell's handling of quotes. For simplicity, let's first put an update script into a file:
 
-POKI_INCLUDE_ESCAPED(data/single-quote-example.mlr)HERE
+GENRST_INCLUDE_ESCAPED(data/single-quote-example.mlr)
 
-POKI_RUN_COMMAND{{echo a=bcd | mlr put -f data/single-quote-example.mlr}}HERE
+GENRST_RUN_COMMAND
+echo a=bcd | mlr put -f data/single-quote-example.mlr
+GENRST_EOF
 
 So, it's simple: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
 
 Without putting the update expression in a file, it's messier:
 
-POKI_RUN_COMMAND{{echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'}}HERE
+GENRST_RUN_COMMAND
+echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
+GENRST_EOF
 
 The idea is that the outermost single-quotes are to protect the ``put`` expression from the shell, and the double quotes within them are for Miller. To get a single quote in the middle there, you need to actually put it *outside* the single-quoting for the shell. The pieces are the following, all concatenated together:
 
@@ -66,9 +84,15 @@ How to escape '?' in regexes?
 
 One way is to use square brackets; an alternative is to use simple string-substitution rather than a regular expression.
 
-POKI_RUN_COMMAND{{cat data/question.dat}}HERE
-POKI_RUN_COMMAND{{mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat}}HERE
-POKI_RUN_COMMAND{{mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat}}HERE
+GENRST_RUN_COMMAND
+cat data/question.dat
+GENRST_EOF
+GENRST_RUN_COMMAND
+mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat
+GENRST_EOF
+GENRST_RUN_COMMAND
+mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat
+GENRST_EOF
 
 The ``ssub`` function exists precisely for this reason: so you don't have to escape anything.
 
@@ -81,9 +105,13 @@ How do I suppress numeric conversion?
 
 Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input records is to parse them as integer, if possible, then as float, if possible, else leave them as string:
 
-POKI_RUN_COMMAND{{cat data/scan-example-1.tbl}}HERE
+GENRST_RUN_COMMAND
+cat data/scan-example-1.tbl
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-1.tbl}}HERE
+GENRST_RUN_COMMAND
+mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-1.tbl
+GENRST_EOF
 
 The numeric-conversion rule is simple:
 
@@ -95,9 +123,13 @@ This is a sensible default: you should be able to put ``'$z = $x + $y'`` without
 
 But now suppose you have data like these:
 
-POKI_RUN_COMMAND{{cat data/scan-example-2.tbl}}HERE
+GENRST_RUN_COMMAND
+cat data/scan-example-2.tbl
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl}}HERE
+GENRST_RUN_COMMAND
+mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
+GENRST_EOF
 
 The same conversion rules as above are being used. Namely:
 
@@ -113,4 +145,6 @@ Taken individually the rules make sense; taken collectively they produce a mishm
 
 The solution is to **use the -S flag** for ``mlr put`` and/or ``mlr filter``. Then all field values are left as string. You can type-coerce on demand using syntax like ``'$z = int($x) + float($y)'``. (See also :doc:`reference-dsl`; see also https://github.com/johnkerl/miller/issues/150.)
 
-POKI_RUN_COMMAND{{mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl}}HERE
+GENRST_RUN_COMMAND
+mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
+GENRST_EOF

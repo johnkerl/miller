@@ -1,20 +1,28 @@
 Unix-toolkit context
 ================================================================
 
-How does Miller fit within the Unix toolkit (`grep`, `sed`, `awk`, etc.)?
+How does Miller fit within the Unix toolkit (``grep``, ``sed``, ``awk``, etc.)?
 
 File-format awareness
 ----------------------------------------------------------------
 
 Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header line is written once:
 
-POKI_RUN_COMMAND{{cat data/a.csv}}HERE
+GENRST_RUN_COMMAND
+cat data/a.csv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{cat data/b.csv}}HERE
+GENRST_RUN_COMMAND
+cat data/b.csv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --csv cat data/a.csv data/b.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --csv cat data/a.csv data/b.csv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --csv sort -nr b data/a.csv data/b.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --csv sort -nr b data/a.csv data/b.csv
+GENRST_EOF
 
 Likewise with ``mlr sort``, ``mlr tac``, and so on.
 

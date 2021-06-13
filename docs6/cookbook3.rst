@@ -10,7 +10,7 @@ Overview
 One of Miller's strengths is its compact notation: for example, given input of the form
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ head -n 5 ../data/medium
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -22,7 +22,7 @@ One of Miller's strengths is its compact notation: for example, given input of t
 you can simply do
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --oxtab stats1 -a sum -f x ../data/medium
     x_sum 4986.019681679581
@@ -30,7 +30,7 @@ you can simply do
 or
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a sum -f x -g b ../data/medium
     b   x_sum
@@ -43,7 +43,7 @@ or
 rather than the more tedious
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-6
 
     $ mlr --oxtab put -q '
       @x_sum += $x;
@@ -56,7 +56,7 @@ rather than the more tedious
 or
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-6
 
     $ mlr --opprint put -q '
       @x_sum[$b] += $x;
@@ -81,14 +81,14 @@ Mean without/with oosvars
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a mean -f x data/medium
     x_mean
     0.49860196816795804
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-8
 
     $ mlr --opprint put -q '
       @x_sum += $x;
@@ -105,7 +105,7 @@ Keyed mean without/with oosvars
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a mean -f x -g a,b data/medium
     a   b   x_mean
@@ -136,7 +136,7 @@ Keyed mean without/with oosvars
     wye eks 0.5306035254809106
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-10
 
     $ mlr --opprint put -q '
       @x_sum[$a][$b] += $x;
@@ -179,7 +179,7 @@ Variance and standard deviation without/with oosvars
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium
     x_count  10000
@@ -189,7 +189,7 @@ Variance and standard deviation without/with oosvars
     x_stddev 0.2902925151144007
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat variance.mlr
     @n += 1;
@@ -203,7 +203,7 @@ Variance and standard deviation without/with oosvars
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --oxtab put -q -f variance.mlr data/medium
     n      10000
@@ -219,16 +219,20 @@ Min/max without/with oosvars
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --oxtab stats1 -a min,max -f x data/medium
     x_min 4.509679127584487e-05
     x_max 0.999952670371898
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-5
 
-    $ mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium
+    $ mlr --oxtab put -q '
+      @x_min = min(@x_min, $x);
+      @x_max = max(@x_max, $x);
+      end{emitf @x_min, @x_max}
+    ' data/medium
     x_min 4.509679127584487e-05
     x_max 0.999952670371898
 
@@ -236,7 +240,7 @@ Keyed min/max without/with oosvars
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint stats1 -a min,max -f x -g a data/medium
     a   x_min                  x_max
@@ -247,7 +251,7 @@ Keyed min/max without/with oosvars
     hat 4.509679127584487e-05  0.999952670371898
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-7
 
     $ mlr --opprint --from data/medium put -q '
       @min[$a] = min(@min[$a], $x);
@@ -267,7 +271,7 @@ Delta without/with oosvars
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint step -a delta -f x data/small
     a   b   i x                   y                   x_delta
@@ -278,9 +282,12 @@ Delta without/with oosvars
     wye pan 5 0.5732889198020006  0.8636244699032729  0.19188952593085962
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-4
 
-    $ mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small
+    $ mlr --opprint put '
+      $x_delta = is_present(@last) ? $x - @last : 0;
+      @last = $x
+    ' data/small
     a   b   i x                   y                   x_delta
     pan pan 1 0.3467901443380824  0.7268028627434533  0
     eks pan 2 0.7586799647899636  0.5221511083334797  0.41188982045188116
@@ -292,7 +299,7 @@ Keyed delta without/with oosvars
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint step -a delta -f x -g a data/small
     a   b   i x                   y                   x_delta
@@ -303,9 +310,12 @@ Keyed delta without/with oosvars
     wye pan 5 0.5732889198020006  0.8636244699032729  0.36868561403569755
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-4
 
-    $ mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small
+    $ mlr --opprint put '
+      $x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0;
+      @last[$a]=$x
+    ' data/small
     a   b   i x                   y                   x_delta
     pan pan 1 0.3467901443380824  0.7268028627434533  0
     eks pan 2 0.7586799647899636  0.5221511083334797  0
@@ -317,7 +327,7 @@ Exponentially weighted moving averages without/with oosvars
 ----------------------------------------------------------------
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --opprint step -a ewma -d 0.1 -f x data/small
     a   b   i x                   y                   x_ewma_0.1
@@ -328,7 +338,7 @@ Exponentially weighted moving averages without/with oosvars
     wye pan 5 0.5732889198020006  0.8636244699032729  0.3910644883290776
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-5
 
     $ mlr --opprint put '
       begin{ @a=0.1 };

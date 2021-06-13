@@ -13,4 +13,3 @@ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
   $fcount = @fcount;
 
 ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
-

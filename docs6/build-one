@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euo pipefail
+
+if [ $# -ge 1 ]; then
+  for name; do
+    if [[ $name == *.rst.in ]]; then
+      genrsts $name;
+    fi
+  done
+else
+  for rstin in *.rst.in; do genrsts $rstin; done
+fi
+sphinx-build -M html . _build

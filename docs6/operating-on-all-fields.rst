@@ -10,7 +10,7 @@ Bulk rename of fields
 Suppose you want to replace spaces with underscores in your column names:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/spaces.csv
     a b c,def,g h i
@@ -21,7 +21,7 @@ Suppose you want to replace spaces with underscores in your column names:
 The simplest way is to use ``mlr rename`` with ``-g`` (for global replace, not just first occurrence of space within each field) and ``-r`` for pattern-matching (rather than explicit single-column renames):
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv rename -g -r ' ,_'  data/spaces.csv
     a_b_c,def,g_h_i
@@ -30,7 +30,7 @@ The simplest way is to use ``mlr rename`` with ``-g`` (for global replace, not j
     9987,3312,4543
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv
     a_b_c def  g_h_i
@@ -41,7 +41,7 @@ The simplest way is to use ``mlr rename`` with ``-g`` (for global replace, not j
 You can also do this with a for-loop:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/bulk-rename-for-loop.mlr
     map newrec = {};
@@ -51,7 +51,7 @@ You can also do this with a for-loop:
     $* = newrec
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
     a_b_c def  g_h_i
@@ -65,7 +65,7 @@ Search-and-replace over all fields
 How to do ``$name = gsub($name, "old", "new")`` for all fields?
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/sar.csv
     a,b,c
@@ -73,7 +73,7 @@ How to do ``$name = gsub($name, "old", "new")`` for all fields?
     over,the,lazy dogs
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/sar.mlr
       for (k in $*) {
@@ -81,7 +81,7 @@ How to do ``$name = gsub($name, "old", "new")`` for all fields?
       }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv put -f data/sar.mlr data/sar.csv
     a,b,c
@@ -94,7 +94,7 @@ Full field renames and reassigns
 Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully generalize :ref:`mlr rename <reference-verbs-rename>`, :ref:`mlr reorder <reference-verbs-reorder>`, etc.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -104,7 +104,7 @@ Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully general
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-15
 
     $ mlr put '
       begin {

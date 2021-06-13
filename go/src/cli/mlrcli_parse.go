@@ -316,16 +316,16 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		return true
 
 	} else if args[argi] == "--list-all-keywords-raw" || args[argi] == "-K" {
-		fmt.Println("TOD: port mlr_dsl_list_all_keywords_raw")
+		fmt.Println("TODO: port mlr_dsl_list_all_keywords_raw")
 		//		mlr_dsl_list_all_keywords_raw(os.Stdout);
 		return true
 	} else if args[argi] == "--help-all-keywords" || args[argi] == "-k" {
-		fmt.Println("TOD: port mlr_dsl_list_all_keywords")
+		fmt.Println("TODO: port mlr_dsl_list_all_keywords")
 		//		mlr_dsl_keyword_usage(os.Stdout, nil);
 		return true
 	} else if args[argi] == "--help-keyword" || args[argi] == "--hk" {
 		cliutil.CheckArgCount(args, argi, argc, 2)
-		fmt.Println("TOD: port mlr_dsl_keyword_usage")
+		fmt.Println("TODO: port mlr_dsl_keyword_usage")
 		//		mlr_dsl_keyword_usage(os.Stdout, args[argi+1]);
 		return true
 

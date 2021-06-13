@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+while true
+	begin
+		line = $stdin.readline.chomp
+	rescue EOFError
+		break
+	end
+
+  if line =~ /GENRST_RUN_COMMAND{{.*}}HERE/
+    line.sub!("GENRST_RUN_COMMAND{{", "")
+    line.sub!("}}HERE", "")
+    puts 'GENRST_RUN_COMMAND'
+    puts line
+    puts 'GENRST_EOF'
+  else
+    puts line
+  end
+end
