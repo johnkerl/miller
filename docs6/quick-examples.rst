@@ -4,8 +4,6 @@
 Quick examples
 ================================================================
 
-.. image:: coverart/cover-combined.png
-
 Column select:
 
 .. code-block:: none

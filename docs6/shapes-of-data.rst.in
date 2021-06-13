@@ -18,89 +18,145 @@ Also try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable c
 Diagnosing delimiter specifications
 ----------------------------------------------------------------
 
-POKI_INCLUDE_ESCAPED(data/delimiter-examples.txt)HERE
+GENRST_INCLUDE_ESCAPED(data/delimiter-examples.txt)
 
 I assigned $9 and it's not 9th
 ----------------------------------------------------------------
 
 Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data.
 
-POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp cat}}HERE
+GENRST_RUN_COMMAND
+echo x,y,z | mlr --dkvp cat
+GENRST_EOF
 
-POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'}}HERE
+GENRST_RUN_COMMAND
+echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'
+GENRST_EOF
 
-POKI_RUN_COMMAND{{echo x,y,z | mlr --nidx cat}}HERE
+GENRST_RUN_COMMAND
+echo x,y,z | mlr --nidx cat
+GENRST_EOF
 
-POKI_RUN_COMMAND{{echo x,y,z | mlr --csv --implicit-csv-header cat}}HERE
+GENRST_RUN_COMMAND
+echo x,y,z | mlr --csv --implicit-csv-header cat
+GENRST_EOF
 
-POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp rename 2,999}}HERE
+GENRST_RUN_COMMAND
+echo x,y,z | mlr --dkvp rename 2,999
+GENRST_EOF
 
-POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp rename 2,newname}}HERE
+GENRST_RUN_COMMAND
+echo x,y,z | mlr --dkvp rename 2,newname
+GENRST_EOF
 
-POKI_RUN_COMMAND{{echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2}}HERE
+GENRST_RUN_COMMAND
+echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2
+GENRST_EOF
 
 Why doesn't mlr cut put fields in the order I want?
 ----------------------------------------------------------------
 
 Example: columns ``x,i,a`` were requested but they appear here in the order ``a,i,x``:
 
-POKI_RUN_COMMAND{{cat data/small}}HERE
+GENRST_RUN_COMMAND
+cat data/small
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr cut -f x,i,a data/small}}HERE
+GENRST_RUN_COMMAND
+mlr cut -f x,i,a data/small
+GENRST_EOF
 
 The issue is that Miller's ``cut``, by default, outputs cut fields in the order they appear in the input data. This design decision was made intentionally to parallel the Unix/Linux system ``cut`` command, which has the same semantics.
 
 The solution is to use the ``-o`` option:
 
-POKI_RUN_COMMAND{{mlr cut -o -f x,i,a data/small}}HERE
+GENRST_RUN_COMMAND
+mlr cut -o -f x,i,a data/small
+GENRST_EOF
 
 Numbering and renumbering records
 ----------------------------------------------------------------
 
 The ``awk``-like built-in variable ``NR`` is incremented for each input record:
 
-POKI_RUN_COMMAND{{cat data/small}}HERE
+GENRST_RUN_COMMAND
+cat data/small
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr put '$nr = NR' data/small}}HERE
+GENRST_RUN_COMMAND
+mlr put '$nr = NR' data/small
+GENRST_EOF
 
 However, this is the record number within the original input stream -- not after any filtering you may have done:
 
-POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then put '$nr = NR' data/small}}HERE
+GENRST_RUN_COMMAND
+mlr filter '$a == "wye"' then put '$nr = NR' data/small
+GENRST_EOF
 
 There are two good options here. One is to use the ``cat`` verb with ``-n``:
 
-POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then cat -n data/small}}HERE
+GENRST_RUN_COMMAND
+mlr filter '$a == "wye"' then cat -n data/small
+GENRST_EOF
 
 The other is to keep your own counter within the ``put`` DSL:
 
-POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small}}HERE
+GENRST_RUN_COMMAND
+mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small
+GENRST_EOF
 
-rhe difference is a matter of taste (although ``mlr cat -n`` puts the counter first).
+The difference is a matter of taste (although ``mlr cat -n`` puts the counter first).
 
 Splitting nested fields
 ----------------------------------------------------------------
 
 Suppose you have a TSV file like this:
 
-POKI_INCLUDE_ESCAPED(data/nested.tsv)HERE
+GENRST_INCLUDE_ESCAPED(data/nested.tsv)
 
 The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
 
-POKI_RUN_COMMAND{{mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv}}HERE
+GENRST_RUN_COMMAND
+mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv}}HERE
+GENRST_RUN_COMMAND
+mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv
+GENRST_EOF
 
 While ``mlr nest`` is simplest, let's also take a look at a few ways to do this using the ``put`` DSL.
 
 One option to split out the colon-delimited values in the ``b`` column is to use ``splitnv`` to create an integer-indexed map and loop over it, adding new fields to the current record:
 
-POKI_RUN_COMMAND{{mlr --from data/nested.tsv --itsv --oxtab put 'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'}}HERE
+GENRST_RUN_COMMAND
+mlr --from data/nested.tsv --itsv --oxtab put '
+  o = splitnv($b, ":");
+  for (k,v in o) {
+    $["p".k]=v
+  }
+'
+GENRST_EOF
 
 while another is to loop over the same map from ``splitnv`` and use it (with ``put -q`` to suppress printing the original record) to produce multiple records:
 
-POKI_RUN_COMMAND{{mlr --from data/nested.tsv --itsv --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'}}HERE
+GENRST_RUN_COMMAND
+mlr --from data/nested.tsv --itsv --oxtab put -q '
+  o = splitnv($b, ":");
+  for (k,v in o) {
+    x = mapsum($*, {"b":v});
+    emit x
+  }
+'
+GENRST_EOF
 
-rOKI_RUN_COMMAND{{mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); for (k,v in o) {x=mapsum($*, {"b":v}); emit x}'}}HERE
+GENRST_RUN_COMMAND
+mlr --from data/nested.tsv --tsv put -q '
+  o = splitnv($b, ":");
+  for (k,v in o) {
+    x = mapsum($*, {"b":v}); emit x
+  }
+'
+GENRST_EOF
 
 Options for dealing with duplicate rows
 ----------------------------------------------------------------
@@ -114,20 +170,20 @@ Rectangularizing data
 
 Suppose you have a method (in whatever language) which is printing things of the form
 
-POKI_INCLUDE_ESCAPED(data/rect-outer.txt)HERE
+GENRST_INCLUDE_ESCAPED(data/rect-outer.txt)
 
 and then calls another method which prints things of the form
 
-POKI_INCLUDE_ESCAPED(data/rect-middle.txt)HERE
+GENRST_INCLUDE_ESCAPED(data/rect-middle.txt)
 
 and then, perhaps, that second method calls a third method which prints things of the form
 
-POKI_INCLUDE_ESCAPED(data/rect-inner.txt)HERE
+GENRST_INCLUDE_ESCAPED(data/rect-inner.txt)
 
 with the result that your program's output is
 
-POKI_INCLUDE_ESCAPED(data/rect.txt)HERE
+GENRST_INCLUDE_ESCAPED(data/rect.txt)
 
 The idea here is that middles starting with a 1 belong to the outer value of 1, and so on.  (For example, the outer values might be account IDs, the middle values might be invoice IDs, and the inner values might be invoice line-items.) If you want all the middle and inner lines to have the context of which outers they belong to, you can modify your software to pass all those through your methods. Alternatively, don't refactor your code just to handle some ad-hoc log-data formatting -- instead, use the following to rectangularize the data.  The idea is to use an out-of-stream variable to accumulate fields across records. Clear that variable when you see an outer ID; accumulate fields; emit output when you see the inner IDs.
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
+GENRST_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)

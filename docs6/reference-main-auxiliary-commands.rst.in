@@ -1,0 +1,46 @@
+Reference: auxiliary commands
+================================================================
+
+There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables but they're delivered within the main Miller executable for convenience.
+
+GENRST_RUN_COMMAND
+mlr aux-list
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr lecat --help
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr termcvt --help
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr hex --help
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr unhex --help
+GENRST_EOF
+
+Examples:
+
+GENRST_RUN_COMMAND
+echo 'Hello, world!' | mlr lecat --mono
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr hex data/budget.csv
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr hex -r data/budget.csv
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
+GENRST_EOF

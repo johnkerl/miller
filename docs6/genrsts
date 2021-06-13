@@ -1,6 +1,21 @@
 #!/bin/bash
+
+set -euo pipefail
+
+# Run the live-code bits within the markup files. See README.md for details.
+
 if [ $# -ge 1 ]; then
-  for rstin; do genrst $rstin; done
+  names="$@"
+  names=$(echo "$names" | sed 's/\.rst\.in//g')
 else
-  for rstin in *.rst.in; do genrst $rstin; done
+  names=$(echo *.rst.in | sed 's/\.rst\.in//g')
 fi
+
+for name in $names; do
+  echo Generating $name.rst
+  if [ -f $name.rst ]; then # Won't exist yet on first run
+    chmod u+w $name.rst
+  fi
+  genrst-filter < $name.rst.in > $name.rst
+  chmod 400 $name.rst
+done

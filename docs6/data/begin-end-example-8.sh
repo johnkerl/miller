@@ -12,4 +12,3 @@ mlr put '
     emitf @num_total, @num_positive
   }
 ' data/put-gating-example-1.dkvp
-

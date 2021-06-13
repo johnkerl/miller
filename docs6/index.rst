@@ -1,5 +1,5 @@
-Miller Docs v2
-================================================================
+Miller Documentation
+====================
 
 Getting started
 ----------------------------------------------------------------
@@ -7,14 +7,13 @@ Getting started
 .. toctree::
    :maxdepth: 1
 
-   quick-examples
+   introduction
    10min
-   data-diving-examples
-   customization
-   installation
+   keystroke-savers
+   programming-language
    community
 
-About
+Miller in more detail
 ----------------------------------------------------------------
 
 .. toctree::
@@ -25,11 +24,7 @@ About
    file-formats
    record-heterogeneity
    internationalization
-   why
-   etymology
-   originality
-   performance
-   contact
+   customization
 
 FAQs and recipes
 ----------------------------------------------------------------
@@ -44,6 +39,7 @@ FAQs and recipes
    dates-and-times
    then-chaining
    joins
+   shell-commands
 
 To be refactored
 ----------------------------------------------------------------
@@ -51,19 +47,25 @@ To be refactored
 .. toctree::
    :maxdepth: 1
 
+   quick-examples
+   data-diving-examples
    cookbook
    cookbook2
    cookbook3
+   cookbook4
+   sql-examples
+   log-processing-examples
 
-Integrations
+Background
 ----------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 1
 
-   sql-examples
-   log-processing-examples
-   data-sharing
+   why
+   etymology
+   originality
+   performance
 
 Reference
 ----------------------------------------------------------------
@@ -71,11 +73,31 @@ Reference
 .. toctree::
    :maxdepth: 1
 
-   reference
+   reference-main-overview
+   reference-main-io-options
+   reference-main-then-chaining
+   reference-main-auxiliary-commands
+   reference-main-data-types
+   reference-main-null-data
+   reference-main-arithmetic
+   reference-main-regular-expressions
+   reference-main-online-help
    reference-verbs
    reference-dsl
+   reference-dsl-syntax
+   reference-dsl-variables
+   reference-dsl-operators
+   reference-dsl-control-structures
+   reference-dsl-user-defined-functions
+   reference-dsl-builtin-functions
+   reference-dsl-output-statements
+   reference-dsl-unset-statements
+   reference-dsl-filter-statements
+   reference-dsl-errors
+   reference-dsl-complexity
    manpage
    release-docs
+   installation
    build
 
 Index

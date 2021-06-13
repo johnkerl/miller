@@ -6,4 +6,3 @@ mlr --opprint put -q '
     emit @x_mean
   }
 ' data/medium
-

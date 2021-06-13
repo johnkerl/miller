@@ -10,7 +10,7 @@ Data-cleaning examples
 Here are some ways to use the type-checking options as described in :ref:`reference-dsl-type-tests-and-assertions` Suppose you have the following data file, with inconsistent typing for boolean. (Also imagine that, for the sake of discussion, we have a million-line file rather than a four-line file, so we can't see it all at once and some automation is called for.)
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/het-bool.csv
     name,reachable
@@ -22,7 +22,7 @@ Here are some ways to use the type-checking options as described in :ref:`refere
 One option is to coerce everything to boolean, or integer:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
     name   reachable
@@ -32,7 +32,7 @@ One option is to coerce everything to boolean, or integer:
     wilma  true
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
     name   reachable
@@ -44,7 +44,7 @@ One option is to coerce everything to boolean, or integer:
 A second option is to flag badly formatted data within the output stream:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
     name   reachable format_ok
@@ -56,9 +56,11 @@ A second option is to flag badly formatted data within the output stream:
 Or perhaps to flag badly formatted data outside the output stream:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-3
 
-    $ mlr --icsv --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
+    $ mlr --icsv --opprint put '
+      if (!is_string($reachable)) {eprint "Malformed at NR=".NR}
+    ' data/het-bool.csv
     Malformed at NR=1
     Malformed at NR=2
     Malformed at NR=3
@@ -72,7 +74,7 @@ Or perhaps to flag badly formatted data outside the output stream:
 A third way is to abort the process on first instance of bad data:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv
     Miller: is_string type-assertion failed at NR=1 FNR=1 FILENAME=data/het-bool.csv
@@ -83,7 +85,7 @@ Showing differences between successive queries
 Suppose you have a database query which you run at one point in time, producing the output on the left, then again later producing the output on the right:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/previous_counters.csv
     color,count
@@ -93,7 +95,7 @@ Suppose you have a database query which you run at one point in time, producing 
     purple,12
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/current_counters.csv
     color,count
@@ -107,12 +109,12 @@ And, suppose you want to compute the differences in the counters between adjacen
 First, rename counter columns to make them distinct:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/prevtemp.csv
     color,previous_count
@@ -122,12 +124,12 @@ First, rename counter columns to make them distinct:
     purple,12
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/currtemp.csv
     color,current_count
@@ -139,7 +141,7 @@ First, rename counter columns to make them distinct:
 Then, join on the key field(s), and use unsparsify to zero-fill counters absent on one side but present on the other. Use ``--ul`` and ``--ur`` to emit unpaired records (namely, purple on the left and yellow on the right):
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-5
 
     $ mlr --icsv --opprint \
       join -j color --ul --ur -f data/prevtemp.csv \
@@ -164,7 +166,7 @@ Two-pass algorithms: computation of percentages
 For example, mapping numeric values down a column to the percentage between their min and max values is two-pass: on the first pass you find the min and max values, then on the second, map each record's value to a percentage.
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-16
 
     $ mlr --from data/small --opprint put -q '
       # These are executed once per record, which is the first pass.
@@ -195,7 +197,7 @@ Two-pass algorithms: line-number ratios
 Similarly, finding the total record count requires first reading through all the data:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-11
 
     $ mlr --opprint --from data/small put -q '
       @records[NR] = $*;
@@ -221,7 +223,7 @@ Two-pass algorithms: records having max value
 The idea is to retain records having the largest value of ``n`` in the following data:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --itsv --opprint cat data/maxrows.tsv
     a      b      n score
@@ -260,7 +262,7 @@ The idea is to retain records having the largest value of ``n`` in the following
 Of course, the largest value of ``n`` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/maxrows.mlr
     # Retain all records
@@ -280,7 +282,7 @@ Of course, the largest value of ``n`` isn't known until after all data have been
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
     a      b      n score
@@ -335,7 +337,7 @@ A reasonable question to ask is, how many occurrences of each field are there? A
 Then
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --json put -q -f data/feature-count.mlr data/features.json
     {
@@ -391,7 +393,7 @@ Then
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json
     record_count
@@ -421,7 +423,7 @@ The previous section discussed how to fill out missing data fields within CSV wi
 For example, suppose you have JSON input like this:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/sparse.json
     {"a":1,"b":2,"v":3}
@@ -432,7 +434,7 @@ For example, suppose you have JSON input like this:
 There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use ``put -q`` since we don't want to produce per-record output, only emitting output in the ``end`` block:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ cat data/unsparsify.mlr
     # First pass:
@@ -463,7 +465,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --json put -q -f data/unsparsify.mlr data/sparse.json
     {
@@ -500,7 +502,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
     }
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json
     a,b,v,u,x,w
@@ -510,7 +512,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
     ,,1,,,2
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     $ mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
     a b v u x w
@@ -561,7 +563,6 @@ The recursive function for the Fibonacci sequence is famous for its computationa
       $fcount = @fcount;
     
     ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
-    
 
 produces output like this:
 

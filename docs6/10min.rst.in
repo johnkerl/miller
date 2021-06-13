@@ -1,65 +1,176 @@
 Miller in 10 minutes
 ====================
 
-CSV-file examples
-^^^^^^^^^^^^^^^^^
+Obtaining Miller
+^^^^^^^^^^^^^^^^
 
-Suppose you have this CSV data file:
+You can install Miller for various platforms as follows:
 
-POKI_RUN_COMMAND{{cat example.csv}}HERE
+* Linux: ``yum install miller`` or ``apt-get install miller`` depending on your flavor of Linux
+* MacOS: ``brew install miller`` or ``port install miller`` depending on your preference of `Homebrew <https://brew.sh>`_ or `MacPorts <https://macports.org>`_.
+* Windows: ``choco install miller``  using `Chocolatey <https://chocolatey.org>`_.
+* See also :doc:`build` if you prefer -- in particular, if your platform's package manager doesn't have the latest release.
 
-``mlr cat`` is like cat -- it passes the data through unmodified:
+As a first check, you should be able to run ``mlr --version`` at your system's command prompt and see something like the following:
 
-POKI_RUN_COMMAND{{mlr --csv cat example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --version
+GENRST_EOF
 
-but it can also do format conversion (here, you can pretty-print in tabular format):
+As a second check, given (`example.csv <./example.csv>`_) you should be able to do
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cat example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --csv cat example.csv
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr --icsv --opprint cat example.csv
+GENRST_EOF
+
+If you run into issues on these checks, please check out the resources on the :doc:`community` page for help.
+
+Miller verbs
+^^^^^^^^^^^^
+
+Let's take a quick look at some of the most useful Miller verbs -- file-format-aware, name-index-empowered equivalents of standard system commands.
+
+``mlr cat`` is like system ``cat`` (or ``type`` on Windows) -- it passes the data through unmodified:
+
+GENRST_RUN_COMMAND
+mlr --csv cat example.csv
+GENRST_EOF
+
+But ``mlr cat`` can also do format conversion -- for example, you can pretty-print in tabular format:
+
+GENRST_RUN_COMMAND
+mlr --icsv --opprint cat example.csv
+GENRST_EOF
 
 ``mlr head`` and ``mlr tail`` count records rather than lines. Whether you're getting the first few records or the last few, the CSV header is included either way:
 
-POKI_RUN_COMMAND{{mlr --csv head -n 4 example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --csv head -n 4 example.csv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --csv tail -n 4 example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --csv tail -n 4 example.csv
+GENRST_EOF
 
-You can sort primarily alphabetically on one field, then secondarily numerically descending on another field:
+GENRST_RUN_COMMAND
+mlr --icsv --ojson tail -n 2 example.csv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index example.csv}}HERE
+You can sort on a single field:
 
-You can use ``cut`` to retain only specified fields, in the same order they appeared in the input data:
+GENRST_RUN_COMMAND
+mlr --icsv --opprint sort -f shape example.csv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cut -f flag,shape example.csv}}HERE
+Or, you can sort primarily alphabetically on one field, then secondarily numerically descending on another field, and so on:
 
-You can also use ``cut -o`` to retain only specified fields in your preferred order:
+GENRST_RUN_COMMAND
+mlr --icsv --opprint sort -f shape -nr index example.csv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cut -o -f flag,shape example.csv}}HERE
+If there are fields you don't want to see in your data, you can use ``cut`` to keep only the ones you want, in the same order they appeared in the input data:
+
+GENRST_RUN_COMMAND
+mlr --icsv --opprint cut -f flag,shape example.csv
+GENRST_EOF
+
+You can also use ``cut -o`` to keep specified fields, but in your preferred order:
+
+GENRST_RUN_COMMAND
+mlr --icsv --opprint cut -o -f flag,shape example.csv
+GENRST_EOF
 
 You can use ``cut -x`` to omit fields you don't care about:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint cut -x -f flag,shape example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint cut -x -f flag,shape example.csv
+GENRST_EOF
 
 You can use ``filter`` to keep only records you care about:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red"' example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint filter '$color == "red"' example.csv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red" && $flag == 1' example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv
+GENRST_EOF
 
 You can use ``put`` to create new fields which are computed from other fields:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint put '
+  $ratio = $quantity / $rate;
+  $color_shape = $color . "_" . $shape
+' example.csv
+GENRST_EOF
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use ``$[[3]]`` to access the name of field 3 or ``$[[[3]]]`` to access the value of field 3:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv
+GENRST_EOF
 
-JSON-file examples
-^^^^^^^^^^^^^^^^^^
+You can find the full list of verbs at the :doc:`reference-verbs` page.
 
-OK, CSV and pretty-print are fine. But Miller can also convert between a few other formats -- let's take a look at JSON output:
+Multiple input files
+^^^^^^^^^^^^^^^^^^^^
 
-POKI_RUN_COMMAND{{mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv}}HERE
+Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files (`data/a.csv <data/a.csv>`_) and (`data/b.csv <data/b.csv>`_), the system ``cat`` command will repeat header lines:
+
+GENRST_RUN_COMMAND
+cat data/a.csv
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+cat data/b.csv
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+cat data/a.csv data/b.csv
+GENRST_EOF
+
+However, ``mlr cat`` will not:
+
+GENRST_RUN_COMMAND
+mlr --csv cat data/a.csv data/b.csv
+GENRST_EOF
+
+Chaining verbs together
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Often we want to chain queries together -- for example, sorting by a field and taking the top few values. We can do this using pipes:
+
+GENRST_RUN_COMMAND
+mlr --csv sort -nr index example.csv | mlr --icsv --opprint head -n 3
+GENRST_EOF
+
+This works fine -- but Miller also lets you chain verbs together using the word ``then``. Think of this as a Miller-internal pipe that lets you use fewer keystrokes:
+
+GENRST_RUN_COMMAND
+mlr --icsv --opprint sort -nr index then head -n 3 example.csv
+GENRST_EOF
+
+As another convenience, you can put the filename first using ``--from``. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:
+
+GENRST_RUN_COMMAND
+mlr --icsv --opprint --from example.csv sort -nr index then head -n 3
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+mlr --icsv --opprint --from example.csv \
+  sort -nr index \
+  then head -n 3 \
+  then cut -f shape,quantity
+GENRST_EOF
 
 Sorts and stats
 ^^^^^^^^^^^^^^^
@@ -68,122 +179,47 @@ Now suppose you want to sort the data on a given column, *and then* take the top
 
 Here are the records with the top three ``index`` values:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index then head -n 3 example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint sort -nr index then head -n 3 example.csv
+GENRST_EOF
 
 Lots of Miller commands take a ``-g`` option for group-by: here, ``head -n 1 -g shape`` outputs the first record for each distinct value of the ``shape`` field. This means we're finding the record with highest ``index`` field for each distinct ``shape`` field:
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
+GENRST_EOF
 
 Statistics can be computed with or without group-by field(s):
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
+GENRST_EOF
 
-POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color}}HERE
+GENRST_RUN_COMMAND
+mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
+GENRST_EOF
 
 If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:
 
-POKI_RUN_COMMAND{{mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate}}HERE
-
-.. _10min-choices-for-printing-to-files:
-
-Choices for printing to files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Often we want to print output to the screen. Miller does this by default, as we've seen in the previous examples.
-
-Sometimes we want to print output to another file: just use **> outputfilenamegoeshere** at the end of your command:
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % mlr --icsv --opprint cat example.csv > newfile.csv
-    # Output goes to the new file;
-    # nothing is printed to the screen.
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % cat newfile.csv
-    color  shape    flag index quantity rate
-    yellow triangle 1    11    43.6498  9.8870
-    red    square   1    15    79.2778  0.0130
-    red    circle   1    16    13.8103  2.9010
-    red    square   0    48    77.5542  7.4670
-    purple triangle 0    51    81.2290  8.5910
-    red    square   0    64    77.1991  9.5310
-    purple triangle 0    65    80.1405  5.8240
-    yellow circle   1    73    63.9785  4.2370
-    yellow circle   1    87    63.5058  8.3350
-    purple square   0    91    72.3735  8.2430
-
-Other times we just want our files to be **changed in-place**: just use **mlr -I**:
+GENRST_RUN_COMMAND
+mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
+GENRST_EOF
 
 
-.. code-block:: none
-   :emphasize-lines: 1,1
+File formats and format conversion
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    % cp example.csv newfile.txt
+Miller supports the following formats:
 
-.. code-block:: none
-   :emphasize-lines: 1,1
+* CSV (comma-separared values)
+* TSV (tab-separated values)
+* JSON (JavaScript Object Notation)
+* PPRINT (pretty-printed tabular)
+* XTAB (vertical-tabular or sideways-tabular)
+* NIDX (numerically indexed, label-free, with implicit labels ``"1"``, ``"2"``, etc.)
+* DKVP (delimited key-value pairs).
 
-    % cat newfile.txt
-    color,shape,flag,index,quantity,rate
-    yellow,triangle,1,11,43.6498,9.8870
-    red,square,1,15,79.2778,0.0130
-    red,circle,1,16,13.8103,2.9010
-    red,square,0,48,77.5542,7.4670
-    purple,triangle,0,51,81.2290,8.5910
-    red,square,0,64,77.1991,9.5310
-    purple,triangle,0,65,80.1405,5.8240
-    yellow,circle,1,73,63.9785,4.2370
-    yellow,circle,1,87,63.5058,8.3350
-    purple,square,0,91,72.3735,8.2430
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % mlr -I --icsv --opprint cat newfile.txt
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    % cat newfile.txt
-    color  shape    flag index quantity rate
-    yellow triangle 1    11    43.6498  9.8870
-    red    square   1    15    79.2778  0.0130
-    red    circle   1    16    13.8103  2.9010
-    red    square   0    48    77.5542  7.4670
-    purple triangle 0    51    81.2290  8.5910
-    red    square   0    64    77.1991  9.5310
-    purple triangle 0    65    80.1405  5.8240
-    yellow circle   1    73    63.9785  4.2370
-    yellow circle   1    87    63.5058  8.3350
-    purple square   0    91    72.3735  8.2430
-
-Also using ``mlr -I`` you can bulk-operate on lots of files: e.g.:
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    mlr -I --csv cut -x -f unwanted_column_name *.csv
-
-If you like, you can first copy off your original data somewhere else, before doing in-place operations.
-
-Lastly, using ``tee`` within ``put``, you can split your input data into separate files per one or more field names:
-
-POKI_RUN_COMMAND{{mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'}}HERE
-
-POKI_RUN_COMMAND{{cat circle.csv}}HERE
-
-POKI_RUN_COMMAND{{cat square.csv}}HERE
-
-POKI_RUN_COMMAND{{cat triangle.csv}}HERE
-
-Other-format examples
-^^^^^^^^^^^^^^^^^^^^^
-
-What's a CSV file, really? It's an array of rows, or *records*, each being a list of key-value pairs, or *fields*: for CSV it so happens that all the keys are shared in the header line and the values vary data line by data line.
+What's a CSV file, really? It's an array of rows, or *records*, each being a list of key-value pairs, or *fields*: for CSV it so happens that all the keys are shared in the header line and the values vary from one data line to another.
 
 For example, if you have:
 
@@ -200,10 +236,7 @@ then that's a way of saying:
     shape=circle,flag=1,index=24
     shape=square,flag=0,index=36
 
-Data written this way are called **DKVP**, for *delimited key-value pairs*.
-
-We've also already seen other ways to write the same data:
-
+Other ways to write the same data:
 
 .. code-block:: none
 
@@ -224,3 +257,111 @@ We've also already seen other ways to write the same data:
                                       index 36
 
 Anything we can do with CSV input data, we can do with any other format input data.  And you can read from one format, do any record-processing, and output to the same format as the input, or to a different output format.
+
+How to specify these to Miller:
+
+* If you use ``--csv`` or ``--json`` or ``--pprint``, etc., then Miller will use that format for input and output.
+* If you use ``--icsv`` and ``--ojson`` (note the extra ``i`` and ``o``) then Miller will use CSV for input and JSON for output, etc.  See also :doc:`keystroke-savers` for even shorter options like ``--c2j``.
+
+You can read more about this at the :doc:`file-formats` page.
+
+Choices for printing to files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Often we want to print output to the screen. Miller does this by default, as we've seen in the previous examples.
+
+Sometimes, though, we want to print output to another file. Just use **> outputfilenamegoeshere** at the end of your command:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % mlr --icsv --opprint cat example.csv > newfile.csv
+    # Output goes to the new file;
+    # nothing is printed to the screen.
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % cat newfile.csv
+    color  shape    flag     index quantity rate
+    yellow triangle true     11    43.6498  9.8870
+    red    square   true     15    79.2778  0.0130
+    red    circle   true     16    13.8103  2.9010
+    red    square   false    48    77.5542  7.4670
+    purple triangle false    51    81.2290  8.5910
+    red    square   false    64    77.1991  9.5310
+    purple triangle false    65    80.1405  5.8240
+    yellow circle   true     73    63.9785  4.2370
+    yellow circle   true     87    63.5058  8.3350
+    purple square   false    91    72.3735  8.2430
+
+Other times we just want our files to be **changed in-place**: just use **mlr -I**:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % cp example.csv newfile.txt
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % cat newfile.txt
+    color,shape,flag,index,quantity,rate
+    yellow,triangle,true,11,43.6498,9.8870
+    red,square,true,15,79.2778,0.0130
+    red,circle,true,16,13.8103,2.9010
+    red,square,false,48,77.5542,7.4670
+    purple,triangle,false,51,81.2290,8.5910
+    red,square,false,64,77.1991,9.5310
+    purple,triangle,false,65,80.1405,5.8240
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
+    purple,square,false,91,72.3735,8.2430
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % mlr -I --csv sort -f shape newfile.txt
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    % cat newfile.txt
+    color,shape,flag,index,quantity,rate
+    red,circle,true,16,13.8103,2.9010
+    yellow,circle,true,73,63.9785,4.2370
+    yellow,circle,true,87,63.5058,8.3350
+    red,square,true,15,79.2778,0.0130
+    red,square,false,48,77.5542,7.4670
+    red,square,false,64,77.1991,9.5310
+    purple,square,false,91,72.3735,8.2430
+    yellow,triangle,true,11,43.6498,9.8870
+    purple,triangle,false,51,81.2290,8.5910
+    purple,triangle,false,65,80.1405,5.8240
+
+Also using ``mlr -I`` you can bulk-operate on lots of files: e.g.:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    mlr -I --csv cut -x -f unwanted_column_name *.csv
+
+If you like, you can first copy off your original data somewhere else, before doing in-place operations.
+
+Lastly, using ``tee`` within ``put``, you can split your input data into separate files per one or more field names:
+
+GENRST_RUN_COMMAND
+mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+cat circle.csv
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+cat square.csv
+GENRST_EOF
+
+GENRST_RUN_COMMAND
+cat triangle.csv
+GENRST_EOF
