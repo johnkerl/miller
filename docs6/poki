@@ -25,7 +25,15 @@ def main
     begin
       content_line = input_handle.readline
 
-      if content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
+      if content_line =~ /^POKI_RUN_COMMAND$/
+        cmd_lines = read_until_poki_eof(input_handle)
+        run_command_lines(cmd_lines, output_handle)
+
+      elsif content_line =~ /^POKI_RUN_COMMAND_TOLERATING_ERROR$/
+        cmd_lines = read_until_poki_eof(input_handle)
+        run_command_tolerating_error(cmd_lines, output_handle)
+
+      elsif content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
         included_file_name = $1
         include_escaped(included_file_name, output_handle)
 
@@ -34,25 +42,17 @@ def main
         cmd = File.readlines(included_file_name).join('')
         run_command(cmd, output_handle)
 
-      elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)/
-        cmd = $1
-        run_content_generator(cmd, output_handle)
-
       elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
          cmd = $1
          run_command(cmd, output_handle)
-
-      elsif content_line =~ /^POKI_RUN_COMMAND$/
-        cmd_lines = read_until_poki_eof(input_handle)
-        run_command_lines(cmd_lines, output_handle)
 
       elsif content_line =~ /POKI_SHOW_COMMAND{{(.+)}}HERE/
          cmd = $1
          show_command(cmd, output_handle)
 
-      elsif content_line =~ /POKI_RUN_COMMAND_TOLERATING_ERROR{{(.+)}}HERE/
+      elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)/
         cmd = $1
-        run_command_tolerating_error(cmd, output_handle)
+        run_content_generator(cmd, output_handle)
 
       elsif content_line =~ /POKI/
         raise "Unhandled poki line #{content_line}"
@@ -81,11 +81,6 @@ def read_until_poki_eof(input_handle)
 end
 
 # ----------------------------------------------------------------
-def include_escaped(included_file_name, output_handle)
-  write_card([], File.readlines(included_file_name), output_handle)
-end
-
-# ----------------------------------------------------------------
 # The command can be multi-line
 def run_command_lines(cmd_lines, output_handle)
   cmd = cmd_lines.join("\n")
@@ -96,6 +91,19 @@ def run_command_lines(cmd_lines, output_handle)
   end
   cmd_line_1 = cmd_lines.shift
   write_card(['$ '+cmd_line_1] + cmd_lines, cmd_output.split(/\n/), output_handle)
+end
+
+# ----------------------------------------------------------------
+def run_command_tolerating_error(cmd_lines, output_handle)
+  cmd = cmd_lines.join("\n")
+  cmd_output = `#{cmd} 2>&1`
+  cmd_line_1 = cmd_lines.shift
+  write_card(['$ '+cmd_line_1] + cmd_lines, cmd_output.split(/\n/), output_handle)
+end
+
+# ----------------------------------------------------------------
+def include_escaped(included_file_name, output_handle)
+  write_card([], File.readlines(included_file_name), output_handle)
 end
 
 # ----------------------------------------------------------------
@@ -117,12 +125,6 @@ def show_command(cmd, output_handle)
   cmd_lines = cmd.split(/\n/)
   cmd_line_1 = cmd_lines.shift
   write_card(['$ '+cmd_line_1] + cmd_lines, [], output_handle)
-end
-
-# ----------------------------------------------------------------
-def run_command_tolerating_error(cmd, output_handle)
-  cmd_output = `#{cmd} 2>&1`
-  write_card(['$ '+cmd], cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------

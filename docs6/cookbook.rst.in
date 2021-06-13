@@ -34,7 +34,9 @@ POKI_EOF
 
 A third way is to abort the process on first instance of bad data:
 
-POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND_TOLERATING_ERROR
+mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv
+POKI_EOF
 
 Showing differences between successive queries
 ----------------------------------------------------------------
