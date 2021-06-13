@@ -31,7 +31,9 @@ POKI_EOF
 
 If there's more than one input file, you can use ``--mfrom``, then however many file names, then ``--`` to indicate the end of your input-file-name list:
 
-POKI_SHOW_COMMAND{{mlr --c2p --mfrom data/*.csv -- sort -n index}}HERE
+POKI_SHOW_COMMAND
+mlr --c2p --mfrom data/*.csv -- sort -n index
+POKI_EOF
 
 .mlrrc file
 ^^^^^^^^^^^

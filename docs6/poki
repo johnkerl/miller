@@ -33,6 +33,10 @@ def main
         cmd_lines = read_until_poki_eof(input_handle)
         run_command_tolerating_error(cmd_lines, output_handle)
 
+      elsif content_line =~ /^POKI_SHOW_COMMAND$/
+        cmd_lines = read_until_poki_eof(input_handle)
+        show_command(cmd_lines, output_handle)
+
       elsif content_line =~ /POKI_INCLUDE_ESCAPED\(([^)]+)\)HERE/
         included_file_name = $1
         include_escaped(included_file_name, output_handle)
@@ -41,14 +45,6 @@ def main
         included_file_name = $1
         cmd = File.readlines(included_file_name).join('')
         run_command(cmd, output_handle)
-
-      elsif content_line =~ /POKI_RUN_COMMAND{{(.+)}}HERE/
-         cmd = $1
-         run_command(cmd, output_handle)
-
-      elsif content_line =~ /POKI_SHOW_COMMAND{{(.+)}}HERE/
-         cmd = $1
-         show_command(cmd, output_handle)
 
       elsif content_line =~ /POKI_RUN_CONTENT_GENERATOR\(([^)]+)\)/
         cmd = $1
@@ -69,15 +65,22 @@ end
 
 # ----------------------------------------------------------------
 def read_until_poki_eof(input_handle)
-  lines = []
-  while true
-    line = input_handle.readline.chomp
-    if line == 'POKI_EOF'
-      break
+  begin
+
+    lines = []
+    while true
+      line = input_handle.readline.chomp
+      if line == 'POKI_EOF'
+        break
+      end
+      lines << line
     end
-    lines << line
+    return lines
+
+  rescue EOFError
+    $stderr.puts 'poki: did not find POKI_EOF'
+    exit 1
   end
-  return lines
 end
 
 # ----------------------------------------------------------------
@@ -120,9 +123,8 @@ def run_command(cmd, output_handle)
 end
 
 # ----------------------------------------------------------------
-def show_command(cmd, output_handle)
+def show_command(cmd_lines, output_handle)
   # The command can be multi-line
-  cmd_lines = cmd.split(/\n/)
   cmd_line_1 = cmd_lines.shift
   write_card(['$ '+cmd_line_1] + cmd_lines, [], output_handle)
 end
