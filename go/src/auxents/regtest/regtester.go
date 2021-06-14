@@ -12,8 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"miller/src/colorizer"
 	"miller/src/lib"
-	"miller/src/platform"
 )
 
 const DefaultPath = "./regtest/cases"
@@ -134,12 +134,10 @@ func (regtester *RegTester) Execute(
 	// Directory count may be zero if we were invoked with all paths on the
 	// command line being .cmd files.
 	if regtester.casePassCount > 0 && regtester.caseFailCount == 0 {
-		platform.PrintHiGreen("PASS")
-		fmt.Printf(" overall\n")
+		fmt.Printf("%s overall\n", colorizer.MaybeColorizePass("PASS", true))
 		return true
 	} else {
-		platform.PrintHiRed("FAIL")
-		fmt.Printf(" overall\n")
+		fmt.Printf("%s overall\n", colorizer.MaybeColorizeFail("FAIL", true))
 		return false
 	}
 }
@@ -220,11 +218,9 @@ func (regtester *RegTester) executeSingleDirectory(
 		// multiply announce.
 		if hasCaseSubdirectories {
 			if passed {
-				platform.PrintHiGreen("PASS")
-				fmt.Printf(" %s/\n", dirName)
+				fmt.Printf("%s %s\n", colorizer.MaybeColorizePass("PASS", true), dirName)
 			} else {
-				platform.PrintHiRed("FAIL")
-				fmt.Printf(" %s/\n", dirName)
+				fmt.Printf("%s %s\n", colorizer.MaybeColorizeFail("FAIL", true), dirName)
 			}
 		}
 	}
@@ -596,11 +592,9 @@ func (regtester *RegTester) executeSingleCmdFile(
 
 	if verbosityLevel >= 1 {
 		if passed {
-			platform.PrintHiGreen("pass")
-			fmt.Printf(" %s\n", cmdFilePath)
+			fmt.Printf("%s %s\n", colorizer.MaybeColorizePass("pass", true), cmdFilePath)
 		} else {
-			platform.PrintHiRed("fail")
-			fmt.Printf(" %s\n", cmdFilePath)
+			fmt.Printf("%s %s\n", colorizer.MaybeColorizeFail("fail", true), cmdFilePath)
 		}
 	}
 
