@@ -751,7 +751,7 @@ func MlrvalJSONParse(input1 *Mlrval) *Mlrval {
 }
 
 func MlrvalJSONStringifyUnary(input1 *Mlrval) *Mlrval {
-	outputBytes, err := input1.MarshalJSON(JSON_SINGLE_LINE)
+	outputBytes, err := input1.MarshalJSON(JSON_SINGLE_LINE, false)
 	if err != nil {
 		return MLRVAL_ERROR
 	} else {
@@ -769,7 +769,7 @@ func MlrvalJSONStringifyBinary(input1, input2 *Mlrval) *Mlrval {
 		jsonFormatting = JSON_MULTILINE
 	}
 
-	outputBytes, err := input1.MarshalJSON(jsonFormatting)
+	outputBytes, err := input1.MarshalJSON(jsonFormatting, false)
 	if err != nil {
 		return MLRVAL_ERROR
 	} else {

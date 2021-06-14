@@ -12,6 +12,7 @@ func ChannelWriter(
 	recordWriter IRecordWriter,
 	doneChannel chan<- bool,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	for {
 		recordAndContext := <-outputChannel
@@ -29,7 +30,7 @@ func ChannelWriter(
 
 			record := recordAndContext.Record
 			if record != nil {
-				recordWriter.Write(record, ostream)
+				recordWriter.Write(record, ostream, outputIsStdout)
 			}
 
 			outputString := recordAndContext.OutputString
@@ -42,7 +43,7 @@ func ChannelWriter(
 			// queued up. For example, PPRINT needs to see all same-schema
 			// records before printing any, since it needs to compute max width
 			// down columns.
-			recordWriter.Write(nil, ostream)
+			recordWriter.Write(nil, ostream, outputIsStdout)
 			doneChannel <- true
 			break
 		}

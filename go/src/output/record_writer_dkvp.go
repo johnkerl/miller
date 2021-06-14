@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"miller/src/cliutil"
+	"miller/src/colorizer"
 	"miller/src/types"
 )
 
@@ -21,6 +22,7 @@ func NewRecordWriterDKVP(writerOptions *cliutil.TWriterOptions) *RecordWriterDKV
 func (writer *RecordWriterDKVP) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
@@ -34,9 +36,9 @@ func (writer *RecordWriterDKVP) Write(
 
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		buffer.WriteString(pe.Key)
+		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 		buffer.WriteString(writer.writerOptions.OPS)
-		buffer.WriteString(pe.Value.String())
+		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
 		if pe.Next != nil {
 			buffer.WriteString(writer.writerOptions.OFS)
 		}

@@ -578,7 +578,7 @@ func writeRecord(repl *Repl, outrec *types.Mlrmap) {
 			outrec.Unflatten(repl.options.WriterOptions.OFLATSEP)
 		}
 	}
-	repl.recordWriter.Write(outrec, repl.outputStream)
+	repl.recordWriter.Write(outrec, repl.outputStream, true /*outputIsStdout*/)
 }
 
 // ----------------------------------------------------------------

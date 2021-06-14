@@ -361,6 +361,7 @@ func (handler *FileOutputHandler) setUpRecordWriter() error {
 		handler.recordWriter,
 		handler.recordDoneChannel,
 		handler.handle,
+		false, // outputIsStdout
 	)
 
 	return nil

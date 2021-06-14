@@ -6,6 +6,7 @@ import (
 	"io"
 
 	"miller/src/cliutil"
+	"miller/src/colorizer"
 	"miller/src/types"
 )
 
@@ -29,6 +30,7 @@ func NewRecordWriterMarkdown(writerOptions *cliutil.TWriterOptions) *RecordWrite
 func (writer *RecordWriterMarkdown) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	if outrec == nil { // end of record stream
 		return
@@ -50,7 +52,7 @@ func (writer *RecordWriterMarkdown) Write(
 		buffer.WriteString("|")
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(" ")
-			buffer.WriteString(pe.Key)
+			buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 			buffer.WriteString(" |")
 		}
 		buffer.WriteString(writer.writerOptions.ORS)
@@ -68,7 +70,7 @@ func (writer *RecordWriterMarkdown) Write(
 	buffer.WriteString("|")
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(" ")
-		buffer.WriteString(pe.Value.String())
+		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
 		buffer.WriteString(" |")
 	}
 	buffer.WriteString(writer.writerOptions.ORS)

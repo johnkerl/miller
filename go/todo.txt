@@ -14,6 +14,44 @@ TOP OF LIST:
 ? maybe key/value colorizer like in jq -- off when to file -- ?
 
 ----------------------------------------------------------------
+colorizer:
+* flags from CLI; env vars for color settings
+
+  --no-color
+  --pass-color xxx
+  --fail-color xxx
+  --help-color xxx
+  --keys-color xxx
+  --values-color xxx
+
+  $MLR_NO_COLOR
+  $MLR_PASS_COLOR green
+  $MLR_FAIL_COLOR red
+  $MLR_HELP_COLOR red
+  $MLR_KEYS_COLOR blue
+  $MLR_VALUES_COLOR orange
+
+* mrpl output?
+
+* singleton w/ isatty & color strings
+* make it fast for the not-a-tty case
+* env-vars doc section
+* auxent for colortest
+
+* isatty
+* TERM
+* propagation through JSON marshaler ...
+
+* https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
+
+* test on:
+  o mac (various emulators), linux (laptop+instances; screen, tmux, various emulators), windows (cmd & PS)
+  o what about RPIs?
+  o check $TERM
+    - absent
+    - present but "xterm"
+
+----------------------------------------------------------------
 doclink etc:
 * colored-shapes.dkvp -> csv; also mkdat2
 * data/small -> csv throughout. and/or just use example.csv
@@ -60,6 +98,7 @@ w survey
     - in that vein re-think the faq -- split up, and/or move down
     - likewise cookbook2/3 -- overly nerdy; perhaps just annoying
     - re-work data-sharing <-> SQL ...
+    - env-vars section
   o little:
     - stats1 --fr
       cookbook2.rst.in
@@ -86,6 +125,7 @@ w survey
     - cookbook 1/2/3 total teardown/rebuild:
       > data-cleaning examples -> full section -- ?
       > c2 & c3 are all esoterica
+! mlr --help, manpage, etc total refactor & audit
 ----------------------------------------------------------------
 
 * case auxfiles: cat them too

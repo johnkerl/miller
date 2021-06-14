@@ -14,6 +14,7 @@ import (
 	"errors"
 	"io"
 
+	"miller/src/colorizer"
 	"miller/src/lib"
 )
 
@@ -261,100 +262,102 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 // ================================================================
 func (mv *Mlrval) MarshalJSON(
 	jsonFormatting TJSONFormatting,
-) ([]byte, error) {
-	return mv.marshalJSONAux(jsonFormatting, 1)
+	outputIsStdout bool,
+) (string, error) {
+	return mv.marshalJSONAux(jsonFormatting, 1, outputIsStdout)
 }
 
 func (mv *Mlrval) marshalJSONAux(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
-) ([]byte, error) {
+	outputIsStdout bool,
+) (string, error) {
 	switch mv.mvtype {
 	case MT_PENDING:
-		return mv.marshalJSONPending()
+		return mv.marshalJSONPending(outputIsStdout)
 		break
 	case MT_ERROR:
-		return mv.marshalJSONError()
+		return mv.marshalJSONError(outputIsStdout)
 		break
 	case MT_ABSENT:
-		return mv.marshalJSONAbsent()
+		return mv.marshalJSONAbsent(outputIsStdout)
 		break
 	case MT_NULL:
-		return mv.marshalJSONNull()
+		return mv.marshalJSONNull(outputIsStdout)
 		break
 	case MT_VOID:
-		return mv.marshalJSONVoid()
+		return mv.marshalJSONVoid(outputIsStdout)
 		break
 	case MT_STRING:
-		return mv.marshalJSONString()
+		return mv.marshalJSONString(outputIsStdout)
 		break
 	case MT_INT:
-		return mv.marshalJSONInt()
+		return mv.marshalJSONInt(outputIsStdout)
 		break
 	case MT_FLOAT:
-		return mv.marshalJSONFloat()
+		return mv.marshalJSONFloat(outputIsStdout)
 		break
 	case MT_BOOL:
-		return mv.marshalJSONBool()
+		return mv.marshalJSONBool(outputIsStdout)
 		break
 	case MT_ARRAY:
-		return mv.marshalJSONArray(jsonFormatting, elementNestingDepth)
+		return mv.marshalJSONArray(jsonFormatting, elementNestingDepth, outputIsStdout)
 		break
 	case MT_MAP:
-		return mv.marshalJSONMap(jsonFormatting, elementNestingDepth)
+		return mv.marshalJSONMap(jsonFormatting, elementNestingDepth, outputIsStdout)
 		break
 	case MT_DIM: // MT_DIM is one past the last valid type
-		return nil, errors.New("Miller: internal coding error detected")
+		return "", errors.New("Miller: internal coding error detected")
 	}
-	return nil, errors.New("Miller: iInternal coding error detected")
+	return "", errors.New("Miller: iInternal coding error detected")
 }
 
 // ================================================================
 // TYPE-SPECIFIC MARSHALERS
 
 // ----------------------------------------------------------------
-func (mv *Mlrval) marshalJSONPending() ([]byte, error) {
+func (mv *Mlrval) marshalJSONPending(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_PENDING)
-	return nil, errors.New(
+	return "", errors.New(
 		"Miller internal coding error: pending-values should not have been produced",
 	)
 }
 
 // ----------------------------------------------------------------
-func (mv *Mlrval) marshalJSONError() ([]byte, error) {
+func (mv *Mlrval) marshalJSONError(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ERROR)
-	return []byte(mv.printrep), nil
+	return colorizer.MaybeColorizeValue(mv.printrep, outputIsStdout), nil
 }
 
 // ----------------------------------------------------------------
-func (mv *Mlrval) marshalJSONAbsent() ([]byte, error) {
+func (mv *Mlrval) marshalJSONAbsent(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ABSENT)
-	return nil, errors.New(
+	return "", errors.New(
 		"Miller internal coding error: absent-values should not have been assigned",
 	)
 }
 
 // ----------------------------------------------------------------
-func (mv *Mlrval) marshalJSONNull() ([]byte, error) {
+func (mv *Mlrval) marshalJSONNull(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_NULL)
-	return []byte("null"), nil
+	return colorizer.MaybeColorizeValue("null", outputIsStdout), nil
 }
 
 // ----------------------------------------------------------------
-func (mv *Mlrval) marshalJSONVoid() ([]byte, error) {
+func (mv *Mlrval) marshalJSONVoid(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_VOID)
-	return []byte("\"\""), nil
+	return colorizer.MaybeColorizeValue("\"\"", outputIsStdout), nil
 }
 
 // ----------------------------------------------------------------
-func (mv *Mlrval) marshalJSONString() ([]byte, error) {
+func (mv *Mlrval) marshalJSONString(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_STRING)
 
-	return millerJSONEncodeString(mv.printrep), nil
+	return colorizer.MaybeColorizeValue(millerJSONEncodeString(mv.printrep), outputIsStdout), nil
 }
 
 // Wraps with double-quotes and escape-encoded JSON-special characters.
-func millerJSONEncodeString(input string) []byte {
+func millerJSONEncodeString(input string) string {
 	var buffer bytes.Buffer
 
 	buffer.WriteByte('"')
@@ -389,32 +392,33 @@ func millerJSONEncodeString(input string) []byte {
 
 	buffer.WriteByte('"')
 
-	return buffer.Bytes()
+	return buffer.String()
 }
 
 // ----------------------------------------------------------------
-func (mv *Mlrval) marshalJSONInt() ([]byte, error) {
+func (mv *Mlrval) marshalJSONInt(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_INT)
-	return []byte(mv.String()), nil
+	return colorizer.MaybeColorizeValue(mv.String(), outputIsStdout), nil
 }
 
 // ----------------------------------------------------------------
-func (mv *Mlrval) marshalJSONFloat() ([]byte, error) {
+func (mv *Mlrval) marshalJSONFloat(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_FLOAT)
-	return []byte(mv.String()), nil
+	return colorizer.MaybeColorizeValue(mv.String(), outputIsStdout), nil
 }
 
 // ----------------------------------------------------------------
-func (mv *Mlrval) marshalJSONBool() ([]byte, error) {
+func (mv *Mlrval) marshalJSONBool(outputIsStdout bool) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_BOOL)
-	return []byte(mv.String()), nil
+	return colorizer.MaybeColorizeValue(mv.String(), outputIsStdout), nil
 }
 
 // ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONArray(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
-) ([]byte, error) {
+	outputIsStdout bool,
+) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ARRAY)
 	lib.InternalCodingErrorIf(jsonFormatting != JSON_SINGLE_LINE && jsonFormatting != JSON_MULTILINE)
 
@@ -430,31 +434,32 @@ func (mv *Mlrval) marshalJSONArray(
 	}
 
 	if allTerminal || (jsonFormatting == JSON_SINGLE_LINE) {
-		return mv.marshalJSONArraySingleLine(elementNestingDepth)
+		return mv.marshalJSONArraySingleLine(elementNestingDepth, outputIsStdout)
 	} else {
-		return mv.marshalJSONArrayMultipleLines(jsonFormatting, elementNestingDepth)
+		return mv.marshalJSONArrayMultipleLines(jsonFormatting, elementNestingDepth, outputIsStdout)
 	}
 }
 
 func (mv *Mlrval) marshalJSONArraySingleLine(
 	elementNestingDepth int,
-) ([]byte, error) {
+	outputIsStdout bool,
+) (string, error) {
 	n := len(mv.arrayval)
 	var buffer bytes.Buffer
 	buffer.WriteByte('[')
 
 	for i, element := range mv.arrayval {
-		elementBytes, err := element.marshalJSONAux(JSON_SINGLE_LINE, elementNestingDepth+1)
+		elementString, err := element.marshalJSONAux(JSON_SINGLE_LINE, elementNestingDepth+1, outputIsStdout)
 		if err != nil {
-			return nil, err
+			return "", err
 		}
-		buffer.Write(elementBytes)
+		buffer.WriteString(elementString)
 		if i < n-1 {
 			buffer.WriteString(", ")
 		}
 	}
 	buffer.WriteByte(']')
-	return buffer.Bytes(), nil
+	return buffer.String(), nil
 }
 
 // The element nesting depth is how deeply our element should be indented. Our
@@ -474,7 +479,8 @@ func (mv *Mlrval) marshalJSONArraySingleLine(
 func (mv *Mlrval) marshalJSONArrayMultipleLines(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
-) ([]byte, error) {
+	outputIsStdout bool,
+) (string, error) {
 	n := len(mv.arrayval)
 	var buffer bytes.Buffer
 
@@ -485,14 +491,14 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 	}
 
 	for i, element := range mv.arrayval {
-		elementBytes, err := element.marshalJSONAux(jsonFormatting, elementNestingDepth+1)
+		elementString, err := element.marshalJSONAux(jsonFormatting, elementNestingDepth+1, outputIsStdout)
 		if err != nil {
-			return nil, err
+			return "", err
 		}
 		for i := 0; i < elementNestingDepth; i++ {
 			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
 		}
-		buffer.Write(elementBytes)
+		buffer.WriteString(elementString)
 		if i < n-1 {
 			buffer.WriteString(",")
 		}
@@ -507,18 +513,19 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 	}
 
 	buffer.WriteByte(']')
-	return buffer.Bytes(), nil
+	return buffer.String(), nil
 }
 
 // ----------------------------------------------------------------
 func (mv *Mlrval) marshalJSONMap(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
-) ([]byte, error) {
+	outputIsStdout bool,
+) (string, error) {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_MAP)
-	bytes, err := mv.mapval.marshalJSONAux(jsonFormatting, elementNestingDepth)
+	s, err := mv.mapval.marshalJSONAux(jsonFormatting, elementNestingDepth, outputIsStdout)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	return bytes, nil
+	return s, nil
 }

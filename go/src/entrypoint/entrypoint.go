@@ -64,7 +64,7 @@ func processToStdout(
 	options cliutil.TOptions,
 	recordTransformers []transforming.IRecordTransformer,
 ) {
-	err := stream.Stream(options.FileNames, options, recordTransformers, os.Stdout)
+	err := stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 		os.Exit(1)
@@ -126,7 +126,7 @@ func processInPlace(
 			os.Exit(1)
 		}
 
-		err = stream.Stream([]string{fileName}, options, recordTransformers, handle)
+		err = stream.Stream([]string{fileName}, options, recordTransformers, handle, false)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 			os.Exit(1)
