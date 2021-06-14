@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 
+	"miller/src/colorizer"
 	"miller/src/dsl/cst"
 	"miller/src/lib"
 	"miller/src/types"
@@ -824,28 +825,32 @@ func handleHelpSingle(repl *Repl, arg string) {
 			if i > 0 {
 				fmt.Println()
 			}
-			PrintHighlightString(strings.Join(entry.verbNames, " or "))
+			fmt.Println(colorizer.MaybeColorizeHelp(strings.Join(entry.verbNames, " or "), true))
 			entry.usageFunc(repl)
 		}
 		return
 	}
 
 	if arg == "prompt" {
-		fmt.Printf("You can export the environment variable ")
-		PrintHighlightString(ENV_PRIMARY_PROMPT)
-		fmt.Printf(" to customize the Miller REPL prompt.\n")
+		fmt.Printf(
+			"You can export the environment variable %s to customize the Miller REPL prompt.\n",
+			colorizer.MaybeColorizeHelp(ENV_PRIMARY_PROMPT, true),
+		)
 
-		fmt.Printf("Otherwise, it defaults to \"")
-		PrintHighlightString(DEFAULT_PRIMARY_PROMPT)
-		fmt.Printf("\".\n")
+		fmt.Printf(
+			"Otherwise, it defaults to \"%s\".\n",
+			colorizer.MaybeColorizeHelp(DEFAULT_PRIMARY_PROMPT, true),
+		)
 
-		fmt.Printf("Likewise you can export the environment variable ")
-		PrintHighlightString(ENV_SECONDARY_PROMPT)
-		fmt.Printf(" to customize the secondary prompt,\n")
+		fmt.Printf(
+			"Likewise you can export the environment variable %s to customize the secondary prompt,\n",
+			colorizer.MaybeColorizeHelp(ENV_SECONDARY_PROMPT, true),
+		)
 
-		fmt.Printf("which defaults to \"")
-		PrintHighlightString(DEFAULT_SECONDARY_PROMPT)
-		fmt.Printf("\". This is used for multi-line input.\n")
+		fmt.Printf(
+			"which defaults to \"%s\". This is used for multi-line input.\n",
+			colorizer.MaybeColorizeHelp(DEFAULT_SECONDARY_PROMPT, true),
+		)
 
 		return
 	}
@@ -858,7 +863,9 @@ func handleHelpSingle(repl *Repl, arg string) {
 	if arg == "function-details" {
 		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsagesDecorated(
 			os.Stdout,
-			func(functionName string) { PrintHighlightString(functionName) },
+			func(functionName string) {
+				fmt.Println(colorizer.MaybeColorizeHelp(functionName, true))
+			},
 		)
 		return
 	}
@@ -877,13 +884,13 @@ func handleHelpSingle(repl *Repl, arg string) {
 }
 
 func showREPLIntro(repl *Repl) {
-	PrintHighlightString("What the Miller REPL is:\n")
+	fmt.Println(colorizer.MaybeColorizeHelp("What the Miller REPL is", true))
 	fmt.Println(
 		`The Miller REPL (read-evaluate-print loop) is an interactive counterpart
 to record-processing using the put/filter DSL (domain-specific language).`)
 	fmt.Println()
 
-	PrintHighlightString("Using Miller without the REPL:\n")
+	fmt.Println(colorizer.MaybeColorizeHelp("Using Miller without the REPL:", true))
 	fmt.Printf(
 		`Using put and filter, you can do the following:
 * Specify input format (e.g. --icsv), output format (e.g. --ojson), etc. using
@@ -899,7 +906,7 @@ to record-processing using the put/filter DSL (domain-specific language).`)
 	fmt.Println()
 	fmt.Println()
 
-	PrintHighlightString("Using Miller with the REPL:\n")
+	fmt.Println(colorizer.MaybeColorizeHelp("Using Miller with the REPL:", true))
 	fmt.Println(
 		`Using the REPL, by contrast, you get interactive control over those same steps:
 * Specify input format (e.g. --icsv), output format (e.g. --ojson), etc. using
@@ -936,7 +943,7 @@ included in the output-record stream.  But here in the REPL, they are simply
 printed to the terminal, e.g. if you type '1+2', you will see '3'.`)
 	fmt.Println()
 
-	PrintHighlightString("Entering multi-line statements:\n")
+	fmt.Println(colorizer.MaybeColorizeHelp("Entering multi-line statements", true))
 	fmt.Println(
 		`* To enter multi-line statements, enter '<' on a line by itself, then the code (taking care
   for semicolons), then ">" on a line by itself. These will be executed immediately.
@@ -945,20 +952,20 @@ printed to the terminal, e.g. if you type '1+2', you will see '3'.`)
   ':main', as if you had done ':load' to load statements from a file.`)
 	fmt.Println()
 
-	PrintHighlightString("History-editing:\n")
+	fmt.Println(colorizer.MaybeColorizeHelp("History-editing:", true))
 	fmt.Println(
 		`No command-line-history-editing feature is built in but 'rlwrap mlr repl' is a
 delight. You may need 'brew install rlwrap', 'sudo apt-get install rlwrap',
 etc. depending on your platform.`)
 	fmt.Println()
 
-	PrintHighlightString("On-line help:\n")
+	fmt.Println(colorizer.MaybeColorizeHelp("On-line help:", true))
 	fmt.Println("Type ':help' to see more about your options. In particular, ':help examples'.")
 }
 
 // ----------------------------------------------------------------
 func showREPLExamples(repl *Repl) {
-	PrintHighlightString("Immediately executed statements:\n")
+	fmt.Println(colorizer.MaybeColorizeHelp("Immediately executed statements", true))
 	fmt.Println(
 		`[mlr] 1+2
 3
@@ -968,7 +975,7 @@ func showREPLExamples(repl *Repl) {
 [mlr] x+y
 7`)
 	fmt.Println()
-	PrintHighlightString("Defining functions:\n")
+	fmt.Println(colorizer.MaybeColorizeHelp("Defining functions:", true))
 	fmt.Println(
 		`[mlr] <
 func f(a,b) {
@@ -978,7 +985,7 @@ func f(a,b) {
 [mlr] f(7,5)
 16807`)
 	fmt.Println()
-	PrintHighlightString("Reading and processing records:\n")
+	fmt.Println(colorizer.MaybeColorizeHelp("Reading and processing records:", true))
 	fmt.Println(
 		`[mlr] :open foo.dat
 [mlr] :read
