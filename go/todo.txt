@@ -15,41 +15,12 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 colorizer:
-* flags from CLI; env vars for color settings
-
-  --no-color
-  --pass-color xxx
-  --fail-color xxx
-  --help-color xxx
-  --keys-color xxx
-  --values-color xxx
-
-  $MLR_NO_COLOR
-  $MLR_PASS_COLOR green
-  $MLR_FAIL_COLOR red
-  $MLR_HELP_COLOR red
-  $MLR_KEYS_COLOR blue
-  $MLR_VALUES_COLOR orange
-
+* comlete fatih prune, pass/fail, olh
 * mrpl output?
-
-* singleton w/ isatty & color strings
-* make it fast for the not-a-tty case
-* env-vars doc section
-* auxent for colortest
-
-* isatty
-* TERM
-* propagation through JSON marshaler ...
-
-* https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
-
 * test on:
-  o mac (various emulators), linux (laptop+instances; screen, tmux, various emulators), windows (cmd & PS)
-  o what about RPIs?
-  o check $TERM
-    - absent
-    - present but "xterm"
+  o mac (various emulators)
+  o linux (laptop+instances; screen, tmux, various emulators)
+  o windows (cmd & PS)
 
 ----------------------------------------------------------------
 doclink etc:
