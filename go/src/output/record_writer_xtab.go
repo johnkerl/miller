@@ -6,6 +6,7 @@ import (
 	"unicode/utf8"
 
 	"miller/src/cliutil"
+	"miller/src/colorizer"
 	"miller/src/types"
 )
 
@@ -24,6 +25,7 @@ func NewRecordWriterXTAB(writerOptions *cliutil.TWriterOptions) *RecordWriterXTA
 func (writer *RecordWriterXTAB) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
@@ -51,12 +53,12 @@ func (writer *RecordWriterXTAB) Write(
 		keyLength := utf8.RuneCountInString(pe.Key)
 		padLength := maxKeyLength - keyLength
 
-		buffer.WriteString(pe.Key)
+		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 		buffer.WriteString(" ")
 		for i := 0; i < padLength; i++ {
 			buffer.WriteString(" ")
 		}
-		buffer.WriteString(pe.Value.String())
+		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
 		buffer.WriteString("\n")
 	}
 	ostream.Write(buffer.Bytes())

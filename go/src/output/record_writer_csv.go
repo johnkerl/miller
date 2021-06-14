@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
+	"miller/src/colorizer"
 	"miller/src/types"
 )
 
@@ -30,6 +31,7 @@ func NewRecordWriterCSV(writerOptions *cliutil.TWriterOptions) *RecordWriterCSV 
 func (writer *RecordWriterCSV) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
@@ -68,7 +70,7 @@ func (writer *RecordWriterCSV) Write(
 		fields := make([]string, outrec.FieldCount)
 		i := 0
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			fields[i] = pe.Key
+			fields[i] = colorizer.MaybeColorizeKey(pe.Key, outputIsStdout)
 			i++
 		}
 		writer.csvWriter.Write(fields)
@@ -77,7 +79,7 @@ func (writer *RecordWriterCSV) Write(
 	fields := make([]string, outrec.FieldCount)
 	i := 0
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		fields[i] = pe.Value.String()
+		fields[i] = colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout)
 		i++
 	}
 	writer.csvWriter.Write(fields)

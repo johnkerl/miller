@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
+	"miller/src/colorizer"
 	"miller/src/types"
 )
 
@@ -29,6 +30,7 @@ func NewRecordWriterCSVLite(writerOptions *cliutil.TWriterOptions) *RecordWriter
 func (writer *RecordWriterCSVLite) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	// End of record stream: nothing special for this output format
 	if outrec == nil {
@@ -61,7 +63,7 @@ func (writer *RecordWriterCSVLite) Write(
 	if needToPrintHeader && !writer.writerOptions.HeaderlessCSVOutput {
 		var buffer bytes.Buffer // faster than fmt.Print() separately
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			buffer.WriteString(pe.Key)
+			buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 
 			if pe.Next != nil {
 				buffer.WriteString(writer.writerOptions.OFS)
@@ -74,7 +76,7 @@ func (writer *RecordWriterCSVLite) Write(
 
 	var buffer bytes.Buffer // faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		buffer.WriteString(pe.Value.String())
+		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
 		if pe.Next != nil {
 			buffer.WriteString(writer.writerOptions.OFS)
 		}

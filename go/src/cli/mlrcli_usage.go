@@ -81,6 +81,10 @@ func mainUsageLong(o *os.File, argv0 string) {
 	mainUsageNumericalFormatting(o, argv0)
 	fmt.Fprintf(o, "\n")
 
+	fmt.Fprintf(o, "OUTPUT COLORIZATION:\n")
+	mainUsageOutputColorization(o, argv0)
+	fmt.Fprintf(o, "\n")
+
 	fmt.Fprintf(o, "OTHER OPTIONS:\n")
 	mainUsageOtherOptions(o, argv0)
 	fmt.Fprintf(o, "\n")
@@ -496,6 +500,44 @@ func mainUsageNumericalFormatting(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "                     floating-point nummbers. If not specified, default formatting is used.\n")
 	fmt.Fprintf(o, "                     See also the fmtnum function within mlr put (mlr --help-all-functions);\n")
 	fmt.Fprintf(o, "                     see also the format-values function.\n")
+}
+
+func mainUsageOutputColorization(o *os.File, argv0 string) {
+	fmt.Fprintf(o, "Things having colors:\n")
+	fmt.Fprintf(o, "* Keys in CSV header lines, JSON keys, etc\n")
+	fmt.Fprintf(o, "* Values in CSV data lines, JSON scalar values, etc\n")
+	fmt.Fprintf(o, "* \"PASS\" and \"FAIL\" in regression-test output\n")
+	fmt.Fprintf(o, "* Some online-help strings\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Rules for coloring:\n")
+	fmt.Fprintf(o, "* By default, colorize output only if writing to stdout and stdout is a TTY.\n")
+	fmt.Fprintf(o, "  * Example: color: mlr --csv cat foo.csv\n")
+	fmt.Fprintf(o, "  * Example: no color: mlr --csv cat foo.csv > bar.csv\n")
+	fmt.Fprintf(o, "  * Example: no color: mlr --csv cat foo.csv | less\n")
+	fmt.Fprintf(o, "* The default colors were chosen since they look OK with white or black terminal background,\n")
+	fmt.Fprintf(o, "  and are differentiable with common varieties of human color vision.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "Mechanisms for coloring:\n")
+	fmt.Fprintf(o, "* Miller uses ANSI escape sequences only. This does not work on Windows except on Cygwin.\n")
+	fmt.Fprintf(o, "* Requires TERM environment variable to be set to non-empty string.\n")
+	fmt.Fprintf(o, "* Doesn't try to check to see whether the terminal is capable of 256-color\n")
+	fmt.Fprintf(o, "  ANSI vs 16-color ANSI. Note that if colors are in the range 0..15\n")
+	fmt.Fprintf(o, "  then 16-color ANSI escapes are used, so this is in the user's control.\n")
+	fmt.Fprintf(o, "\n")
+	fmt.Fprintf(o, "How you can control colorization:\n")
+	fmt.Fprintf(o, "* Suppression/unsuppression:\n")
+	fmt.Fprintf(o, "  * Environment variable export MLR_NO_COLOR=true means don't color even if stdout+TTY.\n")
+	fmt.Fprintf(o, "  * Environment variable export MLR_ALWAYS_COLOR=true means do color even if not stdout+TTY.\n")
+	fmt.Fprintf(o, "    For example, you might want to use this when piping mlr output to less -r.\n")
+	fmt.Fprintf(o, "  * Command-line flags ``--no-color`` or ``-M``, ``--always-color`` or ``-C``.\n")
+
+	fmt.Fprintf(o, "* Color choices can be specified by using environment variables, or command-line flags,\n")
+	fmt.Fprintf(o, "  with values 0..255:\n")
+	fmt.Fprintf(o, "  * export MLR_KEY_COLOR=208, MLR_VALUE_COLOR-33, etc.\n")
+	fmt.Fprintf(o, "  * Command-line flags --key-color 208, --value-color 33, etc.\n")
+	fmt.Fprintf(o, "  * This is particularly useful if your terminal's background color clashes with current settings.\n")
+	fmt.Fprintf(o, "* If environment-variable settings and command-line flags are both provided,the latter take precedence.\n")
+	fmt.Fprintf(o, "* Please do %s --list-colors to see the available color codes.\n", lib.MlrExeName())
 }
 
 // TODO

@@ -32,7 +32,7 @@ func (mlrmap *Mlrmap) ToDKVPString() string {
 // Must have non-pointer receiver in order to implement the fmt.Stringer
 // interface to make mlrmap printable via fmt.Println et al.
 func (mlrmap Mlrmap) String() string {
-	bytes, err := mlrmap.MarshalJSON(JSON_MULTILINE)
+	bytes, err := mlrmap.MarshalJSON(JSON_MULTILINE, false)
 	if err != nil {
 		return "Mlrmap: could not not marshal self to JSON"
 	} else {

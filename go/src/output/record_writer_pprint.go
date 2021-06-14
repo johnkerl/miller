@@ -9,6 +9,7 @@ import (
 	"unicode/utf8"
 
 	"miller/src/cliutil"
+	"miller/src/colorizer"
 	"miller/src/types"
 )
 
@@ -36,6 +37,7 @@ func NewRecordWriterPPRINT(writerOptions *cliutil.TWriterOptions) *RecordWriterP
 func (writer *RecordWriterPPRINT) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	// Group records by have-same-schema or not. Pretty-print each
 	// homoegeneous sublist, or "batch".
@@ -57,7 +59,13 @@ func (writer *RecordWriterPPRINT) Write(
 			joinedHeader := strings.Join(outrec.GetKeys(), ",")
 			if *writer.lastJoinedHeader != joinedHeader {
 				// Print and free old batch
-				if writer.writeHeterogenousList(writer.batch, writer.writerOptions.BarredPprintOutput, ostream) {
+				nonEmpty := writer.writeHeterogenousList(
+					writer.batch,
+					writer.writerOptions.BarredPprintOutput,
+					ostream,
+					outputIsStdout,
+				)
+				if nonEmpty {
 					// Print a newline
 					ostream.Write([]byte("\n"))
 				}
@@ -74,7 +82,7 @@ func (writer *RecordWriterPPRINT) Write(
 	} else { // End of record stream
 
 		if writer.batch.Front() != nil {
-			writer.writeHeterogenousList(writer.batch, writer.writerOptions.BarredPprintOutput, ostream)
+			writer.writeHeterogenousList(writer.batch, writer.writerOptions.BarredPprintOutput, ostream, outputIsStdout)
 		}
 	}
 }
@@ -85,6 +93,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	records *list.List,
 	barred bool,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) bool {
 	maxWidths := make(map[string]int)
 	var maxNR int = 0
@@ -118,9 +127,9 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 			}
 		}
 		if barred {
-			writer.writeHeterogenousListBarred(records, maxWidths, ostream)
+			writer.writeHeterogenousListBarred(records, maxWidths, ostream, outputIsStdout)
 		} else {
-			writer.writeHeterogenousListNonBarred(records, maxWidths, ostream)
+			writer.writeHeterogenousListNonBarred(records, maxWidths, ostream, outputIsStdout)
 		}
 		return true
 	}
@@ -140,6 +149,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 	records *list.List,
 	maxWidths map[string]int,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 
 	onFirst := true
@@ -152,13 +162,15 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				if !writer.writerOptions.RightAlignedPprintOutput {
 					if pe.Next != nil {
-						buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[pe.Key], pe.Key))
+						formatted := fmt.Sprintf("%-*s ", maxWidths[pe.Key], pe.Key)
+						buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
 					} else {
-						buffer.WriteString(pe.Key)
+						buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 						buffer.WriteString("\n") // TODO: ORS
 					}
 				} else {
-					buffer.WriteString(fmt.Sprintf("%*s ", maxWidths[pe.Key], pe.Key))
+					formatted := fmt.Sprintf("%*s ", maxWidths[pe.Key], pe.Key)
+					buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
 					if pe.Next == nil {
 						buffer.WriteString("\n") // TODO: ORS
 					}
@@ -178,13 +190,15 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 			}
 			if !writer.writerOptions.RightAlignedPprintOutput {
 				if pe.Next != nil {
-					buffer.WriteString(fmt.Sprintf("%-*s ", maxWidths[pe.Key], s))
+					formatted := fmt.Sprintf("%-*s ", maxWidths[pe.Key], s)
+					buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
 				} else {
-					buffer.WriteString(s)
+					buffer.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
 					buffer.WriteString("\n") // TODO: ORS
 				}
 			} else {
-				buffer.WriteString(fmt.Sprintf("%*s ", maxWidths[pe.Key], s))
+				formatted := fmt.Sprintf("%*s ", maxWidths[pe.Key], s)
+				buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
 				if pe.Next == nil {
 					buffer.WriteString("\n") // TODO: ORS
 				}
@@ -214,6 +228,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 	records *list.List,
 	maxWidths map[string]int,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 
 	horizontalBars := make(map[string]string)
@@ -249,9 +264,11 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 			buffer.WriteString(verticalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				if !writer.writerOptions.RightAlignedPprintOutput {
-					buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[pe.Key], pe.Key))
+					formatted := fmt.Sprintf("%-*s", maxWidths[pe.Key], pe.Key)
+					buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
 				} else {
-					buffer.WriteString(fmt.Sprintf("%*s", maxWidths[pe.Key], pe.Key))
+					formatted := fmt.Sprintf("%*s", maxWidths[pe.Key], pe.Key)
+					buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
 				}
 				if pe.Next != nil {
 					buffer.WriteString(verticalMiddle)
@@ -282,9 +299,11 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
 			if !writer.writerOptions.RightAlignedPprintOutput {
-				buffer.WriteString(fmt.Sprintf("%-*s", maxWidths[pe.Key], s))
+				formatted := fmt.Sprintf("%-*s", maxWidths[pe.Key], s)
+				buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
 			} else {
-				buffer.WriteString(fmt.Sprintf("%*s", maxWidths[pe.Key], s))
+				formatted := fmt.Sprintf("%*s", maxWidths[pe.Key], s)
+				buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
 			}
 			if pe.Next != nil {
 				buffer.WriteString(fmt.Sprint(verticalMiddle))
