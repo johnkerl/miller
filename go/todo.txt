@@ -21,6 +21,7 @@ colorizer:
   o mac (various emulators)
   o linux (laptop+instances; screen, tmux, various emulators)
   o windows (cmd & PS)
+* REPL PS1 color?
 
 ----------------------------------------------------------------
 doclink etc:
