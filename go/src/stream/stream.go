@@ -35,6 +35,7 @@ func Stream(
 	options cliutil.TOptions,
 	recordTransformers []transforming.IRecordTransformer,
 	outputStream *os.File,
+	outputIsStdout bool,
 ) error {
 
 	// Since Go is concurrent, the context struct needs to be duplicated and
@@ -68,7 +69,7 @@ func Stream(
 
 	go recordReader.Read(fileNames, *initialContext, inputChannel, errorChannel)
 	go transforming.ChainTransformer(inputChannel, recordTransformers, outputChannel)
-	go output.ChannelWriter(outputChannel, recordWriter, doneChannel, outputStream)
+	go output.ChannelWriter(outputChannel, recordWriter, doneChannel, outputStream, outputIsStdout)
 
 	done := false
 	for !done {

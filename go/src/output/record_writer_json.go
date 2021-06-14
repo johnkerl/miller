@@ -37,11 +37,12 @@ func NewRecordWriterJSON(writerOptions *cliutil.TWriterOptions) *RecordWriterJSO
 func (writer *RecordWriterJSON) Write(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	if writer.writerOptions.WrapJSONOutputInOuterList {
-		writer.writeWithListWrap(outrec, ostream)
+		writer.writeWithListWrap(outrec, ostream, outputIsStdout)
 	} else {
-		writer.writeWithoutListWrap(outrec, ostream)
+		writer.writeWithoutListWrap(outrec, ostream, outputIsStdout)
 	}
 }
 
@@ -49,6 +50,7 @@ func (writer *RecordWriterJSON) Write(
 func (writer *RecordWriterJSON) writeWithListWrap(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 
@@ -59,7 +61,7 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 
 		// The Mlrmap MarshalJSON doesn't include the final newline, so that we
 		// can place it neatly with commas here (if the user requested them).
-		bytes, err := outrec.MarshalJSON(writer.jsonFormatting)
+		s, err := outrec.MarshalJSON(writer.jsonFormatting, outputIsStdout)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -69,7 +71,7 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 			buffer.WriteString(",\n")
 		}
 
-		buffer.Write(bytes)
+		buffer.WriteString(s)
 
 		writer.onFirst = false
 
@@ -86,6 +88,7 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 func (writer *RecordWriterJSON) writeWithoutListWrap(
 	outrec *types.Mlrmap,
 	ostream io.WriteCloser,
+	outputIsStdout bool,
 ) {
 	if outrec == nil {
 		// End of record stream
@@ -94,12 +97,12 @@ func (writer *RecordWriterJSON) writeWithoutListWrap(
 
 	// The Mlrmap MarshalJSON doesn't include the final newline, so that we
 	// can place it neatly with commas here (if the user requested them).
-	bytes, err := outrec.MarshalJSON(writer.jsonFormatting)
+	s, err := outrec.MarshalJSON(writer.jsonFormatting, outputIsStdout)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
-	ostream.Write(bytes)
+	ostream.Write([]byte(s))
 	ostream.Write([]byte("\n"))
 }

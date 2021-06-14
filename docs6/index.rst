@@ -24,6 +24,7 @@ Miller in more detail
    file-formats
    record-heterogeneity
    internationalization
+   output-colorization
    customization
 
 FAQs and recipes

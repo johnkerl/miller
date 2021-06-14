@@ -7,21 +7,25 @@ package types
 import (
 	"bytes"
 
+	"miller/src/colorizer"
 	"miller/src/lib"
 )
 
 // ----------------------------------------------------------------
-func (mlrmap *Mlrmap) MarshalJSON(jsonFormatting TJSONFormatting) ([]byte, error) {
+func (mlrmap *Mlrmap) MarshalJSON(
+	jsonFormatting TJSONFormatting,
+	outputIsStdout bool,
+) (string, error) {
 	var buffer bytes.Buffer
-	mapBytes, err := mlrmap.marshalJSONAux(jsonFormatting, 1)
+	s, err := mlrmap.marshalJSONAux(jsonFormatting, 1, outputIsStdout)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	buffer.Write(mapBytes)
+	buffer.WriteString(s)
 	// Do not write the final newline here, so the caller can write commas
 	// in the right place if desired.
 	// buffer.WriteString("\n")
-	return buffer.Bytes(), nil
+	return buffer.String(), nil
 }
 
 // For a map we only write from opening curly brace to closing curly brace.  In
@@ -41,21 +45,23 @@ func (mlrmap *Mlrmap) MarshalJSON(jsonFormatting TJSONFormatting) ([]byte, error
 func (mlrmap *Mlrmap) marshalJSONAux(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
-) ([]byte, error) {
+	outputIsStdout bool,
+) (string, error) {
 	if jsonFormatting == JSON_MULTILINE {
-		return mlrmap.marshalJSONAuxMultiline(jsonFormatting, elementNestingDepth)
+		return mlrmap.marshalJSONAuxMultiline(jsonFormatting, elementNestingDepth, outputIsStdout)
 	} else if jsonFormatting == JSON_SINGLE_LINE {
-		return mlrmap.marshalJSONAuxSingleLine(jsonFormatting, elementNestingDepth)
+		return mlrmap.marshalJSONAuxSingleLine(jsonFormatting, elementNestingDepth, outputIsStdout)
 	} else {
 		lib.InternalCodingErrorIf(true)
-		return nil, nil // not reached
+		return "", nil // not reached
 	}
 }
 
 func (mlrmap *Mlrmap) marshalJSONAuxMultiline(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
-) ([]byte, error) {
+	outputIsStdout bool,
+) (string, error) {
 	var buffer bytes.Buffer
 
 	buffer.WriteString("{")
@@ -72,17 +78,19 @@ func (mlrmap *Mlrmap) marshalJSONAuxMultiline(
 		for i := 0; i < elementNestingDepth; i++ {
 			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
 		}
-		buffer.WriteString(string(millerJSONEncodeString(pe.Key)))
+		encoded := string(millerJSONEncodeString(pe.Key))
+		colorized := colorizer.MaybeColorizeKey(encoded, outputIsStdout)
+		buffer.WriteString(colorized)
 		buffer.WriteString(": ")
 
 		// Write the value which is a mlrval
-		valueBytes, err := pe.Value.marshalJSONAux(jsonFormatting, elementNestingDepth+1)
+		valueString, err := pe.Value.marshalJSONAux(jsonFormatting, elementNestingDepth+1, outputIsStdout)
 		if err != nil {
-			return nil, err
+			return "", err
 		}
-		_, err = buffer.Write(valueBytes)
+		_, err = buffer.WriteString(valueString)
 		if err != nil {
-			return nil, err
+			return "", err
 		}
 
 		if pe.Next != nil {
@@ -99,13 +107,14 @@ func (mlrmap *Mlrmap) marshalJSONAuxMultiline(
 	}
 	buffer.WriteString("}")
 
-	return buffer.Bytes(), nil
+	return buffer.String(), nil
 }
 
 func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 	jsonFormatting TJSONFormatting,
 	elementNestingDepth int,
-) ([]byte, error) {
+	outputIsStdout bool,
+) (string, error) {
 	var buffer bytes.Buffer
 
 	buffer.WriteString("{")
@@ -114,17 +123,17 @@ func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 		// Write the key which is necessarily string-valued in Miller, and in
 		// JSON for that matter :)
 		buffer.WriteString("\"")
-		buffer.WriteString(pe.Key)
+		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 		buffer.WriteString("\": ")
 
 		// Write the value which is a mlrval
-		valueBytes, err := pe.Value.marshalJSONAux(jsonFormatting, elementNestingDepth+1)
+		valueString, err := pe.Value.marshalJSONAux(jsonFormatting, elementNestingDepth+1, outputIsStdout)
 		if err != nil {
-			return nil, err
+			return "", err
 		}
-		_, err = buffer.Write(valueBytes)
+		_, err = buffer.WriteString(valueString)
 		if err != nil {
-			return nil, err
+			return "", err
 		}
 
 		if pe.Next != nil {
@@ -134,7 +143,7 @@ func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 
 	buffer.WriteString("}")
 
-	return buffer.Bytes(), nil
+	return buffer.String(), nil
 }
 
 // ----------------------------------------------------------------
@@ -142,7 +151,7 @@ func (mlrmap *Mlrmap) marshalJSONAuxSingleLine(
 func (entry *MlrmapEntry) JSONStringifyInPlace(
 	jsonFormatting TJSONFormatting,
 ) {
-	outputBytes, err := entry.Value.MarshalJSON(jsonFormatting)
+	outputBytes, err := entry.Value.MarshalJSON(jsonFormatting, false)
 	if err != nil {
 		entry.Value = MLRVAL_ERROR
 	} else {

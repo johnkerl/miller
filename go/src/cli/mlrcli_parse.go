@@ -376,6 +376,9 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		//	} else if args[argi] == "--usage-numerical-formatting" {
 		//		mainUsageNumericalFormatting(os.Stdout, lib.MlrExeName());
 		//		return true;
+	} else if args[argi] == "--usage-output-colorization" {
+		mainUsageOutputColorization(os.Stdout, lib.MlrExeName())
+		return true
 	} else if args[argi] == "--usage-other-options" {
 		mainUsageOtherOptions(os.Stdout, lib.MlrExeName())
 		return true
