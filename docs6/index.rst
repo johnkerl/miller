@@ -26,6 +26,7 @@ Miller in more detail
    internationalization
    output-colorization
    customization
+   new-in-miller-6
 
 FAQs and recipes
 ----------------------------------------------------------------
