@@ -10,12 +10,9 @@ TOP OF LIST:
 * cli-audits * doc6 * survey * check issues *
 * split up mlr -h
 * snk postntn
-* note coverart image: command/keys/values is just for illustration only
-? maybe key/value colorizer like in jq -- off when to file -- ?
 
 ----------------------------------------------------------------
 colorizer:
-* comlete fatih prune, pass/fail, olh
 * mrpl output?
 * test on:
   o mac (various emulators)
@@ -71,6 +68,7 @@ w survey
     - likewise cookbook2/3 -- overly nerdy; perhaps just annoying
     - re-work data-sharing <-> SQL ...
     - env-vars section
+    - windows section
   o little:
     - stats1 --fr
       cookbook2.rst.in
