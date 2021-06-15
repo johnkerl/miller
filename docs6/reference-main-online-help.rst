@@ -503,34 +503,36 @@ Examples:
     Things having colors:
     * Keys in CSV header lines, JSON keys, etc
     * Values in CSV data lines, JSON scalar values, etc
-    * "PASS" in regression-test output
-    * "FAIL" in regression-test output
+    * "PASS" and "FAIL" in regression-test output
     * Some online-help strings
     
     Rules for coloring:
     * By default, colorize output only if writing to stdout and stdout is a TTY.
-      Example: color: mlr --csv cat foo.csv
-      Example: no color: mlr --csv cat foo.csv > bar.csv
-      Example: no color: mlr --csv cat foo.csv | less
-    * Default colors were chosen since they look OK with white or black terminal background,
+      * Example: color: mlr --csv cat foo.csv
+      * Example: no color: mlr --csv cat foo.csv > bar.csv
+      * Example: no color: mlr --csv cat foo.csv | less
+    * The default colors were chosen since they look OK with white or black terminal background,
       and are differentiable with common varieties of human color vision.
     
     Mechanisms for coloring:
-    * ANSI escape sequences only. Does not work on Windows except on Cygwin.
+    * Miller uses ANSI escape sequences only. This does not work on Windows except on Cygwin.
     * Requires TERM environment variable to be set to non-empty string.
     * Doesn't try to check to see whether the terminal is capable of 256-color
       ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
       then 16-color ANSI escapes are used, so this is in the user's control.
     
-    Control of coloring:
-    * Suppression/unsuppression by environment variables:
-      MLR_NO_COLOR=true means don't color even if stdout+tty
-      MLR_ALWAYS_COLOR=true means do color even if not stdout+tty, e.g. piping to less -r
-    * Color choices by environment variables, with values 0..255:
-      MLR_KEY_COLOR, MLR_VALUE_COLOR, MLR_PASS_COLOR, MLR_FAIL_COLOR, MLR_HELP_COLOR
-    * Command-line flags --no-color or -M, --always-color or -C, --pass-color 208, etc.
-    * If environment-variable settings and command-line flags are both provided,
-      the latter take precedence.
+    How you can control colorization:
+    * Suppression/unsuppression:
+      * Environment variable export MLR_NO_COLOR=true means don't color even if stdout+TTY.
+      * Environment variable export MLR_ALWAYS_COLOR=true means do color even if not stdout+TTY.
+        For example, you might want to use this when piping mlr output to less -r.
+      * Command-line flags ``--no-color`` or ``-M``, ``--always-color`` or ``-C``.
+    * Color choices can be specified by using environment variables, or command-line flags,
+      with values 0..255:
+      * export MLR_KEY_COLOR=208, MLR_VALUE_COLOR-33, etc.
+      * Command-line flags --key-color 208, --value-color 33, etc.
+      * This is particularly useful if your terminal's background color clashes with current settings.
+    * If environment-variable settings and command-line flags are both provided,the latter take precedence.
     * Please do mlr --list-colors to see the available color codes.
     
     OTHER OPTIONS:
