@@ -25,6 +25,10 @@ What's new in Miller 6
 * Minor:
 
   * Getoptish (#467)
+
+    * ``-xyz`` to ``-x -y -z`` -- show an example. And back-compat for ``sort``
+    * ``--foo=bar`` to ``--foo bar`` -- show an example.
+
   * ``--mfrom``, ``--load``, ``--mload``
   * Better syntax-error messages for the DSL, including line number
   * Completely reworked regression-testing
