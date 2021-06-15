@@ -6,7 +6,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding: 0 5px
 .highlight .hll { background-color: #c5b690; font-weight: bold; } /* CHANGED */
 /*.highlight { background: #eeffcc; }*/
 /* CHANGE ME */
-.highlight { background: #eae2cb; }
+.highlight { background-color: #eae2cb; }
 .highlight .c { color: #408090; font-style: italic } /* Comment */
 .highlight .err { border: 1px solid #FF0000 } /* Error */
 .highlight .k { color: #007020; font-weight: bold } /* Keyword */

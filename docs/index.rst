@@ -1,4 +1,4 @@
-Miller Docs v2
+Miller Documentation
 ================================================================
 
 Overview
