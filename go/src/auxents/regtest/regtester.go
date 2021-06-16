@@ -28,6 +28,14 @@ const ShouldFailName = "should-fail"
 const MajorSeparator = "================================================================"
 const MinorSeparator = "----------------------------------------------------------------"
 
+var envVarsToUnset = []string{
+	"MLRRC",
+	"MLR_KEY_COLOR",
+	"MLR_VALUE_COLOR",
+	"MLR_REPL_PS1",
+	"MLR_REPL_PS2",
+}
+
 type stringPair struct {
 	first  string
 	second string
@@ -84,6 +92,11 @@ func (regtester *RegTester) resetCounts() {
 func (regtester *RegTester) Execute(
 	paths []string,
 ) bool {
+
+	// Don't let the current user's settings affect expected results
+	for _, name := range envVarsToUnset {
+		os.Unsetenv(name)
+	}
 
 	regtester.resetCounts()
 

@@ -8,6 +8,9 @@ What's new in Miller 6
 
 * Completely reworked documentation (here) and on-line help (``mlr --help``)
 * Arrays in the ``put``/``filter`` DSL
+
+  * also ``array`` is now a keyword so you can't use that as a local-variable or UDF name
+
 * JSON:
 
   * Improved JSON support
@@ -19,14 +22,22 @@ What's new in Miller 6
 
 * Build artifacts (binaries) using GitHub Actions
 * In-process support for compressed input
+* Built-in ``md5`` ``sha1`` etc
+* ``hostname`` ``os`` ``version`` functions
 * Input-preservation -- find a way to describe this -- link to the issue ...
 * REPL TBD
 * :doc:`output-colorization`
 * Minor:
 
   * Getoptish (#467)
+
+    * ``-xyz`` to ``-x -y -z`` -- show an example. And back-compat for ``sort``
+    * ``--foo=bar`` to ``--foo bar`` -- show an example.
+
   * ``--mfrom``, ``--load``, ``--mload``
   * Better syntax-error messages for the DSL, including line number
+  * ``substr0`` and ``substr1``, and why
+  * ``>>>`` and ``>>>=``
   * Completely reworked regression-testing
 
 * Dev: ported to Go
