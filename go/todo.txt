@@ -28,30 +28,22 @@ doclink etc:
 ----------------------------------------------------------------
 DOC6
 
-* --foo=bar
-  o regtest
-  o docwhere
+! mlr --help, manpage, etc total refactor & audit
 
 ? quick-examples needs fewer inputs, and outputs for all retained inputs
   ? or q-e more links to 10min
 
-! how-to-help guide
-  - testing
-  - doc mods
-  - dev
-  - community
-
-! windows guide
-
-! mlr --help, manpage, etc total refactor & audit
+! fill out:
+  o how-to-help guide
+  o windows guide
+  o repl guide
+  o env-vars section
 
 ! thruout pitch the docs at primarily the first whenever possible:
   - python/ruby-level user w/o heavy sysadm
   - sysadm w/o dev
     > do not assume people know awk! XD
   - devs
-
-- env-vars section @ reference
 
 * code to-do items:
   o stats1 --fr

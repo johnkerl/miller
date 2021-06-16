@@ -28,6 +28,7 @@ Miller in more detail
    customization
    miller-on-windows
    new-in-miller-6
+   contributing
 
 FAQs and recipes
 ----------------------------------------------------------------
@@ -85,6 +86,7 @@ Reference
    reference-main-null-data
    reference-main-arithmetic
    reference-main-regular-expressions
+   reference-main-env-vars
    reference-main-online-help
    reference-dsl
    reference-dsl-syntax
@@ -106,5 +108,4 @@ Reference
 Index
 ----------------------------------------------------------------
 
-* :ref:`genindex`
 * :ref:`search`
