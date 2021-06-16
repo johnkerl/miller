@@ -58,20 +58,20 @@ GENRST_INCLUDE_ESCAPED(sample_mlrrc)
 Where to put your .mlrrc
 ----------------------------------------------------------------
 
-* If the environment variable ``MLRRC`` is set:
+If the environment variable ``MLRRC`` is set:
 
-  * If its value is ``__none__`` then no ``.mlrrc`` files are processed.  (This is nice for things like regression testing.)
+* If its value is ``__none__`` then no ``.mlrrc`` files are processed.  (This is nice for things like regression testing.)
 
-  * Otherwise, its value (as a filename) is loaded and processed. If there are syntax errors, they abort ``mlr`` with a usage message (as if you had mistyped something on the command line). If the file can't be loaded at all, though, it is silently skipped.
+* Otherwise, its value (as a filename) is loaded and processed. If there are syntax errors, they abort ``mlr`` with a usage message (as if you had mistyped something on the command line). If the file can't be loaded at all, though, it is silently skipped.
 
-  * Any ``.mlrrc`` in your home directory or current directory is ignored whenever ``MLRRC`` is set in the environment.
+* Any ``.mlrrc`` in your home directory or current directory is ignored whenever ``MLRRC`` is set in the environment.
 
-  * Example line in your shell's rc file: ``export MLRRC=/path/to/my/mlrrc``
+* Example line in your shell's rc file: ``export MLRRC=/path/to/my/mlrrc``
 
-* Otherwise:
+Otherwise:
 
-  * If ``$HOME/.mlrrc`` exists, it's processed as above.
+* If ``$HOME/.mlrrc`` exists, it's processed as above.
 
-  * If ``./.mlrrc`` exists, it's then also processed as above.
+* If ``./.mlrrc`` exists, it's then also processed as above.
 
-  * The idea is you can have all your settings in your ``$HOME/.mlrrc``, then override maybe one or two for your current directory if you like.
+* The idea is you can have all your settings in your ``$HOME/.mlrrc``, then override maybe one or two for your current directory if you like.

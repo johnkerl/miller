@@ -1,14 +1,13 @@
 ================================================================
 TOP OF LIST:
 
-* sat:
-  o convert all code-blocks to cardify
-  o most/least-frequent: map -> odict
-
 * emit * regex * fmtnum * localtime *
 * --nr-progress-mod * mlr -k *
 * cli-audits * doc6 * survey * check issues *
 * split up mlr -h
+
+* convert all code-blocks to cardify
+* most/least-frequent: map -> odict
 * snk postntn
 
 ----------------------------------------------------------------
@@ -25,6 +24,50 @@ doclink etc:
 * colored-shapes.dkvp -> csv; also mkdat2
 * data/small -> csv throughout. and/or just use example.csv
 ----------------------------------------------------------------
+
+----------------------------------------------------------------
+DOC6
+
+! mlr --help, manpage, etc total refactor & audit
+
+? quick-examples needs fewer inputs, and outputs for all retained inputs
+  ? or q-e more links to 10min
+
+! fill out:
+  o how-to-help guide
+  o windows guide
+  o repl guide
+  o env-vars section
+
+! thruout pitch the docs at primarily the first whenever possible:
+  - python/ruby-level user w/o heavy sysadm
+  - sysadm w/o dev
+    > do not assume people know awk! XD
+  - devs
+
+* code to-do items:
+  o stats1 --fr
+    cookbook2.rst.in
+  o mlr --print-type-arithmetic-info
+    reference.rst.in
+  o mlr --help-all-keywords
+    reference-dsl.rst.in
+  o mlr format-values --help
+    reference-verbs.rst.in
+  o mlr --usage-comments-in-data
+    file-formats.rst.in
+  o file-formats: colon -> dot
+  o unset multiple lvalues in the BNF
+    faq.rst.in
+  o list at end of todo.txt
+  o trailing space on pprint right
+  o file-formats.rst.in & olh: dkvp not first anymore
+
+* data-cleaning examples -> full section -- ?
+* c2 & c3 are all esoterica
+----------------------------------------------------------------
+
+* case auxfiles: cat them too
 
 ----------------------------------------------------------------
 * mlr -k
@@ -46,59 +89,6 @@ w survey
   o point to reworked&backported community page ...
   o head -n1 / tail -n1 -- special-case? but not head -n10 since getopts to head -n -1 -0 ...
   o --from=foo => split (at getopt-level) to --from foo
-
-! how-to-help guide
-  - testing
-  - doc mods
-  - dev
-  - community
-  > backport to docs5
-
-----------------------------------------------------------------
-! get doc6 going sooner than later! lots accumulating ...
-  o big:
-    ? quick-examples needs fewer inputs, and outputs for all retained inputs
-      ? or q-e more links to 10min
-    ! thruout pitch the docs at primarily the first whenever possible:
-      - python/ruby-level user w/o heavy sysadm
-      - sysadm w/o dev
-        > do not assume people know awk! XD
-      - devs
-    - in that vein re-think the faq -- split up, and/or move down
-    - likewise cookbook2/3 -- overly nerdy; perhaps just annoying
-    - re-work data-sharing <-> SQL ...
-    - env-vars section
-    - windows section
-  o little:
-    - stats1 --fr
-      cookbook2.rst.in
-    - mlr --print-type-arithmetic-info
-      reference.rst.in
-    - mlr --help-all-keywords
-      reference-dsl.rst.in
-    - mlr format-values --help
-      reference-verbs.rst.in
-    - mlr --usage-comments-in-data
-      file-formats.rst.in
-    - file-formats: colon -> dot
-    - unset multiple lvalues in the BNF
-      faq.rst.in
-    - list at end of todo.txt
-    - maybe mlr -> mlrc as live-todo & 6make by default -- ?
-    - trailing space on pprint right
-    - sphinx more mobile-friendly somehow -- ?
-    - file-formats.rst.in & olh: dkvp not first anymore
-  o plan:
-    - first landing page w/ toplinks -- ?
-    - current FAQ -> esoterica (mostly ...) & distill new FAQ from GH issues/discussions
-    - integrations section: log-processing, sql, mixing
-    - cookbook 1/2/3 total teardown/rebuild:
-      > data-cleaning examples -> full section -- ?
-      > c2 & c3 are all esoterica
-! mlr --help, manpage, etc total refactor & audit
-----------------------------------------------------------------
-
-* case auxfiles: cat them too
 
 ----------------------------------------------------------------
 

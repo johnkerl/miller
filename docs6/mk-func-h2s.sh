@@ -41,7 +41,7 @@ mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
   echo "$displayname"
   echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
   echo ""
-  echo '::'
+  echo '.. code-block:: none'
   echo ''
   mlr --help-function "$funcname" | sed 's/^/    /'
   echo ''
@@ -83,7 +83,7 @@ mlr -F | grep '^[a-zA-Z]' | sort -u | while read funcname; do
   echo "$displayname"
   echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
   echo ""
-  echo '::'
+  echo '.. code-block:: none'
   echo ''
   mlr --help-function "$funcname" | sed 's/^/    /'
   echo ''

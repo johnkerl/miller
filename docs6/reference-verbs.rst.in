@@ -1,38 +1,5 @@
-Verbs reference
+Reference: List of verbs
 ================================================================
-
-Overview
-----------------------------------------------------------------
-
-When you type ``mlr {something} myfile.dat``, the ``{something}`` part is called a **verb**. It specifies how you want to transform your data. (See also :doc:`reference-main-overview` for a breakdown.) The following is an alphabetical list of verbs with their descriptions.
-
-The verbs ``put`` and ``filter`` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found at :doc:`reference-dsl`.
-
-Here's a comparison of verbs and ``put``/``filter`` DSL expressions:
-
-Example:
-
-GENRST_RUN_COMMAND
-mlr stats1 -a sum -f x -g a data/small
-GENRST_EOF
-
-* Verbs are coded in Go
-* They run a bit faster
-* They take fewer keystrokes
-* There is less to learn
-* Their customization is limited to each verb's options
-
-Example:
-
-GENRST_RUN_COMMAND
-mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
-GENRST_EOF
-
-* You get to write your own DSL expressions
-* They run a bit slower
-* They take more keystrokes
-* There is more to learn
-* They are highly customizable
 
 .. _reference-verbs-altkv:
 

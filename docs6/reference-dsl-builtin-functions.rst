@@ -23,7 +23,7 @@ You can get a list of all functions using **mlr -F**.
 \+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     +  (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
 
@@ -34,7 +34,7 @@ You can get a list of all functions using **mlr -F**.
 \-
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     -  (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
 
@@ -45,7 +45,7 @@ You can get a list of all functions using **mlr -F**.
 \*
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     *  (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
 
@@ -56,7 +56,7 @@ You can get a list of all functions using **mlr -F**.
 /
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     /  (class=arithmetic #args=2) Division. Integer / integer is floating-point.
 
@@ -67,7 +67,7 @@ You can get a list of all functions using **mlr -F**.
 //
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     //  (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
 
@@ -78,7 +78,7 @@ You can get a list of all functions using **mlr -F**.
 \**
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     **  (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
 
@@ -89,7 +89,7 @@ You can get a list of all functions using **mlr -F**.
 .+
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     .+  (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
 
@@ -100,7 +100,7 @@ You can get a list of all functions using **mlr -F**.
 .-
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     .-  (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
 
@@ -111,7 +111,7 @@ You can get a list of all functions using **mlr -F**.
 .*
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     .*  (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
 
@@ -122,7 +122,7 @@ You can get a list of all functions using **mlr -F**.
 ./
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ./  (class=arithmetic #args=2) Integer division; not pythonic.
 
@@ -133,7 +133,7 @@ You can get a list of all functions using **mlr -F**.
 %
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     %  (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
 
@@ -144,7 +144,7 @@ You can get a list of all functions using **mlr -F**.
 ~
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ~  (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
     regex-match operator: try '$y = ~$x'.
@@ -156,7 +156,7 @@ You can get a list of all functions using **mlr -F**.
 &
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     &  (class=arithmetic #args=2) Bitwise AND.
 
@@ -167,7 +167,7 @@ You can get a list of all functions using **mlr -F**.
 \|
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     |  (class=arithmetic #args=2) Bitwise OR.
 
@@ -178,7 +178,7 @@ You can get a list of all functions using **mlr -F**.
 ^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ^  (class=arithmetic #args=2) Bitwise XOR.
 
@@ -189,7 +189,7 @@ You can get a list of all functions using **mlr -F**.
 <<
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     <<  (class=arithmetic #args=2) Bitwise left-shift.
 
@@ -200,7 +200,7 @@ You can get a list of all functions using **mlr -F**.
 >>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     >>  (class=arithmetic #args=2) Bitwise signed right-shift.
 
@@ -211,7 +211,7 @@ You can get a list of all functions using **mlr -F**.
 >>>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     >>>  (class=arithmetic #args=2) Bitwise unsigned right-shift.
 
@@ -222,7 +222,7 @@ You can get a list of all functions using **mlr -F**.
 !
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     !  (class=boolean #args=1) Logical negation.
 
@@ -233,7 +233,7 @@ You can get a list of all functions using **mlr -F**.
 ==
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ==  (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
 
@@ -244,7 +244,7 @@ You can get a list of all functions using **mlr -F**.
 !=
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     !=  (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
 
@@ -255,7 +255,7 @@ You can get a list of all functions using **mlr -F**.
 >
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     >  (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
 
@@ -266,7 +266,7 @@ You can get a list of all functions using **mlr -F**.
 >=
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     >=  (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
 
@@ -277,7 +277,7 @@ You can get a list of all functions using **mlr -F**.
 <
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     <  (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
 
@@ -288,7 +288,7 @@ You can get a list of all functions using **mlr -F**.
 <=
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     <=  (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
 
@@ -299,7 +299,7 @@ You can get a list of all functions using **mlr -F**.
 =~
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     =~  (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
 
@@ -310,7 +310,7 @@ You can get a list of all functions using **mlr -F**.
 !=~
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     !=~  (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
 
@@ -321,7 +321,7 @@ You can get a list of all functions using **mlr -F**.
 &&
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     &&  (class=boolean #args=2) Logical AND.
 
@@ -332,7 +332,7 @@ You can get a list of all functions using **mlr -F**.
 ||
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ||  (class=boolean #args=2) Logical OR.
 
@@ -343,7 +343,7 @@ You can get a list of all functions using **mlr -F**.
 ^^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ^^  (class=boolean #args=2) Logical XOR.
 
@@ -354,7 +354,7 @@ You can get a list of all functions using **mlr -F**.
 ??
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ??  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
 
@@ -365,7 +365,7 @@ You can get a list of all functions using **mlr -F**.
 ???
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ???  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
 
@@ -376,7 +376,7 @@ You can get a list of all functions using **mlr -F**.
 \?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ?:  (class=boolean #args=3) Standard ternary operator.
 
@@ -387,7 +387,7 @@ You can get a list of all functions using **mlr -F**.
 .
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     .  (class=string #args=2) String concatenation.
 
@@ -398,7 +398,7 @@ You can get a list of all functions using **mlr -F**.
 abs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     abs  (class=math #args=1) Absolute value.
 
@@ -409,7 +409,7 @@ abs
 acos
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     acos  (class=math #args=1) Inverse trigonometric cosine.
 
@@ -420,7 +420,7 @@ acos
 acosh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     acosh  (class=math #args=1) Inverse hyperbolic cosine.
 
@@ -431,7 +431,7 @@ acosh
 append
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     append  (class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
 
@@ -442,7 +442,7 @@ append
 arrayify
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     arrayify  (class=maps/arrays #args=1) Walks through a nested map/array, converting any map with consecutive keys
     "1", "2", ... into an array. Useful to wrap the output of unflatten.
@@ -454,7 +454,7 @@ arrayify
 asin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asin  (class=math #args=1) Inverse trigonometric sine.
 
@@ -465,7 +465,7 @@ asin
 asinh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asinh  (class=math #args=1) Inverse hyperbolic sine.
 
@@ -476,7 +476,7 @@ asinh
 asserting_absent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_absent  (class=typing #args=1) Aborts with an error if is_absent on the argument returns false,
     else returns its argument.
@@ -488,7 +488,7 @@ asserting_absent
 asserting_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_array  (class=typing #args=1) Aborts with an error if is_array on the argument returns false,
     else returns its argument.
@@ -500,7 +500,7 @@ asserting_array
 asserting_bool
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_bool  (class=typing #args=1) Aborts with an error if is_bool on the argument returns false,
     else returns its argument.
@@ -512,7 +512,7 @@ asserting_bool
 asserting_boolean
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_boolean  (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false,
     else returns its argument.
@@ -524,7 +524,7 @@ asserting_boolean
 asserting_empty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_empty  (class=typing #args=1) Aborts with an error if is_empty on the argument returns false,
     else returns its argument.
@@ -536,7 +536,7 @@ asserting_empty
 asserting_empty_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_empty_map  (class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false,
     else returns its argument.
@@ -548,7 +548,7 @@ asserting_empty_map
 asserting_error
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_error  (class=typing #args=1) Aborts with an error if is_error on the argument returns false,
     else returns its argument.
@@ -560,7 +560,7 @@ asserting_error
 asserting_float
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_float  (class=typing #args=1) Aborts with an error if is_float on the argument returns false,
     else returns its argument.
@@ -572,7 +572,7 @@ asserting_float
 asserting_int
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_int  (class=typing #args=1) Aborts with an error if is_int on the argument returns false,
     else returns its argument.
@@ -584,7 +584,7 @@ asserting_int
 asserting_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_map  (class=typing #args=1) Aborts with an error if is_map on the argument returns false,
     else returns its argument.
@@ -596,7 +596,7 @@ asserting_map
 asserting_nonempty_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_nonempty_map  (class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false,
     else returns its argument.
@@ -608,7 +608,7 @@ asserting_nonempty_map
 asserting_not_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_not_array  (class=typing #args=1) Aborts with an error if is_not_array on the argument returns false,
     else returns its argument.
@@ -620,7 +620,7 @@ asserting_not_array
 asserting_not_empty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_not_empty  (class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false,
     else returns its argument.
@@ -632,7 +632,7 @@ asserting_not_empty
 asserting_not_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_not_map  (class=typing #args=1) Aborts with an error if is_not_map on the argument returns false,
     else returns its argument.
@@ -644,7 +644,7 @@ asserting_not_map
 asserting_not_null
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_not_null  (class=typing #args=1) Aborts with an error if is_not_null on the argument returns false,
     else returns its argument.
@@ -656,7 +656,7 @@ asserting_not_null
 asserting_null
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_null  (class=typing #args=1) Aborts with an error if is_null on the argument returns false,
     else returns its argument.
@@ -668,7 +668,7 @@ asserting_null
 asserting_numeric
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_numeric  (class=typing #args=1) Aborts with an error if is_numeric on the argument returns false,
     else returns its argument.
@@ -680,7 +680,7 @@ asserting_numeric
 asserting_present
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_present  (class=typing #args=1) Aborts with an error if is_present on the argument returns false,
     else returns its argument.
@@ -692,7 +692,7 @@ asserting_present
 asserting_string
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     asserting_string  (class=typing #args=1) Aborts with an error if is_string on the argument returns false,
     else returns its argument.
@@ -704,7 +704,7 @@ asserting_string
 atan
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     atan  (class=math #args=1) One-argument arctangent.
 
@@ -715,7 +715,7 @@ atan
 atan2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     atan2  (class=math #args=2) Two-argument arctangent.
 
@@ -726,7 +726,7 @@ atan2
 atanh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     atanh  (class=math #args=1) Inverse hyperbolic tangent.
 
@@ -737,7 +737,7 @@ atanh
 bitcount
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     bitcount  (class=arithmetic #args=1) Count of 1-bits.
 
@@ -748,7 +748,7 @@ bitcount
 boolean
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     boolean  (class=conversion #args=1) Convert int/float/bool/string to boolean.
 
@@ -759,7 +759,7 @@ boolean
 capitalize
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     capitalize  (class=string #args=1) Convert string's first character to uppercase.
 
@@ -770,7 +770,7 @@ capitalize
 cbrt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     cbrt  (class=math #args=1) Cube root.
 
@@ -781,7 +781,7 @@ cbrt
 ceil
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ceil  (class=math #args=1) Ceiling: nearest integer at or above.
 
@@ -792,7 +792,7 @@ ceil
 clean_whitespace
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     clean_whitespace  (class=string #args=1) Same as collapse_whitespace and strip.
 
@@ -803,7 +803,7 @@ clean_whitespace
 collapse_whitespace
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     collapse_whitespace  (class=string #args=1) Strip repeated whitespace from string.
 
@@ -814,7 +814,7 @@ collapse_whitespace
 cos
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     cos  (class=math #args=1) Trigonometric cosine.
 
@@ -825,7 +825,7 @@ cos
 cosh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     cosh  (class=math #args=1) Hyperbolic cosine.
 
@@ -836,7 +836,7 @@ cosh
 depth
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     depth  (class=maps/arrays #args=1) Prints maximum depth of map/array. Scalars have depth 0.
 
@@ -847,7 +847,7 @@ depth
 dhms2fsec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     dhms2fsec  (class=time #args=1) Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
     
@@ -859,7 +859,7 @@ dhms2fsec
 dhms2sec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     dhms2sec  (class=time #args=1) Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
     
@@ -871,7 +871,7 @@ dhms2sec
 erf
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     erf  (class=math #args=1) Error function.
 
@@ -882,7 +882,7 @@ erf
 erfc
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     erfc  (class=math #args=1) Complementary error function.
 
@@ -893,7 +893,7 @@ erfc
 exp
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     exp  (class=math #args=1) Exponential function e**x.
 
@@ -904,7 +904,7 @@ exp
 expm1
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     expm1  (class=math #args=1) e**x - 1.
 
@@ -915,7 +915,7 @@ expm1
 flatten
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     flatten  (class=maps/arrays #args=3) Flattens multi-level maps to single-level ones. Examples:
     flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
@@ -930,7 +930,7 @@ flatten
 float
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     float  (class=conversion #args=1) Convert int/float/bool/string to float.
 
@@ -941,7 +941,7 @@ float
 floor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     floor  (class=math #args=1) Floor: nearest integer at or below.
 
@@ -952,7 +952,7 @@ floor
 fmtnum
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     fmtnum  (class=conversion #args=2) Convert int/float/bool to string using
     printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
@@ -964,7 +964,7 @@ fmtnum
 fsec2dhms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     fsec2dhms  (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
     
@@ -976,7 +976,7 @@ fsec2dhms
 fsec2hms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     fsec2hms  (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
     
@@ -988,7 +988,7 @@ fsec2hms
 get_keys
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     get_keys  (class=maps/arrays #args=1) Returns array of keys of map or array
 
@@ -999,7 +999,7 @@ get_keys
 get_values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     get_values  (class=maps/arrays #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
 
@@ -1010,7 +1010,7 @@ get_values
 gmt2sec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     gmt2sec  (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
 
@@ -1021,7 +1021,7 @@ gmt2sec
 gsub
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     gsub  (class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
 
@@ -1032,7 +1032,7 @@ gsub
 haskey
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     haskey  (class=maps/arrays #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
     'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
@@ -1045,7 +1045,7 @@ haskey
 hexfmt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     hexfmt  (class=conversion #args=1) Convert int to hex string, e.g. 255 to "0xff".
 
@@ -1056,7 +1056,7 @@ hexfmt
 hms2fsec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     hms2fsec  (class=time #args=1) Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000
     
@@ -1068,7 +1068,7 @@ hms2fsec
 hms2sec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     hms2sec  (class=time #args=1) Recovers integer seconds as in hms2sec("01:23:20") = 5000
     
@@ -1080,7 +1080,7 @@ hms2sec
 hostname
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     hostname  (class=system #args=0) Returns the hostname as a string.
 
@@ -1091,7 +1091,7 @@ hostname
 int
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     int  (class=conversion #args=1) Convert int/float/bool/string to int.
 
@@ -1102,7 +1102,7 @@ int
 invqnorm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     invqnorm  (class=math #args=1) Inverse of normal cumulative distribution function.
     Note that invqorm(urand()) is normally distributed.
@@ -1114,7 +1114,7 @@ invqnorm
 is_absent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_absent  (class=typing #args=1) False if field is present in input, true otherwise
 
@@ -1125,7 +1125,7 @@ is_absent
 is_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_array  (class=typing #args=1) True if argument is an array.
 
@@ -1136,7 +1136,7 @@ is_array
 is_bool
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_bool  (class=typing #args=1) True if field is present with boolean value. Synonymous with is_boolean.
 
@@ -1147,7 +1147,7 @@ is_bool
 is_boolean
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_boolean  (class=typing #args=1) True if field is present with boolean value. Synonymous with is_bool.
 
@@ -1158,7 +1158,7 @@ is_boolean
 is_empty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_empty  (class=typing #args=1) True if field is present in input with empty string value, false otherwise.
 
@@ -1169,7 +1169,7 @@ is_empty
 is_empty_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_empty_map  (class=typing #args=1) True if argument is a map which is empty.
 
@@ -1180,7 +1180,7 @@ is_empty_map
 is_error
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_error  (class=typing #args=1) True if if argument is an error, such as taking string length of an integer.
 
@@ -1191,7 +1191,7 @@ is_error
 is_float
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_float  (class=typing #args=1) True if field is present with value inferred to be float
 
@@ -1202,7 +1202,7 @@ is_float
 is_int
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_int  (class=typing #args=1) True if field is present with value inferred to be int
 
@@ -1213,7 +1213,7 @@ is_int
 is_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_map  (class=typing #args=1) True if argument is a map.
 
@@ -1224,7 +1224,7 @@ is_map
 is_nonempty_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_nonempty_map  (class=typing #args=1) True if argument is a map which is non-empty.
 
@@ -1235,7 +1235,7 @@ is_nonempty_map
 is_not_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_not_array  (class=typing #args=1) True if argument is not an array.
 
@@ -1246,7 +1246,7 @@ is_not_array
 is_not_empty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_not_empty  (class=typing #args=1) False if field is present in input with empty value, true otherwise
 
@@ -1257,7 +1257,7 @@ is_not_empty
 is_not_map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_not_map  (class=typing #args=1) True if argument is not a map.
 
@@ -1268,7 +1268,7 @@ is_not_map
 is_not_null
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_not_null  (class=typing #args=1) False if argument is null (empty or absent), true otherwise.
 
@@ -1279,7 +1279,7 @@ is_not_null
 is_null
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_null  (class=typing #args=1) True if argument is null (empty or absent), false otherwise.
 
@@ -1290,7 +1290,7 @@ is_null
 is_numeric
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_numeric  (class=typing #args=1) True if field is present with value inferred to be int or float
 
@@ -1301,7 +1301,7 @@ is_numeric
 is_present
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_present  (class=typing #args=1) True if field is present in input, false otherwise.
 
@@ -1312,7 +1312,7 @@ is_present
 is_string
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     is_string  (class=typing #args=1) True if field is present with string (including empty-string) value
 
@@ -1323,7 +1323,7 @@ is_string
 joink
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     joink  (class=conversion #args=2) Makes string from map/array keys. Examples:
     joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
@@ -1336,7 +1336,7 @@ joink
 joinkv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs. Examples:
     joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
@@ -1349,7 +1349,7 @@ joinkv
 joinv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     joinv  (class=conversion #args=2) Makes string from map/array values.
     joinv([3,4,5], ",") = "3,4,5"
@@ -1362,7 +1362,7 @@ joinv
 json_parse
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     json_parse  (class=maps/arrays #args=1) Converts value from JSON-formatted string.
 
@@ -1373,7 +1373,7 @@ json_parse
 json_stringify
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     json_stringify  (class=maps/arrays #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
     With optional second boolean argument set to true, produces multiline output.
@@ -1385,7 +1385,7 @@ json_stringify
 leafcount
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     leafcount  (class=maps/arrays #args=1) Counts total number of terminal values in map/array. For single-level
     map/array, same as length.
@@ -1397,7 +1397,7 @@ leafcount
 length
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     length  (class=maps/arrays #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
 
@@ -1408,7 +1408,7 @@ length
 log
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     log  (class=math #args=1) Natural (base-e) logarithm.
 
@@ -1419,7 +1419,7 @@ log
 log10
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     log10  (class=math #args=1) Base-10 logarithm.
 
@@ -1430,7 +1430,7 @@ log10
 log1p
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     log1p  (class=math #args=1) log(1-x).
 
@@ -1441,7 +1441,7 @@ log1p
 logifit
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     logifit  (class=math #args=3)  Given m and b from logistic regression, compute fit:
     $yhat=logifit($x,$m,$b).
@@ -1453,7 +1453,7 @@ logifit
 lstrip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     lstrip  (class=string #args=1) Strip leading whitespace from string.
 
@@ -1464,7 +1464,7 @@ lstrip
 madd
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     madd  (class=arithmetic #args=3) a + b mod m (integers)
 
@@ -1475,7 +1475,7 @@ madd
 mapdiff
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     mapdiff  (class=maps/arrays #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
     With 2 or more, returns copy of arg 1 with all keys from any of remaining
@@ -1488,7 +1488,7 @@ mapdiff
 mapexcept
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     mapexcept  (class=maps/arrays #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
     Remaining arguments can be strings or arrays of string.
@@ -1502,7 +1502,7 @@ mapexcept
 mapselect
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     mapselect  (class=maps/arrays #args=variadic) Returns a map with only keys from remaining arguments set.
     Remaining arguments can be strings or arrays of string.
@@ -1516,7 +1516,7 @@ mapselect
 mapsum
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     mapsum  (class=maps/arrays #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with
     key-value pairs from all arguments. Rightmost collisions win, e.g.
@@ -1529,7 +1529,7 @@ mapsum
 max
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     max  (class=math #args=variadic) Max of n numbers; null loses.
 
@@ -1540,7 +1540,7 @@ max
 md5
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     md5  (class=hashing #args=1) MD5 hash.
 
@@ -1551,7 +1551,7 @@ md5
 mexp
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     mexp  (class=arithmetic #args=3) a ** b mod m (integers)
 
@@ -1562,7 +1562,7 @@ mexp
 min
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     min  (class=math #args=variadic) Min of n numbers; null loses.
 
@@ -1573,7 +1573,7 @@ min
 mmul
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     mmul  (class=arithmetic #args=3) a * b mod m (integers)
 
@@ -1584,7 +1584,7 @@ mmul
 msub
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     msub  (class=arithmetic #args=3) a - b mod m (integers)
 
@@ -1595,7 +1595,7 @@ msub
 os
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     os  (class=system #args=0) Returns the operating-system name as a string.
 
@@ -1606,7 +1606,7 @@ os
 pow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     pow  (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
 
@@ -1617,7 +1617,7 @@ pow
 qnorm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     qnorm  (class=math #args=1) Normal cumulative distribution function.
 
@@ -1628,7 +1628,7 @@ qnorm
 regextract
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     regextract  (class=string #args=2) Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
 
@@ -1639,7 +1639,7 @@ regextract
 regextract_or_else
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     regextract_or_else  (class=string #args=3) Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
 
@@ -1650,7 +1650,7 @@ regextract_or_else
 round
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     round  (class=math #args=1) Round to nearest integer.
 
@@ -1661,7 +1661,7 @@ round
 roundm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     roundm  (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is
     the same as round($x/$m)*$m.
@@ -1673,7 +1673,7 @@ roundm
 rstrip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     rstrip  (class=string #args=1) Strip trailing whitespace from string.
 
@@ -1684,7 +1684,7 @@ rstrip
 sec2dhms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
     
@@ -1696,7 +1696,7 @@ sec2dhms
 sec2gmt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sec2gmt  (class=time #args=1,2) Formats seconds since epoch (integer part)
     as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
@@ -1710,7 +1710,7 @@ sec2gmt
 sec2gmtdate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part)
     as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
@@ -1724,7 +1724,7 @@ sec2gmtdate
 sec2hms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
     
@@ -1736,7 +1736,7 @@ sec2hms
 sgn
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sgn  (class=math #args=1)  +1, 0, -1 for positive, zero, negative input respectively.
 
@@ -1747,7 +1747,7 @@ sgn
 sha1
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sha1  (class=hashing #args=1) SHA1 hash.
 
@@ -1758,7 +1758,7 @@ sha1
 sha256
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sha256  (class=hashing #args=1) SHA256 hash.
 
@@ -1769,7 +1769,7 @@ sha256
 sha512
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sha512  (class=hashing #args=1) SHA512 hash.
 
@@ -1780,7 +1780,7 @@ sha512
 sin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sin  (class=math #args=1) Trigonometric sine.
 
@@ -1791,7 +1791,7 @@ sin
 sinh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sinh  (class=math #args=1) Hyperbolic sine.
 
@@ -1802,7 +1802,7 @@ sinh
 splita
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     splita  (class=conversion #args=2) Splits string into array with type inference. Example:
     splita("3,4,5", ",") = [3,4,5]
@@ -1814,7 +1814,7 @@ splita
 splitax
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     splitax  (class=conversion #args=2) Splits string into array without type inference. Example:
     splita("3,4,5", ",") = ["3","4","5"]
@@ -1826,7 +1826,7 @@ splitax
 splitkv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     splitkv  (class=conversion #args=3) Splits string by separators into map with type inference. Example:
     splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
@@ -1838,7 +1838,7 @@ splitkv
 splitkvx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and
     values are strings). Example:
@@ -1851,7 +1851,7 @@ splitkvx
 splitnv
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example:
     splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
@@ -1863,7 +1863,7 @@ splitnv
 splitnvx
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type
     inference (values are strings). Example:
@@ -1876,7 +1876,7 @@ splitnvx
 sqrt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sqrt  (class=math #args=1) Square root.
 
@@ -1887,7 +1887,7 @@ sqrt
 ssub
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     ssub  (class=string #args=3) Like sub but does no regexing. No characters are special.
 
@@ -1898,7 +1898,7 @@ ssub
 strftime
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     strftime  (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.
     	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
@@ -1916,7 +1916,7 @@ strftime
 string
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     string  (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
 
@@ -1927,7 +1927,7 @@ string
 strip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     strip  (class=string #args=1) Strip leading and trailing whitespace from string.
 
@@ -1938,7 +1938,7 @@ strip
 strlen
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     strlen  (class=string #args=1) String length.
 
@@ -1949,7 +1949,7 @@ strlen
 strptime
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     strptime  (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch,
     	e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
@@ -1964,7 +1964,7 @@ strptime
 sub
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     sub  (class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace once).
 
@@ -1975,7 +1975,7 @@ sub
 substr
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     substr  (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
     with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
@@ -1988,7 +1988,7 @@ substr
 substr0
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     substr0  (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
     inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
@@ -2000,7 +2000,7 @@ substr0
 substr1
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     substr1  (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
     inclusive. Negative indices -len .. -1 alias to 1 .. len.
@@ -2012,7 +2012,7 @@ substr1
 system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     system  (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
 
@@ -2023,7 +2023,7 @@ system
 systime
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     systime  (class=time #args=0) help string will go here
 
@@ -2034,7 +2034,7 @@ systime
 systimeint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     systimeint  (class=time #args=0) help string will go here
 
@@ -2045,7 +2045,7 @@ systimeint
 tan
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     tan  (class=math #args=1) Trigonometric tangent.
 
@@ -2056,7 +2056,7 @@ tan
 tanh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     tanh  (class=math #args=1) Hyperbolic tangent.
 
@@ -2067,7 +2067,7 @@ tanh
 tolower
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     tolower  (class=string #args=1) Convert string to lowercase.
 
@@ -2078,7 +2078,7 @@ tolower
 toupper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     toupper  (class=string #args=1) Convert string to uppercase.
 
@@ -2089,7 +2089,7 @@ toupper
 truncate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     truncate  (class=string #args=2) Truncates string first argument to max length of int second argument.
 
@@ -2100,7 +2100,7 @@ truncate
 typeof
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     typeof  (class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
 
@@ -2111,7 +2111,7 @@ typeof
 unflatten
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     unflatten  (class=maps/arrays #args=2) Reverses flatten. Example:
     unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}}.
@@ -2125,7 +2125,7 @@ unflatten
 uptime
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     uptime  (class=time #args=0) help string will go here
 
@@ -2136,7 +2136,7 @@ uptime
 urand
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     urand  (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
     Int-valued example: '$n=floor(20+urand()*11)'.
@@ -2148,7 +2148,7 @@ urand
 urand32
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     urand32  (class=math #args=0) Integer uniformly distributed 0 and 2**32-1 inclusive.
 
@@ -2159,7 +2159,7 @@ urand32
 urandint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     urandint  (class=math #args=2) Integer uniformly distributed between inclusive integer endpoints.
 
@@ -2170,7 +2170,7 @@ urandint
 urandrange
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     urandrange  (class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
 
@@ -2181,7 +2181,7 @@ urandrange
 version
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+.. code-block:: none
 
     version  (class=system #args=0) Returns the Miller version as a string.
 

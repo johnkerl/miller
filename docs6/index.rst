@@ -26,7 +26,9 @@ Miller in more detail
    internationalization
    output-colorization
    customization
+   miller-on-windows
    new-in-miller-6
+   contributing
 
 FAQs and recipes
 ----------------------------------------------------------------
@@ -76,6 +78,7 @@ Reference
    :maxdepth: 1
 
    reference-main-overview
+   reference-verbs
    reference-main-io-options
    reference-main-then-chaining
    reference-main-auxiliary-commands
@@ -83,8 +86,8 @@ Reference
    reference-main-null-data
    reference-main-arithmetic
    reference-main-regular-expressions
+   reference-main-env-vars
    reference-main-online-help
-   reference-verbs
    reference-dsl
    reference-dsl-syntax
    reference-dsl-variables
@@ -105,5 +108,4 @@ Reference
 Index
 ----------------------------------------------------------------
 
-* :ref:`genindex`
 * :ref:`search`
