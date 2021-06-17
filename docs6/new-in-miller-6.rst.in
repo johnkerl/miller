@@ -1,66 +1,61 @@
 What's new in Miller 6
 ================================================================
 
-[this doc is WIP]
-
-See also https://github.com/johnkerl/miller/issues/372
+See also https://github.com/johnkerl/miller/labels/go-port
 
 Documentation improvements
 ----------------------------------------------------------------
 
-* Completely reworked documentation (here) and on-line help (``mlr --help``)
+Documentation (here) and on-line help (``mlr --help``) has been completely reworked.
+
+* Intro material is pulled out front, no longer assuming users are comparing to tools like AWK.
+* Since CSV is the file format most used by Miller users, it is discussed first, and more examples use CSV.
+* There is more focus on simpler use-cases, and detailed how-to material has been moved further down.
+* Long reference sections have been split up.
 
 JSON support, and arrays
 ----------------------------------------------------------------
 
-* Arrays are now supported in the ``put``/``filter`` DSL
+Arrays are now supported in Miller's ``put``/``filter`` programming language, as described at :doc:`reference-dsl-arrays`. Also, ``array`` is now a keyword so this is no longer usable as a local-variable or UDF name.
 
-  * Todo: screenshot
-  * also ``array`` is now a keyword so you can't use that as a local-variable or UDF name
+JSON support is improved:
 
-* JSON:
-
-  * Improved JSON support
-  * Streamable JSON parsing
-  * Arrays
-  * Flatten/unflatten -- TODO pick a name and link to a separate page/section
+* Direct support for arrays means that you can now use Miller to process more JSON files.
+* Streamable JSON parsing: Miller's internal record-processing pipeline starts as soon as the first record is read (which was already the case for other file formats). This means that, unless records are wrapped with outermost ``[...]``, Miller now handles JSON in ``tail -f`` contexts like it does for other file formats.
+* Flatten/unflatten -- TODO pick a name and link to a separate page/section
 
 Improved Windows experience
 ----------------------------------------------------------------
 
-* Full* support for Windows
+Stronger support for Windows (with or without MSYS2), with a couple of exceptions.  See :doc:`miller-on-windows` for more information.
 
-See :doc:`miller-on-windows` for more information.
-
-* Build artifacts (binaries) using GitHub Actions
+Binaries are reliably available using GitHub Actions: see also :doc:`installation`.
 
 In-process support for compressed input
 ----------------------------------------------------------------
 
-TODO: type up
+In addition to ``--prepipe gunzip``, you can now use the ``--gzin`` flag, and similarly for BZIP files. In fact, Miller will autodetect (by file extension) and automatically uncompress ``mlr --csv cat foo.csv.gz``. Please see section [TODO:linkify] for more information.
 
 Output colorization
 ----------------------------------------------------------------
 
 See :doc:`output-colorization`.
 
-New DSL functions
+New DSL functions / operators
 ----------------------------------------------------------------
 
-TODO: type up
-
-* Built-in ``md5`` ``sha1`` etc
-* ``hostname`` ``os`` ``version`` functions
-* ``>>>`` and ``>>>=``
+* String-hashing functions :ref:`reference-dsl-md5`, :ref:`reference-dsl-sha1`, :ref:`reference-dsl-sha256`, and :ref:`reference-dsl-sha512`
+* Platform-property functions :ref:`reference-dsl-hostname`, :ref:`reference-dsl-os`, and :ref:`reference-dsl-version`
+* Unsigned right-shift :ref:`reference-dsl-ursh` along with ``>>>=``
 
 Improved command-line parsing
 ----------------------------------------------------------------
 
-Getoptish (#467)
+Getoptish command-line parsing (https://github.com/johnkerl/miller/pull/467):
 
-* ``-xyz`` to ``-x -y -z`` -- show an example. And back-compat for ``sort``
-* ``--foo=bar`` to ``--foo bar`` -- show an example.
-* ``--mfrom``, ``--load``, ``--mload``
+* ``-xyz`` expands automatically to ``-x -y -z``, so (for example) ``mlr cut -of shape,flag`` is the same as ``mlr cut -o -f shape,flag``.
+* ``--foo=bar`` expands automatically to  ``--foo bar``, so (for example) ``mlr --ifs=comma`` is the same as ``mlr --ifs comma``.
+* ``--mfrom``, ``--load``, ``--mload`` as described at [TODO:linkify].
 
 To file
 ----------------------------------------------------------------

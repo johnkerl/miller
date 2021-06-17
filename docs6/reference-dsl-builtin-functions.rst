@@ -195,9 +195,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl->>:
+.. _reference-dsl-srsh:
 
->>
+\>\>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
@@ -206,9 +206,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl->>>:
+.. _reference-dsl-ursh:
 
->>>
+\>\>\>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
@@ -217,9 +217,9 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl-!:
+.. _reference-dsl-colon:
 
-!
+\!
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
