@@ -1,3 +1,91 @@
+================================================================
+manpage:
+
+mlr --usage-synopsis
+mlr --version
+mlr --usage-examples
+mlr --usage-data-format-examples
+mlr --usage-help-options
+mlr --usage-list-all-verbs
+mlr --usage-functions
+mlr --usage-data-format-options
+mlr --usage-comments-in-data
+mlr --usage-format-conversion-keystroke-saver-options
+mlr --usage-compressed-data-options
+mlr --usage-separator-options
+mlr --usage-csv-options
+mlr --usage-double-quoting
+mlr --usage-numerical-formatting
+mlr --usage-other-options
+mlr --usage-then-chaining
+mlr --usage-auxents
+mlr --list-all-verbs-raw
+mlr #{verb} -h
+mlr --list-all-functions-raw
+mlr --help-function '#{function}
+mlr --list-all-keywords-raw`
+mlr --help-keyword '#{keyword}'
+
+----------------------------------------------------------------
+old mlr --help:
+
+mainUsageSynopsis(o, argv0)
+mainUsageExamples(o, argv0, "  ")
+mainUsageDataFormatExamples(o, argv0)
+mainUsageHelpOptions(o, argv0)
+mainUsageMlrrc(o, argv0)
+listAllVerbs(o, "  ")
+mainUsageFunctions(o)
+mainUsageDataFormatOptions(o, argv0)
+mainUsageCommentsInData(o, argv0)
+mainUsageFormatConversionKeystrokeSaverOptions(o, argv0)
+mainUsageCompressedDataOptions(o, argv0)
+mainUsageSeparatorOptions(o, argv0);
+mainUsageCsvOptions(o, argv0)
+mainUsageDoubleQuoting(o, argv0);
+mainUsageNumericalFormatting(o, argv0)
+mainUsageOutputColorization(o, argv0)
+mainUsageOtherOptions(o, argv0)
+mainUsageThenChaining(o, argv0)
+mainUsageAuxents(o)
+mainUsageSeeAlso(o, argv0)
+
+----------------------------------------------------------------
+new -- ?!?
+
+mlr --help
+= mlr help
+< mlr --usage-synopsis
+
+mlr help {foo} w/ lookup -- ?
+
+mlr --version
+= mlr version
+
+mlr --usage-examples
+mlr --usage-data-format-examples
+mlr --usage-help-options
+mlr --usage-list-all-verbs
+mlr --usage-functions
+mlr --usage-data-format-options
+mlr --usage-comments-in-data
+mlr --usage-format-conversion-keystroke-saver-options
+mlr --usage-compressed-data-options
+mlr --usage-separator-options
+mlr --usage-csv-options
+mlr --usage-double-quoting
+mlr --usage-numerical-formatting
+mlr --usage-other-options
+mlr --usage-then-chaining
+mlr --usage-auxents
+mlr --list-all-verbs-raw
+mlr #{verb} -h
+mlr --list-all-functions-raw
+mlr --help-function '#{function}
+mlr --list-all-keywords-raw`
+mlr --help-keyword '#{keyword}'
+
+================================================================
 Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
 
 ----------------------------------------------------------------

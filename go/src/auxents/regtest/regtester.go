@@ -28,6 +28,10 @@ const ShouldFailName = "should-fail"
 const MajorSeparator = "================================================================"
 const MinorSeparator = "----------------------------------------------------------------"
 
+// Don't unset MLR_PASS_COLOR or MLR_FAIL_COLOR -- if people want to change the
+// output-coloring used by this regression-tester, we should let them. We
+// should only unset environment variables which can cause functional tests to
+// fail.
 var envVarsToUnset = []string{
 	"MLRRC",
 	"MLR_KEY_COLOR",

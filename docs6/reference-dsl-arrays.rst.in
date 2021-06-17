@@ -1,0 +1,8 @@
+Reference: arrays
+================================================================
+
+TODO
+
+GENRST_RUN_COMMAND
+mlr --json cat data/array-example.json
+GENRST_EOF

@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Miller'
-copyright = '2020, John Kerl'
+copyright = '2021, John Kerl'
 author = 'John Kerl'
 
 # The full version, including alpha/beta/rc tags

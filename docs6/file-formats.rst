@@ -4,7 +4,9 @@
 File formats
 ================================================================
 
-Miller handles name-indexed data using several formats: some you probably know by name, such as CSV, TSV, and JSON -- and other formats you're likely already seeing and using in your structured data. Additionally, Miller gives you the option of including comments within your data.
+Miller handles name-indexed data using several formats: some you probably know by name, such as CSV, TSV, and JSON -- and other formats you're likely already seeing and using in your structured data.
+
+Additionally, Miller gives you the option of including comments within your data.
 
 Examples
 ----------------------------------------------------------------
@@ -13,26 +15,15 @@ Examples
    :emphasize-lines: 1-1
 
     $ mlr --usage-data-format-examples
-      DKVP: delimited key-value pairs (Miller default format)
-      +---------------------+
-      | apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-      | dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
-      +---------------------+
-    
-      NIDX: implicitly numerically indexed (Unix-toolkit style)
-      +---------------------+
-      | the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
-      | fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
-      +---------------------+
-    
-      CSV/CSV-lite: comma-separated values with separate header line
+     CSV/CSV-lite: comma-separated values with separate header line
+      TSV: same but with tabs in places of commas
       +---------------------+
       | apple,bat,cog       |
       | 1,2,3               | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
       | 4,5,6               | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
       +---------------------+
     
-      Tabular JSON: nested objects are supported, although arrays within them are not:
+      JSON (sequence or array of objects):
       +---------------------+
       | {                   |
       |  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
@@ -55,6 +46,14 @@ Examples
       | 4     5   6         | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
       +---------------------+
     
+      Markdown tabular (supported for output only):
+      +-----------------------+
+      | | apple | bat | cog | |
+      | | ---   | --- | --- | |
+      | | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+      | | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+      +-----------------------+
+    
       XTAB: pretty-printed transposed tabular
       +---------------------+
       | apple 1             | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
@@ -65,13 +64,17 @@ Examples
       | egg  8              |
       +---------------------+
     
-      Markdown tabular (supported for output only):
-      +-----------------------+
-      | | apple | bat | cog | |
-      | | ---   | --- | --- | |
-      | | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-      | | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-      +-----------------------+
+      DKVP: delimited key-value pairs (Miller default format)
+      +---------------------+
+      | apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+      | dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
+      +---------------------+
+    
+      NIDX: implicitly numerically indexed (Unix-toolkit style)
+      +---------------------+
+      | the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
+      | fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
+      +---------------------+
 
 .. _file-formats-csv:
 
@@ -95,7 +98,7 @@ Miller has record separator ``RS`` and field separator ``FS``, just as ``awk`` d
 
 **USV (Unicode-separated values):** likewise, the flags ``--usv``, ``--iusv``, ``--ousv``, ``--usvlite``, ``--iusvlite``, and ``--ousvlite`` use Unicode FS and RS U+241F (UTF-8 0x0xe2909f) and U+241E (UTF-8 0xe2909e), respectively.
 
-Miller's ``--csv`` flag supports `RFC-4180 CSV <https://tools.ietf.org/html/rfc4180">`_. This includes CRLF line-terminators by default, regardless of platform.
+Miller's ``--csv`` flag supports `RFC-4180 CSV <https://tools.ietf.org/html/rfc4180>`_. This includes CRLF line-terminators by default, regardless of platform.
 
 Here are the differences between CSV and CSV-lite:
 
@@ -168,7 +171,9 @@ See :doc:`reference-main-io-options` regarding how to specify separators other t
 NIDX: Index-numbered (toolkit style)
 ----------------------------------------------------------------
 
-With ``--inidx --ifs ' ' --repifs``, Miller splits lines on whitespace and assigns integer field names starting with 1. This recapitulates Unix-toolkit behavior.
+With ``--inidx --ifs ' ' --repifs``, Miller splits lines on whitespace and assigns integer field names starting with 1.
+
+This recapitulates Unix-toolkit behavior.
 
 Example with index-numbered output:
 
@@ -236,6 +241,8 @@ Tabular JSON
 JSON is a format which supports arbitrarily deep nesting of "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for handling **tabular data** only. This means Miller cannot (and should not) handle arbitrary JSON. (Check out `jq <https://stedolan.github.io/jq/>`_.)
 
 But if you have tabular data represented in JSON then Miller can handle that for you.
+
+By *tabular JSON* I mean the data is either a sequence of one or more objects, or an array consisting of one or more orjects. Miller treats JSON objects as name-indexed records.
 
 Single-level JSON objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -421,14 +428,7 @@ JSON isn't a parameterized format, so ``RS``, ``FS``, ``PS`` aren't specifiable.
 
 * Use ``--jflatsep yourstringhere`` to specify the string used for key concatenation: this defaults to a single colon.
 
-* Use ``--jofmt`` to force Miller to apply the global ``--ofmt`` to floating-point values.  First note: please use sprintf-style codes for double precision, e.g. ending in ``%lf``, ``%le``, or ``%lg``.  Miller floats are double-precision so behavior using ``%f``, ``%d``, etc. is undefined.  Second note: ``0.123`` is valid JSON; ``.123`` is not. Thus this feature allows you to emit JSON which may be unparseable by other tools.
-
 Again, please see `jq <https://stedolan.github.io/jq/>`_ for a truly powerful, JSON-specific tool.
-
-JSON non-streaming
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The JSON parser Miller uses does not return until all input is parsed: in particular this means that, unlike for other file formats, Miller does not (at present) handle JSON files in ``tail -f`` contexts.
 
 .. _file-formats-pprint:
 

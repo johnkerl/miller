@@ -27,12 +27,24 @@ mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
   elif [ "$funcname" = ':' ]; then
     displayname='\:'
     linkname='colon'
+  elif [ "$funcname" = '!' ]; then
+    displayname='\!'
+    linkname='colon'
   elif [ "$funcname" = '? :' ]; then
     displayname='\?'
     linkname='question-mark-colon'
   elif [ "$funcname" = '?:' ]; then
     displayname='\?'
     linkname='question-mark-colon'
+  elif [ "$funcname" = '>>' ]; then
+    displayname='\>\>'
+    linkname='srsh'
+  elif [ "$funcname" = '>>>' ]; then
+    displayname='\>\>\>'
+    linkname='ursh'
+  elif [ "$funcname" = '>>>=' ]; then
+    displayname='\>\>\>='
+    linkname='ursheq'
   fi
 
   echo ""
@@ -72,9 +84,21 @@ mlr -F | grep '^[a-zA-Z]' | sort -u | while read funcname; do
   elif [ "$funcname" = ':' ]; then
     displayname='\:'
     linkname='colon'
+  elif [ "$funcname" = '!' ]; then
+    displayname='\!'
+    linkname='colon'
   elif [ "$funcname" = '? :' ]; then
     displayname='\?'
     linkname='question-mark-colon'
+  elif [ "$funcname" = '>>' ]; then
+    displayname='\>\>'
+    linkname='srsh'
+  elif [ "$funcname" = '>>>' ]; then
+    displayname='\>\>\>'
+    linkname='ursh'
+  elif [ "$funcname" = '>>>=' ]; then
+    displayname='\>\>\>='
+    linkname='ursheq'
   fi
 
   echo ""
