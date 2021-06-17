@@ -901,7 +901,7 @@ to record-processing using the put/filter DSL (domain-specific language).`)
 * Define user-defined functions/subroutines using func and subr.
 * Specify statements to be executed on each record -- which are anything outside of begin/end/func/subr.
 * Example:
-  %s --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y end {print "GOODBYE"}`,
+  %s --icsv --ojson put 'begin {print "HELLO"} $z = $x + $y; end {print "GOODBYE"}`,
 		repl.exeName)
 	fmt.Println()
 	fmt.Println()
