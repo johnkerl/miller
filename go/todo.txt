@@ -31,9 +31,6 @@ DOC6
   ? or q-e more links to 10min
 
 ! fill out:
-  o how-to-help guide
-  o repl guide
-  o env-vars section
   o new-in-miller-6: flatten/unflatten
   o JSON flatten/unflatten section
   o Arrays section including 1-up and why
@@ -135,6 +132,8 @@ w survey
   NUMERICS < BOOL < VOID < STRING
 
 ================================================================
+* non-blocker: 'true && false' windows CLI-parse: debug
+
 * non-blocker: commenting passes ...
 
 * non-blocker: new functions:
