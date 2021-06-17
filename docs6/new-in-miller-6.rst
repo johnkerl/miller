@@ -39,8 +39,6 @@ In-process support for compressed input
 
 In addition to ``--prepipe gunzip``, you can now use the ``--gzin`` flag, and similarly for BZIP files. In fact, Miller will autodetect (by file extension) and automatically uncompress ``mlr --csv cat foo.csv.gz``. Please see section [TODO:linkify] for more information.
 
-TODO: type up
-
 Output colorization
 ----------------------------------------------------------------
 
