@@ -26,6 +26,7 @@ Miller in more detail
    internationalization
    output-colorization
    customization
+   repl
    miller-on-windows
    new-in-miller-6
    contributing
