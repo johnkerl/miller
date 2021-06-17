@@ -8,6 +8,14 @@ The Miller REPL (read-evaluate-print loop) is an interactive counterpart to reco
 
 It isn't a source-level debugger which lets you execute one source-code *statement* at a time -- however, it does let you operate on one *record* at a time. Further, it lets you use "immediate expressions", namely, you can interact with the language without having to provide data from an input file.
 
+.. code-block:: none
+  :emphasize-lines: 1-1
+
+    $ mlr repl
+
+    [mlr] 1 + 2
+    3
+
 Using Miller without the REPL
 ----------------------------------------------------------------
 
