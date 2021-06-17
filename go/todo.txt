@@ -9,6 +9,7 @@ TOP OF LIST:
 * convert all code-blocks to cardify
 * most/least-frequent: map -> odict
 * snk postntn
+* bug: 'mlr --from foo.dat cat then' abend
 
 ----------------------------------------------------------------
 colorizer:
