@@ -4,44 +4,79 @@
 What's new in Miller 6
 ================================================================
 
-[doc is WIP]
+[this doc is WIP]
+
+See also https://github.com/johnkerl/miller/issues/372
+
+Documentation improvements
+----------------------------------------------------------------
 
 * Completely reworked documentation (here) and on-line help (``mlr --help``)
-* Arrays in the ``put``/``filter`` DSL
 
+JSON support, and arrays
+----------------------------------------------------------------
+
+* Arrays are now supported in the ``put``/``filter`` DSL
+
+  * Todo: screenshot
   * also ``array`` is now a keyword so you can't use that as a local-variable or UDF name
 
 * JSON:
 
   * Improved JSON support
   * Streamable JSON parsing
+  * Arrays
+  * Flatten/unflatten -- TODO pick a name and link to a separate page/section
+
+Improved Windows experience
+----------------------------------------------------------------
 
 * Full* support for Windows
 
-  * Make a Windows docpage
+See :doc:`miller-on-windows` for more information.
 
 * Build artifacts (binaries) using GitHub Actions
-* In-process support for compressed input
+
+In-process support for compressed input
+----------------------------------------------------------------
+
+TODO: type up
+
+Output colorization
+----------------------------------------------------------------
+
+See :doc:`output-colorization`.
+
+New DSL functions
+----------------------------------------------------------------
+
+TODO: type up
+
 * Built-in ``md5`` ``sha1`` etc
 * ``hostname`` ``os`` ``version`` functions
+* ``>>>`` and ``>>>=``
+
+Improved command-line parsing
+----------------------------------------------------------------
+
+Getoptish (#467)
+
+* ``-xyz`` to ``-x -y -z`` -- show an example. And back-compat for ``sort``
+* ``--foo=bar`` to ``--foo bar`` -- show an example.
+* ``--mfrom``, ``--load``, ``--mload``
+
+To file
+----------------------------------------------------------------
+
 * Input-preservation -- find a way to describe this -- link to the issue ...
 * REPL TBD
-* :doc:`output-colorization`
 * Minor:
 
-  * Getoptish (#467)
-
-    * ``-xyz`` to ``-x -y -z`` -- show an example. And back-compat for ``sort``
-    * ``--foo=bar`` to ``--foo bar`` -- show an example.
-
-  * ``--mfrom``, ``--load``, ``--mload``
   * Better syntax-error messages for the DSL, including line number
   * ``substr0`` and ``substr1``, and why
-  * ``>>>`` and ``>>>=``
-  * Completely reworked regression-testing
 
-* Dev: ported to Go
+Developer-specific aspects
+----------------------------------------------------------------
 
-  * Developer notes: https://github.com/johnkerl/miller/blob/main/go/README.md
-
-See also https://github.com/johnkerl/miller/issues/372
+* Miller has been ported from C to Go. Developer notes: https://github.com/johnkerl/miller/blob/main/go/README.md
+* Completely reworked regression testing, including running on Windows

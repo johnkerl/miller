@@ -4,11 +4,27 @@
 Miller on Windows
 ================================================================
 
-TODO
+Native builds as of Miller 6
+----------------------------------------------------------------
 
-* ``mlr.exe``, no ``msys2.dll``
-* easier to build yourself
-* where to get binaries
-* ``PATH`` seutp w/ examples
-* MSYS2 ``PATH`` seutp w/ examples
-* examples of the one gotcha: DSL @ CLI, and the ``put -f`` workaround
+As of version 6.0.0, Miller builds directly on Windows. The experience is now almost the same as on Linux, NetBSD/FreeBSD, and MacOS.
+
+MSYS2 is no longer required, although you can use Miller from within MSYS2 if you like. There is now simply a single ``mlr.exe``, with no ``msys2.dll`` alongside anymore.
+
+See :doc:`installation` for how to get a copy of ``mlr.exe``.
+
+Setup
+----------------------------------------------------------------
+
+Simply place ``mlr.exe`` somewhere within your ``PATH`` variable.
+
+TODO: screenshot here
+
+To use Miller from within MSYS2/Cygwin, [TODO: type up notes and put up a screenshot].
+
+Differences
+----------------------------------------------------------------
+
+:doc:`output-colorization` does not work on Windows.
+
+TODO: examples of the one gotcha: DSL @ CLI, and the ``put -f`` workaround

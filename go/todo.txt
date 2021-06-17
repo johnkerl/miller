@@ -38,12 +38,16 @@ DOC6
   o windows guide
   o repl guide
   o env-vars section
+  o new-in-miller-6: flatten/unflatten
+  o JSON flatten/unflatten section
+  o Arrays section including 1-up and why
 
-! thruout pitch the docs at primarily the first whenever possible:
-  - python/ruby-level user w/o heavy sysadm
-  - sysadm w/o dev
-    > do not assume people know awk! XD
-  - devs
+* items:
+  o file-formats:
+    o NIDX link to headerless CSV
+    o JSON re-write re arrays & key-concat -- needs its own section
+    o format ordering: pick one for sphinx, manpage, olh
+    o autodetect: tbd
 
 * code to-do items:
   o stats1 --fr
@@ -65,6 +69,13 @@ DOC6
 
 * data-cleaning examples -> full section -- ?
 * c2 & c3 are all esoterica
+
+! thruout pitch the docs at primarily the first whenever possible:
+  - python/ruby-level user w/o heavy sysadm
+  - sysadm w/o dev
+    > do not assume people know awk! XD
+  - devs
+
 ----------------------------------------------------------------
 
 * case auxfiles: cat them too
