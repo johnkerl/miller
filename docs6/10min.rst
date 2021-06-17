@@ -12,6 +12,7 @@ You can install Miller for various platforms as follows:
 * Linux: ``yum install miller`` or ``apt-get install miller`` depending on your flavor of Linux
 * MacOS: ``brew install miller`` or ``port install miller`` depending on your preference of `Homebrew <https://brew.sh>`_ or `MacPorts <https://macports.org>`_.
 * Windows: ``choco install miller``  using `Chocolatey <https://chocolatey.org>`_.
+* You can get latest builds for Linux, MacOS, and Windows by visiting https://github.com/johnkerl/miller/actions, selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
 * See also :doc:`build` if you prefer -- in particular, if your platform's package manager doesn't have the latest release.
 
 As a first check, you should be able to run ``mlr --version`` at your system's command prompt and see something like the following:

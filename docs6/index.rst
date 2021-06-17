@@ -83,6 +83,7 @@ Reference
    reference-main-then-chaining
    reference-main-auxiliary-commands
    reference-main-data-types
+   reference-dsl-arrays
    reference-main-null-data
    reference-main-arithmetic
    reference-main-regular-expressions

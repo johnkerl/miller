@@ -30,7 +30,7 @@ Miller has record separator ``RS`` and field separator ``FS``, just as ``awk`` d
 
 **USV (Unicode-separated values):** likewise, the flags ``--usv``, ``--iusv``, ``--ousv``, ``--usvlite``, ``--iusvlite``, and ``--ousvlite`` use Unicode FS and RS U+241F (UTF-8 0x0xe2909f) and U+241E (UTF-8 0xe2909e), respectively.
 
-Miller's ``--csv`` flag supports `RFC-4180 CSV <https://tools.ietf.org/html/rfc4180">`_. This includes CRLF line-terminators by default, regardless of platform.
+Miller's ``--csv`` flag supports `RFC-4180 CSV <https://tools.ietf.org/html/rfc4180>`_. This includes CRLF line-terminators by default, regardless of platform.
 
 Here are the differences between CSV and CSV-lite:
 

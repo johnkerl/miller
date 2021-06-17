@@ -50,7 +50,10 @@ Prebuilt executables via GitHub per release
 
 Please see https://github.com/johnkerl/miller/releases where there are builds for OSX Yosemite, Linux x86-64 (dynamically linked), and Windows.
 
-Miller is autobuilt for **Linux**, **MacOS**, and **Windows** using **GitHub Actions** on every commit (https://github.com/johnkerl/miller/actions).
+Prebuilt executables via GitHub per commit
+----------------------------------------------------------------
+
+Miller is autobuilt for **Linux**, **MacOS**, and **Windows** using **GitHub Actions** on every commit (https://github.com/johnkerl/miller/actions): select the latest build and click _Artifacts_. (These are retained for 5 days after each commit.)
 
 Building from source
 ----------------------------------------------------------------
