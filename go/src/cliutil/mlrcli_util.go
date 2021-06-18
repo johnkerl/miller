@@ -11,11 +11,7 @@ import (
 // this let us see if the "10" slot exists.
 func CheckArgCount(args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
-		if argi == argc {
-			fmt.Fprintf(os.Stderr, "%s: missing argument(s).\n", lib.MlrExeName())
-		} else {
-			fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", lib.MlrExeName(), args[argi])
-		}
+		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", lib.MlrExeName(), args[argi])
 		fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", lib.MlrExeName())
 		os.Exit(1)
 	}
