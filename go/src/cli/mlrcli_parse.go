@@ -263,10 +263,22 @@ func parseTransformers(
 
 		transformerList = append(transformerList, transformer)
 
-		if argi >= argc || args[argi] != "then" {
+		// argi now points to:
+		// * A "then", followed by the start of the next verb in the chain, if any
+		// * Filenames after the verb (there are no more verbs listed)
+		// * None of the above; argi == argc
+		if argi >= argc {
 			break
+		} else if args[argi] != "then" {
+			break
+		} else {
+			if argi == argc-1 {
+				fmt.Fprintf(os.Stderr, "%s: missing next verb after \"then\".\n", lib.MlrExeName())
+				os.Exit(1)
+			} else {
+				argi++
+			}
 		}
-		argi++
 	}
 
 	*pargi = argi
