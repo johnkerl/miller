@@ -132,6 +132,8 @@ w survey
   NUMERICS < BOOL < VOID < STRING
 
 ================================================================
+* non-blocker: read-from-URL support -- ?
+
 * non-blocker: 'true && false' windows CLI-parse: debug
 
 * non-blocker: commenting passes ...

@@ -11,6 +11,8 @@ Getting started
    10min
    keystroke-savers
    programming-language
+   repl
+   miller-on-windows
    community
 
 Miller in more detail
@@ -26,8 +28,6 @@ Miller in more detail
    internationalization
    output-colorization
    customization
-   repl
-   miller-on-windows
    new-in-miller-6
    contributing
 

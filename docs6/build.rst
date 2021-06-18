@@ -32,7 +32,7 @@ From git clone
 In case of problems
 ----------------------------------------------------------------
 
-If you have any build errors, feel free to contact me at mailto:kerl.john.r+miller@gmail.com -- or, better, open an issue with "New Issue" at https://github.com/johnkerl/miller/issues.
+If you have any build errors, feel free to open an issue with "New Issue" at https://github.com/johnkerl/miller/issues.
 
 Dependencies
 ----------------------------------------------------------------
@@ -48,7 +48,7 @@ These are necessary to produce the ``mlr`` executable.
 Optional external dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This documentation pageset is built using Sphinx. Please see `./README.md` for details.
+This documentation pageset is built using Sphinx. Please see https://github.com/johnkerl/miller/blob/main/docs6/README.md for details.
 
 Creating a new release: for developers
 ----------------------------------------------------------------
