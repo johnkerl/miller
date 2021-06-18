@@ -63,12 +63,6 @@ DOC6
 * data-cleaning examples -> full section -- ?
 * c2 & c3 are all esoterica
 
-! thruout pitch the docs at primarily the first whenever possible:
-  - python/ruby-level user w/o heavy sysadm
-  - sysadm w/o dev
-    > do not assume people know awk! XD
-  - devs
-
 ----------------------------------------------------------------
 
 * case auxfiles: cat them too
