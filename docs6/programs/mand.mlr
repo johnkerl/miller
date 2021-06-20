@@ -60,7 +60,7 @@ end {
 # complex plane.
 func get_point_plot(pr, pi, maxits, do_julia, jr, ji) {
   num zr = 0.0;
-  >um zi = 0.0;
+  num zi = 0.0;
   num cr = 0.0;
   num ci = 0.0;
 

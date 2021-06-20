@@ -506,6 +506,7 @@ Examples:
     * Values in CSV data lines, JSON scalar values, etc
     * "PASS" and "FAIL" in regression-test output
     * Some online-help strings
+    * Coloring for the REPL prompt
     
     Rules for coloring:
     * By default, colorize output only if writing to stdout and stdout is a TTY.

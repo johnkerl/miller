@@ -38,6 +38,8 @@ var envVarsToUnset = []string{
 	"MLR_VALUE_COLOR",
 	"MLR_REPL_PS1",
 	"MLR_REPL_PS2",
+	"MLR_REPL_PS1_COLOR",
+	"MLR_REPL_PS2_COLOR",
 }
 
 type stringPair struct {
