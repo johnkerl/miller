@@ -14,7 +14,7 @@ For example, the right file here has nine records, and the left file should add 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsvlite --opprint cat data/join-u-left.csv
+    mlr --icsvlite --opprint cat data/join-u-left.csv
     hostname              ipaddr
     nadir.east.our.org    10.3.1.18
     zenith.west.our.org   10.3.1.27
@@ -23,7 +23,7 @@ For example, the right file here has nine records, and the left file should add 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsvlite --opprint cat data/join-u-right.csv
+    mlr --icsvlite --opprint cat data/join-u-right.csv
     ipaddr    timestamp  bytes
     10.3.1.27 1448762579 4568
     10.3.1.18 1448762578 8729
@@ -38,7 +38,7 @@ For example, the right file here has nine records, and the left file should add 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
+    mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
     ipaddr    hostname              timestamp  bytes
     10.3.1.27 zenith.west.our.org   1448762579 4568
     10.4.5.94 apoapsis.east.our.org 1448762579 17445
@@ -52,7 +52,7 @@ The solution (besides pre-sorting the input files on the join keys) is to simply
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
+    mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
     ipaddr    hostname              timestamp  bytes
     10.3.1.27 zenith.west.our.org   1448762579 4568
     10.3.1.18 nadir.east.our.org    1448762578 8729
@@ -89,7 +89,7 @@ Joining on color the results are as expected:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv join -j id -f data/color-codes.csv data/color-names.csv
+    mlr --csv join -j id -f data/color-codes.csv data/color-names.csv
     id,code,color
     4,ff0000,red
     2,00ff00,green
@@ -99,7 +99,7 @@ However, if we ask for left-unpaireds, since there's no ``color`` column, we get
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv
+    mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv
     id,code,color
     4,ff0000,red
     2,00ff00,green
@@ -112,7 +112,7 @@ To fix this, we can use **unsparsify**:
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --csv join --ul -j id -f data/color-codes.csv \
+    mlr --csv join --ul -j id -f data/color-codes.csv \
       then unsparsify --fill-with "" \
       data/color-names.csv
     id,code,color
@@ -130,7 +130,7 @@ Suppose we have the following data:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat multi-join/input.csv
+    cat multi-join/input.csv
     id,task
     10,chop
     20,puree
@@ -146,7 +146,7 @@ And we want to augment the ``id`` column with lookups from the following data fi
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat multi-join/name-lookup.csv
+    cat multi-join/name-lookup.csv
     id,name
     30,Alice
     10,Bob
@@ -155,7 +155,7 @@ And we want to augment the ``id`` column with lookups from the following data fi
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat multi-join/status-lookup.csv
+    cat multi-join/status-lookup.csv
     id,status
     30,occupied
     10,idle
@@ -166,7 +166,7 @@ We can run the input file through multiple ``join`` commands in a ``then``-chain
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
+    mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
       then join -f multi-join/status-lookup.csv -j id \
       multi-join/input.csv
     id status   name  task

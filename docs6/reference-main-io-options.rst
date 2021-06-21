@@ -24,7 +24,7 @@ These are as discussed in :doc:`file-formats`, with the exception of ``--right``
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint cat data/small
+    mlr --opprint cat data/small
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -35,7 +35,7 @@ These are as discussed in :doc:`file-formats`, with the exception of ``--right``
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --right cat data/small
+    mlr --opprint --right cat data/small
       a   b i                   x                   y 
     pan pan 1  0.3467901443380824  0.7268028627434533 
     eks pan 2  0.7586799647899636  0.5221511083334797 
@@ -138,13 +138,13 @@ To apply formatting to a single field, overriding the global ``ofmt``, use ``fmt
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'
+    echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'
     x=3.1,y=4.3,z=%!l(float64=00013.33)f
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'
+    echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'
     x=0xffff,y=0xff,z=%!l(int=16711425)lx
 
 Input conversion from hexadecimal is done automatically on fields handled by ``mlr put`` and ``mlr filter`` as long as the field value begins with "0x".  To apply output conversion to hexadecimal on a single column, you may use ``fmtnum``, or the keystroke-saving ``hexfmt`` function. Example:
@@ -152,5 +152,5 @@ Input conversion from hexadecimal is done automatically on fields handled by ``m
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
+    echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
     x=0xffff,y=0xff,z=0xfeff01

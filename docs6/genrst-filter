@@ -92,16 +92,14 @@ def run_command(cmd_lines, output_handle)
   if status != 0
     raise "\"#{cmd}\" exited with non-zero code #{status}."
   end
-  cmd_line_1 = cmd_lines.shift
-  write_card(['$ '+cmd_line_1] + cmd_lines, cmd_output.split(/\n/), output_handle)
+  write_card(cmd_lines, cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------
 def run_command_tolerating_error(cmd_lines, output_handle)
   cmd = cmd_lines.join("\n")
   cmd_output = `#{cmd} 2>&1`
-  cmd_line_1 = cmd_lines.shift
-  write_card(['$ '+cmd_line_1] + cmd_lines, cmd_output.split(/\n/), output_handle)
+  write_card(cmd_lines, cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------
@@ -112,8 +110,7 @@ end
 # ----------------------------------------------------------------
 def show_command(cmd_lines, output_handle)
   # The command can be multi-line
-  cmd_line_1 = cmd_lines.shift
-  write_card(['$ '+cmd_line_1] + cmd_lines, [], output_handle)
+  write_card(cmd_lines, [], output_handle)
 end
 
 # ----------------------------------------------------------------

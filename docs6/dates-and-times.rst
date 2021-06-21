@@ -12,7 +12,7 @@ Given input like
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat dates.csv
+    cat dates.csv
     date,event
     2018-02-03,initialization
     2018-03-07,discovery
@@ -23,7 +23,7 @@ we can use ``strptime`` to parse the date field into seconds-since-epoch and the
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --csv filter '
+    mlr --csv filter '
       strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")
     ' dates.csv
     date,event
@@ -39,7 +39,7 @@ Suppose you have some date-stamped data which may (or may not) be missing entrie
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ head -n 10 data/miss-date.csv
+    head -n 10 data/miss-date.csv
     date,qoh
     2012-03-05,10055
     2012-03-06,10486
@@ -54,7 +54,7 @@ Suppose you have some date-stamped data which may (or may not) be missing entrie
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ wc -l data/miss-date.csv
+    wc -l data/miss-date.csv
         1372 data/miss-date.csv
 
 Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using ``strptime``, then compute adjacent differences (the ``cat -n`` simply inserts record-counters):
@@ -62,7 +62,7 @@ Since there are 1372 lines in the data file, some automation is called for. To f
 .. code-block:: none
    :emphasize-lines: 1-5
 
-    $ mlr --from data/miss-date.csv --icsv \
+    mlr --from data/miss-date.csv --icsv \
       cat -n \
       then put '$datestamp = strptime($date, "%Y-%m-%d")' \
       then step -a delta -f datestamp \
@@ -83,7 +83,7 @@ Then, filter for adjacent difference not being 86400 (the number of seconds in a
 .. code-block:: none
    :emphasize-lines: 1-5
 
-    $ mlr --from data/miss-date.csv --icsv \
+    mlr --from data/miss-date.csv --icsv \
       cat -n \
       then put '$datestamp = strptime($date, "%Y-%m-%d")' \
       then step -a delta -f datestamp \
@@ -96,7 +96,7 @@ Given this, it's now easy to see where the gaps are:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv
+    mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv
     n=770,1=2014-04-12,2=129435
     n=771,1=2014-04-13,2=129868
     n=772,1=2014-04-14,2=129797
@@ -112,7 +112,7 @@ Given this, it's now easy to see where the gaps are:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv
+    mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv
     n=1115,1=2015-03-25,2=181006
     n=1116,1=2015-03-26,2=180995
     n=1117,1=2015-03-27,2=181043

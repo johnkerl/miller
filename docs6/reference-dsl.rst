@@ -14,7 +14,7 @@ Example:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr stats1 -a sum -f x -g a data/small
+    mlr stats1 -a sum -f x -g a data/small
     a=pan,x_sum=0.3467901443380824
     a=eks,x_sum=1.1400793586611044
     a=wye,x_sum=0.7778922255683036
@@ -30,7 +30,7 @@ Example:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
+    mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
     a=pan,x_sum=0.3467901443380824
     a=eks,x_sum=1.1400793586611044
     a=wye,x_sum=0.7778922255683036
@@ -48,7 +48,7 @@ The essential usages of ``mlr filter`` and ``mlr put`` are for record-selection 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -60,7 +60,7 @@ you might retain only the records whose ``a`` field has value ``eks``:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr filter '$a == "eks"' data/small
+    mlr filter '$a == "eks"' data/small
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 
@@ -69,7 +69,7 @@ or you might add a new field which is a function of existing fields:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$ab = $a . "_" . $b ' data/small
+    mlr put '$ab = $a . "_" . $b ' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,ab=pan_pan
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,ab=eks_pan
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,ab=wye_wye

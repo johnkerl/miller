@@ -35,7 +35,7 @@ Example:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/regex-in-data.dat
+    cat data/regex-in-data.dat
     name=jane,regex=^j.*e$
     name=bill,regex=^b[ou]ll$
     name=bull,regex=^b[ou]ll$
@@ -43,7 +43,7 @@ Example:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr filter '$name =~ $regex' data/regex-in-data.dat
+    mlr filter '$name =~ $regex' data/regex-in-data.dat
     name=jane,regex=^j.*e$
     name=bull,regex=^b[ou]ll$
 

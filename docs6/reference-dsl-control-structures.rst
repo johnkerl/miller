@@ -12,7 +12,7 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat data/put-gating-example-1.dkvp
+    mlr cat data/put-gating-example-1.dkvp
     x=-1
     x=0
     x=1
@@ -22,7 +22,7 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
+    mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
     x=-1
     x=0
     x=1,y=0,z=0
@@ -32,7 +32,7 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat data/put-gating-example-2.dkvp
+    mlr cat data/put-gating-example-2.dkvp
     a=abc_123
     a=some other name
     a=xyz_789
@@ -40,7 +40,7 @@ These are reminiscent of ``awk`` syntax.  They can be used to allow assignments 
 .. code-block:: none
    :emphasize-lines: 1-5
 
-    $ mlr put '
+    mlr put '
       $a =~ "([a-z]+)_([0-9]+)" {
         $b = "left_\1"; $c = "right_\2"
       }' \
@@ -54,7 +54,7 @@ This produces heteregenous output which Miller, of course, has no problems with 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
+    mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
     x=1,y=0,z=0
     x=2,y=0.3010299956639812,z=0.5486620049392715
     x=3,y=0.4771212547196624,z=0.6907396432228734
@@ -62,7 +62,7 @@ This produces heteregenous output which Miller, of course, has no problems with 
 .. code-block:: none
    :emphasize-lines: 1-5
 
-    $ mlr put '
+    mlr put '
       $a =~ "([a-z]+)_([0-9]+)";
       $b = "left_\1";
       $c = "right_\2"
@@ -107,7 +107,7 @@ Miller's ``while`` and ``do-while`` are unsurprising in comparison to various la
 .. code-block:: none
    :emphasize-lines: 1-6
 
-    $ echo x=1,y=2 | mlr put '
+    echo x=1,y=2 | mlr put '
       while (NF < 10) {
         $[NF+1] = ""
       }
@@ -118,7 +118,7 @@ Miller's ``while`` and ``do-while`` are unsurprising in comparison to various la
 .. code-block:: none
    :emphasize-lines: 1-9
 
-    $ echo x=1,y=2 | mlr put '
+    echo x=1,y=2 | mlr put '
       do {
         $[NF+1] = "";
         if (NF == 5) {
@@ -147,7 +147,7 @@ The ``key`` variable is always bound to the *key* of key-value pairs:
 .. code-block:: none
    :emphasize-lines: 1-8
 
-    $ mlr --from data/small put '
+    mlr --from data/small put '
       print "NR = ".NR;
       for (key in $*) {
         value = $[key];
@@ -194,7 +194,7 @@ The ``key`` variable is always bound to the *key* of key-value pairs:
 .. code-block:: none
    :emphasize-lines: 1-8
 
-    $ mlr -n put '
+    mlr -n put '
       end {
         o = {1:2, 3:{4:5}};
         for (key in o) {
@@ -215,7 +215,7 @@ Single-level keys may be gotten at using either ``for(k,v)`` or ``for((k),v)``; 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/for-srec-example.tbl
+    cat data/for-srec-example.tbl
     label1 label2 f1  f2  f3
     blue   green  100 240 350
     red    green  120 11  195
@@ -224,7 +224,7 @@ Single-level keys may be gotten at using either ``for(k,v)`` or ``for((k),v)``; 
 .. code-block:: none
    :emphasize-lines: 1-11
 
-    $ mlr --pprint --from data/for-srec-example.tbl put '
+    mlr --pprint --from data/for-srec-example.tbl put '
       $sum1 = $f1 + $f2 + $f3;
       $sum2 = 0;
       $sum3 = 0;
@@ -243,7 +243,7 @@ Single-level keys may be gotten at using either ``for(k,v)`` or ``for((k),v)``; 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
+    mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
     a   b   i x                   y                   a_type b_type i_type x_type y_type
     pan pan 1 0.3467901443380824  0.7268028627434533  string string int    float  float
     eks pan 2 0.7586799647899636  0.5221511083334797  string string int    float  float
@@ -258,7 +258,7 @@ Important note: to avoid inconsistent looping behavior in case you're setting ne
 .. code-block:: none
    :emphasize-lines: 1-10
 
-    $ mlr --from data/small --opprint put '
+    mlr --from data/small --opprint put '
       $sum1 = 0;
       $sum2 = 0;
       for (k,v in $*) {
@@ -280,7 +280,7 @@ It can be confusing to modify the stream record while iterating over a copy of i
 .. code-block:: none
    :emphasize-lines: 1-9
 
-    $ mlr --from data/small --opprint put '
+    mlr --from data/small --opprint put '
       sum = 0;
       for (k,v in $*) {
         if (is_numeric(v)) {
@@ -314,7 +314,7 @@ That's confusing in the abstract, so a concrete example is in order. Suppose the
 .. code-block:: none
    :emphasize-lines: 1-10
 
-    $ mlr -n put --jknquoteint -q '
+    mlr -n put --jknquoteint -q '
       begin {
         @myvar = {
           1: 2,
@@ -343,7 +343,7 @@ Then we can get at various values as follows:
 .. code-block:: none
    :emphasize-lines: 1-16
 
-    $ mlr -n put --jknquoteint -q '
+    mlr -n put --jknquoteint -q '
       begin {
         @myvar = {
           1: 2,
@@ -366,7 +366,7 @@ Then we can get at various values as follows:
 .. code-block:: none
    :emphasize-lines: 1-17
 
-    $ mlr -n put --jknquoteint -q '
+    mlr -n put --jknquoteint -q '
       begin {
         @myvar = {
           1: 2,
@@ -389,7 +389,7 @@ Then we can get at various values as follows:
 .. code-block:: none
    :emphasize-lines: 1-17
 
-    $ mlr -n put --jknquoteint -q '
+    mlr -n put --jknquoteint -q '
       begin {
         @myvar = {
           1: 2,
@@ -416,7 +416,7 @@ These are supported as follows:
 .. code-block:: none
    :emphasize-lines: 1-7
 
-    $ mlr --from data/small --opprint put '
+    mlr --from data/small --opprint put '
       num suma = 0;
       for (a = 1; a <= NR; a += 1) {
         suma += a;
@@ -433,7 +433,7 @@ These are supported as follows:
 .. code-block:: none
    :emphasize-lines: 1-10
 
-    $ mlr --from data/small --opprint put '
+    mlr --from data/small --opprint put '
       num suma = 0;
       num sumb = 0;
       for (num a = 1, num b = 1; a <= NR; a += 1, b *= 2) {
@@ -470,7 +470,7 @@ Miller supports an ``awk``-like ``begin/end`` syntax.  The statements in the ``b
 .. code-block:: none
    :emphasize-lines: 1-5
 
-    $ mlr put '
+    mlr put '
       begin { @sum = 0 };
       @x_sum += $x;
       end { emit @x_sum }
@@ -492,7 +492,7 @@ Since uninitialized out-of-stream variables default to 0 for addition/substracti
 .. code-block:: none
    :emphasize-lines: 1-4
 
-    $ mlr put '
+    mlr put '
       @x_sum += $x;
       end { emit @x_sum }
     ' ../data/small
@@ -513,7 +513,7 @@ The **put -q** option is a shorthand which suppresses printing of each output re
 .. code-block:: none
    :emphasize-lines: 1-4
 
-    $ mlr put -q '
+    mlr put -q '
       @x_sum += $x;
       end { emit @x_sum }
     ' ../data/small
@@ -524,7 +524,7 @@ We can do similarly with multiple out-of-stream variables:
 .. code-block:: none
    :emphasize-lines: 1-8
 
-    $ mlr put -q '
+    mlr put -q '
       @x_count += 1;
       @x_sum += $x;
       end {
@@ -540,7 +540,7 @@ This is of course not much different than
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr stats1 -a count,sum -f x ../data/small
+    mlr stats1 -a count,sum -f x ../data/small
     x_count=10,x_sum=4.536293840335763
 
 Note that it's a syntax error for begin/end blocks to refer to field names (beginning with ``$``), since these execute outside the context of input records.

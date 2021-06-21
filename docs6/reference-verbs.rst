@@ -38,7 +38,7 @@ Map list of values to alternating key/value pairs.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr altkv -h
+    mlr altkv -h
     Usage: mlr altkv [options]
     Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
     Options:
@@ -47,13 +47,13 @@ Map list of values to alternating key/value pairs.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'a,b,c,d,e,f' | mlr altkv
+    echo 'a,b,c,d,e,f' | mlr altkv
     a=b,c=d,e=f
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'a,b,c,d,e,f,g' | mlr altkv
+    echo 'a,b,c,d,e,f,g' | mlr altkv
     a=b,c=d,e=f,4=g
 
 .. _reference-verbs-bar:
@@ -66,7 +66,7 @@ Cheesy bar-charting.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr bar -h
+    mlr bar -h
     Usage: mlr bar [options]
     Replaces a numeric field with a number of asterisks, allowing for cheesy
     bar plots. These align best with --opprint or --oxtab output format.
@@ -87,7 +87,7 @@ Cheesy bar-charting.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint cat data/small
+    mlr --opprint cat data/small
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -98,7 +98,7 @@ Cheesy bar-charting.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint bar --lo 0 --hi 1 -f x,y data/small
+    mlr --opprint bar --lo 0 --hi 1 -f x,y data/small
     a   b   i x                                        y
     pan pan 1 *************........................... *****************************...........
     eks pan 2 ******************************.......... ********************....................
@@ -109,7 +109,7 @@ Cheesy bar-charting.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small
+    mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small
     a   b   i x                                        y
     pan pan 1 #....................................... ***************************************#
     eks pan 2 ***************************************# ************************................
@@ -120,7 +120,7 @@ Cheesy bar-charting.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint bar --auto -f x,y data/small
+    mlr --opprint bar --auto -f x,y data/small
     a   b   i x                                                                                 y
     pan pan 1 [0.20460330576630303]**********..............................[0.7586799647899636] [0.13418874328430463]********************************........[0.8636244699032729]
     eks pan 2 [0.20460330576630303]***************************************#[0.7586799647899636] [0.13418874328430463]*********************...................[0.8636244699032729]
@@ -136,7 +136,7 @@ bootstrap
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr bootstrap --help
+    mlr bootstrap --help
     Usage: mlr bootstrap [options]
     Emits an n-sample, with replacement, of the input records.
     See also mlr sample and mlr shuffle.
@@ -205,7 +205,7 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat -h
+    mlr cat -h
     Usage: mlr cat [options]
     Passes input records directly to output. Most useful for format conversion.
     Options:
@@ -217,7 +217,7 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/a.csv
+    cat data/a.csv
     a,b,c
     1,2,3
     4,5,6
@@ -225,14 +225,14 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/b.csv
+    cat data/b.csv
     a,b,c
     7,8,9
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv cat data/a.csv data/b.csv
+    mlr --csv cat data/a.csv data/b.csv
     a,b,c
     1,2,3
     4,5,6
@@ -241,7 +241,7 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --oxtab cat data/a.csv data/b.csv
+    mlr --icsv --oxtab cat data/a.csv data/b.csv
     a 1
     b 2
     c 3
@@ -257,7 +257,7 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv cat -n data/a.csv data/b.csv
+    mlr --csv cat -n data/a.csv data/b.csv
     n,a,b,c
     1,1,2,3
     2,4,5,6
@@ -266,7 +266,7 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint cat data/small
+    mlr --opprint cat data/small
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -277,7 +277,7 @@ Most useful for format conversions (see :doc:`file-formats`, and concatenating m
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint cat -n -g a data/small
+    mlr --opprint cat -n -g a data/small
     n a   b   i x                   y
     1 pan pan 1 0.3467901443380824  0.7268028627434533
     1 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -293,7 +293,7 @@ check
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr check --help
+    mlr check --help
     Usage: mlr check [options]
     Consumes records without printing any output.
     Useful for doing a well-formatted check on input data.
@@ -308,7 +308,7 @@ clean-whitespace
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr clean-whitespace --help
+    mlr clean-whitespace --help
     Usage: mlr clean-whitespace [options]
     For each record, for each field in the record, whitespace-cleans the keys and/or
     values. Whitespace-cleaning entails stripping leading and trailing whitespace,
@@ -326,7 +326,7 @@ clean-whitespace
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --ojson cat data/clean-whitespace.csv
+    mlr --icsv --ojson cat data/clean-whitespace.csv
     {
       "  Name  ": "  Ann  Simons",
       " Preference  ": "  blue  "
@@ -343,7 +343,7 @@ clean-whitespace
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv
+    mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv
     {
       "Name": "  Ann  Simons",
       "Preference": "  blue  "
@@ -360,7 +360,7 @@ clean-whitespace
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv
+    mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv
     {
       "  Name  ": "Ann Simons",
       " Preference  ": "blue"
@@ -377,7 +377,7 @@ clean-whitespace
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv
+    mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv
     {
       "Name": "Ann Simons",
       "Preference": "blue"
@@ -407,7 +407,7 @@ count
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count --help
+    mlr count --help
     Usage: mlr count [options]
     Prints number of records, optionally grouped by distinct values for specified field names.
     Options:
@@ -419,13 +419,13 @@ count
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count data/medium
+    mlr count data/medium
     count=10000
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count -g a data/medium
+    mlr count -g a data/medium
     a=pan,count=2081
     a=eks,count=1965
     a=wye,count=1966
@@ -435,13 +435,13 @@ count
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count -n -g a data/medium
+    mlr count -n -g a data/medium
     count=5
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count -g b data/medium
+    mlr count -g b data/medium
     b=pan,count=1942
     b=wye,count=2057
     b=zee,count=1943
@@ -451,13 +451,13 @@ count
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count -n -g b data/medium
+    mlr count -n -g b data/medium
     count=5
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count -g a,b data/medium
+    mlr count -g a,b data/medium
     a=pan,b=pan,count=427
     a=eks,b=pan,count=371
     a=wye,b=wye,count=377
@@ -492,7 +492,7 @@ count-distinct
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count-distinct --help
+    mlr count-distinct --help
     Usage: mlr count-distinct [options]
     Prints number of records having distinct values for specified field names.
     Same as uniq -c.
@@ -511,7 +511,7 @@ count-distinct
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count-distinct -f a,b then sort -nr count data/medium
+    mlr count-distinct -f a,b then sort -nr count data/medium
     a=zee,b=wye,count=455
     a=pan,b=eks,count=429
     a=pan,b=pan,count=427
@@ -541,7 +541,7 @@ count-distinct
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count-distinct -u -f a,b data/medium
+    mlr count-distinct -u -f a,b data/medium
     field=a,value=pan,count=2081
     field=a,value=eks,count=1965
     field=a,value=wye,count=1966
@@ -556,7 +556,7 @@ count-distinct
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium
+    mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium
     a=zee,b=wye,someothername=455
     a=pan,b=eks,someothername=429
     a=pan,b=pan,someothername=427
@@ -586,7 +586,7 @@ count-distinct
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count-distinct -n -f a,b data/medium
+    mlr count-distinct -n -f a,b data/medium
     count=25
 
 .. _reference-verbs-count-similar:
@@ -597,7 +597,7 @@ count-similar
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr count-similar --help
+    mlr count-similar --help
     Usage: mlr count-similar [options]
     Ingests all records, then emits each record augmented by a count of
     the number of other records having the same group-by field values.
@@ -609,7 +609,7 @@ count-similar
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint head -n 20 data/medium
+    mlr --opprint head -n 20 data/medium
     a   b   i  x                   y
     pan pan 1  0.3467901443380824  0.7268028627434533
     eks pan 2  0.7586799647899636  0.5221511083334797
@@ -635,7 +635,7 @@ count-similar
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint head -n 20 then count-similar -g a data/medium
+    mlr --opprint head -n 20 then count-similar -g a data/medium
     a   b   i  x                   y                    count
     pan pan 1  0.3467901443380824  0.7268028627434533   4
     pan wye 10 0.5026260055412137  0.9526183602969864   4
@@ -661,7 +661,7 @@ count-similar
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium
+    mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium
     a   b   i  x                   y                    count
     eks pan 2  0.7586799647899636  0.5221511083334797   7
     eks wye 4  0.38139939387114097 0.13418874328430463  7
@@ -692,7 +692,7 @@ cut
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cut --help
+    mlr cut --help
     Usage: mlr cut [options]
     Passes through input records with specified fields included/excluded.
     Options:
@@ -715,7 +715,7 @@ cut
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint cat data/small
+    mlr --opprint cat data/small
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -726,7 +726,7 @@ cut
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint cut -f y,x,i data/small
+    mlr --opprint cut -f y,x,i data/small
     i x                   y
     1 0.3467901443380824  0.7268028627434533
     2 0.7586799647899636  0.5221511083334797
@@ -737,13 +737,13 @@ cut
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'a=1,b=2,c=3' | mlr cut -f b,c,a
+    echo 'a=1,b=2,c=3' | mlr cut -f b,c,a
     a=1,b=2,c=3
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a
+    echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a
     b=2,c=3,a=1
 
 .. _reference-verbs-decimate:
@@ -754,7 +754,7 @@ decimate
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr decimate --help
+    mlr decimate --help
     Usage: mlr decimate [options]
     Passes through one of every n records, optionally by category.
     Options:
@@ -772,7 +772,7 @@ fill-down
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr fill-down --help
+    mlr fill-down --help
     Usage: mlr fill-down [options]
     If a given record has a missing value for a given field, fill that from
     the corresponding value from a previous record, if any.
@@ -791,7 +791,7 @@ fill-down
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/fill-down.csv
+    cat data/fill-down.csv
     a,b,c
     1,,3
     4,5,6
@@ -800,7 +800,7 @@ fill-down
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv fill-down -f b data/fill-down.csv
+    mlr --csv fill-down -f b data/fill-down.csv
     a,b,c
     1,,3
     4,5,6
@@ -809,7 +809,7 @@ fill-down
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv fill-down -a -f b data/fill-down.csv
+    mlr --csv fill-down -a -f b data/fill-down.csv
     a,b,c
     1,,3
     4,5,6
@@ -823,7 +823,7 @@ filter
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr filter --help
+    mlr filter --help
     Usage: mlr put [options] {DSL expression}
     Options:
     -f {file name} File containing a DSL expression. If the filename is a directory,
@@ -890,7 +890,7 @@ format-values
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr format-values --help
+    mlr format-values --help
     Usage: mlr format-values [options]
     Applies format strings to all field values, depending on autodetected type.
     * If a field value is detected to be integer, applies integer format.
@@ -924,7 +924,7 @@ format-values
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint format-values data/small
+    mlr --opprint format-values data/small
     a   b   i x        y
     pan pan 1 0.346790 0.726803
     eks pan 2 0.758680 0.522151
@@ -935,7 +935,7 @@ format-values
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint format-values -n data/small
+    mlr --opprint format-values -n data/small
     a   b   i        x        y
     pan pan 1.000000 0.346790 0.726803
     eks pan 2.000000 0.758680 0.522151
@@ -946,7 +946,7 @@ format-values
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small
+    mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small
     a     b     i                   x                      y
     XpanX XpanX %!l(int=00000001)lx %!l(float64=0.34679)e  %!l(float64=0.726803)e
     XeksX XpanX %!l(int=00000002)lx %!l(float64=0.75868)e  %!l(float64=0.522151)e
@@ -957,7 +957,7 @@ format-values
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small
+    mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small
     a     b     i               x                      y
     XpanX XpanX %!l(float64=1)e %!l(float64=0.34679)e  %!l(float64=0.726803)e
     XeksX XpanX %!l(float64=2)e %!l(float64=0.75868)e  %!l(float64=0.522151)e
@@ -973,7 +973,7 @@ fraction
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr fraction --help
+    mlr fraction --help
     Usage: mlr fraction [options]
     For each record's value in specified fields, computes the ratio of that
     value to the sum of values in that field over all input records.
@@ -1017,7 +1017,7 @@ Then we can see what each record's ``n`` contributes to the total ``n``:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint fraction -f n data/fraction-example.csv
+    mlr --opprint fraction -f n data/fraction-example.csv
     u      v      n    n_fraction
     female red    2458 0.32638427831629263
     female green  192  0.025494622228123754
@@ -1037,7 +1037,7 @@ Using ``-g`` we can split those out by gender, or by color:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint fraction -f n -g u data/fraction-example.csv
+    mlr --opprint fraction -f n -g u data/fraction-example.csv
     u      v      n    n_fraction
     female red    2458 0.7073381294964028
     female green  192  0.05525179856115108
@@ -1055,7 +1055,7 @@ Using ``-g`` we can split those out by gender, or by color:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint fraction -f n -g v data/fraction-example.csv
+    mlr --opprint fraction -f n -g v data/fraction-example.csv
     u      v      n    n_fraction
     female red    2458 0.9450211457131872
     female green  192  0.45823389021479716
@@ -1077,7 +1077,7 @@ To convert fractions to percents, you may use ``-p``:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint fraction -f n -p data/fraction-example.csv
+    mlr --opprint fraction -f n -p data/fraction-example.csv
     u      v      n    n_percent
     female red    2458 32.638427831629265
     female green  192  2.5494622228123753
@@ -1097,7 +1097,7 @@ Another often-used idiom is to convert from a point distribution to a cumulative
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint fraction -f n -p -c data/fraction-example.csv
+    mlr --opprint fraction -f n -p -c data/fraction-example.csv
     u      v      n    n_cumulative_percent
     female red    2458 32.638427831629265
     female green  192  35.18789005444164
@@ -1115,7 +1115,7 @@ Another often-used idiom is to convert from a point distribution to a cumulative
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv
+    mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv
     u      v      n    n_cumulative_percent
     female red    2458 70.73381294964028
     female green  192  76.2589928057554
@@ -1138,7 +1138,7 @@ grep
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr grep -h
+    mlr grep -h
     Usage: mlr grep [options] {regular expression}
     Passes through records which match the regular expression.
     Options:
@@ -1165,7 +1165,7 @@ group-by
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr group-by --help
+    mlr group-by --help
     Usage: mlr group-by [options] {comma-separated field names}
     Outputs records in batches having identical values at specified field names.Options:
     -h|--help Show this message.
@@ -1175,7 +1175,7 @@ This is similar to ``sort`` but with less work. Namely, Miller's sort has three 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint group-by a data/small
+    mlr --opprint group-by a data/small
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -1186,7 +1186,7 @@ This is similar to ``sort`` but with less work. Namely, Miller's sort has three 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint sort -f a data/small
+    mlr --opprint sort -f a data/small
     a   b   i x                   y
     eks pan 2 0.7586799647899636  0.5221511083334797
     eks wye 4 0.38139939387114097 0.13418874328430463
@@ -1204,7 +1204,7 @@ group-like
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr group-like --help
+    mlr group-like --help
     Usage: mlr group-like [options]
     Outputs records in batches having identical field names.Options:
     -h|--help Show this message.
@@ -1214,7 +1214,7 @@ This groups together records having the same schema (i.e. same ordered list of f
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat data/het.dkvp
+    mlr cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
     record_count=100,resource=/path/to/file
     resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -1224,7 +1224,7 @@ This groups together records having the same schema (i.e. same ordered list of f
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint group-like data/het.dkvp
+    mlr --opprint group-like data/het.dkvp
     resource             loadsec ok
     /path/to/file        0.45    true
     /path/to/second/file 0.32    true
@@ -1242,7 +1242,7 @@ having-fields
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr having-fields --help
+    mlr having-fields --help
     Usage: mlr having-fields [options]
     Conditionally passes through records depending on each record's field names.
     Options:
@@ -1263,7 +1263,7 @@ Similar to :ref:`reference-verbs-group-like`, this retains records with specifie
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat data/het.dkvp
+    mlr cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
     record_count=100,resource=/path/to/file
     resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -1273,7 +1273,7 @@ Similar to :ref:`reference-verbs-group-like`, this retains records with specifie
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr having-fields --at-least resource data/het.dkvp
+    mlr having-fields --at-least resource data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
     record_count=100,resource=/path/to/file
     resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -1283,7 +1283,7 @@ Similar to :ref:`reference-verbs-group-like`, this retains records with specifie
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr having-fields --which-are resource,ok,loadsec data/het.dkvp
+    mlr having-fields --which-are resource,ok,loadsec data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
     resource=/path/to/second/file,loadsec=0.32,ok=true
     resource=/some/other/path,loadsec=0.97,ok=false
@@ -1296,7 +1296,7 @@ head
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr head --help
+    mlr head --help
     Usage: mlr head [options]
     Passes through the first n records, optionally by category.
     Options:
@@ -1309,7 +1309,7 @@ Note that ``head`` is distinct from :ref:`reference-verbs-top` -- ``head`` shows
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint head -n 4 data/medium
+    mlr --opprint head -n 4 data/medium
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -1319,7 +1319,7 @@ Note that ``head`` is distinct from :ref:`reference-verbs-top` -- ``head`` shows
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint head -n 1 -g b data/medium
+    mlr --opprint head -n 1 -g b data/medium
     a   b   i  x                   y
     pan pan 1  0.3467901443380824  0.7268028627434533
     wye wye 3  0.20460330576630303 0.33831852551664776
@@ -1335,7 +1335,7 @@ histogram
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr histogram --help
+    mlr histogram --help
     Just a histogram. Input values < lo or > hi are not counted.
     Usage: mlr histogram [options]
     -f {a,b,c}    Value-field names for histogram counts
@@ -1352,7 +1352,7 @@ This is just a histogram; there's not too much to say here. A note about binning
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
+    mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
       then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 \
       data/medium
     bin_lo bin_hi x_count x2_count x3_count
@@ -1370,7 +1370,7 @@ This is just a histogram; there's not too much to say here. A note about binning
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
+    mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
       then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ \
       data/medium
     my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
@@ -1393,7 +1393,7 @@ join
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr join --help
+    mlr join --help
     Usage: mlr sort {flags}
     Sorts records primarily by the first specified field, secondarily by the second
     field, and so on.  (Any records not having all specified sort keys will appear
@@ -1421,7 +1421,7 @@ Join larger table with IDs with smaller ID-to-name lookup table, showing only pa
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsvlite --opprint cat data/join-left-example.csv
+    mlr --icsvlite --opprint cat data/join-left-example.csv
     id  name
     100 alice
     200 bob
@@ -1432,7 +1432,7 @@ Join larger table with IDs with smaller ID-to-name lookup table, showing only pa
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsvlite --opprint cat data/join-right-example.csv
+    mlr --icsvlite --opprint cat data/join-right-example.csv
     status  idcode
     present 400
     present 100
@@ -1458,7 +1458,7 @@ Join larger table with IDs with smaller ID-to-name lookup table, showing only pa
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --icsvlite --opprint \
+    mlr --icsvlite --opprint \
       join -u -j id -r idcode -f data/join-left-example.csv \
       data/join-right-example.csv
     id  name  status
@@ -1487,7 +1487,7 @@ Same, but with sorting the input first:
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --icsvlite --opprint sort -f idcode \
+    mlr --icsvlite --opprint sort -f idcode \
       then join -j id -r idcode -f data/join-left-example.csv \
       data/join-right-example.csv
     id  name  status
@@ -1516,7 +1516,7 @@ Same, but showing only unpaired records:
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --icsvlite --opprint \
+    mlr --icsvlite --opprint \
       join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv \
       data/join-right-example.csv
     status  idcode
@@ -1530,7 +1530,7 @@ Use prefixing options to disambiguate between otherwise identical non-join field
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv
+    mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv
     a b c
     1 2 3
     1 4 5
@@ -1540,7 +1540,7 @@ Use prefixing options to disambiguate between otherwise identical non-join field
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+    mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
     a left_b left_c right_b right_c
     1 2      3      2       3
     1 4      5      2       3
@@ -1552,7 +1552,7 @@ Use zero join columns:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+    mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
     left_a left_b left_c right_a right_b right_c
     1      2      3      1       2       3
     1      4      5      1       2       3
@@ -1567,7 +1567,7 @@ label
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr label --help
+    mlr label --help
     Usage: mlr label [options] {new1,new2,new3,...}
     Given n comma-separated names, renames the first n fields of each record to
     have the respective name. (Fields past the nth are left with their original
@@ -1600,7 +1600,7 @@ Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of i
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/headerless.csv
+    cat data/headerless.csv
     John,23,present
     Fred,34,present
     Alice,56,missing
@@ -1609,7 +1609,7 @@ Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of i
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr  --csv --implicit-csv-header cat data/headerless.csv
+    mlr  --csv --implicit-csv-header cat data/headerless.csv
     1,2,3
     John,23,present
     Fred,34,present
@@ -1619,7 +1619,7 @@ Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of i
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr  --csv --implicit-csv-header label name,age,status data/headerless.csv
+    mlr  --csv --implicit-csv-header label name,age,status data/headerless.csv
     name,age,status
     John,23,present
     Fred,34,present
@@ -1629,7 +1629,7 @@ Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of i
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv
+    mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv
     name  age status
     John  23  present
     Fred  34  present
@@ -1644,7 +1644,7 @@ least-frequent
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr least-frequent -h
+    mlr least-frequent -h
     Usage: mlr least-frequent [options]
     Shows the least frequently occurring distinct values for specified field names.
     The first entry is the statistical anti-mode; the remaining are runners-up.
@@ -1658,7 +1658,7 @@ least-frequent
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5
+    mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5
     shape    count
     circle   2591
     triangle 3372
@@ -1667,7 +1667,7 @@ least-frequent
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5
+    mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5
     shape    color  count
     circle   orange 68
     triangle orange 107
@@ -1678,7 +1678,7 @@ least-frequent
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -o someothername
+    mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -o someothername
     shape    color  someothername
     circle   orange 68
     triangle orange 107
@@ -1689,7 +1689,7 @@ least-frequent
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b
+    mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b
     shape    color
     circle   orange
     triangle orange
@@ -1707,7 +1707,7 @@ merge-fields
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr merge-fields --help
+    mlr merge-fields --help
     Usage: mlr merge-fields [options]
     Computes univariate statistics for each input record, accumulated across
     specified fields.
@@ -1759,7 +1759,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csvlite --opprint cat data/inout.csv
+    mlr --csvlite --opprint cat data/inout.csv
     a_in a_out b_in b_out
     436  490   446  195
     526  320   963  780
@@ -1768,7 +1768,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv
+    mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv
     a_min a_max a_sum b_min b_max b_sum
     436   490   926   195   446   641
     320   526   846   780   963   1743
@@ -1777,7 +1777,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv
+    mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv
     a_in a_out b_in b_out a_sum b_sum
     436  490   446  195   926   641
     526  320   963  780   846   1743
@@ -1791,7 +1791,7 @@ most-frequent
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr most-frequent -h
+    mlr most-frequent -h
     Usage: mlr most-frequent [options]
     Shows the most frequently occurring distinct values for specified field names.
     The first entry is the statistical mode; the remaining are runners-up.
@@ -1805,7 +1805,7 @@ most-frequent
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5
+    mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5
     shape    count
     square   4115
     triangle 3372
@@ -1814,29 +1814,29 @@ most-frequent
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5
+    mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5
     shape    color  count
     square   red    1874
     triangle red    1560
     circle   red    1207
-    square   blue   589
     square   yellow 589
+    square   blue   589
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -o someothername
+    mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -o someothername
     shape    color  someothername
     square   red    1874
     triangle red    1560
     circle   red    1207
-    square   yellow 589
     square   blue   589
+    square   yellow 589
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b
+    mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b
     shape    color
     square   red
     triangle red
@@ -1854,7 +1854,7 @@ nest
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr nest -h
+    mlr nest -h
     Usage: mlr nest [options]
     Explodes specified field values into separate fields/records, or reverses this.
     Options:
@@ -1911,7 +1911,7 @@ nothing
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr nothing -h
+    mlr nothing -h
     Usage: mlr nothing [options]
     Drops all input records. Useful for testing, or after tee/print/etc. have
     produced other output.
@@ -1926,7 +1926,7 @@ put
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put --help
+    mlr put --help
     Usage: mlr put [options] {DSL expression}
     Options:
     -f {file name} File containing a DSL expression. If the filename is a directory,
@@ -1993,7 +1993,7 @@ regularize
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr regularize --help
+    mlr regularize --help
     Usage: mlr regularize [options]
     Outputs records sorted lexically ascending by keys.Options:
     -h|--help Show this message.
@@ -2010,7 +2010,7 @@ remove-empty-columns
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr remove-empty-columns --help
+    mlr remove-empty-columns --help
     Usage: mlr remove-empty-columns [options]
     Omits fields which are empty on every input row. Non-streaming.
     Options:
@@ -2019,7 +2019,7 @@ remove-empty-columns
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/remove-empty-columns.csv
+    cat data/remove-empty-columns.csv
     a,b,c,d,e
     1,,3,,5
     2,,4,,5
@@ -2028,7 +2028,7 @@ remove-empty-columns
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv remove-empty-columns data/remove-empty-columns.csv
+    mlr --csv remove-empty-columns data/remove-empty-columns.csv
     a,c,e
     1,3,5
     2,4,5
@@ -2044,7 +2044,7 @@ rename
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr rename --help
+    mlr rename --help
     Usage: mlr rename [options] {old1,new1,old2,new2,...}
     Renames specified fields.
     Options:
@@ -2070,7 +2070,7 @@ rename
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint cat data/small
+    mlr --opprint cat data/small
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -2081,7 +2081,7 @@ rename
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint rename i,INDEX,b,COLUMN2 data/small
+    mlr --opprint rename i,INDEX,b,COLUMN2 data/small
     a   COLUMN2 INDEX x                   y
     pan pan     1     0.3467901443380824  0.7268028627434533
     eks pan     2     0.7586799647899636  0.5221511083334797
@@ -2094,7 +2094,7 @@ As discussed in :doc:`performance`, ``sed`` is significantly faster than Miller 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ sed 's/y/COLUMN5/g' data/small
+    sed 's/y/COLUMN5/g' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,COLUMN5=0.5221511083334797
     a=wCOLUMN5e,b=wCOLUMN5e,i=3,x=0.20460330576630303,COLUMN5=0.33831852551664776
@@ -2104,7 +2104,7 @@ As discussed in :doc:`performance`, ``sed`` is significantly faster than Miller 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr rename y,COLUMN5 data/small
+    mlr rename y,COLUMN5 data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,COLUMN5=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,COLUMN5=0.33831852551664776
@@ -2121,7 +2121,7 @@ reorder
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr reorder --help
+    mlr reorder --help
     Usage: mlr reorder [options]
     Moves specified names to start of record, or end of record.
     Options:
@@ -2146,7 +2146,7 @@ two to the front of line where you can give a quick visual scan.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint cat data/small
+    mlr --opprint cat data/small
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -2157,7 +2157,7 @@ two to the front of line where you can give a quick visual scan.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint reorder -f i,b data/small
+    mlr --opprint reorder -f i,b data/small
     i b   a   x                   y
     1 pan pan 0.3467901443380824  0.7268028627434533
     2 pan eks 0.7586799647899636  0.5221511083334797
@@ -2168,7 +2168,7 @@ two to the front of line where you can give a quick visual scan.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint reorder -e -f i,b data/small
+    mlr --opprint reorder -e -f i,b data/small
     a   x                   y                   i b
     pan 0.3467901443380824  0.7268028627434533  1 pan
     eks 0.7586799647899636  0.5221511083334797  2 pan
@@ -2184,7 +2184,7 @@ repeat
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr repeat --help
+    mlr repeat --help
     Usage: mlr repeat [options]
     Copies input records to output records multiple times.
     Options must be exactly one of the following:
@@ -2218,7 +2218,7 @@ samples from data which has been count-aggregated:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/repeat-example.dat
+    cat data/repeat-example.dat
     color=blue,count=5
     color=red,count=4
     color=green,count=3
@@ -2226,7 +2226,7 @@ samples from data which has been count-aggregated:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr repeat -f count then cut -x -f count data/repeat-example.dat
+    mlr repeat -f count then cut -x -f count data/repeat-example.dat
     color=blue
     color=blue
     color=blue
@@ -2252,7 +2252,7 @@ reshape
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr reshape --help
+    mlr reshape --help
     Usage: mlr reshape [options]
     Wide-to-long options:
       -i {input field names}   -o {key-field name,value-field name}
@@ -2317,7 +2317,7 @@ sample
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sample --help
+    mlr sample --help
     Usage: mlr sample [options]
     Reservoir sampling (subsampling without replacement), optionally by category.
     See also mlr bootstrap and mlr shuffle.
@@ -2391,7 +2391,7 @@ sec2gmt
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sec2gmt -h
+    mlr sec2gmt -h
     Usage: mlr sec2gmt [options] {comma-separated list of field names}
     Replaces a numeric field representing seconds since the epoch with the
     corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
@@ -2414,7 +2414,7 @@ sec2gmtdate
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sec2gmtdate -h
+    mlr sec2gmtdate -h
     Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
     Replaces a numeric field representing seconds since the epoch with the
     corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
@@ -2431,7 +2431,7 @@ seqgen
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr seqgen -h
+    mlr seqgen -h
     Usage: mlr seqgen [options]
     Passes input records directly to output. Most useful for format conversion.
     Produces a sequence of counters.  Discards the input record stream. Produces
@@ -2450,7 +2450,7 @@ seqgen
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr seqgen --stop 10
+    mlr seqgen --stop 10
     i=1
     i=2
     i=3
@@ -2465,7 +2465,7 @@ seqgen
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr seqgen --start 20 --stop 40 --step 4
+    mlr seqgen --start 20 --stop 40 --step 4
     i=20
     i=24
     i=28
@@ -2476,7 +2476,7 @@ seqgen
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr seqgen --start 40 --stop 20 --step -4
+    mlr seqgen --start 40 --stop 20 --step -4
     i=40
     i=36
     i=32
@@ -2492,7 +2492,7 @@ shuffle
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr shuffle -h
+    mlr shuffle -h
     Usage: mlr shuffle [options]
     Outputs records randomly permuted. No output records are produced until
     all input records are read. See also mlr bootstrap and mlr sample.
@@ -2507,7 +2507,7 @@ skip-trivial-records
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr skip-trivial-records -h
+    mlr skip-trivial-records -h
     Usage: mlr skip-trivial-records [options]
     Passes through all records except those with zero fields,
     or those for which all fields have empty value.
@@ -2517,7 +2517,7 @@ skip-trivial-records
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/trivial-records.csv
+    cat data/trivial-records.csv
     a,b,c
     1,2,3
     4,,6
@@ -2527,7 +2527,7 @@ skip-trivial-records
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv skip-trivial-records data/trivial-records.csv
+    mlr --csv skip-trivial-records data/trivial-records.csv
     a,b,c
     1,2,3
     4,,6
@@ -2541,7 +2541,7 @@ sort
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sort --help
+    mlr sort --help
     Usage: mlr sort {flags}
     Sorts records primarily by the first specified field, secondarily by the second
     field, and so on.  (Any records not having all specified sort keys will appear
@@ -2567,7 +2567,7 @@ Example:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint sort -f a -nr x data/small
+    mlr --opprint sort -f a -nr x data/small
     a   b   i x                   y
     eks pan 2 0.7586799647899636  0.5221511083334797
     eks wye 4 0.38139939387114097 0.13418874328430463
@@ -2580,7 +2580,7 @@ Here's an example filtering log data: suppose multiple threads (labeled here by 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ head -n 10 data/multicountdown.dat
+    head -n 10 data/multicountdown.dat
     upsec=0.002,color=green,count=1203
     upsec=0.083,color=red,count=3817
     upsec=0.188,color=red,count=3801
@@ -2599,7 +2599,7 @@ timestamps within each thread's log data are still chronological:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ head -n 20 data/multicountdown.dat | mlr --opprint sort -f color
+    head -n 20 data/multicountdown.dat | mlr --opprint sort -f color
     upsec              color  count
     0.395              blue   2697
     0.671              blue   2684
@@ -2628,7 +2628,7 @@ were encountered, regardless of the specified sort order:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sort -n  x data/sort-missing.dkvp
+    mlr sort -n  x data/sort-missing.dkvp
     x=1
     x=2
     x=4
@@ -2637,7 +2637,7 @@ were encountered, regardless of the specified sort order:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sort -nr x data/sort-missing.dkvp
+    mlr sort -nr x data/sort-missing.dkvp
     x=4
     x=2
     x=1
@@ -2651,7 +2651,7 @@ sort-within-records
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sort-within-records -h
+    mlr sort-within-records -h
     Usage: mlr sort-within-records [options]
     Outputs records sorted lexically ascending by keys.
     Options:
@@ -2661,7 +2661,7 @@ sort-within-records
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/sort-within-records.json
+    cat data/sort-within-records.json
     {
       "a": 1,
       "b": 2,
@@ -2681,7 +2681,7 @@ sort-within-records
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --ijson --opprint cat data/sort-within-records.json
+    mlr --ijson --opprint cat data/sort-within-records.json
     a b c
     1 2 3
     
@@ -2694,7 +2694,7 @@ sort-within-records
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --json sort-within-records data/sort-within-records.json
+    mlr --json sort-within-records data/sort-within-records.json
     {
       "a": 1,
       "b": 2,
@@ -2714,7 +2714,7 @@ sort-within-records
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --ijson --opprint sort-within-records data/sort-within-records.json
+    mlr --ijson --opprint sort-within-records data/sort-within-records.json
     a b c
     1 2 3
     5 4 6
@@ -2728,7 +2728,7 @@ stats1
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr stats1 --help
+    mlr stats1 --help
     Usage: mlr stats1 [options]
     Computes univariate statistics for one or more given fields, accumulated across
     the input record stream.
@@ -2789,7 +2789,7 @@ optionally categorized by one or more other fields.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium
+    mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium
     x_count 10000
     x_sum   4986.019681679581
     x_min   4.509679127584487e-05
@@ -2810,7 +2810,7 @@ optionally categorized by one or more other fields.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium
+    mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium
     b   x_mean             y_mean
     eks 0.5063609846272304 0.510292657158104
     hat 0.4878988625336502 0.5131176341556505
@@ -2821,7 +2821,7 @@ optionally categorized by one or more other fields.
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --opprint stats1 -a p50,p99 -f u,v -g color \
+    mlr --opprint stats1 -a p50,p99 -f u,v -g color \
       then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' \
       data/colored-shapes.dkvp
     color  u_p50               u_p99              v_p50               v_p99              ur                 vr
@@ -2835,7 +2835,7 @@ optionally categorized by one or more other fields.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp
+    mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp
     shape    count
     square   4115
     triangle 3372
@@ -2844,7 +2844,7 @@ optionally categorized by one or more other fields.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp
+    mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp
     shape    color_mode
     triangle red
     square   red
@@ -2858,7 +2858,7 @@ stats2
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr stats2 --help
+    mlr stats2 --help
     Usage: mlr stats2 [options]
     Computes bivariate statistics for one or more given field-name pairs,
     accumulated across the input record stream.
@@ -2892,7 +2892,7 @@ fields, optionally categorized by one or more fields.
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
+    mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
       then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 \
       data/medium
     x_y_cov    4.2574820827444476e-05
@@ -2907,7 +2907,7 @@ fields, optionally categorized by one or more fields.
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
+    mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
       then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a \
       data/medium
     a   x_y_ols_m             x_y_ols_b           x_y_ols_n x_y_r2                 y_y_ols_m y_y_ols_b y_y_ols_n y_y_r2 xy_y2_ols_m        xy_y2_ols_b         xy_y2_ols_n xy_y2_r2
@@ -2958,7 +2958,7 @@ Here's an example estimating time-to-completion for a set of jobs. Input data co
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ head -n 10 data/multicountdown.dat
+    head -n 10 data/multicountdown.dat
     upsec=0.002,color=green,count=1203
     upsec=0.083,color=red,count=3817
     upsec=0.188,color=red,count=3801
@@ -2975,7 +2975,7 @@ We can do a linear regression on count remaining as a function of time: with ``c
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color \
+    mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color \
       then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' \
       data/multicountdown.dat
     color                   green
@@ -3014,7 +3014,7 @@ step
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr step --help
+    mlr step --help
     Usage: mlr step [options]
     Computes values dependent on the previous record, optionally grouped by category.
     Options:
@@ -3058,7 +3058,7 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint step -a shift,delta,rsum,counter -f x data/medium | head -15
+    mlr --opprint step -a shift,delta,rsum,counter -f x data/medium | head -15
     a   b   i     x                      y                      x_shift                x_delta                 x_rsum             x_counter
     pan pan 1     0.3467901443380824     0.7268028627434533     -                      0                       0.3467901443380824 1
     eks pan 2     0.7586799647899636     0.5221511083334797     0.3467901443380824     0.41188982045188116     1.105470109128046  2
@@ -3078,7 +3078,7 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15
+    mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15
     a   b   i     x                      y                      x_shift                x_delta                 x_rsum              x_counter
     pan pan 1     0.3467901443380824     0.7268028627434533     -                      0                       0.3467901443380824  1
     eks pan 2     0.7586799647899636     0.5221511083334797     -                      0                       0.7586799647899636  1
@@ -3098,7 +3098,7 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint step -a ewma -f x -d 0.1,0.9 data/medium | head -15
+    mlr --opprint step -a ewma -f x -d 0.1,0.9 data/medium | head -15
     a   b   i     x                      y                      x_ewma_0.1          x_ewma_0.9
     pan pan 1     0.3467901443380824     0.7268028627434533     0.3467901443380824  0.3467901443380824
     eks pan 2     0.7586799647899636     0.5221511083334797     0.3879791263832706  0.7174909827447755
@@ -3118,7 +3118,7 @@ Most Miller commands are record-at-a-time, with the exception of ``stats1``, ``s
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough data/medium | head -15
+    mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough data/medium | head -15
     a   b   i     x                      y                      x_ewma_smooth       x_ewma_rough
     pan pan 1     0.3467901443380824     0.7268028627434533     0.3467901443380824  0.3467901443380824
     eks pan 2     0.7586799647899636     0.5221511083334797     0.3879791263832706  0.7174909827447755
@@ -3160,7 +3160,7 @@ tac
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr tac --help
+    mlr tac --help
     Usage: mlr tac [options]
     Prints records in reverse order from the order in which they were encountered.
     Options:
@@ -3171,7 +3171,7 @@ Prints the records in the input stream in reverse order. Note: this requires Mil
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint cat data/a.csv
+    mlr --icsv --opprint cat data/a.csv
     a b c
     1 2 3
     4 5 6
@@ -3179,14 +3179,14 @@ Prints the records in the input stream in reverse order. Note: this requires Mil
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint cat data/b.csv
+    mlr --icsv --opprint cat data/b.csv
     a b c
     7 8 9
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint tac data/a.csv data/b.csv
+    mlr --icsv --opprint tac data/a.csv data/b.csv
     a b c
     7 8 9
     4 5 6
@@ -3195,7 +3195,7 @@ Prints the records in the input stream in reverse order. Note: this requires Mil
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv
+    mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv
     a b c filename
     7 8 9 data/b.csv
     4 5 6 data/a.csv
@@ -3209,7 +3209,7 @@ tail
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr tail --help
+    mlr tail --help
     Usage: mlr tail [options]
     Passes through the last n records, optionally by category.
     Options:
@@ -3222,7 +3222,7 @@ Prints the last *n* records in the input stream, optionally by category.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint tail -n 4 data/colored-shapes.dkvp
+    mlr --opprint tail -n 4 data/colored-shapes.dkvp
     color  shape    flag i     u                    v                   w                   x
     blue   square   1    99974 0.6189062525431605   0.2637962404841453  0.5311465405784674  6.210738209085753
     blue   triangle 0    99976 0.008110504040268474 0.8267274952432482  0.4732962944898885  6.146956761817328
@@ -3232,7 +3232,7 @@ Prints the last *n* records in the input stream, optionally by category.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp
+    mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp
     color  shape    flag i     u                  v                   w                   x
     yellow triangle 0    99990 0.3839424618160777 0.55952913620132    0.5113763011485609  4.307973891915119
     blue   square   1    99974 0.6189062525431605 0.2637962404841453  0.5311465405784674  6.210738209085753
@@ -3246,7 +3246,7 @@ tee
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr tee --help
+    mlr tee --help
     Usage: mlr tee [options] {filename}
     Options:
     -a    Append to existing file, if any, rather than overwriting.
@@ -3266,7 +3266,7 @@ top
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr top --help
+    mlr top --help
     Usage: mlr top [options]
     -f {a,b,c}    Value-field names for top counts.
     -g {d,e,f}    Optional group-by-field names for top counts.
@@ -3285,7 +3285,7 @@ Note that ``top`` is distinct from :ref:`reference-verbs-head` -- ``head`` shows
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint top -n 4 -f x data/medium
+    mlr --opprint top -n 4 -f x data/medium
     top_idx x_top
     1       0.999952670371898
     2       0.9998228522652893
@@ -3295,7 +3295,7 @@ Note that ``top`` is distinct from :ref:`reference-verbs-head` -- ``head`` shows
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint top -n 4 -f x -o someothername data/medium
+    mlr --opprint top -n 4 -f x -o someothername data/medium
     someothername x_top
     1             0.999952670371898
     2             0.9998228522652893
@@ -3305,7 +3305,7 @@ Note that ``top`` is distinct from :ref:`reference-verbs-head` -- ``head`` shows
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
+    mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
     a   top_idx x_top
     eks 1       0.9988110946859143
     eks 2       0.9985342548358704
@@ -3326,7 +3326,7 @@ uniq
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr uniq --help
+    mlr uniq --help
     Usage: mlr uniq [options]
     Prints distinct values for specified field names. With -c, same as
     count-distinct. For uniq, -f is a synonym for -g.
@@ -3346,13 +3346,13 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ wc -l data/colored-shapes.dkvp
+    wc -l data/colored-shapes.dkvp
        10078 data/colored-shapes.dkvp
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr uniq -g color,shape data/colored-shapes.dkvp
+    mlr uniq -g color,shape data/colored-shapes.dkvp
     color=yellow,shape=triangle
     color=red,shape=square
     color=red,shape=circle
@@ -3375,7 +3375,7 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp
+    mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp
     color  shape    count
     blue   circle   384
     blue   square   589
@@ -3399,7 +3399,7 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --opprint uniq -g color,shape -c -o someothername \
+    mlr --opprint uniq -g color,shape -c -o someothername \
       then sort -nr someothername \
       data/colored-shapes.dkvp
     color  shape    someothername
@@ -3425,7 +3425,7 @@ There are two main ways to use ``mlr uniq``: the first way is with ``-g`` to spe
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp
+    mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp
     count
     18
 
@@ -3434,7 +3434,7 @@ The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/repeats.dkvp
+    cat data/repeats.dkvp
     color=red,shape=square,flag=0
     color=purple,shape=triangle,flag=0
     color=yellow,shape=circle,flag=1
@@ -3496,13 +3496,13 @@ The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ wc -l data/repeats.dkvp
+    wc -l data/repeats.dkvp
           57 data/repeats.dkvp
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint uniq -a data/repeats.dkvp
+    mlr --opprint uniq -a data/repeats.dkvp
     color  shape    flag
     red    square   0
     purple triangle 0
@@ -3515,14 +3515,14 @@ The second main way to use ``mlr uniq`` is without group-by columns, using ``-a`
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint uniq -a -n data/repeats.dkvp
+    mlr --opprint uniq -a -n data/repeats.dkvp
     count
     7
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint uniq -a -c data/repeats.dkvp
+    mlr --opprint uniq -a -c data/repeats.dkvp
     count color  shape    flag
     17    red    square   0
     11    purple triangle 0
@@ -3540,7 +3540,7 @@ unsparsify
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr unsparsify --help
+    mlr unsparsify --help
     Usage: mlr unsparsify [options]
     Prints records with the union of field names over all input records.
     For field names absent in a given record but present in others, fills in
@@ -3560,7 +3560,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/sparse.json
+    cat data/sparse.json
     {"a":1,"b":2,"v":3}
     {"u":1,"b":2}
     {"a":1,"v":2,"x":3}
@@ -3569,7 +3569,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --json unsparsify data/sparse.json
+    mlr --json unsparsify data/sparse.json
     {
       "a": 1,
       "b": 2,
@@ -3606,7 +3606,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --ijson --opprint unsparsify data/sparse.json
+    mlr --ijson --opprint unsparsify data/sparse.json
     a b v u x w
     1 2 3 - - -
     - 2 - 1 - -
@@ -3616,7 +3616,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --ijson --opprint unsparsify --fill-with missing data/sparse.json
+    mlr --ijson --opprint unsparsify --fill-with missing data/sparse.json
     a       b       v       u       x       w
     1       2       3       missing missing missing
     missing 2       missing 1       missing missing
@@ -3626,7 +3626,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --ijson --opprint unsparsify -f a,b,u data/sparse.json
+    mlr --ijson --opprint unsparsify -f a,b,u data/sparse.json
     a b v u
     1 2 3 -
     
@@ -3642,7 +3642,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json
+    mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json
     a b v u w x
     1 2 3 - - -
     - 2 - 1 - -

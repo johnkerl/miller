@@ -9,7 +9,7 @@ TODO
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --json cat data/array-example.json
+    mlr --json cat data/array-example.json
     {
       "key": "ax04",
       "samples": [45, 67, 22]

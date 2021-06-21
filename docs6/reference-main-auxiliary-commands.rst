@@ -9,7 +9,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr aux-list
+    mlr aux-list
     Available subcommands:
       aux-list
       hex
@@ -23,7 +23,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr lecat --help
+    mlr lecat --help
     Usage: mlr lecat [options] {zero or more file names}
     Simple hex-dump.
     If zero file names are supplied, standard input is read.
@@ -34,7 +34,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr termcvt --help
+    mlr termcvt --help
     Usage: mlr termcvt [option] {zero or more file names}
     Option (exactly one is required):
     --cr2crlf
@@ -51,7 +51,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr hex --help
+    mlr hex --help
     Usage: mlr hex [options] {zero or more file names}
     Simple hex-dump.
     If zero file names are supplied, standard input is read.
@@ -62,7 +62,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr unhex --help
+    mlr unhex --help
     Usage: mlr unhex [options] {zero or more file names}
     Simple hex-dump.
     If zero file names are supplied, standard input is read.
@@ -75,19 +75,19 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'Hello, world!' | mlr lecat --mono
+    echo 'Hello, world!' | mlr lecat --mono
     Hello, world![LF]
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
+    echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
     Hello, world![CR][LF]
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr hex data/budget.csv
+    mlr hex data/budget.csv
     00000000: 23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20 |# Asana -- here |
     00000010: 61 72 65 20  74 68 65 20  62 75 64 67  65 74 20 66 |are the budget f|
     00000020: 69 67 75 72  65 73 20 79  6f 75 20 61  73 6b 65 64 |igures you asked|
@@ -99,7 +99,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr hex -r data/budget.csv
+    mlr hex -r data/budget.csv
     23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20 
     61 72 65 20  74 68 65 20  62 75 64 67  65 74 20 66 
     69 67 75 72  65 73 20 79  6f 75 20 61  73 6b 65 64 
@@ -111,7 +111,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
+    mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
     #*Asana*--*here*are*the*budget*figures*you*asked*for!
     type,quantity
     purple,456.78

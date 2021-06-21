@@ -11,7 +11,7 @@ The :ref:`reference-dsl-system` DSL function allows you to run a specific shell 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint put '$o = system("echo hello world")' data/small
+    mlr --opprint put '$o = system("echo hello world")' data/small
     a   b   i x                   y                   o
     pan pan 1 0.3467901443380824  0.7268028627434533  hello world
     eks pan 2 0.7586799647899636  0.5221511083334797  hello world
@@ -22,7 +22,7 @@ The :ref:`reference-dsl-system` DSL function allows you to run a specific shell 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint put '$o = system("echo {" . NR . "}")' data/small
+    mlr --opprint put '$o = system("echo {" . NR . "}")' data/small
     a   b   i x                   y                   o
     pan pan 1 0.3467901443380824  0.7268028627434533  {1}
     eks pan 2 0.7586799647899636  0.5221511083334797  {2}
@@ -33,7 +33,7 @@ The :ref:`reference-dsl-system` DSL function allows you to run a specific shell 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint put '$o = system("echo -n ".$a."| sha1sum")' data/small
+    mlr --opprint put '$o = system("echo -n ".$a."| sha1sum")' data/small
     a   b   i x                   y                   o
     pan pan 1 0.3467901443380824  0.7268028627434533  f29c748220331c273ef16d5115f6ecd799947f13  -
     eks pan 2 0.7586799647899636  0.5221511083334797  456d988ecb3bf1b75f057fc6e9fe70db464e9388  -

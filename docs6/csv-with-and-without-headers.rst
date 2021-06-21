@@ -12,7 +12,7 @@ Sometimes we get CSV files which lack a header. For example (`data/headerless.cs
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/headerless.csv
+    cat data/headerless.csv
     John,23,present
     Fred,34,present
     Alice,56,missing
@@ -23,7 +23,7 @@ You can use Miller to add a header. The ``--implicit-csv-header`` applies positi
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv --implicit-csv-header cat data/headerless.csv
+    mlr --csv --implicit-csv-header cat data/headerless.csv
     1,2,3
     John,23,present
     Fred,34,present
@@ -35,7 +35,7 @@ Following that, you can rename the positionally indexed labels to names with mea
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv --implicit-csv-header label name,age,status data/headerless.csv
+    mlr --csv --implicit-csv-header label name,age,status data/headerless.csv
     name,age,status
     John,23,present
     Fred,34,present
@@ -47,7 +47,7 @@ Likewise, if you need to produce CSV which is lacking its header, you can pipe M
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ head -5 data/colored-shapes.dkvp | mlr --ocsv cat
+    head -5 data/colored-shapes.dkvp | mlr --ocsv cat
     color,shape,flag,i,u,v,w,x
     yellow,triangle,1,11,0.6321695890307647,0.9887207810889004,0.4364983936735774,5.7981881667050565
     red,square,1,15,0.21966833570651523,0.001257332190235938,0.7927778364718627,2.944117399716207
@@ -58,7 +58,7 @@ Likewise, if you need to produce CSV which is lacking its header, you can pipe M
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat
+    head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat
     yellow,triangle,1,11,0.6321695890307647,0.9887207810889004,0.4364983936735774,5.7981881667050565
     red,square,1,15,0.21966833570651523,0.001257332190235938,0.7927778364718627,2.944117399716207
     red,circle,1,16,0.20901671281497636,0.29005231936593445,0.13810280912907674,5.065034003400998
@@ -70,7 +70,7 @@ Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in co
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv
+    mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv
     1 John
     3 present
     
@@ -91,7 +91,7 @@ Miller handles compliant CSV: in particular, it's an error if the number of data
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/ragged.csv
+    cat data/ragged.csv
     a,b,c
     1,2,3
     4,5
@@ -100,7 +100,7 @@ Miller handles compliant CSV: in particular, it's an error if the number of data
 .. code-block:: none
    :emphasize-lines: 1-8
 
-    $ mlr --from data/ragged.csv --fs comma --nidx put '
+    mlr --from data/ragged.csv --fs comma --nidx put '
       @maxnf = max(@maxnf, NF);
       @nf = NF;
       while(@nf < @maxnf) {
@@ -118,7 +118,7 @@ or, more simply,
 .. code-block:: none
    :emphasize-lines: 1-6
 
-    $ mlr --from data/ragged.csv --fs comma --nidx put '
+    mlr --from data/ragged.csv --fs comma --nidx put '
       @maxnf = max(@maxnf, NF);
       while(NF < @maxnf) {
         $[NF+1] = "";

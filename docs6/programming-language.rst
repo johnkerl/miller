@@ -18,7 +18,7 @@ Let's keep using the sample `example.csv <./example.csv>`_. When we type
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p put '$cost = $quantity * $rate' example.csv
+    mlr --c2p put '$cost = $quantity * $rate' example.csv
     color  shape    flag  index quantity rate   cost
     yellow triangle true  11    43.6498  9.8870 431.5655726
     red    square   true  15    79.2778  0.0130 1.0306114
@@ -46,7 +46,7 @@ You can use more than one statement, separating them with semicolons, and option
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p put '$cost = $quantity * $rate; $index = $index * 100'  example.csv
+    mlr --c2p put '$cost = $quantity * $rate; $index = $index * 100'  example.csv
     color  shape    flag  index quantity rate   cost
     yellow triangle true  1100  43.6498  9.8870 431.5655726
     red    square   true  1500  79.2778  0.0130 1.0306114
@@ -62,7 +62,7 @@ You can use more than one statement, separating them with semicolons, and option
 .. code-block:: none
    :emphasize-lines: 1-4
 
-    $ mlr --c2p put '
+    mlr --c2p put '
       $cost = $quantity * $rate;
       $index *= 100
     ' example.csv
@@ -83,14 +83,14 @@ One of Miller's key features is the ability to express data-transformation right
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat dsl-example.mlr
+    cat dsl-example.mlr
     $cost = $quantity * $rate;
     $index *= 100
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p put -f dsl-example.mlr example.csv
+    mlr --c2p put -f dsl-example.mlr example.csv
     color  shape    flag  index quantity rate   cost
     yellow triangle true  1100  43.6498  9.8870 431.5655726
     red    square   true  1500  79.2778  0.0130 1.0306114
@@ -117,7 +117,7 @@ To make ``begin`` and ``end`` statements useful, we need somewhere to put things
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p --from example.csv put 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
+    mlr --c2p --from example.csv put 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
     color  shape    flag  index quantity rate
     yellow triangle true  11    43.6498  9.8870
     red    square   true  15    79.2778  0.0130
@@ -138,14 +138,14 @@ If you want the end-block output to be the only output, and not include the inpu
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
+    mlr --c2p --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
     sum
     652.7185
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2j --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
+    mlr --c2j --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
     {
       "sum": 652.7185
     }
@@ -153,7 +153,7 @@ If you want the end-block output to be the only output, and not include the inpu
 .. code-block:: none
    :emphasize-lines: 1-6
 
-    $ mlr --c2j --from example.csv put -q '
+    mlr --c2j --from example.csv put -q '
       begin { @count = 0; @sum = 0 }
       @count += 1;
       @sum += $quantity;
@@ -180,7 +180,7 @@ Also inspired by `AWK <https://en.wikipedia.org/wiki/AWK>`_, the Miller DSL has 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat context-example.mlr
+    cat context-example.mlr
     $nf       = NF;
     $nr       = NR;
     $fnr      = FNR;
@@ -191,7 +191,7 @@ Also inspired by `AWK <https://en.wikipedia.org/wiki/AWK>`_, the Miller DSL has 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p put -f context-example.mlr data/a.csv data/b.csv
+    mlr --c2p put -f context-example.mlr data/a.csv data/b.csv
     a b c nf nr fnr filename   filenum newnf
     1 2 3 3  1  1   data/a.csv 1       8
     4 5 6 3  2  2   data/a.csv 1       8
@@ -205,7 +205,7 @@ You can define your own functions:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat factorial-example.mlr
+    cat factorial-example.mlr
     func factorial(n) {
       if (n <= 1) {
         return n
@@ -217,7 +217,7 @@ You can define your own functions:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p --from example.csv put -f factorial-example.mlr -e '$fact = factorial(NR)'
+    mlr --c2p --from example.csv put -f factorial-example.mlr -e '$fact = factorial(NR)'
     color  shape    flag  index quantity rate   fact
     yellow triangle true  11    43.6498  9.8870 1
     red    square   true  15    79.2778  0.0130 2
@@ -244,7 +244,7 @@ Suppose you want to only compute sums conditionally -- you can use an ``if`` sta
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat if-example.mlr
+    cat if-example.mlr
     begin {
       @count_of_red = 0;
       @sum_of_red = 0
@@ -262,7 +262,7 @@ Suppose you want to only compute sums conditionally -- you can use an ``if`` sta
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p --from example.csv put -q -f if-example.mlr
+    mlr --c2p --from example.csv put -q -f if-example.mlr
     count_of_red sum_of_red
     4            247.84139999999996
 
@@ -278,7 +278,7 @@ current record as a hashmap:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat for-example.mlr
+    cat for-example.mlr
     for (k, v in $*) {
       print "KEY IS ". k . " VALUE IS ". v;
     }
@@ -287,7 +287,7 @@ current record as a hashmap:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv cat data/a.csv
+    mlr --csv cat data/a.csv
     a,b,c
     1,2,3
     4,5,6
@@ -295,7 +295,7 @@ current record as a hashmap:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv --from data/a.csv put -qf for-example.mlr
+    mlr --csv --from data/a.csv put -qf for-example.mlr
     KEY IS a VALUE IS 1
     KEY IS b VALUE IS 2
     KEY IS c VALUE IS 3
@@ -337,7 +337,7 @@ For example, you can sum up all the ``$a`` values across records without having 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --json cat absent-example.json
+    mlr --json cat absent-example.json
     {
       "a": 1,
       "b": 2
@@ -353,7 +353,7 @@ For example, you can sum up all the ``$a`` values across records without having 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --json put '@sum_of_a += $a; end {emit @sum_of_a}' absent-example.json
+    mlr --json put '@sum_of_a += $a; end {emit @sum_of_a}' absent-example.json
     {
       "a": 1,
       "b": 2

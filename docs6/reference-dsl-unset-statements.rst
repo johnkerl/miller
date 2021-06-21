@@ -9,7 +9,7 @@ You can clear a map key by assigning the empty string as its value: ``$x=""`` or
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -19,7 +19,7 @@ You can clear a map key by assigning the empty string as its value: ``$x=""`` or
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put 'unset $x, $a' data/small
+    mlr put 'unset $x, $a' data/small
     b=pan,i=1,y=0.7268028627434533
     b=pan,i=2,y=0.5221511083334797
     b=wye,i=3,y=0.33831852551664776
@@ -31,7 +31,7 @@ This can also be done, of course, using ``mlr cut -x``. You can also clear out-o
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small
+    mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small
     {
       "sum": {
         "pan": {
@@ -52,7 +52,7 @@ This can also be done, of course, using ``mlr cut -x``. You can also clear out-o
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small
+    mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small
     {
       "sum": {
         "pan": {

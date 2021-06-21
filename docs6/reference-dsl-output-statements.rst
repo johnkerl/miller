@@ -79,13 +79,13 @@ Details:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --help-keyword print
+    mlr --help-keyword print
     TODO: port mlr_dsl_keyword_usage
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --help-keyword dump
+    mlr --help-keyword dump
     TODO: port mlr_dsl_keyword_usage
 
 * ``mlr put`` sends the current record (possibly modified by the ``put`` expression) to the output record stream. Records are then input to the following verb in a ``then``-chain (if any), else printed to standard output (unless ``put -q``). The **tee** keyword *additionally* writes the output record to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
@@ -93,7 +93,7 @@ Details:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --help-keyword tee
+    mlr --help-keyword tee
     TODO: port mlr_dsl_keyword_usage
 
 * ``mlr put``'s ``emitf``, ``emitp``, and ``emit`` send out-of-stream variables to the output record stream. These are then input to the following verb in a ``then``-chain (if any), else printed to standard output. When redirected with ``>``, ``>>``, or ``|``, they *instead* write the out-of-stream variable(s) to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
@@ -101,19 +101,19 @@ Details:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --help-keyword emitf
+    mlr --help-keyword emitf
     TODO: port mlr_dsl_keyword_usage
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --help-keyword emitp
+    mlr --help-keyword emitp
     TODO: port mlr_dsl_keyword_usage
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --help-keyword emit
+    mlr --help-keyword emit
     TODO: port mlr_dsl_keyword_usage
 
 .. _reference-dsl-emit-statements:
@@ -128,7 +128,7 @@ Use **emitf** to output several out-of-stream variables side-by-side in the same
 .. code-block:: none
    :emphasize-lines: 1-6
 
-    $ mlr put -q '
+    mlr put -q '
       @count += 1;
       @x_sum += $x;
       @y_sum += $y;
@@ -141,7 +141,7 @@ Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -151,7 +151,7 @@ Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum += $x; end { dump }' data/small
+    mlr put -q '@sum += $x; end { dump }' data/small
     {
       "sum": 2.264761728567491
     }
@@ -159,7 +159,7 @@ Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum += $x; end { emit @sum }' data/small
+    mlr put -q '@sum += $x; end { emit @sum }' data/small
     sum=2.264761728567491
 
 If it's indexed then use as many names after ``emit`` as there are indices:
@@ -167,7 +167,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a] += $x; end { dump }' data/small
+    mlr put -q '@sum[$a] += $x; end { dump }' data/small
     {
       "sum": {
         "pan": 0.3467901443380824,
@@ -179,7 +179,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
+    mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
     a=pan,sum=0.3467901443380824
     a=eks,sum=1.1400793586611044
     a=wye,sum=0.7778922255683036
@@ -187,7 +187,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
+    mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
     {
       "sum": {
         "pan": {
@@ -207,7 +207,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
+    mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
     a=pan,b=pan,sum=0.3467901443380824
     a=eks,b=pan,sum=0.7586799647899636
     a=eks,b=wye,sum=0.38139939387114097
@@ -217,7 +217,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
+    mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
     {
       "sum": {
         "pan": {
@@ -247,7 +247,7 @@ If it's indexed then use as many names after ``emit`` as there are indices:
 .. code-block:: none
    :emphasize-lines: 1-4
 
-    $ mlr put -q '
+    mlr put -q '
       @sum[$a][$b][$i] += $x;
       end { emit @sum, "a", "b", "i" }
     ' data/small
@@ -262,7 +262,7 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
+    mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
     {
       "sum": {
         "pan": {
@@ -282,7 +282,7 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
+    mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
     a=pan,pan=0.3467901443380824
     a=eks,pan=0.7586799647899636,wye=0.38139939387114097
     a=wye,wye=0.20460330576630303,pan=0.5732889198020006
@@ -290,13 +290,13 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
+    mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
     pan.pan=0.3467901443380824,eks.pan=0.7586799647899636,eks.wye=0.38139939387114097,wye.wye=0.20460330576630303,wye.pan=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+    mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
     a=pan,sum.pan=0.3467901443380824
     a=eks,sum.pan=0.7586799647899636,sum.wye=0.38139939387114097
     a=wye,sum.wye=0.20460330576630303,sum.pan=0.5732889198020006
@@ -304,13 +304,13 @@ Now for **emitp**: if you have as many names following ``emit`` as there are lev
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+    mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
     sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.38139939387114097,sum.wye.wye=0.20460330576630303,sum.wye.pan=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+    mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
     sum.pan.pan 0.3467901443380824
     sum.eks.pan 0.7586799647899636
     sum.eks.wye 0.38139939387114097
@@ -323,7 +323,7 @@ keys for ``emitp`` (it defaults to a colon):
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+    mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
     a=pan,sum.pan=0.3467901443380824
     a=eks,sum.pan=0.7586799647899636,sum.wye=0.38139939387114097
     a=wye,sum.wye=0.20460330576630303,sum.pan=0.5732889198020006
@@ -331,13 +331,13 @@ keys for ``emitp`` (it defaults to a colon):
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+    mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
     sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.38139939387114097,sum.wye.wye=0.20460330576630303,sum.wye.pan=0.5732889198020006
 
 .. code-block:: none
    :emphasize-lines: 1-4
 
-    $ mlr --oxtab put -q --oflatsep / '
+    mlr --oxtab put -q --oflatsep / '
       @sum[$a][$b] += $x;
       end { emitp @sum }
     ' data/small
@@ -356,7 +356,7 @@ including their names in parentheses:
 .. code-block:: none
    :emphasize-lines: 1-10
 
-    $ mlr --from data/medium --opprint put -q '
+    mlr --from data/medium --opprint put -q '
       @x_count[$a][$b] += 1;
       @x_sum[$a][$b] += $x;
       end {
@@ -403,7 +403,7 @@ Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-strea
 .. code-block:: none
    :emphasize-lines: 1-5
 
-    $ mlr --from data/small --opprint put -q '
+    mlr --from data/small --opprint put -q '
       @v[$a][$b]["sum"] += $x;
       @v[$a][$b]["count"] += 1;
       end{emit @*,"a","b"}
@@ -420,7 +420,7 @@ Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-strea
 .. code-block:: none
    :emphasize-lines: 1-5
 
-    $ mlr --from data/small --opprint put -q '
+    mlr --from data/small --opprint put -q '
       @sum[$a][$b] += $x;
       @count[$a][$b] += 1;
       end{emit @*,"a","b"}
@@ -446,7 +446,7 @@ Use **emit all** (or ``emit @*`` which is synonymous) to output all out-of-strea
 .. code-block:: none
    :emphasize-lines: 1-5
 
-    $ mlr --from data/small --opprint put -q '
+    mlr --from data/small --opprint put -q '
       @sum[$a][$b] += $x;
       @count[$a][$b] += 1;
       end{emit (@sum, @count),"a","b"}

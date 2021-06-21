@@ -15,7 +15,7 @@ Suppose your program has printed something like this (`log.txt <./log.txt>`_):
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat log.txt
+    cat log.txt
     op=enter,time=1472819681
     op=cache,type=A9,hit=0
     op=cache,type=A4,hit=1
@@ -65,7 +65,7 @@ Each print statement simply contains local information: the current timestamp, w
 .. code-block:: none
    :emphasize-lines: 1-2
 
-    $ grep op=cache log.txt \
+    grep op=cache log.txt \
       | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
     type hit_mean
     A1   0.8571428571428571
@@ -75,7 +75,7 @@ Each print statement simply contains local information: the current timestamp, w
 .. code-block:: none
    :emphasize-lines: 1-4
 
-    $ mlr --from log.txt --opprint \
+    mlr --from log.txt --opprint \
       filter 'is_present($batch_size)' \
       then step -a delta -f time,num_filtered \
       then sec2gmt time
@@ -92,7 +92,7 @@ Alternatively, we can simply group the similar data for a better look:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint group-like log.txt
+    mlr --opprint group-like log.txt
     op    time
     enter 1472819681
     
@@ -145,7 +145,7 @@ Alternatively, we can simply group the similar data for a better look:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint group-like then sec2gmt time log.txt
+    mlr --opprint group-like then sec2gmt time log.txt
     op    time
     enter 2016-09-02T12:34:41Z
     

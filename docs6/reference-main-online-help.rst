@@ -11,7 +11,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --help
+    mlr --help
     Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
     
     COMMAND-LINE-SYNTAX EXAMPLES:
@@ -585,7 +585,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sort --help
+    mlr sort --help
     Usage: mlr sort {flags}
     Sorts records primarily by the first specified field, secondarily by the second
     field, and so on.  (Any records not having all specified sort keys will appear

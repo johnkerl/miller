@@ -14,7 +14,7 @@ Here's the obligatory example of a recursive function to compute the factorial f
 .. code-block:: none
    :emphasize-lines: 1-14
 
-    $ mlr --opprint --from data/small put '
+    mlr --opprint --from data/small put '
         func f(n) {
             if (is_numeric(n)) {
                 if (n > 0) {
@@ -63,7 +63,7 @@ Example:
 .. code-block:: none
    :emphasize-lines: 1-17
 
-    $ mlr --opprint --from data/small put -q '
+    mlr --opprint --from data/small put -q '
       begin {
         @call_count = 0;
       }
