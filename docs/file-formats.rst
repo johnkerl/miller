@@ -12,7 +12,7 @@ Examples
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --usage-data-format-examples
+    mlr --usage-data-format-examples
       DKVP: delimited key-value pairs (Miller default format)
       +---------------------+
       | apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
@@ -121,7 +121,7 @@ Miller's default file format is DKVP, for **delimited key-value pairs**. Example
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr cat data/small
+    mlr cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -175,7 +175,7 @@ Example with index-numbered output:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -185,7 +185,7 @@ Example with index-numbered output:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --onidx --ofs ' ' cat data/small
+    mlr --onidx --ofs ' ' cat data/small
     pan pan 1 0.3467901443380824 0.7268028627434533
     eks pan 2 0.7586799647899636 0.5221511083334797
     wye wye 3 0.20460330576630303 0.33831852551664776
@@ -197,7 +197,7 @@ Example with index-numbered input:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/mydata.txt
+    cat data/mydata.txt
     oh say can you see
     by the dawn's
     early light
@@ -205,7 +205,7 @@ Example with index-numbered input:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt
+    mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt
     1=oh,2=say,3=can,4=you,5=see
     1=by,2=the,3=dawn's
     1=early,2=light
@@ -215,7 +215,7 @@ Example with index-numbered input and output:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/mydata.txt
+    cat data/mydata.txt
     oh say can you see
     by the dawn's
     early light
@@ -223,7 +223,7 @@ Example with index-numbered input and output:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt
+    mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt
     say can
     the dawn's
     light
@@ -245,14 +245,14 @@ An **array of single-level objects** is, quite simply, **a table**:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --json head -n 2 then cut -f color,shape data/json-example-1.json
+    mlr --json head -n 2 then cut -f color,shape data/json-example-1.json
     { "color": "yellow", "shape": "triangle" }
     { "color": "red", "shape": "square" }
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json
+    mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json
     {
       "color": "yellow",
       "u": 0.6321695890307647,
@@ -267,7 +267,7 @@ An **array of single-level objects** is, quite simply, **a table**:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json
+    mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json
     shape    u_mean   u_stddev u_count
     triangle 0.583995 0.131184 3
     square   0.409355 0.365428 4
@@ -281,7 +281,7 @@ Additionally, Miller can **tabularize nested objects by concatentating keys**:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --json --jvstack head -n 2 data/json-example-2.json
+    mlr --json --jvstack head -n 2 data/json-example-2.json
     {
       "flag": 1,
       "i": 11,
@@ -314,7 +314,7 @@ Additionally, Miller can **tabularize nested objects by concatentating keys**:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --ijson --opprint head -n 4 data/json-example-2.json
+    mlr --ijson --opprint head -n 4 data/json-example-2.json
     flag i  attributes:color attributes:shape values:u values:v values:w values:x
     1    11 yellow           triangle         0.632170 0.988721 0.436498 5.798188
     1    15 red              square           0.219668 0.001257 0.792778 2.944117
@@ -326,7 +326,7 @@ Note in particular that as far as Miller's ``put`` and ``filter``, as well as ot
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json
+    mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json
     {
       "flag": 1,
       "i": 11,
@@ -353,7 +353,7 @@ Suppose we have arrays like this in our input data:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/json-example-3.json
+    cat data/json-example-3.json
     {
       "label": "orange",
       "values": [12.2, 13.8, 17.2]
@@ -368,7 +368,7 @@ Then integer indices (starting from 0 and counting up) are used as map keys:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --ijson --oxtab cat data/json-example-3.json
+    mlr --ijson --oxtab cat data/json-example-3.json
     label    orange
     values:0 12.2
     values:1 13.8
@@ -383,7 +383,7 @@ When the data are written back out as JSON, field names are re-expanded as above
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --json --jvstack cat data/json-example-3.json
+    mlr --json --jvstack cat data/json-example-3.json
     {
       "label": "orange",
       "values": {
@@ -440,7 +440,7 @@ Miller's pretty-print format is like CSV, but column-aligned.  For example, comp
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --ocsv cat data/small
+    mlr --ocsv cat data/small
     a,b,i,x,y
     pan,pan,1,0.3467901443380824,0.7268028627434533
     eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -451,7 +451,7 @@ Miller's pretty-print format is like CSV, but column-aligned.  For example, comp
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint cat data/small
+    mlr --opprint cat data/small
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -468,7 +468,7 @@ For output only (this isn't supported in the input-scanner as of 5.0.0) you can 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint --barred cat data/small
+    mlr --opprint --barred cat data/small
     +-----+-----+---+---------------------+---------------------+
     | a   | b   | i | x                   | y                   |
     +-----+-----+---+---------------------+---------------------+
@@ -550,7 +550,7 @@ Markdown format looks like this:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --omd cat data/small
+    mlr --omd cat data/small
     | a | b | i | x | y |
     | --- | --- | --- | --- | --- |
     | pan | pan | 1 | 0.3467901443380824 | 0.7268028627434533 |
@@ -573,7 +573,7 @@ While you can do format conversion using ``mlr --icsv --ojson cat myfile.csv``, 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --usage-format-conversion-keystroke-saver-options
+    mlr --usage-format-conversion-keystroke-saver-options
     As keystroke-savers for format-conversion you may use the following:
             --c2t --c2d --c2n --c2j --c2x --c2p --c2m
       --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
@@ -609,7 +609,7 @@ You can include comments within your data files, and either have them ignored, o
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --usage-comments-in-data
+    mlr --usage-comments-in-data
       --skip-comments                 Ignore commented lines (prefixed by "#")
                                       within the input.
       --skip-comments-with {string}   Ignore commented lines within input, with
@@ -632,7 +632,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/budget.csv
+    cat data/budget.csv
     # Asana -- here are the budget figures you asked for!
     type,quantity
     purple,456.78
@@ -642,7 +642,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --skip-comments --icsv --opprint sort -nr quantity data/budget.csv
+    mlr --skip-comments --icsv --opprint sort -nr quantity data/budget.csv
     type   quantity
     green  678.12
     purple 456.78
@@ -651,7 +651,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --pass-comments --icsv --opprint sort -nr quantity data/budget.csv
+    mlr --pass-comments --icsv --opprint sort -nr quantity data/budget.csv
     # Asana -- here are the budget figures you asked for!
     type   quantity
     green  678.12

@@ -14,7 +14,7 @@ Vertical-tabular format is good for a quick look at CSV data layout -- seeing wh
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ head -n 2 data/flins.csv | mlr --icsv --oxtab cat
+    head -n 2 data/flins.csv | mlr --icsv --oxtab cat
     county   Seminole
     tiv_2011 22890.55
     tiv_2012 20848.71
@@ -25,7 +25,7 @@ A few simple queries:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head
+    mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head
     county     count
     Seminole   1
     Miami Dade 2
@@ -37,26 +37,26 @@ A few simple queries:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line
+    mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line
 
 Categorization of total insured value:
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012
+    mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012
     tiv_2012_min tiv_2012_mean  tiv_2012_max
     19757.910000 1061531.463750 2785551.630000
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
+    mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/flins.csv --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
+    mlr --from data/flins.csv --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
     hu_site_deductible_p0   
     hu_site_deductible_p10  
     hu_site_deductible_p50  
@@ -68,7 +68,7 @@ Categorization of total insured value:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
+    mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
     county     hu_site_deductible_p95 hu_site_deductible_p99 hu_site_deductible_p100
     Duval      -                      -                      -
     Highlands  -                      -                      -
@@ -80,7 +80,7 @@ Categorization of total insured value:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
+    mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
     tiv_2011_tiv_2012_corr  0.935363
     tiv_2011_tiv_2012_ols_m 1.089091
     tiv_2011_tiv_2012_ols_b 103095.523356
@@ -90,7 +90,7 @@ Categorization of total insured value:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
+    mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
     county     tiv_2011_tiv_2012_corr tiv_2011_tiv_2012_ols_m tiv_2011_tiv_2012_ols_b tiv_2011_tiv_2012_ols_n tiv_2011_tiv_2012_r2
     Seminole   -                      -                       -                       1                       -
     Miami Dade 1.000000               0.930643                -2311.154328            2                       1.000000
@@ -117,13 +117,13 @@ Peek at the data:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ wc -l data/colored-shapes.dkvp
+    wc -l data/colored-shapes.dkvp
        10078 data/colored-shapes.dkvp
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ head -n 6 data/colored-shapes.dkvp | mlr --opprint cat
+    head -n 6 data/colored-shapes.dkvp | mlr --opprint cat
     color  shape    flag i  u                   v                    w                   x
     yellow triangle 1    11 0.6321695890307647  0.9887207810889004   0.4364983936735774  5.7981881667050565
     red    square   1    15 0.21966833570651523 0.001257332190235938 0.7927778364718627  2.944117399716207
@@ -139,7 +139,7 @@ Here it looks reasonable that ``u`` is unit-uniform; something's up with ``v`` b
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
+    mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
     flag_min  0
     flag_mean 0.398889
     flag_max  1
@@ -157,7 +157,7 @@ The histogram shows the different distribution of 0/1 flags:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp
+    mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp
     bin_lo    bin_hi   flag_count u_count v_count
     -0.100000 0.000000 6058       0       36
     0.000000  0.100000 0          1062    988
@@ -177,7 +177,7 @@ Look at univariate stats by color and shape. In particular, color-dependent flag
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
+    mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp
     color  flag_min flag_mean flag_max u_min    u_mean   u_max    v_min     v_mean   v_max
     blue   0        0.584354  1        0.000044 0.517717 0.999969 0.001489  0.491056 0.999576
     green  0        0.209197  1        0.000488 0.504861 0.999936 0.000501  0.499085 0.999676
@@ -189,7 +189,7 @@ Look at univariate stats by color and shape. In particular, color-dependent flag
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
+    mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp
     shape    flag_min flag_mean flag_max u_min    u_mean   u_max    v_min     v_mean   v_max
     circle   0        0.399846  1        0.000044 0.498555 0.999923 -0.092709 0.495524 1.072500
     square   0        0.396112  1        0.000188 0.499385 0.999969 0.000089  0.496538 0.999975
@@ -200,14 +200,14 @@ Look at bivariate stats by color and shape. In particular, ``u,v`` pairwise corr
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp
+    mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp
     u_v_corr  w_x_corr
     0.133418 -0.011320
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp
+    mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp
      color    shape  u_v_corr  w_x_corr
        red   circle  0.980798 -0.018565
     orange   square  0.176858 -0.071044

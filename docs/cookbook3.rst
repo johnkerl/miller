@@ -12,7 +12,7 @@ One of Miller's strengths is its compact notation: for example, given input of t
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ head -n 5 ../data/medium
+    head -n 5 ../data/medium
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -24,7 +24,7 @@ you can simply do
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab stats1 -a sum -f x ../data/medium
+    mlr --oxtab stats1 -a sum -f x ../data/medium
     x_sum 4986.019682
 
 or
@@ -32,7 +32,7 @@ or
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint stats1 -a sum -f x -g b ../data/medium
+    mlr --opprint stats1 -a sum -f x -g b ../data/medium
     b   x_sum
     pan 965.763670
     wye 1023.548470
@@ -45,7 +45,7 @@ rather than the more tedious
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab put -q '
+    mlr --oxtab put -q '
       @x_sum += $x;
       end {
         emit @x_sum
@@ -58,7 +58,7 @@ or
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint put -q '
+    mlr --opprint put -q '
       @x_sum[$b] += $x;
       end {
         emit @x_sum, "b"
@@ -83,14 +83,14 @@ Mean without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint stats1 -a mean -f x data/medium
+    mlr --opprint stats1 -a mean -f x data/medium
     x_mean
     0.498602
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint put -q '
+    mlr --opprint put -q '
       @x_sum += $x;
       @x_count += 1;
       end {
@@ -107,7 +107,7 @@ Keyed mean without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint stats1 -a mean -f x -g a,b data/medium
+    mlr --opprint stats1 -a mean -f x -g a,b data/medium
     a   b   x_mean
     pan pan 0.513314
     eks pan 0.485076
@@ -138,7 +138,7 @@ Keyed mean without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint put -q '
+    mlr --opprint put -q '
       @x_sum[$a][$b] += $x;
       @x_count[$a][$b] += 1;
       end{
@@ -181,7 +181,7 @@ Variance and standard deviation without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium
+    mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium
     x_count  10000
     x_sum    4986.019682
     x_mean   0.498602
@@ -191,7 +191,7 @@ Variance and standard deviation without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat variance.mlr
+    cat variance.mlr
     @n += 1;
     @sumx += $x;
     @sumx2 += $x**2;
@@ -205,7 +205,7 @@ Variance and standard deviation without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab put -q -f variance.mlr data/medium
+    mlr --oxtab put -q -f variance.mlr data/medium
     n      10000
     sumx   4986.019682
     sumx2  3328.652400
@@ -221,14 +221,14 @@ Min/max without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab stats1 -a min,max -f x data/medium
+    mlr --oxtab stats1 -a min,max -f x data/medium
     x_min 0.000045
     x_max 0.999953
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium
+    mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium
     x_min 0.000045
     x_max 0.999953
 
@@ -238,7 +238,7 @@ Keyed min/max without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint stats1 -a min,max -f x -g a data/medium
+    mlr --opprint stats1 -a min,max -f x -g a data/medium
     a   x_min    x_max
     pan 0.000204 0.999403
     eks 0.000692 0.998811
@@ -249,7 +249,7 @@ Keyed min/max without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint --from data/medium put -q '
+    mlr --opprint --from data/medium put -q '
       @min[$a] = min(@min[$a], $x);
       @max[$a] = max(@max[$a], $x);
       end{
@@ -269,7 +269,7 @@ Delta without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint step -a delta -f x data/small
+    mlr --opprint step -a delta -f x data/small
     a   b   i x                   y                   x_delta
     pan pan 1 0.3467901443380824  0.7268028627434533  0
     eks pan 2 0.7586799647899636  0.5221511083334797  0.411890
@@ -280,7 +280,7 @@ Delta without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small
+    mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small
     a   b   i x                   y                   x_delta
     pan pan 1 0.3467901443380824  0.7268028627434533  0
     eks pan 2 0.7586799647899636  0.5221511083334797  0.411890
@@ -294,7 +294,7 @@ Keyed delta without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint step -a delta -f x -g a data/small
+    mlr --opprint step -a delta -f x -g a data/small
     a   b   i x                   y                   x_delta
     pan pan 1 0.3467901443380824  0.7268028627434533  0
     eks pan 2 0.7586799647899636  0.5221511083334797  0
@@ -305,7 +305,7 @@ Keyed delta without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small
+    mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small
     a   b   i x                   y                   x_delta
     pan pan 1 0.3467901443380824  0.7268028627434533  0
     eks pan 2 0.7586799647899636  0.5221511083334797  0
@@ -319,7 +319,7 @@ Exponentially weighted moving averages without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint step -a ewma -d 0.1 -f x data/small
+    mlr --opprint step -a ewma -d 0.1 -f x data/small
     a   b   i x                   y                   x_ewma_0.1
     pan pan 1 0.3467901443380824  0.7268028627434533  0.346790
     eks pan 2 0.7586799647899636  0.5221511083334797  0.387979
@@ -330,7 +330,7 @@ Exponentially weighted moving averages without/with oosvars
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint put '
+    mlr --opprint put '
       begin{ @a=0.1 };
       $e = NR==1 ? $x : @a * $x + (1 - @a) * @e;
       @e=$e

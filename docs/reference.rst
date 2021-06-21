@@ -54,7 +54,7 @@ These are as discussed in :doc:`file-formats`, with the exception of ``--right``
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint cat data/small
+    mlr --opprint cat data/small
     a   b   i x                   y
     pan pan 1 0.3467901443380824  0.7268028627434533
     eks pan 2 0.7586799647899636  0.5221511083334797
@@ -65,7 +65,7 @@ These are as discussed in :doc:`file-formats`, with the exception of ``--right``
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint --right cat data/small
+    mlr --opprint --right cat data/small
       a   b i                   x                   y
     pan pan 1  0.3467901443380824  0.7268028627434533
     eks pan 2  0.7586799647899636  0.5221511083334797
@@ -168,13 +168,13 @@ To apply formatting to a single field, overriding the global ``ofmt``, use ``fmt
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'
+    echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'
     x=3.1,y=4.3,z=13.330000
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'
+    echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'
     x=0xffff,y=0xff,z=00feff01
 
 Input conversion from hexadecimal is done automatically on fields handled by ``mlr put`` and ``mlr filter`` as long as the field value begins with "0x".  To apply output conversion to hexadecimal on a single column, you may use ``fmtnum``, or the keystroke-saving ``hexfmt`` function. Example:
@@ -182,7 +182,7 @@ Input conversion from hexadecimal is done automatically on fields handled by ``m
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
+    echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'
     x=0xffff,y=0xff,z=0xfeff01
 
 Data transformations (verbs)
@@ -245,7 +245,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr aux-list
+    mlr aux-list
     Available subcommands:
       aux-list
       lecat
@@ -258,7 +258,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr lecat --help
+    mlr lecat --help
     Usage: mlr lecat [options] {zero or more file names}
     Simply echoes input, but flags CR characters in red and LF characters in green.
     If zero file names are supplied, standard input is read.
@@ -269,7 +269,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr termcvt --help
+    mlr termcvt --help
     Usage: mlr termcvt [option] {zero or more file names}
     Option (exactly one is required):
     --cr2crlf
@@ -286,7 +286,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr hex --help
+    mlr hex --help
     Usage: mlr hex [options] {zero or more file names}
     Simple hex-dump.
     If zero file names are supplied, standard input is read.
@@ -297,7 +297,7 @@ There are a few nearly-standalone programs which have nothing to do with the res
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr unhex --help
+    mlr unhex --help
     Usage: mlr unhex [option] {zero or more file names}
     Options:
     -h or --help: print this message
@@ -309,19 +309,19 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'Hello, world!' | mlr lecat --mono
+    echo 'Hello, world!' | mlr lecat --mono
     Hello, world![LF]
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
+    echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
     Hello, world![CR][LF]
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr hex data/budget.csv
+    mlr hex data/budget.csv
     00000000: 23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20 |# Asana -- here |
     00000010: 61 72 65 20  74 68 65 20  62 75 64 67  65 74 20 66 |are the budget f|
     00000020: 69 67 75 72  65 73 20 79  6f 75 20 61  73 6b 65 64 |igures you asked|
@@ -333,7 +333,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr hex -r data/budget.csv
+    mlr hex -r data/budget.csv
     23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20 
     61 72 65 20  74 68 65 20  62 75 64 67  65 74 20 66 
     69 67 75 72  65 73 20 79  6f 75 20 61  73 6b 65 64 
@@ -345,7 +345,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
+    mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
     #*Asana*--*here*are*the*budget*figures*you*asked*for!
     type,quantity
     purple,456.78
@@ -397,7 +397,7 @@ Rules for null-handling:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr cat data/sort-null.dat
+    mlr cat data/sort-null.dat
     a=3,b=2
     a=1,b=8
     a=,b=4
@@ -407,7 +407,7 @@ Rules for null-handling:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr sort -n  a data/sort-null.dat
+    mlr sort -n  a data/sort-null.dat
     a=1,b=8
     a=3,b=2
     a=5,b=7
@@ -417,7 +417,7 @@ Rules for null-handling:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr sort -nr a data/sort-null.dat
+    mlr sort -nr a data/sort-null.dat
     a=,b=4
     a=5,b=7
     a=3,b=2
@@ -429,19 +429,19 @@ Rules for null-handling:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x=2,y=3' | mlr put '$a=$x+$y'
+    echo 'x=2,y=3' | mlr put '$a=$x+$y'
     x=2,y=3,a=5
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x=,y=3' | mlr put '$a=$x+$y'
+    echo 'x=,y=3' | mlr put '$a=$x+$y'
     x=,y=3,a=
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
+    echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
     x=,y=3,a=,b=1.098612
 
 with the exception that the ``min`` and ``max`` functions are special: if one argument is non-null, it wins:
@@ -449,7 +449,7 @@ with the exception that the ``min`` and ``max`` functions are special: if one ar
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
+    echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
     x=,y=3,a=3,b=3
 
 * Functions of *absent* variables (e.g. ``mlr put '$y = log10($nonesuch)'``) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
@@ -457,13 +457,13 @@ with the exception that the ``min`` and ``max`` functions are special: if one ar
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
+    echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
     x=2,y=3,b=3,c=5
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
+    echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
     x=2,y=3,a=2,b=3
 
 * Likewise, for assignment to maps, **absent-valued keys or values result in a skipped assignment**.
@@ -483,7 +483,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr cat data/het.dkvp
+    mlr cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
     record_count=100,resource=/path/to/file
     resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -493,7 +493,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
+    mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450.000000
     record_count=100,resource=/path/to/file
     resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320.000000
@@ -503,7 +503,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
+    mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450.000000
     record_count=100,resource=/path/to/file,loadmillis=0.000000
     resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320.000000
@@ -515,7 +515,7 @@ If you're interested in a formal description of how empty and absent fields part
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --print-type-arithmetic-info
+    mlr --print-type-arithmetic-info
     (+)    | error  absent empty  string int    float  bool  
     ------ + ------ ------ ------ ------ ------ ------ ------
     error  | error  error  error  error  error  error  error 
@@ -583,7 +583,7 @@ Example:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/regex-in-data.dat
+    cat data/regex-in-data.dat
     name=jane,regex=^j.*e$
     name=bill,regex=^b[ou]ll$
     name=bull,regex=^b[ou]ll$
@@ -591,7 +591,7 @@ Example:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr filter '$name =~ $regex' data/regex-in-data.dat
+    mlr filter '$name =~ $regex' data/regex-in-data.dat
     name=jane,regex=^j.*e$
     name=bull,regex=^b[ou]ll$
 
@@ -682,7 +682,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --help
+    mlr --help
     Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
     
     Command-line-syntax examples:
@@ -1108,7 +1108,7 @@ Examples:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr sort --help
+    mlr sort --help
     Usage: mlr sort {flags}
     Flags:
       -f  {comma-separated field names}  Lexical ascending

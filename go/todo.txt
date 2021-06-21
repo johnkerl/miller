@@ -5,6 +5,7 @@ TOP OF LIST:
 * --nr-progress-mod * mlr -k *
 * cli-audits * doc6 * survey * check issues *
 * split up mlr -h
+* survey email followups
 
 * convert all code-blocks to cardify
 * most/least-frequent: map -> odict
@@ -37,6 +38,7 @@ DOC6
   o new-in-miller-6: flatten/unflatten
   o JSON flatten/unflatten section
   o Arrays section including 1-up and why
+  o differences from other languages (cf. juliadocs)
 
 * audit for links jko help -> rtd help
 * doc notes about --jknquotein & --jvquoteall. make sure they're ignore-accepted in the CLIP.

@@ -68,14 +68,13 @@ def run_command(cmd, output_handle)
   end
   # The command can be multi-line
   cmd_lines = cmd.split(/\n/)
-  cmd_line_1 = cmd_lines.shift
-  write_card(true, ['$ '+cmd_line_1] + cmd_lines + cmd_output.split(/\n/), output_handle)
+  write_card(true, cmd_lines + cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------
 def run_command_tolerating_error(cmd, output_handle)
   cmd_output = `#{cmd} 2>&1`
-  write_card(true, ['$ '+cmd] + cmd_output.split(/\n/), output_handle)
+  write_card(true, [cmd] + cmd_output.split(/\n/), output_handle)
 end
 
 # ----------------------------------------------------------------

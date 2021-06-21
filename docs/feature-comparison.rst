@@ -14,7 +14,7 @@ Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header l
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/a.csv
+    cat data/a.csv
     a,b,c
     1,2,3
     4,5,6
@@ -22,14 +22,14 @@ Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header l
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/b.csv
+    cat data/b.csv
     a,b,c
     7,8,9
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv cat data/a.csv data/b.csv
+    mlr --csv cat data/a.csv data/b.csv
     a,b,c
     1,2,3
     4,5,6
@@ -38,7 +38,7 @@ Miller respects CSV headers. If you do ``mlr --csv cat *.csv`` then the header l
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv sort -nr b data/a.csv data/b.csv
+    mlr --csv sort -nr b data/a.csv data/b.csv
     a,b,c
     7,8,9
     4,5,6
