@@ -26,6 +26,7 @@ doclink etc:
 DOC6
 
 ! mlr --help, manpage, etc total refactor & audit
+! complete list of color vars x docs6 & olh
 
 ? quick-examples needs fewer inputs, and outputs for all retained inputs
   ? or q-e more links to 10min
@@ -62,6 +63,7 @@ DOC6
 
 * data-cleaning examples -> full section -- ?
 * c2 & c3 are all esoterica
+* output-colors olh: list vars -- and/or mlr help env-vars section
 
 ----------------------------------------------------------------
 

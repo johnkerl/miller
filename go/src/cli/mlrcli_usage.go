@@ -509,6 +509,7 @@ func mainUsageOutputColorization(o *os.File, argv0 string) {
 	fmt.Fprintf(o, "* Values in CSV data lines, JSON scalar values, etc\n")
 	fmt.Fprintf(o, "* \"PASS\" and \"FAIL\" in regression-test output\n")
 	fmt.Fprintf(o, "* Some online-help strings\n")
+	fmt.Fprintf(o, "* Coloring for the REPL prompt\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Rules for coloring:\n")
 	fmt.Fprintf(o, "* By default, colorize output only if writing to stdout and stdout is a TTY.\n")

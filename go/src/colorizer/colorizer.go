@@ -44,6 +44,12 @@ func SetPassColor(i int) {
 func SetFailColor(i int) {
 	failColorString = makeColorString(i)
 }
+func SetREPLPS1Color(i int) {
+	replPS1ColorString = makeColorString(i)
+}
+func SetREPLPS2Color(i int) {
+	replPS2ColorString = makeColorString(i)
+}
 func SetHelpColor(i int) {
 	helpColorString = makeColorString(i)
 }
@@ -63,6 +69,14 @@ func MaybeColorizePass(text string, outputIsStdout bool) string {
 
 func MaybeColorizeFail(text string, outputIsStdout bool) string {
 	return maybeColorize(text, failColorString, outputIsStdout)
+}
+
+func MaybeColorizeREPLPS1(text string, outputIsStdout bool) string {
+	return maybeColorize(text, replPS1ColorString, outputIsStdout)
+}
+
+func MaybeColorizeREPLPS2(text string, outputIsStdout bool) string {
+	return maybeColorize(text, replPS2ColorString, outputIsStdout)
 }
 
 func MaybeColorizeHelp(text string, outputIsStdout bool) string {
@@ -90,6 +104,8 @@ var keyColorString = make256ColorString(208)  // orange
 var valueColorString = make256ColorString(33) // blue
 var passColorString = make16ColorString(10)   // bold green
 var failColorString = make16ColorString(9)    // bold red
+var replPS1ColorString = make16ColorString(9)    // bold red
+var replPS2ColorString = make16ColorString(1)    // red
 var helpColorString = make16ColorString(9)    // bold red
 
 // Used to switch back to default color
@@ -126,6 +142,14 @@ func init() {
 	temp, ok = makeColorStringFromEnv("MLR_FAIL_COLOR")
 	if ok {
 		failColorString = temp
+	}
+	temp, ok = makeColorStringFromEnv("MLR_REPL_PS1_COLOR")
+	if ok {
+		replPS1ColorString = temp
+	}
+	temp, ok = makeColorStringFromEnv("MLR_REPL_PS2_COLOR")
+	if ok {
+		replPS2ColorString = temp
 	}
 	temp, ok = makeColorStringFromEnv("MLR_HELP_COLOR")
 	if ok {
