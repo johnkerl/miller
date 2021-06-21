@@ -14,10 +14,11 @@ There are a few nearly-standalone programs which have nothing to do with the res
       aux-list
       hex
       lecat
-      regtest
-      repl
       termcvt
       unhex
+      help
+      regtest
+      repl
     For more information, please invoke mlr {subcommand} --help.
 
 .. code-block:: none

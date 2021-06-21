@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"os"
 
+	"miller/src/auxents/help"
 	"miller/src/auxents/regtest"
 	"miller/src/auxents/repl"
 )
@@ -32,10 +33,11 @@ func init() {
 		{"aux-list", auxListMain, auxListUsage},
 		{"hex", hexMain, hexUsage},
 		{"lecat", lecatMain, lecatUsage},
-		{"regtest", regtest.RegTestMain, regtest.RegTestUsage},
-		{"repl", repl.ReplMain, repl.ReplUsage},
 		{"termcvt", termcvtMain, termcvtUsage},
 		{"unhex", unhexMain, unhexUsage},
+		{"help", help.HelpMain, help.HelpUsage},
+		{"regtest", regtest.RegTestMain, regtest.RegTestUsage},
+		{"repl", repl.ReplMain, repl.ReplUsage},
 	}
 }
 

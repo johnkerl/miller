@@ -53,6 +53,7 @@ separator, --ors the output record separator, and --rs sets both the input and
 output separator to the given value."""
   ])
 
+  # TODO: output colorization and repl
 	print make_subsection('HELP OPTIONS', [])
 	print make_code_block(`mlr --usage-help-options`)
 
@@ -63,7 +64,7 @@ output separator to the given value."""
 	print make_code_block(`mlr --usage-functions`)
 
 	print make_subsection('I/O FORMATTING', [])
-	print make_code_block(`mlr --usage-data-format-options`)
+	print make_code_block(`mlr help data formats`)
 
 	print make_subsection('COMMENTS IN DATA', [])
 	print make_code_block(`mlr --usage-comments-in-data`)

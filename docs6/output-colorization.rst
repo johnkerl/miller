@@ -44,13 +44,13 @@ How you can control colorization:
 
   * ``export MLR_KEY_COLOR=208``
   * ``export MLR_VALUE_COLOR=33``
-  * Likewise for ``MLR_PASS_COLOR``, ``MLR_FAIL_COLOR``, and ``MLR_HELP_COLOR``.
-  * Command-line flags ``--key-color 208``, ``--value-color 33``, etc.
+  * Likewise for ``MLR_PASS_COLOR``, ``MLR_FAIL_COLOR``, ``MLR_HELP_COLOR``, ``MLR_REPL_PS1_COLOR``, and ``MLR_REPL_PS2_COLOR``.
+  * Command-line flags ``--key-color 208``, ``--value-color 33``, etc., and likewise for ``--pass-color``, ``--fail-color``, ``--repl-ps1-color``, ``--repl-ps2-color``, and ``--help-color``.
   * This is particularly useful if your terminal's background color clashes with current settings.
 
-* If environment-variable settings and command-line flags are both provided, the latter take precedence.
+If environment-variable settings and command-line flags are both provided, the latter take precedence.
 
-* Please do ``mlr --list-colors`` to see the available color codes.
+Please do ``mlr --list-colors`` to see the available color codes.
 
 .. image:: pix/colorization2.png
 

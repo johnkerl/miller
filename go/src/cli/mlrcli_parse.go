@@ -1,12 +1,8 @@
 package cli
 
 import (
-	"bufio"
 	"fmt"
-	"io"
 	"os"
-	"regexp"
-	"strings"
 
 	"miller/src/cliutil"
 	"miller/src/dsl/cst"
@@ -226,8 +222,7 @@ func parseTransformers(
 
 	if (argc - argi) < 1 {
 		fmt.Fprintf(os.Stderr, "%s: no verb supplied.\n", lib.MlrExeName())
-		mainUsageShort()
-		os.Exit(1)
+		mainUsageShort(os.Stderr, 1)
 	}
 
 	onFirst := true
@@ -290,11 +285,8 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 	if args[argi] == "--version" {
 		fmt.Printf("Miller %s\n", version.STRING)
 		return true
-	} else if args[argi] == "-h" {
-		mainUsageLong(os.Stdout, lib.MlrExeName())
-		return true
-	} else if args[argi] == "--help" {
-		mainUsageLong(os.Stdout, lib.MlrExeName())
+	} else if args[argi] == "-h" || args[argi] == "--help" {
+		mainUsageShort(os.Stdout, 0)
 		return true
 	} else if args[argi] == "--print-type-arithmetic-info" {
 		fmt.Println("TODO: port printTypeArithmeticInfo")
@@ -343,188 +335,15 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 
 		//	// main-usage subsections, individually accessible for the benefit of
 		//	// the manpage-autogenerator
-	} else if args[argi] == "--usage-synopsis" {
-		mainUsageSynopsis(os.Stdout, lib.MlrExeName())
-		return true
-	} else if args[argi] == "--usage-examples" {
-		mainUsageExamples(os.Stdout, lib.MlrExeName(), "")
-		return true
 	} else if args[argi] == "--usage-list-all-verbs" {
 		listAllVerbs(os.Stdout, "")
 		return true
 	} else if args[argi] == "--usage-help-options" {
 		mainUsageHelpOptions(os.Stdout, lib.MlrExeName())
 		return true
-	} else if args[argi] == "--usage-mlrrc" {
-		mainUsageMlrrc(os.Stdout, lib.MlrExeName())
-		return true
 	} else if args[argi] == "--usage-functions" {
 		mainUsageFunctions(os.Stdout)
 		return true
-	} else if args[argi] == "--usage-data-format-examples" {
-		mainUsageDataFormatExamples(os.Stdout, lib.MlrExeName())
-		return true
-	} else if args[argi] == "--usage-data-format-options" {
-		mainUsageDataFormatOptions(os.Stdout, lib.MlrExeName())
-		return true
-	} else if args[argi] == "--usage-comments-in-data" {
-		mainUsageCommentsInData(os.Stdout, lib.MlrExeName())
-		return true
-	} else if args[argi] == "--usage-format-conversion-keystroke-saver-options" {
-		mainUsageFormatConversionKeystrokeSaverOptions(os.Stdout, lib.MlrExeName())
-		return true
-	} else if args[argi] == "--usage-compressed-data-options" {
-		mainUsageCompressedDataOptions(os.Stdout, lib.MlrExeName())
-		return true
-		//	} else if args[argi] == "--usage-separator-options" {
-		//		mainUsageSeparatorOptions(os.Stdout, lib.MlrExeName());
-		//		return true;
-	} else if args[argi] == "--usage-csv-options" {
-		mainUsageCsvOptions(os.Stdout, lib.MlrExeName())
-		return true
-		//	} else if args[argi] == "--usage-double-quoting" {
-		//		mainUsageDoubleQuoting(os.Stdout, lib.MlrExeName());
-		//		return true;
-		//	} else if args[argi] == "--usage-numerical-formatting" {
-		//		mainUsageNumericalFormatting(os.Stdout, lib.MlrExeName());
-		//		return true;
-	} else if args[argi] == "--usage-output-colorization" {
-		mainUsageOutputColorization(os.Stdout, lib.MlrExeName())
-		return true
-	} else if args[argi] == "--usage-other-options" {
-		mainUsageOtherOptions(os.Stdout, lib.MlrExeName())
-		return true
-	} else if args[argi] == "--usage-then-chaining" {
-		mainUsageThenChaining(os.Stdout, lib.MlrExeName())
-		return true
-	} else if args[argi] == "--usage-auxents" {
-		mainUsageAuxents(os.Stdout)
-		return true
-	} else if args[argi] == "--usage-see-also" {
-		mainUsageSeeAlso(os.Stdout, lib.MlrExeName())
-		return true
 	}
 	return false
-}
-
-// ----------------------------------------------------------------
-// * If $MLRRC is set, use it and only it.
-// * Otherwise try first $HOME/.mlrrc and then ./.mlrrc but let them
-//   stack: e.g. $HOME/.mlrrc is lots of settings and maybe in one
-//   subdir you want to override just a setting or two.
-
-// TODO: move to separate file?
-func loadMlrrcOrDie(
-	options *cliutil.TOptions,
-) {
-	env_mlrrc := os.Getenv("MLRRC")
-
-	if env_mlrrc != "" {
-		if env_mlrrc == "__none__" {
-			return
-		}
-		if tryLoadMlrrc(options, env_mlrrc) {
-			return
-		}
-	}
-
-	env_home := os.Getenv("HOME")
-	if env_home != "" {
-		path := env_home + "/.mlrrc"
-		tryLoadMlrrc(options, path)
-	}
-
-	tryLoadMlrrc(options, "./.mlrrc")
-}
-
-func tryLoadMlrrc(
-	options *cliutil.TOptions,
-	path string,
-) bool {
-	handle, err := os.Open(path)
-	if err != nil {
-		return false
-	}
-	defer handle.Close()
-
-	lineReader := bufio.NewReader(handle)
-
-	eof := false
-	lineno := 0
-	for !eof {
-		line, err := lineReader.ReadString('\n')
-		if err == io.EOF {
-			err = nil
-			eof = true
-			break
-		}
-		lineno++
-
-		if err != nil {
-			fmt.Fprintln(os.Stderr, lib.MlrExeName(), err)
-			os.Exit(1)
-			return false
-		}
-
-		// This is how to do a chomp:
-		// TODO: handle \r\n with libified solution.
-		line = strings.TrimRight(line, "\n")
-
-		if !handleMlrrcLine(options, line) {
-			fmt.Fprintf(os.Stderr, "%s: parse error at file \"%s\" line %d: %s\n",
-				lib.MlrExeName(), path, lineno, line,
-			)
-			os.Exit(1)
-		}
-	}
-
-	return true
-}
-
-func handleMlrrcLine(
-	options *cliutil.TOptions,
-	line string,
-) bool {
-
-	// Comment-strip
-	re := regexp.MustCompile("#.*")
-	line = re.ReplaceAllString(line, "")
-
-	// Left-trim / right-trim
-	line = strings.TrimSpace(line)
-
-	if line == "" { // line was whitespace-only
-		return true
-	}
-
-	// Prepend initial "--" if it's not already there
-	if !strings.HasPrefix(line, "-") {
-		line = "--" + line
-	}
-
-	// Split line into args array
-	args := strings.Fields(line)
-	argi := 0
-	argc := len(args)
-
-	if args[0] == "--prepipe" || args[0] == "--prepipex" {
-		// Don't allow code execution via .mlrrc
-		return false
-	} else if args[0] == "--load" || args[0] == "--mload" {
-		// Don't allow code execution via .mlrrc
-		return false
-	} else if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
-		// handled
-	} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
-		// handled
-	} else if cliutil.ParseReaderWriterOptions(args, argc, &argi,
-		&options.ReaderOptions, &options.WriterOptions) {
-		// handled
-	} else if cliutil.ParseMiscOptions(args, argc, &argi, options) {
-		// handled
-	} else {
-		return false
-	}
-
-	return true
 }
