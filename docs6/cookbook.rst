@@ -12,7 +12,7 @@ Here are some ways to use the type-checking options as described in :ref:`refere
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/het-bool.csv
+    cat data/het-bool.csv
     name,reachable
     barney,false
     betty,true
@@ -24,7 +24,7 @@ One option is to coerce everything to boolean, or integer:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
+    mlr --icsv --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
     name   reachable
     barney false
     betty  true
@@ -34,7 +34,7 @@ One option is to coerce everything to boolean, or integer:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
+    mlr --icsv --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
     name   reachable
     barney 0
     betty  1
@@ -46,7 +46,7 @@ A second option is to flag badly formatted data within the output stream:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
+    mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
     name   reachable format_ok
     barney false     false
     betty  true      false
@@ -58,7 +58,7 @@ Or perhaps to flag badly formatted data outside the output stream:
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --icsv --opprint put '
+    mlr --icsv --opprint put '
       if (!is_string($reachable)) {eprint "Malformed at NR=".NR}
     ' data/het-bool.csv
     Malformed at NR=1
@@ -76,7 +76,7 @@ A third way is to abort the process on first instance of bad data:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv
+    mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv
     Miller: is_string type-assertion failed at NR=1 FNR=1 FILENAME=data/het-bool.csv
 
 Showing differences between successive queries
@@ -87,7 +87,7 @@ Suppose you have a database query which you run at one point in time, producing 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/previous_counters.csv
+    cat data/previous_counters.csv
     color,count
     red,3472
     blue,6838
@@ -97,7 +97,7 @@ Suppose you have a database query which you run at one point in time, producing 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/current_counters.csv
+    cat data/current_counters.csv
     color,count
     red,3467
     orange,670
@@ -111,12 +111,12 @@ First, rename counter columns to make them distinct:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv
+    mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/prevtemp.csv
+    cat data/prevtemp.csv
     color,previous_count
     red,3472
     blue,6838
@@ -126,12 +126,12 @@ First, rename counter columns to make them distinct:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv
+    mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/currtemp.csv
+    cat data/currtemp.csv
     color,current_count
     red,3467
     orange,670
@@ -143,7 +143,7 @@ Then, join on the key field(s), and use unsparsify to zero-fill counters absent 
 .. code-block:: none
    :emphasize-lines: 1-5
 
-    $ mlr --icsv --opprint \
+    mlr --icsv --opprint \
       join -j color --ul --ur -f data/prevtemp.csv \
       then unsparsify --fill-with 0 \
       then put '$count_delta = $current_count - $previous_count' \
@@ -168,7 +168,7 @@ For example, mapping numeric values down a column to the percentage between thei
 .. code-block:: none
    :emphasize-lines: 1-16
 
-    $ mlr --from data/small --opprint put -q '
+    mlr --from data/small --opprint put -q '
       # These are executed once per record, which is the first pass.
       # The key is to use NR to index an out-of-stream variable to
       # retain all the x-field values.
@@ -199,7 +199,7 @@ Similarly, finding the total record count requires first reading through all the
 .. code-block:: none
    :emphasize-lines: 1-11
 
-    $ mlr --opprint --from data/small put -q '
+    mlr --opprint --from data/small put -q '
       @records[NR] = $*;
       end {
         for((I,k),v in @records) {
@@ -225,7 +225,7 @@ The idea is to retain records having the largest value of ``n`` in the following
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --itsv --opprint cat data/maxrows.tsv
+    mlr --itsv --opprint cat data/maxrows.tsv
     a      b      n score
     purple red    5 0.743231
     blue   purple 2 0.093710
@@ -264,7 +264,7 @@ Of course, the largest value of ``n`` isn't known until after all data have been
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/maxrows.mlr
+    cat data/maxrows.mlr
     # Retain all records
     @records[NR] = $*;
     # Track max value of n
@@ -284,7 +284,7 @@ Of course, the largest value of ``n`` isn't known until after all data have been
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
+    mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
     a      b      n score
     purple red    5 0.743231
     purple red    5 0.389055
@@ -339,7 +339,7 @@ Then
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --json put -q -f data/feature-count.mlr data/features.json
+    mlr --json put -q -f data/feature-count.mlr data/features.json
     {
       "record_count": 12
     }
@@ -395,7 +395,7 @@ Then
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json
+    mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json
     record_count
     12
     
@@ -425,7 +425,7 @@ For example, suppose you have JSON input like this:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/sparse.json
+    cat data/sparse.json
     {"a":1,"b":2,"v":3}
     {"u":1,"b":2}
     {"a":1,"v":2,"x":3}
@@ -436,7 +436,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/unsparsify.mlr
+    cat data/unsparsify.mlr
     # First pass:
     # Remember all unique key names:
     for (k in $*) {
@@ -467,7 +467,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --json put -q -f data/unsparsify.mlr data/sparse.json
+    mlr --json put -q -f data/unsparsify.mlr data/sparse.json
     {
       "a": 1,
       "b": 2,
@@ -504,7 +504,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json
+    mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json
     a,b,v,u,x,w
     1,2,3,,,
     ,2,,1,,
@@ -514,7 +514,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
+    mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
     a b v u x w
     1 2 3 - - -
     - 2 - 1 - -

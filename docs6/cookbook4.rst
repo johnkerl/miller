@@ -75,7 +75,7 @@ And here is an example using them:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat polyglot-dkvp-io/example.py
+    cat polyglot-dkvp-io/example.py
     #!/usr/bin/env python
     
     import sys
@@ -116,7 +116,7 @@ Run as-is:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ python polyglot-dkvp-io/example.py < data/small
+    python polyglot-dkvp-io/example.py < data/small
     a=pan,b=pan,i=1,y=0.7268028627434533,ab=panpan,iy=1.7268028627434533,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
     a=eks,b=pan,i=2,y=0.5221511083334797,ab=ekspan,iy=2.5221511083334796,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
     a=wye,b=wye,i=3,y=0.33831852551664776,ab=wyewye,iy=3.3383185255166477,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
@@ -128,7 +128,7 @@ Run as-is, then pipe to Miller for pretty-printing:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ python polyglot-dkvp-io/example.py < data/small | mlr --opprint cat
+    python polyglot-dkvp-io/example.py < data/small | mlr --opprint cat
     a   b   i y                   ab     iy                 ta  tb  ti  ty    tab tiy
     pan pan 1 0.7268028627434533  panpan 1.7268028627434533 str str int float str float
     eks pan 2 0.5221511083334797  ekspan 2.5221511083334796 str str int float str float
@@ -201,7 +201,7 @@ And here is an example using them:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat polyglot-dkvp-io/example.rb
+    cat polyglot-dkvp-io/example.rb
     #!/usr/bin/env ruby
     
     require 'dkvp_io'
@@ -232,7 +232,7 @@ Run as-is:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small
+    ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small
     a=pan,b=pan,i=1,y=0.7268028627434533,ab=panpan,iy=1.7268028627434533,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
     a=eks,b=pan,i=2,y=0.5221511083334797,ab=ekspan,iy=2.5221511083334796,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
     a=wye,b=wye,i=3,y=0.33831852551664776,ab=wyewye,iy=3.3383185255166477,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
@@ -244,7 +244,7 @@ Run as-is, then pipe to Miller for pretty-printing:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small | mlr --opprint cat
+    ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small | mlr --opprint cat
     a   b   i y                   ab     iy                 ta     tb     ti      ty    tab    tiy
     pan pan 1 0.7268028627434533  panpan 1.7268028627434533 String String Integer Float String Float
     eks pan 2 0.5221511083334797  ekspan 2.5221511083334796 String String Integer Float String Float

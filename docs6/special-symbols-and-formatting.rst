@@ -12,7 +12,7 @@ How can I handle commas-as-data in various formats?
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat commas.csv
+    cat commas.csv
     Name,Role
     "Xiao, Lin",administrator
     "Khavari, Darius",tester
@@ -22,7 +22,7 @@ Likewise :ref:`file-formats-json`:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --ojson cat commas.csv
+    mlr --icsv --ojson cat commas.csv
     {
       "Name": "Xiao, Lin",
       "Role": "administrator"
@@ -37,7 +37,7 @@ For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no esca
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --oxtab cat commas.csv
+    mlr --icsv --oxtab cat commas.csv
     Name Xiao, Lin
     Role administrator
     
@@ -49,7 +49,7 @@ But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <fil
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --odkvp cat commas.csv
+    mlr --icsv --odkvp cat commas.csv
     Name=Xiao, Lin,Role=administrator
     Name=Khavari, Darius,Role=tester
 
@@ -58,7 +58,7 @@ One solution is to use a different delimiter, such as a pipe character:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --odkvp --ofs pipe cat commas.csv
+    mlr --icsv --odkvp --ofs pipe cat commas.csv
     Name=Xiao, Lin|Role=administrator
     Name=Khavari, Darius|Role=tester
 
@@ -68,7 +68,7 @@ characters as delimiters -- here, control-A:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
+    mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
     Name=Xiao, Lin\001Role=administrator
     Name=Khavari, Darius\001Role=tester
 
@@ -80,7 +80,7 @@ Simply surround the field names with curly braces:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
+    echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
     x.a=3,y:b=4,z/c=5,product.all=60
 
 How can I put single-quotes into strings?
@@ -95,7 +95,7 @@ This is a little tricky due to the shell's handling of quotes. For simplicity, l
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo a=bcd | mlr put -f data/single-quote-example.mlr
+    echo a=bcd | mlr put -f data/single-quote-example.mlr
     a=It's OK, I said, then 'for now'.
 
 So, it's simple: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
@@ -105,7 +105,7 @@ Without putting the update expression in a file, it's messier:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
+    echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
     a=It's OK, I said, 'for now'.
 
 The idea is that the outermost single-quotes are to protect the ``put`` expression from the shell, and the double quotes within them are for Miller. To get a single quote in the middle there, you need to actually put it *outside* the single-quoting for the shell. The pieces are the following, all concatenated together:
@@ -126,19 +126,19 @@ One way is to use square brackets; an alternative is to use simple string-substi
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/question.dat
+    cat data/question.dat
     a=is it?,b=it is!
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat
+    mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat
     a is it?
     b it is!
     c is it ...
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat
+    mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat
     a is it?
     b it is!
     c is it ...
@@ -157,7 +157,7 @@ Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input r
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/scan-example-1.tbl
+    cat data/scan-example-1.tbl
     value
     1
     2.0
@@ -167,7 +167,7 @@ Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input r
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-1.tbl
+    mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-1.tbl
     value copy  type
     1     1     int
     2.0   2.0   float
@@ -187,7 +187,7 @@ But now suppose you have data like these:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/scan-example-2.tbl
+    cat data/scan-example-2.tbl
     value
     0001
     0002
@@ -203,7 +203,7 @@ But now suppose you have data like these:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
+    mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
     value  copy   type
     0001   0001   int
     0002   0002   int
@@ -233,7 +233,7 @@ The solution is to **use the -S flag** for ``mlr put`` and/or ``mlr filter``. Th
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
+    mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
     value  copy   type
     0001   0001   int
     0002   0002   int

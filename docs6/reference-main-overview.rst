@@ -19,7 +19,7 @@ For example, reading from a file:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint head -n 2 then sort -f shape example.csv
+    mlr --icsv --opprint head -n 2 then sort -f shape example.csv
     color  shape    flag index quantity rate
     red    square   true 15    79.2778  0.0130
     yellow triangle true 11    43.6498  9.8870
@@ -29,7 +29,7 @@ Reading from standard input:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat example.csv | mlr --icsv --opprint head -n 2 then sort -f shape
+    cat example.csv | mlr --icsv --opprint head -n 2 then sort -f shape
     color  shape    flag index quantity rate
     red    square   true 15    79.2778  0.0130
     yellow triangle true 11    43.6498  9.8870
@@ -50,7 +50,7 @@ Example of using a verb for data processing:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr stats1 -a sum -f x -g a data/small
+    mlr stats1 -a sum -f x -g a data/small
     a=pan,x_sum=0.3467901443380824
     a=eks,x_sum=1.1400793586611044
     a=wye,x_sum=0.7778922255683036
@@ -66,7 +66,7 @@ Example of doing the same thing using a DSL expression:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
+    mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
     a=pan,x_sum=0.3467901443380824
     a=eks,x_sum=1.1400793586611044
     a=wye,x_sum=0.7778922255683036

@@ -21,7 +21,7 @@ Rules for null-handling:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat data/sort-null.dat
+    mlr cat data/sort-null.dat
     a=3,b=2
     a=1,b=8
     a=,b=4
@@ -31,7 +31,7 @@ Rules for null-handling:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sort -n  a data/sort-null.dat
+    mlr sort -n  a data/sort-null.dat
     a=1,b=8
     a=3,b=2
     a=5,b=7
@@ -41,7 +41,7 @@ Rules for null-handling:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr sort -nr a data/sort-null.dat
+    mlr sort -nr a data/sort-null.dat
     a=,b=4
     a=5,b=7
     a=3,b=2
@@ -53,19 +53,19 @@ Rules for null-handling:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x=2,y=3' | mlr put '$a=$x+$y'
+    echo 'x=2,y=3' | mlr put '$a=$x+$y'
     x=2,y=3,a=5
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x=,y=3' | mlr put '$a=$x+$y'
+    echo 'x=,y=3' | mlr put '$a=$x+$y'
     x=,y=3,a=
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
+    echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
     x=,y=3,a=,b=1.0986122886681096
 
 with the exception that the ``min`` and ``max`` functions are special: if one argument is non-null, it wins:
@@ -73,7 +73,7 @@ with the exception that the ``min`` and ``max`` functions are special: if one ar
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
+    echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
     x=,y=3,a=3,b=
 
 * Functions of *absent* variables (e.g. ``mlr put '$y = log10($nonesuch)'``) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
@@ -81,13 +81,13 @@ with the exception that the ``min`` and ``max`` functions are special: if one ar
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
+    echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
     x=2,y=3,b=3,c=5
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
+    echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
     x=2,y=3,a=2,b=3
 
 * Likewise, for assignment to maps, **absent-valued keys or values result in a skipped assignment**.
@@ -107,7 +107,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat data/het.dkvp
+    mlr cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
     record_count=100,resource=/path/to/file
     resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -117,7 +117,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
+    mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450
     record_count=100,resource=/path/to/file
     resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320
@@ -127,7 +127,7 @@ Since absent plus absent is absent (and likewise for other operators), accumulat
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
+    mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450
     record_count=100,resource=/path/to/file,loadmillis=0
     resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320
@@ -139,5 +139,5 @@ If you're interested in a formal description of how empty and absent fields part
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --print-type-arithmetic-info
+    mlr --print-type-arithmetic-info
     TODO: port printTypeArithmeticInfo

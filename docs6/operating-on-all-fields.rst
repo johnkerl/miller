@@ -12,7 +12,7 @@ Suppose you want to replace spaces with underscores in your column names:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/spaces.csv
+    cat data/spaces.csv
     a b c,def,g h i
     123,4567,890
     2468,1357,3579
@@ -23,7 +23,7 @@ The simplest way is to use ``mlr rename`` with ``-g`` (for global replace, not j
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv rename -g -r ' ,_'  data/spaces.csv
+    mlr --csv rename -g -r ' ,_'  data/spaces.csv
     a_b_c,def,g_h_i
     123,4567,890
     2468,1357,3579
@@ -32,7 +32,7 @@ The simplest way is to use ``mlr rename`` with ``-g`` (for global replace, not j
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv
+    mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv
     a_b_c def  g_h_i
     123   4567 890
     2468  1357 3579
@@ -43,7 +43,7 @@ You can also do this with a for-loop:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/bulk-rename-for-loop.mlr
+    cat data/bulk-rename-for-loop.mlr
     map newrec = {};
     for (oldk, v in $*) {
         newrec[gsub(oldk, " ", "_")] = v;
@@ -53,7 +53,7 @@ You can also do this with a for-loop:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
+    mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
     a_b_c def  g_h_i
     123   4567 890
     2468  1357 3579
@@ -67,7 +67,7 @@ How to do ``$name = gsub($name, "old", "new")`` for all fields?
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/sar.csv
+    cat data/sar.csv
     a,b,c
     the quick,brown fox,jumped
     over,the,lazy dogs
@@ -75,7 +75,7 @@ How to do ``$name = gsub($name, "old", "new")`` for all fields?
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/sar.mlr
+    cat data/sar.mlr
       for (k in $*) {
         $[k] = gsub($[k], "e", "X");
       }
@@ -83,7 +83,7 @@ How to do ``$name = gsub($name, "old", "new")`` for all fields?
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv put -f data/sar.mlr data/sar.csv
+    mlr --csv put -f data/sar.mlr data/sar.csv
     a,b,c
     thX quick,brown fox,jumpXd
     ovXr,thX,lazy dogs
@@ -96,7 +96,7 @@ Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully general
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -106,7 +106,7 @@ Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully general
 .. code-block:: none
    :emphasize-lines: 1-15
 
-    $ mlr put '
+    mlr put '
       begin {
         @i_cumu = 0;
       }

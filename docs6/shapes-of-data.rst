@@ -89,44 +89,44 @@ Miller records are ordered lists of key-value pairs. For NIDX format, DKVP forma
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo x,y,z | mlr --dkvp cat
+    echo x,y,z | mlr --dkvp cat
     1=x,2=y,3=z
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'
+    echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'
     1=x,2=y,3=z,6=a,4=b,55=cde
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo x,y,z | mlr --nidx cat
+    echo x,y,z | mlr --nidx cat
     x,y,z
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo x,y,z | mlr --csv --implicit-csv-header cat
+    echo x,y,z | mlr --csv --implicit-csv-header cat
     1,2,3
     x,y,z
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo x,y,z | mlr --dkvp rename 2,999
+    echo x,y,z | mlr --dkvp rename 2,999
     1=x,999=y,3=z
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo x,y,z | mlr --dkvp rename 2,newname
+    echo x,y,z | mlr --dkvp rename 2,newname
     1=x,newname=y,3=z
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2
+    echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2
     3,1,2
     z,x,y
 
@@ -138,7 +138,7 @@ Example: columns ``x,i,a`` were requested but they appear here in the order ``a,
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -148,7 +148,7 @@ Example: columns ``x,i,a`` were requested but they appear here in the order ``a,
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cut -f x,i,a data/small
+    mlr cut -f x,i,a data/small
     a=pan,i=1,x=0.3467901443380824
     a=eks,i=2,x=0.7586799647899636
     a=wye,i=3,x=0.20460330576630303
@@ -162,7 +162,7 @@ The solution is to use the ``-o`` option:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cut -o -f x,i,a data/small
+    mlr cut -o -f x,i,a data/small
     x=0.3467901443380824,i=1,a=pan
     x=0.7586799647899636,i=2,a=eks
     x=0.20460330576630303,i=3,a=wye
@@ -177,7 +177,7 @@ The ``awk``-like built-in variable ``NR`` is incremented for each input record:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -187,7 +187,7 @@ The ``awk``-like built-in variable ``NR`` is incremented for each input record:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$nr = NR' data/small
+    mlr put '$nr = NR' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nr=1
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nr=2
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
@@ -199,7 +199,7 @@ However, this is the record number within the original input stream -- not after
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr filter '$a == "wye"' then put '$nr = NR' data/small
+    mlr filter '$a == "wye"' then put '$nr = NR' data/small
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
 
@@ -208,7 +208,7 @@ There are two good options here. One is to use the ``cat`` verb with ``-n``:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr filter '$a == "wye"' then cat -n data/small
+    mlr filter '$a == "wye"' then cat -n data/small
     n=1,a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
     n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
@@ -217,7 +217,7 @@ The other is to keep your own counter within the ``put`` DSL:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small
+    mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,n=1
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
 
@@ -239,7 +239,7 @@ The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv
+    mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv
     a	b
     x	z
     s	u
@@ -249,7 +249,7 @@ The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv
+    mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv
     a	b_1
     x	z
     
@@ -263,7 +263,7 @@ One option to split out the colon-delimited values in the ``b`` column is to use
 .. code-block:: none
    :emphasize-lines: 1-6
 
-    $ mlr --from data/nested.tsv --itsv --oxtab put '
+    mlr --from data/nested.tsv --itsv --oxtab put '
       o = splitnv($b, ":");
       for (k,v in o) {
         $["p".k]=v
@@ -284,7 +284,7 @@ while another is to loop over the same map from ``splitnv`` and use it (with ``p
 .. code-block:: none
    :emphasize-lines: 1-7
 
-    $ mlr --from data/nested.tsv --itsv --oxtab put -q '
+    mlr --from data/nested.tsv --itsv --oxtab put -q '
       o = splitnv($b, ":");
       for (k,v in o) {
         x = mapsum($*, {"b":v});
@@ -306,7 +306,7 @@ while another is to loop over the same map from ``splitnv`` and use it (with ``p
 .. code-block:: none
    :emphasize-lines: 1-6
 
-    $ mlr --from data/nested.tsv --tsv put -q '
+    mlr --from data/nested.tsv --tsv put -q '
       o = splitnv($b, ":");
       for (k,v in o) {
         x = mapsum($*, {"b":v}); emit x
@@ -387,7 +387,7 @@ The idea here is that middles starting with a 1 belong to the outer value of 1, 
 .. code-block:: none
    :emphasize-lines: 1-10
 
-    $ mlr --from data/rect.txt put -q '
+    mlr --from data/rect.txt put -q '
       is_present($outer) {
         unset @r
       }

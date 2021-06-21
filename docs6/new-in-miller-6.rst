@@ -89,7 +89,7 @@ For example (see https://github.com/johnkerl/miller/issues/178) you can now do
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo '{ "a": "0123" }' | mlr --json cat
+    echo '{ "a": "0123" }' | mlr --json cat
     {
       "a": "0123"
     }
@@ -97,7 +97,7 @@ For example (see https://github.com/johnkerl/miller/issues/178) you can now do
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo '{ "x": 1.230, "y": 1.230000000 }' | mlr --json cat
+    echo '{ "x": 1.230, "y": 1.230000000 }' | mlr --json cat
     {
       "x": 1.230,
       "y": 1.230000000

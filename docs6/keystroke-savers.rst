@@ -12,7 +12,7 @@ In our examples so far we've often made use of ``mlr --icsv --opprint`` or ``mlr
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p head -n 2 example.csv
+    mlr --c2p head -n 2 example.csv
     color  shape    flag index quantity rate
     yellow triangle true 11    43.6498  9.8870
     red    square   true 15    79.2778  0.0130
@@ -20,7 +20,7 @@ In our examples so far we've often made use of ``mlr --icsv --opprint`` or ``mlr
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2j head -n 2 example.csv
+    mlr --c2j head -n 2 example.csv
     {
       "color": "yellow",
       "shape": "triangle",
@@ -48,7 +48,7 @@ Already we saw that you can put the filename first using ``--from``. When you're
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p --from example.csv sort -nr index then head -n 3
+    mlr --c2p --from example.csv sort -nr index then head -n 3
     color  shape  flag  index quantity rate
     purple square false 91    72.3735  8.2430
     yellow circle true  87    63.5058  8.3350
@@ -57,7 +57,7 @@ Already we saw that you can put the filename first using ``--from``. When you're
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p --from example.csv sort -nr index then head -n 3 then cut -f shape,quantity
+    mlr --c2p --from example.csv sort -nr index then head -n 3 then cut -f shape,quantity
     shape  quantity
     square 72.3735
     circle 63.5058
@@ -68,7 +68,7 @@ If there's more than one input file, you can use ``--mfrom``, then however many 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --c2p --mfrom data/*.csv -- sort -n index
+    mlr --c2p --mfrom data/*.csv -- sort -n index
 
 .mlrrc file
 ^^^^^^^^^^^

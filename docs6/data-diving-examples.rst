@@ -14,7 +14,7 @@ Vertical-tabular format is good for a quick look at CSV data layout -- seeing wh
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ head -n 2 data/flins.csv | mlr --icsv --oxtab cat
+    head -n 2 data/flins.csv | mlr --icsv --oxtab cat
     county   Seminole
     tiv_2011 22890.55
     tiv_2012 20848.71
@@ -25,7 +25,7 @@ A few simple queries:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head
+    mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head
     county     count
     Seminole   1
     Miami Dade 2
@@ -37,33 +37,33 @@ A few simple queries:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line
+    mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line
 
 Categorization of total insured value:
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012
+    mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012
     tiv_2012_min tiv_2012_mean          tiv_2012_max
     19757.91     1.0615314637499999e+06 2.78555163e+06
 
 .. code-block:: none
    :emphasize-lines: 1-2
 
-    $ mlr --from data/flins.csv --icsv --opprint \
+    mlr --from data/flins.csv --icsv --opprint \
       stats1 -a min,mean,max -f tiv_2012 -g construction,line
 
 .. code-block:: none
    :emphasize-lines: 1-2
 
-    $ mlr --from data/flins.csv --icsv --oxtab \
+    mlr --from data/flins.csv --icsv --oxtab \
       stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
 
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --from data/flins.csv --icsv --opprint \
+    mlr --from data/flins.csv --icsv --opprint \
       stats1 -a p95,p99,p100 -f hu_site_deductible -g county \
       then sort -f county | head
     county
@@ -77,7 +77,7 @@ Categorization of total insured value:
 .. code-block:: none
    :emphasize-lines: 1-2
 
-    $ mlr --from data/flins.csv --icsv --oxtab \
+    mlr --from data/flins.csv --icsv --oxtab \
       stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
     tiv_2011_tiv_2012_corr  0.9353629581411828
     tiv_2011_tiv_2012_ols_m 1.0890905877734807
@@ -88,7 +88,7 @@ Categorization of total insured value:
 .. code-block:: none
    :emphasize-lines: 1-2
 
-    $ mlr --from data/flins.csv --icsv --opprint \
+    mlr --from data/flins.csv --icsv --opprint \
       stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
     county     tiv_2011_tiv_2012_corr tiv_2011_tiv_2012_ols_m tiv_2011_tiv_2012_ols_b tiv_2011_tiv_2012_ols_n tiv_2011_tiv_2012_r2
     Seminole   -                      -                       -                       1                       -
@@ -116,13 +116,13 @@ Peek at the data:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ wc -l data/colored-shapes.dkvp
+    wc -l data/colored-shapes.dkvp
        10078 data/colored-shapes.dkvp
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ head -n 6 data/colored-shapes.dkvp | mlr --opprint cat
+    head -n 6 data/colored-shapes.dkvp | mlr --opprint cat
     color  shape    flag i  u                   v                    w                   x
     yellow triangle 1    11 0.6321695890307647  0.9887207810889004   0.4364983936735774  5.7981881667050565
     red    square   1    15 0.21966833570651523 0.001257332190235938 0.7927778364718627  2.944117399716207
@@ -138,7 +138,7 @@ Here it looks reasonable that ``u`` is unit-uniform; something's up with ``v`` b
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
+    mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
     flag_min  0
     flag_mean 0.39888866838658465
     flag_max  1
@@ -156,7 +156,7 @@ The histogram shows the different distribution of 0/1 flags:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp
+    mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp
     bin_lo                bin_hi              flag_count u_count v_count
     -0.010000000000000002 0.09000000000000002 6058       0       36
     0.09000000000000002   0.19000000000000003 0          1062    988
@@ -176,7 +176,7 @@ Look at univariate stats by color and shape. In particular, color-dependent flag
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color \
+    mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color \
       then sort -f color \
       data/colored-shapes.dkvp
     color  flag_min flag_mean           flag_max u_min                  u_mean              u_max              v_min                 v_mean              v_max
@@ -190,7 +190,7 @@ Look at univariate stats by color and shape. In particular, color-dependent flag
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape \
+    mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape \
       then sort -f shape \
       data/colored-shapes.dkvp
     shape    flag_min flag_mean           flag_max u_min                  u_mean              u_max              v_min                 v_mean              v_max
@@ -203,14 +203,14 @@ Look at bivariate stats by color and shape. In particular, ``u,v`` pairwise corr
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp
+    mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp
                u_v_corr              w_x_corr 
     0.13341803768384553 -0.011319938208638764 
 
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --opprint --right \
+    mlr --opprint --right \
       stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr \
       data/colored-shapes.dkvp
      color    shape              u_v_corr               w_x_corr 

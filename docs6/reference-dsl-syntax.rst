@@ -12,7 +12,7 @@ Multiple expressions may be given, separated by semicolons, and each may refer t
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'
+    ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'
     i j  k
     0 1  1
     1 2  3
@@ -30,7 +30,7 @@ Newlines within the expression are ignored, which can help increase legibility o
 .. code-block:: none
    :emphasize-lines: 1-7
 
-    $ mlr --opprint put '
+    mlr --opprint put '
       $nf       = NF;
       $nr       = NR;
       $fnr      = FNR;
@@ -52,7 +52,7 @@ Newlines within the expression are ignored, which can help increase legibility o
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \
+    mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \
       then stats2 -a corr -f x,y \
       data/medium
     x_y_corr
@@ -68,7 +68,7 @@ The simplest way to enter expressions for ``put`` and ``filter`` is between sing
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'
+    mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
@@ -78,7 +78,7 @@ The simplest way to enter expressions for ``put`` and ``filter`` is between sing
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --from data/small put 'func f(a, b) { return sqrt(a**2 + b**2) } $xy = f($x, $y)'
+    mlr --from data/small put 'func f(a, b) { return sqrt(a**2 + b**2) } $xy = f($x, $y)'
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
@@ -91,7 +91,7 @@ You may, though, find it convenient to put expressions into files for reuse, and
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/fe-example-3.mlr
+    cat data/fe-example-3.mlr
     func f(a, b) {
       return sqrt(a**2 + b**2)
     }
@@ -100,7 +100,7 @@ You may, though, find it convenient to put expressions into files for reuse, and
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --from data/small put -f data/fe-example-3.mlr
+    mlr --from data/small put -f data/fe-example-3.mlr
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
@@ -112,7 +112,7 @@ If you have some of the logic in a file and you want to write the rest on the co
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/fe-example-4.mlr
+    cat data/fe-example-4.mlr
     func f(a, b) {
       return sqrt(a**2 + b**2)
     }
@@ -120,7 +120,7 @@ If you have some of the logic in a file and you want to write the rest on the co
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'
+    mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
@@ -150,13 +150,13 @@ Semicolons are optional after closing curly braces (which close conditionals and
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'
+    echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'
     x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'
+    echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'
     x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 
 Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
@@ -178,7 +178,7 @@ Semicolons are required between statements even if those statements are on separ
 .. code-block:: none
    :emphasize-lines: 1-17
 
-    $ mlr --csvlite --from data/a.csv put '
+    mlr --csvlite --from data/a.csv put '
       func f(
         num a,
         num b,

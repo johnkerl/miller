@@ -26,7 +26,7 @@ Namely, Miller supports the following five built-in variables for :doc:`filter a
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr filter 'FNR == 2' data/small*
+    mlr filter 'FNR == 2' data/small*
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
     a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
@@ -34,7 +34,7 @@ Namely, Miller supports the following five built-in variables for :doc:`filter a
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$fnr = FNR' data/small*
+    mlr put '$fnr = FNR' data/small*
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,fnr=1
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,fnr=2
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,fnr=3
@@ -59,7 +59,7 @@ Their **scope is global**: you can refer to them in any ``filter`` or ``put`` st
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv put '$nr = NR' data/a.csv
+    mlr --csv put '$nr = NR' data/a.csv
     a,b,c,nr
     1,2,3,1
     4,5,6,2
@@ -67,7 +67,7 @@ Their **scope is global**: you can refer to them in any ``filter`` or ``put`` st
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
+    mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
     a,b,c,nr
     1,2,3,1
     1,2,3,1
@@ -92,12 +92,12 @@ You may also use a **computed field name** in square brackets, e.g.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo a=3,b=4 | mlr filter '$["x"] < 0.5'
+    echo a=3,b=4 | mlr filter '$["x"] < 0.5'
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
+    echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
     s=green,t=blue,a=3,b=4,green_blue=12
 
 Notes:
@@ -122,7 +122,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr cat data/small
+    mlr cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -132,7 +132,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$[[3]] = "NEW"' data/small
+    mlr put '$[[3]] = "NEW"' data/small
     a=pan,b=pan,NEW=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,NEW=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,NEW=3,x=0.20460330576630303,y=0.33831852551664776
@@ -142,7 +142,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$[[[3]]] = "NEW"' data/small
+    mlr put '$[[[3]]] = "NEW"' data/small
     a=pan,b=pan,i=NEW,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=NEW,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
@@ -152,7 +152,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$NEW = $[[NR]]' data/small
+    mlr put '$NEW = $[[NR]]' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=a
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=b
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=i
@@ -162,7 +162,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$NEW = $[[[NR]]]' data/small
+    mlr put '$NEW = $[[[NR]]]' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=pan
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=pan
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=3
@@ -172,7 +172,7 @@ Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third fiel
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$[[[NR]]] = "NEW"' data/small
+    mlr put '$[[[NR]]] = "NEW"' data/small
     a=NEW,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=NEW,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
@@ -184,7 +184,7 @@ Right-hand side accesses to non-existent fields -- i.e. with index less than 1 o
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$[[6]] = "NEW"' data/small
+    mlr put '$[[6]] = "NEW"' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -194,7 +194,7 @@ Right-hand side accesses to non-existent fields -- i.e. with index less than 1 o
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put '$[[[6]]] = "NEW"' data/small
+    mlr put '$[[[6]]] = "NEW"' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -215,7 +215,7 @@ You may use a **computed key** in square brackets, e.g.
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
+    echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
     green_blue=12
 
 Out-of-stream variables are **scoped** to the ``put`` command in which they appear.  In particular, if you have two or more ``put`` commands separated by ``then``, each put will have its own set of out-of-stream variables:
@@ -223,14 +223,14 @@ Out-of-stream variables are **scoped** to the ``put`` command in which they appe
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/a.dkvp
+    cat data/a.dkvp
     a=1,b=2,c=3
     a=4,b=5,c=6
 
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr put '@sum += $a; end {emit @sum}' \
+    mlr put '@sum += $a; end {emit @sum}' \
       then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' \
       data/a.dkvp
     a=10,b=2,c=3
@@ -250,7 +250,7 @@ Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of t
 .. code-block:: none
    :emphasize-lines: 1-8
 
-    $ mlr put -q '
+    mlr put -q '
       @x_count[$a] += 1;
       @x_sum[$a] += $x;
       end {
@@ -272,7 +272,7 @@ Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of t
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr stats1 -a count,sum -f x -g a ../data/small
+    mlr stats1 -a count,sum -f x -g a ../data/small
     a=pan,x_count=2,x_sum=0.8494161498792961
     a=eks,x_count=3,x_sum=1.75186341922895
     a=wye,x_count=2,x_sum=0.7778922255683036
@@ -284,7 +284,7 @@ Indices can be arbitrarily deep -- here there are two or more of them:
 .. code-block:: none
    :emphasize-lines: 1-7
 
-    $ mlr --from data/medium put -q '
+    mlr --from data/medium put -q '
       @x_count[$a][$b] += 1;
       @x_sum[$a][$b] += $x;
       end {
@@ -324,7 +324,7 @@ Begin/end blocks can be mixed with pattern/action blocks. For example:
 .. code-block:: none
    :emphasize-lines: 1-14
 
-    $ mlr put '
+    mlr put '
       begin {
         @num_total = 0;
         @num_positive = 0;
@@ -357,7 +357,7 @@ For example:
 .. code-block:: none
    :emphasize-lines: 1-16
 
-    $ # Here I'm using a specified random-number seed so this example always
+    # Here I'm using a specified random-number seed so this example always
     # produces the same output for this web document: in everyday practice we
     # would leave off the --seed 12345 part.
     mlr --seed 12345 seqgen --start 1 --stop 10 then put '
@@ -413,7 +413,7 @@ The following example demonstrates the scope rules:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/scope-example.mlr
+    cat data/scope-example.mlr
     func f(a) {      # argument is local to the function
       var b = 100;   # local to the function
       c = 100;       # local to the function; does not overwrite outer c
@@ -441,7 +441,7 @@ The following example demonstrates the scope rules:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/scope-example.dat
+    cat data/scope-example.dat
     n=1,x=123
     n=2,x=456
     n=3,x=789
@@ -449,7 +449,7 @@ The following example demonstrates the scope rules:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr
+    mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr
     n       1
     x       123
     outer_a 10
@@ -477,7 +477,7 @@ And this example demonstrates the type-declaration rules:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/type-decl-example.mlr
+    cat data/type-decl-example.mlr
     subr s(a, str b, int c) {                         # a is implicitly var (untyped).
                                                       # b is explicitly str.
                                                       # c is explicitly int.
@@ -526,7 +526,7 @@ For example, the following swaps the input stream's ``a`` and ``i`` fields, modi
 .. code-block:: none
    :emphasize-lines: 1-7
 
-    $ mlr --opprint put '
+    mlr --opprint put '
       $* = {
         "a": $i,
         "i": $a,
@@ -545,7 +545,7 @@ Likewise, you can assign map literals to out-of-stream variables or local variab
 .. code-block:: none
    :emphasize-lines: 1-7
 
-    $ mlr --from data/small put '
+    mlr --from data/small put '
       func f(map m): map {
         m["x"] *= 200;
         return m;
@@ -563,7 +563,7 @@ Like out-of-stream and local variables, map literals can be multi-level:
 .. code-block:: none
    :emphasize-lines: 1-19
 
-    $ mlr --from data/small put -q '
+    mlr --from data/small put -q '
       begin {
         @o = {
           "nrec": 0,
@@ -611,7 +611,7 @@ The following ``is...`` functions take a value and return a boolean indicating w
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr -F | grep ^is
+    mlr -F | grep ^is
     is_absent
     is_array
     is_bool
@@ -635,7 +635,7 @@ The following ``is...`` functions take a value and return a boolean indicating w
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr -F | grep ^assert
+    mlr -F | grep ^assert
     asserting_absent
     asserting_array
     asserting_bool
@@ -749,7 +749,7 @@ Example recursive copy of out-of-stream variables:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small
+    mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small
     {
       "v": {
         "sum": 2.264761728567491,
@@ -772,7 +772,7 @@ Example of out-of-stream variable assigned to full stream record, where the 2nd 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
+    mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -784,7 +784,7 @@ Example of full stream record assigned to an out-of-stream variable, finding the
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -794,7 +794,7 @@ Example of full stream record assigned to an out-of-stream variable, finding the
 .. code-block:: none
    :emphasize-lines: 1-4
 
-    $ mlr --opprint put -q '
+    mlr --opprint put -q '
       is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*};
       end {emit @recmax}
     ' data/small
@@ -807,6 +807,6 @@ Keywords for filter and put
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --help-all-keywords
+    mlr --help-all-keywords
     TODO: port mlr_dsl_list_all_keywords
 

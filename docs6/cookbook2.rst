@@ -112,7 +112,7 @@ For one or more specified field names, simply compute p25 and p75, then write th
 .. code-block:: none
    :emphasize-lines: 1-3
 
-    $ mlr --oxtab stats1 -f x -a p25,p75 \
+    mlr --oxtab stats1 -f x -a p25,p75 \
         then put '$x_iqr = $x_p75 - $x_p25' \
         data/medium 
     x_p25 0.24667037823231752
@@ -124,7 +124,7 @@ For wildcarded field names, first compute p25 and p75, then loop over field name
 .. code-block:: none
    :emphasize-lines: 1-7
 
-    $ mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \
+    mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \
         then put 'for (k,v in $*) {
           if (k =~ "(.*)_p25") {
             $["\1_iqr"] = $["\1_p75"] - $["\1_p25"]
@@ -140,7 +140,7 @@ This might be more elegantly implemented as an option within the ``stats1`` verb
 .. code-block:: none
    :emphasize-lines: 1-24
 
-    $ mlr --from data/medium put -q '
+    mlr --from data/medium put -q '
       # Using the y field for weighting in this example
       weight = $y;
     
@@ -178,7 +178,7 @@ Here we can chain together a few simple building blocks:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat expo-sample.sh
+    cat expo-sample.sh
     # Generate 100,000 pairs of independent and identically distributed
     # exponentially distributed random variables with the same rate parameter
     # (namely, 2.5). Then compute histograms of one of them, along with
@@ -221,7 +221,7 @@ The output is as follows:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ sh expo-sample.sh
+    sh expo-sample.sh
     bin_lo bin_hi u_count                        s_count                         p_count
     0      0.04   [64]*******************#[9554] [326]#...................[3703] [19]*******************#[39809]
     0.04   0.08   [64]*****************...[9554] [326]*****...............[3703] [19]*******.............[39809]
@@ -282,7 +282,7 @@ The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat programs/sieve.mlr
+    cat programs/sieve.mlr
     # ================================================================
     # Sieve of Eratosthenes: simple example of Miller DSL as programming language.
     # ================================================================
@@ -319,7 +319,7 @@ The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr -n put -f programs/sieve.mlr
+    mlr -n put -f programs/sieve.mlr
     2
     3
     5
@@ -356,7 +356,7 @@ The (approximate) computation of points in the complex plane which are and aren'
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ cat programs/mand.mlr
+    cat programs/mand.mlr
     # Mandelbrot set generator: simple example of Miller DSL as programming language.
     begin {
       # Set defaults
@@ -463,7 +463,7 @@ At standard resolution this makes a nice little ASCII plot:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr -n put -f ./programs/mand.mlr
+    mlr -n put -f ./programs/mand.mlr
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

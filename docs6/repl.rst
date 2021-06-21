@@ -32,7 +32,7 @@ Using ``put`` and ``filter``, you can do the following as we've seen above:
 .. code-block:: none
    :emphasize-lines: 1-2
 
-    $ mlr --icsv --ojson --from example.csv head -n 2 \
+    mlr --icsv --ojson --from example.csv head -n 2 \
       then put 'begin {print "HELLO"} $z = $x + $y; end {print "GOODBYE"}'
     HELLO
     {
