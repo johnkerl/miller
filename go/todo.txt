@@ -24,6 +24,11 @@ doclink etc:
 ----------------------------------------------------------------
 DOC6
 
+* wip
+  go get github.com/kisielk/godepgraph
+  godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
+* flamegraph etc double-check
+
 ! mlr --help, manpage, etc total refactor & audit
   ! parseTerminalUsage move-over
   ! -f/-F/-l/-L/etc keeps

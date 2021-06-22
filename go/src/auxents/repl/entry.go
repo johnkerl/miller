@@ -27,7 +27,6 @@ import (
 	"path"
 	"strings"
 
-	"miller/src/cli"
 	"miller/src/cliutil"
 )
 
@@ -153,8 +152,8 @@ func ReplMain(args []string) int {
 
 	// --auto-flatten is on by default. But if input and output formats are both JSON,
 	// then we don't need to actually do anything. See also mlrcli_parse.go.
-	options.WriterOptions.AutoFlatten = cli.DecideFinalFlatten(&options)
-	options.WriterOptions.AutoUnflatten = cli.DecideFinalUnflatten(&options)
+	options.WriterOptions.AutoFlatten = cliutil.DecideFinalFlatten(&options)
+	options.WriterOptions.AutoUnflatten = cliutil.DecideFinalUnflatten(&options)
 
 	repl, err := NewRepl(
 		exeName,

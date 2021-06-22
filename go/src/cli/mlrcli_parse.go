@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"miller/src/auxents/help"
 	"miller/src/cliutil"
 	"miller/src/dsl/cst"
 	"miller/src/lib"
@@ -52,7 +53,9 @@ func ParseCommandLine(args []string) (
 			// handled
 		} else {
 			// unhandled
-			usageUnrecognizedVerb(lib.MlrExeName(), args[argi])
+			fmt.Fprintf(os.Stderr, "%s: option \"%s\" not recognized.\n", lib.MlrExeName(), args[argi])
+			fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for usage information.\n", lib.MlrExeName())
+			os.Exit(1)
 		}
 	}
 
@@ -75,7 +78,7 @@ func ParseCommandLine(args []string) (
 		options.NoInput = true // e.g. then-chain begins with seqgen
 	}
 
-	if DecideFinalFlatten(&options) {
+	if cliutil.DecideFinalFlatten(&options) {
 		// E.g. '{"req": {"method": "GET", "path": "/api/check"}}' becomes
 		// req.method=GET,req.path=/api/check.
 		transformer, err := transformers.NewTransformerFlatten(options.WriterOptions.OFLATSEP, nil)
@@ -84,7 +87,7 @@ func ParseCommandLine(args []string) (
 		recordTransformers = append(recordTransformers, transformer)
 	}
 
-	if DecideFinalUnflatten(&options) {
+	if cliutil.DecideFinalUnflatten(&options) {
 		// E.g.  req.method=GET,req.path=/api/check becomes
 		// '{"req": {"method": "GET", "path": "/api/check"}}'
 		transformer, err := transformers.NewTransformerUnflatten(options.WriterOptions.OFLATSEP, nil)
@@ -116,84 +119,6 @@ func ParseCommandLine(args []string) (
 	return options, recordTransformers, nil
 }
 
-// ================================================================
-// Decide whether to insert a flatten or unflatten verb at the end of the
-// chain.  See also repl/verbs.go which handles the same issue in the REPL.
-//
-// ----------------------------------------------------------------
-// PROBLEM TO BE SOLVED:
-//
-// JSON has nested structures and CSV et al. do not. For example:
-// {
-//   "req" : {
-//     "method": "GET",
-//     "path":   "api/check",
-//   }
-// }
-//
-// For CSV we flatten this down to
-//
-// {
-//   "req.method": "GET",
-//   "req.path":   "api/check"
-// }
-//
-// ----------------------------------------------------------------
-// APPROACH:
-//
-// Use the Principle of Least Surprise (POLS).
-//
-// * If input is JSON and output is JSON:
-//   o Records can be nested from record-read
-//   o They remain that way through the Miller record-processing stream
-//   o They are nested on record-write
-//   o No action needs to be taken
-//
-// * If input is JSON and output is non-JSON:
-//   o Records can be nested from record-read
-//   o They remain that way through the Miller record-processing stream
-//   o On record-write, nested structures will be converted to string (carriage
-//     returns and all) using json_stringify. People *might* want this but
-//     (using POLS) we will (by default) AUTO-FLATTEN for them. There is a
-//     --no-auto-unflatten CLI flag for those who want it.
-//
-// * If input is non-JSON and output is non-JSON:
-//   o If there is a "req.method" field, people should be able to do
-//     'mlr sort -f req.method' with no surprises. (Again, POLS.) Therefore
-//     no auto-unflatten on input.  People can insert an unflatten verb
-//     into their verb chain if they really want unflatten for non-JSON
-//     files.
-//   o The DSL can make nested data, so AUTO-FLATTEN at output.
-//
-// * If input is non-JSON and output is JSON:
-//   o Default is to auto-unflatten at output.
-//   o There is a --no-auto-unflatten for those who want it.
-// ================================================================
-
-func DecideFinalFlatten(options *cliutil.TOptions) bool {
-	ofmt := options.WriterOptions.OutputFileFormat
-	if options.WriterOptions.AutoFlatten {
-		if ofmt != "json" {
-			return true
-		}
-	}
-	return false
-}
-
-func DecideFinalUnflatten(options *cliutil.TOptions) bool {
-	ifmt := options.ReaderOptions.InputFileFormat
-	ofmt := options.WriterOptions.OutputFileFormat
-
-	if options.WriterOptions.AutoUnflatten {
-		if ifmt != "json" {
-			if ofmt == "json" {
-				return true
-			}
-		}
-	}
-	return false
-}
-
 // ----------------------------------------------------------------
 // Returns a list of transformers, from the starting point in args given by *pargi.
 // Bumps *pargi to point to remaining post-transformer-setup args, i.e. filenames.
@@ -222,7 +147,8 @@ func parseTransformers(
 
 	if (argc - argi) < 1 {
 		fmt.Fprintf(os.Stderr, "%s: no verb supplied.\n", lib.MlrExeName())
-		mainUsageShort(os.Stderr, 1)
+		help.MainUsage(os.Stderr)
+		os.Exit(1)
 	}
 
 	onFirst := true
@@ -281,12 +207,14 @@ func parseTransformers(
 }
 
 // ----------------------------------------------------------------
+// TODO: move to src/auxents/help -- ?
 func parseTerminalUsage(args []string, argc int, argi int) bool {
 	if args[argi] == "--version" {
 		fmt.Printf("Miller %s\n", version.STRING)
 		return true
 	} else if args[argi] == "-h" || args[argi] == "--help" {
-		mainUsageShort(os.Stdout, 0)
+		help.MainUsage(os.Stdout)
+		os.Exit(0)
 		return true
 	} else if args[argi] == "--print-type-arithmetic-info" {
 		fmt.Println("TODO: port printTypeArithmeticInfo")
@@ -333,16 +261,16 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		//		mlr_dsl_keyword_usage(os.Stdout, args[argi+1]);
 		return true
 
-		//	// main-usage subsections, individually accessible for the benefit of
-		//	// the manpage-autogenerator
+		// main-usage subsections, individually accessible for the benefit of
+		// the manpage-autogenerator
 	} else if args[argi] == "--usage-list-all-verbs" {
 		listAllVerbs(os.Stdout, "")
 		return true
 	} else if args[argi] == "--usage-help-options" {
-		mainUsageHelpOptions(os.Stdout, lib.MlrExeName())
+		help.MainUsage(os.Stdout)
 		return true
 	} else if args[argi] == "--usage-functions" {
-		mainUsageFunctions(os.Stdout)
+		help.ListBuiltinFunctions(os.Stdout)
 		return true
 	}
 	return false

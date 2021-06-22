@@ -13,6 +13,8 @@ import (
 	"path"
 
 	"miller/src/cliutil"
+	"miller/src/dsl/cst"
+	"miller/src/lib"
 )
 
 type tHandlerFunc func(args []string)
@@ -76,13 +78,18 @@ func HelpMain(args []string) int {
 }
 
 // ----------------------------------------------------------------
-func handleDefault(args []string) {
-	fmt.Printf(
+func MainUsage(o *os.File) {
+	fmt.Fprintf(o,
 		`Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see 'mlr help topics' for more information.
 `)
+}
+
+// ----------------------------------------------------------------
+func handleDefault(args []string) {
+	MainUsage(os.Stdout)
 }
 
 // ----------------------------------------------------------------
@@ -632,3 +639,9 @@ func helpMiscOptions(args []string) {
 //	fmt.Printf("http://github.com/johnkerl/miller.")
 //	fmt.Printf(" This is Miller version %s.\n", version.STRING)
 //}
+
+// TODO port from src/cli
+func ListBuiltinFunctions(o *os.File) {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
+	fmt.Fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
+}
