@@ -33,7 +33,7 @@ func RunMillerCommand(
 	}
 
 	// This is bash -c ... or cmd /c ...
-	shellRunName, shellRunArgs := platform.GetShellRunArray(argsString)
+	shellRunName, shellRunArgs := platform.GetShellRunCommandAndArray(argsString)
 
 	cmd := exec.Command(shellRunName, shellRunArgs...)
 
