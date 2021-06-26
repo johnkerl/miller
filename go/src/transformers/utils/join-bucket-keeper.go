@@ -123,10 +123,11 @@ import (
 // Data stored in this class
 type JoinBucketKeeper struct {
 	// For streaming through the left-side file
-	recordReader input.IRecordReader
-	context      *types.Context
-	inputChannel <-chan *types.RecordAndContext
-	errorChannel chan error
+	recordReader      input.IRecordReader
+	context           *types.Context
+	inputChannel      <-chan *types.RecordAndContext
+	warningChannel    chan error
+	fatalErrorChannel chan error
 	// TODO: merge with leof flag
 	recordReaderDone bool
 
@@ -184,18 +185,20 @@ func NewJoinBucketKeeper(
 
 	// Set up channels for the record-reader
 	inputChannel := make(chan *types.RecordAndContext, 10)
-	errorChannel := make(chan error, 1)
+	warningChannel := make(chan error, 1)
+	fatalErrorChannel := make(chan error, 1)
 
 	// Start the record-reader in its own goroutine.
 	leftFileNameArray := [1]string{leftFileName}
-	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, errorChannel)
+	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, warningChannel, fatalErrorChannel)
 
 	keeper := &JoinBucketKeeper{
-		recordReader:     recordReader,
-		context:          initialContext,
-		inputChannel:     inputChannel,
-		errorChannel:     errorChannel,
-		recordReaderDone: false,
+		recordReader:      recordReader,
+		context:           initialContext,
+		inputChannel:      inputChannel,
+		warningChannel:    warningChannel,
+		fatalErrorChannel: fatalErrorChannel,
+		recordReaderDone:  false,
 
 		leftJoinFieldNames: leftJoinFieldNames,
 
@@ -571,7 +574,9 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 	}
 
 	select {
-	case err := <-keeper.errorChannel:
+	case err := <-keeper.warningChannel:
+		fmt.Fprintln(os.Stderr, lib.MlrExeName(), ": ", err)
+	case err := <-keeper.fatalErrorChannel:
 		fmt.Fprintln(os.Stderr, lib.MlrExeName(), ": ", err)
 		os.Exit(1)
 	case leftrecAndContext := <-keeper.inputChannel:

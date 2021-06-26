@@ -33,7 +33,8 @@ func (reader *RecordReaderCSV) Read(
 	filenames []string,
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
+	warningChannel chan error,
+	fatalErrorChannel chan error,
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
@@ -43,9 +44,9 @@ func (reader *RecordReaderCSV) Read(
 				reader.readerOptions.FileInputEncoding,
 			)
 			if err != nil {
-				errorChannel <- err
+				fatalErrorChannel <- err
 			}
-			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, warningChannel, fatalErrorChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
@@ -55,9 +56,14 @@ func (reader *RecordReaderCSV) Read(
 					reader.readerOptions.FileInputEncoding,
 				)
 				if err != nil {
-					errorChannel <- err
+					if reader.readerOptions.KeepGoing {
+						warningChannel <- err
+					} else {
+						fatalErrorChannel <- err
+						return
+					}
 				} else {
-					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, warningChannel, fatalErrorChannel)
 					handle.Close()
 				}
 			}
@@ -72,7 +78,8 @@ func (reader *RecordReaderCSV) processHandle(
 	filename string,
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
+	warningChannel chan error,
+	fatalErrorChannel chan error,
 ) {
 	context.UpdateForStartOfFile(filename)
 	needHeader := !reader.readerOptions.UseImplicitCSVHeader
@@ -90,9 +97,15 @@ func (reader *RecordReaderCSV) processHandle(
 				break
 			}
 			if err != nil && csvRecord == nil {
-				// See https://golang.org/pkg/encoding/csv.
-				// We handle field-count ourselves.
-				errorChannel <- err
+				if reader.readerOptions.KeepGoing {
+					rowNumber++
+					warningChannel <- err
+					continue
+				} else {
+					// See https://golang.org/pkg/encoding/csv.
+					// We handle field-count ourselves.
+					fatalErrorChannel <- err
+				}
 				return
 			}
 
@@ -112,10 +125,16 @@ func (reader *RecordReaderCSV) processHandle(
 			break
 		}
 		if err != nil && csvRecord == nil {
-			// See https://golang.org/pkg/encoding/csv.
-			// We handle field-count ourselves.
-			errorChannel <- err
-			return
+			if reader.readerOptions.KeepGoing {
+				rowNumber++
+				warningChannel <- err
+				continue
+			} else {
+				// See https://golang.org/pkg/encoding/csv.
+				// We handle field-count ourselves.
+				fatalErrorChannel <- err
+				return
+			}
 		}
 		rowNumber++
 
@@ -153,8 +172,13 @@ func (reader *RecordReaderCSV) processHandle(
 						nh, nd, filename, rowNumber,
 					),
 				)
-				errorChannel <- err
-				return
+				if reader.readerOptions.KeepGoing {
+					warningChannel <- err
+					continue
+				} else {
+					fatalErrorChannel <- err
+					return
+				}
 			} else {
 				i := 0
 				n := lib.IntMin2(nh, nd)

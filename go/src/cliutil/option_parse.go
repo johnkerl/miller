@@ -261,6 +261,10 @@ func ParseReaderOptions(
 		readerOptions.CommentHandling = PassComments
 		argi += 2
 
+	} else if args[argi] == "-k" {
+		readerOptions.KeepGoing = true
+		argi += 1
+
 	}
 	*pargi = argi
 	return argi != oargi

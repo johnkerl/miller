@@ -158,7 +158,7 @@ func (tr *TransformerBootstrap) Transform(
 		tr.recordsAndContexts.Remove(head)
 	}
 
-	// Do the sample-with-replacment, reading from random indices in the input
+	// Do the sample-with-replacement, reading from random indices in the input
 	// array and emitting output.
 	for i := 0; i < nout; i++ {
 		index := lib.RandRange(0, nin)

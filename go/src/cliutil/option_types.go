@@ -52,6 +52,9 @@ type TReaderOptions struct {
 	CommentHandling TCommentHandling
 	CommentString   string
 
+	// for mlr -k, to try to continue despite input-formatting errors
+	KeepGoing bool
+
 	//	// Fake internal-data-generator 'reader'
 	//	generator_opts_t generator_opts;
 
