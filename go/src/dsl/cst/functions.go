@@ -35,6 +35,19 @@ func (root *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 	functionName := string(astNode.Token.Lit)
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Special-case the dot operator, which is:
+	// * string + string, with coercion to string if either side is int/float/bool/etc.;
+	// * map attribute access, if the left-hand side is a map.
+
+	if functionName == "." {
+		dotCallsiteNode, err := root.BuildDotCallsiteNode(astNode)
+		if err != nil {
+			return nil, err
+		}
+		return dotCallsiteNode, nil
+	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Look for a builtin function with the given name.
 
 	builtinFunctionCallsiteNode, err := root.BuildBuiltinFunctionCallsiteNode(astNode)

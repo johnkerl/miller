@@ -271,6 +271,74 @@ func (node *BinaryFunctionCallsiteNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
+// DotCallsiteNode special-cases the dot operator, which is:
+// * string + string, with coercion to string if either side is int/float/bool/etc.
+// * map attribute access, if the left-hand side is a map.
+type DotCallsiteNode struct {
+	evaluable1 IEvaluable
+	evaluable2 IEvaluable
+	string2    string
+}
+
+func (root *RootNode) BuildDotCallsiteNode(
+	astNode *dsl.ASTNode,
+) (IEvaluable, error) {
+	callsiteArity := len(astNode.Children)
+	expectedArity := 2
+	if callsiteArity != expectedArity {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"Miller: function %s invoked with %d argument%s; expected %d",
+				".",
+				callsiteArity,
+				lib.Plural(callsiteArity),
+				expectedArity,
+			),
+		)
+	}
+
+	evaluable1, err := root.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+	evaluable2, err := root.BuildEvaluableNode(astNode.Children[1])
+	if err != nil {
+		return nil, err
+	}
+
+	return &DotCallsiteNode{
+		evaluable1: evaluable1,
+		evaluable2: evaluable2,
+		string2:    string(astNode.Children[1].Token.Lit),
+	}, nil
+}
+
+func (node *DotCallsiteNode) Evaluate(
+	state *runtime.State,
+) *types.Mlrval {
+	value1 := node.evaluable1.Evaluate(state)
+
+	mapvalue1 := value1.GetMap()
+
+	if mapvalue1 != nil {
+		// Case 1: map.attribute as shorthand for map["attribute"]
+		value2 := mapvalue1.Get(node.string2)
+		if value2 == nil {
+			return types.MLRVAL_ABSENT
+		} else {
+			return value2
+		}
+	} else {
+		// Case 2: string concatenation
+		value2 := node.evaluable2.Evaluate(state)
+		return types.MlrvalDot(
+			value1,
+			value2,
+		)
+	}
+}
+
+// ----------------------------------------------------------------
 type TernaryFunctionCallsiteNode struct {
 	ternaryFunc types.TernaryFunc
 	evaluable1  IEvaluable
