@@ -1672,13 +1672,21 @@ ContextVariable
 // ----------------------------------------------------------------
 MlrvalOrFunction : ENV ;
 
-// Only ENV["foo"]; not arbitrarily indexable like maps are
+// Only ENV["FOO"]; not arbitrarily indexable like maps are.
+// Alternate syntax: ENV.FOO.
 
 ENV
   : env "[" Rvalue "]"
     << dsl.NewASTNodeUnary(
       $0,
       $2,
+      dsl.NodeTypeEnvironmentVariable,
+    ) >>
+
+  | env "." non_sigil_name
+    << dsl.NewASTNodeUnary(
+      $0,
+      dsl.NewASTNodeNestable($2, dsl.NodeTypeStringLiteral),
       dsl.NodeTypeEnvironmentVariable,
     ) >>
 ;

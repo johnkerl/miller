@@ -104,8 +104,8 @@ var keyColorString = make256ColorString(208)  // orange
 var valueColorString = make256ColorString(33) // blue
 var passColorString = make16ColorString(10)   // bold green
 var failColorString = make16ColorString(9)    // bold red
-var replPS1ColorString = make16ColorString(9)    // bold red
-var replPS2ColorString = make16ColorString(1)    // red
+var replPS1ColorString = make16ColorString(9) // bold red
+var replPS2ColorString = make16ColorString(1) // red
 var helpColorString = make16ColorString(9)    // bold red
 
 // Used to switch back to default color
