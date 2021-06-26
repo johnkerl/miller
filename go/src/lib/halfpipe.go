@@ -30,9 +30,9 @@ func OpenOutboundHalfPipe(commandString string) (*os.File, error) {
 	}
 
 	// /bin/sh -c "..." or cmd /c "..."
-	args := platform.GetShellRunArray(commandString)
+	foo, bar := platform.GetShellRunArray(commandString)
 
-	process, err := os.StartProcess(args[0], args, &procAttr)
+	process, err := os.StartProcess(foo, bar, &procAttr)
 	if err != nil {
 		return nil, err
 	}
@@ -65,9 +65,9 @@ func OpenInboundHalfPipe(commandString string) (*os.File, error) {
 	}
 
 	// /bin/sh -c "..." or cmd /c "..."
-	args := platform.GetShellRunArray(commandString)
+	foo, bar := platform.GetShellRunArray(commandString)
 
-	process, err := os.StartProcess(args[0], args, &procAttr)
+	process, err := os.StartProcess(foo, bar, &procAttr)
 	if err != nil {
 		return nil, err
 	}

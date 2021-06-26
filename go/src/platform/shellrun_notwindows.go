@@ -10,6 +10,6 @@ func GetShellRunCommandAndArray(command string) (string, []string) {
 	return "/bin/sh", []string{"-c", command}
 }
 
-func GetShellRunArray(command string) []string {
-	return []string{"/bin/sh", "-c", command}
+func GetShellRunArray(command string) (string, []string) {
+	return "/bin/sh", []string{"/bin/sh", "-c", command}
 }

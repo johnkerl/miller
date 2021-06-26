@@ -45,11 +45,12 @@ func GetShellRunCommandAndArray(command string) (string, []string) {
 	}
 }
 
-func GetShellRunArray(command string) []string {
+func GetShellRunArray(command string) (string, []string) {
 	if os.Getenv("MSYSTEM") != "" {
 		// Running inside MSYS2; sufficiently Unix-like already.
-		return []string{"bash", "-c", command}
+		return "bash", []string{"bash", "-c", command}
 	} else {
-		return []string{"cmd", "/c", command}
+		// TODO: use env COMSPEC
+		return "C:\\Windows\\System32\\cmd.exe", []string{"cmd", "/c", command}
 	}
 }
