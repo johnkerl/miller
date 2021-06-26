@@ -1841,8 +1841,8 @@ most-frequent
     square   red
     triangle red
     circle   red
-    square   yellow
     square   blue
+    square   yellow
 
 See also :ref:`reference-verbs-least-frequent`.
 
