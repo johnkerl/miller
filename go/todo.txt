@@ -78,6 +78,13 @@ w survey
 ----------------------------------------------------------------
 BLOCKERS
 
+* list-of-verbs shortlist @ top ...
+* dotted syntax:
+  k DSL RHS coded
+  o DSL RHS needs regtest
+  o DSL LHS needs coding
+  ? support in verbs ... ?
+
 * blocker: regexes
   o finish stats1 -r
   o regex captures ...
