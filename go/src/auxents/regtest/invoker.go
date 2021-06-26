@@ -33,9 +33,9 @@ func RunMillerCommand(
 	}
 
 	// This is bash -c ... or cmd /c ...
-	shellRunName, shellRunArgs := platform.GetShellRunCommandAndArray(argsString)
+	shellRunArray := platform.GetShellRunArray(argsString)
 
-	cmd := exec.Command(shellRunName, shellRunArgs...)
+	cmd := exec.Command(shellRunArray[0], shellRunArray[1:]...)
 
 	var stdoutBuffer bytes.Buffer
 	var stderrBuffer bytes.Buffer

@@ -33,9 +33,9 @@ func MlrvalSystem(input1 *Mlrval) *Mlrval {
 	}
 	commandString := input1.printrep
 
-	shell, shellRunArray := platform.GetShellRunCommandAndArray(commandString)
+	shellRunArray := platform.GetShellRunArray(commandString)
 
-	outputBytes, err := exec.Command(shell, shellRunArray...).Output()
+	outputBytes, err := exec.Command(shellRunArray[0], shellRunArray[1:]...).Output()
 	if err != nil {
 		return MLRVAL_ERROR
 	}
