@@ -3,6 +3,8 @@ package lib
 import (
 	"fmt"
 	"os"
+
+	"miller/src/platform"
 )
 
 // OpenOutboundHalfPipe returns a handle to a process. Writing to that handle
@@ -27,13 +29,10 @@ func OpenOutboundHalfPipe(commandString string) (*os.File, error) {
 		os.Stderr,
 	}
 
-	args := []string{
-		"/bin/sh",
-		"-c",
-		commandString,
-	}
+	// /bin/sh -c "..." or cmd /c "..."
+	shellRunArray := platform.GetShellRunArray(commandString)
 
-	process, err := os.StartProcess(args[0], args, &procAttr)
+	process, err := os.StartProcess(shellRunArray[0], shellRunArray, &procAttr)
 	if err != nil {
 		return nil, err
 	}
@@ -65,21 +64,18 @@ func OpenInboundHalfPipe(commandString string) (*os.File, error) {
 		os.Stderr,
 	}
 
-	args := []string{
-		"/bin/sh",
-		"-c",
-		commandString,
-	}
+	// /bin/sh -c "..." or cmd /c "..."
+	shellRunArray := platform.GetShellRunArray(commandString)
 
-	process, err := os.StartProcess(args[0], args, &procAttr)
+	process, err := os.StartProcess(shellRunArray[0], shellRunArray, &procAttr)
 	if err != nil {
 		return nil, err
 	}
 
-	// xxx comment somewhere
+	// TODO comment somewhere
 	// https://stackoverflow.com/questions/47486128/why-does-io-pipe-continue-to-block-even-when-eof-is-reached
 
-	// xxx comment
+	// TODO comment
 	go func(process *os.Process, readPipe *os.File) {
 		_, err := process.Wait()
 		if err != nil {

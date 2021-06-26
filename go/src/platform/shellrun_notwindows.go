@@ -6,6 +6,6 @@
 
 package platform
 
-func GetShellRunArray(command string) (string, []string) {
-	return "sh", []string{"-c", command}
+func GetShellRunArray(command string) []string {
+	return []string{"/bin/sh", "-c", command}
 }

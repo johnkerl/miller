@@ -36,11 +36,15 @@ import (
 // more powerful isn't *sufficiently* more powerful to justify the
 // batching-complexity to overcome its startup-latency overhead.
 
-func GetShellRunArray(command string) (string, []string) {
+func GetShellRunArray(command string) []string {
 	if os.Getenv("MSYSTEM") != "" {
 		// Running inside MSYS2; sufficiently Unix-like already.
-		return "bash", []string{"-c", command}
+		return []string{"/bin/sh", "-c", command}
 	} else {
-		return "cmd", []string{"/c", command}
+		cmd := os.Getenv("COMSPEC")
+		if cmd == "" {
+			cmd = "C:\\Windows\\System32\\cmd.exe"
+		}
+		return []string{cmd, "/c", command}
 	}
 }
