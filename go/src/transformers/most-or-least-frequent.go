@@ -8,7 +8,6 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
@@ -19,14 +18,14 @@ const verbNameLeastFrequent = "least-frequent"
 const mostLeastFrequentDefaultMaxOutputLength = 10
 const mostLeastFrequentDefaultOutputFieldName = "count"
 
-var MostFrequentSetup = transforming.TransformerSetup{
+var MostFrequentSetup = TransformerSetup{
 	Verb:         verbNameMostFrequent,
 	UsageFunc:    transformerMostFrequentUsage,
 	ParseCLIFunc: transformerMostFrequentParseCLI,
 	IgnoresInput: false,
 }
 
-var LeastFrequentSetup = transforming.TransformerSetup{
+var LeastFrequentSetup = TransformerSetup{
 	Verb:         verbNameLeastFrequent,
 	UsageFunc:    transformerLeastFrequentUsage,
 	ParseCLIFunc: transformerLeastFrequentParseCLI,
@@ -80,7 +79,7 @@ func transformerMostFrequentParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, true, transformerMostFrequentUsage)
 }
 
@@ -89,7 +88,7 @@ func transformerLeastFrequentParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, false, transformerLeastFrequentUsage)
 }
 
@@ -98,8 +97,8 @@ func transformerMostOrLeastFrequentParseCLI(
 	argc int,
 	args []string,
 	descending bool,
-	usageFunc transforming.TransformerUsageFunc,
-) transforming.IRecordTransformer {
+	usageFunc TransformerUsageFunc,
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

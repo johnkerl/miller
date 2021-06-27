@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameRegularize = "regularize"
 
-var RegularizeSetup = transforming.TransformerSetup{
+var RegularizeSetup = TransformerSetup{
 	Verb:         verbNameRegularize,
 	UsageFunc:    transformerRegularizeUsage,
 	ParseCLIFunc: transformerRegularizeParseCLI,
@@ -41,7 +40,7 @@ func transformerRegularizeParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

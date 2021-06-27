@@ -23,7 +23,6 @@ doclink etc:
 ----------------------------------------------------------------
 HELP REFACTOR
 * all into src/auxents/help except shorts like mlr -f
-* cli/transformers usage -> transformers package; maybe even entire file
 ----------------------------------------------------------------
 
 DOC6

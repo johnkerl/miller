@@ -10,7 +10,6 @@ import (
 	"miller/src/cliutil"
 	"miller/src/lib"
 	"miller/src/transformers/utils"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
@@ -21,7 +20,7 @@ const verbNameStats2 = "stats2"
 // if we were ever asked to process field names with commas in them.
 const stats2KeySeparator = "\001"
 
-var Stats2Setup = transforming.TransformerSetup{
+var Stats2Setup = TransformerSetup{
 	Verb:         verbNameStats2,
 	UsageFunc:    transformerStats2Usage,
 	ParseCLIFunc: transformerStats2ParseCLI,
@@ -70,7 +69,7 @@ func transformerStats2ParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

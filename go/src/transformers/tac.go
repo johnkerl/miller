@@ -8,14 +8,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameTac = "tac"
 
-var TacSetup = transforming.TransformerSetup{
+var TacSetup = TransformerSetup{
 	Verb:         verbNameTac,
 	UsageFunc:    transformerTacUsage,
 	ParseCLIFunc: transformerTacParseCLI,
@@ -42,7 +41,7 @@ func transformerTacParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

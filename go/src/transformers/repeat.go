@@ -7,7 +7,6 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
@@ -22,7 +21,7 @@ const (
 // ----------------------------------------------------------------
 const verbNameRepeat = "repeat"
 
-var RepeatSetup = transforming.TransformerSetup{
+var RepeatSetup = TransformerSetup{
 	Verb:         verbNameRepeat,
 	UsageFunc:    transformerRepeatUsage,
 	ParseCLIFunc: transformerRepeatParseCLI,
@@ -71,7 +70,7 @@ func transformerRepeatParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	repeatCountSource := repeatCountSourceUnspecified
 	repeatCount := 0
@@ -127,7 +126,7 @@ func transformerRepeatParseCLI(
 type TransformerRepeat struct {
 	repeatCount           int
 	repeatCountFieldName  string
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 // ----------------------------------------------------------------

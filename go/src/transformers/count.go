@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameCount = "count"
 
-var CountSetup = transforming.TransformerSetup{
+var CountSetup = TransformerSetup{
 	Verb:         verbNameCount,
 	UsageFunc:    transformerCountUsage,
 	ParseCLIFunc: transformerCountParseCLI,
@@ -46,7 +45,7 @@ func transformerCountParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -103,7 +102,7 @@ type TransformerCount struct {
 	outputFieldName   string
 
 	// state
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 	ungroupedCount        int
 	// Example:
 	// * Suppose group-by fields are a,b.

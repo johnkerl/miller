@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameSkipTrivialRecords = "skip-trivial-records"
 
-var SkipTrivialRecordsSetup = transforming.TransformerSetup{
+var SkipTrivialRecordsSetup = TransformerSetup{
 	Verb:         verbNameSkipTrivialRecords,
 	UsageFunc:    transformerSkipTrivialRecordsUsage,
 	ParseCLIFunc: transformerSkipTrivialRecordsParseCLI,
@@ -42,7 +41,7 @@ func transformerSkipTrivialRecordsParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

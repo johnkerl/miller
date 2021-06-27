@@ -8,14 +8,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameGrep = "grep"
 
-var GrepSetup = transforming.TransformerSetup{
+var GrepSetup = TransformerSetup{
 	Verb:         verbNameGrep,
 	UsageFunc:    transformerGrepUsage,
 	ParseCLIFunc: transformerGrepParseCLI,
@@ -58,7 +57,7 @@ func transformerGrepParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

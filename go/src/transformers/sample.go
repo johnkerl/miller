@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameSample = "sample"
 
-var SampleSetup = transforming.TransformerSetup{
+var SampleSetup = TransformerSetup{
 	Verb:         verbNameSample,
 	UsageFunc:    transformerSampleUsage,
 	ParseCLIFunc: transformerSampleParseCLI,
@@ -46,7 +45,7 @@ func transformerSampleParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

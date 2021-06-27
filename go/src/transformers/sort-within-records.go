@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameSortWithinRecords = "sort-within-records"
 
-var SortWithinRecordsSetup = transforming.TransformerSetup{
+var SortWithinRecordsSetup = TransformerSetup{
 	Verb:         verbNameSortWithinRecords,
 	UsageFunc:    transformerSortWithinRecordsUsage,
 	ParseCLIFunc: transformerSortWithinRecordsParseCLI,
@@ -42,7 +41,7 @@ func transformerSortWithinRecordsParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -82,7 +81,7 @@ func transformerSortWithinRecordsParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerSortWithinRecords struct {
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerSortWithinRecords(

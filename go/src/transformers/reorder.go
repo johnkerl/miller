@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameReorder = "reorder"
 
-var ReorderSetup = transforming.TransformerSetup{
+var ReorderSetup = TransformerSetup{
 	Verb:         verbNameReorder,
 	UsageFunc:    transformerReorderUsage,
 	ParseCLIFunc: transformerReorderParseCLI,
@@ -57,7 +56,7 @@ func transformerReorderParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -130,7 +129,7 @@ type TransformerReorder struct {
 	afterFieldName  string
 
 	// state
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerReorder(

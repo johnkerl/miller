@@ -8,7 +8,6 @@ import (
 	"miller/src/cliutil"
 	"miller/src/lib"
 	"miller/src/transformers"
-	"miller/src/transforming"
 	"miller/src/types"
 	"miller/src/version"
 )
@@ -16,7 +15,7 @@ import (
 // ----------------------------------------------------------------
 func ParseCommandLine(args []string) (
 	options cliutil.TOptions,
-	recordTransformers []transforming.IRecordTransformer,
+	recordTransformers []transformers.IRecordTransformer,
 	err error,
 ) {
 	options = cliutil.DefaultOptions()
@@ -128,12 +127,12 @@ func parseTransformers(
 	argc int,
 	options *cliutil.TOptions,
 ) (
-	transformerList []transforming.IRecordTransformer,
+	transformerList []transformers.IRecordTransformer,
 	ignoresInput bool,
 	err error,
 ) {
 
-	transformerList = make([]transforming.IRecordTransformer, 0)
+	transformerList = make([]transformers.IRecordTransformer, 0)
 	ignoresInput = false
 
 	argi := *pargi
@@ -156,7 +155,7 @@ func parseTransformers(
 		cliutil.CheckArgCount(args, argi, argc, 1)
 		verb := args[argi]
 
-		transformerSetup := lookUpTransformerSetup(verb)
+		transformerSetup := transformers.LookUp(verb)
 		if transformerSetup == nil {
 			fmt.Fprintf(os.Stderr,
 				"%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
@@ -225,19 +224,20 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		// TODO raw
 		help.ListVerbs([]string{})
 		return true
-	} else if args[argi] == "-F" {
-		// TODO: mlr help function-names
-		return true
+
 	} else if args[argi] == "-f" {
 		// TODO: mlr help function-details
 		return true
+	} else if args[argi] == "-F" {
+		// TODO: mlr help function-names
+		return true
 
+	} else if args[argi] == "-k" {
+		help.HelpKeyword([]string{})
+		return true
 	} else if args[argi] == "-K" {
 		// TODO: refacctor
 		help.ListKeywords([]string{})
-		return true
-	} else if args[argi] == "-k" {
-		help.HelpKeyword([]string{})
 		return true
 
 	} else {

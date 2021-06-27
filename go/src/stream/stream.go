@@ -9,7 +9,7 @@ import (
 	"miller/src/input"
 	"miller/src/lib"
 	"miller/src/output"
-	"miller/src/transforming"
+	"miller/src/transformers"
 	"miller/src/types"
 )
 
@@ -33,7 +33,7 @@ func Stream(
 	// which sends along only one file name per call to Stream():
 	fileNames []string,
 	options cliutil.TOptions,
-	recordTransformers []transforming.IRecordTransformer,
+	recordTransformers []transformers.IRecordTransformer,
 	outputStream *os.File,
 	outputIsStdout bool,
 ) error {
@@ -68,7 +68,7 @@ func Stream(
 	// error or end-of-processing happens.
 
 	go recordReader.Read(fileNames, *initialContext, inputChannel, errorChannel)
-	go transforming.ChainTransformer(inputChannel, recordTransformers, outputChannel)
+	go transformers.ChainTransformer(inputChannel, recordTransformers, outputChannel)
 	go output.ChannelWriter(outputChannel, recordWriter, doneChannel, outputStream, outputIsStdout)
 
 	done := false

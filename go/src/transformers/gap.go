@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameGap = "gap"
 
-var GapSetup = transforming.TransformerSetup{
+var GapSetup = TransformerSetup{
 	Verb:         verbNameGap,
 	UsageFunc:    transformerGapUsage,
 	ParseCLIFunc: transformerGapParseCLI,
@@ -47,7 +46,7 @@ func transformerGapParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -102,7 +101,7 @@ type TransformerGap struct {
 	groupByFieldNames []string
 
 	// state
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 	recordCount           int
 	previousGroupingKey   string
 }

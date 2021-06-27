@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameCat = "cat"
 
-var CatSetup = transforming.TransformerSetup{
+var CatSetup = TransformerSetup{
 	Verb:         verbNameCat,
 	UsageFunc:    transformerCatUsage,
 	ParseCLIFunc: transformerCatParseCLI,
@@ -44,7 +43,7 @@ func transformerCatParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -103,7 +102,7 @@ type TransformerCat struct {
 	countsByGroup    map[string]int
 	counterFieldName string
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 // ----------------------------------------------------------------

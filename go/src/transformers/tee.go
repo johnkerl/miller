@@ -8,14 +8,13 @@ import (
 	"miller/src/cliutil"
 	"miller/src/lib"
 	"miller/src/output"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameTee = "tee"
 
-var TeeSetup = transforming.TransformerSetup{
+var TeeSetup = TransformerSetup{
 	Verb:         verbNameTee,
 	UsageFunc:    transformerTeeUsage,
 	ParseCLIFunc: transformerTeeParseCLI,
@@ -49,7 +48,7 @@ func transformerTeeParseCLI(
 	argc int,
 	args []string,
 	mainOptions *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

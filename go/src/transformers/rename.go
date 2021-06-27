@@ -10,14 +10,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameRename = "rename"
 
-var RenameSetup = transforming.TransformerSetup{
+var RenameSetup = TransformerSetup{
 	Verb:         verbNameRename,
 	UsageFunc:    transformerRenameUsage,
 	ParseCLIFunc: transformerRenameParseCLI,
@@ -64,7 +63,7 @@ func transformerRenameParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -132,7 +131,7 @@ type TransformerRename struct {
 	oldToNewNames          *lib.OrderedMap
 	regexesAndReplacements *list.List
 	doGsub                 bool
-	recordTransformerFunc  transforming.RecordTransformerFunc
+	recordTransformerFunc  RecordTransformerFunc
 }
 
 func NewTransformerRename(

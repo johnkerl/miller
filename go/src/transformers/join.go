@@ -11,14 +11,13 @@ import (
 	"miller/src/input"
 	"miller/src/lib"
 	"miller/src/transformers/utils"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameJoin = "join"
 
-var JoinSetup = transforming.TransformerSetup{
+var JoinSetup = TransformerSetup{
 	Verb:         verbNameJoin,
 	UsageFunc:    transformerJoinUsage,
 	ParseCLIFunc: transformerJoinParseCLI,
@@ -139,7 +138,7 @@ func transformerJoinParseCLI(
 	argc int,
 	args []string,
 	mainOptions *cliutil.TOptions, // Options for the right-files
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -281,7 +280,7 @@ type TransformerJoin struct {
 	// For sorted/doubly-streaming input
 	joinBucketKeeper *utils.JoinBucketKeeper
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 // ----------------------------------------------------------------

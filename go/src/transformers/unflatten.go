@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameUnflatten = "unflatten"
 
-var UnflattenSetup = transforming.TransformerSetup{
+var UnflattenSetup = TransformerSetup{
 	Verb:         verbNameUnflatten,
 	UsageFunc:    transformerUnflattenUsage,
 	ParseCLIFunc: transformerUnflattenParseCLI,
@@ -46,7 +45,7 @@ func transformerUnflattenParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -97,7 +96,7 @@ type TransformerUnflatten struct {
 	fieldNameSet map[string]bool
 
 	// state
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerUnflatten(

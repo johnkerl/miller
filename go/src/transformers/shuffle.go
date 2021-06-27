@@ -8,14 +8,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameShuffle = "shuffle"
 
-var ShuffleSetup = transforming.TransformerSetup{
+var ShuffleSetup = TransformerSetup{
 	Verb:         verbNameShuffle,
 	UsageFunc:    transformerShuffleUsage,
 	ParseCLIFunc: transformerShuffleParseCLI,
@@ -45,7 +44,7 @@ func transformerShuffleParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

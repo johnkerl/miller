@@ -8,7 +8,6 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
@@ -27,7 +26,7 @@ const (
 // ----------------------------------------------------------------
 const verbNameHavingFields = "having-fields"
 
-var HavingFieldsSetup = transforming.TransformerSetup{
+var HavingFieldsSetup = TransformerSetup{
 	Verb:         verbNameHavingFields,
 	UsageFunc:    transformerHavingFieldsUsage,
 	ParseCLIFunc: transformerHavingFieldsParseCLI,
@@ -68,7 +67,7 @@ func transformerHavingFieldsParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	havingFieldsCriterion := havingFieldsCriterionUnspecified
 	var fieldNames []string = nil
@@ -153,7 +152,7 @@ type TransformerHavingFields struct {
 
 	regex *regexp.Regexp
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 // ----------------------------------------------------------------
