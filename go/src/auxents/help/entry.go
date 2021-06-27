@@ -252,12 +252,6 @@ Please do mlr --list-colors to see the available color codes.
 // mlr help mlrrc
 // mlr aux-list
 
-// ----------------------------------------------------------------
-// SEE ALSO:
-// https://miller.readthedocs.io
-// temp:
-// http://johnkerl.org/miller-releases/miller-head/docs6/_build/html/index.html
-
 // ================================================================
 // ================================================================
 // ================================================================
@@ -455,10 +449,10 @@ func helpDataFormatOptions(args []string) {
                                 and RS %s\n",
 
 --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated with --fs tab, etc.).
-							   The 'lite' CSV does not handle RFC-CSV double-quoting rules; is
-							   slightly faster and handles heterogeneity in the input stream via
-							   empty newline followed by new header line. See also
-                                http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/etc.
+							    The 'lite' CSV does not handle RFC-CSV double-quoting rules; is
+							    slightly faster and handles heterogeneity in the input stream via
+							    empty newline followed by new header line. See also
+								%s/file-formats.html#csv-tsv-asv-usv-etc
 
 --itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
                                 "--ocsvlite --ofs tab", "--csvlite --fs tab".
@@ -502,6 +496,7 @@ are overridden in all cases by setting output format to format2.`,
 		cliutil.ASV_RS_FOR_HELP,
 		cliutil.USV_FS_FOR_HELP,
 		cliutil.USV_RS_FOR_HELP,
+		lib.DOC_URL,
 		cliutil.ASV_FS_FOR_HELP,
 		cliutil.ASV_RS_FOR_HELP,
 		cliutil.USV_FS_FOR_HELP,
@@ -690,7 +685,7 @@ func helpMiscOptions(args []string) {
 
 // ----------------------------------------------------------------
 //func helpSeeAlso(o *os.File, argv0 string) {
-//	fmt.Printf("For more information please see http://johnkerl.org/miller/doc and/or\n")
+//	fmt.Printf("For more information please see %s and/or\n", lib.DOC_URL)
 //	fmt.Printf("http://github.com/johnkerl/miller.")
 //	fmt.Printf(" This is Miller version %s.\n", version.STRING)
 //}

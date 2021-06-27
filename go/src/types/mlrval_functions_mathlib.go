@@ -63,7 +63,7 @@ func MlrvalTanh(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](inpu
 
 // ================================================================
 // Exponentiation: DSL operator '**'.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func pow_f_ii(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromFloat64(math.Pow(float64(input1.intval), float64(input2.intval)))

@@ -64,16 +64,16 @@ output separator to the given value."""
 	print make_code_block(`mlr --usage-functions`)
 
 	print make_subsection('I/O FORMATTING', [])
-	print make_code_block(`mlr help data formats`)
+	print make_code_block(`mlr help data-formats`)
 
 	print make_subsection('COMMENTS IN DATA', [])
-	print make_code_block(`mlr --usage-comments-in-data`)
+	print make_code_block(`mlr help comments-in-data`)
 
 	print make_subsection('FORMAT-CONVERSION KEYSTROKE-SAVERS', [])
 	print make_code_block(`mlr --usage-format-conversion-keystroke-saver-options`)
 
 	print make_subsection('COMPRESSED I/O', [])
-	print make_code_block(`mlr --usage-compressed-data-options`)
+	print make_code_block(`mlr help compressed-data`)
 
 	print make_subsection('SEPARATORS', [])
 	print make_code_block(`mlr --usage-separator-options`)
@@ -94,11 +94,11 @@ output separator to the given value."""
 	print make_code_block(`mlr --usage-then-chaining`)
 
 	print make_subsection('AUXILIARY COMMANDS', [])
-	print make_code_block(`mlr --usage-auxents`)
+	print make_code_block(`mlr aux-list`)
 
   print make_section('MLRRC', [])
 
-  print make_code_block(`mlr --usage-mlrrc`)
+  print make_code_block(`mlr help mlrrc`)
 
   verbs = `mlr --list-all-verbs-raw`
   print make_section('VERBS', [
@@ -139,7 +139,7 @@ output separator to the given value."""
   ])
   print make_section('SEE ALSO', [
     "awk(1), sed(1), cut(1), join(1), sort(1), RFC 4180: Common Format and MIME Type for " +
-    "Comma-Separated Values (CSV) Files, the miller website http://johnkerl.org/miller/doc"
+    "Comma-Separated Values (CSV) Files, the Miller docsite https://miller.readthedocs.io"
   ])
 end
 

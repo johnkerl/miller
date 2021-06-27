@@ -22,7 +22,12 @@ doclink etc:
 
 ----------------------------------------------------------------
 HELP REFACTOR
-* all into src/auxents/help except shorts like mlr -f
+k all into src/auxents/help except shorts like mlr -f
+* entrypoints:
+  o mlrcli_parse.go -- call
+  o mlr help all variants
+  o man6
+* doc URLs: make a single one -- ?
 ----------------------------------------------------------------
 
 DOC6
