@@ -80,19 +80,18 @@ func LookUp(verb string) *TransformerSetup {
 }
 
 // ----------------------------------------------------------------
-func ListAllVerbNames(o *os.File) {
+func ListAllVerbNames() {
 	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
-		fmt.Fprintf(o, "%s\n", transformerSetup.Verb)
+		fmt.Printf("%s\n", transformerSetup.Verb)
 	}
 }
 
 // ----------------------------------------------------------------
-func ListAllVerbs(o *os.File, leader string) {
+func ListAllVerbNamesAsParagraph() {
 	separator := " "
 
-	leaderlen := len(leader)
 	separatorlen := len(separator)
-	linelen := leaderlen
+	linelen := 0
 	j := 0
 
 	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
@@ -100,18 +99,18 @@ func ListAllVerbs(o *os.File, leader string) {
 		verblen := len(verb)
 		linelen += separatorlen + verblen
 		if linelen >= 80 {
-			fmt.Fprintf(o, "\n")
-			linelen = leaderlen + separatorlen + verblen
+			fmt.Printf("\n")
+			linelen = separatorlen + verblen
 			j = 0
 		}
-		if j == 0 {
-			fmt.Fprintf(o, "%s", leader)
+		if j > 0 {
+			fmt.Print(separator)
 		}
-		fmt.Fprintf(o, "%s%s", separator, verb)
+		fmt.Print(verb)
 		j++
 	}
 
-	fmt.Fprintf(o, "\n")
+	fmt.Printf("\n")
 }
 
 // ----------------------------------------------------------------

@@ -28,6 +28,11 @@ k all into src/auxents/help except shorts like mlr -f
   o mlr help all variants
   o man6
 * doc URLs: make a single one -- ?
+* bodies needed:
+  o mlr -l / -L paragraph/oneper
+  o mlr -f / -F long/short
+  o mlr -k / -K long/short
+
 ----------------------------------------------------------------
 
 DOC6

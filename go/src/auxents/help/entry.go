@@ -15,6 +15,7 @@ import (
 	"miller/src/cliutil"
 	"miller/src/dsl/cst"
 	"miller/src/lib"
+	"miller/src/transformers"
 )
 
 type tHandlerFunc func(args []string)
@@ -573,7 +574,15 @@ func HelpKeyword(args []string) {
 
 // ----------------------------------------------------------------
 func ListVerbs(args []string) {
-	fmt.Println("TODO: list keywords")
+	transformers.ListAllVerbNamesAsParagraph()
+}
+
+func ListAllVerbNames() {
+	transformers.ListAllVerbNames()
+}
+
+func ListAllVerbNamesAsParagraph() {
+	transformers.ListAllVerbNamesAsParagraph()
 }
 
 // ----------------------------------------------------------------
