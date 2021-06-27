@@ -9,7 +9,6 @@ TOP OF LIST:
 
 * convert all code-blocks to cardify
 * most/least-frequent: map -> odict
-* snk postntn
 
 ----------------------------------------------------------------
 colorizer:
@@ -22,6 +21,11 @@ doclink etc:
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
+HELP REFACTOR
+* all into src/auxents/help except shorts like mlr -f
+* cli/transformers usage -> transformers package; maybe even entire file
+----------------------------------------------------------------
+
 DOC6
 
 * wip
@@ -32,6 +36,7 @@ DOC6
 ! mlr --help, manpage, etc total refactor & audit
   ! parseTerminalUsage move-over
   ! -f/-F/-l/-L/etc keeps
+  ! args []string API modify
 
 * debug && || on windows more ...
 * list-of-verbs shortlist @ top ...

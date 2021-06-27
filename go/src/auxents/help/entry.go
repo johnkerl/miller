@@ -38,11 +38,27 @@ func init() {
 		{name: "data-formats", handlerFunc: helpDataFormats},
 		{name: "data-format-options", handlerFunc: helpDataFormatOptions},
 		{name: "format-conversion", handlerFunc: helpFormatConversionKeystrokeSaverOptions},
+		{name: "list-functions", handlerFunc: ListFunctions},
+		{name: "list-keywords", handlerFunc: ListKeywords},
+		{name: "list-verbs", handlerFunc: ListVerbs},
+		// TODO: help for function
+		// TODO: help for keyword
+		// {name: "function", handlerFunc: HelpFunction},
+		// {name: "keyword", handlerFunc: HelpKeyword},
+		{name: "misc", handlerFunc: helpMiscOptions},
 		{name: "mlrrc", handlerFunc: helpMlrrc},
 		{name: "output-colorizations", handlerFunc: helpOutputColorization},
-		{name: "misc", handlerFunc: helpMiscOptions},
+		// type-arithmetic-info
+		//		printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
+		// TODO
+		//{name: "usage-functions", handlerFunc: UsageFunctions},
+		//{name: "usage-keywords", handlerFunc: UsageKeywords},
+		//{name: "usage-verbs", handlerFunc: UsageVerbs},
+		// TODO: search
 	}
 }
+		//listAllVerbs(os.Stdout, "")
+		//help.ListBuiltinFunctions(os.Stdout)
 
 // ================================================================
 func HelpUsage(verbName string, o *os.File, exitCode int) {
@@ -94,6 +110,7 @@ func handleDefault(args []string) {
 
 // ----------------------------------------------------------------
 func listTopics(args []string) {
+	fmt.Println("Type 'mlr help {topic} for any of the following topics:")
 	for _, info := range handlerLookupTable {
 		fmt.Printf("  %s\n", info.name)
 	}
@@ -524,6 +541,44 @@ The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
 PPRINT, and markdown, respectively. Note that markdown format is available for
 output only.
 `)
+}
+
+// ----------------------------------------------------------------
+func ListFunctions(args []string) {
+	fmt.Println("TODO: list functions")
+	//TODO
+	//cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+	//cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
+	//cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(args[argi+1], os.Stdout)
+	//TODO: as-table
+		//		fmgr_t* pfmgr = fmgr_alloc();
+		//		fmgr_list_all_functions_as_table(pfmgr, os.Stdout);
+		//		fmgr_free(pfmgr, nil);
+		//		return true;
+}
+
+// ----------------------------------------------------------------
+func HelpFunction(args []string) {
+	fmt.Println("TODO: help for function")
+}
+
+// TODO: help all functions
+
+// ----------------------------------------------------------------
+func ListKeywords(args []string) {
+	fmt.Println("TODO: list keywords")
+}
+
+// ----------------------------------------------------------------
+func HelpKeyword(args []string) {
+	fmt.Println("TODO: help for keyword")
+}
+
+// TODO: help all keywords
+
+// ----------------------------------------------------------------
+func ListVerbs(args []string) {
+	fmt.Println("TODO: list keywords")
 }
 
 // ----------------------------------------------------------------

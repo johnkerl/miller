@@ -87,6 +87,7 @@ func listAllVerbsRaw(o *os.File) {
 	}
 }
 
+// TODO: move to help package
 func listAllVerbs(o *os.File, leader string) {
 	separator := " "
 

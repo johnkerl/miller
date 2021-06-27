@@ -6,7 +6,6 @@ import (
 
 	"miller/src/auxents/help"
 	"miller/src/cliutil"
-	"miller/src/dsl/cst"
 	"miller/src/lib"
 	"miller/src/transformers"
 	"miller/src/transforming"
@@ -212,66 +211,36 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 	if args[argi] == "--version" {
 		fmt.Printf("Miller %s\n", version.STRING)
 		return true
+
 	} else if args[argi] == "-h" || args[argi] == "--help" {
 		help.MainUsage(os.Stdout)
 		os.Exit(0)
 		return true
-	} else if args[argi] == "--print-type-arithmetic-info" {
-		fmt.Println("TODO: port printTypeArithmeticInfo")
-		//		printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
+
+	} else if args[argi] == "-l" {
+		// TODO: move to help?
+		help.ListVerbs([]string{})
+		return true
+	} else if args[argi] == "-L" {
+		// TODO raw
+		help.ListVerbs([]string{})
+		return true
+	} else if args[argi] == "-F" {
+		// TODO: mlr help function-names
+		return true
+	} else if args[argi] == "-f" {
+		// TODO: mlr help function-details
 		return true
 
-	} else if args[argi] == "--help-all-verbs" || args[argi] == "--usage-all-verbs" {
-		usageAllVerbs(lib.MlrExeName())
-	} else if args[argi] == "--list-all-verbs" || args[argi] == "-l" {
-		listAllVerbs(os.Stdout, " ")
+	} else if args[argi] == "-K" {
+		// TODO: refacctor
+		help.ListKeywords([]string{})
 		return true
-	} else if args[argi] == "--list-all-verbs-raw" || args[argi] == "-L" {
-		listAllVerbsRaw(os.Stdout)
-		return true
-
-	} else if args[argi] == "--list-all-functions-raw" || args[argi] == "-F" {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
-		return true
-		//	} else if args[argi] == "--list-all-functions-as-table" {
-		//		fmgr_t* pfmgr = fmgr_alloc();
-		//		fmgr_list_all_functions_as_table(pfmgr, os.Stdout);
-		//		fmgr_free(pfmgr, nil);
-		//		return true;
-	} else if args[argi] == "--help-all-functions" || args[argi] == "-f" {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
-		return true
-	} else if args[argi] == "--help-function" || args[argi] == "--hf" {
-		cliutil.CheckArgCount(args, argi, argc, 2)
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(args[argi+1], os.Stdout)
-		argi++
+	} else if args[argi] == "-k" {
+		help.HelpKeyword([]string{})
 		return true
 
-	} else if args[argi] == "--list-all-keywords-raw" || args[argi] == "-K" {
-		fmt.Println("TODO: port mlr_dsl_list_all_keywords_raw")
-		//		mlr_dsl_list_all_keywords_raw(os.Stdout);
-		return true
-	} else if args[argi] == "--help-all-keywords" || args[argi] == "-k" {
-		fmt.Println("TODO: port mlr_dsl_list_all_keywords")
-		//		mlr_dsl_keyword_usage(os.Stdout, nil);
-		return true
-	} else if args[argi] == "--help-keyword" || args[argi] == "--hk" {
-		cliutil.CheckArgCount(args, argi, argc, 2)
-		fmt.Println("TODO: port mlr_dsl_keyword_usage")
-		//		mlr_dsl_keyword_usage(os.Stdout, args[argi+1]);
-		return true
-
-		// main-usage subsections, individually accessible for the benefit of
-		// the manpage-autogenerator
-	} else if args[argi] == "--usage-list-all-verbs" {
-		listAllVerbs(os.Stdout, "")
-		return true
-	} else if args[argi] == "--usage-help-options" {
-		help.MainUsage(os.Stdout)
-		return true
-	} else if args[argi] == "--usage-functions" {
-		help.ListBuiltinFunctions(os.Stdout)
-		return true
+	} else {
+		return false
 	}
-	return false
 }
