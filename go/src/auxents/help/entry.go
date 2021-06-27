@@ -2,6 +2,78 @@
 // TODO: comment
 // ================================================================
 
+// ================================================================
+// mlr --usage-data-format-examples             -> mlr help format-examples
+// mlr --usage-examples                         -> mlr help ___
+// mlr --usage-help-options                     -> mlr help ___ <-- should be help-of-help meta thing -- LUT
+// mlr --usage-list-all-verbs                   -> mlr help ___
+// mlr --usage-functions                        -> mlr help ___
+// mlr --usage-data-format-options              -> mlr help ___
+// mlr --usage-comments-in-data                 -> mlr help ___
+// mlr --usage-format-conversion-keystroke-sa.. -> mlr help keystroke-savers
+// mlr --usage-compressed-data-options          -> mlr help compressed-data
+// mlr --usage-separator-options                -> mlr help separators
+// mlr --usage-csv-options                      -> mlr help csv-options
+// mlr --usage-double-quoting                   -> mlr help double-quoting
+// mlr --usage-numerical-formatting             -> mlr help number-formatting
+// mlr --usage-other-options                    -> mlr help ???
+// mlr --usage-then-chaining                    -> mlr help then-chaining
+// mlr --usage-auxents                          -> mlr help auxents
+// mlr --list-all-verbs-raw                     -> mlr help list-verbs
+// mlr #{verb} -h                               -> mlr help ????
+// mlr --list-all-functions-raw                 -> mlr help list-functions
+// mlr --help-function #{function}              -> mlr help ___
+// mlr --list-all-keywords-raw                  -> mlr help list-keywords
+// mlr --help-keyword                           -> mlr help '#{keyword}'
+
+// mlr help {foo} w/ polymorphic lookup -- ?
+// cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout)
+//
+// ? integrate repl help w/ main help ... ?
+
+// ----------------------------------------------------------------
+// To keep:
+//   -h or --help                 Show this message.
+//   --version                    Show the software version.
+//   {verb name} --help           Show verb-specific help.
+//   --help-all-verbs             Show help on all verbs.
+//   -l                           List only verb names.
+//   -L                           List only verb names, one per line.
+//   -f                           Show help on all built-in functions.
+//   -F                           Show a bare listing of built-in functions by name.
+//   -k or --help-all-keywords    Show help on all keywords.
+//   -K                           Show a bare listing of keywords by name.
+
+// mlr help verbs
+// mlr help data-format-options
+// mlr help comments-in-data
+// mlr help other-options
+// mlr help functions
+// mlr help mlrrc
+// mlr aux-list
+
+// ================================================================
+// ================================================================
+// ================================================================
+
+//func helpHelpOptions(o *os.File, argv0 string) {
+//	fmt.Printf("  -h or --help                 Show this message.\n")
+//	fmt.Printf("  --version                    Show the software version.\n")
+//	fmt.Printf("  {verb name} --help           Show verb-specific help.\n")
+//	fmt.Printf("  --help-all-verbs             Show help on all verbs.\n")
+//	fmt.Printf("  -l or --list-all-verbs       List only verb names.\n")
+//	fmt.Printf("  -L                           List only verb names, one per line.\n")
+//	fmt.Printf("  -f or --help-all-functions   Show help on all built-in functions.\n")
+//	fmt.Printf("  -F                           Show a bare listing of built-in functions by name.\n")
+//	fmt.Printf("  -k or --help-all-keywords    Show help on all keywords.\n")
+//	fmt.Printf("  -K                           Show a bare listing of keywords by name.\n")
+//}
+
+//func helpFunctions(o *os.File) {
+//	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
+//	fmt.Printf("Please use "mlr --help-function {function name}" for function-specific help.\n")
+//}
+
 // TODO: validate (args []string) non-empty by handlers that don't take them --
 // maybe a bool in the LUT
 
@@ -58,8 +130,6 @@ func init() {
 		// TODO: search
 	}
 }
-		//listAllVerbs(os.Stdout, "")
-		//help.ListBuiltinFunctions(os.Stdout)
 
 // ================================================================
 func HelpUsage(verbName string, o *os.File, exitCode int) {
@@ -199,81 +269,6 @@ If environment-variable settings and command-line flags are both provided,the la
 Please do mlr --list-colors to see the available color codes.
 `)
 }
-
-// ----------------------------------------------------------------
-// mlr --version
-// = mlr version ?
-
-// mlr --usage-data-format-examples             -> mlr help format-examples
-// mlr --usage-examples                         -> mlr help ___
-// mlr --usage-help-options                     -> mlr help ___ <-- should be help-of-help meta thing -- LUT
-// mlr --usage-list-all-verbs                   -> mlr help ___
-// mlr --usage-functions                        -> mlr help ___
-// mlr --usage-data-format-options              -> mlr help ___
-// mlr --usage-comments-in-data                 -> mlr help ___
-// mlr --usage-format-conversion-keystroke-sa.. -> mlr help keystroke-savers
-// mlr --usage-compressed-data-options          -> mlr help compressed-data
-// mlr --usage-separator-options                -> mlr help separators
-// mlr --usage-csv-options                      -> mlr help csv-options
-// mlr --usage-double-quoting                   -> mlr help double-quoting
-// mlr --usage-numerical-formatting             -> mlr help number-formatting
-// mlr --usage-other-options                    -> mlr help ???
-// mlr --usage-then-chaining                    -> mlr help then-chaining
-// mlr --usage-auxents                          -> mlr help auxents
-// mlr --list-all-verbs-raw                     -> mlr help list-verbs
-// mlr #{verb} -h                               -> mlr help ????
-// mlr --list-all-functions-raw                 -> mlr help list-functions
-// mlr --help-function #{function}              -> mlr help ___
-// mlr --list-all-keywords-raw                  -> mlr help list-keywords
-// mlr --help-keyword                           -> mlr help '#{keyword}'
-
-// mlr help {foo} w/ polymorphic lookup -- ?
-// cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout)
-//
-// ? integrate repl help w/ main help ... ?
-
-// ----------------------------------------------------------------
-// To keep:
-//   -h or --help                 Show this message.
-//   --version                    Show the software version.
-//   {verb name} --help           Show verb-specific help.
-//   --help-all-verbs             Show help on all verbs.
-//   -l                           List only verb names.
-//   -L                           List only verb names, one per line.
-//   -f                           Show help on all built-in functions.
-//   -F                           Show a bare listing of built-in functions by name.
-//   -k or --help-all-keywords    Show help on all keywords.
-//   -K                           Show a bare listing of keywords by name.
-
-// mlr help verbs
-// mlr help data-format-options
-// mlr help comments-in-data
-// mlr help other-options
-// mlr help functions
-// mlr help mlrrc
-// mlr aux-list
-
-// ================================================================
-// ================================================================
-// ================================================================
-
-//func helpHelpOptions(o *os.File, argv0 string) {
-//	fmt.Printf("  -h or --help                 Show this message.\n")
-//	fmt.Printf("  --version                    Show the software version.\n")
-//	fmt.Printf("  {verb name} --help           Show verb-specific help.\n")
-//	fmt.Printf("  --help-all-verbs             Show help on all verbs.\n")
-//	fmt.Printf("  -l or --list-all-verbs       List only verb names.\n")
-//	fmt.Printf("  -L                           List only verb names, one per line.\n")
-//	fmt.Printf("  -f or --help-all-functions   Show help on all built-in functions.\n")
-//	fmt.Printf("  -F                           Show a bare listing of built-in functions by name.\n")
-//	fmt.Printf("  -k or --help-all-keywords    Show help on all keywords.\n")
-//	fmt.Printf("  -K                           Show a bare listing of keywords by name.\n")
-//}
-
-//func helpFunctions(o *os.File) {
-//	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
-//	fmt.Printf("Please use "mlr --help-function {function name}" for function-specific help.\n")
-//}
 
 // ----------------------------------------------------------------
 func helpAuxents(args []string) {
@@ -543,14 +538,13 @@ output only.
 func ListFunctions(args []string) {
 	fmt.Println("TODO: list functions")
 	//TODO
-	//cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
 	//cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
 	//cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(args[argi+1], os.Stdout)
 	//TODO: as-table
-		//		fmgr_t* pfmgr = fmgr_alloc();
-		//		fmgr_list_all_functions_as_table(pfmgr, os.Stdout);
-		//		fmgr_free(pfmgr, nil);
-		//		return true;
+	//		fmgr_t* pfmgr = fmgr_alloc();
+	//		fmgr_list_all_functions_as_table(pfmgr, os.Stdout);
+	//		fmgr_free(pfmgr, nil);
+	//		return true;
 }
 
 // ----------------------------------------------------------------
@@ -577,12 +571,33 @@ func ListVerbs(args []string) {
 	transformers.ListAllVerbNamesAsParagraph()
 }
 
+// ----------------------------------------------------------------
 func ListAllVerbNames() {
 	transformers.ListAllVerbNames()
 }
 
+// ----------------------------------------------------------------
 func ListAllVerbNamesAsParagraph() {
 	transformers.ListAllVerbNamesAsParagraph()
+}
+
+// ----------------------------------------------------------------
+func ListAllFunctions() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
+}
+
+// ----------------------------------------------------------------
+func UsageAllFunctions() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+}
+
+// ----------------------------------------------------------------
+func ListAllKeywords() {
+}
+
+// ----------------------------------------------------------------
+func UsageAllKeywords() {
 }
 
 // ----------------------------------------------------------------
@@ -698,9 +713,3 @@ func helpMiscOptions(args []string) {
 //	fmt.Printf("http://github.com/johnkerl/miller.")
 //	fmt.Printf(" This is Miller version %s.\n", version.STRING)
 //}
-
-// TODO port from src/cli
-func ListBuiltinFunctions(o *os.File) {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
-	fmt.Fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
-}

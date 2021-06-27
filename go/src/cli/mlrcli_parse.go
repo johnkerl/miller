@@ -216,7 +216,6 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		return true
 
 	} else if args[argi] == "-l" {
-		// TODO: move to help?
 		help.ListAllVerbNamesAsParagraph()
 		return true
 	} else if args[argi] == "-L" {
@@ -224,22 +223,17 @@ func parseTerminalUsage(args []string, argc int, argi int) bool {
 		return true
 
 	} else if args[argi] == "-f" {
-		// TODO: mlr help function-details
-		// all functions with usage-strings
+		help.UsageAllFunctions()
 		return true
 	} else if args[argi] == "-F" {
-		// TODO: mlr help function-names
-		// all functions, names only
+		help.ListAllFunctions()
 		return true
 
 	} else if args[argi] == "-k" {
-		help.HelpKeyword([]string{})
-		// TODO: all keywords, long version
+		help.UsageAllKeywords()
 		return true
 	} else if args[argi] == "-K" {
-		// TODO: refacctor
-		// TODO: all keywords, names only
-		help.ListKeywords([]string{})
+		help.ListAllKeywords()
 		return true
 
 	} else {
