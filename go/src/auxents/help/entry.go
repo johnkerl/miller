@@ -82,7 +82,6 @@ package help
 import (
 	"fmt"
 	"os"
-	"path"
 
 	"miller/src/cliutil"
 	"miller/src/dsl/cst"
@@ -90,7 +89,14 @@ import (
 	"miller/src/transformers"
 )
 
-type tHandlerFunc func(args []string)
+// ================================================================
+type tHandlerFunc func()
+
+type shorthandInfo struct {
+	shorthand   string
+	longhand    string
+	handlerFunc tHandlerFunc
+}
 
 type handlerInfo struct {
 	name        string
@@ -99,9 +105,25 @@ type handlerInfo struct {
 
 // We get a Golang "initialization loop" if this is defined statically. So, we
 // use a "package init" function.
+var shorthandLookupTable = []shorthandInfo{}
 var handlerLookupTable = []handlerInfo{}
 
 func init() {
+
+	// For things like 'mlr -F', invoked through the CLI parser which does not
+	// go through our HelpMain().
+	shorthandLookupTable = []shorthandInfo{
+		// TODO: remove handler func & replace with just short/long
+		{shorthand: "-l", longhand: "TODO", handlerFunc: listAllVerbNamesAsParagraph},
+		{shorthand: "-L", longhand: "TODO", handlerFunc: listAllVerbNames},
+		{shorthand: "-f", longhand: "TODO", handlerFunc: usageAllFunctions},
+		{shorthand: "-F", longhand: "TODO", handlerFunc: listAllFunctions},
+		{shorthand: "-k", longhand: "TODO", handlerFunc: usageAllKeywords},
+		{shorthand: "-K", longhand: "TODO", handlerFunc: listAllKeywords},
+	}
+
+	// For things like 'mlr help foo', invoked through the auxent framework
+	// which goes through our HelpMain().
 	handlerLookupTable = []handlerInfo{
 		{name: "topics", handlerFunc: listTopics},
 		{name: "auxents", handlerFunc: helpAuxents},
@@ -113,7 +135,7 @@ func init() {
 		{name: "format-conversion", handlerFunc: helpFormatConversionKeystrokeSaverOptions},
 		{name: "list-functions", handlerFunc: ListFunctions},
 		{name: "list-keywords", handlerFunc: ListKeywords},
-		{name: "list-verbs", handlerFunc: ListVerbs},
+		{name: "list-verbs", handlerFunc: listVerbs},
 		// TODO: help for function
 		// TODO: help for keyword
 		// {name: "function", handlerFunc: HelpFunction},
@@ -121,9 +143,8 @@ func init() {
 		{name: "misc", handlerFunc: helpMiscOptions},
 		{name: "mlrrc", handlerFunc: helpMlrrc},
 		{name: "output-colorizations", handlerFunc: helpOutputColorization},
-		// type-arithmetic-info
-		//		printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
 		// TODO
+		// type-arithmetic-info printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
 		//{name: "usage-functions", handlerFunc: UsageFunctions},
 		//{name: "usage-keywords", handlerFunc: UsageKeywords},
 		//{name: "usage-verbs", handlerFunc: UsageVerbs},
@@ -131,35 +152,61 @@ func init() {
 	}
 }
 
+//	} else if (streq(argv[argi], "--help-all-verbs")) {
+//			usage_all_verbs(MLR_GLOBALS.bargv0);
+
+//	} else if (streq(argv[argi], "--list-all-verbs") || streq(argv[argi], "-l")) {
+//		list_all_verbs(stdout, "");
+
+//	} else if (streq(argv[argi], "--list-all-verbs-raw") || streq(argv[argi], "-L")) {
+//		list_all_verbs_raw(stdout);
+
+//	} else if (streq(argv[argi], "--list-all-functions-raw") || streq(argv[argi], "-F")) {
+//		fmgr_list_all_functions_raw(pfmgr, stdout);
+
+//	} else if (streq(argv[argi], "--list-all-functions-as-table")) {
+//		fmgr_list_all_functions_as_table(pfmgr, stdout);
+
+//	} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
+//		fmgr_function_usage(pfmgr, stdout, NULL);
+
+//	} else if (streq(argv[argi], "--help-function") || streq(argv[argi], "--hf")) {
+//		fmgr_function_usage(pfmgr, stdout, argv[argi+1]);
+
+//	} else if (streq(argv[argi], "--list-all-keywords-raw") || streq(argv[argi], "-K")) {
+//		mlr_dsl_list_all_keywords_raw(stdout);
+
+//	} else if (streq(argv[argi], "--help-all-keywords") || streq(argv[argi], "-k")) {
+//		mlr_dsl_keyword_usage(stdout, NULL);
+
 // ================================================================
-func HelpUsage(verbName string, o *os.File, exitCode int) {
-	exeName := path.Base(os.Args[0])
-	fmt.Printf("Usage: %s %s {TODO}\n", exeName, verbName)
-
-	os.Exit(exitCode)
-}
-
-// Here the args are the full Miller command line: "mlr help foo bar".
+// For things like 'mlr help foo', invoked through the auxent framework which
+// goes through our HelpMain().  Here, the args are the full Miller command
+// line: "mlr help foo bar".
 func HelpMain(args []string) int {
 	args = args[2:]
 
 	// "mlr help" and nothing else
 	if len(args) == 0 {
-		handleDefault(args)
+		handleDefault()
 		return 0
 	}
+
+	// TODO arg-count check
 
 	// "mlr help something" where we recognize the something
 	subcommand := args[0]
 	for _, info := range handlerLookupTable {
 		if info.name == subcommand {
-			info.handlerFunc(args)
+			info.handlerFunc()
 			return 0
 		}
 	}
 
+	// TODO: free-ranging keyword/function/verb/etc search as in mlr repl.
+
 	// "mlr help something" where we do not recognize the something
-	listTopics(args)
+	listTopics()
 
 	return 0
 }
@@ -175,103 +222,41 @@ Please see 'mlr help topics' for more information.
 }
 
 // ----------------------------------------------------------------
-func handleDefault(args []string) {
+// For things like 'mlr -F', invoked through the CLI parser which does not
+// go through our HelpMain().
+func ParseTerminalUsage(arg string) bool {
+	if arg == "-h" || arg == "--help" {
+		handleDefault()
+		return true
+	}
+	for _, info := range shorthandLookupTable {
+		if info.shorthand == arg {
+			info.handlerFunc()
+			return true
+		}
+	}
+	return false
+}
+
+// ================================================================
+func handleDefault() {
 	MainUsage(os.Stdout)
 }
 
 // ----------------------------------------------------------------
-func listTopics(args []string) {
+func listTopics() {
 	fmt.Println("Type 'mlr help {topic} for any of the following topics:")
 	for _, info := range handlerLookupTable {
-		fmt.Printf("  %s\n", info.name)
+		fmt.Printf("  mlr help %s\n", info.name)
+	}
+	fmt.Println("Shorthands:")
+	for _, info := range shorthandLookupTable {
+		fmt.Printf("  mlr %s = mlr help %s\n", info.shorthand, info.longhand)
 	}
 }
 
 // ----------------------------------------------------------------
-func helpMlrrc(args []string) {
-	fmt.Print(
-		`You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
-For example, if you usually process CSV, then you can put "--csv" in your .mlrrc file
-and that will be the default input/output format unless otherwise specified on the command line.
-
-The .mlrrc file format is one "--flag" or "--option value" per line, with the leading "--" optional.
-Hash-style comments and blank lines are ignored.
-
-Sample .mlrrc:
-# Input and output formats are CSV by default (unless otherwise specified
-# on the mlr command line):
-csv
-# These are no-ops for CSV, but when I do use JSON output, I want these
-# pretty-printing options to be used:
-jvstack
-jlistwrap
-
-How to specify location of .mlrrc:
-* If $MLRRC is set:
-  o If its value is "__none__" then no .mlrrc files are processed.
-  o Otherwise, its value (as a filename) is loaded and processed. If there are syntax
-    errors, they abort mlr with a usage message (as if you had mistyped something on the
-    command line). If the file can't be loaded at all, though, it is silently skipped.
-  o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is
-    set in the environment.
-* Otherwise:
-  o If $HOME/.mlrrc exists, it's then processed as above.
-  o If ./.mlrrc exists, it's then also processed as above.
-  (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)
-
-See also:
-https://miller.readthedocs.io/en/latest/customization.html
-`)
-}
-
-// ----------------------------------------------------------------
-func helpOutputColorization(args []string) {
-	fmt.Print(`Things having colors:
-* Keys in CSV header lines, JSON keys, etc
-* Values in CSV data lines, JSON scalar values, etc
- in regression-test output
-* Some online-help strings
-
-Rules for coloring:
-* By default, colorize output only if writing to stdout and stdout is a TTY.
-  * Example: color: mlr --csv cat foo.csv
-  * Example: no color: mlr --csv cat foo.csv > bar.csv
-  * Example: no color: mlr --csv cat foo.csv | less
-* The default colors were chosen since they look OK with white or black terminal background,
-  and are differentiable with common varieties of human color vision.
-
-Mechanisms for coloring:
-* Miller uses ANSI escape sequences only. This does not work on Windows except on Cygwin.
-* Requires TERM environment variable to be set to non-empty string.
-* Doesn't try to check to see whether the terminal is capable of 256-color
-  ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
-  then 16-color ANSI escapes are used, so this is in the user's control.
-
-How you can control colorization:
-* Suppression/unsuppression:
-  * Environment variable export MLR_NO_COLOR=true means don't color even if stdout+TTY.
-  * Environment variable export MLR_ALWAYS_COLOR=true means do color even if not stdout+TTY.
-    For example, you might want to use this when piping mlr output to less -r.
-  * Command-line flags --no-color or -M, --always-color or -C.
-
-* Color choices can be specified by using environment variables, or command-line flags,
-  with values 0..255:
-  * export MLR_KEY_COLOR=208, MLR_VALUE_COLOR-33, etc.:
-    MLR_KEY_COLOR MLR_VALUE_COLOR MLR_PASS_COLOR MLR_FAIL_COLOR
-    MLR_REPL_PS1_COLOR MLR_REPL_PS2_COLOR MLR_HELP_COLOR
-  * Command-line flags --key-color 208, --value-color 33, etc.:
-    --key-color --value-color --pass-color --fail-color
-    --repl-ps1-color --repl-ps2-color --help-color
-  * This is particularly useful if your terminal's background color clashes with current settings.
-
-If environment-variable settings and command-line flags are both provided,the latter take precedence.
-
-Please do mlr --list-colors to see the available color codes.
-`)
-}
-
-// ----------------------------------------------------------------
-func helpAuxents(args []string) {
+func helpAuxents() {
 	fmt.Print(`Miller has a few otherwise-standalone executables packaged within it.
 They do not participate in any other parts of Miller.
 Please "mlr aux-list" for more information.
@@ -281,7 +266,7 @@ Please "mlr aux-list" for more information.
 }
 
 // ----------------------------------------------------------------
-func helpCommentsInData(args []string) {
+func helpCommentsInData() {
 	fmt.Printf(
 		`--skip-comments                 Ignore commented lines (prefixed by "%s")
                                 within the input.
@@ -306,7 +291,7 @@ Notes:
 }
 
 // ----------------------------------------------------------------
-func helpCompressedDataOptions(args []string) {
+func helpCompressedDataOptions() {
 	fmt.Print(`Decompression done within the Miller process itself:
 --gzin  Uncompress gzip within the Miller process. Done by default if file ends in ".gz".
 --bz2in Uncompress bz2ip within the Miller process. Done by default if file ends in ".bz2".
@@ -341,7 +326,7 @@ decisions that might have been made based on the file suffix. Also,
 }
 
 // ----------------------------------------------------------------
-func helpCSVOptions(args []string) {
+func helpCSVOptions() {
 	fmt.Print(
 		`  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
                      of input files. Tip: combine with "label" to recreate
@@ -362,7 +347,7 @@ func helpCSVOptions(args []string) {
 }
 
 // ----------------------------------------------------------------
-func helpDataFormats(args []string) {
+func helpDataFormats() {
 	fmt.Printf(
 		`CSV/CSV-lite: comma-separated values with separate header line
 TSV: same but with tabs in places of commas
@@ -428,7 +413,7 @@ NIDX: implicitly numerically indexed (Unix-toolkit style)
 }
 
 // ----------------------------------------------------------------
-func helpDataFormatOptions(args []string) {
+func helpDataFormatOptions() {
 	fmt.Printf(
 		`--idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
                                  (Miller's default format).
@@ -519,7 +504,7 @@ are overridden in all cases by setting output format to format2.`,
 ////}
 
 // ----------------------------------------------------------------
-func helpFormatConversionKeystrokeSaverOptions(args []string) {
+func helpFormatConversionKeystrokeSaverOptions() {
 	fmt.Print(`As keystroke-savers for format-conversion you may use the following:
 --c2t --c2d --c2n --c2j --c2x --c2p --c2m
 --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
@@ -535,7 +520,7 @@ output only.
 }
 
 // ----------------------------------------------------------------
-func ListFunctions(args []string) {
+func ListFunctions() {
 	fmt.Println("TODO: list functions")
 	//TODO
 	//cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
@@ -548,60 +533,60 @@ func ListFunctions(args []string) {
 }
 
 // ----------------------------------------------------------------
-func HelpFunction(args []string) {
+func HelpFunction() {
 	fmt.Println("TODO: help for function")
 }
 
 // TODO: help all functions
 
 // ----------------------------------------------------------------
-func ListKeywords(args []string) {
+func ListKeywords() {
 	fmt.Println("TODO: list keywords")
 }
 
 // ----------------------------------------------------------------
-func HelpKeyword(args []string) {
+func HelpKeyword() {
 	fmt.Println("TODO: help for keyword")
 }
 
 // TODO: help all keywords
 
 // ----------------------------------------------------------------
-func ListVerbs(args []string) {
+func listVerbs() {
 	transformers.ListAllVerbNamesAsParagraph()
 }
 
 // ----------------------------------------------------------------
-func ListAllVerbNames() {
+func listAllVerbNames() {
 	transformers.ListAllVerbNames()
 }
 
 // ----------------------------------------------------------------
-func ListAllVerbNamesAsParagraph() {
+func listAllVerbNamesAsParagraph() {
 	transformers.ListAllVerbNamesAsParagraph()
 }
 
 // ----------------------------------------------------------------
-func ListAllFunctions() {
+func listAllFunctions() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
 	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
 }
 
 // ----------------------------------------------------------------
-func UsageAllFunctions() {
+func usageAllFunctions() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
 }
 
 // ----------------------------------------------------------------
-func ListAllKeywords() {
+func listAllKeywords() {
 }
 
 // ----------------------------------------------------------------
-func UsageAllKeywords() {
+func usageAllKeywords() {
 }
 
 // ----------------------------------------------------------------
-func helpMiscOptions(args []string) {
+func helpMiscOptions() {
 	fmt.Printf(`  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
                      urand()/urandint()/urand32().
   --nr-progress-mod {m}, with m a positive integer: print filename and record
@@ -636,6 +621,89 @@ func helpMiscOptions(args []string) {
 }
 
 // ----------------------------------------------------------------
+func helpMlrrc() {
+	fmt.Print(
+		`You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
+For example, if you usually process CSV, then you can put "--csv" in your .mlrrc file
+and that will be the default input/output format unless otherwise specified on the command line.
+
+The .mlrrc file format is one "--flag" or "--option value" per line, with the leading "--" optional.
+Hash-style comments and blank lines are ignored.
+
+Sample .mlrrc:
+# Input and output formats are CSV by default (unless otherwise specified
+# on the mlr command line):
+csv
+# These are no-ops for CSV, but when I do use JSON output, I want these
+# pretty-printing options to be used:
+jvstack
+jlistwrap
+
+How to specify location of .mlrrc:
+* If $MLRRC is set:
+  o If its value is "__none__" then no .mlrrc files are processed.
+  o Otherwise, its value (as a filename) is loaded and processed. If there are syntax
+    errors, they abort mlr with a usage message (as if you had mistyped something on the
+    command line). If the file can't be loaded at all, though, it is silently skipped.
+  o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is
+    set in the environment.
+* Otherwise:
+  o If $HOME/.mlrrc exists, it's then processed as above.
+  o If ./.mlrrc exists, it's then also processed as above.
+  (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)
+
+See also:
+https://miller.readthedocs.io/en/latest/customization.html
+`)
+}
+
+// ----------------------------------------------------------------
+func helpOutputColorization() {
+	fmt.Print(`Things having colors:
+* Keys in CSV header lines, JSON keys, etc
+* Values in CSV data lines, JSON scalar values, etc
+ in regression-test output
+* Some online-help strings
+
+Rules for coloring:
+* By default, colorize output only if writing to stdout and stdout is a TTY.
+  * Example: color: mlr --csv cat foo.csv
+  * Example: no color: mlr --csv cat foo.csv > bar.csv
+  * Example: no color: mlr --csv cat foo.csv | less
+* The default colors were chosen since they look OK with white or black terminal background,
+  and are differentiable with common varieties of human color vision.
+
+Mechanisms for coloring:
+* Miller uses ANSI escape sequences only. This does not work on Windows except on Cygwin.
+* Requires TERM environment variable to be set to non-empty string.
+* Doesn't try to check to see whether the terminal is capable of 256-color
+  ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
+  then 16-color ANSI escapes are used, so this is in the user's control.
+
+How you can control colorization:
+* Suppression/unsuppression:
+  * Environment variable export MLR_NO_COLOR=true means don't color even if stdout+TTY.
+  * Environment variable export MLR_ALWAYS_COLOR=true means do color even if not stdout+TTY.
+    For example, you might want to use this when piping mlr output to less -r.
+  * Command-line flags --no-color or -M, --always-color or -C.
+
+* Color choices can be specified by using environment variables, or command-line flags,
+  with values 0..255:
+  * export MLR_KEY_COLOR=208, MLR_VALUE_COLOR-33, etc.:
+    MLR_KEY_COLOR MLR_VALUE_COLOR MLR_PASS_COLOR MLR_FAIL_COLOR
+    MLR_REPL_PS1_COLOR MLR_REPL_PS2_COLOR MLR_HELP_COLOR
+  * Command-line flags --key-color 208, --value-color 33, etc.:
+    --key-color --value-color --pass-color --fail-color
+    --repl-ps1-color --repl-ps2-color --help-color
+  * This is particularly useful if your terminal's background color clashes with current settings.
+
+If environment-variable settings and command-line flags are both provided,the latter take precedence.
+
+Please do mlr --list-colors to see the available color codes.
+`)
+}
+
+// ----------------------------------------------------------------
 //func helpNumericalFormatting(o *os.File, argv0 string) {
 //	fmt.Printf("  --ofmt {format}    E.g. %%.18f, %%.0f, %%9.6e. Please use sprintf-style codes for\n")
 //	fmt.Printf("                     floating-point nummbers. If not specified, default formatting is used.\n")
@@ -644,7 +712,7 @@ func helpMiscOptions(args []string) {
 //}
 
 // ----------------------------------------------------------------
-////func helpSeparatorOptions(args []string) {
+////func helpSeparatorOptions() {
 ////	fmt.Print(`Separator options:
 ////  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'
 ////  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma

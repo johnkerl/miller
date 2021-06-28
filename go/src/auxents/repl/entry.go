@@ -31,7 +31,7 @@ import (
 )
 
 // ================================================================
-func ReplUsage(verbName string, o *os.File, exitCode int) {
+func replUsage(verbName string, o *os.File, exitCode int) {
 	exeName := path.Base(os.Args[0])
 	fmt.Fprintf(o, "Usage: %s %s [options] {zero or more data-file names}\n", exeName, verbName)
 
@@ -96,7 +96,7 @@ func ReplMain(args []string) int {
 		}
 
 		if args[argi] == "-h" || args[argi] == "--help" {
-			ReplUsage(replName, os.Stdout, 0)
+			replUsage(replName, os.Stdout, 0)
 
 		} else if args[argi] == "-q" {
 			showStartupBanner = false
@@ -119,14 +119,14 @@ func ReplMain(args []string) int {
 
 		} else if args[argi] == "--load" {
 			if argc-argi < 2 {
-				ReplUsage(replName, os.Stderr, 1)
+				replUsage(replName, os.Stderr, 1)
 			}
 			options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[argi+1])
 			argi += 2
 
 		} else if args[argi] == "--mload" {
 			if argc-argi < 2 {
-				ReplUsage(replName, os.Stderr, 1)
+				replUsage(replName, os.Stderr, 1)
 			}
 			argi += 1
 			for argi < argc && args[argi] != "--" {
@@ -146,7 +146,7 @@ func ReplMain(args []string) int {
 		} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
 
 		} else {
-			ReplUsage(replName, os.Stderr, 1)
+			replUsage(replName, os.Stderr, 1)
 		}
 	}
 

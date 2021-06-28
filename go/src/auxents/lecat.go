@@ -26,7 +26,7 @@ func lecatMain(args []string) int {
 	args = args[2:]
 	if len(args) >= 1 {
 		if args[0] == "-h" || args[0] == "--help" {
-			hexUsage(verb, os.Stdout, 0)
+			lecatUsage(verb, os.Stdout, 0)
 		}
 
 		if args[0][0] == '-' {

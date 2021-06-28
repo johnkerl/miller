@@ -13,7 +13,7 @@ import (
 )
 
 // ================================================================
-func RegTestUsage(verbName string, o *os.File, exitCode int) {
+func regTestUsage(verbName string, o *os.File, exitCode int) {
 	exeName := path.Base(os.Args[0])
 	fmt.Fprintf(o, "Usage: %s %s [options] [one or more directories/files]\n", exeName, verbName)
 	fmt.Fprintf(o, "If no directories/files are specified, the directory %s is used by default.\n", DefaultPath)
@@ -54,11 +54,11 @@ func RegTestMain(args []string) int {
 		argi++
 
 		if arg == "-h" || arg == "--help" {
-			RegTestUsage(verbName, os.Stdout, 0)
+			regTestUsage(verbName, os.Stdout, 0)
 
 		} else if arg == "-m" {
 			if argi >= argc {
-				RegTestUsage(verbName, os.Stderr, 1)
+				regTestUsage(verbName, os.Stderr, 1)
 			}
 			exeName = args[argi]
 			argi++
@@ -68,11 +68,11 @@ func RegTestMain(args []string) int {
 
 		} else if arg == "-s" {
 			if argi >= argc {
-				RegTestUsage(verbName, os.Stderr, 1)
+				regTestUsage(verbName, os.Stderr, 1)
 			}
 			temp, err := strconv.Atoi(args[argi])
 			if err != nil {
-				RegTestUsage(verbName, os.Stderr, 1)
+				regTestUsage(verbName, os.Stderr, 1)
 			}
 			firstNFailsToShow = temp
 			argi++
@@ -84,7 +84,7 @@ func RegTestMain(args []string) int {
 			verbosityLevel++
 
 		} else {
-			RegTestUsage(verbName, os.Stderr, 1)
+			regTestUsage(verbName, os.Stderr, 1)
 		}
 	}
 	paths := args[argi:]

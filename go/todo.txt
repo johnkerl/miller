@@ -9,6 +9,7 @@ TOP OF LIST:
 
 * convert all code-blocks to cardify
 * most/least-frequent: map -> odict
+* lib.MlrExeName() -> "mlr" throughout
 
 ----------------------------------------------------------------
 colorizer:
@@ -32,7 +33,9 @@ k all into src/auxents/help except shorts like mlr -f
   o mlr -l / -L paragraph/oneper
   o mlr -f / -F long/short
   o mlr -k / -K long/short
+* split up help/entry.go -- ?
 ! sort functions-table at runtime
+? rid of tAuxUsage -- is it ever called?
 
 ----------------------------------------------------------------
 

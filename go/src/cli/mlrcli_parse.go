@@ -34,12 +34,20 @@ func ParseCommandLine(args []string) (
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		if args[argi][0] != '-' {
 			break // No more flag options to process
+
 		} else if args[argi] == "--cpuprofile" {
 			// Already handled in main(); ignore here.
 			cliutil.CheckArgCount(args, argi, argc, 1)
 			argi += 2
-		} else if parseTerminalUsage(args, argc, argi) {
+		} else if args[argi] == "--version" {
+			fmt.Printf("Miller %s\n", version.STRING)
 			os.Exit(0)
+
+		} else if help.ParseTerminalUsage(args[argi]) {
+			// Most help is in the 'mlr help' auxent but there are a few shorthands
+			// like 'mlr -h' and 'mlr -F'.
+			os.Exit(0)
+
 		} else if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
 			// handled
 		} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
@@ -202,41 +210,4 @@ func parseTransformers(
 
 	*pargi = argi
 	return transformerList, ignoresInput, nil
-}
-
-// ----------------------------------------------------------------
-func parseTerminalUsage(args []string, argc int, argi int) bool {
-	if args[argi] == "--version" {
-		fmt.Printf("Miller %s\n", version.STRING)
-		return true
-
-	} else if args[argi] == "-h" || args[argi] == "--help" {
-		help.MainUsage(os.Stdout)
-		os.Exit(0)
-		return true
-
-	} else if args[argi] == "-l" {
-		help.ListAllVerbNamesAsParagraph()
-		return true
-	} else if args[argi] == "-L" {
-		help.ListAllVerbNames()
-		return true
-
-	} else if args[argi] == "-f" {
-		help.UsageAllFunctions()
-		return true
-	} else if args[argi] == "-F" {
-		help.ListAllFunctions()
-		return true
-
-	} else if args[argi] == "-k" {
-		help.UsageAllKeywords()
-		return true
-	} else if args[argi] == "-K" {
-		help.ListAllKeywords()
-		return true
-
-	} else {
-		return false
-	}
 }

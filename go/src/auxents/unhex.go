@@ -26,7 +26,7 @@ func unhexMain(args []string) int {
 
 	if len(args) >= 1 {
 		if args[0] == "-h" || args[0] == "--help" {
-			hexUsage(verb, os.Stdout, 0)
+			unhexUsage(verb, os.Stdout, 0)
 		}
 	}
 
