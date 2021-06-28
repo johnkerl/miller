@@ -4,7 +4,9 @@ Miller on Windows
 Native builds as of Miller 6
 ----------------------------------------------------------------
 
-As of version 6.0.0, Miller builds directly on Windows. The experience is now almost the same as on Linux, NetBSD/FreeBSD, and MacOS.
+Miller was originally developed for Unix-like operating systems including Linux and MacOS. Since the initial release of Miller in 2015, support for Windows has been partial. But as of version 6.0.0, Miller builds directly on Windows.
+
+The experience is now almost the same as on Linux, NetBSD/FreeBSD, and MacOS.
 
 MSYS2 is no longer required, although you can use Miller from within MSYS2 if you like. There is now simply a single ``mlr.exe``, with no ``msys2.dll`` alongside anymore.
 

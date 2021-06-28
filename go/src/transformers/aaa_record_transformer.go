@@ -1,4 +1,4 @@
-package transforming
+package transformers
 
 import (
 	"os"

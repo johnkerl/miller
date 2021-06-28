@@ -12,7 +12,7 @@ Sometimes we get CSV files which lack a header. For example (`data/headerless.cs
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/headerless.csv
+    cat data/headerless.csv
     John,23,present
     Fred,34,present
     Alice,56,missing
@@ -23,7 +23,7 @@ You can use Miller to add a header. The ``--implicit-csv-header`` applies positi
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv --implicit-csv-header cat data/headerless.csv
+    mlr --csv --implicit-csv-header cat data/headerless.csv
     1,2,3
     John,23,present
     Fred,34,present
@@ -35,7 +35,7 @@ Following that, you can rename the positionally indexed labels to names with mea
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv --implicit-csv-header label name,age,status data/headerless.csv
+    mlr --csv --implicit-csv-header label name,age,status data/headerless.csv
     name,age,status
     John,23,present
     Fred,34,present
@@ -47,7 +47,7 @@ Likewise, if you need to produce CSV which is lacking its header, you can pipe M
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ head -5 data/colored-shapes.dkvp | mlr --ocsv cat
+    head -5 data/colored-shapes.dkvp | mlr --ocsv cat
     color,shape,flag,i,u,v,w,x
     yellow,triangle,1,11,0.6321695890307647,0.9887207810889004,0.4364983936735774,5.7981881667050565
     red,square,1,15,0.21966833570651523,0.001257332190235938,0.7927778364718627,2.944117399716207
@@ -58,7 +58,7 @@ Likewise, if you need to produce CSV which is lacking its header, you can pipe M
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat
+    head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat
     yellow,triangle,1,11,0.6321695890307647,0.9887207810889004,0.4364983936735774,5.7981881667050565
     red,square,1,15,0.21966833570651523,0.001257332190235938,0.7927778364718627,2.944117399716207
     red,circle,1,16,0.20901671281497636,0.29005231936593445,0.13810280912907674,5.065034003400998
@@ -70,7 +70,7 @@ Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in co
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv
+    mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv
     1 John
     3 present
     
@@ -91,7 +91,7 @@ Suppose we have the following data:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat multi-join/input.csv
+    cat multi-join/input.csv
     id,task
     10,chop
     20,puree
@@ -107,7 +107,7 @@ And we want to augment the ``id`` column with lookups from the following data fi
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat multi-join/name-lookup.csv
+    cat multi-join/name-lookup.csv
     id,name
     30,Alice
     10,Bob
@@ -116,7 +116,7 @@ And we want to augment the ``id`` column with lookups from the following data fi
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat multi-join/status-lookup.csv
+    cat multi-join/status-lookup.csv
     id,status
     30,occupied
     10,idle
@@ -127,7 +127,7 @@ We can run the input file through multiple ``join`` commands in a ``then``-chain
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id then join -f multi-join/status-lookup.csv -j id multi-join/input.csv
+    mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id then join -f multi-join/status-lookup.csv -j id multi-join/input.csv
     id status   name  task
     10 idle     Bob   chop
     20 idle     Carol puree
@@ -146,7 +146,7 @@ Suppose you want to replace spaces with underscores in your column names:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/spaces.csv
+    cat data/spaces.csv
     a b c,def,g h i
     123,4567,890
     2468,1357,3579
@@ -157,7 +157,7 @@ The simplest way is to use ``mlr rename`` with ``-g`` (for global replace, not j
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv rename -g -r ' ,_'  data/spaces.csv
+    mlr --csv rename -g -r ' ,_'  data/spaces.csv
     a_b_c,def,g_h_i
     123,4567,890
     2468,1357,3579
@@ -166,7 +166,7 @@ The simplest way is to use ``mlr rename`` with ``-g`` (for global replace, not j
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv
+    mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv
     a_b_c def  g_h_i
     123   4567 890
     2468  1357 3579
@@ -177,7 +177,7 @@ You can also do this with a for-loop:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/bulk-rename-for-loop.mlr
+    cat data/bulk-rename-for-loop.mlr
     map newrec = {};
     for (oldk, v in $*) {
         newrec[gsub(oldk, " ", "_")] = v;
@@ -187,7 +187,7 @@ You can also do this with a for-loop:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
+    mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
     a_b_c def  g_h_i
     123   4567 890
     2468  1357 3579
@@ -201,7 +201,7 @@ How to do ``$name = gsub($name, "old", "new")`` for all fields?
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/sar.csv
+    cat data/sar.csv
     a,b,c
     the quick,brown fox,jumped
     over,the,lazy dogs
@@ -209,7 +209,7 @@ How to do ``$name = gsub($name, "old", "new")`` for all fields?
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/sar.mlr
+    cat data/sar.mlr
       for (k in $*) {
         $[k] = gsub($[k], "e", "X");
       }
@@ -217,7 +217,7 @@ How to do ``$name = gsub($name, "old", "new")`` for all fields?
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv put -f data/sar.mlr data/sar.csv
+    mlr --csv put -f data/sar.mlr data/sar.csv
     a,b,c
     thX quick,brown fox,jumpXd
     ovXr,thX,lazy dogs
@@ -230,7 +230,7 @@ Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully general
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -240,7 +240,7 @@ Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully general
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr put '
+    mlr put '
       begin {
         @i_cumu = 0;
       }
@@ -269,7 +269,7 @@ The ``awk``-like built-in variable ``NR`` is incremented for each input record:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -279,7 +279,7 @@ The ``awk``-like built-in variable ``NR`` is incremented for each input record:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr put '$nr = NR' data/small
+    mlr put '$nr = NR' data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nr=1
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nr=2
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
@@ -291,7 +291,7 @@ However, this is the record number within the original input stream -- not after
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr filter '$a == "wye"' then put '$nr = NR' data/small
+    mlr filter '$a == "wye"' then put '$nr = NR' data/small
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
 
@@ -300,7 +300,7 @@ There are two good options here. One is to use the ``cat`` verb with ``-n``:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr filter '$a == "wye"' then cat -n data/small
+    mlr filter '$a == "wye"' then cat -n data/small
     n=1,a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
     n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
@@ -309,7 +309,7 @@ The other is to keep your own counter within the ``put`` DSL:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small
+    mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,n=1
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
 
@@ -332,7 +332,7 @@ Here are some ways to use the type-checking options as described in :ref:`refere
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/het-bool.csv
+    cat data/het-bool.csv
     name,reachable
     barney,false
     betty,true
@@ -344,7 +344,7 @@ One option is to coerce everything to boolean, or integer:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
+    mlr --icsv --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
     name   reachable
     barney false
     betty  true
@@ -354,7 +354,7 @@ One option is to coerce everything to boolean, or integer:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
+    mlr --icsv --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
     name   reachable
     barney 0
     betty  1
@@ -366,7 +366,7 @@ A second option is to flag badly formatted data within the output stream:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
+    mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
     name   reachable format_ok
     barney false     true
     betty  true      true
@@ -378,7 +378,7 @@ Or perhaps to flag badly formatted data outside the output stream:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
+    mlr --icsv --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
     Malformed at NR=4
     name   reachable
     barney false
@@ -391,7 +391,7 @@ A third way is to abort the process on first instance of bad data:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv
+    mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv
     mlr: string type-assertion failed at NR=4 FNR=4 FILENAME=data/het-bool.csv
     name,reachable
     barney,false
@@ -414,7 +414,7 @@ The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv
+    mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv
     a	b
     x	z
     s	u
@@ -424,7 +424,7 @@ The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv
+    mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv
     a	b_1
     x	z
     
@@ -438,7 +438,7 @@ One option to split out the colon-delimited values in the ``b`` column is to use
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/nested.tsv --itsv --oxtab put 'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
+    mlr --from data/nested.tsv --itsv --oxtab put 'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
     a  x
     b  z
     p1 z
@@ -454,7 +454,7 @@ while another is to loop over the same map from ``splitnv`` and use it (with ``p
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/nested.tsv --itsv --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
+    mlr --from data/nested.tsv --itsv --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
     a x
     b z
     
@@ -470,7 +470,7 @@ while another is to loop over the same map from ``splitnv`` and use it (with ``p
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
+    mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
     a	b
     x	z
     s	u
@@ -485,7 +485,7 @@ Suppose you have a database query which you run at one point in time, producing 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/previous_counters.csv
+    cat data/previous_counters.csv
     color,count
     red,3472
     blue,6838
@@ -495,7 +495,7 @@ Suppose you have a database query which you run at one point in time, producing 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/current_counters.csv
+    cat data/current_counters.csv
     color,count
     red,3467
     orange,670
@@ -509,12 +509,12 @@ First, rename counter columns to make them distinct:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv
+    mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/prevtemp.csv
+    cat data/prevtemp.csv
     color,previous_count
     red,3472
     blue,6838
@@ -524,12 +524,12 @@ First, rename counter columns to make them distinct:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv
+    mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/currtemp.csv
+    cat data/currtemp.csv
     color,current_count
     red,3467
     orange,670
@@ -541,7 +541,7 @@ Then, join on the key field(s), and use unsparsify to zero-fill counters absent 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --opprint \
+    mlr --icsv --opprint \
       join -j color --ul --ur -f data/prevtemp.csv \
       then unsparsify --fill-with 0 \
       then put '$count_delta = $current_count - $previous_count' \
@@ -561,7 +561,7 @@ Suppose you have some date-stamped data which may (or may not) be missing entrie
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ head -n 10 data/miss-date.csv
+    head -n 10 data/miss-date.csv
     date,qoh
     2012-03-05,10055
     2012-03-06,10486
@@ -576,7 +576,7 @@ Suppose you have some date-stamped data which may (or may not) be missing entrie
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ wc -l data/miss-date.csv
+    wc -l data/miss-date.csv
         1372 data/miss-date.csv
 
 Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using ``strptime``, then compute adjacent differences (the ``cat -n`` simply inserts record-counters):
@@ -584,7 +584,7 @@ Since there are 1372 lines in the data file, some automation is called for. To f
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/miss-date.csv --icsv \
+    mlr --from data/miss-date.csv --icsv \
       cat -n \
       then put '$datestamp = strptime($date, "%Y-%m-%d")' \
       then step -a delta -f datestamp \
@@ -605,7 +605,7 @@ Then, filter for adjacent difference not being 86400 (the number of seconds in a
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/miss-date.csv --icsv \
+    mlr --from data/miss-date.csv --icsv \
       cat -n \
       then put '$datestamp = strptime($date, "%Y-%m-%d")' \
       then step -a delta -f datestamp \
@@ -618,7 +618,7 @@ Given this, it's now easy to see where the gaps are:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv
+    mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv
     n=770,1=2014-04-12,2=129435
     n=771,1=2014-04-13,2=129868
     n=772,1=2014-04-14,2=129797
@@ -634,7 +634,7 @@ Given this, it's now easy to see where the gaps are:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv
+    mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv
     n=1115,1=2015-03-25,2=181006
     n=1116,1=2015-03-26,2=180995
     n=1117,1=2015-03-27,2=181043
@@ -660,7 +660,7 @@ For example, mapping numeric values down a column to the percentage between thei
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/small --opprint put -q '
+    mlr --from data/small --opprint put -q '
       # These are executed once per record, which is the first pass.
       # The key is to use NR to index an out-of-stream variable to
       # retain all the x-field values.
@@ -691,7 +691,7 @@ Similarly, finding the total record count requires first reading through all the
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint --from data/small put -q '
+    mlr --opprint --from data/small put -q '
       @records[NR] = $*;
       end {
         for((I,k),v in @records) {
@@ -717,7 +717,7 @@ The idea is to retain records having the largest value of ``n`` in the following
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --itsv --opprint cat data/maxrows.tsv
+    mlr --itsv --opprint cat data/maxrows.tsv
     a      b      n score
     purple red    5 0.743231
     blue   purple 2 0.093710
@@ -756,7 +756,7 @@ Of course, the largest value of ``n`` isn't known until after all data have been
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/maxrows.mlr
+    cat data/maxrows.mlr
     # Retain all records
     @records[NR] = $*;
     # Track max value of n
@@ -776,7 +776,7 @@ Of course, the largest value of ``n`` isn't known until after all data have been
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
+    mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
     a      b      n score
     purple red    5 0.743231
     purple red    5 0.389055
@@ -850,7 +850,7 @@ The idea here is that middles starting with a 1 belong to the outer value of 1, 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/rect.txt put -q '
+    mlr --from data/rect.txt put -q '
       is_present($outer) {
         unset @r
       }
@@ -876,7 +876,7 @@ Miller handles compliant CSV: in particular, it's an error if the number of data
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/ragged.csv
+    cat data/ragged.csv
     a,b,c
     1,2,3
     4,5
@@ -885,7 +885,7 @@ Miller handles compliant CSV: in particular, it's an error if the number of data
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/ragged.csv --fs comma --nidx put '
+    mlr --from data/ragged.csv --fs comma --nidx put '
       @maxnf = max(@maxnf, NF);
       @nf = NF;
       while(@nf < @maxnf) {
@@ -903,7 +903,7 @@ or, more simply,
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --from data/ragged.csv --fs comma --nidx put '
+    mlr --from data/ragged.csv --fs comma --nidx put '
       @maxnf = max(@maxnf, NF);
       while(NF < @maxnf) {
         $[NF+1] = "";
@@ -957,7 +957,7 @@ Then
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --json put -q -f data/feature-count.mlr data/features.json
+    mlr --json put -q -f data/feature-count.mlr data/features.json
     { "record_count": 12 }
     { "key": "qoh", "key_counts": 8 }
     { "key": "rate", "key_counts": 8 }
@@ -975,7 +975,7 @@ Then
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json
+    mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json
     record_count
     12
     
@@ -1005,7 +1005,7 @@ For example, suppose you have JSON input like this:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/sparse.json
+    cat data/sparse.json
     {"a":1,"b":2,"v":3}
     {"u":1,"b":2}
     {"a":1,"v":2,"x":3}
@@ -1016,7 +1016,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/unsparsify.mlr
+    cat data/unsparsify.mlr
     # First pass:
     # Remember all unique key names:
     for (k in $*) {
@@ -1047,7 +1047,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --json put -q -f data/unsparsify.mlr data/sparse.json
+    mlr --json put -q -f data/unsparsify.mlr data/sparse.json
     { "a": 1, "b": 2, "v": 3, "u": "", "x": "", "w": "" }
     { "a": "", "b": 2, "v": "", "u": 1, "x": "", "w": "" }
     { "a": 1, "b": "", "v": 2, "u": "", "x": 3, "w": "" }
@@ -1056,7 +1056,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json
+    mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json
     a,b,v,u,x,w
     1,2,3,,,
     ,2,,1,,
@@ -1066,7 +1066,7 @@ There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- bu
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
+    mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
     a b v u x w
     1 2 3 - - -
     - 2 - 1 - -

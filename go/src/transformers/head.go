@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameHead = "head"
 
-var HeadSetup = transforming.TransformerSetup{
+var HeadSetup = TransformerSetup{
 	Verb:         verbNameHead,
 	UsageFunc:    transformerHeadUsage,
 	ParseCLIFunc: transformerHeadParseCLI,
@@ -50,7 +49,7 @@ func transformerHeadParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -101,7 +100,7 @@ type TransformerHead struct {
 	groupByFieldNames []string
 
 	// state
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 	unkeyedRecordCount    int
 	keyedRecordCounts     map[string]int
 }

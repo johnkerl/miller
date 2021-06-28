@@ -8,14 +8,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameCut = "cut"
 
-var CutSetup = transforming.TransformerSetup{
+var CutSetup = TransformerSetup{
 	Verb:         verbNameCut,
 	UsageFunc:    transformerCutUsage,
 	ParseCLIFunc: transformerCutParseCLI,
@@ -56,7 +55,7 @@ func transformerCutParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -125,7 +124,7 @@ type TransformerCut struct {
 	doComplement bool
 	regexes      []*regexp.Regexp
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerCut(

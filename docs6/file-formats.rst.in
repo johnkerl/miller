@@ -9,7 +9,7 @@ Examples
 ----------------------------------------------------------------
 
 GENRST_RUN_COMMAND
-mlr --usage-data-format-examples
+mlr help data-formats
 GENRST_EOF
 
 .. _file-formats-csv:
@@ -290,7 +290,7 @@ Data-conversion keystroke-savers
 While you can do format conversion using ``mlr --icsv --ojson cat myfile.csv``, there are also keystroke-savers for this purpose, such as ``mlr --c2j cat myfile.csv``.  For a complete list:
 
 GENRST_RUN_COMMAND
-mlr --usage-format-conversion-keystroke-saver-options
+mlr help format-conversion
 GENRST_EOF
 
 Autodetect of line endings
@@ -314,7 +314,7 @@ Comments in data
 You can include comments within your data files, and either have them ignored, or passed directly through to the standard output as soon as they are encountered:
 
 GENRST_RUN_COMMAND
-mlr --usage-comments-in-data
+mlr help comments-in-data
 GENRST_EOF
 
 Examples:

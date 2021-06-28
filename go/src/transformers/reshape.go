@@ -35,14 +35,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameReshape = "reshape"
 
-var ReshapeSetup = transforming.TransformerSetup{
+var ReshapeSetup = TransformerSetup{
 	Verb:         verbNameReshape,
 	UsageFunc:    transformerReshapeUsage,
 	ParseCLIFunc: transformerReshapeParseCLI,
@@ -124,7 +123,7 @@ func transformerReshapeParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -219,7 +218,7 @@ type TransformerReshape struct {
 	splitOutValueFieldName          string
 	otherKeysToOtherValuesToBuckets *lib.OrderedMap
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 // ----------------------------------------------------------------

@@ -17,7 +17,7 @@ import (
 	"miller/src/cliutil"
 	"miller/src/lib"
 	"miller/src/stream"
-	"miller/src/transforming"
+	"miller/src/transformers"
 )
 
 // ----------------------------------------------------------------
@@ -62,7 +62,7 @@ func Main() {
 
 func processToStdout(
 	options cliutil.TOptions,
-	recordTransformers []transforming.IRecordTransformer,
+	recordTransformers []transformers.IRecordTransformer,
 ) {
 	err := stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
 	if err != nil {

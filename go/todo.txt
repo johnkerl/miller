@@ -5,16 +5,15 @@ TOP OF LIST:
 * --nr-progress-mod * mlr -k *
 * cli-audits * doc6 * survey * check issues *
 * split up mlr -h
+* survey email followups
 
 * convert all code-blocks to cardify
 * most/least-frequent: map -> odict
-* snk postntn
-* bug: 'mlr --from foo.dat cat then' abend
+* lib.MlrExeName() -> "mlr" throughout
 
 ----------------------------------------------------------------
 colorizer:
 * mrpl output?
-* REPL PS1 color?
 
 ----------------------------------------------------------------
 doclink etc:
@@ -23,10 +22,21 @@ doclink etc:
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
+HELP
+
+* split up help/entry.go -- ?
+! improved sort for functions-table
+? integrate repl help with main help?
+* manpage & main help need some basic examples
+----------------------------------------------------------------
+
+----------------------------------------------------------------
 DOC6
 
-! mlr --help, manpage, etc total refactor & audit
-! complete list of color vars x docs6 & olh
+* wip
+  go get github.com/kisielk/godepgraph
+  godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
+* flamegraph etc double-check
 
 ? quick-examples needs fewer inputs, and outputs for all retained inputs
   ? or q-e more links to 10min
@@ -35,6 +45,10 @@ DOC6
   o new-in-miller-6: flatten/unflatten
   o JSON flatten/unflatten section
   o Arrays section including 1-up and why
+  o differences from other languages (cf. juliadocs)
+
+* doc notes about --jknquotein & --jvquoteall. make sure they're ignore-accepted in the CLIP.
+* audit for mlb -> lib.MlrExeName() (in case mlr.foo)
 
 * items:
   o file-formats:
@@ -92,6 +106,9 @@ w survey
 
 ----------------------------------------------------------------
 
+* debug && || on windows more ...
+* list-of-verbs shortlist @ top ...
+
 * blocker: regexes
   o finish stats1 -r
   o regex captures ...
@@ -129,6 +146,8 @@ w survey
 
 ================================================================
 * non-blocker: read-from-URL support -- ?
+
+* non-blocker: _ variable feature?
 
 * non-blocker: 'true && false' windows CLI-parse: debug
 

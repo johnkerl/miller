@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameFillDown = "fill-down"
 
-var FillDownSetup = transforming.TransformerSetup{
+var FillDownSetup = TransformerSetup{
 	Verb:         verbNameFillDown,
 	UsageFunc:    transformerFillDownUsage,
 	ParseCLIFunc: transformerFillDownParseCLI,
@@ -51,7 +50,7 @@ func transformerFillDownParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -117,7 +116,7 @@ type TransformerFillDown struct {
 	// state
 	lastNonNullValues map[string]*types.Mlrval
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerFillDown(

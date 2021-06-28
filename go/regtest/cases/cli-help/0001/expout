@@ -3,6 +3,7 @@ Usage: mlr altkv [options]
 Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
 Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr bar [options]
 Replaces a numeric field with a number of asterisks, allowing for cheesy
@@ -20,6 +21,7 @@ Options:
 Nominally the fill, out-of-bounds, and blank characters will be strings of length 1.
 However you can make them all longer if you so desire.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr bootstrap [options]
 Emits an n-sample, with replacement, of the input records.
@@ -28,6 +30,7 @@ Options:
  -n Number of samples to output. Defaults to number of input records.
     Must be non-negative.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr cat [options]
 Passes input records directly to output. Most useful for format conversion.
@@ -36,12 +39,14 @@ Options:
 -N {name}  Prepend field {name} to each record with record-counter starting at 1.
 -g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr check [options]
 Consumes records without printing any output.
 Useful for doing a well-formatted check on input data.
 Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr clean-whitespace [options]
 For each record, for each field in the record, whitespace-cleans the keys and/or
@@ -56,6 +61,7 @@ Options:
 It is an error to specify -k as well as -v -- to clean keys and values,
 leave off -k as well as -v.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr count-distinct [options]
 Prints number of records having distinct values for specified field names.
@@ -71,6 +77,7 @@ Options:
               and b field values. With -f a,b and with -u, computes counts
               for distinct a field values and counts for distinct b field
               values separately.
+
 ================================================================
 Usage: mlr count [options]
 Prints number of records, optionally grouped by distinct values for specified field names.
@@ -79,6 +86,7 @@ Options:
 -n {n} Show only the number of distinct values. Not interesting without -g.
 -o {name} Field name for output-count. Default "count".
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr count-similar [options]
 Ingests all records, then emits each record augmented by a count of
@@ -87,6 +95,7 @@ Options:
 -g {a,b,c} Group-by-field names for counts, e.g. a,b,c
 -o {name} Field name for output-counts. Defaults to "count".
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr cut [options]
 Passes through input records with specified fields included/excluded.
@@ -106,6 +115,7 @@ Examples:
   mlr cut -r -f '^status$,sda[0-9]'
   mlr cut -r -f '^status$,"sda[0-9]"'
   mlr cut -r -f '^status$,"sda[0-9]"i' (this is case-insensitive)
+
 ================================================================
 Usage: mlr decimate [options]
 Passes through one of every n records, optionally by category.
@@ -115,6 +125,7 @@ Options:
  -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.
  -n {n} Decimation factor (default 10).
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr fill-down [options]
 If a given record has a missing value for a given field, fill that from
@@ -130,11 +141,13 @@ Options:
      With -a, a field is 'missing' only if it is absent.
  -f  Field names for fill-down.
  -h|--help Show this message.
+
 ================================================================
 Usage: mlr fill-empty [options]
 Fills empty-string fields with specified fill-value.
 Options:
 -v {string} Fill-value: defaults to "N/A"
+
 ================================================================
 Usage: mlr filter [options] {DSL expression}
 Options:
@@ -188,6 +201,7 @@ Parser-info options:
 
 -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
    only want to look at parser information.
+
 ================================================================
 Usage: mlr flatten [options]
 Flattens multi-level maps to single-level ones. Example: field with name 'a'
@@ -196,6 +210,7 @@ Options:
 -f Comma-separated list of field names to flatten (default all).
 -s Separator, defaulting to mlr --oflatsep value.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr format-values [options]
 Applies format strings to all field values, depending on autodetected type.
@@ -226,6 +241,7 @@ Options:
                     with s in them. Undefined behavior results otherwise.
 -n                  Coerce field values autodetected as int to float, and then
                     apply the float format.
+
 ================================================================
 Usage: mlr fraction [options]
 For each record's value in specified fields, computes the ratio of that
@@ -247,6 +263,7 @@ Options:
               E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
               x=1,x_cumulative_fraction=0.1  x=2,x_cumulative_fraction=0.3
               x=3,x_cumulative_fraction=0.6  and  x=4,x_cumulative_fraction=1.0
+
 ================================================================
 Usage: mlr gap [options]
 Emits an empty record every n records, or when certain values change.
@@ -257,6 +274,7 @@ Emits an empty record every n records, or when certain values change.
 One of -f or -g is required.
 -n is ignored if -g is present.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr grep [options] {regular expression}
 Passes through records which match the regular expression.
@@ -275,14 +293,17 @@ be matched, not against either of these lines, but against the DKVP line
 and this command is intended to be merely a keystroke-saver. To get all the
 features of system grep, you can do
   "mlr --odkvp ... | grep ... | mlr --idkvp ..."
+
 ================================================================
 Usage: mlr group-by [options] {comma-separated field names}
 Outputs records in batches having identical values at specified field names.Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr group-like [options]
 Outputs records in batches having identical field names.Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr having-fields [options]
 Conditionally passes through records depending on each record's field names.
@@ -298,6 +319,7 @@ Examples:
   mlr having-fields --any-matching 'sda[0-9]'
   mlr having-fields --any-matching '"sda[0-9]"'
   mlr having-fields --any-matching '"sda[0-9]"i' (this is case-insensitive)
+
 ================================================================
 Usage: mlr head [options]
 Passes through the first n records, optionally by category.
@@ -305,6 +327,7 @@ Options:
 -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
 -n {n} Head-count to print. Default 10.
 -h|--help Show this message.
+
 ================================================================
 Just a histogram. Input values < lo or > hi are not counted.
 Usage: mlr histogram [options]
@@ -316,12 +339,14 @@ Usage: mlr histogram [options]
               Holds all values in memory before producing any output.
 -o {prefix}   Prefix for output field name. Default: no prefix.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr json-parse [options]
 Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].
 Options:
 -f {...} Comma-separated list of field names to json-parse (default all).
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr json-stringify [options]
 Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
@@ -330,6 +355,7 @@ Options:
 --jvstack Produce multi-line JSON output.
 --no-jvstack Produce single-line JSON output per record (default).
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr join [options]
 Joins records from specified left file name with records from all file names
@@ -378,6 +404,7 @@ expected to be headerless as well unless you put '--no-implicit-csv-header' afte
 Please use "mlr --usage-separator-options" for information on specifying separators.
 Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
 including examples.
+
 ================================================================
 Usage: mlr label [options] {new1,new2,new3,...}
 Given n comma-separated names, renames the first n fields of each record to
@@ -387,6 +414,7 @@ useful names to otherwise integer-indexed fields.
 
 Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr least-frequent [options]
 Shows the least frequently occurring distinct values for specified field names.
@@ -397,6 +425,7 @@ Options:
 -b          Suppress counts; show only field values.
 -o {name}   Field name for output count. Default "count".
 See also "mlr most-frequent".
+
 ================================================================
 Usage: mlr merge-fields [options]
 Computes univariate statistics for each input record, accumulated across
@@ -441,6 +470,7 @@ Example: mlr merge-fields -a sum,count -c in_,out_
   produces "a_x_sum=3,a_x_count=2,b_y_sum=4,b_y_count=1,b_x_sum=8,b_x_count=1"
   since "a_in_x" and "a_out_x" both collapse to "a_x", "b_in_y" collapses to
   "b_y", and "b_out_x" collapses to "b_x".
+
 ================================================================
 Usage: mlr most-frequent [options]
 Shows the most frequently occurring distinct values for specified field names.
@@ -451,6 +481,7 @@ Options:
 -b          Suppress counts; show only field values.
 -o {name}   Field name for output count. Default "count".
 See also "mlr least-frequent".
+
 ================================================================
 Usage: mlr nest [options]
 Explodes specified field values into separate fields/records, or reverses this.
@@ -499,12 +530,14 @@ Notes:
 * It's up to you to ensure that the nested-fs is distinct from your data's IFS:
   e.g. by default the former is semicolon and the latter is comma.
 See also mlr reshape.
+
 ================================================================
 Usage: mlr nothing [options]
 Drops all input records. Useful for testing, or after tee/print/etc. have
 produced other output.
 Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr put [options] {DSL expression}
 Options:
@@ -558,15 +591,18 @@ Parser-info options:
 
 -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
    only want to look at parser information.
+
 ================================================================
 Usage: mlr regularize [options]
 Outputs records sorted lexically ascending by keys.Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr remove-empty-columns [options]
 Omits fields which are empty on every input row. Non-streaming.
 Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
@@ -589,6 +625,7 @@ mlr rename -r 'Date_[0-9]+,Date,'  Rename all such fields to be "Date"
 mlr rename -r '"Date_[0-9]+",Date' Same
 mlr rename -r 'Date_([0-9]+).*,\1' Rename all such fields to be of the form 20151015
 mlr rename -r '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
+
 ================================================================
 Usage: mlr reorder [options]
 Moves specified names to start of record, or end of record.
@@ -606,6 +643,7 @@ Options:
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
+
 ================================================================
 Usage: mlr repeat [options]
 Copies input records to output records multiple times.
@@ -632,6 +670,7 @@ produces:
   a=1,b=2,c=3
   a=1,b=2,c=3
   a=1,b=2,c=3
+
 ================================================================
 Usage: mlr reshape [options]
 Wide-to-long options:
@@ -688,6 +727,7 @@ Examples:
     2009-01-02 -0.89248112 0.2154713
     2009-01-03 0.98012375  1.3179287
 See also mlr nest.
+
 ================================================================
 Usage: mlr sample [options]
 Reservoir sampling (subsampling without replacement), optionally by category.
@@ -696,6 +736,7 @@ Options:
 -g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.
 -k {k} Required: number of records to output in total, or by group if using -g.
 -h|--help Show this message.
+
 ================================================================
 Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
@@ -704,6 +745,7 @@ This is nothing more than a keystroke-saver for the sec2gmtdate function:
   ../c/mlr sec2gmtdate time1,time2
 is the same as
   ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+
 ================================================================
 Usage: mlr sec2gmt [options] {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
@@ -718,6 +760,7 @@ Options:
 --micros Input numbers are treated as microseconds since the epoch.
 --nanos  Input numbers are treated as nanoseconds since the epoch.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr seqgen [options]
 Passes input records directly to output. Most useful for format conversion.
@@ -733,18 +776,21 @@ Options:
 Start, stop, and/or step may be floating-point. Output is integer if start,
 stop, and step are all integers. Step may be negative. It may not be zero
 unless start == stop.
+
 ================================================================
 Usage: mlr shuffle [options]
 Outputs records randomly permuted. No output records are produced until
 all input records are read. See also mlr bootstrap and mlr sample.
 Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr skip-trivial-records [options]
 Passes through all records except those with zero fields,
 or those for which all fields have empty value.
 Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr sort {flags}
 Sorts records primarily by the first specified field, secondarily by the second
@@ -765,12 +811,14 @@ Example:
   mlr sort -f a,b -nr x,y,z
 which is the same as:
   mlr sort -f a -f b -nr x -nr y -nr z
+
 ================================================================
 Usage: mlr sort-within-records [options]
 Outputs records sorted lexically ascending by keys.
 Options:
 -r        Recursively sort subobjects/submaps, e.g. for JSON input.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr stats1 [options]
 Computes univariate statistics for one or more given fields, accumulated across
@@ -824,6 +872,7 @@ Notes:
 * count and mode allow text input; the rest require numeric input.
   In particular, 1 and 1.0 are distinct text for count and mode.
 * When there are mode ties, the first-encountered datum wins.
+
 ================================================================
 Usage: mlr stats2 [options]
 Computes bivariate statistics for one or more given field-name pairs,
@@ -851,6 +900,7 @@ Only one of -s or --fit may be used.
 Example: mlr stats2 -a linreg-pca -f x,y
 Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
 Example: mlr stats2 -a corr -f x,y
+
 ================================================================
 Usage: mlr step [options]
 Computes values dependent on the previous record, optionally grouped by category.
@@ -889,11 +939,13 @@ Examples:
 Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
 https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 for more information on EWMA.
+
 ================================================================
 Usage: mlr tac [options]
 Prints records in reverse order from the order in which they were encountered.
 Options:
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr tail [options]
 Passes through the last n records, optionally by category.
@@ -901,6 +953,7 @@ Options:
 -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
 -n {n} Head-count to print. Default 10.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr tee [options] {filename}
 Options:
@@ -912,6 +965,7 @@ the input is CSV, the output is pretty-print tabular, but the tee-file output
 is written in JSON format.
 
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr top [options]
 -f {a,b,c}    Value-field names for top counts.
@@ -925,6 +979,7 @@ Usage: mlr top [options]
 -o {name}     Field name for output indices. Default "top_idx".
 Prints the n records with smallest/largest values at specified fields,
 optionally by category.
+
 ================================================================
 Usage: mlr unflatten [options]
 Reverses flatten. Example: field with name 'a.b.c' and value 4
@@ -933,6 +988,7 @@ Options:
 -f {a,b,c} Comma-separated list of field names to unflatten (default all).
 -s {string} Separator, defaulting to mlr --oflatsep value.
 -h|--help Show this message.
+
 ================================================================
 Usage: mlr uniq [options]
 Prints distinct values for specified field names. With -c, same as
@@ -947,6 +1003,7 @@ Options:
               With -c, produces unique records, with repeat counts for each.
               With -n, produces only one record which is the unique-record count.
               With neither -c nor -n, produces unique records.
+
 ================================================================
 Usage: mlr unsparsify [options]
 Prints records with the union of field names over all input records.

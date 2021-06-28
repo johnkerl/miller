@@ -8,7 +8,6 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
@@ -17,7 +16,7 @@ const DEFAULT_STRING_ALPHA = "0.5"
 // ----------------------------------------------------------------
 const verbNameStep = "step"
 
-var StepSetup = transforming.TransformerSetup{
+var StepSetup = TransformerSetup{
 	Verb:         verbNameStep,
 	UsageFunc:    transformerStepUsage,
 	ParseCLIFunc: transformerStepParseCLI,
@@ -81,7 +80,7 @@ func transformerStepParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

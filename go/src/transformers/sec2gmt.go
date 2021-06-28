@@ -6,14 +6,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameSec2GMT = "sec2gmt"
 
-var Sec2GMTSetup = transforming.TransformerSetup{
+var Sec2GMTSetup = TransformerSetup{
 	Verb:         verbNameSec2GMT,
 	UsageFunc:    transformerSec2GMTUsage,
 	ParseCLIFunc: transformerSec2GMTParseCLI,
@@ -49,7 +48,7 @@ func transformerSec2GMTParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

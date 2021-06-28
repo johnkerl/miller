@@ -8,14 +8,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameGroupBy = "group-by"
 
-var GroupBySetup = transforming.TransformerSetup{
+var GroupBySetup = TransformerSetup{
 	Verb:         verbNameGroupBy,
 	UsageFunc:    transformerGroupByUsage,
 	ParseCLIFunc: transformerGroupByParseCLI,
@@ -42,7 +41,7 @@ func transformerGroupByParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

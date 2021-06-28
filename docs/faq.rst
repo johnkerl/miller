@@ -105,7 +105,7 @@ Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input r
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/scan-example-1.tbl
+    cat data/scan-example-1.tbl
     value
     1
     2.0
@@ -115,7 +115,7 @@ Within ``mlr put`` and ``mlr filter``, the default behavior for scanning input r
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-1.tbl
+    mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-1.tbl
     value copy     type
     1     1        int
     2.0   2.000000 float
@@ -135,7 +135,7 @@ But now suppose you have data like these:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/scan-example-2.tbl
+    cat data/scan-example-2.tbl
     value
     0001
     0002
@@ -151,7 +151,7 @@ But now suppose you have data like these:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
+    mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
     value  copy     type
     0001   1        int
     0002   2        int
@@ -181,7 +181,7 @@ The solution is to **use the -S flag** for ``mlr put`` and/or ``mlr filter``. Th
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
+    mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl
     value  copy   type
     0001   0001   string
     0002   0002   string
@@ -204,7 +204,7 @@ First, look at the input data:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/then-example.csv
+    cat data/then-example.csv
     Status,Payment_Type,Amount
     paid,cash,10.00
     pending,debit,20.00
@@ -217,7 +217,7 @@ Next, run the first step of your command, omitting anything from the first ``the
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --opprint count-distinct -f Status,Payment_Type data/then-example.csv
+    mlr --icsv --opprint count-distinct -f Status,Payment_Type data/then-example.csv
     Status  Payment_Type count
     paid    cash         2
     pending debit        1
@@ -229,7 +229,7 @@ After that, run it with the next ``then`` step included:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.csv
+    mlr --icsv --opprint count-distinct -f Status,Payment_Type then sort -nr count data/then-example.csv
     Status  Payment_Type count
     paid    cash         2
     pending debit        1
@@ -243,7 +243,7 @@ Note, by the way, that you'll get the same results using pipes:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv | mlr --icsv --opprint sort -nr count
+    mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv | mlr --icsv --opprint sort -nr count
     Status  Payment_Type count
     paid    cash         2
     pending debit        1
@@ -258,44 +258,44 @@ Miller records are ordered lists of key-value pairs. For NIDX format, DKVP forma
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo x,y,z | mlr --dkvp cat
+    echo x,y,z | mlr --dkvp cat
     1=x,2=y,3=z
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'
+    echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'
     1=x,2=y,3=z,6=a,4=b,55=cde
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo x,y,z | mlr --nidx cat
+    echo x,y,z | mlr --nidx cat
     x,y,z
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo x,y,z | mlr --csv --implicit-csv-header cat
+    echo x,y,z | mlr --csv --implicit-csv-header cat
     1,2,3
     x,y,z
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo x,y,z | mlr --dkvp rename 2,999
+    echo x,y,z | mlr --dkvp rename 2,999
     1=x,999=y,3=z
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo x,y,z | mlr --dkvp rename 2,newname
+    echo x,y,z | mlr --dkvp rename 2,newname
     1=x,newname=y,3=z
 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2
+    echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2
     3,1,2
     z,x,y
 
@@ -307,7 +307,7 @@ Given input like
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat dates.csv
+    cat dates.csv
     date,event
     2018-02-03,initialization
     2018-03-07,discovery
@@ -318,7 +318,7 @@ we can use ``strptime`` to parse the date field into seconds-since-epoch and the
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv filter 'strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")' dates.csv
+    mlr --csv filter 'strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")' dates.csv
     date,event
     2018-03-07,discovery
 
@@ -332,7 +332,7 @@ How can I handle commas-as-data in various formats?
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat commas.csv
+    cat commas.csv
     Name,Role
     "Xiao, Lin",administrator
     "Khavari, Darius",tester
@@ -342,7 +342,7 @@ Likewise :ref:`file-formats-json`:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --ojson cat commas.csv
+    mlr --icsv --ojson cat commas.csv
     { "Name": "Xiao, Lin", "Role": "administrator" }
     { "Name": "Khavari, Darius", "Role": "tester" }
 
@@ -351,7 +351,7 @@ For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no esca
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --oxtab cat commas.csv
+    mlr --icsv --oxtab cat commas.csv
     Name Xiao, Lin
     Role administrator
     
@@ -363,7 +363,7 @@ But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <fil
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --odkvp cat commas.csv
+    mlr --icsv --odkvp cat commas.csv
     Name=Xiao, Lin,Role=administrator
     Name=Khavari, Darius,Role=tester
 
@@ -372,7 +372,7 @@ One solution is to use a different delimiter, such as a pipe character:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --odkvp --ofs pipe cat commas.csv
+    mlr --icsv --odkvp --ofs pipe cat commas.csv
     Name=Xiao, Lin|Role=administrator
     Name=Khavari, Darius|Role=tester
 
@@ -382,7 +382,7 @@ characters as delimiters -- here, control-A:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
+    mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
     Name=Xiao, Lin^ARole=administrator
     Name=Khavari, Darius^ARole=tester
 
@@ -394,7 +394,7 @@ Simply surround the field names with curly braces:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
+    echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
     x.a=3,y:b=4,z/c=5,product.all=60
 
 How to escape '?' in regexes?
@@ -405,19 +405,19 @@ One way is to use square brackets; an alternative is to use simple string-substi
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/question.dat
+    cat data/question.dat
     a=is it?,b=it is!
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat
+    mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat
     a is it?
     b it is!
     c is it ...
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat
+    mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat
     a is it?
     b it is!
     c is it ...
@@ -436,7 +436,7 @@ This is a little tricky due to the shell's handling of quotes. For simplicity, l
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo a=bcd | mlr put -f data/single-quote-example.mlr
+    echo a=bcd | mlr put -f data/single-quote-example.mlr
     a=It's OK, I said, then 'for now'.
 
 So, it's simple: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
@@ -446,7 +446,7 @@ Without putting the update expression in a file, it's messier:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
+    echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
     a=It's OK, I said, 'for now'.
 
 The idea is that the outermost single-quotes are to protect the ``put`` expression from the shell, and the double quotes within them are for Miller. To get a single quote in the middle there, you need to actually put it *outside* the single-quoting for the shell. The pieces are the following, all concatenated together:
@@ -467,7 +467,7 @@ Example: columns ``x,i,a`` were requested but they appear here in the order ``a,
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -477,7 +477,7 @@ Example: columns ``x,i,a`` were requested but they appear here in the order ``a,
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr cut -f x,i,a data/small
+    mlr cut -f x,i,a data/small
     a=pan,i=1,x=0.3467901443380824
     a=eks,i=2,x=0.7586799647899636
     a=wye,i=3,x=0.20460330576630303
@@ -491,7 +491,7 @@ The solution is to use the ``-o`` option:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr cut -o -f x,i,a data/small
+    mlr cut -o -f x,i,a data/small
     x=0.3467901443380824,i=1,a=pan
     x=0.7586799647899636,i=2,a=eks
     x=0.20460330576630303,i=3,a=wye
@@ -506,7 +506,7 @@ Given this input data:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/small
+    cat data/small
     a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -518,7 +518,7 @@ why don't I see ``NR=1`` and ``NR=2`` here??
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr filter '$x > 0.5' then put '$NR = NR' data/small
+    mlr filter '$x > 0.5' then put '$NR = NR' data/small
     a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NR=2
     a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NR=5
 
@@ -527,7 +527,7 @@ The reason is that ``NR`` is computed for the original input records and isn't d
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'
+    echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'
     nf1=3,u=4,nf2=5,nf3=3
 
 ``NR``, by contrast (and ``FNR`` as well), retains the value from the original input stream, and records may be dropped by a ``filter`` within a ``then``-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows:
@@ -535,7 +535,7 @@ The reason is that ``NR`` is computed for the original input records and isn't d
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint --from data/small put '
+    mlr --opprint --from data/small put '
       begin{ @nr1 = 0 }
       @nr1 += 1;
       $nr1 = @nr1
@@ -555,7 +555,7 @@ Or, simply use ``mlr cat -n``:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr filter '$x > 0.5' then cat -n data/small
+    mlr filter '$x > 0.5' then cat -n data/small
     n=1,a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
     n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
@@ -569,7 +569,7 @@ For example, the right file here has nine records, and the left file should add 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsvlite --opprint cat data/join-u-left.csv
+    mlr --icsvlite --opprint cat data/join-u-left.csv
     hostname              ipaddr
     nadir.east.our.org    10.3.1.18
     zenith.west.our.org   10.3.1.27
@@ -578,7 +578,7 @@ For example, the right file here has nine records, and the left file should add 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsvlite --opprint cat data/join-u-right.csv
+    mlr --icsvlite --opprint cat data/join-u-right.csv
     ipaddr    timestamp  bytes
     10.3.1.27 1448762579 4568
     10.3.1.18 1448762578 8729
@@ -593,7 +593,7 @@ For example, the right file here has nine records, and the left file should add 
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
+    mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
     ipaddr    hostname              timestamp  bytes
     10.3.1.27 zenith.west.our.org   1448762579 4568
     10.4.5.94 apoapsis.east.our.org 1448762579 17445
@@ -607,7 +607,7 @@ The solution (besides pre-sorting the input files on the join keys) is to simply
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
+    mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
     ipaddr    hostname              timestamp  bytes
     10.3.1.27 zenith.west.our.org   1448762579 4568
     10.3.1.18 nadir.east.our.org    1448762578 8729
@@ -644,7 +644,7 @@ Joining on color the results are as expected:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv join -j id -f data/color-codes.csv data/color-names.csv
+    mlr --csv join -j id -f data/color-codes.csv data/color-names.csv
     id,code,color
     4,ff0000,red
     2,00ff00,green
@@ -654,7 +654,7 @@ However, if we ask for left-unpaireds, since there's no ``color`` column, we get
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv
+    mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv
     id,code,color
     4,ff0000,red
     2,00ff00,green
@@ -667,7 +667,7 @@ To fix this, we can use **unsparsify**:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv
+    mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv
     id,code,color
     4,ff0000,red
     2,00ff00,green

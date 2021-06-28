@@ -7,7 +7,6 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
@@ -18,7 +17,7 @@ const defaultFormatValuesStringFormat = "%s"
 const defaultFormatValuesIntFormat = "%d"
 const defaultFormatValuesFloatFormat = "%f"
 
-var FormatValuesSetup = transforming.TransformerSetup{
+var FormatValuesSetup = TransformerSetup{
 	Verb:         verbNameFormatValues,
 	UsageFunc:    transformerFormatValuesUsage,
 	ParseCLIFunc: transformerFormatValuesParseCLI,
@@ -71,7 +70,7 @@ func transformerFormatValuesParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

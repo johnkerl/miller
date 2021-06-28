@@ -9,6 +9,7 @@ package cst
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	"miller/src/lib"
@@ -46,6 +47,30 @@ type BuiltinFunctionInfo struct {
 }
 
 // ================================================================
+// Sort the function table by class, then by function name. Useful for online help.
+// Or: just by function name ...
+//
+// TODO: pipes and tildes are coming after text, & other symbols before, due to ASCII ordering.
+// Code around that.
+func init() {
+	// Go sort API: for ascending sort, return true if element i < element j.
+	sort.Slice(_BUILTIN_FUNCTION_LOOKUP_TABLE, func(i, j int) bool {
+		//if _BUILTIN_FUNCTION_LOOKUP_TABLE[i].class < _BUILTIN_FUNCTION_LOOKUP_TABLE[j].class {
+		//return true
+		//}
+		//if _BUILTIN_FUNCTION_LOOKUP_TABLE[i].class > _BUILTIN_FUNCTION_LOOKUP_TABLE[j].class {
+		//return false
+		//}
+		if _BUILTIN_FUNCTION_LOOKUP_TABLE[i].name < _BUILTIN_FUNCTION_LOOKUP_TABLE[j].name {
+			return true
+		}
+		if _BUILTIN_FUNCTION_LOOKUP_TABLE[i].name > _BUILTIN_FUNCTION_LOOKUP_TABLE[j].name {
+			return false
+		}
+		return false
+	})
+}
+
 var _BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
 
 	// ----------------------------------------------------------------
@@ -791,8 +816,7 @@ for the seconds part`,
 		class: FUNC_CLASS_TIME,
 		help: `Formats seconds since epoch (integer part)
 as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
-Leaves non-numbers as-is.
-`,
+Leaves non-numbers as-is.`,
 		unaryFunc: types.MlrvalSec2GMTDate,
 	},
 
@@ -826,8 +850,7 @@ Leaves non-numbers as-is.
 	Format strings are as in the C library (please see "man strftime" on your system),
 	with the Miller-specific addition of "%1S" through "%9S" which format the seconds
 	with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
-	See also strftime_local.
-`,
+	See also strftime_local.`,
 		binaryFunc: types.MlrvalStrftime,
 	},
 
@@ -837,8 +860,7 @@ Leaves non-numbers as-is.
 		help: `strptime: Parses timestamp as floating-point seconds since the epoch,
 	e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
 	and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
-	See also strptime_local.
-`,
+	See also strptime_local.`,
 		binaryFunc: types.MlrvalStrptime,
 	},
 
@@ -849,66 +871,58 @@ Leaves non-numbers as-is.
 	// strptime_local (class=time #args=2): Like strptime, but consults $TZ environment variable to find and use local timezone.
 
 	{
-		name:  "dhms2fsec",
-		class: FUNC_CLASS_TIME,
-		help: `Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
-`,
+		name:      "dhms2fsec",
+		class:     FUNC_CLASS_TIME,
+		help:      `Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000`,
 		unaryFunc: types.MlrvalDHMS2FSec,
 	},
 
 	{
-		name:  "dhms2sec",
-		class: FUNC_CLASS_TIME,
-		help: `Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
-`,
+		name:      "dhms2sec",
+		class:     FUNC_CLASS_TIME,
+		help:      `Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000`,
 		unaryFunc: types.MlrvalDHMS2Sec,
 	},
 
 	{
-		name:  "fsec2dhms",
-		class: FUNC_CLASS_TIME,
-		help: `Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
-`,
+		name:      "fsec2dhms",
+		class:     FUNC_CLASS_TIME,
+		help:      `Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"`,
 		unaryFunc: types.MlrvalFSec2DHMS,
 	},
 
 	{
-		name:  "fsec2hms",
-		class: FUNC_CLASS_TIME,
-		help: `Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
-`,
+		name:      "fsec2hms",
+		class:     FUNC_CLASS_TIME,
+		help:      `Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"`,
 		unaryFunc: types.MlrvalFSec2HMS,
 	},
 
 	{
-		name:  "hms2fsec",
-		class: FUNC_CLASS_TIME,
-		help: `Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000
-`,
+		name:      "hms2fsec",
+		class:     FUNC_CLASS_TIME,
+		help:      `Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000`,
 		unaryFunc: types.MlrvalHMS2FSec,
 	},
 
 	{
-		name:  "hms2sec",
-		class: FUNC_CLASS_TIME,
-		help: `Recovers integer seconds as in hms2sec("01:23:20") = 5000
-`,
+		name:      "hms2sec",
+		class:     FUNC_CLASS_TIME,
+		help:      `Recovers integer seconds as in hms2sec("01:23:20") = 5000`,
 		unaryFunc: types.MlrvalHMS2Sec,
 	},
 
 	{
-		name:  "sec2dhms",
-		class: FUNC_CLASS_TIME,
-		help: `Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
-`,
+		name:      "sec2dhms",
+		class:     FUNC_CLASS_TIME,
+		help:      `Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"`,
 		unaryFunc: types.MlrvalSec2DHMS,
 	},
 
 	{
-		name:  "sec2hms",
-		class: FUNC_CLASS_TIME,
-		help: `Formats integer seconds as in sec2hms(5000) = "01:23:20"
-`,
+		name:      "sec2hms",
+		class:     FUNC_CLASS_TIME,
+		help:      `Formats integer seconds as in sec2hms(5000) = "01:23:20"`,
 		unaryFunc: types.MlrvalSec2HMS,
 	},
 
@@ -1481,7 +1495,7 @@ key-value pairs from all arguments. Rightmost collisions win, e.g.
 		name:  "unflatten",
 		class: FUNC_CLASS_COLLECTIONS,
 		help: `Reverses flatten. Example:
-unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}}.
+unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
 Useful for nested JSON-like structures for non-JSON file formats like CSV.
 See also arrayify.`,
 		binaryFunc: types.MlrvalUnflatten,
@@ -1562,7 +1576,7 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 }
 
 // ----------------------------------------------------------------
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionsRaw(o *os.File) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionNames(o *os.File) {
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		fmt.Fprintln(o, builtinFunctionInfo.name)
 	}
@@ -1631,10 +1645,15 @@ func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageApproximate(
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "No exact match for \"%s\". Inexact matches:\n", text)
+	found := false
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		if strings.Contains(builtinFunctionInfo.name, text) {
 			fmt.Fprintf(o, "  %s\n", builtinFunctionInfo.name)
+			found = true
 		}
+	}
+	if !found {
+		fmt.Fprintln(o, "None found.")
 	}
 }
 

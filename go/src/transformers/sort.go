@@ -50,14 +50,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameSort = "sort"
 
-var SortSetup = transforming.TransformerSetup{
+var SortSetup = TransformerSetup{
 	Verb:         verbNameSort,
 	UsageFunc:    transformerSortUsage,
 	ParseCLIFunc: transformerSortParseCLI,
@@ -99,7 +98,7 @@ func transformerSortParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

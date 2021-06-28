@@ -14,67 +14,67 @@ Examples
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --usage-data-format-examples
-     CSV/CSV-lite: comma-separated values with separate header line
-      TSV: same but with tabs in places of commas
-      +---------------------+
-      | apple,bat,cog       |
-      | 1,2,3               | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-      | 4,5,6               | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-      +---------------------+
+    mlr help data-formats
+    CSV/CSV-lite: comma-separated values with separate header line
+    TSV: same but with tabs in places of commas
+    +---------------------+
+    | apple,bat,cog       |
+    | 1,2,3               | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+    | 4,5,6               | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+    +---------------------+
     
-      JSON (sequence or array of objects):
-      +---------------------+
-      | {                   |
-      |  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-      |  "bat": 2,          |
-      |  "cog": 3           |
-      | }                   |
-      | {                   |
-      |   "dish": {         | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
-      |     "egg": 7,       |
-      |     "flint": 8      |
-      |   },                |
-      |   "garlic": ""      |
-      | }                   |
-      +---------------------+
+    JSON (sequence or array of objects):
+    +---------------------+
+    | {                   |
+    |  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+    |  "bat": 2,          |
+    |  "cog": 3           |
+    | }                   |
+    | {                   |
+    |   "dish": {         | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
+    |     "egg": 7,       |
+    |     "flint": 8      |
+    |   },                |
+    |   "garlic": ""      |
+    | }                   |
+    +---------------------+
     
-      PPRINT: pretty-printed tabular
-      +---------------------+
-      | apple bat cog       |
-      | 1     2   3         | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-      | 4     5   6         | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-      +---------------------+
+    PPRINT: pretty-printed tabular
+    +---------------------+
+    | apple bat cog       |
+    | 1     2   3         | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+    | 4     5   6         | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+    +---------------------+
     
-      Markdown tabular (supported for output only):
-      +-----------------------+
-      | | apple | bat | cog | |
-      | | ---   | --- | --- | |
-      | | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-      | | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-      +-----------------------+
+    Markdown tabular (supported for output only):
+    +-----------------------+
+    | | apple | bat | cog | |
+    | | ---   | --- | --- | |
+    | | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+    | | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+    +-----------------------+
     
-      XTAB: pretty-printed transposed tabular
-      +---------------------+
-      | apple 1             | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-      | bat   2             |
-      | cog   3             |
-      |                     |
-      | dish 7              | Record 2: "dish" => "7", "egg" => "8"
-      | egg  8              |
-      +---------------------+
+    XTAB: pretty-printed transposed tabular
+    +---------------------+
+    | apple 1             | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+    | bat   2             |
+    | cog   3             |
+    |                     |
+    | dish 7              | Record 2: "dish" => "7", "egg" => "8"
+    | egg  8              |
+    +---------------------+
     
-      DKVP: delimited key-value pairs (Miller default format)
-      +---------------------+
-      | apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-      | dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
-      +---------------------+
+    DKVP: delimited key-value pairs (Miller default format)
+    +---------------------+
+    | apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+    | dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
+    +---------------------+
     
-      NIDX: implicitly numerically indexed (Unix-toolkit style)
-      +---------------------+
-      | the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
-      | fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
-      +---------------------+
+    NIDX: implicitly numerically indexed (Unix-toolkit style)
+    +---------------------+
+    | the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
+    | fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
+    +---------------------+
 
 .. _file-formats-csv:
 
@@ -573,15 +573,15 @@ While you can do format conversion using ``mlr --icsv --ojson cat myfile.csv``, 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --usage-format-conversion-keystroke-saver-options
+    mlr help format-conversion
     As keystroke-savers for format-conversion you may use the following:
-            --c2t --c2d --c2n --c2j --c2x --c2p --c2m
-      --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
-      --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
-      --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
-      --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
-      --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
-      --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
+    --c2t --c2d --c2n --c2j --c2x --c2p --c2m
+    --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
+    --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
+    --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
+    --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
+    --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
+    --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
     The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
     PPRINT, and markdown, respectively. Note that markdown format is available for
     output only.
@@ -609,23 +609,24 @@ You can include comments within your data files, and either have them ignored, o
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --usage-comments-in-data
-      --skip-comments                 Ignore commented lines (prefixed by "#")
-                                      within the input.
-      --skip-comments-with {string}   Ignore commented lines within input, with
-                                      specified prefix.
-      --pass-comments                 Immediately print commented lines (prefixed by "#")
-                                      within the input.
-      --pass-comments-with {string}   Immediately print commented lines within input, with
-                                      specified prefix.
+    mlr help comments-in-data
+    --skip-comments                 Ignore commented lines (prefixed by "#")
+                                    within the input.
+    --skip-comments-with {string}   Ignore commented lines within input, with
+                                    specified prefix.
+    --pass-comments                 Immediately print commented lines (prefixed by "#")
+                                    within the input.
+    --pass-comments-with {string}   Immediately print commented lines within input, with
+                                    specified prefix.
+    
     Notes:
     * Comments are only honored at the start of a line.
     * In the absence of any of the above four options, comments are data like
       any other text.
     * When pass-comments is used, comment lines are written to standard output
-      immediately upon being read; they are not part of the record stream.
-      Results may be counterintuitive. A suggestion is to place comments at the
-      start of data files.
+      immediately upon being read; they are not part of the record stream.  Results
+      may be counterintuitive. A suggestion is to place comments at the start of
+      data files.
 
 Examples:
 

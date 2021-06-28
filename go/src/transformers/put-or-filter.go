@@ -13,14 +13,13 @@ import (
 	"miller/src/parsing/lexer"
 	"miller/src/parsing/parser"
 	"miller/src/runtime"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNamePut = "put"
 
-var PutSetup = transforming.TransformerSetup{
+var PutSetup = TransformerSetup{
 	Verb:         verbNamePut,
 	UsageFunc:    transformerPutUsage,
 	ParseCLIFunc: transformerPutOrFilterParseCLI,
@@ -29,7 +28,7 @@ var PutSetup = transforming.TransformerSetup{
 
 const verbNameFilter = "filter"
 
-var FilterSetup = transforming.TransformerSetup{
+var FilterSetup = TransformerSetup{
 	Verb:         verbNameFilter,
 	UsageFunc:    transformerFilterUsage,
 	ParseCLIFunc: transformerPutOrFilterParseCLI,
@@ -125,7 +124,7 @@ func transformerPutOrFilterParseCLI(
 	argc int,
 	args []string,
 	mainOptions *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

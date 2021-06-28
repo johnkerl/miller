@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameHistogram = "histogram"
 
-var HistogramSetup = transforming.TransformerSetup{
+var HistogramSetup = TransformerSetup{
 	Verb:         verbNameHistogram,
 	UsageFunc:    transformerHistogramUsage,
 	ParseCLIFunc: transformerHistogramParseCLI,
@@ -49,7 +48,7 @@ func transformerHistogramParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -140,7 +139,7 @@ type TransformerHistogram struct {
 	vectorsByFieldName map[string][]float64 // For auto-mode
 	outputPrefix       string
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 // ----------------------------------------------------------------

@@ -12,6 +12,7 @@ import (
 	"golang.org/x/term"
 
 	"miller/src/colorizer"
+	"miller/src/lib"
 	"miller/src/version"
 )
 
@@ -19,7 +20,6 @@ const ENV_PRIMARY_PROMPT = "MLR_REPL_PS1"
 const ENV_SECONDARY_PROMPT = "MLR_REPL_PS2"
 const DEFAULT_PRIMARY_PROMPT = "[mlr] "
 const DEFAULT_SECONDARY_PROMPT = "... "
-const MILLER_6_DOCS_URL = "http://johnkerl.org/miller-releases/miller-head/docs6/_build/html/index.html"
 
 func getInputIsTerminal() bool {
 	if runtime.GOOS == "windows" && os.Getenv("MSYSTEM") != "" {
@@ -51,7 +51,7 @@ func getPrompt2() string {
 func (repl *Repl) printStartupBanner() {
 	if repl.inputIsTerminal {
 		fmt.Printf("Miller %s REPL for %s:%s:%s\n", version.STRING, runtime.GOOS, runtime.GOARCH, runtime.Version())
-		fmt.Printf("Pre-release docs for Miller 6: %s\n", MILLER_6_DOCS_URL)
+		fmt.Printf("Pre-release docs for Miller 6: %s\n", lib.DOC_URL)
 		fmt.Printf("Type ':help' for on-line help; ':quit' to quit.\n")
 	}
 }

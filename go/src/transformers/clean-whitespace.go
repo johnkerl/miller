@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameCleanWhitespace = "clean-whitespace"
 
-var CleanWhitespaceSetup = transforming.TransformerSetup{
+var CleanWhitespaceSetup = TransformerSetup{
 	Verb:         verbNameCleanWhitespace,
 	UsageFunc:    transformerCleanWhitespaceUsage,
 	ParseCLIFunc: transformerCleanWhitespaceParseCLI,
@@ -50,7 +49,7 @@ func transformerCleanWhitespaceParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	doKeys := true
 	doValues := true
@@ -100,7 +99,7 @@ func transformerCleanWhitespaceParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerCleanWhitespace struct {
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 // ----------------------------------------------------------------

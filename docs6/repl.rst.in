@@ -151,6 +151,8 @@ No command-line-history-editing feature is built in but **rlwrap mlr repl** is a
 delight. You may need ``brew install rlwrap``, ``sudo apt-get install rlwrap``,
 etc. depending on your platform.
 
+Suggestion: ``alias mrpl='rlwrap mlr repl'`` in your shell's startup file.
+
 On-line help
 ----------------------------------------------------------------
 

@@ -9,18 +9,17 @@ import (
 	"fmt"
 	"os"
 
+	"miller/src/auxents/help"
 	"miller/src/auxents/regtest"
 	"miller/src/auxents/repl"
 )
 
 // ----------------------------------------------------------------
 type tAuxMain func(args []string) int
-type tAuxUsage func(verbName string, o *os.File, exitCode int)
 
 type tAuxLookupEntry struct {
-	name  string
-	main  tAuxMain
-	usage tAuxUsage
+	name string
+	main tAuxMain
 }
 
 // We get a Golang "initialization loop" if this is defined statically. So, we
@@ -29,13 +28,14 @@ var _AUX_LOOKUP_TABLE = []tAuxLookupEntry{}
 
 func init() {
 	_AUX_LOOKUP_TABLE = []tAuxLookupEntry{
-		{"aux-list", auxListMain, auxListUsage},
-		{"hex", hexMain, hexUsage},
-		{"lecat", lecatMain, lecatUsage},
-		{"regtest", regtest.RegTestMain, regtest.RegTestUsage},
-		{"repl", repl.ReplMain, repl.ReplUsage},
-		{"termcvt", termcvtMain, termcvtUsage},
-		{"unhex", unhexMain, unhexUsage},
+		{"aux-list", auxListMain},
+		{"hex", hexMain},
+		{"lecat", lecatMain},
+		{"termcvt", termcvtMain},
+		{"unhex", unhexMain},
+		{"help", help.HelpMain},
+		{"regtest", regtest.RegTestMain},
+		{"repl", repl.ReplMain},
 	}
 }
 

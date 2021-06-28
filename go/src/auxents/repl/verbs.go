@@ -856,7 +856,8 @@ func handleHelpSingle(repl *Repl, arg string) {
 	}
 
 	if arg == "function-names" {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
+		// TODO: move to src/auxents/help
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
 		return
 	}
 

@@ -11,14 +11,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameNest = "nest"
 
-var NestSetup = transforming.TransformerSetup{
+var NestSetup = TransformerSetup{
 	Verb:         verbNameNest,
 	UsageFunc:    transformerNestUsage,
 	ParseCLIFunc: transformerNestParseCLI,
@@ -98,7 +97,7 @@ func transformerNestParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -226,7 +225,7 @@ type TransformerNest struct {
 	// For implode across records
 	otherKeysToOtherValuesToBuckets *lib.OrderedMap
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 // ----------------------------------------------------------------

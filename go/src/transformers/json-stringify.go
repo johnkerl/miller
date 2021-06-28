@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameJSONStringify = "json-stringify"
 
-var JSONStringifySetup = transforming.TransformerSetup{
+var JSONStringifySetup = TransformerSetup{
 	Verb:         verbNameJSONStringify,
 	UsageFunc:    transformerJSONStringifyUsage,
 	ParseCLIFunc: transformerJSONStringifyParseCLI,
@@ -46,7 +45,7 @@ func transformerJSONStringifyParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -107,7 +106,7 @@ type TransformerJSONStringify struct {
 	fieldNameSet   map[string]bool
 
 	// state
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerJSONStringify(

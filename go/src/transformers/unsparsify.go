@@ -8,14 +8,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameUnsparsify = "unsparsify"
 
-var UnsparsifySetup = transforming.TransformerSetup{
+var UnsparsifySetup = TransformerSetup{
 	Verb:         verbNameUnsparsify,
 	UsageFunc:    transformerUnsparsifyUsage,
 	ParseCLIFunc: transformerUnsparsifyParseCLI,
@@ -57,7 +56,7 @@ func transformerUnsparsifyParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -106,7 +105,7 @@ type TransformerUnsparsify struct {
 	fillerMlrval          types.Mlrval
 	recordsAndContexts    *list.List
 	fieldNamesSeen        *lib.OrderedMap
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerUnsparsify(

@@ -8,14 +8,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameSeqgen = "seqgen"
 
-var SeqgenSetup = transforming.TransformerSetup{
+var SeqgenSetup = TransformerSetup{
 	Verb:         verbNameSeqgen,
 	UsageFunc:    transformerSeqgenUsage,
 	ParseCLIFunc: transformerSeqgenParseCLI,
@@ -53,7 +52,7 @@ func transformerSeqgenParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi

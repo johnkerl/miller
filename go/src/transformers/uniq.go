@@ -7,7 +7,6 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
@@ -16,14 +15,14 @@ const verbNameCountDistinct = "count-distinct"
 const verbNameUniq = "uniq"
 const uniqDefaultOutputFieldName = "count"
 
-var CountDistinctSetup = transforming.TransformerSetup{
+var CountDistinctSetup = TransformerSetup{
 	Verb:         verbNameCountDistinct,
 	UsageFunc:    transformerCountDistinctUsage,
 	ParseCLIFunc: transformerCountDistinctParseCLI,
 	IgnoresInput: false,
 }
 
-var UniqSetup = transforming.TransformerSetup{
+var UniqSetup = TransformerSetup{
 	Verb:         verbNameUniq,
 	UsageFunc:    transformerUniqUsage,
 	ParseCLIFunc: transformerUniqParseCLI,
@@ -63,7 +62,7 @@ func transformerCountDistinctParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -162,7 +161,7 @@ func transformerUniqParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -271,7 +270,7 @@ type TransformerUniq struct {
 	unlashedCounts        *lib.OrderedMap // field name -> string field value -> count
 	unlashedCountValues   *lib.OrderedMap // field name -> string field value -> typed field value
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 // ----------------------------------------------------------------

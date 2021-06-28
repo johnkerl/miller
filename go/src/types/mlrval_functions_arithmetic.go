@@ -65,7 +65,7 @@ func MlrvalLogicalNOT(input1 *Mlrval) *Mlrval {
 
 // ================================================================
 // Addition with auto-overflow from int to float when necessary.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 // Auto-overflows up to float.  Additions & subtractions overflow by at most
 // one bit so it suffices to check sign-changes.
@@ -122,7 +122,7 @@ func MlrvalBinaryPlus(input1, input2 *Mlrval) *Mlrval {
 
 // ================================================================
 // Subtraction with auto-overflow from int to float when necessary.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 // Adds & subtracts overflow by at most one bit so it suffices to check
 // sign-changes.
@@ -179,7 +179,7 @@ func MlrvalBinaryMinus(input1, input2 *Mlrval) *Mlrval {
 
 // ================================================================
 // Multiplication with auto-overflow from int to float when necessary.  See
-// also http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 // Auto-overflows up to float.
 //
@@ -252,7 +252,7 @@ func MlrvalTimes(input1, input2 *Mlrval) *Mlrval {
 
 // ================================================================
 // Pythonic division.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 //
 // Int/int pairings don't produce overflow.
 //
@@ -322,7 +322,7 @@ func MlrvalDivide(input1, input2 *Mlrval) *Mlrval {
 
 // ================================================================
 // Integer division: DSL operator '//' as in Python.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func int_divide_n_ii(input1, input2 *Mlrval) *Mlrval {
 	a := input1.intval
@@ -382,7 +382,7 @@ func MlrvalIntDivide(input1, input2 *Mlrval) *Mlrval {
 
 // ================================================================
 // Non-auto-overflowing addition: DSL operator '.+'.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func dotplus_i_ii(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromInt(input1.intval + input2.intval)
@@ -417,7 +417,7 @@ func MlrvalDotPlus(input1, input2 *Mlrval) *Mlrval {
 
 // ================================================================
 // Non-auto-overflowing subtraction: DSL operator '.-'.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func dotminus_i_ii(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromInt(input1.intval - input2.intval)
@@ -452,7 +452,7 @@ func MlrvalDotMinus(input1, input2 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 // Non-auto-overflowing multiplication: DSL operator '.*'.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func dottimes_i_ii(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromInt(input1.intval * input2.intval)
@@ -487,7 +487,7 @@ func MlrvalDotTimes(input1, input2 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './'.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func dotdivide_i_ii(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromInt(input1.intval / input2.intval)
@@ -522,7 +522,7 @@ func MlrvalDotDivide(input1, input2 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './/'.  See also
-// http://johnkerl.org/miller/doc/reference.html#Arithmetic.
+// https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func dotidivide_i_ii(input1, input2 *Mlrval) *Mlrval {
 	a := input1.intval

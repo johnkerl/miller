@@ -19,7 +19,7 @@ Miller simply prints a newline and a new header when there is a schema change. W
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/het.dkvp
+    cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
     record_count=100,resource=/path/to/file
     resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -29,7 +29,7 @@ Miller simply prints a newline and a new header when there is a schema change. W
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --ocsvlite cat data/het.dkvp
+    mlr --ocsvlite cat data/het.dkvp
     resource,loadsec,ok
     /path/to/file,0.45,true
     
@@ -48,7 +48,7 @@ Miller simply prints a newline and a new header when there is a schema change. W
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint cat data/het.dkvp
+    mlr --opprint cat data/het.dkvp
     resource      loadsec ok
     /path/to/file 0.45    true
     
@@ -69,7 +69,7 @@ Miller handles explicit header changes as just shown. If your CSV input contains
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/ragged.csv
+    cat data/ragged.csv
     a,b,c
     1,2,3
     4,5
@@ -78,7 +78,7 @@ Miller handles explicit header changes as just shown. If your CSV input contains
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv
+    mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv
     a 1
     b 2
     c 3
@@ -97,7 +97,7 @@ You may also find Miller's ``group-like`` feature handy (see also :doc:`referenc
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --ocsvlite group-like data/het.dkvp
+    mlr --ocsvlite group-like data/het.dkvp
     resource,loadsec,ok
     /path/to/file,0.45,true
     /path/to/second/file,0.32,true
@@ -110,7 +110,7 @@ You may also find Miller's ``group-like`` feature handy (see also :doc:`referenc
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --opprint group-like data/het.dkvp
+    mlr --opprint group-like data/het.dkvp
     resource             loadsec ok
     /path/to/file        0.45    true
     /path/to/second/file 0.32    true
@@ -128,7 +128,7 @@ For these formats, record-heterogeneity comes naturally:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/het.dkvp
+    cat data/het.dkvp
     resource=/path/to/file,loadsec=0.45,ok=true
     record_count=100,resource=/path/to/file
     resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -138,7 +138,7 @@ For these formats, record-heterogeneity comes naturally:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --onidx --ofs ' ' cat data/het.dkvp
+    mlr --onidx --ofs ' ' cat data/het.dkvp
     /path/to/file 0.45 true
     100 /path/to/file
     /path/to/second/file 0.32 true
@@ -148,7 +148,7 @@ For these formats, record-heterogeneity comes naturally:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab cat data/het.dkvp
+    mlr --oxtab cat data/het.dkvp
     resource /path/to/file
     loadsec  0.45
     ok       true
@@ -170,7 +170,7 @@ For these formats, record-heterogeneity comes naturally:
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr --oxtab group-like data/het.dkvp
+    mlr --oxtab group-like data/het.dkvp
     resource /path/to/file
     loadsec  0.45
     ok       true
@@ -197,7 +197,7 @@ Miller operates on specified fields and takes the rest along: for example, if yo
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ cat data/sort-het.dkvp
+    cat data/sort-het.dkvp
     count=500,color=green
     count=600
     status=ok,count=250,hours=0.22
@@ -209,7 +209,7 @@ Miller operates on specified fields and takes the rest along: for example, if yo
 .. code-block:: none
    :emphasize-lines: 1,1
 
-    $ mlr sort -n count data/sort-het.dkvp
+    mlr sort -n count data/sort-het.dkvp
     count=100,color=green
     status=ok,count=200,hours=3.4
     status=ok,count=250,hours=0.22

@@ -7,14 +7,13 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameJSONParse = "json-parse"
 
-var JSONParseSetup = transforming.TransformerSetup{
+var JSONParseSetup = TransformerSetup{
 	Verb:         verbNameJSONParse,
 	UsageFunc:    transformerJSONParseUsage,
 	ParseCLIFunc: transformerJSONParseParseCLI,
@@ -45,7 +44,7 @@ func transformerJSONParseParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -90,7 +89,7 @@ type TransformerJSONParse struct {
 	fieldNameSet map[string]bool
 
 	// state
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerJSONParse(

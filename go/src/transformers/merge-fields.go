@@ -10,14 +10,13 @@ import (
 	"miller/src/cliutil"
 	"miller/src/lib"
 	"miller/src/transformers/utils"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
 // ----------------------------------------------------------------
 const verbNameMergeFields = "merge-fields"
 
-var MergeFieldsSetup = transforming.TransformerSetup{
+var MergeFieldsSetup = TransformerSetup{
 	Verb:         verbNameMergeFields,
 	UsageFunc:    transformerMergeFieldsUsage,
 	ParseCLIFunc: transformerMergeFieldsParseCLI,
@@ -83,7 +82,7 @@ func transformerMergeFieldsParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
@@ -235,7 +234,7 @@ type TransformerMergeFields struct {
 	// Ordered map from accumulator name to accumulator
 	namedAccumulators *lib.OrderedMap
 
-	recordTransformerFunc transforming.RecordTransformerFunc
+	recordTransformerFunc RecordTransformerFunc
 }
 
 func NewTransformerMergeFields(

@@ -7,7 +7,6 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/lib"
-	"miller/src/transforming"
 	"miller/src/types"
 )
 
@@ -15,7 +14,7 @@ import (
 const verbNameFillEmpty = "fill-empty"
 const defaultFillEmptyString = "N/A"
 
-var FillEmptySetup = transforming.TransformerSetup{
+var FillEmptySetup = TransformerSetup{
 	Verb:         verbNameFillEmpty,
 	UsageFunc:    transformerFillEmptyUsage,
 	ParseCLIFunc: transformerFillEmptyParseCLI,
@@ -42,7 +41,7 @@ func transformerFillEmptyParseCLI(
 	argc int,
 	args []string,
 	_ *cliutil.TOptions,
-) transforming.IRecordTransformer {
+) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
 	argi := *pargi
