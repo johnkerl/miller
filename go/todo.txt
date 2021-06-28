@@ -27,6 +27,7 @@ HELP
 * split up help/entry.go -- ?
 ! improved sort for functions-table
 ? integrate repl help with main help?
+  o repl help keyword
 * manpage & main help need some basic examples
 ----------------------------------------------------------------
 

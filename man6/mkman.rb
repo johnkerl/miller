@@ -38,8 +38,9 @@ a special case.) This manpage documents #{`mlr --version`.chomp}."""
   print make_section('EXAMPLES', [
     ""
   ])
+	print make_code_block(`mlr help basic-examples`)
 
-	print make_subsection('DATA FORMATS', [])
+	print make_section('DATA FORMATS', [])
 	print make_code_block(`mlr help data-formats`)
 
   print make_section('OPTIONS', [
@@ -59,7 +60,7 @@ output separator to the given value."""
 
 	print make_subsection('FUNCTION LIST', [])
   # TODO: list as paragraph
-	print make_code_block(`mlr help list functions`)
+	print make_code_block(`mlr help list-functions`)
 
 	print make_subsection('I/O FORMATTING', [])
 	print make_code_block(`mlr help data-formats`)
@@ -82,8 +83,8 @@ output separator to the given value."""
 	print make_subsection('DOUBLE-QUOTING FOR CSV/CSVLITE OUTPUT', [])
 	print make_code_block(`mlr help double-quoting`)
 
-	print make_subsection('NUMERICAL FORMATTING', [])
-	print make_code_block(`mlr help numerical-formatting`)
+	print make_subsection('NUMBER FORMATTING', [])
+	print make_code_block(`mlr help number-formatting`)
 
 	print make_subsection('OTHER OPTIONS', [])
 	print make_code_block(`mlr help misc`)
