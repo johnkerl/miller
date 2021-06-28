@@ -151,7 +151,7 @@ blockquote {
 
 p {
     line-height: 20px;
-    margin-bottom: 0;
+    margin-bottom: 10px;
     margin-top: 10px;
 }
 
@@ -211,7 +211,9 @@ code {
     font-family: 'Bitstream Vera Sans Mono', 'Monaco', monospace;
     color: black;
     padding: 1px 2px 1px 2px;
-    background-color: #fafafa;
+    /* background-color: #e9e2cd; */ /* CHANGE */
+    /* background-color: #c3b694; */
+    background-color: #e8e8e8;
     border-bottom: 1px solid #eee;
 }
 
@@ -406,7 +408,7 @@ div.highlight { /* CHANGED */
 
 div.highlight-none { /* CHANGED */
     background-color: #eae2cb;
-    border: 0px solid #ccc;
+    border: 5px solid #ffffff;
 }
 
 #toc {

@@ -408,7 +408,7 @@ div.highlight { /* CHANGED */
 
 div.highlight-none { /* CHANGED */
     background-color: #eae2cb;
-    border: 0px solid #ccc;
+    border: 5px solid #ffffff;
 }
 
 #toc {
