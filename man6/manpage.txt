@@ -8,7 +8,11 @@ NAME
 
 SYNOPSIS
        Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or
-       more file names}
+       more file names} Output of one verb may be chained as input to another
+       using "then", e.g.
+	 mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
+       Please see 'mlr help topics' for more information.  Please also see
+       https://johnkerl.org/miller6
 
 
 DESCRIPTION
@@ -21,91 +25,7 @@ DESCRIPTION
        manpage documents Miller v6.0.0-dev.
 
 EXAMPLES
-   COMMAND-LINE SYNTAX
-       mlr --csv cut -f hostname,uptime mydata.csv
-       mlr --tsv --rs lf filter '$status != "down" && $upsec >= 10000' *.tsv
-       mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
-       grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
-       mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-       mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
-       mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
-       mlr stats2 -a linreg-pca -f u,v -g shape data/*
-       mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
-       mlr --from estimates.tbl put '
-	 for (k,v in $*) {
-	   if (is_numeric(v) && k =~ "^[t-z].*$") {
-	     $sum += v; $count += 1
-	   }
-	 }
-	 $mean = $sum / $count # no assignment if count unset'
-       mlr --from infile.dat put -f analyze.mlr
-       mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'
-       mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'
-       mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
-       mlr --from infile.dat put  '(NR % 1000 == 0) { print > os.Stderr, "Checkpoint ".NR}'
-
    DATA FORMATS
-	CSV/CSV-lite: comma-separated values with separate header line
-	 TSV: same but with tabs in places of commas
-	 +---------------------+
-	 | apple,bat,cog       |
-	 | 1,2,3	       | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-	 | 4,5,6	       | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-	 +---------------------+
-
-	 JSON (sequence or array of objects):
-	 +---------------------+
-	 | {		       |
-	 |  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-	 |  "bat": 2,	       |
-	 |  "cog": 3	       |
-	 | }		       |
-	 | {		       |
-	 |   "dish": {	       | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
-	 |     "egg": 7,       |
-	 |     "flint": 8      |
-	 |   }, 	       |
-	 |   "garlic": ""      |
-	 | }		       |
-	 +---------------------+
-
-	 PPRINT: pretty-printed tabular
-	 +---------------------+
-	 | apple bat cog       |
-	 | 1	 2   3	       | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-	 | 4	 5   6	       | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-	 +---------------------+
-
-	 Markdown tabular (supported for output only):
-	 +-----------------------+
-	 | | apple | bat | cog | |
-	 | | ---   | --- | --- | |
-	 | | 1	   | 2	 | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-	 | | 4	   | 5	 | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-	 +-----------------------+
-
-	 XTAB: pretty-printed transposed tabular
-	 +---------------------+
-	 | apple 1	       | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-	 | bat	 2	       |
-	 | cog	 3	       |
-	 |		       |
-	 | dish 7	       | Record 2: "dish" => "7", "egg" => "8"
-	 | egg	8	       |
-	 +---------------------+
-
-	 DKVP: delimited key-value pairs (Miller default format)
-	 +---------------------+
-	 | apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-	 | dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
-	 +---------------------+
-
-	 NIDX: implicitly numerically indexed (Unix-toolkit style)
-	 +---------------------+
-	 | the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
-	 | fox jumped	       | Record 2: "1" => "fox", "2" => "jumped"
-	 +---------------------+
-
 OPTIONS
        In the following option flags, the version with "i" designates the
        input stream, "o" the output stream, and the version without prefix
@@ -114,350 +34,186 @@ OPTIONS
        --rs sets both the input and output separator to the given value.
 
    HELP OPTIONS
-	 -h or --help		      Show this message.
-	 --version		      Show the software version.
-	 {verb name} --help	      Show verb-specific help.
-	 --help-all-verbs	      Show help on all verbs.
-	 -l or --list-all-verbs       List only verb names.
-	 -L			      List only verb names, one per line.
-	 -f or --help-all-functions   Show help on all built-in functions.
-	 -F			      Show a bare listing of built-in functions by name.
-	 -k or --help-all-keywords    Show help on all keywords.
-	 -K			      Show a bare listing of keywords by name.
+       Type 'mlr help {topic}' for any of the following:
+	 mlr help topics
+	 mlr help auxents
+	 mlr help comments-in-data
+	 mlr help compressed-data
+	 mlr help csv-options
+	 mlr help data-formats
+	 mlr help data-format-options
+	 mlr help format-conversion
+	 mlr help misc
+	 mlr help mlrrc
+	 mlr help output-colorizations
+	 mlr help list-functions
+	 mlr help list-functions-vertically
+	 mlr help list-keywords
+	 mlr help list-verbs
+	 mlr help list-verbs-vertically
+	 mlr help usage-functions
+	 mlr help usage-keywords
+       Shorthands:
+	 mlr -l = mlr help list-verbs
+	 mlr -L = mlr help list-verbs-vertically
+	 mlr -f = mlr help usage-functions
+	 mlr -F = mlr help list-functions
+	 mlr -k = mlr help usage-keywords
+	 mlr -K = mlr help list-keywords
 
    VERB LIST
-	altkv bar bootstrap cat check clean-whitespace count-distinct count
-	count-similar cut decimate fill-down fill-empty filter flatten format-values
-	fraction gap grep group-by group-like having-fields head histogram json-parse
-	json-stringify join label least-frequent merge-fields most-frequent nest
-	nothing put regularize remove-empty-columns rename reorder repeat reshape
-	sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
-	sort-within-records stats1 stats2 step tac tail tee top unflatten uniq
-	unsparsify
+       altkv bar bootstrap cat check clean-whitespace count-distinct count
+       count-similar cut decimate fill-down fill-empty filter flatten format-values
+       fraction gap grep group-by group-like having-fields head histogram json-parse
+       json-stringify join label least-frequent merge-fields most-frequent nest
+       nothing put regularize remove-empty-columns rename reorder repeat reshape
+       sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
+       sort-within-records stats1 stats2 step tac tail tee top unflatten uniq
+       unsparsify
 
    FUNCTION LIST
-       +
-       -
-       *
-       /
-       //
-       **
-       pow
-       .+
-       .-
-       .*
-       ./
-       %
-       ~
-       &
-       |
-       ^
-       <<
-       >>
-       >>>
-       bitcount
-       madd
-       msub
-       mmul
-       mexp
-       !
-       ==
-       !=
-       >
-       >=
-       <
-       <=
-       =~
-       !=~
-       &&
-       ||
-       ^^
-       ??
-       ???
-       ?:
-       .
-       capitalize
-       clean_whitespace
-       collapse_whitespace
-       gsub
-       lstrip
-       regextract
-       regextract_or_else
-       rstrip
-       strip
-       strlen
-       ssub
-       sub
-       substr0
-       substr1
-       substr
-       tolower
-       toupper
-       truncate
-       md5
-       sha1
-       sha256
-       sha512
-       abs
-       acos
-       acosh
-       asin
-       asinh
-       atan
-       atan2
-       atanh
-       cbrt
-       ceil
-       cos
-       cosh
-       erf
-       erfc
-       exp
-       expm1
-       floor
-       invqnorm
-       log
-       log10
-       log1p
-       logifit
-       max
-       min
-       qnorm
-       round
-       sgn
-       sin
-       sinh
-       sqrt
-       tan
-       tanh
-       roundm
-       urand
-       urandint
-       urandrange
-       urand32
-       gmt2sec
-       sec2gmt
-       sec2gmtdate
-       systime
-       systimeint
-       uptime
-       strftime
-       strptime
-       dhms2fsec
-       dhms2sec
-       fsec2dhms
-       fsec2hms
-       hms2fsec
-       hms2sec
-       sec2dhms
-       sec2hms
-       is_absent
-       is_array
-       is_bool
-       is_boolean
-       is_empty
-       is_empty_map
-       is_error
-       is_float
-       is_int
-       is_map
-       is_nonempty_map
-       is_not_empty
-       is_not_map
-       is_not_array
-       is_not_null
-       is_null
-       is_numeric
-       is_present
-       is_string
-       asserting_absent
-       asserting_array
-       asserting_bool
-       asserting_boolean
-       asserting_error
-       asserting_empty
-       asserting_empty_map
-       asserting_float
-       asserting_int
-       asserting_map
-       asserting_nonempty_map
-       asserting_not_empty
-       asserting_not_map
-       asserting_not_array
-       asserting_not_null
-       asserting_null
-       asserting_numeric
-       asserting_present
-       asserting_string
-       typeof
-       boolean
-       float
-       fmtnum
-       hexfmt
-       int
-       joink
-       joinv
-       joinkv
-       splita
-       splitax
-       splitkv
-       splitkvx
-       splitnv
-       splitnvx
-       string
-       append
-       arrayify
-       depth
-       flatten
-       get_keys
-       get_values
-       haskey
-       json_parse
-       json_stringify
-       leafcount
-       length
-       mapdiff
-       mapexcept
-       mapselect
-       mapsum
-       unflatten
-       hostname
-       os
-       system
-       version
-       Please use "mlr --help-function {function name}" for function-specific help.
-
    I/O FORMATTING
-	      --idkvp	--odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
-					      (this is Miller's default format).
+       CSV/CSV-lite: comma-separated values with separate header line
+       TSV: same but with tabs in places of commas
+       +---------------------+
+       | apple,bat,cog	     |
+       | 1,2,3		     | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+       | 4,5,6		     | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+       +---------------------+
 
-	      --inidx	--onidx   --nidx      Implicitly-integer-indexed fields
-					      (Unix-toolkit style).
-	      -T			      Synonymous with "--nidx --fs tab".
+       JSON (sequence or array of objects):
+       +---------------------+
+       | {		     |
+       |  "apple": 1,	     | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+       |  "bat": 2,	     |
+       |  "cog": 3	     |
+       | }		     |
+       | {		     |
+       |   "dish": {	     | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
+       |     "egg": 7,	     |
+       |     "flint": 8      |
+       |   },		     |
+       |   "garlic": ""      |
+       | }		     |
+       +---------------------+
 
-	      --icsv	--ocsv	  --csv       Comma-separated value (or tab-separated
-					      with --fs tab, etc.)
+       PPRINT: pretty-printed tabular
+       +---------------------+
+       | apple bat cog	     |
+       | 1     2   3	     | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+       | 4     5   6	     | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+       +---------------------+
 
-	      --itsv	--otsv	  --tsv       Keystroke-savers for "--icsv --ifs tab",
-					      "--ocsv --ofs tab", "--csv --fs tab".
-	      --iasv	--oasv	  --asv       Similar but using ASCII FS 0x1f and RS 0x1e\n",
-	      --iusv	--ousv	  --usv       Similar but using Unicode FS U+241F (UTF-8 0xe2909f)\n",
-					      and RS U+241E (UTF-8 0xe2909e)\n",
+       Markdown tabular (supported for output only):
+       +-----------------------+
+       | | apple | bat | cog | |
+       | | ---	 | --- | --- | |
+       | | 1	 | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+       | | 4	 | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+       +-----------------------+
 
-	      --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated
-					      with --fs tab, etc.). The 'lite' CSV does not handle
-					      RFC-CSV double-quoting rules; is slightly faster;
-					      and handles heterogeneity in the input stream via
-					      empty newline followed by new header line. See also
-					      http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/etc.
+       XTAB: pretty-printed transposed tabular
+       +---------------------+
+       | apple 1	     | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+       | bat   2	     |
+       | cog   3	     |
+       |		     |
+       | dish 7 	     | Record 2: "dish" => "7", "egg" => "8"
+       | egg  8 	     |
+       +---------------------+
 
-	      --itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
-					      "--ocsvlite --ofs tab", "--csvlite --fs tab".
-	      -t			      Synonymous with --tsvlite.
-	      --iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS 0x1f and RS 0x1e\n",
-	      --iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS U+241F (UTF-8 0xe2909f)\n",
-					      and RS U+241E (UTF-8 0xe2909e)\n",
+       DKVP: delimited key-value pairs (Miller default format)
+       +---------------------+
+       | apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+       | dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
+       +---------------------+
 
-	      --ipprint --opprint --pprint    Pretty-printed tabular (produces no
-					      output until all input is in).
-				  --right     Right-justifies all fields for PPRINT output.
-				  --barred    Prints a border around PPRINT output
-					      (only available for output).
-
-			--omd		      Markdown-tabular (only available for output).
-
-	      --ixtab	--oxtab   --xtab      Pretty-printed vertical-tabular.
-				  --xvright   Right-justifies values for XTAB format.
-
-	      --ijson	--ojson   --json      JSON tabular: sequence or list of one-level
-					      maps: {...}{...} or [{...},{...}].
-		--json-map-arrays-on-input    JSON arrays are unmillerable. --json-map-arrays-on-input
-		--json-skip-arrays-on-input   is the default: arrays are converted to integer-indexed
-		--json-fatal-arrays-on-input  maps. The other two options cause them to be skipped, or
-					      to be treated as errors.	Please use the jq tool for full
-					      JSON (pre)processing.
-				  --jvstack   Put one key-value pair per line for JSON output.
-			       --no-jvstack   Put objects/arrays all on one line for JSON output.
-			    --jsonx --ojsonx  Keystroke-savers for --json --jvstack
-			    --jsonx --ojsonx  and --ojson --jvstack, respectively.
-				  --jlistwrap Wrap JSON output in outermost [ ].
-				--jknquoteint Do not quote non-string map keys in JSON output.
-				 --jvquoteall Quote map values in JSON output, even if they're
-					      numeric.
-			  --oflatsep {string} Separator for flattening multi-level JSON keys,
-					      e.g. '{"a":{"b":3}}' becomes a:b => 3 for
-					      non-JSON formats. Defaults to ..\n",
-
-	      -p is a keystroke-saver for --nidx --fs space --repifs
-
-	      Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
-	      DKVP-formatted input and pretty-printed output.
-
-	      Please use --iformat1 --oformat2 rather than --format1 --oformat2.
-	      The latter sets up input and output flags for format1, not all of which
-	      are overridden in all cases by setting output format to format2.
-
+       NIDX: implicitly numerically indexed (Unix-toolkit style)
+       +---------------------+
+       | the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
+       | fox jumped	     | Record 2: "1" => "fox", "2" => "jumped"
+       +---------------------+
 
    COMMENTS IN DATA
-	 --skip-comments		 Ignore commented lines (prefixed by "#")
-					 within the input.
-	 --skip-comments-with {string}	 Ignore commented lines within input, with
-					 specified prefix.
-	 --pass-comments		 Immediately print commented lines (prefixed by "#")
-					 within the input.
-	 --pass-comments-with {string}	 Immediately print commented lines within input, with
-					 specified prefix.
+       --skip-comments		       Ignore commented lines (prefixed by "#")
+				       within the input.
+       --skip-comments-with {string}   Ignore commented lines within input, with
+				       specified prefix.
+       --pass-comments		       Immediately print commented lines (prefixed by "#")
+				       within the input.
+       --pass-comments-with {string}   Immediately print commented lines within input, with
+				       specified prefix.
+
        Notes:
        * Comments are only honored at the start of a line.
        * In the absence of any of the above four options, comments are data like
 	 any other text.
        * When pass-comments is used, comment lines are written to standard output
-	 immediately upon being read; they are not part of the record stream.
-	 Results may be counterintuitive. A suggestion is to place comments at the
-	 start of data files.
+	 immediately upon being read; they are not part of the record stream.  Results
+	 may be counterintuitive. A suggestion is to place comments at the start of
+	 data files.
 
    FORMAT-CONVERSION KEYSTROKE-SAVERS
-       As keystroke-savers for format-conversion you may use the following:
-	       --c2t --c2d --c2n --c2j --c2x --c2p --c2m
-	 --t2c	     --t2d --t2n --t2j --t2x --t2p --t2m
-	 --d2c --d2t	   --d2n --d2j --d2x --d2p --d2m
-	 --n2c --n2t --n2d	 --n2j --n2x --n2p --n2m
-	 --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
-	 --x2c --x2t --x2d --x2n --x2j	     --x2p --x2m
-	 --p2c --p2t --p2d --p2n --p2j --p2x	   --p2m
-       The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
-       PPRINT, and markdown, respectively. Note that markdown format is available for
-       output only.
-
    COMPRESSED I/O
-	 Decompression done within the Miller process itself:
-	 --gzin  Uncompress gzip within the Miller process. Done by default if file ends in ".gz".
-	 --bz2in Uncompress bz2ip within the Miller process. Done by default if file ends in ".bz2".
-	 --zin	 Uncompress zlib within the Miller process. Done by default if file ends in ".z".
-	 Decompression done outside the Miller processn  --prepipe {command} You can, of course, already do without this for single input files,
-	 e.g. "gunzip < myfile.csv.gz | mlr ...".
-	 However, when multiple input files are present, between-file separations are
-	 lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can
-	 specify an action to be taken on each input file. This prepipe command must
-	 be able to read from standard input; it will be invoked with
-	   {command} < {filename}.
-	 --prepipex {command} Like --prepipe with one exception: doesn't insert '<' between
-	 command and filename at runtime. Useful for some commands like 'unzip -qc' which don't
-	 read standard input.
-	 Examples:
-	   mlr --prepipe 'gunzip'
-	   mlr --prepipe 'zcat -cf'
-	   mlr --prepipe 'xz -cd'
-	   mlr --prepipe cat
-	 Note that this feature is quite general and is not limited to decompression
-	 utilities. You can use it to apply per-file filters of your choice.
-	 For output compression (or other) utilities, simply pipe the output:
-	   mlr ... | {your compression command}
-	 Lastly, note that if --prepipe is specified, it replaces any decisions that might
-	 have been made based on the file suffix. Also, --gzin/--bz2in/--zin are ignored
-	 if --prepipe is also specified.
+       Decompression done within the Miller process itself:
+       --gzin  Uncompress gzip within the Miller process. Done by default if file ends in ".gz".
+       --bz2in Uncompress bz2ip within the Miller process. Done by default if file ends in ".bz2".
+       --zin   Uncompress zlib within the Miller process. Done by default if file ends in ".z".
+
+       Decompression done outside the Miller process:
+       --prepipe {command} You can, of course, already do without this for single input files,
+	 e.g. "gunzip < myfile.csv.gz | mlr ..."
+       --prepipex {command} Like --prepipe with one exception: doesn't insert '<' between
+	 command and filename at runtime. Useful for some commands like 'unzip -qc'
+	 which don't read standard input.
+
+       Using --prepipe and --prepipex you can specify an action to be taken on each
+       input file. This prepipe command must be able to read from standard input; it
+       will be invoked with {command} < {filename}.
+
+       Examples:
+	 mlr --prepipe gunzip
+	 mlr --prepipe zcat -cf
+	 mlr --prepipe xz -cd
+	 mlr --prepipe cat
+
+       Note that this feature is quite general and is not limited to decompression
+       utilities. You can use it to apply per-file filters of your choice.  For output
+       compression (or other) utilities, simply pipe the output:
+       mlr ... | {your compression command} > outputfilenamegoeshere
+
+       Lastly, note that if --prepipe or --prepipex is specified, it replaces any
+       decisions that might have been made based on the file suffix. Also,
+       --gzin/--bz2in/--zin are ignored if --prepipe is also specified.
 
    SEPARATORS
+       Type 'mlr help {topic}' for any of the following:
+	 mlr help topics
+	 mlr help auxents
+	 mlr help comments-in-data
+	 mlr help compressed-data
+	 mlr help csv-options
+	 mlr help data-formats
+	 mlr help data-format-options
+	 mlr help format-conversion
+	 mlr help misc
+	 mlr help mlrrc
+	 mlr help output-colorizations
+	 mlr help list-functions
+	 mlr help list-functions-vertically
+	 mlr help list-keywords
+	 mlr help list-verbs
+	 mlr help list-verbs-vertically
+	 mlr help usage-functions
+	 mlr help usage-keywords
+       Shorthands:
+	 mlr -l = mlr help list-verbs
+	 mlr -L = mlr help list-verbs-vertically
+	 mlr -f = mlr help usage-functions
+	 mlr -F = mlr help list-functions
+	 mlr -k = mlr help usage-keywords
+	 mlr -K = mlr help list-keywords
+
    CSV-SPECIFIC OPTIONS
 	 --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
 			    of input files. Tip: combine with "label" to recreate
@@ -476,7 +232,61 @@ OPTIONS
 	 -N		    Keystroke-saver for --implicit-csv-header --headerless-csv-output.
 
    DOUBLE-QUOTING FOR CSV/CSVLITE OUTPUT
+       Type 'mlr help {topic}' for any of the following:
+	 mlr help topics
+	 mlr help auxents
+	 mlr help comments-in-data
+	 mlr help compressed-data
+	 mlr help csv-options
+	 mlr help data-formats
+	 mlr help data-format-options
+	 mlr help format-conversion
+	 mlr help misc
+	 mlr help mlrrc
+	 mlr help output-colorizations
+	 mlr help list-functions
+	 mlr help list-functions-vertically
+	 mlr help list-keywords
+	 mlr help list-verbs
+	 mlr help list-verbs-vertically
+	 mlr help usage-functions
+	 mlr help usage-keywords
+       Shorthands:
+	 mlr -l = mlr help list-verbs
+	 mlr -L = mlr help list-verbs-vertically
+	 mlr -f = mlr help usage-functions
+	 mlr -F = mlr help list-functions
+	 mlr -k = mlr help usage-keywords
+	 mlr -K = mlr help list-keywords
+
    NUMERICAL FORMATTING
+       Type 'mlr help {topic}' for any of the following:
+	 mlr help topics
+	 mlr help auxents
+	 mlr help comments-in-data
+	 mlr help compressed-data
+	 mlr help csv-options
+	 mlr help data-formats
+	 mlr help data-format-options
+	 mlr help format-conversion
+	 mlr help misc
+	 mlr help mlrrc
+	 mlr help output-colorizations
+	 mlr help list-functions
+	 mlr help list-functions-vertically
+	 mlr help list-keywords
+	 mlr help list-verbs
+	 mlr help list-verbs-vertically
+	 mlr help usage-functions
+	 mlr help usage-keywords
+       Shorthands:
+	 mlr -l = mlr help list-verbs
+	 mlr -L = mlr help list-verbs-vertically
+	 mlr -f = mlr help usage-functions
+	 mlr -F = mlr help list-functions
+	 mlr -k = mlr help usage-keywords
+	 mlr -K = mlr help list-keywords
+
    OTHER OPTIONS
 	 --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
 			    urand()/urandint()/urand32().
@@ -506,17 +316,20 @@ OPTIONS
 			    line, output is written to a temp file in the same
 			    directory, which is then renamed over the original. Each
 			    file is processed in isolation: if the output format is
-			    CSV, CSV headers will be present in each output file;
+			    CSV, CSV headers will be present in each output file
 			    statistics are only over each file's own records; and so on.
 
-   THEN-CHAINING
-       Output of one verb may be chained as input to another using "then", e.g.
-	 mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
-
    AUXILIARY COMMANDS
-       Miller has a few otherwise-standalone executables packaged within it.
-       They do not participate in any other parts of Miller.
-       Please use "mlr aux-list" for more information.
+       Available subcommands:
+	 aux-list
+	 hex
+	 lecat
+	 termcvt
+	 unhex
+	 help
+	 regtest
+	 repl
+       For more information, please invoke mlr {subcommand} --help.
 
 MLRRC
        You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
@@ -1546,667 +1359,251 @@ VERBS
        'a=,b=3,c=4'.
 
 FUNCTIONS FOR FILTER/PUT
-   +
-	(class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
-
-   -
-	(class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
-
-   *
-	(class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
-
-   /
-	(class=arithmetic #args=2) Division. Integer / integer is floating-point.
-
-   //
-	(class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
-
-   **
-	(class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
-
-   pow
-	(class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
-
-   .+
-	(class=arithmetic #args=2) Addition, with integer-to-integer overflow.
-
-   .-
-	(class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
-
-   .*
-	(class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
-
-   ./
-	(class=arithmetic #args=2) Integer division; not pythonic.
-
-   %
-	(class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
-
-   ~
-	(class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
-       regex-match operator: try '$y = ~$x'.
-
-   &
-	(class=arithmetic #args=2) Bitwise AND.
-
-   |
-	(class=arithmetic #args=2) Bitwise OR.
-
-   ^
-	(class=arithmetic #args=2) Bitwise XOR.
-
-   <<
-	(class=arithmetic #args=2) Bitwise left-shift.
-
-   >>
-	(class=arithmetic #args=2) Bitwise signed right-shift.
-
-   >>>
-	(class=arithmetic #args=2) Bitwise unsigned right-shift.
-
-   bitcount
-	(class=arithmetic #args=1) Count of 1-bits.
-
-   madd
-	(class=arithmetic #args=3) a + b mod m (integers)
-
-   msub
-	(class=arithmetic #args=3) a - b mod m (integers)
-
-   mmul
-	(class=arithmetic #args=3) a * b mod m (integers)
-
-   mexp
-	(class=arithmetic #args=3) a ** b mod m (integers)
-
    !
-	(class=boolean #args=1) Logical negation.
-
-   ==
-	(class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
-
    !=
-	(class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
-
-   >
-	(class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
-
-   >=
-	(class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
-
-   <
-	(class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
-
-   <=
-	(class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
-
-   =~
-	(class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
-
    !=~
-	(class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
-
+   %
+   &
    &&
-	(class=boolean #args=2) Logical AND.
-
-   ||
-	(class=boolean #args=2) Logical OR.
-
-   ^^
-	(class=boolean #args=2) Logical XOR.
-
-   ??
-	(class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
-
-   ???
-	(class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
-
-   ?:
-	(class=boolean #args=3) Standard ternary operator.
-
+   *
+   **
+   +
+   -
    .
-	(class=string #args=2) String concatenation.
-
-   capitalize
-	(class=string #args=1) Convert string's first character to uppercase.
-
-   clean_whitespace
-	(class=string #args=1) Same as collapse_whitespace and strip.
-
-   collapse_whitespace
-	(class=string #args=1) Strip repeated whitespace from string.
-
-   gsub
-	(class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
-
-   lstrip
-	(class=string #args=1) Strip leading whitespace from string.
-
-   regextract
-	(class=string #args=2) Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
-
-   regextract_or_else
-	(class=string #args=3) Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
-
-   rstrip
-	(class=string #args=1) Strip trailing whitespace from string.
-
-   strip
-	(class=string #args=1) Strip leading and trailing whitespace from string.
-
-   strlen
-	(class=string #args=1) String length.
-
-   ssub
-	(class=string #args=3) Like sub but does no regexing. No characters are special.
-
-   sub
-	(class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace once).
-
-   substr0
-	(class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
-       inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
-
-   substr1
-	(class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
-       inclusive. Negative indices -len .. -1 alias to 1 .. len.
-
-   substr
-	(class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
-       with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
-       Arrays are new in Miller 6; the substr function is older.
-
-   tolower
-	(class=string #args=1) Convert string to lowercase.
-
-   toupper
-	(class=string #args=1) Convert string to uppercase.
-
-   truncate
-	(class=string #args=2) Truncates string first argument to max length of int second argument.
-
-   md5
-	(class=hashing #args=1) MD5 hash.
-
-   sha1
-	(class=hashing #args=1) SHA1 hash.
-
-   sha256
-	(class=hashing #args=1) SHA256 hash.
-
-   sha512
-	(class=hashing #args=1) SHA512 hash.
-
+   .*
+   .+
+   .-
+   ./
+   /
+   //
+   <
+   <<
+   <=
+   ==
+   =~
+   >
+   >=
+   >>
+   >>>
+   ?:
+   ??
+   ???
+   ^
+   ^^
    abs
-	(class=math #args=1) Absolute value.
-
    acos
-	(class=math #args=1) Inverse trigonometric cosine.
-
    acosh
-	(class=math #args=1) Inverse hyperbolic cosine.
-
-   asin
-	(class=math #args=1) Inverse trigonometric sine.
-
-   asinh
-	(class=math #args=1) Inverse hyperbolic sine.
-
-   atan
-	(class=math #args=1) One-argument arctangent.
-
-   atan2
-	(class=math #args=2) Two-argument arctangent.
-
-   atanh
-	(class=math #args=1) Inverse hyperbolic tangent.
-
-   cbrt
-	(class=math #args=1) Cube root.
-
-   ceil
-	(class=math #args=1) Ceiling: nearest integer at or above.
-
-   cos
-	(class=math #args=1) Trigonometric cosine.
-
-   cosh
-	(class=math #args=1) Hyperbolic cosine.
-
-   erf
-	(class=math #args=1) Error function.
-
-   erfc
-	(class=math #args=1) Complementary error function.
-
-   exp
-	(class=math #args=1) Exponential function e**x.
-
-   expm1
-	(class=math #args=1) e**x - 1.
-
-   floor
-	(class=math #args=1) Floor: nearest integer at or below.
-
-   invqnorm
-	(class=math #args=1) Inverse of normal cumulative distribution function.
-       Note that invqorm(urand()) is normally distributed.
-
-   log
-	(class=math #args=1) Natural (base-e) logarithm.
-
-   log10
-	(class=math #args=1) Base-10 logarithm.
-
-   log1p
-	(class=math #args=1) log(1-x).
-
-   logifit
-	(class=math #args=3)  Given m and b from logistic regression, compute fit:
-       $yhat=logifit($x,$m,$b).
-
-   max
-	(class=math #args=variadic) Max of n numbers; null loses.
-
-   min
-	(class=math #args=variadic) Min of n numbers; null loses.
-
-   qnorm
-	(class=math #args=1) Normal cumulative distribution function.
-
-   round
-	(class=math #args=1) Round to nearest integer.
-
-   sgn
-	(class=math #args=1)  +1, 0, -1 for positive, zero, negative input respectively.
-
-   sin
-	(class=math #args=1) Trigonometric sine.
-
-   sinh
-	(class=math #args=1) Hyperbolic sine.
-
-   sqrt
-	(class=math #args=1) Square root.
-
-   tan
-	(class=math #args=1) Trigonometric tangent.
-
-   tanh
-	(class=math #args=1) Hyperbolic tangent.
-
-   roundm
-	(class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is
-       the same as round($x/$m)*$m.
-
-   urand
-	(class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
-       Int-valued example: '$n=floor(20+urand()*11)'.
-
-   urandint
-	(class=math #args=2) Integer uniformly distributed between inclusive integer endpoints.
-
-   urandrange
-	(class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
-
-   urand32
-	(class=math #args=0) Integer uniformly distributed 0 and 2**32-1 inclusive.
-
-   gmt2sec
-	(class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
-
-   sec2gmt
-	(class=time #args=1,2) Formats seconds since epoch (integer part)
-       as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-       Leaves non-numbers as-is. With second integer argument n, includes n decimal places
-       for the seconds part
-
-   sec2gmtdate
-	(class=time #args=1) Formats seconds since epoch (integer part)
-       as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
-       Leaves non-numbers as-is.
-
-
-   systime
-	(class=time #args=0) help string will go here
-
-   systimeint
-	(class=time #args=0) help string will go here
-
-   uptime
-	(class=time #args=0) help string will go here
-
-   strftime
-	(class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.
-	    strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
-	    strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
-	    Format strings are as in the C library (please see "man strftime" on your system),
-	    with the Miller-specific addition of "%1S" through "%9S" which format the seconds
-	    with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
-	    See also strftime_local.
-
-
-   strptime
-	(class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch,
-	    e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
-	    and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
-	    See also strptime_local.
-
-
-   dhms2fsec
-	(class=time #args=1) Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
-
-
-   dhms2sec
-	(class=time #args=1) Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
-
-
-   fsec2dhms
-	(class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
-
-
-   fsec2hms
-	(class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
-
-
-   hms2fsec
-	(class=time #args=1) Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000
-
-
-   hms2sec
-	(class=time #args=1) Recovers integer seconds as in hms2sec("01:23:20") = 5000
-
-
-   sec2dhms
-	(class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
-
-
-   sec2hms
-	(class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
-
-
-   is_absent
-	(class=typing #args=1) False if field is present in input, true otherwise
-
-   is_array
-	(class=typing #args=1) True if argument is an array.
-
-   is_bool
-	(class=typing #args=1) True if field is present with boolean value. Synonymous with is_boolean.
-
-   is_boolean
-	(class=typing #args=1) True if field is present with boolean value. Synonymous with is_bool.
-
-   is_empty
-	(class=typing #args=1) True if field is present in input with empty string value, false otherwise.
-
-   is_empty_map
-	(class=typing #args=1) True if argument is a map which is empty.
-
-   is_error
-	(class=typing #args=1) True if if argument is an error, such as taking string length of an integer.
-
-   is_float
-	(class=typing #args=1) True if field is present with value inferred to be float
-
-   is_int
-	(class=typing #args=1) True if field is present with value inferred to be int
-
-   is_map
-	(class=typing #args=1) True if argument is a map.
-
-   is_nonempty_map
-	(class=typing #args=1) True if argument is a map which is non-empty.
-
-   is_not_empty
-	(class=typing #args=1) False if field is present in input with empty value, true otherwise
-
-   is_not_map
-	(class=typing #args=1) True if argument is not a map.
-
-   is_not_array
-	(class=typing #args=1) True if argument is not an array.
-
-   is_not_null
-	(class=typing #args=1) False if argument is null (empty or absent), true otherwise.
-
-   is_null
-	(class=typing #args=1) True if argument is null (empty or absent), false otherwise.
-
-   is_numeric
-	(class=typing #args=1) True if field is present with value inferred to be int or float
-
-   is_present
-	(class=typing #args=1) True if field is present in input, false otherwise.
-
-   is_string
-	(class=typing #args=1) True if field is present with string (including empty-string) value
-
-   asserting_absent
-	(class=typing #args=1) Aborts with an error if is_absent on the argument returns false,
-       else returns its argument.
-
-   asserting_array
-	(class=typing #args=1) Aborts with an error if is_array on the argument returns false,
-       else returns its argument.
-
-   asserting_bool
-	(class=typing #args=1) Aborts with an error if is_bool on the argument returns false,
-       else returns its argument.
-
-   asserting_boolean
-	(class=typing #args=1) Aborts with an error if is_boolean on the argument returns false,
-       else returns its argument.
-
-   asserting_error
-	(class=typing #args=1) Aborts with an error if is_error on the argument returns false,
-       else returns its argument.
-
-   asserting_empty
-	(class=typing #args=1) Aborts with an error if is_empty on the argument returns false,
-       else returns its argument.
-
-   asserting_empty_map
-	(class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false,
-       else returns its argument.
-
-   asserting_float
-	(class=typing #args=1) Aborts with an error if is_float on the argument returns false,
-       else returns its argument.
-
-   asserting_int
-	(class=typing #args=1) Aborts with an error if is_int on the argument returns false,
-       else returns its argument.
-
-   asserting_map
-	(class=typing #args=1) Aborts with an error if is_map on the argument returns false,
-       else returns its argument.
-
-   asserting_nonempty_map
-	(class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false,
-       else returns its argument.
-
-   asserting_not_empty
-	(class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false,
-       else returns its argument.
-
-   asserting_not_map
-	(class=typing #args=1) Aborts with an error if is_not_map on the argument returns false,
-       else returns its argument.
-
-   asserting_not_array
-	(class=typing #args=1) Aborts with an error if is_not_array on the argument returns false,
-       else returns its argument.
-
-   asserting_not_null
-	(class=typing #args=1) Aborts with an error if is_not_null on the argument returns false,
-       else returns its argument.
-
-   asserting_null
-	(class=typing #args=1) Aborts with an error if is_null on the argument returns false,
-       else returns its argument.
-
-   asserting_numeric
-	(class=typing #args=1) Aborts with an error if is_numeric on the argument returns false,
-       else returns its argument.
-
-   asserting_present
-	(class=typing #args=1) Aborts with an error if is_present on the argument returns false,
-       else returns its argument.
-
-   asserting_string
-	(class=typing #args=1) Aborts with an error if is_string on the argument returns false,
-       else returns its argument.
-
-   typeof
-	(class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
-
-   boolean
-	(class=conversion #args=1) Convert int/float/bool/string to boolean.
-
-   float
-	(class=conversion #args=1) Convert int/float/bool/string to float.
-
-   fmtnum
-	(class=conversion #args=2) Convert int/float/bool to string using
-       printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
-
-   hexfmt
-	(class=conversion #args=1) Convert int to hex string, e.g. 255 to "0xff".
-
-   int
-	(class=conversion #args=1) Convert int/float/bool/string to int.
-
-   joink
-	(class=conversion #args=2) Makes string from map/array keys. Examples:
-       joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
-       joink([1,2,3], ",") = "1,2,3".
-
-   joinv
-	(class=conversion #args=2) Makes string from map/array values.
-       joinv([3,4,5], ",") = "3,4,5"
-       joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
-
-   joinkv
-	(class=conversion #args=3) Makes string from map/array key-value pairs. Examples:
-       joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
-       joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
-
-   splita
-	(class=conversion #args=2) Splits string into array with type inference. Example:
-       splita("3,4,5", ",") = [3,4,5]
-
-   splitax
-	(class=conversion #args=2) Splits string into array without type inference. Example:
-       splita("3,4,5", ",") = ["3","4","5"]
-
-   splitkv
-	(class=conversion #args=3) Splits string by separators into map with type inference. Example:
-       splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
-
-   splitkvx
-	(class=conversion #args=3) Splits string by separators into map without type inference (keys and
-       values are strings). Example:
-       splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
-
-   splitnv
-	(class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example:
-       splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
-
-   splitnvx
-	(class=conversion #args=2) Splits string by separator into integer-indexed map without type
-       inference (values are strings). Example:
-       splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
-
-   string
-	(class=conversion #args=1) Convert int/float/bool/string/array/map to string.
-
    append
-	(class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
-
    arrayify
-	(class=maps/arrays #args=1) Walks through a nested map/array, converting any map with consecutive keys
-       "1", "2", ... into an array. Useful to wrap the output of unflatten.
-
+   asin
+   asinh
+   asserting_absent
+   asserting_array
+   asserting_bool
+   asserting_boolean
+   asserting_empty
+   asserting_empty_map
+   asserting_error
+   asserting_float
+   asserting_int
+   asserting_map
+   asserting_nonempty_map
+   asserting_not_array
+   asserting_not_empty
+   asserting_not_map
+   asserting_not_null
+   asserting_null
+   asserting_numeric
+   asserting_present
+   asserting_string
+   atan
+   atan2
+   atanh
+   bitcount
+   boolean
+   capitalize
+   cbrt
+   ceil
+   clean_whitespace
+   collapse_whitespace
+   cos
+   cosh
    depth
-	(class=maps/arrays #args=1) Prints maximum depth of map/array. Scalars have depth 0.
-
+   dhms2fsec
+   dhms2sec
+   erf
+   erfc
+   exp
+   expm1
    flatten
-	(class=maps/arrays #args=3) Flattens multi-level maps to single-level ones. Examples:
-       flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
-       flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
-       Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
-       Useful for nested JSON-like structures for non-JSON file formats like CSV.
-
+   float
+   floor
+   fmtnum
+   fsec2dhms
+   fsec2hms
    get_keys
-	(class=maps/arrays #args=1) Returns array of keys of map or array
-
    get_values
-	(class=maps/arrays #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
-
+   gmt2sec
+   gsub
    haskey
-	(class=maps/arrays #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
-       'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
-       Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
-
-   json_parse
-	(class=maps/arrays #args=1) Converts value from JSON-formatted string.
-
-   json_stringify
-	(class=maps/arrays #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
-       With optional second boolean argument set to true, produces multiline output.
-
-   leafcount
-	(class=maps/arrays #args=1) Counts total number of terminal values in map/array. For single-level
-       map/array, same as length.
-
-   length
-	(class=maps/arrays #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
-
-   mapdiff
-	(class=maps/arrays #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
-       With 2 or more, returns copy of arg 1 with all keys from any of remaining
-       argument maps removed.
-
-   mapexcept
-	(class=maps/arrays #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
-       Remaining arguments can be strings or arrays of string.
-       E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
-       and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
-
-   mapselect
-	(class=maps/arrays #args=variadic) Returns a map with only keys from remaining arguments set.
-       Remaining arguments can be strings or arrays of string.
-       E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
-       and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
-
-   mapsum
-	(class=maps/arrays #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with
-       key-value pairs from all arguments. Rightmost collisions win, e.g.
-       'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
-
-   unflatten
-	(class=maps/arrays #args=2) Reverses flatten. Example:
-       unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}}.
-       Useful for nested JSON-like structures for non-JSON file formats like CSV.
-       See also arrayify.
-
+   hexfmt
+   hms2fsec
+   hms2sec
    hostname
-	(class=system #args=0) Returns the hostname as a string.
-
+   int
+   invqnorm
+   is_absent
+   is_array
+   is_bool
+   is_boolean
+   is_empty
+   is_empty_map
+   is_error
+   is_float
+   is_int
+   is_map
+   is_nonempty_map
+   is_not_array
+   is_not_empty
+   is_not_map
+   is_not_null
+   is_null
+   is_numeric
+   is_present
+   is_string
+   joink
+   joinkv
+   joinv
+   json_parse
+   json_stringify
+   leafcount
+   length
+   log
+   log10
+   log1p
+   logifit
+   lstrip
+   madd
+   mapdiff
+   mapexcept
+   mapselect
+   mapsum
+   max
+   md5
+   mexp
+   min
+   mmul
+   msub
    os
-	(class=system #args=0) Returns the operating-system name as a string.
-
+   pow
+   qnorm
+   regextract
+   regextract_or_else
+   round
+   roundm
+   rstrip
+   sec2dhms
+   sec2gmt
+   sec2gmtdate
+   sec2hms
+   sgn
+   sha1
+   sha256
+   sha512
+   sin
+   sinh
+   splita
+   splitax
+   splitkv
+   splitkvx
+   splitnv
+   splitnvx
+   sqrt
+   ssub
+   strftime
+   string
+   strip
+   strlen
+   strptime
+   sub
+   substr
+   substr0
+   substr1
    system
-	(class=system #args=1) Run command string, yielding its stdout minus final carriage return.
-
+   systime
+   systimeint
+   tan
+   tanh
+   tolower
+   toupper
+   truncate
+   typeof
+   unflatten
+   uptime
+   urand
+   urand32
+   urandint
+   urandrange
    version
-	(class=system #args=0) Returns the Miller version as a string.
-
+   |
+   ||
+   ~
+   Please use  mlr --help-function {function name}" for function-specific
+       help."
 KEYWORDS FOR PUT AND FILTER
-   TODO: port mlr_dsl_list_all_keywords_raw
-       TODO: port mlr_dsl_keyword_usage
-
+   all
+   begin
+   bool
+   break
+   call
+   continue
+   do
+   dump
+   edump
+   elif
+   else
+   emit
+   emitf
+   emitp
+   end
+   eprint
+   eprintn
+   false
+   filter
+   float
+   for
+   func
+   if
+   in
+   int
+   map
+   num
+   print
+   printn
+   return
+   stderr
+   stdout
+   str
+   subr
+   tee
+   true
+   unset
+   var
+   while
+   ENV
+   FILENAME
+   FILENUM
+   FNR
+   IFS
+   IPS
+   IRS
+   M_E
+   M_PI
+   NF
+   NR
+   OFS
+   OPS
+   ORS
 AUTHOR
        Miller is written by John Kerl <kerl.john.r@gmail.com>.
 
@@ -2215,9 +1612,9 @@ AUTHOR
 
 SEE ALSO
        awk(1), sed(1), cut(1), join(1), sort(1), RFC 4180: Common Format and
-       MIME Type for Comma-Separated Values (CSV) Files, the miller website
-       http://johnkerl.org/miller/doc
+       MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
+       https://miller.readthedocs.io
 
 
 
-				  2021-06-16			     MILLER(1)
+				  2021-06-28			     MILLER(1)

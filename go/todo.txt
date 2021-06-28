@@ -36,6 +36,8 @@ k all into src/auxents/help except shorts like mlr -f
 * split up help/entry.go -- ?
 ! sort functions-table at runtime
 ? rid of tAuxUsage -- is it ever called?
+* keyword usage: lib.DOC_URL
+? integrate repl help with main help?
 
 ----------------------------------------------------------------
 

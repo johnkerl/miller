@@ -23,7 +23,7 @@ def main
   ])
 
   print make_section('SYNOPSIS', [
-`mlr --usage-synopsis`
+`mlr --help`
   ])
 
   print make_section('DESCRIPTION', [
@@ -39,9 +39,6 @@ a special case.) This manpage documents #{`mlr --version`.chomp}."""
     ""
   ])
 
-	print make_subsection('COMMAND-LINE SYNTAX', [])
-  print make_code_block(`mlr --usage-examples`)
-
 	print make_subsection('DATA FORMATS', [])
 	print make_code_block(`mlr --usage-data-format-examples`)
 
@@ -55,10 +52,10 @@ output separator to the given value."""
 
   # TODO: output colorization and repl
 	print make_subsection('HELP OPTIONS', [])
-	print make_code_block(`mlr --usage-help-options`)
+	print make_code_block(`mlr help topics`)
 
 	print make_subsection('VERB LIST', [])
-	print make_code_block(`mlr --usage-list-all-verbs`)
+	print make_code_block(`mlr help list-verbs`)
 
 	print make_subsection('FUNCTION LIST', [])
 	print make_code_block(`mlr --usage-functions`)
@@ -76,31 +73,27 @@ output separator to the given value."""
 	print make_code_block(`mlr help compressed-data`)
 
 	print make_subsection('SEPARATORS', [])
-	print make_code_block(`mlr --usage-separator-options`)
+	print make_code_block(`mlr help separator-options`)
 
 	print make_subsection('CSV-SPECIFIC OPTIONS', [])
-	print make_code_block(`mlr --usage-csv-options`)
+	print make_code_block(`mlr help csv-options`)
 
 	print make_subsection('DOUBLE-QUOTING FOR CSV/CSVLITE OUTPUT', [])
-	print make_code_block(`mlr --usage-double-quoting`)
+	print make_code_block(`mlr help double-quoting`)
 
 	print make_subsection('NUMERICAL FORMATTING', [])
-	print make_code_block(`mlr --usage-numerical-formatting`)
+	print make_code_block(`mlr help numerical-formatting`)
 
 	print make_subsection('OTHER OPTIONS', [])
-	print make_code_block(`mlr --usage-other-options`)
-
-	print make_subsection('THEN-CHAINING', [])
-	print make_code_block(`mlr --usage-then-chaining`)
+	print make_code_block(`mlr help misc`)
 
 	print make_subsection('AUXILIARY COMMANDS', [])
 	print make_code_block(`mlr aux-list`)
 
   print make_section('MLRRC', [])
-
   print make_code_block(`mlr help mlrrc`)
 
-  verbs = `mlr --list-all-verbs-raw`
+  verbs = `mlr help list-verbs-vertically`
   print make_section('VERBS', [
     ""
   ])
@@ -110,7 +103,7 @@ output separator to the given value."""
     print make_code_block(`mlr #{verb} -h`)
   end
 
-  functions = `mlr --list-all-functions-raw`
+  functions = `mlr help list-functions-vertically`
   print make_section('FUNCTIONS FOR FILTER/PUT', [
     ""
   ])
@@ -122,7 +115,7 @@ output separator to the given value."""
     print make_code_block(text)
   end
 
-  keywords = `mlr --list-all-keywords-raw`
+  keywords = `mlr help list-keywords`
   print make_section('KEYWORDS FOR PUT AND FILTER', [
     ""
   ])

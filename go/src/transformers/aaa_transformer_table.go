@@ -80,14 +80,14 @@ func LookUp(verb string) *TransformerSetup {
 }
 
 // ----------------------------------------------------------------
-func ListAllVerbNames() {
+func ListVerbNamesVertically() {
 	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
 		fmt.Printf("%s\n", transformerSetup.Verb)
 	}
 }
 
 // ----------------------------------------------------------------
-func ListAllVerbNamesAsParagraph() {
+func ListVerbNamesAsParagraph() {
 	separator := " "
 
 	separatorlen := len(separator)
@@ -114,7 +114,7 @@ func ListAllVerbNamesAsParagraph() {
 }
 
 // ----------------------------------------------------------------
-func UsageAllVerbs(argv0 string) {
+func UsageVerbs(argv0 string) {
 	separator := "================================================================"
 
 	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {

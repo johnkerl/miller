@@ -2,81 +2,6 @@
 // TODO: comment
 // ================================================================
 
-// ================================================================
-// mlr --usage-data-format-examples             -> mlr help format-examples
-// mlr --usage-examples                         -> mlr help ___
-// mlr --usage-help-options                     -> mlr help ___ <-- should be help-of-help meta thing -- LUT
-// mlr --usage-list-all-verbs                   -> mlr help ___
-// mlr --usage-functions                        -> mlr help ___
-// mlr --usage-data-format-options              -> mlr help ___
-// mlr --usage-comments-in-data                 -> mlr help ___
-// mlr --usage-format-conversion-keystroke-sa.. -> mlr help keystroke-savers
-// mlr --usage-compressed-data-options          -> mlr help compressed-data
-// mlr --usage-separator-options                -> mlr help separators
-// mlr --usage-csv-options                      -> mlr help csv-options
-// mlr --usage-double-quoting                   -> mlr help double-quoting
-// mlr --usage-numerical-formatting             -> mlr help number-formatting
-// mlr --usage-other-options                    -> mlr help ???
-// mlr --usage-then-chaining                    -> mlr help then-chaining
-// mlr --usage-auxents                          -> mlr help auxents
-// mlr --list-all-verbs-raw                     -> mlr help list-verbs
-// mlr #{verb} -h                               -> mlr help ????
-// mlr --list-all-functions-raw                 -> mlr help list-functions
-// mlr --help-function #{function}              -> mlr help ___
-// mlr --list-all-keywords-raw                  -> mlr help list-keywords
-// mlr --help-keyword                           -> mlr help '#{keyword}'
-
-// mlr help {foo} w/ polymorphic lookup -- ?
-// cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout)
-//
-// ? integrate repl help w/ main help ... ?
-
-// ----------------------------------------------------------------
-// To keep:
-//   -h or --help                 Show this message.
-//   --version                    Show the software version.
-//   {verb name} --help           Show verb-specific help.
-//   --help-all-verbs             Show help on all verbs.
-//   -l                           List only verb names.
-//   -L                           List only verb names, one per line.
-//   -f                           Show help on all built-in functions.
-//   -F                           Show a bare listing of built-in functions by name.
-//   -k or --help-all-keywords    Show help on all keywords.
-//   -K                           Show a bare listing of keywords by name.
-
-// mlr help verbs
-// mlr help data-format-options
-// mlr help comments-in-data
-// mlr help other-options
-// mlr help functions
-// mlr help mlrrc
-// mlr aux-list
-
-// ================================================================
-// ================================================================
-// ================================================================
-
-//func helpHelpOptions(o *os.File, argv0 string) {
-//	fmt.Printf("  -h or --help                 Show this message.\n")
-//	fmt.Printf("  --version                    Show the software version.\n")
-//	fmt.Printf("  {verb name} --help           Show verb-specific help.\n")
-//	fmt.Printf("  --help-all-verbs             Show help on all verbs.\n")
-//	fmt.Printf("  -l or --list-all-verbs       List only verb names.\n")
-//	fmt.Printf("  -L                           List only verb names, one per line.\n")
-//	fmt.Printf("  -f or --help-all-functions   Show help on all built-in functions.\n")
-//	fmt.Printf("  -F                           Show a bare listing of built-in functions by name.\n")
-//	fmt.Printf("  -k or --help-all-keywords    Show help on all keywords.\n")
-//	fmt.Printf("  -K                           Show a bare listing of keywords by name.\n")
-//}
-
-//func helpFunctions(o *os.File) {
-//	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
-//	fmt.Printf("Please use "mlr --help-function {function name}" for function-specific help.\n")
-//}
-
-// TODO: validate (args []string) non-empty by handlers that don't take them --
-// maybe a bool in the LUT
-
 package help
 
 import (
@@ -93,9 +18,8 @@ import (
 type tHandlerFunc func()
 
 type shorthandInfo struct {
-	shorthand   string
-	longhand    string
-	handlerFunc tHandlerFunc
+	shorthand string
+	longhand  string
 }
 
 type handlerInfo struct {
@@ -109,17 +33,16 @@ var shorthandLookupTable = []shorthandInfo{}
 var handlerLookupTable = []handlerInfo{}
 
 func init() {
-
 	// For things like 'mlr -F', invoked through the CLI parser which does not
 	// go through our HelpMain().
 	shorthandLookupTable = []shorthandInfo{
 		// TODO: remove handler func & replace with just short/long
-		{shorthand: "-l", longhand: "TODO", handlerFunc: listAllVerbNamesAsParagraph},
-		{shorthand: "-L", longhand: "TODO", handlerFunc: listAllVerbNames},
-		{shorthand: "-f", longhand: "TODO", handlerFunc: usageAllFunctions},
-		{shorthand: "-F", longhand: "TODO", handlerFunc: listAllFunctions},
-		{shorthand: "-k", longhand: "TODO", handlerFunc: usageAllKeywords},
-		{shorthand: "-K", longhand: "TODO", handlerFunc: listAllKeywords},
+		{shorthand: "-l", longhand: "list-verbs"},
+		{shorthand: "-L", longhand: "list-verbs-vertically"},
+		{shorthand: "-f", longhand: "usage-functions"},
+		{shorthand: "-F", longhand: "list-functions"},
+		{shorthand: "-k", longhand: "usage-keywords"},
+		{shorthand: "-K", longhand: "list-keywords"},
 	}
 
 	// For things like 'mlr help foo', invoked through the auxent framework
@@ -133,51 +56,28 @@ func init() {
 		{name: "data-formats", handlerFunc: helpDataFormats},
 		{name: "data-format-options", handlerFunc: helpDataFormatOptions},
 		{name: "format-conversion", handlerFunc: helpFormatConversionKeystrokeSaverOptions},
-		{name: "list-functions", handlerFunc: ListFunctions},
-		{name: "list-keywords", handlerFunc: ListKeywords},
-		{name: "list-verbs", handlerFunc: listVerbs},
-		// TODO: help for function
-		// TODO: help for keyword
-		// {name: "function", handlerFunc: HelpFunction},
-		// {name: "keyword", handlerFunc: HelpKeyword},
 		{name: "misc", handlerFunc: helpMiscOptions},
 		{name: "mlrrc", handlerFunc: helpMlrrc},
 		{name: "output-colorizations", handlerFunc: helpOutputColorization},
-		// TODO
-		// type-arithmetic-info printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
-		//{name: "usage-functions", handlerFunc: UsageFunctions},
-		//{name: "usage-keywords", handlerFunc: UsageKeywords},
-		//{name: "usage-verbs", handlerFunc: UsageVerbs},
-		// TODO: search
+		{name: "list-functions", handlerFunc: listFunctions},
+		{name: "list-functions-vertically", handlerFunc: listFunctionsVertically},
+		{name: "list-keywords", handlerFunc: listKeywords},
+		// TODO: keywords listed as paragraph
+		{name: "list-verbs", handlerFunc: listVerbsAsParagraph},
+		{name: "list-verbs-vertically", handlerFunc: listVerbsVertically},
+		{name: "usage-functions", handlerFunc: usageFunctions},
+		{name: "usage-keywords", handlerFunc: usageKeywords},
+		//{name: "usage-verbs", handlerFunc: usageVerbs},
+		// TODO: search for function/keyword/verb/etc like in the REPL
 	}
 }
 
-//	} else if (streq(argv[argi], "--help-all-verbs")) {
-//			usage_all_verbs(MLR_GLOBALS.bargv0);
-
-//	} else if (streq(argv[argi], "--list-all-verbs") || streq(argv[argi], "-l")) {
-//		list_all_verbs(stdout, "");
-
-//	} else if (streq(argv[argi], "--list-all-verbs-raw") || streq(argv[argi], "-L")) {
-//		list_all_verbs_raw(stdout);
-
-//	} else if (streq(argv[argi], "--list-all-functions-raw") || streq(argv[argi], "-F")) {
-//		fmgr_list_all_functions_raw(pfmgr, stdout);
-
-//	} else if (streq(argv[argi], "--list-all-functions-as-table")) {
-//		fmgr_list_all_functions_as_table(pfmgr, stdout);
-
-//	} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
-//		fmgr_function_usage(pfmgr, stdout, NULL);
-
-//	} else if (streq(argv[argi], "--help-function") || streq(argv[argi], "--hf")) {
-//		fmgr_function_usage(pfmgr, stdout, argv[argi+1]);
-
-//	} else if (streq(argv[argi], "--list-all-keywords-raw") || streq(argv[argi], "-K")) {
-//		mlr_dsl_list_all_keywords_raw(stdout);
-
-//	} else if (streq(argv[argi], "--help-all-keywords") || streq(argv[argi], "-k")) {
-//		mlr_dsl_keyword_usage(stdout, NULL);
+// TODO:
+// function-list as paragraph (for manpage)
+// type-arithmetic-info printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
+// mlr --usage-separator-options                -> mlr help separators
+// mlr --usage-double-quoting                   -> mlr help double-quoting
+// mlr --usage-numerical-formatting             -> mlr help number-formatting
 
 // ================================================================
 // For things like 'mlr help foo', invoked through the auxent framework which
@@ -219,6 +119,7 @@ Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see 'mlr help topics' for more information.
 `)
+	fmt.Fprintf(o, "Please also see %s\n", lib.DOC_URL)
 }
 
 // ----------------------------------------------------------------
@@ -229,10 +130,15 @@ func ParseTerminalUsage(arg string) bool {
 		handleDefault()
 		return true
 	}
-	for _, info := range shorthandLookupTable {
-		if info.shorthand == arg {
-			info.handlerFunc()
-			return true
+	// "mlr -l" is shorthand for "mlr help list-verbs", etc.
+	for _, sinfo := range shorthandLookupTable {
+		if sinfo.shorthand == arg {
+			for _, info := range handlerLookupTable {
+				if info.name == sinfo.longhand {
+					info.handlerFunc()
+					return true
+				}
+			}
 		}
 	}
 	return false
@@ -245,7 +151,7 @@ func handleDefault() {
 
 // ----------------------------------------------------------------
 func listTopics() {
-	fmt.Println("Type 'mlr help {topic} for any of the following topics:")
+	fmt.Println("Type 'mlr help {topic}' for any of the following:")
 	for _, info := range handlerLookupTable {
 		fmt.Printf("  mlr help %s\n", info.name)
 	}
@@ -262,7 +168,7 @@ They do not participate in any other parts of Miller.
 Please "mlr aux-list" for more information.
 `)
 	// imports miller/src/auxents: import cycle not allowed
-	//auxents.ShowAuxEntries(o)
+	// auxents.ShowAuxEntries(o)
 }
 
 // ----------------------------------------------------------------
@@ -488,20 +394,22 @@ are overridden in all cases by setting output format to format2.`,
 }
 
 // ----------------------------------------------------------------
-////func helpDoubleQuoting(o *os.File, argv0 string) {
-////	fmt.Printf("  --quote-all        Wrap all fields in double quotes\n")
-////	fmt.Printf("  --quote-none       Do not wrap any fields in double quotes, even if they have\n")
-////	fmt.Printf("                     OFS or ORS in them\n")
-////	fmt.Printf("  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS\n")
-////	fmt.Printf("                     in them (default)\n")
-////	fmt.Printf("  --quote-numeric    Wrap fields in double quotes only if they have numbers\n")
-////	fmt.Printf("                     in them\n")
-////	fmt.Printf("  --quote-original   Wrap fields in double quotes if and only if they were\n")
-////	fmt.Printf("                     quoted on input. This isn't sticky for computed fields:\n")
-////	fmt.Printf("                     e.g. if fields a and b were quoted on input and you do\n")
-////	fmt.Printf("                     "put '$c = $a . $b'" then field c won't inherit a or b's\n")
-////	fmt.Printf("                     was-quoted-on-input flag.\n")
-////}
+// TBD FOR MILLER 6:
+
+//func helpDoubleQuoting(o *os.File, argv0 string) {
+//	fmt.Printf("  --quote-all        Wrap all fields in double quotes\n")
+//	fmt.Printf("  --quote-none       Do not wrap any fields in double quotes, even if they have\n")
+//	fmt.Printf("                     OFS or ORS in them\n")
+//	fmt.Printf("  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS\n")
+//	fmt.Printf("                     in them (default)\n")
+//	fmt.Printf("  --quote-numeric    Wrap fields in double quotes only if they have numbers\n")
+//	fmt.Printf("                     in them\n")
+//	fmt.Printf("  --quote-original   Wrap fields in double quotes if and only if they were\n")
+//	fmt.Printf("                     quoted on input. This isn't sticky for computed fields:\n")
+//	fmt.Printf("                     e.g. if fields a and b were quoted on input and you do\n")
+//	fmt.Printf("                     "put '$c = $a . $b'" then field c won't inherit a or b's\n")
+//	fmt.Printf("                     was-quoted-on-input flag.\n")
+//}
 
 // ----------------------------------------------------------------
 func helpFormatConversionKeystrokeSaverOptions() {
@@ -517,72 +425,6 @@ The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
 PPRINT, and markdown, respectively. Note that markdown format is available for
 output only.
 `)
-}
-
-// ----------------------------------------------------------------
-func ListFunctions() {
-	fmt.Println("TODO: list functions")
-	//TODO
-	//cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsRaw(os.Stdout)
-	//cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsage(args[argi+1], os.Stdout)
-	//TODO: as-table
-	//		fmgr_t* pfmgr = fmgr_alloc();
-	//		fmgr_list_all_functions_as_table(pfmgr, os.Stdout);
-	//		fmgr_free(pfmgr, nil);
-	//		return true;
-}
-
-// ----------------------------------------------------------------
-func HelpFunction() {
-	fmt.Println("TODO: help for function")
-}
-
-// TODO: help all functions
-
-// ----------------------------------------------------------------
-func ListKeywords() {
-	fmt.Println("TODO: list keywords")
-}
-
-// ----------------------------------------------------------------
-func HelpKeyword() {
-	fmt.Println("TODO: help for keyword")
-}
-
-// TODO: help all keywords
-
-// ----------------------------------------------------------------
-func listVerbs() {
-	transformers.ListAllVerbNamesAsParagraph()
-}
-
-// ----------------------------------------------------------------
-func listAllVerbNames() {
-	transformers.ListAllVerbNames()
-}
-
-// ----------------------------------------------------------------
-func listAllVerbNamesAsParagraph() {
-	transformers.ListAllVerbNamesAsParagraph()
-}
-
-// ----------------------------------------------------------------
-func listAllFunctions() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
-	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
-}
-
-// ----------------------------------------------------------------
-func usageAllFunctions() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
-}
-
-// ----------------------------------------------------------------
-func listAllKeywords() {
-}
-
-// ----------------------------------------------------------------
-func usageAllKeywords() {
 }
 
 // ----------------------------------------------------------------
@@ -704,6 +546,8 @@ Please do mlr --list-colors to see the available color codes.
 }
 
 // ----------------------------------------------------------------
+// TBD FOR MILLER 6:
+
 //func helpNumericalFormatting(o *os.File, argv0 string) {
 //	fmt.Printf("  --ofmt {format}    E.g. %%.18f, %%.0f, %%9.6e. Please use sprintf-style codes for\n")
 //	fmt.Printf("                     floating-point nummbers. If not specified, default formatting is used.\n")
@@ -712,72 +556,110 @@ Please do mlr --list-colors to see the available color codes.
 //}
 
 // ----------------------------------------------------------------
-////func helpSeparatorOptions() {
-////	fmt.Print(`Separator options:
-////  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'
-////  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
-////  --ps     --ips     --ops              Pair separators, e.g. equals sign
-////
-////  Notes about line endings:
-////  * Default line endings (--irs and --ors) are "auto" which means autodetect from
-////    the input file format, as long as the input file(s) have lines ending in either
-////    LF (also known as linefeed, '\\n', 0x0a, Unix-style) or CRLF (also known as
-////    carriage-return/linefeed pairs, '\\r\\n', 0x0d 0x0a, Windows style).
-////  * If both irs and ors are auto (which is the default) then LF input will lead to LF
-////    output and CRLF input will lead to CRLF output, regardless of the platform you're
-////    running on.
-////  * The line-ending autodetector triggers on the first line ending detected in the input
-////    stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
-////    LF-terminated file then autodetected line endings will be CRLF.
-////  * If you use --ors {something else} with (default or explicitly specified) --irs auto
-////    then line endings are autodetected on input and set to what you specify on output.
-////  * If you use --irs {something else} with (default or explicitly specified) --ors auto
-////    then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
-////
-////  Notes about all other separators:
-////  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
-////    do key-value pairs appear juxtaposed.
-////  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
-////    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
-////    a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs
-////    auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
-////  * OFS must be single-character for PPRINT format. This is because it is used
-////    with repetition for alignment; multi-character separators would make
-////    alignment impossible.
-////  * OPS may be multi-character for XTAB format, in which case alignment is
-////    disabled.
-////  * TSV is simply CSV using tab as field separator ("--fs tab").
-////  * FS/PS are ignored for markdown format; RS is used.
-////  * All FS and PS options are ignored for JSON format, since they are not relevant
-////    to the JSON format.
-////  * You can specify separators in any of the following ways, shown by example:
-////    - Type them out, quoting as necessary for shell escapes, e.g.
-////      "--fs '|' --ips :"
-////    - C-style escape sequences, e.g. "--rs '\\r\\n' --fs '\\t'".
-////    - To avoid backslashing, you can use any of the following names:
-////     ")
-//////	lhmss_t* pmap = get_desc_to_chars_map()
-//////	for (lhmsse_t* pe = pmap.phead; pe != nil; pe = pe.pnext) {
-//// %s", pe.key)
-//////	}
-////
-////  * Default separators by format:
-////      %-12s %-8s %-8s %s\n", "File format", "RS", "FS", "PS")
-//////	lhmss_t* default_rses = get_default_rses()
-//////	lhmss_t* default_fses = get_default_fses()
-//////	lhmss_t* default_pses = get_default_pses()
-//////	for (lhmsse_t* pe = default_rses.phead; pe != nil; pe = pe.pnext) {
-//////		char* filefmt = pe.key
-//////		char* rs = pe.value
-//////		char* fs = lhmss_get(default_fses, filefmt)
-//////		char* ps = lhmss_get(default_pses, filefmt)
-////      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps))
-//////	}
-////}
+// TBD FOR MILLER 6:
+
+//func helpSeparatorOptions() {
+//	fmt.Print(`Separator options:
+//  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'
+//  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
+//  --ps     --ips     --ops              Pair separators, e.g. equals sign
+//
+//  Notes about line endings:
+//  * Default line endings (--irs and --ors) are "auto" which means autodetect from
+//    the input file format, as long as the input file(s) have lines ending in either
+//    LF (also known as linefeed, '\\n', 0x0a, Unix-style) or CRLF (also known as
+//    carriage-return/linefeed pairs, '\\r\\n', 0x0d 0x0a, Windows style).
+//  * If both irs and ors are auto (which is the default) then LF input will lead to LF
+//    output and CRLF input will lead to CRLF output, regardless of the platform you're
+//    running on.
+//  * The line-ending autodetector triggers on the first line ending detected in the input
+//    stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
+//    LF-terminated file then autodetected line endings will be CRLF.
+//  * If you use --ors {something else} with (default or explicitly specified) --irs auto
+//    then line endings are autodetected on input and set to what you specify on output.
+//  * If you use --irs {something else} with (default or explicitly specified) --ors auto
+//    then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+//
+//  Notes about all other separators:
+//  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
+//    do key-value pairs appear juxtaposed.
+//  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
+//    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
+//    a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs
+//    auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
+//  * OFS must be single-character for PPRINT format. This is because it is used
+//    with repetition for alignment; multi-character separators would make
+//    alignment impossible.
+//  * OPS may be multi-character for XTAB format, in which case alignment is
+//    disabled.
+//  * TSV is simply CSV using tab as field separator ("--fs tab").
+//  * FS/PS are ignored for markdown format; RS is used.
+//  * All FS and PS options are ignored for JSON format, since they are not relevant
+//    to the JSON format.
+//  * You can specify separators in any of the following ways, shown by example:
+//    - Type them out, quoting as necessary for shell escapes, e.g.
+//      "--fs '|' --ips :"
+//    - C-style escape sequences, e.g. "--rs '\\r\\n' --fs '\\t'".
+//    - To avoid backslashing, you can use any of the following names:
+//     ")
+////	lhmss_t* pmap = get_desc_to_chars_map()
+////	for (lhmsse_t* pe = pmap.phead; pe != nil; pe = pe.pnext) {
+// %s", pe.key)
+////	}
+//
+//  * Default separators by format:
+//      %-12s %-8s %-8s %s\n", "File format", "RS", "FS", "PS")
+////	lhmss_t* default_rses = get_default_rses()
+////	lhmss_t* default_fses = get_default_fses()
+////	lhmss_t* default_pses = get_default_pses()
+////	for (lhmsse_t* pe = default_rses.phead; pe != nil; pe = pe.pnext) {
+////		char* filefmt = pe.key
+////		char* rs = pe.value
+////		char* fs = lhmss_get(default_fses, filefmt)
+////		char* ps = lhmss_get(default_pses, filefmt)
+//      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps))
+////	}
+//}
 
 // ----------------------------------------------------------------
-//func helpSeeAlso(o *os.File, argv0 string) {
-//	fmt.Printf("For more information please see %s and/or\n", lib.DOC_URL)
-//	fmt.Printf("http://github.com/johnkerl/miller.")
-//	fmt.Printf(" This is Miller version %s.\n", version.STRING)
-//}
+func listVerbsAsParagraph() {
+	transformers.ListVerbNamesAsParagraph()
+}
+
+// ----------------------------------------------------------------
+func listVerbsVertically() {
+	transformers.ListVerbNamesVertically()
+}
+
+// ----------------------------------------------------------------
+func listVerbNamesAsParagraph() {
+	transformers.ListVerbNamesAsParagraph()
+}
+
+// ----------------------------------------------------------------
+// TODO: port the paragraphifier
+func listFunctions() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
+}
+
+// ----------------------------------------------------------------
+func listFunctionsVertically() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
+}
+
+// ----------------------------------------------------------------
+func listKeywords() {
+	cst.ListKeywords()
+}
+
+// ----------------------------------------------------------------
+func usageFunctions() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+}
+
+// ----------------------------------------------------------------
+func usageKeywords() {
+	cst.UsageKeywords()
+}
