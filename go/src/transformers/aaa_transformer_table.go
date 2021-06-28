@@ -114,10 +114,13 @@ func ListVerbNamesAsParagraph() {
 }
 
 // ----------------------------------------------------------------
-func UsageVerbs(argv0 string) {
+func UsageVerbs() {
 	separator := "================================================================"
 
-	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
+	for i, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
+		if i > 0 {
+			fmt.Println()
+		}
 		fmt.Printf("%s\n", separator)
 		lib.InternalCodingErrorIf(transformerSetup.UsageFunc == nil)
 		transformerSetup.UsageFunc(os.Stdout, false, 0)

@@ -15,7 +15,8 @@ import (
 )
 
 // ================================================================
-type tHandlerFunc func()
+type tZaryHandlerFunc func()
+type tUnaryHandlerFunc func(arg string)
 
 type shorthandInfo struct {
 	shorthand string
@@ -23,8 +24,9 @@ type shorthandInfo struct {
 }
 
 type handlerInfo struct {
-	name        string
-	handlerFunc tHandlerFunc
+	name             string
+	zaryHandlerFunc  tZaryHandlerFunc
+	unaryHandlerFunc tUnaryHandlerFunc
 }
 
 // We get a Golang "initialization loop" if this is defined statically. So, we
@@ -48,36 +50,40 @@ func init() {
 	// For things like 'mlr help foo', invoked through the auxent framework
 	// which goes through our HelpMain().
 	handlerLookupTable = []handlerInfo{
-		{name: "topics", handlerFunc: listTopics},
-		{name: "auxents", handlerFunc: helpAuxents},
-		{name: "comments-in-data", handlerFunc: helpCommentsInData},
-		{name: "compressed-data", handlerFunc: helpCompressedDataOptions},
-		{name: "csv-options", handlerFunc: helpCSVOptions},
-		{name: "data-formats", handlerFunc: helpDataFormats},
-		{name: "data-format-options", handlerFunc: helpDataFormatOptions},
-		{name: "format-conversion", handlerFunc: helpFormatConversionKeystrokeSaverOptions},
-		{name: "misc", handlerFunc: helpMiscOptions},
-		{name: "mlrrc", handlerFunc: helpMlrrc},
-		{name: "output-colorizations", handlerFunc: helpOutputColorization},
-		{name: "list-functions", handlerFunc: listFunctions},
-		{name: "list-functions-vertically", handlerFunc: listFunctionsVertically},
-		{name: "list-keywords", handlerFunc: listKeywords},
-		// TODO: keywords listed as paragraph
-		{name: "list-verbs", handlerFunc: listVerbsAsParagraph},
-		{name: "list-verbs-vertically", handlerFunc: listVerbsVertically},
-		{name: "usage-functions", handlerFunc: usageFunctions},
-		{name: "usage-keywords", handlerFunc: usageKeywords},
-		//{name: "usage-verbs", handlerFunc: usageVerbs},
-		// TODO: search for function/keyword/verb/etc like in the REPL
+		{name: "topics", zaryHandlerFunc: listTopics},
+		{name: "auxents", zaryHandlerFunc: helpAuxents},
+		{name: "comments-in-data", zaryHandlerFunc: helpCommentsInData},
+		{name: "compressed-data", zaryHandlerFunc: helpCompressedDataOptions},
+		{name: "csv-options", zaryHandlerFunc: helpCSVOptions},
+		{name: "data-format-options", zaryHandlerFunc: helpDataFormatOptions},
+		{name: "data-formats", zaryHandlerFunc: helpDataFormats},
+		{name: "double-quoting", zaryHandlerFunc: helpDoubleQuoting},
+		{name: "format-conversion", zaryHandlerFunc: helpFormatConversionKeystrokeSaverOptions},
+		{name: "function", unaryHandlerFunc: helpForFunction},
+		{name: "keyword", unaryHandlerFunc: helpForKeyword},
+		{name: "list-functions", zaryHandlerFunc: listFunctions},
+		{name: "list-functions-vertically", zaryHandlerFunc: listFunctionsVertically},
+		{name: "list-keywords", zaryHandlerFunc: listKeywords},
+		{name: "list-verbs", zaryHandlerFunc: listVerbsAsParagraph},
+		{name: "list-verbs-vertically", zaryHandlerFunc: listVerbsVertically},
+		{name: "misc", zaryHandlerFunc: helpMiscOptions},
+		{name: "mlrrc", zaryHandlerFunc: helpMlrrc},
+		{name: "number-formatting", zaryHandlerFunc: helpNumberFormatting},
+		{name: "output-colorizations", zaryHandlerFunc: helpOutputColorization},
+		{name: "separator-options", zaryHandlerFunc: helpSeparatorOptions},
+		{name: "usage-functions", zaryHandlerFunc: usageFunctions},
+		{name: "usage-keywords", zaryHandlerFunc: usageKeywords},
+		{name: "usage-verbs", zaryHandlerFunc: usageVerbs},
+		{name: "verb", unaryHandlerFunc: helpForVerb},
 	}
 }
+
+// TODO: keywords listed as paragraph
+// TODO: search for function/keyword/verb/etc like in the REPL
 
 // TODO:
 // function-list as paragraph (for manpage)
 // type-arithmetic-info printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
-// mlr --usage-separator-options                -> mlr help separators
-// mlr --usage-double-quoting                   -> mlr help double-quoting
-// mlr --usage-numerical-formatting             -> mlr help number-formatting
 
 // ================================================================
 // For things like 'mlr help foo', invoked through the auxent framework which
@@ -92,14 +98,28 @@ func HelpMain(args []string) int {
 		return 0
 	}
 
-	// TODO arg-count check
-
 	// "mlr help something" where we recognize the something
-	subcommand := args[0]
+	name := args[0]
 	for _, info := range handlerLookupTable {
-		if info.name == subcommand {
-			info.handlerFunc()
-			return 0
+		if info.name == name {
+			if info.zaryHandlerFunc != nil {
+				if len(args) != 1 {
+					fmt.Printf("mlr help %s takes no additional argument.\n", name)
+					return 0
+				}
+				info.zaryHandlerFunc()
+				return 0
+			}
+			if info.unaryHandlerFunc != nil {
+				if len(args) < 2 {
+					fmt.Printf("mlr help %s takes at least one required argument.\n", name)
+					return 0
+				}
+				for _, arg := range args[1:] {
+					info.unaryHandlerFunc(arg)
+				}
+				return 0
+			}
 		}
 	}
 
@@ -135,7 +155,7 @@ func ParseTerminalUsage(arg string) bool {
 		if sinfo.shorthand == arg {
 			for _, info := range handlerLookupTable {
 				if info.name == sinfo.longhand {
-					info.handlerFunc()
+					info.zaryHandlerFunc()
 					return true
 				}
 			}
@@ -396,20 +416,21 @@ are overridden in all cases by setting output format to format2.`,
 // ----------------------------------------------------------------
 // TBD FOR MILLER 6:
 
-//func helpDoubleQuoting(o *os.File, argv0 string) {
-//	fmt.Printf("  --quote-all        Wrap all fields in double quotes\n")
-//	fmt.Printf("  --quote-none       Do not wrap any fields in double quotes, even if they have\n")
-//	fmt.Printf("                     OFS or ORS in them\n")
-//	fmt.Printf("  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS\n")
-//	fmt.Printf("                     in them (default)\n")
-//	fmt.Printf("  --quote-numeric    Wrap fields in double quotes only if they have numbers\n")
-//	fmt.Printf("                     in them\n")
-//	fmt.Printf("  --quote-original   Wrap fields in double quotes if and only if they were\n")
-//	fmt.Printf("                     quoted on input. This isn't sticky for computed fields:\n")
-//	fmt.Printf("                     e.g. if fields a and b were quoted on input and you do\n")
-//	fmt.Printf("                     "put '$c = $a . $b'" then field c won't inherit a or b's\n")
-//	fmt.Printf("                     was-quoted-on-input flag.\n")
-//}
+func helpDoubleQuoting() {
+	fmt.Printf("THIS IS STILL WIP FOR MILLER 6\n")
+	fmt.Printf("  --quote-all        Wrap all fields in double quotes\n")
+	fmt.Printf("  --quote-none       Do not wrap any fields in double quotes, even if they have\n")
+	fmt.Printf("                     OFS or ORS in them\n")
+	fmt.Printf("  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS\n")
+	fmt.Printf("                     in them (default)\n")
+	fmt.Printf("  --quote-numeric    Wrap fields in double quotes only if they have numbers\n")
+	fmt.Printf("                     in them\n")
+	fmt.Printf("  --quote-original   Wrap fields in double quotes if and only if they were\n")
+	fmt.Printf("                     quoted on input. This isn't sticky for computed fields:\n")
+	fmt.Printf("                     e.g. if fields a and b were quoted on input and you do\n")
+	fmt.Printf("                     \"put '$c = $a . $b'\" then field c won't inherit a or b's\n")
+	fmt.Printf("                     was-quoted-on-input flag.\n")
+}
 
 // ----------------------------------------------------------------
 func helpFormatConversionKeystrokeSaverOptions() {
@@ -548,80 +569,120 @@ Please do mlr --list-colors to see the available color codes.
 // ----------------------------------------------------------------
 // TBD FOR MILLER 6:
 
-//func helpNumericalFormatting(o *os.File, argv0 string) {
-//	fmt.Printf("  --ofmt {format}    E.g. %%.18f, %%.0f, %%9.6e. Please use sprintf-style codes for\n")
-//	fmt.Printf("                     floating-point nummbers. If not specified, default formatting is used.\n")
-//	fmt.Printf("                     See also the fmtnum function within mlr put (mlr --help-all-functions);\n")
-//	fmt.Printf("                     see also the format-values function.\n")
-//}
+func helpNumberFormatting() {
+	fmt.Printf("THIS IS STILL WIP FOR MILLER 6\n")
+	fmt.Printf("  --ofmt {format}    E.g. %%.18f, %%.0f, %%9.6e. Please use sprintf-style codes for\n")
+	fmt.Printf("                     floating-point nummbers. If not specified, default formatting is used.\n")
+	fmt.Printf("                     See also the fmtnum function within mlr put (mlr --help-all-functions);\n")
+	fmt.Printf("                     see also the format-values function.\n")
+}
 
 // ----------------------------------------------------------------
 // TBD FOR MILLER 6:
 
-//func helpSeparatorOptions() {
-//	fmt.Print(`Separator options:
-//  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'
-//  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
-//  --ps     --ips     --ops              Pair separators, e.g. equals sign
-//
-//  Notes about line endings:
-//  * Default line endings (--irs and --ors) are "auto" which means autodetect from
-//    the input file format, as long as the input file(s) have lines ending in either
-//    LF (also known as linefeed, '\\n', 0x0a, Unix-style) or CRLF (also known as
-//    carriage-return/linefeed pairs, '\\r\\n', 0x0d 0x0a, Windows style).
-//  * If both irs and ors are auto (which is the default) then LF input will lead to LF
-//    output and CRLF input will lead to CRLF output, regardless of the platform you're
-//    running on.
-//  * The line-ending autodetector triggers on the first line ending detected in the input
-//    stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
-//    LF-terminated file then autodetected line endings will be CRLF.
-//  * If you use --ors {something else} with (default or explicitly specified) --irs auto
-//    then line endings are autodetected on input and set to what you specify on output.
-//  * If you use --irs {something else} with (default or explicitly specified) --ors auto
-//    then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
-//
-//  Notes about all other separators:
-//  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
-//    do key-value pairs appear juxtaposed.
-//  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
-//    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
-//    a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs
-//    auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
-//  * OFS must be single-character for PPRINT format. This is because it is used
-//    with repetition for alignment; multi-character separators would make
-//    alignment impossible.
-//  * OPS may be multi-character for XTAB format, in which case alignment is
-//    disabled.
-//  * TSV is simply CSV using tab as field separator ("--fs tab").
-//  * FS/PS are ignored for markdown format; RS is used.
-//  * All FS and PS options are ignored for JSON format, since they are not relevant
-//    to the JSON format.
-//  * You can specify separators in any of the following ways, shown by example:
-//    - Type them out, quoting as necessary for shell escapes, e.g.
-//      "--fs '|' --ips :"
-//    - C-style escape sequences, e.g. "--rs '\\r\\n' --fs '\\t'".
-//    - To avoid backslashing, you can use any of the following names:
-//     ")
-////	lhmss_t* pmap = get_desc_to_chars_map()
-////	for (lhmsse_t* pe = pmap.phead; pe != nil; pe = pe.pnext) {
-// %s", pe.key)
-////	}
-//
-//  * Default separators by format:
-//      %-12s %-8s %-8s %s\n", "File format", "RS", "FS", "PS")
-////	lhmss_t* default_rses = get_default_rses()
-////	lhmss_t* default_fses = get_default_fses()
-////	lhmss_t* default_pses = get_default_pses()
-////	for (lhmsse_t* pe = default_rses.phead; pe != nil; pe = pe.pnext) {
-////		char* filefmt = pe.key
-////		char* rs = pe.value
-////		char* fs = lhmss_get(default_fses, filefmt)
-////		char* ps = lhmss_get(default_pses, filefmt)
-//      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps))
-////	}
-//}
+func helpSeparatorOptions() {
+	fmt.Println("THIS IS STILL TBD FOR MILLER 6")
+	//	fmt.Print(`Separator options:
+	//  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'
+	//  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
+	//  --ps     --ips     --ops              Pair separators, e.g. equals sign
+	//
+	//  Notes about line endings:
+	//  * Default line endings (--irs and --ors) are "auto" which means autodetect from
+	//    the input file format, as long as the input file(s) have lines ending in either
+	//    LF (also known as linefeed, '\\n', 0x0a, Unix-style) or CRLF (also known as
+	//    carriage-return/linefeed pairs, '\\r\\n', 0x0d 0x0a, Windows style).
+	//  * If both irs and ors are auto (which is the default) then LF input will lead to LF
+	//    output and CRLF input will lead to CRLF output, regardless of the platform you're
+	//    running on.
+	//  * The line-ending autodetector triggers on the first line ending detected in the input
+	//    stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
+	//    LF-terminated file then autodetected line endings will be CRLF.
+	//  * If you use --ors {something else} with (default or explicitly specified) --irs auto
+	//    then line endings are autodetected on input and set to what you specify on output.
+	//  * If you use --irs {something else} with (default or explicitly specified) --ors auto
+	//    then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+	//
+	//  Notes about all other separators:
+	//  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
+	//    do key-value pairs appear juxtaposed.
+	//  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
+	//    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
+	//    a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs
+	//    auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
+	//  * OFS must be single-character for PPRINT format. This is because it is used
+	//    with repetition for alignment; multi-character separators would make
+	//    alignment impossible.
+	//  * OPS may be multi-character for XTAB format, in which case alignment is
+	//    disabled.
+	//  * TSV is simply CSV using tab as field separator ("--fs tab").
+	//  * FS/PS are ignored for markdown format; RS is used.
+	//  * All FS and PS options are ignored for JSON format, since they are not relevant
+	//    to the JSON format.
+	//  * You can specify separators in any of the following ways, shown by example:
+	//    - Type them out, quoting as necessary for shell escapes, e.g.
+	//      "--fs '|' --ips :"
+	//    - C-style escape sequences, e.g. "--rs '\\r\\n' --fs '\\t'".
+	//    - To avoid backslashing, you can use any of the following names:
+	//     ")
+	////	lhmss_t* pmap = get_desc_to_chars_map()
+	////	for (lhmsse_t* pe = pmap.phead; pe != nil; pe = pe.pnext) {
+	// %s", pe.key)
+	////	}
+	//
+	//  * Default separators by format:
+	//      %-12s %-8s %-8s %s\n", "File format", "RS", "FS", "PS")
+	////	lhmss_t* default_rses = get_default_rses()
+	////	lhmss_t* default_fses = get_default_fses()
+	////	lhmss_t* default_pses = get_default_pses()
+	////	for (lhmsse_t* pe = default_rses.phead; pe != nil; pe = pe.pnext) {
+	////		char* filefmt = pe.key
+	////		char* rs = pe.value
+	////		char* fs = lhmss_get(default_fses, filefmt)
+	////		char* ps = lhmss_get(default_pses, filefmt)
+	//      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps))
+	////	}
+}
+
+// ================================================================
+// TODO: port the paragraphifier
+func listFunctions() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
+}
 
 // ----------------------------------------------------------------
+func listFunctionsVertically() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
+}
+
+// ----------------------------------------------------------------
+func usageFunctions() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+}
+
+// ----------------------------------------------------------------
+func helpForFunction(arg string) {
+	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout)
+}
+
+// ================================================================
+func listKeywords() {
+	cst.ListKeywords()
+}
+
+// ----------------------------------------------------------------
+func usageKeywords() {
+	cst.UsageKeywords()
+}
+
+// ----------------------------------------------------------------
+func helpForKeyword(arg string) {
+	cst.UsageForKeyword(arg)
+}
+
+// ================================================================
 func listVerbsAsParagraph() {
 	transformers.ListVerbNamesAsParagraph()
 }
@@ -637,29 +698,18 @@ func listVerbNamesAsParagraph() {
 }
 
 // ----------------------------------------------------------------
-// TODO: port the paragraphifier
-func listFunctions() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
-	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
+func helpForVerb(arg string) {
+	transformerSetup := transformers.LookUp(arg)
+	if transformerSetup != nil {
+		transformerSetup.UsageFunc(os.Stdout, true, 0)
+	} else {
+		fmt.Printf(
+			"mlr: verb \"%s\" not found. Please use \"mlr help list-verbs\" for a list.\n",
+			arg)
+	}
 }
 
 // ----------------------------------------------------------------
-func listFunctionsVertically() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
-	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
-}
-
-// ----------------------------------------------------------------
-func listKeywords() {
-	cst.ListKeywords()
-}
-
-// ----------------------------------------------------------------
-func usageFunctions() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
-}
-
-// ----------------------------------------------------------------
-func usageKeywords() {
-	cst.UsageKeywords()
+func usageVerbs() {
+	transformers.UsageVerbs()
 }

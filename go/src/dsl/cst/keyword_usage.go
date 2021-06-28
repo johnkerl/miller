@@ -81,22 +81,19 @@ func UsageKeywords() {
 	}
 }
 
-// TODO:
-//	} else {
-//
-//		int found = FALSE;
-//		for (int i = 0; i < KEYWORD_USAGE_TABLE_SIZE; i++) {
-//			if (streq(keyword, KEYWORD_USAGE_TABLE[i].name)) {
-//				KEYWORD_USAGE_TABLE[i].pusage_func(o);
-//				found = TRUE;
-//				break;
-//			}
-//		}
-//		if (!found) {
-//			fmt.Fprintf(o, "%s: unrecognized keyword \"%s\".\n", MLR_GLOBALS.bargv0, keyword);
-//		}
-//	}
-//}
+func UsageForKeyword(name string) {
+	found := false
+	for _, entry := range KEYWORD_USAGE_TABLE {
+		if entry.name == name {
+			entry.usageFunc()
+			found = true
+			break
+		}
+	}
+	if !found {
+		fmt.Printf("mlr: unrecognized keyword \"%s\".\n", name)
+	}
+}
 
 // ----------------------------------------------------------------
 func ListKeywords() {
@@ -192,7 +189,7 @@ in curly braces.`)
 }
 
 func emitKeywordUsage() {
-	fmt.Println(
+	fmt.Printf(
 		`emit: inserts an out-of-stream variable into the output record stream. Hashmap
 indices present in the data but not slotted by emit arguments are not output.
 
@@ -221,11 +218,12 @@ etc., to control the format of the output if the output is redirected. See also 
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
 
-Please see %s://johnkerl.org/miller/doc for more information.`, lib.DOC_URL)
+Please see %s://johnkerl.org/miller/doc for more information.
+`, lib.DOC_URL)
 }
 
 func emitfKeywordUsage() {
-	fmt.Println(
+	fmt.Printf(
 		`emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
 output record stream.
 
@@ -251,11 +249,12 @@ etc., to control the format of the output if the output is redirected. See also 
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
 
-Please see %s://johnkerl.org/miller/doc for more information.`, lib.DOC_URL)
+Please see %s://johnkerl.org/miller/doc for more information.
+`, lib.DOC_URL)
 }
 
 func emitpKeywordUsage() {
-	fmt.Println(
+	fmt.Printf(
 		`emitp: inserts an out-of-stream variable into the output record stream.
 Hashmap indices present in the data but not slotted by emitp arguments are
 output concatenated with ":".
@@ -283,7 +282,8 @@ etc., to control the format of the output if the output is redirected. See also 
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
 
-Please see %s://johnkerl.org/miller/doc for more information.`, lib.DOC_URL)
+Please see %s://johnkerl.org/miller/doc for more information.
+`, lib.DOC_URL)
 }
 
 func endKeywordUsage() {

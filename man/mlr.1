@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: mkman.rb
-.\"      Date: 2021-03-23
+.\" Generator: ./mkman.rb
+.\"      Date: 2021-06-28
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-03-23" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-06-28" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +38,7 @@ on integer-indexed fields: if the natural data structure for the latter is the
 array, then Miller's natural data structure is the insertion-ordered hash map.
 This encompasses a variety of data formats, including but not limited to the
 familiar CSV, TSV, and JSON.  (Miller can handle positionally-indexed data as
-a special case.) This manpage documents Miller v5.10.1.
+a special case.) This manpage documents Miller v5.10.2-dev.
 .SH "EXAMPLES"
 .sp
 
@@ -169,12 +169,12 @@ output separator to the given value.
 .\}
 .nf
  altkv bar bootstrap cat check clean-whitespace count count-distinct
- count-similar cut decimate fill-down filter format-values fraction grep
- group-by group-like having-fields head histogram join label least-frequent
- merge-fields most-frequent nest nothing put regularize remove-empty-columns
- rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle
- skip-trivial-records sort sort-within-records stats1 stats2 step tac tail tee
- top uniq unsparsify
+ count-similar cut decimate fill-down fill-empty filter format-values fraction
+ grep group-by group-like having-fields head histogram join label
+ least-frequent merge-fields most-frequent nest nothing put regularize
+ remove-empty-columns rename reorder repeat reshape sample sec2gmt sec2gmtdate
+ seqgen shuffle skip-trivial-records sort sort-within-records stats1 stats2
+ step tac tail tee top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -427,6 +427,12 @@ output only.
   --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
                      of input files. Tip: combine with "label" to recreate
                      missing headers.
+  --no-implicit-csv-header Do not use --implicit-csv-header. This is the default
+                     anyway -- the main use is for the flags to 'mlr join' if you have
+                     main file(s) which are headerless but you want to join in on
+                     a file which does have a CSV header. Then you could use
+                     'mlr --csv --implicit-csv-header join --no-implicit-csv-header
+                     -l your-join-in-with-header.csv ... your-headerless.csv'
   --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,
                      fill remaining keys with empty string. If a data line has more
                      fields than the header line, use integer field labels as in
@@ -752,12 +758,31 @@ Passes through one of every n records, optionally by category.
 .\}
 .nf
 Usage: mlr fill-down [options]
--f {a,b,c}          Field names for fill-down
--a|--only-if-absent Field names for fill-down
 If a given record has a missing value for a given field, fill that from
 the corresponding value from a previous record, if any.
 By default, a 'missing' field either is absent, or has the empty-string value.
 With -a, a field is 'missing' only if it is absent.
+
+Options:
+ --all Operate on all fields in the input.
+ -a|--only-if-absent If a given record has a missing value for a given field,
+     fill that from the corresponding value from a previous record, if any.
+     By default, a 'missing' field either is absent, or has the empty-string value.
+     With -a, a field is 'missing' only if it is absent.
+ -f  Field names for fill-down.
+ -h|--help Show this message.
+.fi
+.if n \{\
+.RE
+.SS "fill-empty"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr fill-empty
+Fills empty-string fields with specified fill-value.
+Options:
+-v {string} Fill-value: defaults to "N/A"
 .fi
 .if n \{\
 .RE
@@ -1048,13 +1073,19 @@ Options:
                as here, it must be specified there as well as here.
 File-format options default to those for the right file names on the Miller
 argument list, but may be overridden for the left file as follows. Please see
-the main "mlr --help" for more information on syntax for these arguments.
+the main "mlr --help" for more information on syntax for these arguments:
   -i {one of csv,dkvp,nidx,pprint,xtab}
   --irs {record-separator character}
   --ifs {field-separator character}
   --ips {pair-separator character}
   --repifs
   --repips
+  --implicit-csv-header
+  --no-implicit-csv-header
+For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will
+be specified CSV as well unless you override with 'mlr --csv ... join --ijson -l foo' etc.
+Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be
+expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.
 Please use "mlr --usage-separator-options" for information on specifying separators.
 Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
 including examples.
@@ -1388,9 +1419,15 @@ mlr rename -r '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
 .\}
 .nf
 Usage: mlr reorder [options]
--f {a,b,c}   Field names to reorder.
--e           Put specified field names at record end: default is to put
-             them at record start.
+-f {a,b,c} Field names to reorder.
+-e         Put specified field names at record end: default is to put
+           them at record start.
+-b {x}     Put field names specified with -f before field name specified by {x},
+           if any. If {x} isn't present in a given record, the specified fields
+           will not be moved.
+-a {x}     Put field names specified with -f after field name specified by {x},
+           if any. If {x} isn't present in a given record, the specified fields
+           will not be moved.
 Examples:
 mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
 mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".

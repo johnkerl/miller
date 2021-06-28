@@ -51,6 +51,66 @@ a special case.) This manpage documents Miller v6.0.0-dev.
 .RS 0
 .\}
 .nf
+CSV/CSV-lite: comma-separated values with separate header line
+TSV: same but with tabs in places of commas
++---------------------+
+| apple,bat,cog       |
+| 1,2,3               | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+| 4,5,6               | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
++---------------------+
+
+JSON (sequence or array of objects):
++---------------------+
+| {                   |
+|  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+|  "bat": 2,          |
+|  "cog": 3           |
+| }                   |
+| {                   |
+|   "dish": {         | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
+|     "egg": 7,       |
+|     "flint": 8      |
+|   },                |
+|   "garlic": ""      |
+| }                   |
++---------------------+
+
+PPRINT: pretty-printed tabular
++---------------------+
+| apple bat cog       |
+| 1     2   3         | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+| 4     5   6         | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
++---------------------+
+
+Markdown tabular (supported for output only):
++-----------------------+
+| | apple | bat | cog | |
+| | ---   | --- | --- | |
+| | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
+| | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
++-----------------------+
+
+XTAB: pretty-printed transposed tabular
++---------------------+
+| apple 1             | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+| bat   2             |
+| cog   3             |
+|                     |
+| dish 7              | Record 2: "dish" => "7", "egg" => "8"
+| egg  8              |
++---------------------+
+
+DKVP: delimited key-value pairs (Miller default format)
++---------------------+
+| apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+| dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
++---------------------+
+
+NIDX: implicitly numerically indexed (Unix-toolkit style)
++---------------------+
+| the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
+| fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
++---------------------+
 .fi
 .if n \{\
 .RE
@@ -72,19 +132,26 @@ Type 'mlr help {topic}' for any of the following:
   mlr help comments-in-data
   mlr help compressed-data
   mlr help csv-options
-  mlr help data-formats
   mlr help data-format-options
+  mlr help data-formats
+  mlr help double-quoting
   mlr help format-conversion
-  mlr help misc
-  mlr help mlrrc
-  mlr help output-colorizations
+  mlr help function
+  mlr help keyword
   mlr help list-functions
   mlr help list-functions-vertically
   mlr help list-keywords
   mlr help list-verbs
   mlr help list-verbs-vertically
+  mlr help misc
+  mlr help mlrrc
+  mlr help number-formatting
+  mlr help output-colorizations
+  mlr help separator-options
   mlr help usage-functions
   mlr help usage-keywords
+  mlr help usage-verbs
+  mlr help verb
 Shorthands:
   mlr -l = mlr help list-verbs
   mlr -L = mlr help list-verbs-vertically
@@ -116,6 +183,39 @@ unsparsify
 .RS 0
 .\}
 .nf
+Type 'mlr help {topic}' for any of the following:
+  mlr help topics
+  mlr help auxents
+  mlr help comments-in-data
+  mlr help compressed-data
+  mlr help csv-options
+  mlr help data-format-options
+  mlr help data-formats
+  mlr help double-quoting
+  mlr help format-conversion
+  mlr help function
+  mlr help keyword
+  mlr help list-functions
+  mlr help list-functions-vertically
+  mlr help list-keywords
+  mlr help list-verbs
+  mlr help list-verbs-vertically
+  mlr help misc
+  mlr help mlrrc
+  mlr help number-formatting
+  mlr help output-colorizations
+  mlr help separator-options
+  mlr help usage-functions
+  mlr help usage-keywords
+  mlr help usage-verbs
+  mlr help verb
+Shorthands:
+  mlr -l = mlr help list-verbs
+  mlr -L = mlr help list-verbs-vertically
+  mlr -f = mlr help usage-functions
+  mlr -F = mlr help list-functions
+  mlr -k = mlr help usage-keywords
+  mlr -K = mlr help list-keywords
 .fi
 .if n \{\
 .RE
@@ -217,6 +317,17 @@ Notes:
 .RS 0
 .\}
 .nf
+As keystroke-savers for format-conversion you may use the following:
+--c2t --c2d --c2n --c2j --c2x --c2p --c2m
+--t2c       --t2d --t2n --t2j --t2x --t2p --t2m
+--d2c --d2t       --d2n --d2j --d2x --d2p --d2m
+--n2c --n2t --n2d       --n2j --n2x --n2p --n2m
+--j2c --j2t --j2d --j2n       --j2x --j2p --j2m
+--x2c --x2t --x2d --x2n --x2j       --x2p --x2m
+--p2c --p2t --p2d --p2n --p2j --p2x       --p2m
+The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
+PPRINT, and markdown, respectively. Note that markdown format is available for
+output only.
 .fi
 .if n \{\
 .RE
@@ -263,32 +374,8 @@ decisions that might have been made based on the file suffix. Also,
 .RS 0
 .\}
 .nf
-Type 'mlr help {topic}' for any of the following:
-  mlr help topics
-  mlr help auxents
-  mlr help comments-in-data
-  mlr help compressed-data
-  mlr help csv-options
-  mlr help data-formats
-  mlr help data-format-options
-  mlr help format-conversion
-  mlr help misc
-  mlr help mlrrc
-  mlr help output-colorizations
-  mlr help list-functions
-  mlr help list-functions-vertically
-  mlr help list-keywords
-  mlr help list-verbs
-  mlr help list-verbs-vertically
-  mlr help usage-functions
-  mlr help usage-keywords
-Shorthands:
-  mlr -l = mlr help list-verbs
-  mlr -L = mlr help list-verbs-vertically
-  mlr -f = mlr help usage-functions
-  mlr -F = mlr help list-functions
-  mlr -k = mlr help usage-keywords
-  mlr -K = mlr help list-keywords
+THIS IS STILL TBD FOR MILLER 6
+
 .fi
 .if n \{\
 .RE
@@ -320,32 +407,19 @@ Shorthands:
 .RS 0
 .\}
 .nf
-Type 'mlr help {topic}' for any of the following:
-  mlr help topics
-  mlr help auxents
-  mlr help comments-in-data
-  mlr help compressed-data
-  mlr help csv-options
-  mlr help data-formats
-  mlr help data-format-options
-  mlr help format-conversion
-  mlr help misc
-  mlr help mlrrc
-  mlr help output-colorizations
-  mlr help list-functions
-  mlr help list-functions-vertically
-  mlr help list-keywords
-  mlr help list-verbs
-  mlr help list-verbs-vertically
-  mlr help usage-functions
-  mlr help usage-keywords
-Shorthands:
-  mlr -l = mlr help list-verbs
-  mlr -L = mlr help list-verbs-vertically
-  mlr -f = mlr help usage-functions
-  mlr -F = mlr help list-functions
-  mlr -k = mlr help usage-keywords
-  mlr -K = mlr help list-keywords
+THIS IS STILL WIP FOR MILLER 6
+  --quote-all        Wrap all fields in double quotes
+  --quote-none       Do not wrap any fields in double quotes, even if they have
+                     OFS or ORS in them
+  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
+                     in them (default)
+  --quote-numeric    Wrap fields in double quotes only if they have numbers
+                     in them
+  --quote-original   Wrap fields in double quotes if and only if they were
+                     quoted on input. This isn't sticky for computed fields:
+                     e.g. if fields a and b were quoted on input and you do
+                     "put '$c = $a . $b'" then field c won't inherit a or b's
+                     was-quoted-on-input flag.
 .fi
 .if n \{\
 .RE
@@ -360,19 +434,26 @@ Type 'mlr help {topic}' for any of the following:
   mlr help comments-in-data
   mlr help compressed-data
   mlr help csv-options
-  mlr help data-formats
   mlr help data-format-options
+  mlr help data-formats
+  mlr help double-quoting
   mlr help format-conversion
-  mlr help misc
-  mlr help mlrrc
-  mlr help output-colorizations
+  mlr help function
+  mlr help keyword
   mlr help list-functions
   mlr help list-functions-vertically
   mlr help list-keywords
   mlr help list-verbs
   mlr help list-verbs-vertically
+  mlr help misc
+  mlr help mlrrc
+  mlr help number-formatting
+  mlr help output-colorizations
+  mlr help separator-options
   mlr help usage-functions
   mlr help usage-keywords
+  mlr help usage-verbs
+  mlr help verb
 Shorthands:
   mlr -l = mlr help list-verbs
   mlr -L = mlr help list-verbs-vertically
@@ -1830,6 +1911,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=1) Logical negation.
 .fi
 .if n \{\
 .RE
@@ -1838,6 +1920,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
 .fi
 .if n \{\
 .RE
@@ -1846,6 +1929,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
 .fi
 .if n \{\
 .RE
@@ -1854,6 +1938,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
 .fi
 .if n \{\
 .RE
@@ -1862,6 +1947,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Bitwise AND.
 .fi
 .if n \{\
 .RE
@@ -1870,6 +1956,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) Logical AND.
 .fi
 .if n \{\
 .RE
@@ -1878,6 +1965,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
 .fi
 .if n \{\
 .RE
@@ -1886,6 +1974,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
 .fi
 .if n \{\
 .RE
@@ -1894,6 +1983,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
 .fi
 .if n \{\
 .RE
@@ -1902,6 +1992,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
 .fi
 .if n \{\
 .RE
@@ -1910,6 +2001,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=2) String concatenation.
 .fi
 .if n \{\
 .RE
@@ -1918,6 +2010,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
 .fi
 .if n \{\
 .RE
@@ -1926,6 +2019,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
 .fi
 .if n \{\
 .RE
@@ -1934,6 +2028,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
 .fi
 .if n \{\
 .RE
@@ -1942,6 +2037,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Integer division; not pythonic.
 .fi
 .if n \{\
 .RE
@@ -1950,6 +2046,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Division. Integer / integer is floating-point.
 .fi
 .if n \{\
 .RE
@@ -1958,6 +2055,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
 .fi
 .if n \{\
 .RE
@@ -1966,6 +2064,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
 .fi
 .if n \{\
 .RE
@@ -1974,6 +2073,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Bitwise left-shift.
 .fi
 .if n \{\
 .RE
@@ -1982,6 +2082,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
 .fi
 .if n \{\
 .RE
@@ -1990,6 +2091,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
 .fi
 .if n \{\
 .RE
@@ -1998,6 +2100,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
 .fi
 .if n \{\
 .RE
@@ -2006,6 +2109,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
 .fi
 .if n \{\
 .RE
@@ -2014,6 +2118,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
 .fi
 .if n \{\
 .RE
@@ -2022,6 +2127,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Bitwise signed right-shift.
 .fi
 .if n \{\
 .RE
@@ -2030,6 +2136,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Bitwise unsigned right-shift.
 .fi
 .if n \{\
 .RE
@@ -2038,6 +2145,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=3) Standard ternary operator.
 .fi
 .if n \{\
 .RE
@@ -2046,6 +2154,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
 .fi
 .if n \{\
 .RE
@@ -2054,6 +2163,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
 .fi
 .if n \{\
 .RE
@@ -2062,6 +2172,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Bitwise XOR.
 .fi
 .if n \{\
 .RE
@@ -2070,6 +2181,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) Logical XOR.
 .fi
 .if n \{\
 .RE
@@ -2078,6 +2190,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Absolute value.
 .fi
 .if n \{\
 .RE
@@ -2086,6 +2199,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Inverse trigonometric cosine.
 .fi
 .if n \{\
 .RE
@@ -2094,6 +2208,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Inverse hyperbolic cosine.
 .fi
 .if n \{\
 .RE
@@ -2102,6 +2217,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
 .fi
 .if n \{\
 .RE
@@ -2110,6 +2226,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=1) Walks through a nested map/array, converting any map with consecutive keys
+"1", "2", ... into an array. Useful to wrap the output of unflatten.
 .fi
 .if n \{\
 .RE
@@ -2118,6 +2236,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Inverse trigonometric sine.
 .fi
 .if n \{\
 .RE
@@ -2126,6 +2245,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Inverse hyperbolic sine.
 .fi
 .if n \{\
 .RE
@@ -2134,6 +2254,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_absent on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2142,6 +2264,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_array on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2150,6 +2274,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_bool on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2158,6 +2284,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2166,6 +2294,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_empty on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2174,6 +2304,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2182,6 +2314,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_error on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2190,6 +2324,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_float on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2198,6 +2334,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_int on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2206,6 +2344,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_map on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2214,6 +2354,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2222,6 +2364,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_not_array on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2230,6 +2374,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2238,6 +2384,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_not_map on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2246,6 +2394,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_not_null on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2254,6 +2404,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_null on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2262,6 +2414,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_numeric on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2270,6 +2424,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_present on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2278,6 +2434,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Aborts with an error if is_string on the argument returns false,
+else returns its argument.
 .fi
 .if n \{\
 .RE
@@ -2286,6 +2444,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) One-argument arctangent.
 .fi
 .if n \{\
 .RE
@@ -2294,6 +2453,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=2) Two-argument arctangent.
 .fi
 .if n \{\
 .RE
@@ -2302,6 +2462,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Inverse hyperbolic tangent.
 .fi
 .if n \{\
 .RE
@@ -2310,6 +2471,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=1) Count of 1-bits.
 .fi
 .if n \{\
 .RE
@@ -2318,6 +2480,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=1) Convert int/float/bool/string to boolean.
 .fi
 .if n \{\
 .RE
@@ -2326,6 +2489,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=1) Convert string's first character to uppercase.
 .fi
 .if n \{\
 .RE
@@ -2334,6 +2498,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Cube root.
 .fi
 .if n \{\
 .RE
@@ -2342,6 +2507,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Ceiling: nearest integer at or above.
 .fi
 .if n \{\
 .RE
@@ -2350,6 +2516,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=1) Same as collapse_whitespace and strip.
 .fi
 .if n \{\
 .RE
@@ -2358,6 +2525,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=1) Strip repeated whitespace from string.
 .fi
 .if n \{\
 .RE
@@ -2366,6 +2534,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Trigonometric cosine.
 .fi
 .if n \{\
 .RE
@@ -2374,6 +2543,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Hyperbolic cosine.
 .fi
 .if n \{\
 .RE
@@ -2382,6 +2552,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=1) Prints maximum depth of map/array. Scalars have depth 0.
 .fi
 .if n \{\
 .RE
@@ -2390,6 +2561,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
 .fi
 .if n \{\
 .RE
@@ -2398,6 +2570,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
 .fi
 .if n \{\
 .RE
@@ -2406,6 +2579,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Error function.
 .fi
 .if n \{\
 .RE
@@ -2414,6 +2588,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Complementary error function.
 .fi
 .if n \{\
 .RE
@@ -2422,6 +2597,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Exponential function e**x.
 .fi
 .if n \{\
 .RE
@@ -2430,6 +2606,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) e**x - 1.
 .fi
 .if n \{\
 .RE
@@ -2438,6 +2615,11 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=3) Flattens multi-level maps to single-level ones. Examples:
+flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
+Useful for nested JSON-like structures for non-JSON file formats like CSV.
 .fi
 .if n \{\
 .RE
@@ -2446,6 +2628,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=1) Convert int/float/bool/string to float.
 .fi
 .if n \{\
 .RE
@@ -2454,6 +2637,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Floor: nearest integer at or below.
 .fi
 .if n \{\
 .RE
@@ -2462,6 +2646,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=2) Convert int/float/bool to string using
+printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
 .fi
 .if n \{\
 .RE
@@ -2470,6 +2656,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
 .fi
 .if n \{\
 .RE
@@ -2478,6 +2665,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
 .fi
 .if n \{\
 .RE
@@ -2486,6 +2674,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=1) Returns array of keys of map or array
 .fi
 .if n \{\
 .RE
@@ -2494,6 +2683,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
 .fi
 .if n \{\
 .RE
@@ -2502,6 +2692,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
 .fi
 .if n \{\
 .RE
@@ -2510,6 +2701,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
 .fi
 .if n \{\
 .RE
@@ -2518,6 +2710,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+\(cqhaskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
+Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
 .fi
 .if n \{\
 .RE
@@ -2526,6 +2721,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=1) Convert int to hex string, e.g. 255 to "0xff".
 .fi
 .if n \{\
 .RE
@@ -2534,6 +2730,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000
 .fi
 .if n \{\
 .RE
@@ -2542,6 +2739,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Recovers integer seconds as in hms2sec("01:23:20") = 5000
 .fi
 .if n \{\
 .RE
@@ -2550,6 +2748,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=system #args=0) Returns the hostname as a string.
 .fi
 .if n \{\
 .RE
@@ -2558,6 +2757,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=1) Convert int/float/bool/string to int.
 .fi
 .if n \{\
 .RE
@@ -2566,6 +2766,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Inverse of normal cumulative distribution function.
+Note that invqorm(urand()) is normally distributed.
 .fi
 .if n \{\
 .RE
@@ -2574,6 +2776,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) False if field is present in input, true otherwise
 .fi
 .if n \{\
 .RE
@@ -2582,6 +2785,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if argument is an array.
 .fi
 .if n \{\
 .RE
@@ -2590,6 +2794,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if field is present with boolean value. Synonymous with is_boolean.
 .fi
 .if n \{\
 .RE
@@ -2598,6 +2803,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if field is present with boolean value. Synonymous with is_bool.
 .fi
 .if n \{\
 .RE
@@ -2606,6 +2812,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if field is present in input with empty string value, false otherwise.
 .fi
 .if n \{\
 .RE
@@ -2614,6 +2821,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if argument is a map which is empty.
 .fi
 .if n \{\
 .RE
@@ -2622,6 +2830,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if if argument is an error, such as taking string length of an integer.
 .fi
 .if n \{\
 .RE
@@ -2630,6 +2839,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if field is present with value inferred to be float
 .fi
 .if n \{\
 .RE
@@ -2638,6 +2848,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if field is present with value inferred to be int
 .fi
 .if n \{\
 .RE
@@ -2646,6 +2857,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if argument is a map.
 .fi
 .if n \{\
 .RE
@@ -2654,6 +2866,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if argument is a map which is non-empty.
 .fi
 .if n \{\
 .RE
@@ -2662,6 +2875,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if argument is not an array.
 .fi
 .if n \{\
 .RE
@@ -2670,6 +2884,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) False if field is present in input with empty value, true otherwise
 .fi
 .if n \{\
 .RE
@@ -2678,6 +2893,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if argument is not a map.
 .fi
 .if n \{\
 .RE
@@ -2686,6 +2902,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) False if argument is null (empty or absent), true otherwise.
 .fi
 .if n \{\
 .RE
@@ -2694,6 +2911,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if argument is null (empty or absent), false otherwise.
 .fi
 .if n \{\
 .RE
@@ -2702,6 +2920,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if field is present with value inferred to be int or float
 .fi
 .if n \{\
 .RE
@@ -2710,6 +2929,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if field is present in input, false otherwise.
 .fi
 .if n \{\
 .RE
@@ -2718,6 +2938,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) True if field is present with string (including empty-string) value
 .fi
 .if n \{\
 .RE
@@ -2726,6 +2947,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=2) Makes string from map/array keys. Examples:
+joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
+joink([1,2,3], ",") = "1,2,3".
 .fi
 .if n \{\
 .RE
@@ -2734,6 +2958,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=3) Makes string from map/array key-value pairs. Examples:
+joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
+joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 .fi
 .if n \{\
 .RE
@@ -2742,6 +2969,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=2) Makes string from map/array values.
+joinv([3,4,5], ",") = "3,4,5"
+joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 .fi
 .if n \{\
 .RE
@@ -2750,6 +2980,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=1) Converts value from JSON-formatted string.
 .fi
 .if n \{\
 .RE
@@ -2758,6 +2989,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
+With optional second boolean argument set to true, produces multiline output.
 .fi
 .if n \{\
 .RE
@@ -2766,6 +2999,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=1) Counts total number of terminal values in map/array. For single-level
+map/array, same as length.
 .fi
 .if n \{\
 .RE
@@ -2774,6 +3009,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
 .fi
 .if n \{\
 .RE
@@ -2782,6 +3018,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Natural (base-e) logarithm.
 .fi
 .if n \{\
 .RE
@@ -2790,6 +3027,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Base-10 logarithm.
 .fi
 .if n \{\
 .RE
@@ -2798,6 +3036,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) log(1-x).
 .fi
 .if n \{\
 .RE
@@ -2806,6 +3045,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=3)  Given m and b from logistic regression, compute fit:
+$yhat=logifit($x,$m,$b).
 .fi
 .if n \{\
 .RE
@@ -2814,6 +3055,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=1) Strip leading whitespace from string.
 .fi
 .if n \{\
 .RE
@@ -2822,6 +3064,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=3) a + b mod m (integers)
 .fi
 .if n \{\
 .RE
@@ -2830,6 +3073,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
+With 2 or more, returns copy of arg 1 with all keys from any of remaining
+argument maps removed.
 .fi
 .if n \{\
 .RE
@@ -2838,6 +3084,10 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
+Remaining arguments can be strings or arrays of string.
+E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
+and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
 .fi
 .if n \{\
 .RE
@@ -2846,6 +3096,10 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=variadic) Returns a map with only keys from remaining arguments set.
+Remaining arguments can be strings or arrays of string.
+E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
+and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
 .fi
 .if n \{\
 .RE
@@ -2854,6 +3108,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with
+key-value pairs from all arguments. Rightmost collisions win, e.g.
+\(cqmapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 .fi
 .if n \{\
 .RE
@@ -2862,6 +3119,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=variadic) Max of n numbers; null loses.
 .fi
 .if n \{\
 .RE
@@ -2870,6 +3128,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=hashing #args=1) MD5 hash.
 .fi
 .if n \{\
 .RE
@@ -2878,6 +3137,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=3) a ** b mod m (integers)
 .fi
 .if n \{\
 .RE
@@ -2886,6 +3146,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=variadic) Min of n numbers; null loses.
 .fi
 .if n \{\
 .RE
@@ -2894,6 +3155,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=3) a * b mod m (integers)
 .fi
 .if n \{\
 .RE
@@ -2902,6 +3164,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=3) a - b mod m (integers)
 .fi
 .if n \{\
 .RE
@@ -2910,6 +3173,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=system #args=0) Returns the operating-system name as a string.
 .fi
 .if n \{\
 .RE
@@ -2918,6 +3182,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
 .fi
 .if n \{\
 .RE
@@ -2926,6 +3191,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Normal cumulative distribution function.
 .fi
 .if n \{\
 .RE
@@ -2934,6 +3200,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=2) Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
 .fi
 .if n \{\
 .RE
@@ -2942,6 +3209,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=3) Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
 .fi
 .if n \{\
 .RE
@@ -2950,6 +3218,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Round to nearest integer.
 .fi
 .if n \{\
 .RE
@@ -2958,6 +3227,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is
+the same as round($x/$m)*$m.
 .fi
 .if n \{\
 .RE
@@ -2966,6 +3237,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=1) Strip trailing whitespace from string.
 .fi
 .if n \{\
 .RE
@@ -2974,6 +3246,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
 .fi
 .if n \{\
 .RE
@@ -2982,6 +3255,10 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1,2) Formats seconds since epoch (integer part)
+as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
+Leaves non-numbers as-is. With second integer argument n, includes n decimal places
+for the seconds part
 .fi
 .if n \{\
 .RE
@@ -2990,6 +3267,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Formats seconds since epoch (integer part)
+as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
+Leaves non-numbers as-is.
 .fi
 .if n \{\
 .RE
@@ -2998,6 +3278,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
 .fi
 .if n \{\
 .RE
@@ -3006,6 +3287,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1)  +1, 0, -1 for positive, zero, negative input respectively.
 .fi
 .if n \{\
 .RE
@@ -3014,6 +3296,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=hashing #args=1) SHA1 hash.
 .fi
 .if n \{\
 .RE
@@ -3022,6 +3305,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=hashing #args=1) SHA256 hash.
 .fi
 .if n \{\
 .RE
@@ -3030,6 +3314,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=hashing #args=1) SHA512 hash.
 .fi
 .if n \{\
 .RE
@@ -3038,6 +3323,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Trigonometric sine.
 .fi
 .if n \{\
 .RE
@@ -3046,6 +3332,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Hyperbolic sine.
 .fi
 .if n \{\
 .RE
@@ -3054,6 +3341,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=2) Splits string into array with type inference. Example:
+splita("3,4,5", ",") = [3,4,5]
 .fi
 .if n \{\
 .RE
@@ -3062,6 +3351,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=2) Splits string into array without type inference. Example:
+splita("3,4,5", ",") = ["3","4","5"]
 .fi
 .if n \{\
 .RE
@@ -3070,6 +3361,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=3) Splits string by separators into map with type inference. Example:
+splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 .fi
 .if n \{\
 .RE
@@ -3078,6 +3371,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=3) Splits string by separators into map without type inference (keys and
+values are strings). Example:
+splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 .fi
 .if n \{\
 .RE
@@ -3086,6 +3382,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example:
+splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 .fi
 .if n \{\
 .RE
@@ -3094,6 +3392,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=2) Splits string by separator into integer-indexed map without type
+inference (values are strings). Example:
+splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 .fi
 .if n \{\
 .RE
@@ -3102,6 +3403,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Square root.
 .fi
 .if n \{\
 .RE
@@ -3110,6 +3412,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=3) Like sub but does no regexing. No characters are special.
 .fi
 .if n \{\
 .RE
@@ -3118,6 +3421,13 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.
+	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
+	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
+	Format strings are as in the C library (please see "man strftime" on your system),
+	with the Miller-specific addition of "%1S" through "%9S" which format the seconds
+	with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
+	See also strftime_local.
 .fi
 .if n \{\
 .RE
@@ -3126,6 +3436,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
 .fi
 .if n \{\
 .RE
@@ -3134,6 +3445,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=1) Strip leading and trailing whitespace from string.
 .fi
 .if n \{\
 .RE
@@ -3142,6 +3454,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=1) String length.
 .fi
 .if n \{\
 .RE
@@ -3150,6 +3463,10 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch,
+	e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
+	and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
+	See also strptime_local.
 .fi
 .if n \{\
 .RE
@@ -3158,6 +3475,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace once).
 .fi
 .if n \{\
 .RE
@@ -3166,6 +3484,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
+with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
+Arrays are new in Miller 6; the substr function is older.
 .fi
 .if n \{\
 .RE
@@ -3174,6 +3495,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
+inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
 .fi
 .if n \{\
 .RE
@@ -3182,6 +3505,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
+inclusive. Negative indices -len .. -1 alias to 1 .. len.
 .fi
 .if n \{\
 .RE
@@ -3190,6 +3515,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
 .fi
 .if n \{\
 .RE
@@ -3198,6 +3524,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=0) help string will go here
 .fi
 .if n \{\
 .RE
@@ -3206,6 +3533,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=0) help string will go here
 .fi
 .if n \{\
 .RE
@@ -3214,6 +3542,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Trigonometric tangent.
 .fi
 .if n \{\
 .RE
@@ -3222,6 +3551,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=1) Hyperbolic tangent.
 .fi
 .if n \{\
 .RE
@@ -3230,6 +3560,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=1) Convert string to lowercase.
 .fi
 .if n \{\
 .RE
@@ -3238,6 +3569,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=1) Convert string to uppercase.
 .fi
 .if n \{\
 .RE
@@ -3246,6 +3578,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=string #args=2) Truncates string first argument to max length of int second argument.
 .fi
 .if n \{\
 .RE
@@ -3254,6 +3587,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
 .fi
 .if n \{\
 .RE
@@ -3262,6 +3596,10 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=maps/arrays #args=2) Reverses flatten. Example:
+unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
+Useful for nested JSON-like structures for non-JSON file formats like CSV.
+See also arrayify.
 .fi
 .if n \{\
 .RE
@@ -3270,6 +3608,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=time #args=0) help string will go here
 .fi
 .if n \{\
 .RE
@@ -3278,6 +3617,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
+Int-valued example: '$n=floor(20+urand()*11)'.
 .fi
 .if n \{\
 .RE
@@ -3286,6 +3627,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=0) Integer uniformly distributed 0 and 2**32-1 inclusive.
 .fi
 .if n \{\
 .RE
@@ -3294,6 +3636,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=2) Integer uniformly distributed between inclusive integer endpoints.
 .fi
 .if n \{\
 .RE
@@ -3302,6 +3645,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
 .fi
 .if n \{\
 .RE
@@ -3310,6 +3654,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=system #args=0) Returns the Miller version as a string.
 .fi
 .if n \{\
 .RE
@@ -3318,6 +3663,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=2) Bitwise OR.
 .fi
 .if n \{\
 .RE
@@ -3326,6 +3672,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=boolean #args=2) Logical OR.
 .fi
 .if n \{\
 .RE
@@ -3334,6 +3681,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
+regex-match operator: try '$y = ~$x'.
 .fi
 .if n \{\
 .RE
@@ -3342,6 +3691,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+No exact match for "Please use "mlr --help-function {function name}" for function-specific help.". Inexact matches:
+None found.
 .fi
 .if n \{\
 .RE
@@ -3353,6 +3704,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+all: used in "emit", "emitp", and "unset" as a synonym for @*
 .fi
 .if n \{\
 .RE
@@ -3361,6 +3713,10 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+begin: defines a block of statements to be executed before input records
+are ingested. The body statements must be wrapped in curly braces.
+
+  Example: 'begin { @count = 0 }'
 .fi
 .if n \{\
 .RE
@@ -3369,6 +3725,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+bool: declares a boolean local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'bool b = 1' is an error.
 .fi
 .if n \{\
 .RE
@@ -3377,6 +3735,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+break: causes execution to continue after the body of the current for/while/do-while loop.
 .fi
 .if n \{\
 .RE
@@ -3385,6 +3744,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+call: used for invoking a user-defined subroutine.
+
+  Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 .fi
 .if n \{\
 .RE
@@ -3393,6 +3755,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+continue: causes execution to skip the remaining statements in the body of
+the current for/while/do-while loop. For-loop increments are still applied.
 .fi
 .if n \{\
 .RE
@@ -3401,6 +3765,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+do: with "while", introduces a do-while loop. The body statements must be wrapped
+in curly braces.
 .fi
 .if n \{\
 .RE
@@ -3409,6 +3775,23 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+dump: prints all currently defined out-of-stream variables immediately
+to stdout as JSON.
+
+With >, >>, or |, the data do not become part of the output record stream but
+are instead redirected.
+
+The > and >> are for write and append, as in the shell, but (as with awk) the
+file-overwrite for > is on first write, not per record. The | is for piping to
+a process which will process the data. There will be one open file for each
+distinct file name (for > and >>) or one subordinate process for each distinct
+value of the piped-to command (for |). Output-formatting flags are taken from
+the main command line.
+
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
 .fi
 .if n \{\
 .RE
@@ -3417,6 +3800,10 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+edump: prints all currently defined out-of-stream variables immediately
+to stderr as JSON.
+
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
 .fi
 .if n \{\
 .RE
@@ -3425,6 +3812,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+elif: the way Miller spells "else if". The body statements must be wrapped
+in curly braces.
 .fi
 .if n \{\
 .RE
@@ -3433,6 +3822,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+else: terminates an if/elif/elif chain. The body statements must be wrapped
+in curly braces.
 .fi
 .if n \{\
 .RE
@@ -3441,6 +3832,35 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+emit: inserts an out-of-stream variable into the output record stream. Hashmap
+indices present in the data but not slotted by emit arguments are not output.
+
+With >, >>, or |, the data do not become part of the output record stream but
+are instead redirected.
+
+The > and >> are for write and append, as in the shell, but (as with awk) the
+file-overwrite for > is on first write, not per record. The | is for piping to
+a process which will process the data. There will be one open file for each
+distinct file name (for > and >>) or one subordinate process for each distinct
+value of the piped-to command (for |). Output-formatting flags are taken from
+the main command line.
+
+You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+etc., to control the format of the output if the output is redirected. See also mlr -h.
+
+  Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, $*'
+  Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, mapexcept($*, "a")'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
+  Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit > "tap-".$a.$b.".dat", @sums'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >  "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >> "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip > mytap.dat.gz", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
+
+Please see %s://johnkerl.org/miller/doc for more information. https://johnkerl.org/miller6
 .fi
 .if n \{\
 .RE
@@ -3449,6 +3869,32 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
+output record stream.
+
+With >, >>, or |, the data do not become part of the output record stream but
+are instead redirected.
+
+The > and >> are for write and append, as in the shell, but (as with awk) the
+file-overwrite for > is on first write, not per record. The | is for piping to
+a process which will process the data. There will be one open file for each
+distinct file name (for > and >>) or one subordinate process for each distinct
+value of the piped-to command (for |). Output-formatting flags are taken from
+the main command line.
+
+You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+etc., to control the format of the output if the output is redirected. See also mlr -h.
+
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
+  Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf > "tap-".$i.".dat", @a'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > "mytap.dat", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> "mytap.dat", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > stderr, @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
+
+Please see %s://johnkerl.org/miller/doc for more information. https://johnkerl.org/miller6
 .fi
 .if n \{\
 .RE
@@ -3457,6 +3903,34 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+emitp: inserts an out-of-stream variable into the output record stream.
+Hashmap indices present in the data but not slotted by emitp arguments are
+output concatenated with ":".
+
+With >, >>, or |, the data do not become part of the output record stream but
+are instead redirected.
+
+The > and >> are for write and append, as in the shell, but (as with awk) the
+file-overwrite for > is on first write, not per record. The | is for piping to
+a process which will process the data. There will be one open file for each
+distinct file name (for > and >>) or one subordinate process for each distinct
+value of the piped-to command (for |). Output-formatting flags are taken from
+the main command line.
+
+You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+etc., to control the format of the output if the output is redirected. See also mlr -h.
+
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
+  Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp > "tap-".$a.$b.".dat", @sums'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >  "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >> "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip > mytap.dat.gz", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
+
+Please see %s://johnkerl.org/miller/doc for more information. https://johnkerl.org/miller6
 .fi
 .if n \{\
 .RE
@@ -3465,6 +3939,11 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+end: defines a block of statements to be executed after input records
+are ingested. The body statements must be wrapped in curly braces.
+
+  Example: 'end { emit @count }'
+  Example: 'end { eprint "Final count is " . @count }'
 .fi
 .if n \{\
 .RE
@@ -3473,6 +3952,11 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+eprint: prints expression immediately to stderr.
+
+  Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
+  Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
+  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { eprint "Checkpoint ".NR}'
 .fi
 .if n \{\
 .RE
@@ -3481,6 +3965,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+eprintn: prints expression immediately to stderr, without trailing newline.
+
+  Example: mlr --from f.dat put -q 'eprintn "The sum of x and y is ".($x+$y); eprint ""'
 .fi
 .if n \{\
 .RE
@@ -3489,6 +3976,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+false: the boolean literal value.
 .fi
 .if n \{\
 .RE
@@ -3497,6 +3985,15 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+filter: includes/excludes the record in the output record stream.
+
+  Example: mlr --from f.dat put 'filter (NR == 2 || $x > 5.4)'
+
+Instead of put with 'filter false' you can simply use put -q.  The following
+uses the input record to accumulate data but only prints the running sum
+without printing the input record:
+
+  Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
 .fi
 .if n \{\
 .RE
@@ -3505,6 +4002,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+float: declares a floating-point local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'float x = 0' is an error.
 .fi
 .if n \{\
 .RE
@@ -3513,6 +4012,21 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+for: defines a for-loop using one of three styles. The body statements must
+be wrapped in curly braces.
+For-loop over stream record:
+
+  Example:  'for (k, v in $*) { ... }'
+
+For-loop over out-of-stream variables:
+
+  Example: 'for (k, v in @counts) { ... }'
+  Example: 'for ((k1, k2), v in @counts) { ... }'
+  Example: 'for ((k1, k2, k3), v in @*) { ... }'
+
+C-style for-loop:
+
+  Example:  'for (var i = 0, var b = 1; i < 10; i += 1, b *= 2) { ... }'
 .fi
 .if n \{\
 .RE
@@ -3521,6 +4035,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+func: used for defining a user-defined function.
+
+  Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
 .fi
 .if n \{\
 .RE
@@ -3529,6 +4046,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+if: starts an if/elif/elif chain. The body statements must be wrapped
+in curly braces.
 .fi
 .if n \{\
 .RE
@@ -3537,6 +4056,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+in: used in for-loops over stream records or out-of-stream variables.
 .fi
 .if n \{\
 .RE
@@ -3545,6 +4065,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+int: declares an integer local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'int x = 0.0' is an error.
 .fi
 .if n \{\
 .RE
@@ -3553,6 +4075,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+map: declares an map-valued local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
+always OK. map b = a is OK or not depending on whether a is a map.
 .fi
 .if n \{\
 .RE
@@ -3561,6 +4086,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+num: declares an int/float local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'num b = true' is an error.
 .fi
 .if n \{\
 .RE
@@ -3569,6 +4096,11 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+print: prints expression immediately to stdout.
+
+  Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
+  Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
+  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 .fi
 .if n \{\
 .RE
@@ -3577,6 +4109,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+printn: prints expression immediately to stdout, without trailing newline.
+
+  Example: mlr --from f.dat put -q 'printn "."; end { print "" }'
 .fi
 .if n \{\
 .RE
@@ -3585,6 +4120,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+return: specifies the return value from a user-defined function.
+Omitted return statements (including via if-branches) result in an absent-null
+return value, which in turns results in a skipped assignment to an LHS.
 .fi
 .if n \{\
 .RE
@@ -3593,6 +4131,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
+to print to standard error.
 .fi
 .if n \{\
 .RE
@@ -3601,6 +4141,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
+to print to standard output.
 .fi
 .if n \{\
 .RE
@@ -3609,6 +4151,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+str: declares a string local variable in the current curly-braced scope.
+Type-checking happens at assignment.
 .fi
 .if n \{\
 .RE
@@ -3617,6 +4161,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+subr: used for defining a subroutine.
+
+  Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 .fi
 .if n \{\
 .RE
@@ -3625,6 +4172,30 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+tee: prints the current record to specified file.
+This is an immediate print to the specified file (except for pprint format
+which of course waits until the end of the input stream to format all output).
+
+The > and >> are for write and append, as in the shell, but (as with awk) the
+file-overwrite for > is on first write, not per record. The | is for piping to
+a process which will process the data. There will be one open file for each
+distinct file name (for > and >>) or one subordinate process for each distinct
+value of the piped-to command (for |). Output-formatting flags are taken from
+the main command line.
+
+You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+etc., to control the format of the output. See also mlr -h.
+
+emit with redirect and tee with redirect are identical, except tee can only
+output $*.
+
+  Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
+  Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
+  Example: mlr --from f.dat put 'tee >  stderr, $*'
+  Example: mlr --from f.dat put -q 'tee | "tr \e[a-z\e\e] \e[A-Z\e\e]", $*'
+  Example: mlr --from f.dat put -q 'tee | "tr \e[a-z\e\e] \e[A-Z\e\e] > /tmp/data-".$a, $*'
+  Example: mlr --from f.dat put -q 'tee | "gzip > /tmp/data-".$a.".gz", $*'
+  Example: mlr --from f.dat put -q --ojson 'tee | "gzip > /tmp/data-".$a.".gz", $*'
 .fi
 .if n \{\
 .RE
@@ -3633,6 +4204,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+true: the boolean literal value.
 .fi
 .if n \{\
 .RE
@@ -3641,6 +4213,14 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+unset: clears field(s) from the current record, or an out-of-stream or local variable.
+
+  Example: mlr --from f.dat put 'unset $x'
+  Example: mlr --from f.dat put 'unset $*'
+  Example: mlr --from f.dat put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
+  Example: mlr --from f.dat put '...; unset @sums'
+  Example: mlr --from f.dat put '...; unset @sums["green"]'
+  Example: mlr --from f.dat put '...; unset @*'
 .fi
 .if n \{\
 .RE
@@ -3649,6 +4229,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+var: declares an untyped local variable in the current curly-braced scope.
+
+  Examples: 'var a=1', 'var xyz=""'
 .fi
 .if n \{\
 .RE
@@ -3657,6 +4240,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+while: introduces a while loop, or with "do", introduces a do-while loop.
+The body statements must be wrapped in curly braces.
 .fi
 .if n \{\
 .RE
@@ -3665,6 +4250,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ENV: access to environment variables by name, e.g. '$home = ENV["HOME"]'
 .fi
 .if n \{\
 .RE
@@ -3673,6 +4259,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+FILENAME: evaluates to the name of the current file being processed.
 .fi
 .if n \{\
 .RE
@@ -3681,6 +4268,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+FILENUM: evaluates to the number of the current file being processed,
+starting with 1.
 .fi
 .if n \{\
 .RE
@@ -3689,6 +4278,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+FNR: evaluates to the number of the current record within the current file
+being processed, starting with 1. Resets at the start of each file.
 .fi
 .if n \{\
 .RE
@@ -3697,6 +4288,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+IFS: evaluates to the input field separator from the command line.
 .fi
 .if n \{\
 .RE
@@ -3705,6 +4297,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+IPS: evaluates to the input pair separator from the command line.
 .fi
 .if n \{\
 .RE
@@ -3713,6 +4306,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+IRS: evaluates to the input record separator from the command line,
+or to LF or CRLF from the input data if in autodetect mode (which is
+the default).
 .fi
 .if n \{\
 .RE
@@ -3721,6 +4317,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+M_E: the mathematical constant e.
 .fi
 .if n \{\
 .RE
@@ -3729,6 +4326,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+M_PI: the mathematical constant pi.
 .fi
 .if n \{\
 .RE
@@ -3737,6 +4335,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+NF: evaluates to the number of fields in the current record.
 .fi
 .if n \{\
 .RE
@@ -3745,6 +4344,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+NR: evaluates to the number of the current record over all files
+being processed, starting with 1. Does not reset at the start of each file.
 .fi
 .if n \{\
 .RE
@@ -3753,6 +4354,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+OFS: evaluates to the output field separator from the command line.
 .fi
 .if n \{\
 .RE
@@ -3761,6 +4363,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+OPS: evaluates to the output pair separator from the command line.
 .fi
 .if n \{\
 .RE
@@ -3769,6 +4372,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
+ORS: evaluates to the output record separator from the command line,
+or to LF or CRLF from the input data if in autodetect mode (which is
+the default).
 .fi
 .if n \{\
 .RE

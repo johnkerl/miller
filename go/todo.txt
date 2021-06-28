@@ -22,39 +22,21 @@ doclink etc:
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
-HELP REFACTOR
-k all into src/auxents/help except shorts like mlr -f
-* entrypoints:
-  o mlrcli_parse.go -- call
-  o mlr help all variants
-  o man6
-* doc URLs: make a single one -- ?
-* bodies needed:
-  o mlr -l / -L paragraph/oneper
-  o mlr -f / -F long/short
-  o mlr -k / -K long/short
-* split up help/entry.go -- ?
-! sort functions-table at runtime
-? rid of tAuxUsage -- is it ever called?
-* keyword usage: lib.DOC_URL
-? integrate repl help with main help?
+HELP
 
+* split up help/entry.go -- ?
+! improved sort for functions-table
+? integrate repl help with main help?
+* manpage & main help need some basic examples
 ----------------------------------------------------------------
 
+----------------------------------------------------------------
 DOC6
 
 * wip
   go get github.com/kisielk/godepgraph
   godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
 * flamegraph etc double-check
-
-! mlr --help, manpage, etc total refactor & audit
-  ! parseTerminalUsage move-over
-  ! -f/-F/-l/-L/etc keeps
-  ! args []string API modify
-
-* debug && || on windows more ...
-* list-of-verbs shortlist @ top ...
 
 ? quick-examples needs fewer inputs, and outputs for all retained inputs
   ? or q-e more links to 10min
@@ -65,7 +47,6 @@ DOC6
   o Arrays section including 1-up and why
   o differences from other languages (cf. juliadocs)
 
-* audit for links jko help -> rtd help
 * doc notes about --jknquotein & --jvquoteall. make sure they're ignore-accepted in the CLIP.
 * audit for mlb -> lib.MlrExeName() (in case mlr.foo)
 
@@ -124,6 +105,9 @@ w survey
   o --from=foo => split (at getopt-level) to --from foo
 
 ----------------------------------------------------------------
+
+* debug && || on windows more ...
+* list-of-verbs shortlist @ top ...
 
 * blocker: regexes
   o finish stats1 -r

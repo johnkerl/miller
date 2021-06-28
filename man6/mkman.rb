@@ -40,7 +40,7 @@ a special case.) This manpage documents #{`mlr --version`.chomp}."""
   ])
 
 	print make_subsection('DATA FORMATS', [])
-	print make_code_block(`mlr --usage-data-format-examples`)
+	print make_code_block(`mlr help data-formats`)
 
   print make_section('OPTIONS', [
 """In the following option flags, the version with \"i\" designates the input
@@ -58,7 +58,8 @@ output separator to the given value."""
 	print make_code_block(`mlr help list-verbs`)
 
 	print make_subsection('FUNCTION LIST', [])
-	print make_code_block(`mlr --usage-functions`)
+  # TODO: list as paragraph
+	print make_code_block(`mlr help list functions`)
 
 	print make_subsection('I/O FORMATTING', [])
 	print make_code_block(`mlr help data-formats`)
@@ -67,7 +68,7 @@ output separator to the given value."""
 	print make_code_block(`mlr help comments-in-data`)
 
 	print make_subsection('FORMAT-CONVERSION KEYSTROKE-SAVERS', [])
-	print make_code_block(`mlr --usage-format-conversion-keystroke-saver-options`)
+	print make_code_block(`mlr help format-conversion`)
 
 	print make_subsection('COMPRESSED I/O', [])
 	print make_code_block(`mlr help compressed-data`)
@@ -110,7 +111,7 @@ output separator to the given value."""
   functions = functions.strip.split("\n").uniq
   for function in functions
     print make_subsection(function, [])
-    text = `mlr --help-function '#{function}'`
+    text = `mlr help function '#{function}'`
     text = text.sub(function + ' ', '')
     print make_code_block(text)
   end
@@ -122,7 +123,7 @@ output separator to the given value."""
   keywords = keywords.strip.split("\n").uniq
   for keyword in keywords
     print make_subsection(keyword, [])
-    text = `mlr --help-keyword '#{keyword}'`
+    text = `mlr help keyword '#{keyword}'`
     print make_code_block(text)
   end
 

@@ -1645,10 +1645,15 @@ func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageApproximate(
 	o *os.File,
 ) {
 	fmt.Fprintf(o, "No exact match for \"%s\". Inexact matches:\n", text)
+	found := false
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		if strings.Contains(builtinFunctionInfo.name, text) {
 			fmt.Fprintf(o, "  %s\n", builtinFunctionInfo.name)
+			found = true
 		}
+	}
+	if !found {
+		fmt.Fprintln(o, "None found.")
 	}
 }
 
