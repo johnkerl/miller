@@ -26,10 +26,10 @@ There are a few nearly-standalone programs which have nothing to do with the res
 
     mlr lecat --help
     Usage: mlr lecat [options] {zero or more file names}
-    Simple hex-dump.
+    Simply echoes input, but flags CR characters in red and LF characters in green.
     If zero file names are supplied, standard input is read.
     Options:
-    -r: print only raw hex without leading offset indicators or trailing ASCII dump.
+    --mono: don't try to colorize the output
     -h or --help: print this message
 
 .. code-block:: none
@@ -64,12 +64,11 @@ There are a few nearly-standalone programs which have nothing to do with the res
    :emphasize-lines: 1-1
 
     mlr unhex --help
-    Usage: mlr unhex [options] {zero or more file names}
-    Simple hex-dump.
-    If zero file names are supplied, standard input is read.
+    Usage: mlr unhex [option] {zero or more file names}
     Options:
-    -r: print only raw hex without leading offset indicators or trailing ASCII dump.
     -h or --help: print this message
+    Zero file names means read from standard input.
+    Output is always to standard output; files are not written in-place.
 
 Examples:
 

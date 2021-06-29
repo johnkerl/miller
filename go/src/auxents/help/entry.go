@@ -72,6 +72,7 @@ func init() {
 		{name: "number-formatting", zaryHandlerFunc: helpNumberFormatting},
 		{name: "output-colorizations", zaryHandlerFunc: helpOutputColorization},
 		{name: "separator-options", zaryHandlerFunc: helpSeparatorOptions},
+		{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
 		{name: "usage-functions", zaryHandlerFunc: usageFunctions},
 		{name: "usage-keywords", zaryHandlerFunc: usageKeywords},
 		{name: "usage-verbs", zaryHandlerFunc: usageVerbs},
@@ -661,11 +662,16 @@ func helpSeparatorOptions() {
 	////	}
 }
 
+// ----------------------------------------------------------------
+func helpTypeArithmeticInfo() {
+	fmt.Println("TO BE PORTED")
+}
+
+
 // ================================================================
 // TODO: port the paragraphifier
 func listFunctions() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
-	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
 }
 
 // ----------------------------------------------------------------

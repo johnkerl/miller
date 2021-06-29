@@ -55,7 +55,7 @@ mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
   echo ""
   echo '.. code-block:: none'
   echo ''
-  mlr --help-function "$funcname" | sed 's/^/    /'
+  mlr help function "$funcname" | sed 's/^/    /'
   echo ''
   echo ''
 done
@@ -109,7 +109,7 @@ mlr -F | grep '^[a-zA-Z]' | sort -u | while read funcname; do
   echo ""
   echo '.. code-block:: none'
   echo ''
-  mlr --help-function "$funcname" | sed 's/^/    /'
+  mlr help function "$funcname" | sed 's/^/    /'
   echo ''
   echo ''
 done

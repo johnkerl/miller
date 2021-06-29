@@ -79,42 +79,165 @@ Details:
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --help-keyword print
-    TODO: port mlr_dsl_keyword_usage
+    mlr help keyword print
+    print: prints expression immediately to stdout.
+    
+      Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
+      Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
+      Example: mlr --from f.dat put  '(NR %% 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --help-keyword dump
-    TODO: port mlr_dsl_keyword_usage
+    mlr help keyword dump
+    dump: prints all currently defined out-of-stream variables immediately
+    to stdout as JSON.
+    
+    With >, >>, or |, the data do not become part of the output record stream but
+    are instead redirected.
+    
+    The > and >> are for write and append, as in the shell, but (as with awk) the
+    file-overwrite for > is on first write, not per record. The | is for piping to
+    a process which will process the data. There will be one open file for each
+    distinct file name (for > and >>) or one subordinate process for each distinct
+    value of the piped-to command (for |). Output-formatting flags are taken from
+    the main command line.
+    
+      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
+      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
+      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
+      Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
 
 * ``mlr put`` sends the current record (possibly modified by the ``put`` expression) to the output record stream. Records are then input to the following verb in a ``then``-chain (if any), else printed to standard output (unless ``put -q``). The **tee** keyword *additionally* writes the output record to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --help-keyword tee
-    TODO: port mlr_dsl_keyword_usage
+    mlr help keyword tee
+    tee: prints the current record to specified file.
+    This is an immediate print to the specified file (except for pprint format
+    which of course waits until the end of the input stream to format all output).
+    
+    The > and >> are for write and append, as in the shell, but (as with awk) the
+    file-overwrite for > is on first write, not per record. The | is for piping to
+    a process which will process the data. There will be one open file for each
+    distinct file name (for > and >>) or one subordinate process for each distinct
+    value of the piped-to command (for |). Output-formatting flags are taken from
+    the main command line.
+    
+    You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+    etc., to control the format of the output. See also mlr -h.
+    
+    emit with redirect and tee with redirect are identical, except tee can only
+    output $*.
+    
+      Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
+      Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
+      Example: mlr --from f.dat put 'tee >  stderr, $*'
+      Example: mlr --from f.dat put -q 'tee | "tr \[a-z\\] \[A-Z\\]", $*'
+      Example: mlr --from f.dat put -q 'tee | "tr \[a-z\\] \[A-Z\\] > /tmp/data-".$a, $*'
+      Example: mlr --from f.dat put -q 'tee | "gzip > /tmp/data-".$a.".gz", $*'
+      Example: mlr --from f.dat put -q --ojson 'tee | "gzip > /tmp/data-".$a.".gz", $*'
 
 * ``mlr put``'s ``emitf``, ``emitp``, and ``emit`` send out-of-stream variables to the output record stream. These are then input to the following verb in a ``then``-chain (if any), else printed to standard output. When redirected with ``>``, ``>>``, or ``|``, they *instead* write the out-of-stream variable(s) to specified file(s) or pipe-to command, or immediately to ``stdout``/``stderr``.
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --help-keyword emitf
-    TODO: port mlr_dsl_keyword_usage
+    mlr help keyword emitf
+    emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
+    output record stream.
+    
+    With >, >>, or |, the data do not become part of the output record stream but
+    are instead redirected.
+    
+    The > and >> are for write and append, as in the shell, but (as with awk) the
+    file-overwrite for > is on first write, not per record. The | is for piping to
+    a process which will process the data. There will be one open file for each
+    distinct file name (for > and >>) or one subordinate process for each distinct
+    value of the piped-to command (for |). Output-formatting flags are taken from
+    the main command line.
+    
+    You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+    etc., to control the format of the output if the output is redirected. See also mlr -h.
+    
+      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
+      Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf > "tap-".$i.".dat", @a'
+      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
+      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > "mytap.dat", @a, @b, @c'
+      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> "mytap.dat", @a, @b, @c'
+      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > stderr, @a, @b, @c'
+      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
+      Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
+    
+    Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --help-keyword emitp
-    TODO: port mlr_dsl_keyword_usage
+    mlr help keyword emitp
+    emitp: inserts an out-of-stream variable into the output record stream.
+    Hashmap indices present in the data but not slotted by emitp arguments are
+    output concatenated with ":".
+    
+    With >, >>, or |, the data do not become part of the output record stream but
+    are instead redirected.
+    
+    The > and >> are for write and append, as in the shell, but (as with awk) the
+    file-overwrite for > is on first write, not per record. The | is for piping to
+    a process which will process the data. There will be one open file for each
+    distinct file name (for > and >>) or one subordinate process for each distinct
+    value of the piped-to command (for |). Output-formatting flags are taken from
+    the main command line.
+    
+    You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+    etc., to control the format of the output if the output is redirected. See also mlr -h.
+    
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
+      Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp > "tap-".$a.$b.".dat", @sums'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >  "mytap.dat", @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >> "mytap.dat", @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip > mytap.dat.gz", @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
+    
+    Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
 
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --help-keyword emit
-    TODO: port mlr_dsl_keyword_usage
+    mlr help keyword emit
+    emit: inserts an out-of-stream variable into the output record stream. Hashmap
+    indices present in the data but not slotted by emit arguments are not output.
+    
+    With >, >>, or |, the data do not become part of the output record stream but
+    are instead redirected.
+    
+    The > and >> are for write and append, as in the shell, but (as with awk) the
+    file-overwrite for > is on first write, not per record. The | is for piping to
+    a process which will process the data. There will be one open file for each
+    distinct file name (for > and >>) or one subordinate process for each distinct
+    value of the piped-to command (for |). Output-formatting flags are taken from
+    the main command line.
+    
+    You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+    etc., to control the format of the output if the output is redirected. See also mlr -h.
+    
+      Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, $*'
+      Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, mapexcept($*, "a")'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
+      Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit > "tap-".$a.$b.".dat", @sums'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >  "mytap.dat", @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >> "mytap.dat", @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip > mytap.dat.gz", @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
+      Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
+    
+    Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
 
 .. _reference-dsl-emit-statements:
 

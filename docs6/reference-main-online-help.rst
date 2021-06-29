@@ -12,7 +12,11 @@ Examples:
    :emphasize-lines: 1-1
 
     mlr --help
-    Please run "mlr --help" for detailed usage information.
+    Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
+    Output of one verb may be chained as input to another using "then", e.g.
+      mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
+    Please see 'mlr help topics' for more information.
+    Please also see https://johnkerl.org/miller6
 
 .. code-block:: none
    :emphasize-lines: 1-1

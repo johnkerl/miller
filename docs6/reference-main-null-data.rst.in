@@ -86,5 +86,5 @@ GENRST_EOF
 If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
 
 GENRST_RUN_COMMAND
-mlr --print-type-arithmetic-info
+mlr help type-arithmetic-info
 GENRST_EOF

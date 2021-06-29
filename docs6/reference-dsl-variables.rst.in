@@ -379,6 +379,6 @@ Keywords for filter and put
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 GENRST_RUN_COMMAND
-mlr --help-all-keywords
+mlr help usage-keywords
 GENRST_EOF
 
