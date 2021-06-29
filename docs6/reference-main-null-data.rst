@@ -139,5 +139,5 @@ If you're interested in a formal description of how empty and absent fields part
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr --print-type-arithmetic-info
-    TODO: port printTypeArithmeticInfo
+    mlr help type-arithmetic-info
+    TO BE PORTED

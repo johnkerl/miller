@@ -408,7 +408,12 @@ div.highlight { /* CHANGED */
 
 div.highlight-none { /* CHANGED */
     background-color: #eae2cb;
-    border: 5px solid #ffffff;
+    border-top: 5px solid #ffffff;
+    border-bottom: 5px solid #ffffff;
+    border-left: 0px solid #ffffff;
+    border-right: 0px solid #ffffff;
+    padding-left: 0px solid #ffffff;
+    padding-right: 0px solid #ffffff;
 }
 
 #toc {

@@ -52,6 +52,7 @@ func init() {
 	handlerLookupTable = []handlerInfo{
 		{name: "topics", zaryHandlerFunc: listTopics},
 		{name: "auxents", zaryHandlerFunc: helpAuxents},
+		{name: "basic-examples", zaryHandlerFunc: helpBasicExamples},
 		{name: "comments-in-data", zaryHandlerFunc: helpCommentsInData},
 		{name: "compressed-data", zaryHandlerFunc: helpCompressedDataOptions},
 		{name: "csv-options", zaryHandlerFunc: helpCSVOptions},
@@ -71,6 +72,7 @@ func init() {
 		{name: "number-formatting", zaryHandlerFunc: helpNumberFormatting},
 		{name: "output-colorizations", zaryHandlerFunc: helpOutputColorization},
 		{name: "separator-options", zaryHandlerFunc: helpSeparatorOptions},
+		{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
 		{name: "usage-functions", zaryHandlerFunc: usageFunctions},
 		{name: "usage-keywords", zaryHandlerFunc: usageKeywords},
 		{name: "usage-verbs", zaryHandlerFunc: usageVerbs},
@@ -192,6 +194,19 @@ Please "mlr aux-list" for more information.
 }
 
 // ----------------------------------------------------------------
+func helpBasicExamples() {
+	fmt.Print(
+`mlr --icsv --opprint cat example.csv
+mlr --icsv --opprint sort -f shape example.csv
+mlr --icsv --opprint sort -f shape -nr index example.csv
+mlr --icsv --opprint cut -f flag,shape example.csv
+mlr --csv filter '$color == "red"' example.csv
+mlr --icsv --ojson put '$ratio = $quantity / $rate' example.csv
+mlr --icsv --opprint --from example.csv sort -nr index then cut -f shape,quantity
+`)
+}
+
+// ----------------------------------------------------------------
 func helpCommentsInData() {
 	fmt.Printf(
 		`--skip-comments                 Ignore commented lines (prefixed by "%s")
@@ -254,21 +269,21 @@ decisions that might have been made based on the file suffix. Also,
 // ----------------------------------------------------------------
 func helpCSVOptions() {
 	fmt.Print(
-		`  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
-                     of input files. Tip: combine with "label" to recreate
-                     missing headers.
-  --no-implicit-csv-header Do not use --implicit-csv-header. This is the default
-                     anyway -- the main use is for the flags to 'mlr join' if you have
-                     main file(s) which are headerless but you want to join in on
-                     a file which does have a CSV header. Then you could use
-                     'mlr --csv --implicit-csv-header join --no-implicit-csv-header
-                     -l your-join-in-with-header.csv ... your-headerless.csv'
-  --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,
-                     fill remaining keys with empty string. If a data line has more
-                     fields than the header line, use integer field labels as in
-                     the implicit-header case.
-  --headerless-csv-output   Print only CSV data lines.
-  -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.
+		`--implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
+                   of input files. Tip: combine with "label" to recreate
+                   missing headers.
+--no-implicit-csv-header Do not use --implicit-csv-header. This is the default
+                   anyway -- the main use is for the flags to 'mlr join' if you have
+                   main file(s) which are headerless but you want to join in on
+                   a file which does have a CSV header. Then you could use
+                   'mlr --csv --implicit-csv-header join --no-implicit-csv-header
+                   -l your-join-in-with-header.csv ... your-headerless.csv'
+--allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,
+                   fill remaining keys with empty string. If a data line has more
+                   fields than the header line, use integer field labels as in
+                   the implicit-header case.
+--headerless-csv-output   Print only CSV data lines.
+-N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.
 `)
 }
 
@@ -418,18 +433,20 @@ are overridden in all cases by setting output format to format2.`,
 
 func helpDoubleQuoting() {
 	fmt.Printf("THIS IS STILL WIP FOR MILLER 6\n")
-	fmt.Printf("  --quote-all        Wrap all fields in double quotes\n")
-	fmt.Printf("  --quote-none       Do not wrap any fields in double quotes, even if they have\n")
-	fmt.Printf("                     OFS or ORS in them\n")
-	fmt.Printf("  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS\n")
-	fmt.Printf("                     in them (default)\n")
-	fmt.Printf("  --quote-numeric    Wrap fields in double quotes only if they have numbers\n")
-	fmt.Printf("                     in them\n")
-	fmt.Printf("  --quote-original   Wrap fields in double quotes if and only if they were\n")
-	fmt.Printf("                     quoted on input. This isn't sticky for computed fields:\n")
-	fmt.Printf("                     e.g. if fields a and b were quoted on input and you do\n")
-	fmt.Printf("                     \"put '$c = $a . $b'\" then field c won't inherit a or b's\n")
-	fmt.Printf("                     was-quoted-on-input flag.\n")
+	fmt.Println(
+`--quote-all        Wrap all fields in double quotes
+--quote-none       Do not wrap any fields in double quotes, even if they have
+                   OFS or ORS in them
+--quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
+                   in them (default)
+--quote-numeric    Wrap fields in double quotes only if they have numbers
+                   in them
+--quote-original   Wrap fields in double quotes if and only if they were
+                   quoted on input. This isn't sticky for computed fields:
+                   e.g. if fields a and b were quoted on input and you do
+                   "put '$c = $a . $b'" then field c won't inherit a or b's
+                   was-quoted-on-input flag.
+`)
 }
 
 // ----------------------------------------------------------------
@@ -450,36 +467,37 @@ output only.
 
 // ----------------------------------------------------------------
 func helpMiscOptions() {
-	fmt.Printf(`  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
-                     urand()/urandint()/urand32().
-  --nr-progress-mod {m}, with m a positive integer: print filename and record
-                     count to os.Stderr every m input records.
-  --from {filename}  Use this to specify an input file before the verb(s),
-                     rather than after. May be used more than once. Example:
-                     "mlr --from a.dat --from b.dat cat" is the same as
-                     "mlr cat a.dat b.dat".
-  --mfrom {filenames} --  Use this to specify one of more input files before the verb(s),
-                     rather than after. May be used more than once.
-                     The list of filename must end with "--". This is useful
-                     for example since "--from *.csv" doesn't do what you might
-                     hope but "--mfrom *.csv --" does.
-  --load {filename}  Load DSL script file for all put/filter operations on the command line.
-                     If the name following --load is a directory, load all "*.mlr" files
-                     in that directory. This is just like "put -f" and "filter -f"
-                     except it's up-front on the command line, so you can do something like
-                     alias mlr='mlr --load ~/myscripts' if you like.
-  --mload {names} -- Like --load but works with more than one filename,
-                     e.g. '--mload *.mlr --'.
-  -n                 Process no input files, nor standard input either. Useful
-                     for mlr put with begin/end statements only. (Same as --from
-                     /dev/null.) Also useful in "mlr -n put -v '...'" for
-                     analyzing abstract syntax trees (if that's your thing).
-  -I                 Process files in-place. For each file name on the command
-                     line, output is written to a temp file in the same
-                     directory, which is then renamed over the original. Each
-                     file is processed in isolation: if the output format is
-                     CSV, CSV headers will be present in each output file
-                     statistics are only over each file's own records; and so on.
+	fmt.Printf(
+`--seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
+                   urand()/urandint()/urand32().
+--nr-progress-mod {m}, with m a positive integer: print filename and record
+                   count to os.Stderr every m input records.
+--from {filename}  Use this to specify an input file before the verb(s),
+                   rather than after. May be used more than once. Example:
+                   "mlr --from a.dat --from b.dat cat" is the same as
+                   "mlr cat a.dat b.dat".
+--mfrom {filenames} --  Use this to specify one of more input files before the verb(s),
+                   rather than after. May be used more than once.
+                   The list of filename must end with "--". This is useful
+                   for example since "--from *.csv" doesn't do what you might
+                   hope but "--mfrom *.csv --" does.
+--load {filename}  Load DSL script file for all put/filter operations on the command line.
+                   If the name following --load is a directory, load all "*.mlr" files
+                   in that directory. This is just like "put -f" and "filter -f"
+                   except it's up-front on the command line, so you can do something like
+                   alias mlr='mlr --load ~/myscripts' if you like.
+--mload {names} -- Like --load but works with more than one filename,
+                   e.g. '--mload *.mlr --'.
+-n                 Process no input files, nor standard input either. Useful
+                   for mlr put with begin/end statements only. (Same as --from
+                   /dev/null.) Also useful in "mlr -n put -v '...'" for
+                   analyzing abstract syntax trees (if that's your thing).
+-I                 Process files in-place. For each file name on the command
+                   line, output is written to a temp file in the same
+                   directory, which is then renamed over the original. Each
+                   file is processed in isolation: if the output format is
+                   CSV, CSV headers will be present in each output file
+                   statistics are only over each file's own records; and so on.
 `)
 }
 
@@ -644,17 +662,21 @@ func helpSeparatorOptions() {
 	////	}
 }
 
+// ----------------------------------------------------------------
+func helpTypeArithmeticInfo() {
+	fmt.Println("TO BE PORTED")
+}
+
+
 // ================================================================
 // TODO: port the paragraphifier
 func listFunctions() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
-	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
 }
 
 // ----------------------------------------------------------------
 func listFunctionsVertically() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
-	fmt.Printf("Please use \"%s --help-function {function name}\" for function-specific help.\n", lib.MlrExeName())
 }
 
 // ----------------------------------------------------------------

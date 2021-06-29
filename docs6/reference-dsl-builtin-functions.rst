@@ -18,6 +18,94 @@ Each function takes a specific number of arguments, as shown below, except for f
 You can get a list of all functions using **mlr -F**.
 
 
+.. _reference-dsl-colon:
+
+\!
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    !  (class=boolean #args=1) Logical negation.
+
+
+
+.. _reference-dsl-!=:
+
+!=
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    !=  (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
+
+
+
+.. _reference-dsl-!=~:
+
+!=~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    !=~  (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
+
+
+
+.. _reference-dsl-%:
+
+%
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    %  (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
+
+
+
+.. _reference-dsl-&:
+
+&
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    &  (class=arithmetic #args=2) Bitwise AND.
+
+
+
+.. _reference-dsl-&&:
+
+&&
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    &&  (class=boolean #args=2) Logical AND.
+
+
+
+.. _reference-dsl-times:
+
+\*
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    *  (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
+
+
+
+.. _reference-dsl-exponentiation:
+
+\**
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    **  (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
+
+
+
 .. _reference-dsl-plus:
 
 \+
@@ -40,47 +128,25 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl-times:
+.. _reference-dsl-.:
 
-\*
+.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    *  (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
+    .  (class=string #args=2) String concatenation.
 
 
 
-.. _reference-dsl-/:
+.. _reference-dsl-.*:
 
-/
+.*
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    /  (class=arithmetic #args=2) Division. Integer / integer is floating-point.
-
-
-
-.. _reference-dsl-//:
-
-//
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    //  (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
-
-
-
-.. _reference-dsl-exponentiation:
-
-\**
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    **  (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
+    .*  (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
 
 
 
@@ -106,17 +172,6 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl-.*:
-
-.*
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    .*  (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
-
-
-
 .. _reference-dsl-./:
 
 ./
@@ -128,59 +183,36 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl-%:
+.. _reference-dsl-/:
 
-%
+/
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    %  (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
+    /  (class=arithmetic #args=2) Division. Integer / integer is floating-point.
 
 
 
-.. _reference-dsl-~:
+.. _reference-dsl-//:
 
-~
+//
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    ~  (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
-    regex-match operator: try '$y = ~$x'.
+    //  (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
 
 
 
-.. _reference-dsl-&:
+.. _reference-dsl-<:
 
-&
+<
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    &  (class=arithmetic #args=2) Bitwise AND.
-
-
-
-.. _reference-dsl-bitwise-or:
-
-\|
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    |  (class=arithmetic #args=2) Bitwise OR.
-
-
-
-.. _reference-dsl-^:
-
-^
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    ^  (class=arithmetic #args=2) Bitwise XOR.
+    <  (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
 
 
 
@@ -195,36 +227,14 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl-srsh:
+.. _reference-dsl-<=:
 
-\>\>
+<=
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    >>  (class=arithmetic #args=2) Bitwise signed right-shift.
-
-
-
-.. _reference-dsl-ursh:
-
-\>\>\>
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    >>>  (class=arithmetic #args=2) Bitwise unsigned right-shift.
-
-
-
-.. _reference-dsl-colon:
-
-\!
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    !  (class=boolean #args=1) Logical negation.
+    <=  (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
 
 
 
@@ -239,14 +249,14 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl-!=:
+.. _reference-dsl-=~:
 
-!=
+=~
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    !=  (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
+    =~  (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
 
 
 
@@ -272,80 +282,36 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl-<:
+.. _reference-dsl-srsh:
 
-<
+\>\>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    <  (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
+    >>  (class=arithmetic #args=2) Bitwise signed right-shift.
 
 
 
-.. _reference-dsl-<=:
+.. _reference-dsl-ursh:
 
-<=
+\>\>\>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    <=  (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
+    >>>  (class=arithmetic #args=2) Bitwise unsigned right-shift.
 
 
 
-.. _reference-dsl-=~:
+.. _reference-dsl-question-mark-colon:
 
-=~
+\?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    =~  (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
-
-
-
-.. _reference-dsl-!=~:
-
-!=~
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    !=~  (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
-
-
-
-.. _reference-dsl-&&:
-
-&&
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    &&  (class=boolean #args=2) Logical AND.
-
-
-
-.. _reference-dsl-||:
-
-||
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    ||  (class=boolean #args=2) Logical OR.
-
-
-
-.. _reference-dsl-^^:
-
-^^
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    ^^  (class=boolean #args=2) Logical XOR.
+    ?:  (class=boolean #args=3) Standard ternary operator.
 
 
 
@@ -371,25 +337,59 @@ You can get a list of all functions using **mlr -F**.
 
 
 
-.. _reference-dsl-question-mark-colon:
+.. _reference-dsl-^:
 
-\?
+^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    ?:  (class=boolean #args=3) Standard ternary operator.
+    ^  (class=arithmetic #args=2) Bitwise XOR.
 
 
 
-.. _reference-dsl-.:
+.. _reference-dsl-^^:
 
-.
+^^
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    .  (class=string #args=2) String concatenation.
+    ^^  (class=boolean #args=2) Logical XOR.
+
+
+
+.. _reference-dsl-bitwise-or:
+
+\|
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    |  (class=arithmetic #args=2) Bitwise OR.
+
+
+
+.. _reference-dsl-||:
+
+||
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    ||  (class=boolean #args=2) Logical OR.
+
+
+
+.. _reference-dsl-~:
+
+~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    ~  (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
+    regex-match operator: try '$y = ~$x'.
 
 
 
@@ -850,7 +850,6 @@ dhms2fsec
 .. code-block:: none
 
     dhms2fsec  (class=time #args=1) Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
-    
 
 
 
@@ -862,7 +861,6 @@ dhms2sec
 .. code-block:: none
 
     dhms2sec  (class=time #args=1) Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
-    
 
 
 
@@ -967,7 +965,6 @@ fsec2dhms
 .. code-block:: none
 
     fsec2dhms  (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
-    
 
 
 
@@ -979,7 +976,6 @@ fsec2hms
 .. code-block:: none
 
     fsec2hms  (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
-    
 
 
 
@@ -1059,7 +1055,6 @@ hms2fsec
 .. code-block:: none
 
     hms2fsec  (class=time #args=1) Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000
-    
 
 
 
@@ -1071,7 +1066,6 @@ hms2sec
 .. code-block:: none
 
     hms2sec  (class=time #args=1) Recovers integer seconds as in hms2sec("01:23:20") = 5000
-    
 
 
 
@@ -1687,7 +1681,6 @@ sec2dhms
 .. code-block:: none
 
     sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
-    
 
 
 
@@ -1715,7 +1708,6 @@ sec2gmtdate
     sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part)
     as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
     Leaves non-numbers as-is.
-    
 
 
 
@@ -1727,7 +1719,6 @@ sec2hms
 .. code-block:: none
 
     sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
-    
 
 
 
@@ -1907,7 +1898,6 @@ strftime
     	with the Miller-specific addition of "%1S" through "%9S" which format the seconds
     	with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
     	See also strftime_local.
-    
 
 
 
@@ -1955,7 +1945,6 @@ strptime
     	e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
     	and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
     	See also strptime_local.
-    
 
 
 
@@ -2114,7 +2103,7 @@ unflatten
 .. code-block:: none
 
     unflatten  (class=maps/arrays #args=2) Reverses flatten. Example:
-    unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}}.
+    unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
     Useful for nested JSON-like structures for non-JSON file formats like CSV.
     See also arrayify.
 
