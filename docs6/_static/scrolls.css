@@ -408,8 +408,8 @@ div.highlight { /* CHANGED */
 
 div.highlight-none { /* CHANGED */
     background-color: #eae2cb;
-    border-top: 5px solid #ffffff;
-    border-bottom: 5px solid #ffffff;
+    border-top: 0px solid #ffffff;
+    border-bottom: 10px solid #ffffff;
     border-left: 0px solid #ffffff;
     border-right: 0px solid #ffffff;
     padding-left: 0px solid #ffffff;
