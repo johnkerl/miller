@@ -196,7 +196,7 @@ Please "mlr aux-list" for more information.
 // ----------------------------------------------------------------
 func helpBasicExamples() {
 	fmt.Print(
-`mlr --icsv --opprint cat example.csv
+		`mlr --icsv --opprint cat example.csv
 mlr --icsv --opprint sort -f shape example.csv
 mlr --icsv --opprint sort -f shape -nr index example.csv
 mlr --icsv --opprint cut -f flag,shape example.csv
@@ -434,7 +434,7 @@ are overridden in all cases by setting output format to format2.`,
 func helpDoubleQuoting() {
 	fmt.Printf("THIS IS STILL WIP FOR MILLER 6\n")
 	fmt.Println(
-`--quote-all        Wrap all fields in double quotes
+		`--quote-all        Wrap all fields in double quotes
 --quote-none       Do not wrap any fields in double quotes, even if they have
                    OFS or ORS in them
 --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
@@ -445,8 +445,7 @@ func helpDoubleQuoting() {
                    quoted on input. This isn't sticky for computed fields:
                    e.g. if fields a and b were quoted on input and you do
                    "put '$c = $a . $b'" then field c won't inherit a or b's
-                   was-quoted-on-input flag.
-`)
+                   was-quoted-on-input flag.`)
 }
 
 // ----------------------------------------------------------------
@@ -468,7 +467,7 @@ output only.
 // ----------------------------------------------------------------
 func helpMiscOptions() {
 	fmt.Printf(
-`--seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
+		`--seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
                    urand()/urandint()/urand32().
 --nr-progress-mod {m}, with m a positive integer: print filename and record
                    count to os.Stderr every m input records.
@@ -666,7 +665,6 @@ func helpSeparatorOptions() {
 func helpTypeArithmeticInfo() {
 	fmt.Println("TO BE PORTED")
 }
-
 
 // ================================================================
 // TODO: port the paragraphifier
