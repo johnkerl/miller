@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -25,7 +24,7 @@ func transformerNothingUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameNothing)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameNothing)
 	fmt.Fprintf(o, "Drops all input records. Useful for testing, or after tee/print/etc. have\n")
 	fmt.Fprintf(o, "produced other output.\n")
 	fmt.Fprintf(o, "Options:\n")

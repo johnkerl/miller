@@ -26,7 +26,7 @@ func transformerTailUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameTail)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameTail)
 	fmt.Fprintln(o, "Passes through the last n records, optionally by category.")
 
 	fmt.Fprintf(o, "Options:\n")

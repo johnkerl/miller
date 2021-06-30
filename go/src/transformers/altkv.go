@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -26,7 +25,7 @@ func transformerAltkvUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameAltkv)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameAltkv)
 	fmt.Fprintf(o, "Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")

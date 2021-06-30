@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -26,7 +25,7 @@ func transformerRemoveEmptyColumnsUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameRemoveEmptyColumns)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameRemoveEmptyColumns)
 	fmt.Fprintf(o, "Omits fields which are empty on every input row. Non-streaming.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")

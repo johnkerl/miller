@@ -141,7 +141,7 @@ func (root *RootNode) buildDumpxStatementNode(
 				return nil, errors.New(
 					fmt.Sprintf(
 						"%s: unhandled redirector node type %s.",
-						lib.MlrExeName(), string(redirectorNode.Type),
+						"mlr", string(redirectorNode.Type),
 					),
 				)
 			}
@@ -219,7 +219,7 @@ func (node *DumpStatementNode) dumpToFileOrPipe(
 		return errors.New(
 			fmt.Sprintf(
 				"%s: output redirection yielded %s, not string.",
-				lib.MlrExeName(), redirectorTarget.GetTypeName(),
+				"mlr", redirectorTarget.GetTypeName(),
 			),
 		)
 	}

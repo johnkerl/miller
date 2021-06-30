@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/output"
 	"miller/src/types"
 )
@@ -26,7 +25,7 @@ func transformerTeeUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", lib.MlrExeName(), verbNameTee)
+	fmt.Fprintf(o, "Usage: %s %s [options] {filename}\n", "mlr", verbNameTee)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o,
 		`-a    Append to existing file, if any, rather than overwriting.
@@ -166,7 +165,7 @@ func (tr *TransformerTee) Transform(
 			fmt.Fprintf(
 				os.Stderr,
 				"%s: error writing to tee \"%s\":\n",
-				lib.MlrExeName(), tr.filenameOrCommandForDisplay,
+				"mlr", tr.filenameOrCommandForDisplay,
 			)
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -179,7 +178,7 @@ func (tr *TransformerTee) Transform(
 			fmt.Fprintf(
 				os.Stderr,
 				"%s: error closing tee \"%s\":\n",
-				lib.MlrExeName(), tr.filenameOrCommandForDisplay,
+				"mlr", tr.filenameOrCommandForDisplay,
 			)
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)

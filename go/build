@@ -22,10 +22,6 @@ go build mlr.go
 echo Compile OK
 echo
 
-# During the C-to-Go port I like to have ../c/mlr and ./mlrgo and have symlinks
-# to them from my ~/lbin. Hence the duplicate name here.
-cp mlr mlrgo
-
 echo ================================================================
 echo UNIT TESTS
 go test -v miller/src/...

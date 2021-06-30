@@ -453,7 +453,7 @@ func (frame *StackFrame) defineTyped(
 		return errors.New(
 			fmt.Sprintf(
 				"%s: variable %s has already been defined in the same scope.",
-				lib.MlrExeName(), stackVariable.name,
+				"mlr", stackVariable.name,
 			),
 		)
 	}
@@ -477,7 +477,7 @@ func (frame *StackFrame) setIndexed(
 			return errors.New(
 				fmt.Sprintf(
 					"%s: map indices must be int or string; got %s.\n",
-					lib.MlrExeName(), leadingIndex.GetTypeName(),
+					"mlr", leadingIndex.GetTypeName(),
 				),
 			)
 		}

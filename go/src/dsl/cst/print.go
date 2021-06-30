@@ -284,7 +284,7 @@ func (root *RootNode) buildPrintxStatementNode(
 				return nil, errors.New(
 					fmt.Sprintf(
 						"%s: unhandled redirector node type %s.",
-						lib.MlrExeName(), string(redirectorNode.Type),
+						"mlr", string(redirectorNode.Type),
 					),
 				)
 			}
@@ -365,7 +365,7 @@ func (node *PrintStatementNode) printToFileOrPipe(
 		return errors.New(
 			fmt.Sprintf(
 				"%s: output redirection yielded %s, not string.",
-				lib.MlrExeName(), redirectorTarget.GetTypeName(),
+				"mlr", redirectorTarget.GetTypeName(),
 			),
 		)
 	}

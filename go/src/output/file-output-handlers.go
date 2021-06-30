@@ -282,7 +282,7 @@ func NewPipeWriteOutputHandler(
 		return nil, errors.New(
 			fmt.Sprintf(
 				"%s: could not launch command \"%s\" for pipe-to.",
-				lib.MlrExeName(),
+				"mlr",
 				commandString,
 			),
 		)

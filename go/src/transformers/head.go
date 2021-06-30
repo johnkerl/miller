@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -25,7 +24,7 @@ func transformerHeadUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameHead)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameHead)
 	fmt.Fprintf(o, "Passes through the first n records, optionally by category.\n")
 
 	fmt.Fprintf(o, "Options:\n")

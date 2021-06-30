@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -30,7 +29,7 @@ func transformerFormatValuesUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameFormatValues)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameFormatValues)
 	fmt.Fprintf(o, "Applies format strings to all field values, depending on autodetected type.\n")
 	fmt.Fprintf(o, "* If a field value is detected to be integer, applies integer format.\n")
 	fmt.Fprintf(o, "* Else, if a field value is detected to be float, applies float format.\n")

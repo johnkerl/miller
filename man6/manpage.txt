@@ -124,7 +124,7 @@ OPTIONS
          mlr help misc
          mlr help mlrrc
          mlr help number-formatting
-         mlr help output-colorizations
+         mlr help output-colorization
          mlr help separator-options
          mlr help type-arithmetic-info
          mlr help usage-functions
@@ -135,7 +135,7 @@ OPTIONS
          mlr -l = mlr help list-verbs
          mlr -L = mlr help list-verbs-vertically
          mlr -f = mlr help usage-functions
-         mlr -F = mlr help list-functions
+         mlr -F = mlr help list-functions-vertically
          mlr -k = mlr help usage-keywords
          mlr -K = mlr help list-keywords
 
@@ -2433,4 +2433,4 @@ SEE ALSO
 
 
 
-                                  2021-06-29                         MILLER(1)
+                                  2021-06-30                         MILLER(1)

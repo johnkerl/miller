@@ -720,7 +720,7 @@ func (regtester *RegTester) loadEnvFile(
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s: could not parse line \"%s\" from file \"%s\".\n",
-					lib.MlrExeName(), line, filename,
+					"mlr", line, filename,
 				),
 			)
 		}
@@ -759,7 +759,7 @@ func (regtester *RegTester) loadStringPairFile(
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s: could not parse line \"%s\" from file \"%s\".\n",
-					lib.MlrExeName(), line, filename,
+					"mlr", line, filename,
 				),
 			)
 		}

@@ -82,14 +82,14 @@ func termcvtMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: lib.MlrExeName()
+				// TODO: "mlr"
 				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 				os.Exit(1)
 			}
 
 			ostream, err := os.Open(tempname)
 			if err != nil {
-				// TODO: lib.MlrExeName()
+				// TODO: "mlr"
 				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 				os.Exit(1)
 			}
@@ -102,7 +102,7 @@ func termcvtMain(args []string) int {
 
 			err = os.Rename(tempname, filename)
 			if err != nil {
-				// TODO: lib.MlrExeName()
+				// TODO: "mlr"
 				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 				os.Exit(1)
 			}
@@ -113,7 +113,7 @@ func termcvtMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: lib.MlrExeName()
+				// TODO: "mlr"
 				fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 				os.Exit(1)
 			}
@@ -137,7 +137,7 @@ func termcvtFile(istream *os.File, ostream *os.File, inTerm string, outTerm stri
 		}
 
 		if err != nil {
-			// TODO: lib.MlrExeName()
+			// TODO: "mlr"
 			fmt.Fprintln(os.Stderr, "mlr termcvt:", err)
 			os.Exit(1)
 		}

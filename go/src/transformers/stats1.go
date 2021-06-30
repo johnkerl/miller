@@ -27,7 +27,7 @@ func transformerStats1Usage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameStats1)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameStats1)
 	fmt.Fprint(o,
 		`Computes univariate statistics for one or more given fields, accumulated across
 the input record stream.
@@ -52,13 +52,13 @@ Options:
 `)
 
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape\n", lib.MlrExeName(), verbNameStats1)
+		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape\n", "mlr", verbNameStats1)
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size\n", lib.MlrExeName(), verbNameStats1)
+		"Example: mlr stats1 -a count,mode -f size\n", "mlr", verbNameStats1)
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size -g shape\n", lib.MlrExeName(), verbNameStats1)
+		"Example: mlr stats1 -a count,mode -f size -g shape\n", "mlr", verbNameStats1)
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", lib.MlrExeName(), verbNameStats1)
+		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", "mlr", verbNameStats1)
 	fmt.Fprintln(o,
 		`        This computes count and mode statistics on all field names beginning
          with a through h, grouped by all field names starting with k.`)
@@ -141,13 +141,13 @@ func transformerStats1ParseCLI(
 
 	// TODO: libify for use across verbs.
 	if len(accumulatorNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", lib.MlrExeName(), verbNameStats1)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", lib.MlrExeName(), verbNameStats1)
+		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", "mlr", verbNameStats1)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", "mlr", verbNameStats1)
 		os.Exit(1)
 	}
 	if len(valueFieldNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", lib.MlrExeName(), verbNameStats1)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", lib.MlrExeName(), verbNameStats1)
+		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", "mlr", verbNameStats1)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", "mlr", verbNameStats1)
 		os.Exit(1)
 	}
 
@@ -244,7 +244,7 @@ func NewTransformerStats1(
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s stats1: accumulator \"%s\" not found.\n",
-					lib.MlrExeName(), name,
+					"mlr", name,
 				),
 			)
 		}

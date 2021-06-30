@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -34,7 +33,7 @@ func transformerRepeatUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameRepeat)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameRepeat)
 	fmt.Fprintf(o, "Copies input records to output records multiple times.\n")
 	fmt.Fprintf(o, "Options must be exactly one of the following:\n")
 	fmt.Fprintf(o, "-n {repeat count}  Repeat each input record this many times.\n")
@@ -42,19 +41,19 @@ func transformerRepeatUsage(
 	fmt.Fprintf(o, "                   field name of each input record.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  echo x=0 | %s %s -n 4 then put '$x=urand()'\n", lib.MlrExeName(), verbNameRepeat)
+	fmt.Fprintf(o, "  echo x=0 | %s %s -n 4 then put '$x=urand()'\n", "mlr", verbNameRepeat)
 	fmt.Fprintf(o, "produces:\n")
 	fmt.Fprintf(o, " x=0.488189\n")
 	fmt.Fprintf(o, " x=0.484973\n")
 	fmt.Fprintf(o, " x=0.704983\n")
 	fmt.Fprintf(o, " x=0.147311\n")
 	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f b\n", lib.MlrExeName(), verbNameRepeat)
+	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f b\n", "mlr", verbNameRepeat)
 	fmt.Fprintf(o, "produces:\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
 	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f c\n", lib.MlrExeName(), verbNameRepeat)
+	fmt.Fprintf(o, "  echo a=1,b=2,c=3 | %s %s -f c\n", "mlr", verbNameRepeat)
 	fmt.Fprintf(o, "produces:\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")
 	fmt.Fprintf(o, "  a=1,b=2,c=3\n")

@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -25,7 +24,7 @@ func transformerCheckUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCheck)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCheck)
 	fmt.Fprintf(o, "Consumes records without printing any output.\n")
 	fmt.Fprintf(o, "Useful for doing a well-formatted check on input data.\n")
 	fmt.Fprintf(o, "Options:\n")

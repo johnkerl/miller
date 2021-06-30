@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -25,7 +24,7 @@ func transformerDecimateUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameDecimate)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameDecimate)
 	fmt.Fprintf(o, "Passes through one of every n records, optionally by category.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, " -b Decimate by printing first of every n.\n")

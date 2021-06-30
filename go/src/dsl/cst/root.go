@@ -13,7 +13,6 @@ import (
 
 	"miller/src/cliutil"
 	"miller/src/dsl"
-	"miller/src/lib"
 	"miller/src/output"
 	"miller/src/runtime"
 	"miller/src/types"
@@ -81,7 +80,7 @@ func (root *RootNode) IngestAST(
 			if warningsAreFatal {
 				fmt.Printf(
 					"%s: Exiting due to warnings treated as fatal.\n",
-					lib.MlrExeName(),
+					"mlr",
 				)
 				os.Exit(1)
 			}
@@ -281,7 +280,7 @@ func (root *RootNode) ProcessEndOfStream() {
 				fmt.Fprintf(
 					os.Stderr,
 					"%s: error on end-of-stream close: %v\n",
-					lib.MlrExeName(),
+					"mlr",
 					err,
 				)
 			}

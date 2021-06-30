@@ -4,12 +4,10 @@ TOP OF LIST:
 * emit * regex * fmtnum * localtime *
 * --nr-progress-mod * mlr -k *
 * cli-audits * doc6 * survey * check issues *
-* split up mlr -h
 * survey email followups
 
 * convert all code-blocks to cardify
 * most/least-frequent: map -> odict
-* lib.MlrExeName() -> "mlr" throughout
 
 ----------------------------------------------------------------
 colorizer:
@@ -29,15 +27,11 @@ HELP
 * split up help/entry.go -- ?
 ? integrate repl help with main help?
   o repl help keyword
+* proofread mlr help ... & man mlr6
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
 DOC6
-
-* wip
-  go get github.com/kisielk/godepgraph
-  godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
-* flamegraph etc double-check
 
 * memory page:
   o open with "out of memory" -- what next?
@@ -56,7 +50,6 @@ DOC6
   o differences from other languages (cf. juliadocs)
 
 * doc notes about --jknquotein & --jvquoteall. make sure they're ignore-accepted in the CLIP.
-* audit for mlb -> lib.MlrExeName() (in case mlr.foo)
 
 * items:
   o file-formats:
@@ -121,7 +114,6 @@ w survey
 ----------------------------------------------------------------
 
 * debug && || on windows more ...
-* list-of-verbs shortlist @ top ...
 
 * blocker: regexes
   o finish stats1 -r
@@ -183,6 +175,11 @@ w survey
   - InputFormat into Context
   - TBD writer -- defer factory until first context?
   - deeper refactor pulling format out of reader/writer options entirely -- ?
+
+* pkg graph:
+  go get github.com/kisielk/godepgraph
+  godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
+  flamegraph etc double-check
 
 ----------------------------------------------------------------
 

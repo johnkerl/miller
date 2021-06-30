@@ -144,7 +144,7 @@ func (mv *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {
 		fmt.Fprintf(
 			os.Stderr,
 			"%s: couldn't parse \"%s\" as number.",
-			lib.MlrExeName(), mv.String(),
+			"mlr", mv.String(),
 		)
 		os.Exit(1)
 	}

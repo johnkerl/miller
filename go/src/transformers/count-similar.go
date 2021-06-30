@@ -26,7 +26,7 @@ func transformerCountSimilarUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCountSimilar)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCountSimilar)
 	fmt.Fprintf(o, "Ingests all records, then emits each record augmented by a count of\n")
 	fmt.Fprintf(o, "the number of other records having the same group-by field values.\n")
 	fmt.Fprintf(o, "Options:\n")

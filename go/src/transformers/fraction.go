@@ -26,7 +26,7 @@ func transformerFractionUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameFraction
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "For each record's value in specified fields, computes the ratio of that\n")

@@ -26,7 +26,7 @@ func transformerGroupLikeUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameGroupLike)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameGroupLike)
 	fmt.Fprint(o, "Outputs records in batches having identical field names.")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")

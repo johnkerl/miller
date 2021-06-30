@@ -3,16 +3,14 @@ package cliutil
 import (
 	"fmt"
 	"os"
-
-	"miller/src/lib"
 )
 
 // For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
 // this let us see if the "10" slot exists.
 func CheckArgCount(args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
-		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", lib.MlrExeName(), args[argi])
-		fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", lib.MlrExeName())
+		fmt.Fprintf(os.Stderr, "%s: option \"%s\" missing argument(s).\n", "mlr", args[argi])
+		fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", "mlr")
 		os.Exit(1)
 	}
 }

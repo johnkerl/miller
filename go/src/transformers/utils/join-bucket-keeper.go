@@ -170,7 +170,7 @@ func NewJoinBucketKeeper(
 		fmt.Fprintf(
 			os.Stderr,
 			"%s join: Input format %s not found.\n",
-			lib.MlrExeName(),
+			"mlr",
 			joinReaderOptions.InputFileFormat,
 		)
 		os.Exit(1)
@@ -314,7 +314,7 @@ func (keeper *JoinBucketKeeper) FindJoinBucket(
 			fmt.Fprintf(
 				os.Stderr,
 				"%s: internal coding error: failed transition from prefill state.\n",
-				lib.MlrExeName(),
+				"mlr",
 			)
 			os.Exit(1)
 		}
@@ -464,7 +464,7 @@ func (keeper *JoinBucketKeeper) fillNextJoinBucket() {
 		fmt.Fprintf(
 			os.Stderr,
 			"%s: internal coding error: peek record should have had join keys.\n",
-			lib.MlrExeName(),
+			"mlr",
 		)
 		os.Exit(1)
 	}
@@ -572,7 +572,7 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 
 	select {
 	case err := <-keeper.errorChannel:
-		fmt.Fprintln(os.Stderr, lib.MlrExeName(), ": ", err)
+		fmt.Fprintln(os.Stderr, "mlr", ": ", err)
 		os.Exit(1)
 	case leftrecAndContext := <-keeper.inputChannel:
 		if leftrecAndContext.EndOfStream { // end-of-stream marker

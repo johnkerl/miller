@@ -25,7 +25,7 @@ func transformerCountUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCount)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCount)
 	fmt.Fprint(o,
 		`Prints number of records, optionally grouped by distinct values for specified field names.
 `)

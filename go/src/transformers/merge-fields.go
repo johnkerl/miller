@@ -37,7 +37,7 @@ func transformerMergeFieldsUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameMergeFields
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Computes univariate statistics for each input record, accumulated across\n")
@@ -143,13 +143,13 @@ func transformerMergeFieldsParseCLI(
 
 	// TODO: libify for use across verbs.
 	if len(accumulatorNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", lib.MlrExeName(), verbNameMergeFields)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", lib.MlrExeName(), verbNameMergeFields)
+		fmt.Fprintf(os.Stderr, "%s %s: -a option is required.\n", "mlr", verbNameMergeFields)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", "mlr", verbNameMergeFields)
 		os.Exit(1)
 	}
 	if len(valueFieldNameList) == 0 {
-		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", lib.MlrExeName(), verbNameMergeFields)
-		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", lib.MlrExeName(), verbNameMergeFields)
+		fmt.Fprintf(os.Stderr, "%s %s: -f option is required.\n", "mlr", verbNameMergeFields)
+		fmt.Fprintf(os.Stderr, "Please see %s %s --help for more information.\n", "mlr", verbNameMergeFields)
 		os.Exit(1)
 	}
 	if outputFieldBasename == "" {
@@ -251,7 +251,7 @@ func NewTransformerMergeFields(
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s %s: accumulator \"%s\" not found.\n",
-					lib.MlrExeName(), verbNameMergeFields, accumulatorName,
+					"mlr", verbNameMergeFields, accumulatorName,
 				),
 			)
 		}
@@ -275,7 +275,7 @@ func NewTransformerMergeFields(
 			fmt.Fprintf(
 				os.Stderr,
 				"%s %s: cannot compile regex [%s]\n",
-				lib.MlrExeName(), verbNameCut, regexString,
+				"mlr", verbNameCut, regexString,
 			)
 			os.Exit(1)
 		}

@@ -26,7 +26,7 @@ func transformerGroupByUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated field names}\n", lib.MlrExeName(), verbNameGroupBy)
+	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated field names}\n", "mlr", verbNameGroupBy)
 	fmt.Fprint(o, "Outputs records in batches having identical values at specified field names.")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")

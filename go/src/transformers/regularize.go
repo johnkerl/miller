@@ -25,7 +25,7 @@ func transformerRegularizeUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameRegularize)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameRegularize)
 	fmt.Fprint(o, "Outputs records sorted lexically ascending by keys.")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")

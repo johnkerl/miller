@@ -77,7 +77,7 @@ func transformerJoinUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJoin)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameJoin)
 	fmt.Fprintf(o, "Joins records from specified left file name with records from all file names\n")
 	fmt.Fprintf(o, "at the end of the Miller argument list.\n")
 	fmt.Fprintf(o, "Functionality is essentially the same as the system \"join\" command, but for\n")
@@ -103,13 +103,13 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "  -u           Enable unsorted input. (This is the default even without -u.)\n")
 	fmt.Fprintf(o, "               In this case, the entire left file will be loaded into memory.\n")
 	fmt.Fprintf(o, "  --prepipe {command} As in main input options; see %s --help for details.\n",
-		lib.MlrExeName())
+		"mlr")
 	fmt.Fprintf(o, "               If you wish to use a prepipe command for the main input as well\n")
 	fmt.Fprintf(o, "               as here, it must be specified there as well as here.\n")
 	fmt.Fprintf(o, "  --prepipex {command} Likewise.\n")
 	fmt.Fprintf(o, "File-format options default to those for the right file names on the Miller\n")
 	fmt.Fprintf(o, "argument list, but may be overridden for the left file as follows. Please see\n")
-	fmt.Fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments:\n", lib.MlrExeName())
+	fmt.Fprintf(o, "the main \"%s --help\" for more information on syntax for these arguments:\n", "mlr")
 	fmt.Fprintf(o, "  -i {one of csv,dkvp,nidx,pprint,xtab}\n")
 	fmt.Fprintf(o, "  --irs {record-separator character}\n")
 	fmt.Fprintf(o, "  --ifs {field-separator character}\n")
@@ -123,7 +123,7 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be\n")
 	fmt.Fprintf(o, "expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.\n")
 	fmt.Fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
-		lib.MlrExeName())
+		"mlr")
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information\n")
 	fmt.Fprintf(o, "including examples.\n")
 
@@ -220,20 +220,20 @@ func transformerJoinParseCLI(
 	}
 
 	if opts.leftFileName == "" {
-		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", lib.MlrExeName(), verb)
+		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", "mlr", verb)
 		transformerSortUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if !opts.emitPairables && !opts.emitLeftUnpairables && !opts.emitRightUnpairables {
 		fmt.Fprintf(os.Stderr, "%s %s: all emit flags are unset; no output is possible.\n",
-			lib.MlrExeName(), verb)
+			"mlr", verb)
 		transformerSortUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if opts.outputJoinFieldNames == nil {
-		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", lib.MlrExeName(), verb)
+		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", "mlr", verb)
 		transformerSortUsage(os.Stderr, true, 1)
 		return nil
 	}
@@ -251,7 +251,7 @@ func transformerJoinParseCLI(
 	if llen != rlen || llen != olen {
 		fmt.Fprintf(os.Stderr,
 			"%s %s: must have equal left,right,output field-name lists; got lengths %d,%d,%d.\n",
-			lib.MlrExeName(), verb, llen, rlen, olen)
+			"mlr", verb, llen, rlen, olen)
 		os.Exit(1)
 	}
 
@@ -475,7 +475,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 		select {
 
 		case err := <-errorChannel:
-			fmt.Fprintln(os.Stderr, lib.MlrExeName(), ": ", err)
+			fmt.Fprintln(os.Stderr, "mlr", ": ", err)
 			os.Exit(1)
 
 		case leftrecAndContext := <-inputChannel:

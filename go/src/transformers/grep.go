@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -26,7 +25,7 @@ func transformerGrepUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {regular expression}\n", lib.MlrExeName(), verbNameGrep)
+	fmt.Fprintf(o, "Usage: %s %s [options] {regular expression}\n", "mlr", verbNameGrep)
 	fmt.Fprintf(o, "Passes through records which match the regular expression.\n")
 
 	fmt.Fprint(o, "Options:\n")
@@ -45,7 +44,7 @@ be matched, not against either of these lines, but against the DKVP line
 and this command is intended to be merely a keystroke-saver. To get all the
 features of system grep, you can do
   "%s --odkvp ... | grep ... | %s --idkvp ..."
-`, lib.MlrExeName(), lib.MlrExeName(), lib.MlrExeName(), lib.MlrExeName())
+`, "mlr", "mlr", "mlr", "mlr")
 
 	if doExit {
 		os.Exit(exitCode)
@@ -103,7 +102,7 @@ func transformerGrepParseCLI(
 	regexp, err := regexp.Compile(pattern)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s %s: couldn't compile regex \"%s\"\n",
-			lib.MlrExeName(), verb, pattern)
+			"mlr", verb, pattern)
 		os.Exit(1)
 	}
 

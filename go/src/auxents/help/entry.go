@@ -70,7 +70,7 @@ func init() {
 		{name: "misc", zaryHandlerFunc: helpMiscOptions},
 		{name: "mlrrc", zaryHandlerFunc: helpMlrrc},
 		{name: "number-formatting", zaryHandlerFunc: helpNumberFormatting},
-		{name: "output-colorizations", zaryHandlerFunc: helpOutputColorization},
+		{name: "output-colorization", zaryHandlerFunc: helpOutputColorization},
 		{name: "separator-options", zaryHandlerFunc: helpSeparatorOptions},
 		{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
 		{name: "usage-functions", zaryHandlerFunc: usageFunctions},
@@ -85,7 +85,7 @@ func init() {
 
 // TODO:
 // function-list as paragraph (for manpage)
-// type-arithmetic-info printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
+// type-arithmetic-info printTypeArithmeticInfo(os.Stdout, "mlr");
 
 // ================================================================
 // For things like 'mlr help foo', invoked through the auxent framework which

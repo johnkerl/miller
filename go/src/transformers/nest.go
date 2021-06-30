@@ -29,7 +29,7 @@ func transformerNestUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameNest
 
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
@@ -251,7 +251,7 @@ func NewTransformerNest(
 		fmt.Fprintf(
 			os.Stderr,
 			"%s %s: cannot compile regex [%s]\n",
-			lib.MlrExeName(), verbNameNest, regexString,
+			"mlr", verbNameNest, regexString,
 		)
 		os.Exit(1)
 	}

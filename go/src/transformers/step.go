@@ -28,7 +28,7 @@ func transformerStepUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameStep)
 	fmt.Fprintf(o, "Computes values dependent on the previous record, optionally grouped by category.\n")
 	fmt.Fprintf(o, "Options:\n")
 
@@ -49,7 +49,7 @@ func transformerStepUsage(
 	fmt.Fprintf(o, "-d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no\n")
 	fmt.Fprintf(o, "           smoothing), near under under 1 is light smoothing, near over 0 is\n")
 	fmt.Fprintf(o, "           heavy smoothing. Multiple weights may be specified, e.g.\n")
-	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "           \"%s %s -a ewma -f sys_load -d 0.01,0.1,0.9\". Default if omitted\n", "mlr", verbNameStep)
 	fmt.Fprintf(o, "           is \"-d %s\".\n", DEFAULT_STRING_ALPHA)
 
 	fmt.Fprintf(o, "-o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to\n")
@@ -59,11 +59,11 @@ func transformerStepUsage(
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", lib.MlrExeName(), verbNameStep)
-	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", lib.MlrExeName(), verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a rsum -f request_size\n", "mlr", verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a delta -f request_size -g hostname\n", "mlr", verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -f x,y\n", "mlr", verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", "mlr", verbNameStep)
+	fmt.Fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", "mlr", verbNameStep)
 
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or\n")

@@ -59,8 +59,8 @@ func ParseCommandLine(args []string) (
 			// handled
 		} else {
 			// unhandled
-			fmt.Fprintf(os.Stderr, "%s: option \"%s\" not recognized.\n", lib.MlrExeName(), args[argi])
-			fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for usage information.\n", lib.MlrExeName())
+			fmt.Fprintf(os.Stderr, "%s: option \"%s\" not recognized.\n", "mlr", args[argi])
+			fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for usage information.\n", "mlr")
 			os.Exit(1)
 		}
 	}
@@ -114,7 +114,7 @@ func ParseCommandLine(args []string) (
 	}
 
 	if options.DoInPlace && (options.FileNames == nil || len(options.FileNames) == 0) {
-		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", lib.MlrExeName())
+		fmt.Fprintf(os.Stderr, "%s: -I option (in-place operation) requires input files.\n", "mlr")
 		os.Exit(1)
 	}
 
@@ -152,7 +152,7 @@ func parseTransformers(
 	}
 
 	if (argc - argi) < 1 {
-		fmt.Fprintf(os.Stderr, "%s: no verb supplied.\n", lib.MlrExeName())
+		fmt.Fprintf(os.Stderr, "%s: no verb supplied.\n", "mlr")
 		help.MainUsage(os.Stderr)
 		os.Exit(1)
 	}
@@ -167,7 +167,7 @@ func parseTransformers(
 		if transformerSetup == nil {
 			fmt.Fprintf(os.Stderr,
 				"%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
-				lib.MlrExeName(), verb, lib.MlrExeName())
+				"mlr", verb, "mlr")
 			os.Exit(1)
 		}
 
@@ -200,7 +200,7 @@ func parseTransformers(
 			break
 		} else {
 			if argi == argc-1 {
-				fmt.Fprintf(os.Stderr, "%s: missing next verb after \"then\".\n", lib.MlrExeName())
+				fmt.Fprintf(os.Stderr, "%s: missing next verb after \"then\".\n", "mlr")
 				os.Exit(1)
 			} else {
 				argi++

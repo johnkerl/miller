@@ -25,11 +25,11 @@ func transformerSampleUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSample)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSample)
 	fmt.Fprintf(o,
 		`Reservoir sampling (subsampling without replacement), optionally by category.
 See also %s bootstrap and %s shuffle.
-`, lib.MlrExeName(), lib.MlrExeName())
+`, "mlr", "mlr")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.\n")
 	fmt.Fprintf(o, "-k {k} Required: number of records to output in total, or by group if using -g.\n")

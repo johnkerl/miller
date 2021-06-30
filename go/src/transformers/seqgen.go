@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -26,7 +25,7 @@ func transformerSeqgenUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSeqgen)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSeqgen)
 	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
 	fmt.Fprintf(o, "Produces a sequence of counters.  Discards the input record stream. Produces\n")
 	fmt.Fprintf(o, "output as specified by the options\n")

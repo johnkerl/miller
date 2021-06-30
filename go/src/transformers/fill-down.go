@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -25,7 +24,7 @@ func transformerFillDownUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameFillDown)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameFillDown)
 	fmt.Fprintln(o, "If a given record has a missing value for a given field, fill that from")
 	fmt.Fprintln(o, "the corresponding value from a previous record, if any.")
 	fmt.Fprintln(o, "By default, a 'missing' field either is absent, or has the empty-string value.")

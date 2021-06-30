@@ -9,7 +9,6 @@ import (
 	"os"
 
 	"miller/src/dsl"
-	"miller/src/lib"
 	"miller/src/parsing/lexer"
 	"miller/src/parsing/parser"
 )
@@ -24,7 +23,7 @@ func (repl *Repl) BuildASTFromStringWithMessage(
 		// At present it's overly parser-internal, and confusing. :(
 		// fmt.Fprintln(os.Stderr, err)
 		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
-			lib.MlrExeName())
+			"mlr")
 		if repl.astPrintMode != ASTPrintNone {
 			fmt.Fprintln(os.Stderr, dslString)
 		}
