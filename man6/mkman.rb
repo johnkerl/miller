@@ -59,7 +59,6 @@ output separator to the given value."""
 	print make_code_block(`mlr help list-verbs`)
 
 	print make_subsection('FUNCTION LIST', [])
-  # TODO: list as paragraph
 	print make_code_block(`mlr help list-functions`)
 
 	print make_subsection('I/O FORMATTING', [])

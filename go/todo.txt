@@ -24,11 +24,11 @@ doclink etc:
 ----------------------------------------------------------------
 HELP
 
+! TABLE -> getTABLE() w/ lazy sorted/sorter
+
 * split up help/entry.go -- ?
-! improved sort for functions-table
 ? integrate repl help with main help?
   o repl help keyword
-* manpage & main help need some basic examples
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
@@ -38,6 +38,13 @@ DOC6
   go get github.com/kisielk/godepgraph
   godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
 * flamegraph etc double-check
+
+* memory page:
+  o open with "out of memory" -- what next?
+  o streaming vs non-streaming
+  o unsparsify -f
+  o no out-of-core sort yet ...
+  o older versions
 
 ? quick-examples needs fewer inputs, and outputs for all retained inputs
   ? or q-e more links to 10min
@@ -83,6 +90,12 @@ DOC6
 ----------------------------------------------------------------
 
 * case auxfiles: cat them too
+
+----------------------------------------------------------------
+REPLv2
+
+* consider making it a verb
+  o 'put --repl' maybe
 
 ----------------------------------------------------------------
 * mlr -k

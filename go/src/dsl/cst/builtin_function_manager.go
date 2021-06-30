@@ -55,20 +55,47 @@ type BuiltinFunctionInfo struct {
 func init() {
 	// Go sort API: for ascending sort, return true if element i < element j.
 	sort.Slice(_BUILTIN_FUNCTION_LOOKUP_TABLE, func(i, j int) bool {
-		//if _BUILTIN_FUNCTION_LOOKUP_TABLE[i].class < _BUILTIN_FUNCTION_LOOKUP_TABLE[j].class {
-		//return true
-		//}
-		//if _BUILTIN_FUNCTION_LOOKUP_TABLE[i].class > _BUILTIN_FUNCTION_LOOKUP_TABLE[j].class {
-		//return false
-		//}
-		if _BUILTIN_FUNCTION_LOOKUP_TABLE[i].name < _BUILTIN_FUNCTION_LOOKUP_TABLE[j].name {
+		namei := _BUILTIN_FUNCTION_LOOKUP_TABLE[i].name
+		namej := _BUILTIN_FUNCTION_LOOKUP_TABLE[j].name
+
+		si := startsWithLetter(namei)
+		sj := startsWithLetter(namej)
+
+		if si && !sj {
 			return true
-		}
-		if _BUILTIN_FUNCTION_LOOKUP_TABLE[i].name > _BUILTIN_FUNCTION_LOOKUP_TABLE[j].name {
+		} else if !si && sj {
 			return false
+		} else {
+
+			// classi := _BUILTIN_FUNCTION_LOOKUP_TABLE[i].class
+			// classj := _BUILTIN_FUNCTION_LOOKUP_TABLE[j].class
+			//if classi < classj {
+			//  return true
+			//}
+			//if classi > classj {
+			//  return false
+			//}
+
+			if namei < namej {
+				return true
+			} else {
+				return false
+			}
 		}
-		return false
 	})
+}
+
+// TODO: move
+func isLetter(c byte) bool {
+	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
+}
+
+func startsWithLetter(s string) bool {
+	if len(s) < 1 {
+		return false
+	} else {
+		return isLetter(s[0])
+	}
 }
 
 var _BUILTIN_FUNCTION_LOOKUP_TABLE = []BuiltinFunctionInfo{
@@ -1580,6 +1607,15 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionNames(o *os.File) {
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		fmt.Fprintln(o, builtinFunctionInfo.name)
 	}
+}
+
+// ----------------------------------------------------------------
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph(o *os.File) {
+	functionNames := make([]string, len(*manager.lookupTable))
+	for i, builtinFunctionInfo := range *manager.lookupTable {
+		functionNames[i] = builtinFunctionInfo.name
+	}
+	lib.PrintWordsAsParagraph(functionNames, o)
 }
 
 // ----------------------------------------------------------------

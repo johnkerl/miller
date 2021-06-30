@@ -42,7 +42,7 @@ func init() {
 		{shorthand: "-l", longhand: "list-verbs"},
 		{shorthand: "-L", longhand: "list-verbs-vertically"},
 		{shorthand: "-f", longhand: "usage-functions"},
-		{shorthand: "-F", longhand: "list-functions"},
+		{shorthand: "-F", longhand: "list-functions-vertically"},
 		{shorthand: "-k", longhand: "usage-keywords"},
 		{shorthand: "-K", longhand: "list-keywords"},
 	}
@@ -667,9 +667,8 @@ func helpTypeArithmeticInfo() {
 }
 
 // ================================================================
-// TODO: port the paragraphifier
 func listFunctions() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
 }
 
 // ----------------------------------------------------------------

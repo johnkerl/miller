@@ -1830,8 +1830,8 @@ most-frequent
     square   red    1874
     triangle red    1560
     circle   red    1207
-    square   yellow 589
     square   blue   589
+    square   yellow 589
 
 .. code-block:: none
    :emphasize-lines: 1-1
@@ -1841,8 +1841,8 @@ most-frequent
     square   red
     triangle red
     circle   red
-    square   yellow
     square   blue
+    square   yellow
 
 See also :ref:`reference-verbs-least-frequent`.
 

@@ -126,6 +126,7 @@ OPTIONS
          mlr help number-formatting
          mlr help output-colorizations
          mlr help separator-options
+         mlr help type-arithmetic-info
          mlr help usage-functions
          mlr help usage-keywords
          mlr help usage-verbs
@@ -149,196 +150,27 @@ OPTIONS
        unsparsify
 
    FUNCTION LIST
-       !
-       !=
-       !=~
-       %
-       &
-       &&
-       *
-       **
-       +
-       -
-       .
-       .*
-       .+
-       .-
-       ./
-       /
-       //
-       <
-       <<
-       <=
-       ==
-       =~
-       >
-       >=
-       >>
-       >>>
-       ?:
-       ??
-       ???
-       ^
-       ^^
-       abs
-       acos
-       acosh
-       append
-       arrayify
-       asin
-       asinh
-       asserting_absent
-       asserting_array
-       asserting_bool
-       asserting_boolean
-       asserting_empty
-       asserting_empty_map
-       asserting_error
-       asserting_float
-       asserting_int
-       asserting_map
-       asserting_nonempty_map
-       asserting_not_array
-       asserting_not_empty
-       asserting_not_map
-       asserting_not_null
-       asserting_null
-       asserting_numeric
-       asserting_present
-       asserting_string
-       atan
-       atan2
-       atanh
-       bitcount
-       boolean
-       capitalize
-       cbrt
-       ceil
-       clean_whitespace
-       collapse_whitespace
-       cos
-       cosh
-       depth
-       dhms2fsec
-       dhms2sec
-       erf
-       erfc
-       exp
-       expm1
-       flatten
-       float
-       floor
-       fmtnum
-       fsec2dhms
-       fsec2hms
-       get_keys
-       get_values
-       gmt2sec
-       gsub
-       haskey
-       hexfmt
-       hms2fsec
-       hms2sec
-       hostname
-       int
-       invqnorm
-       is_absent
-       is_array
-       is_bool
-       is_boolean
-       is_empty
-       is_empty_map
-       is_error
-       is_float
-       is_int
-       is_map
-       is_nonempty_map
-       is_not_array
-       is_not_empty
-       is_not_map
-       is_not_null
-       is_null
-       is_numeric
-       is_present
-       is_string
-       joink
-       joinkv
-       joinv
-       json_parse
-       json_stringify
-       leafcount
-       length
-       log
-       log10
-       log1p
-       logifit
-       lstrip
-       madd
-       mapdiff
-       mapexcept
-       mapselect
-       mapsum
-       max
-       md5
-       mexp
-       min
-       mmul
-       msub
-       os
-       pow
-       qnorm
-       regextract
-       regextract_or_else
-       round
-       roundm
-       rstrip
-       sec2dhms
-       sec2gmt
-       sec2gmtdate
-       sec2hms
-       sgn
-       sha1
-       sha256
-       sha512
-       sin
-       sinh
-       splita
-       splitax
-       splitkv
-       splitkvx
-       splitnv
-       splitnvx
-       sqrt
-       ssub
-       strftime
-       string
-       strip
-       strlen
-       strptime
-       sub
-       substr
-       substr0
-       substr1
-       system
-       systime
-       systimeint
-       tan
-       tanh
-       tolower
-       toupper
-       truncate
-       typeof
-       unflatten
-       uptime
-       urand
-       urand32
-       urandint
-       urandrange
-       version
-       |
-       ||
-       ~
-       Please use "mlr --help-function {function name}" for function-specific help.
+       abs acos acosh append arrayify asin asinh asserting_absent asserting_array
+       asserting_bool asserting_boolean asserting_empty asserting_empty_map
+       asserting_error asserting_float asserting_int asserting_map
+       asserting_nonempty_map asserting_not_array asserting_not_empty
+       asserting_not_map asserting_not_null asserting_null asserting_numeric
+       asserting_present asserting_string atan atan2 atanh bitcount boolean
+       capitalize cbrt ceil clean_whitespace collapse_whitespace cos cosh depth
+       dhms2fsec dhms2sec erf erfc exp expm1 flatten float floor fmtnum fsec2dhms
+       fsec2hms get_keys get_values gmt2sec gsub haskey hexfmt hms2fsec hms2sec
+       hostname int invqnorm is_absent is_array is_bool is_boolean is_empty
+       is_empty_map is_error is_float is_int is_map is_nonempty_map is_not_array
+       is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
+       joink joinkv joinv json_parse json_stringify leafcount length log log10 log1p
+       logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul
+       msub os pow qnorm regextract regextract_or_else round roundm rstrip sec2dhms
+       sec2gmt sec2gmtdate sec2hms sgn sha1 sha256 sha512 sin sinh splita splitax
+       splitkv splitkvx splitnv splitnvx sqrt ssub strftime string strip strlen
+       strptime sub substr substr0 substr1 system systime systimeint tan tanh tolower
+       toupper truncate typeof unflatten uptime urand urand32 urandint urandrange
+       version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= == =~ > >= >> >>>
+       ?: ?? ??? ^ ^^ | || ~
 
    I/O FORMATTING
        CSV/CSV-lite: comma-separated values with separate header line
@@ -500,7 +332,6 @@ OPTIONS
                           e.g. if fields a and b were quoted on input and you do
                           "put '$c = $a . $b'" then field c won't inherit a or b's
                           was-quoted-on-input flag.
-
 
    NUMBER FORMATTING
        THIS IS STILL WIP FOR MILLER 6
@@ -1581,99 +1412,6 @@ VERBS
        'a=,b=3,c=4'.
 
 FUNCTIONS FOR FILTER/PUT
-   !
-        (class=boolean #args=1) Logical negation.
-
-   !=
-        (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
-
-   !=~
-        (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
-
-   %
-        (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
-
-   &
-        (class=arithmetic #args=2) Bitwise AND.
-
-   &&
-        (class=boolean #args=2) Logical AND.
-
-   *
-        (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
-
-   **
-        (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
-
-   +
-        (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
-
-   -
-        (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
-
-   .
-        (class=string #args=2) String concatenation.
-
-   .*
-        (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
-
-   .+
-        (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
-
-   .-
-        (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
-
-   ./
-        (class=arithmetic #args=2) Integer division; not pythonic.
-
-   /
-        (class=arithmetic #args=2) Division. Integer / integer is floating-point.
-
-   //
-        (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
-
-   <
-        (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
-
-   <<
-        (class=arithmetic #args=2) Bitwise left-shift.
-
-   <=
-        (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
-
-   ==
-        (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
-
-   =~
-        (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
-
-   >
-        (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
-
-   >=
-        (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
-
-   >>
-        (class=arithmetic #args=2) Bitwise signed right-shift.
-
-   >>>
-        (class=arithmetic #args=2) Bitwise unsigned right-shift.
-
-   ?:
-        (class=boolean #args=3) Standard ternary operator.
-
-   ??
-        (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
-
-   ???
-        (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
-
-   ^
-        (class=arithmetic #args=2) Bitwise XOR.
-
-   ^^
-        (class=boolean #args=2) Logical XOR.
-
    abs
         (class=math #args=1) Absolute value.
 
@@ -2217,6 +1955,99 @@ FUNCTIONS FOR FILTER/PUT
    version
         (class=system #args=0) Returns the Miller version as a string.
 
+   !
+        (class=boolean #args=1) Logical negation.
+
+   !=
+        (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
+
+   !=~
+        (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
+
+   %
+        (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
+
+   &
+        (class=arithmetic #args=2) Bitwise AND.
+
+   &&
+        (class=boolean #args=2) Logical AND.
+
+   *
+        (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
+
+   **
+        (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
+
+   +
+        (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
+
+   -
+        (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
+
+   .
+        (class=string #args=2) String concatenation.
+
+   .*
+        (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
+
+   .+
+        (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
+
+   .-
+        (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
+
+   ./
+        (class=arithmetic #args=2) Integer division; not pythonic.
+
+   /
+        (class=arithmetic #args=2) Division. Integer / integer is floating-point.
+
+   //
+        (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
+
+   <
+        (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
+
+   <<
+        (class=arithmetic #args=2) Bitwise left-shift.
+
+   <=
+        (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
+
+   ==
+        (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
+
+   =~
+        (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
+
+   >
+        (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
+
+   >=
+        (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
+
+   >>
+        (class=arithmetic #args=2) Bitwise signed right-shift.
+
+   >>>
+        (class=arithmetic #args=2) Bitwise unsigned right-shift.
+
+   ?:
+        (class=boolean #args=3) Standard ternary operator.
+
+   ??
+        (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
+
+   ???
+        (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
+
+   ^
+        (class=arithmetic #args=2) Bitwise XOR.
+
+   ^^
+        (class=boolean #args=2) Logical XOR.
+
    |
         (class=arithmetic #args=2) Bitwise OR.
 
@@ -2602,4 +2433,4 @@ SEE ALSO
 
 
 
-                                  2021-06-28                         MILLER(1)
+                                  2021-06-29                         MILLER(1)
