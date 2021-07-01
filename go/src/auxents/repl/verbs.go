@@ -870,6 +870,10 @@ func handleHelpSingle(repl *Repl, arg string) {
 		return
 	}
 
+	if cst.TryUsageForKeyword(arg) {
+		return
+	}
+
 	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout) {
 		return
 	}

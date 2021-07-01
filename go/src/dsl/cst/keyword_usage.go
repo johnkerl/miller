@@ -2,6 +2,7 @@ package cst
 
 import (
 	"fmt"
+	"os"
 
 	"miller/src/lib"
 )
@@ -82,24 +83,35 @@ func UsageKeywords() {
 }
 
 func UsageForKeyword(name string) {
-	found := false
-	for _, entry := range KEYWORD_USAGE_TABLE {
-		if entry.name == name {
-			entry.usageFunc()
-			found = true
-			break
-		}
-	}
-	if !found {
+	if !TryUsageForKeyword(name) {
 		fmt.Printf("mlr: unrecognized keyword \"%s\".\n", name)
 	}
 }
 
+func TryUsageForKeyword(name string) bool {
+	for _, entry := range KEYWORD_USAGE_TABLE {
+		if entry.name == name {
+			entry.usageFunc()
+			return true
+		}
+	}
+	return false
+}
+
 // ----------------------------------------------------------------
-func ListKeywords() {
+func ListKeywordsVertically() {
 	for _, entry := range KEYWORD_USAGE_TABLE {
 		fmt.Println(entry.name)
 	}
+}
+
+// ----------------------------------------------------------------
+func ListKeywordsAsParagraph() {
+	keywords := make([]string, len(KEYWORD_USAGE_TABLE))
+	for i, entry := range KEYWORD_USAGE_TABLE {
+		keywords[i] = entry.name
+	}
+	lib.PrintWordsAsParagraph(keywords, os.Stdout)
 }
 
 // ----------------------------------------------------------------

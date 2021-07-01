@@ -255,11 +255,11 @@ Type-test and type-assertion expressions
 The following ``is...`` functions take a value and return a boolean indicating whether the argument is of the indicated type. The ``assert_...`` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
 GENRST_RUN_COMMAND
-mlr -F | grep ^is
+mlr -f | grep ^is
 GENRST_EOF
 
 GENRST_RUN_COMMAND
-mlr -F | grep ^assert
+mlr -f | grep ^assert
 GENRST_EOF
 
 Please see :ref:`cookbook-data-cleaning-examples` for examples of how to use these.

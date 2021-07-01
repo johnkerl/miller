@@ -43,6 +43,15 @@ a special case.) This manpage documents #{`mlr --version`.chomp}."""
 	print make_section('DATA FORMATS', [])
 	print make_code_block(`mlr help data-formats`)
 
+	print make_section('VERB LIST', [])
+	print make_code_block(`mlr help list-verbs-as-paragraph`)
+
+	print make_section('FUNCTION LIST', [])
+	print make_code_block(`mlr help list-functions-as-paragraph`)
+
+	print make_section('HELP OPTIONS', [])
+	print make_code_block(`mlr help topics`)
+
   print make_section('OPTIONS', [
 """In the following option flags, the version with \"i\" designates the input
 stream, \"o\" the output stream, and the version without prefix sets the option
@@ -51,30 +60,20 @@ separator, --ors the output record separator, and --rs sets both the input and
 output separator to the given value."""
   ])
 
-  # TODO: output colorization and repl
-	print make_subsection('HELP OPTIONS', [])
-	print make_code_block(`mlr help topics`)
-
-	print make_subsection('VERB LIST', [])
-	print make_code_block(`mlr help list-verbs`)
-
-	print make_subsection('FUNCTION LIST', [])
-	print make_code_block(`mlr help list-functions`)
-
-	print make_subsection('I/O FORMATTING', [])
-	print make_code_block(`mlr help data-formats`)
-
-	print make_subsection('COMMENTS IN DATA', [])
-	print make_code_block(`mlr help comments-in-data`)
+	print make_subsection('DATA-FORMAT OPTIONS', [])
+	print make_code_block(`mlr help data-format-options`)
 
 	print make_subsection('FORMAT-CONVERSION KEYSTROKE-SAVERS', [])
 	print make_code_block(`mlr help format-conversion`)
 
+	print make_subsection('SEPARATORS', [])
+	print make_code_block(`mlr help separator-options`)
+
 	print make_subsection('COMPRESSED I/O', [])
 	print make_code_block(`mlr help compressed-data`)
 
-	print make_subsection('SEPARATORS', [])
-	print make_code_block(`mlr help separator-options`)
+	print make_subsection('COMMENTS IN DATA', [])
+	print make_code_block(`mlr help comments-in-data`)
 
 	print make_subsection('CSV-SPECIFIC OPTIONS', [])
 	print make_code_block(`mlr help csv-options`)
@@ -88,13 +87,19 @@ output separator to the given value."""
 	print make_subsection('OTHER OPTIONS', [])
 	print make_code_block(`mlr help misc`)
 
-	print make_subsection('AUXILIARY COMMANDS', [])
+	print make_section('AUXILIARY COMMANDS', [])
 	print make_code_block(`mlr aux-list`)
+
+  print make_section('REPL', [])
+  print make_code_block(`mlr repl -h`)
+
+  print make_section('OUTPUT COLORIZATION', [])
+  print make_code_block(`mlr help output-colorization`)
 
   print make_section('MLRRC', [])
   print make_code_block(`mlr help mlrrc`)
 
-  verbs = `mlr help list-verbs-vertically`
+  verbs = `mlr help list-verbs`
   print make_section('VERBS', [
     ""
   ])
@@ -104,7 +109,7 @@ output separator to the given value."""
     print make_code_block(`mlr #{verb} -h`)
   end
 
-  functions = `mlr help list-functions-vertically`
+  functions = `mlr help list-functions`
   print make_section('FUNCTIONS FOR FILTER/PUT', [
     ""
   ])

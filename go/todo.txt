@@ -23,11 +23,9 @@ doclink etc:
 HELP
 
 ! TABLE -> getTABLE() w/ lazy sorted/sorter
-
 * split up help/entry.go -- ?
-? integrate repl help with main help?
-  o repl help keyword
-* proofread mlr help ... & man mlr6
+! type-arithmetic-info
+
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
@@ -57,6 +55,10 @@ DOC6
     o JSON re-write re arrays & key-concat -- needs its own section
     o format ordering: pick one for sphinx, manpage, olh
     o autodetect: tbd
+
+* separator options -- olh also
+* number formatting -- olh also
+* double quoting -- olh also
 
 * code to-do items:
   o stats1 --fr

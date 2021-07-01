@@ -3,7 +3,7 @@
 # In case the user running this has a .mlrrc
 export MLRRC=__none__
 
-mlr help list-functions-vertically | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
+mlr help list-functions | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
   displayname=$funcname
   linkname="$funcname"
   if [ "$funcname" = '+' ]; then
@@ -60,7 +60,7 @@ mlr help list-functions-vertically | grep -v '^[a-zA-Z]' | uniq | while read fun
   echo ''
 done
 
-mlr help list-functions-vertically | grep '^[a-zA-Z]' | sort -u | while read funcname; do
+mlr help list-functions | grep '^[a-zA-Z]' | sort -u | while read funcname; do
   displayname=$funcname
   linkname="$funcname"
   if [ "$funcname" = '+' ]; then
