@@ -140,4 +140,9 @@ If you're interested in a formal description of how empty and absent fields part
    :emphasize-lines: 1-1
 
     mlr help type-arithmetic-info
-    TO BE PORTED
+    (+)        | 1          2.5        (absent)   (error)   
+    ------     + ------     ------     ------     ------    
+    1          | 2          3.5        1          (error)   
+    2.5        | 3.5        5          2.5        (error)   
+    (absent)   | 1          2.5        (absent)   (error)   
+    (error)    | (error)    (error)    (error)    (error)   

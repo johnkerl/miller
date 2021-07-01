@@ -14,6 +14,7 @@ import (
 	"miller/src/dsl/cst"
 	"miller/src/lib"
 	"miller/src/transformers"
+	"miller/src/types"
 )
 
 // ================================================================
@@ -656,7 +657,36 @@ func helpSeparatorOptions() {
 
 // ----------------------------------------------------------------
 func helpTypeArithmeticInfo() {
-	fmt.Println("TO BE PORTED")
+	mlrvals := []*types.Mlrval{
+		types.MlrvalPointerFromInt(1),
+		types.MlrvalPointerFromFloat64(2.5),
+		types.MLRVAL_ABSENT,
+		types.MLRVAL_ERROR,
+	}
+
+	n := len(mlrvals)
+
+	for i := -2; i < n; i++ {
+		if i == -2 {
+			fmt.Printf("%-10s |", "(+)")
+		} else if i == -1 {
+			fmt.Printf("%-10s +", "------")
+		} else {
+			fmt.Printf("%-10s |", mlrvals[i].String())
+		}
+		for j := 0; j < n; j++ {
+			if i == -2 {
+				fmt.Printf(" %-10s", mlrvals[j].String())
+			} else if i == -1 {
+				fmt.Printf(" %-10s", "------")
+			} else {
+				sum := types.MlrvalBinaryPlus(mlrvals[i], mlrvals[j])
+				fmt.Printf(" %-10s", sum.String())
+			}
+		}
+		fmt.Println()
+	}
+
 }
 
 // ----------------------------------------------------------------
