@@ -11,7 +11,6 @@ Getting started
    10min
    keystroke-savers
    programming-language
-   repl
    miller-on-windows
    community
 
@@ -28,6 +27,7 @@ Miller in more detail
    internationalization
    output-colorization
    customization
+   repl
    new-in-miller-6
    contributing
 
@@ -37,29 +37,24 @@ FAQs and recipes
 .. toctree::
    :maxdepth: 1
 
-   shapes-of-data
    csv-with-and-without-headers
+   shapes-of-data
    operating-on-all-fields
    special-symbols-and-formatting
    dates-and-times
    then-chaining
    joins
    shell-commands
-
-To be refactored
-----------------------------------------------------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   quick-examples
    data-diving-examples
-   cookbook
-   cookbook2
-   cookbook3
-   cookbook4
-   sql-examples
    log-processing-examples
+   sql-examples
+   data-cleaning-examples
+   statistics-examples
+   randomizing-examples
+   two-pass-algorithms
+   dkvp-examples
+   programming-examples
+   misc-examples
 
 Background
 ----------------------------------------------------------------

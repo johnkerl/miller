@@ -18,12 +18,80 @@ Also try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable c
 Diagnosing delimiter specifications
 ----------------------------------------------------------------
 
-GENRST_INCLUDE_ESCAPED(data/delimiter-examples.txt)
+Use the ``file`` command to see if there are CR/LF terminators (in this case, # there are not):
+
+GENRST_CARDIFY_HIGHLIGHT_ONE
+file data/colours.csv 
+data/colours.csv: UTF-8 Unicode text
+GENRST_EOF
+
+Look at the file to find names of fields
+
+GENRST_CARDIFY_HIGHLIGHT_ONE
+cat data/colours.csv 
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR
+masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
+masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
+GENRST_EOF
+
+Extract a few fields:
+
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --csv cut -f KEY,PL,RO data/colours.csv 
+(only blank lines appear)
+GENRST_EOF
+
+Use XTAB output format to get a sharper picture of where records/fields are being split:
+
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --icsv --oxtab cat data/colours.csv 
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
+
+KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
+GENRST_EOF
+
+Using XTAB output format makes it clearer that ``KEY;DE;...;RO;TR`` is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (``--fs semicolon``):
+
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --icsv --ifs semicolon --oxtab cat data/colours.csv 
+KEY masterdata_colourcode_1
+DE  Weiß
+EN  White
+ES  Blanco
+FI  Valkoinen
+FR  Blanc
+IT  Bianco
+NL  Wit
+PL  Biały
+RO  Alb
+TR  Beyaz
+
+KEY masterdata_colourcode_2
+DE  Schwarz
+EN  Black
+ES  Negro
+FI  Musta
+FR  Noir
+IT  Nero
+NL  Zwart
+PL  Czarny
+RO  Negru
+TR  Siyah
+GENRST_EOF
+
+Using the new field-separator, retry the cut:
+
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --csv --fs semicolon cut -f KEY,PL,RO data/colours.csv 
+KEY;PL;RO
+masterdata_colourcode_1;Biały;Alb
+masterdata_colourcode_2;Czarny;Negru
+GENRST_EOF
 
 I assigned $9 and it's not 9th
 ----------------------------------------------------------------
 
-Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data.
+Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data, when it is originally read from the input file(s).
 
 GENRST_RUN_COMMAND
 echo x,y,z | mlr --dkvp cat

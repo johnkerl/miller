@@ -87,5 +87,3 @@ mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
   then join -f multi-join/status-lookup.csv -j id \
   multi-join/input.csv
 GENRST_EOF
-
-.. _cookbook-data-cleaning-examples:

@@ -178,5 +178,3 @@ We can run the input file through multiple ``join`` commands in a ``then``-chain
     20 idle     Carol mix
     10 idle     Bob   knead
     30 occupied Alice clean
-
-.. _cookbook-data-cleaning-examples:

@@ -7,6 +7,8 @@ TOP OF LIST:
 * survey email followups
 * template verb
 
+! find a way to get timestamps out as ints not scinot
+
 * windows ./mlr hack
 * windows &&/|| debug
 
@@ -18,6 +20,9 @@ doclink etc:
 
 ----------------------------------------------------------------
 DOC6
+
+* shell-commands.html
+  while-read example issue
 
 * memory page:
   o open with "out of memory" -- what next?

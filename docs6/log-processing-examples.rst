@@ -2,9 +2,12 @@
     PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
 
 Log-processing examples
-----------------------------------------------------------------
+================================================================
 
 Another of my favorite use-cases for Miller is doing ad-hoc processing of log-file data.  Here's where DKVP format really shines: one, since the field names and field values are present on every line, every line stands on its own. That means you can ``grep`` or what have you. Also it means not every line needs to have the same list of field names ("schema").
+
+Generating and aggregating log-file output
+----------------------------------------------------------------
 
 Again, all the examples in the CSV section apply here -- just change the input-format flags. But there's more you can do when not all the records have the same shape.
 
@@ -194,3 +197,21 @@ Alternatively, we can simply group the similar data for a better look:
     2016-09-02T12:35:20Z 100        554
     2016-09-02T12:35:36Z 100        612
     2016-09-02T12:35:42Z 100        728
+
+Parsing log-file output
+----------------------------------------------------------------
+
+This, of course, depends highly on what's in your log files. But, as an example, suppose you have log-file lines such as
+
+.. code-block:: none
+
+    2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378
+
+I prefer to pre-filter with ``grep`` and/or ``sed`` to extract the structured text, then hand that to Miller. Example:
+
+.. code-block:: none
+   :emphasize-lines: 1-3
+
+    grep 'various sorts' *.log \
+      | sed 's/.*} //' \
+      | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
