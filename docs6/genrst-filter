@@ -29,6 +29,15 @@ def main
         cmd_lines = read_until_genrst_eof(input_handle)
         run_command(cmd_lines, output_handle)
 
+      elsif content_line =~ /^GENRST_CARDIFY$/
+        lines = read_until_genrst_eof(input_handle)
+        write_card([], lines, output_handle)
+
+      elsif content_line =~ /^GENRST_CARDIFY_HIGHLIGHT_ONE$/
+        lines = read_until_genrst_eof(input_handle)
+        line1 = lines.shift
+        write_card([line1], lines, output_handle)
+
       elsif content_line =~ /^GENRST_RUN_COMMAND_TOLERATING_ERROR$/
         cmd_lines = read_until_genrst_eof(input_handle)
         run_command_tolerating_error(cmd_lines, output_handle)

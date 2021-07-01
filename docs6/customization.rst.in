@@ -6,33 +6,29 @@ How to use .mlrrc
 
 Suppose you always use CSV files. Then instead of always having to type ``--csv`` as in
 
-.. code-block:: none
-   :emphasize-lines: 1,1
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --csv cut -x -f extra mydata.csv
+GENRST_EOF
 
-    mlr --csv cut -x -f extra mydata.csv
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    mlr --csv sort -n id mydata.csv
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --csv sort -n id mydata.csv
+GENRST_EOF
 
 and so on, you can instead put the following into your ``$HOME/.mlrrc``:
 
-.. code-block:: none
-
+GENRST_CARDIFY
     --csv
+GENRST_EOF
 
 Then you can just type things like
 
-.. code-block:: none
-   :emphasize-lines: 1,1
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr cut -x -f extra mydata.csv
+GENRST_EOF
 
-    mlr cut -x -f extra mydata.csv
-
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    mlr sort -n id mydata.csv
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr sort -n id mydata.csv
+GENRST_EOF
 
 and the ``--csv`` part will automatically be understood. (If you do want to process, say, a JSON file then ``mlr --json ...`` at the command line will override the default from your ``.mlrrc``.)
 
@@ -51,7 +47,7 @@ What you can put in your .mlrrc
 
 * Empty lines are ignored -- including lines which are empty after comments are removed.
 
-Here is an example ``.mlrrc file``:
+Here is an example ``.mlrrc`` file:
 
 GENRST_INCLUDE_ESCAPED(sample_mlrrc)
 

@@ -135,11 +135,11 @@ Such data are easy to generate, e.g. in Ruby with
 
 .. code-block:: none
 
-  puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
+    puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
 
 .. code-block:: none
 
-  puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
+    puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
 
 or ``print`` statements in various languages, e.g.
 

@@ -7,14 +7,14 @@ Reference: then-chaining
 In accord with the `Unix philosophy <http://en.wikipedia.org/wiki/Unix_philosophy>`_, you can pipe data into or out of Miller. For example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
 
 You can, if you like, instead simply chain commands together using the ``then`` keyword:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
 

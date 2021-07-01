@@ -127,7 +127,9 @@ Miller 6 has getoptish command-line parsing (https://github.com/johnkerl/miller/
 Improved error messages for DSL parsing
 ----------------------------------------------------------------
 
-For ``mlr put`` and ``mlr filter``, parse-error messages now include location information::
+For ``mlr put`` and ``mlr filter``, parse-error messages now include location information:
+
+.. code-block:: none
 
     mlr: cannot parse DSL expression.
     Parse error on token ">" at line 63 columnn 7.

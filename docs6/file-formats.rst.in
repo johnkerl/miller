@@ -63,33 +63,33 @@ GENRST_EOF
 
 Such data are easy to generate, e.g. in Ruby with
 
-.. code-block:: none
+GENRST_CARDIFY
+puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
+GENRST_EOF
 
-  puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
-
-.. code-block:: none
-
-  puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
+GENRST_CARDIFY
+puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
+GENRST_EOF
 
 or ``print`` statements in various languages, e.g.
 
-.. code-block:: none
+GENRST_CARDIFY
+echo "type=3,user=$USER,date=$date\n";
+GENRST_EOF
 
-    echo "type=3,user=$USER,date=$date\n";
-
-.. code-block:: none
-
-    logger.log("type=3,user=$USER,date=$date\n");
+GENRST_CARDIFY
+logger.log("type=3,user=$USER,date=$date\n");
+GENRST_EOF
 
 Fields lacking an IPS will have positional index (starting at 1) used as the key, as in NIDX format. For example, ``dish=7,egg=8,flint`` is parsed as ``"dish" => "7", "egg" => "8", "3" => "flint"`` and ``dish,egg,flint`` is parsed as ``"1" => "dish", "2" => "egg", "3" => "flint"``.
 
 As discussed in :doc:`record-heterogeneity`, Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
 
-.. code-block:: none
-
-    resource=/path/to/file,loadsec=0.45,ok=true
-    record_count=100, resource=/path/to/file
-    resource=/some/other/path,loadsec=0.97,ok=false
+GENRST_CARDIFY
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100, resource=/path/to/file
+resource=/some/other/path,loadsec=0.97,ok=false
+GENRST_EOF
 
 etc. and I just log them as needed. Then later, I can use ``grep``, ``mlr --opprint group-like``, etc.
 to analyze my logs.

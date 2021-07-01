@@ -14,9 +14,9 @@ I like to produce SQL-query output with header-column and tab delimiter: this is
 For example, using default output formatting in ``mysql`` we get formatting like Miller's ``--opprint --barred``:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mysql --database=mydb -e 'show columns in mytable'
+    mysql --database=mydb -e 'show columns in mytable'
     +------------------+--------------+------+-----+---------+-------+
     | Field            | Type         | Null | Key | Default | Extra |
     +------------------+--------------+------+-----+---------+-------+
@@ -30,9 +30,9 @@ For example, using default output formatting in ``mysql`` we get formatting like
 Using ``mysql``'s ``-B`` we get TSV output:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --opprint cat
+    mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --opprint cat
     Field            Type         Null Key Default Extra
     id               bigint(20)   NO  MUL NULL -
     category         varchar(256) NO  -   NULL -
@@ -43,9 +43,9 @@ Using ``mysql``'s ``-B`` we get TSV output:
 Since Miller handles TSV output, we can do as much or as little processing as we want in the SQL query, then send the rest on to Miller. This includes outputting as JSON, doing further selects/joins in Miller, doing stats, etc.  etc.:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson --jlistwrap --jvstack cat
+    mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson --jlistwrap --jvstack cat
     [
       {
         "Field": "id",
@@ -90,11 +90,14 @@ Since Miller handles TSV output, we can do as much or as little processing as we
     ]
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mysql --database=mydb -B -e 'select * from mytable' > query.tsv
+    mysql --database=mydb -B -e 'select * from mytable' > query.tsv
 
-    $ mlr --from query.tsv --t2p stats1 -a count -f id -g category,assigned_to
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --from query.tsv --t2p stats1 -a count -f id -g category,assigned_to
     category assigned_to id_count
     special  10000978    207
     special  10003924    385
@@ -125,13 +128,13 @@ Create and load SQL table:
       y DOUBLE
     );
     Query OK, 0 rows affected (0.01 sec)
-
+    
     bash$ mlr --onidx --fs comma cat data/medium > medium.nidx
-
+    
     mysql> LOAD DATA LOCAL INFILE 'medium.nidx' REPLACE INTO TABLE abixy FIELDS TERMINATED BY ',' ;
     Query OK, 10000 rows affected (0.07 sec)
     Records: 10000  Deleted: 0  Skipped: 0  Warnings: 0
-
+    
     mysql> SELECT COUNT(*) AS count FROM abixy;
     +-------+
     | count |
@@ -139,7 +142,7 @@ Create and load SQL table:
     | 10000 |
     +-------+
     1 row in set (0.00 sec)
-
+    
     mysql> SELECT * FROM abixy LIMIT 10;
     +------+------+------+---------------------+---------------------+
     | a    | b    | i    | x                   | y                   |
@@ -159,7 +162,6 @@ Create and load SQL table:
 Aggregate counts within SQL:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
 
     mysql> SELECT a, b, COUNT(*) AS count FROM abixy GROUP BY a, b ORDER BY COUNT DESC;
     +------+------+-------+
@@ -196,9 +198,9 @@ Aggregate counts within SQL:
 Aggregate counts within Miller:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mlr --opprint uniq -c -g a,b then sort -nr count data/medium
+    mlr --opprint uniq -c -g a,b then sort -nr count data/medium
     a   b   count
     zee wye 455
     pan eks 429
@@ -219,9 +221,9 @@ Aggregate counts within Miller:
 Pipe SQL output to aggregate counts within Miller:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mysql -D miller -B -e 'select * from abixy' | mlr --itsv --opprint uniq -c -g a,b then sort -nr count
+    mysql -D miller -B -e 'select * from abixy' | mlr --itsv --opprint uniq -c -g a,b then sort -nr count
     a   b   count
     zee wye 455
     pan eks 429

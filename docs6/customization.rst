@@ -10,12 +10,12 @@ How to use .mlrrc
 Suppose you always use CSV files. Then instead of always having to type ``--csv`` as in
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     mlr --csv cut -x -f extra mydata.csv
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     mlr --csv sort -n id mydata.csv
 
@@ -23,17 +23,17 @@ and so on, you can instead put the following into your ``$HOME/.mlrrc``:
 
 .. code-block:: none
 
-    --csv
+        --csv
 
 Then you can just type things like
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     mlr cut -x -f extra mydata.csv
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     mlr sort -n id mydata.csv
 
@@ -54,12 +54,10 @@ What you can put in your .mlrrc
 
 * Empty lines are ignored -- including lines which are empty after comments are removed.
 
-Here is an example ``.mlrrc file``:
+Here is an example ``.mlrrc`` file:
 
 .. code-block:: none
 
-    # These are my preferred default settings for Miller
-    
     # Input and output formats are CSV by default (unless otherwise specified
     # on the mlr command line):
     csv

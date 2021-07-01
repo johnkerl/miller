@@ -202,19 +202,19 @@ Semicolons are required between statements even if those statements are on separ
 Bodies for all compound statements must be enclosed in **curly braces**, even if the body is a single statement:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     mlr put 'if ($x == 1) $y = 2' # Syntax error
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     mlr put 'if ($x == 1) { $y = 2 }' # This is OK
 
 Bodies for compound statements may be empty:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
 

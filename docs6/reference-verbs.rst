@@ -147,10 +147,14 @@ bootstrap
 
 The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
 
+..
+    hard-coded, not live-code, since random sampling would generate different data on each doc run
+    which would needlessly complicate git diff
+
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+    mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
     yellow 0.497129 1413
     red    0.492560 4641
@@ -162,7 +166,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+    mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
     yellow 0.500651 1380
     purple 0.501556 1111
@@ -174,7 +178,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+    mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
     yellow 0.498046 1485
     blue   0.513576 1417
@@ -186,7 +190,7 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+    mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
     color  u_mean   u_count
     blue   0.522921 1447
     red    0.490717 4617

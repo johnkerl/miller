@@ -43,14 +43,18 @@ Headerless CSV with duplicate field values
 
 Miller is (by central design) a mapping from name to value, rather than integer position to value as in most tools in the Unix toolkit such as ``sort``, ``cut``, ``awk``, etc. So given input ``Yea=1,Yea=2`` on the same input line, first ``Yea=1`` is stored, then updated with ``Yea=2``. This is in the input-parser and the value ``Yea=1`` is unavailable to any further processing. The following example line comes from a headerless CSV file and includes 5 times the string (value) ``'NA'``:
 
-``ag '0.9' nas.csv |head -1
-2:-349801.10097848,4537221.43295653,2,1,NA,NA,NA,NA,NA``
+GENRST_CARDIFY_HIGHLIGHT_ONE
+ag '0.9' nas.csv | head -1
+2:-349801.10097848,4537221.43295653,2,1,NA,NA,NA,NA,NA
+GENRST_EOF
 
 The repeated ``'NA'`` strings (values) in the same line will be treated as fields (columns) with same name, thus only one is kept in the output.
 
-This can be worked around by telling ``mlr`` that there is no header row by using ``--implicit-csv-header`` or changing the input format by using ``nidx`` like so::
+This can be worked around by telling ``mlr`` that there is no header row by using ``--implicit-csv-header`` or changing the input format by using ``nidx`` like so:
 
-    ag '0.9' nas.csv | mlr --n2c --fs "," label xsn,ysn,x,y,t,a,e29,e31,e32 then head
+GENRST_CARDIFY
+ag '0.9' nas.csv | mlr --n2c --fs "," label xsn,ysn,x,y,t,a,e29,e31,e32 then head
+GENRST_EOF
 
 Regularizing ragged CSV
 ----------------------------------------------------------------

@@ -10,9 +10,9 @@ Randomly selecting words from a list
 Given this `word list <./data/english-words.txt>`_, first take a look to see what the first few lines look like:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ head data/english-words.txt
+    head data/english-words.txt
     a
     aa
     aal
@@ -27,9 +27,9 @@ Given this `word list <./data/english-words.txt>`_, first take a look to see wha
 Then the following will randomly sample ten words with four to eight characters in them:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10
+    mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10
     thionine
     birchman
     mildewy
@@ -49,9 +49,9 @@ These are simple *n*-grams as `described here <http://johnkerl.org/randspell/ran
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
-    $ mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr
+    mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr
     beard
     plastinguish
     politicially
