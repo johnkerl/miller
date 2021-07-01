@@ -31,9 +31,6 @@ DOC6
   o no out-of-core sort yet ...
   o older versions
 
-? quick-examples needs fewer inputs, and outputs for all retained inputs
-  ? or q-e more links to 10min
-
 ! fill out:
   o new-in-miller-6: flatten/unflatten
   o JSON flatten/unflatten section
@@ -57,10 +54,6 @@ DOC6
     faq.rst.in
   o list at end of todo.txt
   o file-formats.rst.in & olh: dkvp not first anymore
-
-* data-cleaning examples -> full section -- ?
-* c2 & c3 are all esoterica
-* output-colors olh: list vars -- and/or mlr help env-vars section
 
 * pending:
   o separator options -- olh also
