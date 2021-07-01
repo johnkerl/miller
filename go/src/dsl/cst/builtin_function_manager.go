@@ -47,11 +47,7 @@ type BuiltinFunctionInfo struct {
 }
 
 // ================================================================
-// Sort the function table by class, then by function name. Useful for online help.
-// Or: just by function name ...
-//
-// TODO: pipes and tildes are coming after text, & other symbols before, due to ASCII ordering.
-// Code around that.
+// Sort the function table.  Useful for online help and autogenned docs / manpage.
 func init() {
 	// Go sort API: for ascending sort, return true if element i < element j.
 	sort.Slice(_BUILTIN_FUNCTION_LOOKUP_TABLE, func(i, j int) bool {
@@ -66,16 +62,6 @@ func init() {
 		} else if !si && sj {
 			return false
 		} else {
-
-			// classi := _BUILTIN_FUNCTION_LOOKUP_TABLE[i].class
-			// classj := _BUILTIN_FUNCTION_LOOKUP_TABLE[j].class
-			//if classi < classj {
-			//  return true
-			//}
-			//if classi > classj {
-			//  return false
-			//}
-
 			if namei < namej {
 				return true
 			} else {
@@ -85,7 +71,6 @@ func init() {
 	})
 }
 
-// TODO: move
 func isLetter(c byte) bool {
 	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
 }

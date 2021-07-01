@@ -22,8 +22,6 @@ doclink etc:
 ----------------------------------------------------------------
 HELP
 
-! TABLE -> getTABLE() w/ lazy sorted/sorter
-* split up help/entry.go -- ?
 ! type-arithmetic-info
 
 ----------------------------------------------------------------
