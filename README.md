@@ -24,7 +24,7 @@ including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 (Miller can handle **positionally-indexed data** too!)
 
 In the above image (color added for the illustration) you can see how Miller embraces the common themes
-of key-value-pair ddata in a variety of data formats.
+of key-value-pair data in a variety of data formats.
 
 # Getting started
 
@@ -32,14 +32,14 @@ of key-value-pair ddata in a variety of data formats.
 * [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
 * [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
 * [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
-* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html).
+* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html)
 * [Linux Magazine: Process structured text files with Miller](https://www.linux-magazine.com/Issues/2016/187/Miller)
 * [Miller: Command Line CSV File Processing](https://onepointzero.app/posts/miller-command-line-csv-file-processing/)
 
 # More documentation links
 
 * [**Full documentation**](https://miller.readthedocs.io/)
-* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
+* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
@@ -59,7 +59,7 @@ of key-value-pair ddata in a variety of data formats.
 # Contributors
 
 Thanks to all the fine people who help make Miller better by contributing commits/PRs! (I wish there
-were an equally fine way to honor all the fine people who contribute through issues and feature requests!)
+were an equally good way to honor all the fine people who contribute through issues and feature requests!)
 
 <a href="https://github.com/johnkerl/miller/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />

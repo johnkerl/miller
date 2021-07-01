@@ -5,6 +5,10 @@ TOP OF LIST:
 * --nr-progress-mod * mlr -k *
 * cli-audits * doc6 * survey * check issues *
 * survey email followups
+* template verb
+
+* windows ./mlr hack
+* windows &&/|| debug
 
 ----------------------------------------------------------------
 doclink etc:
@@ -40,31 +44,23 @@ DOC6
     o format ordering: pick one for sphinx, manpage, olh
     o autodetect: tbd
 
-* separator options -- olh also
-* number formatting -- olh also
-* double quoting -- olh also
-
 * code to-do items:
   o stats1 --fr
     cookbook2.rst.in
-  o mlr --print-type-arithmetic-info
-    reference.rst.in
-  o mlr --help-all-keywords
-    reference-dsl.rst.in
-  o mlr format-values --help
-    reference-verbs.rst.in
-  o mlr --usage-comments-in-data
-    file-formats.rst.in
   o file-formats: colon -> dot
   o unset multiple lvalues in the BNF
     faq.rst.in
   o list at end of todo.txt
-  o trailing space on pprint right
   o file-formats.rst.in & olh: dkvp not first anymore
 
 * data-cleaning examples -> full section -- ?
 * c2 & c3 are all esoterica
 * output-colors olh: list vars -- and/or mlr help env-vars section
+
+* pending:
+  o separator options -- olh also
+  o number formatting -- olh also
+  o double quoting -- olh also
 
 ----------------------------------------------------------------
 
@@ -137,6 +133,9 @@ w survey
   NUMERICS < BOOL < VOID < STRING
 
 ================================================================
+* headerful/headerless mix -- ?
+  TOptions as list, not single -- ?
+
 * non-blocker: read-from-URL support -- ?
 
 * non-blocker: _ variable feature?
