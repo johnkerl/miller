@@ -6,8 +6,6 @@ TOP OF LIST:
 * cli-audits * doc6 * survey * check issues *
 * survey email followups
 
-* convert all code-blocks to cardify
-
 ----------------------------------------------------------------
 doclink etc:
 * colored-shapes.dkvp -> csv; also mkdat2
@@ -16,11 +14,6 @@ doclink etc:
 
 ----------------------------------------------------------------
 DOC6
-
-! 'S mlr'
-! sphinx bootstrap comment
-! file:////Users/kerl/pub_http_internet/miller-releases/miller-head/docs6/_build/html/shapes-of-data.html
-  diagnosing margin-upper bork
 
 * memory page:
   o open with "out of memory" -- what next?
