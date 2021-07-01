@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
+	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -165,7 +166,7 @@ type TransformerMostOrLeastFrequent struct {
 	showCounts        bool
 	outputFieldName   string
 	descending        bool
-	countsByGroup     map[string]int
+	countsByGroup     *lib.OrderedMap // map[string]int
 	valuesForGroup    map[string][]*types.Mlrval
 }
 
@@ -188,7 +189,7 @@ func NewTransformerMostOrLeastFrequent(
 		showCounts:        showCounts,
 		outputFieldName:   outputFieldName,
 		descending:        descending,
-		countsByGroup:     make(map[string]int),
+		countsByGroup:     lib.NewOrderedMap(),
 		valuesForGroup:    make(map[string][]*types.Mlrval),
 	}
 
@@ -207,7 +208,12 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 			return
 		}
 
-		tr.countsByGroup[groupingKey]++
+		iCount := tr.countsByGroup.Get(groupingKey)
+		if iCount == nil {
+			tr.countsByGroup.Put(groupingKey, 1)
+		} else {
+			tr.countsByGroup.Put(groupingKey, iCount.(int)+1)
+		}
 		if tr.valuesForGroup[groupingKey] == nil {
 			selectedValues, _ := inrec.GetSelectedValues(tr.groupByFieldNames)
 			tr.valuesForGroup[groupingKey] = selectedValues
@@ -219,11 +225,13 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 		// be O(log n) and there would be m of them.)
 
 		// Copy keys and counters from hashmap to array for sorting
-		inputLength := len(tr.countsByGroup)
+		inputLength := tr.countsByGroup.FieldCount
 
 		sortPairs := make([]tMostOrLeastFrequentSortPair, inputLength)
 		i := 0
-		for groupingKey, count := range tr.countsByGroup {
+		for pe := tr.countsByGroup.Head; pe != nil; pe = pe.Next {
+			groupingKey := pe.Key
+			count := pe.Value.(int)
 			sortPairs[i].groupingKey = groupingKey
 			sortPairs[i].count = count
 			i++
