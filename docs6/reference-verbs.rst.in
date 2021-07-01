@@ -78,53 +78,53 @@ GENRST_EOF
 
 The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
 
-.. code-block:: none
-   :emphasize-lines: 1-1
+..
+    hard-coded, not live-code, since random sampling would generate different data on each doc run
+    which would needlessly complicate git diff
 
-    $ mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
-    color  u_mean   u_count
-    yellow 0.497129 1413
-    red    0.492560 4641
-    purple 0.494005 1142
-    green  0.504861 1109
-    blue   0.517717 1470
-    orange 0.490532 303
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+color  u_mean   u_count
+yellow 0.497129 1413
+red    0.492560 4641
+purple 0.494005 1142
+green  0.504861 1109
+blue   0.517717 1470
+orange 0.490532 303
+GENRST_EOF
 
-.. code-block:: none
-   :emphasize-lines: 1-1
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+color  u_mean   u_count
+yellow 0.500651 1380
+purple 0.501556 1111
+green  0.503272 1068
+red    0.493895 4702
+blue   0.512529 1496
+orange 0.521030 321
+GENRST_EOF
 
-    $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
-    color  u_mean   u_count
-    yellow 0.500651 1380
-    purple 0.501556 1111
-    green  0.503272 1068
-    red    0.493895 4702
-    blue   0.512529 1496
-    orange 0.521030 321
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+color  u_mean   u_count
+yellow 0.498046 1485
+blue   0.513576 1417
+red    0.492870 4595
+orange 0.507697 307
+green  0.496803 1075
+purple 0.486337 1199
+GENRST_EOF
 
-.. code-block:: none
-   :emphasize-lines: 1-1
-
-    $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
-    color  u_mean   u_count
-    yellow 0.498046 1485
-    blue   0.513576 1417
-    red    0.492870 4595
-    orange 0.507697 307
-    green  0.496803 1075
-    purple 0.486337 1199
-
-.. code-block:: none
-   :emphasize-lines: 1-1
-
-    $ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
-    color  u_mean   u_count
-    blue   0.522921 1447
-    red    0.490717 4617
-    yellow 0.496450 1419
-    purple 0.496523 1192
-    green  0.507569 1111
-    orange 0.468014 292
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+color  u_mean   u_count
+blue   0.522921 1447
+red    0.490717 4617
+yellow 0.496450 1419
+purple 0.496523 1192
+green  0.507569 1111
+orange 0.468014 292
+GENRST_EOF
 
 .. _reference-verbs-cat:
 

@@ -7,11 +7,6 @@ TOP OF LIST:
 * survey email followups
 
 * convert all code-blocks to cardify
-* most/least-frequent: map -> odict
-
-----------------------------------------------------------------
-colorizer:
-* mrpl output?
 
 ----------------------------------------------------------------
 doclink etc:
@@ -20,14 +15,12 @@ doclink etc:
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
-HELP
-
-! type-arithmetic-info
-
-----------------------------------------------------------------
-
-----------------------------------------------------------------
 DOC6
+
+! 'S mlr'
+! sphinx bootstrap comment
+! file:////Users/kerl/pub_http_internet/miller-releases/miller-head/docs6/_build/html/shapes-of-data.html
+  diagnosing margin-upper bork
 
 * memory page:
   o open with "out of memory" -- what next?

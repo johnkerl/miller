@@ -224,38 +224,38 @@ What's a CSV file, really? It's an array of rows, or *records*, each being a lis
 
 For example, if you have:
 
-.. code-block:: none
-
-    shape,flag,index
-    circle,1,24
-    square,0,36
+GENRST_CARDIFY
+shape,flag,index
+circle,1,24
+square,0,36
+GENRST_EOF
 
 then that's a way of saying:
 
-.. code-block:: none
-
-    shape=circle,flag=1,index=24
-    shape=square,flag=0,index=36
+GENRST_CARDIFY
+shape=circle,flag=1,index=24
+shape=square,flag=0,index=36
+GENRST_EOF
 
 Other ways to write the same data:
 
-.. code-block:: none
-
-    CSV                               PPRINT                 JSON
-    shape,flag,index                  shape  flag index      [
-    circle,1,24                       circle 1    24           {
-    square,0,36                       square 0    36             "shape": "circle",
-                                                                 "flag": 1,
-                                                                 "index": 24
-                                                               },
-    DKVP                              XTAB                     {
-    shape=circle,flag=1,index=24      shape circle               "shape": "square",
-    shape=square,flag=0,index=36      flag  1                    "flag": 0,
-                                      index 24                   "index": 36
-                                                               }
-                                      shape square           ]
-                                      flag  0
-                                      index 36
+GENRST_CARDIFY
+CSV                               PPRINT                 JSON
+shape,flag,index                  shape  flag index      [
+circle,1,24                       circle 1    24           {
+square,0,36                       square 0    36             "shape": "circle",
+                                                             "flag": 1,
+                                                             "index": 24
+                                                           },
+DKVP                              XTAB                     {
+shape=circle,flag=1,index=24      shape circle               "shape": "square",
+shape=square,flag=0,index=36      flag  1                    "flag": 0,
+                                  index 24                   "index": 36
+                                                           }
+                                  shape square           ]
+                                  flag  0
+                                  index 36
+GENRST_EOF
 
 Anything we can do with CSV input data, we can do with any other format input data.  And you can read from one format, do any record-processing, and output to the same format as the input, or to a different output format.
 

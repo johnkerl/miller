@@ -9,10 +9,10 @@ The Miller REPL (read-evaluate-print loop) is an interactive counterpart to reco
 It isn't a source-level debugger which lets you execute one source-code *statement* at a time -- however, it does let you operate on one *record* at a time. Further, it lets you use "immediate expressions", namely, you can interact with the language without having to provide data from an input file.
 
 .. code-block:: none
-  :emphasize-lines: 1-1
+   :emphasize-lines: 1-1
 
-    $ mlr repl
-
+    mlr repl
+    
     [mlr] 1 + 2
     3
 
@@ -103,34 +103,36 @@ Examples
 Use the REPL to look at arithmetic:
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
-    $ mlr repl
-
+    mlr repl
+    
     [mlr] 6/3
     2
-
+    
     [mlr] 6/5
     1.2
-
+    
     [mlr] typeof(6/3)
     int
-
+    
     [mlr] typeof(6/5)
     float
 
 Read the first record from a small file:
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
-    $ mlr repl
-
+    mlr repl
+    
     [mlr] :open foo.dat
-
+    
     [mlr] :read
-
+    
     [mlr] :context
     FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
-
+    
     [mlr] $*
     {
       "a": "eks",
@@ -139,18 +141,19 @@ Read the first record from a small file:
       "x": 0.38139939387114097,
       "y": 0.13418874328430463
     }
-
+    
     [mlr] $z = $x + $i
-
+    
     [mlr] :write
     a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=4.381399393871141
 
 Skip until deep into a larger file, then inspect a record:
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
-    $ mlr repl --csv
-
+    mlr repl --csv
+    
     [mlr] :open data/colored-shapes.csv
     [mlr] :skip until NR == 10000
     [mlr] :r

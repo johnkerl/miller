@@ -535,7 +535,7 @@ This, of course, depends highly on what's in your log files. But, as an example,
 I prefer to pre-filter with ``grep`` and/or ``sed`` to extract the structured text, then hand that to Miller. Example:
 
 .. code-block:: none
-   :emphasize-lines: 1,1
+   :emphasize-lines: 1-1
 
     grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
 

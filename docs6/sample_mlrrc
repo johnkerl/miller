@@ -1,5 +1,3 @@
-# These are my preferred default settings for Miller
-
 # Input and output formats are CSV by default (unless otherwise specified
 # on the mlr command line):
 csv

@@ -271,70 +271,70 @@ Local variables can be defined either untyped as in ``x = 1``, or typed as in ``
 
 The reason for ``num`` is that ``int`` and ``float`` typedecls are very precise:
 
-.. code-block:: none
-
-    float a = 0;   # Runtime error since 0 is int not float
-    int   b = 1.0; # Runtime error since 1.0 is float not int
-    num   c = 0;   # OK
-    num   d = 1.0; # OK
+GENRST_CARDIFY
+float a = 0;   # Runtime error since 0 is int not float
+int   b = 1.0; # Runtime error since 1.0 is float not int
+num   c = 0;   # OK
+num   d = 1.0; # OK
+GENRST_EOF
 
 A suggestion is to use ``num`` for general use when you want numeric content, and use ``int`` when you genuinely want integer-only values, e.g. in loop indices or map keys (since Miller map keys can only be strings or ints).
 
 The ``var`` type declaration indicates no type restrictions, e.g. ``var x = 1`` has the same type restrictions on ``x`` as ``x = 1``. The difference is in intentional shadowing: if you have ``x = 1`` in outer scope and ``x = 2`` in inner scope (e.g. within a for-loop or an if-statement) then outer-scope ``x`` has value 2 after the second assignment.  But if you have ``var x = 2`` in the inner scope, then you are declaring a variable scoped to the inner block.) For example:
 
-.. code-block:: none
+GENRST_CARDIFY
+x = 1;
+if (NR == 4) {
+  x = 2; # Refers to outer-scope x: value changes from 1 to 2.
+}
+print x; # Value of x is now two
+GENRST_EOF
 
-    x = 1;
-    if (NR == 4) {
-      x = 2; # Refers to outer-scope x: value changes from 1 to 2.
-    }
-    print x; # Value of x is now two
-
-.. code-block:: none
-
-    x = 1;
-    if (NR == 4) {
-      var x = 2; # Defines a new inner-scope x with value 2
-    }
-    print x;     # Value of this x is still 1
+GENRST_CARDIFY
+x = 1;
+if (NR == 4) {
+  var x = 2; # Defines a new inner-scope x with value 2
+}
+print x;     # Value of this x is still 1
+GENRST_EOF
 
 Likewise function arguments can optionally be typed, with type enforced when the function is called:
 
-.. code-block:: none
-
-    func f(map m, int i) {
-      ...
-    }
-    $a = f({1:2, 3:4}, 5);     # OK
-    $b = f({1:2, 3:4}, "abc"); # Runtime error
-    $c = f({1:2, 3:4}, $x);    # Runtime error for records with non-integer field named x
-    if (NR == 4) {
-      var x = 2; # Defines a new inner-scope x with value 2
-    }
-    print x;     # Value of this x is still 1
+GENRST_CARDIFY
+func f(map m, int i) {
+  ...
+}
+$a = f({1:2, 3:4}, 5);     # OK
+$b = f({1:2, 3:4}, "abc"); # Runtime error
+$c = f({1:2, 3:4}, $x);    # Runtime error for records with non-integer field named x
+if (NR == 4) {
+  var x = 2; # Defines a new inner-scope x with value 2
+}
+print x;     # Value of this x is still 1
+GENRST_EOF
 
 Thirdly, function return values can be type-checked at the point of ``return`` using ``:`` and a typedecl after the parameter list:
 
-.. code-block:: none
-
-    func f(map m, int i): bool {
-      ...
-      ...
-      if (...) {
-        return "false"; # Runtime error if this branch is taken
-      }
-      ...
-      ...
-      if (...) {
-        return retval; # Runtime error if this function doesn't have an in-scope
-        # boolean-valued variable named retval
-      }
-      ...
-      ...
-      # In Miller if your functions don't explicitly return a value, they return absent-null.
-      # So it would also be a runtime error on reaching the end of this function without
-      # an explicit return statement.
-    }
+GENRST_CARDIFY
+func f(map m, int i): bool {
+  ...
+  ...
+  if (...) {
+    return "false"; # Runtime error if this branch is taken
+  }
+  ...
+  ...
+  if (...) {
+    return retval; # Runtime error if this function doesn't have an in-scope
+    # boolean-valued variable named retval
+  }
+  ...
+  ...
+  # In Miller if your functions don't explicitly return a value, they return absent-null.
+  # So it would also be a runtime error on reaching the end of this function without
+  # an explicit return statement.
+}
+GENRST_EOF
 
 Null data: empty and absent
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

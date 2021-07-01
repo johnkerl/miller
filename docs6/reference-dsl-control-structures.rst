@@ -76,10 +76,12 @@ If-statements
 These are again reminiscent of ``awk``. Pattern-action blocks are a special case of ``if`` with no ``elif`` or ``else`` blocks, no ``if`` keyword, and parentheses optional around the boolean expression:
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     mlr put 'NR == 4 {$foo = "bar"}'
 
 .. code-block:: none
+   :emphasize-lines: 1-1
 
     mlr put 'if (NR == 4) {$foo = "bar"}'
 

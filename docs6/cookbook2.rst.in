@@ -6,37 +6,35 @@ Randomly selecting words from a list
 
 Given this `word list <./data/english-words.txt>`_, first take a look to see what the first few lines look like:
 
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    $ head data/english-words.txt
-    a
-    aa
-    aal
-    aalii
-    aam
-    aardvark
-    aardwolf
-    aba
-    abac
-    abaca
+GENRST_CARDIFY_HIGHLIGHT_ONE
+head data/english-words.txt
+a
+aa
+aal
+aalii
+aam
+aardvark
+aardwolf
+aba
+abac
+abaca
+GENRST_EOF
 
 Then the following will randomly sample ten words with four to eight characters in them:
 
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    $ mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10
-    thionine
-    birchman
-    mildewy
-    avigate
-    addedly
-    abaze
-    askant
-    aiming
-    insulant
-    coinmate
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10
+thionine
+birchman
+mildewy
+avigate
+addedly
+abaze
+askant
+aiming
+insulant
+coinmate
+GENRST_EOF
 
 Randomly generating jabberwocky words
 ----------------------------------------------------------------
@@ -45,26 +43,25 @@ These are simple *n*-grams as `described here <http://johnkerl.org/randspell/ran
 
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
-.. code-block:: none
-   :emphasize-lines: 1,1
-
-    $ mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr
-    beard
-    plastinguish
-    politicially
-    noise
-    loan
-    country
-    controductionary
-    suppery
-    lose
-    lessors
-    dollar
-    judge
-    rottendence
-    lessenger
-    diffendant
-    suggestional
+GENRST_CARDIFY_HIGHLIGHT_ONE
+mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr
+beard
+plastinguish
+politicially
+noise
+loan
+country
+controductionary
+suppery
+lose
+lessors
+dollar
+judge
+rottendence
+lessenger
+diffendant
+suggestional
+GENRST_EOF
 
 Program timing
 ----------------------------------------------------------------
@@ -147,13 +144,13 @@ GENRST_EOF
 
 But using a very small font size (as small as my Mac will let me go), and by choosing the coordinates to zoom in on a particular part of the complex plane, we can get a nice little picture:
 
-.. code-block:: none
-
-    #!/bin/bash
-    # Get the number of rows and columns from the terminal window dimensions
-    iheight=$(stty size | mlr --nidx --fs space cut -f 1)
-    iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
-    echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheight,iwidth=$iwidth" \
-    | mlr put -f programs/mand.mlr
+GENRST_CARDIFY
+#!/bin/bash
+# Get the number of rows and columns from the terminal window dimensions
+iheight=$(stty size | mlr --nidx --fs space cut -f 1)
+iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
+echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheight,iwidth=$iwidth" \
+| mlr put -f programs/mand.mlr
+GENRST_EOF
 
 .. image:: pix/mand.png

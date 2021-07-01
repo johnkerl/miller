@@ -45,13 +45,13 @@ If-statements
 
 These are again reminiscent of ``awk``. Pattern-action blocks are a special case of ``if`` with no ``elif`` or ``else`` blocks, no ``if`` keyword, and parentheses optional around the boolean expression:
 
-.. code-block:: none
+GENRST_SHOW_COMMAND
+mlr put 'NR == 4 {$foo = "bar"}'
+GENRST_EOF
 
-    mlr put 'NR == 4 {$foo = "bar"}'
-
-.. code-block:: none
-
-    mlr put 'if (NR == 4) {$foo = "bar"}'
+GENRST_SHOW_COMMAND
+mlr put 'if (NR == 4) {$foo = "bar"}'
+GENRST_EOF
 
 Compound statements use ``elif`` (rather than ``elsif`` or ``else if``):
 
