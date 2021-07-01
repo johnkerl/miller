@@ -26,7 +26,7 @@ func transformerUnsparsifyUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameUnsparsify)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameUnsparsify)
 	fmt.Fprint(o,
 		`Prints records with the union of field names over all input records.
 For field names absent in a given record but present in others, fills in

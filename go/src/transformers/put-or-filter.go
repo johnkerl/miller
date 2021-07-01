@@ -58,7 +58,7 @@ func transformerPutOrFilterUsage(
 	exitCode int,
 	verb string,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", lib.MlrExeName(), verb)
+	fmt.Fprintf(o, "Usage: %s %s [options] {DSL expression}\n", "mlr", verb)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o,
 		`-f {file name} File containing a DSL expression. If the filename is a directory,
@@ -157,7 +157,7 @@ func transformerPutOrFilterParseCLI(
 		theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from \"%s\": ",
-				lib.MlrExeName(), verb, filename)
+				"mlr", verb, filename)
 			fmt.Println(err)
 			return nil
 		}
@@ -181,7 +181,7 @@ func transformerPutOrFilterParseCLI(
 			theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
-					lib.MlrExeName(), verb, filename)
+					"mlr", verb, filename)
 				fmt.Println(err)
 				return nil
 			}
@@ -404,7 +404,7 @@ func BuildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
 		// At present it's overly parser-internal, and confusing. :(
 		// fmt.Fprintln(os.Stderr, err)
 		fmt.Fprintf(os.Stderr, "%s: cannot parse DSL expression.\n",
-			lib.MlrExeName())
+			"mlr")
 		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	} else {

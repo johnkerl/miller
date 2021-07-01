@@ -25,7 +25,7 @@ func transformerHistogramUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameHistogram
 	fmt.Fprintf(o, "Just a histogram. Input values < lo or > hi are not counted.\n")
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
@@ -217,7 +217,7 @@ func (tr *TransformerHistogram) ingestNonAuto(
 				fmt.Fprintf(
 					os.Stderr,
 					"%s %s: cannot parse \"%s\" as float.\n",
-					lib.MlrExeName(), verbNameHistogram, stringValue.String(),
+					"mlr", verbNameHistogram, stringValue.String(),
 				)
 				os.Exit(1)
 			}

@@ -35,7 +35,7 @@ func transformerCountDistinctUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameCountDistinct
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Prints number of records having distinct values for specified field names.\n")
@@ -135,7 +135,7 @@ func transformerUniqUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameUniq
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Prints distinct values for specified field names. With -c, same as\n")

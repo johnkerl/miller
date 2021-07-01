@@ -88,29 +88,13 @@ func ListVerbNamesVertically() {
 
 // ----------------------------------------------------------------
 func ListVerbNamesAsParagraph() {
-	separator := " "
+	verbNames := make([]string, len(TRANSFORMER_LOOKUP_TABLE))
 
-	separatorlen := len(separator)
-	linelen := 0
-	j := 0
-
-	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
-		verb := transformerSetup.Verb
-		verblen := len(verb)
-		linelen += separatorlen + verblen
-		if linelen >= 80 {
-			fmt.Printf("\n")
-			linelen = separatorlen + verblen
-			j = 0
-		}
-		if j > 0 {
-			fmt.Print(separator)
-		}
-		fmt.Print(verb)
-		j++
+	for i, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
+		verbNames[i] = transformerSetup.Verb
 	}
 
-	fmt.Printf("\n")
+	lib.PrintWordsAsParagraph(verbNames, os.Stdout)
 }
 
 // ----------------------------------------------------------------

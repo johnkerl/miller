@@ -26,7 +26,7 @@ func transformerCutUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCut)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCut)
 	fmt.Fprintf(o, "Passes through input records with specified fields included/excluded.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, " -f {a,b,c} Comma-separated field names for cut, e.g. a,b,c.\n")
@@ -39,11 +39,11 @@ func transformerCutUsage(
 	fmt.Fprintf(o, "   be used. The -o flag is ignored when -r is present.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "Examples:\n")
-	fmt.Fprintf(o, "  %s %s -f hostname,status\n", lib.MlrExeName(), verbNameCut)
-	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", lib.MlrExeName(), verbNameCut)
-	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", lib.MlrExeName(), verbNameCut)
-	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", lib.MlrExeName(), verbNameCut)
-	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", lib.MlrExeName(), verbNameCut)
+	fmt.Fprintf(o, "  %s %s -f hostname,status\n", "mlr", verbNameCut)
+	fmt.Fprintf(o, "  %s %s -x -f hostname,status\n", "mlr", verbNameCut)
+	fmt.Fprintf(o, "  %s %s -r -f '^status$,sda[0-9]'\n", "mlr", verbNameCut)
+	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"'\n", "mlr", verbNameCut)
+	fmt.Fprintf(o, "  %s %s -r -f '^status$,\"sda[0-9]\"i' (this is case-insensitive)\n", "mlr", verbNameCut)
 
 	if doExit {
 		os.Exit(exitCode)
@@ -158,7 +158,7 @@ func NewTransformerCut(
 				fmt.Fprintf(
 					os.Stderr,
 					"%s %s: cannot compile regex [%s]\n",
-					lib.MlrExeName(), verbNameCut, regexString,
+					"mlr", verbNameCut, regexString,
 				)
 				os.Exit(1)
 			}

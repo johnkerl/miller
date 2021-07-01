@@ -124,7 +124,7 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s: unhandled redirector node type %s.",
-					lib.MlrExeName(), string(redirectorNode.Type),
+					"mlr", string(redirectorNode.Type),
 				),
 			)
 		}
@@ -146,7 +146,7 @@ func (node *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, 
 		return nil, errors.New(
 			fmt.Sprintf(
 				"%s: tee-evaluaiton yielded %s, not map.",
-				lib.MlrExeName(), expression.GetTypeName(),
+				"mlr", expression.GetTypeName(),
 			),
 		)
 	}
@@ -164,7 +164,7 @@ func (node *TeeStatementNode) teeToFileOrPipe(
 		return errors.New(
 			fmt.Sprintf(
 				"%s: output redirection yielded %s, not string.",
-				lib.MlrExeName(), redirectorTarget.GetTypeName(),
+				"mlr", redirectorTarget.GetTypeName(),
 			),
 		)
 	}

@@ -611,7 +611,7 @@ The following ``is...`` functions take a value and return a boolean indicating w
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr -F | grep ^is
+    mlr -f | grep ^is
     is_absent
     is_array
     is_bool
@@ -635,7 +635,7 @@ The following ``is...`` functions take a value and return a boolean indicating w
 .. code-block:: none
    :emphasize-lines: 1-1
 
-    mlr -F | grep ^assert
+    mlr -f | grep ^assert
     asserting_absent
     asserting_array
     asserting_bool

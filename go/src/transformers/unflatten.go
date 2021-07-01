@@ -25,14 +25,14 @@ func transformerUnflattenUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameUnflatten)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameUnflatten)
 	fmt.Fprint(o,
 		`Reverses flatten. Example: field with name 'a.b.c' and value 4
 becomes name 'a' and value '{"b": { "c": 4 }}'.
 `)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c} Comma-separated list of field names to unflatten (default all).\n")
-	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --oflatsep value.\n", lib.MlrExeName())
+	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --oflatsep value.\n", "mlr")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {

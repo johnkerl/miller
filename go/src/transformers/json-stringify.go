@@ -25,7 +25,7 @@ func transformerJSONStringifyUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJSONStringify)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameJSONStringify)
 	fmt.Fprint(o,
 		`Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
 `)

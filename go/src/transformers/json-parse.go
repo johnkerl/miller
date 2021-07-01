@@ -25,7 +25,7 @@ func transformerJSONParseUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameJSONParse)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameJSONParse)
 	fmt.Fprintln(
 		o,
 		`Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].`,

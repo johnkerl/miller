@@ -64,7 +64,7 @@ func hexMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: lib.MlrExeName()
+				// TODO: "mlr"
 				fmt.Fprintln(os.Stderr, "mlr hex:", err)
 				os.Exit(1)
 			}

@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -34,7 +33,7 @@ func transformerBarUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameBar)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameBar)
 	fmt.Fprintf(o, "Replaces a numeric field with a number of asterisks, allowing for cheesy\n")
 	fmt.Fprintf(o, "bar plots. These align best with --opprint or --oxtab output format.\n")
 	fmt.Fprintf(o, "Options:\n")

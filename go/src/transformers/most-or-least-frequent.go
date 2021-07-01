@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -37,7 +36,7 @@ func transformerMostFrequentUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameMostFrequent
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Shows the most frequently occurring distinct values for specified field names.\n")
@@ -58,7 +57,7 @@ func transformerLeastFrequentUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameLeastFrequent
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
 	fmt.Fprintf(o, "Shows the least frequently occurring distinct values for specified field names.\n")

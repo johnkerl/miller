@@ -39,9 +39,9 @@ func transformerHavingFieldsUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	exeName := lib.MlrExeName()
+	exeName := "mlr"
 	verb := verbNameHavingFields
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameHavingFields)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameHavingFields)
 
 	fmt.Fprintf(o, "Conditionally passes through records depending on each record's field names.\n")
 	fmt.Fprintf(o, "Options:\n")
@@ -187,7 +187,7 @@ func NewTransformerHavingFields(
 			fmt.Fprintf(
 				os.Stderr,
 				"%s %s: cannot compile regex \"%s\"\n",
-				lib.MlrExeName(),
+				"mlr",
 				verbNameHavingFields,
 				regexString,
 			)

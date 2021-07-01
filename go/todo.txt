@@ -4,12 +4,10 @@ TOP OF LIST:
 * emit * regex * fmtnum * localtime *
 * --nr-progress-mod * mlr -k *
 * cli-audits * doc6 * survey * check issues *
-* split up mlr -h
 * survey email followups
 
 * convert all code-blocks to cardify
 * most/least-frequent: map -> odict
-* lib.MlrExeName() -> "mlr" throughout
 
 ----------------------------------------------------------------
 colorizer:
@@ -24,20 +22,21 @@ doclink etc:
 ----------------------------------------------------------------
 HELP
 
+! TABLE -> getTABLE() w/ lazy sorted/sorter
 * split up help/entry.go -- ?
-! improved sort for functions-table
-? integrate repl help with main help?
-  o repl help keyword
-* manpage & main help need some basic examples
+! type-arithmetic-info
+
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
 DOC6
 
-* wip
-  go get github.com/kisielk/godepgraph
-  godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
-* flamegraph etc double-check
+* memory page:
+  o open with "out of memory" -- what next?
+  o streaming vs non-streaming
+  o unsparsify -f
+  o no out-of-core sort yet ...
+  o older versions
 
 ? quick-examples needs fewer inputs, and outputs for all retained inputs
   ? or q-e more links to 10min
@@ -49,7 +48,6 @@ DOC6
   o differences from other languages (cf. juliadocs)
 
 * doc notes about --jknquotein & --jvquoteall. make sure they're ignore-accepted in the CLIP.
-* audit for mlb -> lib.MlrExeName() (in case mlr.foo)
 
 * items:
   o file-formats:
@@ -57,6 +55,10 @@ DOC6
     o JSON re-write re arrays & key-concat -- needs its own section
     o format ordering: pick one for sphinx, manpage, olh
     o autodetect: tbd
+
+* separator options -- olh also
+* number formatting -- olh also
+* double quoting -- olh also
 
 * code to-do items:
   o stats1 --fr
@@ -85,6 +87,12 @@ DOC6
 * case auxfiles: cat them too
 
 ----------------------------------------------------------------
+REPLv2
+
+* consider making it a verb
+  o 'put --repl' maybe
+
+----------------------------------------------------------------
 * mlr -k
   o c,go
   o various test cases
@@ -108,7 +116,6 @@ w survey
 ----------------------------------------------------------------
 
 * debug && || on windows more ...
-* list-of-verbs shortlist @ top ...
 
 * blocker: regexes
   o finish stats1 -r
@@ -170,6 +177,11 @@ w survey
   - InputFormat into Context
   - TBD writer -- defer factory until first context?
   - deeper refactor pulling format out of reader/writer options entirely -- ?
+
+* pkg graph:
+  go get github.com/kisielk/godepgraph
+  godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
+  flamegraph etc double-check
 
 ----------------------------------------------------------------
 

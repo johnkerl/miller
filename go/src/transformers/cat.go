@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -25,7 +24,7 @@ func transformerCatUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCat)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCat)
 	fmt.Fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-n         Prepend field \"n\" to each record with record-counter starting at 1.\n")

@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -25,7 +24,7 @@ func transformerSkipTrivialRecordsUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameSkipTrivialRecords)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameSkipTrivialRecords)
 	fmt.Fprintf(o, "Passes through all records except those with zero fields,\n")
 	fmt.Fprintf(o, "or those for which all fields have empty value.\n")
 	fmt.Fprintf(o, "Options:\n")

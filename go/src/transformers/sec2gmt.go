@@ -24,13 +24,13 @@ func transformerSec2GMTUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated list of field names}\n", lib.MlrExeName(), verbNameSec2GMT)
+	fmt.Fprintf(o, "Usage: %s %s [options] {comma-separated list of field names}\n", "mlr", verbNameSec2GMT)
 	fmt.Fprintf(o, "Replaces a numeric field representing seconds since the epoch with the\n")
 	fmt.Fprintf(o, "corresponding GMT timestamp; leaves non-numbers as-is. This is nothing\n")
 	fmt.Fprintf(o, "more than a keystroke-saver for the sec2gmt function:\n")
-	fmt.Fprintf(o, "  %s %s time1,time2\n", lib.MlrExeName(), verbNameSec2GMT)
+	fmt.Fprintf(o, "  %s %s time1,time2\n", "mlr", verbNameSec2GMT)
 	fmt.Fprintf(o, "is the same as\n")
-	fmt.Fprintf(o, "  %s put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'\n", lib.MlrExeName())
+	fmt.Fprintf(o, "  %s put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'\n", "mlr")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-1 through -9: format the seconds using 1..9 decimal places, respectively.\n")
 	fmt.Fprintf(o, "--millis Input numbers are treated as milliseconds since the epoch.\n")

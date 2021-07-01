@@ -176,7 +176,7 @@ func GetRealSymmetricEigensystem(
 	if !found {
 		fmt.Fprintf(os.Stderr,
 			"%s: Jacobi eigensolver: max iterations (%d) exceeded.  Non-symmetric input?\n",
-			MlrExeName(),
+			"mlr",
 			JACOBI_MAXITER,
 		)
 		os.Exit(1)

@@ -122,7 +122,7 @@ func (root *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 				return nil, errors.New(
 					fmt.Sprintf(
 						"%s: unhandled redirector node type %s.",
-						lib.MlrExeName(), string(redirectorNode.Type),
+						"mlr", string(redirectorNode.Type),
 					),
 				)
 			}
@@ -171,7 +171,7 @@ func getNameFromNamedNode(astNode *dsl.ASTNode, description string) (string, err
 	return "", errors.New(
 		fmt.Sprintf(
 			"%s: can't get name of node type \"%s\" for %s.",
-			lib.MlrExeName(), string(astNode.Type), description,
+			"mlr", string(astNode.Type), description,
 		),
 	)
 }
@@ -200,7 +200,7 @@ func (node *EmitFStatementNode) emitfToFileOrPipe(
 		return errors.New(
 			fmt.Sprintf(
 				"%s: output redirection yielded %s, not string.",
-				lib.MlrExeName(), redirectorTarget.GetTypeName(),
+				"mlr", redirectorTarget.GetTypeName(),
 			),
 		)
 	}

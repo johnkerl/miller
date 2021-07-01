@@ -97,7 +97,7 @@ func ParseReaderOptions(
 		//		CheckArgCount(args, argi, argc, 2);
 		//		if (sscanf(args[argi+1], "%lld", &readerOptions.generator_opts.start) != 1) {
 		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
-		//				lib.MlrExeName(), args[argi+1]);
+		//				"mlr", args[argi+1]);
 		//		}
 		//		argi += 2;
 		//	} else if args[argi] == "--gen-stop" {
@@ -105,7 +105,7 @@ func ParseReaderOptions(
 		//		CheckArgCount(args, argi, argc, 2);
 		//		if (sscanf(args[argi+1], "%lld", &readerOptions.generator_opts.stop) != 1) {
 		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
-		//				lib.MlrExeName(), args[argi+1]);
+		//				"mlr", args[argi+1]);
 		//		}
 		//		argi += 2;
 		//	} else if args[argi] == "--gen-step" {
@@ -113,7 +113,7 @@ func ParseReaderOptions(
 		//		CheckArgCount(args, argi, argc, 2);
 		//		if (sscanf(args[argi+1], "%lld", &readerOptions.generator_opts.step) != 1) {
 		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
-		//				lib.MlrExeName(), args[argi+1]);
+		//				"mlr", args[argi+1]);
 		//		}
 		//		argi += 2;
 
@@ -487,7 +487,7 @@ func ParseWriterOptions(
 		if !ok {
 			fmt.Fprintf(os.Stderr,
 				"%s: --key-color argument must be a decimal integer; got \"%s\".\n",
-				lib.MlrExeName(), args[argi+1])
+				"mlr", args[argi+1])
 			os.Exit(1)
 		}
 		colorizer.SetKeyColor(code)
@@ -500,7 +500,7 @@ func ParseWriterOptions(
 		if !ok {
 			fmt.Fprintf(os.Stderr,
 				"%s: --value-color argument must be a decimal integer; got \"%s\".\n",
-				lib.MlrExeName(), args[argi+1])
+				"mlr", args[argi+1])
 			os.Exit(1)
 		}
 		colorizer.SetValueColor(code)
@@ -513,7 +513,7 @@ func ParseWriterOptions(
 		if !ok {
 			fmt.Fprintf(os.Stderr,
 				"%s: --pass-color argument must be a decimal integer; got \"%s\".\n",
-				lib.MlrExeName(), args[argi+1])
+				"mlr", args[argi+1])
 			os.Exit(1)
 		}
 		colorizer.SetPassColor(code)
@@ -526,7 +526,7 @@ func ParseWriterOptions(
 		if !ok {
 			fmt.Fprintf(os.Stderr,
 				"%s: --fail-color argument must be a decimal integer; got \"%s\".\n",
-				lib.MlrExeName(), args[argi+1])
+				"mlr", args[argi+1])
 			os.Exit(1)
 		}
 		colorizer.SetFailColor(code)
@@ -539,7 +539,7 @@ func ParseWriterOptions(
 		if !ok {
 			fmt.Fprintf(os.Stderr,
 				"%s: --help-color argument must be a decimal integer; got \"%s\".\n",
-				lib.MlrExeName(), args[argi+1])
+				"mlr", args[argi+1])
 			os.Exit(1)
 		}
 		colorizer.SetHelpColor(code)
@@ -600,7 +600,7 @@ func ParseReaderWriterOptions(
 		CheckArgCount(args, argi, argc, 2)
 		if defaultFSes[args[argi+1]] == "" {
 			fmt.Fprintf(os.Stderr, "%s: unrecognized I/O format \"%s\".\n",
-				lib.MlrExeName(), args[argi+1])
+				"mlr", args[argi+1])
 			os.Exit(1)
 		}
 		readerOptions.InputFileFormat = args[argi+1]
@@ -1132,14 +1132,14 @@ func ParseMiscOptions(
 		//		if (sscanf(args[argi+1], "%lld", &options.nr_progress_mod) != 1) {
 		//			fmt.Fprintf(os.Stderr,
 		//				"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-		//				lib.MlrExeName(), args[argi+1]);
+		//				"mlr", args[argi+1]);
 		//			mainUsageShort()
 		//			os.Exit(1);
 		//		}
 		//		if (options.nr_progress_mod <= 0) {
 		//			fmt.Fprintf(os.Stderr,
 		//				"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-		//				lib.MlrExeName(), args[argi+1]);
+		//				"mlr", args[argi+1]);
 		//			mainUsageShort()
 		//			os.Exit(1);
 		//		}
@@ -1154,8 +1154,8 @@ func ParseMiscOptions(
 		} else {
 			fmt.Fprintf(os.Stderr,
 				"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
-				lib.MlrExeName(), args[argi+1])
-			fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", lib.MlrExeName())
+				"mlr", args[argi+1])
+			fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", "mlr")
 			os.Exit(1)
 		}
 		argi += 2

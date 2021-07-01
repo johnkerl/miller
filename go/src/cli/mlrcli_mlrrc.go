@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 )
 
 // ----------------------------------------------------------------
@@ -66,7 +65,7 @@ func tryLoadMlrrc(
 		lineno++
 
 		if err != nil {
-			fmt.Fprintln(os.Stderr, lib.MlrExeName(), err)
+			fmt.Fprintln(os.Stderr, "mlr", err)
 			os.Exit(1)
 			return false
 		}
@@ -77,7 +76,7 @@ func tryLoadMlrrc(
 
 		if !handleMlrrcLine(options, line) {
 			fmt.Fprintf(os.Stderr, "%s: parse error at file \"%s\" line %d: %s\n",
-				lib.MlrExeName(), path, lineno, line,
+				"mlr", path, lineno, line,
 			)
 			os.Exit(1)
 		}

@@ -26,10 +26,10 @@ func transformerShuffleUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameShuffle)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameShuffle)
 	fmt.Fprintf(o, "Outputs records randomly permuted. No output records are produced until\n")
 	fmt.Fprintf(o, "all input records are read. See also %s bootstrap and %s sample.\n",
-		lib.MlrExeName(), lib.MlrExeName(),
+		"mlr", "mlr",
 	)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")

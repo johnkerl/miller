@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -25,7 +24,7 @@ func transformerCleanWhitespaceUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameCleanWhitespace)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameCleanWhitespace)
 	fmt.Fprintf(o, "For each record, for each field in the record, whitespace-cleans the keys and/or\n")
 	fmt.Fprintf(o, "values. Whitespace-cleaning entails stripping leading and trailing whitespace,\n")
 	fmt.Fprintf(o, "and replacing multiple whitespace with singles. For finer-grained control,\n")

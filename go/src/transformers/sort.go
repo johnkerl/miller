@@ -68,7 +68,7 @@ func transformerSortUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s {flags}\n", lib.MlrExeName(), verbNameSort)
+	fmt.Fprintf(o, "Usage: %s %s {flags}\n", "mlr", verbNameSort)
 	fmt.Fprintf(o, "Sorts records primarily by the first specified field, secondarily by the second\n")
 	fmt.Fprintf(o, "field, and so on.  (Any records not having all specified sort keys will appear\n")
 	fmt.Fprintf(o, "at the end of the output, in the order they were encountered, regardless of the\n")
@@ -84,9 +84,9 @@ func transformerSortUsage(
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Example:\n")
-	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", lib.MlrExeName(), verbNameSort)
+	fmt.Fprintf(o, "  %s %s -f a,b -nr x,y,z\n", "mlr", verbNameSort)
 	fmt.Fprintf(o, "which is the same as:\n")
-	fmt.Fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", lib.MlrExeName(), verbNameSort)
+	fmt.Fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", "mlr", verbNameSort)
 
 	if doExit {
 		os.Exit(exitCode)

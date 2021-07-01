@@ -18,7 +18,7 @@ import (
 func verbCheckArgCount(verb string, opt string, args []string, argi int, argc int, n int) {
 	if (argc - argi) < n {
 		fmt.Fprintf(os.Stderr, "%s %s: option \"%s\" missing argument(s).\n",
-			lib.MlrExeName(), verb, opt,
+			"mlr", verb, opt,
 		)
 		os.Exit(1)
 	}
@@ -48,7 +48,7 @@ func VerbGetIntArgOrDie(verb string, opt string, args []string, pargi *int, argc
 	if err != nil {
 		fmt.Fprintf(os.Stderr,
 			"%s %s: could not scan flag \"%s\" argument \"%s\" as int.\n",
-			lib.MlrExeName(), verb, flag, stringArg,
+			"mlr", verb, flag, stringArg,
 		)
 		os.Exit(1)
 	}
@@ -64,7 +64,7 @@ func VerbGetFloatArgOrDie(verb string, opt string, args []string, pargi *int, ar
 	if err != nil {
 		fmt.Fprintf(os.Stderr,
 			"%s %s: could not scan flag \"%s\" argument \"%s\" as float.\n",
-			lib.MlrExeName(), verb, flag, stringArg,
+			"mlr", verb, flag, stringArg,
 		)
 		os.Exit(1)
 	}

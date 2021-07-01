@@ -276,7 +276,7 @@ func validateForLoopTwoVariableUniqueNames(astNode *dsl.ASTNode) error {
 		return errors.New(
 			fmt.Sprintf(
 				"%s: redefinition of variable %s in the same scope.",
-				lib.MlrExeName(),
+				"mlr",
 				keyVarName,
 			),
 		)
@@ -312,7 +312,7 @@ func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
 			return errors.New(
 				fmt.Sprintf(
 					"%s: redefinition of variable %s in the same scope.",
-					lib.MlrExeName(),
+					"mlr",
 					name,
 				),
 			)
@@ -325,7 +325,7 @@ func validateForLoopMultivariableUniqueNames(astNode *dsl.ASTNode) error {
 		return errors.New(
 			fmt.Sprintf(
 				"%s: redefinition of variable %s in the same scope.",
-				lib.MlrExeName(),
+				"mlr",
 				valVarName,
 			),
 		)

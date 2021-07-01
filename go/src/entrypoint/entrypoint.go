@@ -101,7 +101,7 @@ func processInPlace(
 	for _, fileName := range fileNames {
 
 		if _, err := os.Stat(fileName); os.IsNotExist(err) {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", lib.MlrExeName(), err)
+			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
 			os.Exit(1)
 		}
 
@@ -115,7 +115,7 @@ func processInPlace(
 		// as revealed by printing handle.Name().
 		handle, err := os.CreateTemp(containingDirectory, "mlr-in-place-")
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", lib.MlrExeName(), err)
+			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
 			os.Exit(1)
 		}
 		tempFileName := handle.Name()
@@ -134,13 +134,13 @@ func processInPlace(
 
 		err = handle.Close()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", lib.MlrExeName(), err)
+			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
 			os.Exit(1)
 		}
 
 		err = os.Rename(tempFileName, fileName)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", lib.MlrExeName(), err)
+			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
 			os.Exit(1)
 		}
 	}

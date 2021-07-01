@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-06-28
+.\"      Date: 2021-07-01
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-06-28" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-07-01" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -128,14 +128,52 @@ NIDX: implicitly numerically indexed (Unix-toolkit style)
 .fi
 .if n \{\
 .RE
-.SH "OPTIONS"
-.sp
-In the following option flags, the version with "i" designates the input
-stream, "o" the output stream, and the version without prefix sets the option
-for both input and output stream. For example: --irs sets the input record
-separator, --ors the output record separator, and --rs sets both the input and
-output separator to the given value.
-.SS "HELP OPTIONS"
+.SH "VERB LIST"
+.if n \{\
+.RS 0
+.\}
+.nf
+altkv bar bootstrap cat check clean-whitespace count-distinct count
+count-similar cut decimate fill-down fill-empty filter flatten format-values
+fraction gap grep group-by group-like having-fields head histogram json-parse
+json-stringify join label least-frequent merge-fields most-frequent nest
+nothing put regularize remove-empty-columns rename reorder repeat reshape
+sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
+sort-within-records stats1 stats2 step tac tail tee top unflatten uniq
+unsparsify
+.fi
+.if n \{\
+.RE
+.SH "FUNCTION LIST"
+.if n \{\
+.RS 0
+.\}
+.nf
+abs acos acosh append arrayify asin asinh asserting_absent asserting_array
+asserting_bool asserting_boolean asserting_empty asserting_empty_map
+asserting_error asserting_float asserting_int asserting_map
+asserting_nonempty_map asserting_not_array asserting_not_empty
+asserting_not_map asserting_not_null asserting_null asserting_numeric
+asserting_present asserting_string atan atan2 atanh bitcount boolean
+capitalize cbrt ceil clean_whitespace collapse_whitespace cos cosh depth
+dhms2fsec dhms2sec erf erfc exp expm1 flatten float floor fmtnum fsec2dhms
+fsec2hms get_keys get_values gmt2sec gsub haskey hexfmt hms2fsec hms2sec
+hostname int invqnorm is_absent is_array is_bool is_boolean is_empty
+is_empty_map is_error is_float is_int is_map is_nonempty_map is_not_array
+is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
+joink joinkv joinv json_parse json_stringify leafcount length log log10 log1p
+logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul
+msub os pow qnorm regextract regextract_or_else round roundm rstrip sec2dhms
+sec2gmt sec2gmtdate sec2hms sgn sha1 sha256 sha512 sin sinh splita splitax
+splitkv splitkvx splitnv splitnvx sqrt ssub strftime string strip strlen
+strptime sub substr substr0 substr1 system systime systimeint tan tanh tolower
+toupper truncate typeof unflatten uptime urand urand32 urandint urandrange
+version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= == =~ > >= >> >>>
+?: ?? ??? ^ ^^ | || ~
+.fi
+.if n \{\
+.RE
+.SH "HELP OPTIONS"
 .if n \{\
 .RS 0
 .\}
@@ -154,333 +192,100 @@ Type 'mlr help {topic}' for any of the following:
   mlr help function
   mlr help keyword
   mlr help list-functions
-  mlr help list-functions-vertically
+  mlr help list-functions-as-paragraph
   mlr help list-keywords
+  mlr help list-keywords-as-paragraph
   mlr help list-verbs
-  mlr help list-verbs-vertically
+  mlr help list-verbs-as-paragraph
   mlr help misc
   mlr help mlrrc
   mlr help number-formatting
-  mlr help output-colorizations
+  mlr help output-colorization
   mlr help separator-options
+  mlr help type-arithmetic-info
   mlr help usage-functions
   mlr help usage-keywords
   mlr help usage-verbs
   mlr help verb
 Shorthands:
   mlr -l = mlr help list-verbs
-  mlr -L = mlr help list-verbs-vertically
-  mlr -f = mlr help usage-functions
-  mlr -F = mlr help list-functions
-  mlr -k = mlr help usage-keywords
-  mlr -K = mlr help list-keywords
+  mlr -L = mlr help usage-verbs
+  mlr -f = mlr help list-functions
+  mlr -F = mlr help usage-functions
+  mlr -k = mlr help list-keywords
+  mlr -K = mlr help usage-keywords
 .fi
 .if n \{\
 .RE
-.SS "VERB LIST"
+.SH "OPTIONS"
+.sp
+In the following option flags, the version with "i" designates the input
+stream, "o" the output stream, and the version without prefix sets the option
+for both input and output stream. For example: --irs sets the input record
+separator, --ors the output record separator, and --rs sets both the input and
+output separator to the given value.
+.SS "DATA-FORMAT OPTIONS"
 .if n \{\
 .RS 0
 .\}
 .nf
-altkv bar bootstrap cat check clean-whitespace count-distinct count
-count-similar cut decimate fill-down fill-empty filter flatten format-values
-fraction gap grep group-by group-like having-fields head histogram json-parse
-json-stringify join label least-frequent merge-fields most-frequent nest
-nothing put regularize remove-empty-columns rename reorder repeat reshape
-sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
-sort-within-records stats1 stats2 step tac tail tee top unflatten uniq
-unsparsify
-.fi
-.if n \{\
-.RE
-.SS "FUNCTION LIST"
-.if n \{\
-.RS 0
-.\}
-.nf
-!
-!=
-!=~
-%
-&
-&&
-*
-**
-+
--
-\&.
-\&.*
-\&.+
-\&.-
-\&./
-/
-//
-<
-<<
-<=
-==
-=~
->
->=
->>
->>>
-?:
-??
-???
-^
-^^
-abs
-acos
-acosh
-append
-arrayify
-asin
-asinh
-asserting_absent
-asserting_array
-asserting_bool
-asserting_boolean
-asserting_empty
-asserting_empty_map
-asserting_error
-asserting_float
-asserting_int
-asserting_map
-asserting_nonempty_map
-asserting_not_array
-asserting_not_empty
-asserting_not_map
-asserting_not_null
-asserting_null
-asserting_numeric
-asserting_present
-asserting_string
-atan
-atan2
-atanh
-bitcount
-boolean
-capitalize
-cbrt
-ceil
-clean_whitespace
-collapse_whitespace
-cos
-cosh
-depth
-dhms2fsec
-dhms2sec
-erf
-erfc
-exp
-expm1
-flatten
-float
-floor
-fmtnum
-fsec2dhms
-fsec2hms
-get_keys
-get_values
-gmt2sec
-gsub
-haskey
-hexfmt
-hms2fsec
-hms2sec
-hostname
-int
-invqnorm
-is_absent
-is_array
-is_bool
-is_boolean
-is_empty
-is_empty_map
-is_error
-is_float
-is_int
-is_map
-is_nonempty_map
-is_not_array
-is_not_empty
-is_not_map
-is_not_null
-is_null
-is_numeric
-is_present
-is_string
-joink
-joinkv
-joinv
-json_parse
-json_stringify
-leafcount
-length
-log
-log10
-log1p
-logifit
-lstrip
-madd
-mapdiff
-mapexcept
-mapselect
-mapsum
-max
-md5
-mexp
-min
-mmul
-msub
-os
-pow
-qnorm
-regextract
-regextract_or_else
-round
-roundm
-rstrip
-sec2dhms
-sec2gmt
-sec2gmtdate
-sec2hms
-sgn
-sha1
-sha256
-sha512
-sin
-sinh
-splita
-splitax
-splitkv
-splitkvx
-splitnv
-splitnvx
-sqrt
-ssub
-strftime
-string
-strip
-strlen
-strptime
-sub
-substr
-substr0
-substr1
-system
-systime
-systimeint
-tan
-tanh
-tolower
-toupper
-truncate
-typeof
-unflatten
-uptime
-urand
-urand32
-urandint
-urandrange
-version
-|
-||
-~
-Please use "mlr --help-function {function name}" for function-specific help.
-.fi
-.if n \{\
-.RE
-.SS "I/O FORMATTING"
-.if n \{\
-.RS 0
-.\}
-.nf
-CSV/CSV-lite: comma-separated values with separate header line
-TSV: same but with tabs in places of commas
-+---------------------+
-| apple,bat,cog       |
-| 1,2,3               | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| 4,5,6               | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-+---------------------+
+--idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
+                                 (Miller's default format).
 
-JSON (sequence or array of objects):
-+---------------------+
-| {                   |
-|  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-|  "bat": 2,          |
-|  "cog": 3           |
-| }                   |
-| {                   |
-|   "dish": {         | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
-|     "egg": 7,       |
-|     "flint": 8      |
-|   },                |
-|   "garlic": ""      |
-| }                   |
-+---------------------+
+--inidx   --onidx   --nidx      Implicitly-integer-indexed fields (Unix-toolkit style).
+-T                              Synonymous with "--nidx --fs tab".
 
-PPRINT: pretty-printed tabular
-+---------------------+
-| apple bat cog       |
-| 1     2   3         | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| 4     5   6         | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-+---------------------+
+--icsv    --ocsv    --csv       Comma-separated value (or tab-separated with --fs tab, etc.)
 
-Markdown tabular (supported for output only):
-+-----------------------+
-| | apple | bat | cog | |
-| | ---   | --- | --- | |
-| | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
-+-----------------------+
+--itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
+                                "--ocsv --ofs tab", "--csv --fs tab".
+--iasv    --oasv    --asv       Similar but using ASCII FS 0x1f and RS 0x1e\en",
+--iusv    --ousv    --usv       Similar but using Unicode FS U+241F (UTF-8 0xe2909f)\en",
+                                and RS U+241E (UTF-8 0xe2909e)\en",
 
-XTAB: pretty-printed transposed tabular
-+---------------------+
-| apple 1             | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-| bat   2             |
-| cog   3             |
-|                     |
-| dish 7              | Record 2: "dish" => "7", "egg" => "8"
-| egg  8              |
-+---------------------+
+--icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated with --fs tab, etc.).
+							    The 'lite' CSV does not handle RFC-CSV double-quoting rules; is
+							    slightly faster and handles heterogeneity in the input stream via
+							    empty newline followed by new header line. See also
+								https://johnkerl.org/miller6/file-formats.html#csv-tsv-asv-usv-etc
 
-DKVP: delimited key-value pairs (Miller default format)
-+---------------------+
-| apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-| dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
-+---------------------+
+--itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
+                                "--ocsvlite --ofs tab", "--csvlite --fs tab".
+-t                              Synonymous with --tsvlite.
+--iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS 0x1f and RS 0x1e\en",
+--iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS U+241F (UTF-8 0xe2909f)\en",
+                                and RS U+241E (UTF-8 0xe2909e)\en",
 
-NIDX: implicitly numerically indexed (Unix-toolkit style)
-+---------------------+
-| the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
-| fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
-+---------------------+
-.fi
-.if n \{\
-.RE
-.SS "COMMENTS IN DATA"
-.if n \{\
-.RS 0
-.\}
-.nf
---skip-comments                 Ignore commented lines (prefixed by "#")
-                                within the input.
---skip-comments-with {string}   Ignore commented lines within input, with
-                                specified prefix.
---pass-comments                 Immediately print commented lines (prefixed by "#")
-                                within the input.
---pass-comments-with {string}   Immediately print commented lines within input, with
-                                specified prefix.
+--ipprint --opprint --pprint    Pretty-printed tabular (produces no
+                                output until all input is in).
+                    --right     Right-justifies all fields for PPRINT output.
+                    --barred    Prints a border around PPRINT output
+                                (only available for output).
 
-Notes:
-* Comments are only honored at the start of a line.
-* In the absence of any of the above four options, comments are data like
-  any other text.
-* When pass-comments is used, comment lines are written to standard output
-  immediately upon being read; they are not part of the record stream.  Results
-  may be counterintuitive. A suggestion is to place comments at the start of
-  data files.
+          --omd                 Markdown-tabular (only available for output).
+
+--ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
+                    --xvright   Right-justifies values for XTAB format.
+
+--ijson   --ojson   --json      JSON tabular: sequence or list of one-level
+                                maps: {...}{...} or [{...},{...}].
+                    --jvstack   Put one key-value pair per line for JSON output.
+                 --no-jvstack   Put objects/arrays all on one line for JSON output.
+              --jsonx --ojsonx  Keystroke-savers for --json --jvstack
+              --jsonx --ojsonx  and --ojson --jvstack, respectively.
+                    --jlistwrap Wrap JSON output in outermost [ ].
+            --oflatsep {string} Separator for flattening multi-level JSON keys,
+                                e.g. '{"a":{"b":3}}' becomes a:b => 3 for
+                                non-JSON formats. Defaults to ..\en",
+
+-p is a keystroke-saver for --nidx --fs space --repifs
+
+Examples: --csv for CSV-formatted input and output; --icsv --opprint for
+CSV-formatted input and pretty-printed output.
+
+Please use --iformat1 --oformat2 rather than --format1 --oformat2.
+The latter sets up input and output flags for format1, not all of which
+are overridden in all cases by setting output format to format2.
 .fi
 .if n \{\
 .RE
@@ -500,6 +305,15 @@ As keystroke-savers for format-conversion you may use the following:
 The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
 PPRINT, and markdown, respectively. Note that markdown format is available for
 output only.
+.fi
+.if n \{\
+.RE
+.SS "SEPARATORS"
+.if n \{\
+.RS 0
+.\}
+.nf
+THIS IS STILL TBD FOR MILLER 6
 .fi
 .if n \{\
 .RE
@@ -541,12 +355,28 @@ decisions that might have been made based on the file suffix. Also,
 .fi
 .if n \{\
 .RE
-.SS "SEPARATORS"
+.SS "COMMENTS IN DATA"
 .if n \{\
 .RS 0
 .\}
 .nf
-THIS IS STILL TBD FOR MILLER 6
+--skip-comments                 Ignore commented lines (prefixed by "#")
+                                within the input.
+--skip-comments-with {string}   Ignore commented lines within input, with
+                                specified prefix.
+--pass-comments                 Immediately print commented lines (prefixed by "#")
+                                within the input.
+--pass-comments-with {string}   Immediately print commented lines within input, with
+                                specified prefix.
+
+Notes:
+* Comments are only honored at the start of a line.
+* In the absence of any of the above four options, comments are data like
+  any other text.
+* When pass-comments is used, comment lines are written to standard output
+  immediately upon being read; they are not part of the record stream.  Results
+  may be counterintuitive. A suggestion is to place comments at the start of
+  data files.
 .fi
 .if n \{\
 .RE
@@ -591,7 +421,6 @@ THIS IS STILL WIP FOR MILLER 6
                    e.g. if fields a and b were quoted on input and you do
                    "put '$c = $a . $b'" then field c won't inherit a or b's
                    was-quoted-on-input flag.
-
 .fi
 .if n \{\
 .RE
@@ -646,7 +475,7 @@ THIS IS STILL WIP FOR MILLER 6
 .fi
 .if n \{\
 .RE
-.SS "AUXILIARY COMMANDS"
+.SH "AUXILIARY COMMANDS"
 .if n \{\
 .RS 0
 .\}
@@ -661,6 +490,91 @@ Available subcommands:
   regtest
   repl
 For more information, please invoke mlr {subcommand} --help.
+.fi
+.if n \{\
+.RE
+.SH "REPL"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr repl [options] {zero or more data-file names}
+-v Prints the expressions's AST (abstract syntax tree), which gives
+   full transparency on the precedence and associativity rules of
+   Miller's grammar, to stdout.
+
+-d Like -v but uses a parenthesized-expression format for the AST.
+
+-D Like -d but with output all on one line.
+
+-w Show warnings about uninitialized variables
+
+-q Don't show startup banner
+
+-s Don't show prompts
+
+--load {DSL script file} Load script file before presenting the prompt.
+   If the name following --load is a directory, load all "*.mlr" files
+   in that directory.
+
+--mload {DSL script files} -- Like --load but works with more than one filename,
+   e.g. '--mload *.mlr --'.
+
+-h|--help Show this message.
+
+Or any --icsv, --ojson, etc. reader/writer options as for the main Miller command line.
+
+Any data-file names are opened just as if you had waited and typed :open {filenames}
+at the Miller REPL prompt.
+.fi
+.if n \{\
+.RE
+.SH "OUTPUT COLORIZATION"
+.if n \{\
+.RS 0
+.\}
+.nf
+Things having colors:
+* Keys in CSV header lines, JSON keys, etc
+* Values in CSV data lines, JSON scalar values, etc
+ in regression-test output
+* Some online-help strings
+
+Rules for coloring:
+* By default, colorize output only if writing to stdout and stdout is a TTY.
+  * Example: color: mlr --csv cat foo.csv
+  * Example: no color: mlr --csv cat foo.csv > bar.csv
+  * Example: no color: mlr --csv cat foo.csv | less
+* The default colors were chosen since they look OK with white or black terminal background,
+  and are differentiable with common varieties of human color vision.
+
+Mechanisms for coloring:
+* Miller uses ANSI escape sequences only. This does not work on Windows except on Cygwin.
+* Requires TERM environment variable to be set to non-empty string.
+* Doesn't try to check to see whether the terminal is capable of 256-color
+  ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
+  then 16-color ANSI escapes are used, so this is in the user's control.
+
+How you can control colorization:
+* Suppression/unsuppression:
+  * Environment variable export MLR_NO_COLOR=true means don't color even if stdout+TTY.
+  * Environment variable export MLR_ALWAYS_COLOR=true means do color even if not stdout+TTY.
+    For example, you might want to use this when piping mlr output to less -r.
+  * Command-line flags --no-color or -M, --always-color or -C.
+
+* Color choices can be specified by using environment variables, or command-line flags,
+  with values 0..255:
+  * export MLR_KEY_COLOR=208, MLR_VALUE_COLOR-33, etc.:
+    MLR_KEY_COLOR MLR_VALUE_COLOR MLR_PASS_COLOR MLR_FAIL_COLOR
+    MLR_REPL_PS1_COLOR MLR_REPL_PS2_COLOR MLR_HELP_COLOR
+  * Command-line flags --key-color 208, --value-color 33, etc.:
+    --key-color --value-color --pass-color --fail-color
+    --repl-ps1-color --repl-ps2-color --help-color
+  * This is particularly useful if your terminal's background color clashes with current settings.
+
+If environment-variable settings and command-line flags are both provided,the latter take precedence.
+
+Please do mlr --list-colors to see the available color codes.
 .fi
 .if n \{\
 .RE
@@ -2050,285 +1964,6 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .SH "FUNCTIONS FOR FILTER/PUT"
 .sp
 
-.SS "!"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=1) Logical negation.
-.fi
-.if n \{\
-.RE
-.SS "!="
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
-.fi
-.if n \{\
-.RE
-.SS "!=~"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
-.fi
-.if n \{\
-.RE
-.SS "%"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
-.fi
-.if n \{\
-.RE
-.SS "&"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Bitwise AND.
-.fi
-.if n \{\
-.RE
-.SS "&&"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) Logical AND.
-.fi
-.if n \{\
-.RE
-.SS "*"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
-.fi
-.if n \{\
-.RE
-.SS "**"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
-.fi
-.if n \{\
-.RE
-.SS "+"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
-.fi
-.if n \{\
-.RE
-.SS "-"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
-.fi
-.if n \{\
-.RE
-.SS "."
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=string #args=2) String concatenation.
-.fi
-.if n \{\
-.RE
-.SS ".*"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
-.fi
-.if n \{\
-.RE
-.SS ".+"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
-.fi
-.if n \{\
-.RE
-.SS ".-"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
-.fi
-.if n \{\
-.RE
-.SS "./"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Integer division; not pythonic.
-.fi
-.if n \{\
-.RE
-.SS "/"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Division. Integer / integer is floating-point.
-.fi
-.if n \{\
-.RE
-.SS "//"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
-.fi
-.if n \{\
-.RE
-.SS "<"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
-.fi
-.if n \{\
-.RE
-.SS "<<"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Bitwise left-shift.
-.fi
-.if n \{\
-.RE
-.SS "<="
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
-.fi
-.if n \{\
-.RE
-.SS "=="
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
-.fi
-.if n \{\
-.RE
-.SS "=~"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
-.fi
-.if n \{\
-.RE
-.SS ">"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
-.fi
-.if n \{\
-.RE
-.SS ">="
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
-.fi
-.if n \{\
-.RE
-.SS ">>"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Bitwise signed right-shift.
-.fi
-.if n \{\
-.RE
-.SS ">>>"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Bitwise unsigned right-shift.
-.fi
-.if n \{\
-.RE
-.SS "?:"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=3) Standard ternary operator.
-.fi
-.if n \{\
-.RE
-.SS "??"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
-.fi
-.if n \{\
-.RE
-.SS "???"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
-.fi
-.if n \{\
-.RE
-.SS "^"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=arithmetic #args=2) Bitwise XOR.
-.fi
-.if n \{\
-.RE
-.SS "^^"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=boolean #args=2) Logical XOR.
-.fi
-.if n \{\
-.RE
 .SS "abs"
 .if n \{\
 .RS 0
@@ -3799,6 +3434,285 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .\}
 .nf
  (class=system #args=0) Returns the Miller version as a string.
+.fi
+.if n \{\
+.RE
+.SS "!"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=1) Logical negation.
+.fi
+.if n \{\
+.RE
+.SS "!="
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "!=~"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
+.fi
+.if n \{\
+.RE
+.SS "%"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
+.fi
+.if n \{\
+.RE
+.SS "&"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Bitwise AND.
+.fi
+.if n \{\
+.RE
+.SS "&&"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) Logical AND.
+.fi
+.if n \{\
+.RE
+.SS "*"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
+.fi
+.if n \{\
+.RE
+.SS "**"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
+.fi
+.if n \{\
+.RE
+.SS "+"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
+.fi
+.if n \{\
+.RE
+.SS "-"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
+.fi
+.if n \{\
+.RE
+.SS "."
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=string #args=2) String concatenation.
+.fi
+.if n \{\
+.RE
+.SS ".*"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
+.fi
+.if n \{\
+.RE
+.SS ".+"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
+.fi
+.if n \{\
+.RE
+.SS ".-"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
+.fi
+.if n \{\
+.RE
+.SS "./"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Integer division; not pythonic.
+.fi
+.if n \{\
+.RE
+.SS "/"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Division. Integer / integer is floating-point.
+.fi
+.if n \{\
+.RE
+.SS "//"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
+.fi
+.if n \{\
+.RE
+.SS "<"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "<<"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Bitwise left-shift.
+.fi
+.if n \{\
+.RE
+.SS "<="
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "=="
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "=~"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
+.fi
+.if n \{\
+.RE
+.SS ">"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
+.fi
+.if n \{\
+.RE
+.SS ">="
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
+.fi
+.if n \{\
+.RE
+.SS ">>"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Bitwise signed right-shift.
+.fi
+.if n \{\
+.RE
+.SS ">>>"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Bitwise unsigned right-shift.
+.fi
+.if n \{\
+.RE
+.SS "?:"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=3) Standard ternary operator.
+.fi
+.if n \{\
+.RE
+.SS "??"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
+.fi
+.if n \{\
+.RE
+.SS "???"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
+.fi
+.if n \{\
+.RE
+.SS "^"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=arithmetic #args=2) Bitwise XOR.
+.fi
+.if n \{\
+.RE
+.SS "^^"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) Logical XOR.
 .fi
 .if n \{\
 .RE

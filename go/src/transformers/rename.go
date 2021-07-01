@@ -28,10 +28,10 @@ func transformerRenameUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	exeName := lib.MlrExeName()
+	exeName := "mlr"
 	verb := verbNameRename
 
-	fmt.Fprintf(o, "Usage: %s %s [options] {old1,new1,old2,new2,...}\n", lib.MlrExeName(), verbNameRename)
+	fmt.Fprintf(o, "Usage: %s %s [options] {old1,new1,old2,new2,...}\n", "mlr", verbNameRename)
 	fmt.Fprintf(o, "Renames specified fields.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-r         Treat old field  names as regular expressions. \"ab\", \"a.*b\"\n")

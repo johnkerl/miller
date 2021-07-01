@@ -26,7 +26,7 @@ func transformerLabelUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {new1,new2,new3,...}\n", lib.MlrExeName(), verbNameLabel)
+	fmt.Fprintf(o, "Usage: %s %s [options] {new1,new2,new3,...}\n", "mlr", verbNameLabel)
 	fmt.Fprintf(o, "Given n comma-separated names, renames the first n fields of each record to\n")
 	fmt.Fprintf(o, "have the respective name. (Fields past the nth are left with their original\n")
 	fmt.Fprintf(o, "names.) Particularly useful with --inidx or --implicit-csv-header, to give\n")

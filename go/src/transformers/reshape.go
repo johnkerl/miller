@@ -53,7 +53,7 @@ func transformerReshapeUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameReshape
 
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
@@ -250,7 +250,7 @@ func NewTransformerReshape(
 				fmt.Fprintf(
 					os.Stderr,
 					"%s %s: cannot compile regex [%s]\n",
-					lib.MlrExeName(), verbNameReshape, inputFieldRegexString,
+					"mlr", verbNameReshape, inputFieldRegexString,
 				)
 				os.Exit(1)
 			}

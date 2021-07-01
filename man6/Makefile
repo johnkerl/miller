@@ -12,10 +12,10 @@ top: .always
 	echo mkman end
 
 # These targets are only for local dev work.
-install:
+install: top
 	mkdir -p $(INSTALLDIR)
 	cp mlr6.1 $(INSTALLDIR)/mlr6.1
-installhome:
+installhome: top
 	mkdir -p $(INSTALLHOME)
 	cp mlr6.1 $(INSTALLHOME)/mlr6.1
 

@@ -32,7 +32,7 @@ func transformerStats2Usage(
 	doExit bool,
 	exitCode int,
 ) {
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 	verb := verbNameStats2
 
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", argv0, verb)
@@ -76,7 +76,7 @@ func transformerStats2ParseCLI(
 	verb := args[argi]
 	argi++
 
-	argv0 := lib.MlrExeName()
+	argv0 := "mlr"
 
 	var accumulatorNameList []string = nil
 	var valueFieldNameList []string = nil
@@ -204,7 +204,7 @@ func NewTransformerStats2(
 			return nil, errors.New(
 				fmt.Sprintf(
 					"%s stats2: accumulator \"%s\" not found.\n",
-					lib.MlrExeName(), name,
+					"mlr", name,
 				),
 			)
 		}
@@ -352,7 +352,7 @@ func (tr *TransformerStats2) ingest(
 				)
 				if accumulator == nil {
 					fmt.Fprintf(os.Stderr, "%s %s: accumulator \"%s\" not found.\n",
-						lib.MlrExeName(), verbNameStats2, accumulatorName,
+						"mlr", verbNameStats2, accumulatorName,
 					)
 					os.Exit(1)
 				}

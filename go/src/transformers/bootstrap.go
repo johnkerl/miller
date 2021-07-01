@@ -26,11 +26,11 @@ func transformerBootstrapUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameBootstrap)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameBootstrap)
 	fmt.Fprintf(o,
 		`Emits an n-sample, with replacement, of the input records.
 See also %s sample and %s shuffle.
-`, lib.MlrExeName(), lib.MlrExeName())
+`, "mlr", "mlr")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o,
 		` -n Number of samples to output. Defaults to number of input records.

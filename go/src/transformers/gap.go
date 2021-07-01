@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"miller/src/cliutil"
-	"miller/src/lib"
 	"miller/src/types"
 )
 
@@ -25,7 +24,7 @@ func transformerGapUsage(
 	doExit bool,
 	exitCode int,
 ) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", lib.MlrExeName(), verbNameGap)
+	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameGap)
 	fmt.Fprint(o, "Emits an empty record every n records, or when certain values change.\n")
 	fmt.Fprintf(o, "Options:\n")
 

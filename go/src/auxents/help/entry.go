@@ -1,5 +1,5 @@
 // ================================================================
-// TODO: comment
+// On-line help
 // ================================================================
 
 package help
@@ -7,6 +7,8 @@ package help
 import (
 	"fmt"
 	"os"
+
+	"github.com/mattn/go-isatty"
 
 	"miller/src/cliutil"
 	"miller/src/dsl/cst"
@@ -35,16 +37,15 @@ var shorthandLookupTable = []shorthandInfo{}
 var handlerLookupTable = []handlerInfo{}
 
 func init() {
-	// For things like 'mlr -F', invoked through the CLI parser which does not
+	// For things like 'mlr -f', invoked through the CLI parser which does not
 	// go through our HelpMain().
 	shorthandLookupTable = []shorthandInfo{
-		// TODO: remove handler func & replace with just short/long
 		{shorthand: "-l", longhand: "list-verbs"},
-		{shorthand: "-L", longhand: "list-verbs-vertically"},
-		{shorthand: "-f", longhand: "usage-functions"},
-		{shorthand: "-F", longhand: "list-functions"},
-		{shorthand: "-k", longhand: "usage-keywords"},
-		{shorthand: "-K", longhand: "list-keywords"},
+		{shorthand: "-L", longhand: "usage-verbs"},
+		{shorthand: "-f", longhand: "list-functions"},
+		{shorthand: "-F", longhand: "usage-functions"},
+		{shorthand: "-k", longhand: "list-keywords"},
+		{shorthand: "-K", longhand: "usage-keywords"},
 	}
 
 	// For things like 'mlr help foo', invoked through the auxent framework
@@ -63,14 +64,15 @@ func init() {
 		{name: "function", unaryHandlerFunc: helpForFunction},
 		{name: "keyword", unaryHandlerFunc: helpForKeyword},
 		{name: "list-functions", zaryHandlerFunc: listFunctions},
-		{name: "list-functions-vertically", zaryHandlerFunc: listFunctionsVertically},
+		{name: "list-functions-as-paragraph", zaryHandlerFunc: listFunctionsAsParagraph},
 		{name: "list-keywords", zaryHandlerFunc: listKeywords},
-		{name: "list-verbs", zaryHandlerFunc: listVerbsAsParagraph},
-		{name: "list-verbs-vertically", zaryHandlerFunc: listVerbsVertically},
+		{name: "list-keywords-as-paragraph", zaryHandlerFunc: listKeywordsAsParagraph},
+		{name: "list-verbs", zaryHandlerFunc: listVerbs},
+		{name: "list-verbs-as-paragraph", zaryHandlerFunc: listVerbsAsParagraph},
 		{name: "misc", zaryHandlerFunc: helpMiscOptions},
 		{name: "mlrrc", zaryHandlerFunc: helpMlrrc},
 		{name: "number-formatting", zaryHandlerFunc: helpNumberFormatting},
-		{name: "output-colorizations", zaryHandlerFunc: helpOutputColorization},
+		{name: "output-colorization", zaryHandlerFunc: helpOutputColorization},
 		{name: "separator-options", zaryHandlerFunc: helpSeparatorOptions},
 		{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
 		{name: "usage-functions", zaryHandlerFunc: usageFunctions},
@@ -79,13 +81,6 @@ func init() {
 		{name: "verb", unaryHandlerFunc: helpForVerb},
 	}
 }
-
-// TODO: keywords listed as paragraph
-// TODO: search for function/keyword/verb/etc like in the REPL
-
-// TODO:
-// function-list as paragraph (for manpage)
-// type-arithmetic-info printTypeArithmeticInfo(os.Stdout, lib.MlrExeName());
 
 // ================================================================
 // For things like 'mlr help foo', invoked through the auxent framework which
@@ -124,8 +119,6 @@ func HelpMain(args []string) int {
 			}
 		}
 	}
-
-	// TODO: free-ranging keyword/function/verb/etc search as in mlr repl.
 
 	// "mlr help something" where we do not recognize the something
 	listTopics()
@@ -666,58 +659,61 @@ func helpTypeArithmeticInfo() {
 	fmt.Println("TO BE PORTED")
 }
 
-// ================================================================
-// TODO: port the paragraphifier
+// ----------------------------------------------------------------
 func listFunctions() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+	if isatty.IsTerminal(os.Stdout.Fd()) {
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
+	} else {
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+	}
 }
 
-// ----------------------------------------------------------------
-func listFunctionsVertically() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+func listFunctionsAsParagraph() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
 }
 
-// ----------------------------------------------------------------
 func usageFunctions() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
 }
 
-// ----------------------------------------------------------------
 func helpForFunction(arg string) {
 	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout)
 }
 
-// ================================================================
+// ----------------------------------------------------------------
 func listKeywords() {
-	cst.ListKeywords()
+	if isatty.IsTerminal(os.Stdout.Fd()) {
+		cst.ListKeywordsAsParagraph()
+	} else {
+		cst.ListKeywordsVertically()
+	}
 }
 
-// ----------------------------------------------------------------
+func listKeywordsAsParagraph() {
+	cst.ListKeywordsAsParagraph()
+}
+
 func usageKeywords() {
 	cst.UsageKeywords()
 }
 
-// ----------------------------------------------------------------
 func helpForKeyword(arg string) {
 	cst.UsageForKeyword(arg)
 }
 
-// ================================================================
+// ----------------------------------------------------------------
+func listVerbs() {
+	if isatty.IsTerminal(os.Stdout.Fd()) {
+		transformers.ListVerbNamesAsParagraph()
+	} else {
+		transformers.ListVerbNamesVertically()
+	}
+}
+
 func listVerbsAsParagraph() {
 	transformers.ListVerbNamesAsParagraph()
 }
 
-// ----------------------------------------------------------------
-func listVerbsVertically() {
-	transformers.ListVerbNamesVertically()
-}
-
-// ----------------------------------------------------------------
-func listVerbNamesAsParagraph() {
-	transformers.ListVerbNamesAsParagraph()
-}
-
-// ----------------------------------------------------------------
 func helpForVerb(arg string) {
 	transformerSetup := transformers.LookUp(arg)
 	if transformerSetup != nil {
@@ -729,7 +725,6 @@ func helpForVerb(arg string) {
 	}
 }
 
-// ----------------------------------------------------------------
 func usageVerbs() {
 	transformers.UsageVerbs()
 }

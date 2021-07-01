@@ -79,7 +79,7 @@ func OpenInboundHalfPipe(commandString string) (*os.File, error) {
 	go func(process *os.Process, readPipe *os.File) {
 		_, err := process.Wait()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", MlrExeName(), err)
+			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
 		}
 		readPipe.Close()
 	}(process, readPipe)
@@ -90,7 +90,7 @@ func OpenInboundHalfPipe(commandString string) (*os.File, error) {
 func waitAndClose(process *os.Process, readPipe *os.File) {
 	_, err := process.Wait()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: %v\n", MlrExeName(), err)
+		fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
 	}
 	readPipe.Close()
 }
