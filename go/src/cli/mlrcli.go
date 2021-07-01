@@ -64,29 +64,3 @@ package cli
 //	else
 //		return sep;
 //}
-
-//func printTypeArithmeticInfo(o *os.File, argv0 string) {
-//	for (int i = -2; i < MT_DIM; i++) {
-//		mv_t a = (mv_t) {.type = i, .free_flags = NO_FREE, .u.intv = 0};
-//		if (i == -2)
-//			fmt.Printf("%-6s |", "(+)");
-//		else if (i == -1)
-//			fmt.Printf("%-6s +", "------");
-//		else
-//			fmt.Printf("%-6s |", mt_describe_type_simple(a.type));
-//
-//		for (int j = 0; j < MT_DIM; j++) {
-//			mv_t b = (mv_t) {.type = j, .free_flags = NO_FREE, .u.intv = 0};
-//			if (i == -2) {
-//				fmt.Printf(" %-6s", mt_describe_type_simple(b.type));
-//			} else if (i == -1) {
-//				fmt.Printf(" %-6s", "------");
-//			} else {
-//				mv_t c = x_xx_plus_func(&a, &b);
-//				fmt.Printf(" %-6s", mt_describe_type_simple(c.type));
-//			}
-//		}
-//
-//		fmt.Fprintf(o, "\n");
-//	}
-//}
