@@ -967,6 +967,20 @@ is written in JSON format.
 -h|--help Show this message.
 
 ================================================================
+Usage: mlr template [options]
+Places input-record fields in the order specified by list of column names.
+If the input record is missing a specified field, it will be filled with the fill-with.
+If the input record possess an nspecified field, it will be discarded.
+Options:
+ -f {a,b,c} Comma-separated field names for template, e.g. a,b,c.
+--fill-with {filler string}  What to fill absent fields with. Defaults to the empty string.
+-h|--help Show this message.
+Example:
+* Specified fields are a,b,c.
+* Input record is c=3,a=1,f=6.
+* Output record is a=1,b=,c=3.
+
+================================================================
 Usage: mlr top [options]
 -f {a,b,c}    Value-field names for top counts.
 -g {d,e,f}    Optional group-by-field names for top counts.
