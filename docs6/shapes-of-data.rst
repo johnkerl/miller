@@ -21,36 +21,48 @@ Also try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable c
 Diagnosing delimiter specifications
 ----------------------------------------------------------------
 
-.. code-block:: none
+Use the ``file`` command to see if there are CR/LF terminators (in this case, # there are not):
 
-    # Use the `file` command to see if there are CR/LF terminators (in this case,
-    # there are not):
-    $ file data/colours.csv 
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    file data/colours.csv 
     data/colours.csv: UTF-8 Unicode text
-    
-    # Look at the file to find names of fields
-    $ cat data/colours.csv 
+
+Look at the file to find names of fields
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    cat data/colours.csv 
     KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR
     masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
     masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
-    
-    # Extract a few fields:
-    $ mlr --csv cut -f KEY,PL,RO data/colours.csv 
+
+Extract a few fields:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --csv cut -f KEY,PL,RO data/colours.csv 
     (only blank lines appear)
-    
-    # Use XTAB output format to get a sharper picture of where records/fields
-    # are being split:
-    $ mlr --icsv --oxtab cat data/colours.csv 
+
+Use XTAB output format to get a sharper picture of where records/fields are being split:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --icsv --oxtab cat data/colours.csv 
     KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
     
     KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
-    
-    # Using XTAB output format makes it clearer that KEY;DE;...;RO;TR is being
-    # treated as a single field name in the CSV header, and likewise each
-    # subsequent line is being treated as a single field value. This is because
-    # the default field separator is a comma but we have semicolons here.
-    # Use XTAB again with different field separator (--fs semicolon):
-     mlr --icsv --ifs semicolon --oxtab cat data/colours.csv 
+
+Using XTAB output format makes it clearer that ``KEY;DE;...;RO;TR`` is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (``--fs semicolon``):
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --icsv --ifs semicolon --oxtab cat data/colours.csv 
     KEY masterdata_colourcode_1
     DE  Weiß
     EN  White
@@ -74,9 +86,13 @@ Diagnosing delimiter specifications
     PL  Czarny
     RO  Negru
     TR  Siyah
-    
-    # Using the new field-separator, retry the cut:
-     mlr --csv --fs semicolon cut -f KEY,PL,RO data/colours.csv 
+
+Using the new field-separator, retry the cut:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --csv --fs semicolon cut -f KEY,PL,RO data/colours.csv 
     KEY;PL;RO
     masterdata_colourcode_1;Biały;Alb
     masterdata_colourcode_2;Czarny;Negru
@@ -84,7 +100,7 @@ Diagnosing delimiter specifications
 I assigned $9 and it's not 9th
 ----------------------------------------------------------------
 
-Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data.
+Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data, when it is originally read from the input file(s).
 
 .. code-block:: none
    :emphasize-lines: 1-1

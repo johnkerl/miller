@@ -262,7 +262,7 @@ GENRST_RUN_COMMAND
 mlr -f | grep ^assert
 GENRST_EOF
 
-Please see :ref:`cookbook-data-cleaning-examples` for examples of how to use these.
+See :doc:`data-cleaning-examples` for examples of how to use these.
 
 Type-declarations for local variables, function parameter, and function return values
 ...............................................................................................

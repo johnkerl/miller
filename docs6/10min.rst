@@ -524,6 +524,8 @@ How to specify these to Miller:
 
 You can read more about this at the :doc:`file-formats` page.
 
+.. _10min-choices-for-printing-to-files:
+
 Choices for printing to files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -1,11 +1,13 @@
 ..
     PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
 
-Cookbook part 3: Stats with and without out-of-stream variables
+Two-pass algorithms
 ================================================================
 
 Overview
 ----------------------------------------------------------------
+
+Miller is a streaming record processor; commands are performed once per record. This makes Miller particularly suitable for single-pass algorithms, allowing many of its verbs to process files that are (much) larger than the amount of RAM present in your system. (Of course, Miller verbs such as ``sort``, ``tac``, etc. all must ingest and retain all input records before emitting any output records.) You can also use out-of-stream variables to perform multi-pass computations, at the price of retaining all input records in memory.
 
 One of Miller's strengths is its compact notation: for example, given input of the form
 
@@ -76,6 +78,369 @@ The former (``mlr stats1`` et al.) has the advantages of being easier to type, b
 Nonetheless, out-of-stream variables (which I whimsically call *oosvars*), begin/end blocks, and emit statements give you the ability to implement logic -- if you wish to do so -- which isn't present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at https://github.com/johnkerl/miller/issues to get it implemented directly in Go as a Miller verb of its own.)
 
 The following examples compute some things using oosvars which are already computable using Miller verbs, by way of providing food for thought.
+
+Computation of percentages
+----------------------------------------------------------------
+
+For example, mapping numeric values down a column to the percentage between their min and max values is two-pass: on the first pass you find the min and max values, then on the second, map each record's value to a percentage.
+
+.. code-block:: none
+   :emphasize-lines: 1-16
+
+    mlr --from data/small --opprint put -q '
+      # These are executed once per record, which is the first pass.
+      # The key is to use NR to index an out-of-stream variable to
+      # retain all the x-field values.
+      @x_min = min($x, @x_min);
+      @x_max = max($x, @x_max);
+      @x[NR] = $x;
+    
+      # The second pass is in a for-loop in an end-block.
+      end {
+        for (nr, x in @x) {
+          @x_pct[nr] = 100 * (x - @x_min) / (@x_max - @x_min);
+        }
+        emit (@x, @x_pct), "NR"
+      }
+    '
+    NR x                   x_pct
+    1  0.3467901443380824  25.66194338926441
+    2  0.7586799647899636  100
+    3  0.20460330576630303 0
+    4  0.38139939387114097 31.90823602213647
+    5  0.5732889198020006  66.54054236562845
+
+Line-number ratios
+----------------------------------------------------------------
+
+Similarly, finding the total record count requires first reading through all the data:
+
+.. code-block:: none
+   :emphasize-lines: 1-11
+
+    mlr --opprint --from data/small put -q '
+      @records[NR] = $*;
+      end {
+        for((I,k),v in @records) {
+          @records[I]["I"] = I;
+          @records[I]["N"] = NR;
+          @records[I]["PCT"] = 100*I/NR
+        }
+        emit @records,"I"
+      }
+    ' then reorder -f I,N,PCT
+    I N PCT     a   b   i x                   y
+    1 5 (error) pan pan 1 0.3467901443380824  0.7268028627434533
+    2 5 (error) eks pan 2 0.7586799647899636  0.5221511083334797
+    3 5 (error) wye wye 3 0.20460330576630303 0.33831852551664776
+    4 5 (error) eks wye 4 0.38139939387114097 0.13418874328430463
+    5 5 (error) wye pan 5 0.5732889198020006  0.8636244699032729
+
+Records having max value
+----------------------------------------------------------------
+
+The idea is to retain records having the largest value of ``n`` in the following data:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --itsv --opprint cat data/maxrows.tsv
+    a      b      n score
+    purple red    5 0.743231
+    blue   purple 2 0.093710
+    red    purple 2 0.802103
+    purple red    5 0.389055
+    red    purple 2 0.880457
+    orange red    2 0.540349
+    purple purple 1 0.634451
+    orange purple 5 0.257223
+    orange purple 5 0.693499
+    red    red    4 0.981355
+    blue   purple 5 0.157052
+    purple purple 1 0.441784
+    red    purple 1 0.124912
+    orange blue   1 0.921944
+    blue   purple 4 0.490909
+    purple red    5 0.454779
+    green  purple 4 0.198278
+    orange blue   5 0.705700
+    red    red    3 0.940705
+    purple red    5 0.072936
+    orange blue   3 0.389463
+    orange purple 2 0.664985
+    blue   purple 1 0.371813
+    red    purple 4 0.984571
+    green  purple 5 0.203577
+    green  purple 3 0.900873
+    purple purple 0 0.965677
+    blue   purple 2 0.208785
+    purple purple 1 0.455077
+    red    purple 4 0.477187
+    blue   red    4 0.007487
+
+Of course, the largest value of ``n`` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    cat data/maxrows.mlr
+    # Retain all records
+    @records[NR] = $*;
+    # Track max value of n
+    @maxn = max(@maxn, $n);
+    
+    # After all records have been read, loop through retained records
+    # and print those with the max n value.
+    end {
+      for (nr in @records) {
+        map record = @records[nr];
+        if (record["n"] == @maxn) {
+          emit record;
+        }
+      }
+    }
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
+    a      b      n score
+    purple red    5 0.743231
+    purple red    5 0.389055
+    orange purple 5 0.257223
+    orange purple 5 0.693499
+    blue   purple 5 0.157052
+    purple red    5 0.454779
+    orange blue   5 0.705700
+    purple red    5 0.072936
+    green  purple 5 0.203577
+
+Feature-counting
+----------------------------------------------------------------
+
+Suppose you have some heterogeneous data like this:
+
+.. code-block:: none
+
+    { "qoh": 29874, "rate": 1.68, "latency": 0.02 }
+    { "name": "alice", "uid": 572 }
+    { "qoh": 1227, "rate": 1.01, "latency": 0.07 }
+    { "qoh": 13458, "rate": 1.72, "latency": 0.04 }
+    { "qoh": 56782, "rate": 1.64 }
+    { "qoh": 23512, "rate": 1.71, "latency": 0.03 }
+    { "qoh": 9876, "rate": 1.89, "latency": 0.08 }
+    { "name": "bill", "uid": 684 }
+    { "name": "chuck", "uid2": 908 }
+    { "name": "dottie", "uid": 440 }
+    { "qoh": 0, "rate": 0.40, "latency": 0.01 }
+    { "qoh": 5438, "rate": 1.56, "latency": 0.17 }
+
+A reasonable question to ask is, how many occurrences of each field are there? And, what percentage of total row count has each of them? Since the denominator of the percentage is not known until the end, this is a two-pass algorithm:
+
+.. code-block:: none
+
+    for (key in $*) {
+      @key_counts[key] += 1;
+    }
+    @record_count += 1;
+    
+    end {
+      for (key in @key_counts) {
+          @key_fraction[key] = @key_counts[key] / @record_count
+      }
+      emit @record_count;
+      emit @key_counts, "key";
+      emit @key_fraction,"key"
+    }
+
+Then
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --json put -q -f data/feature-count.mlr data/features.json
+    {
+      "record_count": 12
+    }
+    {
+      "key": "qoh",
+      "key_counts": 8
+    }
+    {
+      "key": "rate",
+      "key_counts": 8
+    }
+    {
+      "key": "latency",
+      "key_counts": 7
+    }
+    {
+      "key": "name",
+      "key_counts": 4
+    }
+    {
+      "key": "uid",
+      "key_counts": 3
+    }
+    {
+      "key": "uid2",
+      "key_counts": 1
+    }
+    {
+      "key": "qoh",
+      "key_fraction": 0.6666666666666666
+    }
+    {
+      "key": "rate",
+      "key_fraction": 0.6666666666666666
+    }
+    {
+      "key": "latency",
+      "key_fraction": 0.5833333333333334
+    }
+    {
+      "key": "name",
+      "key_fraction": 0.3333333333333333
+    }
+    {
+      "key": "uid",
+      "key_fraction": 0.25
+    }
+    {
+      "key": "uid2",
+      "key_fraction": 0.08333333333333333
+    }
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json
+    record_count
+    12
+    
+    key     key_counts
+    qoh     8
+    rate    8
+    latency 7
+    name    4
+    uid     3
+    uid2    1
+    
+    key     key_fraction
+    qoh     0.6666666666666666
+    rate    0.6666666666666666
+    latency 0.5833333333333334
+    name    0.3333333333333333
+    uid     0.25
+    uid2    0.08333333333333333
+
+Unsparsing
+----------------------------------------------------------------
+
+The previous section discussed how to fill out missing data fields within CSV with full header line -- so the list of all field names is present within the header line. Next, let's look at a related problem: we have data where each record has various key names but we want to produce rectangular output having the union of all key names.
+
+For example, suppose you have JSON input like this:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    cat data/sparse.json
+    {"a":1,"b":2,"v":3}
+    {"u":1,"b":2}
+    {"a":1,"v":2,"x":3}
+    {"v":1,"w":2}
+
+There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use ``put -q`` since we don't want to produce per-record output, only emitting output in the ``end`` block:
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    cat data/unsparsify.mlr
+    # First pass:
+    # Remember all unique key names:
+    for (k in $*) {
+      @all_keys[k] = 1;
+    }
+    # Remember all input records:
+    @records[NR] = $*;
+    
+    # Second pass:
+    end {
+      for (nr in @records) {
+        # Get the sparsely keyed input record:
+        irecord = @records[nr];
+        # Fill in missing keys with empty string:
+        map orecord = {};
+        for (k in @all_keys) {
+          if (haskey(irecord, k)) {
+            orecord[k] = irecord[k];
+          } else {
+            orecord[k] = "";
+          }
+        }
+        # Produce the output:
+        emit orecord;
+      }
+    }
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --json put -q -f data/unsparsify.mlr data/sparse.json
+    {
+      "a": 1,
+      "b": 2,
+      "v": 3,
+      "u": "",
+      "x": "",
+      "w": ""
+    }
+    {
+      "a": "",
+      "b": 2,
+      "v": "",
+      "u": 1,
+      "x": "",
+      "w": ""
+    }
+    {
+      "a": 1,
+      "b": "",
+      "v": 2,
+      "u": "",
+      "x": 3,
+      "w": ""
+    }
+    {
+      "a": "",
+      "b": "",
+      "v": 1,
+      "u": "",
+      "x": "",
+      "w": 2
+    }
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json
+    a,b,v,u,x,w
+    1,2,3,,,
+    ,2,,1,,
+    1,,2,,3,
+    ,,1,,,2
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
+    a b v u x w
+    1 2 3 - - -
+    - 2 - 1 - -
+    1 - 2 - 3 -
+    - - 1 - - 2
+
+There is a keystroke-saving verb for this: :ref:`mlr unsparsify <reference-verbs-unsparsify>`.
 
 Mean without/with oosvars
 ----------------------------------------------------------------

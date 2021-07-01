@@ -656,7 +656,7 @@ The following ``is...`` functions take a value and return a boolean indicating w
     asserting_present
     asserting_string
 
-Please see :ref:`cookbook-data-cleaning-examples` for examples of how to use these.
+See :doc:`data-cleaning-examples` for examples of how to use these.
 
 Type-declarations for local variables, function parameter, and function return values
 ...............................................................................................
