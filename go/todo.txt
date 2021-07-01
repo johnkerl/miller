@@ -7,8 +7,6 @@ TOP OF LIST:
 * survey email followups
 * template verb
 
-! find a way to get timestamps out as ints not scinot
-
 * windows ./mlr hack
 * windows &&/|| debug
 

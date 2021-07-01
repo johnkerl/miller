@@ -50,7 +50,7 @@ func (mv *Mlrval) setPrintRep() {
 			mv.printrep = strconv.Itoa(mv.intval)
 			break
 		case MT_FLOAT:
-			mv.printrep = strconv.FormatFloat(mv.floatval, 'g', -1, 64)
+			mv.printrep = strconv.FormatFloat(mv.floatval, 'f', -1, 64)
 			break
 		case MT_BOOL:
 			if mv.boolval == true {
