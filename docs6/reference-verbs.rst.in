@@ -1188,6 +1188,15 @@ GENRST_RUN_COMMAND
 mlr tee --help
 GENRST_EOF
 
+.. _reference-verbs-template:
+
+template
+----------------------------------------------------------------
+
+GENRST_RUN_COMMAND
+mlr template --help
+GENRST_EOF
+
 .. _reference-verbs-top:
 
 top

@@ -63,6 +63,7 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	TacSetup,
 	TailSetup,
 	TeeSetup,
+	TemplateSetup,
 	TopSetup,
 	UnflattenSetup,
 	UniqSetup,
