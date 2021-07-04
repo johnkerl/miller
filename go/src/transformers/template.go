@@ -28,9 +28,10 @@ func transformerTemplateUsage(
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameTemplate)
 	fmt.Fprintf(o, "Places input-record fields in the order specified by list of column names.\n")
 	fmt.Fprintf(o, "If the input record is missing a specified field, it will be filled with the fill-with.\n")
-	fmt.Fprintf(o, "If the input record possess an nspecified field, it will be discarded.\n")
+	fmt.Fprintf(o, "If the input record possesses an unspecified field, it will be discarded.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, " -f {a,b,c} Comma-separated field names for template, e.g. a,b,c.\n")
+	fmt.Fprintf(o, " -t {filename} CSV file whose header line will be used for template.\n")
 	fmt.Fprintf(o, "--fill-with {filler string}  What to fill absent fields with. Defaults to the empty string.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "Example:\n")
@@ -70,6 +71,15 @@ func transformerTemplateParseCLI(
 
 		} else if opt == "-f" {
 			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+
+		} else if opt == "-t" {
+			templateFileName := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			temp, err := lib.ReadCSVHeader(templateFileName)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			fieldNames = temp
 
 		} else if opt == "--fill-with" {
 			fillWith = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)

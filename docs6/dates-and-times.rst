@@ -67,16 +67,16 @@ Since there are 1372 lines in the data file, some automation is called for. To f
       then put '$datestamp = strptime($date, "%Y-%m-%d")' \
       then step -a delta -f datestamp \
     | head
-    n=1,date=2012-03-05,qoh=10055,datestamp=1.3309056e+09,datestamp_delta=0
-    n=2,date=2012-03-06,qoh=10486,datestamp=1.330992e+09,datestamp_delta=86400
-    n=3,date=2012-03-07,qoh=10430,datestamp=1.3310784e+09,datestamp_delta=86400
-    n=4,date=2012-03-08,qoh=10674,datestamp=1.3311648e+09,datestamp_delta=86400
-    n=5,date=2012-03-09,qoh=10880,datestamp=1.3312512e+09,datestamp_delta=86400
-    n=6,date=2012-03-10,qoh=10718,datestamp=1.3313376e+09,datestamp_delta=86400
-    n=7,date=2012-03-11,qoh=10795,datestamp=1.331424e+09,datestamp_delta=86400
-    n=8,date=2012-03-12,qoh=11043,datestamp=1.3315104e+09,datestamp_delta=86400
-    n=9,date=2012-03-13,qoh=11177,datestamp=1.3315968e+09,datestamp_delta=86400
-    n=10,date=2012-03-14,qoh=11498,datestamp=1.3316832e+09,datestamp_delta=86400
+    n=1,date=2012-03-05,qoh=10055,datestamp=1330905600,datestamp_delta=0
+    n=2,date=2012-03-06,qoh=10486,datestamp=1330992000,datestamp_delta=86400
+    n=3,date=2012-03-07,qoh=10430,datestamp=1331078400,datestamp_delta=86400
+    n=4,date=2012-03-08,qoh=10674,datestamp=1331164800,datestamp_delta=86400
+    n=5,date=2012-03-09,qoh=10880,datestamp=1331251200,datestamp_delta=86400
+    n=6,date=2012-03-10,qoh=10718,datestamp=1331337600,datestamp_delta=86400
+    n=7,date=2012-03-11,qoh=10795,datestamp=1331424000,datestamp_delta=86400
+    n=8,date=2012-03-12,qoh=11043,datestamp=1331510400,datestamp_delta=86400
+    n=9,date=2012-03-13,qoh=11177,datestamp=1331596800,datestamp_delta=86400
+    n=10,date=2012-03-14,qoh=11498,datestamp=1331683200,datestamp_delta=86400
 
 Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
 
@@ -88,8 +88,8 @@ Then, filter for adjacent difference not being 86400 (the number of seconds in a
       then put '$datestamp = strptime($date, "%Y-%m-%d")' \
       then step -a delta -f datestamp \
       then filter '$datestamp_delta != 86400 && $n != 1'
-    n=774,date=2014-04-19,qoh=130140,datestamp=1.3978656e+09,datestamp_delta=259200
-    n=1119,date=2015-03-31,qoh=181625,datestamp=1.42776e+09,datestamp_delta=172800
+    n=774,date=2014-04-19,qoh=130140,datestamp=1397865600,datestamp_delta=259200
+    n=1119,date=2015-03-31,qoh=181625,datestamp=1427760000,datestamp_delta=172800
 
 Given this, it's now easy to see where the gaps are:
 

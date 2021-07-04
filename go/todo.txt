@@ -7,6 +7,8 @@ TOP OF LIST:
 * survey email followups
 * template verb
 
+* quicklinks -- ?
+
 * windows ./mlr hack
 * windows &&/|| debug
 
@@ -29,6 +31,10 @@ DOC6
   o no out-of-core sort yet ...
   o older versions
 
+* number-formatting page
+
+* check <-> manpage/olh sections & doc6 sections
+
 ! fill out:
   o new-in-miller-6: flatten/unflatten
   o JSON flatten/unflatten section
@@ -48,8 +54,6 @@ DOC6
   o stats1 --fr
     cookbook2.rst.in
   o file-formats: colon -> dot
-  o unset multiple lvalues in the BNF
-    faq.rst.in
   o list at end of todo.txt
   o file-formats.rst.in & olh: dkvp not first anymore
 
@@ -131,6 +135,8 @@ w survey
 ================================================================
 * headerful/headerless mix -- ?
   TOptions as list, not single -- ?
+
+* uniqify-field-names in record-readers -- which issue?
 
 * non-blocker: read-from-URL support -- ?
 

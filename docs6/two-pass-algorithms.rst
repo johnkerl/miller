@@ -587,7 +587,7 @@ Min/max without/with oosvars
    :emphasize-lines: 1-1
 
     mlr --oxtab stats1 -a min,max -f x data/medium
-    x_min 4.509679127584487e-05
+    x_min 0.00004509679127584487
     x_max 0.999952670371898
 
 .. code-block:: none
@@ -598,7 +598,7 @@ Min/max without/with oosvars
       @x_max = max(@x_max, $x);
       end{emitf @x_min, @x_max}
     ' data/medium
-    x_min 4.509679127584487e-05
+    x_min 0.00004509679127584487
     x_max 0.999952670371898
 
 Keyed min/max without/with oosvars
@@ -613,7 +613,7 @@ Keyed min/max without/with oosvars
     eks 0.0006917972627396018  0.9988110946859143
     wye 0.0001874794831505655  0.9998228522652893
     zee 0.0005486114815762555  0.9994904324789629
-    hat 4.509679127584487e-05  0.999952670371898
+    hat 0.00004509679127584487 0.999952670371898
 
 .. code-block:: none
    :emphasize-lines: 1-7
@@ -630,7 +630,7 @@ Keyed min/max without/with oosvars
     eks 0.0006917972627396018  0.9988110946859143
     wye 0.0001874794831505655  0.9998228522652893
     zee 0.0005486114815762555  0.9994904324789629
-    hat 4.509679127584487e-05  0.999952670371898
+    hat 0.00004509679127584487 0.999952670371898
 
 Delta without/with oosvars
 ----------------------------------------------------------------

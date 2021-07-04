@@ -2796,7 +2796,7 @@ optionally categorized by one or more other fields.
     mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium
     x_count 10000
     x_sum   4986.019681679581
-    x_min   4.509679127584487e-05
+    x_min   0.00004509679127584487
     x_p10   0.09332217805283527
     x_p50   0.5011592202840128
     x_mean  0.49860196816795804
@@ -2804,7 +2804,7 @@ optionally categorized by one or more other fields.
     x_max   0.999952670371898
     y_count 10000
     y_sum   5062.057444929905
-    y_min   8.818962627266114e-05
+    y_min   0.00008818962627266114
     y_p10   0.10213207378968225
     y_p50   0.5060212582772865
     y_mean  0.5062057444929905
@@ -2899,7 +2899,7 @@ fields, optionally categorized by one or more fields.
     mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
       then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 \
       data/medium
-    x_y_cov    4.2574820827444476e-05
+    x_y_cov    0.000042574820827444476
     x_y_corr   0.0005042001844467462
     y_y_cov    0.08461122467974003
     y_y_corr   1
@@ -2914,12 +2914,12 @@ fields, optionally categorized by one or more fields.
     mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
       then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a \
       data/medium
-    a   x_y_ols_m             x_y_ols_b           x_y_ols_n x_y_r2                 y_y_ols_m y_y_ols_b y_y_ols_n y_y_r2 xy_y2_ols_m        xy_y2_ols_b         xy_y2_ols_n xy_y2_r2
-    pan 0.01702551273681908   0.5004028922897639  2081      0.00028691820445814767 1         0         2081      1      0.8781320866715662 0.11908230147563566 2081        0.41749827377311266
-    eks 0.0407804923685586    0.48140207967651016 1965      0.0016461239223448587  1         0         1965      1      0.8978728611690183 0.10734054433612333 1965        0.45563223864254526
-    wye -0.03915349075204814  0.5255096523974456  1966      0.0015051268704373607  1         0         1966      1      0.8538317334220835 0.1267454301662969  1966        0.38991721818599295
-    zee 0.0027812364960399147 0.5043070448033061  2047      7.751652858786137e-06  1         0         2047      1      0.8524439912011013 0.12401684308018937 2047        0.39356598090006495
-    hat -0.018620577041095078 0.5179005397264935  1941      0.0003520036646055585  1         0         1941      1      0.8412305086345014 0.13557328318623216 1941        0.3687944261732265
+    a   x_y_ols_m             x_y_ols_b           x_y_ols_n x_y_r2                  y_y_ols_m y_y_ols_b y_y_ols_n y_y_r2 xy_y2_ols_m        xy_y2_ols_b         xy_y2_ols_n xy_y2_r2
+    pan 0.01702551273681908   0.5004028922897639  2081      0.00028691820445814767  1         0         2081      1      0.8781320866715662 0.11908230147563566 2081        0.41749827377311266
+    eks 0.0407804923685586    0.48140207967651016 1965      0.0016461239223448587   1         0         1965      1      0.8978728611690183 0.10734054433612333 1965        0.45563223864254526
+    wye -0.03915349075204814  0.5255096523974456  1966      0.0015051268704373607   1         0         1966      1      0.8538317334220835 0.1267454301662969  1966        0.38991721818599295
+    zee 0.0027812364960399147 0.5043070448033061  2047      0.000007751652858786137 1         0         2047      1      0.8524439912011013 0.12401684308018937 2047        0.39356598090006495
+    hat -0.018620577041095078 0.5179005397264935  1941      0.0003520036646055585   1         0         1941      1      0.8412305086345014 0.13557328318623216 1941        0.3687944261732265
 
 Here's an example simple line-fit. The ``x`` and ``y``
 fields of the ``data/medium`` dataset are just independent uniformly
@@ -3261,6 +3261,29 @@ tee
     is written in JSON format.
     
     -h|--help Show this message.
+
+.. _reference-verbs-template:
+
+template
+----------------------------------------------------------------
+
+.. code-block:: none
+   :emphasize-lines: 1-1
+
+    mlr template --help
+    Usage: mlr template [options]
+    Places input-record fields in the order specified by list of column names.
+    If the input record is missing a specified field, it will be filled with the fill-with.
+    If the input record possesses an unspecified field, it will be discarded.
+    Options:
+     -f {a,b,c} Comma-separated field names for template, e.g. a,b,c.
+     -t {filename} CSV file whose header line will be used for template.
+    --fill-with {filler string}  What to fill absent fields with. Defaults to the empty string.
+    -h|--help Show this message.
+    Example:
+    * Specified fields are a,b,c.
+    * Input record is c=3,a=1,f=6.
+    * Output record is a=1,b=,c=3.
 
 .. _reference-verbs-top:
 

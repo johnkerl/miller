@@ -970,9 +970,10 @@ is written in JSON format.
 Usage: mlr template [options]
 Places input-record fields in the order specified by list of column names.
 If the input record is missing a specified field, it will be filled with the fill-with.
-If the input record possess an nspecified field, it will be discarded.
+If the input record possesses an unspecified field, it will be discarded.
 Options:
  -f {a,b,c} Comma-separated field names for template, e.g. a,b,c.
+ -t {filename} CSV file whose header line will be used for template.
 --fill-with {filler string}  What to fill absent fields with. Defaults to the empty string.
 -h|--help Show this message.
 Example:

@@ -6,6 +6,7 @@
 package lib
 
 import (
+	"encoding/csv"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -71,4 +72,18 @@ func LoadStringsFromDir(dirname string, extension string) ([]string, error) {
 	}
 
 	return dslStrings, nil
+}
+
+func ReadCSVHeader(filename string) ([]string, error) {
+	handle, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer handle.Close()
+	csvReader := csv.NewReader(handle)
+	header, err := csvReader.Read()
+	if err != nil {
+		return nil, err
+	}
+	return header, nil
 }
