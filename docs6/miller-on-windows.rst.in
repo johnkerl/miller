@@ -37,3 +37,5 @@ The Windows-support code within Miller makes effort to support Linux/Unix/MacOS-
 One workaround is to use MSYS2. Another is to put more complex DSL expressions into a file:
 
 .. image::  pix/miller-windows-complex-workaround.png
+
+A third workaround is to replace ...
