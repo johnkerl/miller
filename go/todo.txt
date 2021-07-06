@@ -25,9 +25,6 @@ DOC6
 
 * number-formatting page
 
-* windows &&/|| note
-  o note "true&&false" vs 'true && false'; & " ... """...""" ..."
-
 * check <-> manpage/olh sections & doc6 sections
 
 * fill out:

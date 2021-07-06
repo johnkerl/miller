@@ -34,6 +34,12 @@ The Windows-support code within Miller makes effort to support Linux/Unix/MacOS-
 
 .. image::  pix/miller-msys-complex.png
 
-One workaround is to use MSYS2. Another is to put more complex DSL expressions into a file:
+Single quotes with ``&&`` or ``||`` inside are fundamentally unhandleable within Windows; there is nothing Miller can do here as the Windows command line is split before Miller ever receives it.
+
+One workaround is to use MSYS2. Another workaround is to put more complex DSL expressions into a file:
 
 .. image::  pix/miller-windows-complex-workaround.png
+
+A third workaround is to replace ``"`` with ``"""``, then ``'`` with ``"``:
+
+.. image::  pix/miller-windows-triple-double-quote.png
