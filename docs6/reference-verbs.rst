@@ -1,7 +1,7 @@
 ..
     PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
 
-Reference: List of verbs
+Reference: list of verbs
 ================================================================
 
 Overview
