@@ -89,7 +89,13 @@ const (
 	// for its redirect target.
 	NodeTypeNoOp = "no-op"
 
+	// The dot operator is a little different from other operators since it's
+	// type-dependent: for strings/int/bools etc it's just concatenation of
+	// string representations, but if the left-hand side is a map, it's a
+	// key-lookup with an unquoted literal on the right. E.g. mymap.foo is the
+	// same as mymap["foo"].
 	NodeTypeOperator           = "operator"
+	NodeTypeDotOperator        = "dot operator"
 	NodeTypeFunctionCallsite   = "function callsite"
 	NodeTypeSubroutineCallsite = "subroutine callsite"
 

@@ -1953,7 +1953,7 @@ var productionsTable = ProdTab{
 		String: `Assignment : Lvalue ".=" Rvalue	<< dsl.NewASTNodeBinary(
       dsl.NewASTToken("=", X[1]),
       X[0],
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", X[1]), X[0], X[2], dsl.NodeTypeOperator),
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", X[1]), X[0], X[2], dsl.NodeTypeDotOperator),
       dsl.NodeTypeAssignment,
     ) >>`,
 		Id:         "Assignment",
@@ -1964,7 +1964,7 @@ var productionsTable = ProdTab{
 			return dsl.NewASTNodeBinary(
 				dsl.NewASTToken("=", X[1]),
 				X[0],
-				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", X[1]), X[0], X[2], dsl.NodeTypeOperator),
+				dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", X[1]), X[0], X[2], dsl.NodeTypeDotOperator),
 				dsl.NodeTypeAssignment,
 			)
 		},
@@ -2470,13 +2470,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `AddsubdotTerm : AddsubdotTerm "." MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator) >>`,
+		String: `AddsubdotTerm : AddsubdotTerm "." MuldivTerm	<< dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeDotOperator) >>`,
 		Id:         "AddsubdotTerm",
 		NTType:     55,
 		Index:      182,
 		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib) (Attrib, error) {
-			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeOperator)
+			return dsl.NewASTNodeBinary(X[1], X[0], X[2], dsl.NodeTypeDotOperator)
 		},
 	},
 	ProdTabEntry{

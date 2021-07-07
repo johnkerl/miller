@@ -5,8 +5,8 @@ DSL EXPRESSION:
 AST:
 * statement block
     * bare boolean
-        * operator "."
-            * operator "."
+        * dot operator "."
+            * dot operator "."
                 * int literal "1"
                 * int literal "2"
             * int literal "3"

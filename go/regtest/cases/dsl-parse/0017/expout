@@ -10,7 +10,7 @@ AST:
             * operator "*"
                 * int literal "2"
                 * direct field value "a"
-            * operator "."
+            * dot operator "."
                 * direct field value "b"
                 * direct field value "c"
 

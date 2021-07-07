@@ -11,7 +11,7 @@ AST:
         * statement block
             * assignment "="
                 * indirect field value "$[]"
-                    * operator "."
+                    * dot operator "."
                         * local variable "k"
                         * string literal "_orig"
                 * local variable "v"

@@ -6,7 +6,7 @@ AST:
 * statement block
     * assignment "="
         * direct field value "new"
-        * operator "."
+        * dot operator "."
             * direct field value "a"
             * direct field value "b"
 

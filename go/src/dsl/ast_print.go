@@ -259,6 +259,8 @@ func (node *ASTNode) Text() string {
 
 	case NodeTypeOperator:
 		return tokenText
+	case NodeTypeDotOperator:
+		return tokenText
 	case NodeTypeFunctionCallsite:
 		return tokenText
 

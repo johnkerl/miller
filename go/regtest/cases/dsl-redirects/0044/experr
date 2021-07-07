@@ -1,4 +1,18 @@
-a:1=pan
-a:1=pan,a:2=eks
-a:1=pan,a:2=eks,a:3=wye
-a:1=pan,a:2=eks,a:3=wye,a:4=eks
+a={
+  "1": "pan"
+}
+a={
+  "1": "pan",
+  "2": "eks"
+}
+a={
+  "1": "pan",
+  "2": "eks",
+  "3": "wye"
+}
+a={
+  "1": "pan",
+  "2": "eks",
+  "3": "wye",
+  "4": "eks"
+}

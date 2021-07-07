@@ -7,7 +7,7 @@ AST:
     * bare boolean
         * operator "=~"
             * direct field value "x"
-            * operator "."
+            * dot operator "."
                 * string literal "^a.*"
                 * case-insensitive regular expression ""d$"i"
 

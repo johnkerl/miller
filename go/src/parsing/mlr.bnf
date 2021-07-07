@@ -1249,7 +1249,7 @@ Assignment
     << dsl.NewASTNodeBinary(
       dsl.NewASTToken("=", $1),
       $0,
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", $1), $0, $2, dsl.NodeTypeDotOperator),
       dsl.NodeTypeAssignment,
     ) >>
 
@@ -1389,7 +1389,7 @@ AddsubdotTerm
   | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm "."  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm "."  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeDotOperator) >>
   | MuldivTerm
 ;
 
