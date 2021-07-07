@@ -62,7 +62,8 @@ func OpenFileForRead(
 	}
 }
 
-// PathToHandle maps various back-ends to a stream. As of 2021-07-07:
+// PathToHandle maps various back-ends to a stream. As of 2021-07-07, the
+// following URI schemes are supported:
 // * https://... and http://...
 // * file://...
 // * plain disk files
