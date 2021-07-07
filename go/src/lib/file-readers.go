@@ -25,6 +25,7 @@ import (
 	"compress/gzip"
 	"compress/zlib"
 	"io"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -53,11 +54,33 @@ func OpenFileForRead(
 	if prepipe != "" {
 		return openPrepipedHandleForRead(filename, prepipe, prepipeIsRaw)
 	} else {
-		handle, err := os.Open(filename)
+		handle, err := PathToHandle(filename)
 		if err != nil {
 			return nil, err
 		}
 		return openEncodedHandleForRead(handle, encoding, filename)
+	}
+}
+
+// PathToHandle maps various back-ends to a stream. As of 2021-07-07, the
+// following URI schemes are supported:
+// * https://... and http://...
+// * file://...
+// * plain disk files
+func PathToHandle(
+	path string,
+) (io.ReadCloser, error) {
+	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
+		resp, err := http.Get(path)
+		if err != nil {
+			return nil, err
+		}
+		handle := resp.Body
+		return handle, err
+	} else if strings.HasPrefix(path, "file://") {
+		return os.Open(strings.Replace(path, "file://", "", 1))
+	} else {
+		return os.Open(path)
 	}
 }
 
@@ -125,7 +148,7 @@ func escapeFileNameForPopen(filename string) string {
 
 // TODO: comment
 func openEncodedHandleForRead(
-	handle *os.File,
+	handle io.ReadCloser,
 	encoding TFileInputEncoding,
 	filename string,
 ) (io.ReadCloser, error) {
@@ -160,11 +183,11 @@ func openEncodedHandleForRead(
 // ----------------------------------------------------------------
 // BZip2ReadCloser remedies the fact that bzip2.NewReader does not implement io.ReadCloser.
 type BZip2ReadCloser struct {
-	originalHandle *os.File
+	originalHandle io.ReadCloser
 	bzip2Handle    io.Reader
 }
 
-func NewBZip2ReadCloser(handle *os.File) *BZip2ReadCloser {
+func NewBZip2ReadCloser(handle io.ReadCloser) *BZip2ReadCloser {
 	return &BZip2ReadCloser{
 		originalHandle: handle,
 		bzip2Handle:    bzip2.NewReader(handle),
