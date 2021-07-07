@@ -1,7 +1,7 @@
 ================================================================
 TOP OF LIST:
 
-* dotted-LHS *
+* dotted-LHS * http/s reader *
 * emit * regex * fmtnum * localtime * stats1 --fr *
 * --nr-progress-mod * mlr -k * json comment-handling
 * cli-audits * doc6 * survey * check issues *
