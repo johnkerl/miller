@@ -758,7 +758,7 @@ EmitFStatement
 // record.
 //
 // We use the Emittable production rule to limit the things being emitted.  It
-// would be fine to use more generally Rvalue -- anything *evaluating* to a
+// might be fine to use more generally Rvalue -- anything *evaluating* to a
 // map, including function calls -- except that the legacy punctuation design
 // of 'emit (#, #), #, #' means that allowing parenthesized expressions within
 // the '(...)' results in shift-reduce conflicts at parser-gen time.
@@ -767,6 +767,17 @@ EmitFStatement
 // expression within the parentheses. Another (backward-incompatible) solution
 // would be to modify the punctuation, e.g. 'emit [#, #], # #' or
 // 'emit ([#, #], # #)' perhaps.
+//
+// However: we shouldn't bother. The reason is that emittables need names which
+// are known.
+// * emit @a -- the name is "a"
+// * emit (@a, @b) -- the names are ["a", "b"]
+// * emit @* -- the names are the map keys
+// * emit $* -- the names are the map keys
+// * emit {...} -- the names are the map keys
+// If we allow emit of arbitrary expressions, we open ourselves up to things
+// which are unnameable such as the return value from map-valued functions such
+// as mapdiff, etc. etc.
 
 EmitStatement
   : emit EmittableAsList
@@ -981,16 +992,16 @@ EmittableAsList
 Emittable
   : LocalVariable
 
-  | FullOosvar
   | DirectOosvarValue
   | BracedOosvarValue
   | IndirectOosvarValue
 
-  | FullSrec
   | DirectFieldValue
   | BracedFieldValue
   | IndirectFieldValue
 
+  | FullSrec
+  | FullOosvar
   | MapLiteral
   ;
 
