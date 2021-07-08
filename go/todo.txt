@@ -25,7 +25,7 @@ EMIT
 ! refactor:
   o in emit.go: separate topLevelArray / topLevelMap
   o fcnptr no longer Executor: takes a map
-! needs BNF support for [...]
+! make validation/build-time rule for no emit ($*,@*)
 
 ----------------------------------------------------------------
 DOC6
