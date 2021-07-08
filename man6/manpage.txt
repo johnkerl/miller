@@ -102,8 +102,8 @@ VERB LIST
        json-stringify join label least-frequent merge-fields most-frequent nest
        nothing put regularize remove-empty-columns rename reorder repeat reshape
        sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
-       sort-within-records stats1 stats2 step tac tail tee top unflatten uniq
-       unsparsify
+       sort-within-records stats1 stats2 step tac tail tee template top unflatten
+       uniq unsparsify
 
 FUNCTION LIST
        abs acos acosh append arrayify asin asinh asserting_absent asserting_array
@@ -453,7 +453,8 @@ OUTPUT COLORIZATION
 
        If environment-variable settings and command-line flags are both provided,the latter take precedence.
 
-       Please do mlr --list-colors to see the available color codes.
+       Please do mlr --list-color-codes to see the available color codes (like 170), and
+       mlr --list-color-names to see available names (like orchid).
 
 MLRRC
        You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
@@ -1428,6 +1429,21 @@ VERBS
        is written in JSON format.
 
        -h|--help Show this message.
+
+   template
+       Usage: mlr template [options]
+       Places input-record fields in the order specified by list of column names.
+       If the input record is missing a specified field, it will be filled with the fill-with.
+       If the input record possesses an unspecified field, it will be discarded.
+       Options:
+        -f {a,b,c} Comma-separated field names for template, e.g. a,b,c.
+        -t {filename} CSV file whose header line will be used for template.
+       --fill-with {filler string}  What to fill absent fields with. Defaults to the empty string.
+       -h|--help Show this message.
+       Example:
+       * Specified fields are a,b,c.
+       * Input record is c=3,a=1,f=6.
+       * Output record is a=1,b=,c=3.
 
    top
        Usage: mlr top [options]
@@ -2504,4 +2520,4 @@ SEE ALSO
 
 
 
-                                  2021-07-01                         MILLER(1)
+                                  2021-07-08                         MILLER(1)

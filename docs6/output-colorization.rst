@@ -50,7 +50,7 @@ How you can control colorization:
 
 If environment-variable settings and command-line flags are both provided, the latter take precedence.
 
-Please do ``mlr --list-colors`` to see the available color codes.
+Please do ``mlr --list-color-codes`` to see the available color codes (like ``170``), and ``mlr --list-color-names`` to see available names (like ``orchid``).
 
 .. image:: pix/colorization2.png
 
