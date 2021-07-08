@@ -471,7 +471,8 @@ Unset
 //
 // Instead, we use the same production rule for lvalues and rvalues here in the
 // grammar, deferring lvalue restrictions to the CST builder where we have more
-// flexibility -- as well as more expressive ability in our error messages.
+// flexibility. As an added bonuys, we get more expressive ability in our error
+// messages.
 
 Lvalue
   : Rvalue

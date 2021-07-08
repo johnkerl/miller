@@ -1,7 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-* dotted-LHS * http/s reader *
 * emit * regex * fmtnum * localtime * stats1 --fr *
 * --nr-progress-mod * mlr -k * json comment-handling
 * cli-audits * doc6 * survey * check issues *
@@ -582,3 +581,5 @@ DOC6:
   - use JSON null here
   - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
 * doclink re https://readthedocs.org/projects/miller/ & https://github.com/johnkerl/miller/settings/hooks
+* dotted-map doc ...
+  o $*.foo["bar"] = NR b04k b/c precedence :(
