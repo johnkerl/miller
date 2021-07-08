@@ -27,7 +27,7 @@ AST:
             * assignment "="
                 * array or map index access "[]"
                     * direct oosvar value "t"
-                    * operator "."
+                    * dot operator "."
                         * string literal "u"
                         * direct field value "5"
                 * int literal "2"

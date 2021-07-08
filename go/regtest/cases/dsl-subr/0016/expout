@@ -28,8 +28,8 @@ AST:
         * statement block
             * print statement "print"
                 * function callsite
-                    * operator "."
-                        * operator "."
+                    * dot operator "."
+                        * dot operator "."
                             * string literal "HELLO, "
                             * local variable "a"
                         * string literal "!"

@@ -471,7 +471,8 @@ Unset
 //
 // Instead, we use the same production rule for lvalues and rvalues here in the
 // grammar, deferring lvalue restrictions to the CST builder where we have more
-// flexibility -- as well as more expressive ability in our error messages.
+// flexibility. As an added bonuys, we get more expressive ability in our error
+// messages.
 
 Lvalue
   : Rvalue
@@ -1249,7 +1250,7 @@ Assignment
     << dsl.NewASTNodeBinary(
       dsl.NewASTToken("=", $1),
       $0,
-      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", $1), $0, $2, dsl.NodeTypeOperator),
+      dsl.NewASTNodeBinaryNestable(dsl.NewASTToken(".", $1), $0, $2, dsl.NodeTypeDotOperator),
       dsl.NodeTypeAssignment,
     ) >>
 
@@ -1389,7 +1390,7 @@ AddsubdotTerm
   | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm "."  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | AddsubdotTerm "."  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeDotOperator) >>
   | MuldivTerm
 ;
 
