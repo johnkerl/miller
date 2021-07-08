@@ -72,7 +72,7 @@ type TWriterOptions struct {
 	ORS              string
 	OFS              string
 	OPS              string
-	FLATSEP         string
+	FLATSEP          string
 
 	// If unspecified on the command line, these take input-format-dependent
 	// defaults.  E.g. default FS is comma for DKVP but space for NIDX.
@@ -190,7 +190,7 @@ func DefaultWriterOptions() TWriterOptions {
 		ORS:              "\n",
 		OFS:              ",",
 		OPS:              "=",
-		FLATSEP:         ".",
+		FLATSEP:          ".",
 
 		HeaderlessCSVOutput:       false,
 		WrapJSONOutputInOuterList: false,

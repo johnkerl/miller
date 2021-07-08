@@ -377,7 +377,7 @@ var TokMap = TokenMap{
 		"ctx_OPS":                113,
 		"ctx_OFS":                114,
 		"ctx_ORS":                115,
-		"ctx_FLATSEP":           116,
+		"ctx_FLATSEP":            116,
 		"ctx_NF":                 117,
 		"ctx_NR":                 118,
 		"ctx_FNR":                119,

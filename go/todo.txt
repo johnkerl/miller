@@ -13,8 +13,19 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 EMIT
-mlr --from regtest/input/emit2.dkvp put -q -f regtest/cases/dsl-emit-basic-indexing/0041-emitp-index-nonindexed/mlr
-mlr --from regtest/input/emit2.dkvp put -q -f regtest/cases/dsl-emit-basic-indexing/0041-emitp-index-underindexed/mlr
+* make single top-level emittable (rename to topLevelEmittable)
+  o @foo
+    - name known at build-time
+  ? [@foo,@bar]
+    - sub-names known at build-time if we require they be named
+  o all/@*
+    - sub-names known at run-time from map keys
+  o {...}
+    - sub-names known at run-time from map keys
+! refactor:
+  o in emit.go: separate topLevelArray / topLevelMap
+  o fcnptr no longer Executor: takes a map
+! needs BNF support for [...]
 
 ----------------------------------------------------------------
 DOC6
