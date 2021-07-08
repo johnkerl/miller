@@ -59,6 +59,7 @@ type tEmitToRedirectFunc func(
 type tEmitExecutorFunc func(
 	names []string,
 	values []*types.Mlrval,
+	state *runtime.State,
 ) error
 
 type EmitXStatementNode struct {
@@ -208,9 +209,9 @@ func (root *RootNode) buildEmitXStatementNode(
 	}
 
 	if !isIndexed {
-		retval.executorFunc = retval.stubExecutor
+		retval.executorFunc = retval.executeNonIndexed
 	} else {
-		retval.executorFunc = retval.stubExecutor
+		retval.executorFunc = retval.executeIndexed
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -277,7 +278,7 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 		for i, evaluable := range node.topLevelEvaluableList {
 			values[i] = evaluable.Evaluate(state)
 		}
-		return nil, node.executorFunc(names, values)
+		return nil, node.executorFunc(names, values, state)
 
 	} else {
 		// 'emit @*', 'emit {...}', etc.
@@ -300,222 +301,156 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 			i++
 		}
 
-		return nil, node.executorFunc(names, values)
+		return nil, node.executorFunc(names, values, state)
 	}
 }
 
 // ----------------------------------------------------------------
-func (node *EmitXStatementNode) stubExecutor(
+func (node *EmitXStatementNode) executeNonIndexed(
 	names []string,
 	values []*types.Mlrval,
+	state *runtime.State,
 ) error {
-	//for i, _ := range names {
-		//fmt.Printf("[[%s}] -> [[%s]]\n", names[i], values[i].String())
-	//}
-	return nil
+	newrec := types.NewMlrmapAsRecord()
+
+	for i, value := range values {
+		if value.IsAbsent() {
+			continue
+		}
+
+		if node.isEmitP {
+			newrec.PutCopy(names[i], value)
+		} else {
+			if value.IsMap() {
+				newrec.Merge(value.GetMap())
+			} else {
+				newrec.PutCopy(names[i], value)
+			}
+		}
+	}
+
+	return node.emitToRedirectFunc(newrec, state)
 }
 
 // ----------------------------------------------------------------
-//func (node *EmitXStatementNode) executeNonIndexed(
-//	state *runtime.State,
-//) (*BlockExitPayload, error) {
-//
-//	newrec := types.NewMlrmapAsRecord()
-//
-//	for i, topLevelEmitEvaluable := range node.topLevelEmitEvaluables {
-//		emittable := topLevelEmitEvaluable.Evaluate(state)
-//		if emittable.IsAbsent() {
-//			continue
-//		}
-//
-//		if node.isEmitP {
-//			if node.isNamelesses[i] {
-//				// The top-level map for 'all oosvars' doesn't have a name --
-//				// other than '@*' of course. But we need to not include that
-//				// 'name' as the first output slot. Without this check,
-//				//
-//				//   mlr put -q @sum[$a][$b] += $x; end { emitp @* } foo.dat
-//				//
-//				// results in something like
-//				//
-//				//   {
-//				//     "_": {
-//				//       "sum": {
-//				//         "eks": {
-//				//           "wye": 0.38139939387114097,
-//				//           "zee": 0.6117840605678454
-//				//         }
-//				//       },
-//				//       "count": {
-//				//         "eks": {
-//				//           "wye": 2,
-//				//           "zee": 4,
-//				//         }
-//				//       },
-//				//     }
-//				//   }
-//				//
-//				// when we really want
-//				//
-//				//   {
-//				//     "sum": {
-//				//       "eks": {
-//				//         "wye": 0.38139939387114097,
-//				//         "zee": 0.6117840605678454
-//				//       }
-//				//     },
-//				//     "count": {
-//				//       "eks": {
-//				//         "wye": 2,
-//				//         "zee": 4,
-//				//       }
-//				//     },
-//				//   }
-//
-//				top := emittable.GetMap()
-//				lib.InternalCodingErrorIf(top == nil)
-//				for pe := top.Head; pe != nil; pe = pe.Next {
-//					newrec.PutCopy(pe.Key, pe.Value)
-//				}
-//			} else {
-//				newrec.PutCopy(node.names[i], emittable)
-//			}
-//		} else {
-//			if emittable.IsMap() {
-//				newrec.Merge(emittable.GetMap())
-//			} else {
-//				newrec.PutCopy(node.names[i], emittable)
-//			}
-//		}
-//	}
-//
-//	err := node.emitToRedirectFunc(newrec, state)
-//
-//	return nil, err
-//}
+func (node *EmitXStatementNode) executeIndexed(
+	names []string,
+	values []*types.Mlrval,
+	state *runtime.State,
+) error {
 
-//// ----------------------------------------------------------------
-//func (node *EmitXStatementNode) executeIndexed(
-//	state *runtime.State,
-//) (*BlockExitPayload, error) {
-//	emittableMaps := make([]*types.Mlrmap, len(node.topLevelEmitEvaluables))
-//	for i, topLevelEmitEvaluable := range node.topLevelEmitEvaluables {
-//		emittable := topLevelEmitEvaluable.Evaluate(state)
-//		if emittable.IsAbsent() {
-//			return nil, nil
-//		}
-//		if !emittable.IsMap() {
-//			return nil, nil
-//		}
-//		emittableMaps[i] = emittable.GetMap()
-//	}
-//	indices := make([]*types.Mlrval, len(node.indexEvaluables))
-//
-//	// TODO: libify this
-//	for i, _ := range node.indexEvaluables {
-//		indices[i] = node.indexEvaluables[i].Evaluate(state)
-//		if indices[i].IsAbsent() {
-//			return nil, nil
-//		}
-//		if indices[i].IsError() {
-//			// TODO: surface this more highly
-//			return nil, nil
-//		}
-//	}
-//
-//	return node.executeIndexedAux(
-//		node.names,
-//		types.NewMlrmapAsRecord(),
-//		emittableMaps,
-//		indices,
-//		state,
-//	)
-//}
+	emittableMaps := make([]*types.Mlrmap, len(values))
+	for i, value := range values {
+		if value.IsAbsent() {
+			return nil
+		}
+		mapValue := value.GetMap()
+		if mapValue == nil {
+			return nil
+		}
+		emittableMaps[i] = mapValue
+	}
 
-//// Recurses over indices.
-//func (node *EmitXStatementNode) executeIndexedAux(
-//	mapNames []string,
-//	templateRecord *types.Mlrmap,
-//	emittableMaps []*types.Mlrmap,
-//	indices []*types.Mlrval,
-//	state *runtime.State,
-//) (*BlockExitPayload, error) {
-//	lib.InternalCodingErrorIf(len(indices) < 1)
-//	index := indices[0]
-//	indexString := index.String()
-//
-//	for pe := emittableMaps[0].Head; pe != nil; pe = pe.Next {
-//		newrec := templateRecord.Copy()
-//
-//		indexValue := types.MlrvalFromString(pe.Key)
-//		newrec.PutCopy(indexString, &indexValue)
-//		indexValueString := indexValue.String()
-//
-//		nextLevels := make([]*types.Mlrval, len(emittableMaps))
-//		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
-//		for i, emittableMap := range emittableMaps {
-//			if emittableMap != nil {
-//				nextLevel := emittableMap.Get(indexValueString)
-//				nextLevels[i] = nextLevel
-//				// Can be nil for lashed indexing with heterogeneous data: e.g.
-//				// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
-//				if nextLevel != nil && nextLevel.IsMap() {
-//					nextLevelMaps[i] = nextLevel.GetMap()
-//				} else {
-//					nextLevelMaps[i] = nil
-//				}
-//			} else {
-//				nextLevelMaps[i] = nil
-//			}
-//		}
-//
-//		if nextLevelMaps[0] != nil && len(indices) >= 2 {
-//			// recurse
-//			node.executeIndexedAux(
-//				mapNames,
-//				newrec,
-//				nextLevelMaps,
-//				indices[1:],
-//				state,
-//			)
-//		} else {
-//			// end of recursion
-//			if node.isEmitP {
-//				for i, nextLevel := range nextLevels {
-//					if nextLevel != nil {
-//						if node.isNamelesses[i] {
-//							// See extended comment for the non-indexed case, above.
-//							top := nextLevel.GetMap()
-//							lib.InternalCodingErrorIf(top == nil)
-//							for pe := top.Head; pe != nil; pe = pe.Next {
-//								newrec.PutCopy(pe.Key, pe.Value)
-//							}
-//						} else {
-//							newrec.PutCopy(mapNames[i], nextLevel)
-//						}
-//					}
-//				}
-//			} else {
-//				for i, nextLevel := range nextLevels {
-//					if nextLevel != nil {
-//						if nextLevel.IsMap() {
-//							newrec.Merge(nextLevelMaps[i])
-//						} else {
-//							newrec.PutCopy(mapNames[i], nextLevel)
-//						}
-//					}
-//				}
-//			}
-//
-//			err := node.emitToRedirectFunc(newrec, state)
-//			if err != nil {
-//				return nil, err
-//			}
-//		}
-//	}
-//
-//	return nil, nil
-//}
+	// TODO: libify this
+	indices := make([]*types.Mlrval, len(node.indexEvaluables))
+	for i, _ := range node.indexEvaluables {
+		indices[i] = node.indexEvaluables[i].Evaluate(state)
+		if indices[i].IsAbsent() {
+			return nil
+		}
+		if indices[i].IsError() {
+			// TODO: surface this more highly
+			return nil
+		}
+	}
+
+	return node.executeIndexedAux(
+		names,
+		types.NewMlrmapAsRecord(),
+		emittableMaps,
+		indices,
+		state,
+	)
+}
+
+// Recurses over indices.
+func (node *EmitXStatementNode) executeIndexedAux(
+	names []string,
+	templateRecord *types.Mlrmap,
+	emittableMaps []*types.Mlrmap,
+	indices []*types.Mlrval,
+	state *runtime.State,
+) error {
+	lib.InternalCodingErrorIf(len(indices) < 1)
+	index := indices[0]
+	indexString := index.String()
+
+	leadingMap := emittableMaps[0]
+
+	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
+		newrec := templateRecord.Copy()
+
+		indexValue := types.MlrvalFromString(pe.Key)
+		newrec.PutCopy(indexString, &indexValue)
+		indexValueString := indexValue.String()
+
+		nextLevels := make([]*types.Mlrval, len(emittableMaps))
+		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
+		for i, emittableMap := range emittableMaps {
+			if emittableMap != nil {
+				nextLevel := emittableMap.Get(indexValueString)
+				nextLevels[i] = nextLevel
+				// Can be nil for lashed indexing with heterogeneous data: e.g.
+				// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
+				if nextLevel != nil && nextLevel.IsMap() {
+					nextLevelMaps[i] = nextLevel.GetMap()
+				} else {
+					nextLevelMaps[i] = nil
+				}
+			} else {
+				nextLevelMaps[i] = nil
+			}
+		}
+
+		if nextLevelMaps[0] != nil && len(indices) >= 2 {
+			// recurse
+			node.executeIndexedAux(
+				names,
+				newrec,
+				nextLevelMaps,
+				indices[1:],
+				state,
+			)
+		} else {
+			// end of recursion
+			if node.isEmitP {
+				for i, nextLevel := range nextLevels {
+					if nextLevel != nil {
+						newrec.PutCopy(names[i], nextLevel)
+					}
+				}
+			} else {
+				for i, nextLevel := range nextLevels {
+					if nextLevel != nil {
+						if nextLevel.IsMap() {
+							newrec.Merge(nextLevelMaps[i])
+						} else {
+							newrec.PutCopy(names[i], nextLevel)
+						}
+					}
+				}
+			}
+
+			err := node.emitToRedirectFunc(newrec, state)
+			if err != nil {
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
 
 // ----------------------------------------------------------------
 func (node *EmitXStatementNode) emitRecordToRecordStream(
