@@ -3122,7 +3122,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `ContextVariable : ctx_OFLATSEP	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
+		String: `ContextVariable : ctx_FLATSEP	<< dsl.NewASTNode(X[0], dsl.NodeTypeContextVariable) >>`,
 		Id:         "ContextVariable",
 		NTType:     66,
 		Index:      237,

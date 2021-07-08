@@ -98,7 +98,7 @@ type Context struct {
 	OPS      string
 	OFS      string
 	ORS      string
-	OFLATSEP string
+	FLATSEP string
 }
 
 func NewContext(options *cliutil.TOptions) *Context {
@@ -116,7 +116,7 @@ func NewContext(options *cliutil.TOptions) *Context {
 		OPS:      "=",
 		OFS:      ",",
 		ORS:      "\n",
-		OFLATSEP: ".",
+		FLATSEP: ".",
 	}
 
 	// Remember command-line values to pass along to CST evaluators.  The
@@ -135,7 +135,7 @@ func NewContext(options *cliutil.TOptions) *Context {
 		context.OPS = options.WriterOptions.OPS
 		context.OFS = options.WriterOptions.OFS
 		context.ORS = options.WriterOptions.ORS
-		context.OFLATSEP = options.WriterOptions.OFLATSEP
+		context.FLATSEP = options.WriterOptions.FLATSEP
 	}
 
 	return context

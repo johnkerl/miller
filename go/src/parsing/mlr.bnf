@@ -157,7 +157,7 @@ ctx_IRS : 'I' 'R' 'S' ;
 ctx_OPS : 'O' 'P' 'S' ;
 ctx_OFS : 'O' 'F' 'S' ;
 ctx_ORS : 'O' 'R' 'S' ;
-ctx_OFLATSEP : 'O' 'F' 'L' 'A' 'T' 'S' 'E' 'P';
+ctx_FLATSEP : 'F' 'L' 'A' 'T' 'S' 'E' 'P';
 
 ctx_NF  : 'N' 'F' ;
 ctx_NR  : 'N' 'R' ;
@@ -1660,7 +1660,7 @@ ContextVariable
   | ctx_OPS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
   | ctx_OFS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
   | ctx_ORS << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
-  | ctx_OFLATSEP << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
+  | ctx_FLATSEP << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
 
   | ctx_NF  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
   | ctx_NR  << dsl.NewASTNode($0, dsl.NodeTypeContextVariable) >>
