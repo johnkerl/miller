@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-07-01
+.\"      Date: 2021-07-08
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-07-01" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-07-08" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,8 +139,8 @@ fraction gap grep group-by group-like having-fields head histogram json-parse
 json-stringify join label least-frequent merge-fields most-frequent nest
 nothing put regularize remove-empty-columns rename reorder repeat reshape
 sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
-sort-within-records stats1 stats2 step tac tail tee top unflatten uniq
-unsparsify
+sort-within-records stats1 stats2 step tac tail tee template top unflatten
+uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -574,7 +574,8 @@ How you can control colorization:
 
 If environment-variable settings and command-line flags are both provided,the latter take precedence.
 
-Please do mlr --list-colors to see the available color codes.
+Please do mlr --list-color-codes to see the available color codes (like 170), and
+mlr --list-color-names to see available names (like orchid).
 .fi
 .if n \{\
 .RE
@@ -1881,6 +1882,27 @@ the input is CSV, the output is pretty-print tabular, but the tee-file output
 is written in JSON format.
 
 -h|--help Show this message.
+.fi
+.if n \{\
+.RE
+.SS "template"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr template [options]
+Places input-record fields in the order specified by list of column names.
+If the input record is missing a specified field, it will be filled with the fill-with.
+If the input record possesses an unspecified field, it will be discarded.
+Options:
+ -f {a,b,c} Comma-separated field names for template, e.g. a,b,c.
+ -t {filename} CSV file whose header line will be used for template.
+--fill-with {filler string}  What to fill absent fields with. Defaults to the empty string.
+-h|--help Show this message.
+Example:
+* Specified fields are a,b,c.
+* Input record is c=3,a=1,f=6.
+* Output record is a=1,b=,c=3.
 .fi
 .if n \{\
 .RE

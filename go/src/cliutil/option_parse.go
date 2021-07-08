@@ -467,8 +467,13 @@ func ParseWriterOptions(
 		// No-op for Miller 6; accepted at the command line for backward compatibility.
 		argi += 1
 
-	} else if args[argi] == "--list-colors" {
-		colorizer.ListColors(os.Stdout)
+	} else if args[argi] == "--list-color-codes" {
+		colorizer.ListColorCodes()
+		os.Exit(0)
+		argi += 1
+
+	} else if args[argi] == "--list-color-names" {
+		colorizer.ListColorNames()
 		os.Exit(0)
 		argi += 1
 
@@ -481,68 +486,58 @@ func ParseWriterOptions(
 		argi += 1
 
 	} else if args[argi] == "--key-color" {
-		colorizer.SetColorization(colorizer.ColorizeOutputAlways)
 		CheckArgCount(args, argi, argc, 2)
-		code, ok := lib.TryIntFromString(args[argi+1])
+		ok := colorizer.SetKeyColor(args[argi+1])
 		if !ok {
 			fmt.Fprintf(os.Stderr,
-				"%s: --key-color argument must be a decimal integer; got \"%s\".\n",
+				"%s: --key-color argument unrecognized; got \"%s\".\n",
 				"mlr", args[argi+1])
 			os.Exit(1)
 		}
-		colorizer.SetKeyColor(code)
 		argi += 2
 
 	} else if args[argi] == "--value-color" {
-		colorizer.SetColorization(colorizer.ColorizeOutputAlways)
 		CheckArgCount(args, argi, argc, 2)
-		code, ok := lib.TryIntFromString(args[argi+1])
+		ok := colorizer.SetValueColor(args[argi+1])
 		if !ok {
 			fmt.Fprintf(os.Stderr,
-				"%s: --value-color argument must be a decimal integer; got \"%s\".\n",
+				"%s: --value-color argument unrecognized; got \"%s\".\n",
 				"mlr", args[argi+1])
 			os.Exit(1)
 		}
-		colorizer.SetValueColor(code)
 		argi += 2
 
 	} else if args[argi] == "--pass-color" {
-		colorizer.SetColorization(colorizer.ColorizeOutputAlways)
 		CheckArgCount(args, argi, argc, 2)
-		code, ok := lib.TryIntFromString(args[argi+1])
+		ok := colorizer.SetPassColor(args[argi+1])
 		if !ok {
 			fmt.Fprintf(os.Stderr,
-				"%s: --pass-color argument must be a decimal integer; got \"%s\".\n",
+				"%s: --pass-color argument unrecognized; got \"%s\".\n",
 				"mlr", args[argi+1])
 			os.Exit(1)
 		}
-		colorizer.SetPassColor(code)
 		argi += 2
 
 	} else if args[argi] == "--fail-color" {
-		colorizer.SetColorization(colorizer.ColorizeOutputAlways)
 		CheckArgCount(args, argi, argc, 2)
-		code, ok := lib.TryIntFromString(args[argi+1])
+		ok := colorizer.SetFailColor(args[argi+1])
 		if !ok {
 			fmt.Fprintf(os.Stderr,
-				"%s: --fail-color argument must be a decimal integer; got \"%s\".\n",
+				"%s: --fail-color argument unrecognized; got \"%s\".\n",
 				"mlr", args[argi+1])
 			os.Exit(1)
 		}
-		colorizer.SetFailColor(code)
 		argi += 2
 
 	} else if args[argi] == "--help-color" {
-		colorizer.SetColorization(colorizer.ColorizeOutputAlways)
 		CheckArgCount(args, argi, argc, 2)
-		code, ok := lib.TryIntFromString(args[argi+1])
+		ok := colorizer.SetHelpColor(args[argi+1])
 		if !ok {
 			fmt.Fprintf(os.Stderr,
-				"%s: --help-color argument must be a decimal integer; got \"%s\".\n",
+				"%s: --help-color argument unrecognized; got \"%s\".\n",
 				"mlr", args[argi+1])
 			os.Exit(1)
 		}
-		colorizer.SetHelpColor(code)
 		argi += 2
 
 	}
