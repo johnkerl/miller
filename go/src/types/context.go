@@ -95,9 +95,9 @@ type Context struct {
 	IFS string
 	IRS string
 
-	OPS      string
-	OFS      string
-	ORS      string
+	OPS     string
+	OFS     string
+	ORS     string
 	FLATSEP string
 }
 
@@ -113,9 +113,9 @@ func NewContext(options *cliutil.TOptions) *Context {
 		IFS: ",",
 		IRS: "\n",
 
-		OPS:      "=",
-		OFS:      ",",
-		ORS:      "\n",
+		OPS:     "=",
+		OFS:     ",",
+		ORS:     "\n",
 		FLATSEP: ".",
 	}
 

@@ -1,25 +1,32 @@
 // ================================================================
 // This handles emit and emitp statements. These produce new records (in
-// addition to $*) into the output record stream.
+// addition to the current record, $*) into the output record stream.
 //
 // Some complications here are due to legacy. Emit statements existed in the
 // Miller DSL before there were for-loops. As a result, some of the
 // side-by-side emit syntaxes were invented (and supported) to allow things
 // that might have been more easily done with simpler emit syntax.
-// Nonetheless, those syntaxes are now supported and we need to support them.
+// Nonetheless, those syntaxes have been introduced into general use and we
+// need to continue to support them.
 //
 // Examples for emit and emitp:
+//
 //   emit @a
 //   emit (@a, @b)
+//   emit {"a": @a, "b": @b}
+//   emit @*
+//
 //   emit @a, "x", "y"
 //   emit (@a, @b), "x", "y"
+//   emit {"a": @a, "b": @b}, "x", "y"
+//   emit @*, "x", "y"
 //
-// The first argument (single or in parentheses) must be non-indexed
-// oosvars/localvars/fieldnames, so we can use their names as keys in the
-// emitted record, or they must be maps. So the first complexity in this code
-// is, do we have a named variable or a map.
+// The first argument must be non-indexed oosvars/localvars/fieldnames, or
+// a list thereof, so that we can use their names as keys in the emitted record
+// -- or they must be maps. So the first complexity in this code is, do we have
+// a named variable (or list thereof), or a map.
 //
-// The second complexity here is whether we have 'emit @a' or 'emit (@a, @b)'
+// The second complexity here is whether we have 'emit @a' or 'emit [@a, @b]'
 // -- the latter being the "lashed" variant. Here, the keys of the first
 // argument are used to drive indexing of the remaining arguments.
 //
@@ -55,13 +62,17 @@ type EmitXStatementNode struct {
 	names []string
 
 	// Maps or named variables: the @a, @b parts.
-	emitEvaluables []IEvaluable
+	// * emit @a: this is a length-one array of [@a]
+	// * emit [@a, @b]: this is a length-two array of [@a, @b]
+	// * emit {"a": @a, "b": @b}: this is a map
+	// * emit @*: this is a map
+	topLevelEmitEvaluables []IEvaluable
 
 	// The "x","y" parts.
 	indexEvaluables []IEvaluable
 
-	// Whether each emittable is 'all'/'@*', or not
-	isFullOosvars []bool
+	// Whether each emittable is 'all'/'@*'/{...}, or not
+	isNamelesses []bool
 
 	// Appropriate function to evaluate statements, depending on indexed or not.
 	executorFunc Executor
@@ -111,27 +122,27 @@ func (root *RootNode) buildEmitXStatementNode(
 	redirectorNode := astNode.Children[2]
 
 	var names []string = nil
-	var emitEvaluables []IEvaluable = nil
-	var isFullOosvars []bool = nil
+	var topLevelEmitEvaluables []IEvaluable = nil
+	var isNamelesses []bool = nil
 	var indexEvaluables []IEvaluable = nil
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Things to be emitted, e.g. $a and $b in 'emit > "foo.dat", $a, $b'.
 
 	// Non-lashed: emit @a, "x"
-	// Lashed: emit (@a, @b), "x"
+	// Lashed: emit [@a, @b], "x"
 	numEmittables := len(emittablesNode.Children)
 	names = make([]string, numEmittables)
-	emitEvaluables = make([]IEvaluable, numEmittables)
-	isFullOosvars = make([]bool, numEmittables)
+	topLevelEmitEvaluables = make([]IEvaluable, numEmittables)
+	isNamelesses = make([]bool, numEmittables)
 	for i, emittableNode := range emittablesNode.Children {
-		name, emitEvaluable, isFullOosvar, err := root.buildEmittableNode(emittableNode)
+		name, topLevelEmitEvaluable, isNameless, err := root.buildEmittableNode(emittableNode)
 		if err != nil {
 			return nil, err
 		}
 		names[i] = name
-		emitEvaluables[i] = emitEvaluable
-		isFullOosvars[i] = isFullOosvar
+		topLevelEmitEvaluables[i] = topLevelEmitEvaluable
+		isNamelesses[i] = isNameless
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -153,11 +164,11 @@ func (root *RootNode) buildEmitXStatementNode(
 	}
 
 	retval := &EmitXStatementNode{
-		names:           names,
-		emitEvaluables:  emitEvaluables,
-		indexEvaluables: indexEvaluables,
-		isFullOosvars:   isFullOosvars,
-		isEmitP:         isEmitP,
+		names:                  names,
+		topLevelEmitEvaluables: topLevelEmitEvaluables,
+		indexEvaluables:        indexEvaluables,
+		isNamelesses:           isNamelesses,
+		isEmitP:                isEmitP,
 	}
 
 	if !isIndexed {
@@ -212,7 +223,7 @@ func (root *RootNode) buildEmitXStatementNode(
 		}
 	}
 
-	// Register this with the CST root node so that open file descriptrs can be
+	// Register this with the CST root node so that open file descriptors can be
 	// closed, etc at end of stream.
 	if retval.outputHandlerManager != nil {
 		root.RegisterOutputHandlerManager(retval.outputHandlerManager)
@@ -227,24 +238,24 @@ func (root *RootNode) buildEmitXStatementNode(
 
 func (root *RootNode) buildEmittableNode(
 	astNode *dsl.ASTNode,
-) (name string, emitEvaluable IEvaluable, isFullOosvar bool, err error) {
+) (name string, topLevelEmitEvaluable IEvaluable, isNameless bool, err error) {
 	name = ""
-	emitEvaluable = nil
-	isFullOosvar = true
+	topLevelEmitEvaluable = nil
+	isNameless = true
 	err = nil
 
 	if astNode.Type == dsl.NodeTypeLocalVariable {
 		name = string(astNode.Token.Lit)
-		isFullOosvar = false
+		isNameless = false
 	} else if astNode.Type == dsl.NodeTypeDirectOosvarValue {
 		name = string(astNode.Token.Lit)
-		isFullOosvar = false
+		isNameless = false
 	} else if astNode.Type == dsl.NodeTypeDirectFieldValue {
 		name = string(astNode.Token.Lit)
-		isFullOosvar = false
+		isNameless = false
 	} else if astNode.Type == dsl.NodeTypeMapLiteral {
 		name = "_"
-		isFullOosvar = false
+		isNameless = true
 	}
 
 	// xxx temp
@@ -264,9 +275,9 @@ func (root *RootNode) buildEmittableNode(
 	// ;
 	// ----------------------------------------------------------------
 
-	emitEvaluable, err = root.BuildEvaluableNode(astNode)
+	topLevelEmitEvaluable, err = root.BuildEvaluableNode(astNode)
 
-	return name, emitEvaluable, isFullOosvar, err
+	return name, topLevelEmitEvaluable, isNameless, err
 }
 
 // ================================================================
@@ -281,14 +292,14 @@ func (node *EmitXStatementNode) executeNonIndexed(
 
 	newrec := types.NewMlrmapAsRecord()
 
-	for i, emitEvaluable := range node.emitEvaluables {
-		emittable := emitEvaluable.Evaluate(state)
+	for i, topLevelEmitEvaluable := range node.topLevelEmitEvaluables {
+		emittable := topLevelEmitEvaluable.Evaluate(state)
 		if emittable.IsAbsent() {
 			continue
 		}
 
 		if node.isEmitP {
-			if node.isFullOosvars[i] {
+			if node.isNamelesses[i] {
 				// The top-level map for 'all oosvars' doesn't have a name --
 				// other than '@*' of course. But we need to not include that
 				// 'name' as the first output slot. Without this check,
@@ -357,9 +368,9 @@ func (node *EmitXStatementNode) executeNonIndexed(
 func (node *EmitXStatementNode) executeIndexed(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
-	emittableMaps := make([]*types.Mlrmap, len(node.emitEvaluables))
-	for i, emitEvaluable := range node.emitEvaluables {
-		emittable := emitEvaluable.Evaluate(state)
+	emittableMaps := make([]*types.Mlrmap, len(node.topLevelEmitEvaluables))
+	for i, topLevelEmitEvaluable := range node.topLevelEmitEvaluables {
+		emittable := topLevelEmitEvaluable.Evaluate(state)
 		if emittable.IsAbsent() {
 			return nil, nil
 		}
@@ -442,7 +453,7 @@ func (node *EmitXStatementNode) executeIndexedAux(
 			if node.isEmitP {
 				for i, nextLevel := range nextLevels {
 					if nextLevel != nil {
-						if node.isFullOosvars[i] {
+						if node.isNamelesses[i] {
 							// See extended comment for the non-indexed case, above.
 							top := nextLevel.GetMap()
 							lib.InternalCodingErrorIf(top == nil)
