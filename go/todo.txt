@@ -12,6 +12,11 @@ TOP OF LIST:
 * survey email followups
 
 ----------------------------------------------------------------
+EMIT
+mlr --from regtest/input/emit2.dkvp put -q -f regtest/cases/dsl-emit-basic-indexing/0041-emitp-index-nonindexed/mlr
+mlr --from regtest/input/emit2.dkvp put -q -f regtest/cases/dsl-emit-basic-indexing/0041-emitp-index-underindexed/mlr
+
+----------------------------------------------------------------
 DOC6
 
 * colored-shapes.dkvp -> csv; also mkdat2

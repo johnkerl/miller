@@ -32,7 +32,7 @@ and value '{"b": { "c": 4 }}' becomes name 'a.b.c' and value 4.
 `)
 	fmt.Fprint(o, "Options:\n")
 	fmt.Fprint(o, "-f Comma-separated list of field names to flatten (default all).\n")
-	fmt.Fprintf(o, "-s Separator, defaulting to %s --oflatsep value.\n", "mlr")
+	fmt.Fprintf(o, "-s Separator, defaulting to %s --flatsep value.\n", "mlr")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
@@ -138,7 +138,7 @@ func (tr *TransformerFlatten) flattenAll(
 		inrec := inrecAndContext.Record
 		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
-			oFlatSep = inrecAndContext.Context.OFLATSEP
+			oFlatSep = inrecAndContext.Context.FLATSEP
 		}
 		inrec.Flatten(oFlatSep)
 		outputChannel <- inrecAndContext
@@ -156,7 +156,7 @@ func (tr *TransformerFlatten) flattenSome(
 		inrec := inrecAndContext.Record
 		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
-			oFlatSep = inrecAndContext.Context.OFLATSEP
+			oFlatSep = inrecAndContext.Context.FLATSEP
 		}
 		inrec.FlattenFields(tr.fieldNameSet, oFlatSep)
 		outputChannel <- inrecAndContext
