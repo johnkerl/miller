@@ -3,7 +3,7 @@ TOP OF LIST:
 
 * emit * regex * fmtnum * localtime * stats1 --fr *
 * --nr-progress-mod * mlr -k * json comment-handling
-* cli-audits * doc6 * survey * check issues *
+* cli-audits * doc6 * survey * check issues * regtest pendings *
 * survey email followups
 
 ----------------------------------------------------------------
@@ -26,6 +26,8 @@ DOC6
 * MLR_NO_COLOR etc -> olh
 
 * number-formatting page
+
+* list-of-verbs shortlist @ top
 
 * check <-> manpage/olh sections & doc6 sections
 
@@ -56,8 +58,8 @@ DOC6
   o double quoting -- olh also
 
 ! readthedocs -- find out what's necessary to get per-version history
-
 ----------------------------------------------------------------
+
 * mlr -k
   o c,go
   o various test cases
@@ -77,30 +79,23 @@ w survey
 ----------------------------------------------------------------
 BLOCKERS
 
-* list-of-verbs shortlist @ top ...
-* dotted syntax:
-  k DSL RHS coded
-  o DSL RHS needs regtest
-  o DSL LHS needs coding
-  ? support in verbs ... ?
-
-* blocker: regexes
+* regexes
   o finish stats1 -r
   o regex captures ...
     - rename -r
   ! separate DSL/non-DSL string-literal handlers
 
-* blockers:
+* regtest:
   o convert regtest/cases-pending-windows
   o convert regtest/cases-pending-go-port
   w after regex
 
-* blocker: remaining functions:
+* remaining functions:
   o regextract regextract_or_else
 
-* blocker: JSON comment-handling
+* JSON comment-handling
 
-* blocker: localtime functions
+* localtime functions
 
 * strptime w/ ...00.Z -> error
 * strptime/strftime experiments ...
@@ -130,27 +125,19 @@ BLOCKERS
   o TSV/ASV writer
   o markdown writer
 
+* more I/O:
+  !!! golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
+    detection -- needs an input-stream delegator -- ?
+  o --allow-ragged-csv-input|--ragged
+  o non-lite DKVP reader/writer
+  o comment-filtering-composed io.Reader
+
 ================================================================
 NON-BLOCKERS
 
-* repl as verb -- ?  'put --repl' maybe
-
-* json-triple-quote -- what can be done here?
-
 * case auxfiles: cat them too
 
-* headerful/headerless mix -- ?
-  TOptions as list, not single -- ?
-
 * uniqify-field-names in record-readers -- which issue?
-
-* non-blocker: read-from-URL support -- ?
-
-? windows ./mlr hack
-
-* non-blocker: _ variable feature?
-
-* non-blocker: 'true && false' windows CLI-parse: debug
 
 * non-blocker: commenting passes ...
 
@@ -163,20 +150,6 @@ NON-BLOCKERS
 ? zip -- but that is an archive case too not just an encoding case
   ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
   ? as 6.1 follow-on work -- ?
-
-* future:
-  - separate out InputFormat into per-file (or tbd) & have autodetect on file endings -- ?
-  - maybe a TBD reader -- ?
-  - InputFormat into Context
-  - TBD writer -- defer factory until first context?
-  - deeper refactor pulling format out of reader/writer options entirely -- ?
-
-* pkg graph:
-  go get github.com/kisielk/godepgraph
-  godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
-  flamegraph etc double-check
-
-* emph go 1.16 @ go.mod & README.md; also gha yaml
 
 * more about HTTP logs in miller -- doc and encapsulate:
   mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
@@ -231,27 +204,6 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
   - what about csvlite-style -- ? needs a --dkvplite ?
 ! pprint emit on schema change, not all-at-end.
 
-* mlr -f / -F flags
-  o others in mlrcli_parse.go
-
-* more mlrtut
-  https://onepointzero.app/posts/miller-command-line-csv-file-processing/
-
-* go 1.16
-  o https://golang.org/doc/go1.16
-  o io/ioutil deprecation: ioutil.ReadFile -> os.ReadFile
-
-* miller extensibility re golang plugins -- ?!?
-  ? verbs ?
-  ? DSL functions ?
-
-* more I/O:
-  !!! golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
-    detection -- needs an input-stream delegator -- ?
-  o --allow-ragged-csv-input|--ragged
-  o non-lite DKVP reader/writer
-  o comment-filtering-composed io.Reader
-
 * widen DSL coverage
   o err-return for array/map get/put if incorrect types ... currently go-void ...
     ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
@@ -267,6 +219,38 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
 * address all manner of xxx and TODO comments
 * empty csv ... reminder ...
 
+================================================================
+MAYBES
+
+* dotted-syntax support in verbs?
+
+* repl as verb -- ?  'put --repl' maybe
+
+* json-triple-quote -- what can be done here?
+
+? windows ./mlr hack
+
+* non-blocker: _ variable feature?
+
+* headerful/headerless mix -- ?
+  TOptions as list, not single -- ?
+
+* miller extensibility re golang plugins -- ?!?
+  ? verbs ?
+  ? DSL functions ?
+
+* het ifmt-reading
+  - separate out InputFormat into per-file (or tbd) & have autodetect on file endings -- ?
+  - maybe a TBD reader -- ?
+  - InputFormat into Context
+  - TBD writer -- defer factory until first context?
+  - deeper refactor pulling format out of reader/writer options entirely -- ?
+
+* pkg graph:
+  go get github.com/kisielk/godepgraph
+  godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
+  flamegraph etc double-check
+
 ----------------------------------------------------------------
 DEFER:
 * parser-fu:
@@ -280,7 +264,7 @@ no need to bootstrap a parser for the parser-generator language
 ----------------------------------------------------------------
 GOCC UPSTREAMS:
 
-* support "abc" (not just 'a' 'b' 'c') in the lexer part
+? support "abc" (not just 'a' 'b' 'c') in the lexer part
 
 ----------------------------------------------------------------
 TBF:
