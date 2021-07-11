@@ -50,7 +50,7 @@ func LoadStringFromFile(filename string) (string, error) {
 func LoadStringsFromDir(dirname string, extension string) ([]string, error) {
 	dslStrings := make([]string, 0)
 
-	entries, err := os.ReadDir(dirname)
+	entries, err := ioutil.ReadDir(dirname)
 	if err != nil {
 		return nil, err
 	}
