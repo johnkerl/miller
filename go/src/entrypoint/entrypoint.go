@@ -7,6 +7,7 @@ package entrypoint
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 
@@ -113,7 +114,7 @@ func processInPlace(
 		containingDirectory := path.Dir(fileName)
 		// Names like ./mlr-in-place-2148227797 and ./mlr-in-place-1792078347,
 		// as revealed by printing handle.Name().
-		handle, err := os.CreateTemp(containingDirectory, "mlr-in-place-")
+		handle, err := ioutil.TempFile(containingDirectory, "mlr-in-place-")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
 			os.Exit(1)

@@ -8,6 +8,7 @@ import (
 	"container/list"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -216,7 +217,7 @@ func (regtester *RegTester) executeSingleDirectory(
 		fmt.Printf("%s BEGIN %s/\n", MajorSeparator, dirName)
 	}
 
-	entries, err := os.ReadDir(dirName)
+	entries, err := ioutil.ReadDir(dirName)
 	if err != nil {
 		fmt.Printf("%s: %v\n", dirName, err)
 		passed = false
@@ -265,7 +266,7 @@ func (regtester *RegTester) hasCaseSubdirectories(
 	dirName string,
 ) bool {
 
-	entries, err := os.ReadDir(dirName)
+	entries, err := ioutil.ReadDir(dirName)
 	if err != nil {
 		fmt.Printf("%s: %v\n", dirName, err)
 		os.Exit(1)
@@ -633,7 +634,7 @@ func (regtester *RegTester) loadFile(
 	fileName string,
 	caseDir string,
 ) (string, error) {
-	byteContents, err := os.ReadFile(fileName)
+	byteContents, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		return "", err
 	}
@@ -647,7 +648,7 @@ func (regtester *RegTester) storeFile(
 	fileName string,
 	contents string,
 ) error {
-	err := os.WriteFile(fileName, []byte(contents), 0666)
+	err := ioutil.WriteFile(fileName, []byte(contents), 0666)
 	if err != nil {
 		return err
 	}
