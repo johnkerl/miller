@@ -429,18 +429,20 @@ Lots of Miller commands take a ``-g`` option for group-by: here, ``head -n 1 -g 
 Statistics can be computed with or without group-by field(s):
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-2
 
-    mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
+    mlr --icsv --opprint --from example.csv \
+      stats1 -a count,min,mean,max -f quantity -g shape
     shape    quantity_count quantity_min quantity_mean     quantity_max
     triangle 3              43.6498      68.33976666666666 81.229
     square   4              72.3735      76.60114999999999 79.2778
     circle   3              13.8103      47.0982           63.9785
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-2
 
-    mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
+    mlr --icsv --opprint --from example.csv \
+      stats1 -a count,min,mean,max -f quantity -g shape,color
     shape    color  quantity_count quantity_min quantity_mean      quantity_max
     triangle yellow 1              43.6498      43.6498            43.6498
     square   red    3              77.1991      78.01036666666666  79.2778
@@ -452,9 +454,10 @@ Statistics can be computed with or without group-by field(s):
 If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:
 
 .. code-block:: none
-   :emphasize-lines: 1-1
+   :emphasize-lines: 1-2
 
-    mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
+    mlr --icsv --oxtab --from example.csv \
+      stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
     rate_p0   0.0130
     rate_p10  2.9010
     rate_p25  4.2370
@@ -499,21 +502,26 @@ Other ways to write the same data:
 
 .. code-block:: none
 
-    CSV                               PPRINT                 JSON
-    shape,flag,index                  shape  flag index      [
-    circle,1,24                       circle 1    24           {
-    square,0,36                       square 0    36             "shape": "circle",
-                                                                 "flag": 1,
-                                                                 "index": 24
-                                                               },
-    DKVP                              XTAB                     {
-    shape=circle,flag=1,index=24      shape circle               "shape": "square",
-    shape=square,flag=0,index=36      flag  1                    "flag": 0,
-                                      index 24                   "index": 36
-                                                               }
-                                      shape square           ]
-                                      flag  0
-                                      index 36
+    CSV                   PPRINT
+    shape,flag,index      shape  flag index
+    circle,1,24           circle 1    24
+    square,0,36           square 0    36
+    
+    JSON                  XTAB
+    {                     shape circle
+      "shape": "circle",  flag  1
+      "flag": 1,          index 24
+      "index": 24         .
+    }                     shape square
+    {                     flag  0
+      "shape": "square",  index 36
+      "flag": 0,
+      "index": 36
+    }
+    
+       DKVP
+       shape=circle,flag=1,index=24
+       shape=square,flag=0,index=36
 
 Anything we can do with CSV input data, we can do with any other format input data.  And you can read from one format, do any record-processing, and output to the same format as the input, or to a different output format.
 
