@@ -65,6 +65,9 @@ time_t mlr_arch_timegmlocal(struct tm* ptm, timezone_handling_t timezone_handlin
 		}
 		tzset();
 	} else {
+		// Tell mktime to lookup DST status in the timezone db.
+		ptm->tm_isdst = -1;
+
 		ret = mktime(ptm);
 	}
 
