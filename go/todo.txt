@@ -1,6 +1,11 @@
 ================================================================
 TOP OF LIST:
 
+* nr-progress-mod
+* shell-commands.html; while-read
+* memory page
+* emit
+
 * emit * regex * fmtnum * localtime * stats1 --fr *
 * --nr-progress-mod * mlr -k * json comment-handling
 * cli-audits * doc6 * survey * check issues * regtest pendings *
@@ -22,8 +27,6 @@ DOC6
   o unsparsify -f
   o no out-of-core sort yet ...
   o older versions
-
-* MLR_NO_COLOR etc -> olh
 
 * number-formatting page
 
