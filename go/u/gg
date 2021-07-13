@@ -53,17 +53,53 @@ mention() {
 
 # ================================================================
 
-mlr --c2p cat regtest/input/merge-fields-in-out.csv
-echo
-../c/mlr --csvlite merge-fields  -a min,max,count,sum -c _in,_out regtest/input/merge-fields-in-out.csv
-echo
-../go/mlr --csvlite merge-fields -a min,max,count,sum -c _in,_out regtest/input/merge-fields-in-out.csv
-echo
-echo
-mlr --c2p cat regtest/input/merge-fields-in-out.csv
-echo
-../c/mlr --csvlite merge-fields  -a p0,p29,p100 -c _in,_out regtest/input/merge-fields-in-out.csv
-echo
-../go/mlr --csvlite merge-fields -a p0,p29,p100 -c _in,_out regtest/input/merge-fields-in-out.csv
+echo "======================================================================== 0"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { dump }' regtest/input/emit2.dkvp
+done
+
+
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit @*}' regtest/input/emit2.dkvp
+done
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit @sum, "a"}' regtest/input/emit2.dkvp
+done
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit @sum, "a", "b"}' regtest/input/emit2.dkvp
+done
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit @sum, "a", "b", "c"}' regtest/input/emit2.dkvp
+done
+
+
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emitp @*}' regtest/input/emit2.dkvp
+done
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emitp @sum, "a"}' regtest/input/emit2.dkvp
+done
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emitp @sum, "a", "b"}' regtest/input/emit2.dkvp
+done
+
+echo "========================================================================"
+for path_to_mlr in "../c/mlr" "../go/mlr"; do
+run_mlr --opprint put -q '@count[$a][$b] += 1; @sum[$a][$b] += $n; end { emitp @sum, "a", "b", "c"}' regtest/input/emit2.dkvp
+done
 
 # ================================================================

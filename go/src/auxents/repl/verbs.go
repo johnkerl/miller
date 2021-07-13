@@ -571,12 +571,12 @@ func writeRecord(repl *Repl, outrec *types.Mlrmap) {
 		// E.g. '{"req": {"method": "GET", "path": "/api/check"}}' becomes
 		// req.method=GET,req.path=/api/check.
 		if repl.options.WriterOptions.AutoFlatten {
-			outrec.Flatten(repl.options.WriterOptions.OFLATSEP)
+			outrec.Flatten(repl.options.WriterOptions.FLATSEP)
 		}
 		// E.g.  req.method=GET,req.path=/api/check becomes
 		// '{"req": {"method": "GET", "path": "/api/check"}}'
 		if repl.options.WriterOptions.AutoUnflatten {
-			outrec.Unflatten(repl.options.WriterOptions.OFLATSEP)
+			outrec.Unflatten(repl.options.WriterOptions.FLATSEP)
 		}
 	}
 	repl.recordWriter.Write(outrec, repl.outputStream, true /*outputIsStdout*/)

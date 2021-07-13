@@ -7,6 +7,22 @@ TOP OF LIST:
 * survey email followups
 
 ----------------------------------------------------------------
+EMIT
+* make single top-level emittable (rename to topLevelEmittable)
+  o @foo
+    - name known at build-time
+  ? [@foo,@bar]
+    - sub-names known at build-time if we require they be named
+  o all/@*
+    - sub-names known at run-time from map keys
+  o {...}
+    - sub-names known at run-time from map keys
+! refactor:
+  o in emit.go: separate topLevelArray / topLevelMap
+  o fcnptr no longer Executor: takes a map
+! make validation/build-time rule for no emit ($*,@*)
+
+----------------------------------------------------------------
 DOC6
 
 * colored-shapes.dkvp -> csv; also mkdat2
@@ -66,6 +82,11 @@ DOC6
   o OLH re limitations
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
+
+* defer json comment-handling
+
+* json-triple-quote -- what can be done here?
+* -l/-L?
 
 w survey
   o summary to GHD thread

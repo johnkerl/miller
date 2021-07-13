@@ -95,10 +95,10 @@ type Context struct {
 	IFS string
 	IRS string
 
-	OPS      string
-	OFS      string
-	ORS      string
-	OFLATSEP string
+	OPS     string
+	OFS     string
+	ORS     string
+	FLATSEP string
 }
 
 func NewContext(options *cliutil.TOptions) *Context {
@@ -113,10 +113,10 @@ func NewContext(options *cliutil.TOptions) *Context {
 		IFS: ",",
 		IRS: "\n",
 
-		OPS:      "=",
-		OFS:      ",",
-		ORS:      "\n",
-		OFLATSEP: ".",
+		OPS:     "=",
+		OFS:     ",",
+		ORS:     "\n",
+		FLATSEP: ".",
 	}
 
 	// Remember command-line values to pass along to CST evaluators.  The
@@ -135,7 +135,7 @@ func NewContext(options *cliutil.TOptions) *Context {
 		context.OPS = options.WriterOptions.OPS
 		context.OFS = options.WriterOptions.OFS
 		context.ORS = options.WriterOptions.ORS
-		context.OFLATSEP = options.WriterOptions.OFLATSEP
+		context.FLATSEP = options.WriterOptions.FLATSEP
 	}
 
 	return context

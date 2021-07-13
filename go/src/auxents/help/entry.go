@@ -395,7 +395,7 @@ func helpDataFormatOptions() {
               --jsonx --ojsonx  Keystroke-savers for --json --jvstack
               --jsonx --ojsonx  and --ojson --jvstack, respectively.
                     --jlistwrap Wrap JSON output in outermost [ ].
-            --oflatsep {string} Separator for flattening multi-level JSON keys,
+            --flatsep {string} Separator for flattening multi-level JSON keys,
                                 e.g. '{"a":{"b":3}}' becomes a:b => 3 for
                                 non-JSON formats. Defaults to %s.\n",
 
