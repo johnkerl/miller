@@ -16,7 +16,7 @@ EMIT
 * make single top-level emittable (rename to topLevelEmittable)
   o @foo
     - name known at build-time
-  ? [@foo,@bar]
+  ? (@foo,@bar)
     - sub-names known at build-time if we require they be named
   o all/@*
     - sub-names known at run-time from map keys
