@@ -1,2 +1,24 @@
+{
+  "count": {
+    "vee": {
+      "wye": 1,
+      "zee": 1
+    },
+    "eks": {
+      "wye": 1,
+      "zee": 1
+    }
+  },
+  "sum": {
+    "vee": {
+      "wye": 2,
+      "zee": 4
+    },
+    "eks": {
+      "wye": 6,
+      "zee": 8
+    }
+  }
+}
 count:vee:wye=1,count:vee:zee=1,count:eks:wye=1,count:eks:zee=1
 sum:vee:wye=2,sum:vee:zee=4,sum:eks:wye=6,sum:eks:zee=8

@@ -1,2 +1,12 @@
+{
+  "vee": {
+    "wye": 2,
+    "zee": 4
+  },
+  "eks": {
+    "wye": 6,
+    "zee": 8
+  }
+}
 wye=2,zee=4
 wye=6,zee=8

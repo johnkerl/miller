@@ -1,2 +1,12 @@
+{
+  "vee": {
+    "wye": 2,
+    "zee": 4
+  },
+  "eks": {
+    "wye": 6,
+    "zee": 8
+  }
+}
 a=vee,wye=2,zee=4
 a=eks,wye=6,zee=8

@@ -1,0 +1,22 @@
+{
+  "vee": {
+    "wye": 1,
+    "zee": 1
+  },
+  "eks": {
+    "wye": 1,
+    "zee": 1
+  }
+}
+{
+  "vee": {
+    "wye": 2,
+    "zee": 4
+  },
+  "eks": {
+    "wye": 6,
+    "zee": 8
+  }
+}
+a=vee,wye=2,zee=4
+a=eks,wye=6,zee=8

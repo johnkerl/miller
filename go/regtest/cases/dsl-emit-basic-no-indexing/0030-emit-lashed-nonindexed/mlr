@@ -1,0 +1,1 @@
+@count += 1; @sum += $n; end { dump @count; dump @sum; emit (@count, @sum) }

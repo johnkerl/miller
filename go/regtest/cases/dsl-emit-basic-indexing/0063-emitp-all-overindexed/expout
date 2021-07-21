@@ -1,3 +1,25 @@
+{
+  "count": {
+    "vee": {
+      "wye": 1,
+      "zee": 1
+    },
+    "eks": {
+      "wye": 1,
+      "zee": 1
+    }
+  },
+  "sum": {
+    "vee": {
+      "wye": 2,
+      "zee": 4
+    },
+    "eks": {
+      "wye": 6,
+      "zee": 8
+    }
+  }
+}
 a=vee,b=wye,count=1
 a=vee,b=zee,count=1
 a=eks,b=wye,count=1
