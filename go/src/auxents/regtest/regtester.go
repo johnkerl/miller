@@ -20,6 +20,7 @@ import (
 const DefaultPath = "./regtest/cases"
 const CmdName = "cmd"
 const EnvName = "env"
+const ScriptName = "mlr"
 const PreCopyName = "precopy"
 const ExpectedStdoutName = "expout"
 const ExpectedStderrName = "experr"
@@ -52,6 +53,7 @@ type stringPair struct {
 type RegTester struct {
 	exeName        string
 	verbosityLevel int
+	plainMode      bool
 	doPopulate     bool
 
 	directoryPassCount int
@@ -69,12 +71,14 @@ func NewRegTester(
 	exeName string,
 	doPopulate bool,
 	verbosityLevel int,
+	plainMode bool,
 	firstNFailsToShow int,
 ) *RegTester {
 	return &RegTester{
 		exeName:            exeName,
 		doPopulate:         doPopulate,
 		verbosityLevel:     verbosityLevel,
+		plainMode:          plainMode,
 		directoryPassCount: 0,
 		directoryFailCount: 0,
 		casePassCount:      0,
@@ -111,12 +115,14 @@ func (regtester *RegTester) Execute(
 		paths = []string{DefaultPath}
 	}
 
-	fmt.Println("REGRESSION TEST:")
-	for _, path := range paths {
-		fmt.Printf("  %s\n", path)
+	if !regtester.plainMode {
+		fmt.Println("REGRESSION TEST:")
+		for _, path := range paths {
+			fmt.Printf("  %s\n", path)
+		}
+		fmt.Printf("Using executable: %s\n", regtester.exeName)
+		fmt.Println()
 	}
-	fmt.Printf("Using executable: %s\n", regtester.exeName)
-	fmt.Println()
 
 	for _, path := range paths {
 		regtester.executeSinglePath(path)
@@ -136,7 +142,7 @@ func (regtester *RegTester) Execute(
 		}
 	}
 
-	if regtester.failDirNames.Len() > 0 {
+	if !regtester.plainMode && regtester.failDirNames.Len() > 0 {
 		fmt.Println()
 		fmt.Println("FAILED CASE DIRECTORIES:")
 		for e := regtester.failDirNames.Front(); e != nil; e = e.Next() {
@@ -144,20 +150,26 @@ func (regtester *RegTester) Execute(
 		}
 	}
 
-	fmt.Println()
-	fmt.Printf("NUMBER OF CASES            PASSED %d\n", regtester.casePassCount)
-	fmt.Printf("NUMBER OF CASES            FAILED %d\n", regtester.caseFailCount)
-	fmt.Printf("NUMBER OF CASE-DIRECTORIES PASSED %d\n", regtester.directoryPassCount)
-	fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", regtester.directoryFailCount)
-	fmt.Println()
+	if !regtester.plainMode {
+		fmt.Println()
+		fmt.Printf("NUMBER OF CASES            PASSED %d\n", regtester.casePassCount)
+		fmt.Printf("NUMBER OF CASES            FAILED %d\n", regtester.caseFailCount)
+		fmt.Printf("NUMBER OF CASE-DIRECTORIES PASSED %d\n", regtester.directoryPassCount)
+		fmt.Printf("NUMBER OF CASE-DIRECTORIES FAILED %d\n", regtester.directoryFailCount)
+		fmt.Println()
+	}
 
 	// Directory count may be zero if we were invoked with all paths on the
 	// command line being .cmd files.
 	if regtester.casePassCount > 0 && regtester.caseFailCount == 0 {
-		fmt.Printf("%s overall\n", colorizer.MaybeColorizePass("PASS", true))
+		if !regtester.plainMode {
+			fmt.Printf("%s overall\n", colorizer.MaybeColorizePass("PASS", true))
+		}
 		return true
 	} else {
-		fmt.Printf("%s overall\n", colorizer.MaybeColorizeFail("FAIL", true))
+		if !regtester.plainMode {
+			fmt.Printf("%s overall\n", colorizer.MaybeColorizeFail("FAIL", true))
+		}
 		return false
 	}
 }
@@ -213,8 +225,10 @@ func (regtester *RegTester) executeSingleDirectory(
 	// TODO: comment
 	hasCaseSubdirectories := regtester.hasCaseSubdirectories(dirName)
 
-	if hasCaseSubdirectories && regtester.verbosityLevel >= 1 {
-		fmt.Printf("%s BEGIN %s/\n", MajorSeparator, dirName)
+	if !regtester.plainMode {
+		if hasCaseSubdirectories && regtester.verbosityLevel >= 1 {
+			fmt.Printf("%s BEGIN %s/\n", MajorSeparator, dirName)
+		}
 	}
 
 	entries, err := ioutil.ReadDir(dirName)
@@ -238,16 +252,22 @@ func (regtester *RegTester) executeSingleDirectory(
 		// multiply announce.
 		if hasCaseSubdirectories {
 			if passed {
-				fmt.Printf("%s %s\n", colorizer.MaybeColorizePass("PASS", true), dirName)
+				if !regtester.plainMode {
+					fmt.Printf("%s %s\n", colorizer.MaybeColorizePass("PASS", true), dirName)
+				}
 			} else {
-				fmt.Printf("%s %s\n", colorizer.MaybeColorizeFail("FAIL", true), dirName)
+				if !regtester.plainMode {
+					fmt.Printf("%s %s\n", colorizer.MaybeColorizeFail("FAIL", true), dirName)
+				}
 			}
 		}
 	}
 
-	if !hasCaseSubdirectories && regtester.verbosityLevel >= 1 {
-		fmt.Printf("%s END   %s/\n", MajorSeparator, dirName)
-		fmt.Println()
+	if !regtester.plainMode {
+		if !hasCaseSubdirectories && regtester.verbosityLevel >= 1 {
+			fmt.Printf("%s END   %s/\n", MajorSeparator, dirName)
+			fmt.Println()
+		}
 	}
 
 	return passed, hasCaseSubdirectories
@@ -335,6 +355,17 @@ func (regtester *RegTester) executeSingleCmdFile(
 	if verbosityLevel >= 2 {
 		fmt.Println("Command:")
 		fmt.Println(cmd)
+	}
+
+	if regtester.plainMode {
+		fmt.Println("----------------------------------------------------------------")
+		fmt.Println(cmd)
+
+		scriptFileName := caseDir + slash + ScriptName
+		scriptContents, err := regtester.loadFile(scriptFileName, caseDir)
+		if err == nil {
+			fmt.Println(scriptContents)
+		}
 	}
 
 	// The .env needn't exist (most test cases don't have one) in which case
@@ -489,6 +520,11 @@ func (regtester *RegTester) executeSingleCmdFile(
 		expectedExitCode := 0
 		if regtester.FileExists(expectFailFileName) {
 			expectedExitCode = 1
+		}
+
+		if regtester.plainMode {
+			fmt.Println(actualStdout)
+			fmt.Println(actualStderr)
 		}
 
 		if verbosityLevel >= 3 {
@@ -720,8 +756,8 @@ func (regtester *RegTester) loadEnvFile(
 		if len(fields) != 2 {
 			return nil, errors.New(
 				fmt.Sprintf(
-					"%s: could not parse line \"%s\" from file \"%s\".\n",
-					"mlr", line, filename,
+					"mlr: could not parse line \"%s\" from file \"%s\".\n",
+					line, filename,
 				),
 			)
 		}
@@ -759,8 +795,8 @@ func (regtester *RegTester) loadStringPairFile(
 		if len(fields) != 2 {
 			return nil, errors.New(
 				fmt.Sprintf(
-					"%s: could not parse line \"%s\" from file \"%s\".\n",
-					"mlr", line, filename,
+					"mlr: could not parse line \"%s\" from file \"%s\".\n",
+					line, filename,
 				),
 			)
 		}
