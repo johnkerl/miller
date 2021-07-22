@@ -8,10 +8,7 @@
     "zee": 8
   }
 }
-a   vee
-wye 2
-zee 4
-
-a   eks
-wye 6
-zee 8
+sum:vee:wye 2
+sum:vee:zee 4
+sum:eks:wye 6
+sum:eks:zee 8

@@ -1,0 +1,39 @@
+{
+  "vee": {
+    "wye": 1,
+    "zee": 1
+  },
+  "eks": {
+    "wye": 1,
+    "zee": 1
+  }
+}
+{
+  "vee": {
+    "wye": 2,
+    "zee": 4
+  },
+  "eks": {
+    "wye": 6,
+    "zee": 8
+  }
+}
+a     vee
+b     wye
+count 1
+sum   2
+
+a     vee
+b     zee
+count 1
+sum   4
+
+a     eks
+b     wye
+count 1
+sum   6
+
+a     eks
+b     zee
+count 1
+sum   8

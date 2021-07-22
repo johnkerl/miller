@@ -8,7 +8,18 @@
     "zee": 8
   }
 }
-a=vee,b=wye,sum=2
-a=vee,b=zee,sum=4
-a=eks,b=wye,sum=6
-a=eks,b=zee,sum=8
+a   vee
+b   wye
+sum 2
+
+a   vee
+b   zee
+sum 4
+
+a   eks
+b   wye
+sum 6
+
+a   eks
+b   zee
+sum 8
