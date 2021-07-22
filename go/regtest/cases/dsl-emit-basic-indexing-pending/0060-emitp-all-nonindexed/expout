@@ -20,34 +20,15 @@
     }
   }
 }
-a     vee
-b     wye
-count 1
-
-a     vee
-b     zee
-count 1
-
-a     eks
-b     wye
-count 1
-
-a     eks
-b     zee
-count 1
-
-a   vee
-b   wye
-sum 2
-
-a   vee
-b   zee
-sum 4
-
-a   eks
-b   wye
-sum 6
-
-a   eks
-b   zee
-sum 8
+{
+  "count:vee:wye": 1,
+  "count:vee:zee": 1,
+  "count:eks:wye": 1,
+  "count:eks:zee": 1
+}
+{
+  "sum:vee:wye": 2,
+  "sum:vee:zee": 4,
+  "sum:eks:wye": 6,
+  "sum:eks:zee": 8
+}

@@ -27,6 +27,11 @@ EMIT
   o fcnptr no longer Executor: takes a map
 ! make validation/build-time rule for no emit ($*,@*)
 
+cases:
+* 0061-emitp-all-underindexed interleave
+* 0062-emitp-all-atindexed interleave
+* 0063-emitp-all-overindexed interleave
+
 ----------------------------------------------------------------
 DOC6
 

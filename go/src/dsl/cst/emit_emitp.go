@@ -405,17 +405,27 @@ func (node *EmitXStatementNode) executeIndexed(
 		}
 	}
 
-	return node.executeIndexedAux(
-		names,
-		types.NewMlrmapAsRecord(),
-		emittableMaps,
-		indices,
-		state,
-	)
+	if node.isEmitP {
+		return node.executeIndexedEmitPAux(
+			names,
+			types.NewMlrmapAsRecord(),
+			emittableMaps,
+			indices,
+			state,
+		)
+	} else {
+		return node.executeIndexedEmitAux(
+			names,
+			types.NewMlrmapAsRecord(),
+			emittableMaps,
+			indices,
+			state,
+		)
+	}
 }
 
 // Recurses over indices.
-func (node *EmitXStatementNode) executeIndexedAux(
+func (node *EmitXStatementNode) executeIndexedEmitPAux(
 	names []string,
 	templateRecord *types.Mlrmap,
 	emittableMaps []*types.Mlrmap,
@@ -455,7 +465,7 @@ func (node *EmitXStatementNode) executeIndexedAux(
 
 		if nextLevelMaps[0] != nil && len(indices) >= 2 {
 			// recurse
-			node.executeIndexedAux(
+			node.executeIndexedEmitPAux(
 				names,
 				newrec,
 				nextLevelMaps,
@@ -464,20 +474,80 @@ func (node *EmitXStatementNode) executeIndexedAux(
 			)
 		} else {
 			// end of recursion
-			if node.isEmitP {
-				for i, nextLevel := range nextLevels {
-					if nextLevel != nil {
-						newrec.PutCopy(names[i], nextLevel)
-					}
+			for i, nextLevel := range nextLevels {
+				if nextLevel != nil {
+					newrec.PutCopy(names[i], nextLevel)
+				}
+			}
+
+			err := node.emitToRedirectFunc(newrec, state)
+			if err != nil {
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// Recurses over indices.
+func (node *EmitXStatementNode) executeIndexedEmitAux(
+	names []string,
+	templateRecord *types.Mlrmap,
+	emittableMaps []*types.Mlrmap,
+	indices []*types.Mlrval,
+	state *runtime.State,
+) error {
+	lib.InternalCodingErrorIf(len(indices) < 1)
+	index := indices[0]
+	indexString := index.String()
+
+	leadingMap := emittableMaps[0]
+
+	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
+		newrec := templateRecord.Copy()
+
+		indexValue := types.MlrvalFromString(pe.Key)
+		newrec.PutCopy(indexString, &indexValue)
+		indexValueString := indexValue.String()
+
+		nextLevels := make([]*types.Mlrval, len(emittableMaps))
+		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
+		for i, emittableMap := range emittableMaps {
+			if emittableMap != nil {
+				nextLevel := emittableMap.Get(indexValueString)
+				nextLevels[i] = nextLevel
+				// Can be nil for lashed indexing with heterogeneous data: e.g.
+				// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
+				if nextLevel != nil && nextLevel.IsMap() {
+					nextLevelMaps[i] = nextLevel.GetMap()
+				} else {
+					nextLevelMaps[i] = nil
 				}
 			} else {
-				for i, nextLevel := range nextLevels {
-					if nextLevel != nil {
-						if nextLevel.IsMap() {
-							newrec.Merge(nextLevelMaps[i])
-						} else {
-							newrec.PutCopy(names[i], nextLevel)
-						}
+				nextLevelMaps[i] = nil
+			}
+		}
+
+		if nextLevelMaps[0] != nil && len(indices) >= 2 {
+			// recurse
+			node.executeIndexedEmitAux(
+				names,
+				newrec,
+				nextLevelMaps,
+				indices[1:],
+				state,
+			)
+		} else {
+			// end of recursion
+
+			for i, nextLevel := range nextLevels {
+				if nextLevel != nil {
+					if nextLevel.IsMap() {
+						newrec.Merge(nextLevelMaps[i])
+					} else {
+						newrec.PutCopy(names[i], nextLevel)
 					}
 				}
 			}
