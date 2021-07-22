@@ -26,7 +26,7 @@
 // -- or they must be maps. So the first complexity in this code is, do we have
 // a named variable (or list thereof), or a map.
 //
-// The second complexity here is whether we have 'emit @a' or 'emit [@a, @b]'
+// The second complexity here is whether we have 'emit @a' or 'emit (@a, @b)'
 // -- the latter being the "lashed" variant. Here, the keys of the first
 // argument are used to drive indexing of the remaining arguments.
 //
@@ -86,7 +86,8 @@ type EmitXStatementNode struct {
 	outputHandlerManager output.OutputHandlerManager
 
 	// For code-reuse between executors.
-	isEmitP bool
+	isEmitP  bool
+	isLashed bool
 }
 
 func (root *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
@@ -127,7 +128,8 @@ func (root *RootNode) buildEmitXStatementNode(
 	redirectorNode := astNode.Children[2]
 
 	retval := &EmitXStatementNode{
-		isEmitP: isEmitP,
+		isEmitP:  isEmitP,
+		isLashed: false, // will be determined below
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -167,6 +169,7 @@ func (root *RootNode) buildEmitXStatementNode(
 		}
 
 	} else {
+		retval.isLashed = true
 		for _, childNode := range emittablesNode.Children {
 			if !EMITX_NAMED_NODE_TYPES[childNode.Type] {
 				return nil, errors.New(
@@ -209,7 +212,11 @@ func (root *RootNode) buildEmitXStatementNode(
 	}
 
 	if !isIndexed {
-		retval.executorFunc = retval.executeNonIndexed
+		if retval.isLashed {
+			retval.executorFunc = retval.executeNonIndexedLashed
+		} else {
+			retval.executorFunc = retval.executeNonIndexedNonLashed
+		}
 	} else {
 		retval.executorFunc = retval.executeIndexed
 	}
@@ -306,7 +313,9 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 }
 
 // ----------------------------------------------------------------
-func (node *EmitXStatementNode) executeNonIndexed(
+// emit (@a, $b) means @a and @b material are lashed together in the
+// same record.
+func (node *EmitXStatementNode) executeNonIndexedLashed(
 	names []string,
 	values []*types.Mlrval,
 	state *runtime.State,
@@ -330,6 +339,38 @@ func (node *EmitXStatementNode) executeNonIndexed(
 	}
 
 	return node.emitToRedirectFunc(newrec, state)
+}
+
+// ----------------------------------------------------------------
+// emit @* (supposing @a and @b exist) means @a and @b material are
+// emitted in separate records.
+func (node *EmitXStatementNode) executeNonIndexedNonLashed(
+	names []string,
+	values []*types.Mlrval,
+	state *runtime.State,
+) error {
+	for i, value := range values {
+		if value.IsAbsent() {
+			continue
+		}
+		newrec := types.NewMlrmapAsRecord()
+
+		if node.isEmitP {
+			newrec.PutCopy(names[i], value)
+		} else {
+			if value.IsMap() {
+				newrec.Merge(value.GetMap())
+			} else {
+				newrec.PutCopy(names[i], value)
+			}
+		}
+		err := node.emitToRedirectFunc(newrec, state)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // ----------------------------------------------------------------
