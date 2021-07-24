@@ -1,1 +1,1 @@
-mlr put '@t["u"] = NR; $tu = @["t"]["u"]; emitp all' regtest/input/abixy
+mlr put -f ${CASEDIR}/mlr regtest/input/abixy
