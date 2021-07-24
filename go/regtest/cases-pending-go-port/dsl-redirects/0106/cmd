@@ -1,1 +1,1 @@
-mlr head -n 4 then put -q --ojson '@a[NR]=$a; @b[NR]=$b; emit > "${CASEDIR}/out.".$a.$b, (@a, @b), "NR"' regtest/input/abixy
+mlr head -n 4 then put -q --ojson -f ${CASEDIR}/mlr regtest/input/abixy
