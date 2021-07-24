@@ -1,0 +1,1 @@
+@sum += $i; end {emitp @sum, "extra" }

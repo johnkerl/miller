@@ -20,6 +20,23 @@ The vast majority of Miller tests, though -- thousands of cases -- are tested by
 
 TODO: needs to be written up
 
+```
+alias mr='mlr regtest'
+mr
+mr regtest/cases/foo
+mr -v regtest/cases/foo
+mr -cj regtest/cases/foo/0003
+mr -gj regtest/cases/foo/0003
+mr -gp regtest/cases/foo/0003
+...
+```
+
+```
+mr -gp regtest/cases/foo
+git diff
+git reset --hard
+```
+
 ## Creating new cases
 
 TODO: needs to be written up
