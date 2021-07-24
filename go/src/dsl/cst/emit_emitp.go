@@ -319,6 +319,32 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 // ----------------------------------------------------------------
 // emit @* (supposing @a and @b exist) means @a and @b material are
 // emitted in separate records.
+//
+// Example:
+// DSL expression: @sum[$a][$b] += $n; end { dump; emit @sum }
+// Name: "sum"
+// Values: single array contaning the map
+//   {
+//     "sum": {
+//       "vee": {
+//         "wye": 2,
+//         "zee": 4
+//       },
+//       "eks": {
+//         "wye": 6,
+//         "zee": 8
+//       }
+//     }
+//   }
+// Desired output:
+//   {
+//     "wye": 2,
+//     "zee": 4
+//   }
+//   {
+//     "wye": 6,
+//     "zee": 8
+//   }
 
 func (node *EmitXStatementNode) executeNonIndexedNonLashedEmit(
 	names []string,
@@ -329,16 +355,38 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmit(
 		if value.IsAbsent() {
 			continue
 		}
-		newrec := types.NewMlrmapAsRecord()
 
-		if value.IsMap() {
-			newrec.Merge(value.GetMap())
-		} else {
+		valueAsMap := value.GetMap() // nil if not a map
+
+		if valueAsMap == nil {
+			newrec := types.NewMlrmapAsRecord()
 			newrec.PutCopy(names[i], value)
-		}
-		err := node.emitToRedirectFunc(newrec, state)
-		if err != nil {
-			return err
+			err := node.emitToRedirectFunc(newrec, state)
+			if err != nil {
+				return err
+			}
+
+		} else {
+			recurse := valueAsMap.IsNested()
+			if !recurse {
+				newrec := types.NewMlrmapAsRecord()
+				for pe := valueAsMap.Head; pe != nil; pe = pe.Next {
+					newrec.PutCopy(pe.Key, pe.Value)
+				}
+				err := node.emitToRedirectFunc(newrec, state)
+				if err != nil {
+					return err
+				}
+
+			} else { // recurse
+				nextLevelNames := make([]string, 0)
+				nextLevelValues := make([]*types.Mlrval, 0)
+				for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
+					nextLevelNames = append(nextLevelNames, pe.Key)
+					nextLevelValues = append(nextLevelValues, pe.Value.Copy())
+				}
+				node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
+			}
 		}
 	}
 
