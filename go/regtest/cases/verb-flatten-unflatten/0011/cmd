@@ -1,1 +1,1 @@
-mlr --ixtab --ojson --oflatsep @ unflatten regtest/input/unflatten-input-2.xtab
+mlr --ixtab --ojson --flatsep @ unflatten regtest/input/unflatten-input-2.xtab

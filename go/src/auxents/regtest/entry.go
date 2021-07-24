@@ -68,6 +68,9 @@ func RegTestMain(args []string) int {
 		} else if arg == "-c" {
 			exeName = "../c/mlr"
 
+		} else if arg == "-g" {
+			exeName = "../go/mlr"
+
 		} else if arg == "-s" {
 			if argi >= argc {
 				regTestUsage(verbName, os.Stderr, 1)

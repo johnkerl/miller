@@ -43,10 +43,8 @@ catm
 gmon.out
 *.o
 *.pyc
-.swp
-.swo
-.*.swp
-.*.swo
+.sw?
+.*.sw?
 c/parsing/lemon
 c/parsing/mlr_dsl_lexer.c
 c/parsing/mlr_dsl_lexer.h

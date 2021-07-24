@@ -4,9 +4,8 @@ TOP OF LIST:
 * nr-progress-mod
 * shell-commands.html; while-read
 * memory page
-* emit
 
-* emit * regex * fmtnum * localtime * stats1 --fr *
+* regex * fmtnum * localtime * stats1 --fr *
 * --nr-progress-mod * mlr -k * json comment-handling
 * cli-audits * doc6 * survey * check issues * regtest pendings *
 * survey email followups
@@ -69,6 +68,11 @@ DOC6
   o OLH re limitations
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
+
+* defer json comment-handling
+
+* json-triple-quote -- what can be done here?
+* -l/-L?
 
 w survey
   o summary to GHD thread
