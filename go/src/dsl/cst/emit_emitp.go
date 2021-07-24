@@ -651,65 +651,102 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
 	index := indices[0]
 	indexString := index.String()
 
-	leadingMap := emittableMaps[0]
+	for i, emittableMap := range emittableMaps {
+		for pe := emittableMap.Head; pe != nil; pe = pe.Next {
+			newrec := templateRecord.Copy()
+			newrec.PutCopy(indexString, types.MlrvalPointerFromString(pe.Key))
 
-	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
-		newrec := templateRecord.Copy()
-
-		indexValue := types.MlrvalFromString(pe.Key)
-		newrec.PutCopy(indexString, &indexValue)
-
-		nextLevels := make([]*types.Mlrval, 0)
-		nextLevelNames := make([]string, 0)
-		nextLevelMaps := make([]*types.Mlrmap, 0)
-		for i, emittableMap := range emittableMaps[1:] {
-			if emittableMap != nil {
-				for pe := emittableMap.Head; pe != nil; pe = pe.Next {
-					nextLevel := pe.Value.Copy()
-					nextLevels = append(nextLevels, nextLevel)
-					nextLevelNames = append(nextLevelNames, names[i])
-					// Can be nil for lashed indexing with heterogeneous data: e.g.
-					// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
-					if nextLevel != nil && nextLevel.IsMap() {
-						nextLevelMaps = append(nextLevelMaps, nextLevel.GetMap())
-					} else {
-						nextLevelMaps = append(nextLevelMaps, nil)
+			if len(indices) == 1 {
+				valueAsMap := pe.Value.GetMap()
+				if valueAsMap == nil {
+					newrec.PutCopy(names[i], pe.Value)
+				} else {
+					for pe := valueAsMap.Head; pe != nil; pe = pe.Next {
+						newrec.PutCopy(pe.Key, pe.Value)
 					}
 				}
-			} else {
-				nextLevelMaps = append(nextLevelMaps, nil)
-			}
-		}
-
-		if nextLevelMaps[0] != nil && len(indices) >= 2 {
-			// recurse
-			node.executeIndexedNonLashedEmitAux(
-				nextLevelNames,
-				newrec,
-				nextLevelMaps,
-				indices[1:],
-				state,
-			)
-		} else {
-			// end of recursion
-
-			for i, nextLevel := range nextLevels {
-				if nextLevel != nil {
-					if nextLevel.IsMap() {
-						newrec.Merge(nextLevelMaps[i])
-					} else {
-						newrec.PutCopy(nextLevelNames[i], nextLevel)
+				err := node.emitToRedirectFunc(newrec, state)
+				if err != nil {
+					return err
+				}
+			} else { // recurse
+				valueAsMap := pe.Value.GetMap()
+				if valueAsMap == nil {
+					newrec.PutCopy(names[i], pe.Value)
+					err := node.emitToRedirectFunc(newrec, state)
+					if err != nil {
+						return err
 					}
+				} else {
+					node.executeIndexedNonLashedEmitPAux(
+						[]string{names[i]},
+						newrec,
+						[]*types.Mlrmap{valueAsMap},
+						indices[1:],
+						state,
+					)
 				}
 			}
-
-			err := node.emitToRedirectFunc(newrec, state)
-			if err != nil {
-				return err
-			}
 		}
-
 	}
+
+	//	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
+	//		newrec := templateRecord.Copy()
+	//
+	//		indexValue := types.MlrvalFromString(pe.Key)
+	//		newrec.PutCopy(indexString, &indexValue)
+	//
+	//		nextLevels := make([]*types.Mlrval, 0)
+	//		nextLevelNames := make([]string, 0)
+	//		nextLevelMaps := make([]*types.Mlrmap, 0)
+	//		for i, emittableMap := range emittableMaps[1:] {
+	//			if emittableMap != nil {
+	//				for pe := emittableMap.Head; pe != nil; pe = pe.Next {
+	//					nextLevel := pe.Value.Copy()
+	//					nextLevels = append(nextLevels, nextLevel)
+	//					nextLevelNames = append(nextLevelNames, names[i])
+	//					// Can be nil for lashed indexing with heterogeneous data: e.g.
+	//					// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
+	//					if nextLevel != nil && nextLevel.IsMap() {
+	//						nextLevelMaps = append(nextLevelMaps, nextLevel.GetMap())
+	//					} else {
+	//						nextLevelMaps = append(nextLevelMaps, nil)
+	//					}
+	//				}
+	//			} else {
+	//				nextLevelMaps = append(nextLevelMaps, nil)
+	//			}
+	//		}
+	//
+	//		if nextLevelMaps[0] != nil && len(indices) >= 2 {
+	//			// recurse
+	//			node.executeIndexedNonLashedEmitAux(
+	//				nextLevelNames,
+	//				newrec,
+	//				nextLevelMaps,
+	//				indices[1:],
+	//				state,
+	//			)
+	//		} else {
+	//			// end of recursion
+	//
+	//			for i, nextLevel := range nextLevels {
+	//				if nextLevel != nil {
+	//					if nextLevel.IsMap() {
+	//						newrec.Merge(nextLevelMaps[i])
+	//					} else {
+	//						newrec.PutCopy(nextLevelNames[i], nextLevel)
+	//					}
+	//				}
+	//			}
+	//
+	//			err := node.emitToRedirectFunc(newrec, state)
+	//			if err != nil {
+	//				return err
+	//			}
+	//		}
+	//
+	//	}
 
 	return nil
 }
@@ -832,7 +869,6 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(
 				}
 			}
 		}
-
 	}
 
 	return nil
