@@ -1,0 +1,1 @@
+@v = $*; end{dump;emitp @v}

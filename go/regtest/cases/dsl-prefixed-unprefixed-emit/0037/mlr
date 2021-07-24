@@ -1,0 +1,1 @@
+@v[NR][NR][NR] = $*; end{dump;emitp @v, "I", "J"}

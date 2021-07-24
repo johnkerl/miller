@@ -1,0 +1,1 @@
+func f(a,b) { return {"ab": a.b} } o = f($a, $b); emit o
