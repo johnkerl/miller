@@ -1,0 +1,6 @@
+for x in "$@"; do
+  echo $x
+  sed "s:'.*':-f \${CASEDIR}/mlr:" $x/cmd > $x/cmd.tmp
+  sed "s:[^']*'::" $x/cmd | sed "s:'.*::" | left > $x/mlr
+  mv $x/cmd.tmp $x/cmd
+done
