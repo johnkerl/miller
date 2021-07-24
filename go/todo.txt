@@ -41,26 +41,6 @@ cases:
 * short/wrong:
   o 0031-emit-all-underindexed
 
-* non-indexed, indexed
-  * single/multi-unlashed, multi-lashed
-    * emit, emitp
-
-* non-indexed
-  * nonlashed
-    * emit
-    * emitp
-  * lashed
-    * emit
-    * emitp
-
-* indexed
-  * nonlashed
-    * emit
-    * emitp
-  * lashed
-    * emit
-    * emitp
-
 ----------------------------------------------------------------
 DOC6
 

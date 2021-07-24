@@ -1,1 +1,0 @@
-@count[$a][$b] += 1; @sum[$a][$b] += $n; end { dump @count; dump @sum; emit (@count, @sum), "a", "b", "c" }
