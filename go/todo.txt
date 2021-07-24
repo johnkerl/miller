@@ -28,9 +28,38 @@ EMIT
 ! make validation/build-time rule for no emit ($*,@*)
 
 cases:
-* 0061-emitp-all-underindexed interleave
-* 0062-emitp-all-atindexed interleave
-* 0063-emitp-all-overindexed interleave
+* interleave:
+  o 0032-emit-all-atindexed
+  o 0033-emit-all-overindexed/
+  o 0061-emitp-all-underindexed
+  o 0062-emitp-all-atindexed
+  o 0063-emitp-all-overindexed
+* prefix-strip:
+  o 0010-emit-single-nonindexed
+  o 0020-emit-lashed-nonindexed
+  o 0030-emit-all-nonindexed
+* short/wrong:
+  o 0031-emit-all-underindexed
+
+* non-indexed, indexed
+  * single/multi-unlashed, multi-lashed
+    * emit, emitp
+
+* non-indexed
+  * nonlashed
+    * emit
+    * emitp
+  * lashed
+    * emit
+    * emitp
+
+* indexed
+  * nonlashed
+    * emit
+    * emitp
+  * lashed
+    * emit
+    * emitp
 
 ----------------------------------------------------------------
 DOC6

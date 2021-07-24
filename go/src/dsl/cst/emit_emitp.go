@@ -212,10 +212,14 @@ func (root *RootNode) buildEmitXStatementNode(
 	}
 
 	if !isIndexed {
-		if retval.isLashed {
-			retval.executorFunc = retval.executeNonIndexedLashed
+		if !retval.isLashed {
+			if !isEmitP {
+				retval.executorFunc = retval.executeNonIndexedNonLashedEmit
+			} else {
+				retval.executorFunc = retval.executeNonIndexedNonLashedEmitP
+			}
 		} else {
-			retval.executorFunc = retval.executeNonIndexedNonLashed
+			retval.executorFunc = retval.executeNonIndexedLashed
 		}
 	} else {
 		retval.executorFunc = retval.executeIndexed
@@ -313,6 +317,55 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 }
 
 // ----------------------------------------------------------------
+// emit @* (supposing @a and @b exist) means @a and @b material are
+// emitted in separate records.
+
+func (node *EmitXStatementNode) executeNonIndexedNonLashedEmit(
+	names []string,
+	values []*types.Mlrval,
+	state *runtime.State,
+) error {
+	for i, value := range values {
+		if value.IsAbsent() {
+			continue
+		}
+		newrec := types.NewMlrmapAsRecord()
+
+		if value.IsMap() {
+			newrec.Merge(value.GetMap())
+		} else {
+			newrec.PutCopy(names[i], value)
+		}
+		err := node.emitToRedirectFunc(newrec, state)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (node *EmitXStatementNode) executeNonIndexedNonLashedEmitP(
+	names []string,
+	values []*types.Mlrval,
+	state *runtime.State,
+) error {
+	for i, value := range values {
+		if value.IsAbsent() {
+			continue
+		}
+		newrec := types.NewMlrmapAsRecord()
+		newrec.PutCopy(names[i], value)
+		err := node.emitToRedirectFunc(newrec, state)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ----------------------------------------------------------------
 // emit (@a, $b) means @a and @b material are lashed together in the
 // same record.
 func (node *EmitXStatementNode) executeNonIndexedLashed(
@@ -339,38 +392,6 @@ func (node *EmitXStatementNode) executeNonIndexedLashed(
 	}
 
 	return node.emitToRedirectFunc(newrec, state)
-}
-
-// ----------------------------------------------------------------
-// emit @* (supposing @a and @b exist) means @a and @b material are
-// emitted in separate records.
-func (node *EmitXStatementNode) executeNonIndexedNonLashed(
-	names []string,
-	values []*types.Mlrval,
-	state *runtime.State,
-) error {
-	for i, value := range values {
-		if value.IsAbsent() {
-			continue
-		}
-		newrec := types.NewMlrmapAsRecord()
-
-		if node.isEmitP {
-			newrec.PutCopy(names[i], value)
-		} else {
-			if value.IsMap() {
-				newrec.Merge(value.GetMap())
-			} else {
-				newrec.PutCopy(names[i], value)
-			}
-		}
-		err := node.emitToRedirectFunc(newrec, state)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 // ----------------------------------------------------------------
@@ -455,6 +476,7 @@ func (node *EmitXStatementNode) executeIndexedEmitPAux(
 				// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
 				if nextLevel != nil && nextLevel.IsMap() {
 					nextLevelMaps[i] = nextLevel.GetMap()
+					// xxx need to put names[i] and the accumulator value
 				} else {
 					nextLevelMaps[i] = nil
 				}
@@ -491,7 +513,69 @@ func (node *EmitXStatementNode) executeIndexedEmitPAux(
 	return nil
 }
 
+// ----------------------------------------------------------------
 // Recurses over indices.
+//
+// Example:
+// DSL expression:
+//   @sum[$a][$b] += $n; end { dump @sum; emit @sum, "a", "b" }
+// Input data (DKVP):
+//   a=vee,b=wye,n=2
+//   a=vee,b=zee,n=4
+//   a=eks,b=wye,n=6
+//   a=eks,b=zee,n=8
+// @sum data structure at end:
+//   {
+//     "vee": {
+//       "wye": 2,
+//       "zee": 4
+//     },
+//     "eks": {
+//       "wye": 6,
+//       "zee": 8
+//     }
+//   }
+//
+// Output data (JSON):
+//   {
+//     "a": "vee",
+//     "b": "wye",
+//     "sum": 2
+//   }
+//   {
+//     "a": "vee",
+//     "b": "zee",
+//     "sum": 4
+//   }
+//   {
+//     "a": "eks",
+//     "b": "wye",
+//     "sum": 6
+//   }
+//   {
+//     "a": "eks",
+//     "b": "zee",
+//     "sum": 8
+//   }
+//
+// Outer call:
+// * names = ["sum"]
+// * templateRecord is empty
+// * emittableMaps = [ {"vee": { "wye": 2, "zee": 4 }, "eks": { "wye": 6, "zee": 8 }} ]
+// * indices = ["a", "b"]
+//
+// Inner call 1:
+// * names = ["sum"]
+// * templateRecord is {"a":"vee"}
+// * emittableMaps = [{ "wye": 2, "zee": 4 }]
+// * indices = ["b"]
+//
+// Inner call 1:
+// * names = ["sum"]
+// * templateRecord is {"a":"eks"}
+// * emittableMaps = [{ "wye": 6, "zee": 8 }]
+// * indices = ["b"]
+
 func (node *EmitXStatementNode) executeIndexedEmitAux(
 	names []string,
 	templateRecord *types.Mlrmap,
@@ -499,6 +583,7 @@ func (node *EmitXStatementNode) executeIndexedEmitAux(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) error {
+	fmt.Printf("ENTER names=%+v tr=%s em=%+v indices=%+v\n", names, templateRecord.String(), emittableMaps, indices)
 	lib.InternalCodingErrorIf(len(indices) < 1)
 	index := indices[0]
 	indexString := index.String()
@@ -510,30 +595,34 @@ func (node *EmitXStatementNode) executeIndexedEmitAux(
 
 		indexValue := types.MlrvalFromString(pe.Key)
 		newrec.PutCopy(indexString, &indexValue)
-		indexValueString := indexValue.String()
 
-		nextLevels := make([]*types.Mlrval, len(emittableMaps))
-		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
-		for i, emittableMap := range emittableMaps {
+		nextLevels := make([]*types.Mlrval, 0)
+		nextLevelNames := make([]string, 0)
+		nextLevelMaps := make([]*types.Mlrmap, 0)
+		for i, emittableMap := range emittableMaps[1:] {
 			if emittableMap != nil {
-				nextLevel := emittableMap.Get(indexValueString)
-				nextLevels[i] = nextLevel
-				// Can be nil for lashed indexing with heterogeneous data: e.g.
-				// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
-				if nextLevel != nil && nextLevel.IsMap() {
-					nextLevelMaps[i] = nextLevel.GetMap()
-				} else {
-					nextLevelMaps[i] = nil
+				for pe := emittableMap.Head; pe != nil; pe = pe.Next {
+					nextLevel := pe.Value.Copy()
+					////fmt.Printf("-------- len=%d i=%d nl=%s\n", len(indices), i, nextLevel.String())
+					nextLevels = append(nextLevels, nextLevel)
+					nextLevelNames = append(nextLevelNames, names[i])
+					// Can be nil for lashed indexing with heterogeneous data: e.g.
+					// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
+					if nextLevel != nil && nextLevel.IsMap() {
+						nextLevelMaps = append(nextLevelMaps, nextLevel.GetMap())
+					} else {
+						nextLevelMaps = append(nextLevelMaps, nil)
+					}
 				}
 			} else {
-				nextLevelMaps[i] = nil
+				nextLevelMaps = append(nextLevelMaps, nil)
 			}
 		}
 
 		if nextLevelMaps[0] != nil && len(indices) >= 2 {
 			// recurse
 			node.executeIndexedEmitAux(
-				names,
+				nextLevelNames,
 				newrec,
 				nextLevelMaps,
 				indices[1:],
@@ -547,7 +636,7 @@ func (node *EmitXStatementNode) executeIndexedEmitAux(
 					if nextLevel.IsMap() {
 						newrec.Merge(nextLevelMaps[i])
 					} else {
-						newrec.PutCopy(names[i], nextLevel)
+						newrec.PutCopy(nextLevelNames[i], nextLevel)
 					}
 				}
 			}
@@ -560,6 +649,7 @@ func (node *EmitXStatementNode) executeIndexedEmitAux(
 
 	}
 
+	////fmt.Printf("EXIT %d\n", len(indices))
 	return nil
 }
 
