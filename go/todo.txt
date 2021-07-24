@@ -27,19 +27,22 @@ EMIT
   o fcnptr no longer Executor: takes a map
 ! make validation/build-time rule for no emit ($*,@*)
 
-cases:
-* interleave:
-  o 0032-emit-all-atindexed
-  o 0033-emit-all-overindexed/
-  o 0061-emitp-all-underindexed
-  o 0062-emitp-all-atindexed
-  o 0063-emitp-all-overindexed
-* prefix-strip:
-  o 0010-emit-single-nonindexed
-  o 0020-emit-lashed-nonindexed
-  o 0030-emit-all-nonindexed
-* short/wrong:
-  o 0031-emit-all-underindexed
+fails:
+
+./regtest/cases/dsl-lashed-emitp-singles/0070/cmd
+./regtest/cases/dsl-lashed-emitp-singles/0072/cmd
+./regtest/cases/dsl-lashed-emitp-singles/0073/cmd
+./regtest/cases/dsl-lashed-emitp-singles/0081/cmd
+./regtest/cases/dsl-lashed-emitp-singles/0087/cmd
+./regtest/cases/dsl-mapvar-emit/0001/cmd
+./regtest/cases/dsl-mapvar-emit/0002/cmd
+./regtest/cases/dsl-prefixed-unprefixed-emit/0032/cmd
+./regtest/cases/dsl-prefixed-unprefixed-emit/0040/cmd
+./regtest/cases/dsl-redirects/0101/cmd
+./regtest/cases/dsl-slice/0001/cmd
+./regtest/cases/dsl-slice/0002/cmd
+./regtest/cases/dsl-slice/0003/cmd
+./regtest/cases/dsl-user-defined-functions-and-subroutines/0031/cmd
 
 ----------------------------------------------------------------
 DOC6
