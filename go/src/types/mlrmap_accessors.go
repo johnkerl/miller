@@ -708,6 +708,18 @@ func (mlrmap *Mlrmap) SortByKeyRecursively() {
 	*mlrmap = *other
 }
 
+// ----------------------------------------------------------------
+// Only checks to see if the first entry is a map. For emit/emitp.
+func (mlrmap *Mlrmap) IsNested() bool {
+	if mlrmap.Head == nil {
+		return false
+	} else if mlrmap.Head.Value.GetMap() == nil {
+		return false
+	} else {
+		return true
+	}
+}
+
 // ================================================================
 // PRIVATE METHODS
 

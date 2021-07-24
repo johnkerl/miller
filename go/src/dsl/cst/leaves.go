@@ -318,8 +318,8 @@ func (root *RootNode) BuildContextVariableNode(astNode *dsl.ASTNode) (IEvaluable
 	case "OPS":
 		return root.BuildOPSNode(), nil
 		break
-	case "OFLATSEP":
-		return root.BuildOFLATSEPNode(), nil
+	case "FLATSEP":
+		return root.BuildFLATSEPNode(), nil
 		break
 
 	}
@@ -473,16 +473,16 @@ func (node *OPSNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
-type OFLATSEPNode struct {
+type FLATSEPNode struct {
 }
 
-func (root *RootNode) BuildOFLATSEPNode() *OFLATSEPNode {
-	return &OFLATSEPNode{}
+func (root *RootNode) BuildFLATSEPNode() *FLATSEPNode {
+	return &FLATSEPNode{}
 }
-func (node *OFLATSEPNode) Evaluate(
+func (node *FLATSEPNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(state.Context.OFLATSEP)
+	return types.MlrvalPointerFromString(state.Context.FLATSEP)
 }
 
 // ================================================================

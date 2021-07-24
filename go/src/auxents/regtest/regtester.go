@@ -19,6 +19,7 @@ import (
 
 const DefaultPath = "./regtest/cases"
 const CmdName = "cmd"
+const MlrName = "mlr"
 const EnvName = "env"
 const ScriptName = "mlr"
 const PreCopyName = "precopy"
@@ -226,7 +227,7 @@ func (regtester *RegTester) executeSingleDirectory(
 	hasCaseSubdirectories := regtester.hasCaseSubdirectories(dirName)
 
 	if !regtester.plainMode {
-		if hasCaseSubdirectories && regtester.verbosityLevel >= 1 {
+		if hasCaseSubdirectories && regtester.verbosityLevel >= 2 {
 			fmt.Printf("%s BEGIN %s/\n", MajorSeparator, dirName)
 		}
 	}
@@ -264,7 +265,7 @@ func (regtester *RegTester) executeSingleDirectory(
 	}
 
 	if !regtester.plainMode {
-		if !hasCaseSubdirectories && regtester.verbosityLevel >= 1 {
+		if !hasCaseSubdirectories && regtester.verbosityLevel >= 2 {
 			fmt.Printf("%s END   %s/\n", MajorSeparator, dirName)
 			fmt.Println()
 		}
@@ -337,6 +338,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 	}
 
 	slash := string(filepath.Separator) // Or backslash on Windows ... although modern Windows versions handle slashes fine.
+	mlrFileName := caseDir + slash + MlrName
 	envFileName := caseDir + slash + EnvName
 	preCopyFileName := caseDir + slash + PreCopyName
 	expectedStdoutFileName := caseDir + slash + ExpectedStdoutName
@@ -355,6 +357,12 @@ func (regtester *RegTester) executeSingleCmdFile(
 	if verbosityLevel >= 2 {
 		fmt.Println("Command:")
 		fmt.Println(cmd)
+
+		mlr, err := regtester.loadFile(mlrFileName, caseDir)
+		if err == nil {
+			fmt.Println("Miller DSL script:")
+			fmt.Println(mlr)
+		}
 	}
 
 	if regtester.plainMode {
@@ -523,8 +531,9 @@ func (regtester *RegTester) executeSingleCmdFile(
 		}
 
 		if regtester.plainMode {
-			fmt.Println(actualStdout)
-			fmt.Println(actualStderr)
+			fmt.Print(actualStdout)
+			fmt.Print(actualStderr)
+			fmt.Println()
 		}
 
 		if verbosityLevel >= 3 {

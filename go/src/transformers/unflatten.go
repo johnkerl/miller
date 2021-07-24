@@ -32,7 +32,7 @@ becomes name 'a' and value '{"b": { "c": 4 }}'.
 `)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f {a,b,c} Comma-separated list of field names to unflatten (default all).\n")
-	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --oflatsep value.\n", "mlr")
+	fmt.Fprintf(o, "-s {string} Separator, defaulting to %s --flatsep value.\n", "mlr")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 
 	if doExit {
@@ -137,7 +137,7 @@ func (tr *TransformerUnflatten) unflattenAll(
 		inrec := inrecAndContext.Record
 		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
-			oFlatSep = inrecAndContext.Context.OFLATSEP
+			oFlatSep = inrecAndContext.Context.FLATSEP
 		}
 		inrec.Unflatten(oFlatSep)
 		outputChannel <- inrecAndContext
@@ -155,7 +155,7 @@ func (tr *TransformerUnflatten) unflattenSome(
 		inrec := inrecAndContext.Record
 		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
-			oFlatSep = inrecAndContext.Context.OFLATSEP
+			oFlatSep = inrecAndContext.Context.FLATSEP
 		}
 		inrec.UnflattenFields(tr.fieldNameSet, oFlatSep)
 		outputChannel <- inrecAndContext
