@@ -2,12 +2,13 @@
 // This handles emit and emitp statements. These produce new records (in
 // addition to the current record, $*) into the output record stream.
 //
-// Some complications here are due to legacy. Emit statements existed in the
-// Miller DSL before there were for-loops. As a result, some of the
-// side-by-side emit syntaxes were invented (and supported) to allow things
-// that might have been more easily done with simpler emit syntax.
-// Nonetheless, those syntaxes have been introduced into general use and we
-// need to continue to support them.
+// Some complications here are due to legacy.
+//
+// Emit statements existed in the Miller DSL before there were for-loops. As a
+// result, some of the side-by-side emit syntaxes were invented (and supported)
+// to allow things that might have been more easily done with simpler emit
+// syntax.  Nonetheless, those syntaxes have been introduced into general use
+// and we need to continue to support them.
 //
 // Examples for emit and emitp:
 //
@@ -219,7 +220,11 @@ func (root *RootNode) buildEmitXStatementNode(
 				retval.executorFunc = retval.executeNonIndexedNonLashedEmitP
 			}
 		} else {
-			retval.executorFunc = retval.executeNonIndexedLashed
+			if !isEmitP {
+				retval.executorFunc = retval.executeNonIndexedLashedEmit
+			} else {
+				retval.executorFunc = retval.executeNonIndexedLashedEmitP
+			}
 		}
 	} else {
 		retval.executorFunc = retval.executeIndexed
@@ -416,7 +421,74 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmitP(
 // ----------------------------------------------------------------
 // emit (@a, $b) means @a and @b material are lashed together in the
 // same record.
-func (node *EmitXStatementNode) executeNonIndexedLashed(
+
+func (node *EmitXStatementNode) executeNonIndexedLashedEmit(
+	names []string,
+	values []*types.Mlrval,
+	state *runtime.State,
+) error {
+	lib.InternalCodingErrorIf(len(values) < 1)
+	leadingValueAsMap := values[0].GetMap()
+	if leadingValueAsMap == nil {
+		// Emit a record like a=1,b=2
+		newrec := types.NewMlrmapAsRecord()
+		for i, value := range values {
+			if value.IsAbsent() {
+				continue
+			}
+			if value.IsMap() {
+				newrec.Merge(value.GetMap())
+			} else {
+				newrec.PutCopy(names[i], value)
+			}
+		}
+		return node.emitToRedirectFunc(newrec, state)
+
+	} else {
+		for i, value := range values {
+			if value.IsAbsent() {
+				continue
+			}
+
+			valueAsMap := value.GetMap() // nil if not a map
+
+			if valueAsMap == nil {
+				newrec := types.NewMlrmapAsRecord()
+				newrec.PutCopy(names[i], value)
+				err := node.emitToRedirectFunc(newrec, state)
+				if err != nil {
+					return err
+				}
+
+			} else {
+				recurse := valueAsMap.IsNested()
+				if !recurse {
+					newrec := types.NewMlrmapAsRecord()
+					for pe := valueAsMap.Head; pe != nil; pe = pe.Next {
+						newrec.PutCopy(pe.Key, pe.Value)
+					}
+					err := node.emitToRedirectFunc(newrec, state)
+					if err != nil {
+						return err
+					}
+
+				} else { // recurse
+					nextLevelNames := make([]string, 0)
+					nextLevelValues := make([]*types.Mlrval, 0)
+					for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
+						nextLevelNames = append(nextLevelNames, pe.Key)
+						nextLevelValues = append(nextLevelValues, pe.Value.Copy())
+					}
+					node.executeNonIndexedNonLashedEmit(nextLevelNames, nextLevelValues, state)
+				}
+			}
+		}
+
+		return nil
+	}
+}
+
+func (node *EmitXStatementNode) executeNonIndexedLashedEmitP(
 	names []string,
 	values []*types.Mlrval,
 	state *runtime.State,
@@ -428,15 +500,7 @@ func (node *EmitXStatementNode) executeNonIndexedLashed(
 			continue
 		}
 
-		if node.isEmitP {
-			newrec.PutCopy(names[i], value)
-		} else {
-			if value.IsMap() {
-				newrec.Merge(value.GetMap())
-			} else {
-				newrec.PutCopy(names[i], value)
-			}
-		}
+		newrec.PutCopy(names[i], value)
 	}
 
 	return node.emitToRedirectFunc(newrec, state)
