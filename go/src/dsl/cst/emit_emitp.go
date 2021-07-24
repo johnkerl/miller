@@ -541,16 +541,16 @@ func (node *EmitXStatementNode) executeIndexed(
 	if !node.isEmitP {
 		if !node.isLashed {
 			return node.executeIndexedNonLashedEmitAux(
-				names,
 				types.NewMlrmapAsRecord(),
+				names,
 				emittableMaps,
 				indices,
 				state,
 			)
 		} else {
 			return node.executeIndexedLashedEmitAux(
-				names,
 				types.NewMlrmapAsRecord(),
+				names,
 				emittableMaps,
 				indices,
 				state,
@@ -559,16 +559,16 @@ func (node *EmitXStatementNode) executeIndexed(
 	} else {
 		if !node.isLashed {
 			return node.executeIndexedNonLashedEmitPAux(
-				names,
 				types.NewMlrmapAsRecord(),
+				names,
 				emittableMaps,
 				indices,
 				state,
 			)
 		} else {
 			return node.executeIndexedLashedEmitPAux(
-				names,
 				types.NewMlrmapAsRecord(),
+				names,
 				emittableMaps,
 				indices,
 				state,
@@ -641,8 +641,8 @@ func (node *EmitXStatementNode) executeIndexed(
 // * indices = ["b"]
 
 func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
-	names []string,
 	templateRecord *types.Mlrmap,
+	names []string,
 	emittableMaps []*types.Mlrmap,
 	indices []*types.Mlrval,
 	state *runtime.State,
@@ -679,8 +679,8 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
 					}
 				} else {
 					node.executeIndexedNonLashedEmitPAux(
-						[]string{names[i]},
 						newrec,
+						[]string{names[i]},
 						[]*types.Mlrmap{valueAsMap},
 						indices[1:],
 						state,
@@ -690,70 +690,105 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
 		}
 	}
 
-	//	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
-	//		newrec := templateRecord.Copy()
-	//
-	//		indexValue := types.MlrvalFromString(pe.Key)
-	//		newrec.PutCopy(indexString, &indexValue)
-	//
-	//		nextLevels := make([]*types.Mlrval, 0)
-	//		nextLevelNames := make([]string, 0)
-	//		nextLevelMaps := make([]*types.Mlrmap, 0)
-	//		for i, emittableMap := range emittableMaps[1:] {
-	//			if emittableMap != nil {
-	//				for pe := emittableMap.Head; pe != nil; pe = pe.Next {
-	//					nextLevel := pe.Value.Copy()
-	//					nextLevels = append(nextLevels, nextLevel)
-	//					nextLevelNames = append(nextLevelNames, names[i])
-	//					// Can be nil for lashed indexing with heterogeneous data: e.g.
-	//					// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
-	//					if nextLevel != nil && nextLevel.IsMap() {
-	//						nextLevelMaps = append(nextLevelMaps, nextLevel.GetMap())
-	//					} else {
-	//						nextLevelMaps = append(nextLevelMaps, nil)
-	//					}
-	//				}
-	//			} else {
-	//				nextLevelMaps = append(nextLevelMaps, nil)
-	//			}
-	//		}
-	//
-	//		if nextLevelMaps[0] != nil && len(indices) >= 2 {
-	//			// recurse
-	//			node.executeIndexedNonLashedEmitAux(
-	//				nextLevelNames,
-	//				newrec,
-	//				nextLevelMaps,
-	//				indices[1:],
-	//				state,
-	//			)
-	//		} else {
-	//			// end of recursion
-	//
-	//			for i, nextLevel := range nextLevels {
-	//				if nextLevel != nil {
-	//					if nextLevel.IsMap() {
-	//						newrec.Merge(nextLevelMaps[i])
-	//					} else {
-	//						newrec.PutCopy(nextLevelNames[i], nextLevel)
-	//					}
-	//				}
-	//			}
-	//
-	//			err := node.emitToRedirectFunc(newrec, state)
-	//			if err != nil {
-	//				return err
-	//			}
-	//		}
-	//
-	//	}
-
 	return nil
 }
 
+// ----------------------------------------------------------------
+// Example:
+//
+// DSL expression: @count[$a][$b] += 1; @sum[$a][$b] += $n; end { emit (@count, @sum), "a", "b" }
+//
+// @count and @sum maps:
+//   {
+//     "count": {
+//       "vee": {
+//         "wye": 1,
+//         "zee": 1
+//       },
+//       "eks": {
+//         "wye": 1,
+//         "zee": 1
+//       }
+//     },
+//     "sum": {
+//       "vee": {
+//         "wye": 2,
+//         "zee": 4
+//       },
+//       "eks": {
+//         "wye": 6,
+//         "zee": 8
+//       }
+//     }
+//   }
+//
+// Desired output:
+//   {
+//     "a": "vee",
+//     "b": "wye",
+//     "count": 1,
+//     "sum": 2
+//   }
+//   {
+//     "a": "vee",
+//     "b": "zee",
+//     "count": 1,
+//     "sum": 4
+//   }
+//   {
+//     "a": "eks",
+//     "b": "wye",
+//     "count": 1,
+//     "sum": 6
+//   }
+//   {
+//     "a": "eks",
+//     "b": "zee",
+//     "count": 1,
+//     "sum": 8
+//   }
+//
+// First call:
+// * templateRecord is empty
+// * names ["count", "sum"]
+// * emittableMaps
+//     {                {
+//       "vee": {         "vee": {
+//         "wye": 1,        "wye": 2,
+//         "zee": 1         "zee": 4
+//       },               },
+//       "eks": {         "eks": {
+//         "wye": 1,        "wye": 6,
+//         "zee": 1         "zee": 8
+//       }                }
+//     }                }
+// * indices ["a", "b"]
+//
+// * Loop over first-level keys of the leading map which is the "count" map: "vee" and "eks"
+//
+// * Recurse with:
+//   o templateRecord {"a":"vee"}
+//   o names ["count", "sum"]
+//   o emittableMaps
+//       {                {
+//         "wye": 1,        "wye": 2,
+//         "zee": 1         "zee": 4
+//       }                }
+//   o indices ["b"]
+//
+// * Recurse with:
+//   o templateRecord {"a":"eks"}
+//   o names ["count", "sum"]
+//   o emittableMaps
+//       {                {
+//         "wye": 1,        "wye": 6,
+//         "zee": 1         "zee": 8
+//       }                }
+//   o indices ["b"]
+
 func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
-	names []string,
 	templateRecord *types.Mlrmap,
+	names []string,
 	emittableMaps []*types.Mlrmap,
 	indices []*types.Mlrval,
 	state *runtime.State,
@@ -766,50 +801,43 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
 
 	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
 		newrec := templateRecord.Copy()
-
 		indexValue := types.MlrvalFromString(pe.Key)
 		newrec.PutCopy(indexString, &indexValue)
 
-		nextLevels := make([]*types.Mlrval, 0)
-		nextLevelNames := make([]string, 0)
-		nextLevelMaps := make([]*types.Mlrmap, 0)
-		for i, emittableMap := range emittableMaps[1:] {
+		nextLevelValues := make([]*types.Mlrval, len(emittableMaps))
+		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
+		for i, emittableMap := range emittableMaps {
 			if emittableMap != nil {
-				for pe := emittableMap.Head; pe != nil; pe = pe.Next {
-					nextLevel := pe.Value.Copy()
-					nextLevels = append(nextLevels, nextLevel)
-					nextLevelNames = append(nextLevelNames, names[i])
-					// Can be nil for lashed indexing with heterogeneous data: e.g.
-					// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
-					if nextLevel != nil && nextLevel.IsMap() {
-						nextLevelMaps = append(nextLevelMaps, nextLevel.GetMap())
-					} else {
-						nextLevelMaps = append(nextLevelMaps, nil)
-					}
+				nextLevelValues[i] = emittableMaps[i].Get(pe.Key)
+				// Can be nil for lashed indexing with heterogeneous data: e.g.
+				// @x={"a":1}; @y={"b":2}; emit (@x, @y), "a"
+				if nextLevelValues[i] != nil && nextLevelValues[i].IsMap() {
+					nextLevelMaps[i] = nextLevelValues[i].GetMap().Copy()
+				} else {
+					nextLevelMaps[i] = nil
 				}
 			} else {
 				nextLevelMaps = append(nextLevelMaps, nil)
 			}
 		}
 
-		if nextLevelMaps[0] != nil && len(indices) >= 2 {
-			// recurse
+		if len(indices) > 1 && nextLevelMaps[0] != nil {
+			// Recurse.  The leading map drives the iteration; we don't
+			// continue even if other maps aren't empty
 			node.executeIndexedLashedEmitAux(
-				nextLevelNames,
 				newrec,
+				names,
 				nextLevelMaps,
 				indices[1:],
 				state,
 			)
-		} else {
-			// end of recursion
-
-			for i, nextLevel := range nextLevels {
-				if nextLevel != nil {
-					if nextLevel.IsMap() {
+		} else { // end of recursion
+			for i, nextLevelValue := range nextLevelValues {
+				if nextLevelValue != nil {
+					if nextLevelMaps[i] != nil {
 						newrec.Merge(nextLevelMaps[i])
 					} else {
-						newrec.PutCopy(nextLevelNames[i], nextLevel)
+						newrec.PutCopy(names[i], nextLevelValue)
 					}
 				}
 			}
@@ -819,7 +847,6 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
 				return err
 			}
 		}
-
 	}
 
 	return nil
@@ -829,8 +856,8 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
 // Recurses over indices.
 
 func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(
-	names []string,
 	templateRecord *types.Mlrmap,
+	names []string,
 	emittableMaps []*types.Mlrmap,
 	indices []*types.Mlrval,
 	state *runtime.State,
@@ -860,8 +887,8 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(
 					}
 				} else {
 					node.executeIndexedNonLashedEmitPAux(
-						[]string{names[i]},
 						newrec,
+						[]string{names[i]},
 						[]*types.Mlrmap{valueAsMap},
 						indices[1:],
 						state,
@@ -875,8 +902,8 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(
 }
 
 func (node *EmitXStatementNode) executeIndexedLashedEmitPAux(
-	names []string,
 	templateRecord *types.Mlrmap,
+	names []string,
 	emittableMaps []*types.Mlrmap,
 	indices []*types.Mlrval,
 	state *runtime.State,
@@ -916,8 +943,8 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitPAux(
 		if nextLevelMaps[0] != nil && len(indices) >= 2 {
 			// recurse
 			node.executeIndexedLashedEmitPAux(
-				names,
 				newrec,
+				names,
 				nextLevelMaps,
 				indices[1:],
 				state,
