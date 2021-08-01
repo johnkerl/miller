@@ -172,6 +172,7 @@ static sllv_t* mapper_count_process_ungrouped(
 	mapper_count_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		pstate->ungrouped_count++;
+		lrec_free(pinrec);
 		return NULL;
 	} else { // end of record stream
 		lrec_t* poutrec = lrec_unbacked_alloc();
