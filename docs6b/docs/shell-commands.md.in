@@ -2,7 +2,7 @@
 
 TODO: while-read example from issues
 
-The :ref:`reference-dsl-system` DSL function allows you to run a specific shell command and put its output -- minus the final newline -- into a record field. The command itself is any string, either a literal string, or a concatenation of strings, perhaps including other field values or what have you.
+The [system](reference-dsl.md#system) DSL function allows you to run a specific shell command and put its output -- minus the final newline -- into a record field. The command itself is any string, either a literal string, or a concatenation of strings, perhaps including other field values or what have you.
 
 GENMD_RUN_COMMAND
 mlr --opprint put '$o = system("echo hello world")' data/small
@@ -16,7 +16,7 @@ GENMD_RUN_COMMAND
 mlr --opprint put '$o = system("echo -n ".$a."| sha1sum")' data/small
 GENMD_EOF
 
-Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system ``date`` command for the current time in nanoseconds versus computing it in process:
+Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system `date` command for the current time in nanoseconds versus computing it in process:
 
 ..
     hard-coded, not live-code, since %N doesn't exist on all platforms

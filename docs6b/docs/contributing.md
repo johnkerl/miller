@@ -11,11 +11,11 @@ Pre-release Miller documentation is at [https://github.com/johnkerl/miller/tree/
 
 Clone [https://github.com/johnkerl/miller](https://github.com/johnkerl/miller) and `cd` into `docs6`.
 
-After ``sudo pip install sphinx`` (or ``pip3``) you should be able to do ``make html``.
+After `sudo pip install sphinx` (or `pip3`) you should be able to do `make html`.
 
-Edit ``*.md.in`` files, then ``make html`` to generate ``*.md``, then run the Sphinx document-generator.
+Edit `*.md.in` files, then `make html` to generate `*.md`, then run the Sphinx document-generator.
 
-Open ``_build/html/index.html`` in your browser, e.g. ``file:////Users/yourname/git/miller/docs6/_build/html/contributing.html``, to verify.
+Open `_build/html/index.html` in your browser, e.g. `file:////Users/yourname/git/miller/docs6/_build/html/contributing.html`, to verify.
 
 PRs are welcome at [https://github.com/johnkerl/miller](https://github.com/johnkerl/miller).
 

@@ -1,11 +1,17 @@
+/* Top left, desktop */
 .wy-menu {
   background-color: #c0c0c0;
-  /*background-color: #404040;*/
 }
+/* Top left, mobile */
+.wy-nav-top {
+  background-color: #c0c0c0;
+}
+/* Left navbar */
 .wy-side-nav-search {
   background-color: #c0c0c0;
-  /*background-color: #404040;*/
 }
+
+/* Code samples without <pre> (none currently in use) */
 .rst-content code {
   color: #000000;
   background-color: #e0e0e0;
@@ -18,11 +24,37 @@
   color: #0FF1CE;
 }
 .caption-text {
-  /*background-color: #808080; */
   color: maroon;
   padding: 4px;
 }
 
+/* Code samples using <pre> (which is currently in use) */
+pre {
+  color: #000000;
+  background-color: #eae2cb;
+  font-size: 12px;
+  padding: 10px;
+}
+
+pre b {
+  background-color: #c5b690;
+  padding: 2px;
+}
+
+.pre-highlight {
+  color: #000000;
+  background-color: #c5b690;
+  font-size: 12px;
+  padding: 10px;
+}
+.pre-non-highlight {
+  color: #000000;
+  background-color: #eae2cb;
+  font-size: 12px;
+  padding: 10px;
+}
+
+/* Section titles with content pages */
 h1 {
   color: maroon;
   background-color: #e0e0e0;
@@ -36,31 +68,7 @@ h3 {
   background-color: #e0e0e0;
 }
 
-pre {
-  color: #000000;
-  background-color: #eae2cb;
-  font-size: 12px;
-  padding: 10px;
-}
-
-pre b {
-  background-color: #c5b690;
-  padding: 2px;
-}
-
-a {
-  color: orange;
-}
-a:visited {
-  color: green;
-}
-a:hover {
-  color: blue;
-}
-a .internal {
-  color: red;
-}
-
+/* Hyperlinks in content pages */
 a {
   color: maroon;
 }
@@ -72,6 +80,7 @@ a:hover {
   color: maroon;
 }
 
+/* Hyperlinks in navbar */
 .wy-menu-vertical li ul li a {
     margin-bottom:0;
     color:#000000;

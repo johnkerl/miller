@@ -3,8 +3,10 @@
 
 TODO
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --json cat data/array-example.json</b>
+</pre>
+<pre class="pre-non-highlight">
 {
   "key": "ax04",
   "samples": [45, 67, 22]

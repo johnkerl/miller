@@ -2,13 +2,13 @@
 
 ## Headerless CSV on input or output
 
-Sometimes we get CSV files which lack a header. For example (`data/headerless.csv <./data/headerless.csv>`_):
+Sometimes we get CSV files which lack a header. For example, [data/headerless.csv](./data/headerless.csv):
 
 GENMD_RUN_COMMAND
 cat data/headerless.csv
 GENMD_EOF
 
-You can use Miller to add a header. The ``--implicit-csv-header`` applies positionally indexed labels:
+You can use Miller to add a header. The `--implicit-csv-header` applies positionally indexed labels:
 
 GENMD_RUN_COMMAND
 mlr --csv --implicit-csv-header cat data/headerless.csv
@@ -20,7 +20,7 @@ GENMD_RUN_COMMAND
 mlr --csv --implicit-csv-header label name,age,status data/headerless.csv
 GENMD_EOF
 
-Likewise, if you need to produce CSV which is lacking its header, you can pipe Miller's output to the system command ``sed 1d``, or you can use Miller's ``--headerless-csv-output`` option:
+Likewise, if you need to produce CSV which is lacking its header, you can pipe Miller's output to the system command `sed 1d`, or you can use Miller's `--headerless-csv-output` option:
 
 GENMD_RUN_COMMAND
 head -5 data/colored-shapes.dkvp | mlr --ocsv cat
@@ -38,16 +38,16 @@ GENMD_EOF
 
 ## Headerless CSV with duplicate field values
 
-Miller is (by central design) a mapping from name to value, rather than integer position to value as in most tools in the Unix toolkit such as ``sort``, ``cut``, ``awk``, etc. So given input ``Yea=1,Yea=2`` on the same input line, first ``Yea=1`` is stored, then updated with ``Yea=2``. This is in the input-parser and the value ``Yea=1`` is unavailable to any further processing. The following example line comes from a headerless CSV file and includes 5 times the string (value) ``'NA'``:
+Miller is (by central design) a mapping from name to value, rather than integer position to value as in most tools in the Unix toolkit such as `sort`, `cut`, `awk`, etc. So given input `Yea=1,Yea=2` on the same input line, first `Yea=1` is stored, then updated with `Yea=2`. This is in the input-parser and the value `Yea=1` is unavailable to any further processing. The following example line comes from a headerless CSV file and includes 5 times the string (value) `'NA'`:
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 ag '0.9' nas.csv | head -1
 2:-349801.10097848,4537221.43295653,2,1,NA,NA,NA,NA,NA
 GENMD_EOF
 
-The repeated ``'NA'`` strings (values) in the same line will be treated as fields (columns) with same name, thus only one is kept in the output.
+The repeated `'NA'` strings (values) in the same line will be treated as fields (columns) with same name, thus only one is kept in the output.
 
-This can be worked around by telling ``mlr`` that there is no header row by using ``--implicit-csv-header`` or changing the input format by using ``nidx`` like so:
+This can be worked around by telling `mlr` that there is no header row by using `--implicit-csv-header` or changing the input format by using `nidx` like so:
 
 GENMD_CARDIFY
 ag '0.9' nas.csv | mlr --n2c --fs "," label xsn,ysn,x,y,t,a,e29,e31,e32 then head

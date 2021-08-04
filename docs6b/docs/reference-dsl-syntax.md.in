@@ -18,11 +18,9 @@ mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \
   data/medium
 GENMD_EOF
 
-.. _reference-dsl-expressions-from-files:
-
 ## Expressions from files
 
-The simplest way to enter expressions for ``put`` and ``filter`` is between single quotes on the command line, e.g.
+The simplest way to enter expressions for `put` and `filter` is between single quotes on the command line, e.g.
 
 GENMD_INCLUDE_AND_RUN_ESCAPED(data/fe-example-1.sh)
 
@@ -51,9 +49,9 @@ GENMD_EOF
 
 A suggested use-case here is defining functions in files, and calling them from command-line expressions.
 
-Another suggested use-case is putting default parameter values in files, e.g. using ``begin{@count=is_present(@count)?@count:10}`` in the file, where you can precede that using ``begin{@count=40}`` using ``-e``.
+Another suggested use-case is putting default parameter values in files, e.g. using `begin{@count=is_present(@count)?@count:10}` in the file, where you can precede that using `begin{@count=40}` using `-e`.
 
-Moreover, you can have one or more ``-f`` expressions (maybe one function per file, for example) and one or more ``-e`` expressions on the command line.  If you mix ``-f`` and ``-e`` then the expressions are evaluated in the order encountered. (Since the expressions are all simply concatenated together in order, don't forget intervening semicolons: e.g. not ``mlr put -e '$x=1' -e '$y=2 ...'`` but rather ``mlr put -e '$x=1;' -e '$y=2' ...``.)
+Moreover, you can have one or more `-f` expressions (maybe one function per file, for example) and one or more `-e` expressions on the command line.  If you mix `-f` and `-e` then the expressions are evaluated in the order encountered. (Since the expressions are all simply concatenated together in order, don't forget intervening semicolons: e.g. not `mlr put -e '$x=1' -e '$y=2 ...'` but rather `mlr put -e '$x=1;' -e '$y=2' ...`.)
 
 ## Semicolons, commas, newlines, and curly braces
 

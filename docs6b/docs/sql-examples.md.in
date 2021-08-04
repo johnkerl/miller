@@ -1,12 +1,10 @@
 # SQL examples
 
-.. _sql-output-examples:
-
 ## SQL-output examples
 
-I like to produce SQL-query output with header-column and tab delimiter: this is CSV but with a tab instead of a comma, also known as TSV. Then I post-process with ``mlr --tsv`` or ``mlr --tsvlite``.  This means I can do some (or all, or none) of my data processing within SQL queries, and some (or none, or all) of my data processing using Miller -- whichever is most convenient for my needs at the moment.
+I like to produce SQL-query output with header-column and tab delimiter: this is CSV but with a tab instead of a comma, also known as TSV. Then I post-process with `mlr --tsv` or `mlr --tsvlite`.  This means I can do some (or all, or none) of my data processing within SQL queries, and some (or none, or all) of my data processing using Miller -- whichever is most convenient for my needs at the moment.
 
-For example, using default output formatting in ``mysql`` we get formatting like Miller's ``--opprint --barred``:
+For example, using default output formatting in `mysql` we get formatting like Miller's `--opprint --barred`:
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 mysql --database=mydb -e 'show columns in mytable'
@@ -21,7 +19,7 @@ mysql --database=mydb -e 'show columns in mytable'
 +------------------+--------------+------+-----+---------+-------+
 GENMD_EOF
 
-Using ``mysql``'s ``-B`` we get TSV output:
+Using `mysql`'s `-B` we get TSV output:
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --opprint cat
@@ -98,8 +96,6 @@ standard 10009872    108
 GENMD_EOF
 
 Again, all the examples in the CSV section apply here -- just change the input-format flags.
-
-.. _sql-input-examples:
 
 ## SQL-input examples
 

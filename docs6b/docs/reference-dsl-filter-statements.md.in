@@ -1,6 +1,6 @@
 # DSL reference: filter statements
 
-You can use ``filter`` within ``put``. In fact, the following two are synonymous:
+You can use `filter` within `put`. In fact, the following two are synonymous:
 
 GENMD_RUN_COMMAND
 mlr filter 'NR==2 || NR==3' data/small

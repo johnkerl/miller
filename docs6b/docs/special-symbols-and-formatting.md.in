@@ -2,7 +2,7 @@
 
 ## How can I handle commas-as-data in various formats?
 
-:doc:`CSV <file-formats>` handles this well and by design:
+[CSV](file-formats.md) handles this well and by design:
 
 GENMD_RUN_COMMAND
 cat commas.csv
@@ -65,15 +65,15 @@ GENMD_RUN_COMMAND
 echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
 GENMD_EOF
 
-The idea is that the outermost single-quotes are to protect the ``put`` expression from the shell, and the double quotes within them are for Miller. To get a single quote in the middle there, you need to actually put it *outside* the single-quoting for the shell. The pieces are the following, all concatenated together:
+The idea is that the outermost single-quotes are to protect the `put` expression from the shell, and the double quotes within them are for Miller. To get a single quote in the middle there, you need to actually put it *outside* the single-quoting for the shell. The pieces are the following, all concatenated together:
 
-* ``$a="It``
-* ``\'``
-* ``s OK, I said,``
-* ``\'``
-* ``for now``
-* ``\'``
-* ``.``
+* `$a="It`
+* `\'`
+* `s OK, I said,`
+* `\'`
+* `for now`
+* `\'`
+* `.`
 
 ## How to escape '?' in regexes?
 
@@ -89,4 +89,4 @@ GENMD_RUN_COMMAND
 mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat
 GENMD_EOF
 
-The ``ssub`` function exists precisely for this reason: so you don't have to escape anything.
+The `ssub` function exists precisely for this reason: so you don't have to escape anything.
