@@ -5,11 +5,11 @@ Please also see [Installation](installation.md) for information about pre-built 
 
 ## Miller license
 
-Two-clause BSD license https://github.com/johnkerl/miller/blob/master/LICENSE.txt.
+Two-clause BSD license [https://github.com/johnkerl/miller/blob/master/LICENSE.txt](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
 
 ## From release tarball
 
-* Obtain `mlr-i.j.k.tar.gz` from https://github.com/johnkerl/miller/tags, replacing `i.j.k` with the desired release, e.g. `6.1.0`.
+* Obtain `mlr-i.j.k.tar.gz` from [https://github.com/johnkerl/miller/tags](https://github.com/johnkerl/miller/tags), replacing `i.j.k` with the desired release, e.g. `6.1.0`.
 * `tar zxvf mlr-i.j.k.tar.gz`
 * `cd mlr-i.j.k`
 * `cd go`
@@ -25,7 +25,7 @@ Two-clause BSD license https://github.com/johnkerl/miller/blob/master/LICENSE.tx
 
 ## In case of problems
 
-If you have any build errors, feel free to open an issue with "New Issue" at https://github.com/johnkerl/miller/issues.
+If you have any build errors, feel free to open an issue with "New Issue" at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues).
 
 ## Dependencies
 
@@ -38,7 +38,7 @@ These are necessary to produce the `mlr` executable.
 
 ### Optional external dependencies
 
-This documentation pageset is built using Sphinx. Please see https://github.com/johnkerl/miller/blob/main/docs6/README.md for details.
+This documentation pageset is built using Sphinx. Please see [https://github.com/johnkerl/miller/blob/main/docs6/README.md](https://github.com/johnkerl/miller/blob/main/docs6/README.md) for details.
 
 ## Creating a new release: for developers
 
@@ -71,12 +71,12 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 
 * Check the release-specific docs:
 
-    * Look at https://miller.readthedocs.io for new-version docs, after a few minutes' propagation time.
+    * Look at [https://miller.readthedocs.io](https://miller.readthedocs.io) for new-version docs, after a few minutes' propagation time.
 
 * Notify:
 
     * Submit `brew` pull request; notify any other distros which don't appear to have autoupdated since the previous release (notes below)
-    * Similarly for `macports`: https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile.
+    * Similarly for `macports`: [https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile](https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile)
     * Social-media updates.
 
 <pre class="pre-non-highlight">
@@ -88,8 +88,9 @@ shasum -a 256 /path/to/mlr-6.1.0.tar.gz
 edit Formula/miller.rb
 # Test the URL from the line like
 #   url "https://github.com/johnkerl/miller/releases/download/v6.1.0/mlr-6.1.0.tar.gz"
-# in a browser for typos
-# A '@BrewTestBot Test this please' comment within the homebrew-core pull request will restart the homebrew travis build
+# in a browser for typos.
+# A '@BrewTestBot Test this please' comment within the homebrew-core pull request
+# will restart the homebrew travis build.
 git add Formula/miller.rb
 git commit -m 'miller 6.1.0'
 git push -u origin miller-6.1.0

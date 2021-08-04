@@ -8,7 +8,7 @@ For background, I'm a software engineer, with a heavy devops bent and a non-triv
 
 But now there's this neat little tool **which seems to be useful for people in various disciplines**. I don't even know entirely *who*. I can click through Github starrers and read a bit about what they seem to do, but not everyone that uses Miller is even *on* Github (or stars things). I've gotten a lot of feature requests through Github -- but only from people who are Github users.  Not everyone's a coder (it seems like a lot of Miller's Github starrers are devops folks like myself, or data-science-ish people, or biology/genomics folks.) A lot of people care 100% about CSV. And so on.
 
-So I wonder (please drop a note at https://github.com/johnkerl/miller/issues) does Miller do what you need? Do you use it for all sorts of things, or just one or two nice things? Are there things you wish it did but it doesn't? Is it almost there, or just nowhere near what you want? Are there not enough features or way too many? Are the docs too complicated; do you have a hard time finding out how to do what you want? Should I think differently about what this tool even *is* in the first place? Should I think differently about who it's for?
+So I wonder (please drop a note at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues)) does Miller do what you need? Do you use it for all sorts of things, or just one or two nice things? Are there things you wish it did but it doesn't? Is it almost there, or just nowhere near what you want? Are there not enough features or way too many? Are the docs too complicated; do you have a hard time finding out how to do what you want? Should I think differently about what this tool even *is* in the first place? Should I think differently about who it's for?
 
 ## What was Miller created to do?
 
@@ -40,7 +40,7 @@ A fourth tradeoff is in the DSL (more visibly so in 5.0.0 but already in pre-5.0
 
 ## Related tools
 
-Here's a comprehensive list: https://github.com/dbohdan/structured-text-tools. It doesn't mention [rows](https://github.com/turicas/rows) so here's a plug for that as well.
+Here's a comprehensive list: [https://github.com/dbohdan/structured-text-tools](https://github.com/dbohdan/structured-text-tools). It doesn't mention [rows](https://github.com/turicas/rows) so here's a plug for that as well.
 
 ## Moving forward
 

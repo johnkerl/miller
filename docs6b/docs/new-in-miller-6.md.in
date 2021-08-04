@@ -70,7 +70,7 @@ a numeric field isn't modified during the processing chain, it's printed out
 the way it arrived. Also, quoted values in JSON strings are flagged as being
 strings throughout the processing chain.
 
-For example (see https://github.com/johnkerl/miller/issues/178) you can now do
+For example (see [https://github.com/johnkerl/miller/issues/178](https://github.com/johnkerl/miller/issues/178)) you can now do
 
 GENMD_RUN_COMMAND
 echo '{ "a": "0123" }' | mlr --json cat

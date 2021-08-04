@@ -49,7 +49,7 @@ Additional notes:
 
 * DKVP (key-value-pair) format is the default for input and output. So, `--oxtab` is the same as `--idkvp --oxtab`.
 
-**Pro-tip:** Please use either **--format1**, or **--iformat1 --oformat2**.  If you use **--format1 --oformat2** then what happens is that flags are set up for input *and* output for format1, some of which are overwritten for output in format2. For technical reasons, having `--oformat2` clobber all the output-related effects of `--format1` also removes some flexibility from the command-line interface. See also https://github.com/johnkerl/miller/issues/180 and https://github.com/johnkerl/miller/issues/199.
+**Pro-tip:** Please use either **--format1**, or **--iformat1 --oformat2**.  If you use **--format1 --oformat2** then what happens is that flags are set up for input *and* output for format1, some of which are overwritten for output in format2. For technical reasons, having `--oformat2` clobber all the output-related effects of `--format1` also removes some flexibility from the command-line interface. See also [https://github.com/johnkerl/miller/issues/180](https://github.com/johnkerl/miller/issues/180) and [https://github.com/johnkerl/miller/issues/199](https://github.com/johnkerl/miller/issues/199).
 
 ## In-place mode
 

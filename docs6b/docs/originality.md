@@ -7,9 +7,9 @@ It isn't. Miller is one of many, many participants in the online-analytical-proc
 
 Recipes abound for command-line data analysis using the Unix toolkit. Here are just a couple of my favorites:
 
-* http://en.wikibooks.org/wiki/Ad_Hoc_Data_Analysis_From_The_Unix_Command_Line
-* http://www.gregreda.com/2013/07/15/unix-commands-for-data-science
-* https://github.com/dbohdan/structured-text-tools
+* [http://en.wikibooks.org/wiki/Ad_Hoc_Data_Analysis_From_The_Unix_Command_Line](http://en.wikibooks.org/wiki/Ad_Hoc_Data_Analysis_From_The_Unix_Command_Line)
+* [http://www.gregreda.com/2013/07/15/unix-commands-for-data-science](http://www.gregreda.com/2013/07/15/unix-commands-for-data-science)
+* [https://github.com/dbohdan/structured-text-tools](https://github.com/dbohdan/structured-text-tools)
 
 **RecordStream**: Miller owes particular inspiration to [RecordStream](https://github.com/benbernard/RecordStream). The key difference is that RecordStream is a Perl-based tool for manipulating JSON (including requiring it to separately manipulate other formats such as CSV into and out of JSON), while Miller is fast Go which handles its formats natively.  The similarities include the `sort`, `stats1` (analog of RecordStream's `collate`), and `delta` operations, as well as `filter` and `put`, and pretty-print formatting.
 
@@ -29,7 +29,7 @@ Recipes abound for command-line data analysis using the Unix toolkit. Here are j
 
 **What about similar tools?**
 
-Here's a comprehensive list: https://github.com/dbohdan/structured-text-tools.  Last I knew it doesn't mention [rows](https://github.com/turicas/rows) so here's a plug for that as well.  As it turns out, I learned about most of these after writing Miller.
+Here's a comprehensive list: [https://github.com/dbohdan/structured-text-tools](https://github.com/dbohdan/structured-text-tools).  Last I knew it doesn't mention [rows](https://github.com/turicas/rows) so here's a plug for that as well.  As it turns out, I learned about most of these after writing Miller.
 
 **What about DOTADIW?** One of the key points of the [Unix philosophy](http://en.wikipedia.org/wiki/Unix_philosophy) is that a tool should do one thing and do it well.  Hence `sort` and `cut` do just one thing. Why does Miller put `awk`-like processing, a few SQL-like operations, and statistical reduction all into one tool?  This is a fair question. First note that many standard tools, such as `awk` and `perl`, do quite a few things -- as does `jq`.  But I could have pushed for putting format awareness and name-indexing options into `cut`, `awk`, and so on (so you could do `cut -f hostname,uptime` or `awk '{sum += $x*$y}END{print sum}'`).  Patching `cut`, `sort`, etc. on multiple operating systems is a non-starter in terms of uptake.  Moreover, it makes sense for me to have Miller be a tool which collects together format-aware record-stream processing into one place, with good reuse of Miller-internal library code for its various features.
 

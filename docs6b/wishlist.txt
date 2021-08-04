@@ -1,21 +1,12 @@
-must have:
-k color configs
+why:
 k ok on desktop & mobile
-k highlight line 1 (even if hacky in genrst)
 
 to do:
-k figure out internal-link spelling
-k figure out external-link spelling
-k vis-link css
-k build.md -- nested bullets ...
-k builtin-functions autogen sh
-k add comments in extra.css
-k fix bluing in mobile css
-* linkify more https://...
 * re-do the readme.md
   - include mkdocs serve, mkdocs build, etc
 * overwrite docs6b -> docs6
 * check data-file links don't break
+!!! all :ref: ...
 !!! remove '.. foo' markers, & fix internal links
 * link-check x all ... & to r.md ...
   - sudo pip3 install git+https://github.com/linkchecker/linkchecker.git

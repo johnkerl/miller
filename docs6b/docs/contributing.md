@@ -19,7 +19,7 @@ Open `_build/html/index.html` in your browser, e.g. `file:////Users/yourname/git
 
 PRs are welcome at [https://github.com/johnkerl/miller](https://github.com/johnkerl/miller).
 
-Once PRs are merged, readthedocs creates https://miller.readthedocs.io using the following configs:
+Once PRs are merged, readthedocs creates [https://miller.readthedocs.io](https://miller.readthedocs.io) using the following configs:
 
 * [https://readthedocs.org/projects/miller](https://readthedocs.org/projects/miller)
 * [https://readthedocs.org/projects/miller/builds](https://readthedocs.org/projects/miller/builds)

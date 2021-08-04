@@ -36,7 +36,7 @@ You can use the following backslash escapes for strings such as between the doub
 * `\123`: Octal 123, etc. for `\000` up to `\377`
 * `\x7f`: Hexadecimal 7f, etc. for `\x00` up to `\xff`
 
-See also https://en.wikipedia.org/wiki/Escape_sequences_in_C.
+See also [https://en.wikipedia.org/wiki/Escape_sequences_in_C](https://en.wikipedia.org/wiki/Escape_sequences_in_C).
 
 These replacements apply only to strings you key in for the DSL expressions for `filter` and `put`: that is, if you type `\t` in a string literal for a `filter`/`put` expression, it will be turned into a tab character. If you want a backslash followed by a `t`, then please type `\\t`.
 

@@ -77,9 +77,9 @@ over,the,lazy dogs
 <b>cat data/sar.mlr</b>
 </pre>
 <pre class="pre-non-highlight">
-  for (k in $*) {
-    $[k] = gsub($[k], "e", "X");
-  }
+for (k in $*) {
+  $[k] = gsub($[k], "e", "X");
+}
 </pre>
 
 <pre class="pre-highlight">

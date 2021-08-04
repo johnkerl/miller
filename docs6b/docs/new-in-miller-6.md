@@ -71,7 +71,7 @@ a numeric field isn't modified during the processing chain, it's printed out
 the way it arrived. Also, quoted values in JSON strings are flagged as being
 strings throughout the processing chain.
 
-For example (see https://github.com/johnkerl/miller/issues/178) you can now do
+For example (see [https://github.com/johnkerl/miller/issues/178](https://github.com/johnkerl/miller/issues/178)) you can now do
 
 <pre class="pre-highlight">
 <b>echo '{ "a": "0123" }' | mlr --json cat</b>
@@ -98,7 +98,7 @@ Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single
 
 ## New DSL functions / operators
 
-* String-hashing functions [md5](reference-dsl-builtin-functions.md#md5), :ref:`reference-dsl-sha1`, :ref:`reference-dsl-sha256`, and :ref:`reference-dsl-sha512`.
+* String-hashing functions [md5](reference-dsl-builtin-functions.md#md5), [sha1](reference-dsl-builtin-functions.md#sha1), :ref:`reference-dsl-sha256`, and :ref:`reference-dsl-sha512`.
 * Platform-property functions [hostname](reference-dsl-builtin-functions.md#hostname), :ref:`reference-dsl-os`, and :ref:`reference-dsl-version`.
 * Unsigned right-shift :ref:`reference-dsl-ursh` along with `>>>=`.
 
