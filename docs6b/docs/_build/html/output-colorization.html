@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Output colorization &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Customization: .mlrrc" href="customization.html" />
+    <link rel="prev" title="Internationalization" href="internationalization.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Output colorization</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="internationalization.html">&laquo; Internationalization</a> |
+        <a href="#">Output colorization</a>
+        | <a href="customization.html">Customization: .mlrrc &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div role="main">
+        
+  <div class="section" id="output-colorization">
+<h1>Output colorization<a class="headerlink" href="#output-colorization" title="Permalink to this headline">¶</a></h1>
+<p>As of version 6.0.0, Miller supports output-colorization. Here are examples using side-by-side black-background and white-background terminals:</p>
+<img alt="_images/colorization.png" src="_images/colorization.png" />
+<p>Things having colors:</p>
+<ul class="simple">
+<li><p>Keys in CSV header lines, JSON keys, etc</p></li>
+<li><p>Values in CSV data lines, JSON scalar values, etc</p></li>
+<li><p>“PASS” and “FAIL” in regression-test output</p></li>
+<li><p>Some online-help strings</p></li>
+</ul>
+<p>Rules for colorization:</p>
+<ul class="simple">
+<li><p>By default, colorize output only if writing to stdout and stdout is a TTY.</p>
+<ul>
+<li><p>Example: color: <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--csv</span> <span class="pre">cat</span> <span class="pre">foo.csv</span></code></p></li>
+<li><p>Example: no color: <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--csv</span> <span class="pre">cat</span> <span class="pre">foo.csv</span> <span class="pre">&gt;</span> <span class="pre">bar.csv</span></code></p></li>
+<li><p>Example: no color: <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--csv</span> <span class="pre">cat</span> <span class="pre">foo.csv</span> <span class="pre">|</span> <span class="pre">less</span></code></p></li>
+</ul>
+</li>
+<li><p>The default colors were chosen since they look OK with white or black terminal background, and are differentiable with common varieties of human color vision.</p></li>
+</ul>
+<p>Mechanisms for colorization:</p>
+<ul class="simple">
+<li><p>Miller uses ANSI escape sequences only. This does not work on Windows except on Cygwin.</p></li>
+<li><p>Requires <code class="docutils literal notranslate"><span class="pre">TERM</span></code> environment variable to be set to non-empty string.</p></li>
+<li><p>Doesn’t try to check to see whether the terminal is capable of 256-color ANSI vs 16-color ANSI. Note that if colors are in the range 0..15 then 16-color ANSI escapes are used, so this is in the user’s control.</p></li>
+</ul>
+<p>How you can control colorization:</p>
+<ul class="simple">
+<li><p>Suppression/unsuppression:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">MLR_NO_COLOR=true</span></code> means Miller won’t color even when it normally would.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">MLR_ALWAYS_COLOR=true</span></code> means Miller will color even when it normally would not. For example, you might want to use this when piping <code class="docutils literal notranslate"><span class="pre">mlr</span></code> output to <code class="docutils literal notranslate"><span class="pre">less</span> <span class="pre">-r</span></code>.</p></li>
+<li><p>Command-line flags <code class="docutils literal notranslate"><span class="pre">--no-color</span></code> or <code class="docutils literal notranslate"><span class="pre">-M</span></code>, <code class="docutils literal notranslate"><span class="pre">--always-color</span></code> or <code class="docutils literal notranslate"><span class="pre">-C</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Color choices can be specified by using environment variables or command-line flags, with values 0..255:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">MLR_KEY_COLOR=208</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">MLR_VALUE_COLOR=33</span></code></p></li>
+<li><p>Likewise for <code class="docutils literal notranslate"><span class="pre">MLR_PASS_COLOR</span></code>, <code class="docutils literal notranslate"><span class="pre">MLR_FAIL_COLOR</span></code>, <code class="docutils literal notranslate"><span class="pre">MLR_HELP_COLOR</span></code>, <code class="docutils literal notranslate"><span class="pre">MLR_REPL_PS1_COLOR</span></code>, and <code class="docutils literal notranslate"><span class="pre">MLR_REPL_PS2_COLOR</span></code>.</p></li>
+<li><p>Command-line flags <code class="docutils literal notranslate"><span class="pre">--key-color</span> <span class="pre">208</span></code>, <code class="docutils literal notranslate"><span class="pre">--value-color</span> <span class="pre">33</span></code>, etc., and likewise for <code class="docutils literal notranslate"><span class="pre">--pass-color</span></code>, <code class="docutils literal notranslate"><span class="pre">--fail-color</span></code>, <code class="docutils literal notranslate"><span class="pre">--repl-ps1-color</span></code>, <code class="docutils literal notranslate"><span class="pre">--repl-ps2-color</span></code>, and <code class="docutils literal notranslate"><span class="pre">--help-color</span></code>.</p></li>
+<li><p>This is particularly useful if your terminal’s background color clashes with current settings.</p></li>
+</ul>
+</li>
+</ul>
+<p>If environment-variable settings and command-line flags are both provided, the latter take precedence.</p>
+<p>Please do <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--list-color-codes</span></code> to see the available color codes (like <code class="docutils literal notranslate"><span class="pre">170</span></code>), and <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--list-color-names</span></code> to see available names (like <code class="docutils literal notranslate"><span class="pre">orchid</span></code>).</p>
+<img alt="_images/colorization2.png" src="_images/colorization2.png" />
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

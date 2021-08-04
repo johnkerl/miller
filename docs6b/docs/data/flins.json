@@ -1,0 +1,8 @@
+{ "county": "Seminole",   "tiv_2011": 22890.55,   "tiv_2012": 20848.71,   "line": "Residential" }
+{ "county": "Miami Dade", "tiv_2011": 1158674.85, "tiv_2012": 1076001.08, "line": "Residential" }
+{ "county": "Palm Beach", "tiv_2011": 1174081.5,  "tiv_2012": 1856589.17, "line": "Residential" }
+{ "county": "Miami Dade", "tiv_2011": 2850980.31, "tiv_2012": 2650932.72, "line": "Commercial"  }
+{ "county": "Highlands",  "tiv_2011": 23006.41,   "tiv_2012": 19757.91,   "line": "Residential" }
+{ "county": "Highlands",  "tiv_2011": 49155.16,   "tiv_2012": 47362.96,   "line": "Residential" }
+{ "county": "Duval",      "tiv_2011": 1731888.18, "tiv_2012": 2785551.63, "line": "Residential" }
+{ "county": "St. Johns",  "tiv_2011": 29589.12,   "tiv_2012": 35207.53,   "line": "Residential" }

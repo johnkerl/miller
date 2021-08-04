@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The REPL &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="What’s new in Miller 6" href="new-in-miller-6.html" />
+    <link rel="prev" title="Customization: .mlrrc" href="customization.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>The REPL</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="customization.html">&laquo; Customization: .mlrrc</a> |
+        <a href="#">The REPL</a>
+        | <a href="new-in-miller-6.html">What’s new in Miller 6 &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">The REPL</a><ul>
+<li><a class="reference internal" href="#using-miller-without-the-repl">Using Miller without the REPL</a></li>
+<li><a class="reference internal" href="#using-miller-with-the-repl">Using Miller with the REPL</a></li>
+<li><a class="reference internal" href="#entering-multi-line-statements">Entering multi-line statements</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#history-editing">History-editing</a></li>
+<li><a class="reference internal" href="#on-line-help">On-line help</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="the-repl">
+<h1>The REPL<a class="headerlink" href="#the-repl" title="Permalink to this headline">¶</a></h1>
+<p>The Miller REPL (read-evaluate-print loop) is an interactive counterpart to record-processing using the <code class="docutils literal notranslate"><span class="pre">put</span></code>/<code class="docutils literal notranslate"><span class="pre">filter</span></code> language. (A REPL is anything that evaluates what you type into it – like <code class="docutils literal notranslate"><span class="pre">python</span></code> with no arguments, or Ruby’s <code class="docutils literal notranslate"><span class="pre">irb</span></code>, or <code class="docutils literal notranslate"><span class="pre">node</span></code> with no arguments, etc.)</p>
+<p>Miller’s REPL isn’t a source-level debugger which lets you execute one source-code <em>statement</em> at a time – however, it does let you operate on one <em>record</em> at a time. Further, it lets you use “immediate expressions”, namely, you can interact with the language without having to provide data from an input file.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr repl
+</span>
+ [mlr] 1 + 2
+ 3
+</pre></div>
+</div>
+<div class="section" id="using-miller-without-the-repl">
+<h2>Using Miller without the REPL<a class="headerlink" href="#using-miller-without-the-repl" title="Permalink to this headline">¶</a></h2>
+<p>Using <code class="docutils literal notranslate"><span class="pre">put</span></code> and <code class="docutils literal notranslate"><span class="pre">filter</span></code>, you can do the following as we’ve seen above:</p>
+<ul class="simple">
+<li><p>Specify input format (e.g. <code class="docutils literal notranslate"><span class="pre">--icsv</span></code>), output format (e.g. <code class="docutils literal notranslate"><span class="pre">--ojson</span></code>), etc. using command-line flags.</p></li>
+<li><p>Specify filenames on the command line.</p></li>
+<li><p>Define <code class="docutils literal notranslate"><span class="pre">begin</span> <span class="pre">{...}</span></code> blocks which are executed before the first record is read.</p></li>
+<li><p>Define <code class="docutils literal notranslate"><span class="pre">end</span> <span class="pre">{...}</span></code> blocks which are executed after the last record is read.</p></li>
+<li><p>Define user-defined functions/subroutines using <code class="docutils literal notranslate"><span class="pre">func</span></code> and <code class="docutils literal notranslate"><span class="pre">subr</span></code>.</p></li>
+<li><p>Specify statements to be executed on each record – which are anything outside of <code class="docutils literal notranslate"><span class="pre">begin</span></code>/<code class="docutils literal notranslate"><span class="pre">end</span></code>/<code class="docutils literal notranslate"><span class="pre">func</span></code>/<code class="docutils literal notranslate"><span class="pre">subr</span></code>.</p></li>
+<li><p>Example:</p></li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --ojson --from example.csv head -n 2 \
+</span><span class="hll">   then put &#39;begin {print &quot;HELLO&quot;} $z = $x + $y; end {print &quot;GOODBYE&quot;}&#39;
+</span> HELLO
+ {
+   &quot;color&quot;: &quot;yellow&quot;,
+   &quot;shape&quot;: &quot;triangle&quot;,
+   &quot;flag&quot;: true,
+   &quot;index&quot;: 11,
+   &quot;quantity&quot;: 43.6498,
+   &quot;rate&quot;: 9.8870
+ }
+ {
+   &quot;color&quot;: &quot;red&quot;,
+   &quot;shape&quot;: &quot;square&quot;,
+   &quot;flag&quot;: true,
+   &quot;index&quot;: 15,
+   &quot;quantity&quot;: 79.2778,
+   &quot;rate&quot;: 0.0130
+ }
+ GOODBYE
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-miller-with-the-repl">
+<h2>Using Miller with the REPL<a class="headerlink" href="#using-miller-with-the-repl" title="Permalink to this headline">¶</a></h2>
+<p>Using the REPL, by contrast, you get interactive control over those same steps:</p>
+<ul class="simple">
+<li><p>Specify input format (e.g. <code class="docutils literal notranslate"><span class="pre">--icsv</span></code>), output format (e.g. <code class="docutils literal notranslate"><span class="pre">--ojson</span></code>), etc. using command-line flags.</p></li>
+<li><p>REPL-only statements (non-DSL statements) start with <code class="docutils literal notranslate"><span class="pre">:</span></code>, such as <code class="docutils literal notranslate"><span class="pre">:help</span></code> or <code class="docutils literal notranslate"><span class="pre">:quit</span></code>
+or <code class="docutils literal notranslate"><span class="pre">:open</span></code>.</p></li>
+<li><p>Specify filenames either on the command line or via <code class="docutils literal notranslate"><span class="pre">:open</span></code> at the Miller REPL.</p></li>
+<li><p>Read records one at a time using <code class="docutils literal notranslate"><span class="pre">:read</span></code>.</p></li>
+<li><p>Write the current record (maybe after you’ve modified it with things like <code class="docutils literal notranslate"><span class="pre">$z</span> <span class="pre">=</span> <span class="pre">$x</span> <span class="pre">+</span> <span class="pre">$y</span></code>)
+using <code class="docutils literal notranslate"><span class="pre">:write</span></code>. This goes to the terminal; you can use <code class="docutils literal notranslate"><span class="pre">:&gt;</span> <span class="pre">{filename}</span></code> to make writes
+go to a file, or <code class="docutils literal notranslate"><span class="pre">:&gt;&gt;</span> <span class="pre">{filename}</span></code> to append.</p></li>
+<li><p>You can type <code class="docutils literal notranslate"><span class="pre">:reopen</span></code> to go back to the start of the same file(s) you specified
+with <code class="docutils literal notranslate"><span class="pre">:open</span></code>.</p></li>
+<li><p>Skip ahead using statements <code class="docutils literal notranslate"><span class="pre">:skip</span> <span class="pre">10</span></code> or <code class="docutils literal notranslate"><span class="pre">:skip</span> <span class="pre">until</span> <span class="pre">NR</span> <span class="pre">==</span> <span class="pre">100</span></code> or
+<code class="docutils literal notranslate"><span class="pre">:skip</span> <span class="pre">until</span> <span class="pre">$status_code</span> <span class="pre">!=</span> <span class="pre">200</span></code>.</p></li>
+<li><p>Similarly, but processing records rather than skipping past them, using
+<code class="docutils literal notranslate"><span class="pre">:process</span></code> rather than <code class="docutils literal notranslate"><span class="pre">:skip</span></code>. Like <code class="docutils literal notranslate"><span class="pre">:write</span></code>, these go to the screen;
+use <code class="docutils literal notranslate"><span class="pre">:&gt;</span> <span class="pre">{filename}</span></code> or <code class="docutils literal notranslate"><span class="pre">:&gt;&gt;</span> <span class="pre">{filename}</span></code> to log to a file instead.</p></li>
+<li><p>Define <code class="docutils literal notranslate"><span class="pre">begin</span> <span class="pre">{...}</span></code> blocks; invoke them at will using <code class="docutils literal notranslate"><span class="pre">:begin</span></code>.</p></li>
+<li><p>Define <code class="docutils literal notranslate"><span class="pre">end</span> <span class="pre">{...}</span></code> blocks; invoke them at will using <code class="docutils literal notranslate"><span class="pre">:end</span></code>.</p></li>
+<li><p>Define user-defined functions/subroutines using <code class="docutils literal notranslate"><span class="pre">func</span></code>/<code class="docutils literal notranslate"><span class="pre">subr</span></code>; call them from other statements.</p></li>
+<li><p>Interactively specify statements to be executed immediately on the current record.</p></li>
+<li><p>Load any of the above from Miller-script files using <code class="docutils literal notranslate"><span class="pre">:load</span></code>.</p></li>
+</ul>
+<p>The input “record” by default is the empty map but you can do things like
+<code class="docutils literal notranslate"><span class="pre">$x=3</span></code>, or <code class="docutils literal notranslate"><span class="pre">unset</span> <span class="pre">$y</span></code>, or <code class="docutils literal notranslate"><span class="pre">$*</span> <span class="pre">=</span> <span class="pre">{&quot;x&quot;:</span> <span class="pre">3,</span> <span class="pre">&quot;y&quot;:</span> <span class="pre">4}</span></code> to populate it. Or, <code class="docutils literal notranslate"><span class="pre">:open</span>
+<span class="pre">foo.dat</span></code> followed by <code class="docutils literal notranslate"><span class="pre">:read</span></code> to populate it from a data file.</p>
+<p>Non-assignment expressions, such as <code class="docutils literal notranslate"><span class="pre">7</span></code> or <code class="docutils literal notranslate"><span class="pre">true</span></code>, operate as filter conditions
+in the <code class="docutils literal notranslate"><span class="pre">put</span></code> DSL: they can be used to specify whether a record will or won’t be
+included in the output-record stream.  But here in the REPL, they are simply
+printed to the terminal, e.g. if you type <code class="docutils literal notranslate"><span class="pre">1+2</span></code>, you will see <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+</div>
+<div class="section" id="entering-multi-line-statements">
+<h2>Entering multi-line statements<a class="headerlink" href="#entering-multi-line-statements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>To enter multi-line statements, enter <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> on a line by itself, then the code (taking care
+for semicolons), then “&gt;” on a line by itself. These will be executed immediately.</p></li>
+<li><p>If you enter <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> on a line by itself, then the code, then <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code> on a line by
+itself, the statements will be remembered for executing on records with
+<code class="docutils literal notranslate"><span class="pre">:main</span></code>, as if you had done <code class="docutils literal notranslate"><span class="pre">:load</span></code> to load statements from a file.</p></li>
+</ul>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Use the REPL to look at arithmetic:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr repl
+</span>
+ [mlr] 6/3
+ 2
+
+ [mlr] 6/5
+ 1.2
+
+ [mlr] typeof(6/3)
+ int
+
+ [mlr] typeof(6/5)
+ float
+</pre></div>
+</div>
+<p>Read the first record from a small file:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr repl
+</span>
+ [mlr] :open foo.dat
+
+ [mlr] :read
+
+ [mlr] :context
+ FILENAME=&quot;foo.dat&quot;,FILENUM=1,NR=1,FNR=1
+
+ [mlr] $*
+ {
+   &quot;a&quot;: &quot;eks&quot;,
+   &quot;b&quot;: &quot;wye&quot;,
+   &quot;i&quot;: 4,
+   &quot;x&quot;: 0.38139939387114097,
+   &quot;y&quot;: 0.13418874328430463
+ }
+
+ [mlr] $z = $x + $i
+
+ [mlr] :write
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=4.381399393871141
+</pre></div>
+</div>
+<p>Skip until deep into a larger file, then inspect a record:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr repl --csv
+</span>
+ [mlr] :open data/colored-shapes.csv
+ [mlr] :skip until NR == 10000
+ [mlr] :r
+ [mlr] $*
+ {
+   &quot;color&quot;: &quot;yellow&quot;,
+   &quot;shape&quot;: &quot;circle&quot;,
+   &quot;flag&quot;: 1,
+   &quot;i&quot;: 99284,
+   &quot;u&quot;: 0.6530503199545348,
+   &quot;v&quot;: 0.23908588907834516,
+   &quot;w&quot;: 0.4799125551304738,
+   &quot;x&quot;: 6.379888206335166
+ }
+</pre></div>
+</div>
+</div>
+<div class="section" id="history-editing">
+<h2>History-editing<a class="headerlink" href="#history-editing" title="Permalink to this headline">¶</a></h2>
+<p>No command-line-history-editing feature is built in but <strong>rlwrap mlr repl</strong> is a
+delight. You may need <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">rlwrap</span></code>, <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">rlwrap</span></code>,
+etc. depending on your platform.</p>
+<p>Suggestion: <code class="docutils literal notranslate"><span class="pre">alias</span> <span class="pre">mrpl='rlwrap</span> <span class="pre">mlr</span> <span class="pre">repl'</span></code> in your shell’s startup file.</p>
+</div>
+<div class="section" id="on-line-help">
+<h2>On-line help<a class="headerlink" href="#on-line-help" title="Permalink to this headline">¶</a></h2>
+<p>After <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">repl</span></code>, type <code class="docutils literal notranslate"><span class="pre">:help</span></code> to see more about your options. In particular, <code class="docutils literal notranslate"><span class="pre">:help</span> <span class="pre">examples</span></code>.</p>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

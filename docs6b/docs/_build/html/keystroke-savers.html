@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keystroke-savers &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Intro to Miller’s programming language" href="programming-language.html" />
+    <link rel="prev" title="Miller in 10 minutes" href="10min.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Keystroke-savers</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="10min.html">&laquo; Miller in 10 minutes</a> |
+        <a href="#">Keystroke-savers</a>
+        | <a href="programming-language.html">Intro to Miller’s programming language &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Keystroke-savers</a><ul>
+<li><a class="reference internal" href="#short-format-specifiers">Short format specifiers</a></li>
+<li><a class="reference internal" href="#file-names-up-front">File names up front</a></li>
+<li><a class="reference internal" href="#mlrrc-file">.mlrrc file</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="keystroke-savers">
+<h1>Keystroke-savers<a class="headerlink" href="#keystroke-savers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="short-format-specifiers">
+<h2>Short format specifiers<a class="headerlink" href="#short-format-specifiers" title="Permalink to this headline">¶</a></h2>
+<p>In our examples so far we’ve often made use of <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--icsv</span> <span class="pre">--opprint</span></code> or <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--icsv</span> <span class="pre">--ojson</span></code>. These are such frequently occurring patterns that they have short options like <strong>–c2p</strong> and <strong>–c2j</strong>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --c2p head -n 2 example.csv
+</span> color  shape    flag index quantity rate
+ yellow triangle true 11    43.6498  9.8870
+ red    square   true 15    79.2778  0.0130
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --c2j head -n 2 example.csv
+</span> {
+   &quot;color&quot;: &quot;yellow&quot;,
+   &quot;shape&quot;: &quot;triangle&quot;,
+   &quot;flag&quot;: true,
+   &quot;index&quot;: 11,
+   &quot;quantity&quot;: 43.6498,
+   &quot;rate&quot;: 9.8870
+ }
+ {
+   &quot;color&quot;: &quot;red&quot;,
+   &quot;shape&quot;: &quot;square&quot;,
+   &quot;flag&quot;: true,
+   &quot;index&quot;: 15,
+   &quot;quantity&quot;: 79.2778,
+   &quot;rate&quot;: 0.0130
+ }
+</pre></div>
+</div>
+<p>You can get the full list here (TODO:linkify).</p>
+</div>
+<div class="section" id="file-names-up-front">
+<h2>File names up front<a class="headerlink" href="#file-names-up-front" title="Permalink to this headline">¶</a></h2>
+<p>Already we saw that you can put the filename first using <code class="docutils literal notranslate"><span class="pre">--from</span></code>. When you’re interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --c2p --from example.csv sort -nr index then head -n 3
+</span> color  shape  flag  index quantity rate
+ purple square false 91    72.3735  8.2430
+ yellow circle true  87    63.5058  8.3350
+ yellow circle true  73    63.9785  4.2370
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --c2p --from example.csv sort -nr index then head -n 3 then cut -f shape,quantity
+</span> shape  quantity
+ square 72.3735
+ circle 63.5058
+ circle 63.9785
+</pre></div>
+</div>
+<p>If there’s more than one input file, you can use <code class="docutils literal notranslate"><span class="pre">--mfrom</span></code>, then however many file names, then <code class="docutils literal notranslate"><span class="pre">--</span></code> to indicate the end of your input-file-name list:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --c2p --mfrom data/*.csv -- sort -n index
+</span></pre></div>
+</div>
+</div>
+<div class="section" id="mlrrc-file">
+<h2>.mlrrc file<a class="headerlink" href="#mlrrc-file" title="Permalink to this headline">¶</a></h2>
+<p>If you want the default file format for Miller to be CSV you can simply put <code class="docutils literal notranslate"><span class="pre">--csv</span></code> on a line by itself in your <code class="docutils literal notranslate"><span class="pre">~/.mlrrc</span></code> file. Then instead of <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--csv</span> <span class="pre">cat</span> <span class="pre">example.csv</span></code> you can just do <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">cat</span> <span class="pre">example.csv</span></code>. This is just the default, though, so <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--opprint</span> <span class="pre">cat</span> <span class="pre">example.csv</span></code> will still use default CSV format for input, and PPRINT (tabular) for output.</p>
+<p>You can read more about this at the <a class="reference internal" href="customization.html"><span class="doc">Customization: .mlrrc</span></a> page.</p>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

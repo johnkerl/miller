@@ -1,0 +1,16 @@
+<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+# Reference: arrays
+
+TODO
+
+<pre>
+<b>mlr --json cat data/array-example.json</b>
+{
+  "key": "ax04",
+  "samples": [45, 67, 22]
+}
+{
+  "key": "cz09",
+  "samples": [11, 29, 84, 91]
+}
+</pre>

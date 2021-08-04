@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ $# -ge 1 ]; then
+  for f in $*; do
+    echo $f ...
+    ./morph < $f > tmp.$f && mv tmp.$f $f
+  done
+else
+  for f in *.md.in; do
+    echo $f ...
+    ./morph < $f > tmp.$f && mv tmp.$f $f
+  done
+fi

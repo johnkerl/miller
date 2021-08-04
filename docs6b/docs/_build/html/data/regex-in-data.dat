@@ -1,0 +1,3 @@
+name=jane,regex=^j.*e$
+name=bill,regex=^b[ou]ll$
+name=bull,regex=^b[ou]ll$

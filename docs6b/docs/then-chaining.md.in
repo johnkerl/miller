@@ -1,0 +1,64 @@
+# Then-chaining
+
+## How do I examine then-chaining?
+
+Then-chaining found in Miller is intended to function the same as Unix pipes, but with less keystroking. You can print your data one pipeline step at a time, to see what intermediate output at one step becomes the input to the next step.
+
+First, look at the input data:
+
+GENMD_RUN_COMMAND
+cat data/then-example.csv
+GENMD_EOF
+
+Next, run the first step of your command, omitting anything from the first ``then`` onward:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint count-distinct -f Status,Payment_Type data/then-example.csv
+GENMD_EOF
+
+After that, run it with the next ``then`` step included:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint count-distinct -f Status,Payment_Type \
+  then sort -nr count \
+  data/then-example.csv
+GENMD_EOF
+
+Now if you use ``then`` to include another verb after that, the columns ``Status``, ``Payment_Type``, and ``count`` will be the input to that verb.
+
+Note, by the way, that you'll get the same results using pipes:
+
+GENMD_RUN_COMMAND
+mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv \
+| mlr --icsv --opprint sort -nr count
+GENMD_EOF
+
+## NR is not consecutive after then-chaining
+
+Given this input data:
+
+GENMD_RUN_COMMAND
+cat data/small
+GENMD_EOF
+
+why don't I see ``NR=1`` and ``NR=2`` here??
+
+GENMD_RUN_COMMAND
+mlr filter '$x > 0.5' then put '$NR = NR' data/small
+GENMD_EOF
+
+The reason is that ``NR`` is computed for the original input records and isn't dynamically updated. By contrast, ``NF`` is dynamically updated: it's the number of fields in the current record, and if you add/remove a field, the value of ``NF`` will change:
+
+GENMD_RUN_COMMAND
+echo x=1,y=2,z=3 | mlr put '$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF'
+GENMD_EOF
+
+``NR``, by contrast (and ``FNR`` as well), retains the value from the original input stream, and records may be dropped by a ``filter`` within a ``then``-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows:
+
+GENMD_INCLUDE_AND_RUN_ESCAPED(data/dynamic-nr.sh)
+
+Or, simply use ``mlr cat -n``:
+
+GENMD_RUN_COMMAND
+mlr filter '$x > 0.5' then cat -n data/small
+GENMD_EOF

@@ -1,0 +1,22 @@
+
+# Prepare input data:
+mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)' data/medium > data/medium-squares
+
+# Do a linear regression and examine coefficients:
+mlr --ofs newline stats2 -a linreg-pca -f x,y data/medium-squares
+x_y_pca_m=1.014419
+x_y_pca_b=0.000308
+x_y_pca_quality=0.861354
+
+# Option 1 to apply the regression coefficients and produce a linear fit:
+#   Set x_y_pca_m and x_y_pca_b as shell variables:
+eval $(mlr --ofs newline stats2 -a linreg-pca -f x,y data/medium-squares)
+#   In addition to x and y, make a new yfit which is the line fit, then plot
+#   using your favorite tool:
+mlr --onidx put '$yfit='$x_y_pca_m'*$x+'$x_y_pca_b then cut -x -f a,b,i data/medium-squares \
+  | pgr -p -title 'linreg-pca example' -xmin 0 -xmax 1 -ymin 0 -ymax 1
+
+# Option 2 to apply the regression coefficients and produce a linear fit: use --fit option
+mlr --onidx stats2 -a linreg-pca --fit -f x,y then cut -f a,b,i data/medium-squares \
+  | pgr -p -title 'linreg-pca example' -xmin 0 -xmax 1 -ymin 0 -ymax 1
+

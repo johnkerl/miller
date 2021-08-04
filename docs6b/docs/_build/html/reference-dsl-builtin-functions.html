@@ -1,0 +1,1477 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSL reference: built-in functions &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DSL reference: output statements" href="reference-dsl-output-statements.html" />
+    <link rel="prev" title="DSL reference: user-defined functions" href="reference-dsl-user-defined-functions.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>DSL reference: built-in functions</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="reference-dsl-user-defined-functions.html">&laquo; DSL reference: user-defined functions</a> |
+        <a href="#">DSL reference: built-in functions</a>
+        | <a href="reference-dsl-output-statements.html">DSL reference: output statements &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">DSL reference: built-in functions</a><ul>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#list-of-functions">List of functions</a><ul>
+<li><a class="reference internal" href="#reference-dsl-colon">!</a></li>
+<li><a class="reference internal" href="#reference-dsl">!=</a></li>
+<li><a class="reference internal" href="#id3">!=~</a></li>
+<li><a class="reference internal" href="#id6">%</a></li>
+<li><a class="reference internal" href="#id8">&amp;</a></li>
+<li><a class="reference internal" href="#id10">&amp;&amp;</a></li>
+<li><a class="reference internal" href="#reference-dsl-times">*</a></li>
+<li><a class="reference internal" href="#reference-dsl-exponentiation">**</a></li>
+<li><a class="reference internal" href="#reference-dsl-plus">+</a></li>
+<li><a class="reference internal" href="#reference-dsl-minus">-</a></li>
+<li><a class="reference internal" href="#id16">.</a></li>
+<li><a class="reference internal" href="#id17">.*</a></li>
+<li><a class="reference internal" href="#id19">.+</a></li>
+<li><a class="reference internal" href="#id21">.-</a></li>
+<li><a class="reference internal" href="#id23">./</a></li>
+<li><a class="reference internal" href="#id26">/</a></li>
+<li><a class="reference internal" href="#id28">//</a></li>
+<li><a class="reference internal" href="#id30">&lt;</a></li>
+<li><a class="reference internal" href="#id32">&lt;&lt;</a></li>
+<li><a class="reference internal" href="#id33">&lt;=</a></li>
+<li><a class="reference internal" href="#id36">==</a></li>
+<li><a class="reference internal" href="#id37">=~</a></li>
+<li><a class="reference internal" href="#id40">&gt;</a></li>
+<li><a class="reference internal" href="#id41">&gt;=</a></li>
+<li><a class="reference internal" href="#reference-dsl-srsh">&gt;&gt;</a></li>
+<li><a class="reference internal" href="#reference-dsl-ursh">&gt;&gt;&gt;</a></li>
+<li><a class="reference internal" href="#reference-dsl-question-mark-colon">?</a></li>
+<li><a class="reference internal" href="#id47">??</a></li>
+<li><a class="reference internal" href="#id49">???</a></li>
+<li><a class="reference internal" href="#id51">^</a></li>
+<li><a class="reference internal" href="#id53">^^</a></li>
+<li><a class="reference internal" href="#reference-dsl-bitwise-or">|</a></li>
+<li><a class="reference internal" href="#id56">||</a></li>
+<li><a class="reference internal" href="#id58">~</a></li>
+<li><a class="reference internal" href="#abs">abs</a></li>
+<li><a class="reference internal" href="#acos">acos</a></li>
+<li><a class="reference internal" href="#acosh">acosh</a></li>
+<li><a class="reference internal" href="#append">append</a></li>
+<li><a class="reference internal" href="#arrayify">arrayify</a></li>
+<li><a class="reference internal" href="#asin">asin</a></li>
+<li><a class="reference internal" href="#asinh">asinh</a></li>
+<li><a class="reference internal" href="#asserting-absent">asserting_absent</a></li>
+<li><a class="reference internal" href="#asserting-array">asserting_array</a></li>
+<li><a class="reference internal" href="#asserting-bool">asserting_bool</a></li>
+<li><a class="reference internal" href="#asserting-boolean">asserting_boolean</a></li>
+<li><a class="reference internal" href="#asserting-empty">asserting_empty</a></li>
+<li><a class="reference internal" href="#asserting-empty-map">asserting_empty_map</a></li>
+<li><a class="reference internal" href="#asserting-error">asserting_error</a></li>
+<li><a class="reference internal" href="#asserting-float">asserting_float</a></li>
+<li><a class="reference internal" href="#asserting-int">asserting_int</a></li>
+<li><a class="reference internal" href="#asserting-map">asserting_map</a></li>
+<li><a class="reference internal" href="#asserting-nonempty-map">asserting_nonempty_map</a></li>
+<li><a class="reference internal" href="#asserting-not-array">asserting_not_array</a></li>
+<li><a class="reference internal" href="#asserting-not-empty">asserting_not_empty</a></li>
+<li><a class="reference internal" href="#asserting-not-map">asserting_not_map</a></li>
+<li><a class="reference internal" href="#asserting-not-null">asserting_not_null</a></li>
+<li><a class="reference internal" href="#asserting-null">asserting_null</a></li>
+<li><a class="reference internal" href="#asserting-numeric">asserting_numeric</a></li>
+<li><a class="reference internal" href="#asserting-present">asserting_present</a></li>
+<li><a class="reference internal" href="#asserting-string">asserting_string</a></li>
+<li><a class="reference internal" href="#atan">atan</a></li>
+<li><a class="reference internal" href="#atan2">atan2</a></li>
+<li><a class="reference internal" href="#atanh">atanh</a></li>
+<li><a class="reference internal" href="#bitcount">bitcount</a></li>
+<li><a class="reference internal" href="#boolean">boolean</a></li>
+<li><a class="reference internal" href="#capitalize">capitalize</a></li>
+<li><a class="reference internal" href="#cbrt">cbrt</a></li>
+<li><a class="reference internal" href="#ceil">ceil</a></li>
+<li><a class="reference internal" href="#clean-whitespace">clean_whitespace</a></li>
+<li><a class="reference internal" href="#collapse-whitespace">collapse_whitespace</a></li>
+<li><a class="reference internal" href="#cos">cos</a></li>
+<li><a class="reference internal" href="#cosh">cosh</a></li>
+<li><a class="reference internal" href="#depth">depth</a></li>
+<li><a class="reference internal" href="#dhms2fsec">dhms2fsec</a></li>
+<li><a class="reference internal" href="#dhms2sec">dhms2sec</a></li>
+<li><a class="reference internal" href="#erf">erf</a></li>
+<li><a class="reference internal" href="#erfc">erfc</a></li>
+<li><a class="reference internal" href="#exp">exp</a></li>
+<li><a class="reference internal" href="#expm1">expm1</a></li>
+<li><a class="reference internal" href="#flatten">flatten</a></li>
+<li><a class="reference internal" href="#float">float</a></li>
+<li><a class="reference internal" href="#floor">floor</a></li>
+<li><a class="reference internal" href="#fmtnum">fmtnum</a></li>
+<li><a class="reference internal" href="#fsec2dhms">fsec2dhms</a></li>
+<li><a class="reference internal" href="#fsec2hms">fsec2hms</a></li>
+<li><a class="reference internal" href="#get-keys">get_keys</a></li>
+<li><a class="reference internal" href="#get-values">get_values</a></li>
+<li><a class="reference internal" href="#gmt2sec">gmt2sec</a></li>
+<li><a class="reference internal" href="#gsub">gsub</a></li>
+<li><a class="reference internal" href="#haskey">haskey</a></li>
+<li><a class="reference internal" href="#hexfmt">hexfmt</a></li>
+<li><a class="reference internal" href="#hms2fsec">hms2fsec</a></li>
+<li><a class="reference internal" href="#hms2sec">hms2sec</a></li>
+<li><a class="reference internal" href="#hostname">hostname</a></li>
+<li><a class="reference internal" href="#int">int</a></li>
+<li><a class="reference internal" href="#invqnorm">invqnorm</a></li>
+<li><a class="reference internal" href="#is-absent">is_absent</a></li>
+<li><a class="reference internal" href="#is-array">is_array</a></li>
+<li><a class="reference internal" href="#is-bool">is_bool</a></li>
+<li><a class="reference internal" href="#is-boolean">is_boolean</a></li>
+<li><a class="reference internal" href="#is-empty">is_empty</a></li>
+<li><a class="reference internal" href="#is-empty-map">is_empty_map</a></li>
+<li><a class="reference internal" href="#is-error">is_error</a></li>
+<li><a class="reference internal" href="#is-float">is_float</a></li>
+<li><a class="reference internal" href="#is-int">is_int</a></li>
+<li><a class="reference internal" href="#is-map">is_map</a></li>
+<li><a class="reference internal" href="#is-nonempty-map">is_nonempty_map</a></li>
+<li><a class="reference internal" href="#is-not-array">is_not_array</a></li>
+<li><a class="reference internal" href="#is-not-empty">is_not_empty</a></li>
+<li><a class="reference internal" href="#is-not-map">is_not_map</a></li>
+<li><a class="reference internal" href="#is-not-null">is_not_null</a></li>
+<li><a class="reference internal" href="#is-null">is_null</a></li>
+<li><a class="reference internal" href="#is-numeric">is_numeric</a></li>
+<li><a class="reference internal" href="#is-present">is_present</a></li>
+<li><a class="reference internal" href="#is-string">is_string</a></li>
+<li><a class="reference internal" href="#joink">joink</a></li>
+<li><a class="reference internal" href="#joinkv">joinkv</a></li>
+<li><a class="reference internal" href="#joinv">joinv</a></li>
+<li><a class="reference internal" href="#json-parse">json_parse</a></li>
+<li><a class="reference internal" href="#json-stringify">json_stringify</a></li>
+<li><a class="reference internal" href="#leafcount">leafcount</a></li>
+<li><a class="reference internal" href="#length">length</a></li>
+<li><a class="reference internal" href="#log">log</a></li>
+<li><a class="reference internal" href="#log10">log10</a></li>
+<li><a class="reference internal" href="#log1p">log1p</a></li>
+<li><a class="reference internal" href="#logifit">logifit</a></li>
+<li><a class="reference internal" href="#lstrip">lstrip</a></li>
+<li><a class="reference internal" href="#madd">madd</a></li>
+<li><a class="reference internal" href="#mapdiff">mapdiff</a></li>
+<li><a class="reference internal" href="#mapexcept">mapexcept</a></li>
+<li><a class="reference internal" href="#mapselect">mapselect</a></li>
+<li><a class="reference internal" href="#mapsum">mapsum</a></li>
+<li><a class="reference internal" href="#max">max</a></li>
+<li><a class="reference internal" href="#md5">md5</a></li>
+<li><a class="reference internal" href="#mexp">mexp</a></li>
+<li><a class="reference internal" href="#min">min</a></li>
+<li><a class="reference internal" href="#mmul">mmul</a></li>
+<li><a class="reference internal" href="#msub">msub</a></li>
+<li><a class="reference internal" href="#os">os</a></li>
+<li><a class="reference internal" href="#pow">pow</a></li>
+<li><a class="reference internal" href="#qnorm">qnorm</a></li>
+<li><a class="reference internal" href="#regextract">regextract</a></li>
+<li><a class="reference internal" href="#regextract-or-else">regextract_or_else</a></li>
+<li><a class="reference internal" href="#round">round</a></li>
+<li><a class="reference internal" href="#roundm">roundm</a></li>
+<li><a class="reference internal" href="#rstrip">rstrip</a></li>
+<li><a class="reference internal" href="#sec2dhms">sec2dhms</a></li>
+<li><a class="reference internal" href="#sec2gmt">sec2gmt</a></li>
+<li><a class="reference internal" href="#sec2gmtdate">sec2gmtdate</a></li>
+<li><a class="reference internal" href="#sec2hms">sec2hms</a></li>
+<li><a class="reference internal" href="#sgn">sgn</a></li>
+<li><a class="reference internal" href="#sha1">sha1</a></li>
+<li><a class="reference internal" href="#sha256">sha256</a></li>
+<li><a class="reference internal" href="#sha512">sha512</a></li>
+<li><a class="reference internal" href="#sin">sin</a></li>
+<li><a class="reference internal" href="#sinh">sinh</a></li>
+<li><a class="reference internal" href="#splita">splita</a></li>
+<li><a class="reference internal" href="#splitax">splitax</a></li>
+<li><a class="reference internal" href="#splitkv">splitkv</a></li>
+<li><a class="reference internal" href="#splitkvx">splitkvx</a></li>
+<li><a class="reference internal" href="#splitnv">splitnv</a></li>
+<li><a class="reference internal" href="#splitnvx">splitnvx</a></li>
+<li><a class="reference internal" href="#sqrt">sqrt</a></li>
+<li><a class="reference internal" href="#ssub">ssub</a></li>
+<li><a class="reference internal" href="#strftime">strftime</a></li>
+<li><a class="reference internal" href="#string">string</a></li>
+<li><a class="reference internal" href="#strip">strip</a></li>
+<li><a class="reference internal" href="#strlen">strlen</a></li>
+<li><a class="reference internal" href="#strptime">strptime</a></li>
+<li><a class="reference internal" href="#sub">sub</a></li>
+<li><a class="reference internal" href="#substr">substr</a></li>
+<li><a class="reference internal" href="#substr0">substr0</a></li>
+<li><a class="reference internal" href="#substr1">substr1</a></li>
+<li><a class="reference internal" href="#system">system</a></li>
+<li><a class="reference internal" href="#systime">systime</a></li>
+<li><a class="reference internal" href="#systimeint">systimeint</a></li>
+<li><a class="reference internal" href="#tan">tan</a></li>
+<li><a class="reference internal" href="#tanh">tanh</a></li>
+<li><a class="reference internal" href="#tolower">tolower</a></li>
+<li><a class="reference internal" href="#toupper">toupper</a></li>
+<li><a class="reference internal" href="#truncate">truncate</a></li>
+<li><a class="reference internal" href="#typeof">typeof</a></li>
+<li><a class="reference internal" href="#unflatten">unflatten</a></li>
+<li><a class="reference internal" href="#uptime">uptime</a></li>
+<li><a class="reference internal" href="#urand">urand</a></li>
+<li><a class="reference internal" href="#urand32">urand32</a></li>
+<li><a class="reference internal" href="#urandint">urandint</a></li>
+<li><a class="reference internal" href="#urandrange">urandrange</a></li>
+<li><a class="reference internal" href="#version">version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="dsl-reference-built-in-functions">
+<h1>DSL reference: built-in functions<a class="headerlink" href="#dsl-reference-built-in-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>mlr: option “–list-all-functions-as-table” not recognized.
+Please run “mlr –help” for usage information.</p>
+</div>
+<div class="section" id="list-of-functions">
+<h2>List of functions<a class="headerlink" href="#list-of-functions" title="Permalink to this headline">¶</a></h2>
+<p>Each function takes a specific number of arguments, as shown below, except for functions marked as variadic such as <code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code>. (The latter compute min and max of any number of numerical arguments.) There is no notion of optional or default-on-absent arguments. All argument-passing is positional rather than by name; arguments are passed by value, not by reference.</p>
+<p>You can get a list of all functions using <strong>mlr -f</strong>, with details using <strong>mlr -F</strong>.</p>
+<div class="section" id="reference-dsl-colon">
+<span id="id1"></span><h3>!<a class="headerlink" href="#reference-dsl-colon" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!  (class=boolean #args=1) Logical negation.
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-dsl">
+<span id="id2"></span><h3>!=<a class="headerlink" href="#reference-dsl" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!=  (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<span id="id4"></span><h3>!=~<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>!=~  (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. &#39;$name !=~ &quot;^a.*b$&quot;&#39;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>%<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>%  (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>&amp;<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&amp;  (class=arithmetic #args=2) Bitwise AND.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id10">
+<h3>&amp;&amp;<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&amp;&amp;  (class=boolean #args=2) Logical AND.
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-dsl-times">
+<span id="id11"></span><h3>*<a class="headerlink" href="#reference-dsl-times" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>*  (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-dsl-exponentiation">
+<span id="id12"></span><h3>**<a class="headerlink" href="#reference-dsl-exponentiation" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>**  (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-dsl-plus">
+<span id="id13"></span><h3>+<a class="headerlink" href="#reference-dsl-plus" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+  (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-dsl-minus">
+<span id="id14"></span><h3>-<a class="headerlink" href="#reference-dsl-minus" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-  (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id16">
+<h3>.<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.  (class=string #args=2) String concatenation.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id17">
+<span id="id18"></span><h3>.*<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.*  (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id19">
+<span id="id20"></span><h3>.+<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.+  (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id21">
+<span id="id22"></span><h3>.-<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.-  (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id23">
+<span id="id24"></span><h3>./<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./  (class=arithmetic #args=2) Integer division; not pythonic.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id26">
+<h3>/<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/  (class=arithmetic #args=2) Division. Integer / integer is floating-point.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id28">
+<h3>//<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>//  (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id30">
+<h3>&lt;<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;  (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id32">
+<h3>&lt;&lt;<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;&lt;  (class=arithmetic #args=2) Bitwise left-shift.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id33">
+<span id="id34"></span><h3>&lt;=<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;=  (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id36">
+<h3>==<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>==  (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id37">
+<span id="id38"></span><h3>=~<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>=~  (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. &#39;$name =~ &quot;^a.*b$&quot;&#39;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id40">
+<h3>&gt;<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;  (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id41">
+<span id="id42"></span><h3>&gt;=<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;=  (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-dsl-srsh">
+<span id="id43"></span><h3>&gt;&gt;<a class="headerlink" href="#reference-dsl-srsh" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;  (class=arithmetic #args=2) Bitwise signed right-shift.
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-dsl-ursh">
+<span id="id44"></span><h3>&gt;&gt;&gt;<a class="headerlink" href="#reference-dsl-ursh" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;  (class=arithmetic #args=2) Bitwise unsigned right-shift.
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-dsl-question-mark-colon">
+<span id="id45"></span><h3>?<a class="headerlink" href="#reference-dsl-question-mark-colon" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>?:  (class=boolean #args=3) Standard ternary operator.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id47">
+<h3>??<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>??  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn&#39;t defined in the current record.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id49">
+<h3>???<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>???  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn&#39;t defined in the current record, or has empty value.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id51">
+<h3>^<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>^  (class=arithmetic #args=2) Bitwise XOR.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id53">
+<h3>^^<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>^^  (class=boolean #args=2) Logical XOR.
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference-dsl-bitwise-or">
+<span id="id54"></span><h3>|<a class="headerlink" href="#reference-dsl-bitwise-or" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>|  (class=arithmetic #args=2) Bitwise OR.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id56">
+<h3>||<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>||  (class=boolean #args=2) Logical OR.
+</pre></div>
+</div>
+</div>
+<div class="section" id="id58">
+<h3>~<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>~  (class=arithmetic #args=1) Bitwise NOT. Beware &#39;$y=~$x&#39; since =~ is the
+regex-match operator: try &#39;$y = ~$x&#39;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="abs">
+<span id="reference-dsl-abs"></span><h3>abs<a class="headerlink" href="#abs" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>abs  (class=math #args=1) Absolute value.
+</pre></div>
+</div>
+</div>
+<div class="section" id="acos">
+<span id="reference-dsl-acos"></span><h3>acos<a class="headerlink" href="#acos" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>acos  (class=math #args=1) Inverse trigonometric cosine.
+</pre></div>
+</div>
+</div>
+<div class="section" id="acosh">
+<span id="reference-dsl-acosh"></span><h3>acosh<a class="headerlink" href="#acosh" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>acosh  (class=math #args=1) Inverse hyperbolic cosine.
+</pre></div>
+</div>
+</div>
+<div class="section" id="append">
+<span id="reference-dsl-append"></span><h3>append<a class="headerlink" href="#append" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>append  (class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
+</pre></div>
+</div>
+</div>
+<div class="section" id="arrayify">
+<span id="reference-dsl-arrayify"></span><h3>arrayify<a class="headerlink" href="#arrayify" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>arrayify  (class=maps/arrays #args=1) Walks through a nested map/array, converting any map with consecutive keys
+&quot;1&quot;, &quot;2&quot;, ... into an array. Useful to wrap the output of unflatten.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asin">
+<span id="reference-dsl-asin"></span><h3>asin<a class="headerlink" href="#asin" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asin  (class=math #args=1) Inverse trigonometric sine.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asinh">
+<span id="reference-dsl-asinh"></span><h3>asinh<a class="headerlink" href="#asinh" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asinh  (class=math #args=1) Inverse hyperbolic sine.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-absent">
+<span id="reference-dsl-asserting-absent"></span><h3>asserting_absent<a class="headerlink" href="#asserting-absent" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_absent  (class=typing #args=1) Aborts with an error if is_absent on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-array">
+<span id="reference-dsl-asserting-array"></span><h3>asserting_array<a class="headerlink" href="#asserting-array" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_array  (class=typing #args=1) Aborts with an error if is_array on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-bool">
+<span id="reference-dsl-asserting-bool"></span><h3>asserting_bool<a class="headerlink" href="#asserting-bool" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_bool  (class=typing #args=1) Aborts with an error if is_bool on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-boolean">
+<span id="reference-dsl-asserting-boolean"></span><h3>asserting_boolean<a class="headerlink" href="#asserting-boolean" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_boolean  (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-empty">
+<span id="reference-dsl-asserting-empty"></span><h3>asserting_empty<a class="headerlink" href="#asserting-empty" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_empty  (class=typing #args=1) Aborts with an error if is_empty on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-empty-map">
+<span id="reference-dsl-asserting-empty-map"></span><h3>asserting_empty_map<a class="headerlink" href="#asserting-empty-map" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_empty_map  (class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-error">
+<span id="reference-dsl-asserting-error"></span><h3>asserting_error<a class="headerlink" href="#asserting-error" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_error  (class=typing #args=1) Aborts with an error if is_error on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-float">
+<span id="reference-dsl-asserting-float"></span><h3>asserting_float<a class="headerlink" href="#asserting-float" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_float  (class=typing #args=1) Aborts with an error if is_float on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-int">
+<span id="reference-dsl-asserting-int"></span><h3>asserting_int<a class="headerlink" href="#asserting-int" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_int  (class=typing #args=1) Aborts with an error if is_int on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-map">
+<span id="reference-dsl-asserting-map"></span><h3>asserting_map<a class="headerlink" href="#asserting-map" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_map  (class=typing #args=1) Aborts with an error if is_map on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-nonempty-map">
+<span id="reference-dsl-asserting-nonempty-map"></span><h3>asserting_nonempty_map<a class="headerlink" href="#asserting-nonempty-map" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_nonempty_map  (class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-not-array">
+<span id="reference-dsl-asserting-not-array"></span><h3>asserting_not_array<a class="headerlink" href="#asserting-not-array" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_not_array  (class=typing #args=1) Aborts with an error if is_not_array on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-not-empty">
+<span id="reference-dsl-asserting-not-empty"></span><h3>asserting_not_empty<a class="headerlink" href="#asserting-not-empty" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_not_empty  (class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-not-map">
+<span id="reference-dsl-asserting-not-map"></span><h3>asserting_not_map<a class="headerlink" href="#asserting-not-map" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_not_map  (class=typing #args=1) Aborts with an error if is_not_map on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-not-null">
+<span id="reference-dsl-asserting-not-null"></span><h3>asserting_not_null<a class="headerlink" href="#asserting-not-null" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_not_null  (class=typing #args=1) Aborts with an error if is_not_null on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-null">
+<span id="reference-dsl-asserting-null"></span><h3>asserting_null<a class="headerlink" href="#asserting-null" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_null  (class=typing #args=1) Aborts with an error if is_null on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-numeric">
+<span id="reference-dsl-asserting-numeric"></span><h3>asserting_numeric<a class="headerlink" href="#asserting-numeric" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_numeric  (class=typing #args=1) Aborts with an error if is_numeric on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-present">
+<span id="reference-dsl-asserting-present"></span><h3>asserting_present<a class="headerlink" href="#asserting-present" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_present  (class=typing #args=1) Aborts with an error if is_present on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="asserting-string">
+<span id="reference-dsl-asserting-string"></span><h3>asserting_string<a class="headerlink" href="#asserting-string" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>asserting_string  (class=typing #args=1) Aborts with an error if is_string on the argument returns false,
+else returns its argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="atan">
+<span id="reference-dsl-atan"></span><h3>atan<a class="headerlink" href="#atan" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>atan  (class=math #args=1) One-argument arctangent.
+</pre></div>
+</div>
+</div>
+<div class="section" id="atan2">
+<span id="reference-dsl-atan2"></span><h3>atan2<a class="headerlink" href="#atan2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>atan2  (class=math #args=2) Two-argument arctangent.
+</pre></div>
+</div>
+</div>
+<div class="section" id="atanh">
+<span id="reference-dsl-atanh"></span><h3>atanh<a class="headerlink" href="#atanh" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>atanh  (class=math #args=1) Inverse hyperbolic tangent.
+</pre></div>
+</div>
+</div>
+<div class="section" id="bitcount">
+<span id="reference-dsl-bitcount"></span><h3>bitcount<a class="headerlink" href="#bitcount" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>bitcount  (class=arithmetic #args=1) Count of 1-bits.
+</pre></div>
+</div>
+</div>
+<div class="section" id="boolean">
+<span id="reference-dsl-boolean"></span><h3>boolean<a class="headerlink" href="#boolean" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boolean  (class=conversion #args=1) Convert int/float/bool/string to boolean.
+</pre></div>
+</div>
+</div>
+<div class="section" id="capitalize">
+<span id="reference-dsl-capitalize"></span><h3>capitalize<a class="headerlink" href="#capitalize" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>capitalize  (class=string #args=1) Convert string&#39;s first character to uppercase.
+</pre></div>
+</div>
+</div>
+<div class="section" id="cbrt">
+<span id="reference-dsl-cbrt"></span><h3>cbrt<a class="headerlink" href="#cbrt" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cbrt  (class=math #args=1) Cube root.
+</pre></div>
+</div>
+</div>
+<div class="section" id="ceil">
+<span id="reference-dsl-ceil"></span><h3>ceil<a class="headerlink" href="#ceil" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ceil  (class=math #args=1) Ceiling: nearest integer at or above.
+</pre></div>
+</div>
+</div>
+<div class="section" id="clean-whitespace">
+<span id="reference-dsl-clean-whitespace"></span><h3>clean_whitespace<a class="headerlink" href="#clean-whitespace" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>clean_whitespace  (class=string #args=1) Same as collapse_whitespace and strip.
+</pre></div>
+</div>
+</div>
+<div class="section" id="collapse-whitespace">
+<span id="reference-dsl-collapse-whitespace"></span><h3>collapse_whitespace<a class="headerlink" href="#collapse-whitespace" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>collapse_whitespace  (class=string #args=1) Strip repeated whitespace from string.
+</pre></div>
+</div>
+</div>
+<div class="section" id="cos">
+<span id="reference-dsl-cos"></span><h3>cos<a class="headerlink" href="#cos" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cos  (class=math #args=1) Trigonometric cosine.
+</pre></div>
+</div>
+</div>
+<div class="section" id="cosh">
+<span id="reference-dsl-cosh"></span><h3>cosh<a class="headerlink" href="#cosh" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cosh  (class=math #args=1) Hyperbolic cosine.
+</pre></div>
+</div>
+</div>
+<div class="section" id="depth">
+<span id="reference-dsl-depth"></span><h3>depth<a class="headerlink" href="#depth" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>depth  (class=maps/arrays #args=1) Prints maximum depth of map/array. Scalars have depth 0.
+</pre></div>
+</div>
+</div>
+<div class="section" id="dhms2fsec">
+<span id="reference-dsl-dhms2fsec"></span><h3>dhms2fsec<a class="headerlink" href="#dhms2fsec" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dhms2fsec  (class=time #args=1) Recovers floating-point seconds as in dhms2fsec(&quot;5d18h53m20.250000s&quot;) = 500000.250000
+</pre></div>
+</div>
+</div>
+<div class="section" id="dhms2sec">
+<span id="reference-dsl-dhms2sec"></span><h3>dhms2sec<a class="headerlink" href="#dhms2sec" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dhms2sec  (class=time #args=1) Recovers integer seconds as in dhms2sec(&quot;5d18h53m20s&quot;) = 500000
+</pre></div>
+</div>
+</div>
+<div class="section" id="erf">
+<span id="reference-dsl-erf"></span><h3>erf<a class="headerlink" href="#erf" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>erf  (class=math #args=1) Error function.
+</pre></div>
+</div>
+</div>
+<div class="section" id="erfc">
+<span id="reference-dsl-erfc"></span><h3>erfc<a class="headerlink" href="#erfc" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>erfc  (class=math #args=1) Complementary error function.
+</pre></div>
+</div>
+</div>
+<div class="section" id="exp">
+<span id="reference-dsl-exp"></span><h3>exp<a class="headerlink" href="#exp" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>exp  (class=math #args=1) Exponential function e**x.
+</pre></div>
+</div>
+</div>
+<div class="section" id="expm1">
+<span id="reference-dsl-expm1"></span><h3>expm1<a class="headerlink" href="#expm1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>expm1  (class=math #args=1) e**x - 1.
+</pre></div>
+</div>
+</div>
+<div class="section" id="flatten">
+<span id="reference-dsl-flatten"></span><h3>flatten<a class="headerlink" href="#flatten" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>flatten  (class=maps/arrays #args=3) Flattens multi-level maps to single-level ones. Examples:
+flatten(&quot;a&quot;, &quot;.&quot;, {&quot;b&quot;: { &quot;c&quot;: 4 }}) is {&quot;a.b.c&quot; : 4}.
+flatten(&quot;&quot;, &quot;.&quot;, {&quot;a&quot;: { &quot;b&quot;: 3 }}) is {&quot;a.b&quot; : 3}.
+Two-argument version: flatten($*, &quot;.&quot;) is the same as flatten(&quot;&quot;, &quot;.&quot;, $*).
+Useful for nested JSON-like structures for non-JSON file formats like CSV.
+</pre></div>
+</div>
+</div>
+<div class="section" id="float">
+<span id="reference-dsl-float"></span><h3>float<a class="headerlink" href="#float" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>float  (class=conversion #args=1) Convert int/float/bool/string to float.
+</pre></div>
+</div>
+</div>
+<div class="section" id="floor">
+<span id="reference-dsl-floor"></span><h3>floor<a class="headerlink" href="#floor" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>floor  (class=math #args=1) Floor: nearest integer at or below.
+</pre></div>
+</div>
+</div>
+<div class="section" id="fmtnum">
+<span id="reference-dsl-fmtnum"></span><h3>fmtnum<a class="headerlink" href="#fmtnum" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>fmtnum  (class=conversion #args=2) Convert int/float/bool to string using
+printf-style format string, e.g. &#39;$s = fmtnum($n, &quot;%06lld&quot;)&#39;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="fsec2dhms">
+<span id="reference-dsl-fsec2dhms"></span><h3>fsec2dhms<a class="headerlink" href="#fsec2dhms" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>fsec2dhms  (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = &quot;5d18h53m20.250000s&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="fsec2hms">
+<span id="reference-dsl-fsec2hms"></span><h3>fsec2hms<a class="headerlink" href="#fsec2hms" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>fsec2hms  (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = &quot;01:23:20.250000&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-keys">
+<span id="reference-dsl-get-keys"></span><h3>get_keys<a class="headerlink" href="#get-keys" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>get_keys  (class=maps/arrays #args=1) Returns array of keys of map or array
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-values">
+<span id="reference-dsl-get-values"></span><h3>get_values<a class="headerlink" href="#get-values" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>get_values  (class=maps/arrays #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
+</pre></div>
+</div>
+</div>
+<div class="section" id="gmt2sec">
+<span id="reference-dsl-gmt2sec"></span><h3>gmt2sec<a class="headerlink" href="#gmt2sec" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>gmt2sec  (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
+</pre></div>
+</div>
+</div>
+<div class="section" id="gsub">
+<span id="reference-dsl-gsub"></span><h3>gsub<a class="headerlink" href="#gsub" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>gsub  (class=string #args=3) Example: &#39;$name=gsub($name, &quot;old&quot;, &quot;new&quot;)&#39; (replace all).
+</pre></div>
+</div>
+</div>
+<div class="section" id="haskey">
+<span id="reference-dsl-haskey"></span><h3>haskey<a class="headerlink" href="#haskey" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>haskey  (class=maps/arrays #args=2) True/false if map has/hasn&#39;t key, e.g. &#39;haskey($*, &quot;a&quot;)&#39; or
+&#39;haskey(mymap, mykey)&#39;, or true/false if array index is in bounds / out of bounds.
+Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
+</pre></div>
+</div>
+</div>
+<div class="section" id="hexfmt">
+<span id="reference-dsl-hexfmt"></span><h3>hexfmt<a class="headerlink" href="#hexfmt" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hexfmt  (class=conversion #args=1) Convert int to hex string, e.g. 255 to &quot;0xff&quot;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="hms2fsec">
+<span id="reference-dsl-hms2fsec"></span><h3>hms2fsec<a class="headerlink" href="#hms2fsec" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hms2fsec  (class=time #args=1) Recovers floating-point seconds as in hms2fsec(&quot;01:23:20.250000&quot;) = 5000.250000
+</pre></div>
+</div>
+</div>
+<div class="section" id="hms2sec">
+<span id="reference-dsl-hms2sec"></span><h3>hms2sec<a class="headerlink" href="#hms2sec" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hms2sec  (class=time #args=1) Recovers integer seconds as in hms2sec(&quot;01:23:20&quot;) = 5000
+</pre></div>
+</div>
+</div>
+<div class="section" id="hostname">
+<span id="reference-dsl-hostname"></span><h3>hostname<a class="headerlink" href="#hostname" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hostname  (class=system #args=0) Returns the hostname as a string.
+</pre></div>
+</div>
+</div>
+<div class="section" id="int">
+<span id="reference-dsl-int"></span><h3>int<a class="headerlink" href="#int" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int  (class=conversion #args=1) Convert int/float/bool/string to int.
+</pre></div>
+</div>
+</div>
+<div class="section" id="invqnorm">
+<span id="reference-dsl-invqnorm"></span><h3>invqnorm<a class="headerlink" href="#invqnorm" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>invqnorm  (class=math #args=1) Inverse of normal cumulative distribution function.
+Note that invqorm(urand()) is normally distributed.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-absent">
+<span id="reference-dsl-is-absent"></span><h3>is_absent<a class="headerlink" href="#is-absent" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_absent  (class=typing #args=1) False if field is present in input, true otherwise
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-array">
+<span id="reference-dsl-is-array"></span><h3>is_array<a class="headerlink" href="#is-array" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_array  (class=typing #args=1) True if argument is an array.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-bool">
+<span id="reference-dsl-is-bool"></span><h3>is_bool<a class="headerlink" href="#is-bool" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_bool  (class=typing #args=1) True if field is present with boolean value. Synonymous with is_boolean.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-boolean">
+<span id="reference-dsl-is-boolean"></span><h3>is_boolean<a class="headerlink" href="#is-boolean" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_boolean  (class=typing #args=1) True if field is present with boolean value. Synonymous with is_bool.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-empty">
+<span id="reference-dsl-is-empty"></span><h3>is_empty<a class="headerlink" href="#is-empty" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_empty  (class=typing #args=1) True if field is present in input with empty string value, false otherwise.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-empty-map">
+<span id="reference-dsl-is-empty-map"></span><h3>is_empty_map<a class="headerlink" href="#is-empty-map" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_empty_map  (class=typing #args=1) True if argument is a map which is empty.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-error">
+<span id="reference-dsl-is-error"></span><h3>is_error<a class="headerlink" href="#is-error" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_error  (class=typing #args=1) True if if argument is an error, such as taking string length of an integer.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-float">
+<span id="reference-dsl-is-float"></span><h3>is_float<a class="headerlink" href="#is-float" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_float  (class=typing #args=1) True if field is present with value inferred to be float
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-int">
+<span id="reference-dsl-is-int"></span><h3>is_int<a class="headerlink" href="#is-int" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_int  (class=typing #args=1) True if field is present with value inferred to be int
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-map">
+<span id="reference-dsl-is-map"></span><h3>is_map<a class="headerlink" href="#is-map" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_map  (class=typing #args=1) True if argument is a map.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-nonempty-map">
+<span id="reference-dsl-is-nonempty-map"></span><h3>is_nonempty_map<a class="headerlink" href="#is-nonempty-map" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_nonempty_map  (class=typing #args=1) True if argument is a map which is non-empty.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-not-array">
+<span id="reference-dsl-is-not-array"></span><h3>is_not_array<a class="headerlink" href="#is-not-array" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_not_array  (class=typing #args=1) True if argument is not an array.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-not-empty">
+<span id="reference-dsl-is-not-empty"></span><h3>is_not_empty<a class="headerlink" href="#is-not-empty" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_not_empty  (class=typing #args=1) False if field is present in input with empty value, true otherwise
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-not-map">
+<span id="reference-dsl-is-not-map"></span><h3>is_not_map<a class="headerlink" href="#is-not-map" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_not_map  (class=typing #args=1) True if argument is not a map.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-not-null">
+<span id="reference-dsl-is-not-null"></span><h3>is_not_null<a class="headerlink" href="#is-not-null" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_not_null  (class=typing #args=1) False if argument is null (empty or absent), true otherwise.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-null">
+<span id="reference-dsl-is-null"></span><h3>is_null<a class="headerlink" href="#is-null" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_null  (class=typing #args=1) True if argument is null (empty or absent), false otherwise.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-numeric">
+<span id="reference-dsl-is-numeric"></span><h3>is_numeric<a class="headerlink" href="#is-numeric" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_numeric  (class=typing #args=1) True if field is present with value inferred to be int or float
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-present">
+<span id="reference-dsl-is-present"></span><h3>is_present<a class="headerlink" href="#is-present" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_present  (class=typing #args=1) True if field is present in input, false otherwise.
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-string">
+<span id="reference-dsl-is-string"></span><h3>is_string<a class="headerlink" href="#is-string" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>is_string  (class=typing #args=1) True if field is present with string (including empty-string) value
+</pre></div>
+</div>
+</div>
+<div class="section" id="joink">
+<span id="reference-dsl-joink"></span><h3>joink<a class="headerlink" href="#joink" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>joink  (class=conversion #args=2) Makes string from map/array keys. Examples:
+joink({&quot;a&quot;:3,&quot;b&quot;:4,&quot;c&quot;:5}, &quot;,&quot;) = &quot;a,b,c&quot;
+joink([1,2,3], &quot;,&quot;) = &quot;1,2,3&quot;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="joinkv">
+<span id="reference-dsl-joinkv"></span><h3>joinkv<a class="headerlink" href="#joinkv" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs. Examples:
+joinkv([3,4,5], &quot;=&quot;, &quot;,&quot;) = &quot;1=3,2=4,3=5&quot;
+joinkv({&quot;a&quot;:3,&quot;b&quot;:4,&quot;c&quot;:5}, &quot;=&quot;, &quot;,&quot;) = &quot;a=3,b=4,c=5&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="joinv">
+<span id="reference-dsl-joinv"></span><h3>joinv<a class="headerlink" href="#joinv" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>joinv  (class=conversion #args=2) Makes string from map/array values.
+joinv([3,4,5], &quot;,&quot;) = &quot;3,4,5&quot;
+joinv({&quot;a&quot;:3,&quot;b&quot;:4,&quot;c&quot;:5}, &quot;,&quot;) = &quot;3,4,5&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="json-parse">
+<span id="reference-dsl-json-parse"></span><h3>json_parse<a class="headerlink" href="#json-parse" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>json_parse  (class=maps/arrays #args=1) Converts value from JSON-formatted string.
+</pre></div>
+</div>
+</div>
+<div class="section" id="json-stringify">
+<span id="reference-dsl-json-stringify"></span><h3>json_stringify<a class="headerlink" href="#json-stringify" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>json_stringify  (class=maps/arrays #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
+With optional second boolean argument set to true, produces multiline output.
+</pre></div>
+</div>
+</div>
+<div class="section" id="leafcount">
+<span id="reference-dsl-leafcount"></span><h3>leafcount<a class="headerlink" href="#leafcount" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>leafcount  (class=maps/arrays #args=1) Counts total number of terminal values in map/array. For single-level
+map/array, same as length.
+</pre></div>
+</div>
+</div>
+<div class="section" id="length">
+<span id="reference-dsl-length"></span><h3>length<a class="headerlink" href="#length" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>length  (class=maps/arrays #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
+</pre></div>
+</div>
+</div>
+<div class="section" id="log">
+<span id="reference-dsl-log"></span><h3>log<a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>log  (class=math #args=1) Natural (base-e) logarithm.
+</pre></div>
+</div>
+</div>
+<div class="section" id="log10">
+<span id="reference-dsl-log10"></span><h3>log10<a class="headerlink" href="#log10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>log10  (class=math #args=1) Base-10 logarithm.
+</pre></div>
+</div>
+</div>
+<div class="section" id="log1p">
+<span id="reference-dsl-log1p"></span><h3>log1p<a class="headerlink" href="#log1p" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>log1p  (class=math #args=1) log(1-x).
+</pre></div>
+</div>
+</div>
+<div class="section" id="logifit">
+<span id="reference-dsl-logifit"></span><h3>logifit<a class="headerlink" href="#logifit" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>logifit  (class=math #args=3)  Given m and b from logistic regression, compute fit:
+$yhat=logifit($x,$m,$b).
+</pre></div>
+</div>
+</div>
+<div class="section" id="lstrip">
+<span id="reference-dsl-lstrip"></span><h3>lstrip<a class="headerlink" href="#lstrip" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>lstrip  (class=string #args=1) Strip leading whitespace from string.
+</pre></div>
+</div>
+</div>
+<div class="section" id="madd">
+<span id="reference-dsl-madd"></span><h3>madd<a class="headerlink" href="#madd" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>madd  (class=arithmetic #args=3) a + b mod m (integers)
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapdiff">
+<span id="reference-dsl-mapdiff"></span><h3>mapdiff<a class="headerlink" href="#mapdiff" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mapdiff  (class=maps/arrays #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
+With 2 or more, returns copy of arg 1 with all keys from any of remaining
+argument maps removed.
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapexcept">
+<span id="reference-dsl-mapexcept"></span><h3>mapexcept<a class="headerlink" href="#mapexcept" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mapexcept  (class=maps/arrays #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
+Remaining arguments can be strings or arrays of string.
+E.g. &#39;mapexcept({1:2,3:4,5:6}, 1, 5, 7)&#39; is &#39;{3:4}&#39;
+and  &#39;mapexcept({1:2,3:4,5:6}, [1, 5, 7])&#39; is &#39;{3:4}&#39;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapselect">
+<span id="reference-dsl-mapselect"></span><h3>mapselect<a class="headerlink" href="#mapselect" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mapselect  (class=maps/arrays #args=variadic) Returns a map with only keys from remaining arguments set.
+Remaining arguments can be strings or arrays of string.
+E.g. &#39;mapselect({1:2,3:4,5:6}, 1, 5, 7)&#39; is &#39;{1:2,5:6}&#39;
+and  &#39;mapselect({1:2,3:4,5:6}, [1, 5, 7])&#39; is &#39;{1:2,5:6}&#39;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapsum">
+<span id="reference-dsl-mapsum"></span><h3>mapsum<a class="headerlink" href="#mapsum" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mapsum  (class=maps/arrays #args=variadic) With 0 args, returns empty map. With &gt;= 1 arg, returns a map with
+key-value pairs from all arguments. Rightmost collisions win, e.g.
+&#39;mapsum({1:2,3:4},{1:5})&#39; is &#39;{1:5,3:4}&#39;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="max">
+<span id="reference-dsl-max"></span><h3>max<a class="headerlink" href="#max" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>max  (class=math #args=variadic) Max of n numbers; null loses.
+</pre></div>
+</div>
+</div>
+<div class="section" id="md5">
+<span id="reference-dsl-md5"></span><h3>md5<a class="headerlink" href="#md5" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>md5  (class=hashing #args=1) MD5 hash.
+</pre></div>
+</div>
+</div>
+<div class="section" id="mexp">
+<span id="reference-dsl-mexp"></span><h3>mexp<a class="headerlink" href="#mexp" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mexp  (class=arithmetic #args=3) a ** b mod m (integers)
+</pre></div>
+</div>
+</div>
+<div class="section" id="min">
+<span id="reference-dsl-min"></span><h3>min<a class="headerlink" href="#min" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>min  (class=math #args=variadic) Min of n numbers; null loses.
+</pre></div>
+</div>
+</div>
+<div class="section" id="mmul">
+<span id="reference-dsl-mmul"></span><h3>mmul<a class="headerlink" href="#mmul" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mmul  (class=arithmetic #args=3) a * b mod m (integers)
+</pre></div>
+</div>
+</div>
+<div class="section" id="msub">
+<span id="reference-dsl-msub"></span><h3>msub<a class="headerlink" href="#msub" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>msub  (class=arithmetic #args=3) a - b mod m (integers)
+</pre></div>
+</div>
+</div>
+<div class="section" id="os">
+<span id="reference-dsl-os"></span><h3>os<a class="headerlink" href="#os" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>os  (class=system #args=0) Returns the operating-system name as a string.
+</pre></div>
+</div>
+</div>
+<div class="section" id="pow">
+<span id="reference-dsl-pow"></span><h3>pow<a class="headerlink" href="#pow" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pow  (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
+</pre></div>
+</div>
+</div>
+<div class="section" id="qnorm">
+<span id="reference-dsl-qnorm"></span><h3>qnorm<a class="headerlink" href="#qnorm" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>qnorm  (class=math #args=1) Normal cumulative distribution function.
+</pre></div>
+</div>
+</div>
+<div class="section" id="regextract">
+<span id="reference-dsl-regextract"></span><h3>regextract<a class="headerlink" href="#regextract" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>regextract  (class=string #args=2) Example: &#39;$name=regextract($name, &quot;[A-Z]{3}[0-9]{2}&quot;)&#39;
+</pre></div>
+</div>
+</div>
+<div class="section" id="regextract-or-else">
+<span id="reference-dsl-regextract-or-else"></span><h3>regextract_or_else<a class="headerlink" href="#regextract-or-else" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>regextract_or_else  (class=string #args=3) Example: &#39;$name=regextract_or_else($name, &quot;[A-Z]{3}[0-9]{2}&quot;, &quot;default&quot;)&#39;
+</pre></div>
+</div>
+</div>
+<div class="section" id="round">
+<span id="reference-dsl-round"></span><h3>round<a class="headerlink" href="#round" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>round  (class=math #args=1) Round to nearest integer.
+</pre></div>
+</div>
+</div>
+<div class="section" id="roundm">
+<span id="reference-dsl-roundm"></span><h3>roundm<a class="headerlink" href="#roundm" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>roundm  (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is
+the same as round($x/$m)*$m.
+</pre></div>
+</div>
+</div>
+<div class="section" id="rstrip">
+<span id="reference-dsl-rstrip"></span><h3>rstrip<a class="headerlink" href="#rstrip" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>rstrip  (class=string #args=1) Strip trailing whitespace from string.
+</pre></div>
+</div>
+</div>
+<div class="section" id="sec2dhms">
+<span id="reference-dsl-sec2dhms"></span><h3>sec2dhms<a class="headerlink" href="#sec2dhms" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = &quot;5d18h53m20s&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="sec2gmt">
+<span id="reference-dsl-sec2gmt"></span><h3>sec2gmt<a class="headerlink" href="#sec2gmt" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sec2gmt  (class=time #args=1,2) Formats seconds since epoch (integer part)
+as GMT timestamp, e.g. sec2gmt(1440768801.7) = &quot;2015-08-28T13:33:21Z&quot;.
+Leaves non-numbers as-is. With second integer argument n, includes n decimal places
+for the seconds part
+</pre></div>
+</div>
+</div>
+<div class="section" id="sec2gmtdate">
+<span id="reference-dsl-sec2gmtdate"></span><h3>sec2gmtdate<a class="headerlink" href="#sec2gmtdate" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part)
+as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = &quot;2015-08-28&quot;.
+Leaves non-numbers as-is.
+</pre></div>
+</div>
+</div>
+<div class="section" id="sec2hms">
+<span id="reference-dsl-sec2hms"></span><h3>sec2hms<a class="headerlink" href="#sec2hms" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = &quot;01:23:20&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="sgn">
+<span id="reference-dsl-sgn"></span><h3>sgn<a class="headerlink" href="#sgn" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sgn  (class=math #args=1)  +1, 0, -1 for positive, zero, negative input respectively.
+</pre></div>
+</div>
+</div>
+<div class="section" id="sha1">
+<span id="reference-dsl-sha1"></span><h3>sha1<a class="headerlink" href="#sha1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sha1  (class=hashing #args=1) SHA1 hash.
+</pre></div>
+</div>
+</div>
+<div class="section" id="sha256">
+<span id="reference-dsl-sha256"></span><h3>sha256<a class="headerlink" href="#sha256" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sha256  (class=hashing #args=1) SHA256 hash.
+</pre></div>
+</div>
+</div>
+<div class="section" id="sha512">
+<span id="reference-dsl-sha512"></span><h3>sha512<a class="headerlink" href="#sha512" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sha512  (class=hashing #args=1) SHA512 hash.
+</pre></div>
+</div>
+</div>
+<div class="section" id="sin">
+<span id="reference-dsl-sin"></span><h3>sin<a class="headerlink" href="#sin" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sin  (class=math #args=1) Trigonometric sine.
+</pre></div>
+</div>
+</div>
+<div class="section" id="sinh">
+<span id="reference-dsl-sinh"></span><h3>sinh<a class="headerlink" href="#sinh" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sinh  (class=math #args=1) Hyperbolic sine.
+</pre></div>
+</div>
+</div>
+<div class="section" id="splita">
+<span id="reference-dsl-splita"></span><h3>splita<a class="headerlink" href="#splita" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>splita  (class=conversion #args=2) Splits string into array with type inference. Example:
+splita(&quot;3,4,5&quot;, &quot;,&quot;) = [3,4,5]
+</pre></div>
+</div>
+</div>
+<div class="section" id="splitax">
+<span id="reference-dsl-splitax"></span><h3>splitax<a class="headerlink" href="#splitax" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>splitax  (class=conversion #args=2) Splits string into array without type inference. Example:
+splita(&quot;3,4,5&quot;, &quot;,&quot;) = [&quot;3&quot;,&quot;4&quot;,&quot;5&quot;]
+</pre></div>
+</div>
+</div>
+<div class="section" id="splitkv">
+<span id="reference-dsl-splitkv"></span><h3>splitkv<a class="headerlink" href="#splitkv" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>splitkv  (class=conversion #args=3) Splits string by separators into map with type inference. Example:
+splitkv(&quot;a=3,b=4,c=5&quot;, &quot;=&quot;, &quot;,&quot;) = {&quot;a&quot;:3,&quot;b&quot;:4,&quot;c&quot;:5}
+</pre></div>
+</div>
+</div>
+<div class="section" id="splitkvx">
+<span id="reference-dsl-splitkvx"></span><h3>splitkvx<a class="headerlink" href="#splitkvx" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and
+values are strings). Example:
+splitkvx(&quot;a=3,b=4,c=5&quot;, &quot;=&quot;, &quot;,&quot;) = {&quot;a&quot;:&quot;3&quot;,&quot;b&quot;:&quot;4&quot;,&quot;c&quot;:&quot;5&quot;}
+</pre></div>
+</div>
+</div>
+<div class="section" id="splitnv">
+<span id="reference-dsl-splitnv"></span><h3>splitnv<a class="headerlink" href="#splitnv" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example:
+splitnv(&quot;a,b,c&quot;, &quot;,&quot;) = {&quot;1&quot;:&quot;a&quot;,&quot;2&quot;:&quot;b&quot;,&quot;3&quot;:&quot;c&quot;}
+</pre></div>
+</div>
+</div>
+<div class="section" id="splitnvx">
+<span id="reference-dsl-splitnvx"></span><h3>splitnvx<a class="headerlink" href="#splitnvx" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type
+inference (values are strings). Example:
+splitnvx(&quot;3,4,5&quot;, &quot;,&quot;) = {&quot;1&quot;:&quot;3&quot;,&quot;2&quot;:&quot;4&quot;,&quot;3&quot;:&quot;5&quot;}
+</pre></div>
+</div>
+</div>
+<div class="section" id="sqrt">
+<span id="reference-dsl-sqrt"></span><h3>sqrt<a class="headerlink" href="#sqrt" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sqrt  (class=math #args=1) Square root.
+</pre></div>
+</div>
+</div>
+<div class="section" id="ssub">
+<span id="reference-dsl-ssub"></span><h3>ssub<a class="headerlink" href="#ssub" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ssub  (class=string #args=3) Like sub but does no regexing. No characters are special.
+</pre></div>
+</div>
+</div>
+<div class="section" id="strftime">
+<span id="reference-dsl-strftime"></span><h3>strftime<a class="headerlink" href="#strftime" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>strftime  (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.
+    strftime(1440768801.7,&quot;%Y-%m-%dT%H:%M:%SZ&quot;) = &quot;2015-08-28T13:33:21Z&quot;, and
+    strftime(1440768801.7,&quot;%Y-%m-%dT%H:%M:%3SZ&quot;) = &quot;2015-08-28T13:33:21.700Z&quot;.
+    Format strings are as in the C library (please see &quot;man strftime&quot; on your system),
+    with the Miller-specific addition of &quot;%1S&quot; through &quot;%9S&quot; which format the seconds
+    with 1 through 9 decimal places, respectively. (&quot;%S&quot; uses no decimal places.)
+    See also strftime_local.
+</pre></div>
+</div>
+</div>
+<div class="section" id="string">
+<span id="reference-dsl-string"></span><h3>string<a class="headerlink" href="#string" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>string  (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
+</pre></div>
+</div>
+</div>
+<div class="section" id="strip">
+<span id="reference-dsl-strip"></span><h3>strip<a class="headerlink" href="#strip" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>strip  (class=string #args=1) Strip leading and trailing whitespace from string.
+</pre></div>
+</div>
+</div>
+<div class="section" id="strlen">
+<span id="reference-dsl-strlen"></span><h3>strlen<a class="headerlink" href="#strlen" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>strlen  (class=string #args=1) String length.
+</pre></div>
+</div>
+</div>
+<div class="section" id="strptime">
+<span id="reference-dsl-strptime"></span><h3>strptime<a class="headerlink" href="#strptime" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>strptime  (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch,
+    e.g. strptime(&quot;2015-08-28T13:33:21Z&quot;,&quot;%Y-%m-%dT%H:%M:%SZ&quot;) = 1440768801.000000,
+    and  strptime(&quot;2015-08-28T13:33:21.345Z&quot;,&quot;%Y-%m-%dT%H:%M:%SZ&quot;) = 1440768801.345000.
+    See also strptime_local.
+</pre></div>
+</div>
+</div>
+<div class="section" id="sub">
+<span id="reference-dsl-sub"></span><h3>sub<a class="headerlink" href="#sub" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sub  (class=string #args=3) Example: &#39;$name=sub($name, &quot;old&quot;, &quot;new&quot;)&#39; (replace once).
+</pre></div>
+</div>
+</div>
+<div class="section" id="substr">
+<span id="reference-dsl-substr"></span><h3>substr<a class="headerlink" href="#substr" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>substr  (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
+with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
+Arrays are new in Miller 6; the substr function is older.
+</pre></div>
+</div>
+</div>
+<div class="section" id="substr0">
+<span id="reference-dsl-substr0"></span><h3>substr0<a class="headerlink" href="#substr0" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>substr0  (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
+inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
+</pre></div>
+</div>
+</div>
+<div class="section" id="substr1">
+<span id="reference-dsl-substr1"></span><h3>substr1<a class="headerlink" href="#substr1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>substr1  (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
+inclusive. Negative indices -len .. -1 alias to 1 .. len.
+</pre></div>
+</div>
+</div>
+<div class="section" id="system">
+<span id="reference-dsl-system"></span><h3>system<a class="headerlink" href="#system" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>system  (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
+</pre></div>
+</div>
+</div>
+<div class="section" id="systime">
+<span id="reference-dsl-systime"></span><h3>systime<a class="headerlink" href="#systime" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>systime  (class=time #args=0) help string will go here
+</pre></div>
+</div>
+</div>
+<div class="section" id="systimeint">
+<span id="reference-dsl-systimeint"></span><h3>systimeint<a class="headerlink" href="#systimeint" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>systimeint  (class=time #args=0) help string will go here
+</pre></div>
+</div>
+</div>
+<div class="section" id="tan">
+<span id="reference-dsl-tan"></span><h3>tan<a class="headerlink" href="#tan" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>tan  (class=math #args=1) Trigonometric tangent.
+</pre></div>
+</div>
+</div>
+<div class="section" id="tanh">
+<span id="reference-dsl-tanh"></span><h3>tanh<a class="headerlink" href="#tanh" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>tanh  (class=math #args=1) Hyperbolic tangent.
+</pre></div>
+</div>
+</div>
+<div class="section" id="tolower">
+<span id="reference-dsl-tolower"></span><h3>tolower<a class="headerlink" href="#tolower" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>tolower  (class=string #args=1) Convert string to lowercase.
+</pre></div>
+</div>
+</div>
+<div class="section" id="toupper">
+<span id="reference-dsl-toupper"></span><h3>toupper<a class="headerlink" href="#toupper" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>toupper  (class=string #args=1) Convert string to uppercase.
+</pre></div>
+</div>
+</div>
+<div class="section" id="truncate">
+<span id="reference-dsl-truncate"></span><h3>truncate<a class="headerlink" href="#truncate" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>truncate  (class=string #args=2) Truncates string first argument to max length of int second argument.
+</pre></div>
+</div>
+</div>
+<div class="section" id="typeof">
+<span id="reference-dsl-typeof"></span><h3>typeof<a class="headerlink" href="#typeof" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>typeof  (class=typing #args=1) Convert argument to type of argument (e.g. &quot;str&quot;). For debug.
+</pre></div>
+</div>
+</div>
+<div class="section" id="unflatten">
+<span id="reference-dsl-unflatten"></span><h3>unflatten<a class="headerlink" href="#unflatten" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>unflatten  (class=maps/arrays #args=2) Reverses flatten. Example:
+unflatten({&quot;a.b.c&quot; : 4}, &quot;.&quot;) is {&quot;a&quot;: &quot;b&quot;: { &quot;c&quot;: 4 }}.
+Useful for nested JSON-like structures for non-JSON file formats like CSV.
+See also arrayify.
+</pre></div>
+</div>
+</div>
+<div class="section" id="uptime">
+<span id="reference-dsl-uptime"></span><h3>uptime<a class="headerlink" href="#uptime" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>uptime  (class=time #args=0) help string will go here
+</pre></div>
+</div>
+</div>
+<div class="section" id="urand">
+<span id="reference-dsl-urand"></span><h3>urand<a class="headerlink" href="#urand" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>urand  (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
+Int-valued example: &#39;$n=floor(20+urand()*11)&#39;.
+</pre></div>
+</div>
+</div>
+<div class="section" id="urand32">
+<span id="reference-dsl-urand32"></span><h3>urand32<a class="headerlink" href="#urand32" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>urand32  (class=math #args=0) Integer uniformly distributed 0 and 2**32-1 inclusive.
+</pre></div>
+</div>
+</div>
+<div class="section" id="urandint">
+<span id="reference-dsl-urandint"></span><h3>urandint<a class="headerlink" href="#urandint" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>urandint  (class=math #args=2) Integer uniformly distributed between inclusive integer endpoints.
+</pre></div>
+</div>
+</div>
+<div class="section" id="urandrange">
+<span id="reference-dsl-urandrange"></span><h3>urandrange<a class="headerlink" href="#urandrange" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>urandrange  (class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
+</pre></div>
+</div>
+</div>
+<div class="section" id="version">
+<span id="reference-dsl-version"></span><h3>version<a class="headerlink" href="#version" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>version  (class=system #args=0) Returns the Miller version as a string.
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

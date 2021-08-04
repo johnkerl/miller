@@ -1,0 +1,27 @@
+$ ruby -e '10000.times{|i|puts "i=#{i+1}"}' > lines.txt
+
+$ head -n 5 lines.txt
+i=1
+i=2
+i=3
+i=4
+i=5
+
+mlr --ofmt '%.9le' --opprint put '$t=systime()' then step -a delta -f t lines.txt | head -n 7
+i     t                 t_delta
+1     1430603027.018016 1.430603027e+09
+2     1430603027.018043 2.694129944e-05
+3     1430603027.018048 5.006790161e-06
+4     1430603027.018052 4.053115845e-06
+5     1430603027.018055 2.861022949e-06
+6     1430603027.018058 3.099441528e-06
+
+mlr --ofmt '%.9le' --oxtab \
+  put '$t=systime()' then \
+  step -a delta -f t then \
+  filter '$i>1' then \
+  stats1 -a min,mean,max -f t_delta \
+  lines.txt
+t_delta_min  2.861022949e-06
+t_delta_mean 4.077508505e-06
+t_delta_max  5.388259888e-05

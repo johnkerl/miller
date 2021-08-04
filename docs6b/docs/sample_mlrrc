@@ -1,0 +1,15 @@
+# Input and output formats are CSV by default (unless otherwise specified
+# on the mlr command line):
+csv
+
+# If a data line has fewer fields than the header line, instead of erroring
+# (which is the default), just insert empty values for the missing ones:
+allow-ragged-csv-input
+
+# These are no-ops for CSV, but when I do use JSON output, I want these
+# pretty-printing options to be used:
+jvstack
+jlistwrap
+
+# Use "@", rather than "#", for comments within data files:
+skip-comments-with @

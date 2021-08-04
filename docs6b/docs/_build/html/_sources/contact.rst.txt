@@ -1,0 +1,11 @@
+..
+    PLEASE DO NOT EDIT DIRECTLY. EDIT THE .rst.in FILE PLEASE.
+
+Contact
+================================================================
+
+Bug reports, feature requests, etc.: https://github.com/johnkerl/miller/issues
+
+For issues involving this documentation site please also use https://github.com/johnkerl/miller/issues
+
+Other correspondence: mailto:kerl.john.r+miller@gmail.com

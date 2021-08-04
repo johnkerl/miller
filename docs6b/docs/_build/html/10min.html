@@ -1,0 +1,588 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Miller in 10 minutes &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Keystroke-savers" href="keystroke-savers.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Miller in 10 minutes</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="introduction.html">&laquo; Introduction</a> |
+        <a href="#">Miller in 10 minutes</a>
+        | <a href="keystroke-savers.html">Keystroke-savers &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Miller in 10 minutes</a><ul>
+<li><a class="reference internal" href="#obtaining-miller">Obtaining Miller</a></li>
+<li><a class="reference internal" href="#miller-verbs">Miller verbs</a></li>
+<li><a class="reference internal" href="#multiple-input-files">Multiple input files</a></li>
+<li><a class="reference internal" href="#chaining-verbs-together">Chaining verbs together</a></li>
+<li><a class="reference internal" href="#sorts-and-stats">Sorts and stats</a></li>
+<li><a class="reference internal" href="#file-formats-and-format-conversion">File formats and format conversion</a></li>
+<li><a class="reference internal" href="#choices-for-printing-to-files">Choices for printing to files</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="miller-in-10-minutes">
+<h1>Miller in 10 minutes<a class="headerlink" href="#miller-in-10-minutes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="obtaining-miller">
+<h2>Obtaining Miller<a class="headerlink" href="#obtaining-miller" title="Permalink to this headline">¶</a></h2>
+<p>You can install Miller for various platforms as follows:</p>
+<ul class="simple">
+<li><p>Linux: <code class="docutils literal notranslate"><span class="pre">yum</span> <span class="pre">install</span> <span class="pre">miller</span></code> or <code class="docutils literal notranslate"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">miller</span></code> depending on your flavor of Linux</p></li>
+<li><p>MacOS: <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">miller</span></code> or <code class="docutils literal notranslate"><span class="pre">port</span> <span class="pre">install</span> <span class="pre">miller</span></code> depending on your preference of <a class="reference external" href="https://brew.sh">Homebrew</a> or <a class="reference external" href="https://macports.org">MacPorts</a>.</p></li>
+<li><p>Windows: <code class="docutils literal notranslate"><span class="pre">choco</span> <span class="pre">install</span> <span class="pre">miller</span></code>  using <a class="reference external" href="https://chocolatey.org">Chocolatey</a>.</p></li>
+<li><p>You can get latest builds for Linux, MacOS, and Windows by visiting <a class="reference external" href="https://github.com/johnkerl/miller/actions">https://github.com/johnkerl/miller/actions</a>, selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)</p></li>
+<li><p>See also <a class="reference internal" href="build.html"><span class="doc">Building from source</span></a> if you prefer – in particular, if your platform’s package manager doesn’t have the latest release.</p></li>
+</ul>
+<p>As a first check, you should be able to run <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--version</span></code> at your system’s command prompt and see something like the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --version
+</span> Miller v6.0.0-dev
+</pre></div>
+</div>
+<p>As a second check, given (<a class="reference external" href="./example.csv">example.csv</a>) you should be able to do</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv cat example.csv
+</span> color,shape,flag,index,quantity,rate
+ yellow,triangle,true,11,43.6498,9.8870
+ red,square,true,15,79.2778,0.0130
+ red,circle,true,16,13.8103,2.9010
+ red,square,false,48,77.5542,7.4670
+ purple,triangle,false,51,81.2290,8.5910
+ red,square,false,64,77.1991,9.5310
+ purple,triangle,false,65,80.1405,5.8240
+ yellow,circle,true,73,63.9785,4.2370
+ yellow,circle,true,87,63.5058,8.3350
+ purple,square,false,91,72.3735,8.2430
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint cat example.csv
+</span> color  shape    flag  index quantity rate
+ yellow triangle true  11    43.6498  9.8870
+ red    square   true  15    79.2778  0.0130
+ red    circle   true  16    13.8103  2.9010
+ red    square   false 48    77.5542  7.4670
+ purple triangle false 51    81.2290  8.5910
+ red    square   false 64    77.1991  9.5310
+ purple triangle false 65    80.1405  5.8240
+ yellow circle   true  73    63.9785  4.2370
+ yellow circle   true  87    63.5058  8.3350
+ purple square   false 91    72.3735  8.2430
+</pre></div>
+</div>
+<p>If you run into issues on these checks, please check out the resources on the <a class="reference internal" href="community.html"><span class="doc">Community</span></a> page for help.</p>
+</div>
+<div class="section" id="miller-verbs">
+<h2>Miller verbs<a class="headerlink" href="#miller-verbs" title="Permalink to this headline">¶</a></h2>
+<p>Let’s take a quick look at some of the most useful Miller verbs – file-format-aware, name-index-empowered equivalents of standard system commands.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">cat</span></code> is like system <code class="docutils literal notranslate"><span class="pre">cat</span></code> (or <code class="docutils literal notranslate"><span class="pre">type</span></code> on Windows) – it passes the data through unmodified:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv cat example.csv
+</span> color,shape,flag,index,quantity,rate
+ yellow,triangle,true,11,43.6498,9.8870
+ red,square,true,15,79.2778,0.0130
+ red,circle,true,16,13.8103,2.9010
+ red,square,false,48,77.5542,7.4670
+ purple,triangle,false,51,81.2290,8.5910
+ red,square,false,64,77.1991,9.5310
+ purple,triangle,false,65,80.1405,5.8240
+ yellow,circle,true,73,63.9785,4.2370
+ yellow,circle,true,87,63.5058,8.3350
+ purple,square,false,91,72.3735,8.2430
+</pre></div>
+</div>
+<p>But <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">cat</span></code> can also do format conversion – for example, you can pretty-print in tabular format:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint cat example.csv
+</span> color  shape    flag  index quantity rate
+ yellow triangle true  11    43.6498  9.8870
+ red    square   true  15    79.2778  0.0130
+ red    circle   true  16    13.8103  2.9010
+ red    square   false 48    77.5542  7.4670
+ purple triangle false 51    81.2290  8.5910
+ red    square   false 64    77.1991  9.5310
+ purple triangle false 65    80.1405  5.8240
+ yellow circle   true  73    63.9785  4.2370
+ yellow circle   true  87    63.5058  8.3350
+ purple square   false 91    72.3735  8.2430
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">head</span></code> and <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">tail</span></code> count records rather than lines. Whether you’re getting the first few records or the last few, the CSV header is included either way:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv head -n 4 example.csv
+</span> color,shape,flag,index,quantity,rate
+ yellow,triangle,true,11,43.6498,9.8870
+ red,square,true,15,79.2778,0.0130
+ red,circle,true,16,13.8103,2.9010
+ red,square,false,48,77.5542,7.4670
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv tail -n 4 example.csv
+</span> color,shape,flag,index,quantity,rate
+ purple,triangle,false,65,80.1405,5.8240
+ yellow,circle,true,73,63.9785,4.2370
+ yellow,circle,true,87,63.5058,8.3350
+ purple,square,false,91,72.3735,8.2430
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --ojson tail -n 2 example.csv
+</span> {
+   &quot;color&quot;: &quot;yellow&quot;,
+   &quot;shape&quot;: &quot;circle&quot;,
+   &quot;flag&quot;: true,
+   &quot;index&quot;: 87,
+   &quot;quantity&quot;: 63.5058,
+   &quot;rate&quot;: 8.3350
+ }
+ {
+   &quot;color&quot;: &quot;purple&quot;,
+   &quot;shape&quot;: &quot;square&quot;,
+   &quot;flag&quot;: false,
+   &quot;index&quot;: 91,
+   &quot;quantity&quot;: 72.3735,
+   &quot;rate&quot;: 8.2430
+ }
+</pre></div>
+</div>
+<p>You can sort on a single field:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint sort -f shape example.csv
+</span> color  shape    flag  index quantity rate
+ red    circle   true  16    13.8103  2.9010
+ yellow circle   true  73    63.9785  4.2370
+ yellow circle   true  87    63.5058  8.3350
+ red    square   true  15    79.2778  0.0130
+ red    square   false 48    77.5542  7.4670
+ red    square   false 64    77.1991  9.5310
+ purple square   false 91    72.3735  8.2430
+ yellow triangle true  11    43.6498  9.8870
+ purple triangle false 51    81.2290  8.5910
+ purple triangle false 65    80.1405  5.8240
+</pre></div>
+</div>
+<p>Or, you can sort primarily alphabetically on one field, then secondarily numerically descending on another field, and so on:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint sort -f shape -nr index example.csv
+</span> color  shape    flag  index quantity rate
+ yellow circle   true  87    63.5058  8.3350
+ yellow circle   true  73    63.9785  4.2370
+ red    circle   true  16    13.8103  2.9010
+ purple square   false 91    72.3735  8.2430
+ red    square   false 64    77.1991  9.5310
+ red    square   false 48    77.5542  7.4670
+ red    square   true  15    79.2778  0.0130
+ purple triangle false 65    80.1405  5.8240
+ purple triangle false 51    81.2290  8.5910
+ yellow triangle true  11    43.6498  9.8870
+</pre></div>
+</div>
+<p>If there are fields you don’t want to see in your data, you can use <code class="docutils literal notranslate"><span class="pre">cut</span></code> to keep only the ones you want, in the same order they appeared in the input data:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint cut -f flag,shape example.csv
+</span> shape    flag
+ triangle true
+ square   true
+ circle   true
+ square   false
+ triangle false
+ square   false
+ triangle false
+ circle   true
+ circle   true
+ square   false
+</pre></div>
+</div>
+<p>You can also use <code class="docutils literal notranslate"><span class="pre">cut</span> <span class="pre">-o</span></code> to keep specified fields, but in your preferred order:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint cut -o -f flag,shape example.csv
+</span> flag  shape
+ true  triangle
+ true  square
+ true  circle
+ false square
+ false triangle
+ false square
+ false triangle
+ true  circle
+ true  circle
+ false square
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">cut</span> <span class="pre">-x</span></code> to omit fields you don’t care about:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint cut -x -f flag,shape example.csv
+</span> color  index quantity rate
+ yellow 11    43.6498  9.8870
+ red    15    79.2778  0.0130
+ red    16    13.8103  2.9010
+ red    48    77.5542  7.4670
+ purple 51    81.2290  8.5910
+ red    64    77.1991  9.5310
+ purple 65    80.1405  5.8240
+ yellow 73    63.9785  4.2370
+ yellow 87    63.5058  8.3350
+ purple 91    72.3735  8.2430
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">filter</span></code> to keep only records you care about:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint filter &#39;$color == &quot;red&quot;&#39; example.csv
+</span> color shape  flag  index quantity rate
+ red   square true  15    79.2778  0.0130
+ red   circle true  16    13.8103  2.9010
+ red   square false 48    77.5542  7.4670
+ red   square false 64    77.1991  9.5310
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint filter &#39;$color == &quot;red&quot; &amp;&amp; $flag == true&#39; example.csv
+</span> color shape  flag index quantity rate
+ red   square true 15    79.2778  0.0130
+ red   circle true 16    13.8103  2.9010
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">put</span></code> to create new fields which are computed from other fields:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint put &#39;
+</span><span class="hll">   $ratio = $quantity / $rate;
+</span><span class="hll">   $color_shape = $color . &quot;_&quot; . $shape
+</span><span class="hll"> &#39; example.csv
+</span> color  shape    flag  index quantity rate   ratio              color_shape
+ yellow triangle true  11    43.6498  9.8870 4.414868008496004  yellow_triangle
+ red    square   true  15    79.2778  0.0130 6098.292307692308  red_square
+ red    circle   true  16    13.8103  2.9010 4.760530851430541  red_circle
+ red    square   false 48    77.5542  7.4670 10.386259541984733 red_square
+ purple triangle false 51    81.2290  8.5910 9.455127458968688  purple_triangle
+ red    square   false 64    77.1991  9.5310 8.099790158430384  red_square
+ purple triangle false 65    80.1405  5.8240 13.760388049450551 purple_triangle
+ yellow circle   true  73    63.9785  4.2370 15.09995279679018  yellow_circle
+ yellow circle   true  87    63.5058  8.3350 7.619172165566886  yellow_circle
+ purple square   false 91    72.3735  8.2430 8.779995147397793  purple_square
+</pre></div>
+</div>
+<p>Even though Miller’s main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use <code class="docutils literal notranslate"><span class="pre">$[[3]]</span></code> to access the name of field 3 or <code class="docutils literal notranslate"><span class="pre">$[[[3]]]</span></code> to access the value of field 3:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint put &#39;$[[3]] = &quot;NEW&quot;&#39; example.csv
+</span> color  shape    NEW   index quantity rate
+ yellow triangle true  11    43.6498  9.8870
+ red    square   true  15    79.2778  0.0130
+ red    circle   true  16    13.8103  2.9010
+ red    square   false 48    77.5542  7.4670
+ purple triangle false 51    81.2290  8.5910
+ red    square   false 64    77.1991  9.5310
+ purple triangle false 65    80.1405  5.8240
+ yellow circle   true  73    63.9785  4.2370
+ yellow circle   true  87    63.5058  8.3350
+ purple square   false 91    72.3735  8.2430
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint put &#39;$[[[3]]] = &quot;NEW&quot;&#39; example.csv
+</span> color  shape    flag index quantity rate
+ yellow triangle NEW  11    43.6498  9.8870
+ red    square   NEW  15    79.2778  0.0130
+ red    circle   NEW  16    13.8103  2.9010
+ red    square   NEW  48    77.5542  7.4670
+ purple triangle NEW  51    81.2290  8.5910
+ red    square   NEW  64    77.1991  9.5310
+ purple triangle NEW  65    80.1405  5.8240
+ yellow circle   NEW  73    63.9785  4.2370
+ yellow circle   NEW  87    63.5058  8.3350
+ purple square   NEW  91    72.3735  8.2430
+</pre></div>
+</div>
+<p>You can find the full list of verbs at the <a class="reference internal" href="reference-verbs.html"><span class="doc">Reference: list of verbs</span></a> page.</p>
+</div>
+<div class="section" id="multiple-input-files">
+<h2>Multiple input files<a class="headerlink" href="#multiple-input-files" title="Permalink to this headline">¶</a></h2>
+<p>Miller takes all the files from the command line as an input stream. But it’s format-aware, so it doesn’t repeat CSV header lines. For example, with input files (<a class="reference external" href="data/a.csv">data/a.csv</a>) and (<a class="reference external" href="data/b.csv">data/b.csv</a>), the system <code class="docutils literal notranslate"><span class="pre">cat</span></code> command will repeat header lines:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/a.csv
+</span> a,b,c
+ 1,2,3
+ 4,5,6
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/b.csv
+</span> a,b,c
+ 7,8,9
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/a.csv data/b.csv
+</span> a,b,c
+ 1,2,3
+ 4,5,6
+ a,b,c
+ 7,8,9
+</pre></div>
+</div>
+<p>However, <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">cat</span></code> will not:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv cat data/a.csv data/b.csv
+</span> a,b,c
+ 1,2,3
+ 4,5,6
+ 7,8,9
+</pre></div>
+</div>
+</div>
+<div class="section" id="chaining-verbs-together">
+<h2>Chaining verbs together<a class="headerlink" href="#chaining-verbs-together" title="Permalink to this headline">¶</a></h2>
+<p>Often we want to chain queries together – for example, sorting by a field and taking the top few values. We can do this using pipes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv sort -nr index example.csv | mlr --icsv --opprint head -n 3
+</span> color  shape  flag  index quantity rate
+ purple square false 91    72.3735  8.2430
+ yellow circle true  87    63.5058  8.3350
+ yellow circle true  73    63.9785  4.2370
+</pre></div>
+</div>
+<p>This works fine – but Miller also lets you chain verbs together using the word <code class="docutils literal notranslate"><span class="pre">then</span></code>. Think of this as a Miller-internal pipe that lets you use fewer keystrokes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint sort -nr index then head -n 3 example.csv
+</span> color  shape  flag  index quantity rate
+ purple square false 91    72.3735  8.2430
+ yellow circle true  87    63.5058  8.3350
+ yellow circle true  73    63.9785  4.2370
+</pre></div>
+</div>
+<p>As another convenience, you can put the filename first using <code class="docutils literal notranslate"><span class="pre">--from</span></code>. When you’re interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint --from example.csv sort -nr index then head -n 3
+</span> color  shape  flag  index quantity rate
+ purple square false 91    72.3735  8.2430
+ yellow circle true  87    63.5058  8.3350
+ yellow circle true  73    63.9785  4.2370
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint --from example.csv \
+</span><span class="hll">   sort -nr index \
+</span><span class="hll">   then head -n 3 \
+</span><span class="hll">   then cut -f shape,quantity
+</span> shape  quantity
+ square 72.3735
+ circle 63.5058
+ circle 63.9785
+</pre></div>
+</div>
+</div>
+<div class="section" id="sorts-and-stats">
+<h2>Sorts and stats<a class="headerlink" href="#sorts-and-stats" title="Permalink to this headline">¶</a></h2>
+<p>Now suppose you want to sort the data on a given column, <em>and then</em> take the top few in that ordering. You can use Miller’s <code class="docutils literal notranslate"><span class="pre">then</span></code> feature to pipe commands together.</p>
+<p>Here are the records with the top three <code class="docutils literal notranslate"><span class="pre">index</span></code> values:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint sort -nr index then head -n 3 example.csv
+</span> color  shape  flag  index quantity rate
+ purple square false 91    72.3735  8.2430
+ yellow circle true  87    63.5058  8.3350
+ yellow circle true  73    63.9785  4.2370
+</pre></div>
+</div>
+<p>Lots of Miller commands take a <code class="docutils literal notranslate"><span class="pre">-g</span></code> option for group-by: here, <code class="docutils literal notranslate"><span class="pre">head</span> <span class="pre">-n</span> <span class="pre">1</span> <span class="pre">-g</span> <span class="pre">shape</span></code> outputs the first record for each distinct value of the <code class="docutils literal notranslate"><span class="pre">shape</span></code> field. This means we’re finding the record with highest <code class="docutils literal notranslate"><span class="pre">index</span></code> field for each distinct <code class="docutils literal notranslate"><span class="pre">shape</span></code> field:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
+</span> color  shape    flag  index quantity rate
+ yellow circle   true  87    63.5058  8.3350
+ purple square   false 91    72.3735  8.2430
+ purple triangle false 65    80.1405  5.8240
+</pre></div>
+</div>
+<p>Statistics can be computed with or without group-by field(s):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint --from example.csv \
+</span><span class="hll">   stats1 -a count,min,mean,max -f quantity -g shape
+</span> shape    quantity_count quantity_min quantity_mean     quantity_max
+ triangle 3              43.6498      68.33976666666666 81.229
+ square   4              72.3735      76.60114999999999 79.2778
+ circle   3              13.8103      47.0982           63.9785
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint --from example.csv \
+</span><span class="hll">   stats1 -a count,min,mean,max -f quantity -g shape,color
+</span> shape    color  quantity_count quantity_min quantity_mean      quantity_max
+ triangle yellow 1              43.6498      43.6498            43.6498
+ square   red    3              77.1991      78.01036666666666  79.2778
+ circle   red    1              13.8103      13.8103            13.8103
+ triangle purple 2              80.1405      80.68475000000001  81.229
+ circle   yellow 2              63.5058      63.742149999999995 63.9785
+ square   purple 1              72.3735      72.3735            72.3735
+</pre></div>
+</div>
+<p>If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --oxtab --from example.csv \
+</span><span class="hll">   stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
+</span> rate_p0   0.0130
+ rate_p10  2.9010
+ rate_p25  4.2370
+ rate_p50  8.2430
+ rate_p75  8.5910
+ rate_p90  9.8870
+ rate_p99  9.8870
+ rate_p100 9.8870
+</pre></div>
+</div>
+</div>
+<div class="section" id="file-formats-and-format-conversion">
+<h2>File formats and format conversion<a class="headerlink" href="#file-formats-and-format-conversion" title="Permalink to this headline">¶</a></h2>
+<p>Miller supports the following formats:</p>
+<ul class="simple">
+<li><p>CSV (comma-separared values)</p></li>
+<li><p>TSV (tab-separated values)</p></li>
+<li><p>JSON (JavaScript Object Notation)</p></li>
+<li><p>PPRINT (pretty-printed tabular)</p></li>
+<li><p>XTAB (vertical-tabular or sideways-tabular)</p></li>
+<li><p>NIDX (numerically indexed, label-free, with implicit labels <code class="docutils literal notranslate"><span class="pre">&quot;1&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;2&quot;</span></code>, etc.)</p></li>
+<li><p>DKVP (delimited key-value pairs).</p></li>
+</ul>
+<p>What’s a CSV file, really? It’s an array of rows, or <em>records</em>, each being a list of key-value pairs, or <em>fields</em>: for CSV it so happens that all the keys are shared in the header line and the values vary from one data line to another.</p>
+<p>For example, if you have:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>shape,flag,index
+circle,1,24
+square,0,36
+</pre></div>
+</div>
+<p>then that’s a way of saying:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>shape=circle,flag=1,index=24
+shape=square,flag=0,index=36
+</pre></div>
+</div>
+<p>Other ways to write the same data:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CSV                   PPRINT
+shape,flag,index      shape  flag index
+circle,1,24           circle 1    24
+square,0,36           square 0    36
+
+JSON                  XTAB
+{                     shape circle
+  &quot;shape&quot;: &quot;circle&quot;,  flag  1
+  &quot;flag&quot;: 1,          index 24
+  &quot;index&quot;: 24         .
+}                     shape square
+{                     flag  0
+  &quot;shape&quot;: &quot;square&quot;,  index 36
+  &quot;flag&quot;: 0,
+  &quot;index&quot;: 36
+}
+
+   DKVP
+   shape=circle,flag=1,index=24
+   shape=square,flag=0,index=36
+</pre></div>
+</div>
+<p>Anything we can do with CSV input data, we can do with any other format input data.  And you can read from one format, do any record-processing, and output to the same format as the input, or to a different output format.</p>
+<p>How to specify these to Miller:</p>
+<ul class="simple">
+<li><p>If you use <code class="docutils literal notranslate"><span class="pre">--csv</span></code> or <code class="docutils literal notranslate"><span class="pre">--json</span></code> or <code class="docutils literal notranslate"><span class="pre">--pprint</span></code>, etc., then Miller will use that format for input and output.</p></li>
+<li><p>If you use <code class="docutils literal notranslate"><span class="pre">--icsv</span></code> and <code class="docutils literal notranslate"><span class="pre">--ojson</span></code> (note the extra <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">o</span></code>) then Miller will use CSV for input and JSON for output, etc.  See also <a class="reference internal" href="keystroke-savers.html"><span class="doc">Keystroke-savers</span></a> for even shorter options like <code class="docutils literal notranslate"><span class="pre">--c2j</span></code>.</p></li>
+</ul>
+<p>You can read more about this at the <a class="reference internal" href="file-formats.html"><span class="doc">File formats</span></a> page.</p>
+</div>
+<div class="section" id="choices-for-printing-to-files">
+<span id="min-choices-for-printing-to-files"></span><h2>Choices for printing to files<a class="headerlink" href="#choices-for-printing-to-files" title="Permalink to this headline">¶</a></h2>
+<p>Often we want to print output to the screen. Miller does this by default, as we’ve seen in the previous examples.</p>
+<p>Sometimes, though, we want to print output to another file. Just use <strong>&gt; outputfilenamegoeshere</strong> at the end of your command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint cat example.csv &gt; newfile.csv
+</span> # Output goes to the new file;
+ # nothing is printed to the screen.
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat newfile.csv
+</span> color  shape    flag     index quantity rate
+ yellow triangle true     11    43.6498  9.8870
+ red    square   true     15    79.2778  0.0130
+ red    circle   true     16    13.8103  2.9010
+ red    square   false    48    77.5542  7.4670
+ purple triangle false    51    81.2290  8.5910
+ red    square   false    64    77.1991  9.5310
+ purple triangle false    65    80.1405  5.8240
+ yellow circle   true     73    63.9785  4.2370
+ yellow circle   true     87    63.5058  8.3350
+ purple square   false    91    72.3735  8.2430
+</pre></div>
+</div>
+<p>Other times we just want our files to be <strong>changed in-place</strong>: just use <strong>mlr -I</strong>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cp example.csv newfile.txt
+</span></pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat newfile.txt
+</span> color,shape,flag,index,quantity,rate
+ yellow,triangle,true,11,43.6498,9.8870
+ red,square,true,15,79.2778,0.0130
+ red,circle,true,16,13.8103,2.9010
+ red,square,false,48,77.5542,7.4670
+ purple,triangle,false,51,81.2290,8.5910
+ red,square,false,64,77.1991,9.5310
+ purple,triangle,false,65,80.1405,5.8240
+ yellow,circle,true,73,63.9785,4.2370
+ yellow,circle,true,87,63.5058,8.3350
+ purple,square,false,91,72.3735,8.2430
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr -I --csv sort -f shape newfile.txt
+</span></pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat newfile.txt
+</span> color,shape,flag,index,quantity,rate
+ red,circle,true,16,13.8103,2.9010
+ yellow,circle,true,73,63.9785,4.2370
+ yellow,circle,true,87,63.5058,8.3350
+ red,square,true,15,79.2778,0.0130
+ red,square,false,48,77.5542,7.4670
+ red,square,false,64,77.1991,9.5310
+ purple,square,false,91,72.3735,8.2430
+ yellow,triangle,true,11,43.6498,9.8870
+ purple,triangle,false,51,81.2290,8.5910
+ purple,triangle,false,65,80.1405,5.8240
+</pre></div>
+</div>
+<p>Also using <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">-I</span></code> you can bulk-operate on lots of files: e.g.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr -I --csv cut -x -f unwanted_column_name *.csv
+</span></pre></div>
+</div>
+<p>If you like, you can first copy off your original data somewhere else, before doing in-place operations.</p>
+<p>Lastly, using <code class="docutils literal notranslate"><span class="pre">tee</span></code> within <code class="docutils literal notranslate"><span class="pre">put</span></code>, you can split your input data into separate files per one or more field names:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv --from example.csv put -q &#39;tee &gt; $shape.&quot;.csv&quot;, $*&#39;
+</span></pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat circle.csv
+</span> color,shape,flag,index,quantity,rate
+ red,circle,true,16,13.8103,2.9010
+ yellow,circle,true,73,63.9785,4.2370
+ yellow,circle,true,87,63.5058,8.3350
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat square.csv
+</span> color,shape,flag,index,quantity,rate
+ red,square,true,15,79.2778,0.0130
+ red,square,false,48,77.5542,7.4670
+ red,square,false,64,77.1991,9.5310
+ purple,square,false,91,72.3735,8.2430
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat triangle.csv
+</span> color,shape,flag,index,quantity,rate
+ yellow,triangle,true,11,43.6498,9.8870
+ purple,triangle,false,51,81.2290,8.5910
+ purple,triangle,false,65,80.1405,5.8240
+</pre></div>
+</div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

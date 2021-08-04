@@ -1,0 +1,81 @@
+site_name: Miller Documentation
+theme: readthedocs
+nav:
+  - "Introduction": "index.md"
+  - 'Getting started':
+    - "Miller in 10 minutes": "10min.md"
+    - "Keystroke-savers": "keystroke-savers.md"
+    - "Intro to Miller's programming language": "programming-language.md"
+    - "Miller on Windows": "miller-on-windows.md"
+    - "Community": "community.md"
+  - 'Miller in more detail':
+    - "Features": "features.md"
+    - "Unix-toolkit context": "feature-comparison.md"
+    - "File formats": "file-formats.md"
+    - "Record-heterogeneity": "record-heterogeneity.md"
+    - "Internationalization": "internationalization.md"
+    - "Output colorization": "output-colorization.md"
+    - "Customization: .mlrrc": "customization.md"
+    - "The REPL": "repl.md"
+    - "What's new in Miller 6": "new-in-miller-6.md"
+    - "How to contribute": "contributing.md"
+  - 'FAQs and recipes':
+    - "CSV, with and without headers": "csv-with-and-without-headers.md"
+    - "Shapes of data": "shapes-of-data.md"
+    - "Operating on all fields": "operating-on-all-fields.md"
+    - "Special symbols and formatting": "special-symbols-and-formatting.md"
+    - "Dates and times": "dates-and-times.md"
+    - "Then-chaining": "then-chaining.md"
+    - "Joins": "joins.md"
+    - "Running shell commands": "shell-commands.md"
+    - "Data-diving examples": "data-diving-examples.md"
+    - "Log-processing examples": "log-processing-examples.md"
+    - "SQL examples": "sql-examples.md"
+    - "Data-cleaning examples": "data-cleaning-examples.md"
+    - "Statistics examples": "statistics-examples.md"
+    - "Randomizing examples": "randomizing-examples.md"
+    - "Two-pass algorithms": "two-pass-algorithms.md"
+    - "DKVP I/O examples": "dkvp-examples.md"
+    - "Programming-language examples": "programming-examples.md"
+    - "Miscellaneous examples": "misc-examples.md"
+  - 'Background':
+    - "Why?": "why.md"
+    - "Why call it Miller?": "etymology.md"
+    - "How original is Miller?": "originality.md"
+    - "Performance": "performance.md"
+  - 'Reference':
+    - "Reference: Miller commands": "reference-main-overview.md"
+    - "Reference: list of verbs": "reference-verbs.md"
+    - "Reference: I/O options": "reference-main-io-options.md"
+    - "Reference: then-chaining": "reference-main-then-chaining.md"
+    - "Reference: auxiliary commands": "reference-main-auxiliary-commands.md"
+    - "Reference: data types": "reference-main-data-types.md"
+    - "Reference: arrays": "reference-dsl-arrays.md"
+    - "Reference: null data": "reference-main-null-data.md"
+    - "Reference: arithmetic": "reference-main-arithmetic.md"
+    - "Reference: regular expressions": "reference-main-regular-expressions.md"
+    - "Reference: Miller environment variables": "reference-main-env-vars.md"
+    - "Reference: online help": "reference-main-online-help.md"
+    - "DSL reference: overview": "reference-dsl.md"
+    - "DSL reference: syntax": "reference-dsl-syntax.md"
+    - "DSL reference: variables": "reference-dsl-variables.md"
+    - "DSL reference: operators": "reference-dsl-operators.md"
+    - "DSL reference: control structures": "reference-dsl-control-structures.md"
+    - "DSL reference: user-defined functions": "reference-dsl-user-defined-functions.md"
+    - "DSL reference: built-in functions": "reference-dsl-builtin-functions.md"
+    - "DSL reference: output statements": "reference-dsl-output-statements.md"
+    - "DSL reference: unset statements": "reference-dsl-unset-statements.md"
+    - "DSL reference: filter statements": "reference-dsl-filter-statements.md"
+    - "DSL reference: errors and transparency": "reference-dsl-errors.md"
+    - "DSL reference: a note on the complexity of Miller's expression language": "reference-dsl-complexity.md"
+    - "Manpage": "manpage.md"
+    - "Documents by release": "release-docs.md"
+    - "Installation": "installation.md"
+    - "Building from source": "build.md"
+extra_css: ['extra.css']
+markdown_extensions:
+  - pymdownx.superfences
+  - codehilite
+  - admonition
+  - pymdownx.highlight:
+      linenums: true

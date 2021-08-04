@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Building from source &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Building from source</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="installation.html">&laquo; Installation</a> |
+        <a href="#">Building from source</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Building from source</a><ul>
+<li><a class="reference internal" href="#miller-license">Miller license</a></li>
+<li><a class="reference internal" href="#from-release-tarball">From release tarball</a></li>
+<li><a class="reference internal" href="#from-git-clone">From git clone</a></li>
+<li><a class="reference internal" href="#in-case-of-problems">In case of problems</a></li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a><ul>
+<li><a class="reference internal" href="#required-external-dependencies">Required external dependencies</a></li>
+<li><a class="reference internal" href="#optional-external-dependencies">Optional external dependencies</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#creating-a-new-release-for-developers">Creating a new release: for developers</a></li>
+<li><a class="reference internal" href="#misc-development-notes">Misc. development notes</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="building-from-source">
+<h1>Building from source<a class="headerlink" href="#building-from-source" title="Permalink to this headline">¶</a></h1>
+<p>Please also see <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a> for information about pre-built executables.</p>
+<div class="section" id="miller-license">
+<h2>Miller license<a class="headerlink" href="#miller-license" title="Permalink to this headline">¶</a></h2>
+<p>Two-clause BSD license <a class="reference external" href="https://github.com/johnkerl/miller/blob/master/LICENSE.txt">https://github.com/johnkerl/miller/blob/master/LICENSE.txt</a>.</p>
+</div>
+<div class="section" id="from-release-tarball">
+<h2>From release tarball<a class="headerlink" href="#from-release-tarball" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Obtain <code class="docutils literal notranslate"><span class="pre">mlr-i.j.k.tar.gz</span></code> from <a class="reference external" href="https://github.com/johnkerl/miller/tags">https://github.com/johnkerl/miller/tags</a>, replacing <code class="docutils literal notranslate"><span class="pre">i.j.k</span></code> with the desired release, e.g. <code class="docutils literal notranslate"><span class="pre">6.1.0</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">zxvf</span> <span class="pre">mlr-i.j.k.tar.gz</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">mlr-i.j.k</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">go</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./build</span></code> creates the <code class="docutils literal notranslate"><span class="pre">go/mlr</span></code> executable and runs regression tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">go</span> <span class="pre">build</span> <span class="pre">mlr.go</span></code> creates the <code class="docutils literal notranslate"><span class="pre">go/mlr</span></code> executable without running regression tests</p></li>
+</ul>
+</div>
+<div class="section" id="from-git-clone">
+<h2>From git clone<a class="headerlink" href="#from-git-clone" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/johnkerl/miller</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">miller/go</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./build</span></code> creates the <code class="docutils literal notranslate"><span class="pre">go/mlr</span></code> executable and runs regression tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">go</span> <span class="pre">build</span> <span class="pre">mlr.go</span></code> creates the <code class="docutils literal notranslate"><span class="pre">go/mlr</span></code> executable without running regression tests</p></li>
+</ul>
+</div>
+<div class="section" id="in-case-of-problems">
+<h2>In case of problems<a class="headerlink" href="#in-case-of-problems" title="Permalink to this headline">¶</a></h2>
+<p>If you have any build errors, feel free to open an issue with “New Issue” at <a class="reference external" href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>.</p>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="required-external-dependencies">
+<h3>Required external dependencies<a class="headerlink" href="#required-external-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>These are necessary to produce the <code class="docutils literal notranslate"><span class="pre">mlr</span></code> executable.</p>
+<ul class="simple">
+<li><p>Go version 1.16 or higher</p></li>
+<li><p>Others packaged within <code class="docutils literal notranslate"><span class="pre">go.mod</span></code> and <code class="docutils literal notranslate"><span class="pre">go.sum</span></code> which you don’t need to deal with manually – the Go build process handles them for us</p></li>
+</ul>
+</div>
+<div class="section" id="optional-external-dependencies">
+<h3>Optional external dependencies<a class="headerlink" href="#optional-external-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>This documentation pageset is built using Sphinx. Please see <a class="reference external" href="https://github.com/johnkerl/miller/blob/main/docs6/README.md">https://github.com/johnkerl/miller/blob/main/docs6/README.md</a> for details.</p>
+</div>
+</div>
+<div class="section" id="creating-a-new-release-for-developers">
+<h2>Creating a new release: for developers<a class="headerlink" href="#creating-a-new-release-for-developers" title="Permalink to this headline">¶</a></h2>
+<p>At present I’m the primary developer so this is just my checklist for making new releases.</p>
+<p>In this example I am using version 6.1.0 to 6.2.0; of course that will change for subsequent revisions.</p>
+<ul class="simple">
+<li><p>Update version found in <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--version</span></code> and <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">mlr</span></code>:</p>
+<ul>
+<li><p>Edit <code class="docutils literal notranslate"><span class="pre">go/src/version/version.go</span></code> from <code class="docutils literal notranslate"><span class="pre">6.1.0-dev</span></code> to <code class="docutils literal notranslate"><span class="pre">6.2.0</span></code>.</p></li>
+<li><p>Likewise <code class="docutils literal notranslate"><span class="pre">docs6/conf.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">../docs6</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">PATH=../go:$PATH</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code></p></li>
+<li><p>The ordering is important: the first build creates <code class="docutils literal notranslate"><span class="pre">mlr</span></code>; the second runs <code class="docutils literal notranslate"><span class="pre">mlr</span></code> to create <code class="docutils literal notranslate"><span class="pre">manpage.txt</span></code>; the third includes <code class="docutils literal notranslate"><span class="pre">manpage.txt</span></code> into one of its outputs.</p></li>
+<li><p>Commit and push.</p></li>
+</ul>
+</li>
+<li><p>Create the release tarball and SRPM:</p>
+<ul>
+<li><p>TBD for the Go port …</p></li>
+<li><p>Linux/MacOS/Windows binaries from GitHub Actions …</p></li>
+<li><p>Pull back release tarball <code class="docutils literal notranslate"><span class="pre">mlr-6.2.0.tar.gz</span></code> from buildbox, and <code class="docutils literal notranslate"><span class="pre">mlr.{arch}</span></code> binaries from whatever buildboxes.</p></li>
+</ul>
+</li>
+<li><p>Create the Github release tag:</p>
+<ul>
+<li><p>Don’t forget the <code class="docutils literal notranslate"><span class="pre">v</span></code> in <code class="docutils literal notranslate"><span class="pre">v6.2.0</span></code></p></li>
+<li><p>Write the release notes</p></li>
+<li><p>Attach the release tarball and binaries. Double-check assets were successfully uploaded.</p></li>
+<li><p>Publish the release</p></li>
+</ul>
+</li>
+<li><p>Check the release-specific docs:</p>
+<ul>
+<li><p>Look at <a class="reference external" href="https://miller.readthedocs.io">https://miller.readthedocs.io</a> for new-version docs, after a few minutes’ propagation time.</p></li>
+</ul>
+</li>
+<li><p>Notify:</p>
+<ul>
+<li><p>Submit <code class="docutils literal notranslate"><span class="pre">brew</span></code> pull request; notify any other distros which don’t appear to have autoupdated since the previous release (notes below)</p></li>
+<li><p>Similarly for <code class="docutils literal notranslate"><span class="pre">macports</span></code>: <a class="reference external" href="https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile">https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile</a>.</p></li>
+<li><p>Social-media updates.</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
+git fetch upstream
+git rebase upstream/master
+git checkout -b miller-6.1.0
+shasum -a 256 /path/to/mlr-6.1.0.tar.gz
+edit Formula/miller.rb
+# Test the URL from the line like
+#   url &quot;https://github.com/johnkerl/miller/releases/download/v6.1.0/mlr-6.1.0.tar.gz&quot;
+# in a browser for typos
+# A &#39;@BrewTestBot Test this please&#39; comment within the homebrew-core pull request will restart the homebrew travis build
+git add Formula/miller.rb
+git commit -m &#39;miller 6.1.0&#39;
+git push -u origin miller-6.1.0
+(submit the pull request)
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Afterwork:</p>
+<ul>
+<li><p>Edit <code class="docutils literal notranslate"><span class="pre">go/src/version/version.go</span></code> and <code class="docutils literal notranslate"><span class="pre">docs6/conf.py</span></code> to change version from <code class="docutils literal notranslate"><span class="pre">6.2.0</span></code> to <code class="docutils literal notranslate"><span class="pre">6.2.0-dev</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">go</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./build</span></code></p></li>
+<li><p>Commit and push.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="misc-development-notes">
+<h2>Misc. development notes<a class="headerlink" href="#misc-development-notes" title="Permalink to this headline">¶</a></h2>
+<p>I use terminal width 120 and tabwidth 4.</p>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

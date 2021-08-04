@@ -1,0 +1,1 @@
+@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", all
