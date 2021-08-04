@@ -7,7 +7,7 @@ The outline of an invocation of Miller is
 
 * ``mlr``
 * Options controlling input/output formatting, etc. (:doc:`reference-main-io-options`).
-* One or more verbs (such as ``cut``, ``sort``, etc.) (:doc:`reference-verbs`) -- chained together using ``then`` (:doc:`reference-main-then-chaining`). You use these to transform your data.
+* One or more verbs (such as ``cut``, ``sort``, etc.) ([Verbs Reference](reference-verbs.md)) -- chained together using ``then`` (:doc:`reference-main-then-chaining`). You use these to transform your data.
 * Zero or more filenames, with input taken from standard input if there are no filenames present.
 
 For example, reading from a file:
@@ -34,7 +34,7 @@ The rest of this reference section gives you full information on each of these p
 
 When you type ``mlr {something} myfile.dat``, the ``{something}`` part is called a **verb**. It specifies how you want to transform your data. Most of the verbs are counterparts of built-in system tools like ``cut`` and ``sort`` -- but with file-format awareness, and giving you the ability to refer to fields by name.
 
-The verbs ``put`` and ``filter`` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found at :doc:`reference-dsl`.
+The verbs ``put`` and ``filter`` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found at [DSL reference](reference-dsl.md).
 
 Here's a comparison of verbs and ``put``/``filter`` DSL expressions:
 

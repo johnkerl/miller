@@ -16,9 +16,9 @@ Rules for colorization:
 
 * By default, colorize output only if writing to stdout and stdout is a TTY.
 
-  * Example: color: ``mlr --csv cat foo.csv``
-  * Example: no color: ``mlr --csv cat foo.csv > bar.csv``
-  * Example: no color: ``mlr --csv cat foo.csv | less``
+    * Example: color: ``mlr --csv cat foo.csv``
+    * Example: no color: ``mlr --csv cat foo.csv > bar.csv``
+    * Example: no color: ``mlr --csv cat foo.csv | less``
 
 * The default colors were chosen since they look OK with white or black terminal background, and are differentiable with common varieties of human color vision.
 
@@ -32,18 +32,18 @@ How you can control colorization:
 
 * Suppression/unsuppression:
 
-  * ``export MLR_NO_COLOR=true`` means Miller won't color even when it normally would.
-  * ``export MLR_ALWAYS_COLOR=true`` means Miller will color even when it normally would not. For example, you might want to use this when piping ``mlr`` output to ``less -r``.
-  * Command-line flags ``--no-color`` or ``-M``, ``--always-color`` or ``-C``.
+    * ``export MLR_NO_COLOR=true`` means Miller won't color even when it normally would.
+    * ``export MLR_ALWAYS_COLOR=true`` means Miller will color even when it normally would not. For example, you might want to use this when piping ``mlr`` output to ``less -r``.
+    * Command-line flags ``--no-color`` or ``-M``, ``--always-color`` or ``-C``.
 
 
 * Color choices can be specified by using environment variables or command-line flags, with values 0..255:
 
-  * ``export MLR_KEY_COLOR=208``
-  * ``export MLR_VALUE_COLOR=33``
-  * Likewise for ``MLR_PASS_COLOR``, ``MLR_FAIL_COLOR``, ``MLR_HELP_COLOR``, ``MLR_REPL_PS1_COLOR``, and ``MLR_REPL_PS2_COLOR``.
-  * Command-line flags ``--key-color 208``, ``--value-color 33``, etc., and likewise for ``--pass-color``, ``--fail-color``, ``--repl-ps1-color``, ``--repl-ps2-color``, and ``--help-color``.
-  * This is particularly useful if your terminal's background color clashes with current settings.
+    * ``export MLR_KEY_COLOR=208``
+    * ``export MLR_VALUE_COLOR=33``
+    * Likewise for ``MLR_PASS_COLOR``, ``MLR_FAIL_COLOR``, ``MLR_HELP_COLOR``, ``MLR_REPL_PS1_COLOR``, and ``MLR_REPL_PS2_COLOR``.
+    * Command-line flags ``--key-color 208``, ``--value-color 33``, etc., and likewise for ``--pass-color``, ``--fail-color``, ``--repl-ps1-color``, ``--repl-ps2-color``, and ``--help-color``.
+    * This is particularly useful if your terminal's background color clashes with current settings.
 
 If environment-variable settings and command-line flags are both provided, the latter take precedence.
 

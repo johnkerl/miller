@@ -1,66 +1,18 @@
-"Miller in 10 minutes": "10min.md"
-"Building from source": "build.md"
-"Community": "community.md"
-"How to contribute": "contributing.md"
-"CSV, with and without headers": "csv-with-and-without-headers.md"
-"Customization: .mlrrc": "customization.md"
-"Data-cleaning examples": "data-cleaning-examples.md"
-"Data-diving examples": "data-diving-examples.md"
-"Dates and times": "dates-and-times.md"
-"DKVP I/O examples": "dkvp-examples.md"
-"Why call it Miller?": "etymology.md"
-"Unix-toolkit context": "feature-comparison.md"
-"Features": "features.md"
-"File formats": "file-formats.md"
-"Introduction": "index.md"
-"Installation": "installation.md"
-"Internationalization": "internationalization.md"
-"Joins": "joins.md"
-"Keystroke-savers": "keystroke-savers.md"
-"Log-processing examples": "log-processing-examples.md"
-"Manpage": "manpage.md"
-"Miller on Windows": "miller-on-windows.md"
-"Miscellaneous examples": "misc-examples.md"
-"What's new in Miller 6": "new-in-miller-6.md"
-"Operating on all fields": "operating-on-all-fields.md"
-"How original is Miller?": "originality.md"
-"Output colorization": "output-colorization.md"
-"Performance": "performance.md"
-"Programming-language examples": "programming-examples.md"
-"Intro to Miller's programming language": "programming-language.md"
-"Randomizing examples": "randomizing-examples.md"
-"Record-heterogeneity": "record-heterogeneity.md"
-"Reference: arrays": "reference-dsl-arrays.md"
-"DSL reference: built-in functions": "reference-dsl-builtin-functions.md"
-"DSL reference: a note on the complexity of Miller's expression language": "reference-dsl-complexity.md"
-"DSL reference: control structures": "reference-dsl-control-structures.md"
-"DSL reference: errors and transparency": "reference-dsl-errors.md"
-"DSL reference: filter statements": "reference-dsl-filter-statements.md"
-"DSL reference: operators": "reference-dsl-operators.md"
-"DSL reference: output statements": "reference-dsl-output-statements.md"
-"DSL reference: syntax": "reference-dsl-syntax.md"
-"DSL reference: unset statements": "reference-dsl-unset-statements.md"
-"DSL reference: user-defined functions": "reference-dsl-user-defined-functions.md"
-"DSL reference: variables": "reference-dsl-variables.md"
-"DSL reference: overview": "reference-dsl.md"
-"Reference: arithmetic": "reference-main-arithmetic.md"
-"Reference: auxiliary commands": "reference-main-auxiliary-commands.md"
-"Reference: data types": "reference-main-data-types.md"
-"Reference: Miller environment variables": "reference-main-env-vars.md"
-"Reference: I/O options": "reference-main-io-options.md"
-"Reference: null data": "reference-main-null-data.md"
-"Reference: online help": "reference-main-online-help.md"
-"Reference: Miller commands": "reference-main-overview.md"
-"Reference: regular expressions": "reference-main-regular-expressions.md"
-"Reference: then-chaining": "reference-main-then-chaining.md"
-"Reference: list of verbs": "reference-verbs.md"
-"Documents by release": "release-docs.md"
-"The REPL": "repl.md"
-"Shapes of data": "shapes-of-data.md"
-"Running shell commands": "shell-commands.md"
-"Special symbols and formatting": "special-symbols-and-formatting.md"
-"SQL examples": "sql-examples.md"
-"Statistics examples": "statistics-examples.md"
-"Then-chaining": "then-chaining.md"
-"Two-pass algorithms": "two-pass-algorithms.md"
-"Why?": "why.md"
+o..........o...................o............o.......o.............
+o.................................................................
+o...o...........o................................o.....o..........
+.o...................o.o..........................................
+...o..............................................................
+...o...........o..................................................
+...........o...........................................o..........
+...........o.................o......................o..o..........
+.............o.....................o...................o..........
+..................o.............................o.................
+.....................o.o........................o.................
+.......................o..........................................
+.......................o........................o.................
+.........................o.............................o..........
+.............................o....................................
+..........................................oo......................
+...........................................o......................
+.......................................................o..........

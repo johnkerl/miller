@@ -1,11 +1,11 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # Intro to Miller's programming language
 
-In the :doc:`10min` page we took a tour of some of Miller's most-used verbs including ``cat``, ``head``, ``tail``, ``cut``, and ``sort``. These are analogs of familiar system commands, but empowered by field-name indexing and file-format awareness: the system ``sort`` command only knows about lines and column names like ``1,2,3,4``, while ``mlr sort`` knows about CSV/TSV/JSON/etc records, and field names like ``color,shape,flag,index``.
+In the [Miller in 10 minutes](10min.md) page we took a tour of some of Miller's most-used verbs including ``cat``, ``head``, ``tail``, ``cut``, and ``sort``. These are analogs of familiar system commands, but empowered by field-name indexing and file-format awareness: the system ``sort`` command only knows about lines and column names like ``1,2,3,4``, while ``mlr sort`` knows about CSV/TSV/JSON/etc records, and field names like ``color,shape,flag,index``.
 
 We also caught a glimpse of Miller's ``put`` and ``filter`` verbs. These two are special since they let you express statements using Miller's programming language. It's a *embedded domain-specific language* since it's inside Miller: often referred to simply as the *Miller DSL*.
 
-In the :doc:`reference-dsl` page we have a complete reference to Miller's programming language. For now, let's take a quick look at key features -- you can use as few or as many features as you like.
+In the [DSL reference](reference-dsl.md) page we have a complete reference to Miller's programming language. For now, let's take a quick look at key features -- you can use as few or as many features as you like.
 
 ## Records and fields
 

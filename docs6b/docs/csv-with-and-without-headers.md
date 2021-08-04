@@ -56,7 +56,7 @@ red,square,0,48,0.9562743938458542,0.7467203085342884,0.7755423050923582,7.11783
 purple,triangle,0,51,0.4355354501763202,0.8591292672156728,0.8122903963006748,5.753094629505863
 </pre>
 
-Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in columns which are separated by commas or tabs, respectively. In this case it's perhaps simpler to **just use NIDX format** which was designed for this purpose. (See also :doc:`file-formats`.) For example:
+Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in columns which are separated by commas or tabs, respectively. In this case it's perhaps simpler to **just use NIDX format** which was designed for this purpose. (See also [File Formats](file-formats.md).) For example:
 
 <pre>
 <b>mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv</b>

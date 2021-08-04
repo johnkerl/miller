@@ -38,9 +38,9 @@ JSON support is improved:
 ## Improved Windows experience
 
 Stronger support for Windows (with or without MSYS2), with a couple of
-exceptions.  See :doc:`miller-on-windows` for more information.
+exceptions.  See [Miller on Windows](miller-on-windows.md) for more information.
 
-Binaries are reliably available using GitHub Actions: see also :doc:`installation`.
+Binaries are reliably available using GitHub Actions: see also [Installation](installation.md).
 
 ## In-process support for compressed input
 
@@ -52,7 +52,7 @@ foo.csv.gz``. Similarly for ``.z`` and ``.bz2`` files.  Please see section
 
 ## Output colorization
 
-Miller uses separate, customizable colors for keys and values whenever the output is to a terminal. See :doc:`output-colorization`.
+Miller uses separate, customizable colors for keys and values whenever the output is to a terminal. See [Output Colorization](output-colorization.md).
 
 ## Improved numeric conversion
 
@@ -94,7 +94,7 @@ For example (see https://github.com/johnkerl/miller/issues/178) you can now do
 
 ## REPL
 
-Miller now has a read-evaluate-print-loop (:doc:`repl`) where you can single-step through your data-file record, express arbitrary statements to converse with the data, etc.
+Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single-step through your data-file record, express arbitrary statements to converse with the data, etc.
 
 ## New DSL functions / operators
 

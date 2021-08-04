@@ -9,7 +9,7 @@ You can install Miller for various platforms as follows:
 * MacOS: ``brew install miller`` or ``port install miller`` depending on your preference of [Homebrew](https://brew.sh>`_ or `MacPorts <https://macports.org).
 * Windows: ``choco install miller``  using [Chocolatey](https://chocolatey.org).
 * You can get latest builds for Linux, MacOS, and Windows by visiting https://github.com/johnkerl/miller/actions, selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
-* See also :doc:`build` if you prefer -- in particular, if your platform's package manager doesn't have the latest release.
+* See also the [build page](build.md) if you prefer -- in particular, if your platform's package manager doesn't have the latest release.
 
 As a first check, you should be able to run ``mlr --version`` at your system's command prompt and see something like the following:
 
@@ -50,7 +50,7 @@ yellow circle   true  87    63.5058  8.3350
 purple square   false 91    72.3735  8.2430
 </pre>
 
-If you run into issues on these checks, please check out the resources on the :doc:`community` page for help.
+If you run into issues on these checks, please check out the resources on the [community page](community.md) for help.
 
 ## Miller verbs
 
@@ -285,7 +285,7 @@ yellow circle   NEW  87    63.5058  8.3350
 purple square   NEW  91    72.3735  8.2430
 </pre>
 
-You can find the full list of verbs at the :doc:`reference-verbs` page.
+You can find the full list of verbs at the [Verbs Reference](reference-verbs.md) page.
 
 ## Multiple input files
 
@@ -488,9 +488,9 @@ Anything we can do with CSV input data, we can do with any other format input da
 How to specify these to Miller:
 
 * If you use ``--csv`` or ``--json`` or ``--pprint``, etc., then Miller will use that format for input and output.
-* If you use ``--icsv`` and ``--ojson`` (note the extra ``i`` and ``o``) then Miller will use CSV for input and JSON for output, etc.  See also :doc:`keystroke-savers` for even shorter options like ``--c2j``.
+* If you use ``--icsv`` and ``--ojson`` (note the extra ``i`` and ``o``) then Miller will use CSV for input and JSON for output, etc.  See also [Keystroke Savers](keystroke-savers.md) for even shorter options like ``--c2j``.
 
-You can read more about this at the :doc:`file-formats` page.
+You can read more about this at the [File Formats](file-formats.md) page.
 
 .. _10min-choices-for-printing-to-files:
 

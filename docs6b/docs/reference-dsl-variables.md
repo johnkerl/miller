@@ -608,7 +608,7 @@ asserting_present
 asserting_string
 </pre>
 
-See :doc:`data-cleaning-examples` for examples of how to use these.
+See [Data-cleaning Examples](data-cleaning-examples.md) for examples of how to use these.
 
 Type-declarations for local variables, function parameter, and function return values
 ...............................................................................................
@@ -684,7 +684,7 @@ func f(map m, int i): bool {
 
 ## Null data: empty and absent
 
-Please see :doc:`reference-main-null-data`.
+Please see [xxxx](reference-main-null-data.md).
 
 ## Aggregate variable assignments
 

@@ -15,7 +15,7 @@ Options:
 --json    --ijson    --ojson
 </pre>
 
-These are as discussed in :doc:`file-formats`, with the exception of ``--right`` which makes pretty-printed output right-aligned:
+These are as discussed in [File Formats](file-formats.md), with the exception of ``--right`` which makes pretty-printed output right-aligned:
 
 <pre>
 <b>mlr --opprint cat data/small</b>

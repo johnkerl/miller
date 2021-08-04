@@ -49,4 +49,4 @@ Miller is [autobuilt for **Linux**, **MacOS**, and **Windows** using **GitHub Ac
 
 ## Building from source
 
-Please see :doc:`build`.
+Please see [Building from source](build.md).

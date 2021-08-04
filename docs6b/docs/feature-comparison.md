@@ -54,8 +54,8 @@ Likewise with ``mlr sort``, ``mlr tac``, and so on.
 
 * As with ``awk``, Miller's ``put``/``filter`` language lets you set ``@sum=0`` before records are read, then update that sum on each record, then print its value at the end.  Unlike ``awk``, Miller makes syntactically explicit the difference between variables with extent across all records (names starting with ``@``, such as ``@sum``) and variables which are local to the current expression (names starting without ``@``, such as ``sum``).
 
-* Miller can be faster than ``awk``, ``cut``, and so on, depending on platform; see also :doc:`performance`. In particular, Miller's DSL syntax is parsed into Go control structures at startup time, with the bulk data-stream processing all done in Go.
+* Miller can be faster than ``awk``, ``cut``, and so on, depending on platform; see also [Performance](performance.md). In particular, Miller's DSL syntax is parsed into Go control structures at startup time, with the bulk data-stream processing all done in Go.
 
 ## See also
 
-See :doc:`reference-verbs` for more on Miller's subcommands ``cat``, ``cut``, ``head``, ``sort``, ``tac``, ``tail``, ``top``, and ``uniq``, as well as :doc:`reference-dsl` for more on the awk-like ``mlr filter`` and ``mlr put``.
+See [Verbs Reference](reference-verbs.md) for more on Miller's subcommands ``cat``, ``cut``, ``head``, ``sort``, ``tac``, ``tail``, ``top``, and ``uniq``, as well as [DSL reference](reference-dsl.md) for more on the awk-like ``mlr filter`` and ``mlr put``.

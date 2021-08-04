@@ -64,4 +64,4 @@ If there's more than one input file, you can use ``--mfrom``, then however many 
 
 If you want the default file format for Miller to be CSV you can simply put ``--csv`` on a line by itself in your ``~/.mlrrc`` file. Then instead of ``mlr --csv cat example.csv`` you can just do ``mlr cat example.csv``. This is just the default, though, so ``mlr --opprint cat example.csv`` will still use default CSV format for input, and PPRINT (tabular) for output.
 
-You can read more about this at the :doc:`customization` page.
+You can read more about this at the [Customization](customization.md) page.

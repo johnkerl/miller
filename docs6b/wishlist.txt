@@ -14,3 +14,8 @@ to do:
 * figure out internal-link spelling
 * figure out external-link spelling
 * vis-link css
+
+check:
+* data-file links don't break
+* build.md -- nested bullets ...
+* builtin-functions autogen sh

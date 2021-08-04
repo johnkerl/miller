@@ -74,7 +74,6 @@ nav:
     - "Manpage": "manpage.md"
     - "Documents by release": "release-docs.md"
     - "Installation": "installation.md"
-    - 'build.md'
     - "Building from source": "build.md"
 extra_css: ['extra.css']
 markdown_extensions:

@@ -14,15 +14,15 @@ mlr sort -f hostname,uptime *.dat
 
 These fall into categories as follows:
 
-* Analogs of their Unix-toolkit namesakes, discussed below as well as in :doc:`feature-comparison`: :ref:`reference-verbs-cat`, :ref:`reference-verbs-cut`, :ref:`reference-verbs-grep`, :ref:`reference-verbs-head`, :ref:`reference-verbs-join`, :ref:`reference-verbs-sort`, :ref:`reference-verbs-tac`, :ref:`reference-verbs-tail`, :ref:`reference-verbs-top`, :ref:`reference-verbs-uniq`.
+* Analogs of their Unix-toolkit namesakes, discussed below as well as in [Unix-toolkit Context](feature-comparison.md): :ref:`reference-verbs-cat`, :ref:`reference-verbs-cut`, :ref:`reference-verbs-grep`, :ref:`reference-verbs-head`, :ref:`reference-verbs-join`, :ref:`reference-verbs-sort`, :ref:`reference-verbs-tac`, :ref:`reference-verbs-tail`, :ref:`reference-verbs-top`, :ref:`reference-verbs-uniq`.
 
 * ``awk``-like functionality: :ref:`reference-verbs-filter`, :ref:`reference-verbs-put`, :ref:`reference-verbs-sec2gmt`, :ref:`reference-verbs-sec2gmtdate`, :ref:`reference-verbs-step`, :ref:`reference-verbs-tee`.
 
 * Statistically oriented: :ref:`reference-verbs-bar`, :ref:`reference-verbs-bootstrap`, :ref:`reference-verbs-decimate`, :ref:`reference-verbs-histogram`, :ref:`reference-verbs-least-frequent`, :ref:`reference-verbs-most-frequent`, :ref:`reference-verbs-sample`, :ref:`reference-verbs-shuffle`, :ref:`reference-verbs-stats1`, :ref:`reference-verbs-stats2`.
 
-* Particularly oriented toward :doc:`record-heterogeneity`, although all Miller commands can handle heterogeneous records: :ref:`reference-verbs-group-by`, :ref:`reference-verbs-group-like`, :ref:`reference-verbs-having-fields`.
+* Particularly oriented toward [Record Heterogeneity](record-heterogeneity.md), although all Miller commands can handle heterogeneous records: :ref:`reference-verbs-group-by`, :ref:`reference-verbs-group-like`, :ref:`reference-verbs-having-fields`.
 
-* These draw from other sources (see also :doc:`originality`): :ref:`reference-verbs-count-distinct` is SQL-ish, and :ref:`reference-verbs-rename` can be done by ``sed`` (which does it faster: see :doc:`performance`. Verbs: :ref:`reference-verbs-check`, :ref:`reference-verbs-count-distinct`, :ref:`reference-verbs-label`, :ref:`reference-verbs-merge-fields`, :ref:`reference-verbs-nest`, :ref:`reference-verbs-nothing`, :ref:`reference-verbs-regularize`, :ref:`reference-verbs-rename`, :ref:`reference-verbs-reorder`, :ref:`reference-verbs-reshape`, :ref:`reference-verbs-seqgen`.
+* These draw from other sources (see also [How Original Is Miller?](originality.md)): :ref:`reference-verbs-count-distinct` is SQL-ish, and :ref:`reference-verbs-rename` can be done by ``sed`` (which does it faster: see [Performance](performance.md). Verbs: :ref:`reference-verbs-check`, :ref:`reference-verbs-count-distinct`, :ref:`reference-verbs-label`, :ref:`reference-verbs-merge-fields`, :ref:`reference-verbs-nest`, :ref:`reference-verbs-nothing`, :ref:`reference-verbs-regularize`, :ref:`reference-verbs-rename`, :ref:`reference-verbs-reorder`, :ref:`reference-verbs-reshape`, :ref:`reference-verbs-seqgen`.
 
 .. _reference-verbs-altkv:
 
@@ -183,7 +183,7 @@ orange 0.468014 292
 
 ## cat
 
-Most useful for format conversions (see :doc:`file-formats`, and concatenating multiple same-schema CSV files to have the same header:
+Most useful for format conversions (see [File Formats](file-formats.md), and concatenating multiple same-schema CSV files to have the same header:
 
 <pre>
 <b>mlr cat -h</b>
@@ -812,7 +812,7 @@ Parser-info options:
 
 ### Features which filter shares with put
 
-Please see :doc:`reference-dsl` for more information about the expression language for ``mlr filter``.
+Please see [DSL reference](reference-dsl.md) for more information about the expression language for ``mlr filter``.
 
 .. _reference-verbs-format-values:
 
@@ -1119,7 +1119,7 @@ Outputs records in batches having identical field names.Options:
 -h|--help Show this message.
 </pre>
 
-This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in :doc:`record-heterogeneity` -- in particular, in preparation for CSV or pretty-print output.
+This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in [Record Heterogeneity](record-heterogeneity.md) -- in particular, in preparation for CSV or pretty-print output.
 
 <pre>
 <b>mlr cat data/het.dkvp</b>
@@ -1838,7 +1838,7 @@ Parser-info options:
 
 ### Features which put shares with filter
 
-Please see the :doc:`reference-dsl` for more information about the expression language for ``mlr put``.
+Please see the [DSL reference](reference-dsl.md) for more information about the expression language for ``mlr put``.
 
 .. _reference-verbs-regularize:
 
@@ -1934,7 +1934,7 @@ eks wye     4     0.38139939387114097 0.13418874328430463
 wye pan     5     0.5732889198020006  0.8636244699032729
 </pre>
 
-As discussed in :doc:`performance`, ``sed`` is significantly faster than Miller at doing this. However, Miller is format-aware, so it knows to do renames only within specified field keys and not any others, nor in field values which may happen to contain the same pattern. Example:
+As discussed in [Performance](performance.md), ``sed`` is significantly faster than Miller at doing this. However, Miller is format-aware, so it knows to do renames only within specified field keys and not any others, nor in field values which may happen to contain the same pattern. Example:
 
 <pre>
 <b>sed 's/y/COLUMN5/g' data/small</b>

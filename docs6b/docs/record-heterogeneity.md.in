@@ -32,7 +32,7 @@ GENMD_RUN_COMMAND
 mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv
 GENMD_EOF
 
-You may also find Miller's ``group-like`` feature handy (see also :doc:`reference-verbs`):
+You may also find Miller's ``group-like`` feature handy (see also [Verbs Reference](reference-verbs.md)):
 
 GENMD_RUN_COMMAND
 mlr --ocsvlite group-like data/het.dkvp

@@ -14,7 +14,7 @@ GENMD_CARDIFY
 --json    --ijson    --ojson
 GENMD_EOF
 
-These are as discussed in :doc:`file-formats`, with the exception of ``--right`` which makes pretty-printed output right-aligned:
+These are as discussed in [File Formats](file-formats.md), with the exception of ``--right`` which makes pretty-printed output right-aligned:
 
 GENMD_RUN_COMMAND
 mlr --opprint cat data/small

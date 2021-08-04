@@ -1,8 +1,7 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # Building from source
-================================================================
 
-Please also see :doc:`installation` for information about pre-built executables.
+Please also see [Installation](installation.md) for information about pre-built executables.
 
 ## Miller license
 
@@ -49,36 +48,36 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 
 * Update version found in ``mlr --version`` and ``man mlr``:
 
-  * Edit ``go/src/version/version.go`` from ``6.1.0-dev`` to ``6.2.0``.
-  * Likewise ``docs6/conf.py``
-  * ``cd ../docs6``
-  * ``export PATH=../go:$PATH``
-  * ``make html``
-  * The ordering is important: the first build creates ``mlr``; the second runs ``mlr`` to create ``manpage.txt``; the third includes ``manpage.txt`` into one of its outputs.
-  * Commit and push.
+    * Edit ``go/src/version/version.go`` from ``6.1.0-dev`` to ``6.2.0``.
+    * Likewise ``docs6/conf.py``
+    * ``cd ../docs6``
+    * ``export PATH=../go:$PATH``
+    * ``make html``
+    * The ordering is important: the first build creates ``mlr``; the second runs ``mlr`` to create ``manpage.txt``; the third includes ``manpage.txt`` into one of its outputs.
+    * Commit and push.
 
 * Create the release tarball and SRPM:
 
-  * TBD for the Go port ...
-  * Linux/MacOS/Windows binaries from GitHub Actions ...
-  * Pull back release tarball ``mlr-6.2.0.tar.gz`` from buildbox, and ``mlr.{arch}`` binaries from whatever buildboxes.
+    * TBD for the Go port ...
+    * Linux/MacOS/Windows binaries from GitHub Actions ...
+    * Pull back release tarball ``mlr-6.2.0.tar.gz`` from buildbox, and ``mlr.{arch}`` binaries from whatever buildboxes.
 
 * Create the Github release tag:
 
-  * Don't forget the ``v`` in ``v6.2.0``
-  * Write the release notes
-  * Attach the release tarball and binaries. Double-check assets were successfully uploaded.
-  * Publish the release
+    * Don't forget the ``v`` in ``v6.2.0``
+    * Write the release notes
+    * Attach the release tarball and binaries. Double-check assets were successfully uploaded.
+    * Publish the release
 
 * Check the release-specific docs:
 
-  * Look at https://miller.readthedocs.io for new-version docs, after a few minutes' propagation time.
+    * Look at https://miller.readthedocs.io for new-version docs, after a few minutes' propagation time.
 
 * Notify:
 
-  * Submit ``brew`` pull request; notify any other distros which don't appear to have autoupdated since the previous release (notes below)
-  * Similarly for ``macports``: https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile.
-  * Social-media updates.
+    * Submit ``brew`` pull request; notify any other distros which don't appear to have autoupdated since the previous release (notes below)
+    * Similarly for ``macports``: https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile.
+    * Social-media updates.
 
 <pre>
 git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
@@ -99,10 +98,10 @@ git push -u origin miller-6.1.0
 
 * Afterwork:
 
-  * Edit ``go/src/version/version.go`` and ``docs6/conf.py`` to change version from ``6.2.0`` to ``6.2.0-dev``.
-  * ``cd go``
-  * ``./build``
-  * Commit and push.
+    * Edit ``go/src/version/version.go`` and ``docs6/conf.py`` to change version from ``6.2.0`` to ``6.2.0-dev``.
+    * ``cd go``
+    * ``./build``
+    * Commit and push.
 
 ## Misc. development notes
 

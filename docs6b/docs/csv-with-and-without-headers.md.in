@@ -30,7 +30,7 @@ GENMD_RUN_COMMAND
 head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat
 GENMD_EOF
 
-Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in columns which are separated by commas or tabs, respectively. In this case it's perhaps simpler to **just use NIDX format** which was designed for this purpose. (See also :doc:`file-formats`.) For example:
+Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in columns which are separated by commas or tabs, respectively. In this case it's perhaps simpler to **just use NIDX format** which was designed for this purpose. (See also [File Formats](file-formats.md).) For example:
 
 GENMD_RUN_COMMAND
 mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv

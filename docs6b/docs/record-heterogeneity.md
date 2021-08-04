@@ -82,7 +82,7 @@ c 8
 4 9
 </pre>
 
-You may also find Miller's ``group-like`` feature handy (see also :doc:`reference-verbs`):
+You may also find Miller's ``group-like`` feature handy (see also [Verbs Reference](reference-verbs.md)):
 
 <pre>
 <b>mlr --ocsvlite group-like data/het.dkvp</b>

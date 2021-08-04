@@ -35,7 +35,7 @@ a=wye,x_sum=0.7778922255683036
 * There is more to learn
 * They are highly customizable
 
-Please see :doc:`reference-verbs` for information on verbs other than ``put`` and ``filter``.
+Please see [Verbs Reference](reference-verbs.md) for information on verbs other than ``put`` and ``filter``.
 
 The essential usages of ``mlr filter`` and ``mlr put`` are for record-selection and record-updating expressions, respectively. For example, given the following input data:
 

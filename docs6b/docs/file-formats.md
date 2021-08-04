@@ -75,7 +75,7 @@ NIDX: implicitly numerically indexed (Unix-toolkit style)
 
 ## CSV/TSV/ASV/USV/etc.
 
-When ``mlr`` is invoked with the ``--csv`` or ``--csvlite`` option, key names are found on the first record and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See :doc:`record-heterogeneity` for how Miller handles changes of field names within a single data stream.
+When ``mlr`` is invoked with the ``--csv`` or ``--csvlite`` option, key names are found on the first record and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
 
 Miller has record separator ``RS`` and field separator ``FS``, just as ``awk`` does.  For TSV, use ``--fs tab``; to convert TSV to CSV, use ``--ifs tab --ofs comma``, etc.  (See also :ref:`reference-separators`.)
 
@@ -98,7 +98,7 @@ Here are the differences between CSV and CSV-lite:
 
 * CSV supports [RFC-4180](https://tools.ietf.org/html/rfc4180)-style double-quoting, including the ability to have commas and/or LF/CRLF line-endings contained within an input field; CSV-lite does not.
 
-* CSV does not allow heterogeneous data; CSV-lite does (see also :doc:`record-heterogeneity`).
+* CSV does not allow heterogeneous data; CSV-lite does (see also [Record Heterogeneity](record-heterogeneity.md)).
 
 * The CSV-lite input-reading code is fractionally more efficient than the CSV input-reader.
 
@@ -145,7 +145,7 @@ logger.log("type=3,user=$USER,date=$date\n");
 
 Fields lacking an IPS will have positional index (starting at 1) used as the key, as in NIDX format. For example, ``dish=7,egg=8,flint`` is parsed as ``"dish" => "7", "egg" => "8", "3" => "flint"`` and ``dish,egg,flint`` is parsed as ``"1" => "dish", "2" => "egg", "3" => "flint"``.
 
-As discussed in :doc:`record-heterogeneity`, Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
+As discussed in [Record Heterogeneity](record-heterogeneity.md), Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
 
 <pre>
 resource=/path/to/file,loadsec=0.45,ok=true
@@ -429,7 +429,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729
 
 Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on ``tail -f`` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
 
-See :doc:`record-heterogeneity` for how Miller handles changes of field names within a single data stream.
+See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
 
 For output only (this isn't supported in the input-scanner as of 5.0.0) you can use ``--barred`` with pprint output format:
 
