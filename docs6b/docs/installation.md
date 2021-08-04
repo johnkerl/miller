@@ -7,13 +7,13 @@
 Once Miller 6 is released, the commands in this section will install Miller 6 for you.
 Until then, please see the following sections for how to get Miller 6.*
 
-`Homebrew <https://brew.sh/>`_ installation support for OSX is available via
+[Homebrew](https://brew.sh/) installation support for OSX is available via
 
 <pre>
 <b>brew update && brew install miller</b>
 </pre>
 
-...and also via `MacPorts <https://www.macports.org/>`_:
+...and also via [MacPorts](https://www.macports.org/):
 
 <pre>
 <b>sudo port selfupdate && sudo port install miller</b>
@@ -33,7 +33,7 @@ You may already have the ``mlr`` executable available in your platform's package
 <b>sudo yum install miller</b>
 </pre>
 
-On Windows, Miller is available via `Chocolatey <https://chocolatey.org/>`_:
+On Windows, Miller is available via [Chocolatey](https://chocolatey.org/):
 
 <pre>
 <b>choco install miller</b>
@@ -41,11 +41,11 @@ On Windows, Miller is available via `Chocolatey <https://chocolatey.org/>`_:
 
 ## Prebuilt executables via GitHub per release
 
-Please see https://github.com/johnkerl/miller/releases where there are builds for OSX Yosemite, Linux x86-64 (dynamically linked), and Windows.
+Please see [https://github.com/johnkerl/miller/releases](https://github.com/johnkerl/miller/releases) where there are builds for OSX Yosemite, Linux x86-64 (dynamically linked), and Windows.
 
 ## Prebuilt executables via GitHub per commit
 
-Miller is autobuilt for **Linux**, **MacOS**, and **Windows** using **GitHub Actions** on every commit (https://github.com/johnkerl/miller/actions): select the latest build and click _Artifacts_. (These are retained for 5 days after each commit.)
+Miller is [autobuilt for **Linux**, **MacOS**, and **Windows** using **GitHub Actions** on every commit](https://github.com/johnkerl/miller/actions): select the latest build and click _Artifacts_. (These are retained for 5 days after each commit.)
 
 ## Building from source
 

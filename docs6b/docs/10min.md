@@ -6,8 +6,8 @@
 You can install Miller for various platforms as follows:
 
 * Linux: ``yum install miller`` or ``apt-get install miller`` depending on your flavor of Linux
-* MacOS: ``brew install miller`` or ``port install miller`` depending on your preference of `Homebrew <https://brew.sh>`_ or `MacPorts <https://macports.org>`_.
-* Windows: ``choco install miller``  using `Chocolatey <https://chocolatey.org>`_.
+* MacOS: ``brew install miller`` or ``port install miller`` depending on your preference of [Homebrew](https://brew.sh>`_ or `MacPorts <https://macports.org).
+* Windows: ``choco install miller``  using [Chocolatey](https://chocolatey.org).
 * You can get latest builds for Linux, MacOS, and Windows by visiting https://github.com/johnkerl/miller/actions, selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
 * See also :doc:`build` if you prefer -- in particular, if your platform's package manager doesn't have the latest release.
 
@@ -18,7 +18,7 @@ As a first check, you should be able to run ``mlr --version`` at your system's c
 Miller v6.0.0-dev
 </pre>
 
-As a second check, given (`example.csv <./example.csv>`_) you should be able to do
+As a second check, given [example.csv](./example.csv) you should be able to do
 
 <pre>
 <b>mlr --csv cat example.csv</b>
@@ -289,7 +289,7 @@ You can find the full list of verbs at the :doc:`reference-verbs` page.
 
 ## Multiple input files
 
-Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files (`data/a.csv <data/a.csv>`_) and (`data/b.csv <data/b.csv>`_), the system ``cat`` command will repeat header lines:
+Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files [data/a.csv](data/a.csv and [data/b.csv](data/b.csv), the system ``cat`` command will repeat header lines:
 
 <pre>
 <b>cat data/a.csv</b>

@@ -17,4 +17,4 @@ pretty-print your data horizontally or vertically to make it easier to read.
 
 In the following (color added for the illustration) you can see how CSV, tabular, JSON, and other **file formats** share a common theme which is **lists of key-value-pairs**. Miller embraces this common theme.
 
-.. image:: coverart/cover-combined.png
+![coverart/cover-combined.png](coverart/cover-combined.png)

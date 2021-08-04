@@ -10,8 +10,7 @@ nice to have:
 * dark mode
   ? wtf
 
-wtf:
-* figure out link spelling
-
-need to:
-* titleize all in mkdocs.yml
+to do:
+* figure out internal-link spelling
+* figure out external-link spelling
+* vis-link css

@@ -9,7 +9,7 @@ In the :doc:`reference-dsl` page we have a complete reference to Miller's progra
 
 ## Records and fields
 
-Let's keep using the sample `example.csv <./example.csv>`_. When we type
+Let's keep using the sample [example.csv](./example.csv). When we type
 
 <pre>
 <b>mlr --c2p put '$cost = $quantity * $rate' example.csv</b>
@@ -29,7 +29,7 @@ purple square   false 91    72.3735  8.2430 596.5747605000001
 a few things are happening:
 
 * We refer to fields in the input data using a dollar sign and then the field name, e.g. ``$quantity``. (If a field name has special characters like a dot or slash, just use curly braces: ``${field.name}``.)
-* The expression ``$cost = $quantity * $rate`` is executed once per record of the data file. Our `example.csv <./example.csv>`_ has 10 records so this expression was executed 10 times, with the field names ``$quantity`` and ``$rate`` bound to the current record's values for those fields.
+* The expression ``$cost = $quantity * $rate`` is executed once per record of the data file. Our [example.csv](./example.csv) has 10 records so this expression was executed 10 times, with the field names ``$quantity`` and ``$rate`` bound to the current record's values for those fields.
 * On the left-hand side we have the new field name ``$cost`` which didn't come from the input data. Assignments to new variables result in a new field being placed after all the other ones. If we'd assigned to an existing field name, it would have been updated in-place.
 * The entire expression is surrounded by single quotes, to get it past the system shell. Inside those, only double quotes have meaning in Miller's programming language.
 
@@ -97,7 +97,7 @@ This becomes particularly important on Windows. Quite a bit of effort was put in
 
 ## Out-of-stream variables, begin, and end
 
-Above we saw that your expression is executed once per record -- if a file has a million records, your expression will be executed a million times, once for each record. But you can mark statements to only be executed once, either before the record stream begins, or after the record stream is ended. If you know about `AWK <https://en.wikipedia.org/wiki/AWK>`_, you might have noticed that Miller's programming language is loosely inspired by it, including the ``begin`` and ``end`` statements.
+Above we saw that your expression is executed once per record -- if a file has a million records, your expression will be executed a million times, once for each record. But you can mark statements to only be executed once, either before the record stream begins, or after the record stream is ended. If you know about [AWK](https://en.wikipedia.org/wiki/AWK), you might have noticed that Miller's programming language is loosely inspired by it, including the ``begin`` and ``end`` statements.
 
 Above we also saw that names like ``$quantity`` are bound to each record in turn.
 
@@ -153,7 +153,7 @@ We'll see in the documentation for :ref:`reference-verbs-stats1` that there's a 
 
 ## Context variables
 
-Also inspired by `AWK <https://en.wikipedia.org/wiki/AWK>`_, the Miller DSL has the following special **context variables**:
+Also inspired by [AWK](https://en.wikipedia.org/wiki/AWK), the Miller DSL has the following special **context variables**:
 
 * ``FILENAME`` -- the filename the current record came from. Especially useful in things like ``mlr ... *.csv``.
 * ``FILENUM`` -- similarly, but integer 1,2,3,... rather than filenam.e

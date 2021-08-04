@@ -1,8 +1,20 @@
+/*
 .wy-nav-top {
   background-color: maroon;
 }
+*/
+.wy-menu {
+  /*background-color: #c0c0c0;*/
+  background-color: #404040;
+}
+/*
+.wy-side-scroll {
+  background-color: maroon;
+}
+*/
 .wy-side-nav-search {
-  background-color: #808080;
+  /*background-color: #c0c0c0;*/
+  background-color: #404040;
 }
 .rst-content code {
   color: #000000;
@@ -44,3 +56,25 @@ pre b {
   background-color: #c5b690;
   padding: 2px;
 }
+
+/*
+a {
+  color: maroon;
+}
+a:visited {
+  color: maroon;
+}
+a:hover {
+  color: maroon;
+}
+
+.reference-internal {
+  color: yellow;
+}
+.reference-internal {
+  color: green;
+}
+.reference-internal {
+  color: blue;
+}
+*/

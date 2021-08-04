@@ -10,4 +10,5 @@ if [ $# -ge 1 ]; then
 else
   for rstin in *.md.in; do genmds $rstin; done
 fi
-sphinx-build -M html . _build
+cd ..
+#mkdocs build

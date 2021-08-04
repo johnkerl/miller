@@ -3,8 +3,7 @@
 
 .. _sql-output-examples:
 
-SQL-output examples
-^^^^^^^^^^^^^^^^^^^
+## SQL-output examples
 
 I like to produce SQL-query output with header-column and tab delimiter: this is CSV but with a tab instead of a comma, also known as TSV. Then I post-process with ``mlr --tsv`` or ``mlr --tsvlite``.  This means I can do some (or all, or none) of my data processing within SQL queries, and some (or none, or all) of my data processing using Miller -- whichever is most convenient for my needs at the moment.
 
@@ -103,8 +102,7 @@ Again, all the examples in the CSV section apply here -- just change the input-f
 
 .. _sql-input-examples:
 
-SQL-input examples
-^^^^^^^^^^^^^^^^^^
+## SQL-input examples
 
 One use of NIDX (value-only, no keys) format is for loading up SQL tables.
 

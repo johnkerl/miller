@@ -25,7 +25,7 @@ GENMD_EOF
 
 ## Randomly selecting words from a list
 
-Given this `word list <./data/english-words.txt>`_, first take a look to see what the first few lines look like:
+Given this [word list](./data/english-words.txt), first take a look to see what the first few lines look like:
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 head data/english-words.txt
@@ -59,7 +59,7 @@ GENMD_EOF
 
 ## Randomly generating jabberwocky words
 
-These are simple *n*-grams as `described here <http://johnkerl.org/randspell/randspell-slides-ts.pdf>`_. Some common functions are `located here <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngfuncs.mlr.txt>`_. Then here are scripts for `1-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng1.mlr.txt>`_ `2-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng2.mlr.txt>`_ `3-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng3.mlr.txt>`_ `4-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng4.mlr.txt>`_, and `5-grams <https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng5.mlr.txt>`_.
+These are simple *n*-grams as [described here](http://johnkerl.org/randspell/randspell-slides-ts.pdf). Some common functions are [located here](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ngfuncs.mlr.txt). Then here are scripts for [1-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng1.mlr.txt), [2-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng2.mlr.txt), [3-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng3.mlr.txt), [4-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng4.mlr.txt), and [5-grams](https://github.com/johnkerl/miller/blob/master/docs/ngrams/ng5.mlr.txt).
 
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 

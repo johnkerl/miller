@@ -31,11 +31,11 @@ Miller has record separator ``RS`` and field separator ``FS``, just as ``awk`` d
 
 **USV (Unicode-separated values):** likewise, the flags ``--usv``, ``--iusv``, ``--ousv``, ``--usvlite``, ``--iusvlite``, and ``--ousvlite`` use Unicode FS and RS U+241F (UTF-8 0x0xe2909f) and U+241E (UTF-8 0xe2909e), respectively.
 
-Miller's ``--csv`` flag supports `RFC-4180 CSV <https://tools.ietf.org/html/rfc4180>`_. This includes CRLF line-terminators by default, regardless of platform.
+Miller's ``--csv`` flag supports [RFC-4180 CSV](https://tools.ietf.org/html/rfc4180). This includes CRLF line-terminators by default, regardless of platform.
 
 Here are the differences between CSV and CSV-lite:
 
-* CSV supports `RFC-4180 <https://tools.ietf.org/html/rfc4180>`_-style double-quoting, including the ability to have commas and/or LF/CRLF line-endings contained within an input field; CSV-lite does not.
+* CSV supports [RFC-4180](https://tools.ietf.org/html/rfc4180)-style double-quoting, including the ability to have commas and/or LF/CRLF line-endings contained within an input field; CSV-lite does not.
 
 * CSV does not allow heterogeneous data; CSV-lite does (see also :doc:`record-heterogeneity`).
 
@@ -134,14 +134,13 @@ GENMD_EOF
 
 ## Tabular JSON
 
-JSON is a format which supports arbitrarily deep nesting of "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for handling **tabular data** only. This means Miller cannot (and should not) handle arbitrary JSON. (Check out `jq <https://stedolan.github.io/jq/>`_.)
+JSON is a format which supports arbitrarily deep nesting of "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for handling **tabular data** only. This means Miller cannot (and should not) handle arbitrary JSON. (Check out [jq](https://stedolan.github.io/jq/).)
 
 But if you have tabular data represented in JSON then Miller can handle that for you.
 
 By *tabular JSON* I mean the data is either a sequence of one or more objects, or an array consisting of one or more orjects. Miller treats JSON objects as name-indexed records.
 
-Single-level JSON objects
-^^^^^^^^^^^^^^^^^^^^^^^^^
+### Single-level JSON objects
 
 An **array of single-level objects** is, quite simply, **a table**:
 
@@ -157,8 +156,7 @@ GENMD_RUN_COMMAND
 mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json
 GENMD_EOF
 
-Nested JSON objects
-^^^^^^^^^^^^^^^^^^^^^^^^^
+### Nested JSON objects
 
 Additionally, Miller can **tabularize nested objects by concatentating keys**:
 
@@ -178,8 +176,7 @@ mlr --json --jvstack head -n 1 \
   data/json-example-2.json
 GENMD_EOF
 
-Arrays
-^^^^^^^^^^^^^^^^^^^^^^^^^
+### Arrays
 
 Arrays (TODO: update for Miller6) aren't supported in Miller's ``put``/``filter`` DSL. By default, JSON arrays are read in as integer-keyed maps.
 
@@ -205,10 +202,9 @@ This is non-ideal, but it allows Miller (5.x release being latest as of this wri
 
 You might also use ``mlr --json-skip-arrays-on-input`` or ``mlr --json-fatal-arrays-on-input``.
 
-To truly handle JSON, please use a JSON-processing tool such as `jq <https://stedolan.github.io/jq/>`_.
+To truly handle JSON, please use a JSON-processing tool such as [jq](https://stedolan.github.io/jq/).
 
-Formatting JSON options
-^^^^^^^^^^^^^^^^^^^^^^^^^
+### Formatting JSON options
 
 JSON isn't a parameterized format, so ``RS``, ``FS``, ``PS`` aren't specifiable. Nonetheless, you can do the following:
 
@@ -222,7 +218,7 @@ JSON isn't a parameterized format, so ``RS``, ``FS``, ``PS`` aren't specifiable.
 
 * Use ``--jflatsep youmd.inghere`` to specify the string used for key concatenation: this defaults to a single colon.
 
-Again, please see `jq <https://stedolan.github.io/jq/>`_ for a truly powerful, JSON-specific tool.
+Again, please see [jq](https://stedolan.github.io/jq/) for a truly powerful, JSON-specific tool.
 
 .. _file-formats-pprint:
 
@@ -253,7 +249,7 @@ GENMD_EOF
 ## XTAB: Vertical tabular
 
 This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
-`ngrid <https://github.com/twosigma/ngrid/>`_ for an entirely different, very powerful option). Namely:
+[ngrid](https://github.com/twosigma/ngrid/) for an entirely different, very powerful option). Namely:
 
 GENMD_INCLUDE_ESCAPED(data/system-file-opprint-example.txt)
 
@@ -271,7 +267,7 @@ GENMD_EOF
 
 which renders like this when dropped into various web tools (e.g. github comments):
 
-.. image:: pix/omd.png
+![pix/omd.png](pix/omd.png)
 
 As of Miller 4.3.0, markdown format is supported only for output, not input.
 

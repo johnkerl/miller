@@ -5,7 +5,7 @@ Here are a few things focusing on Miller's DSL as a programming language per se,
 
 ## Sieve of Eratosthenes
 
-The `Sieve of Eratosthenes <http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes>`_ is a standard introductory programming topic. The idea is to find all primes up to some *N* by making a list of the numbers 1 to *N*, then striking out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all multiples of 4 except 4 itself, and so on. Whatever survives that without getting marked is a prime. This is easy enough in Miller. Notice that here all the work is in ``begin`` and ``end`` statements; there is no file input (so we use ``mlr -n`` to keep Miller from waiting for input data).
+The [Sieve of Eratosthenes](http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) is a standard introductory programming topic. The idea is to find all primes up to some *N* by making a list of the numbers 1 to *N*, then striking out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all multiples of 4 except 4 itself, and so on. Whatever survives that without getting marked is a prime. This is easy enough in Miller. Notice that here all the work is in ``begin`` and ``end`` statements; there is no file input (so we use ``mlr -n`` to keep Miller from waiting for input data).
 
 <pre>
 <b>cat programs/sieve.mlr</b>
@@ -74,7 +74,7 @@ end {
 
 ## Mandelbrot-set generator
 
-The `Mandelbrot set <http://en.wikipedia.org/wiki/Mandelbrot_set>`_ is also easily expressed. This isn't an important case of data-processing in the vein for which Miller was designed, but it is an example of Miller as a general-purpose programming language -- a test case for the expressiveness of the language.
+The [Mandelbrot set](http://en.wikipedia.org/wiki/Mandelbrot_set) is also easily expressed. This isn't an important case of data-processing in the vein for which Miller was designed, but it is an example of Miller as a general-purpose programming language -- a test case for the expressiveness of the language.
 
 The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the Wikipedia article); how to render them is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
 
@@ -249,4 +249,4 @@ echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheigh
 | mlr put -f programs/mand.mlr
 </pre>
 
-.. image:: pix/mand.png
+![pix/mand.png](pix/mand.png)

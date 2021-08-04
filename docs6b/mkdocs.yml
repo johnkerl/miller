@@ -4,8 +4,8 @@ theme:
   palette:
     - scheme: slate
 nav:
+  - "Introduction": "index.md"
   - 'Getting started':
-    - "Introduction": "index.md"
     - "Miller in 10 minutes": "10min.md"
     - "Keystroke-savers": "keystroke-savers.md"
     - "Intro to Miller's programming language": "programming-language.md"

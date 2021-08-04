@@ -1,7 +1,7 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # Reference: then-chaining
 
-In accord with the `Unix philosophy <http://en.wikipedia.org/wiki/Unix_philosophy>`_, you can pipe data into or out of Miller. For example:
+In accord with the [Unix philosophy](http://en.wikipedia.org/wiki/Unix_philosophy), you can pipe data into or out of Miller. For example:
 
 <pre>
 <b>mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime</b>

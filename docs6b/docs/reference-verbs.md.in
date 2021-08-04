@@ -335,8 +335,7 @@ GENMD_RUN_COMMAND
 mlr filter --help
 GENMD_EOF
 
-Features which filter shares with put
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+### Features which filter shares with put
 
 Please see :doc:`reference-dsl` for more information about the expression language for ``mlr filter``.
 
@@ -708,8 +707,7 @@ GENMD_RUN_COMMAND
 mlr put --help
 GENMD_EOF
 
-Features which put shares with filter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+### Features which put shares with filter
 
 Please see the :doc:`reference-dsl` for more information about the expression language for ``mlr put``.
 
@@ -1033,10 +1031,9 @@ distributed on the unit interval. Here we remove half the data and fit a line to
 
 GENMD_INCLUDE_ESCAPED(data/linreg-example.txt)
 
-I use `pgr <https://github.com/johnkerl/pgr>`_ for plotting; here's a screenshot.
+I use [pgr](https://github.com/johnkerl/pgr) for plotting; here's a screenshot.
 
-.. image:: data/linreg-example.jpg
-
+![data/linreg-example.jpg](data/linreg-example.jpg)
 
 (Thanks Drew Kunas for a good conversation about PCA!)
 

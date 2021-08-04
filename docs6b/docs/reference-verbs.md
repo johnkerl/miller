@@ -810,8 +810,7 @@ Parser-info options:
    only want to look at parser information.
 </pre>
 
-Features which filter shares with put
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+### Features which filter shares with put
 
 Please see :doc:`reference-dsl` for more information about the expression language for ``mlr filter``.
 
@@ -1837,8 +1836,7 @@ Parser-info options:
    only want to look at parser information.
 </pre>
 
-Features which put shares with filter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+### Features which put shares with filter
 
 Please see the :doc:`reference-dsl` for more information about the expression language for ``mlr put``.
 
@@ -2739,10 +2737,9 @@ mlr --onidx stats2 -a linreg-pca --fit -f x,y then cut -f a,b,i data/medium-squa
 
 </pre>
 
-I use `pgr <https://github.com/johnkerl/pgr>`_ for plotting; here's a screenshot.
+I use [pgr](https://github.com/johnkerl/pgr) for plotting; here's a screenshot.
 
-.. image:: data/linreg-example.jpg
-
+![data/linreg-example.jpg](data/linreg-example.jpg)
 
 (Thanks Drew Kunas for a good conversation about PCA!)
 

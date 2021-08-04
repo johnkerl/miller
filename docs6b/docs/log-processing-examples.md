@@ -9,7 +9,7 @@ Again, all the examples in the CSV section apply here -- just change the input-f
 
 Writing a program -- in any language whatsoever -- you can have it print out log lines as it goes along, with items for various events jumbled together. After the program has finished running you can sort it all out, filter it, analyze it, and learn from it.
 
-Suppose your program has printed something like this (`log.txt <./log.txt>`_):
+Suppose your program has printed something like this [log.txt](./log.txt):
 
 <pre>
 <b>cat log.txt</b>

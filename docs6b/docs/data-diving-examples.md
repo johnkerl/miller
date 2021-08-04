@@ -3,7 +3,7 @@
 
 ## flins data
 
-The `flins.csv <data/flins.csv>`_ file is some sample data obtained from https://support.spatialkey.com/spatialkey-sample-csv-data.
+The [flins.csv](data/flins.csv) file is some sample data obtained from [https://support.spatialkey.com/spatialkey-sample-csv-data](https://support.spatialkey.com/spatialkey-sample-csv-data).
 
 Vertical-tabular format is good for a quick look at CSV data layout -- seeing what columns you have to work with:
 
@@ -87,7 +87,7 @@ St. Johns  -                      -                       -                     
 
 ## Color/shape data
 
-The `colored-shapes.dkvp <https://github.com/johnkerl/miller/blob/master/docs/data/colored-shapes.dkvp>`_ file is some sample data produced by the `mkdat2 <data/mkdat2>`_ script. The idea is:
+The [data/colored-shapes.dkvp](data/colored-shapes.dkvp) file is some sample data produced by the [mkdat2](data/mkdat2) script. The idea is:
 
 * Produce some data with known distributions and correlations, and verify that Miller recovers those properties empirically.
 * Each record is labeled with one of a few colors and one of a few shapes.
@@ -115,7 +115,7 @@ purple triangle 0    51 0.4355354501763202  0.8591292672156728   0.8122903963006
 red    square   0    64 0.2015510269821953  0.9531098083420033   0.7719912015786777  5.612050466474166
 </pre>
 
-Look at uncategorized stats (using `creach <https://github.com/johnkerl/scripts/blob/master/fundam/creach>`_ for spacing).
+Look at uncategorized stats (using [creach](https://github.com/johnkerl/scripts/blob/master/fundam/creach) for spacing).
 
 Here it looks reasonable that ``u`` is unit-uniform; something's up with ``v`` but we can't yet see what:
 

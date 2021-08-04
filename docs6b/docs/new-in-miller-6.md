@@ -1,7 +1,7 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # What's new in Miller 6
 
-See also the `list of issues tagged with go-port <https://github.com/johnkerl/miller/issues?q=label%3Ago-port>`_.
+See also the [list of issues tagged with go-port](https://github.com/johnkerl/miller/issues?q=label%3Ago-port).
 
 ## Documentation improvements
 

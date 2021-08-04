@@ -21,7 +21,6 @@ mlr -n \
     $u = expo_sample(2.5);
     $v = expo_sample(2.5);
     $s = $u + $v;
-    $p = $u * $v;
   ' \
-  then histogram -f u,s,p --lo 0 --hi 2 --nbins 50 \
-  then bar -f u_count,s_count,p_count --auto -w 20
+  then histogram -f u,s --lo 0 --hi 2 --nbins 50 \
+  then bar -f u_count,s_count --auto -w 20

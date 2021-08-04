@@ -35,7 +35,7 @@ That is, one cannot check an integer product to see if it is precisely greater t
 
 ## Pythonic division
 
-Division and remainder are `pythonic <http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html>`_:
+Division and remainder are [pythonic](http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html):
 
 * Quotient of integers is floating-point: ``7/2`` is ``3.5``.
 * Integer division is done with ``//``: ``7//2`` is ``3``.  This rounds toward the negative.

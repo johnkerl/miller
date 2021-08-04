@@ -26,8 +26,7 @@ binary+ binary- .      left to right
 =                      N/A for Miller (there is no $a=$b=$c)
 </pre>
 
-Operator and function semantics
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+## Operator and function semantics
 
 * Functions are often pass-throughs straight to the system-standard Go libraries.
 
