@@ -1,8 +1,5 @@
 site_name: Miller Documentation
-theme:
-  name: readthedocs
-  palette:
-    - scheme: slate
+theme: readthedocs
 nav:
   - "Introduction": "index.md"
   - 'Getting started':

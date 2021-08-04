@@ -1,20 +1,10 @@
-/*
-.wy-nav-top {
-  background-color: maroon;
-}
-*/
 .wy-menu {
-  /*background-color: #c0c0c0;*/
-  background-color: #404040;
+  background-color: #c0c0c0;
+  /*background-color: #404040;*/
 }
-/*
-.wy-side-scroll {
-  background-color: maroon;
-}
-*/
 .wy-side-nav-search {
-  /*background-color: #c0c0c0;*/
-  background-color: #404040;
+  background-color: #c0c0c0;
+  /*background-color: #404040;*/
 }
 .rst-content code {
   color: #000000;
@@ -28,7 +18,8 @@
   color: #0FF1CE;
 }
 .caption-text {
-  background-color: #404040;
+  /*background-color: #808080; */
+  color: maroon;
   padding: 4px;
 }
 
@@ -57,7 +48,19 @@ pre b {
   padding: 2px;
 }
 
-/*
+a {
+  color: orange;
+}
+a:visited {
+  color: green;
+}
+a:hover {
+  color: blue;
+}
+a .internal {
+  color: red;
+}
+
 a {
   color: maroon;
 }
@@ -65,16 +68,29 @@ a:visited {
   color: maroon;
 }
 a:hover {
+  background-color: #e0e0e0;
   color: maroon;
 }
 
-.reference-internal {
-  color: yellow;
+.wy-menu-vertical li ul li a {
+    margin-bottom:0;
+    color:#000000;
+    font-weight:normal
 }
-.reference-internal {
-  color: green;
+.wy-menu-vertical a {
+    display:inline-block;
+    line-height:18px;
+    padding:.4045em 1.618em;
+    display:block;
+    position:relative;
+    font-size:90%;
+    color:#000000
 }
-.reference-internal {
-  color: blue;
+.wy-menu-vertical a:hover {
+    background-color:#4e4a4a;
+    cursor:pointer;
+    color:#e0e0e0;
 }
-*/
+.wy-menu-vertical a:hover span.toctree-expand {
+    color:#808080
+}
