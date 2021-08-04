@@ -1,0 +1,21 @@
+must have:
+k color configs
+  - iteratble ...
+k ok on desktop & mobile
+  - awesome so far! :D 
+k highlight line 1 (even if hacky in genrst)
+  - wip
+
+nice to have:
+* dark mode
+  ? wtf
+
+to do:
+* figure out internal-link spelling
+* figure out external-link spelling
+* vis-link css
+
+check:
+* data-file links don't break
+* build.md -- nested bullets ...
+* builtin-functions autogen sh

@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How to contribute &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CSV, with and without headers" href="csv-with-and-without-headers.html" />
+    <link rel="prev" title="What’s new in Miller 6" href="new-in-miller-6.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>How to contribute</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="new-in-miller-6.html">&laquo; What’s new in Miller 6</a> |
+        <a href="#">How to contribute</a>
+        | <a href="csv-with-and-without-headers.html">CSV, with and without headers &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">How to contribute</a><ul>
+<li><a class="reference internal" href="#community">Community</a></li>
+<li><a class="reference internal" href="#documentation-improvements">Documentation improvements</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#feature-development">Feature development</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="how-to-contribute">
+<h1>How to contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="community">
+<h2>Community<a class="headerlink" href="#community" title="Permalink to this headline">¶</a></h2>
+<p>You can ask questions – or answer them! – following the links at <a class="reference internal" href="community.html"><span class="doc">Community</span></a>.</p>
+</div>
+<div class="section" id="documentation-improvements">
+<h2>Documentation improvements<a class="headerlink" href="#documentation-improvements" title="Permalink to this headline">¶</a></h2>
+<p>Pre-release Miller documentation is at <a class="reference external" href="https://github.com/johnkerl/miller/tree/main/docs6">https://github.com/johnkerl/miller/tree/main/docs6</a>.</p>
+<p>Clone <a class="reference external" href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a> and <cite>cd</cite> into <cite>docs6</cite>.</p>
+<p>After <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">sphinx</span></code> (or <code class="docutils literal notranslate"><span class="pre">pip3</span></code>) you should be able to do <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code>.</p>
+<p>Edit <code class="docutils literal notranslate"><span class="pre">*.rst.in</span></code> files, then <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> to generate <code class="docutils literal notranslate"><span class="pre">*.rst</span></code>, then run the Sphinx document-generator.</p>
+<p>Open <code class="docutils literal notranslate"><span class="pre">_build/html/index.html</span></code> in your browser, e.g. <code class="docutils literal notranslate"><span class="pre">file:////Users/yourname/git/miller/docs6/_build/html/contributing.html</span></code>, to verify.</p>
+<p>PRs are welcome at <a class="reference external" href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>.</p>
+<p>Once PRs are merged, readthedocs creates <a class="reference external" href="https://miller.readthedocs.io">https://miller.readthedocs.io</a> using the following configs:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://readthedocs.org/projects/miller/">https://readthedocs.org/projects/miller/</a></p></li>
+<li><p><a class="reference external" href="https://readthedocs.org/projects/miller/builds/">https://readthedocs.org/projects/miller/builds/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/johnkerl/miller/settings/hooks">https://github.com/johnkerl/miller/settings/hooks</a></p></li>
+</ul>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>As of Miller-6’s current pre-release status, the best way to test is to either build from source via <a class="reference internal" href="build.html"><span class="doc">Building from source</span></a>, or by getting a recent binary at <a class="reference external" href="https://github.com/johnkerl/miller/actions">https://github.com/johnkerl/miller/actions</a>, then click latest build, then <em>Artifacts</em>. Then simply use Miller for whatever you do, and create an issue at <a class="reference external" href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>.</p>
+<p>Do note that as of 2021-06-17 a few things have not been ported to Miller 6 – most notably, including regex captures and localtime DSL functions.</p>
+</div>
+<div class="section" id="feature-development">
+<h2>Feature development<a class="headerlink" href="#feature-development" title="Permalink to this headline">¶</a></h2>
+<p>Issues: <a class="reference external" href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a></p>
+<p>Developer notes: <a class="reference external" href="https://github.com/johnkerl/miller/blob/main/go/README.md">https://github.com/johnkerl/miller/blob/main/go/README.md</a></p>
+<p>PRs which pass regression test (<a class="reference external" href="https://github.com/johnkerl/miller/blob/main/go/regtest/README.md">https://github.com/johnkerl/miller/blob/main/go/regtest/README.md</a>) are always welcome!</p>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

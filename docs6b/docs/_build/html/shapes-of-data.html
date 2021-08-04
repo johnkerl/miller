@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shapes of data &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Operating on all fields" href="operating-on-all-fields.html" />
+    <link rel="prev" title="CSV, with and without headers" href="csv-with-and-without-headers.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Shapes of data</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="csv-with-and-without-headers.html">&laquo; CSV, with and without headers</a> |
+        <a href="#">Shapes of data</a>
+        | <a href="operating-on-all-fields.html">Operating on all fields &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Shapes of data</a><ul>
+<li><a class="reference internal" href="#no-output-at-all">No output at all</a></li>
+<li><a class="reference internal" href="#fields-not-selected">Fields not selected</a></li>
+<li><a class="reference internal" href="#diagnosing-delimiter-specifications">Diagnosing delimiter specifications</a></li>
+<li><a class="reference internal" href="#i-assigned-9-and-it-s-not-9th">I assigned $9 and it’s not 9th</a></li>
+<li><a class="reference internal" href="#why-doesn-t-mlr-cut-put-fields-in-the-order-i-want">Why doesn’t mlr cut put fields in the order I want?</a></li>
+<li><a class="reference internal" href="#numbering-and-renumbering-records">Numbering and renumbering records</a></li>
+<li><a class="reference internal" href="#splitting-nested-fields">Splitting nested fields</a></li>
+<li><a class="reference internal" href="#options-for-dealing-with-duplicate-rows">Options for dealing with duplicate rows</a></li>
+<li><a class="reference internal" href="#rectangularizing-data">Rectangularizing data</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="shapes-of-data">
+<h1>Shapes of data<a class="headerlink" href="#shapes-of-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="no-output-at-all">
+<h2>No output at all<a class="headerlink" href="#no-output-at-all" title="Permalink to this headline">¶</a></h2>
+<p>Try <code class="docutils literal notranslate"><span class="pre">od</span> <span class="pre">-xcv</span></code> and/or <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">-e</span></code> on your file to check for non-printable characters.</p>
+<p>If you’re using Miller version less than 5.0.0 (try <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--version</span></code> on your system to find out), when the line-ending-autodetect feature was introduced, please see <a class="reference external" href="http://johnkerl.org/miller-releases/miller-4.5.0/doc/index.html">http://johnkerl.org/miller-releases/miller-4.5.0/doc/index.html</a>.</p>
+</div>
+<div class="section" id="fields-not-selected">
+<h2>Fields not selected<a class="headerlink" href="#fields-not-selected" title="Permalink to this headline">¶</a></h2>
+<p>Check the field-separators of the data, e.g. with the command-line <code class="docutils literal notranslate"><span class="pre">head</span></code> program. Example: for CSV, Miller’s default record separator is comma; if your data is tab-delimited, e.g. <code class="docutils literal notranslate"><span class="pre">aTABbTABc</span></code>, then Miller won’t find three fields named <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, and <code class="docutils literal notranslate"><span class="pre">c</span></code> but rather just one named <code class="docutils literal notranslate"><span class="pre">aTABbTABc</span></code>.  Solution in this case: <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--fs</span> <span class="pre">tab</span> <span class="pre">{remaining</span> <span class="pre">arguments</span> <span class="pre">...}</span></code>.</p>
+<p>Also try <code class="docutils literal notranslate"><span class="pre">od</span> <span class="pre">-xcv</span></code> and/or <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">-e</span></code> on your file to check for non-printable characters.</p>
+</div>
+<div class="section" id="diagnosing-delimiter-specifications">
+<h2>Diagnosing delimiter specifications<a class="headerlink" href="#diagnosing-delimiter-specifications" title="Permalink to this headline">¶</a></h2>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">file</span></code> command to see if there are CR/LF terminators (in this case, # there are not):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> file data/colours.csv
+</span> data/colours.csv: UTF-8 Unicode text
+</pre></div>
+</div>
+<p>Look at the file to find names of fields</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/colours.csv
+</span> KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR
+ masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
+ masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
+</pre></div>
+</div>
+<p>Extract a few fields:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv cut -f KEY,PL,RO data/colours.csv
+</span> (only blank lines appear)
+</pre></div>
+</div>
+<p>Use XTAB output format to get a sharper picture of where records/fields are being split:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --oxtab cat data/colours.csv
+</span> KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
+
+ KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
+</pre></div>
+</div>
+<p>Using XTAB output format makes it clearer that <code class="docutils literal notranslate"><span class="pre">KEY;DE;...;RO;TR</span></code> is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (<code class="docutils literal notranslate"><span class="pre">--fs</span> <span class="pre">semicolon</span></code>):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --ifs semicolon --oxtab cat data/colours.csv
+</span> KEY masterdata_colourcode_1
+ DE  Weiß
+ EN  White
+ ES  Blanco
+ FI  Valkoinen
+ FR  Blanc
+ IT  Bianco
+ NL  Wit
+ PL  Biały
+ RO  Alb
+ TR  Beyaz
+
+ KEY masterdata_colourcode_2
+ DE  Schwarz
+ EN  Black
+ ES  Negro
+ FI  Musta
+ FR  Noir
+ IT  Nero
+ NL  Zwart
+ PL  Czarny
+ RO  Negru
+ TR  Siyah
+</pre></div>
+</div>
+<p>Using the new field-separator, retry the cut:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv --fs semicolon cut -f KEY,PL,RO data/colours.csv
+</span> KEY;PL;RO
+ masterdata_colourcode_1;Biały;Alb
+ masterdata_colourcode_2;Czarny;Negru
+</pre></div>
+</div>
+</div>
+<div class="section" id="i-assigned-9-and-it-s-not-9th">
+<h2>I assigned $9 and it’s not 9th<a class="headerlink" href="#i-assigned-9-and-it-s-not-9th" title="Permalink to this headline">¶</a></h2>
+<p>Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with <code class="docutils literal notranslate"><span class="pre">--implicit-csv-header</span></code>, Miller will sequentially assign keys of the form <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, etc. But these are not integer array indices: they’re just field names taken from the initial field ordering in the input data, when it is originally read from the input file(s).</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x,y,z | mlr --dkvp cat
+</span> 1=x,2=y,3=z
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x,y,z | mlr --dkvp put &#39;$6=&quot;a&quot;;$4=&quot;b&quot;;$55=&quot;cde&quot;&#39;
+</span> 1=x,2=y,3=z,6=a,4=b,55=cde
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x,y,z | mlr --nidx cat
+</span> x,y,z
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x,y,z | mlr --csv --implicit-csv-header cat
+</span> 1,2,3
+ x,y,z
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x,y,z | mlr --dkvp rename 2,999
+</span> 1=x,999=y,3=z
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x,y,z | mlr --dkvp rename 2,newname
+</span> 1=x,newname=y,3=z
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2
+</span> 3,1,2
+ z,x,y
+</pre></div>
+</div>
+</div>
+<div class="section" id="why-doesn-t-mlr-cut-put-fields-in-the-order-i-want">
+<h2>Why doesn’t mlr cut put fields in the order I want?<a class="headerlink" href="#why-doesn-t-mlr-cut-put-fields-in-the-order-i-want" title="Permalink to this headline">¶</a></h2>
+<p>Example: columns <code class="docutils literal notranslate"><span class="pre">x,i,a</span></code> were requested but they appear here in the order <code class="docutils literal notranslate"><span class="pre">a,i,x</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/small
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr cut -f x,i,a data/small
+</span> a=pan,i=1,x=0.3467901443380824
+ a=eks,i=2,x=0.7586799647899636
+ a=wye,i=3,x=0.20460330576630303
+ a=eks,i=4,x=0.38139939387114097
+ a=wye,i=5,x=0.5732889198020006
+</pre></div>
+</div>
+<p>The issue is that Miller’s <code class="docutils literal notranslate"><span class="pre">cut</span></code>, by default, outputs cut fields in the order they appear in the input data. This design decision was made intentionally to parallel the Unix/Linux system <code class="docutils literal notranslate"><span class="pre">cut</span></code> command, which has the same semantics.</p>
+<p>The solution is to use the <code class="docutils literal notranslate"><span class="pre">-o</span></code> option:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr cut -o -f x,i,a data/small
+</span> x=0.3467901443380824,i=1,a=pan
+ x=0.7586799647899636,i=2,a=eks
+ x=0.20460330576630303,i=3,a=wye
+ x=0.38139939387114097,i=4,a=eks
+ x=0.5732889198020006,i=5,a=wye
+</pre></div>
+</div>
+</div>
+<div class="section" id="numbering-and-renumbering-records">
+<h2>Numbering and renumbering records<a class="headerlink" href="#numbering-and-renumbering-records" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">awk</span></code>-like built-in variable <code class="docutils literal notranslate"><span class="pre">NR</span></code> is incremented for each input record:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/small
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;$nr = NR&#39; data/small
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nr=1
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nr=2
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,nr=4
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
+</pre></div>
+</div>
+<p>However, this is the record number within the original input stream – not after any filtering you may have done:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr filter &#39;$a == &quot;wye&quot;&#39; then put &#39;$nr = NR&#39; data/small
+</span> a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
+</pre></div>
+</div>
+<p>There are two good options here. One is to use the <code class="docutils literal notranslate"><span class="pre">cat</span></code> verb with <code class="docutils literal notranslate"><span class="pre">-n</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr filter &#39;$a == &quot;wye&quot;&#39; then cat -n data/small
+</span> n=1,a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+ n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre></div>
+</div>
+<p>The other is to keep your own counter within the <code class="docutils literal notranslate"><span class="pre">put</span></code> DSL:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr filter &#39;$a == &quot;wye&quot;&#39; then put &#39;begin {@n = 1} $n = @n; @n += 1&#39; data/small
+</span> a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,n=1
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
+</pre></div>
+</div>
+<p>The difference is a matter of taste (although <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">cat</span> <span class="pre">-n</span></code> puts the counter first).</p>
+</div>
+<div class="section" id="splitting-nested-fields">
+<h2>Splitting nested fields<a class="headerlink" href="#splitting-nested-fields" title="Permalink to this headline">¶</a></h2>
+<p>Suppose you have a TSV file like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>a   b
+x   z
+s   u:v:w
+</pre></div>
+</div>
+<p>The simplest option is to use <a class="reference internal" href="reference-verbs.html#reference-verbs-nest"><span class="std std-ref">mlr nest</span></a>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv
+</span> a   b
+ x   z
+ s   u
+ s   v
+ s   w
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv
+</span> a   b_1
+ x   z
+
+ a   b_1     b_2     b_3
+ s   u       v       w
+</pre></div>
+</div>
+<p>While <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">nest</span></code> is simplest, let’s also take a look at a few ways to do this using the <code class="docutils literal notranslate"><span class="pre">put</span></code> DSL.</p>
+<p>One option to split out the colon-delimited values in the <code class="docutils literal notranslate"><span class="pre">b</span></code> column is to use <code class="docutils literal notranslate"><span class="pre">splitnv</span></code> to create an integer-indexed map and loop over it, adding new fields to the current record:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/nested.tsv --itsv --oxtab put &#39;
+</span><span class="hll">   o = splitnv($b, &quot;:&quot;);
+</span><span class="hll">   for (k,v in o) {
+</span><span class="hll">     $[&quot;p&quot;.k]=v
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span> a  x
+ b  z
+ p1 z
+
+ a  s
+ b  u:v:w
+ p1 u
+ p2 v
+ p3 w
+</pre></div>
+</div>
+<p>while another is to loop over the same map from <code class="docutils literal notranslate"><span class="pre">splitnv</span></code> and use it (with <code class="docutils literal notranslate"><span class="pre">put</span> <span class="pre">-q</span></code> to suppress printing the original record) to produce multiple records:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/nested.tsv --itsv --oxtab put -q &#39;
+</span><span class="hll">   o = splitnv($b, &quot;:&quot;);
+</span><span class="hll">   for (k,v in o) {
+</span><span class="hll">     x = mapsum($*, {&quot;b&quot;:v});
+</span><span class="hll">     emit x
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span> a x
+ b z
+
+ a s
+ b u
+
+ a s
+ b v
+
+ a s
+ b w
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/nested.tsv --tsv put -q &#39;
+</span><span class="hll">   o = splitnv($b, &quot;:&quot;);
+</span><span class="hll">   for (k,v in o) {
+</span><span class="hll">     x = mapsum($*, {&quot;b&quot;:v}); emit x
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span> a   b
+ x   z
+ s   u
+ s   v
+ s   w
+</pre></div>
+</div>
+</div>
+<div class="section" id="options-for-dealing-with-duplicate-rows">
+<h2>Options for dealing with duplicate rows<a class="headerlink" href="#options-for-dealing-with-duplicate-rows" title="Permalink to this headline">¶</a></h2>
+<p>If your data has records appearing multiple times, you can use <a class="reference internal" href="reference-verbs.html#reference-verbs-uniq"><span class="std std-ref">mlr uniq</span></a> to show and/or count the unique records.</p>
+<p>If you want to look at partial uniqueness – for example, show only the first record for each unique combination of the <code class="docutils literal notranslate"><span class="pre">account_id</span></code> and <code class="docutils literal notranslate"><span class="pre">account_status</span></code> fields – you might use <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">head</span> <span class="pre">-n</span> <span class="pre">1</span> <span class="pre">-g</span> <span class="pre">account_id,account_status</span></code>. Please also see <a class="reference internal" href="reference-verbs.html#reference-verbs-head"><span class="std std-ref">mlr head</span></a>.</p>
+</div>
+<div class="section" id="rectangularizing-data">
+<h2>Rectangularizing data<a class="headerlink" href="#rectangularizing-data" title="Permalink to this headline">¶</a></h2>
+<p>Suppose you have a method (in whatever language) which is printing things of the form</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>outer=1
+outer=2
+outer=3
+</pre></div>
+</div>
+<p>and then calls another method which prints things of the form</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>middle=10
+middle=11
+middle=12
+middle=20
+middle=21
+middle=30
+middle=31
+</pre></div>
+</div>
+<p>and then, perhaps, that second method calls a third method which prints things of the form</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>inner1=100,inner2=101
+inner1=120,inner2=121
+inner1=200,inner2=201
+inner1=210,inner2=211
+inner1=300,inner2=301
+inner1=312
+inner1=313,inner2=314
+</pre></div>
+</div>
+<p>with the result that your program’s output is</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>outer=1
+middle=10
+inner1=100,inner2=101
+middle=11
+middle=12
+inner1=120,inner2=121
+outer=2
+middle=20
+inner1=200,inner2=201
+middle=21
+inner1=210,inner2=211
+outer=3
+middle=30
+inner1=300,inner2=301
+middle=31
+inner1=312
+inner1=313,inner2=314
+</pre></div>
+</div>
+<p>The idea here is that middles starting with a 1 belong to the outer value of 1, and so on.  (For example, the outer values might be account IDs, the middle values might be invoice IDs, and the inner values might be invoice line-items.) If you want all the middle and inner lines to have the context of which outers they belong to, you can modify your software to pass all those through your methods. Alternatively, don’t refactor your code just to handle some ad-hoc log-data formatting – instead, use the following to rectangularize the data.  The idea is to use an out-of-stream variable to accumulate fields across records. Clear that variable when you see an outer ID; accumulate fields; emit output when you see the inner IDs.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/rect.txt put -q &#39;
+</span><span class="hll">   is_present($outer) {
+</span><span class="hll">     unset @r
+</span><span class="hll">   }
+</span><span class="hll">   for (k, v in $*) {
+</span><span class="hll">     @r[k] = v
+</span><span class="hll">   }
+</span><span class="hll">   is_present($inner1) {
+</span><span class="hll">     emit @r
+</span><span class="hll">   }&#39;
+</span> outer=1,middle=10,inner1=100,inner2=101
+ outer=1,middle=12,inner1=120,inner2=121
+ outer=2,middle=20,inner1=200,inner2=201
+ outer=2,middle=21,inner1=210,inner2=211
+ outer=3,middle=30,inner1=300,inner2=301
+ outer=3,middle=31,inner1=312,inner2=301
+ outer=3,middle=31,inner1=313,inner2=314
+</pre></div>
+</div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

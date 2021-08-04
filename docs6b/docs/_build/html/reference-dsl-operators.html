@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSL reference: operators &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DSL reference: control structures" href="reference-dsl-control-structures.html" />
+    <link rel="prev" title="DSL reference: variables" href="reference-dsl-variables.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>DSL reference: operators</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="reference-dsl-variables.html">&laquo; DSL reference: variables</a> |
+        <a href="#">DSL reference: operators</a>
+        | <a href="reference-dsl-control-structures.html">DSL reference: control structures &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">DSL reference: operators</a><ul>
+<li><a class="reference internal" href="#operator-precedence">Operator precedence</a></li>
+<li><a class="reference internal" href="#operator-and-function-semantics">Operator and function semantics</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="dsl-reference-operators">
+<h1>DSL reference: operators<a class="headerlink" href="#dsl-reference-operators" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="operator-precedence">
+<h2>Operator precedence<a class="headerlink" href="#operator-precedence" title="Permalink to this headline">¶</a></h2>
+<p>Operators are listed in order of decreasing precedence, highest first.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Operators              Associativity
+---------              -------------
+()                     left to right
+**                    right to left
+! ~ unary+ unary- &amp;    right to left
+binary* / // %         left to right
+binary+ binary- .      left to right
+&lt;&lt; &gt;&gt;                  left to right
+&amp;                      left to right
+^                      left to right
+|                      left to right
+&lt; &lt;= &gt; &gt;=              left to right
+== != =~ !=~           left to right
+&amp;&amp;                     left to right
+^^                     left to right
+||                     left to right
+? :                    right to left
+=                      N/A for Miller (there is no $a=$b=$c)
+</pre></div>
+</div>
+</div>
+<div class="section" id="operator-and-function-semantics">
+<h2>Operator and function semantics<a class="headerlink" href="#operator-and-function-semantics" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Functions are often pass-throughs straight to the system-standard Go libraries.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code> functions are different from other multi-argument functions which return null if any of their inputs are null: for <code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code>, by contrast, if one argument is absent-null, the other is returned. Empty-null loses min or max against numeric or boolean; empty-null is less than any other string.</p></li>
+<li><p>Symmetrically with respect to the bitwise OR, XOR, and AND operators <code class="docutils literal notranslate"><span class="pre">|</span></code>, <code class="docutils literal notranslate"><span class="pre">^</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, Miller has logical operators <code class="docutils literal notranslate"><span class="pre">||</span></code>, <code class="docutils literal notranslate"><span class="pre">^^</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code>: the logical XOR not existing in Go.</p></li>
+<li><p>The exponentiation operator <code class="docutils literal notranslate"><span class="pre">**</span></code> is familiar from many languages.</p></li>
+<li><p>The regex-match and regex-not-match operators <code class="docutils literal notranslate"><span class="pre">=~</span></code> and <code class="docutils literal notranslate"><span class="pre">!=~</span></code> are similar to those in Ruby and Perl.</p></li>
+</ul>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

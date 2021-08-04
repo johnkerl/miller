@@ -1,0 +1,84 @@
+site_name: Miller Documentation
+theme:
+  name: readthedocs
+  palette:
+    - scheme: slate
+nav:
+    - 'Getting started':
+        - 'index.md'
+        - '10min.md'
+        - 'keystroke-savers.md'
+        - 'programming-language.md'
+        - 'miller-on-windows.md'
+        - 'community.md'
+    - 'Miller in more detail':
+        - 'features.md'
+        - 'feature-comparison.md'
+        - 'file-formats.md'
+        - 'record-heterogeneity.md'
+        - 'internationalization.md'
+        - 'output-colorization.md'
+        - 'customization.md'
+        - 'repl.md'
+        - 'new-in-miller-6.md'
+        - 'contributing.md'
+    - 'FAQs and recipes':
+        - 'csv-with-and-without-headers.md'
+        - 'shapes-of-data.md'
+        - 'operating-on-all-fields.md'
+        - 'special-symbols-and-formatting.md'
+        - 'dates-and-times.md'
+        - 'then-chaining.md'
+        - 'joins.md'
+        - 'shell-commands.md'
+        - 'data-diving-examples.md'
+        - 'log-processing-examples.md'
+        - 'sql-examples.md'
+        - 'data-cleaning-examples.md'
+        - 'statistics-examples.md'
+        - 'randomizing-examples.md'
+        - 'two-pass-algorithms.md'
+        - 'dkvp-examples.md'
+        - 'programming-examples.md'
+        - 'misc-examples.md'
+    - 'Background':
+        - 'why.md'
+        - 'etymology.md'
+        - 'originality.md'
+        - 'performance.md'
+    - 'Reference':
+        - 'reference-main-overview.md'
+        - 'reference-verbs.md'
+        - 'reference-main-io-options.md'
+        - 'reference-main-then-chaining.md'
+        - 'reference-main-auxiliary-commands.md'
+        - 'reference-main-data-types.md'
+        - 'reference-dsl-arrays.md'
+        - 'reference-main-null-data.md'
+        - 'reference-main-arithmetic.md'
+        - 'reference-main-regular-expressions.md'
+        - 'reference-main-env-vars.md'
+        - 'reference-main-online-help.md'
+        - 'reference-dsl.md'
+        - 'reference-dsl-syntax.md'
+        - 'reference-dsl-variables.md'
+        - 'reference-dsl-operators.md'
+        - 'reference-dsl-control-structures.md'
+        - 'reference-dsl-user-defined-functions.md'
+        - 'reference-dsl-builtin-functions.md'
+        - 'reference-dsl-output-statements.md'
+        - 'reference-dsl-unset-statements.md'
+        - 'reference-dsl-filter-statements.md'
+        - 'reference-dsl-errors.md'
+        - 'reference-dsl-complexity.md'
+        - 'manpage.md'
+        - 'release-docs.md'
+        - 'installation.md'
+        - 'build.md'
+  extra_css: ['extra.css']
+  markdown_extensions:
+    - pymdownx.superfences
+    - codehilite
+    - admonition
+    - pymdownx.highlight:
+        linenums: true

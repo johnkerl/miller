@@ -297,7 +297,7 @@ func ParseWriterOptions(
 		writerOptions.OPSWasSpecified = true
 		argi += 2
 
-	} else if args[argi] == "--flatsep" || args[argi] == "--jflatsep" {
+	} else if args[argi] == "--flatsep" || args[argi] == "--jflatsep" || args[argi] == "--oflatsep" {
 		CheckArgCount(args, argi, argc, 2)
 		writerOptions.FLATSEP = SeparatorFromArg(args[argi+1])
 		argi += 2

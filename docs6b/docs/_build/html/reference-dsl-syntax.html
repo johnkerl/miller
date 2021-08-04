@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSL reference: syntax &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DSL reference: variables" href="reference-dsl-variables.html" />
+    <link rel="prev" title="DSL reference: overview" href="reference-dsl.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>DSL reference: syntax</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="reference-dsl.html">&laquo; DSL reference: overview</a> |
+        <a href="#">DSL reference: syntax</a>
+        | <a href="reference-dsl-variables.html">DSL reference: variables &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">DSL reference: syntax</a><ul>
+<li><a class="reference internal" href="#expression-formatting">Expression formatting</a></li>
+<li><a class="reference internal" href="#expressions-from-files">Expressions from files</a></li>
+<li><a class="reference internal" href="#semicolons-commas-newlines-and-curly-braces">Semicolons, commas, newlines, and curly braces</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="dsl-reference-syntax">
+<h1>DSL reference: syntax<a class="headerlink" href="#dsl-reference-syntax" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="expression-formatting">
+<h2>Expression formatting<a class="headerlink" href="#expression-formatting" title="Permalink to this headline">¶</a></h2>
+<p>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> ruby -e &#39;10.times{|i|puts &quot;i=#{i}&quot;}&#39; | mlr --opprint put &#39;$j = $i + 1; $k = $i +$j&#39;
+</span> i j  k
+ 0 1  1
+ 1 2  3
+ 2 3  5
+ 3 4  7
+ 4 5  9
+ 5 6  11
+ 6 7  13
+ 7 8  15
+ 8 9  17
+ 9 10 19
+</pre></div>
+</div>
+<p>Newlines within the expression are ignored, which can help increase legibility of complex expressions:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint put &#39;
+</span><span class="hll">   $nf       = NF;
+</span><span class="hll">   $nr       = NR;
+</span><span class="hll">   $fnr      = FNR;
+</span><span class="hll">   $filenum  = FILENUM;
+</span><span class="hll">   $filename = FILENAME
+</span><span class="hll"> &#39; data/small data/small2
+</span> a   b   i     x                    y                    nf nr fnr filenum filename
+ pan pan 1     0.3467901443380824   0.7268028627434533   5  1  1   1       data/small
+ eks pan 2     0.7586799647899636   0.5221511083334797   5  2  2   1       data/small
+ wye wye 3     0.20460330576630303  0.33831852551664776  5  3  3   1       data/small
+ eks wye 4     0.38139939387114097  0.13418874328430463  5  4  4   1       data/small
+ wye pan 5     0.5732889198020006   0.8636244699032729   5  5  5   1       data/small
+ pan eks 9999  0.267481232652199086 0.557077185510228001 5  6  1   2       data/small2
+ wye eks 10000 0.734806020620654365 0.884788571337605134 5  7  2   2       data/small2
+ pan wye 10001 0.870530722602517626 0.009854780514656930 5  8  3   2       data/small2
+ hat wye 10002 0.321507044286237609 0.568893318795083758 5  9  4   2       data/small2
+ pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint filter &#39;($x &gt; 0.5 &amp;&amp; $y &lt; 0.5) || ($x &lt; 0.5 &amp;&amp; $y &gt; 0.5)&#39; \
+</span><span class="hll">   then stats2 -a corr -f x,y \
+</span><span class="hll">   data/medium
+</span> x_y_corr
+ -0.7479940285189345
+</pre></div>
+</div>
+</div>
+<div class="section" id="expressions-from-files">
+<span id="reference-dsl-expressions-from-files"></span><h2>Expressions from files<a class="headerlink" href="#expressions-from-files" title="Permalink to this headline">¶</a></h2>
+<p>The simplest way to enter expressions for <code class="docutils literal notranslate"><span class="pre">put</span></code> and <code class="docutils literal notranslate"><span class="pre">filter</span></code> is between single quotes on the command line, e.g.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small put &#39;$xy = sqrt($x**2 + $y**2)&#39;
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small put &#39;func f(a, b) { return sqrt(a**2 + b**2) } $xy = f($x, $y)&#39;
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
+</pre></div>
+</div>
+<p>You may, though, find it convenient to put expressions into files for reuse, and read them
+<strong>using the -f option</strong>. For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/fe-example-3.mlr
+</span> func f(a, b) {
+   return sqrt(a**2 + b**2)
+ }
+ $xy = f($x, $y)
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small put -f data/fe-example-3.mlr
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
+</pre></div>
+</div>
+<p>If you have some of the logic in a file and you want to write the rest on the command line, you can <strong>use the -f and -e options together</strong>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/fe-example-4.mlr
+</span> func f(a, b) {
+   return sqrt(a**2 + b**2)
+ }
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small put -f data/fe-example-4.mlr -e &#39;$xy = f($x, $y)&#39;
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
+</pre></div>
+</div>
+<p>A suggested use-case here is defining functions in files, and calling them from command-line expressions.</p>
+<p>Another suggested use-case is putting default parameter values in files, e.g. using <code class="docutils literal notranslate"><span class="pre">begin{&#64;count=is_present(&#64;count)?&#64;count:10}</span></code> in the file, where you can precede that using <code class="docutils literal notranslate"><span class="pre">begin{&#64;count=40}</span></code> using <code class="docutils literal notranslate"><span class="pre">-e</span></code>.</p>
+<p>Moreover, you can have one or more <code class="docutils literal notranslate"><span class="pre">-f</span></code> expressions (maybe one function per file, for example) and one or more <code class="docutils literal notranslate"><span class="pre">-e</span></code> expressions on the command line.  If you mix <code class="docutils literal notranslate"><span class="pre">-f</span></code> and <code class="docutils literal notranslate"><span class="pre">-e</span></code> then the expressions are evaluated in the order encountered. (Since the expressions are all simply concatenated together in order, don’t forget intervening semicolons: e.g. not <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">-e</span> <span class="pre">'$x=1'</span> <span class="pre">-e</span> <span class="pre">'$y=2</span> <span class="pre">...'</span></code> but rather <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">-e</span> <span class="pre">'$x=1;'</span> <span class="pre">-e</span> <span class="pre">'$y=2'</span> <span class="pre">...</span></code>.)</p>
+</div>
+<div class="section" id="semicolons-commas-newlines-and-curly-braces">
+<h2>Semicolons, commas, newlines, and curly braces<a class="headerlink" href="#semicolons-commas-newlines-and-curly-braces" title="Permalink to this headline">¶</a></h2>
+<p>Miller uses <strong>semicolons as statement separators</strong>, not statement terminators. This means you can write:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mlr put &#39;x=1&#39;
+mlr put &#39;x=1;$y=2&#39;
+mlr put &#39;x=1;$y=2;&#39;
+mlr put &#39;x=1;;;;$y=2;&#39;
+</pre></div>
+</div>
+<p>Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x=1,y=2 | mlr put &#39;while (NF &lt; 10) { $[NF+1] = &quot;&quot;}  $foo = &quot;bar&quot;&#39;
+</span> x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x=1,y=2 | mlr put &#39;while (NF &lt; 10) { $[NF+1] = &quot;&quot;}; $foo = &quot;bar&quot;&#39;
+</span> x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre></div>
+</div>
+<p>Semicolons are required between statements even if those statements are on separate lines.  <strong>Newlines</strong> are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mlr put &#39;
+  $x = 1
+  $y = 2 # Syntax error
+&#39;
+
+mlr put &#39;
+  $x = 1;
+  $y = 2 # This is OK
+&#39;
+</pre></div>
+</div>
+<p><strong>Trailing commas</strong> are allowed in function/subroutine definitions, function/subroutine callsites, and map literals. This is intended for (although not restricted to) the multi-line case:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csvlite --from data/a.csv put &#39;
+</span><span class="hll">   func f(
+</span><span class="hll">     num a,
+</span><span class="hll">     num b,
+</span><span class="hll">   ): num {
+</span><span class="hll">     return a**2 + b**2;
+</span><span class="hll">   }
+</span><span class="hll">   $* = {
+</span><span class="hll">     &quot;s&quot;: $a + $b,
+</span><span class="hll">     &quot;t&quot;: $a - $b,
+</span><span class="hll">     &quot;u&quot;: f(
+</span><span class="hll">       $a,
+</span><span class="hll">       $b,
+</span><span class="hll">     ),
+</span><span class="hll">     &quot;v&quot;: NR,
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span> s,t,u,v
+ 3,-1,5,1
+ 9,-1,41,2
+</pre></div>
+</div>
+<p>Bodies for all compound statements must be enclosed in <strong>curly braces</strong>, even if the body is a single statement:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;if ($x == 1) $y = 2&#39; # Syntax error
+</span></pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;if ($x == 1) { $y = 2 }&#39; # This is OK
+</span></pre></div>
+</div>
+<p>Bodies for compound statements may be empty:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;if ($x == 1) { }&#39; # This no-op is syntactically acceptable
+</span></pre></div>
+</div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

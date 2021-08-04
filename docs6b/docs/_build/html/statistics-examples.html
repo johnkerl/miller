@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Statistics examples &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Randomizing examples" href="randomizing-examples.html" />
+    <link rel="prev" title="Data-cleaning examples" href="data-cleaning-examples.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Statistics examples</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="data-cleaning-examples.html">&laquo; Data-cleaning examples</a> |
+        <a href="#">Statistics examples</a>
+        | <a href="randomizing-examples.html">Randomizing examples &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Statistics examples</a><ul>
+<li><a class="reference internal" href="#computing-interquartile-ranges">Computing interquartile ranges</a></li>
+<li><a class="reference internal" href="#computing-weighted-means">Computing weighted means</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="statistics-examples">
+<h1>Statistics examples<a class="headerlink" href="#statistics-examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="computing-interquartile-ranges">
+<h2>Computing interquartile ranges<a class="headerlink" href="#computing-interquartile-ranges" title="Permalink to this headline">¶</a></h2>
+<p>For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --oxtab stats1 -f x -a p25,p75 \
+</span><span class="hll">     then put &#39;$x_iqr = $x_p75 - $x_p25&#39; \
+</span><span class="hll">     data/medium
+</span> x_p25 0.24667037823231752
+ x_p75 0.7481860062358446
+ x_iqr 0.5015156280035271
+</pre></div>
+</div>
+<p>For wildcarded field names, first compute p25 and p75, then loop over field names with <code class="docutils literal notranslate"><span class="pre">p25</span></code> in them:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --oxtab stats1 --fr &#39;[i-z]&#39; -a p25,p75 \
+</span><span class="hll">     then put &#39;for (k,v in $*) {
+</span><span class="hll">       if (k =~ &quot;(.*)_p25&quot;) {
+</span><span class="hll">         $[&quot;\1_iqr&quot;] = $[&quot;\1_p75&quot;] - $[&quot;\1_p25&quot;]
+</span><span class="hll">       }
+</span><span class="hll">     }&#39; \
+</span><span class="hll">     data/medium
+</span></pre></div>
+</div>
+</div>
+<div class="section" id="computing-weighted-means">
+<h2>Computing weighted means<a class="headerlink" href="#computing-weighted-means" title="Permalink to this headline">¶</a></h2>
+<p>This might be more elegantly implemented as an option within the <code class="docutils literal notranslate"><span class="pre">stats1</span></code> verb. Meanwhile, it’s expressible within the DSL:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/medium put -q &#39;
+</span><span class="hll">   # Using the y field for weighting in this example
+</span><span class="hll">   weight = $y;
+</span><span class="hll">
+</span><span class="hll">   # Using the a field for weighted aggregation in this example
+</span><span class="hll">   @sumwx[$a] += weight * $i;
+</span><span class="hll">   @sumw[$a] += weight;
+</span><span class="hll">
+</span><span class="hll">   @sumx[$a] += $i;
+</span><span class="hll">   @sumn[$a] += 1;
+</span><span class="hll">
+</span><span class="hll">   end {
+</span><span class="hll">     map wmean = {};
+</span><span class="hll">     map mean  = {};
+</span><span class="hll">     for (a in @sumwx) {
+</span><span class="hll">       wmean[a] = @sumwx[a] / @sumw[a]
+</span><span class="hll">     }
+</span><span class="hll">     for (a in @sumx) {
+</span><span class="hll">       mean[a] = @sumx[a] / @sumn[a]
+</span><span class="hll">     }
+</span><span class="hll">     #emit wmean, &quot;a&quot;;
+</span><span class="hll">     #emit mean, &quot;a&quot;;
+</span><span class="hll">     emit (wmean, mean), &quot;a&quot;;
+</span><span class="hll">   }&#39;
+</span> a=pan,wmean=4979.563722208067,mean=5028.259010091302
+ a=eks,wmean=4890.3815931472145,mean=4956.2900763358775
+ a=wye,wmean=4946.987746229947,mean=4920.001017293998
+ a=zee,wmean=5164.719684856538,mean=5123.092330239375
+ a=hat,wmean=4925.533162478552,mean=4967.743946419371
+</pre></div>
+</div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

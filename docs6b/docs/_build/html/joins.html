@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joins &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Running shell commands" href="shell-commands.html" />
+    <link rel="prev" title="Then-chaining" href="then-chaining.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Joins</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="then-chaining.html">&laquo; Then-chaining</a> |
+        <a href="#">Joins</a>
+        | <a href="shell-commands.html">Running shell commands &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Joins</a><ul>
+<li><a class="reference internal" href="#why-am-i-not-seeing-all-possible-joins-occur">Why am I not seeing all possible joins occur?</a></li>
+<li><a class="reference internal" href="#how-to-rectangularize-after-joins-with-unpaired">How to rectangularize after joins with unpaired?</a></li>
+<li><a class="reference internal" href="#doing-multiple-joins">Doing multiple joins</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="joins">
+<h1>Joins<a class="headerlink" href="#joins" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="why-am-i-not-seeing-all-possible-joins-occur">
+<h2>Why am I not seeing all possible joins occur?<a class="headerlink" href="#why-am-i-not-seeing-all-possible-joins-occur" title="Permalink to this headline">¶</a></h2>
+<p><strong>This section describes behavior before Miller 5.1.0. As of 5.1.0, -u is the default.</strong></p>
+<p>For example, the right file here has nine records, and the left file should add in the <code class="docutils literal notranslate"><span class="pre">hostname</span></code> column – so the join output should also have 9 records:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsvlite --opprint cat data/join-u-left.csv
+</span> hostname              ipaddr
+ nadir.east.our.org    10.3.1.18
+ zenith.west.our.org   10.3.1.27
+ apoapsis.east.our.org 10.4.5.94
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsvlite --opprint cat data/join-u-right.csv
+</span> ipaddr    timestamp  bytes
+ 10.3.1.27 1448762579 4568
+ 10.3.1.18 1448762578 8729
+ 10.4.5.94 1448762579 17445
+ 10.3.1.27 1448762589 12
+ 10.3.1.18 1448762588 44558
+ 10.4.5.94 1448762589 8899
+ 10.3.1.27 1448762599 0
+ 10.3.1.18 1448762598 73425
+ 10.4.5.94 1448762599 12200
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
+</span> ipaddr    hostname              timestamp  bytes
+ 10.3.1.27 zenith.west.our.org   1448762579 4568
+ 10.4.5.94 apoapsis.east.our.org 1448762579 17445
+ 10.4.5.94 apoapsis.east.our.org 1448762589 8899
+ 10.4.5.94 apoapsis.east.our.org 1448762599 12200
+</pre></div>
+</div>
+<p>The issue is that Miller’s <code class="docutils literal notranslate"><span class="pre">join</span></code>, by default (before 5.1.0), took input sorted (lexically ascending) by the sort keys on both the left and right files.  This design decision was made intentionally to parallel the Unix/Linux system <code class="docutils literal notranslate"><span class="pre">join</span></code> command, which has the same semantics. The benefit of this default is that the joiner program can stream through the left and right files, needing to load neither entirely into memory. The drawback, of course, is that is requires sorted input.</p>
+<p>The solution (besides pre-sorting the input files on the join keys) is to simply use <strong>mlr join -u</strong> (which is now the default). This loads the left file entirely into memory (while the right file is still streamed one line at a time) and does all possible joins without requiring sorted input:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
+</span> ipaddr    hostname              timestamp  bytes
+ 10.3.1.27 zenith.west.our.org   1448762579 4568
+ 10.3.1.18 nadir.east.our.org    1448762578 8729
+ 10.4.5.94 apoapsis.east.our.org 1448762579 17445
+ 10.3.1.27 zenith.west.our.org   1448762589 12
+ 10.3.1.18 nadir.east.our.org    1448762588 44558
+ 10.4.5.94 apoapsis.east.our.org 1448762589 8899
+ 10.3.1.27 zenith.west.our.org   1448762599 0
+ 10.3.1.18 nadir.east.our.org    1448762598 73425
+ 10.4.5.94 apoapsis.east.our.org 1448762599 12200
+</pre></div>
+</div>
+<p>General advice is to make sure the left-file is relatively small, e.g. containing name-to-number mappings, while saving large amounts of data for the right file.</p>
+</div>
+<div class="section" id="how-to-rectangularize-after-joins-with-unpaired">
+<h2>How to rectangularize after joins with unpaired?<a class="headerlink" href="#how-to-rectangularize-after-joins-with-unpaired" title="Permalink to this headline">¶</a></h2>
+<p>Suppose you have the following two data files:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>id,code
+3,0000ff
+2,00ff00
+4,ff0000
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>id,color
+4,red
+2,green
+</pre></div>
+</div>
+<p>Joining on color the results are as expected:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv join -j id -f data/color-codes.csv data/color-names.csv
+</span> id,code,color
+ 4,ff0000,red
+ 2,00ff00,green
+</pre></div>
+</div>
+<p>However, if we ask for left-unpaireds, since there’s no <code class="docutils literal notranslate"><span class="pre">color</span></code> column, we get a row not having the same column names as the other:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv
+</span> id,code,color
+ 4,ff0000,red
+ 2,00ff00,green
+
+ id,code
+ 3,0000ff
+</pre></div>
+</div>
+<p>To fix this, we can use <strong>unsparsify</strong>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv join --ul -j id -f data/color-codes.csv \
+</span><span class="hll">   then unsparsify --fill-with &quot;&quot; \
+</span><span class="hll">   data/color-names.csv
+</span> id,code,color
+ 4,ff0000,red
+ 2,00ff00,green
+ 3,0000ff,
+</pre></div>
+</div>
+<p>Thanks to &#64;aborruso for the tip!</p>
+</div>
+<div class="section" id="doing-multiple-joins">
+<h2>Doing multiple joins<a class="headerlink" href="#doing-multiple-joins" title="Permalink to this headline">¶</a></h2>
+<p>Suppose we have the following data:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat multi-join/input.csv
+</span> id,task
+ 10,chop
+ 20,puree
+ 20,wash
+ 30,fold
+ 10,bake
+ 20,mix
+ 10,knead
+ 30,clean
+</pre></div>
+</div>
+<p>And we want to augment the <code class="docutils literal notranslate"><span class="pre">id</span></code> column with lookups from the following data files:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat multi-join/name-lookup.csv
+</span> id,name
+ 30,Alice
+ 10,Bob
+ 20,Carol
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat multi-join/status-lookup.csv
+</span> id,status
+ 30,occupied
+ 10,idle
+ 20,idle
+</pre></div>
+</div>
+<p>We can run the input file through multiple <code class="docutils literal notranslate"><span class="pre">join</span></code> commands in a <code class="docutils literal notranslate"><span class="pre">then</span></code>-chain:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id \
+</span><span class="hll">   then join -f multi-join/status-lookup.csv -j id \
+</span><span class="hll">   multi-join/input.csv
+</span> id status   name  task
+ 10 idle     Bob   chop
+ 20 idle     Carol puree
+ 20 idle     Carol wash
+ 30 occupied Alice fold
+ 10 idle     Bob   bake
+ 20 idle     Carol mix
+ 10 idle     Bob   knead
+ 30 occupied Alice clean
+</pre></div>
+</div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Running shell commands &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data-diving examples" href="data-diving-examples.html" />
+    <link rel="prev" title="Joins" href="joins.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Running shell commands</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="joins.html">&laquo; Joins</a> |
+        <a href="#">Running shell commands</a>
+        | <a href="data-diving-examples.html">Data-diving examples &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div role="main">
+        
+  <div class="section" id="running-shell-commands">
+<h1>Running shell commands<a class="headerlink" href="#running-shell-commands" title="Permalink to this headline">¶</a></h1>
+<p>TODO: while-read example from issues</p>
+<p>The <a class="reference internal" href="reference-dsl-builtin-functions.html#reference-dsl-system"><span class="std std-ref">system</span></a> DSL function allows you to run a specific shell command and put its output – minus the final newline – into a record field. The command itself is any string, either a literal string, or a concatenation of strings, perhaps including other field values or what have you.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint put &#39;$o = system(&quot;echo hello world&quot;)&#39; data/small
+</span> a   b   i x                   y                   o
+ pan pan 1 0.3467901443380824  0.7268028627434533  hello world
+ eks pan 2 0.7586799647899636  0.5221511083334797  hello world
+ wye wye 3 0.20460330576630303 0.33831852551664776 hello world
+ eks wye 4 0.38139939387114097 0.13418874328430463 hello world
+ wye pan 5 0.5732889198020006  0.8636244699032729  hello world
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint put &#39;$o = system(&quot;echo {&quot; . NR . &quot;}&quot;)&#39; data/small
+</span> a   b   i x                   y                   o
+ pan pan 1 0.3467901443380824  0.7268028627434533  {1}
+ eks pan 2 0.7586799647899636  0.5221511083334797  {2}
+ wye wye 3 0.20460330576630303 0.33831852551664776 {3}
+ eks wye 4 0.38139939387114097 0.13418874328430463 {4}
+ wye pan 5 0.5732889198020006  0.8636244699032729  {5}
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint put &#39;$o = system(&quot;echo -n &quot;.$a.&quot;| sha1sum&quot;)&#39; data/small
+</span> a   b   i x                   y                   o
+ pan pan 1 0.3467901443380824  0.7268028627434533  f29c748220331c273ef16d5115f6ecd799947f13  -
+ eks pan 2 0.7586799647899636  0.5221511083334797  456d988ecb3bf1b75f057fc6e9fe70db464e9388  -
+ wye wye 3 0.20460330576630303 0.33831852551664776 eab0de043d67f441c7fd1e335f0ca38708e6ebf7  -
+ eks wye 4 0.38139939387114097 0.13418874328430463 456d988ecb3bf1b75f057fc6e9fe70db464e9388  -
+ wye pan 5 0.5732889198020006  0.8636244699032729  eab0de043d67f441c7fd1e335f0ca38708e6ebf7  -
+</pre></div>
+</div>
+<p>Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system <code class="docutils literal notranslate"><span class="pre">date</span></code> command for the current time in nanoseconds versus computing it in process:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint put &#39;$t=system(&quot;date +%s.%N&quot;)&#39; then step -a delta -f t data/small
+</span> a   b   i x                   y                   t                    t_delta
+ pan pan 1 0.3467901443380824  0.7268028627434533  1568774318.513903817 0
+ eks pan 2 0.7586799647899636  0.5221511083334797  1568774318.514722876 0.000819
+ wye wye 3 0.20460330576630303 0.33831852551664776 1568774318.515618046 0.000895
+ eks wye 4 0.38139939387114097 0.13418874328430463 1568774318.516547441 0.000929
+ wye pan 5 0.5732889198020006  0.8636244699032729  1568774318.517518828 0.000971
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint put &#39;$t=systime()&#39; then step -a delta -f t data/small
+</span> a   b   i x                   y                   t                 t_delta
+ pan pan 1 0.3467901443380824  0.7268028627434533  1568774318.518699 0
+ eks pan 2 0.7586799647899636  0.5221511083334797  1568774318.518717 0.000018
+ wye wye 3 0.20460330576630303 0.33831852551664776 1568774318.518723 0.000006
+ eks wye 4 0.38139939387114097 0.13418874328430463 1568774318.518727 0.000004
+ wye pan 5 0.5732889198020006  0.8636244699032729  1568774318.518730 0.000003
+</pre></div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

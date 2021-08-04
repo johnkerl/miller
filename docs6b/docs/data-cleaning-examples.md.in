@@ -1,0 +1,37 @@
+# Data-cleaning examples
+
+Here are some ways to use the type-checking options as described in :ref:`reference-dsl-type-tests-and-assertions` Suppose you have the following data file, with inconsistent typing for boolean. (Also imagine that, for the sake of discussion, we have a million-line file rather than a four-line file, so we can't see it all at once and some automation is called for.)
+
+GENMD_RUN_COMMAND
+cat data/het-bool.csv
+GENMD_EOF
+
+One option is to coerce everything to boolean, or integer:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
+GENMD_EOF
+
+A second option is to flag badly formatted data within the output stream:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
+GENMD_EOF
+
+Or perhaps to flag badly formatted data outside the output stream:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint put '
+  if (!is_string($reachable)) {eprint "Malformed at NR=".NR}
+' data/het-bool.csv
+GENMD_EOF
+
+A third way is to abort the process on fimd.instance of bad data:
+
+GENMD_RUN_COMMAND_TOLERATING_ERROR
+mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv
+GENMD_EOF

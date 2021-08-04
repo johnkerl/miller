@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Miller on Windows &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Community" href="community.html" />
+    <link rel="prev" title="Intro to Miller’s programming language" href="programming-language.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Miller on Windows</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="programming-language.html">&laquo; Intro to Miller’s programming language</a> |
+        <a href="#">Miller on Windows</a>
+        | <a href="community.html">Community &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Miller on Windows</a><ul>
+<li><a class="reference internal" href="#native-builds-as-of-miller-6">Native builds as of Miller 6</a></li>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#differences">Differences</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="miller-on-windows">
+<h1>Miller on Windows<a class="headerlink" href="#miller-on-windows" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="native-builds-as-of-miller-6">
+<h2>Native builds as of Miller 6<a class="headerlink" href="#native-builds-as-of-miller-6" title="Permalink to this headline">¶</a></h2>
+<p>Miller was originally developed for Unix-like operating systems including Linux and MacOS. Since the initial release of Miller in 2015, support for Windows has been partial. But as of version 6.0.0, Miller builds directly on Windows.</p>
+<p>The experience is now almost the same as on Linux, NetBSD/FreeBSD, and MacOS.</p>
+<p>MSYS2 is no longer required, although you can use Miller from within MSYS2 if you like. There is now simply a single <code class="docutils literal notranslate"><span class="pre">mlr.exe</span></code>, with no <code class="docutils literal notranslate"><span class="pre">msys2.dll</span></code> alongside anymore.</p>
+<p>See <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a> for how to get a copy of <code class="docutils literal notranslate"><span class="pre">mlr.exe</span></code>.</p>
+</div>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p>Simply place <code class="docutils literal notranslate"><span class="pre">mlr.exe</span></code> somewhere within your <code class="docutils literal notranslate"><span class="pre">PATH</span></code> variable.</p>
+<img alt="_images/miller-windows.png" src="_images/miller-windows.png" />
+<p>To use Miller from within MSYS2/Cygwin, also make sure <code class="docutils literal notranslate"><span class="pre">mlr.exe</span></code> is within the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> variable.</p>
+<img alt="_images/miller-msys.png" src="_images/miller-msys.png" />
+</div>
+<div class="section" id="differences">
+<h2>Differences<a class="headerlink" href="#differences" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="output-colorization.html"><span class="doc">Output colorization</span></a> doesn’t work on Windows, outside of MSYS2.</p>
+<p>The Windows-support code within Miller makes effort to support Linux/Unix/MacOS-like command-line syntax including single-quoting of expressions for <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span></code> and <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">filter</span></code> – and in the examples above, this often works. However, there are still some cases where more complex expressions aren’t successfully parsed from the Windows prompt, even though they are from MSYS2:</p>
+<img alt="_images/miller-windows-complex.png" src="_images/miller-windows-complex.png" />
+<img alt="_images/miller-msys-complex.png" src="_images/miller-msys-complex.png" />
+<p>Single quotes with <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code> or <code class="docutils literal notranslate"><span class="pre">||</span></code> inside are fundamentally unhandleable within Windows; there is nothing Miller can do here as the Windows command line is split before Miller ever receives it.</p>
+<p>One workaround is to use MSYS2. Another workaround is to put more complex DSL expressions into a file:</p>
+<img alt="_images/miller-windows-complex-workaround.png" src="_images/miller-windows-complex-workaround.png" />
+<p>A third workaround is to replace <code class="docutils literal notranslate"><span class="pre">&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">&quot;&quot;&quot;</span></code>, then <code class="docutils literal notranslate"><span class="pre">'</span></code> with <code class="docutils literal notranslate"><span class="pre">&quot;</span></code>:</p>
+<img alt="_images/miller-windows-triple-double-quote.png" src="_images/miller-windows-triple-double-quote.png" />
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

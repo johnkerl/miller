@@ -1,0 +1,5 @@
+map newrec = {};
+for (oldk, v in $*) {
+    newrec[gsub(oldk, " ", "_")] = v;
+}
+$* = newrec

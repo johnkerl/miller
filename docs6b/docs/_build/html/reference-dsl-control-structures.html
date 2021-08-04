@@ -1,0 +1,528 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSL reference: control structures &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DSL reference: user-defined functions" href="reference-dsl-user-defined-functions.html" />
+    <link rel="prev" title="DSL reference: operators" href="reference-dsl-operators.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>DSL reference: control structures</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="reference-dsl-operators.html">&laquo; DSL reference: operators</a> |
+        <a href="#">DSL reference: control structures</a>
+        | <a href="reference-dsl-user-defined-functions.html">DSL reference: user-defined functions &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">DSL reference: control structures</a><ul>
+<li><a class="reference internal" href="#pattern-action-blocks">Pattern-action blocks</a></li>
+<li><a class="reference internal" href="#if-statements">If-statements</a></li>
+<li><a class="reference internal" href="#while-and-do-while-loops">While and do-while loops</a></li>
+<li><a class="reference internal" href="#for-loops">For-loops</a><ul>
+<li><a class="reference internal" href="#key-only-for-loops">Key-only for-loops</a></li>
+<li><a class="reference internal" href="#key-value-for-loops">Key-value for-loops</a></li>
+<li><a class="reference internal" href="#c-style-triple-for-loops">C-style triple-for loops</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#begin-end-blocks">Begin/end blocks</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="dsl-reference-control-structures">
+<h1>DSL reference: control structures<a class="headerlink" href="#dsl-reference-control-structures" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pattern-action-blocks">
+<h2>Pattern-action blocks<a class="headerlink" href="#pattern-action-blocks" title="Permalink to this headline">¶</a></h2>
+<p>These are reminiscent of <code class="docutils literal notranslate"><span class="pre">awk</span></code> syntax.  They can be used to allow assignments to be done only when appropriate – e.g. for math-function domain restrictions, regex-matching, and so on:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr cat data/put-gating-example-1.dkvp
+</span> x=-1
+ x=0
+ x=1
+ x=2
+ x=3
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;$x &gt; 0.0 { $y = log10($x); $z = sqrt($y) }&#39; data/put-gating-example-1.dkvp
+</span> x=-1
+ x=0
+ x=1,y=0,z=0
+ x=2,y=0.3010299956639812,z=0.5486620049392715
+ x=3,y=0.4771212547196624,z=0.6907396432228734
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr cat data/put-gating-example-2.dkvp
+</span> a=abc_123
+ a=some other name
+ a=xyz_789
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;
+</span><span class="hll">   $a =~ &quot;([a-z]+)_([0-9]+)&quot; {
+</span><span class="hll">     $b = &quot;left_\1&quot;; $c = &quot;right_\2&quot;
+</span><span class="hll">   }&#39; \
+</span><span class="hll">   data/put-gating-example-2.dkvp
+</span> a=abc_123,b=left_\1,c=right_\2
+ a=some other name
+ a=xyz_789,b=left_\1,c=right_\2
+</pre></div>
+</div>
+<p>This produces heteregenous output which Miller, of course, has no problems with (see <a class="reference internal" href="record-heterogeneity.html"><span class="doc">Record-heterogeneity</span></a>).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes <code class="docutils literal notranslate"><span class="pre">put</span></code> to evaluate the boolean expression (along with any side effects, namely, regex-captures <code class="docutils literal notranslate"><span class="pre">\1</span></code>, <code class="docutils literal notranslate"><span class="pre">\2</span></code>, etc.) but doesn’t use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;$x &gt; 0.0; $y = log10($x); $z = sqrt($y)&#39; data/put-gating-example-1.dkvp
+</span> x=1,y=0,z=0
+ x=2,y=0.3010299956639812,z=0.5486620049392715
+ x=3,y=0.4771212547196624,z=0.6907396432228734
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;
+</span><span class="hll">   $a =~ &quot;([a-z]+)_([0-9]+)&quot;;
+</span><span class="hll">   $b = &quot;left_\1&quot;;
+</span><span class="hll">   $c = &quot;right_\2&quot;
+</span><span class="hll"> &#39; data/put-gating-example-2.dkvp
+</span> a=abc_123,b=left_\1,c=right_\2
+ a=xyz_789,b=left_\1,c=right_\2
+</pre></div>
+</div>
+</div>
+<div class="section" id="if-statements">
+<h2>If-statements<a class="headerlink" href="#if-statements" title="Permalink to this headline">¶</a></h2>
+<p>These are again reminiscent of <code class="docutils literal notranslate"><span class="pre">awk</span></code>. Pattern-action blocks are a special case of <code class="docutils literal notranslate"><span class="pre">if</span></code> with no <code class="docutils literal notranslate"><span class="pre">elif</span></code> or <code class="docutils literal notranslate"><span class="pre">else</span></code> blocks, no <code class="docutils literal notranslate"><span class="pre">if</span></code> keyword, and parentheses optional around the boolean expression:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;NR == 4 {$foo = &quot;bar&quot;}&#39;
+</span></pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;if (NR == 4) {$foo = &quot;bar&quot;}&#39;
+</span></pre></div>
+</div>
+<p>Compound statements use <code class="docutils literal notranslate"><span class="pre">elif</span></code> (rather than <code class="docutils literal notranslate"><span class="pre">elsif</span></code> or <code class="docutils literal notranslate"><span class="pre">else</span> <span class="pre">if</span></code>):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mlr put &#39;
+  if (NR == 2) {
+    ...
+  } elif (NR ==4) {
+    ...
+  } elif (NR ==6) {
+    ...
+  } else {
+    ...
+  }
+&#39;
+</pre></div>
+</div>
+</div>
+<div class="section" id="while-and-do-while-loops">
+<h2>While and do-while loops<a class="headerlink" href="#while-and-do-while-loops" title="Permalink to this headline">¶</a></h2>
+<p>Miller’s <code class="docutils literal notranslate"><span class="pre">while</span></code> and <code class="docutils literal notranslate"><span class="pre">do-while</span></code> are unsurprising in comparison to various languages, as are <code class="docutils literal notranslate"><span class="pre">break</span></code> and <code class="docutils literal notranslate"><span class="pre">continue</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x=1,y=2 | mlr put &#39;
+</span><span class="hll">   while (NF &lt; 10) {
+</span><span class="hll">     $[NF+1] = &quot;&quot;
+</span><span class="hll">   }
+</span><span class="hll">   $foo = &quot;bar&quot;
+</span><span class="hll"> &#39;
+</span> x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x=1,y=2 | mlr put &#39;
+</span><span class="hll">   do {
+</span><span class="hll">     $[NF+1] = &quot;&quot;;
+</span><span class="hll">     if (NF == 5) {
+</span><span class="hll">       break
+</span><span class="hll">     }
+</span><span class="hll">   } while (NF &lt; 10);
+</span><span class="hll">   $foo = &quot;bar&quot;
+</span><span class="hll"> &#39;
+</span> x=1,y=2,3=,4=,5=,foo=bar
+</pre></div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">break</span></code> or <code class="docutils literal notranslate"><span class="pre">continue</span></code> within nested conditional blocks or if-statements will, of course, propagate to the innermost loop enclosing them, if any. A <code class="docutils literal notranslate"><span class="pre">break</span></code> or <code class="docutils literal notranslate"><span class="pre">continue</span></code> outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
+The existence of <code class="docutils literal notranslate"><span class="pre">while</span></code>, <code class="docutils literal notranslate"><span class="pre">do-while</span></code>, and <code class="docutils literal notranslate"><span class="pre">for</span></code> loops in Miller’s DSL means that you can create infinite-loop scenarios inadvertently.  In particular, please recall that DSL statements are executed once if in <code class="docutils literal notranslate"><span class="pre">begin</span></code> or <code class="docutils literal notranslate"><span class="pre">end</span></code> blocks, and once <em>per record</em> otherwise. For example, <strong>while (NR &lt; 10) will never terminate as NR is only incremented between records</strong>.</p>
+</div>
+<div class="section" id="for-loops">
+<h2>For-loops<a class="headerlink" href="#for-loops" title="Permalink to this headline">¶</a></h2>
+<p>While Miller’s <code class="docutils literal notranslate"><span class="pre">while</span></code> and <code class="docutils literal notranslate"><span class="pre">do-while</span></code> statements are much as in many other languages, <code class="docutils literal notranslate"><span class="pre">for</span></code> loops are more idiosyncratic to Miller. They are loops over key-value pairs, whether in stream records, out-of-stream variables, local variables, or map-literals: more reminiscent of <code class="docutils literal notranslate"><span class="pre">foreach</span></code>, as in (for example) PHP. There are <strong>for-loops over map keys</strong> and <strong>for-loops over key-value tuples</strong>.  Additionally, Miller has a <strong>C-style triple-for loop</strong> with initialize, test, and update statements.</p>
+<p>As with <code class="docutils literal notranslate"><span class="pre">while</span></code> and <code class="docutils literal notranslate"><span class="pre">do-while</span></code>, a <code class="docutils literal notranslate"><span class="pre">break</span></code> or <code class="docutils literal notranslate"><span class="pre">continue</span></code> within nested control structures will propagate to the innermost loop enclosing them, if any, and a <code class="docutils literal notranslate"><span class="pre">break</span></code> or <code class="docutils literal notranslate"><span class="pre">continue</span></code> outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.</p>
+<div class="section" id="key-only-for-loops">
+<h3>Key-only for-loops<a class="headerlink" href="#key-only-for-loops" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">key</span></code> variable is always bound to the <em>key</em> of key-value pairs:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small put &#39;
+</span><span class="hll">   print &quot;NR = &quot;.NR;
+</span><span class="hll">   for (key in $*) {
+</span><span class="hll">     value = $[key];
+</span><span class="hll">     print &quot;  key:&quot; . key . &quot;  value:&quot;.value;
+</span><span class="hll">   }
+</span><span class="hll">
+</span><span class="hll"> &#39;
+</span> NR = 1
+   key:a  value:pan
+   key:b  value:pan
+   key:i  value:1
+   key:x  value:0.3467901443380824
+   key:y  value:0.7268028627434533
+ a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+ NR = 2
+   key:a  value:eks
+   key:b  value:pan
+   key:i  value:2
+   key:x  value:0.7586799647899636
+   key:y  value:0.5221511083334797
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+ NR = 3
+   key:a  value:wye
+   key:b  value:wye
+   key:i  value:3
+   key:x  value:0.20460330576630303
+   key:y  value:0.33831852551664776
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+ NR = 4
+   key:a  value:eks
+   key:b  value:wye
+   key:i  value:4
+   key:x  value:0.38139939387114097
+   key:y  value:0.13418874328430463
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+ NR = 5
+   key:a  value:wye
+   key:b  value:pan
+   key:i  value:5
+   key:x  value:0.5732889198020006
+   key:y  value:0.8636244699032729
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr -n put &#39;
+</span><span class="hll">   end {
+</span><span class="hll">     o = {1:2, 3:{4:5}};
+</span><span class="hll">     for (key in o) {
+</span><span class="hll">       print &quot;  key:&quot; . key . &quot;  valuetype:&quot; . typeof(o[key]);
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span>   key:1  valuetype:int
+   key:3  valuetype:map
+</pre></div>
+</div>
+<p>Note that the value corresponding to a given key may be gotten as through a <strong>computed field name</strong> using square brackets as in <code class="docutils literal notranslate"><span class="pre">$[key]</span></code> for stream records, or by indexing the looped-over variable using square brackets.</p>
+</div>
+<div class="section" id="key-value-for-loops">
+<h3>Key-value for-loops<a class="headerlink" href="#key-value-for-loops" title="Permalink to this headline">¶</a></h3>
+<p>Single-level keys may be gotten at using either <code class="docutils literal notranslate"><span class="pre">for(k,v)</span></code> or <code class="docutils literal notranslate"><span class="pre">for((k),v)</span></code>; multi-level keys may be gotten at using <code class="docutils literal notranslate"><span class="pre">for((k1,k2,k3),v)</span></code> and so on.  The <code class="docutils literal notranslate"><span class="pre">v</span></code> variable will be bound to to a scalar value (a string or a number) if the map stops at that level, or to a map-valued variable if the map goes deeper. If the map isn’t deep enough then the loop body won’t be executed.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/for-srec-example.tbl
+</span> label1 label2 f1  f2  f3
+ blue   green  100 240 350
+ red    green  120 11  195
+ yellow blue   140 0   240
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --pprint --from data/for-srec-example.tbl put &#39;
+</span><span class="hll">   $sum1 = $f1 + $f2 + $f3;
+</span><span class="hll">   $sum2 = 0;
+</span><span class="hll">   $sum3 = 0;
+</span><span class="hll">   for (key, value in $*) {
+</span><span class="hll">     if (key =~ &quot;^f[0-9]+&quot;) {
+</span><span class="hll">       $sum2 += value;
+</span><span class="hll">       $sum3 += $[key];
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span> label1 label2 f1  f2  f3  sum1 sum2 sum3
+ blue   green  100 240 350 690  690  690
+ red    green  120 11  195 326  326  326
+ yellow blue   140 0   240 380  380  380
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small --opprint put &#39;for (k,v in $*) { $[k.&quot;_type&quot;] = typeof(v) }&#39;
+</span> a   b   i x                   y                   a_type b_type i_type x_type y_type
+ pan pan 1 0.3467901443380824  0.7268028627434533  string string int    float  float
+ eks pan 2 0.7586799647899636  0.5221511083334797  string string int    float  float
+ wye wye 3 0.20460330576630303 0.33831852551664776 string string int    float  float
+ eks wye 4 0.38139939387114097 0.13418874328430463 string string int    float  float
+ wye pan 5 0.5732889198020006  0.8636244699032729  string string int    float  float
+</pre></div>
+</div>
+<p>Note that the value of the current field in the for-loop can be gotten either using the bound variable <code class="docutils literal notranslate"><span class="pre">value</span></code>, or through a <strong>computed field name</strong> using square brackets as in <code class="docutils literal notranslate"><span class="pre">$[key]</span></code>.</p>
+<p>Important note: to avoid inconsistent looping behavior in case you’re setting new fields (and/or unsetting existing ones) while looping over the record, <strong>Miller makes a copy of the record before the loop: loop variables are bound from the copy and all other reads/writes involve the record itself</strong>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small --opprint put &#39;
+</span><span class="hll">   $sum1 = 0;
+</span><span class="hll">   $sum2 = 0;
+</span><span class="hll">   for (k,v in $*) {
+</span><span class="hll">     if (is_numeric(v)) {
+</span><span class="hll">       $sum1 +=v;
+</span><span class="hll">       $sum2 += $[k];
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span> a   b   i x                   y                   sum1               sum2
+ pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356 8.294372028326142
+ eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443  13.123324292493772
+ wye wye 3 0.20460330576630303 0.33831852551664776 3.5429218312829507 14.171687325131803
+ eks wye 4 0.38139939387114097 0.13418874328430463 4.515588137155445  18.06235254862178
+ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273  25.747653558821092
+</pre></div>
+</div>
+<p>It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small --opprint put &#39;
+</span><span class="hll">   sum = 0;
+</span><span class="hll">   for (k,v in $*) {
+</span><span class="hll">     if (is_numeric(v)) {
+</span><span class="hll">       sum += $[k];
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll">   $sum = sum
+</span><span class="hll"> &#39;
+</span> a   b   i x                   y                   sum
+ pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356
+ eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443
+ wye wye 3 0.20460330576630303 0.33831852551664776 3.5429218312829507
+ eks wye 4 0.38139939387114097 0.13418874328430463 4.515588137155445
+ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273
+</pre></div>
+</div>
+<p>You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after <code class="docutils literal notranslate"><span class="pre">in</span></code>, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Parentheses are optional for single key:
+for (k1,           v in @a[&quot;b&quot;][&quot;c&quot;]) { ... }
+for ((k1),         v in @a[&quot;b&quot;][&quot;c&quot;]) { ... }
+# Parentheses are required for multiple keys:
+for ((k1, k2),     v in @a[&quot;b&quot;][&quot;c&quot;]) { ... } # Loop over subhashmap of a variable
+for ((k1, k2, k3), v in @a[&quot;b&quot;][&quot;c&quot;]) { ... } # Ditto
+for ((k1, k2, k3), v in @a { ... }            # Loop over variable starting from basename
+for ((k1, k2, k3), v in @* { ... }            # Loop over all variables (k1 is bound to basename)
+</pre></div>
+</div>
+<p>That’s confusing in the abstract, so a concrete example is in order. Suppose the out-of-stream variable <code class="docutils literal notranslate"><span class="pre">&#64;myvar</span></code> is populated as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr -n put --jknquoteint -q &#39;
+</span><span class="hll">   begin {
+</span><span class="hll">     @myvar = {
+</span><span class="hll">       1: 2,
+</span><span class="hll">       3: { 4 : 5 },
+</span><span class="hll">       6: { 7: { 8: 9 } }
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll">   end { dump }
+</span><span class="hll"> &#39;
+</span> {
+   &quot;myvar&quot;: {
+     &quot;1&quot;: 2,
+     &quot;3&quot;: {
+       &quot;4&quot;: 5
+     },
+     &quot;6&quot;: {
+       &quot;7&quot;: {
+         &quot;8&quot;: 9
+       }
+     }
+   }
+ }
+</pre></div>
+</div>
+<p>Then we can get at various values as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr -n put --jknquoteint -q &#39;
+</span><span class="hll">   begin {
+</span><span class="hll">     @myvar = {
+</span><span class="hll">       1: 2,
+</span><span class="hll">       3: { 4 : 5 },
+</span><span class="hll">       6: { 7: { 8: 9 } }
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll">   end {
+</span><span class="hll">     for (k, v in @myvar) {
+</span><span class="hll">       print
+</span><span class="hll">         &quot;key=&quot; . k .
+</span><span class="hll">         &quot;,valuetype=&quot; . typeof(v);
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span> key=1,valuetype=int
+ key=3,valuetype=map
+ key=6,valuetype=map
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr -n put --jknquoteint -q &#39;
+</span><span class="hll">   begin {
+</span><span class="hll">     @myvar = {
+</span><span class="hll">       1: 2,
+</span><span class="hll">       3: { 4 : 5 },
+</span><span class="hll">       6: { 7: { 8: 9 } }
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll">   end {
+</span><span class="hll">     for ((k1, k2), v in @myvar) {
+</span><span class="hll">       print
+</span><span class="hll">         &quot;key1=&quot; . k1 .
+</span><span class="hll">         &quot;,key2=&quot; . k2 .
+</span><span class="hll">         &quot;,valuetype=&quot; . typeof(v);
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span> key1=3,key2=4,valuetype=int
+ key1=6,key2=7,valuetype=map
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr -n put --jknquoteint -q &#39;
+</span><span class="hll">   begin {
+</span><span class="hll">     @myvar = {
+</span><span class="hll">       1: 2,
+</span><span class="hll">       3: { 4 : 5 },
+</span><span class="hll">       6: { 7: { 8: 9 } }
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll">   end {
+</span><span class="hll">     for ((k1, k2), v in @myvar[6]) {
+</span><span class="hll">       print
+</span><span class="hll">         &quot;key1=&quot; . k1 .
+</span><span class="hll">         &quot;,key2=&quot; . k2 .
+</span><span class="hll">         &quot;,valuetype=&quot; . typeof(v);
+</span><span class="hll">     }
+</span><span class="hll">   }
+</span><span class="hll"> &#39;
+</span> key1=7,key2=8,valuetype=int
+</pre></div>
+</div>
+</div>
+<div class="section" id="c-style-triple-for-loops">
+<h3>C-style triple-for loops<a class="headerlink" href="#c-style-triple-for-loops" title="Permalink to this headline">¶</a></h3>
+<p>These are supported as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small --opprint put &#39;
+</span><span class="hll">   num suma = 0;
+</span><span class="hll">   for (a = 1; a &lt;= NR; a += 1) {
+</span><span class="hll">     suma += a;
+</span><span class="hll">   }
+</span><span class="hll">   $suma = suma;
+</span><span class="hll"> &#39;
+</span> a   b   i x                   y                   suma
+ pan pan 1 0.3467901443380824  0.7268028627434533  1
+ eks pan 2 0.7586799647899636  0.5221511083334797  3
+ wye wye 3 0.20460330576630303 0.33831852551664776 6
+ eks wye 4 0.38139939387114097 0.13418874328430463 10
+ wye pan 5 0.5732889198020006  0.8636244699032729  15
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from data/small --opprint put &#39;
+</span><span class="hll">   num suma = 0;
+</span><span class="hll">   num sumb = 0;
+</span><span class="hll">   for (num a = 1, num b = 1; a &lt;= NR; a += 1, b *= 2) {
+</span><span class="hll">     suma += a;
+</span><span class="hll">     sumb += b;
+</span><span class="hll">   }
+</span><span class="hll">   $suma = suma;
+</span><span class="hll">   $sumb = sumb;
+</span><span class="hll"> &#39;
+</span> a   b   i x                   y                   suma sumb
+ pan pan 1 0.3467901443380824  0.7268028627434533  1    1
+ eks pan 2 0.7586799647899636  0.5221511083334797  3    3
+ wye wye 3 0.20460330576630303 0.33831852551664776 6    7
+ eks wye 4 0.38139939387114097 0.13418874328430463 10   15
+ wye pan 5 0.5732889198020006  0.8636244699032729  15   31
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>In <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(start;</span> <span class="pre">continuation;</span> <span class="pre">update)</span> <span class="pre">{</span> <span class="pre">body</span> <span class="pre">}</span></code>, the start, continuation, and update statements may be empty, single statements, or multiple comma-separated statements. If the continuation is empty (e.g. <code class="docutils literal notranslate"><span class="pre">for(i=1;;i+=1)</span></code>) it defaults to true.</p></li>
+<li><p>In particular, you may use <code class="docutils literal notranslate"><span class="pre">$</span></code>-variables and/or <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>-variables in the start, continuation, and/or update steps (as well as the body, of course).</p></li>
+<li><p>The typedecls such as <code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">num</span></code> are optional.  If a typedecl is provided (for a local variable), it binds a variable scoped to the for-loop regardless of whether a same-name variable is present in outer scope. If a typedecl is not provided, then the variable is scoped to the for-loop if no same-name variable is present in outer scope, or if a same-name variable is present in outer scope then it is modified.</p></li>
+<li><p>Miller has no <code class="docutils literal notranslate"><span class="pre">++</span></code> or <code class="docutils literal notranslate"><span class="pre">--</span></code> operators.</p></li>
+<li><p>As with all for/if/while statements in Miller, the curly braces are required even if the body is a single statement, or empty.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="begin-end-blocks">
+<h2>Begin/end blocks<a class="headerlink" href="#begin-end-blocks" title="Permalink to this headline">¶</a></h2>
+<p>Miller supports an <code class="docutils literal notranslate"><span class="pre">awk</span></code>-like <code class="docutils literal notranslate"><span class="pre">begin/end</span></code> syntax.  The statements in the <code class="docutils literal notranslate"><span class="pre">begin</span></code> block are executed before any input records are read; the statements in the <code class="docutils literal notranslate"><span class="pre">end</span></code> block are executed after the last input record is read.  (If you want to execute some statement at the start of each file, not at the start of the first file as with <code class="docutils literal notranslate"><span class="pre">begin</span></code>, you might use a pattern/action block of the form <code class="docutils literal notranslate"><span class="pre">FNR</span> <span class="pre">==</span> <span class="pre">1</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">}</span></code>.) All statements outside of <code class="docutils literal notranslate"><span class="pre">begin</span></code> or <code class="docutils literal notranslate"><span class="pre">end</span></code> are, of course, executed on every input record. Semicolons separate statements inside or outside of begin/end blocks; semicolons are required between begin/end block bodies and any subsequent statement.  For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;
+</span><span class="hll">   begin { @sum = 0 };
+</span><span class="hll">   @x_sum += $x;
+</span><span class="hll">   end { emit @x_sum }
+</span><span class="hll"> &#39; ../data/small
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+ x_sum=4.536293840335763
+</pre></div>
+</div>
+<p>Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in <code class="docutils literal notranslate"><span class="pre">awk</span></code>, where they’d default to 0 either way), the above can be written more succinctly as</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;
+</span><span class="hll">   @x_sum += $x;
+</span><span class="hll">   end { emit @x_sum }
+</span><span class="hll"> &#39; ../data/small
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+ a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+ x_sum=4.536293840335763
+</pre></div>
+</div>
+<p>The <strong>put -q</strong> option is a shorthand which suppresses printing of each output record, with only <code class="docutils literal notranslate"><span class="pre">emit</span></code> statements being output. So to get only summary outputs, one could write</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put -q &#39;
+</span><span class="hll">   @x_sum += $x;
+</span><span class="hll">   end { emit @x_sum }
+</span><span class="hll"> &#39; ../data/small
+</span> x_sum=4.536293840335763
+</pre></div>
+</div>
+<p>We can do similarly with multiple out-of-stream variables:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put -q &#39;
+</span><span class="hll">   @x_count += 1;
+</span><span class="hll">   @x_sum += $x;
+</span><span class="hll">   end {
+</span><span class="hll">     emit @x_count;
+</span><span class="hll">     emit @x_sum;
+</span><span class="hll">   }
+</span><span class="hll"> &#39; ../data/small
+</span> x_count=10
+ x_sum=4.536293840335763
+</pre></div>
+</div>
+<p>This is of course not much different than</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr stats1 -a count,sum -f x ../data/small
+</span> x_count=10,x_sum=4.536293840335763
+</pre></div>
+</div>
+<p>Note that it’s a syntax error for begin/end blocks to refer to field names (beginning with <code class="docutils literal notranslate"><span class="pre">$</span></code>), since these execute outside the context of input records.</p>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

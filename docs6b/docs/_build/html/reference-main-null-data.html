@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reference: null data &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reference: arithmetic" href="reference-main-arithmetic.html" />
+    <link rel="prev" title="Reference: arrays" href="reference-dsl-arrays.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Reference: null data</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="reference-dsl-arrays.html">&laquo; Reference: arrays</a> |
+        <a href="#">Reference: null data</a>
+        | <a href="reference-main-arithmetic.html">Reference: arithmetic &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div role="main">
+        
+  <div class="section" id="reference-null-data">
+<h1>Reference: null data<a class="headerlink" href="#reference-null-data" title="Permalink to this headline">¶</a></h1>
+<p>One of Miller’s key features is its support for <strong>heterogeneous</strong> data.  For example, take <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">sort</span></code>: if you try to sort on field <code class="docutils literal notranslate"><span class="pre">hostname</span></code> when not all records in the data stream <em>have</em> a field named <code class="docutils literal notranslate"><span class="pre">hostname</span></code>, it is not an error (although you could pre-filter the data stream using <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">having-fields</span> <span class="pre">--at-least</span> <span class="pre">hostname</span> <span class="pre">then</span> <span class="pre">sort</span> <span class="pre">...</span></code>).  Rather, records lacking one or more sort keys are simply output contiguously by <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">sort</span></code>.</p>
+<p>Miller has two kinds of null data:</p>
+<ul class="simple">
+<li><p><strong>Empty (key present, value empty)</strong>: a field name is present in a record (or in an out-of-stream variable) with empty value: e.g. <code class="docutils literal notranslate"><span class="pre">x=,y=2</span></code> in the data input stream, or assignment <code class="docutils literal notranslate"><span class="pre">$x=&quot;&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&#64;x=&quot;&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span></code>.</p></li>
+<li><p><strong>Absent (key not present)</strong>: a field name is not present, e.g. input record is <code class="docutils literal notranslate"><span class="pre">x=1,y=2</span></code> and a <code class="docutils literal notranslate"><span class="pre">put</span></code> or <code class="docutils literal notranslate"><span class="pre">filter</span></code> expression refers to <code class="docutils literal notranslate"><span class="pre">$z</span></code>. Or, reading an out-of-stream variable which hasn’t been assigned a value yet, e.g.  <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">-q</span> <span class="pre">'&#64;sum</span> <span class="pre">+=</span> <span class="pre">$x;</span> <span class="pre">end{emit</span> <span class="pre">&#64;sum}'</span></code> or <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">-q</span> <span class="pre">'&#64;sum[$a][$b]</span> <span class="pre">+=</span> <span class="pre">$x;</span> <span class="pre">end{emit</span> <span class="pre">&#64;sum,</span> <span class="pre">&quot;a&quot;,</span> <span class="pre">&quot;b&quot;}'</span></code>.</p></li>
+</ul>
+<p>You can test these programatically using the functions <code class="docutils literal notranslate"><span class="pre">is_empty</span></code>/<code class="docutils literal notranslate"><span class="pre">is_not_empty</span></code>, <code class="docutils literal notranslate"><span class="pre">is_absent</span></code>/<code class="docutils literal notranslate"><span class="pre">is_present</span></code>, and <code class="docutils literal notranslate"><span class="pre">is_null</span></code>/<code class="docutils literal notranslate"><span class="pre">is_not_null</span></code>. For the last pair, note that null means either empty or absent.</p>
+<p>Rules for null-handling:</p>
+<ul class="simple">
+<li><p>Records with one or more empty sort-field values sort after records with all sort-field values present:</p></li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr cat data/sort-null.dat
+</span> a=3,b=2
+ a=1,b=8
+ a=,b=4
+ x=9,b=10
+ a=5,b=7
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr sort -n  a data/sort-null.dat
+</span> a=1,b=8
+ a=3,b=2
+ a=5,b=7
+ a=,b=4
+ x=9,b=10
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr sort -nr a data/sort-null.dat
+</span> a=,b=4
+ a=5,b=7
+ a=3,b=2
+ a=1,b=8
+ x=9,b=10
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Functions/operators which have one or more <em>empty</em> arguments produce empty output: e.g.</p></li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo &#39;x=2,y=3&#39; | mlr put &#39;$a=$x+$y&#39;
+</span> x=2,y=3,a=5
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo &#39;x=,y=3&#39; | mlr put &#39;$a=$x+$y&#39;
+</span> x=,y=3,a=
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo &#39;x=,y=3&#39; | mlr put &#39;$a=log($x);$b=log($y)&#39;
+</span> x=,y=3,a=,b=1.0986122886681096
+</pre></div>
+</div>
+<p>with the exception that the <code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code> functions are special: if one argument is non-null, it wins:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo &#39;x=,y=3&#39; | mlr put &#39;$a=min($x,$y);$b=max($x,$y)&#39;
+</span> x=,y=3,a=3,b=
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Functions of <em>absent</em> variables (e.g. <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'$y</span> <span class="pre">=</span> <span class="pre">log10($nonesuch)'</span></code>) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, <strong>any expression which evaluates to absent is not stored in the left-hand side of an assignment statement</strong>:</p></li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo &#39;x=2,y=3&#39; | mlr put &#39;$a=$u+$v; $b=$u+$y; $c=$x+$y&#39;
+</span> x=2,y=3,b=3,c=5
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo &#39;x=2,y=3&#39; | mlr put &#39;$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)&#39;
+</span> x=2,y=3,a=2,b=3
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Likewise, for assignment to maps, <strong>absent-valued keys or values result in a skipped assignment</strong>.</p></li>
+</ul>
+<p>The reasoning is as follows:</p>
+<ul class="simple">
+<li><p>Empty values are explicit in the data so they should explicitly affect accumulations: <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'&#64;sum</span> <span class="pre">+=</span> <span class="pre">$x'</span></code> should accumulate numeric <code class="docutils literal notranslate"><span class="pre">x</span></code> values into the sum but an empty <code class="docutils literal notranslate"><span class="pre">x</span></code>, when encountered in the input data stream, should make the sum non-numeric. To work around this you can use the <code class="docutils literal notranslate"><span class="pre">is_not_null</span></code> function as follows: <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'is_not_null($x)</span> <span class="pre">{</span> <span class="pre">&#64;sum</span> <span class="pre">+=</span> <span class="pre">$x</span> <span class="pre">}'</span></code></p></li>
+<li><p>Absent stream-record values should not break accumulations, since Miller by design handles heterogenous data: the running <code class="docutils literal notranslate"><span class="pre">&#64;sum</span></code> in <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'&#64;sum</span> <span class="pre">+=</span> <span class="pre">$x'</span></code> should not be invalidated for records which have no <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
+<li><p>Absent out-of-stream-variable values are precisely what allow you to write <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'&#64;sum</span> <span class="pre">+=</span> <span class="pre">$x'</span></code>. Otherwise you would have to write <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'begin{&#64;sum</span> <span class="pre">=</span> <span class="pre">0};</span> <span class="pre">&#64;sum</span> <span class="pre">+=</span> <span class="pre">$x'</span></code> – which is tolerable – but for <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'begin{...};</span> <span class="pre">&#64;sum[$a][$b]</span> <span class="pre">+=</span> <span class="pre">$x'</span></code> you’d have to pre-initialize <code class="docutils literal notranslate"><span class="pre">&#64;sum</span></code> for all values of <code class="docutils literal notranslate"><span class="pre">$a</span></code> and <code class="docutils literal notranslate"><span class="pre">$b</span></code> in your input data stream, which is intolerable.</p></li>
+<li><p>The penalty for the absent feature is that misspelled variables can be hard to find: e.g. in <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'begin{&#64;sumx</span> <span class="pre">=</span> <span class="pre">10};</span> <span class="pre">...;</span> <span class="pre">update</span> <span class="pre">&#64;sumx</span> <span class="pre">somehow</span> <span class="pre">per-record;</span> <span class="pre">...;</span> <span class="pre">end</span> <span class="pre">{&#64;something</span> <span class="pre">=</span> <span class="pre">&#64;sum</span> <span class="pre">*</span> <span class="pre">2}'</span></code> the accumulator is spelt <code class="docutils literal notranslate"><span class="pre">&#64;sumx</span></code> in the begin-block but <code class="docutils literal notranslate"><span class="pre">&#64;sum</span></code> in the end-block, where since it is absent, <code class="docutils literal notranslate"><span class="pre">&#64;sum*2</span></code> evaluates to 2. See also the section on <a class="reference internal" href="reference-dsl-errors.html"><span class="doc">DSL reference: errors and transparency</span></a>.</p></li>
+</ul>
+<p>Since absent plus absent is absent (and likewise for other operators), accumulations such as <code class="docutils literal notranslate"><span class="pre">&#64;sum</span> <span class="pre">+=</span> <span class="pre">$x</span></code> work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don’t desire.  To work around this – namely, to set an output field only for records which have all the inputs present – you can use a pattern-action block with <code class="docutils literal notranslate"><span class="pre">is_present</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr cat data/het.dkvp
+</span> resource=/path/to/file,loadsec=0.45,ok=true
+ record_count=100,resource=/path/to/file
+ resource=/path/to/second/file,loadsec=0.32,ok=true
+ record_count=150,resource=/path/to/second/file
+ resource=/some/other/path,loadsec=0.97,ok=false
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;is_present($loadsec) { $loadmillis = $loadsec * 1000 }&#39; data/het.dkvp
+</span> resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450
+ record_count=100,resource=/path/to/file
+ resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320
+ record_count=150,resource=/path/to/second/file
+ resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put &#39;$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000&#39; data/het.dkvp
+</span> resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450
+ record_count=100,resource=/path/to/file,loadmillis=0
+ resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320
+ record_count=150,resource=/path/to/second/file,loadmillis=0
+ resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970
+</pre></div>
+</div>
+<p>If you’re interested in a formal description of how empty and absent fields participate in arithmetic, here’s a table for plus (other arithmetic/boolean/bitwise operators are similar):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr help type-arithmetic-info
+</span> (+)        | 1          2.5        (absent)   (error)
+ ------     + ------     ------     ------     ------
+ 1          | 2          3.5        1          (error)
+ 2.5        | 3.5        5          2.5        (error)
+ (absent)   | 1          2.5        (absent)   (error)
+ (error)    | (error)    (error)    (error)    (error)
+</pre></div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>
