@@ -1,0 +1,32 @@
+# ================================================================
+# Sieve of Eratosthenes: simple example of Miller DSL as programming language.
+# ================================================================
+
+# Put this in a begin-block so we can do either
+#   mlr -n put -q -f name-of-this-file.mlr
+# or
+#   mlr -n put -q -f name-of-this-file.mlr -e '@n = 200'
+# i.e. 100 is the default upper limit, and another can be specified using -e.
+begin {
+  @n = 100;
+}
+
+end {
+  for (int i = 0; i <= @n; i += 1) {
+    @s[i] = true;
+  }
+  @s[0] = false; # 0 is neither prime nor composite
+  @s[1] = false; # 1 is neither prime nor composite
+  # Strike out multiples
+  for (int i = 2; i <= @n; i += 1) {
+    for (int j = i+i; j <= @n; j += i) {
+      @s[j] = false;
+    }
+  }
+  # Print survivors
+  for (int i = 0; i <= @n; i += 1) {
+    if (@s[i]) {
+      print i;
+    }
+  }
+}

@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick examples &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Cookbook part 1: common patterns" href="cookbook.html" />
+    <link rel="prev" title="SQL examples" href="sql-examples.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Quick examples</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="sql-examples.html">&laquo; SQL examples</a> |
+        <a href="#">Quick examples</a>
+        | <a href="cookbook.html">Cookbook part 1: common patterns &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div role="main">
+        
+  <div class="section" id="quick-examples">
+<h1>Quick examples<a class="headerlink" href="#quick-examples" title="Permalink to this headline">¶</a></h1>
+<p>Column select:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv cut -f hostname,uptime mydata.csv
+</span></pre></div>
+</div>
+<p>Add new columns as function of other columns:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --nidx put &#39;$sum = $7 &lt; 0.0 ? 3.5 : $7 + 2.1*$8&#39; *.dat
+</span></pre></div>
+</div>
+<p>Row filter:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv filter &#39;$status != &quot;down&quot; &amp;&amp; $upsec &gt;= 10000&#39; *.csv
+</span></pre></div>
+</div>
+<p>Apply column labels and pretty-print:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> grep -v &#39;^#&#39; /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
+</span></pre></div>
+</div>
+<p>Join multiple data sources on key columns:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
+</span></pre></div>
+</div>
+<p>Mulltiple formats including JSON:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --json put &#39;$attr = sub($attr, &quot;([0-9]+)_([0-9]+)_.*&quot;, &quot;\1:\2&quot;)&#39; data/*.json
+</span></pre></div>
+</div>
+<p>Aggregate per-column statistics:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
+</span></pre></div>
+</div>
+<p>Linear regression:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr stats2 -a linreg-pca -f u,v -g shape data/*
+</span></pre></div>
+</div>
+<p>Aggregate custom per-column statistics:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr put -q &#39;@sum[$a][$b] += $x; end {emit @sum, &quot;a&quot;, &quot;b&quot;}&#39; data/*
+</span></pre></div>
+</div>
+<p>Iterate over data using DSL expressions:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from estimates.tbl put &#39;
+</span>   for (k,v in $*) {
+     if (is_numeric(v) &amp;&amp; k =~ &quot;^[t-z].*$&quot;) {
+       $sum += v; $count += 1
+     }
+   }
+   $mean = $sum / $count # no assignment if count unset
+ &#39;
+</pre></div>
+</div>
+<p>Run DSL expressions from a script file:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from infile.dat put -f analyze.mlr
+</span></pre></div>
+</div>
+<p>Split/reduce output to multiple filenames:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from infile.dat put &#39;tee &gt; &quot;./taps/data-&quot;.$a.&quot;-&quot;.$b, $*&#39;
+</span></pre></div>
+</div>
+<p>Compressed I/O:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from infile.dat put &#39;tee | &quot;gzip &gt; ./taps/data-&quot;.$a.&quot;-&quot;.$b.&quot;.gz&quot;, $*&#39;
+</span></pre></div>
+</div>
+<p>Interoperate with other data-processing tools using standard pipes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from infile.dat put -q &#39;@v=$*; dump | &quot;jq .[]&quot;&#39;
+</span></pre></div>
+</div>
+<p>Tap/trace:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --from infile.dat put  &#39;(NR % 1000 == 0) { print &gt; stderr, &quot;Checkpoint &quot;.NR}&#39;
+</span></pre></div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

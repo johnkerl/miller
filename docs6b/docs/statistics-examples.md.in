@@ -1,0 +1,17 @@
+# Statistics examples
+
+## Computing interquartile ranges
+
+For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
+
+GENMD_INCLUDE_AND_RUN_ESCAPED(data/iqr1.sh)
+
+For wildcarded field names, first compute p25 and p75, then loop over field names with ``p25`` in them:
+
+GENMD_INCLUDE_AND_RUN_ESCAPED(data/iqrn.sh)
+
+## Computing weighted means
+
+This might be more elegantly implemented as an option within the ``stats1`` verb. Meanwhile, it's expressible within the DSL:
+
+GENMD_INCLUDE_AND_RUN_ESCAPED(data/weighted-mean.sh)

@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Installation &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Building from source" href="build.html" />
+    <link rel="prev" title="Documents by release" href="release-docs.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Installation</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="release-docs.html">&laquo; Documents by release</a> |
+        <a href="#">Installation</a>
+        | <a href="build.html">Building from source &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#prebuilt-executables-via-package-managers">Prebuilt executables via package managers</a></li>
+<li><a class="reference internal" href="#prebuilt-executables-via-github-per-release">Prebuilt executables via GitHub per release</a></li>
+<li><a class="reference internal" href="#prebuilt-executables-via-github-per-commit">Prebuilt executables via GitHub per commit</a></li>
+<li><a class="reference internal" href="#building-from-source">Building from source</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="prebuilt-executables-via-package-managers">
+<h2>Prebuilt executables via package managers<a class="headerlink" href="#prebuilt-executables-via-package-managers" title="Permalink to this headline">¶</a></h2>
+<p><em>Note: Miller 6 is in pre-release so the above commands will get you Miller 5.
+Once Miller 6 is released, the commands in this section will install Miller 6 for you.
+Until then, please see the following sections for how to get Miller 6.</em></p>
+<p><a class="reference external" href="https://brew.sh/">Homebrew</a> installation support for OSX is available via</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> brew update &amp;&amp; brew install miller
+</span></pre></div>
+</div>
+<p>…and also via <a class="reference external" href="https://www.macports.org/">MacPorts</a>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> sudo port selfupdate &amp;&amp; sudo port install miller
+</span></pre></div>
+</div>
+<p>You may already have the <code class="docutils literal notranslate"><span class="pre">mlr</span></code> executable available in your platform’s package manager on NetBSD, Debian Linux, Ubuntu Xenial and upward, Arch Linux, or perhaps other distributions. For example, on various Linux distributions you might do one of the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> sudo apt-get install miller
+</span></pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> sudo apt install miller
+</span></pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> sudo yum install miller
+</span></pre></div>
+</div>
+<p>On Windows, Miller is available via <a class="reference external" href="https://chocolatey.org/">Chocolatey</a>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> choco install miller
+</span></pre></div>
+</div>
+</div>
+<div class="section" id="prebuilt-executables-via-github-per-release">
+<h2>Prebuilt executables via GitHub per release<a class="headerlink" href="#prebuilt-executables-via-github-per-release" title="Permalink to this headline">¶</a></h2>
+<p>Please see <a class="reference external" href="https://github.com/johnkerl/miller/releases">https://github.com/johnkerl/miller/releases</a> where there are builds for OSX Yosemite, Linux x86-64 (dynamically linked), and Windows.</p>
+</div>
+<div class="section" id="prebuilt-executables-via-github-per-commit">
+<h2>Prebuilt executables via GitHub per commit<a class="headerlink" href="#prebuilt-executables-via-github-per-commit" title="Permalink to this headline">¶</a></h2>
+<p>Miller is autobuilt for <strong>Linux</strong>, <strong>MacOS</strong>, and <strong>Windows</strong> using <strong>GitHub Actions</strong> on every commit (<a class="reference external" href="https://github.com/johnkerl/miller/actions">https://github.com/johnkerl/miller/actions</a>): select the latest build and click _Artifacts_. (These are retained for 5 days after each commit.)</p>
+</div>
+<div class="section" id="building-from-source">
+<h2>Building from source<a class="headerlink" href="#building-from-source" title="Permalink to this headline">¶</a></h2>
+<p>Please see <a class="reference internal" href="build.html"><span class="doc">Building from source</span></a>.</p>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

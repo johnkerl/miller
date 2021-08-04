@@ -1,0 +1,83 @@
+begin {
+  if (is_absent(@olen)) {
+    @olen = 16;
+  }
+  if (is_absent(@ocount)) {
+    @ocount = 16;
+  }
+}
+
+for (_, v in $*) {
+  if (string(v) == "inf" || string(v) == "nan") {
+    continue;
+  }
+  int n = strlen(v);
+  if (n >= 1) {
+    str a = substr(v, 0, 0);
+    @a_histo[a] += 1;
+    for (int i = 0; i < n-1; i += 1) {
+      str a = substr(v, i, i);
+      str b = substr(v, i+1, i+1);
+      @ab_histo[a][b] += 1;
+    }
+  }
+}
+
+end {
+  num a_sum = 0;
+  for (a, na in @a_histo) {
+    a_sum += na;
+  }
+  num a_cumu = 0.0;
+  for (a, na in @a_histo) {
+    num a_p = @a_histo[a] / a_sum;
+    a_cumu += a_p;
+    @a_pmf[a] = a_p;
+    @a_cmf[a] += a_cumu;
+  }
+
+  for (a in @ab_histo) {
+    num ab_sum = 0.0;
+    for (b, nab in @ab_histo[a]) {
+      ab_sum += nab;
+    }
+    num ab_cumu = 0.0;
+    for (b, _ in @ab_histo[a]) {
+      num ab_p = @ab_histo[a][b] / ab_sum;
+      ab_cumu += ab_p;
+      @ab_pmf[a][b] = ab_p;
+      @ab_cmf[a][b] = ab_cumu;
+    }
+  }
+
+  #dump;
+
+  for (int oi = 0; oi < @ocount; oi += 1) {
+    oa_u = urand();
+    oa = "?";
+    for (a, c in @a_cmf) {
+      if (oa_u < c) {
+        oa = a;
+        break;
+      }
+    }
+    str out = oa;
+    for (int i = 1; i < @olen; i += 1) {
+      num ab_u = urand();
+      ob = "???";
+      for (b, c in @ab_cmf[oa]) {
+        #print "BC ".b.c;
+        if (ab_u < c) {
+          ob = b;
+          break;
+        }
+      }
+      if (ob == "???") {
+        break;
+      }
+      out .= ob;
+      oa = ob;
+    }
+    print out;
+  }
+}

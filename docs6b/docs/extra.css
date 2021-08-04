@@ -1,0 +1,46 @@
+.wy-nav-top {
+  background-color: maroon;
+}
+.wy-side-nav-search {
+  background-color: #808080;
+}
+.rst-content code {
+  color: #000000;
+  background-color: #e0e0e0;
+}
+.rst-content pre code {
+  color: #000000;
+  background-color: #eae2cb;
+}
+.highlight {
+  color: #0FF1CE;
+}
+.caption-text {
+  background-color: #404040;
+  padding: 4px;
+}
+
+h1 {
+  color: maroon;
+  background-color: #e0e0e0;
+}
+h2 {
+  color: maroon;
+  background-color: #e0e0e0;
+}
+h3 {
+  color: maroon;
+  background-color: #e0e0e0;
+}
+
+pre {
+  color: #000000;
+  background-color: #eae2cb;
+  font-size: 12px;
+  padding: 10px;
+}
+
+pre b {
+  background-color: #c5b690;
+  padding: 2px;
+}

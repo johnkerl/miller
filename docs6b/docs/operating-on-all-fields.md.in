@@ -1,0 +1,55 @@
+# Operating on all fields
+
+## Bulk rename of fields
+
+Suppose you want to replace spaces with underscores in your column names:
+
+GENMD_RUN_COMMAND
+cat data/spaces.csv
+GENMD_EOF
+
+The simplest way is to use ``mlr rename`` with ``-g`` (for global replace, not just first occurrence of space within each field) and ``-r`` for pattern-matching (rather than explicit single-column renames):
+
+GENMD_RUN_COMMAND
+mlr --csv rename -g -r ' ,_'  data/spaces.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv
+GENMD_EOF
+
+You can also do this with a for-loop:
+
+GENMD_RUN_COMMAND
+cat data/bulk-rename-for-loop.mlr
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
+GENMD_EOF
+
+## Search-and-replace over all fields
+
+How to do ``$name = gsub($name, "old", "new")`` for all fields?
+
+GENMD_RUN_COMMAND
+cat data/sar.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+cat data/sar.mlr
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv put -f data/sar.mlr data/sar.csv
+GENMD_EOF
+
+## Full field renames and reassigns
+
+Using Miller 5.0.0's map literals and assigning to ``$*``, you can fully generalize :ref:`mlr rename <reference-verbs-rename>`, :ref:`mlr reorder <reference-verbs-reorder>`, etc.
+
+GENMD_RUN_COMMAND
+cat data/small
+GENMD_EOF
+
+GENMD_INCLUDE_AND_RUN_ESCAPED(data/full-reorg.sh)

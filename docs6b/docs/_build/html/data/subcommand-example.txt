@@ -1,0 +1,3 @@
+mlr tac *.dat
+mlr cut --complement -f os_version *.dat
+mlr sort -f hostname,uptime *.dat

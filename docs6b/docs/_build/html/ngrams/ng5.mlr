@@ -1,0 +1,95 @@
+# ================================================================
+begin {
+  if (is_absent(@olen)) {
+    @olen = 16;
+  }
+  if (is_absent(@ocount)) {
+    @ocount = 16;
+  }
+}
+
+# ================================================================
+for (_, v in $*) {
+  if (string(v) == "inf" || string(v) == "nan") {
+    continue;
+  }
+  int n = strlen(v);
+  if (n >= 4) {
+    str a = substr(v, 0, 0);
+    str b = substr(v, 1, 1);
+    str c = substr(v, 2, 2);
+    str d = substr(v, 3, 3);
+    @a_histo[a] += 1;
+    @ab_histo[a][b] += 1;
+    @abc_histo[a][b][c] += 1;
+    @abcd_histo[a][b][c][d] += 1;
+
+    for (int i = 0; i < n-4; i += 1) {
+      str a = substr(v, i, i);
+      str b = substr(v, i+1, i+1);
+      str c = substr(v, i+2, i+2);
+      str d = substr(v, i+3, i+3);
+      str e = substr(v, i+4, i+4);
+      @abcde_histo[a][b][c][d][e] += 1;
+    }
+  }
+}
+
+# ================================================================
+end {
+  map a_cmf = compute_cmf_from_histo(@a_histo);
+  # Define these in this scope else they'll be scoped to the for-loops.
+  map ab_cmf    = {};
+  map abc_cmf   = {};
+  map abcd_cmf  = {};
+  map abcde_cmf = {};
+
+  for (a in @ab_histo) {
+    ab_cmf[a] = compute_cmf_from_histo(@ab_histo[a]);
+  }
+
+  for (a in @abc_histo) {
+    for (b in @abc_histo[a]) {
+      abc_cmf[a][b] = compute_cmf_from_histo(@abc_histo[a][b]);
+    }
+  }
+
+  for (a in @abcd_histo) {
+    for (b in @abcd_histo[a]) {
+      for (c in @abcd_histo[a][b]) {
+        abcd_cmf[a][b][c] = compute_cmf_from_histo(@abcd_histo[a][b][c]);
+      }
+    }
+  }
+
+  for (a in @abcde_histo) {
+    for (b in @abcde_histo[a]) {
+      for (c in @abcde_histo[a][b]) {
+        for (d in @abcde_histo[a][b][c]) {
+          abcde_cmf[a][b][c][d] = compute_cmf_from_histo(@abcde_histo[a][b][c][d]);
+        }
+      }
+    }
+  }
+
+  for (int oi = 0; oi < @ocount; oi += 1) {
+    str oa = sample_from_cmf(a_cmf);
+    str ob = sample_from_cmf(ab_cmf[oa]);
+    str oc = sample_from_cmf(abc_cmf[oa][ob]);
+    str od = sample_from_cmf(abcd_cmf[oa][ob][oc]);
+    str out = oa . ob . oc . od;
+
+    for (int i = 4; i < @olen; i += 1) {
+      str oe = sample_from_cmf(abcde_cmf[oa][ob][oc][od]);
+      if (oe == "") {
+        break;
+      }
+      out .= oe;
+      oa = ob;
+      ob = oc;
+      oc = od;
+      od = oe;
+    }
+    print out;
+  }
+}

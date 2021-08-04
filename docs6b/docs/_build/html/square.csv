@@ -1,0 +1,5 @@
+color,shape,flag,index,quantity,rate
+red,square,true,15,79.2778,0.0130
+red,square,false,48,77.5542,7.4670
+red,square,false,64,77.1991,9.5310
+purple,square,false,91,72.3735,8.2430

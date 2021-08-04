@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reference: I/O options &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reference: then-chaining" href="reference-main-then-chaining.html" />
+    <link rel="prev" title="Reference: list of verbs" href="reference-verbs.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Reference: I/O options</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="reference-verbs.html">&laquo; Reference: list of verbs</a> |
+        <a href="#">Reference: I/O options</a>
+        | <a href="reference-main-then-chaining.html">Reference: then-chaining &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Reference: I/O options</a><ul>
+<li><a class="reference internal" href="#formats">Formats</a></li>
+<li><a class="reference internal" href="#in-place-mode">In-place mode</a></li>
+<li><a class="reference internal" href="#compression">Compression</a></li>
+<li><a class="reference internal" href="#record-field-pair-separators">Record/field/pair separators</a></li>
+<li><a class="reference internal" href="#number-formatting">Number formatting</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="reference-i-o-options">
+<h1>Reference: I/O options<a class="headerlink" href="#reference-i-o-options" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="formats">
+<h2>Formats<a class="headerlink" href="#formats" title="Permalink to this headline">¶</a></h2>
+<p>Options:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>--dkvp    --idkvp    --odkvp
+--nidx    --inidx    --onidx
+--csv     --icsv     --ocsv
+--csvlite --icsvlite --ocsvlite
+--pprint  --ipprint  --opprint  --right
+--xtab    --ixtab    --oxtab
+--json    --ijson    --ojson
+</pre></div>
+</div>
+<p>These are as discussed in <a class="reference internal" href="file-formats.html"><span class="doc">File formats</span></a>, with the exception of <code class="docutils literal notranslate"><span class="pre">--right</span></code> which makes pretty-printed output right-aligned:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint cat data/small
+</span> a   b   i x                   y
+ pan pan 1 0.3467901443380824  0.7268028627434533
+ eks pan 2 0.7586799647899636  0.5221511083334797
+ wye wye 3 0.20460330576630303 0.33831852551664776
+ eks wye 4 0.38139939387114097 0.13418874328430463
+ wye pan 5 0.5732889198020006  0.8636244699032729
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint --right cat data/small
+</span>   a   b i                   x                   y
+ pan pan 1  0.3467901443380824  0.7268028627434533
+ eks pan 2  0.7586799647899636  0.5221511083334797
+ wye wye 3 0.20460330576630303 0.33831852551664776
+ eks wye 4 0.38139939387114097 0.13418874328430463
+ wye pan 5  0.5732889198020006  0.8636244699032729
+</pre></div>
+</div>
+<p>Additional notes:</p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--csv</span></code>, <code class="docutils literal notranslate"><span class="pre">--pprint</span></code>, etc. when the input and output formats are the same.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--icsv</span> <span class="pre">--opprint</span></code>, etc. when you want format conversion as part of what Miller does to your data.</p></li>
+<li><p>DKVP (key-value-pair) format is the default for input and output. So, <code class="docutils literal notranslate"><span class="pre">--oxtab</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">--idkvp</span> <span class="pre">--oxtab</span></code>.</p></li>
+</ul>
+<p><strong>Pro-tip:</strong> Please use either <strong>–format1</strong>, or <strong>–iformat1 –oformat2</strong>.  If you use <strong>–format1 –oformat2</strong> then what happens is that flags are set up for input <em>and</em> output for format1, some of which are overwritten for output in format2. For technical reasons, having <code class="docutils literal notranslate"><span class="pre">--oformat2</span></code> clobber all the output-related effects of <code class="docutils literal notranslate"><span class="pre">--format1</span></code> also removes some flexibility from the command-line interface. See also <a class="reference external" href="https://github.com/johnkerl/miller/issues/180">https://github.com/johnkerl/miller/issues/180</a> and <a class="reference external" href="https://github.com/johnkerl/miller/issues/199">https://github.com/johnkerl/miller/issues/199</a>.</p>
+</div>
+<div class="section" id="in-place-mode">
+<h2>In-place mode<a class="headerlink" href="#in-place-mode" title="Permalink to this headline">¶</a></h2>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">-I</span></code> flag to process files in-place. For example, <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">-I</span> <span class="pre">--csv</span> <span class="pre">cut</span> <span class="pre">-x</span> <span class="pre">-f</span> <span class="pre">unwanted_column_name</span> <span class="pre">mydata/*.csv</span></code> will remove <code class="docutils literal notranslate"><span class="pre">unwanted_column_name</span></code> from all your <code class="docutils literal notranslate"><span class="pre">*.csv</span></code> files in your <code class="docutils literal notranslate"><span class="pre">mydata/</span></code> subdirectory.</p>
+<p>By default, Miller output goes to the screen (or you can redirect a file using <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> or to another process using <code class="docutils literal notranslate"><span class="pre">|</span></code>). With <code class="docutils literal notranslate"><span class="pre">-I</span></code>, for each file name on the command line, output is written to a temporary file in the same directory. Miller writes its output into that temp file, which is then renamed over the original.  Then, processing continues on the next file. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file; statistics are only over each file’s own records; and so on.</p>
+<p>Please see <a class="reference internal" href="10min.html#min-choices-for-printing-to-files"><span class="std std-ref">Choices for printing to files</span></a> for examples.</p>
+</div>
+<div class="section" id="compression">
+<h2>Compression<a class="headerlink" href="#compression" title="Permalink to this headline">¶</a></h2>
+<p>Options:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>--prepipe {command}
+</pre></div>
+</div>
+<p>The prepipe command is anything which reads from standard input and produces data acceptable to Miller. Nominally this allows you to use whichever decompression utilities you have installed on your system, on a per-file basis. If the command has flags, quote them: e.g. <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--prepipe</span> <span class="pre">'zcat</span> <span class="pre">-cf'</span></code>. Examples:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># These two produce the same output:
+$ gunzip &lt; myfile1.csv.gz | mlr cut -f hostname,uptime
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz
+# With multiple input files you need --prepipe:
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz
+$ mlr --prepipe gunzip --idkvp --oxtab cut -f hostname,uptime myfile1.dat.gz myfile2.dat.gz
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Similar to the above, but with compressed output as well as input:
+$ gunzip &lt; myfile1.csv.gz | mlr cut -f hostname,uptime | gzip &gt; outfile.csv.gz
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz | gzip &gt; outfile.csv.gz
+$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz | gzip &gt; outfile.csv.gz
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Similar to the above, but with different compression tools for input and output:
+$ gunzip &lt; myfile1.csv.gz | mlr cut -f hostname,uptime | xz -z &gt; outfile.csv.xz
+$ xz -cd &lt; myfile1.csv.xz | mlr cut -f hostname,uptime | gzip &gt; outfile.csv.xz
+$ mlr --prepipe &#39;xz -cd&#39; cut -f hostname,uptime myfile1.csv.xz myfile2.csv.xz | xz -z &gt; outfile.csv.xz
+</pre></div>
+</div>
+</div>
+<div class="section" id="record-field-pair-separators">
+<span id="reference-separators"></span><h2>Record/field/pair separators<a class="headerlink" href="#record-field-pair-separators" title="Permalink to this headline">¶</a></h2>
+<p>Miller has record separators <code class="docutils literal notranslate"><span class="pre">IRS</span></code> and <code class="docutils literal notranslate"><span class="pre">ORS</span></code>, field separators <code class="docutils literal notranslate"><span class="pre">IFS</span></code> and <code class="docutils literal notranslate"><span class="pre">OFS</span></code>, and pair separators <code class="docutils literal notranslate"><span class="pre">IPS</span></code> and <code class="docutils literal notranslate"><span class="pre">OPS</span></code>.  For example, in the DKVP line <code class="docutils literal notranslate"><span class="pre">a=1,b=2,c=3</span></code>, the record separator is newline, field separator is comma, and pair separator is the equals sign. These are the default values.</p>
+<p>Options:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>--rs --irs --ors
+--fs --ifs --ofs --repifs
+--ps --ips --ops
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>You can change a separator from input to output via e.g. <code class="docutils literal notranslate"><span class="pre">--ifs</span> <span class="pre">=</span> <span class="pre">--ofs</span> <span class="pre">:</span></code>. Or, you can specify that the same separator is to be used for input and output via e.g. <code class="docutils literal notranslate"><span class="pre">--fs</span> <span class="pre">:</span></code>.</p></li>
+<li><p>The pair separator is only relevant to DKVP format.</p></li>
+<li><p>Pretty-print and xtab formats ignore the separator arguments altogether.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">--repifs</span></code> means that multiple successive occurrences of the field separator count as one.  For example, in CSV data we often signify nulls by empty strings, e.g. <code class="docutils literal notranslate"><span class="pre">2,9,,,,,6,5,4</span></code>. On the other hand, if the field separator is a space, it might be more natural to parse <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">4</span>&#160;&#160;&#160; <span class="pre">5</span></code> the same as <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">4</span> <span class="pre">5</span></code>: <code class="docutils literal notranslate"><span class="pre">--repifs</span> <span class="pre">--ifs</span> <span class="pre">'</span> <span class="pre">'</span></code> lets this happen.  In fact, the <code class="docutils literal notranslate"><span class="pre">--ipprint</span></code> option above is internally implemented in terms of <code class="docutils literal notranslate"><span class="pre">--repifs</span></code>.</p></li>
+<li><p>Just write out the desired separator, e.g. <code class="docutils literal notranslate"><span class="pre">--ofs</span> <span class="pre">'|'</span></code>. But you may use the symbolic names <code class="docutils literal notranslate"><span class="pre">newline</span></code>, <code class="docutils literal notranslate"><span class="pre">space</span></code>, <code class="docutils literal notranslate"><span class="pre">tab</span></code>, <code class="docutils literal notranslate"><span class="pre">pipe</span></code>, or <code class="docutils literal notranslate"><span class="pre">semicolon</span></code> if you like.</p></li>
+</ul>
+</div>
+<div class="section" id="number-formatting">
+<h2>Number formatting<a class="headerlink" href="#number-formatting" title="Permalink to this headline">¶</a></h2>
+<p>The command-line option <code class="docutils literal notranslate"><span class="pre">--ofmt</span> <span class="pre">{format</span> <span class="pre">string}</span></code> is the global number format for commands which generate numeric output, e.g. <code class="docutils literal notranslate"><span class="pre">stats1</span></code>, <code class="docutils literal notranslate"><span class="pre">stats2</span></code>, <code class="docutils literal notranslate"><span class="pre">histogram</span></code>, and <code class="docutils literal notranslate"><span class="pre">step</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span></code>. Examples:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>--ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf
+</pre></div>
+</div>
+<p>These are just familiar <code class="docutils literal notranslate"><span class="pre">printf</span></code> formats applied to double-precision numbers.  Please don’t use <code class="docutils literal notranslate"><span class="pre">%s</span></code> or <code class="docutils literal notranslate"><span class="pre">%d</span></code>. Additionally, if you use leading width (e.g. <code class="docutils literal notranslate"><span class="pre">%18.12lf</span></code>) then the output will contain embedded whitespace, which may not be what you want if you pipe the output to something else, particularly CSV. I use Miller’s pretty-print format (<code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">--opprint</span></code>) to column-align numerical data.</p>
+<p>To apply formatting to a single field, overriding the global <code class="docutils literal notranslate"><span class="pre">ofmt</span></code>, use <code class="docutils literal notranslate"><span class="pre">fmtnum</span></code> function within <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span></code>. For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo &#39;x=3.1,y=4.3&#39; | mlr put &#39;$z=fmtnum($x*$y,&quot;%08lf&quot;)&#39;
+</span> x=3.1,y=4.3,z=%!l(float64=00013.33)f
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo &#39;x=0xffff,y=0xff&#39; | mlr put &#39;$z=fmtnum(int($x*$y),&quot;%08llx&quot;)&#39;
+</span> x=0xffff,y=0xff,z=%!l(int=16711425)lx
+</pre></div>
+</div>
+<p>Input conversion from hexadecimal is done automatically on fields handled by <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span></code> and <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">filter</span></code> as long as the field value begins with “0x”.  To apply output conversion to hexadecimal on a single column, you may use <code class="docutils literal notranslate"><span class="pre">fmtnum</span></code>, or the keystroke-saving <code class="docutils literal notranslate"><span class="pre">hexfmt</span></code> function. Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo &#39;x=0xffff,y=0xff&#39; | mlr put &#39;$z=hexfmt($x*$y)&#39;
+</span> x=0xffff,y=0xff,z=0xfeff01
+</pre></div>
+</div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSL reference: errors and transparency &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DSL reference: a note on the complexity of Miller’s expression language" href="reference-dsl-complexity.html" />
+    <link rel="prev" title="DSL reference: filter statements" href="reference-dsl-filter-statements.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>DSL reference: errors and transparency</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="reference-dsl-filter-statements.html">&laquo; DSL reference: filter statements</a> |
+        <a href="#">DSL reference: errors and transparency</a>
+        | <a href="reference-dsl-complexity.html">DSL reference: a note on the complexity of Miller’s expression language &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div role="main">
+        
+  <div class="section" id="dsl-reference-errors-and-transparency">
+<h1>DSL reference: errors and transparency<a class="headerlink" href="#dsl-reference-errors-and-transparency" title="Permalink to this headline">¶</a></h1>
+<p>As soon as you have a programming language, you start having the problem <em>What is my code doing, and why?</em> This includes getting syntax errors – which are always annoying – as well as the even more annoying problem of a program which parses without syntax error but doesn’t do what you expect.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">syntax</span> <span class="pre">error</span></code> message is cryptic: it says <code class="docutils literal notranslate"><span class="pre">syntax</span> <span class="pre">error</span> <span class="pre">at</span> <span class="pre">``</span> <span class="pre">followed</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">next</span> <span class="pre">symbol</span> <span class="pre">it</span> <span class="pre">couldn't</span> <span class="pre">parse.</span> <span class="pre">This</span> <span class="pre">is</span> <span class="pre">good,</span> <span class="pre">but</span> <span class="pre">(as</span> <span class="pre">of</span> <span class="pre">5.0.0)</span> <span class="pre">it</span> <span class="pre">doesn't</span> <span class="pre">say</span> <span class="pre">things</span> <span class="pre">like</span> <span class="pre">``syntax</span> <span class="pre">error</span> <span class="pre">at</span> <span class="pre">line</span> <span class="pre">17,</span> <span class="pre">character</span> <span class="pre">22</span></code>. Here are some common causes of syntax errors:</p>
+<ul class="simple">
+<li><p>Don’t forget <code class="docutils literal notranslate"><span class="pre">;</span></code> at end of line, before another statement on the next line.</p></li>
+<li><p>Miller’s DSL lacks the <code class="docutils literal notranslate"><span class="pre">++</span></code> and <code class="docutils literal notranslate"><span class="pre">--</span></code> operators.</p></li>
+<li><p>Curly braces are required for the bodies of <code class="docutils literal notranslate"><span class="pre">if</span></code>/<code class="docutils literal notranslate"><span class="pre">while</span></code>/<code class="docutils literal notranslate"><span class="pre">for</span></code> blocks, even when the body is a single statement.</p></li>
+</ul>
+<p>Now for transparency:</p>
+<ul class="simple">
+<li><p>As in any language, you can do (see <a class="reference internal" href="reference-dsl-output-statements.html#reference-dsl-print-statements"><span class="std std-ref">Print statements</span></a>) <code class="docutils literal notranslate"><span class="pre">print</span></code> (or <code class="docutils literal notranslate"><span class="pre">eprint</span></code> to print to stderr). See also <a class="reference internal" href="reference-dsl-output-statements.html#reference-dsl-dump-statements"><span class="std std-ref">Dump statements</span></a> and <a class="reference internal" href="reference-dsl-output-statements.html#reference-dsl-emit-statements"><span class="std std-ref">Emit statements</span></a>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">-v</span></code> option to <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span></code> and <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">filter</span></code> prints abstract syntax trees for your code. While not all details here will be of interest to everyone, certainly this makes questions such as operator precedence completely unambiguous.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">-T</span></code> option prints a trace of each statement executed.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">-t</span></code> and <code class="docutils literal notranslate"><span class="pre">-a</span></code> options show low-level details for the parsing process and for stack-variable-index allocation, respectively. These will likely be of interest to people who enjoy compilers, and probably less useful for a more general audience.</p></li>
+<li><p>Please see <a class="reference internal" href="reference-dsl-variables.html#reference-dsl-type-checking"><span class="std std-ref">Type-checking</span></a> for type declarations and type-assertions you can use to make sure expressions and the data flowing them are evaluating as you expect.  I made them optional because one of Miller’s important use-cases is being able to say simple things like <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">put</span> <span class="pre">'$y</span> <span class="pre">=</span> <span class="pre">$x</span> <span class="pre">+</span> <span class="pre">1'</span> <span class="pre">myfile.dat</span></code> with a minimum of punctuational bric-a-brac – but for programs over a few lines I generally find that the more type-specification, the better.</p></li>
+</ul>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

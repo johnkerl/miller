@@ -1,0 +1,7 @@
+
+linkify introduction.md.in? too much too soon?
+
+quicklinks maybe? redundant w/ TOC?
+
+so i didn't want to pop out to R just to compute that 'one last thing'; hence covar/linreg/etc
+

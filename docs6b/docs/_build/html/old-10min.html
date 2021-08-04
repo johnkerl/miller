@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TBF &#8212; Miller 6.0.0-alpha documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data-diving examples" href="data-diving-examples.html" />
+    <link rel="prev" title="Quick examples" href="quick-examples.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="data-diving-examples.html" title="Data-diving examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quick-examples.html" title="Quick examples"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 6.0.0-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TBF</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tbf">
+<h1>TBF<a class="headerlink" href="#tbf" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sorts-and-stats">
+<h2>Sorts and stats<a class="headerlink" href="#sorts-and-stats" title="Permalink to this headline">¶</a></h2>
+<p>Now suppose you want to sort the data on a given column, <em>and then</em> take the top few in that ordering. You can use Miller’s <code class="docutils literal notranslate"><span class="pre">then</span></code> feature to pipe commands together.</p>
+<p>Here are the records with the top three <code class="docutils literal notranslate"><span class="pre">index</span></code> values:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> $ mlr --icsv --opprint sort -f shape -nr index then head -n 3 example.csv
+</span> color  shape  flag index quantity rate
+ yellow circle true 87    63.5058  8.3350
+ yellow circle true 73    63.9785  4.2370
+ red    circle true 16    13.8103  2.9010
+</pre></div>
+</div>
+<p>Lots of Miller commands take a <code class="docutils literal notranslate"><span class="pre">-g</span></code> option for group-by: here, <code class="docutils literal notranslate"><span class="pre">head</span> <span class="pre">-n</span> <span class="pre">1</span> <span class="pre">-g</span> <span class="pre">shape</span></code> outputs the first record for each distinct value of the <code class="docutils literal notranslate"><span class="pre">shape</span></code> field. This means we’re finding the record with highest <code class="docutils literal notranslate"><span class="pre">index</span></code> field for each distinct <code class="docutils literal notranslate"><span class="pre">shape</span></code> field:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> $ mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
+</span> color  shape    flag  index quantity rate
+ yellow circle   true  87    63.5058  8.3350
+ purple square   false 91    72.3735  8.2430
+ purple triangle false 65    80.1405  5.8240
+</pre></div>
+</div>
+<p>Statistics can be computed with or without group-by field(s):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> $ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
+</span> shape    quantity_count quantity_min quantity_mean     quantity_max
+ triangle 3              43.6498      68.33976666666666 81.229
+ square   4              72.3735      76.60114999999999 79.2778
+ circle   3              13.8103      47.0982           63.9785
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> $ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
+</span> shape    color  quantity_count quantity_min quantity_mean      quantity_max
+ triangle yellow 1              43.6498      43.6498            43.6498
+ square   red    3              77.1991      78.01036666666666  79.2778
+ circle   red    1              13.8103      13.8103            13.8103
+ triangle purple 2              80.1405      80.68475000000001  81.229
+ circle   yellow 2              63.5058      63.742149999999995 63.9785
+ square   purple 1              72.3735      72.3735            72.3735
+</pre></div>
+</div>
+<p>If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> $ mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
+</span> rate_p0   0.0130
+ rate_p10  2.9010
+ rate_p25  4.2370
+ rate_p50  8.2430
+ rate_p75  8.5910
+ rate_p90  9.8870
+ rate_p99  9.8870
+ rate_p100 9.8870
+</pre></div>
+</div>
+</div>
+<div class="section" id="other-format-examples">
+<span id="min-choices-for-printing-to-files"></span><h2>Other-format examples<a class="headerlink" href="#other-format-examples" title="Permalink to this headline">¶</a></h2>
+<p>What’s a CSV file, really? It’s an array of rows, or <em>records</em>, each being a list of key-value pairs, or <em>fields</em>: for CSV it so happens that all the keys are shared in the header line and the values vary data line by data line.</p>
+<p>For example, if you have:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>shape,flag,index
+circle,1,24
+square,0,36
+</pre></div>
+</div>
+<p>then that’s a way of saying:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>shape=circle,flag=1,index=24
+shape=square,flag=0,index=36
+</pre></div>
+</div>
+<p>Data written this way are called <strong>DKVP</strong>, for <em>delimited key-value pairs</em>.</p>
+<p>We’ve also already seen other ways to write the same data:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CSV                               PPRINT                 JSON
+shape,flag,index                  shape  flag index      [
+circle,1,24                       circle 1    24           {
+square,0,36                       square 0    36             &quot;shape&quot;: &quot;circle&quot;,
+                                                             &quot;flag&quot;: 1,
+                                                             &quot;index&quot;: 24
+                                                           },
+DKVP                              XTAB                     {
+shape=circle,flag=1,index=24      shape circle               &quot;shape&quot;: &quot;square&quot;,
+shape=square,flag=0,index=36      flag  1                    &quot;flag&quot;: 0,
+                                  index 24                   &quot;index&quot;: 36
+                                                           }
+                                  shape square           ]
+                                  flag  0
+                                  index 36
+</pre></div>
+</div>
+<p>Anything we can do with CSV input data, we can do with any other format input data.  And you can read from one format, do any record-processing, and output to the same format as the input, or to a different output format.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">TBF</a><ul>
+<li><a class="reference internal" href="#sorts-and-stats">Sorts and stats</a></li>
+<li><a class="reference internal" href="#other-format-examples">Other-format examples</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quick-examples.html"
+                        title="previous chapter">Quick examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data-diving-examples.html"
+                        title="next chapter">Data-diving examples</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/old-10min.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="data-diving-examples.html" title="Data-diving examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quick-examples.html" title="Quick examples"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Miller 6.0.0-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TBF</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

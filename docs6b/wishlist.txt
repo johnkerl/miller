@@ -1,0 +1,17 @@
+must have:
+k color configs
+  - iteratble ...
+k ok on desktop & mobile
+  - awesome so far! :D 
+k highlight line 1 (even if hacky in genrst)
+  - wip
+
+nice to have:
+* dark mode
+  ? wtf
+
+wtf:
+* figure out link spelling
+
+need to:
+* titleize all in mkdocs.yml

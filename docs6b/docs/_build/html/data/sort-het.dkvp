@@ -1,0 +1,7 @@
+count=500,color=green
+count=600
+status=ok,count=250,hours=0.22
+status=ok,count=200,hours=3.4
+count=300,color=blue
+count=100,color=green
+count=450

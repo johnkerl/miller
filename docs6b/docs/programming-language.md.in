@@ -1,0 +1,182 @@
+# Intro to Miller's programming language
+
+In the :doc:`10min` page we took a tour of some of Miller's most-used verbs including ``cat``, ``head``, ``tail``, ``cut``, and ``sort``. These are analogs of familiar system commands, but empowered by field-name indexing and file-format awareness: the system ``sort`` command only knows about lines and column names like ``1,2,3,4``, while ``mlr sort`` knows about CSV/TSV/JSON/etc records, and field names like ``color,shape,flag,index``.
+
+We also caught a glimpse of Miller's ``put`` and ``filter`` verbs. These two are special since they let you express statements using Miller's programming language. It's a *embedded domain-specific language* since it's inside Miller: often referred to simply as the *Miller DSL*.
+
+In the :doc:`reference-dsl` page we have a complete reference to Miller's programming language. For now, let's take a quick look at key features -- you can use as few or as many features as you like.
+
+## Records and fields
+
+Let's keep using the sample `example.csv <./example.csv>`_. When we type
+
+GENMD_RUN_COMMAND
+mlr --c2p put '$cost = $quantity * $rate' example.csv
+GENMD_EOF
+
+a few things are happening:
+
+* We refer to fields in the input data using a dollar sign and then the field name, e.g. ``$quantity``. (If a field name has special characters like a dot or slash, just use curly braces: ``${field.name}``.)
+* The expression ``$cost = $quantity * $rate`` is executed once per record of the data file. Our `example.csv <./example.csv>`_ has 10 records so this expression was executed 10 times, with the field names ``$quantity`` and ``$rate`` bound to the current record's values for those fields.
+* On the left-hand side we have the new field name ``$cost`` which didn't come from the input data. Assignments to new variables result in a new field being placed after all the other ones. If we'd assigned to an existing field name, it would have been updated in-place.
+* The entire expression is surrounded by single quotes, to get it past the system shell. Inside those, only double quotes have meaning in Miller's programming language.
+
+## Multi-line statements, and statements-from-file
+
+You can use more than one statement, separating them with semicolons, and optionally putting them on lines of their own:
+
+GENMD_RUN_COMMAND
+mlr --c2p put '$cost = $quantity * $rate; $index = $index * 100'  example.csv
+GENMD_EOF
+
+GENMD_INCLUDE_AND_RUN_ESCAPED(dsl-example-multiline.sh)
+
+One of Miller's key features is the ability to express data-transformation right there at the keyboard, interactively. But if you find yourself using expressions repeatedly, you can put everything between the single quotes into a file and refer to that using ``put -f``:
+
+GENMD_RUN_COMMAND
+cat dsl-example.mlr
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p put -f dsl-example.mlr example.csv
+GENMD_EOF
+
+This becomes particularly important on Windows. Quite a bit of effort was put into making Miller on Windows be able to handle the kinds of single-quoted expressions we're showing here, but if you get syntax-error messages on Windows using examples in this documentation, you can put the parts between single quotes into a file and refer to that using ``mlr put -f``.
+
+## Out-of-stream variables, begin, and end
+
+Above we saw that your expression is executed once per record -- if a file has a million records, your expression will be executed a million times, once for each record. But you can mark statements to only be executed once, either before the record stream begins, or after the record stream is ended. If you know about `AWK <https://en.wikipedia.org/wiki/AWK>`_, you might have noticed that Miller's programming language is loosely inspired by it, including the ``begin`` and ``end`` statements.
+
+Above we also saw that names like ``$quantity`` are bound to each record in turn.
+
+To make ``begin`` and ``end`` statements useful, we need somewhere to put things that persist across the duration of the record stream, and a way to emit them. Miller uses **out-of-stream variables** (or **oosvars** for short) whose names start with an ``@`` sigil, and the **emit** keyword to write them into the output record stream:
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
+GENMD_EOF
+
+If you want the end-block output to be the only output, and not include the input data, you can use ``mlr put -q``:
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2j --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2j --from example.csv put -q '
+  begin { @count = 0; @sum = 0 }
+  @count += 1;
+  @sum += $quantity;
+  end {emit (@count, @sum)}
+'
+GENMD_EOF
+
+We'll see in the documentation for :ref:`reference-verbs-stats1` that there's a lower-keystroking way to get counts and sums of things -- so, take this sum/count example as an indication of the kinds of things you can do using Miller's programming language.
+
+## Context variables
+
+Also inspired by `AWK <https://en.wikipedia.org/wiki/AWK>`_, the Miller DSL has the following special **context variables**:
+
+* ``FILENAME`` -- the filename the current record came from. Especially useful in things like ``mlr ... *.csv``.
+* ``FILENUM`` -- similarly, but integer 1,2,3,... rather than filenam.e
+* ``NF`` -- the number of fields in the current record. Note that if you assign ``$newcolumn = some value`` then ``NF`` will increment.
+* ``NR`` -- starting from 1, counter of how many records processed so far.
+* ``FNR`` -- similar, but resets to 1 at the start of each file.
+
+GENMD_RUN_COMMAND
+cat context-example.mlr
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p put -f context-example.mlr data/a.csv data/b.csv
+GENMD_EOF
+
+## Functions and local variables
+
+You can define your own functions:
+
+GENMD_RUN_COMMAND
+cat factorial-example.mlr
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put -f factorial-example.mlr -e '$fact = factorial(NR)'
+GENMD_EOF
+
+Note that here we used the ``-f`` flag to ``put`` to load our function
+definition, and also the ``-e`` flag to add another statement on the command
+line. (We could have also put ``$fact = factorial(NR)`` inside
+``factorial-example.mlr`` but that would have made that file less flexible for our
+future use.)
+
+## If-statements, loops, and local variables
+
+Suppose you want to only compute sums conditionally -- you can use an ``if`` statement:
+
+GENMD_RUN_COMMAND
+cat if-example.mlr
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put -q -f if-example.mlr
+GENMD_EOF
+
+Miller's else-if is spelled ``elif``.
+
+As we'll see more of in section (TODO:linkify), Miller has a few kinds of
+for-loops. In addition to the usual 3-part ``for (i = 0; i < 10; i += 1)`` kind
+that many programming languages have, Miller also lets you loop over arrays and
+hashmaps. We haven't encountered arrays and hashmaps yet in this introduction,
+but for now it suffices to know that ``$*`` is a special variable holding the
+current record as a hashmap:
+
+GENMD_RUN_COMMAND
+cat for-example.mlr
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv cat data/a.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv --from data/a.csv put -qf for-example.mlr
+GENMD_EOF
+
+Here we used the local variables ``k`` and ``v``. Now we've seen four kinds of variables:
+
+* Record fields like ``$shape``
+* Out-of-stream variables like ``@sum``
+* Local variables like ``k``
+* Built-in context variables like ``NF`` and ``NR``
+
+If you're curious about scope and extent of local variables, you can read more in (TODO:linkify) the section on variables.
+
+## Arithmetic
+
+Numbers in Miller's programming language are intended to operate with the principle of least surprise:
+
+* Internally, numbers are either 64-bit signed integers or double-precision floating-point.
+* Sums, differences, and products of integers are also integers (so ``2*3=6`` not ``6.0``) -- unless the result of the operation would overflow a 64-bit signed integer in which case the result is automatically converted to float. (If you ever want integer-to-integer arithmetic, use ``x .+ y``, ``x .* y``, etc.)
+* Quotients of integers are integers if the division is exact, else floating-point:  so ``6/2=3`` but ``7/2=3.5``.
+
+You can read more about this at (TODO:linkify).
+
+## Absent data
+
+In addition to types including string, number (int/float), arrays, and hashmaps, Miller varibles can also be **absent**. This is when a variable never had a value assigned to it. Miller's treatment of absent data is intended to make it easy for you to handle non-heterogeneous data. We'll see more in section (TODO:linkify) but the basic idea is:
+
+* Adding a number to absent gives the number back. This means you don't have to put ``@sum = 0`` in your ``begin`` blocks.
+* Any variable which has the absent value is not assigned. This means you don't have to check presence of things from one record to the next.
+
+For example, you can sum up all the ``$a`` values across records without having to check whether they're present or not:
+
+GENMD_RUN_COMMAND
+mlr --json cat absent-example.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --json put '@sum_of_a += $a; end {emit @sum_of_a}' absent-example.json
+GENMD_EOF

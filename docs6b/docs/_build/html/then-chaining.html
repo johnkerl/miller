@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Then-chaining &#8212; Miller 6.0.0-alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/scrolls.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/theme_extras.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Joins" href="joins.html" />
+    <link rel="prev" title="Dates and times" href="dates-and-times.html" /> 
+  </head><body>
+    <div id="content">
+      <div class="header">
+        <h1 class="heading"><a href="index.html"
+          title="back to the documentation overview"><span>Then-chaining</span></a></h1>
+      </div>
+      <div class="relnav" role="navigation" aria-label="related navigation">
+        <a href="dates-and-times.html">&laquo; Dates and times</a> |
+        <a href="#">Then-chaining</a>
+        | <a href="joins.html">Joins &raquo;</a>
+      </div>
+      <div id="contentwrapper">
+        <div id="toc" role="navigation" aria-label="table of contents navigation">
+          <h3>Table of Contents</h3>
+          <ul>
+<li><a class="reference internal" href="#">Then-chaining</a><ul>
+<li><a class="reference internal" href="#how-do-i-examine-then-chaining">How do I examine then-chaining?</a></li>
+<li><a class="reference internal" href="#nr-is-not-consecutive-after-then-chaining">NR is not consecutive after then-chaining</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        <div role="main">
+        
+  <div class="section" id="then-chaining">
+<h1>Then-chaining<a class="headerlink" href="#then-chaining" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="how-do-i-examine-then-chaining">
+<h2>How do I examine then-chaining?<a class="headerlink" href="#how-do-i-examine-then-chaining" title="Permalink to this headline">¶</a></h2>
+<p>Then-chaining found in Miller is intended to function the same as Unix pipes, but with less keystroking. You can print your data one pipeline step at a time, to see what intermediate output at one step becomes the input to the next step.</p>
+<p>First, look at the input data:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/then-example.csv
+</span> Status,Payment_Type,Amount
+ paid,cash,10.00
+ pending,debit,20.00
+ paid,cash,50.00
+ pending,credit,40.00
+ paid,debit,30.00
+</pre></div>
+</div>
+<p>Next, run the first step of your command, omitting anything from the first <code class="docutils literal notranslate"><span class="pre">then</span></code> onward:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint count-distinct -f Status,Payment_Type data/then-example.csv
+</span> Status  Payment_Type count
+ paid    cash         2
+ pending debit        1
+ pending credit       1
+ paid    debit        1
+</pre></div>
+</div>
+<p>After that, run it with the next <code class="docutils literal notranslate"><span class="pre">then</span></code> step included:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --icsv --opprint count-distinct -f Status,Payment_Type \
+</span><span class="hll">   then sort -nr count \
+</span><span class="hll">   data/then-example.csv
+</span> Status  Payment_Type count
+ paid    cash         2
+ pending debit        1
+ pending credit       1
+ paid    debit        1
+</pre></div>
+</div>
+<p>Now if you use <code class="docutils literal notranslate"><span class="pre">then</span></code> to include another verb after that, the columns <code class="docutils literal notranslate"><span class="pre">Status</span></code>, <code class="docutils literal notranslate"><span class="pre">Payment_Type</span></code>, and <code class="docutils literal notranslate"><span class="pre">count</span></code> will be the input to that verb.</p>
+<p>Note, by the way, that you’ll get the same results using pipes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv \
+</span><span class="hll"> | mlr --icsv --opprint sort -nr count
+</span> Status  Payment_Type count
+ paid    cash         2
+ pending debit        1
+ pending credit       1
+ paid    debit        1
+</pre></div>
+</div>
+</div>
+<div class="section" id="nr-is-not-consecutive-after-then-chaining">
+<h2>NR is not consecutive after then-chaining<a class="headerlink" href="#nr-is-not-consecutive-after-then-chaining" title="Permalink to this headline">¶</a></h2>
+<p>Given this input data:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> cat data/small
+</span> a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+ a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre></div>
+</div>
+<p>why don’t I see <code class="docutils literal notranslate"><span class="pre">NR=1</span></code> and <code class="docutils literal notranslate"><span class="pre">NR=2</span></code> here??</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr filter &#39;$x &gt; 0.5&#39; then put &#39;$NR = NR&#39; data/small
+</span> a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NR=2
+ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NR=5
+</pre></div>
+</div>
+<p>The reason is that <code class="docutils literal notranslate"><span class="pre">NR</span></code> is computed for the original input records and isn’t dynamically updated. By contrast, <code class="docutils literal notranslate"><span class="pre">NF</span></code> is dynamically updated: it’s the number of fields in the current record, and if you add/remove a field, the value of <code class="docutils literal notranslate"><span class="pre">NF</span></code> will change:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> echo x=1,y=2,z=3 | mlr put &#39;$nf1 = NF; $u = 4; $nf2 = NF; unset $x,$y,$z; $nf3 = NF&#39;
+</span> nf1=3,u=4,nf2=5,nf3=3
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">NR</span></code>, by contrast (and <code class="docutils literal notranslate"><span class="pre">FNR</span></code> as well), retains the value from the original input stream, and records may be dropped by a <code class="docutils literal notranslate"><span class="pre">filter</span></code> within a <code class="docutils literal notranslate"><span class="pre">then</span></code>-chain. To recover consecutive record numbers, you can use out-of-stream variables as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr --opprint --from data/small put &#39;
+</span><span class="hll">   begin{ @nr1 = 0 }
+</span><span class="hll">   @nr1 += 1;
+</span><span class="hll">   $nr1 = @nr1
+</span><span class="hll"> &#39; \
+</span><span class="hll"> then filter &#39;$x&gt;0.5&#39; \
+</span><span class="hll"> then put &#39;
+</span><span class="hll">   begin{ @nr2 = 0 }
+</span><span class="hll">   @nr2 += 1;
+</span><span class="hll">   $nr2 = @nr2
+</span><span class="hll"> &#39;
+</span> a   b   i x                  y                  nr1 nr2
+ eks pan 2 0.7586799647899636 0.5221511083334797 2   1
+ wye pan 5 0.5732889198020006 0.8636244699032729 5   2
+</pre></div>
+</div>
+<p>Or, simply use <code class="docutils literal notranslate"><span class="pre">mlr</span> <span class="pre">cat</span> <span class="pre">-n</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll"> mlr filter &#39;$x &gt; 0.5&#39; then cat -n data/small
+</span> n=1,a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+ n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre></div>
+</div>
+</div>
+</div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, John Kerl.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>
