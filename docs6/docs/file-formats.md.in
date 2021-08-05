@@ -239,11 +239,60 @@ GENMD_EOF
 This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
 [ngrid](https://github.com/twosigma/ngrid/) for an entirely different, very powerful option). Namely:
 
-GENMD_INCLUDE_ESCAPED(data/system-file-opprint-example.txt)
+GENMD_CARDIFY_HIGHLIGHT_ONE
+$ grep -v '^#' /etc/passwd | head -n 6 | mlr --nidx --fs : --opprint cat
+1          2 3  4  5                          6               7
+nobody     * -2 -2 Unprivileged User          /var/empty      /usr/bin/false
+root       * 0  0  System Administrator       /var/root       /bin/sh
+daemon     * 1  1  System Services            /var/root       /usr/bin/false
+_uucp      * 4  4  Unix to Unix Copy Protocol /var/spool/uucp /usr/sbin/uucico
+_taskgated * 13 13 Task Gate Daemon           /var/empty      /usr/bin/false
+_networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
+GENMD_EOF
 
-GENMD_INCLUDE_ESCAPED(data/system-file-oxtab-example.txt)
+GENMD_CARDIFY_HIGHLIGHT_ONE
+$ grep -v '^#' /etc/passwd | head -n 2 | mlr --nidx --fs : --oxtab cat
+1 nobody
+2 *
+3 -2
+4 -2
+5 Unprivileged User
+6 /var/empty
+7 /usr/bin/false
 
-GENMD_INCLUDE_ESCAPED(data/system-file-ojson-example.txt)
+1 root
+2 *
+3 0
+4 0
+5 System Administrator
+6 /var/root
+7 /bin/sh
+GENMD_EOF
+
+GENMD_CARDIFY_HIGHLIGHT_ONE
+$ grep -v '^#' /etc/passwd | head -n 2 | \
+  mlr --nidx --fs : --ojson --jvstack --jlistwrap label name,password,uid,gid,gecos,home_dir,shell
+[
+{
+  "name": "nobody",
+  "password": "*",
+  "uid": -2,
+  "gid": -2,
+  "gecos": "Unprivileged User",
+  "home_dir": "/var/empty",
+  "shell": "/usr/bin/false"
+}
+,{
+  "name": "root",
+  "password": "*",
+  "uid": 0,
+  "gid": 0,
+  "gecos": "System Administrator",
+  "home_dir": "/var/root",
+  "shell": "/bin/sh"
+}
+]
+GENMD_EOF
 
 ## Markdown tabular
 

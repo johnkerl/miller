@@ -11,10 +11,10 @@ In the [DSL reference](reference-dsl.md) page we have a complete reference to Mi
 
 Let's keep using the sample [example.csv](./example.csv). For example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2p put '$cost = $quantity * $rate' example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag  index quantity rate   cost
 yellow triangle true  11    43.6498  9.8870 431.5655726
 red    square   true  15    79.2778  0.0130 1.0306114
@@ -39,10 +39,10 @@ When we type that, a few things are happening:
 
 You can use more than one statement, separating them with semicolons, and optionally putting them on lines of their own:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2p put '$cost = $quantity * $rate; $index = $index * 100'  example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag  index quantity rate   cost
 yellow triangle true  1100  43.6498  9.8870 431.5655726
 red    square   true  1500  79.2778  0.0130 1.0306114
@@ -56,13 +56,13 @@ yellow circle   true  8700  63.5058  8.3350 529.3208430000001
 purple square   false 9100  72.3735  8.2430 596.5747605000001
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2p put '</b>
 <b>  $cost = $quantity * $rate;</b>
 <b>  $index *= 100</b>
 <b>' example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag  index quantity rate   cost
 yellow triangle true  1100  43.6498  9.8870 431.5655726
 red    square   true  1500  79.2778  0.0130 1.0306114
@@ -78,18 +78,18 @@ purple square   false 9100  72.3735  8.2430 596.5747605000001
 
 One of Miller's key features is the ability to express data-transformation right there at the keyboard, interactively. But if you find yourself using expressions repeatedly, you can put everything between the single quotes into a file and refer to that using `put -f`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat dsl-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 $cost = $quantity * $rate;
 $index *= 100
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2p put -f dsl-example.mlr example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag  index quantity rate   cost
 yellow triangle true  1100  43.6498  9.8870 431.5655726
 red    square   true  1500  79.2778  0.0130 1.0306114
@@ -113,10 +113,10 @@ Above we also saw that names like `$quantity` are bound to each record in turn.
 
 To make `begin` and `end` statements useful, we need somewhere to put things that persist across the duration of the record stream, and a way to emit them. Miller uses **out-of-stream variables** (or **oosvars** for short) whose names start with an `@` sigil, and the **emit** keyword to write them into the output record stream:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from example.csv put 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag  index quantity rate
 yellow triangle true  11    43.6498  9.8870
 red    square   true  15    79.2778  0.0130
@@ -135,24 +135,24 @@ sum
 
 If you want the end-block output to be the only output, and not include the input data, you can use `mlr put -q`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 sum
 652.7185
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2j --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "sum": 652.7185
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2j --from example.csv put -q '</b>
 <b>  begin { @count = 0; @sum = 0 }</b>
 <b>  @count += 1;</b>
@@ -160,7 +160,7 @@ sum
 <b>  end {emit (@count, @sum)}</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "count": 10,
   "sum": 652.7185
@@ -179,10 +179,10 @@ Also inspired by [AWK](https://en.wikipedia.org/wiki/AWK), the Miller DSL has th
 * `NR` -- starting from 1, counter of how many records processed so far.
 * `FNR` -- similar, but resets to 1 at the start of each file.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat context-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 $nf       = NF;
 $nr       = NR;
 $fnr      = FNR;
@@ -191,10 +191,10 @@ $filenum  = FILENUM;
 $newnf    = NF;
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2p put -f context-example.mlr data/a.csv data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b c nf nr fnr filename   filenum newnf
 1 2 3 3  1  1   data/a.csv 1       8
 4 5 6 3  2  2   data/a.csv 1       8
@@ -205,10 +205,10 @@ a b c nf nr fnr filename   filenum newnf
 
 You can define your own functions:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat factorial-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 func factorial(n) {
   if (n <= 1) {
     return n
@@ -218,10 +218,10 @@ func factorial(n) {
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from example.csv put -f factorial-example.mlr -e '$fact = factorial(NR)'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag  index quantity rate   fact
 yellow triangle true  11    43.6498  9.8870 1
 red    square   true  15    79.2778  0.0130 2
@@ -245,10 +245,10 @@ future use.)
 
 Suppose you want to only compute sums conditionally -- you can use an `if` statement:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat if-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 begin {
   @count_of_red = 0;
   @sum_of_red = 0
@@ -264,10 +264,10 @@ end {
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from example.csv put -q -f if-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count_of_red sum_of_red
 4            247.84139999999996
 </pre>
@@ -281,29 +281,29 @@ hashmaps. We haven't encountered arrays and hashmaps yet in this introduction,
 but for now it suffices to know that `$*` is a special variable holding the
 current record as a hashmap:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat for-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 for (k, v in $*) {
   print "KEY IS ". k . " VALUE IS ". v;
 }
 print
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv cat data/a.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
 4,5,6
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv --from data/a.csv put -qf for-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 KEY IS a VALUE IS 1
 KEY IS b VALUE IS 2
 KEY IS c VALUE IS 3
@@ -341,10 +341,10 @@ In addition to types including string, number (int/float), arrays, and hashmaps,
 
 For example, you can sum up all the `$a` values across records without having to check whether they're present or not:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --json cat absent-example.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "a": 1,
   "b": 2
@@ -358,10 +358,10 @@ For example, you can sum up all the `$a` values across records without having to
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --json put '@sum_of_a += $a; end {emit @sum_of_a}' absent-example.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "a": 1,
   "b": 2

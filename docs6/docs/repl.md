@@ -5,10 +5,10 @@ The Miller REPL (read-evaluate-print loop) is an interactive counterpart to reco
 
 Miller's REPL isn't a source-level debugger which lets you execute one source-code *statement* at a time -- however, it does let you operate on one *record* at a time. Further, it lets you use "immediate expressions", namely, you can interact with the language without having to provide data from an input file.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr repl</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 
 [mlr] 1 + 2
 3
@@ -26,11 +26,11 @@ Using `put` and `filter`, you can do the following as we've seen above:
 * Specify statements to be executed on each record -- which are anything outside of `begin`/`end`/`func`/`subr`.
 * Example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from example.csv head -n 2 \</b>
 <b>  then put 'begin {print "HELLO"} $z = $x + $y; end {print "GOODBYE"}'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 HELLO
 {
   "color": "yellow",
@@ -97,10 +97,10 @@ printed to the terminal, e.g. if you type `1+2`, you will see `3`.
 
 Use the REPL to look at arithmetic:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr repl</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 
 [mlr] 6/3
 2
@@ -117,10 +117,10 @@ float
 
 Read the first record from a small file:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr repl</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 
 [mlr] :open foo.dat
 
@@ -146,10 +146,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=4.381399393871141
 
 Skip until deep into a larger file, then inspect a record:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr repl --csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 
 [mlr] :open data/colored-shapes.csv
 [mlr] :skip until NR == 10000

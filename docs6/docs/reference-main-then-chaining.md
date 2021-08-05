@@ -3,13 +3,13 @@
 
 In accord with the [Unix philosophy](http://en.wikipedia.org/wiki/Unix_philosophy), you can pipe data into or out of Miller. For example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime</b>
 </pre>
 
 You can, if you like, instead simply chain commands together using the `then` keyword:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr cut --complement -f os_version then sort -f hostname,uptime *.dat</b>
 </pre>
 
@@ -17,7 +17,7 @@ You can, if you like, instead simply chain commands together using the `then` ke
 
 Here's a performance comparison:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 % cat piped.sh
 mlr cut -x -f i,y data/big | mlr sort -n y > /dev/null
 

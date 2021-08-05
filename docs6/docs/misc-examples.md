@@ -3,64 +3,64 @@
 
 Column select:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --csv cut -f hostname,uptime mydata.csv</b>
 </pre>
 
 Add new columns as function of other columns:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat</b>
 </pre>
 
 Row filter:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --csv filter '$status != "down" && $upsec >= 10000' *.csv</b>
 </pre>
 
 Apply column labels and pretty-print:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group</b>
 </pre>
 
 Join multiple data sources on key columns:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr join -j account_id -f accounts.dat then group-by account_name balances.dat</b>
 </pre>
 
 Mulltiple formats including JSON:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json</b>
 </pre>
 
 Aggregate per-column statistics:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*</b>
 </pre>
 
 Linear regression:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr stats2 -a linreg-pca -f u,v -g shape data/*</b>
 </pre>
 
 Aggregate custom per-column statistics:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*</b>
 </pre>
 
 Iterate over data using DSL expressions:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from estimates.tbl put '</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
   for (k,v in $*) {
     if (is_numeric(v) && k =~ "^[t-z].*$") {
       $sum += v; $count += 1
@@ -72,31 +72,31 @@ Iterate over data using DSL expressions:
 
 Run DSL expressions from a script file:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --from infile.dat put -f analyze.mlr</b>
 </pre>
 
 Split/reduce output to multiple filenames:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'</b>
 </pre>
 
 Compressed I/O:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'</b>
 </pre>
 
 Interoperate with other data-processing tools using standard pipes:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'</b>
 </pre>
 
 Tap/trace:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'</b>
 </pre>
 
@@ -104,7 +104,7 @@ Tap/trace:
 
 This admittedly artificial example demonstrates using Miller time and stats functions to introspectively acquire some information about Miller's own runtime. The `delta` function computes the difference between successive timestamps.
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 $ ruby -e '10000.times{|i|puts "i=#{i+1}"}' > lines.txt
 
 $ head -n 5 lines.txt
@@ -138,10 +138,10 @@ t_delta_max  5.388259888e-05
 
 Suppose you have a database query which you run at one point in time, producing the output on the left, then again later producing the output on the right:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/previous_counters.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color,count
 red,3472
 blue,6838
@@ -149,10 +149,10 @@ orange,694
 purple,12
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/current_counters.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color,count
 red,3467
 orange,670
@@ -164,14 +164,14 @@ And, suppose you want to compute the differences in the counters between adjacen
 
 First, rename counter columns to make them distinct:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv</b>
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/prevtemp.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color,previous_count
 red,3472
 blue,6838
@@ -179,14 +179,14 @@ orange,694
 purple,12
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv</b>
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/currtemp.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color,current_count
 red,3467
 orange,670
@@ -196,14 +196,14 @@ blue,6944
 
 Then, join on the key field(s), and use unsparsify to zero-fill counters absent on one side but present on the other. Use `--ul` and `--ur` to emit unpaired records (namely, purple on the left and yellow on the right):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint \</b>
 <b>  join -j color --ul --ur -f data/prevtemp.csv \</b>
 <b>  then unsparsify --fill-with 0 \</b>
 <b>  then put '$count_delta = $current_count - $previous_count' \</b>
 <b>  data/currtemp.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  previous_count current_count count_delta
 red    3472           3467          -5
 orange 694            670           -24
@@ -216,7 +216,7 @@ purple 12             0             (error)
 
 The recursive function for the Fibonacci sequence is famous for its computational complexity.  Namely, using f(0)=1, f(1)=1, f(n)=f(n-1)+f(n-2) for n>=2, the evaluation tree branches left as well as right at each non-trivial level, resulting in millions or more paths to the root 0/1 nodes for larger n. This program
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
   func f(n) {
       @fcount += 1;              # count number of calls to the function
@@ -236,7 +236,7 @@ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 
 produces output like this:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 i  o      fcount  seconds_delta
 1  1      1       0
 2  2      3       0.000039101
@@ -270,7 +270,7 @@ i  o      fcount  seconds_delta
 
 Note that the time it takes to evaluate the function is blowing up exponentially as the input argument increases. Using `@`-variables, which persist across records, we can cache and reuse the results of previous computations:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
   func f(n) {
     @fcount += 1;                 # count number of calls to the function
@@ -293,7 +293,7 @@ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 
 with output like this:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 i  o      fcount seconds_delta
 1  1      1      0
 2  2      3      0.000053883

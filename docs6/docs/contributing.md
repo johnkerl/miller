@@ -3,7 +3,7 @@
 
 ## Community
 
-You can ask questions -- or answer them! -- following the links at [Community](community.md).
+You can ask questions -- or answer them! -- following the links on the [Community](community.md) page.
 
 ## Documentation improvements
 

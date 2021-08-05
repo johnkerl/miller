@@ -19,19 +19,19 @@ These are written all in capital letters, such as `NR`, `NF`, `FILENAME`, and on
 
 Namely, Miller supports the following five built-in variables for [filter and put](reference-dsl.md), all `awk`-inspired: `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME`, as well as the mathematical constants `M_PI` and `M_E`.  Lastly, the `ENV` hashmap allows read access to environment variables, e.g.  `ENV["HOME"]` or `ENV["foo_".$hostname]`.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr filter 'FNR == 2' data/small*</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
 a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$fnr = FNR' data/small*</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,fnr=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,fnr=2
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,fnr=3
@@ -54,19 +54,19 @@ Their values of `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME` change from one rec
 
 Their **scope is global**: you can refer to them in any `filter` or `put` statement. Their values are assigned by the input-record reader:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv put '$nr = NR' data/a.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c,nr
 1,2,3,1
 4,5,6,2
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c,nr
 1,2,3,1
 1,2,3,1
@@ -88,14 +88,14 @@ If field names have **special characters** such as `.` then you can use braces, 
 
 You may also use a **computed field name** in square brackets, e.g.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>echo a=3,b=4 | mlr filter '$["x"] < 0.5'</b>
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 s=green,t=blue,a=3,b=4,green_blue=12
 </pre>
 
@@ -117,10 +117,10 @@ Use `$[[3]]` to access the name of field 3.  More generally, any expression eval
 
 Then using a computed field name, `$[ $[[3]] ]` is the value in the third field. This has the shorter equivalent notation `$[[[3]]]`.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -128,10 +128,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$[[3]] = "NEW"' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,NEW=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,NEW=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,NEW=3,x=0.20460330576630303,y=0.33831852551664776
@@ -139,10 +139,10 @@ a=eks,b=wye,NEW=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,NEW=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$[[[3]]] = "NEW"' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=NEW,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=NEW,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
@@ -150,10 +150,10 @@ a=eks,b=wye,i=NEW,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=NEW,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$NEW = $[[NR]]' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=a
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=b
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=i
@@ -161,10 +161,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=x
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=y
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$NEW = $[[[NR]]]' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=pan
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=pan
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=3
@@ -172,10 +172,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=0.38139939387114
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$[[[NR]]] = "NEW"' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=NEW,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=NEW,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
@@ -185,10 +185,10 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=NEW
 
 Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than `NF` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$[[6]] = "NEW"' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -196,10 +196,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$[[[6]]] = "NEW"' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -217,29 +217,29 @@ Just as for field names in stream records, if you want to define out-of-stream v
 
 You may use a **computed key** in square brackets, e.g.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 green_blue=12
 </pre>
 
 Out-of-stream variables are **scoped** to the `put` command in which they appear.  In particular, if you have two or more `put` commands separated by `then`, each put will have its own set of out-of-stream variables:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/a.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=1,b=2,c=3
 a=4,b=5,c=6
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '@sum += $a; end {emit @sum}' \</b>
 <b>  then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' \</b>
 <b>  data/a.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=10,b=2,c=3
 a=40,b=5,c=6
 sum=5
@@ -254,7 +254,7 @@ Out-of-stream variables are **read-write**: you can do `$sum=@sum`, `@sum=$sum`,
 
 Using an index on the `@count` and `@sum` variables, we get the benefit of the `-g` (group-by) option which `mlr stats1` and various other Miller commands have:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '</b>
 <b>  @x_count[$a] += 1;</b>
 <b>  @x_sum[$a] += $x;</b>
@@ -264,7 +264,7 @@ Using an index on the `@count` and `@sum` variables, we get the benefit of the `
 <b>  }</b>
 <b>' ./data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,x_count=1
 a=eks,x_count=2
 a=wye,x_count=2
@@ -273,10 +273,10 @@ a=eks,x_sum=1.1400793586611044
 a=wye,x_sum=0.7778922255683036
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr stats1 -a count,sum -f x -g a ./data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,x_count=1,x_sum=0.3467901443380824
 a=eks,x_count=2,x_sum=1.1400793586611044
 a=wye,x_count=2,x_sum=0.7778922255683036
@@ -284,7 +284,7 @@ a=wye,x_count=2,x_sum=0.7778922255683036
 
 Indices can be arbitrarily deep -- here there are two or more of them:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/medium put -q '</b>
 <b>  @x_count[$a][$b] += 1;</b>
 <b>  @x_sum[$a][$b] += $x;</b>
@@ -293,7 +293,7 @@ Indices can be arbitrarily deep -- here there are two or more of them:
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,x_count=427,x_sum=219.1851288316854
 a=pan,b=wye,x_count=395,x_sum=198.43293070748447
 a=pan,b=eks,x_count=429,x_sum=216.07522773165525
@@ -325,7 +325,7 @@ The idea is that `stats1`, and other Miller verbs, encapsulate frequently-used p
 
 Begin/end blocks can be mixed with pattern/action blocks. For example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '</b>
 <b>  begin {</b>
 <b>    @num_total = 0;</b>
@@ -341,7 +341,7 @@ Begin/end blocks can be mixed with pattern/action blocks. For example:
 <b>  }</b>
 <b>' data/put-gating-example-1.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=-1
 x=0
 x=1,y=0,z=0
@@ -356,7 +356,7 @@ Local variables are similar to out-of-stream variables, except that their extent
 
 For example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b># Here I'm using a specified random-number seed so this example always</b>
 <b># produces the same output for this web document: in everyday practice we</b>
 <b># would leave off the --seed 12345 part.</b>
@@ -374,7 +374,7 @@ For example:
 <b>  $o = o;</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 i=1,o=15.952526011537227
 i=2,o=12.782237754999116
 i=3,o=15.126606630220966
@@ -413,10 +413,10 @@ Things which are perhaps surprising compared to other languages:
 
 The following example demonstrates the scope rules:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/scope-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 func f(a) {      # argument is local to the function
   var b = 100;   # local to the function
   c = 100;       # local to the function; does not overwrite outer c
@@ -442,19 +442,19 @@ $outer_c = c;
 $outer_d = d;    # there is no outer d defined so no assignment happens
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/scope-example.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 n=1,x=123
 n=2,x=456
 n=3,x=789
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 n       1
 x       123
 outer_a 10
@@ -480,10 +480,10 @@ outer_c 60
 
 And this example demonstrates the type-declaration rules:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/type-decl-example.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 subr s(a, str b, int c) {                         # a is implicitly var (untyped).
                                                   # b is explicitly str.
                                                   # c is explicitly int.
@@ -529,7 +529,7 @@ Miller's `put`/`filter` DSL has four kinds of hashmaps. **Stream records** are (
 
 For example, the following swaps the input stream's `a` and `i` fields, modifies `y`, and drops the rest:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint put '</b>
 <b>  $* = {</b>
 <b>    "a": $i,</b>
@@ -538,7 +538,7 @@ For example, the following swaps the input stream's `a` and `i` fields, modifies
 <b>  }</b>
 <b>' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a i   y
 1 pan 7.268028627434533
 2 eks 5.221511083334796
@@ -549,7 +549,7 @@ a i   y
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small put '</b>
 <b>  func f(map m): map {</b>
 <b>    m["x"] *= 200;</b>
@@ -558,7 +558,7 @@ Likewise, you can assign map literals to out-of-stream variables or local variab
 <b>  $* = f({"a": $a, "x": $x});</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,x=69.35802886761648
 a=eks,x=151.73599295799272
 a=wye,x=40.92066115326061
@@ -568,7 +568,7 @@ a=wye,x=114.65778396040011
 
 Like out-of-stream and local variables, map literals can be multi-level:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small put -q '</b>
 <b>  begin {</b>
 <b>    @o = {</b>
@@ -589,7 +589,7 @@ Like out-of-stream and local variables, map literals can be multi-level:
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "nrec": 5,
   "nkey": {
@@ -611,10 +611,10 @@ Use of type-checking is entirely up to you: omit it if you want flexibility with
 
 The following `is...` functions take a value and return a boolean indicating whether the argument is of the indicated type. The `assert_...` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr -f | grep ^is</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 is_absent
 is_array
 is_bool
@@ -636,10 +636,10 @@ is_present
 is_string
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr -f | grep ^assert</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 asserting_absent
 asserting_array
 asserting_bool
@@ -669,7 +669,7 @@ Local variables can be defined either untyped as in `x = 1`, or typed as in `int
 
 The reason for `num` is that `int` and `float` typedecls are very precise:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 float a = 0;   # Runtime error since 0 is int not float
 int   b = 1.0; # Runtime error since 1.0 is float not int
 num   c = 0;   # OK
@@ -680,7 +680,7 @@ A suggestion is to use `num` for general use when you want numeric content, and 
 
 The `var` type declaration indicates no type restrictions, e.g. `var x = 1` has the same type restrictions on `x` as `x = 1`. The difference is in intentional shadowing: if you have `x = 1` in outer scope and `x = 2` in inner scope (e.g. within a for-loop or an if-statement) then outer-scope `x` has value 2 after the second assignment.  But if you have `var x = 2` in the inner scope, then you are declaring a variable scoped to the inner block.) For example:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 x = 1;
 if (NR == 4) {
   x = 2; # Refers to outer-scope x: value changes from 1 to 2.
@@ -688,7 +688,7 @@ if (NR == 4) {
 print x; # Value of x is now two
 </pre>
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 x = 1;
 if (NR == 4) {
   var x = 2; # Defines a new inner-scope x with value 2
@@ -698,7 +698,7 @@ print x;     # Value of this x is still 1
 
 Likewise function arguments can optionally be typed, with type enforced when the function is called:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 func f(map m, int i) {
   ...
 }
@@ -713,7 +713,7 @@ print x;     # Value of this x is still 1
 
 Thirdly, function return values can be type-checked at the point of `return` using `:` and a typedecl after the parameter list:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 func f(map m, int i): bool {
   ...
   ...
@@ -748,10 +748,10 @@ There are three remaining kinds of variable assignment using out-of-stream varia
 
 Example recursive copy of out-of-stream variables:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "v": {
     "sum": 2.264761728567491,
@@ -772,10 +772,10 @@ Example recursive copy of out-of-stream variables:
 
 Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -785,10 +785,10 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 Example of full stream record assigned to an out-of-stream variable, finding the record for which the `x` field has the largest value in the input stream:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -796,23 +796,23 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint put -q '</b>
 <b>  is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*};</b>
 <b>  end {emit @recmax}</b>
 <b>' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                  y
 eks pan 2 0.7586799647899636 0.5221511083334797
 </pre>
 
 ## Keywords for filter and put
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr help usage-keywords</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 all: used in "emit", "emitp", and "unset" as a synonym for @*
 
 begin: defines a block of statements to be executed before input records

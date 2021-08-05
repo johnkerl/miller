@@ -17,19 +17,19 @@ Also try `od -xcv` and/or `cat -e` on your file to check for non-printable chara
 
 Use the `file` command to see if there are CR/LF terminators (in this case, # there are not):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>file data/colours.csv </b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 data/colours.csv: UTF-8 Unicode text
 </pre>
 
 Look at the file to find names of fields
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/colours.csv </b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR
 masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
 masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
@@ -37,19 +37,19 @@ masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;S
 
 Extract a few fields:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv cut -f KEY,PL,RO data/colours.csv </b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 (only blank lines appear)
 </pre>
 
 Use XTAB output format to get a sharper picture of where records/fields are being split:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --oxtab cat data/colours.csv </b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Valkoinen;Blanc;Bianco;Wit;Biały;Alb;Beyaz
 
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
@@ -57,10 +57,10 @@ KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Mu
 
 Using XTAB output format makes it clearer that `KEY;DE;...;RO;TR` is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (`--fs semicolon`):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ifs semicolon --oxtab cat data/colours.csv </b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 KEY masterdata_colourcode_1
 DE  Weiß
 EN  White
@@ -88,10 +88,10 @@ TR  Siyah
 
 Using the new field-separator, retry the cut:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv --fs semicolon cut -f KEY,PL,RO data/colours.csv </b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 KEY;PL;RO
 masterdata_colourcode_1;Biały;Alb
 masterdata_colourcode_2;Czarny;Negru
@@ -101,53 +101,53 @@ masterdata_colourcode_2;Czarny;Negru
 
 Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with `--implicit-csv-header`, Miller will sequentially assign keys of the form `1`, `2`, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data, when it is originally read from the input file(s).
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo x,y,z | mlr --dkvp cat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 1=x,2=y,3=z
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo x,y,z | mlr --dkvp put '$6="a";$4="b";$55="cde"'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 1=x,2=y,3=z,6=a,4=b,55=cde
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo x,y,z | mlr --nidx cat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x,y,z
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo x,y,z | mlr --csv --implicit-csv-header cat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 1,2,3
 x,y,z
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo x,y,z | mlr --dkvp rename 2,999</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 1=x,999=y,3=z
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo x,y,z | mlr --dkvp rename 2,newname</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 1=x,newname=y,3=z
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 3,1,2
 z,x,y
 </pre>
@@ -156,10 +156,10 @@ z,x,y
 
 Example: columns `x,i,a` were requested but they appear here in the order `a,i,x`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -167,10 +167,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cut -f x,i,a data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,i=1,x=0.3467901443380824
 a=eks,i=2,x=0.7586799647899636
 a=wye,i=3,x=0.20460330576630303
@@ -182,10 +182,10 @@ The issue is that Miller's `cut`, by default, outputs cut fields in the order th
 
 The solution is to use the `-o` option:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cut -o -f x,i,a data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=0.3467901443380824,i=1,a=pan
 x=0.7586799647899636,i=2,a=eks
 x=0.20460330576630303,i=3,a=wye
@@ -197,10 +197,10 @@ x=0.5732889198020006,i=5,a=wye
 
 The `awk`-like built-in variable `NR` is incremented for each input record:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -208,10 +208,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$nr = NR' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nr=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nr=2
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
@@ -221,30 +221,30 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
 
 However, this is the record number within the original input stream -- not after any filtering you may have done:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr filter '$a == "wye"' then put '$nr = NR' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
 </pre>
 
 There are two good options here. One is to use the `cat` verb with `-n`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr filter '$a == "wye"' then cat -n data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 n=1,a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
 The other is to keep your own counter within the `put` DSL:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,n=1
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
 </pre>
@@ -255,7 +255,7 @@ The difference is a matter of taste (although `mlr cat -n` puts the counter firs
 
 Suppose you have a TSV file like this:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 a	b
 x	z
 s	u:v:w
@@ -263,10 +263,10 @@ s	u:v:w
 
 The simplest option is to use [nest](reference-verbs.md#nest):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a	b
 x	z
 s	u
@@ -274,10 +274,10 @@ s	v
 s	w
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a	b_1
 x	z
 
@@ -289,7 +289,7 @@ While `mlr nest` is simplest, let's also take a look at a few ways to do this us
 
 One option to split out the colon-delimited values in the `b` column is to use `splitnv` to create an integer-indexed map and loop over it, adding new fields to the current record:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/nested.tsv --itsv --oxtab put '</b>
 <b>  o = splitnv($b, ":");</b>
 <b>  for (k,v in o) {</b>
@@ -297,7 +297,7 @@ One option to split out the colon-delimited values in the `b` column is to use `
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a  x
 b  z
 p1 z
@@ -311,7 +311,7 @@ p3 w
 
 while another is to loop over the same map from `splitnv` and use it (with `put -q` to suppress printing the original record) to produce multiple records:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/nested.tsv --itsv --oxtab put -q '</b>
 <b>  o = splitnv($b, ":");</b>
 <b>  for (k,v in o) {</b>
@@ -320,7 +320,7 @@ while another is to loop over the same map from `splitnv` and use it (with `put 
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a x
 b z
 
@@ -334,7 +334,7 @@ a s
 b w
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/nested.tsv --tsv put -q '</b>
 <b>  o = splitnv($b, ":");</b>
 <b>  for (k,v in o) {</b>
@@ -342,7 +342,7 @@ b w
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a	b
 x	z
 s	u
@@ -360,7 +360,7 @@ If you want to look at partial uniqueness -- for example, show only the first re
 
 Suppose you have a method (in whatever language) which is printing things of the form
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 outer=1
 outer=2
 outer=3
@@ -368,7 +368,7 @@ outer=3
 
 and then calls another method which prints things of the form
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 middle=10
 middle=11
 middle=12
@@ -380,7 +380,7 @@ middle=31
 
 and then, perhaps, that second method calls a third method which prints things of the form
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 inner1=100,inner2=101
 inner1=120,inner2=121
 inner1=200,inner2=201
@@ -392,7 +392,7 @@ inner1=313,inner2=314
 
 with the result that your program's output is
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 outer=1
 middle=10
 inner1=100,inner2=101
@@ -414,7 +414,7 @@ inner1=313,inner2=314
 
 The idea here is that middles starting with a 1 belong to the outer value of 1, and so on.  (For example, the outer values might be account IDs, the middle values might be invoice IDs, and the inner values might be invoice line-items.) If you want all the middle and inner lines to have the context of which outers they belong to, you can modify your software to pass all those through your methods. Alternatively, don't refactor your code just to handle some ad-hoc log-data formatting -- instead, use the following to rectangularize the data.  The idea is to use an out-of-stream variable to accumulate fields across records. Clear that variable when you see an outer ID; accumulate fields; emit output when you see the inner IDs.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/rect.txt put -q '</b>
 <b>  is_present($outer) {</b>
 <b>    unset @r</b>
@@ -426,7 +426,7 @@ The idea here is that middles starting with a 1 belong to the outer value of 1, 
 <b>    emit @r</b>
 <b>  }'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 outer=1,middle=10,inner1=100,inner2=101
 outer=1,middle=12,inner1=120,inner2=121
 outer=2,middle=20,inner1=200,inner2=201

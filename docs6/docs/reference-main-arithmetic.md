@@ -19,7 +19,7 @@ The short of it is that Miller does this transparently for you so you needn't th
 
 Implementation details of this, for the interested: integer adds and subtracts overflow by at most one bit so it suffices to check sign-changes. Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers, converting only to float precisely when the result is less than -2\ :sup:`63` or greater than 2\ :sup:`63`\ -1.  Multiplies, on the other hand, can overflow by a word size and a sign-change technique does not suffice to detect overflow. Instead Miller tests whether the floating-point product exceeds the representable integer range. Now, 64-bit integers have 64-bit precision while IEEE-doubles have only 52-bit mantissas -- so, there are 53 bits including implicit leading one.  The following experiment explicitly demonstrates the resolution at this range:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 64-bit integer     64-bit integer     Casted to double           Back to 64-bit
 in hex             in decimal                                    integer
 0x7ffffffffffff9ff 9223372036854774271 9223372036854773760.000000 0x7ffffffffffff800
