@@ -1,4 +1,0 @@
-for (k, v in $*) {
-  print "KEY IS ". k . " VALUE IS ". v;
-}
-print

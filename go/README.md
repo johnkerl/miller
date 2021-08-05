@@ -9,7 +9,7 @@ A TL;DR for anyone wanting to compile and run the Go port of Miller:
   * `./mlr regtest regtest/cases-pending-go-port` -- needing Go code to be ported from C
   * `./mlr regtest regtest/cases-pending-windows` -- for Go code already ported from C but needing some work for Windows
 
-Pre-release/rough-draft docs are at http://johnkerl.org/miller-releases/miller-head/docs6/_build/html/index.html.
+Pre-release/rough-draft docs are at http://johnkerl.org/miller-releases/miller-head/docs6/site/index.html.
 
 A note on Continuous Integration:
 

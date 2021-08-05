@@ -1,5 +1,0 @@
-mlr --opprint filter '
-  ($x > 0.5 && $y < 0.5)
-  ||
-  ($x < 0.5 && $y > 0.5)
-' then stats2 -a corr -f x,y data/medium
