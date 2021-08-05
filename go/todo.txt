@@ -27,7 +27,44 @@ w discussion re docs6 ...
 * csv -> csv/tsv throughout
 
 ----------------------------------------------------------------
+REGEX CAPTURES
+
+* sub/gsub have function scope
+
+  o MlrvalSub/MlrvalGsub
+    - example: '$b = sub($a, "(..)_(...)", "\2-\1")'
+    - old: lib.RegexReplaceOnce/re.ReplaceAllString
+    - new:
+      > match input(1) against regex(2)
+      > replace each match with \d-enabled string
+      > lumin-like loop with as-is/as-will-be alternations
+
+      $ echo a='12_345 67_890' | mlrc --oxtab put '$b = sub($a, "(..)_(...)", "\2-\1")'
+      a 12_345 67_890
+      b 345-12 67_890
+
+      $ echo a='12_345 67_890' | mlrc --oxtab put '$b = gsub($a, "(..)_(...)", "\2-\1")'
+      a 12_345 67_890
+      b 345-12 890-67
+
+* =~/!=~ have callback scope
+
+  o MlrvalStringMatchesRegexp/MlrvalStringDoesNotMatchRegexp
+    - old: re.MatchString
+    - new:
+      > matcher needs to write the regex-captures object
+      > string-evaluator needs to check for captures -- ?
+        * BuildStringLiteralNode -- check if matches '.*\d.*' pattern
+
+    $ echo a=12_3456 | mlrc --oxtab put '$a =~ "(..)_(....)"; $b = "left_\1"; $c = "right_\2"'
+    a 12_3456
+    b left_12
+    c right_3456
+
+----------------------------------------------------------------
 DOC6
+
+* all sorts of line-wraps in command-blocks
 
 * colored-shapes.dkvp -> csv; also mkdat2
 * data/small -> csv throughout. and/or just use example.csv
