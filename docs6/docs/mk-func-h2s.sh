@@ -58,7 +58,7 @@ mlr help list-functions | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
     echo "## $displayname"
   fi
   echo ''
-  echo '<pre class="pre-non-highlight">'
+  echo '<pre class="pre-non-highlight-non-pair">'
   mlr help function "$funcname"
   echo '</pre>'
   echo ''
@@ -116,7 +116,7 @@ mlr help list-functions | grep '^[a-zA-Z]' | sort -u | while read funcname; do
     echo "## $displayname"
   fi
   echo ''
-  echo '<pre class="pre-non-highlight">'
+  echo '<pre class="pre-non-highlight-non-pair">'
   mlr help function "$funcname"
   echo '</pre>'
   echo ''

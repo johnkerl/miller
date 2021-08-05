@@ -47,6 +47,10 @@ pre.pre-highlight-in-pair {
   font-weight: bold;
   padding: 10px;
   margin-bottom: 0px;
+
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+
 }
 pre.pre-non-highlight-in-pair {
   color: #000000;
@@ -54,6 +58,9 @@ pre.pre-non-highlight-in-pair {
   font-size: 12px;
   padding: 10px;
   margin-top: 0px;
+
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
 
 /* For command-only or output-only situations (less common) -- normal margins.
@@ -67,7 +74,12 @@ pre.pre-highlight-non-pair {
   font-weight: bold;
   padding: 10px;
   margin-top: 2px;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
+
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
 
 /* Example:
@@ -82,20 +94,35 @@ pre.pre-non-highlight-non-pair {
   padding: 10px;
   margin-top: 2px;
   margin-bottom: 15px;
+
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+code {
+  border-radius: 3px;
 }
 
 /* Section titles in content pages */
 h1 {
   color: maroon;
   background-color: #e0e0e0;
+  border-radius: 6px;
+  padding: 6px;
 }
 h2 {
   color: maroon;
   background-color: #e0e0e0;
+  border-radius: 6px;
+  padding: 6px;
 }
 h3 {
   color: maroon;
   background-color: #e0e0e0;
+  border-radius: 6px;
+  padding: 6px;
 }
 
 /* Hyperlinks in content pages */
@@ -132,4 +159,8 @@ a:hover {
 }
 .wy-menu-vertical a:hover span.toctree-expand {
     color:#808080
+}
+
+img {
+  border-radius: 6px;
 }
