@@ -5,27 +5,27 @@
 
 Suppose you always use CSV files. Then instead of always having to type `--csv` as in
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --csv cut -x -f extra mydata.csv</b>
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr --csv sort -n id mydata.csv</b>
 </pre>
 
 and so on, you can instead put the following into your `$HOME/.mlrrc`:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
     --csv
 </pre>
 
 Then you can just type things like
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr cut -x -f extra mydata.csv</b>
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr sort -n id mydata.csv</b>
 </pre>
 
@@ -47,7 +47,7 @@ and the `--csv` part will automatically be understood. (If you do want to proces
 
 Here is an example `.mlrrc` file:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 # Input and output formats are CSV by default (unless otherwise specified
 # on the mlr command line):
 csv

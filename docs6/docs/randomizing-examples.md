@@ -5,10 +5,10 @@
 
 Here we can chain together a few simple building blocks:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat expo-sample.sh</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 # Generate 100,000 pairs of independent and identically distributed
 # exponentially distributed random variables with the same rate parameter
 # (namely, 2.5). Then compute histograms of one of them, along with
@@ -48,10 +48,10 @@ Namely:
 
 The output is as follows:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>sh expo-sample.sh</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 bin_lo bin_hi u_count                        s_count
 0      0.04   [64]*******************#[9554] [326]#...................[3703]
 0.04   0.08   [64]*****************...[9554] [326]*****...............[3703]
@@ -109,10 +109,10 @@ bin_lo bin_hi u_count                        s_count
 
 Given this [word list](./data/english-words.txt), first take a look to see what the first few lines look like:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>head data/english-words.txt</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a
 aa
 aal
@@ -127,10 +127,10 @@ abaca
 
 Then the following will randomly sample ten words with four to eight characters in them:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 thionine
 birchman
 mildewy
@@ -149,10 +149,10 @@ These are simple *n*-grams as [described here](http://johnkerl.org/randspell/ran
 
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 beard
 plastinguish
 politicially

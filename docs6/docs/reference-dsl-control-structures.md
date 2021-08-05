@@ -5,10 +5,10 @@
 
 These are reminiscent of `awk` syntax.  They can be used to allow assignments to be done only when appropriate -- e.g. for math-function domain restrictions, regex-matching, and so on:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cat data/put-gating-example-1.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=-1
 x=0
 x=1
@@ -16,10 +16,10 @@ x=2
 x=3
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=-1
 x=0
 x=1,y=0,z=0
@@ -27,23 +27,23 @@ x=2,y=0.3010299956639812,z=0.5486620049392715
 x=3,y=0.4771212547196624,z=0.6907396432228734
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cat data/put-gating-example-2.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=abc_123
 a=some other name
 a=xyz_789
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '</b>
 <b>  $a =~ "([a-z]+)_([0-9]+)" {</b>
 <b>    $b = "left_\1"; $c = "right_\2"</b>
 <b>  }' \</b>
 <b>  data/put-gating-example-2.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=abc_123,b=left_\1,c=right_\2
 a=some other name
 a=xyz_789,b=left_\1,c=right_\2
@@ -51,23 +51,23 @@ a=xyz_789,b=left_\1,c=right_\2
 
 This produces heteregenous output which Miller, of course, has no problems with (see [Record Heterogeneity](record-heterogeneity.md)).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes `put` to evaluate the boolean expression (along with any side effects, namely, regex-captures `\1`, `\2`, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=1,y=0,z=0
 x=2,y=0.3010299956639812,z=0.5486620049392715
 x=3,y=0.4771212547196624,z=0.6907396432228734
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '</b>
 <b>  $a =~ "([a-z]+)_([0-9]+)";</b>
 <b>  $b = "left_\1";</b>
 <b>  $c = "right_\2"</b>
 <b>' data/put-gating-example-2.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=abc_123,b=left_\1,c=right_\2
 a=xyz_789,b=left_\1,c=right_\2
 </pre>
@@ -76,35 +76,35 @@ a=xyz_789,b=left_\1,c=right_\2
 
 These are again reminiscent of `awk`. Pattern-action blocks are a special case of `if` with no `elif` or `else` blocks, no `if` keyword, and parentheses optional around the boolean expression:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr put 'NR == 4 {$foo = "bar"}'</b>
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr put 'if (NR == 4) {$foo = "bar"}'</b>
 </pre>
 
 Compound statements use `elif` (rather than `elsif` or `else if`):
 
-<pre class="pre-non-highlight">
-mlr put '
-  if (NR == 2) {
-    ...
-  } elif (NR ==4) {
-    ...
-  } elif (NR ==6) {
-    ...
-  } else {
-    ...
-  }
-'
+<pre class="pre-highlight-non-pair">
+<b>mlr put '</b>
+<b>  if (NR == 2) {</b>
+<b>    ...</b>
+<b>  } elif (NR ==4) {</b>
+<b>    ...</b>
+<b>  } elif (NR ==6) {</b>
+<b>    ...</b>
+<b>  } else {</b>
+<b>    ...</b>
+<b>  }</b>
+<b>'</b>
 </pre>
 
 ## While and do-while loops
 
 Miller's `while` and `do-while` are unsurprising in comparison to various languages, as are `break` and `continue`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo x=1,y=2 | mlr put '</b>
 <b>  while (NF < 10) {</b>
 <b>    $[NF+1] = ""</b>
@@ -112,11 +112,11 @@ Miller's `while` and `do-while` are unsurprising in comparison to various langua
 <b>  $foo = "bar"</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo x=1,y=2 | mlr put '</b>
 <b>  do {</b>
 <b>    $[NF+1] = "";</b>
@@ -127,7 +127,7 @@ x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 <b>  $foo = "bar"</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=1,y=2,3=,4=,5=,foo=bar
 </pre>
 
@@ -144,7 +144,7 @@ As with `while` and `do-while`, a `break` or `continue` within nested control st
 
 The `key` variable is always bound to the *key* of key-value pairs:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small put '</b>
 <b>  print "NR = ".NR;</b>
 <b>  for (key in $*) {</b>
@@ -154,7 +154,7 @@ The `key` variable is always bound to the *key* of key-value pairs:
 <b></b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 NR = 1
   key:a  value:pan
   key:b  value:pan
@@ -192,7 +192,7 @@ NR = 5
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
 <b>  end {</b>
 <b>    o = {1:2, 3:{4:5}};</b>
@@ -202,7 +202,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
   key:1  valuetype:int
   key:3  valuetype:map
 </pre>
@@ -213,17 +213,17 @@ Note that the value corresponding to a given key may be gotten as through a **co
 
 Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to to a scalar value (a string or a number) if the map stops at that level, or to a map-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/for-srec-example.tbl</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 label1 label2 f1  f2  f3
 blue   green  100 240 350
 red    green  120 11  195
 yellow blue   140 0   240
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --pprint --from data/for-srec-example.tbl put '</b>
 <b>  $sum1 = $f1 + $f2 + $f3;</b>
 <b>  $sum2 = 0;</b>
@@ -236,17 +236,17 @@ yellow blue   140 0   240
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 label1 label2 f1  f2  f3  sum1 sum2 sum3
 blue   green  100 240 350 690  690  690
 red    green  120 11  195 326  326  326
 yellow blue   140 0   240 380  380  380
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y                   a_type b_type i_type x_type y_type
 pan pan 1 0.3467901443380824  0.7268028627434533  string string int    float  float
 eks pan 2 0.7586799647899636  0.5221511083334797  string string int    float  float
@@ -259,7 +259,7 @@ Note that the value of the current field in the for-loop can be gotten either us
 
 Important note: to avoid inconsistent looping behavior in case you're setting new fields (and/or unsetting existing ones) while looping over the record, **Miller makes a copy of the record before the loop: loop variables are bound from the copy and all other reads/writes involve the record itself**:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put '</b>
 <b>  $sum1 = 0;</b>
 <b>  $sum2 = 0;</b>
@@ -271,7 +271,7 @@ Important note: to avoid inconsistent looping behavior in case you're setting ne
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y                   sum1               sum2
 pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356 8.294372028326142
 eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443  13.123324292493772
@@ -282,7 +282,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273  25.74765355
 
 It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put '</b>
 <b>  sum = 0;</b>
 <b>  for (k,v in $*) {</b>
@@ -293,7 +293,7 @@ It can be confusing to modify the stream record while iterating over a copy of i
 <b>  $sum = sum</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y                   sum
 pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356
 eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443
@@ -304,7 +304,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273
 
 You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 # Parentheses are optional for single key:
 for (k1,           v in @a["b"]["c"]) { ... }
 for ((k1),         v in @a["b"]["c"]) { ... }
@@ -317,7 +317,7 @@ for ((k1, k2, k3), v in @* { ... }            # Loop over all variables (k1 is b
 
 That's confusing in the abstract, so a concrete example is in order. Suppose the out-of-stream variable `@myvar` is populated as follows:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr -n put --jknquoteint -q '</b>
 <b>  begin {</b>
 <b>    @myvar = {</b>
@@ -329,7 +329,7 @@ That's confusing in the abstract, so a concrete example is in order. Suppose the
 <b>  end { dump }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "myvar": {
     "1": 2,
@@ -347,7 +347,7 @@ That's confusing in the abstract, so a concrete example is in order. Suppose the
 
 Then we can get at various values as follows:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr -n put --jknquoteint -q '</b>
 <b>  begin {</b>
 <b>    @myvar = {</b>
@@ -365,13 +365,13 @@ Then we can get at various values as follows:
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 key=1,valuetype=int
 key=3,valuetype=map
 key=6,valuetype=map
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr -n put --jknquoteint -q '</b>
 <b>  begin {</b>
 <b>    @myvar = {</b>
@@ -390,12 +390,12 @@ key=6,valuetype=map
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 key1=3,key2=4,valuetype=int
 key1=6,key2=7,valuetype=map
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr -n put --jknquoteint -q '</b>
 <b>  begin {</b>
 <b>    @myvar = {</b>
@@ -414,7 +414,7 @@ key1=6,key2=7,valuetype=map
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 key1=7,key2=8,valuetype=int
 </pre>
 
@@ -422,7 +422,7 @@ key1=7,key2=8,valuetype=int
 
 These are supported as follows:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put '</b>
 <b>  num suma = 0;</b>
 <b>  for (a = 1; a <= NR; a += 1) {</b>
@@ -431,7 +431,7 @@ These are supported as follows:
 <b>  $suma = suma;</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y                   suma
 pan pan 1 0.3467901443380824  0.7268028627434533  1
 eks pan 2 0.7586799647899636  0.5221511083334797  3
@@ -440,7 +440,7 @@ eks wye 4 0.38139939387114097 0.13418874328430463 10
 wye pan 5 0.5732889198020006  0.8636244699032729  15
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put '</b>
 <b>  num suma = 0;</b>
 <b>  num sumb = 0;</b>
@@ -452,7 +452,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729  15
 <b>  $sumb = sumb;</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y                   suma sumb
 pan pan 1 0.3467901443380824  0.7268028627434533  1    1
 eks pan 2 0.7586799647899636  0.5221511083334797  3    3
@@ -477,14 +477,14 @@ Notes:
 
 Miller supports an `awk`-like `begin/end` syntax.  The statements in the `begin` block are executed before any input records are read; the statements in the `end` block are executed after the last input record is read.  (If you want to execute some statement at the start of each file, not at the start of the first file as with `begin`, you might use a pattern/action block of the form `FNR == 1 { ... }`.) All statements outside of `begin` or `end` are, of course, executed on every input record. Semicolons separate statements inside or outside of begin/end blocks; semicolons are required between begin/end block bodies and any subsequent statement.  For example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '</b>
 <b>  begin { @sum = 0 };</b>
 <b>  @x_sum += $x;</b>
 <b>  end { emit @x_sum }</b>
 <b>' ./data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -495,13 +495,13 @@ x_sum=2.264761728567491
 
 Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in `awk`, where they'd default to 0 either way), the above can be written more succinctly as
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '</b>
 <b>  @x_sum += $x;</b>
 <b>  end { emit @x_sum }</b>
 <b>' ./data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -512,19 +512,19 @@ x_sum=2.264761728567491
 
 The **put -q** option is a shorthand which suppresses printing of each output record, with only `emit` statements being output. So to get only summary outputs, one could write
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '</b>
 <b>  @x_sum += $x;</b>
 <b>  end { emit @x_sum }</b>
 <b>' ./data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x_sum=2.264761728567491
 </pre>
 
 We can do similarly with multiple out-of-stream variables:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '</b>
 <b>  @x_count += 1;</b>
 <b>  @x_sum += $x;</b>
@@ -534,17 +534,17 @@ We can do similarly with multiple out-of-stream variables:
 <b>  }</b>
 <b>' ./data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x_count=5
 x_sum=2.264761728567491
 </pre>
 
 This is of course not much different than
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr stats1 -a count,sum -f x ./data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x_count=5,x_sum=2.264761728567491
 </pre>
 

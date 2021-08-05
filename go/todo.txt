@@ -11,6 +11,11 @@ TOP OF LIST:
 * survey email followups
 
 ----------------------------------------------------------------
+! docs css fixups -- different pres for different pairings -- font-weight in there -- etc
+! discussion re docs6 ...
+! favicon
+
+----------------------------------------------------------------
 DOC6
 
 * colored-shapes.dkvp -> csv; also mkdat2

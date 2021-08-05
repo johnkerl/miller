@@ -9,33 +9,33 @@ Until then, please see the following sections for how to get Miller 6.*
 
 [Homebrew](https://brew.sh/) installation support for OSX is available via
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>brew update && brew install miller</b>
 </pre>
 
 ...and also via [MacPorts](https://www.macports.org/):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>sudo port selfupdate && sudo port install miller</b>
 </pre>
 
 You may already have the `mlr` executable available in your platform's package manager on NetBSD, Debian Linux, Ubuntu Xenial and upward, Arch Linux, or perhaps other distributions. For example, on various Linux distributions you might do one of the following:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>sudo apt-get install miller</b>
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>sudo apt install miller</b>
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>sudo yum install miller</b>
 </pre>
 
 On Windows, Miller is available via [Chocolatey](https://chocolatey.org/):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>choco install miller</b>
 </pre>
 

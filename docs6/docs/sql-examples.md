@@ -7,10 +7,10 @@ I like to produce SQL-query output with header-column and tab delimiter: this is
 
 For example, using default output formatting in `mysql` we get formatting like Miller's `--opprint --barred`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mysql --database=mydb -e 'show columns in mytable'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 +------------------+--------------+------+-----+---------+-------+
 | Field            | Type         | Null | Key | Default | Extra |
 +------------------+--------------+------+-----+---------+-------+
@@ -24,10 +24,10 @@ For example, using default output formatting in `mysql` we get formatting like M
 
 Using `mysql`'s `-B` we get TSV output:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --opprint cat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Field            Type         Null Key Default Extra
 id               bigint(20)   NO  MUL NULL -
 category         varchar(256) NO  -   NULL -
@@ -38,10 +38,10 @@ last_update_time int(11)      YES -   NULL -
 
 Since Miller handles TSV output, we can do as much or as little processing as we want in the SQL query, then send the rest on to Miller. This includes outputting as JSON, doing further selects/joins in Miller, doing stats, etc.  etc.:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson --jlistwrap --jvstack cat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 [
   {
     "Field": "id",
@@ -86,14 +86,14 @@ Since Miller handles TSV output, we can do as much or as little processing as we
 ]
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mysql --database=mydb -B -e 'select * from mytable' > query.tsv</b>
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from query.tsv --t2p stats1 -a count -f id -g category,assigned_to</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 category assigned_to id_count
 special  10000978    207
 special  10003924    385
@@ -112,7 +112,7 @@ One use of NIDX (value-only, no keys) format is for loading up SQL tables.
 
 Create and load SQL table:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 mysql> CREATE TABLE abixy(
   a VARCHAR(32),
   b VARCHAR(32),
@@ -155,7 +155,7 @@ mysql> SELECT * FROM abixy LIMIT 10;
 
 Aggregate counts within SQL:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 mysql> SELECT a, b, COUNT(*) AS count FROM abixy GROUP BY a, b ORDER BY COUNT DESC;
 +------+------+-------+
 | a    | b    | count |
@@ -191,10 +191,10 @@ mysql> SELECT a, b, COUNT(*) AS count FROM abixy GROUP BY a, b ORDER BY COUNT DE
 
 Aggregate counts within Miller:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint uniq -c -g a,b then sort -nr count data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   count
 zee wye 455
 pan eks 429
@@ -215,10 +215,10 @@ eks zee 357
 
 Pipe SQL output to aggregate counts within Miller:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mysql -D miller -B -e 'select * from abixy' | mlr --itsv --opprint uniq -c -g a,b then sort -nr count</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   count
 zee wye 455
 pan eks 429

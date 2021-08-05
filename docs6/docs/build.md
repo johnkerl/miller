@@ -79,7 +79,7 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
     * Similarly for `macports`: [https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile](https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile)
     * Social-media updates.
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
 git fetch upstream
 git rebase upstream/master
