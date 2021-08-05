@@ -29,32 +29,22 @@
 }
 
 /* Code samples using <pre> (which is currently in use) */
-pre {
-  color: #000000;
-  background-color: #eae2cb;
-  font-size: 12px;
-  padding: 10px;
-}
-
-pre b {
-  background-color: #c5b690;
-  padding: 2px;
-}
-
 .pre-highlight {
   color: #000000;
   background-color: #c5b690;
   font-size: 12px;
   padding: 10px;
+  margin-bottom: 0px;
 }
 .pre-non-highlight {
   color: #000000;
   background-color: #eae2cb;
   font-size: 12px;
   padding: 10px;
+  margin-top: 0px;
 }
 
-/* Section titles with content pages */
+/* Section titles in content pages */
 h1 {
   color: maroon;
   background-color: #e0e0e0;
