@@ -1,7 +1,0 @@
-sudo pip3 install mkdocs
-
-sudo pip3 install mkdocs-ivory
-sudo pip3 install pymdown-extensions
-sudo pip3 install pygments
-
-https://www.mkdocs.org/user-guide/customizing-your-theme/#using-the-theme_dir

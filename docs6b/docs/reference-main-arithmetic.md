@@ -3,13 +3,13 @@
 
 ## Input scanning
 
-Numbers in Miller are double-precision float or 64-bit signed integers. Anything scannable as int, e.g ``123`` or ``0xabcd``, is treated as an integer; otherwise, input scannable as float (``4.56`` or ``8e9``) is treated as float; everything else is a string.
+Numbers in Miller are double-precision float or 64-bit signed integers. Anything scannable as int, e.g `123` or `0xabcd`, is treated as an integer; otherwise, input scannable as float (`4.56` or `8e9`) is treated as float; everything else is a string.
 
-If you want all numbers to be treated as floats, then you may use ``float()`` in your filter/put expressions (e.g. replacing ``$c = $a * $b`` with ``$c = float($a) * float($b)``) -- or, more simply, use ``mlr filter -F`` and ``mlr put -F`` which forces all numeric input, whether from expression literals or field values, to float. Likewise ``mlr stats1 -F`` and ``mlr step -F`` force integerable accumulators (such as ``count``) to be done in floating-point.
+If you want all numbers to be treated as floats, then you may use `float()` in your filter/put expressions (e.g. replacing `$c = $a * $b` with `$c = float($a) * float($b)`) -- or, more simply, use `mlr filter -F` and `mlr put -F` which forces all numeric input, whether from expression literals or field values, to float. Likewise `mlr stats1 -F` and `mlr step -F` force integerable accumulators (such as `count`) to be done in floating-point.
 
 ## Conversion by math routines
 
-For most math functions, integers are cast to float on input, and produce float output: e.g. ``exp(0) = 1.0`` rather than ``1``.  The following, however, produce integer output if their inputs are integers: ``+`` ``-`` ``*`` ``/`` ``//`` ``%`` ``abs`` ``ceil`` ``floor`` ``max`` ``min`` ``round`` ``roundm`` ``sgn``. As well, ``stats1 -a min``, ``stats1 -a max``, ``stats1 -a sum``, ``step -a delta``, and ``step -a rsum`` produce integer output if their inputs are integers.
+For most math functions, integers are cast to float on input, and produce float output: e.g. `exp(0) = 1.0` rather than `1`.  The following, however, produce integer output if their inputs are integers: `+` `-` `*` `/` `//` `%` `abs` `ceil` `floor` `max` `min` `round` `roundm` `sgn`. As well, `stats1 -a min`, `stats1 -a max`, `stats1 -a sum`, `step -a delta`, and `step -a rsum` produce integer output if their inputs are integers.
 
 ## Conversion by arithmetic operators
 
@@ -19,9 +19,9 @@ The short of it is that Miller does this transparently for you so you needn't th
 
 Implementation details of this, for the interested: integer adds and subtracts overflow by at most one bit so it suffices to check sign-changes. Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers, converting only to float precisely when the result is less than -2\ :sup:`63` or greater than 2\ :sup:`63`\ -1.  Multiplies, on the other hand, can overflow by a word size and a sign-change technique does not suffice to detect overflow. Instead Miller tests whether the floating-point product exceeds the representable integer range. Now, 64-bit integers have 64-bit precision while IEEE-doubles have only 52-bit mantissas -- so, there are 53 bits including implicit leading one.  The following experiment explicitly demonstrates the resolution at this range:
 
-<pre>
+<pre class="pre-non-highlight">
 64-bit integer     64-bit integer     Casted to double           Back to 64-bit
-in hex           in decimal                                    integer
+in hex             in decimal                                    integer
 0x7ffffffffffff9ff 9223372036854774271 9223372036854773760.000000 0x7ffffffffffff800
 0x7ffffffffffffa00 9223372036854774272 9223372036854773760.000000 0x7ffffffffffff800
 0x7ffffffffffffbff 9223372036854774783 9223372036854774784.000000 0x7ffffffffffffc00
@@ -38,6 +38,6 @@ That is, one cannot check an integer product to see if it is precisely greater t
 
 Division and remainder are [pythonic](http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html):
 
-* Quotient of integers is floating-point: ``7/2`` is ``3.5``.
-* Integer division is done with ``//``: ``7//2`` is ``3``.  This rounds toward the negative.
+* Quotient of integers is floating-point: `7/2` is `3.5`.
+* Integer division is done with `//`: `7//2` is `3`.  This rounds toward the negative.
 * Remainders are non-negative.

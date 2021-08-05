@@ -3,51 +3,51 @@
 
 ## How to use .mlrrc
 
-Suppose you always use CSV files. Then instead of always having to type ``--csv`` as in
+Suppose you always use CSV files. Then instead of always having to type `--csv` as in
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --csv cut -x -f extra mydata.csv</b>
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --csv sort -n id mydata.csv</b>
 </pre>
 
-and so on, you can instead put the following into your ``$HOME/.mlrrc``:
+and so on, you can instead put the following into your `$HOME/.mlrrc`:
 
-<pre>
+<pre class="pre-non-highlight">
     --csv
 </pre>
 
 Then you can just type things like
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr cut -x -f extra mydata.csv</b>
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr sort -n id mydata.csv</b>
 </pre>
 
-and the ``--csv`` part will automatically be understood. (If you do want to process, say, a JSON file then ``mlr --json ...`` at the command line will override the default from your ``.mlrrc``.)
+and the `--csv` part will automatically be understood. (If you do want to process, say, a JSON file then `mlr --json ...` at the command line will override the default from your `.mlrrc`.)
 
 ## What you can put in your .mlrrc
 
-* You can include any command-line flags, except the "terminal" ones such as ``--help``.
+* You can include any command-line flags, except the "terminal" ones such as `--help`.
 
-* The ``--prepipe``, ``--load``, and ``--mload`` flags aren't allowed in ``.mlrrc`` as they control code execution, and could result in your scripts running things you don't expect if you receive data from someone with a ``.mlrrc`` in it.
+* The `--prepipe`, `--load`, and `--mload` flags aren't allowed in `.mlrrc` as they control code execution, and could result in your scripts running things you don't expect if you receive data from someone with a `.mlrrc` in it.
 
-* The formatting rule is you need to put one flag beginning with ``--`` per line: for example, ``--csv`` on one line and ``--nr-progress-mod 1000`` on a separate line.
+* The formatting rule is you need to put one flag beginning with `--` per line: for example, `--csv` on one line and `--nr-progress-mod 1000` on a separate line.
 
-* Since every line starts with a ``--`` option, you can leave off the initial ``--`` if you want. For example, ``ojson`` is the same as ``--ojson``, and ``nr-progress-mod 1000`` is the same as ``--nr-progress-mod 1000``.
+* Since every line starts with a `--` option, you can leave off the initial `--` if you want. For example, `ojson` is the same as `--ojson`, and `nr-progress-mod 1000` is the same as `--nr-progress-mod 1000`.
 
-* Comments are from a ``#`` to the end of the line.
+* Comments are from a `#` to the end of the line.
 
 * Empty lines are ignored -- including lines which are empty after comments are removed.
 
-Here is an example ``.mlrrc`` file:
+Here is an example `.mlrrc` file:
 
-<pre>
+<pre class="pre-non-highlight">
 # Input and output formats are CSV by default (unless otherwise specified
 # on the mlr command line):
 csv
@@ -67,20 +67,20 @@ skip-comments-with @
 
 ## Where to put your .mlrrc
 
-If the environment variable ``MLRRC`` is set:
+If the environment variable `MLRRC` is set:
 
-* If its value is ``__none__`` then no ``.mlrrc`` files are processed.  (This is nice for things like regression testing.)
+* If its value is `__none__` then no `.mlrrc` files are processed.  (This is nice for things like regression testing.)
 
-* Otherwise, its value (as a filename) is loaded and processed. If there are syntax errors, they abort ``mlr`` with a usage message (as if you had mistyped something on the command line). If the file can't be loaded at all, though, it is silently skipped.
+* Otherwise, its value (as a filename) is loaded and processed. If there are syntax errors, they abort `mlr` with a usage message (as if you had mistyped something on the command line). If the file can't be loaded at all, though, it is silently skipped.
 
-* Any ``.mlrrc`` in your home directory or current directory is ignored whenever ``MLRRC`` is set in the environment.
+* Any `.mlrrc` in your home directory or current directory is ignored whenever `MLRRC` is set in the environment.
 
-* Example line in your shell's rc file: ``export MLRRC=/path/to/my/mlrrc``
+* Example line in your shell's rc file: `export MLRRC=/path/to/my/mlrrc`
 
 Otherwise:
 
-* If ``$HOME/.mlrrc`` exists, it's processed as above.
+* If `$HOME/.mlrrc` exists, it's processed as above.
 
-* If ``./.mlrrc`` exists, it's then also processed as above.
+* If `./.mlrrc` exists, it's then also processed as above.
 
-* The idea is you can have all your settings in your ``$HOME/.mlrrc``, then override maybe one or two for your current directory if you like.
+* The idea is you can have all your settings in your `$HOME/.mlrrc`, then override maybe one or two for your current directory if you like.

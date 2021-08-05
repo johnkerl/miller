@@ -22,7 +22,7 @@ GENMD_RUN_COMMAND
 mlr --opprint cat data/het.dkvp
 GENMD_EOF
 
-Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes -- you can use ``--allow-ragged-csv-input`` (or keystroke-saver ``--ragged``). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
+Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
 
 GENMD_RUN_COMMAND
 cat data/ragged.csv
@@ -32,7 +32,7 @@ GENMD_RUN_COMMAND
 mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv
 GENMD_EOF
 
-You may also find Miller's ``group-like`` feature handy (see also [Verbs Reference](reference-verbs.md)):
+You may also find Miller's `group-like` feature handy (see also [Verbs Reference](reference-verbs.md)):
 
 GENMD_RUN_COMMAND
 mlr --ocsvlite group-like data/het.dkvp
@@ -64,7 +64,7 @@ GENMD_EOF
 
 ## For processing
 
-Miller operates on specified fields and takes the rest along: for example, if you are sorting on the ``count`` field then all records in the input stream must have a ``count`` field but the other fields can vary, and moreover the sorted-on field name(s) don't need to be in the same position on each line:
+Miller operates on specified fields and takes the rest along: for example, if you are sorting on the `count` field then all records in the input stream must have a `count` field but the other fields can vary, and moreover the sorted-on field name(s) don't need to be in the same position on each line:
 
 GENMD_RUN_COMMAND
 cat data/sort-het.dkvp

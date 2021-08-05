@@ -47,16 +47,20 @@ mlr help list-functions | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
     linkname='ursheq'
   fi
 
-  echo ""
-  echo ".. _reference-dsl-${linkname}:"
-  echo ""
-  echo "$displayname"
-  echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-  echo ""
-  echo '.. code-block:: none'
+  # TODO: fix section-links for mnkdocs
+  #echo ''
+  #echo ".. _reference-dsl-${linkname}:"
   echo ''
-  mlr help function "$funcname" | sed 's/^/    /'
+  if [ "$linkname" = "$displayname" ]; then
+    echo "## $displayname"
+  else
+    echo "<a id=$linkname />"
+    echo "## $displayname"
+  fi
   echo ''
+  echo '<pre class="pre-non-highlight">'
+  mlr help function "$funcname"
+  echo '</pre>'
   echo ''
 done
 
@@ -101,15 +105,19 @@ mlr help list-functions | grep '^[a-zA-Z]' | sort -u | while read funcname; do
     linkname='ursheq'
   fi
 
-  echo ""
-  echo ".. _reference-dsl-${linkname}:"
-  echo ""
-  echo "$displayname"
-  echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-  echo ""
-  echo '.. code-block:: none'
+  # TODO: fix section-links for mnkdocs
+  #echo ''
+  #echo ".. _reference-dsl-${linkname}:"
   echo ''
-  mlr help function "$funcname" | sed 's/^/    /'
+  if [ "$linkname" = "$displayname" ]; then
+    echo "## $displayname"
+  else
+    echo "<a id=$linkname />"
+    echo "## $displayname"
+  fi
   echo ''
+  echo '<pre class="pre-non-highlight">'
+  mlr help function "$funcname"
+  echo '</pre>'
   echo ''
 done

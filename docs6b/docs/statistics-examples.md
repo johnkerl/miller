@@ -5,18 +5,20 @@
 
 For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --oxtab stats1 -f x -a p25,p75 \</b>
 <b>    then put '$x_iqr = $x_p75 - $x_p25' \</b>
 <b>    data/medium </b>
+</pre>
+<pre class="pre-non-highlight">
 x_p25 0.24667037823231752
 x_p75 0.7481860062358446
 x_iqr 0.5015156280035271
 </pre>
 
-For wildcarded field names, first compute p25 and p75, then loop over field names with ``p25`` in them:
+For wildcarded field names, first compute p25 and p75, then loop over field names with `p25` in them:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \</b>
 <b>    then put 'for (k,v in $*) {</b>
 <b>      if (k =~ "(.*)_p25") {</b>
@@ -28,9 +30,9 @@ For wildcarded field names, first compute p25 and p75, then loop over field name
 
 ## Computing weighted means
 
-This might be more elegantly implemented as an option within the ``stats1`` verb. Meanwhile, it's expressible within the DSL:
+This might be more elegantly implemented as an option within the `stats1` verb. Meanwhile, it's expressible within the DSL:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --from data/medium put -q '</b>
 <b>  # Using the y field for weighting in this example</b>
 <b>  weight = $y;</b>
@@ -55,6 +57,8 @@ This might be more elegantly implemented as an option within the ``stats1`` verb
 <b>    #emit mean, "a";</b>
 <b>    emit (wmean, mean), "a";</b>
 <b>  }'</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,wmean=4979.563722208067,mean=5028.259010091302
 a=eks,wmean=4890.3815931472145,mean=4956.2900763358775
 a=wye,wmean=4946.987746229947,mean=4920.001017293998

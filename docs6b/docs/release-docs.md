@@ -1,7 +1,7 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # Documents by release
 
-As of September 2020, for 5.9.1 onward, release-specific docs will be handled automatically by https://miller.readthedocs.io whenever a new release is tagged at https://github.com/johnkerl/miller/releases.
+As of September 2020, for 5.9.1 onward, release-specific docs will be handled automatically by [https://miller.readthedocs.io](https://miller.readthedocs.io) whenever a new release is tagged at [https://github.com/johnkerl/miller/releases](https://github.com/johnkerl/miller/releases).
 
 Information here is for documents from before the readthedocs port:
 

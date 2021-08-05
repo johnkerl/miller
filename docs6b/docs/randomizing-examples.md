@@ -5,8 +5,10 @@
 
 Here we can chain together a few simple building blocks:
 
-<pre>
+<pre class="pre-highlight">
 <b>cat expo-sample.sh</b>
+</pre>
+<pre class="pre-non-highlight">
 # Generate 100,000 pairs of independent and identically distributed
 # exponentially distributed random variables with the same rate parameter
 # (namely, 2.5). Then compute histograms of one of them, along with
@@ -40,14 +42,16 @@ Namely:
 * Set the Miller random-number seed so this webdoc looks the same every time I regenerate it.
 * Use pretty-printed tabular output.
 * Use pretty-printed tabular output.
-* Use ``seqgen`` to produce 100,000 records ``i=0``, ``i=1``, etc.
-* Send those to a ``put`` step which defines an inverse-transform-sampling function and calls it twice, then computes the sum and product of samples.
+* Use `seqgen` to produce 100,000 records `i=0`, `i=1`, etc.
+* Send those to a `put` step which defines an inverse-transform-sampling function and calls it twice, then computes the sum and product of samples.
 * Send those to a histogram, and from there to a bar-plotter. This is just for visualization; you could just as well output CSV and send that off to your own plotting tool, etc.
 
 The output is as follows:
 
-<pre>
+<pre class="pre-highlight">
 <b>sh expo-sample.sh</b>
+</pre>
+<pre class="pre-non-highlight">
 bin_lo bin_hi u_count                        s_count
 0      0.04   [64]*******************#[9554] [326]#...................[3703]
 0.04   0.08   [64]*****************...[9554] [326]*****...............[3703]
@@ -105,8 +109,10 @@ bin_lo bin_hi u_count                        s_count
 
 Given this [word list](./data/english-words.txt), first take a look to see what the first few lines look like:
 
-<pre>
+<pre class="pre-highlight">
 <b>head data/english-words.txt</b>
+</pre>
+<pre class="pre-non-highlight">
 a
 aa
 aal
@@ -121,8 +127,10 @@ abaca
 
 Then the following will randomly sample ten words with four to eight characters in them:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10</b>
+</pre>
+<pre class="pre-non-highlight">
 thionine
 birchman
 mildewy
@@ -141,8 +149,10 @@ These are simple *n*-grams as [described here](http://johnkerl.org/randspell/ran
 
 The idea is that words from the input file are consumed, then taken apart and pasted back together in ways which imitate the letter-to-letter transitions found in the word list -- giving us automatically generated words in the same vein as *bromance* and *spork*:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 beard
 plastinguish
 politicially
