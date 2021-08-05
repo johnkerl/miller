@@ -3,12 +3,14 @@
 
 ## Overview
 
-Miller is a streaming record processor; commands are performed once per record. This makes Miller particularly suitable for single-pass algorithms, allowing many of its verbs to process files that are (much) larger than the amount of RAM present in your system. (Of course, Miller verbs such as ``sort``, ``tac``, etc. all must ingest and retain all input records before emitting any output records.) You can also use out-of-stream variables to perform multi-pass computations, at the price of retaining all input records in memory.
+Miller is a streaming record processor; commands are performed once per record. This makes Miller particularly suitable for single-pass algorithms, allowing many of its verbs to process files that are (much) larger than the amount of RAM present in your system. (Of course, Miller verbs such as `sort`, `tac`, etc. all must ingest and retain all input records before emitting any output records.) You can also use out-of-stream variables to perform multi-pass computations, at the price of retaining all input records in memory.
 
 One of Miller's strengths is its compact notation: for example, given input of the form
 
-<pre>
+<pre class="pre-highlight">
 <b>head -n 5 ./data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -18,15 +20,19 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 you can simply do
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --oxtab stats1 -a sum -f x ./data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 x_sum 4986.019681679581
 </pre>
 
 or
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint stats1 -a sum -f x -g b ./data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 b   x_sum
 pan 965.7636699425815
 wye 1023.5484702619565
@@ -37,25 +43,29 @@ hat 1000.192668193983
 
 rather than the more tedious
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --oxtab put -q '</b>
 <b>  @x_sum += $x;</b>
 <b>  end {</b>
 <b>    emit @x_sum</b>
 <b>  }</b>
 <b>' data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 x_sum 4986.019681679581
 </pre>
 
 or
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint put -q '</b>
 <b>  @x_sum[$b] += $x;</b>
 <b>  end {</b>
 <b>    emit @x_sum, "b"</b>
 <b>  }</b>
 <b>' data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 b   x_sum
 pan 965.7636699425815
 wye 1023.5484702619565
@@ -64,9 +74,9 @@ eks 1016.7728571314786
 hat 1000.192668193983
 </pre>
 
-The former (``mlr stats1`` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
+The former (`mlr stats1` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
 
-Nonetheless, out-of-stream variables (which I whimsically call *oosvars*), begin/end blocks, and emit statements give you the ability to implement logic -- if you wish to do so -- which isn't present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at https://github.com/johnkerl/miller/issues to get it implemented directly in Go as a Miller verb of its own.)
+Nonetheless, out-of-stream variables (which I whimsically call *oosvars*), begin/end blocks, and emit statements give you the ability to implement logic -- if you wish to do so -- which isn't present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues) to get it implemented directly in Go as a Miller verb of its own.)
 
 The following examples compute some things using oosvars which are already computable using Miller verbs, by way of providing food for thought.
 
@@ -74,7 +84,7 @@ The following examples compute some things using oosvars which are already compu
 
 For example, mapping numeric values down a column to the percentage between their min and max values is two-pass: on the first pass you find the min and max values, then on the second, map each record's value to a percentage.
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --from data/small --opprint put -q '</b>
 <b>  # These are executed once per record, which is the first pass.</b>
 <b>  # The key is to use NR to index an out-of-stream variable to</b>
@@ -91,6 +101,8 @@ For example, mapping numeric values down a column to the percentage between thei
 <b>    emit (@x, @x_pct), "NR"</b>
 <b>  }</b>
 <b>'</b>
+</pre>
+<pre class="pre-non-highlight">
 NR x                   x_pct
 1  0.3467901443380824  25.66194338926441
 2  0.7586799647899636  100
@@ -103,7 +115,7 @@ NR x                   x_pct
 
 Similarly, finding the total record count requires first reading through all the data:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint --from data/small put -q '</b>
 <b>  @records[NR] = $*;</b>
 <b>  end {</b>
@@ -115,6 +127,8 @@ Similarly, finding the total record count requires first reading through all the
 <b>    emit @records,"I"</b>
 <b>  }</b>
 <b>' then reorder -f I,N,PCT</b>
+</pre>
+<pre class="pre-non-highlight">
 I N PCT     a   b   i x                   y
 1 5 (error) pan pan 1 0.3467901443380824  0.7268028627434533
 2 5 (error) eks pan 2 0.7586799647899636  0.5221511083334797
@@ -125,10 +139,12 @@ I N PCT     a   b   i x                   y
 
 ## Records having max value
 
-The idea is to retain records having the largest value of ``n`` in the following data:
+The idea is to retain records having the largest value of `n` in the following data:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --itsv --opprint cat data/maxrows.tsv</b>
+</pre>
+<pre class="pre-non-highlight">
 a      b      n score
 purple red    5 0.743231
 blue   purple 2 0.093710
@@ -163,10 +179,12 @@ red    purple 4 0.477187
 blue   red    4 0.007487
 </pre>
 
-Of course, the largest value of ``n`` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end:
+Of course, the largest value of `n` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end:
 
-<pre>
+<pre class="pre-highlight">
 <b>cat data/maxrows.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 # Retain all records
 @records[NR] = $*;
 # Track max value of n
@@ -184,8 +202,10 @@ end {
 }
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv</b>
+</pre>
+<pre class="pre-non-highlight">
 a      b      n score
 purple red    5 0.743231
 purple red    5 0.389055
@@ -202,7 +222,7 @@ green  purple 5 0.203577
 
 Suppose you have some heterogeneous data like this:
 
-<pre>
+<pre class="pre-non-highlight">
 { "qoh": 29874, "rate": 1.68, "latency": 0.02 }
 { "name": "alice", "uid": 572 }
 { "qoh": 1227, "rate": 1.01, "latency": 0.07 }
@@ -219,7 +239,7 @@ Suppose you have some heterogeneous data like this:
 
 A reasonable question to ask is, how many occurrences of each field are there? And, what percentage of total row count has each of them? Since the denominator of the percentage is not known until the end, this is a two-pass algorithm:
 
-<pre>
+<pre class="pre-non-highlight">
 for (key in $*) {
   @key_counts[key] += 1;
 }
@@ -237,8 +257,10 @@ end {
 
 Then
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --json put -q -f data/feature-count.mlr data/features.json</b>
+</pre>
+<pre class="pre-non-highlight">
 {
   "record_count": 12
 }
@@ -292,8 +314,10 @@ Then
 }
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json</b>
+</pre>
+<pre class="pre-non-highlight">
 record_count
 12
 
@@ -320,18 +344,22 @@ The previous section discussed how to fill out missing data fields within CSV wi
 
 For example, suppose you have JSON input like this:
 
-<pre>
+<pre class="pre-highlight">
 <b>cat data/sparse.json</b>
+</pre>
+<pre class="pre-non-highlight">
 {"a":1,"b":2,"v":3}
 {"u":1,"b":2}
 {"a":1,"v":2,"x":3}
 {"v":1,"w":2}
 </pre>
 
-There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use ``put -q`` since we don't want to produce per-record output, only emitting output in the ``end`` block:
+There are field names `a`, `b`, `v`, `u`, `x`, `w` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use `put -q` since we don't want to produce per-record output, only emitting output in the `end` block:
 
-<pre>
+<pre class="pre-highlight">
 <b>cat data/unsparsify.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 # First pass:
 # Remember all unique key names:
 for (k in $*) {
@@ -360,8 +388,10 @@ end {
 }
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --json put -q -f data/unsparsify.mlr data/sparse.json</b>
+</pre>
+<pre class="pre-non-highlight">
 {
   "a": 1,
   "b": 2,
@@ -396,8 +426,10 @@ end {
 }
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json</b>
+</pre>
+<pre class="pre-non-highlight">
 a,b,v,u,x,w
 1,2,3,,,
 ,2,,1,,
@@ -405,8 +437,10 @@ a,b,v,u,x,w
 ,,1,,,2
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json</b>
+</pre>
+<pre class="pre-non-highlight">
 a b v u x w
 1 2 3 - - -
 - 2 - 1 - -
@@ -414,17 +448,19 @@ a b v u x w
 - - 1 - - 2
 </pre>
 
-There is a keystroke-saving verb for this: :ref:`mlr unsparsify <reference-verbs-unsparsify>`.
+There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify).
 
 ## Mean without/with oosvars
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint stats1 -a mean -f x data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 x_mean
 0.49860196816795804
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint put -q '</b>
 <b>  @x_sum += $x;</b>
 <b>  @x_count += 1;</b>
@@ -433,14 +469,18 @@ x_mean
 <b>    emit @x_mean</b>
 <b>  }</b>
 <b>' data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 x_mean
 0.49860196816795804
 </pre>
 
 ## Keyed mean without/with oosvars
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint stats1 -a mean -f x -g a,b data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 a   b   x_mean
 pan pan 0.5133141190437597
 eks pan 0.48507555383425127
@@ -469,7 +509,7 @@ eks hat 0.5006790659966355
 wye eks 0.5306035254809106
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint put -q '</b>
 <b>  @x_sum[$a][$b] += $x;</b>
 <b>  @x_count[$a][$b] += 1;</b>
@@ -480,6 +520,8 @@ wye eks 0.5306035254809106
 <b>    emit @x_mean, "a", "b"</b>
 <b>  }</b>
 <b>' data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 a   b   x_mean
 pan pan 0.5133141190437597
 pan wye 0.5023618498923658
@@ -510,8 +552,10 @@ hat pan 0.4643355557376876
 
 ## Variance and standard deviation without/with oosvars
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 x_count  10000
 x_sum    4986.019681679581
 x_mean   0.49860196816795804
@@ -519,8 +563,10 @@ x_var    0.08426974433144456
 x_stddev 0.2902925151144007
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>cat variance.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 @n += 1;
 @sumx += $x;
 @sumx2 += $x**2;
@@ -532,8 +578,10 @@ end {
 }
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --oxtab put -q -f variance.mlr data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 n      10000
 sumx   4986.019681679581
 sumx2  3328.652400179729
@@ -546,26 +594,32 @@ You can also do this keyed, of course, imitating the keyed-mean example above.
 
 ## Min/max without/with oosvars
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --oxtab stats1 -a min,max -f x data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 x_min 0.00004509679127584487
 x_max 0.999952670371898
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --oxtab put -q '</b>
 <b>  @x_min = min(@x_min, $x);</b>
 <b>  @x_max = max(@x_max, $x);</b>
 <b>  end{emitf @x_min, @x_max}</b>
 <b>' data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 x_min 0.00004509679127584487
 x_max 0.999952670371898
 </pre>
 
 ## Keyed min/max without/with oosvars
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint stats1 -a min,max -f x -g a data/medium</b>
+</pre>
+<pre class="pre-non-highlight">
 a   x_min                  x_max
 pan 0.00020390740306253097 0.9994029107062516
 eks 0.0006917972627396018  0.9988110946859143
@@ -574,7 +628,7 @@ zee 0.0005486114815762555  0.9994904324789629
 hat 0.00004509679127584487 0.999952670371898
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint --from data/medium put -q '</b>
 <b>  @min[$a] = min(@min[$a], $x);</b>
 <b>  @max[$a] = max(@max[$a], $x);</b>
@@ -582,6 +636,8 @@ hat 0.00004509679127584487 0.999952670371898
 <b>    emit (@min, @max), "a";</b>
 <b>  }</b>
 <b>'</b>
+</pre>
+<pre class="pre-non-highlight">
 a   min                    max
 pan 0.00020390740306253097 0.9994029107062516
 eks 0.0006917972627396018  0.9988110946859143
@@ -592,8 +648,10 @@ hat 0.00004509679127584487 0.999952670371898
 
 ## Delta without/with oosvars
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint step -a delta -f x data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a   b   i x                   y                   x_delta
 pan pan 1 0.3467901443380824  0.7268028627434533  0
 eks pan 2 0.7586799647899636  0.5221511083334797  0.41188982045188116
@@ -602,11 +660,13 @@ eks wye 4 0.38139939387114097 0.13418874328430463 0.17679608810483793
 wye pan 5 0.5732889198020006  0.8636244699032729  0.19188952593085962
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint put '</b>
 <b>  $x_delta = is_present(@last) ? $x - @last : 0;</b>
 <b>  @last = $x</b>
 <b>' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a   b   i x                   y                   x_delta
 pan pan 1 0.3467901443380824  0.7268028627434533  0
 eks pan 2 0.7586799647899636  0.5221511083334797  0.41188982045188116
@@ -617,8 +677,10 @@ wye pan 5 0.5732889198020006  0.8636244699032729  0.19188952593085962
 
 ## Keyed delta without/with oosvars
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint step -a delta -f x -g a data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a   b   i x                   y                   x_delta
 pan pan 1 0.3467901443380824  0.7268028627434533  0
 eks pan 2 0.7586799647899636  0.5221511083334797  0
@@ -627,11 +689,13 @@ eks wye 4 0.38139939387114097 0.13418874328430463 -0.3772805709188226
 wye pan 5 0.5732889198020006  0.8636244699032729  0.36868561403569755
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint put '</b>
 <b>  $x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0;</b>
 <b>  @last[$a]=$x</b>
 <b>' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a   b   i x                   y                   x_delta
 pan pan 1 0.3467901443380824  0.7268028627434533  0
 eks pan 2 0.7586799647899636  0.5221511083334797  0
@@ -642,8 +706,10 @@ wye pan 5 0.5732889198020006  0.8636244699032729  0.36868561403569755
 
 ## Exponentially weighted moving averages without/with oosvars
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint step -a ewma -d 0.1 -f x data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a   b   i x                   y                   x_ewma_0.1
 pan pan 1 0.3467901443380824  0.7268028627434533  0.3467901443380824
 eks pan 2 0.7586799647899636  0.5221511083334797  0.3879791263832706
@@ -652,12 +718,14 @@ eks wye 4 0.38139939387114097 0.13418874328430463 0.37081732927653055
 wye pan 5 0.5732889198020006  0.8636244699032729  0.3910644883290776
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint put '</b>
 <b>  begin{ @a=0.1 };</b>
 <b>  $e = NR==1 ? $x : @a * $x + (1 - @a) * @e;</b>
 <b>  @e=$e</b>
 <b>' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a   b   i x                   y                   e
 pan pan 1 0.3467901443380824  0.7268028627434533  0.3467901443380824
 eks pan 2 0.7586799647899636  0.5221511083334797  0.3879791263832706

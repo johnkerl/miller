@@ -4,10 +4,10 @@ See also the [list of issues tagged with go-port](https://github.com/johnkerl/mi
 
 ## Documentation improvements
 
-Documentation (what you're reading here) and on-line help (``mlr --help``) have been completely reworked.
+Documentation (what you're reading here) and on-line help (`mlr --help`) have been completely reworked.
 
 In the initial release, the focus was convincing users already familiar with
-``awk``/``grep``/``cut`` that Miller was a viable option. Over time it's become
+`awk`/`grep`/`cut` that Miller was a viable option. Over time it's become
 clear that many users aren't expert with these. The focus has shifted toward a
 higher quantity of more introductory/accessible material for command-line data
 processing.
@@ -24,14 +24,14 @@ now discussed first, and more examples use CSV.
 
 ## JSON support, and arrays
 
-Arrays are now supported in Miller's ``put``/``filter`` programming language,
-as described at :doc:`reference-dsl-arrays`. Also, ``array`` is now a keyword
+Arrays are now supported in Miller's `put`/`filter` programming language,
+as described at [Reference: arrays](reference-dsl-arrays.md). Also, `array` is now a keyword
 so this is no longer usable as a local-variable or UDF name.
 
 JSON support is improved:
 
 * Direct support for arrays means that you can now use Miller to process more JSON files.
-* Streamable JSON parsing: Miller's internal record-processing pipeline starts as soon as the first record is read (which was already the case for other file formats). This means that, unless records are wrapped with outermost ``[...]``, Miller now handles JSON in ``tail -f`` contexts like it does for other file formats.
+* Streamable JSON parsing: Miller's internal record-processing pipeline starts as soon as the first record is read (which was already the case for other file formats). This means that, unless records are wrapped with outermost `[...]`, Miller now handles JSON in `tail -f` contexts like it does for other file formats.
 * Flatten/unflatten -- TODO pick a name and link to a separate page/section
 
 ## Improved Windows experience
@@ -43,11 +43,7 @@ Binaries are reliably available using GitHub Actions: see also [Installation](in
 
 ## In-process support for compressed input
 
-In addition to ``--prepipe gunzip``, you can now use the ``--gzin`` flag. In
-fact, if your files end in ``.gz`` you don't even need to do that -- Miller
-will autodetect by file extension and automatically uncompress ``mlr --csv cat
-foo.csv.gz``. Similarly for ``.z`` and ``.bz2`` files.  Please see section
-[TODO:linkify] for more information.
+In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly for `.z` and `.bz2` files.  Please see section [TODO:linkify] for more information.
 
 ## Output colorization
 
@@ -59,12 +55,12 @@ The most central part of Miller 6 is a deep refactor of how data values are pars
 from file contents, how types are inferred, and how they're converted back to
 text into output files.
 
-This was all initiated by https://github.com/johnkerl/miller/issues/151.
+This was all initiated by [https://github.com/johnkerl/miller/issues/151](https://github.com/johnkerl/miller/issues/151).
 
 In Miller 5 and below, all values were stored as strings, then only converted
 to int/float as-needed, for example when a particular field was referenced in
-the ``stats1`` or ``put`` verbs. This led to awkwardnesses such as the ``-S``
-and ``-F`` flags for ``put`` and ``filter``.
+the `stats1` or `put` verbs. This led to awkwardnesses such as the `-S`
+and `-F` flags for `put` and `filter`.
 
 In Miller 6, things parseable as int/float are treated as such from the moment
 the input data is read, and these are passed along through the verb chain.  All
@@ -74,7 +70,7 @@ a numeric field isn't modified during the processing chain, it's printed out
 the way it arrived. Also, quoted values in JSON strings are flagged as being
 strings throughout the processing chain.
 
-For example (see https://github.com/johnkerl/miller/issues/178) you can now do
+For example (see [https://github.com/johnkerl/miller/issues/178](https://github.com/johnkerl/miller/issues/178)) you can now do
 
 GENMD_RUN_COMMAND
 echo '{ "a": "0123" }' | mlr --json cat
@@ -90,21 +86,23 @@ Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single
 
 ## New DSL functions / operators
 
-* String-hashing functions :ref:`reference-dsl-md5`, :ref:`reference-dsl-sha1`, :ref:`reference-dsl-sha256`, and :ref:`reference-dsl-sha512`.
-* Platform-property functions :ref:`reference-dsl-hostname`, :ref:`reference-dsl-os`, and :ref:`reference-dsl-version`.
-* Unsigned right-shift :ref:`reference-dsl-ursh` along with ``>>>=``.
+* String-hashing functions [md5](reference-dsl-builtin-functions.md#md5), [sha1](reference-dsl-builtin-functions.md#sha1), [sha256](reference-dsl-builtin-functions.md#sha256), and [sha512](reference-dsl-builtin-functions.md#sha512).
+
+* Platform-property functions [hostname](reference-dsl-builtin-functions.md#hostname), [os](reference-dsl-builtin-functions.md#os), and [version](reference-dsl-builtin-functions.md#version).
+
+* Unsigned right-shift [`>>>`](reference-dsl-builtin-functions.md#ursh) along with `>>>=`.
 
 ## Improved command-line parsing
 
 Miller 6 has getoptish command-line parsing (https://github.com/johnkerl/miller/pull/467):
 
-* ``-xyz`` expands automatically to ``-x -y -z``, so (for example) ``mlr cut -of shape,flag`` is the same as ``mlr cut -o -f shape,flag``.
-* ``--foo=bar`` expands automatically to  ``--foo bar``, so (for example) ``mlr --ifs=comma`` is the same as ``mlr --ifs comma``.
-* ``--mfrom``, ``--load``, ``--mload`` as described at [TODO:linkify].
+* `-xyz` expands automatically to `-x -y -z`, so (for example) `mlr cut -of shape,flag` is the same as `mlr cut -o -f shape,flag`.
+* `--foo=bar` expands automatically to  `--foo bar`, so (for example) `mlr --ifs=comma` is the same as `mlr --ifs comma`.
+* `--mfrom`, `--load`, `--mload` as described at [TODO:linkify].
 
 ## Improved error messages for DSL parsing
 
-For ``mlr put`` and ``mlr filter``, parse-error messages now include location information:
+For `mlr put` and `mlr filter`, parse-error messages now include location information:
 
 GENMD_CARDIFY
 mlr: cannot parse DSL expression.
@@ -113,5 +111,5 @@ GENMD_EOF
 
 ## Developer-specific aspects
 
-* Miller has been ported from C to Go. Developer notes: https://github.com/johnkerl/miller/blob/main/go/README.md
-* Completely reworked regression testing, including running on Windows
+* Miller has been ported from C to Go. Developer notes: [https://github.com/johnkerl/miller/blob/main/go/README.md](https://github.com/johnkerl/miller/blob/main/go/README.md).
+* Completely reworked regression testing, including regresstion-testing now running on Windows.

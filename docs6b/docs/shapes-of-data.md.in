@@ -2,19 +2,19 @@
 
 ## No output at all
 
-Try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable characters.
+Try `od -xcv` and/or `cat -e` on your file to check for non-printable characters.
 
-If you're using Miller version less than 5.0.0 (try ``mlr --version`` on your system to find out), when the line-ending-autodetect feature was introduced, please see http://johnkerl.org/miller-releases/miller-4.5.0/doc/index.html.
+If you're using Miller version less than 5.0.0 (try `mlr --version` on your system to find out), when the line-ending-autodetect feature was introduced, please see [http://johnkerl.org/miller-releases/miller-4.5.0/doc/index.html](http://johnkerl.org/miller-releases/miller-4.5.0/doc/index.html).
 
 ## Fields not selected
 
-Check the field-separators of the data, e.g. with the command-line ``head`` program. Example: for CSV, Miller's default record separator is comma; if your data is tab-delimited, e.g. ``aTABbTABc``, then Miller won't find three fields named ``a``, ``b``, and ``c`` but rather just one named ``aTABbTABc``.  Solution in this case: ``mlr --fs tab {remaining arguments ...}``.
+Check the field-separators of the data, e.g. with the command-line `head` program. Example: for CSV, Miller's default record separator is comma; if your data is tab-delimited, e.g. `aTABbTABc`, then Miller won't find three fields named `a`, `b`, and `c` but rather just one named `aTABbTABc`.  Solution in this case: `mlr --fs tab {remaining arguments ...}`.
 
-Also try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable characters.
+Also try `od -xcv` and/or `cat -e` on your file to check for non-printable characters.
 
 ## Diagnosing delimiter specifications
 
-Use the ``file`` command to see if there are CR/LF terminators (in this case, # there are not):
+Use the `file` command to see if there are CR/LF terminators (in this case, # there are not):
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 file data/colours.csv 
@@ -46,7 +46,7 @@ KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_1;Weiß;White;Blanco;Val
 KEY;DE;EN;ES;FI;FR;IT;NL;PL;RO;TR masterdata_colourcode_2;Schwarz;Black;Negro;Musta;Noir;Nero;Zwart;Czarny;Negru;Siyah
 GENMD_EOF
 
-Using XTAB output format makes it clearer that ``KEY;DE;...;RO;TR`` is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (``--fs semicolon``):
+Using XTAB output format makes it clearer that `KEY;DE;...;RO;TR` is being treated as a single field name in the CSV header, and likewise each subsequent line is being treated as a single field value. This is because the default field separator is a comma but we have semicolons here.  Use XTAB again with different field separator (`--fs semicolon`):
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 mlr --icsv --ifs semicolon --oxtab cat data/colours.csv 
@@ -86,7 +86,7 @@ GENMD_EOF
 
 ## I assigned $9 and it's not 9th
 
-Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with ``--implicit-csv-header``, Miller will sequentially assign keys of the form ``1``, ``2``, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data, when it is originally read from the input file(s).
+Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with `--implicit-csv-header`, Miller will sequentially assign keys of the form `1`, `2`, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data, when it is originally read from the input file(s).
 
 GENMD_RUN_COMMAND
 echo x,y,z | mlr --dkvp cat
@@ -118,7 +118,7 @@ GENMD_EOF
 
 ## Why doesn't mlr cut put fields in the order I want?
 
-Example: columns ``x,i,a`` were requested but they appear here in the order ``a,i,x``:
+Example: columns `x,i,a` were requested but they appear here in the order `a,i,x`:
 
 GENMD_RUN_COMMAND
 cat data/small
@@ -128,9 +128,9 @@ GENMD_RUN_COMMAND
 mlr cut -f x,i,a data/small
 GENMD_EOF
 
-The issue is that Miller's ``cut``, by default, outputs cut fields in the order they appear in the input data. This design decision was made intentionally to parallel the Unix/Linux system ``cut`` command, which has the same semantics.
+The issue is that Miller's `cut`, by default, outputs cut fields in the order they appear in the input data. This design decision was made intentionally to parallel the Unix/Linux system `cut` command, which has the same semantics.
 
-The solution is to use the ``-o`` option:
+The solution is to use the `-o` option:
 
 GENMD_RUN_COMMAND
 mlr cut -o -f x,i,a data/small
@@ -138,7 +138,7 @@ GENMD_EOF
 
 ## Numbering and renumbering records
 
-The ``awk``-like built-in variable ``NR`` is incremented for each input record:
+The `awk`-like built-in variable `NR` is incremented for each input record:
 
 GENMD_RUN_COMMAND
 cat data/small
@@ -154,19 +154,19 @@ GENMD_RUN_COMMAND
 mlr filter '$a == "wye"' then put '$nr = NR' data/small
 GENMD_EOF
 
-There are two good options here. One is to use the ``cat`` verb with ``-n``:
+There are two good options here. One is to use the `cat` verb with `-n`:
 
 GENMD_RUN_COMMAND
 mlr filter '$a == "wye"' then cat -n data/small
 GENMD_EOF
 
-The other is to keep your own counter within the ``put`` DSL:
+The other is to keep your own counter within the `put` DSL:
 
 GENMD_RUN_COMMAND
 mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small
 GENMD_EOF
 
-The difference is a matter of taste (although ``mlr cat -n`` puts the counter first).
+The difference is a matter of taste (although `mlr cat -n` puts the counter first).
 
 ## Splitting nested fields
 
@@ -174,7 +174,7 @@ Suppose you have a TSV file like this:
 
 GENMD_INCLUDE_ESCAPED(data/nested.tsv)
 
-The simplest option is to use :ref:`mlr nest <reference-verbs-nest>`:
+The simplest option is to use [nest](reference-verbs.md#nest):
 
 GENMD_RUN_COMMAND
 mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv
@@ -184,9 +184,9 @@ GENMD_RUN_COMMAND
 mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv
 GENMD_EOF
 
-While ``mlr nest`` is simplest, let's also take a look at a few ways to do this using the ``put`` DSL.
+While `mlr nest` is simplest, let's also take a look at a few ways to do this using the `put` DSL.
 
-One option to split out the colon-delimited values in the ``b`` column is to use ``splitnv`` to create an integer-indexed map and loop over it, adding new fields to the current record:
+One option to split out the colon-delimited values in the `b` column is to use `splitnv` to create an integer-indexed map and loop over it, adding new fields to the current record:
 
 GENMD_RUN_COMMAND
 mlr --from data/nested.tsv --itsv --oxtab put '
@@ -197,7 +197,7 @@ mlr --from data/nested.tsv --itsv --oxtab put '
 '
 GENMD_EOF
 
-while another is to loop over the same map from ``splitnv`` and use it (with ``put -q`` to suppress printing the original record) to produce multiple records:
+while another is to loop over the same map from `splitnv` and use it (with `put -q` to suppress printing the original record) to produce multiple records:
 
 GENMD_RUN_COMMAND
 mlr --from data/nested.tsv --itsv --oxtab put -q '
@@ -220,9 +220,9 @@ GENMD_EOF
 
 ## Options for dealing with duplicate rows
 
-If your data has records appearing multiple times, you can use :ref:`mlr uniq <reference-verbs-uniq>` to show and/or count the unique records.
+If your data has records appearing multiple times, you can use [uniq](reference-verbs.md#uniq) to show and/or count the unique records.
 
-If you want to look at partial uniqueness -- for example, show only the first record for each unique combination of the ``account_id`` and ``account_status`` fields -- you might use ``mlr head -n 1 -g account_id,account_status``. Please also see :ref:`mlr head <reference-verbs-head>`.
+If you want to look at partial uniqueness -- for example, show only the first record for each unique combination of the `account_id` and `account_status` fields -- you might use `mlr head -n 1 -g account_id,account_status`. Please also see [head](reference-verbs.md#head).
 
 ## Rectangularizing data
 

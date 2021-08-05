@@ -2,25 +2,25 @@
 
 ## How can I handle commas-as-data in various formats?
 
-:doc:`CSV <file-formats>` handles this well and by design:
+[CSV](file-formats.md) handles this well and by design:
 
 GENMD_RUN_COMMAND
 cat commas.csv
 GENMD_EOF
 
-Likewise :ref:`file-formats-json`:
+Likewise [JSON](file-formats.md#json):
 
 GENMD_RUN_COMMAND
 mlr --icsv --ojson cat commas.csv
 GENMD_EOF
 
-For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no escaping for carriage returns, but commas work fine:
+For Miller's [XTAB](file-formats.md#xtab-vertical-tabular) there is no escaping for carriage returns, but commas work fine:
 
 GENMD_RUN_COMMAND
 mlr --icsv --oxtab cat commas.csv
 GENMD_EOF
 
-But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <file-formats-nidx>`, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
+But for [key-value-pairs](file-formats.md#dkvp-key-value-pairs) and [index-numbered](file-formats.md#nidx-index-numbered-toolkit-style) formats, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
 
 GENMD_RUN_COMMAND
 mlr --icsv --odkvp cat commas.csv
@@ -65,15 +65,15 @@ GENMD_RUN_COMMAND
 echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
 GENMD_EOF
 
-The idea is that the outermost single-quotes are to protect the ``put`` expression from the shell, and the double quotes within them are for Miller. To get a single quote in the middle there, you need to actually put it *outside* the single-quoting for the shell. The pieces are the following, all concatenated together:
+The idea is that the outermost single-quotes are to protect the `put` expression from the shell, and the double quotes within them are for Miller. To get a single quote in the middle there, you need to actually put it *outside* the single-quoting for the shell. The pieces are the following, all concatenated together:
 
-* ``$a="It``
-* ``\'``
-* ``s OK, I said,``
-* ``\'``
-* ``for now``
-* ``\'``
-* ``.``
+* `$a="It`
+* `\'`
+* `s OK, I said,`
+* `\'`
+* `for now`
+* `\'`
+* `.`
 
 ## How to escape '?' in regexes?
 
@@ -89,4 +89,4 @@ GENMD_RUN_COMMAND
 mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat
 GENMD_EOF
 
-The ``ssub`` function exists precisely for this reason: so you don't have to escape anything.
+The `ssub` function exists precisely for this reason: so you don't have to escape anything.

@@ -54,15 +54,15 @@ GENMD_EOF
 
 ## Color/shape data
 
-The [data/colored-shapes.dkvp](data/colored-shapes.dkvp) file is some sample data produced by the [mkdat2](data/mkdat2) script. The idea is:
+The [data/colored-shapes.dkvp](data/colored-shapes.dkvp) file is some sample data produced by the [mkdat2](../data/mkdat2) script. The idea is:
 
 * Produce some data with known distributions and correlations, and verify that Miller recovers those properties empirically.
 * Each record is labeled with one of a few colors and one of a few shapes.
-* The ``flag`` field is 0 or 1, with probability dependent on color
-* The ``u`` field is plain uniform on the unit interval.
-* The ``v`` field is the same, except tightly correlated with ``u`` for red circles.
-* The ``w`` field is autocorrelated for each color/shape pair.
-* The ``x`` field is boring Gaussian with mean 5 and standard deviation about 1.2, with no dependence on color or shape.
+* The `flag` field is 0 or 1, with probability dependent on color
+* The `u` field is plain uniform on the unit interval.
+* The `v` field is the same, except tightly correlated with `u` for red circles.
+* The `w` field is autocorrelated for each color/shape pair.
+* The `x` field is boring Gaussian with mean 5 and standard deviation about 1.2, with no dependence on color or shape.
 
 Peek at the data:
 
@@ -76,7 +76,7 @@ GENMD_EOF
 
 Look at uncategorized stats (using [creach](https://github.com/johnkerl/scripts/blob/master/fundam/creach) for spacing).
 
-Here it looks reasonable that ``u`` is unit-uniform; something's up with ``v`` but we can't yet see what:
+Here it looks reasonable that `u` is unit-uniform; something's up with `v` but we can't yet see what:
 
 GENMD_RUN_COMMAND
 mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
@@ -102,7 +102,7 @@ mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape \
   data/colored-shapes.dkvp
 GENMD_EOF
 
-Look at bivariate stats by color and shape. In particular, ``u,v`` pairwise correlation for red circles pops out:
+Look at bivariate stats by color and shape. In particular, `u,v` pairwise correlation for red circles pops out:
 
 GENMD_RUN_COMMAND
 mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp

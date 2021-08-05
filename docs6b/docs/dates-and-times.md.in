@@ -8,7 +8,7 @@ GENMD_RUN_COMMAND
 cat dates.csv
 GENMD_EOF
 
-we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the :ref:`reference-dsl-strptime` format-string.  For example:
+we can use [strptime](reference-verbs.md#strptime) to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the [strptime](reference-verbs.md#strptime) format-string.  For example:
 
 GENMD_RUN_COMMAND
 mlr --csv filter '
@@ -16,7 +16,7 @@ mlr --csv filter '
 ' dates.csv
 GENMD_EOF
 
-Caveat: localtime-handling in timezones with DST is still a work in progress; see https://github.com/johnkerl/miller/issues/170. See also https://github.com/johnkerl/miller/issues/208 -- thanks @aborruso!
+Caveat: localtime-handling in timezones with DST is still a work in progress; see [https://github.com/johnkerl/miller/issues/170](https://github.com/johnkerl/miller/issues/170) . See also [https://github.com/johnkerl/miller/issues/208](https://github.com/johnkerl/miller/issues/208) -- thanks @aborruso!
 
 ## Finding missing dates
 
@@ -30,7 +30,7 @@ GENMD_RUN_COMMAND
 wc -l data/miss-date.csv
 GENMD_EOF
 
-Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using ``strptime``, then compute adjacent differences (the ``cat -n`` simply inserts record-counters):
+Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using `strptime`, then compute adjacent differences (the `cat -n` simply inserts record-counters):
 
 GENMD_INCLUDE_AND_RUN_ESCAPED(data/miss-date-1.sh)
 

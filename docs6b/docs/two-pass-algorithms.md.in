@@ -2,7 +2,7 @@
 
 ## Overview
 
-Miller is a streaming record processor; commands are performed once per record. This makes Miller particularly suitable for single-pass algorithms, allowing many of its verbs to process files that are (much) larger than the amount of RAM present in your system. (Of course, Miller verbs such as ``sort``, ``tac``, etc. all must ingest and retain all input records before emitting any output records.) You can also use out-of-stream variables to perform multi-pass computations, at the price of retaining all input records in memory.
+Miller is a streaming record processor; commands are performed once per record. This makes Miller particularly suitable for single-pass algorithms, allowing many of its verbs to process files that are (much) larger than the amount of RAM present in your system. (Of course, Miller verbs such as `sort`, `tac`, etc. all must ingest and retain all input records before emitting any output records.) You can also use out-of-stream variables to perform multi-pass computations, at the price of retaining all input records in memory.
 
 One of Miller's strengths is its compact notation: for example, given input of the form
 
@@ -30,9 +30,9 @@ or
 
 GENMD_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum-grouped.sh)
 
-The former (``mlr stats1`` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
+The former (`mlr stats1` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
 
-Nonetheless, out-of-stream variables (which I whimsically call *oosvars*), begin/end blocks, and emit statements give you the ability to implement logic -- if you wish to do so -- which isn't present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at https://github.com/johnkerl/miller/issues to get it implemented directly in Go as a Miller verb of its own.)
+Nonetheless, out-of-stream variables (which I whimsically call *oosvars*), begin/end blocks, and emit statements give you the ability to implement logic -- if you wish to do so -- which isn't present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues) to get it implemented directly in Go as a Miller verb of its own.)
 
 The following examples compute some things using oosvars which are already computable using Miller verbs, by way of providing food for thought.
 
@@ -50,13 +50,13 @@ GENMD_INCLUDE_AND_RUN_ESCAPED(data/two-pass-record-numbers.sh)
 
 ## Records having max value
 
-The idea is to retain records having the largest value of ``n`` in the following data:
+The idea is to retain records having the largest value of `n` in the following data:
 
 GENMD_RUN_COMMAND
 mlr --itsv --opprint cat data/maxrows.tsv
 GENMD_EOF
 
-Of course, the largest value of ``n`` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end:
+Of course, the largest value of `n` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end:
 
 GENMD_RUN_COMMAND
 cat data/maxrows.mlr
@@ -96,7 +96,7 @@ GENMD_RUN_COMMAND
 cat data/sparse.json
 GENMD_EOF
 
-There are field names ``a``, ``b``, ``v``, ``u``, ``x``, ``w`` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use ``put -q`` since we don't want to produce per-record output, only emitting output in the ``end`` block:
+There are field names `a`, `b`, `v`, `u`, `x`, `w` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use `put -q` since we don't want to produce per-record output, only emitting output in the `end` block:
 
 GENMD_RUN_COMMAND
 cat data/unsparsify.mlr
@@ -114,7 +114,7 @@ GENMD_RUN_COMMAND
 mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
 GENMD_EOF
 
-There is a keystroke-saving verb for this: :ref:`mlr unsparsify <reference-verbs-unsparsify>`.
+There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify).
 
 ## Mean without/with oosvars
 

@@ -73,9 +73,3 @@ nav:
     - "Installation": "installation.md"
     - "Building from source": "build.md"
 extra_css: ['extra.css']
-markdown_extensions:
-  - pymdownx.superfences
-  - codehilite
-  - admonition
-  - pymdownx.highlight:
-      linenums: true

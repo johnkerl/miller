@@ -3,11 +3,11 @@
 
 Miller has the following kinds of variables:
 
-**Built-in variables** such as ``NF``, ``NF``, ``FILENAME``, ``M_PI``, and ``M_E``.  These are all capital letters and are read-only (although some of them change value from one record to another).
+**Built-in variables** such as `NF`, `NF`, `FILENAME`, `M_PI`, and `M_E`.  These are all capital letters and are read-only (although some of them change value from one record to another).
 
-**Fields of stream records**, accessed using the ``$`` prefix. These refer to fields of the current data-stream record. For example, in ``echo x=1,y=2 | mlr put '$z = $x + $y'``, ``$x`` and ``$y`` refer to input fields, and ``$z`` refers to a new, computed output field. In a few contexts, presented below, you can refer to the entire record as ``$*``.
+**Fields of stream records**, accessed using the `$` prefix. These refer to fields of the current data-stream record. For example, in `echo x=1,y=2 | mlr put '$z = $x + $y'`, `$x` and `$y` refer to input fields, and `$z` refers to a new, computed output field. In a few contexts, presented below, you can refer to the entire record as `$*`.
 
-**Out-of-stream variables** accessed using the ``@`` prefix. These refer to data which persist from one record to the next, including in ``begin`` and ``end`` blocks (which execute before/after the record stream is consumed, respectively). You use them to remember values across records, such as sums, differences, counters, and so on.  In a few contexts, presented below, you can refer to the entire out-of-stream-variables collection as ``@*``.
+**Out-of-stream variables** accessed using the `@` prefix. These refer to data which persist from one record to the next, including in `begin` and `end` blocks (which execute before/after the record stream is consumed, respectively). You use them to remember values across records, such as sums, differences, counters, and so on.  In a few contexts, presented below, you can refer to the entire out-of-stream-variables collection as `@*`.
 
 **Local variables** are limited in scope and extent to the current statements being executed: these include function arguments, bound variables in for loops, and explicitly declared local variables.
 
@@ -15,19 +15,23 @@ Miller has the following kinds of variables:
 
 ## Built-in variables
 
-These are written all in capital letters, such as ``NR``, ``NF``, ``FILENAME``, and only a small, specific set of them is defined by Miller.
+These are written all in capital letters, such as `NR`, `NF`, `FILENAME`, and only a small, specific set of them is defined by Miller.
 
-Namely, Miller supports the following five built-in variables for :doc:`filter and put <reference-dsl>`, all ``awk``-inspired: ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME``, as well as the mathematical constants ``M_PI`` and ``M_E``.  Lastly, the ``ENV`` hashmap allows read access to environment variables, e.g.  ``ENV["HOME"]`` or ``ENV["foo_".$hostname]``.
+Namely, Miller supports the following five built-in variables for [filter and put](reference-dsl.md), all `awk`-inspired: `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME`, as well as the mathematical constants `M_PI` and `M_E`.  Lastly, the `ENV` hashmap allows read access to environment variables, e.g.  `ENV["HOME"]` or `ENV["foo_".$hostname]`.
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr filter 'FNR == 2' data/small*</b>
+</pre>
+<pre class="pre-non-highlight">
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
 a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '$fnr = FNR' data/small*</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,fnr=1
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,fnr=2
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,fnr=3
@@ -46,19 +50,23 @@ a=hat,b=wye,i=10002,x=0.321507044286237609,y=0.568893318795083758,fnr=4
 a=pan,b=zee,i=10003,x=0.272054845593895200,y=0.425789896597056627,fnr=5
 </pre>
 
-Their values of ``NF``, ``NR``, ``FNR``, ``FILENUM``, and ``FILENAME`` change from one record to the next as Miller scans through your input data stream. The mathematical constants, of course, do not change; ``ENV`` is populated from the system environment variables at the time Miller starts and is read-only for the remainder of program execution.
+Their values of `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME` change from one record to the next as Miller scans through your input data stream. The mathematical constants, of course, do not change; `ENV` is populated from the system environment variables at the time Miller starts and is read-only for the remainder of program execution.
 
-Their **scope is global**: you can refer to them in any ``filter`` or ``put`` statement. Their values are assigned by the input-record reader:
+Their **scope is global**: you can refer to them in any `filter` or `put` statement. Their values are assigned by the input-record reader:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --csv put '$nr = NR' data/a.csv</b>
+</pre>
+<pre class="pre-non-highlight">
 a,b,c,nr
 1,2,3,1
 4,5,6,2
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv</b>
+</pre>
+<pre class="pre-non-highlight">
 a,b,c,nr
 1,2,3,1
 1,2,3,1
@@ -68,24 +76,26 @@ a,b,c,nr
 4,5,6,2
 </pre>
 
-The **extent** is for the duration of the put/filter: in a ``begin`` statement (which executes before the fimd.input record is consumed) you will find ``NR=1`` and in an ``end`` statement (which is executed after the last input record is consumed) you will find ``NR`` to be the total number of records ingested.
+The **extent** is for the duration of the put/filter: in a `begin` statement (which executes before the fimd.input record is consumed) you will find `NR=1` and in an `end` statement (which is executed after the last input record is consumed) you will find `NR` to be the total number of records ingested.
 
-These are all **read-only** for the ``mlr put`` and ``mlr filter`` DSLs: they may be assigned from, e.g. ``$nr=NR``, but they may not be assigned to: ``NR=100`` is a syntax error.
+These are all **read-only** for the `mlr put` and `mlr filter` DSLs: they may be assigned from, e.g. `$nr=NR`, but they may not be assigned to: `NR=100` is a syntax error.
 
 ## Field names
 
-Names of fields within stream records must be specified using a ``$`` in :doc:`filter and put expressions <reference-dsl>`, even though the dollar signs don't appear in the data stream itself. For integer-indexed data, this looks like ``awk``'s ``$1,$2,$3``, except that Miller allows non-numeric names such as ``$quantity`` or ``$hostname``.  Likewise, enclose string literals in double quotes in ``filter`` expressions even though they don't appear in file data.  In particular, ``mlr filter '$x=="abc"'`` passes through the record ``x=abc``.
+Names of fields within stream records must be specified using a `$` in [filter and put expressions](reference-dsl.md), even though the dollar signs don't appear in the data stream itself. For integer-indexed data, this looks like `awk`'s `$1,$2,$3`, except that Miller allows non-numeric names such as `$quantity` or `$hostname`.  Likewise, enclose string literals in double quotes in `filter` expressions even though they don't appear in file data.  In particular, `mlr filter '$x=="abc"'` passes through the record `x=abc`.
 
-If field names have **special characters** such as ``.`` then you can use braces, e.g. ``'${field.name}'``.
+If field names have **special characters** such as `.` then you can use braces, e.g. `'${field.name}'`.
 
 You may also use a **computed field name** in square brackets, e.g.
 
-<pre>
+<pre class="pre-highlight">
 <b>echo a=3,b=4 | mlr filter '$["x"] < 0.5'</b>
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'</b>
+</pre>
+<pre class="pre-non-highlight">
 s=green,t=blue,a=3,b=4,green_blue=12
 </pre>
 
@@ -93,22 +103,24 @@ Notes:
 
 The names of record fields depend on the contents of your input data stream, and their values change from one record to the next as Miller scans through your input data stream.
 
-Their **extent** is limited to the current record; their **scope** is the ``filter`` or ``put`` command in which they appear.
+Their **extent** is limited to the current record; their **scope** is the `filter` or `put` command in which they appear.
 
-These are **read-write**: you can do ``$y=2*$x``, ``$x=$x+1``, etc.
+These are **read-write**: you can do `$y=2*$x`, `$x=$x+1`, etc.
 
-Records are Miller's output: field names present in the input stream are passed through to output (written to standard output) unless fields are removed with ``cut``, or records are excluded with ``filter`` or ``put -q``, etc. Simply assign a value to a field and it will be output.
+Records are Miller's output: field names present in the input stream are passed through to output (written to standard output) unless fields are removed with `cut`, or records are excluded with `filter` or `put -q`, etc. Simply assign a value to a field and it will be output.
 
 ## Positional field names
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index (starting from 1).
 
-Use ``$[[3]]`` to access the name of field 3.  More generally, any expression evaluating to an integer can go between ``$[[`` and ``]]``.
+Use `$[[3]]` to access the name of field 3.  More generally, any expression evaluating to an integer can go between `$[[` and `]]`.
 
-Then using a computed field name, ``$[ $[[3]] ]`` is the value in the third field. This has the shorter equivalent notation ``$[[[3]]]``.
+Then using a computed field name, `$[ $[[3]] ]` is the value in the third field. This has the shorter equivalent notation `$[[[3]]]`.
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr cat data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -116,8 +128,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '$[[3]] = "NEW"' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,NEW=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,NEW=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,NEW=3,x=0.20460330576630303,y=0.33831852551664776
@@ -125,8 +139,10 @@ a=eks,b=wye,NEW=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,NEW=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '$[[[3]]] = "NEW"' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=NEW,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=NEW,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
@@ -134,8 +150,10 @@ a=eks,b=wye,i=NEW,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=NEW,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '$NEW = $[[NR]]' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=a
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=b
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=i
@@ -143,8 +161,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=x
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=y
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '$NEW = $[[[NR]]]' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=pan
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=pan
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=3
@@ -152,8 +172,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=0.38139939387114
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=0.8636244699032729
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '$[[[NR]]] = "NEW"' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=NEW,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=NEW,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
@@ -161,10 +183,12 @@ a=eks,b=wye,i=4,x=NEW,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=NEW
 </pre>
 
-Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than ``NF`` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
+Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than `NF` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '$[[6]] = "NEW"' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -172,8 +196,10 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '$[[[6]]] = "NEW"' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -183,46 +209,52 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 ## Out-of-stream variables
 
-These are prefixed with an at-sign, e.g. ``@sum``.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested hashmap: you can do ``@sum += $quanity``, or ``@sum[$color] += $quanity``, or ``@sum[$color][$shape] += $quanity``. The keys for the multi-level hashmap can be any expression which evaluates to string or integer: e.g.  ``@sum[NR] = $a + $b``, ``@sum[$a."-".$b] = $x``, etc.
+These are prefixed with an at-sign, e.g. `@sum`.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested hashmap: you can do `@sum += $quanity`, or `@sum[$color] += $quanity`, or `@sum[$color][$shape] += $quanity`. The keys for the multi-level hashmap can be any expression which evaluates to string or integer: e.g.  `@sum[NR] = $a + $b`, `@sum[$a."-".$b] = $x`, etc.
 
 Their names and their values are entirely under your control; they change only when you assign to them.
 
-Just as for field names in stream records, if you want to define out-of-stream variables with **special characters** such as ``.`` then you can use braces, e.g. ``'@{variable.name}["index"]'``.
+Just as for field names in stream records, if you want to define out-of-stream variables with **special characters** such as `.` then you can use braces, e.g. `'@{variable.name}["index"]'`.
 
 You may use a **computed key** in square brackets, e.g.
 
-<pre>
+<pre class="pre-highlight">
 <b>echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'</b>
+</pre>
+<pre class="pre-non-highlight">
 green_blue=12
 </pre>
 
-Out-of-stream variables are **scoped** to the ``put`` command in which they appear.  In particular, if you have two or more ``put`` commands separated by ``then``, each put will have its own set of out-of-stream variables:
+Out-of-stream variables are **scoped** to the `put` command in which they appear.  In particular, if you have two or more `put` commands separated by `then`, each put will have its own set of out-of-stream variables:
 
-<pre>
+<pre class="pre-highlight">
 <b>cat data/a.dkvp</b>
+</pre>
+<pre class="pre-non-highlight">
 a=1,b=2,c=3
 a=4,b=5,c=6
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '@sum += $a; end {emit @sum}' \</b>
 <b>  then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' \</b>
 <b>  data/a.dkvp</b>
+</pre>
+<pre class="pre-non-highlight">
 a=10,b=2,c=3
 a=40,b=5,c=6
 sum=5
 sum=50
 </pre>
 
-Out-of-stream variables' **extent** is from the start to the end of the record stream, i.e. every time the ``put`` or ``filter`` statement referring to them is executed.
+Out-of-stream variables' **extent** is from the start to the end of the record stream, i.e. every time the `put` or `filter` statement referring to them is executed.
 
-Out-of-stream variables are **read-write**: you can do ``$sum=@sum``, ``@sum=$sum``, etc.
+Out-of-stream variables are **read-write**: you can do `$sum=@sum`, `@sum=$sum`, etc.
 
 ## Indexed out-of-stream variables
 
-Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of the ``-g`` (group-by) option which ``mlr stats1`` and various other Miller commands have:
+Using an index on the `@count` and `@sum` variables, we get the benefit of the `-g` (group-by) option which `mlr stats1` and various other Miller commands have:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put -q '</b>
 <b>  @x_count[$a] += 1;</b>
 <b>  @x_sum[$a] += $x;</b>
@@ -231,6 +263,8 @@ Using an index on the ``@count`` and ``@sum`` variables, we get the benefit of t
 <b>    emit @x_sum, "a";</b>
 <b>  }</b>
 <b>' ./data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,x_count=1
 a=eks,x_count=2
 a=wye,x_count=2
@@ -239,8 +273,10 @@ a=eks,x_sum=1.1400793586611044
 a=wye,x_sum=0.7778922255683036
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr stats1 -a count,sum -f x -g a ./data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,x_count=1,x_sum=0.3467901443380824
 a=eks,x_count=2,x_sum=1.1400793586611044
 a=wye,x_count=2,x_sum=0.7778922255683036
@@ -248,7 +284,7 @@ a=wye,x_count=2,x_sum=0.7778922255683036
 
 Indices can be arbitrarily deep -- here there are two or more of them:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --from data/medium put -q '</b>
 <b>  @x_count[$a][$b] += 1;</b>
 <b>  @x_sum[$a][$b] += $x;</b>
@@ -256,6 +292,8 @@ Indices can be arbitrarily deep -- here there are two or more of them:
 <b>    emit (@x_count, @x_sum), "a", "b";</b>
 <b>  }</b>
 <b>'</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,x_count=427,x_sum=219.1851288316854
 a=pan,b=wye,x_count=395,x_sum=198.43293070748447
 a=pan,b=eks,x_count=429,x_sum=216.07522773165525
@@ -283,11 +321,11 @@ a=hat,b=hat,x_count=381,x_sum=182.8535323148762
 a=hat,b=pan,x_count=363,x_sum=168.5538067327806
 </pre>
 
-The idea is that ``stats1``, and other Miller verbs, encapsulate frequently-used patterns with a minimum of keystroking (and run a little faster), whereas using out-of-stream variables you have more flexibility and control in what you do.
+The idea is that `stats1`, and other Miller verbs, encapsulate frequently-used patterns with a minimum of keystroking (and run a little faster), whereas using out-of-stream variables you have more flexibility and control in what you do.
 
 Begin/end blocks can be mixed with pattern/action blocks. For example:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put '</b>
 <b>  begin {</b>
 <b>    @num_total = 0;</b>
@@ -302,6 +340,8 @@ Begin/end blocks can be mixed with pattern/action blocks. For example:
 <b>    emitf @num_total, @num_positive</b>
 <b>  }</b>
 <b>' data/put-gating-example-1.dkvp</b>
+</pre>
+<pre class="pre-non-highlight">
 x=-1
 x=0
 x=1,y=0,z=0
@@ -310,15 +350,13 @@ x=3,y=0.4771212547196624,z=0.6907396432228734
 num_total=5,num_positive=3
 </pre>
 
-.. _reference-dsl-local-variables:
-
 ## Local variables
 
-Local variables are similar to out-of-stream variables, except that their extent is limited to the expressions in which they appear (and their basenames can't be computed using square brackets). There are three kinds of local variables: **arguments** to functions/subroutines, **variables bound within for-loops**, and **locals** defined within control blocks. They may be untyped using ``var``, or typed using ``num``, ``int``, ``float``, ``str``, ``bool``, and ``map``.
+Local variables are similar to out-of-stream variables, except that their extent is limited to the expressions in which they appear (and their basenames can't be computed using square brackets). There are three kinds of local variables: **arguments** to functions/subroutines, **variables bound within for-loops**, and **locals** defined within control blocks. They may be untyped using `var`, or typed using `num`, `int`, `float`, `str`, `bool`, and `map`.
 
 For example:
 
-<pre>
+<pre class="pre-highlight">
 <b># Here I'm using a specified random-number seed so this example always</b>
 <b># produces the same output for this web document: in everyday practice we</b>
 <b># would leave off the --seed 12345 part.</b>
@@ -335,6 +373,8 @@ For example:
 <b>  num o = f(10, 20);                      # local to the top-level scope</b>
 <b>  $o = o;</b>
 <b>'</b>
+</pre>
+<pre class="pre-non-highlight">
 i=1,o=15.952526011537227
 i=2,o=12.782237754999116
 i=3,o=15.126606630220966
@@ -349,32 +389,34 @@ i=10,o=15.37686787628025
 
 Things which are completely unsurprising, resembling many other languages:
 
-* Parameter names are bound to their arguments but can be reassigned, e.g. if there is a parameter named ``a`` then you can reassign the value of ``a`` to be something else within the function if you like.
+* Parameter names are bound to their arguments but can be reassigned, e.g. if there is a parameter named `a` then you can reassign the value of `a` to be something else within the function if you like.
 
-* However, you cannot redeclare the *type* of an argument or a local: ``var a=1; var a=2`` is an error but ``var a=1;  a=2`` is OK.
+* However, you cannot redeclare the *type* of an argument or a local: `var a=1; var a=2` is an error but `var a=1;  a=2` is OK.
 
 * All argument-passing is positional rather than by name; arguments are passed by value, not by reference. (This is also true for map-valued variables: they are not, and cannot be, passed by reference)
 
-* You can define locals (using ``var``, ``num``, etc.) at any scope (if-statements, else-statements, while-loops, for-loops, or the top-level scope), and nested scopes will have access (more details on scope in the next section).  If you define a local variable with the same name inside an inner scope, then a new variable is created with the narrower scope.
+* You can define locals (using `var`, `num`, etc.) at any scope (if-statements, else-statements, while-loops, for-loops, or the top-level scope), and nested scopes will have access (more details on scope in the next section).  If you define a local variable with the same name inside an inner scope, then a new variable is created with the narrower scope.
 
-* If you assign to a local variable for the first time in a scope without declaring it as ``var``, ``num``, etc. then: if it exists in an outer scope, that outer-scope variable will be updated; if not, it will be defined in the current scope as if ``var`` had been used. (See also :ref:`reference-dsl-type-checking` for an example.) I recommend always declaring variables explicitly to make the intended scoping clear.
+* If you assign to a local variable for the first time in a scope without declaring it as `var`, `num`, etc. then: if it exists in an outer scope, that outer-scope variable will be updated; if not, it will be defined in the current scope as if `var` had been used. (See also [Type-checking](reference-dsl-variables.md#type-checking) for an example.) I recommend always declaring variables explicitly to make the intended scoping clear.
 
 * Functions and subroutines never have access to locals from their callee (unless passed by value as arguments).
 
 Things which are perhaps surprising compared to other languages:
 
-* Type declarations using ``var``, or typed using ``num``, ``int``, ``float``, ``str``, and ``bool`` are necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using ``var``. (Some examples are shown below.)
+* Type declarations using `var`, or typed using `num`, `int`, `float`, `str`, and `bool` are necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using `var`. (Some examples are shown below.)
 
-* Type-checking is done at assignment time. For example, ``float f = 0`` is an error (since ``0`` is an integer), as is ``float f = 0.0; f = 1``. For this reason I prefer to use ``num`` over ``float`` in most contexts since ``num`` encompasses integer and floating-point values. More information about type-checking is at :ref:`reference-dsl-type-checking`.
+* Type-checking is done at assignment time. For example, `float f = 0` is an error (since `0` is an integer), as is `float f = 0.0; f = 1`. For this reason I prefer to use `num` over `float` in most contexts since `num` encompasses integer and floating-point values. More information is at [Type-checking](reference-dsl-variables.md#type-checking).
 
-* Bound variables in for-loops over stream records and out-of-stream variables are implicitly local to that block. E.g. in ``for (k, v in $*) { ... }`` ``for ((k1, k2), v in @*) { ... }`` if there are ``k``, ``v``, etc. in the enclosing scope then those will be masked by the loop-local bound variables in the loop, and moreover the values of the loop-local bound variables are not available after the end of the loop.
+* Bound variables in for-loops over stream records and out-of-stream variables are implicitly local to that block. E.g. in `for (k, v in $*) { ... }` `for ((k1, k2), v in @*) { ... }` if there are `k`, `v`, etc. in the enclosing scope then those will be masked by the loop-local bound variables in the loop, and moreover the values of the loop-local bound variables are not available after the end of the loop.
 
-* For C-style triple-for loops, if a for-loop variable is defined using ``var``, ``int``, etc. then it is scoped to that for-loop. E.g. ``for (i = 0; i < 10; i += 1) { ... }`` and ``for (int i = 0; i < 10; i += 1) { ... }``. (This is unsurprising.). If there is no typedecl and an outer-scope variable of that name exists, then it is used. (This is also unsurprising.) But of there is no outer-scope variable of that name then the variable is scoped to the for-loop only.
+* For C-style triple-for loops, if a for-loop variable is defined using `var`, `int`, etc. then it is scoped to that for-loop. E.g. `for (i = 0; i < 10; i += 1) { ... }` and `for (int i = 0; i < 10; i += 1) { ... }`. (This is unsurprising.). If there is no typedecl and an outer-scope variable of that name exists, then it is used. (This is also unsurprising.) But of there is no outer-scope variable of that name then the variable is scoped to the for-loop only.
 
 The following example demonstrates the scope rules:
 
-<pre>
+<pre class="pre-highlight">
 <b>cat data/scope-example.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 func f(a) {      # argument is local to the function
   var b = 100;   # local to the function
   c = 100;       # local to the function; does not overwrite outer c
@@ -400,15 +442,19 @@ $outer_c = c;
 $outer_d = d;    # there is no outer d defined so no assignment happens
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>cat data/scope-example.dat</b>
+</pre>
+<pre class="pre-non-highlight">
 n=1,x=123
 n=2,x=456
 n=3,x=789
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 n       1
 x       123
 outer_a 10
@@ -434,8 +480,10 @@ outer_c 60
 
 And this example demonstrates the type-declaration rules:
 
-<pre>
+<pre class="pre-highlight">
 <b>cat data/type-decl-example.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 subr s(a, str b, int c) {                         # a is implicitly var (untyped).
                                                   # b is explicitly str.
                                                   # c is explicitly int.
@@ -477,11 +525,11 @@ print "outer j =" . j;                            # j is undefined in this scope
 
 ## Map literals
 
-Miller's ``put``/``filter`` DSL has four kinds of hashmaps. **Stream records** are (single-level) maps from name to value. **Out-of-stream variables** and **local variables** can also be maps, although they can be multi-level hashmaps (e.g. ``@sum[$x][$y]``).  The fourth kind is **map literals**. These cannot be on the left-hand side of assignment expressions. Syntactically they look like JSON, although Miller allows string and integer keys in its map literals while JSON allows only string keys (e.g. ``"3"`` rather than ``3``).
+Miller's `put`/`filter` DSL has four kinds of hashmaps. **Stream records** are (single-level) maps from name to value. **Out-of-stream variables** and **local variables** can also be maps, although they can be multi-level hashmaps (e.g. `@sum[$x][$y]`).  The fourth kind is **map literals**. These cannot be on the left-hand side of assignment expressions. Syntactically they look like JSON, although Miller allows string and integer keys in its map literals while JSON allows only string keys (e.g. `"3"` rather than `3`).
 
-For example, the following swaps the input stream's ``a`` and ``i`` fields, modifies ``y``, and drops the rest:
+For example, the following swaps the input stream's `a` and `i` fields, modifies `y`, and drops the rest:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint put '</b>
 <b>  $* = {</b>
 <b>    "a": $i,</b>
@@ -489,6 +537,8 @@ For example, the following swaps the input stream's ``a`` and ``i`` fields, modi
 <b>    "y": $y * 10,</b>
 <b>  }</b>
 <b>' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a i   y
 1 pan 7.268028627434533
 2 eks 5.221511083334796
@@ -499,7 +549,7 @@ a i   y
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --from data/small put '</b>
 <b>  func f(map m): map {</b>
 <b>    m["x"] *= 200;</b>
@@ -507,6 +557,8 @@ Likewise, you can assign map literals to out-of-stream variables or local variab
 <b>  }</b>
 <b>  $* = f({"a": $a, "x": $x});</b>
 <b>'</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,x=69.35802886761648
 a=eks,x=151.73599295799272
 a=wye,x=40.92066115326061
@@ -516,7 +568,7 @@ a=wye,x=114.65778396040011
 
 Like out-of-stream and local variables, map literals can be multi-level:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --from data/small put -q '</b>
 <b>  begin {</b>
 <b>    @o = {</b>
@@ -536,6 +588,8 @@ Like out-of-stream and local variables, map literals can be multi-level:
 <b>    dump @o;</b>
 <b>  }</b>
 <b>'</b>
+</pre>
+<pre class="pre-non-highlight">
 {
   "nrec": 5,
   "nkey": {
@@ -545,25 +599,22 @@ Like out-of-stream and local variables, map literals can be multi-level:
 }
 </pre>
 
-By default, map-valued expressions are dumped using JSON formatting. If you use ``dump`` to print a hashmap with integer keys and you don't want them double-quoted (JSON-style) then you can use ``mlr put --jknquoteint``. See also ``mlr put --help``.
-
-.. _reference-dsl-type-checking:
+By default, map-valued expressions are dumped using JSON formatting. If you use `dump` to print a hashmap with integer keys and you don't want them double-quoted (JSON-style) then you can use `mlr put --jknquoteint`. See also `mlr put --help`.
 
 ## Type-checking
 
-Miller's ``put``/``filter`` DSLs support two optional kinds of type-checking.  One is inline **type-tests** and **type-assertions** within expressions.  The other is **type declarations** for assignments to local variables, binding of arguments to user-defined functions, and return values from user-defined functions, These are discussed in the following subsections.
+Miller's `put`/`filter` DSLs support two optional kinds of type-checking.  One is inline **type-tests** and **type-assertions** within expressions.  The other is **type declarations** for assignments to local variables, binding of arguments to user-defined functions, and return values from user-defined functions, These are discussed in the following subsections.
 
 Use of type-checking is entirely up to you: omit it if you want flexibility with heterogeneous data; use it if you want to help catch misspellings in your DSL code or unexpected irregularities in your input data.
 
-.. _reference-dsl-type-tests-and-assertions:
+### Type-test and type-assertion expressions
 
-Type-test and type-assertion expressions
-................................................................
+The following `is...` functions take a value and return a boolean indicating whether the argument is of the indicated type. The `assert_...` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
-The following ``is...`` functions take a value and return a boolean indicating whether the argument is of the indicated type. The ``assert_...`` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
-
-<pre>
+<pre class="pre-highlight">
 <b>mlr -f | grep ^is</b>
+</pre>
+<pre class="pre-non-highlight">
 is_absent
 is_array
 is_bool
@@ -585,8 +636,10 @@ is_present
 is_string
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr -f | grep ^assert</b>
+</pre>
+<pre class="pre-non-highlight">
 asserting_absent
 asserting_array
 asserting_bool
@@ -610,25 +663,24 @@ asserting_string
 
 See [Data-cleaning Examples](data-cleaning-examples.md) for examples of how to use these.
 
-Type-declarations for local variables, function parameter, and function return values
-...............................................................................................
+### Type-declarations for local variables, function parameter, and function return values
 
-Local variables can be defined either untyped as in ``x = 1``, or typed as in ``int x = 1``. Types include **var** (explicitly untyped), **int**, **float**, **num** (int or float), **str**, **bool**, and **map**. These optional type declarations are enforced at the time values are assigned to variables: whether at the initial value assignment as in ``int x = 1`` or in any subsequent assignments to the same variable farther down in the scope.
+Local variables can be defined either untyped as in `x = 1`, or typed as in `int x = 1`. Types include **var** (explicitly untyped), **int**, **float**, **num** (int or float), **str**, **bool**, and **map**. These optional type declarations are enforced at the time values are assigned to variables: whether at the initial value assignment as in `int x = 1` or in any subsequent assignments to the same variable farther down in the scope.
 
-The reason for ``num`` is that ``int`` and ``float`` typedecls are very precise:
+The reason for `num` is that `int` and `float` typedecls are very precise:
 
-<pre>
+<pre class="pre-non-highlight">
 float a = 0;   # Runtime error since 0 is int not float
 int   b = 1.0; # Runtime error since 1.0 is float not int
 num   c = 0;   # OK
 num   d = 1.0; # OK
 </pre>
 
-A suggestion is to use ``num`` for general use when you want numeric content, and use ``int`` when you genuinely want integer-only values, e.g. in loop indices or map keys (since Miller map keys can only be strings or ints).
+A suggestion is to use `num` for general use when you want numeric content, and use `int` when you genuinely want integer-only values, e.g. in loop indices or map keys (since Miller map keys can only be strings or ints).
 
-The ``var`` type declaration indicates no type restrictions, e.g. ``var x = 1`` has the same type restrictions on ``x`` as ``x = 1``. The difference is in intentional shadowing: if you have ``x = 1`` in outer scope and ``x = 2`` in inner scope (e.g. within a for-loop or an if-statement) then outer-scope ``x`` has value 2 after the second assignment.  But if you have ``var x = 2`` in the inner scope, then you are declaring a variable scoped to the inner block.) For example:
+The `var` type declaration indicates no type restrictions, e.g. `var x = 1` has the same type restrictions on `x` as `x = 1`. The difference is in intentional shadowing: if you have `x = 1` in outer scope and `x = 2` in inner scope (e.g. within a for-loop or an if-statement) then outer-scope `x` has value 2 after the second assignment.  But if you have `var x = 2` in the inner scope, then you are declaring a variable scoped to the inner block.) For example:
 
-<pre>
+<pre class="pre-non-highlight">
 x = 1;
 if (NR == 4) {
   x = 2; # Refers to outer-scope x: value changes from 1 to 2.
@@ -636,7 +688,7 @@ if (NR == 4) {
 print x; # Value of x is now two
 </pre>
 
-<pre>
+<pre class="pre-non-highlight">
 x = 1;
 if (NR == 4) {
   var x = 2; # Defines a new inner-scope x with value 2
@@ -646,7 +698,7 @@ print x;     # Value of this x is still 1
 
 Likewise function arguments can optionally be typed, with type enforced when the function is called:
 
-<pre>
+<pre class="pre-non-highlight">
 func f(map m, int i) {
   ...
 }
@@ -659,9 +711,9 @@ if (NR == 4) {
 print x;     # Value of this x is still 1
 </pre>
 
-Thirdly, function return values can be type-checked at the point of ``return`` using ``:`` and a typedecl after the parameter list:
+Thirdly, function return values can be type-checked at the point of `return` using `:` and a typedecl after the parameter list:
 
-<pre>
+<pre class="pre-non-highlight">
 func f(map m, int i): bool {
   ...
   ...
@@ -688,7 +740,7 @@ Please see [xxxx](reference-main-null-data.md).
 
 ## Aggregate variable assignments
 
-There are three remaining kinds of variable assignment using out-of-stream variables, the last two of which use the ``$*`` syntax:
+There are three remaining kinds of variable assignment using out-of-stream variables, the last two of which use the `$*` syntax:
 
 * Recursive copy of out-of-stream variables
 * Out-of-stream variable assigned to full stream record
@@ -696,8 +748,10 @@ There are three remaining kinds of variable assignment using out-of-stream varia
 
 Example recursive copy of out-of-stream variables:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 {
   "v": {
     "sum": 2.264761728567491,
@@ -718,8 +772,10 @@ Example recursive copy of out-of-stream variables:
 
 Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -727,10 +783,12 @@ a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-Example of full stream record assigned to an out-of-stream variable, finding the record for which the ``x`` field has the largest value in the input stream:
+Example of full stream record assigned to an out-of-stream variable, finding the record for which the `x` field has the largest value in the input stream:
 
-<pre>
+<pre class="pre-highlight">
 <b>cat data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -738,19 +796,23 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --opprint put -q '</b>
 <b>  is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*};</b>
 <b>  end {emit @recmax}</b>
 <b>' data/small</b>
+</pre>
+<pre class="pre-non-highlight">
 a   b   i x                  y
 eks pan 2 0.7586799647899636 0.5221511083334797
 </pre>
 
 ## Keywords for filter and put
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr help usage-keywords</b>
+</pre>
+<pre class="pre-non-highlight">
 all: used in "emit", "emitp", and "unset" as a synonym for @*
 
 begin: defines a block of statements to be executed before input records

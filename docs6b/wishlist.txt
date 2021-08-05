@@ -1,21 +1,11 @@
-must have:
-k color configs
-  - iteratble ...
+why:
 k ok on desktop & mobile
-  - awesome so far! :D 
-k highlight line 1 (even if hacky in genrst)
-  - wip
-
-nice to have:
-* dark mode
-  ? wtf
 
 to do:
-* figure out internal-link spelling
-* figure out external-link spelling
-* vis-link css
-
-check:
-* data-file links don't break
-* build.md -- nested bullets ...
-* builtin-functions autogen sh
+* re-do the readme.md
+  - include mkdocs serve, mkdocs build, etc
+* overwrite docs6b -> docs6
+* check data-file links don't break
+* to r.md:
+  - sudo pip3 install git+https://github.com/linkchecker/linkchecker.git
+  - cd site; linkchecker .

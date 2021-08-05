@@ -18,11 +18,11 @@ including but not limited to the familiar CSV, TSV, and JSON.  (Miller can handl
 
 * Miller complements **data-analysis tools** such as **R**, **pandas**, etc.: you can use Miller to **clean** and **prepare** your data. While you can do **basic statistics** entirely in Miller, its streaming-data feature and single-pass algorithms enable you to **reduce very large data sets**.
 
-* Miller complements SQL **databases**: you can slice, dice, and reformat data on the client side on its way into or out of a database.  (Examples :ref:`here <sql-input-examples>` and :ref:`here <sql-output-examples>`.) You can also reap some of the benefits of databases for quick, setup-free one-off tasks when you just need to query some data in disk files in a hurry.
+* Miller complements SQL **databases**: you can slice, dice, and reformat data on the client side on its way into or out of a database.  (See [SQL Examples](sql-examples.md).) You can also reap some of the benefits of databases for quick, setup-free one-off tasks when you just need to query some data in disk files in a hurry.
 
 * Miller also goes beyond the classic Unix tools by stepping fully into our modern, **no-SQL** world: its essential record-heterogeneity property allows Miller to operate on data where records with different schema (field names) are interleaved.
 
-* Miller is **streaming**: most operations need only a single record in memory at a time, rather than ingesting all input before producing any output.  For those operations which require deeper retention (``sort``, ``tac``, ``stats1``), Miller retains only as much data as needed.  This means that whenever functionally possible, you can operate on files which are larger than your system's available RAM, and you can use Miller in **tail -f** contexts.
+* Miller is **streaming**: most operations need only a single record in memory at a time, rather than ingesting all input before producing any output.  For those operations which require deeper retention (`sort`, `tac`, `stats1`), Miller retains only as much data as needed.  This means that whenever functionally possible, you can operate on files which are larger than your system's available RAM, and you can use Miller in **tail -f** contexts.
 
 * Miller is **pipe-friendly** and interoperates with the Unix toolkit
 
@@ -30,10 +30,10 @@ including but not limited to the familiar CSV, TSV, and JSON.  (Miller can handl
 
 * Miller does **conversion** between formats
 
-* Miller's **processing is format-aware**: e.g. CSV ``sort`` and ``tac`` keep header lines first
+* Miller's **processing is format-aware**: e.g. CSV `sort` and `tac` keep header lines first
 
 * Miller has high-throughput **performance** on par with the Unix toolkit
 
-* Not unlike [jq](https://stedolan.github.io/jq/) (for JSON), Miller is written in Go which is a portable, modern language, and Miller has no runtime dependencies.  You can download or compile a single binary, ``scp`` it to a faraway machine, and expect it to work.
+* Not unlike [jq](https://stedolan.github.io/jq/) (for JSON), Miller is written in Go which is a portable, modern language, and Miller has no runtime dependencies.  You can download or compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
-Releases and release notes: https://github.com/johnkerl/miller/releases.
+Releases and release notes: [https://github.com/johnkerl/miller/releases](https://github.com/johnkerl/miller/releases).

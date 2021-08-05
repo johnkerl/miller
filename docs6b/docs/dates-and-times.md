@@ -5,32 +5,38 @@
 
 Given input like
 
-<pre>
+<pre class="pre-highlight">
 <b>cat dates.csv</b>
+</pre>
+<pre class="pre-non-highlight">
 date,event
 2018-02-03,initialization
 2018-03-07,discovery
 2018-02-03,allocation
 </pre>
 
-we can use ``strptime`` to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the :ref:`reference-dsl-strptime` format-string.  For example:
+we can use [strptime](reference-verbs.md#strptime) to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the [strptime](reference-verbs.md#strptime) format-string.  For example:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --csv filter '</b>
 <b>  strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")</b>
 <b>' dates.csv</b>
+</pre>
+<pre class="pre-non-highlight">
 date,event
 2018-03-07,discovery
 </pre>
 
-Caveat: localtime-handling in timezones with DST is still a work in progress; see https://github.com/johnkerl/miller/issues/170. See also https://github.com/johnkerl/miller/issues/208 -- thanks @aborruso!
+Caveat: localtime-handling in timezones with DST is still a work in progress; see [https://github.com/johnkerl/miller/issues/170](https://github.com/johnkerl/miller/issues/170) . See also [https://github.com/johnkerl/miller/issues/208](https://github.com/johnkerl/miller/issues/208) -- thanks @aborruso!
 
 ## Finding missing dates
 
 Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
 
-<pre>
+<pre class="pre-highlight">
 <b>head -n 10 data/miss-date.csv</b>
+</pre>
+<pre class="pre-non-highlight">
 date,qoh
 2012-03-05,10055
 2012-03-06,10486
@@ -43,19 +49,23 @@ date,qoh
 2012-03-13,11177
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>wc -l data/miss-date.csv</b>
+</pre>
+<pre class="pre-non-highlight">
     1372 data/miss-date.csv
 </pre>
 
-Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using ``strptime``, then compute adjacent differences (the ``cat -n`` simply inserts record-counters):
+Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using `strptime`, then compute adjacent differences (the `cat -n` simply inserts record-counters):
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --from data/miss-date.csv --icsv \</b>
 <b>  cat -n \</b>
 <b>  then put '$datestamp = strptime($date, "%Y-%m-%d")' \</b>
 <b>  then step -a delta -f datestamp \</b>
 <b>| head</b>
+</pre>
+<pre class="pre-non-highlight">
 n=1,date=2012-03-05,qoh=10055,datestamp=1330905600,datestamp_delta=0
 n=2,date=2012-03-06,qoh=10486,datestamp=1330992000,datestamp_delta=86400
 n=3,date=2012-03-07,qoh=10430,datestamp=1331078400,datestamp_delta=86400
@@ -70,20 +80,24 @@ n=10,date=2012-03-14,qoh=11498,datestamp=1331683200,datestamp_delta=86400
 
 Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr --from data/miss-date.csv --icsv \</b>
 <b>  cat -n \</b>
 <b>  then put '$datestamp = strptime($date, "%Y-%m-%d")' \</b>
 <b>  then step -a delta -f datestamp \</b>
 <b>  then filter '$datestamp_delta != 86400 && $n != 1'</b>
+</pre>
+<pre class="pre-non-highlight">
 n=774,date=2014-04-19,qoh=130140,datestamp=1397865600,datestamp_delta=259200
 n=1119,date=2015-03-31,qoh=181625,datestamp=1427760000,datestamp_delta=172800
 </pre>
 
 Given this, it's now easy to see where the gaps are:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv</b>
+</pre>
+<pre class="pre-non-highlight">
 n=770,1=2014-04-12,2=129435
 n=771,1=2014-04-13,2=129868
 n=772,1=2014-04-14,2=129797
@@ -97,8 +111,10 @@ n=779,1=2014-04-23,2=130849
 n=780,1=2014-04-24,2=131026
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv</b>
+</pre>
+<pre class="pre-non-highlight">
 n=1115,1=2015-03-25,2=181006
 n=1116,1=2015-03-26,2=180995
 n=1117,1=2015-03-27,2=181043

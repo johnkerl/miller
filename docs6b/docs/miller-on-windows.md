@@ -7,17 +7,17 @@ Miller was originally developed for Unix-like operating systems including Linux 
 
 The experience is now almost the same as on Linux, NetBSD/FreeBSD, and MacOS.
 
-MSYS2 is no longer required, although you can use Miller from within MSYS2 if you like. There is now simply a single ``mlr.exe``, with no ``msys2.dll`` alongside anymore.
+MSYS2 is no longer required, although you can use Miller from within MSYS2 if you like. There is now simply a single `mlr.exe`, with no `msys2.dll` alongside anymore.
 
-See [Installation](installation.md) for how to get a copy of ``mlr.exe``.
+See [Installation](installation.md) for how to get a copy of `mlr.exe`.
 
 ## Setup
 
-Simply place ``mlr.exe`` somewhere within your ``PATH`` variable.
+Simply place `mlr.exe` somewhere within your `PATH` variable.
 
 ![pix/miller-windows.png](pix/miller-windows.png)
 
-To use Miller from within MSYS2/Cygwin, also make sure ``mlr.exe`` is within the ``PATH`` variable.
+To use Miller from within MSYS2/Cygwin, also make sure `mlr.exe` is within the `PATH` variable.
 
 ![pix/miller-msys.png](pix/miller-msys.png)
 
@@ -25,18 +25,18 @@ To use Miller from within MSYS2/Cygwin, also make sure ``mlr.exe`` is within the
 
 [Output Colorization](output-colorization.md) doesn't work on Windows, outside of MSYS2.
 
-The Windows-support code within Miller makes effort to support Linux/Unix/MacOS-like command-line syntax including single-quoting of expressions for ``mlr put`` and ``mlr filter`` -- and in the examples above, this often works. However, there are still some cases where more complex expressions aren't successfully parsed from the Windows prompt, even though they are from MSYS2:
+The Windows-support code within Miller makes effort to support Linux/Unix/MacOS-like command-line syntax including single-quoting of expressions for `mlr put` and `mlr filter` -- and in the examples above, this often works. However, there are still some cases where more complex expressions aren't successfully parsed from the Windows prompt, even though they are from MSYS2:
 
 ![pix/miller-windows-complex.png](pix/miller-windows-complex.png)
 
 ![pix/miller-msys-complex.png](pix/miller-msys-complex.png)
 
-Single quotes with ``&&`` or ``||`` inside are fundamentally unhandleable within Windows; there is nothing Miller can do here as the Windows command line is split before Miller ever receives it.
+Single quotes with `&&` or `||` inside are fundamentally unhandleable within Windows; there is nothing Miller can do here as the Windows command line is split before Miller ever receives it.
 
 One workaround is to use MSYS2. Another workaround is to put more complex DSL expressions into a file:
 
 ![pix/miller-windows-complex-workaround.png](pix/miller-windows-complex-workaround.png)
 
-A third workaround is to replace ``"`` with ``"""``, then ``'`` with ``"``:
+A third workaround is to replace `"` with `"""`, then `'` with `"`:
 
 ![pix/miller-windows-triple-double-quote.png](pix/miller-windows-triple-double-quote.png)

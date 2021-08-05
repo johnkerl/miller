@@ -5,10 +5,12 @@ Here are a few things focusing on Miller's DSL as a programming language per se,
 
 ## Sieve of Eratosthenes
 
-The [Sieve of Eratosthenes](http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) is a standard introductory programming topic. The idea is to find all primes up to some *N* by making a list of the numbers 1 to *N*, then striking out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all multiples of 4 except 4 itself, and so on. Whatever survives that without getting marked is a prime. This is easy enough in Miller. Notice that here all the work is in ``begin`` and ``end`` statements; there is no file input (so we use ``mlr -n`` to keep Miller from waiting for input data).
+The [Sieve of Eratosthenes](http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) is a standard introductory programming topic. The idea is to find all primes up to some *N* by making a list of the numbers 1 to *N*, then striking out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all multiples of 4 except 4 itself, and so on. Whatever survives that without getting marked is a prime. This is easy enough in Miller. Notice that here all the work is in `begin` and `end` statements; there is no file input (so we use `mlr -n` to keep Miller from waiting for input data).
 
-<pre>
+<pre class="pre-highlight">
 <b>cat programs/sieve.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 # ================================================================
 # Sieve of Eratosthenes: simple example of Miller DSL as programming language.
 # ================================================================
@@ -43,8 +45,10 @@ end {
 }
 </pre>
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr -n put -f programs/sieve.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 2
 3
 5
@@ -78,8 +82,10 @@ The [Mandelbrot set](http://en.wikipedia.org/wiki/Mandelbrot_set) is also easily
 
 The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the Wikipedia article); how to render them is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
 
-<pre>
+<pre class="pre-highlight">
 <b>cat programs/mand.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 # Mandelbrot set generator: simple example of Miller DSL as programming language.
 begin {
   # Set defaults
@@ -184,8 +190,10 @@ func get_point_plot(pr, pi, maxits, do_julia, jr, ji) {
 
 At standard resolution this makes a nice little ASCII plot:
 
-<pre>
+<pre class="pre-highlight">
 <b>mlr -n put -f ./programs/mand.mlr</b>
+</pre>
+<pre class="pre-non-highlight">
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -240,7 +248,7 @@ At standard resolution this makes a nice little ASCII plot:
 
 But using a very small font size (as small as my Mac will let me go), and by choosing the coordinates to zoom in on a particular part of the complex plane, we can get a nice little picture:
 
-<pre>
+<pre class="pre-non-highlight">
 #!/bin/bash
 # Get the number of rows and columns from the terminal window dimensions
 iheight=$(stty size | mlr --nidx --fs space cut -f 1)

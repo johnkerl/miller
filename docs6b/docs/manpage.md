@@ -3,7 +3,7 @@
 
 This is simply a copy of what you should see on running **man mlr** at a command prompt, once Miller is installed on your system.
 
-<pre>
+<pre class="pre-non-highlight">
 MILLER(1)							     MILLER(1)
 
 

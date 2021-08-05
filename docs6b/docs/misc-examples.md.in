@@ -99,7 +99,7 @@ GENMD_EOF
 
 ## Program timing
 
-This admittedly artificial example demonstrates using Miller time and stats functions to introspectively acquire some information about Miller's own runtime. The ``delta`` function computes the difference between successive timestamps.
+This admittedly artificial example demonstrates using Miller time and stats functions to introspectively acquire some information about Miller's own runtime. The `delta` function computes the difference between successive timestamps.
 
 GENMD_INCLUDE_ESCAPED(data/timing-example.txt)
 
@@ -135,11 +135,9 @@ GENMD_RUN_COMMAND
 cat data/currtemp.csv
 GENMD_EOF
 
-Then, join on the key field(s), and use unsparsify to zero-fill counters absent on one side but present on the other. Use ``--ul`` and ``--ur`` to emit unpaired records (namely, purple on the left and yellow on the right):
+Then, join on the key field(s), and use unsparsify to zero-fill counters absent on one side but present on the other. Use `--ul` and `--ur` to emit unpaired records (namely, purple on the left and yellow on the right):
 
 GENMD_INCLUDE_AND_RUN_ESCAPED(data/previous-to-current.sh)
-
-.. _cookbook-memoization-with-oosvars:
 
 ## Memoization with out-of-stream variables
 
@@ -181,7 +179,7 @@ i  o      fcount  seconds_delta
 28 514229 1028457 0.971235037
 GENMD_EOF
 
-Note that the time it takes to evaluate the function is blowing up exponentially as the input argument increases. Using ``@``-variables, which persist across records, we can cache and reuse the results of previous computations:
+Note that the time it takes to evaluate the function is blowing up exponentially as the input argument increases. Using `@`-variables, which persist across records, we can cache and reuse the results of previous computations:
 
 GENMD_INCLUDE_ESCAPED(data/fibo-cached.sh)
 
