@@ -11,10 +11,10 @@ But heterogeneous data abound (today's no-SQL databases for example). Miller han
 
 Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get CSV per se as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite is that the former is RFC4180-compliant, while the latter readily handles heterogeneous data (which is non-compliant). For example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -22,10 +22,10 @@ record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --ocsvlite cat data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource,loadsec,ok
 /path/to/file,0.45,true
 
@@ -42,10 +42,10 @@ resource,loadsec,ok
 /some/other/path,0.97,false
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource      loadsec ok
 /path/to/file 0.45    true
 
@@ -64,20 +64,20 @@ resource         loadsec ok
 
 Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/ragged.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
 4,5
 6,7,8,9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a 1
 b 2
 c 3
@@ -94,10 +94,10 @@ c 8
 
 You may also find Miller's `group-like` feature handy (see also [Verbs Reference](reference-verbs.md)):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --ocsvlite group-like data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource,loadsec,ok
 /path/to/file,0.45,true
 /path/to/second/file,0.32,true
@@ -108,10 +108,10 @@ record_count,resource
 150,/path/to/second/file
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint group-like data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource             loadsec ok
 /path/to/file        0.45    true
 /path/to/second/file 0.32    true
@@ -126,10 +126,10 @@ record_count resource
 
 For these formats, record-heterogeneity comes naturally:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -137,10 +137,10 @@ record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --onidx --ofs ' ' cat data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 /path/to/file 0.45 true
 100 /path/to/file
 /path/to/second/file 0.32 true
@@ -148,10 +148,10 @@ resource=/some/other/path,loadsec=0.97,ok=false
 /some/other/path 0.97 false
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --oxtab cat data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource /path/to/file
 loadsec  0.45
 ok       true
@@ -171,10 +171,10 @@ loadsec  0.97
 ok       false
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --oxtab group-like data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource /path/to/file
 loadsec  0.45
 ok       true
@@ -198,10 +198,10 @@ resource     /path/to/second/file
 
 Miller operates on specified fields and takes the rest along: for example, if you are sorting on the `count` field then all records in the input stream must have a `count` field but the other fields can vary, and moreover the sorted-on field name(s) don't need to be in the same position on each line:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/sort-het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count=500,color=green
 count=600
 status=ok,count=250,hours=0.22
@@ -211,10 +211,10 @@ count=100,color=green
 count=450
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sort -n count data/sort-het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count=100,color=green
 status=ok,count=200,hours=3.4
 status=ok,count=250,hours=0.22

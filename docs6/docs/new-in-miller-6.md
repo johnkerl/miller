@@ -73,19 +73,19 @@ strings throughout the processing chain.
 
 For example (see [https://github.com/johnkerl/miller/issues/178](https://github.com/johnkerl/miller/issues/178)) you can now do
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo '{ "a": "0123" }' | mlr --json cat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "a": "0123"
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo '{ "x": 1.230, "y": 1.230000000 }' | mlr --json cat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "x": 1.230,
   "y": 1.230000000
@@ -116,7 +116,7 @@ Miller 6 has getoptish command-line parsing (https://github.com/johnkerl/miller/
 
 For `mlr put` and `mlr filter`, parse-error messages now include location information:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 mlr: cannot parse DSL expression.
 Parse error on token ">" at line 63 columnn 7.
 </pre>

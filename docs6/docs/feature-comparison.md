@@ -7,37 +7,37 @@ How does Miller fit within the Unix toolkit (`grep`, `sed`, `awk`, etc.)?
 
 Miller respects CSV headers. If you do `mlr --csv cat *.csv` then the header line is written once:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/a.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
 4,5,6
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 7,8,9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv cat data/a.csv data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
 4,5,6
 7,8,9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv sort -nr b data/a.csv data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 7,8,9
 4,5,6

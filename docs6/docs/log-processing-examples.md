@@ -11,10 +11,10 @@ Writing a program -- in any language whatsoever -- you can have it print out log
 
 Suppose your program has printed something like this [log.txt](./log.txt):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat log.txt</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 op=enter,time=1472819681
 op=cache,type=A9,hit=0
 op=cache,type=A4,hit=1
@@ -62,24 +62,24 @@ time=1472819742,batch_size=100,num_filtered=728
 
 Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system `grep` command, or Miller's `having-fields`, or `is_present`, we can pick out the parts we want and analyze them:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>grep op=cache log.txt \</b>
 <b>  | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 type hit_mean
 A1   0.8571428571428571
 A4   0.7142857142857143
 A9   0.09090909090909091
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from log.txt --opprint \</b>
 <b>  filter 'is_present($batch_size)' \</b>
 <b>  then step -a delta -f time,num_filtered \</b>
 <b>  then sec2gmt time</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 time                 batch_size num_filtered time_delta num_filtered_delta
 2016-09-02T12:34:50Z 100        237          0          0
 2016-09-02T12:35:05Z 100        348          15         111
@@ -91,10 +91,10 @@ time                 batch_size num_filtered time_delta num_filtered_delta
 
 Alternatively, we can simply group the similar data for a better look:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint group-like log.txt</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 op    time
 enter 1472819681
 
@@ -145,10 +145,10 @@ time       batch_size num_filtered
 1472819742 100        728
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint group-like then sec2gmt time log.txt</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 op    time
 enter 2016-09-02T12:34:41Z
 
@@ -203,13 +203,13 @@ time                 batch_size num_filtered
 
 This, of course, depends highly on what's in your log files. But, as an example, suppose you have log-file lines such as
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378
 </pre>
 
 I prefer to pre-filter with `grep` and/or `sed` to extract the structured text, then hand that to Miller. Example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>grep 'various sorts' *.log \</b>
 <b>  | sed 's/.*} //' \</b>
 <b>  | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status</b>

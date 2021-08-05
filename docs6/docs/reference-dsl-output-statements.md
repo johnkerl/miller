@@ -63,10 +63,10 @@ Details:
 
 * The `print` and `dump` keywords produce output immediately to standard output, or to specified file(s) or pipe-to command if present.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr help keyword print</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 print: prints expression immediately to stdout.
 
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
@@ -74,10 +74,10 @@ print: prints expression immediately to stdout.
   Example: mlr --from f.dat put  '(NR %% 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr help keyword dump</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 dump: prints all currently defined out-of-stream variables immediately
 to stdout as JSON.
 
@@ -99,10 +99,10 @@ the main command line.
 
 * `mlr put` sends the current record (possibly modified by the `put` expression) to the output record stream. Records are then input to the following verb in a `then`-chain (if any), else printed to standard output (unless `put -q`). The **tee** keyword *additionally* writes the output record to specified file(s) or pipe-to command, or immediately to `stdout`/`stderr`.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr help keyword tee</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 tee: prints the current record to specified file.
 This is an immediate print to the specified file (except for pprint format
 which of course waits until the end of the input stream to format all output).
@@ -131,10 +131,10 @@ output $*.
 
 * `mlr put`'s `emitf`, `emitp`, and `emit` send out-of-stream variables to the output record stream. These are then input to the following verb in a `then`-chain (if any), else printed to standard output. When redirected with `>`, `>>`, or `|`, they *instead* write the out-of-stream variable(s) to specified file(s) or pipe-to command, or immediately to `stdout`/`stderr`.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr help keyword emitf</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
 output record stream.
 
@@ -163,10 +163,10 @@ etc., to control the format of the output if the output is redirected. See also 
 Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr help keyword emitp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 emitp: inserts an out-of-stream variable into the output record stream.
 Hashmap indices present in the data but not slotted by emitp arguments are
 output concatenated with ":".
@@ -197,10 +197,10 @@ etc., to control the format of the output if the output is redirected. See also 
 Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr help keyword emit</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 emit: inserts an out-of-stream variable into the output record stream. Hashmap
 indices present in the data but not slotted by emit arguments are not output.
 
@@ -238,7 +238,7 @@ There are three variants: `emitf`, `emit`, and `emitp`. Keep in mind that out-of
 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For `emitf` these mustn't have indexing using `@name[...]`. Example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '</b>
 <b>  @count += 1;</b>
 <b>  @x_sum += $x;</b>
@@ -246,16 +246,16 @@ Use **emitf** to output several out-of-stream variables side-by-side in the same
 <b>  end { emitf @count, @x_sum, @y_sum}</b>
 <b>' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count=5,x_sum=2.264761728567491,y_sum=2.585085709781158
 </pre>
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -263,28 +263,28 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum += $x; end { dump }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "sum": 2.264761728567491
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum += $x; end { emit @sum }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 sum=2.264761728567491
 </pre>
 
 If it's indexed then use as many names after `emit` as there are indices:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a] += $x; end { dump }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "sum": {
     "pan": 0.3467901443380824,
@@ -294,19 +294,19 @@ If it's indexed then use as many names after `emit` as there are indices:
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,sum=0.3467901443380824
 a=eks,sum=1.1400793586611044
 a=wye,sum=0.7778922255683036
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "sum": {
     "pan": {
@@ -324,10 +324,10 @@ a=wye,sum=0.7778922255683036
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,sum=0.3467901443380824
 a=eks,b=pan,sum=0.7586799647899636
 a=eks,b=wye,sum=0.38139939387114097
@@ -335,10 +335,10 @@ a=wye,b=wye,sum=0.20460330576630303
 a=wye,b=pan,sum=0.5732889198020006
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "sum": {
     "pan": {
@@ -366,13 +366,13 @@ a=wye,b=pan,sum=0.5732889198020006
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '</b>
 <b>  @sum[$a][$b][$i] += $x;</b>
 <b>  end { emit @sum, "a", "b", "i" }</b>
 <b>' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,sum=0.3467901443380824
 a=eks,b=pan,i=2,sum=0.7586799647899636
 a=eks,b=wye,i=4,sum=0.38139939387114097
@@ -382,10 +382,10 @@ a=wye,b=pan,i=5,sum=0.5732889198020006
 
 Now for **emitp**: if you have as many names following `emit` as there are levels in the out-of-stream variable's hashmap, then `emit` and `emitp` do the same thing. Where they differ is when you don't specify as many names as there are hashmap levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: `emitp` includes full prefixing (hence the `p` in `emitp`) while `emit` takes the deepest hashmap key as the output-record key:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "sum": {
     "pan": {
@@ -403,44 +403,44 @@ Now for **emitp**: if you have as many names following `emit` as there are level
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,pan=0.3467901443380824
 a=eks,pan=0.7586799647899636,wye=0.38139939387114097
 a=wye,wye=0.20460330576630303,pan=0.5732889198020006
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 pan=0.3467901443380824
 pan=0.7586799647899636,wye=0.38139939387114097
 wye=0.20460330576630303,pan=0.5732889198020006
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,sum.pan=0.3467901443380824
 a=eks,sum.pan=0.7586799647899636,sum.wye=0.38139939387114097
 a=wye,sum.wye=0.20460330576630303,sum.pan=0.5732889198020006
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.38139939387114097,sum.wye.wye=0.20460330576630303,sum.wye.pan=0.5732889198020006
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 sum.pan.pan 0.3467901443380824
 sum.eks.pan 0.7586799647899636
 sum.eks.wye 0.38139939387114097
@@ -451,29 +451,29 @@ sum.wye.pan 0.5732889198020006
 Use **--oflatsep** to specify the character which joins multilevel
 keys for `emitp` (it defaults to a colon):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,sum.pan=0.3467901443380824
 a=eks,sum.pan=0.7586799647899636,sum.wye=0.38139939387114097
 a=wye,sum.wye=0.20460330576630303,sum.pan=0.5732889198020006
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.38139939387114097,sum.wye.wye=0.20460330576630303,sum.wye.pan=0.5732889198020006
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --oxtab put -q --oflatsep / '</b>
 <b>  @sum[$a][$b] += $x;</b>
 <b>  end { emitp @sum }</b>
 <b>' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 sum.pan.pan 0.3467901443380824
 sum.eks.pan 0.7586799647899636
 sum.eks.wye 0.38139939387114097
@@ -486,7 +486,7 @@ sum.wye.pan 0.5732889198020006
 You can emit **multiple map-valued expressions side-by-side** by
 including their names in parentheses:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/medium --opprint put -q '</b>
 <b>  @x_count[$a][$b] += 1;</b>
 <b>  @x_sum[$a][$b] += $x;</b>
@@ -498,7 +498,7 @@ including their names in parentheses:
 <b>  }</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   x_sum              x_count x_mean
 pan pan 219.1851288316854  427     0.5133141190437597
 pan wye 198.43293070748447 395     0.5023618498923658
@@ -533,14 +533,14 @@ What this does is walk through the first out-of-stream variable (`@x_sum` in thi
 
 Use **emit all** (or `emit @*` which is synonymous) to output all out-of-stream variables. You can use the following idiom to get various accumulators output side-by-side (reminiscent of `mlr stats1`):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put -q '</b>
 <b>  @v[$a][$b]["sum"] += $x;</b>
 <b>  @v[$a][$b]["count"] += 1;</b>
 <b>  end{emit @*,"a","b"}</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   v.sum               v.count
 pan pan 0.3467901443380824  1
 eks pan 0.7586799647899636  1
@@ -549,14 +549,14 @@ wye wye 0.20460330576630303 1
 wye pan 0.5732889198020006  1
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put -q '</b>
 <b>  @sum[$a][$b] += $x;</b>
 <b>  @count[$a][$b] += 1;</b>
 <b>  end{emit @*,"a","b"}</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   sum
 pan pan 0.3467901443380824
 eks pan 0.7586799647899636
@@ -572,14 +572,14 @@ wye wye 1
 wye pan 1
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --from data/small --opprint put -q '</b>
 <b>  @sum[$a][$b] += $x;</b>
 <b>  @count[$a][$b] += 1;</b>
 <b>  end{emit (@sum, @count),"a","b"}</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   sum                 count
 pan pan 0.3467901443380824  1
 eks pan 0.7586799647899636  1

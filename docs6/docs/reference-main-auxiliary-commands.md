@@ -3,10 +3,10 @@
 
 There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables but they're delivered within the main Miller executable for convenience.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr aux-list</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Available subcommands:
   aux-list
   hex
@@ -19,10 +19,10 @@ Available subcommands:
 For more information, please invoke mlr {subcommand} --help.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr lecat --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr lecat [options] {zero or more file names}
 Simply echoes input, but flags CR characters in red and LF characters in green.
 If zero file names are supplied, standard input is read.
@@ -31,10 +31,10 @@ Options:
 -h or --help: print this message
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr termcvt --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr termcvt [option] {zero or more file names}
 Option (exactly one is required):
 --cr2crlf
@@ -49,10 +49,10 @@ Zero file names means read from standard input.
 Output is always to standard output; files are not written in-place.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr hex --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr hex [options] {zero or more file names}
 Simple hex-dump.
 If zero file names are supplied, standard input is read.
@@ -61,10 +61,10 @@ Options:
 -h or --help: print this message
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr unhex --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr unhex [option] {zero or more file names}
 Options:
 -h or --help: print this message
@@ -74,24 +74,24 @@ Output is always to standard output; files are not written in-place.
 
 Examples:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'Hello, world!' | mlr lecat --mono</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Hello, world![LF]
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Hello, world![CR][LF]
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr hex data/budget.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 00000000: 23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20 |# Asana -- here |
 00000010: 61 72 65 20  74 68 65 20  62 75 64 67  65 74 20 66 |are the budget f|
 00000020: 69 67 75 72  65 73 20 79  6f 75 20 61  73 6b 65 64 |igures you asked|
@@ -101,10 +101,10 @@ Hello, world![CR][LF]
 00000060: 72 61 6e 67  65 2c 31 32  33 2e 34 35  0a          |range,123.45.|
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr hex -r data/budget.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20 
 61 72 65 20  74 68 65 20  62 75 64 67  65 74 20 66 
 69 67 75 72  65 73 20 79  6f 75 20 61  73 6b 65 64 
@@ -114,10 +114,10 @@ Hello, world![CR][LF]
 72 61 6e 67  65 2c 31 32  33 2e 34 35  0a          
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 #*Asana*--*here*are*the*budget*figures*you*asked*for!
 type,quantity
 purple,456.78

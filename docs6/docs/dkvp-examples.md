@@ -5,7 +5,7 @@
 
 Here are the I/O routines:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 #!/usr/bin/env python
 
 # ================================================================
@@ -68,10 +68,10 @@ def map2dkvpline(map , ops, ofs):
 
 And here is an example using them:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat polyglot-dkvp-io/example.py</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 #!/usr/bin/env python
 
 import sys
@@ -110,10 +110,10 @@ while True:
 
 Run as-is:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>python polyglot-dkvp-io/example.py < data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,y=0.7268028627434533,ab=panpan,iy=1.7268028627434533,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
 a=eks,b=pan,i=2,y=0.5221511083334797,ab=ekspan,iy=2.5221511083334796,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
 a=wye,b=wye,i=3,y=0.33831852551664776,ab=wyewye,iy=3.3383185255166477,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
@@ -123,10 +123,10 @@ a=wye,b=pan,i=5,y=0.8636244699032729,ab=wyepan,iy=5.863624469903273,ta=str,tb=st
 
 Run as-is, then pipe to Miller for pretty-printing:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>python polyglot-dkvp-io/example.py < data/small | mlr --opprint cat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i y                   ab     iy                 ta  tb  ti  ty    tab tiy
 pan pan 1 0.7268028627434533  panpan 1.7268028627434533 str str int float str float
 eks pan 2 0.5221511083334797  ekspan 2.5221511083334796 str str int float str float
@@ -139,7 +139,7 @@ wye pan 5 0.8636244699032729  wyepan 5.863624469903273  str str int float str fl
 
 Here are the I/O routines:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 #!/usr/bin/env ruby
 
 # ================================================================
@@ -196,10 +196,10 @@ end
 
 And here is an example using them:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat polyglot-dkvp-io/example.rb</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 #!/usr/bin/env ruby
 
 require 'dkvp_io'
@@ -228,10 +228,10 @@ end
 
 Run as-is:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,y=0.7268028627434533,ab=panpan,iy=1.7268028627434533,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
 a=eks,b=pan,i=2,y=0.5221511083334797,ab=ekspan,iy=2.5221511083334796,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
 a=wye,b=wye,i=3,y=0.33831852551664776,ab=wyewye,iy=3.3383185255166477,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
@@ -241,10 +241,10 @@ a=wye,b=pan,i=5,y=0.8636244699032729,ab=wyepan,iy=5.863624469903273,ta=String,tb
 
 Run as-is, then pipe to Miller for pretty-printing:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small | mlr --opprint cat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i y                   ab     iy                 ta     tb     ti      ty    tab    tiy
 pan pan 1 0.7268028627434533  panpan 1.7268028627434533 String String Integer Float String Float
 eks pan 2 0.5221511083334797  ekspan 2.5221511083334796 String String Integer Float String Float

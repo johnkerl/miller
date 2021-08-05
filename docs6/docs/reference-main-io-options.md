@@ -5,7 +5,7 @@
 
 Options:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 --dkvp    --idkvp    --odkvp
 --nidx    --inidx    --onidx
 --csv     --icsv     --ocsv
@@ -17,10 +17,10 @@ Options:
 
 These are as discussed in [File Formats](file-formats.md), with the exception of `--right` which makes pretty-printed output right-aligned:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -29,10 +29,10 @@ eks wye 4 0.38139939387114097 0.13418874328430463
 wye pan 5 0.5732889198020006  0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --right cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
   a   b i                   x                   y 
 pan pan 1  0.3467901443380824  0.7268028627434533 
 eks pan 2  0.7586799647899636  0.5221511083334797 
@@ -63,14 +63,14 @@ Please see [Choices for printing to files](10min.md#choices-for-printing-to-file
 
 Options:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 --prepipe {command}
 </pre>
 
 
 The prepipe command is anything which reads from standard input and produces data acceptable to Miller. Nominally this allows you to use whichever decompression utilities you have installed on your system, on a per-file basis. If the command has flags, quote them: e.g. `mlr --prepipe 'zcat -cf'`. Examples:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 # These two produce the same output:
 $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime
 $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz
@@ -79,14 +79,14 @@ $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz
 $ mlr --prepipe gunzip --idkvp --oxtab cut -f hostname,uptime myfile1.dat.gz myfile2.dat.gz
 </pre>
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 # Similar to the above, but with compressed output as well as input:
 $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime | gzip > outfile.csv.gz
 $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz | gzip > outfile.csv.gz
 $ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz | gzip > outfile.csv.gz
 </pre>
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 # Similar to the above, but with different compression tools for input and output:
 $ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime | xz -z > outfile.csv.xz
 $ xz -cd < myfile1.csv.xz | mlr cut -f hostname,uptime | gzip > outfile.csv.xz
@@ -99,7 +99,7 @@ Miller has record separators `IRS` and `ORS`, field separators `IFS` and `OFS`, 
 
 Options:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 --rs --irs --ors
 --fs --ifs --ofs --repifs
 --ps --ips --ops
@@ -119,7 +119,7 @@ Options:
 
 The command-line option `--ofmt {format string}` is the global number format for commands which generate numeric output, e.g. `stats1`, `stats2`, `histogram`, and `step`, as well as `mlr put`. Examples:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 --ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf
 </pre>
 
@@ -127,25 +127,25 @@ These are just familiar `printf` formats applied to double-precision numbers.  P
 
 To apply formatting to a single field, overriding the global `ofmt`, use `fmtnum` function within `mlr put`. For example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=3.1,y=4.3,z=%!l(float64=00013.33)f
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=0xffff,y=0xff,z=%!l(int=16711425)lx
 </pre>
 
 Input conversion from hexadecimal is done automatically on fields handled by `mlr put` and `mlr filter` as long as the field value begins with "0x".  To apply output conversion to hexadecimal on a single column, you may use `fmtnum`, or the keystroke-saving `hexfmt` function. Example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=0xffff,y=0xff,z=0xfeff01
 </pre>

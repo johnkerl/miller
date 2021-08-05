@@ -6,7 +6,7 @@
 Whereas the Unix toolkit is made of the separate executables `cat`, `tail`, `cut`,
 `sort`, etc., Miller has subcommands, or **verbs**, invoked as follows:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 mlr tac *.dat
 mlr cut --complement -f os_version *.dat
 mlr sort -f hostname,uptime *.dat
@@ -28,27 +28,27 @@ These fall into categories as follows:
 
 Map list of values to alternating key/value pairs.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr altkv -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr altkv [options]
 Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
 Options:
 -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'a,b,c,d,e,f' | mlr altkv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=b,c=d,e=f
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'a,b,c,d,e,f,g' | mlr altkv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=b,c=d,e=f,4=g
 </pre>
 
@@ -56,10 +56,10 @@ a=b,c=d,e=f,4=g
 
 Cheesy bar-charting.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr bar -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr bar [options]
 Replaces a numeric field with a number of asterisks, allowing for cheesy
 bar plots. These align best with --opprint or --oxtab output format.
@@ -78,10 +78,10 @@ However you can make them all longer if you so desire.
 -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -90,10 +90,10 @@ eks wye 4 0.38139939387114097 0.13418874328430463
 wye pan 5 0.5732889198020006  0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint bar --lo 0 --hi 1 -f x,y data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                                        y
 pan pan 1 *************........................... *****************************...........
 eks pan 2 ******************************.......... ********************....................
@@ -102,10 +102,10 @@ eks wye 4 ***************......................... *****........................
 wye pan 5 **********************.................. **********************************......
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                                        y
 pan pan 1 #....................................... ***************************************#
 eks pan 2 ***************************************# ************************................
@@ -114,10 +114,10 @@ eks wye 4 #....................................... #............................
 wye pan 5 **********************************...... ***************************************#
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint bar --auto -f x,y data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                                                                                 y
 pan pan 1 [0.20460330576630303]**********..............................[0.7586799647899636] [0.13418874328430463]********************************........[0.8636244699032729]
 eks pan 2 [0.20460330576630303]***************************************#[0.7586799647899636] [0.13418874328430463]*********************...................[0.8636244699032729]
@@ -128,10 +128,10 @@ wye pan 5 [0.20460330576630303]**************************..............[0.758679
 
 ## bootstrap
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr bootstrap --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr bootstrap [options]
 Emits an n-sample, with replacement, of the input records.
 See also mlr sample and mlr shuffle.
@@ -147,10 +147,10 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     hard-coded, not live-code, since random sampling would generate different data on each doc run
     which would needlessly complicate git diff
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  u_mean   u_count
 yellow 0.497129 1413
 red    0.492560 4641
@@ -160,10 +160,10 @@ blue   0.517717 1470
 orange 0.490532 303
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  u_mean   u_count
 yellow 0.500651 1380
 purple 0.501556 1111
@@ -173,10 +173,10 @@ blue   0.512529 1496
 orange 0.521030 321
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  u_mean   u_count
 yellow 0.498046 1485
 blue   0.513576 1417
@@ -186,10 +186,10 @@ green  0.496803 1075
 purple 0.486337 1199
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  u_mean   u_count
 blue   0.522921 1447
 red    0.490717 4617
@@ -203,10 +203,10 @@ orange 0.468014 292
 
 Most useful for format conversions (see [File Formats](file-formats.md), and concatenating multiple same-schema CSV files to have the same header:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cat -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr cat [options]
 Passes input records directly to output. Most useful for format conversion.
 Options:
@@ -216,37 +216,37 @@ Options:
 -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/a.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
 4,5,6
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 7,8,9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv cat data/a.csv data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
 4,5,6
 7,8,9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --oxtab cat data/a.csv data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a 1
 b 2
 c 3
@@ -260,20 +260,20 @@ b 8
 c 9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv cat -n data/a.csv data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 n,a,b,c
 1,1,2,3
 2,4,5,6
 3,7,8,9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -282,10 +282,10 @@ eks wye 4 0.38139939387114097 0.13418874328430463
 wye pan 5 0.5732889198020006  0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat -n -g a data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 n a   b   i x                   y
 1 pan pan 1 0.3467901443380824  0.7268028627434533
 1 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -296,10 +296,10 @@ n a   b   i x                   y
 
 ## check
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr check --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr check [options]
 Consumes records without printing any output.
 Useful for doing a well-formatted check on input data.
@@ -309,10 +309,10 @@ Options:
 
 ## clean-whitespace
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr clean-whitespace --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr clean-whitespace [options]
 For each record, for each field in the record, whitespace-cleans the keys and/or
 values. Whitespace-cleaning entails stripping leading and trailing whitespace,
@@ -328,10 +328,10 @@ leave off -k as well as -v.
 -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson cat data/clean-whitespace.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "  Name  ": "  Ann  Simons",
   " Preference  ": "  blue  "
@@ -346,10 +346,10 @@ leave off -k as well as -v.
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "Name": "  Ann  Simons",
   "Preference": "  blue  "
@@ -364,10 +364,10 @@ leave off -k as well as -v.
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "  Name  ": "Ann Simons",
   " Preference  ": "blue"
@@ -382,10 +382,10 @@ leave off -k as well as -v.
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "Name": "Ann Simons",
   "Preference": "blue"
@@ -410,10 +410,10 @@ Function links:
 
 ## count
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr count [options]
 Prints number of records, optionally grouped by distinct values for specified field names.
 Options:
@@ -423,17 +423,17 @@ Options:
 -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count=10000
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count -g a data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,count=2081
 a=eks,count=1965
 a=wye,count=1966
@@ -441,17 +441,17 @@ a=zee,count=2047
 a=hat,count=1941
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count -n -g a data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count=5
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count -g b data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 b=pan,count=1942
 b=wye,count=2057
 b=zee,count=1943
@@ -459,17 +459,17 @@ b=eks,count=2008
 b=hat,count=2050
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count -n -g b data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count=5
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count -g a,b data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,count=427
 a=eks,b=pan,count=371
 a=wye,b=wye,count=377
@@ -499,10 +499,10 @@ a=wye,b=eks,count=386
 
 ## count-distinct
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count-distinct --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr count-distinct [options]
 Prints number of records having distinct values for specified field names.
 Same as uniq -c.
@@ -519,10 +519,10 @@ Options:
               values separately.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count-distinct -f a,b then sort -nr count data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=zee,b=wye,count=455
 a=pan,b=eks,count=429
 a=pan,b=pan,count=427
@@ -550,10 +550,10 @@ a=hat,b=pan,count=363
 a=eks,b=zee,count=357
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count-distinct -u -f a,b data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 field=a,value=pan,count=2081
 field=a,value=eks,count=1965
 field=a,value=wye,count=1966
@@ -566,10 +566,10 @@ field=b,value=eks,count=2008
 field=b,value=hat,count=2050
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=zee,b=wye,someothername=455
 a=pan,b=eks,someothername=429
 a=pan,b=pan,someothername=427
@@ -597,19 +597,19 @@ a=hat,b=pan,someothername=363
 a=eks,b=zee,someothername=357
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count-distinct -n -f a,b data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count=25
 </pre>
 
 ## count-similar
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr count-similar --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr count-similar [options]
 Ingests all records, then emits each record augmented by a count of
 the number of other records having the same group-by field values.
@@ -619,10 +619,10 @@ Options:
 -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint head -n 20 data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -646,10 +646,10 @@ zee pan 19 0.43144132839222604 0.8442204830496998
 eks wye 20 0.38245149780530685 0.4730652428100751
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint head -n 20 then count-similar -g a data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i  x                   y                    count
 pan pan 1  0.3467901443380824  0.7268028627434533   4
 pan wye 10 0.5026260055412137  0.9526183602969864   4
@@ -673,10 +673,10 @@ hat wye 9  0.03144187646093577 0.7495507603507059   2
 hat zee 18 0.05727869223575699 0.13343527626645157  2
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i  x                   y                    count
 eks pan 2  0.7586799647899636  0.5221511083334797   7
 eks wye 4  0.38139939387114097 0.13418874328430463  7
@@ -702,10 +702,10 @@ zee pan 19 0.43144132839222604 0.8442204830496998   5
 
 ## cut
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cut --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr cut [options]
 Passes through input records with specified fields included/excluded.
 Options:
@@ -726,10 +726,10 @@ Examples:
   mlr cut -r -f '^status$,"sda[0-9]"i' (this is case-insensitive)
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -738,10 +738,10 @@ eks wye 4 0.38139939387114097 0.13418874328430463
 wye pan 5 0.5732889198020006  0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint cut -f y,x,i data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 i x                   y
 1 0.3467901443380824  0.7268028627434533
 2 0.7586799647899636  0.5221511083334797
@@ -750,26 +750,26 @@ i x                   y
 5 0.5732889198020006  0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'a=1,b=2,c=3' | mlr cut -f b,c,a</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=1,b=2,c=3
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 b=2,c=3,a=1
 </pre>
 
 ## decimate
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr decimate --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr decimate [options]
 Passes through one of every n records, optionally by category.
 Options:
@@ -782,10 +782,10 @@ Options:
 
 ## fill-down
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr fill-down --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr fill-down [options]
 If a given record has a missing value for a given field, fill that from
 the corresponding value from a previous record, if any.
@@ -802,30 +802,30 @@ Options:
  -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/fill-down.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,,3
 4,5,6
 7,,9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv fill-down -f b data/fill-down.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,,3
 4,5,6
 7,5,9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv fill-down -a -f b data/fill-down.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,,3
 4,5,6
@@ -834,10 +834,10 @@ a,b,c
 
 ## filter
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr filter --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr put [options] {DSL expression}
 Options:
 -f {file name} File containing a DSL expression. If the filename is a directory,
@@ -898,10 +898,10 @@ Please see [DSL reference](reference-dsl.md) for more information about the expr
 
 ## format-values
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr format-values --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr format-values [options]
 Applies format strings to all field values, depending on autodetected type.
 * If a field value is detected to be integer, applies integer format.
@@ -933,10 +933,10 @@ Options:
                     apply the float format.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint format-values data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x        y
 pan pan 1 0.346790 0.726803
 eks pan 2 0.758680 0.522151
@@ -945,10 +945,10 @@ eks wye 4 0.381399 0.134189
 wye pan 5 0.573289 0.863624
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint format-values -n data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i        x        y
 pan pan 1.000000 0.346790 0.726803
 eks pan 2.000000 0.758680 0.522151
@@ -957,10 +957,10 @@ eks wye 4.000000 0.381399 0.134189
 wye pan 5.000000 0.573289 0.863624
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a     b     i                   x                      y
 XpanX XpanX %!l(int=00000001)lx %!l(float64=0.34679)e  %!l(float64=0.726803)e
 XeksX XpanX %!l(int=00000002)lx %!l(float64=0.75868)e  %!l(float64=0.522151)e
@@ -969,10 +969,10 @@ XeksX XwyeX %!l(int=00000004)lx %!l(float64=0.381399)e %!l(float64=0.134189)e
 XwyeX XpanX %!l(int=00000005)lx %!l(float64=0.573289)e %!l(float64=0.863624)e
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a     b     i               x                      y
 XpanX XpanX %!l(float64=1)e %!l(float64=0.34679)e  %!l(float64=0.726803)e
 XeksX XpanX %!l(float64=2)e %!l(float64=0.75868)e  %!l(float64=0.522151)e
@@ -983,10 +983,10 @@ XwyeX XpanX %!l(float64=5)e %!l(float64=0.573289)e %!l(float64=0.863624)e
 
 ## fraction
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr fraction --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr fraction [options]
 For each record's value in specified fields, computes the ratio of that
 value to the sum of values in that field over all input records.
@@ -1011,7 +1011,7 @@ Options:
 
 For example, suppose you have the following CSV file:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 u=female,v=red,n=2458
 u=female,v=green,n=192
 u=female,v=blue,n=337
@@ -1028,10 +1028,10 @@ u=male,v=orange,n=448
 
 Then we can see what each record's `n` contributes to the total `n`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint fraction -f n data/fraction-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 u      v      n    n_fraction
 female red    2458 0.32638427831629263
 female green  192  0.025494622228123754
@@ -1049,10 +1049,10 @@ male   orange 448  0.0594874518656221
 
 Using `-g` we can split those out by gender, or by color:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint fraction -f n -g u data/fraction-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 u      v      n    n_fraction
 female red    2458 0.7073381294964028
 female green  192  0.05525179856115108
@@ -1068,10 +1068,10 @@ male   yellow 1192 0.2938856015779093
 male   orange 448  0.11045364891518737
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint fraction -f n -g v data/fraction-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 u      v      n    n_fraction
 female red    2458 0.9450211457131872
 female green  192  0.45823389021479716
@@ -1091,10 +1091,10 @@ We can see, for example, that 70.9% of females have red (on the left) while 94.5
 
 To convert fractions to percents, you may use `-p`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint fraction -f n -p data/fraction-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 u      v      n    n_percent
 female red    2458 32.638427831629265
 female green  192  2.5494622228123753
@@ -1112,10 +1112,10 @@ male   orange 448  5.94874518656221
 
 Another often-used idiom is to convert from a point distribution to a cumulative distribution, also known as "running sums". Here, you can use `-c`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint fraction -f n -p -c data/fraction-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 u      v      n    n_cumulative_percent
 female red    2458 32.638427831629265
 female green  192  35.18789005444164
@@ -1131,10 +1131,10 @@ male   yellow 1192 94.0512548134378
 male   orange 448  100
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 u      v      n    n_cumulative_percent
 female red    2458 70.73381294964028
 female green  192  76.2589928057554
@@ -1152,10 +1152,10 @@ male   orange 448  100
 
 ## grep
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr grep -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr grep [options] {regular expression}
 Passes through records which match the regular expression.
 Options:
@@ -1177,10 +1177,10 @@ features of system grep, you can do
 
 ## group-by
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr group-by --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr group-by [options] {comma-separated field names}
 Outputs records in batches having identical values at specified field names.Options:
 -h|--help Show this message.
@@ -1188,10 +1188,10 @@ Outputs records in batches having identical values at specified field names.Opti
 
 This is similar to `sort` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint group-by a data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -1200,10 +1200,10 @@ wye wye 3 0.20460330576630303 0.33831852551664776
 wye pan 5 0.5732889198020006  0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint sort -f a data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 eks pan 2 0.7586799647899636  0.5221511083334797
 eks wye 4 0.38139939387114097 0.13418874328430463
@@ -1216,10 +1216,10 @@ In this example, since the sort is on field `a`, the first step is to group toge
 
 ## group-like
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr group-like --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr group-like [options]
 Outputs records in batches having identical field names.Options:
 -h|--help Show this message.
@@ -1227,10 +1227,10 @@ Outputs records in batches having identical field names.Options:
 
 This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in [Record Heterogeneity](record-heterogeneity.md) -- in particular, in preparation for CSV or pretty-print output.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cat data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -1238,10 +1238,10 @@ record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint group-like data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource             loadsec ok
 /path/to/file        0.45    true
 /path/to/second/file 0.32    true
@@ -1254,10 +1254,10 @@ record_count resource
 
 ## having-fields
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr having-fields --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr having-fields [options]
 Conditionally passes through records depending on each record's field names.
 Options:
@@ -1276,10 +1276,10 @@ Examples:
 
 Similar to [group-like](reference-verbs.md#group-like), this retains records with specified schema.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cat data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -1287,10 +1287,10 @@ record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr having-fields --at-least resource data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -1298,10 +1298,10 @@ record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr having-fields --which-are resource,ok,loadsec data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource=/path/to/file,loadsec=0.45,ok=true
 resource=/path/to/second/file,loadsec=0.32,ok=true
 resource=/some/other/path,loadsec=0.97,ok=false
@@ -1309,10 +1309,10 @@ resource=/some/other/path,loadsec=0.97,ok=false
 
 ## head
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr head --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr head [options]
 Passes through the first n records, optionally by category.
 Options:
@@ -1323,10 +1323,10 @@ Options:
 
 Note that `head` is distinct from [top](reference-verbs.md#top) -- `head` shows fields which appear fimd.in the data stream; `top` shows fields which are numerically largest (or smallest).
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint head -n 4 data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -1334,10 +1334,10 @@ wye wye 3 0.20460330576630303 0.33831852551664776
 eks wye 4 0.38139939387114097 0.13418874328430463
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint head -n 1 -g b data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 wye wye 3  0.20460330576630303 0.33831852551664776
@@ -1348,10 +1348,10 @@ wye hat 24 0.7286126830627567  0.19441962592638418
 
 ## histogram
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr histogram --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Just a histogram. Input values < lo or > hi are not counted.
 Usage: mlr histogram [options]
 -f {a,b,c}    Value-field names for histogram counts
@@ -1366,12 +1366,12 @@ Usage: mlr histogram [options]
 
 This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use `--lo 0.0 --hi 1.0 --nbins 10 -f x`.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has `0.0 &le; x < 0.1`, bin 1 has `0.1 &le; x < 0.2`, etc., but bin 9 has `0.9 &le; x &le; 1.0`.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \</b>
 <b>  then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 \</b>
 <b>  data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 bin_lo bin_hi x_count x2_count x3_count
 0      0.1    1072    3231     4661
 0.1    0.2    938     1254     1184
@@ -1385,12 +1385,12 @@ bin_lo bin_hi x_count x2_count x3_count
 0.9    1      1013    507      341
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \</b>
 <b>  then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ \</b>
 <b>  data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
 0         0.1       1072       3231        4661
 0.1       0.2       938        1254        1184
@@ -1406,10 +1406,10 @@ my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
 
 ## join
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr join --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr sort {flags}
 Sorts records primarily by the first specified field, secondarily by the second
 field, and so on.  (Any records not having all specified sort keys will appear
@@ -1435,10 +1435,10 @@ Examples:
 
 Join larger table with IDs with smaller ID-to-name lookup table, showing only paired records:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsvlite --opprint cat data/join-left-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 id  name
 100 alice
 200 bob
@@ -1447,10 +1447,10 @@ id  name
 500 edgar
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsvlite --opprint cat data/join-right-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 status  idcode
 present 400
 present 100
@@ -1474,12 +1474,12 @@ present 400
 present 300
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsvlite --opprint \</b>
 <b>  join -u -j id -r idcode -f data/join-left-example.csv \</b>
 <b>  data/join-right-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 id  name  status
 400 david present
 100 alice present
@@ -1504,12 +1504,12 @@ id  name  status
 
 Same, but with sorting the input first:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsvlite --opprint sort -f idcode \</b>
 <b>  then join -j id -r idcode -f data/join-left-example.csv \</b>
 <b>  data/join-right-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 id  name  status
 100 alice present
 100 alice present
@@ -1534,12 +1534,12 @@ id  name  status
 
 Same, but showing only unpaired records:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsvlite --opprint \</b>
 <b>  join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv \</b>
 <b>  data/join-right-example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 status  idcode
 missing 600
 
@@ -1549,10 +1549,10 @@ id  name
 
 Use prefixing options to disambiguate between otherwise identical non-join field names:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b c
 1 2 3
 1 4 5
@@ -1560,10 +1560,10 @@ a b c
 1 4 5
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a left_b left_c right_b right_c
 1 2      3      2       3
 1 4      5      2       3
@@ -1573,10 +1573,10 @@ a left_b left_c right_b right_c
 
 Use zero join columns:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 left_a left_b left_c right_a right_b right_c
 1      2      3      1       2       3
 1      4      5      1       2       3
@@ -1586,10 +1586,10 @@ left_a left_b left_c right_a right_b right_c
 
 ## label
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr label --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr label [options] {new1,new2,new3,...}
 Given n comma-separated names, renames the first n fields of each record to
 have the respective name. (Fields past the nth are left with their original
@@ -1604,7 +1604,7 @@ See also [rename](reference-verbs.md#rename).
 
 Example: Files such as `/etc/passwd`, `/etc/group`, and so on have implicit field names which are found in section-5 manpages. These field names may be made explicit as follows:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 % grep -v '^#' /etc/passwd | mlr --nidx --fs : --opprint label name,password,uid,gid,gecos,home_dir,shell | head
 name                  password uid gid gecos                         home_dir           shell
 nobody                *        -2  -2  Unprivileged User             /var/empty         /usr/bin/false
@@ -1620,20 +1620,20 @@ _postfix              *        27  27  Postfix Mail Server           /var/spool/
 
 Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using `--implicit-csv-header` and `label`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/headerless.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 John,23,present
 Fred,34,present
 Alice,56,missing
 Carol,45,present
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr  --csv --implicit-csv-header cat data/headerless.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 1,2,3
 John,23,present
 Fred,34,present
@@ -1641,10 +1641,10 @@ Alice,56,missing
 Carol,45,present
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr  --csv --implicit-csv-header label name,age,status data/headerless.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 name,age,status
 John,23,present
 Fred,34,present
@@ -1652,10 +1652,10 @@ Alice,56,missing
 Carol,45,present
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 name  age status
 John  23  present
 Fred  34  present
@@ -1665,10 +1665,10 @@ Carol 45  present
 
 ## least-frequent
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr least-frequent -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr least-frequent [options]
 Shows the least frequently occurring distinct values for specified field names.
 The first entry is the statistical anti-mode; the remaining are runners-up.
@@ -1680,20 +1680,20 @@ Options:
 See also "mlr most-frequent".
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    count
 circle   2591
 triangle 3372
 square   4115
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    color  count
 circle   orange 68
 triangle orange 107
@@ -1702,10 +1702,10 @@ circle   green  287
 circle   purple 289
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -o someothername</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    color  someothername
 circle   orange 68
 triangle orange 107
@@ -1714,10 +1714,10 @@ circle   green  287
 circle   purple 289
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    color
 circle   orange
 triangle orange
@@ -1730,10 +1730,10 @@ See also [most-frequent](reference-verbs.md#most-frequent).
 
 ## merge-fields
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr merge-fields --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr merge-fields [options]
 Computes univariate statistics for each input record, accumulated across
 specified fields.
@@ -1783,30 +1783,30 @@ This is like `mlr stats1` but all accumulation is done across fields within each
 
 Examples:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csvlite --opprint cat data/inout.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a_in a_out b_in b_out
 436  490   446  195
 526  320   963  780
 220  888   705  831
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a_min a_max a_sum b_min b_max b_sum
 436   490   926   195   446   641
 320   526   846   780   963   1743
 220   888   1108  705   831   1536
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a_in a_out b_in b_out a_sum b_sum
 436  490   446  195   926   641
 526  320   963  780   846   1743
@@ -1815,10 +1815,10 @@ a_in a_out b_in b_out a_sum b_sum
 
 ## most-frequent
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr most-frequent -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr most-frequent [options]
 Shows the most frequently occurring distinct values for specified field names.
 The first entry is the statistical mode; the remaining are runners-up.
@@ -1830,20 +1830,20 @@ Options:
 See also "mlr least-frequent".
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    count
 square   4115
 triangle 3372
 circle   2591
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    color  count
 square   red    1874
 triangle red    1560
@@ -1852,10 +1852,10 @@ square   yellow 589
 square   blue   589
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -o someothername</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    color  someothername
 square   red    1874
 triangle red    1560
@@ -1864,10 +1864,10 @@ square   yellow 589
 square   blue   589
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    color
 square   red
 triangle red
@@ -1880,10 +1880,10 @@ See also [least-frequent](reference-verbs.md#least-frequent).
 
 ## nest
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr nest -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr nest [options]
 Explodes specified field values into separate fields/records, or reverses this.
 Options:
@@ -1935,10 +1935,10 @@ See also mlr reshape.
 
 ## nothing
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr nothing -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr nothing [options]
 Drops all input records. Useful for testing, or after tee/print/etc. have
 produced other output.
@@ -1948,10 +1948,10 @@ Options:
 
 ## put
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr put [options] {DSL expression}
 Options:
 -f {file name} File containing a DSL expression. If the filename is a directory,
@@ -2012,10 +2012,10 @@ Please see the [DSL reference](reference-dsl.md) for more information about the 
 
 ## regularize
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr regularize --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr regularize [options]
 Outputs records sorted lexically ascending by keys.Options:
 -h|--help Show this message.
@@ -2027,30 +2027,30 @@ See also [reorder](reference-verbs.md#reorder).
 
 ## remove-empty-columns
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr remove-empty-columns --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr remove-empty-columns [options]
 Omits fields which are empty on every input row. Non-streaming.
 Options:
 -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/remove-empty-columns.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c,d,e
 1,,3,,5
 2,,4,,5
 3,,5,,7
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv remove-empty-columns data/remove-empty-columns.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,c,e
 1,3,5
 2,4,5
@@ -2061,10 +2061,10 @@ Since this verb needs to read all records to see if any of them has a non-empty 
 
 ## rename
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr rename --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr rename [options] {old1,new1,old2,new2,...}
 Renames specified fields.
 Options:
@@ -2088,10 +2088,10 @@ mlr rename -r 'Date_([0-9]+).*,\1' Rename all such fields to be of the form 2015
 mlr rename -r '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -2100,10 +2100,10 @@ eks wye 4 0.38139939387114097 0.13418874328430463
 wye pan 5 0.5732889198020006  0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint rename i,INDEX,b,COLUMN2 data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   COLUMN2 INDEX x                   y
 pan pan     1     0.3467901443380824  0.7268028627434533
 eks pan     2     0.7586799647899636  0.5221511083334797
@@ -2114,10 +2114,10 @@ wye pan     5     0.5732889198020006  0.8636244699032729
 
 As discussed in [Performance](performance.md), `sed` is significantly faster than Miller at doing this. However, Miller is format-aware, so it knows to do renames only within specified field keys and not any others, nor in field values which may happen to contain the same pattern. Example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>sed 's/y/COLUMN5/g' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,COLUMN5=0.5221511083334797
 a=wCOLUMN5e,b=wCOLUMN5e,i=3,x=0.20460330576630303,COLUMN5=0.33831852551664776
@@ -2125,10 +2125,10 @@ a=eks,b=wCOLUMN5e,i=4,x=0.38139939387114097,COLUMN5=0.13418874328430463
 a=wCOLUMN5e,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr rename y,COLUMN5 data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,COLUMN5=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,COLUMN5=0.33831852551664776
@@ -2140,10 +2140,10 @@ See also [label](reference-verbs.md#label).
 
 ## reorder
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr reorder --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr reorder [options]
 Moves specified names to start of record, or end of record.
 Options:
@@ -2166,10 +2166,10 @@ This pivots specified field names to the start or end of the record -- for
 example when you have highly multi-column data and you want to bring a field or
 two to the front of line where you can give a quick visual scan.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 pan pan 1 0.3467901443380824  0.7268028627434533
 eks pan 2 0.7586799647899636  0.5221511083334797
@@ -2178,10 +2178,10 @@ eks wye 4 0.38139939387114097 0.13418874328430463
 wye pan 5 0.5732889198020006  0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint reorder -f i,b data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 i b   a   x                   y
 1 pan pan 0.3467901443380824  0.7268028627434533
 2 pan eks 0.7586799647899636  0.5221511083334797
@@ -2190,10 +2190,10 @@ i b   a   x                   y
 5 pan wye 0.5732889198020006  0.8636244699032729
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint reorder -e -f i,b data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   x                   y                   i b
 pan 0.3467901443380824  0.7268028627434533  1 pan
 eks 0.7586799647899636  0.5221511083334797  2 pan
@@ -2204,10 +2204,10 @@ wye 0.5732889198020006  0.8636244699032729  5 pan
 
 ## repeat
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr repeat --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr repeat [options]
 Copies input records to output records multiple times.
 Options must be exactly one of the following:
@@ -2239,19 +2239,19 @@ This is useful in at least two ways: one, as a data-generator as in the
 above example using `urand()`; two, for reconstructing individual
 samples from data which has been count-aggregated:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/repeat-example.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color=blue,count=5
 color=red,count=4
 color=green,count=3
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr repeat -f count then cut -x -f count data/repeat-example.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color=blue
 color=blue
 color=blue
@@ -2272,10 +2272,10 @@ p10,p50,p90`, etc.
 
 ## reshape
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr reshape --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr reshape [options]
 Wide-to-long options:
   -i {input field names}   -o {key-field name,value-field name}
@@ -2335,10 +2335,10 @@ See also mlr nest.
 
 ## sample
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sample --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr sample [options]
 Reservoir sampling (subsampling without replacement), optionally by category.
 See also mlr bootstrap and mlr shuffle.
@@ -2354,7 +2354,7 @@ uniform probability and no repeats in the sample. (If *n* is less than
 {field names}`, produce a *k*-sample for each distinct value of the
 specified field names.
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 $ mlr --opprint sample -k 4 data/colored-shapes.dkvp 
 color  shape    flag i     u                   v                    w                   x
 purple triangle 0    90122 0.9986871176198068  0.3037738877233719   0.5154934457238382  5.365962021016529
@@ -2407,10 +2407,10 @@ sampling, which works in the streaming case, is `mlr filter 'urand() &
 
 ## sec2gmt
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sec2gmt -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr sec2gmt [options] {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
 corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
@@ -2428,10 +2428,10 @@ Options:
 
 ## sec2gmtdate
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sec2gmtdate -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
 corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
@@ -2443,10 +2443,10 @@ is the same as
 
 ## seqgen
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr seqgen -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr seqgen [options]
 Passes input records directly to output. Most useful for format conversion.
 Produces a sequence of counters.  Discards the input record stream. Produces
@@ -2463,10 +2463,10 @@ stop, and step are all integers. Step may be negative. It may not be zero
 unless start == stop.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr seqgen --stop 10</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 i=1
 i=2
 i=3
@@ -2479,10 +2479,10 @@ i=9
 i=10
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr seqgen --start 20 --stop 40 --step 4</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 i=20
 i=24
 i=28
@@ -2491,10 +2491,10 @@ i=36
 i=40
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr seqgen --start 40 --stop 20 --step -4</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 i=40
 i=36
 i=32
@@ -2505,10 +2505,10 @@ i=20
 
 ## shuffle
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr shuffle -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr shuffle [options]
 Outputs records randomly permuted. No output records are produced until
 all input records are read. See also mlr bootstrap and mlr sample.
@@ -2518,10 +2518,10 @@ Options:
 
 ## skip-trivial-records
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr skip-trivial-records -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr skip-trivial-records [options]
 Passes through all records except those with zero fields,
 or those for which all fields have empty value.
@@ -2529,10 +2529,10 @@ Options:
 -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/trivial-records.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
 4,,6
@@ -2540,10 +2540,10 @@ a,b,c
 ,8,9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --csv skip-trivial-records data/trivial-records.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a,b,c
 1,2,3
 4,,6
@@ -2552,10 +2552,10 @@ a,b,c
 
 ## sort
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sort --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr sort {flags}
 Sorts records primarily by the first specified field, secondarily by the second
 field, and so on.  (Any records not having all specified sort keys will appear
@@ -2579,10 +2579,10 @@ which is the same as:
 
 Example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint sort -f a -nr x data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y
 eks pan 2 0.7586799647899636  0.5221511083334797
 eks wye 4 0.38139939387114097 0.13418874328430463
@@ -2593,10 +2593,10 @@ wye wye 3 0.20460330576630303 0.33831852551664776
 
 Here's an example filtering log data: suppose multiple threads (labeled here by color) are all logging progress counts to a single log file. The log file is (by nature) chronological, so the progress of various threads is interleaved:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>head -n 10 data/multicountdown.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 upsec=0.002,color=green,count=1203
 upsec=0.083,color=red,count=3817
 upsec=0.188,color=red,count=3801
@@ -2613,10 +2613,10 @@ We can group these by thread by sorting on the thread ID (here,
 `color`). Since Miller's sort is stable, this means that
 timestamps within each thread's log data are still chronological:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>head -n 20 data/multicountdown.dat | mlr --opprint sort -f color</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 upsec              color  count
 0.395              blue   2697
 0.671              blue   2684
@@ -2643,20 +2643,20 @@ upsec              color  count
 Any records not having all specified sort keys will appear at the end of the output, in the order they
 were encountered, regardless of the specified sort order:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sort -n  x data/sort-missing.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=1
 x=2
 x=4
 a=3
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sort -nr x data/sort-missing.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=4
 x=2
 x=1
@@ -2665,10 +2665,10 @@ a=3
 
 ## sort-within-records
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sort-within-records -h</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr sort-within-records [options]
 Outputs records sorted lexically ascending by keys.
 Options:
@@ -2676,10 +2676,10 @@ Options:
 -h|--help Show this message.
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/sort-within-records.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "a": 1,
   "b": 2,
@@ -2697,10 +2697,10 @@ Options:
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --ijson --opprint cat data/sort-within-records.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b c
 1 2 3
 
@@ -2711,10 +2711,10 @@ c b a
 7 8 9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --json sort-within-records data/sort-within-records.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "a": 1,
   "b": 2,
@@ -2732,10 +2732,10 @@ c b a
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --ijson --opprint sort-within-records data/sort-within-records.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b c
 1 2 3
 5 4 6
@@ -2744,10 +2744,10 @@ a b c
 
 ## stats1
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr stats1 --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr stats1 [options]
 Computes univariate statistics for one or more given fields, accumulated across
 the input record stream.
@@ -2806,10 +2806,10 @@ These are simple univariate statistics on one or more number-valued fields
 (`count` and `mode` apply to non-numeric fields as well),
 optionally categorized by one or more other fields.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x_count 10000
 x_sum   4986.019681679581
 x_min   0.00004509679127584487
@@ -2828,10 +2828,10 @@ y_p90   0.9053657573378745
 y_max   0.9999648102177897
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 b   x_mean             y_mean
 eks 0.5063609846272304 0.510292657158104
 hat 0.4878988625336502 0.5131176341556505
@@ -2840,12 +2840,12 @@ wye 0.4975928392133964 0.5045964890907357
 zee 0.5042419022900586 0.5029967546798116
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint stats1 -a p50,p99 -f u,v -g color \</b>
 <b>  then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' \</b>
 <b>  data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  u_p50               u_p99              v_p50               v_p99              ur                 vr
 yellow 0.5010187906650703  0.9890464545334569 0.5206303554834582  0.9870337429747029 1.9740705797093183 1.8958436298977264
 red    0.48503770531462564 0.9900536015797581 0.49258608624814926 0.9944442307252868 2.0411889441410493 2.0188232239761583
@@ -2855,20 +2855,20 @@ blue   0.525225660059      0.9926547550299167 0.48516993577967726 0.993872833141
 orange 0.4835478569328253  0.9936350141409035 0.48091255603363914 0.9891023960550895 2.0548845370623567 2.0567198415711636
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    count
 square   4115
 triangle 3372
 circle   2591
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 shape    color_mode
 triangle red
 square   red
@@ -2877,10 +2877,10 @@ circle   red
 
 ## stats2
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr stats2 --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr stats2 [options]
 Computes bivariate statistics for one or more given field-name pairs,
 accumulated across the input record stream.
@@ -2912,12 +2912,12 @@ Example: mlr stats2 -a corr -f x,y
 These are simple bivariate statistics on one or more pairs of number-valued
 fields, optionally categorized by one or more fields.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \</b>
 <b>  then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 \</b>
 <b>  data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x_y_cov    0.000042574820827444476
 x_y_corr   0.0005042001844467462
 y_y_cov    0.08461122467974003
@@ -2928,12 +2928,12 @@ x2_y2_cov  -0.00030953725962542085
 x2_y2_corr -0.0034249088761121966
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \</b>
 <b>  then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a \</b>
 <b>  data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   x_y_ols_m             x_y_ols_b           x_y_ols_n x_y_r2                  y_y_ols_m y_y_ols_b y_y_ols_n y_y_r2 xy_y2_ols_m        xy_y2_ols_b         xy_y2_ols_n xy_y2_r2
 pan 0.01702551273681908   0.5004028922897639  2081      0.00028691820445814767  1         0         2081      1      0.8781320866715662 0.11908230147563566 2081        0.41749827377311266
 eks 0.0407804923685586    0.48140207967651016 1965      0.0016461239223448587   1         0         1965      1      0.8978728611690183 0.10734054433612333 1965        0.45563223864254526
@@ -2946,7 +2946,7 @@ Here's an example simple line-fit. The `x` and `y`
 fields of the `data/medium` dataset are just independent uniformly
 distributed on the unit interval. Here we remove half the data and fit a line to it.
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 
 # Prepare input data:
 mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)' data/medium > data/medium-squares
@@ -2979,10 +2979,10 @@ I use [pgr](https://github.com/johnkerl/pgr) for plotting; here's a screenshot.
 
 Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file, with number of work units left to do in the `count` field and accumulated seconds in the `upsec` field, labeled by the `color` field:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>head -n 10 data/multicountdown.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 upsec=0.002,color=green,count=1203
 upsec=0.083,color=red,count=3817
 upsec=0.188,color=red,count=3801
@@ -2997,12 +2997,12 @@ upsec=1.327,color=purple,count=917
 
 We can do a linear regression on count remaining as a function of time: with `c = m*u+b` we want to find the time when the count goes to zero, i.e. `u=-b/m`.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color \</b>
 <b>  then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' \</b>
 <b>  data/multicountdown.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color                   green
 upsec_count_pca_m       -32.75691673397728
 upsec_count_pca_b       1213.7227296044375
@@ -3034,10 +3034,10 @@ donesec                 25.10852919630297
 
 ## step
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr step --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr step [options]
 Computes values dependent on the previous record, optionally grouped by category.
 Options:
@@ -3079,10 +3079,10 @@ for more information on EWMA.
 
 Most Miller commands are record-at-a-time, with the exception of `stats1`, `stats2`, and `histogram` which compute aggregate output. The `step` command is intermediate: it allows the option of adding fields which are functions of fields from previous records. Rsum is short for *running sum*.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint step -a shift,delta,rsum,counter -f x data/medium | head -15</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i     x                      y                      x_shift                x_delta                 x_rsum             x_counter
 pan pan 1     0.3467901443380824     0.7268028627434533     -                      0                       0.3467901443380824 1
 eks pan 2     0.7586799647899636     0.5221511083334797     0.3467901443380824     0.41188982045188116     1.105470109128046  2
@@ -3100,10 +3100,10 @@ eks pan 13    0.4915175580479536     0.7709126592971468     0.3676141320555616  
 eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.02922067379257154     6.709212604625001  14
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i     x                      y                      x_shift                x_delta                 x_rsum              x_counter
 pan pan 1     0.3467901443380824     0.7268028627434533     -                      0                       0.3467901443380824  1
 eks pan 2     0.7586799647899636     0.5221511083334797     -                      0                       0.7586799647899636  1
@@ -3121,10 +3121,10 @@ eks pan 13    0.4915175580479536     0.7709126592971468     0.6117840605678454  
 eks zee 14    0.5207382318405251     0.34141681118811673    0.4915175580479536     0.02922067379257154     2.7641192091174287  5
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint step -a ewma -f x -d 0.1,0.9 data/medium | head -15</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i     x                      y                      x_ewma_0.1          x_ewma_0.9
 pan pan 1     0.3467901443380824     0.7268028627434533     0.3467901443380824  0.3467901443380824
 eks pan 2     0.7586799647899636     0.5221511083334797     0.3879791263832706  0.7174909827447755
@@ -3142,10 +3142,10 @@ eks pan 13    0.4915175580479536     0.7709126592971468     0.4465877702644416  
 eks zee 14    0.5207382318405251     0.34141681118811673    0.4540028164220499  0.51696937840094
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough data/medium | head -15</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i     x                      y                      x_ewma_smooth       x_ewma_rough
 pan pan 1     0.3467901443380824     0.7268028627434533     0.3467901443380824  0.3467901443380824
 eks pan 2     0.7586799647899636     0.5221511083334797     0.3879791263832706  0.7174909827447755
@@ -3166,7 +3166,7 @@ eks zee 14    0.5207382318405251     0.34141681118811673    0.4540028164220499  
 
 Example deriving uptime-delta from system uptime:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 $ each 10 uptime | mlr -p step -a delta -f 11 
 ...
 20:08 up 36 days, 10:38, 5 users, load averages: 1.42 1.62 1.73 0.000000
@@ -3182,10 +3182,10 @@ $ each 10 uptime | mlr -p step -a delta -f 11
 
 ## tac
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr tac --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr tac [options]
 Prints records in reverse order from the order in which they were encountered.
 Options:
@@ -3194,37 +3194,37 @@ Options:
 
 Prints the records in the input stream in reverse order. Note: this requires Miller to retain all input records in memory before any output records are produced.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint cat data/a.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b c
 1 2 3
 4 5 6
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint cat data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b c
 7 8 9
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint tac data/a.csv data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b c
 7 8 9
 4 5 6
 1 2 3
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b c filename
 7 8 9 data/b.csv
 4 5 6 data/a.csv
@@ -3233,10 +3233,10 @@ a b c filename
 
 ## tail
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr tail --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr tail [options]
 Passes through the last n records, optionally by category.
 Options:
@@ -3247,10 +3247,10 @@ Options:
 
 Prints the last *n* records in the input stream, optionally by category.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint tail -n 4 data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag i     u                    v                   w                   x
 blue   square   1    99974 0.6189062525431605   0.2637962404841453  0.5311465405784674  6.210738209085753
 blue   triangle 0    99976 0.008110504040268474 0.8267274952432482  0.4732962944898885  6.146956761817328
@@ -3258,10 +3258,10 @@ yellow triangle 0    99990 0.3839424618160777   0.55952913620132    0.5113763011
 yellow circle   1    99994 0.764950884927175    0.25284227383991364 0.49969878539567425 5.013809741826425
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag i     u                  v                   w                   x
 yellow triangle 0    99990 0.3839424618160777 0.55952913620132    0.5113763011485609  4.307973891915119
 blue   square   1    99974 0.6189062525431605 0.2637962404841453  0.5311465405784674  6.210738209085753
@@ -3270,10 +3270,10 @@ yellow circle   1    99994 0.764950884927175  0.25284227383991364 0.499698785395
 
 ## tee
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr tee --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr tee [options] {filename}
 Options:
 -a    Append to existing file, if any, rather than overwriting.
@@ -3288,10 +3288,10 @@ is written in JSON format.
 
 ## template
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr template --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr template [options]
 Places input-record fields in the order specified by list of column names.
 If the input record is missing a specified field, it will be filled with the fill-with.
@@ -3309,10 +3309,10 @@ Example:
 
 ## top
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr top --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr top [options]
 -f {a,b,c}    Value-field names for top counts.
 -g {d,e,f}    Optional group-by-field names for top counts.
@@ -3329,10 +3329,10 @@ optionally by category.
 
 Note that `top` is distinct from [head](reference-verbs.md#head) -- `head` shows fields which appear fimd.in the data stream; `top` shows fields which are numerically largest (or smallest).
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint top -n 4 -f x data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 top_idx x_top
 1       0.999952670371898
 2       0.9998228522652893
@@ -3340,10 +3340,10 @@ top_idx x_top
 4       0.9995625801977208
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint top -n 4 -f x -o someothername data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 someothername x_top
 1             0.999952670371898
 2             0.9998228522652893
@@ -3351,10 +3351,10 @@ someothername x_top
 4             0.9995625801977208
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint top -n 2 -f x -g a then sort -f a data/medium</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   top_idx x_top
 eks 1       0.9988110946859143
 eks 2       0.9985342548358704
@@ -3370,10 +3370,10 @@ zee 2       0.9994378171787394
 
 ## uniq
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr uniq --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr uniq [options]
 Prints distinct values for specified field names. With -c, same as
 count-distinct. For uniq, -f is a synonym for -g.
@@ -3391,17 +3391,17 @@ Options:
 
 There are two main ways to use `mlr uniq`: the first way is with `-g` to specify group-by columns.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>wc -l data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
    10078 data/colored-shapes.dkvp
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr uniq -g color,shape data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color=yellow,shape=triangle
 color=red,shape=square
 color=red,shape=circle
@@ -3422,10 +3422,10 @@ color=orange,shape=square
 color=orange,shape=circle
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    count
 blue   circle   384
 blue   square   589
@@ -3447,12 +3447,12 @@ yellow square   589
 yellow triangle 468
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint uniq -g color,shape -c -o someothername \</b>
 <b>  then sort -nr someothername \</b>
 <b>  data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    someothername
 red    square   1874
 red    triangle 1560
@@ -3474,20 +3474,20 @@ orange triangle 107
 orange circle   68
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count
 18
 </pre>
 
 The second main way to use `mlr uniq` is without group-by columns, using `-a` instead:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/repeats.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color=red,shape=square,flag=0
 color=purple,shape=triangle,flag=0
 color=yellow,shape=circle,flag=1
@@ -3547,17 +3547,17 @@ color=yellow,shape=circle,flag=1
 color=purple,shape=square,flag=0
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>wc -l data/repeats.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
       57 data/repeats.dkvp
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint uniq -a data/repeats.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag
 red    square   0
 purple triangle 0
@@ -3568,18 +3568,18 @@ red    square   1
 yellow triangle 1
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint uniq -a -n data/repeats.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count
 7
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint uniq -a -c data/repeats.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 count color  shape    flag
 17    red    square   0
 11    purple triangle 0
@@ -3592,10 +3592,10 @@ count color  shape    flag
 
 ## unsparsify
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr unsparsify --help</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 Usage: mlr unsparsify [options]
 Prints records with the union of field names over all input records.
 For field names absent in a given record but present in others, fills in
@@ -3613,20 +3613,20 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 
 Examples:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/sparse.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {"a":1,"b":2,"v":3}
 {"u":1,"b":2}
 {"a":1,"v":2,"x":3}
 {"v":1,"w":2}
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --json unsparsify data/sparse.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 {
   "a": 1,
   "b": 2,
@@ -3661,10 +3661,10 @@ Examples:
 }
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --ijson --opprint unsparsify data/sparse.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b v u x w
 1 2 3 - - -
 - 2 - 1 - -
@@ -3672,10 +3672,10 @@ a b v u x w
 - - 1 - - 2
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --ijson --opprint unsparsify --fill-with missing data/sparse.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a       b       v       u       x       w
 1       2       3       missing missing missing
 missing 2       missing 1       missing missing
@@ -3683,10 +3683,10 @@ missing 2       missing 1       missing missing
 missing missing 1       missing missing 2
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --ijson --opprint unsparsify -f a,b,u data/sparse.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b v u
 1 2 3 -
 
@@ -3700,10 +3700,10 @@ v w a b u
 1 2 - - -
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a b v u w x
 1 2 3 - - -
 - 2 - 1 - -

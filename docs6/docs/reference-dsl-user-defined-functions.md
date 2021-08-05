@@ -7,7 +7,7 @@ As of Miller 5.0.0 you can define your own functions, as well as subroutines.
 
 Here's the obligatory example of a recursive function to compute the factorial function:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/small put '</b>
 <b>    func f(n) {</b>
 <b>        if (is_numeric(n)) {</b>
@@ -23,7 +23,7 @@ Here's the obligatory example of a recursive function to compute the factorial f
 <b>    $oi = f($i);</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a   b   i x                   y                   ox                  oi
 pan pan 1 0.3467901443380824  0.7268028627434533  0.46705354854811026 1
 eks pan 2 0.7586799647899636  0.5221511083334797  3.680838410072862   2
@@ -56,7 +56,7 @@ Properties of user-defined functions:
 
 Example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --opprint --from data/small put -q '</b>
 <b>  begin {</b>
 <b>    @call_count = 0;</b>
@@ -75,7 +75,7 @@ Example:
 <b>  call s(NR);</b>
 <b>'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 NR=1
 numcalls=1
 NR=2

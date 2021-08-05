@@ -29,19 +29,19 @@ For `filter` and `put`, if the regular expression is a string literal (the norma
 
 Example:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat data/regex-in-data.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 name=jane,regex=^j.*e$
 name=bill,regex=^b[ou]ll$
 name=bull,regex=^b[ou]ll$
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr filter '$name =~ $regex' data/regex-in-data.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 name=jane,regex=^j.*e$
 name=bull,regex=^b[ou]ll$
 </pre>
@@ -52,25 +52,25 @@ Regex captures of the form `\0` through `\9` are supported as
 
 * Captures have in-function context for `sub` and `gsub`. For example, the first `\1,\2` pair belong to the first `sub` and the second `\1,\2` pair belong to the second `sub`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr put '$b = sub($a, "(..)_(...)", "\2-\1"); $c = sub($a, "(..)_(.)(..)", ":\1:\2:\3")'</b>
 </pre>
 
 * Captures endure for the entirety of a `put` for the `=~` and `!=~` operators. For example, here the `\1,\2` are set by the `=~` operator and are used by both subsequent assignment statements:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr put '$a =~ "(..)_(....); $b = "left_\1"; $c = "right_\2"'</b>
 </pre>
 
 * The captures are not retained across multiple puts. For example, here the `\1,\2` won't be expanded from the regex capture:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-non-pair">
 <b>mlr put '$a =~ "(..)_(....)' then {... something else ...} then put '$b = "left_\1"; $c = "right_\2"'</b>
 </pre>
 
 * Captures are ignored in `filter` for the `=~` and `!=~` operators. For example, there is no mechanism provided to refer to the first `(..)` as `\1` or to the second `(....)` as `\2` in the following filter statement:
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 mlr filter '$a =~ "(..)_(....)'
 </pre>
 

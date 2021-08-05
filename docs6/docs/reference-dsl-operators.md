@@ -5,7 +5,7 @@
 
 Operators are listed in order of decreasing precedence, highest first.
 
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-non-pair">
 Operators              Associativity
 ---------              -------------
 ()                     left to right

@@ -15,10 +15,10 @@ Rules for null-handling:
 
 * Records with one or more empty sort-field values sort after records with all sort-field values present:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cat data/sort-null.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=3,b=2
 a=1,b=8
 a=,b=4
@@ -26,10 +26,10 @@ x=9,b=10
 a=5,b=7
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sort -n  a data/sort-null.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=1,b=8
 a=3,b=2
 a=5,b=7
@@ -37,10 +37,10 @@ a=,b=4
 x=9,b=10
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr sort -nr a data/sort-null.dat</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=,b=4
 a=5,b=7
 a=3,b=2
@@ -50,49 +50,49 @@ x=9,b=10
 
 * Functions/operators which have one or more *empty* arguments produce empty output: e.g.
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'x=2,y=3' | mlr put '$a=$x+$y'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=2,y=3,a=5
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'x=,y=3' | mlr put '$a=$x+$y'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=,y=3,a=
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=,y=3,a=,b=1.0986122886681096
 </pre>
 
 with the exception that the `min` and `max` functions are special: if one argument is non-null, it wins:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=,y=3,a=3,b=
 </pre>
 
 * Functions of *absent* variables (e.g. `mlr put '$y = log10($nonesuch)'`) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=2,y=3,b=3,c=5
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 x=2,y=3,a=2,b=3
 </pre>
 
@@ -110,10 +110,10 @@ The reasoning is as follows:
 
 Since absent plus absent is absent (and likewise for other operators), accumulations such as `@sum += $x` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with `is_present`:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr cat data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true
@@ -121,10 +121,10 @@ record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450
 record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320
@@ -132,10 +132,10 @@ record_count=150,resource=/path/to/second/file
 resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970
 </pre>
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450
 record_count=100,resource=/path/to/file,loadmillis=0
 resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320
@@ -145,10 +145,10 @@ resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970
 
 If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr help type-arithmetic-info</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 (+)        | 1          2.5        (absent)   (error)   
 ------     + ------     ------     ------     ------    
 1          | 2          3.5        1          (error)   

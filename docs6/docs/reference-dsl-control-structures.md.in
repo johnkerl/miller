@@ -52,7 +52,19 @@ GENMD_EOF
 
 Compound statements use `elif` (rather than `elsif` or `else if`):
 
-GENMD_INCLUDE_ESCAPED(data/if-chain.sh)
+GENMD_SHOW_COMMAND
+mlr put '
+  if (NR == 2) {
+    ...
+  } elif (NR ==4) {
+    ...
+  } elif (NR ==6) {
+    ...
+  } else {
+    ...
+  }
+'
+GENMD_EOF
 
 ## While and do-while loops
 

@@ -32,19 +32,56 @@ p.caption {
 }
 
 /* Code samples using <pre> (which is currently in use) */
-.pre-highlight {
+/* For command-and-output situations (the most common) -- zero margin between.
+ * Example:
+ *   mlr cat foo.csv <---- command line
+ *   a,b,c           <---- output line
+ *   1,2,3           <---- output line
+ *   4,5,6           <---- output line
+ * Command lines have bold font weight and darker background.
+ */
+pre.pre-highlight-in-pair {
   color: #000000;
   background-color: #c5b690;
   font-size: 12px;
+  font-weight: bold;
   padding: 10px;
   margin-bottom: 0px;
 }
-.pre-non-highlight {
+pre.pre-non-highlight-in-pair {
   color: #000000;
   background-color: #eae2cb;
   font-size: 12px;
   padding: 10px;
   margin-top: 0px;
+}
+
+/* For command-only or output-only situations (less common) -- normal margins.
+ * Example:
+ *   mlr cat foo.csv <---- command line
+ */
+pre.pre-highlight-non-pair {
+  color: #000000;
+  background-color: #c5b690;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px;
+  margin-top: 2px;
+  margin-bottom: 15px;
+}
+
+/* Example:
+ *   a,b,c           <---- output line
+ *   1,2,3           <---- output line
+ *   4,5,6           <---- output line
+ */
+pre.pre-non-highlight-non-pair {
+  color: #000000;
+  background-color: #eae2cb;
+  font-size: 12px;
+  padding: 10px;
+  margin-top: 2px;
+  margin-bottom: 15px;
 }
 
 /* Section titles in content pages */

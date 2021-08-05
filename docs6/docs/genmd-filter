@@ -134,7 +134,11 @@ end
 def write_card(command_lines, output_lines, output_handle)
 
   if command_lines.length > 0
-    output_handle.puts('<pre class="pre-highlight">')
+    if output_lines.length > 0
+      output_handle.puts('<pre class="pre-highlight-in-pair">')
+    else
+      output_handle.puts('<pre class="pre-highlight-non-pair">')
+    end
     command_lines.each do |command_line|
       output_handle.puts("<b>"+command_line+"</b>")
     end
@@ -142,7 +146,11 @@ def write_card(command_lines, output_lines, output_handle)
   end
 
   if output_lines.length > 0
-    output_handle.puts('<pre class="pre-non-highlight">')
+    if command_lines.length > 0
+      output_handle.puts('<pre class="pre-non-highlight-in-pair">')
+    else
+      output_handle.puts('<pre class="pre-non-highlight-non-pair">')
+    end
     output_lines.each do |output_line|
       output_handle.puts(output_line)
     end

@@ -12,10 +12,10 @@ The outline of an invocation of Miller is
 
 For example, reading from a file:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint head -n 2 then sort -f shape example.csv</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag index quantity rate
 red    square   true 15    79.2778  0.0130
 yellow triangle true 11    43.6498  9.8870
@@ -23,10 +23,10 @@ yellow triangle true 11    43.6498  9.8870
 
 Reading from standard input:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>cat example.csv | mlr --icsv --opprint head -n 2 then sort -f shape</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 color  shape    flag index quantity rate
 red    square   true 15    79.2778  0.0130
 yellow triangle true 11    43.6498  9.8870
@@ -44,10 +44,10 @@ Here's a comparison of verbs and `put`/`filter` DSL expressions:
 
 Example of using a verb for data processing:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr stats1 -a sum -f x -g a data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,x_sum=0.3467901443380824
 a=eks,x_sum=1.1400793586611044
 a=wye,x_sum=0.7778922255683036
@@ -61,10 +61,10 @@ a=wye,x_sum=0.7778922255683036
 
 Example of doing the same thing using a DSL expression:
 
-<pre class="pre-highlight">
+<pre class="pre-highlight-in-pair">
 <b>mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small</b>
 </pre>
-<pre class="pre-non-highlight">
+<pre class="pre-non-highlight-in-pair">
 a=pan,x_sum=0.3467901443380824
 a=eks,x_sum=1.1400793586611044
 a=wye,x_sum=0.7778922255683036

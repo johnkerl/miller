@@ -274,14 +274,14 @@ Often we want to print output to the screen. Miller does this by default, as we'
 
 Sometimes, though, we want to print output to another file. Just use **> outputfilenamegoeshere** at the end of your command:
 
-<pre>
-<b>mlr --icsv --opprint cat example.csv > newfile.csv</b>
+GENMD_CARDIFY_HIGHLIGHT_ONE
+mlr --icsv --opprint cat example.csv > newfile.csv
 # Output goes to the new file;
 # nothing is printed to the screen.
-</pre>
+GENMD_EOF
 
-<pre>
-<b>cat newfile.csv</b>
+GENMD_CARDIFY_HIGHLIGHT_ONE
+cat newfile.csv
 color  shape    flag     index quantity rate
 yellow triangle true     11    43.6498  9.8870
 red    square   true     15    79.2778  0.0130
@@ -293,16 +293,16 @@ purple triangle false    65    80.1405  5.8240
 yellow circle   true     73    63.9785  4.2370
 yellow circle   true     87    63.5058  8.3350
 purple square   false    91    72.3735  8.2430
-</pre>
+GENMD_EOF
 
 Other times we just want our files to be **changed in-place**: just use **mlr -I**:
 
-<pre>
-<b>cp example.csv newfile.txt</b>
-</pre>
+GENMD_CARDIFY_HIGHLIGHT_ONE
+cp example.csv newfile.txt
+GENMD_EOF
 
-<pre>
-<b>cat newfile.txt</b>
+GENMD_CARDIFY_HIGHLIGHT_ONE
+cat newfile.txt
 color,shape,flag,index,quantity,rate
 yellow,triangle,true,11,43.6498,9.8870
 red,square,true,15,79.2778,0.0130
@@ -314,14 +314,14 @@ purple,triangle,false,65,80.1405,5.8240
 yellow,circle,true,73,63.9785,4.2370
 yellow,circle,true,87,63.5058,8.3350
 purple,square,false,91,72.3735,8.2430
-</pre>
+GENMD_EOF
 
-<pre>
-<b>mlr -I --csv sort -f shape newfile.txt</b>
-</pre>
+GENMD_CARDIFY_HIGHLIGHT_ONE
+mlr -I --csv sort -f shape newfile.txt
+GENMD_EOF
 
-<pre>
-<b>cat newfile.txt</b>
+GENMD_CARDIFY_HIGHLIGHT_ONE
+cat newfile.txt
 color,shape,flag,index,quantity,rate
 red,circle,true,16,13.8103,2.9010
 yellow,circle,true,73,63.9785,4.2370
@@ -333,13 +333,13 @@ purple,square,false,91,72.3735,8.2430
 yellow,triangle,true,11,43.6498,9.8870
 purple,triangle,false,51,81.2290,8.5910
 purple,triangle,false,65,80.1405,5.8240
-</pre>
+GENMD_EOF
 
 Also using `mlr -I` you can bulk-operate on lots of files: e.g.:
 
-<pre>
-<b>mlr -I --csv cut -x -f unwanted_column_name *.csv</b>
-</pre>
+GENMD_CARDIFY_HIGHLIGHT_ONE
+mlr -I --csv cut -x -f unwanted_column_name *.csv
+GENMD_EOF
 
 If you like, you can first copy off your original data somewhere else, before doing in-place operations.
 
