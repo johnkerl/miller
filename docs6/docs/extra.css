@@ -10,6 +10,9 @@
 .wy-side-nav-search {
   background-color: #c0c0c0;
 }
+p.caption {
+  background-color: #909090;
+}
 
 /* Code samples without <pre> (none currently in use) */
 .rst-content code {
