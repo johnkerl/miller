@@ -29,7 +29,7 @@ The `print` statement is perhaps self-explanatory, but with a few light caveats:
 
 * You can redirect print output to a file: `mlr --from myfile.dat put 'print > "tap.txt", $x'` `mlr --from myfile.dat put 'o=$*; print > $a.".txt", $x'`.
 
-* See also :ref:`reference-dsl-redirected-output-statements` for examples.
+* See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
 ## Dump statements
 
@@ -45,7 +45,7 @@ The `dump` statement is for printing expressions, including maps, directly to st
 
 * As with `print`, you can redirect output to files.
 
-* See also :ref:`reference-dsl-redirected-output-statements` for examples.
+* See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
 ## Tee statements
 
@@ -53,7 +53,7 @@ Records produced by a `mlr put` go downstream to the next verb in your `then`-ch
 
 The syntax is, by example, `mlr --from myfile.dat put 'tee > "tap.dat", $*' then sort -n index`.  First is `tee >`, then the filename expression (which can be an expression such as `"tap.".$a.".dat"`), then a comma, then `$*`. (Nothing else but `$*` is teeable.)
 
-See also :ref:`reference-dsl-redirected-output-statements` for examples.
+See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
 ## Redirected-output statements
 

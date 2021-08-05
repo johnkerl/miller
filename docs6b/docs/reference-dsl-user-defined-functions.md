@@ -42,15 +42,15 @@ Properties of user-defined functions:
 
 * Functions may be defined and called either within `mlr put` or `mlr put`.
 
-* Functions have read access to `$`-variables and `@`-variables but may not modify them. See also :ref:`cookbook-memoization-with-oosvars` for an example.
+* Functions have read access to `$`-variables and `@`-variables but may not modify them. See also [Memoization with out-of-stream variables](misc-examples.md#memoization-with-out-of-stream-variables) for an example.
 
 * Argument values may be reassigned: they are not read-only.
 
 * When a return value is not implicitly returned, this results in a return value of absent-null. (In the example above, if there were records for which the argument to `f` is non-numeric, the assignments would be skipped.) See also the section on [xxxx](reference-main-null-data.md).
 
-* See the section on :ref:`reference-dsl-local-variables` for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
+* See the section on [Local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
 
-* See the section on :ref:`reference-dsl-expressions-from-files` for information on the use of `-f` and `-e` flags.
+* See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.
 
 ## User-defined subroutines
 
@@ -102,6 +102,6 @@ Properties of user-defined subroutines:
 
 * Argument values may be reassigned: they are not read-only.
 
-* See the section on :ref:`reference-dsl-local-variables` for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
+* See the section on [local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
 
-* See the section on :ref:`reference-dsl-expressions-from-files` for information on the use of `-f` and `-e` flags.
+* See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.

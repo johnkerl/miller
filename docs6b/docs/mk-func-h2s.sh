@@ -51,9 +51,14 @@ mlr help list-functions | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
   #echo ''
   #echo ".. _reference-dsl-${linkname}:"
   echo ''
-  echo "## $displayname"
+  if [ "$linkname" = "$displayname" ]; then
+    echo "## $displayname"
+  else
+    echo "<a id=$linkname />"
+    echo "## $displayname"
+  fi
   echo ''
-  echo '<pre>'
+  echo '<pre class="pre-non-highlight">'
   mlr help function "$funcname"
   echo '</pre>'
   echo ''
@@ -104,9 +109,14 @@ mlr help list-functions | grep '^[a-zA-Z]' | sort -u | while read funcname; do
   #echo ''
   #echo ".. _reference-dsl-${linkname}:"
   echo ''
-  echo "## $displayname"
+  if [ "$linkname" = "$displayname" ]; then
+    echo "## $displayname"
+  else
+    echo "<a id=$linkname />"
+    echo "## $displayname"
+  fi
   echo ''
-  echo '<pre>'
+  echo '<pre class="pre-non-highlight">'
   mlr help function "$funcname"
   echo '</pre>'
   echo ''

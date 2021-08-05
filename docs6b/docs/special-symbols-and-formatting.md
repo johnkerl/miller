@@ -14,7 +14,7 @@ Name,Role
 "Khavari, Darius",tester
 </pre>
 
-Likewise :ref:`file-formats-json`:
+Likewise [JSON](file-formats.md#json):
 
 <pre class="pre-highlight">
 <b>mlr --icsv --ojson cat commas.csv</b>
@@ -30,7 +30,7 @@ Likewise :ref:`file-formats-json`:
 }
 </pre>
 
-For Miller's :ref:`vertical-tabular format <file-formats-xtab>` there is no escaping for carriage returns, but commas work fine:
+For Miller's [XTAB](file-formats.md#xtab-vertical-tabular) there is no escaping for carriage returns, but commas work fine:
 
 <pre class="pre-highlight">
 <b>mlr --icsv --oxtab cat commas.csv</b>
@@ -43,7 +43,7 @@ Name Khavari, Darius
 Role tester
 </pre>
 
-But for :ref:`Key-value_pairs <file-formats-dkvp>` and :ref:`index-numbered <file-formats-nidx>`, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
+But for [key-value-pairs](file-formats.md#dkvp-key-value-pairs) and [index-numbered](file-formats.md#nidx-index-numbered-toolkit-style) formats, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
 
 <pre class="pre-highlight">
 <b>mlr --icsv --odkvp cat commas.csv</b>

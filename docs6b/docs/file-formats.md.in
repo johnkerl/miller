@@ -14,7 +14,7 @@ GENMD_EOF
 
 When `mlr` is invoked with the `--csv` or `--csvlite` option, key names are found on the first record and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
 
-Miller has record separator `RS` and field separator `FS`, just as `awk` does.  For TSV, use `--fs tab`; to convert TSV to CSV, use `--ifs tab --ofs comma`, etc.  (See also :ref:`reference-separators`.)
+Miller has record separator `RS` and field separator `FS`, just as `awk` does.  For TSV, use `--fs tab`; to convert TSV to CSV, use `--ifs tab --ofs comma`, etc.  (See also [Record/field/pair separators](reference-main-io-options.md#recordfieldpair-separators).)
 
 **TSV (tab-separated values):** the following are synonymous pairs:
 
@@ -124,7 +124,7 @@ GENMD_RUN_COMMAND
 mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt
 GENMD_EOF
 
-## Tabular JSON
+## JSON
 
 JSON is a format which supports arbitrarily deep nesting of "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for handling **tabular data** only. This means Miller cannot (and should not) handle arbitrary JSON. (Check out [jq](https://stedolan.github.io/jq/).)
 
@@ -279,7 +279,7 @@ If you use `--ors {something else}` with (default or explicitly specified) `--ir
 
 If you use `--irs {something else}` with (default or explicitly specified) `--ors auto` then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 
-See also :ref:`reference-separators` for more information about record/field/pair separators.
+See also [Record/field/pair separators](reference-main-io-options.md#recordfieldpair-separators) for more information about record/field/pair separators.
 
 ## Comments in data
 

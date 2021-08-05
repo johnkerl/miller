@@ -98,9 +98,11 @@ Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single
 
 ## New DSL functions / operators
 
-* String-hashing functions [md5](reference-dsl-builtin-functions.md#md5), [sha1](reference-dsl-builtin-functions.md#sha1), :ref:`reference-dsl-sha256`, and :ref:`reference-dsl-sha512`.
-* Platform-property functions [hostname](reference-dsl-builtin-functions.md#hostname), :ref:`reference-dsl-os`, and :ref:`reference-dsl-version`.
-* Unsigned right-shift :ref:`reference-dsl-ursh` along with `>>>=`.
+* String-hashing functions [md5](reference-dsl-builtin-functions.md#md5), [sha1](reference-dsl-builtin-functions.md#sha1), [sha256](reference-dsl-builtin-functions.md#sha256), and [sha512](reference-dsl-builtin-functions.md#sha512).
+
+* Platform-property functions [hostname](reference-dsl-builtin-functions.md#hostname), [os](reference-dsl-builtin-functions.md#os), and [version](reference-dsl-builtin-functions.md#version).
+
+* Unsigned right-shift [`>>>`](reference-dsl-builtin-functions.md#ursh) along with `>>>=`.
 
 ## Improved command-line parsing
 

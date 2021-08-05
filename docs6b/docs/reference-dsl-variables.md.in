@@ -176,7 +176,7 @@ Things which are completely unsurprising, resembling many other languages:
 
 * You can define locals (using `var`, `num`, etc.) at any scope (if-statements, else-statements, while-loops, for-loops, or the top-level scope), and nested scopes will have access (more details on scope in the next section).  If you define a local variable with the same name inside an inner scope, then a new variable is created with the narrower scope.
 
-* If you assign to a local variable for the first time in a scope without declaring it as `var`, `num`, etc. then: if it exists in an outer scope, that outer-scope variable will be updated; if not, it will be defined in the current scope as if `var` had been used. (See also :ref:`reference-dsl-type-checking` for an example.) I recommend always declaring variables explicitly to make the intended scoping clear.
+* If you assign to a local variable for the first time in a scope without declaring it as `var`, `num`, etc. then: if it exists in an outer scope, that outer-scope variable will be updated; if not, it will be defined in the current scope as if `var` had been used. (See also [Type-checking](reference-dsl-variables.md#type-checking) for an example.) I recommend always declaring variables explicitly to make the intended scoping clear.
 
 * Functions and subroutines never have access to locals from their callee (unless passed by value as arguments).
 
@@ -184,7 +184,7 @@ Things which are perhaps surprising compared to other languages:
 
 * Type declarations using `var`, or typed using `num`, `int`, `float`, `str`, and `bool` are necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using `var`. (Some examples are shown below.)
 
-* Type-checking is done at assignment time. For example, `float f = 0` is an error (since `0` is an integer), as is `float f = 0.0; f = 1`. For this reason I prefer to use `num` over `float` in most contexts since `num` encompasses integer and floating-point values. More information about type-checking is at :ref:`reference-dsl-type-checking`.
+* Type-checking is done at assignment time. For example, `float f = 0` is an error (since `0` is an integer), as is `float f = 0.0; f = 1`. For this reason I prefer to use `num` over `float` in most contexts since `num` encompasses integer and floating-point values. More information is at [Type-checking](reference-dsl-variables.md#type-checking).
 
 * Bound variables in for-loops over stream records and out-of-stream variables are implicitly local to that block. E.g. in `for (k, v in $*) { ... }` `for ((k1, k2), v in @*) { ... }` if there are `k`, `v`, etc. in the enclosing scope then those will be masked by the loop-local bound variables in the loop, and moreover the values of the loop-local bound variables are not available after the end of the loop.
 
@@ -234,8 +234,7 @@ Miller's `put`/`filter` DSLs support two optional kinds of type-checking.  One i
 
 Use of type-checking is entirely up to you: omit it if you want flexibility with heterogeneous data; use it if you want to help catch misspellings in your DSL code or unexpected irregularities in your input data.
 
-Type-test and type-assertion expressions
-................................................................
+### Type-test and type-assertion expressions
 
 The following `is...` functions take a value and return a boolean indicating whether the argument is of the indicated type. The `assert_...` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
@@ -249,8 +248,7 @@ GENMD_EOF
 
 See [Data-cleaning Examples](data-cleaning-examples.md) for examples of how to use these.
 
-Type-declarations for local variables, function parameter, and function return values
-...............................................................................................
+### Type-declarations for local variables, function parameter, and function return values
 
 Local variables can be defined either untyped as in `x = 1`, or typed as in `int x = 1`. Types include **var** (explicitly untyped), **int**, **float**, **num** (int or float), **str**, **bool**, and **map**. These optional type declarations are enforced at the time values are assigned to variables: whether at the initial value assignment as in `int x = 1` or in any subsequent assignments to the same variable farther down in the scope.
 

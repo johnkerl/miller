@@ -6,8 +6,6 @@ to do:
   - include mkdocs serve, mkdocs build, etc
 * overwrite docs6b -> docs6
 * check data-file links don't break
-!!! all :ref: ...
-!!! remove '.. foo' markers, & fix internal links
-* link-check x all ... & to r.md ...
+* to r.md:
   - sudo pip3 install git+https://github.com/linkchecker/linkchecker.git
   - cd site; linkchecker .
