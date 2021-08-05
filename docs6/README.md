@@ -20,8 +20,10 @@
 * Alternate editing loop:
   * Leave one terminal open as a place you will run `mkdocs build`
   * In one terminal, cd to the `docs` subdirectory and edit `*.md.in`.
-  * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited.
-  * In the first terminal, run `mkdocs build` which will populate the `site` directory.
+  * Generate `docs/*.md` from `docs/*.md.in`, and then from that generate the `site/*/*.html`:
+    * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited.
+    * In the first terminal, run `mkdocs build` which will populate the `site` directory.
+    * See also [./regen.sh](./regen.sh) which combines the `genmds` and `mkdocs build` steps.
   * In your browser, visit `file:///your/path/to/miller/docs/site/index.html`
   * Link-checking:
     * `sudo pip3 install git+https://github.com/linkchecker/linkchecker.git`
