@@ -1,3 +1,0 @@
-outer=1
-outer=2
-outer=3

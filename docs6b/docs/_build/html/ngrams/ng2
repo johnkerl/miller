@@ -1,2 +1,0 @@
-ourdir=$(dirname $0)
-mlr --nidx --from $ourdir/gsl-2000.txt put -q -f $ourdir/ngfuncs.mlr -f $ourdir/ng2.mlr

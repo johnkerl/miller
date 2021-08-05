@@ -140,8 +140,7 @@ While Miller's `while` and `do-while` statements are much as in many other langu
 
 As with `while` and `do-while`, a `break` or `continue` within nested control structures will propagate to the innermost loop enclosing them, if any, and a `break` or `continue` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
 
-Key-only for-loops
-................................................................
+### Key-only for-loops
 
 The `key` variable is always bound to the *key* of key-value pairs:
 
@@ -210,8 +209,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in `$[key]` for stream records, or by indexing the looped-over variable using square brackets.
 
-Key-value for-loops
-................................................................
+### Key-value for-loops
 
 Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to to a scalar value (a string or a number) if the map stops at that level, or to a map-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
@@ -420,8 +418,7 @@ key1=6,key2=7,valuetype=map
 key1=7,key2=8,valuetype=int
 </pre>
 
-C-style triple-for loops
-................................................................
+### C-style triple-for loops
 
 These are supported as follows:
 
