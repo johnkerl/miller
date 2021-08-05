@@ -1,6 +1,0 @@
-$nf       = NF;
-$nr       = NR;
-$fnr      = FNR;
-$filename = FILENAME;
-$filenum  = FILENUM;
-$newnf    = NF;
