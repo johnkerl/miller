@@ -51,6 +51,17 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	return regex
 }
 
+func RegexSub(input string, sregex string, replacement string) string {
+	regex := CompileMillerRegexOrDie(sregex)
+
+	// xxx instantiate a RegexCaptures object
+	// xxx extend lib.RegexReplaceOnce to lib.RegexReplaceOnceWithCaptures
+
+	output := RegexReplaceOnce(regex, input, replacement)
+
+	return output
+}
+
 func RegexReplaceOnce(
 	regex *regexp.Regexp,
 	input string,
@@ -65,6 +76,18 @@ func RegexReplaceOnce(
 		return regex.ReplaceAllString(s, replacement)
 	})
 	return output
+}
+
+func RegexGsub(input string, sregex string, replacement string) string {
+	regex := CompileMillerRegexOrDie(sregex)
+	output := regex.ReplaceAllString(input, replacement)
+	return output
+}
+
+func RegexMatches(input string, sregex string) bool {
+	regex := CompileMillerRegexOrDie(sregex)
+	stringMatch := regex.MatchString(input)
+	return stringMatch
 }
 
 // xxx

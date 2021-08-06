@@ -49,15 +49,9 @@ func MlrvalSub(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input3.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
-	// TODO: better exception-handling
-	re := lib.CompileMillerRegexOrDie(input2.printrep)
 
-	// xxx instantiate a RegexCaptures object
-	// xxx extend lib.RegexReplaceOnce to lib.RegexReplaceOnceWithCaptures
-
-	replacement := lib.RegexReplaceOnce(re, input1.printrep, input3.printrep)
-
-	return MlrvalPointerFromString(replacement)
+	stringOutput := lib.RegexSub(input1.printrep, input2.printrep, input3.printrep)
+	return MlrvalPointerFromString(stringOutput)
 }
 
 // ================================================================
@@ -82,11 +76,9 @@ func MlrvalGsub(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input3.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
-	// TODO: better exception-handling
-	re := lib.CompileMillerRegexOrDie(input2.printrep)
-	return MlrvalPointerFromString(
-		re.ReplaceAllString(input1.printrep, input3.printrep),
-	)
+
+	stringOutput := lib.RegexGsub(input1.printrep, input2.printrep, input3.printrep)
+	return MlrvalPointerFromString(stringOutput)
 }
 
 // ================================================================
@@ -105,11 +97,9 @@ func MlrvalStringMatchesRegexp(input1, input2 *Mlrval) *Mlrval {
 	if !input2.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
-	// TODO: better exception-handling
-	re := lib.CompileMillerRegexOrDie(input2.printrep)
 
-	stringMatch := re.MatchString(input1.String())
-	return MlrvalPointerFromBool(stringMatch)
+	boolOutput := lib.RegexMatches(input1.printrep, input2.printrep)
+	return MlrvalPointerFromBool(boolOutput)
 }
 
 func MlrvalStringDoesNotMatchRegexp(input1, input2 *Mlrval) *Mlrval {
