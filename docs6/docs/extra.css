@@ -1,34 +1,39 @@
-/* Top left, desktop */
-.wy-menu {
-  background-color: #c0c0c0;
+/* General pattern/branding for Miller docs:
+ * o The first color is white; the second color is black; the third color is maroon. Code snippets have
+ *   output in manila, with dark-manila command-lines.
+ * o As much as I love serif fonts like Palatino for their beauty (especially their artful italics),
+ *   I use sans-serif for pragmatic visual throughput. (If this were a sales sheet rather than a tech
+ *   guide, I'd use serifs.)
+ * o Corners on code blocks, images, etc. are all rounded.
+ * o Hovering over hyperlinks makes their background light grey for pre-click visual feedback.
+ */
+
+/* Top-of-page banner */
+.md-header {
+    background-color: #800000;
 }
-/* Top left, mobile */
-.wy-nav-top {
-  background-color: #c0c0c0;
-}
-/* Left navbar */
-.wy-side-nav-search {
-  background-color: #c0c0c0;
-}
-p.caption {
-  background-color: #909090;
+.md-nav--primary .md-nav__title[for="__drawer"] {
+    color: #ffffff;
+    background-color: #800000;
+    padding: 3px;
+    border-radius: 6px;
 }
 
-/* Code samples without <pre> (none currently in use) */
-.rst-content code {
-  color: #000000;
+.md-footer {
+    background-color: #e0e0e0;
+}
+
+/* Section headings in the navbar: bold them and stand them out a little */
+.md-nav__item--nested > .md-nav__link {
+    color: inherit;
+    font-weight: bold;
+    margin: 3px;
+    padding: 3px;
+    /*border: 1px solid white;*/
+}
+.md-nav__link:hover {
+  /*border: 1px solid gray;*/
   background-color: #e0e0e0;
-}
-.rst-content pre code {
-  color: #000000;
-  background-color: #eae2cb;
-}
-.highlight {
-  color: #0FF1CE;
-}
-.caption-text {
-  color: maroon;
-  padding: 4px;
 }
 
 /* Code samples using <pre> (which is currently in use) */
@@ -39,6 +44,10 @@ p.caption {
  *   1,2,3           <---- output line
  *   4,5,6           <---- output line
  * Command lines have bold font weight and darker background.
+ *
+ * Note the .pre-highlight-in-pair etc classes are written by the
+ * docs/genmd-filter script when it produces the docs/*.md files from their
+ * respective docs/*.md.in files.
  */
 pre {
   color: #000000;
@@ -50,6 +59,10 @@ pre {
   white-space: -pre-wrap;      /* Opera 4-6 */
   white-space: -o-pre-wrap;    /* Opera 7 */
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+.md-typeset code, .md-typeset kbd, .md-typeset pre {
+  color: #000000;
+  direction: ltr;
 }
 
 pre.pre-highlight-in-pair {
@@ -101,66 +114,74 @@ pre.pre-non-highlight-non-pair {
   border-bottom-left-radius: 6px;
 }
 
-code {
-  border-radius: 3px;
-}
-
 /* Section titles in content pages */
 h1 {
-  color: maroon;
-  background-color: #e0e0e0;
-  border-radius: 6px;
-  padding: 6px;
+  font-weight: bold;
 }
-h2 {
-  color: maroon;
-  background-color: #e0e0e0;
-  border-radius: 6px;
-  padding: 6px;
+.md-typeset h1 {
+  font-weight: bold;
 }
-h3 {
-  color: maroon;
-  background-color: #e0e0e0;
+h1, h2, h3 {
+  color: #800000;
+  font-weight: bold;
   border-radius: 6px;
   padding: 6px;
+  background-color: #e0e0e0;
+}
+.md-typeset h1, .md-typeset h2, .md-typeset h3 {
+  color: #800000;
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 6px;
+  background-color: #e0e0e0;
 }
 
 /* Hyperlinks in content pages */
-a {
-  color: maroon;
+a, a:before, a:focus, a:hover, a:visited {
+  color: #800000;
 }
-a:visited {
-  color: maroon;
+
+.md-typeset a {
+  color: #800000;
 }
-a:hover {
+.md-typeset a:visited {
+  color: #800000;
+}
+.md-typeset a:hover {
   background-color: #e0e0e0;
-  color: maroon;
+  color: #800000;
 }
 
 /* Hyperlinks in navbar */
-.wy-menu-vertical li ul li a {
-    margin-bottom:0;
-    color:#000000;
-    font-weight:normal
+.md-nav__item,
+.md-nav__item:focus,
+.md-nav__item:hover,
+.md-nav__link--active,
+.md-nav__link--active,
+.md-nav__link:focus,
+.md-nav__link:hover
+{
+  color: #800000;
 }
-.wy-menu-vertical a {
-    display:inline-block;
-    line-height:18px;
-    padding:.4045em 1.618em;
-    display:block;
-    position:relative;
-    font-size:90%;
-    color:#000000
+.md-nav__item .md-nav__link--active {
+  color: #800000;
 }
-.wy-menu-vertical a:hover {
-    background-color:#4e4a4a;
-    cursor:pointer;
-    color:#e0e0e0;
+.md-nav--primary .md-nav__item--active > .md-nav__link {
+  color: #800000;
 }
-.wy-menu-vertical a:hover span.toctree-expand {
-    color:#808080
+.md-nav__link[data-md-state="blur"] {
+  color: #800000;
+}
+nav a:hover {
+  border-radius: 3px;
+  background-color: #e0e0e0;
 }
 
+/* Rounded corners for inline code snippets */
+code {
+  border-radius: 3px;
+}
+/* Rounded corners for screenshots/images */
 img {
   border-radius: 6px;
 }
