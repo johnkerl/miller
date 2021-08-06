@@ -14,6 +14,7 @@ TOP OF LIST:
 ! docs css fixups -- different pres for different pairings -- font-weight in there -- etc
 ! discussion re docs6 ...
 ! favicon
+! rtd.io w/ branch -- ?
 
 ----------------------------------------------------------------
 DOC6
