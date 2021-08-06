@@ -28,7 +28,7 @@
 // * The <<...>> code called by the gocc framework must accept interface{} at
 //   all parameters, to be generic, but in practice all arguments end up being
 //   either token.Token (regcognizable here via string-literals or snake-cased
-//   namees) or *miller.dsl.AstNode (recognizable here via camel-cased names).
+//   namees) or *dsl.AstNode (recognizable here via camel-cased names).
 //
 // * Another pattern worth pointing out is that in the gocc framework,
 //   return-types from AST methods must be a pair of (interface{}, error),
@@ -319,7 +319,7 @@ panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 // ================================================================
 
 // Import the AST/ASTNode types and functions
-<< import "miller/src/dsl" >>
+<< import "mlr/src/dsl" >>
 
 // ================================================================
 // TOP-LEVEL PRODUCTION RULE FOR THE MILLER DSL

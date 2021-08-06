@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/cliutil"
-	"miller/src/input"
-	"miller/src/output"
-	"miller/src/transformers"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/input"
+	"mlr/src/output"
+	"mlr/src/transformers"
+	"mlr/src/types"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as

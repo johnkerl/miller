@@ -8,9 +8,9 @@ package cst
 import (
 	"errors"
 
-	"miller/src/dsl"
-	"miller/src/lib"
-	"miller/src/runtime"
+	"mlr/src/dsl"
+	"mlr/src/lib"
+	"mlr/src/runtime"
 )
 
 // ----------------------------------------------------------------

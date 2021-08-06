@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/dsl"
-	"miller/src/parsing/lexer"
-	"miller/src/parsing/parser"
+	"mlr/src/dsl"
+	"mlr/src/parsing/lexer"
+	"mlr/src/parsing/parser"
 )
 
 // ----------------------------------------------------------------

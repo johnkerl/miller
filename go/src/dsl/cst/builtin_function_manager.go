@@ -12,8 +12,8 @@ import (
 	"sort"
 	"strings"
 
-	"miller/src/lib"
-	"miller/src/types"
+	"mlr/src/lib"
+	"mlr/src/types"
 )
 
 type TFunctionClass string

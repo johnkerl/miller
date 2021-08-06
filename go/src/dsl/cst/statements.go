@@ -8,7 +8,7 @@ package cst
 import (
 	"errors"
 
-	"miller/src/dsl"
+	"mlr/src/dsl"
 )
 
 // ----------------------------------------------------------------

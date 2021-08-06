@@ -12,8 +12,8 @@ package main
 import (
 	"testing"
 
-	"miller/src/auxents/regtest"
-	"miller/src/lib"
+	"mlr/src/auxents/regtest"
+	"mlr/src/lib"
 )
 
 func TestRegression(t *testing.T) {

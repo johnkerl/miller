@@ -1,4 +1,4 @@
-module miller
+module mlr
 
 go 1.15
 

@@ -10,10 +10,10 @@ package cst
 import (
 	"os"
 
-	"miller/src/dsl"
-	"miller/src/lib"
-	"miller/src/runtime"
-	"miller/src/types"
+	"mlr/src/dsl"
+	"mlr/src/lib"
+	"mlr/src/runtime"
+	"mlr/src/types"
 )
 
 type EnvironmentVariableNode struct {

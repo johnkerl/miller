@@ -13,8 +13,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"miller/src/colorizer"
-	"miller/src/lib"
+	"mlr/src/colorizer"
+	"mlr/src/lib"
 )
 
 const DefaultPath = "./regtest/cases"

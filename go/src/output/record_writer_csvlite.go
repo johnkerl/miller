@@ -5,9 +5,9 @@ import (
 	"io"
 	"strings"
 
-	"miller/src/cliutil"
-	"miller/src/colorizer"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/colorizer"
+	"mlr/src/types"
 )
 
 type RecordWriterCSVLite struct {

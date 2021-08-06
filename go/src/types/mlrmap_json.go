@@ -7,8 +7,8 @@ package types
 import (
 	"bytes"
 
-	"miller/src/colorizer"
-	"miller/src/lib"
+	"mlr/src/colorizer"
+	"mlr/src/lib"
 )
 
 // ----------------------------------------------------------------

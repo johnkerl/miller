@@ -7,10 +7,10 @@ import (
 	"os"
 	"strings"
 
-	"miller/src/cliutil"
-	"miller/src/lib"
-	"miller/src/transformers/utils"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/lib"
+	"mlr/src/transformers/utils"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

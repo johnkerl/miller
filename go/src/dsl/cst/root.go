@@ -11,11 +11,11 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/cliutil"
-	"miller/src/dsl"
-	"miller/src/output"
-	"miller/src/runtime"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/dsl"
+	"mlr/src/output"
+	"mlr/src/runtime"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

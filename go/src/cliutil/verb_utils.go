@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 
-	"miller/src/lib"
+	"mlr/src/lib"
 )
 
 // For flags with values, e.g. ["-n" "10"], while we're looking at the "-n" this let us see if the "10" slot exists.

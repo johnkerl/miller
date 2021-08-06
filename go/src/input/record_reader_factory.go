@@ -1,7 +1,7 @@
 package input
 
 import (
-	"miller/src/cliutil"
+	"mlr/src/cliutil"
 )
 
 func Create(readerOptions *cliutil.TReaderOptions) IRecordReader {

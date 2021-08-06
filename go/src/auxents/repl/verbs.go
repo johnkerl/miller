@@ -9,10 +9,10 @@ import (
 	"os"
 	"strings"
 
-	"miller/src/colorizer"
-	"miller/src/dsl/cst"
-	"miller/src/lib"
-	"miller/src/types"
+	"mlr/src/colorizer"
+	"mlr/src/dsl/cst"
+	"mlr/src/lib"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

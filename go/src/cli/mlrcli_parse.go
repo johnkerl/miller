@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/auxents/help"
-	"miller/src/cliutil"
-	"miller/src/lib"
-	"miller/src/transformers"
-	"miller/src/types"
-	"miller/src/version"
+	"mlr/src/auxents/help"
+	"mlr/src/cliutil"
+	"mlr/src/lib"
+	"mlr/src/transformers"
+	"mlr/src/types"
+	"mlr/src/version"
 )
 
 // ----------------------------------------------------------------

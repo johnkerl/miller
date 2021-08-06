@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	parseError "miller/src/parsing/errors"
-	"miller/src/parsing/token"
+	parseError "mlr/src/parsing/errors"
+	"mlr/src/parsing/token"
 )
 
 const (

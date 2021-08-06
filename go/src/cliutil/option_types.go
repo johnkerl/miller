@@ -7,7 +7,7 @@
 package cliutil
 
 import (
-	"miller/src/lib"
+	"mlr/src/lib"
 )
 
 // ----------------------------------------------------------------

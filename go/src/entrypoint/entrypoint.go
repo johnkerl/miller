@@ -11,14 +11,14 @@ import (
 	"os"
 	"path"
 
-	"miller/src/platform"
+	"mlr/src/platform"
 
-	"miller/src/auxents"
-	"miller/src/cli"
-	"miller/src/cliutil"
-	"miller/src/lib"
-	"miller/src/stream"
-	"miller/src/transformers"
+	"mlr/src/auxents"
+	"mlr/src/cli"
+	"mlr/src/cliutil"
+	"mlr/src/lib"
+	"mlr/src/stream"
+	"mlr/src/transformers"
 )
 
 // ----------------------------------------------------------------

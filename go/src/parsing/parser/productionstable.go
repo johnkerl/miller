@@ -2,7 +2,7 @@
 
 package parser
 
-import "miller/src/dsl"
+import "mlr/src/dsl"
 
 type (
 	ProdTab      [numProductions]ProdTabEntry

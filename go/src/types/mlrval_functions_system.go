@@ -6,8 +6,8 @@ import (
 	"runtime"
 	"strings"
 
-	"miller/src/platform"
-	"miller/src/version"
+	"mlr/src/platform"
+	"mlr/src/version"
 )
 
 func MlrvalVersion() *Mlrval {

@@ -7,7 +7,7 @@ package types
 import (
 	"errors"
 
-	"miller/src/lib"
+	"mlr/src/lib"
 )
 
 // ----------------------------------------------------------------

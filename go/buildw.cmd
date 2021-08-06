@@ -1,6 +1,6 @@
-go build mlr.go
+go build
 
-go test -v miller/src/...
+go test -v mlr/src/...
 # 'go test' (with no arguments) is the same as 'mlr regtest'
 
 mlr regtest regtest/cases

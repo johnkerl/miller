@@ -7,10 +7,10 @@ package cst
 import (
 	"container/list"
 
-	"miller/src/cliutil"
-	"miller/src/dsl"
-	"miller/src/runtime"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/dsl"
+	"mlr/src/runtime"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

@@ -3,8 +3,8 @@ package transformers
 import (
 	"os"
 
-	"miller/src/cliutil"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/types"
 )
 
 type IRecordTransformer interface {

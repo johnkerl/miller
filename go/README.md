@@ -2,14 +2,16 @@
 
 A TL;DR for anyone wanting to compile and run the Go port of Miller:
 
-* `go build mlr.go` -- produces the `mlr` executable
+* `go build` -- produces the `mlr` executable
 * `go test ./...` -- runs a relatively small number of unit tests
 * `go test` -- runs the same as `mlr regtest`. Note that (see `mlr regtest -h`) the latter gives you more options.
 * `./mlr regtest` -- runs `regtest/cases`, which are cases passing on all platforms
   * `./mlr regtest regtest/cases-pending-go-port` -- needing Go code to be ported from C
   * `./mlr regtest regtest/cases-pending-windows` -- for Go code already ported from C but needing some work for Windows
 
-Pre-release/rough-draft docs are at http://johnkerl.org/miller-releases/miller-head/docs6/site/index.html.
+Pre-release/rough-draft docs are at http://johnkerl.org/miller6.
+
+See also the tracking issue (somewhat redundant to this README file) https://github.com/johnkerl/miller/issues/372.
 
 A note on Continuous Integration:
 
