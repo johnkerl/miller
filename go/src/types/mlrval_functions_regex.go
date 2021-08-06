@@ -52,6 +52,9 @@ func MlrvalSub(input1, input2, input3 *Mlrval) *Mlrval {
 	// TODO: better exception-handling
 	re := lib.CompileMillerRegexOrDie(input2.printrep)
 
+	// xxx instantiate a RegexCaptures object
+	// xxx extend lib.RegexReplaceOnce to lib.RegexReplaceOnceWithCaptures
+
 	replacement := lib.RegexReplaceOnce(re, input1.printrep, input3.printrep)
 
 	return MlrvalPointerFromString(replacement)
@@ -104,9 +107,9 @@ func MlrvalStringMatchesRegexp(input1, input2 *Mlrval) *Mlrval {
 	}
 	// TODO: better exception-handling
 	re := lib.CompileMillerRegexOrDie(input2.printrep)
-	return MlrvalPointerFromBool(
-		re.MatchString(input1.printrep),
-	)
+
+	stringMatch := re.MatchString(input1.String())
+	return MlrvalPointerFromBool(stringMatch)
 }
 
 func MlrvalStringDoesNotMatchRegexp(input1, input2 *Mlrval) *Mlrval {

@@ -66,3 +66,47 @@ func RegexReplaceOnce(
 	})
 	return output
 }
+
+// xxx
+// echo a=ab_cde | mlrgo --oxtab put '
+//   $b = sub($a, "(..)_(...)", "\2-\1");
+//   $c = sub($a, "(..)_(.)(..)", ":\1:\2:\3")
+// '
+
+//// ----------------------------------------------------------------
+//func luminLine(regex *regexp.Regexp, input string) string {
+//
+//	matrix := regex.FindAllStringIndex(input, -1)
+//	// fmt.Printf("%+v\n", matrix)
+//	if matrix == nil || len(matrix) == 0 {
+//		return input
+//	}
+//
+//	// The key is the Go library's regex.FindAllStringIndex.  It gives us start
+//	// (inclusive) and end (exclusive) indices for matches.
+//	//
+//	// Example: for pattern "foo" and input "abc foo def foo ghi" we'll have
+//	// matrix [[4 7] [12 15]] which indicates matches from positions 4-6 and
+//	// 12-14.  We simply need to print out:
+//	// *  0-3  "abc "  with default color
+//	// *  4-6  "foo"   with highlight color
+//	// *  7-11 " def " with default color
+//	// * 12-14 "foo"   with highlight color
+//	// * 15-18 " ghi"  with default color.
+//	//
+//	// Example: with pattern "f.*o" and input "abc foo def foo ghi" we'll have
+//	// matrix [[4 15]] so "foo def foo" will be highlighted.
+//
+//	var buffer bytes.Buffer // Faster since os.Stdout is unbuffered
+//	nonMatchStartIndex := 0
+//
+//	for _, startEnd := range matrix {
+//		buffer.WriteString(input[nonMatchStartIndex:startEnd[0]])
+//		buffer.WriteString(colors.Colorize(input[startEnd[0]:startEnd[1]]))
+//		nonMatchStartIndex = startEnd[1]
+//	}
+//
+//	buffer.WriteString(input[nonMatchStartIndex:])
+//
+//	return buffer.String()
+//}
