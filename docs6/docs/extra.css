@@ -62,7 +62,12 @@ pre {
 }
 .md-typeset code, .md-typeset kbd, .md-typeset pre {
   color: #000000;
+  /*background-color: #e0e0e0;*/
+  background-color: #eae2cb;
+  /*background-color: #c5b690;*/
+  font-size: 12px;
   direction: ltr;
+  border-radius: 3px;
 }
 
 pre.pre-highlight-in-pair {
@@ -177,10 +182,6 @@ nav a:hover {
   background-color: #e0e0e0;
 }
 
-/* Rounded corners for inline code snippets */
-code {
-  border-radius: 3px;
-}
 /* Rounded corners for screenshots/images */
 img {
   border-radius: 6px;
