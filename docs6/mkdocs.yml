@@ -1,8 +1,14 @@
 site_name: Miller Documentation
-theme: material
+theme:
+  name: material
+  favicon: images/favicon.ico
+  logo: images/favicon.png
+  font:
+    text: Lato
+    code: Lato Mono
 nav:
+  - "Introduction": "index.md"
   - 'Getting started':
-    - "Introduction": "index.md"
     - "Miller in 10 minutes": "10min.md"
     - "Keystroke-savers": "keystroke-savers.md"
     - "Intro to Miller's programming language": "programming-language.md"
