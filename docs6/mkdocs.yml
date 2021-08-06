@@ -1,5 +1,5 @@
 site_name: Miller Documentation
-theme: readthedocs
+theme: material
 nav:
   - 'Getting started':
     - "Introduction": "index.md"
