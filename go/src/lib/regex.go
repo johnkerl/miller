@@ -1,12 +1,14 @@
 package lib
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"regexp"
 	"strings"
 )
 
+// ----------------------------------------------------------------
 // Miller regexes use a final 'i' to indicate case-insensitivity; Go regexes
 // use an initial "(?i)".  Also (TODO) I need to find all the right things to
 // backslash-escape in Go.
@@ -51,15 +53,10 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	return regex
 }
 
+// ----------------------------------------------------------------
 func RegexSub(input string, sregex string, replacement string) string {
 	regex := CompileMillerRegexOrDie(sregex)
-
-	// xxx instantiate a RegexCaptures object
-	// xxx extend lib.RegexReplaceOnce to lib.RegexReplaceOnceWithCaptures
-
-	output := RegexReplaceOnce(regex, input, replacement)
-
-	return output
+	return RegexSubGsubAux(input, regex, replacement, true)
 }
 
 func RegexReplaceOnce(
@@ -80,7 +77,49 @@ func RegexReplaceOnce(
 
 func RegexGsub(input string, sregex string, replacement string) string {
 	regex := CompileMillerRegexOrDie(sregex)
-	output := regex.ReplaceAllString(input, replacement)
+	return RegexSubGsubAux(input, regex, replacement, false)
+}
+
+func RegexSubGsubAux(input string, regex *regexp.Regexp, replacement string, breakOnFirst bool) string {
+	matrix := regex.FindAllStringIndex(input, -1)
+	if matrix == nil || len(matrix) == 0 {
+		return input
+	}
+
+	// xxx instantiate a RegexCaptures object
+	// xxx extend lib.RegexReplaceOnce to lib.RegexReplaceOnceWithCaptures
+
+	// The key is the Go library's regex.FindAllStringIndex.  It gives us start
+	// (inclusive) and end (exclusive) indices for matches.
+	//
+	// Example: for pattern "foo" and input "abc foo def foo ghi" we'll have
+	// matrix [[4 7] [12 15]] which indicates matches from positions 4-6 and
+	// 12-14.  We simply need to print out:
+	// *  0-3  "abc "  not matching
+	// *  4-6  "foo"   matching
+	// *  7-11 " def " not matching
+	// * 12-14 "foo"   matching
+	// * 15-18 " ghi"  not matching
+	//
+	// Example: with pattern "f.*o" and input "abc foo def foo ghi" we'll have
+	// matrix [[4 15]] so "foo def foo" will be a match.
+
+	var buffer bytes.Buffer // Faster since os.Stdout is unbuffered
+	nonMatchStartIndex := 0
+
+	for _, startEnd := range matrix {
+		buffer.WriteString(input[nonMatchStartIndex:startEnd[0]])
+		buffer.WriteString(replacement)
+		nonMatchStartIndex = startEnd[1]
+		if breakOnFirst {
+			break
+		}
+	}
+
+	buffer.WriteString(input[nonMatchStartIndex:])
+
+	output := buffer.String()
+
 	return output
 }
 
