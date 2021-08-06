@@ -27,7 +27,7 @@ import (
 	"path"
 	"strings"
 
-	"miller/src/cliutil"
+	"mlr/src/cliutil"
 )
 
 // ================================================================

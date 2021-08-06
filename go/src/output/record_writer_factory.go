@@ -1,7 +1,7 @@
 package output
 
 import (
-	"miller/src/cliutil"
+	"mlr/src/cliutil"
 )
 
 func Create(writerOptions *cliutil.TWriterOptions) IRecordWriter {

@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"miller/src/platform"
+	"mlr/src/platform"
 )
 
 // RunMillerCommand runs a string like 'mlr cat foo.dat', with specified mlr

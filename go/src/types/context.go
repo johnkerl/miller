@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strconv"
 
-	"miller/src/cliutil"
+	"mlr/src/cliutil"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as

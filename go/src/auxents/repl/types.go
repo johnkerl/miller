@@ -7,12 +7,12 @@ package repl
 import (
 	"os"
 
-	"miller/src/cliutil"
-	"miller/src/dsl/cst"
-	"miller/src/input"
-	"miller/src/output"
-	"miller/src/runtime"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/dsl/cst"
+	"mlr/src/input"
+	"mlr/src/output"
+	"mlr/src/runtime"
+	"mlr/src/types"
 )
 
 // ================================================================

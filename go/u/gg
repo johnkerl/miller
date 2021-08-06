@@ -3,7 +3,7 @@
 path_to_mlr="./mlr"
 indir="./regtest/input"
 
-#go build mlr.go
+#go build
 if [ $? -ne 0 ]; then
   exit 1
 fi

@@ -5,7 +5,7 @@
 package utils
 
 import (
-	"miller/src/types"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

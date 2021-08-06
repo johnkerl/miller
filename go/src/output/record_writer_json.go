@@ -6,8 +6,8 @@ import (
 	"io"
 	"os"
 
-	"miller/src/cliutil"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

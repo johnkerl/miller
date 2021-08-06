@@ -8,9 +8,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"miller/src/cliutil"
-	"miller/src/colorizer"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/colorizer"
+	"mlr/src/types"
 )
 
 type RecordWriterPPRINT struct {

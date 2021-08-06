@@ -31,9 +31,9 @@ fi
 rm -f src/parsing/*.txt
 if [ "$verbose" = "true" ]; then
   lr1="src/parsing/LR1_conflicts.txt"
-  $bingocc -v -o ./src/parsing -p miller/src/parsing src/parsing/mlr.bnf || expand -2 $lr1
+  $bingocc -v -o ./src/parsing -p mlr/src/parsing src/parsing/mlr.bnf || expand -2 $lr1
 else
-  $bingocc -o ./src/parsing -p miller/src/parsing src/parsing/mlr.bnf
+  $bingocc -o ./src/parsing -p mlr/src/parsing src/parsing/mlr.bnf
 fi
 
 # Code-gen directories:

@@ -6,7 +6,7 @@
 package cst
 
 import (
-	"miller/src/types"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

@@ -29,7 +29,7 @@ jobs:
       # In the event of needing to debug failures you can modify `./mlr regtest` verbosity
       # using `-v`, `-vv`, or `-vvv`. Commit changes to this file and re-push to GitHub
       # and let the GitHub Actions re-run.
-      run: cd go && go test -v miller/src/... && ./mlr regtest -s 5
+      run: cd go && go test -v mlr/src/... && ./mlr regtest -s 5
 
     - name: PrepareArtifactNonWindows
       if: matrix.os != 'windows-latest'

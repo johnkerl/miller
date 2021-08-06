@@ -10,8 +10,8 @@ import (
 	"errors"
 	"fmt"
 
-	"miller/src/dsl"
-	"miller/src/lib"
+	"mlr/src/dsl"
+	"mlr/src/lib"
 )
 
 // ----------------------------------------------------------------

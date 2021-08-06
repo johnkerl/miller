@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/colorizer"
-	"miller/src/lib"
+	"mlr/src/colorizer"
+	"mlr/src/lib"
 )
 
 const ASV_FS = "\x1f"

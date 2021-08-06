@@ -9,7 +9,7 @@ import (
 	"math"
 	"sort"
 
-	"miller/src/types"
+	"mlr/src/types"
 )
 
 type PercentileKeeper struct {

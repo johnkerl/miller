@@ -25,7 +25,7 @@ package types
 import (
 	"strings"
 
-	"miller/src/lib"
+	"mlr/src/lib"
 )
 
 // ----------------------------------------------------------------

@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"strings"
 
-	"miller/src/parsing/token"
+	"mlr/src/parsing/token"
 )
 
 type ErrorSymbol interface {

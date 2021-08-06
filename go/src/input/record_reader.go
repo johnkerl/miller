@@ -1,7 +1,7 @@
 package input
 
 import (
-	"miller/src/types"
+	"mlr/src/types"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as

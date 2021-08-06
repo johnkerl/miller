@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"miller/src/types"
+	"mlr/src/types"
 )
 
 func ChannelWriter(

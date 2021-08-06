@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"io"
 
-	"miller/src/cliutil"
-	"miller/src/colorizer"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/colorizer"
+	"mlr/src/types"
 )
 
 type RecordWriterNIDX struct {

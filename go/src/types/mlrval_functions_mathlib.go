@@ -7,7 +7,7 @@ package types
 import (
 	"math"
 
-	"miller/src/lib"
+	"mlr/src/lib"
 )
 
 // ----------------------------------------------------------------

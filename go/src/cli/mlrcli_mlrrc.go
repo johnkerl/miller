@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"miller/src/cliutil"
+	"mlr/src/cliutil"
 )
 
 // ----------------------------------------------------------------

@@ -7,7 +7,7 @@ import (
 	"runtime/debug"
 	"runtime/pprof"
 
-	"miller/src/entrypoint"
+	"mlr/src/entrypoint"
 )
 
 // ----------------------------------------------------------------

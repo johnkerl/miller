@@ -8,9 +8,9 @@ import (
 	"regexp"
 	"strings"
 
-	"miller/src/cliutil"
-	"miller/src/lib"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/lib"
+	"mlr/src/types"
 )
 
 type RecordReaderXTAB struct {

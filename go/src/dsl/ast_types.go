@@ -5,7 +5,7 @@
 package dsl
 
 import (
-	"miller/src/parsing/token"
+	"mlr/src/parsing/token"
 )
 
 // ----------------------------------------------------------------
