@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"miller/src/lib"
+	"mlr/src/lib"
 )
 
 // ================================================================

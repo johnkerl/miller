@@ -26,13 +26,13 @@ import (
 	"strings"
 	"syscall"
 
-	"miller/src/cliutil"
-	"miller/src/dsl/cst"
-	"miller/src/input"
-	"miller/src/lib"
-	"miller/src/output"
-	"miller/src/runtime"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/dsl/cst"
+	"mlr/src/input"
+	"mlr/src/lib"
+	"mlr/src/output"
+	"mlr/src/runtime"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

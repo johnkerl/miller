@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"miller/src/cliutil"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/types"
 )
 
 type tRepeatCountSource int

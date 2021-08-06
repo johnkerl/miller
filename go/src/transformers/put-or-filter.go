@@ -6,14 +6,14 @@ import (
 	"os"
 	"strings"
 
-	"miller/src/cliutil"
-	"miller/src/dsl"
-	"miller/src/dsl/cst"
-	"miller/src/lib"
-	"miller/src/parsing/lexer"
-	"miller/src/parsing/parser"
-	"miller/src/runtime"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/dsl"
+	"mlr/src/dsl/cst"
+	"mlr/src/lib"
+	"mlr/src/parsing/lexer"
+	"mlr/src/parsing/parser"
+	"mlr/src/runtime"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

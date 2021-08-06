@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/platform"
+	"mlr/src/platform"
 )
 
 // OpenOutboundHalfPipe returns a handle to a process. Writing to that handle

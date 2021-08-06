@@ -3,7 +3,7 @@ package output
 import (
 	"io"
 
-	"miller/src/types"
+	"mlr/src/types"
 )
 
 // Convention: nil outrec signifies end of record stream

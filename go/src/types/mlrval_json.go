@@ -14,8 +14,8 @@ import (
 	"errors"
 	"io"
 
-	"miller/src/colorizer"
-	"miller/src/lib"
+	"mlr/src/colorizer"
+	"mlr/src/lib"
 )
 
 const MLRVAL_JSON_INDENT_STRING string = "  "

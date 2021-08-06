@@ -10,11 +10,11 @@ import (
 
 	"github.com/mattn/go-isatty"
 
-	"miller/src/cliutil"
-	"miller/src/dsl/cst"
-	"miller/src/lib"
-	"miller/src/transformers"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/dsl/cst"
+	"mlr/src/lib"
+	"mlr/src/transformers"
+	"mlr/src/types"
 )
 
 // ================================================================
@@ -183,7 +183,7 @@ func helpAuxents() {
 They do not participate in any other parts of Miller.
 Please "mlr aux-list" for more information.
 `)
-	// imports miller/src/auxents: import cycle not allowed
+	// imports mlr/src/auxents: import cycle not allowed
 	// auxents.ShowAuxEntries(o)
 }
 

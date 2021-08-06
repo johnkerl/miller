@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/dsl"
-	"miller/src/lib"
+	"mlr/src/dsl"
+	"mlr/src/lib"
 )
 
 // ----------------------------------------------------------------

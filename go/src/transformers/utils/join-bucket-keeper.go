@@ -113,10 +113,10 @@ import (
 	"os"
 	"strings"
 
-	"miller/src/cliutil"
-	"miller/src/input"
-	"miller/src/lib"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/input"
+	"mlr/src/lib"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

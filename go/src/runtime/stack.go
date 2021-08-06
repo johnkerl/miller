@@ -30,8 +30,8 @@ import (
 	"errors"
 	"fmt"
 
-	"miller/src/lib"
-	"miller/src/types"
+	"mlr/src/lib"
+	"mlr/src/types"
 )
 
 // ================================================================

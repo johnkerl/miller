@@ -9,9 +9,9 @@ import (
 	"fmt"
 	"os"
 
-	"miller/src/auxents/help"
-	"miller/src/auxents/regtest"
-	"miller/src/auxents/repl"
+	"mlr/src/auxents/help"
+	"mlr/src/auxents/regtest"
+	"mlr/src/auxents/repl"
 )
 
 // ----------------------------------------------------------------

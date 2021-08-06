@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"miller/src/lib"
-	"miller/src/parsing/token"
+	"mlr/src/lib"
+	"mlr/src/parsing/token"
 )
 
 // ----------------------------------------------------------------

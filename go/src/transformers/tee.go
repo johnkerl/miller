@@ -5,9 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"miller/src/cliutil"
-	"miller/src/output"
-	"miller/src/types"
+	"mlr/src/cliutil"
+	"mlr/src/output"
+	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------

@@ -6,7 +6,7 @@
 package runtime
 
 import (
-	"miller/src/types"
+	"mlr/src/types"
 )
 
 type State struct {

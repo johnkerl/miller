@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"unicode/utf8"
 
-	"miller/src/parsing/token"
+	"mlr/src/parsing/token"
 )
 
 const (

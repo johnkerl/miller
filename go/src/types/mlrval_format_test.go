@@ -8,7 +8,7 @@
 // * go test
 // Or:
 // * cd go
-// * go test miller/src/types/...
+// * go test mlr/src/types/...
 
 package types
 
