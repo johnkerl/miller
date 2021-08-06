@@ -62,6 +62,7 @@ nav:
     - "Reference: regular expressions": "reference-main-regular-expressions.md"
     - "Reference: Miller environment variables": "reference-main-env-vars.md"
     - "Reference: online help": "reference-main-online-help.md"
+  - 'DSL reference':
     - "DSL reference: overview": "reference-dsl.md"
     - "DSL reference: syntax": "reference-dsl-syntax.md"
     - "DSL reference: variables": "reference-dsl-variables.md"
@@ -74,6 +75,7 @@ nav:
     - "DSL reference: filter statements": "reference-dsl-filter-statements.md"
     - "DSL reference: errors and transparency": "reference-dsl-errors.md"
     - "DSL reference: a note on the complexity of Miller's expression language": "reference-dsl-complexity.md"
+  - 'Misc. reference':
     - "Manpage": "manpage.md"
     - "Documents by release": "release-docs.md"
     - "Installation": "installation.md"
