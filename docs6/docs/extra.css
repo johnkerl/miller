@@ -40,12 +40,21 @@ p.caption {
  *   4,5,6           <---- output line
  * Command lines have bold font weight and darker background.
  */
-pre.pre-highlight-in-pair {
+pre {
   color: #000000;
-  background-color: #c5b690;
   font-size: 12px;
-  font-weight: bold;
   padding: 10px;
+
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+pre.pre-highlight-in-pair {
+  background-color: #c5b690;
+  font-weight: bold;
   margin-bottom: 0px;
 
   border-top-left-radius: 6px;
@@ -53,10 +62,7 @@ pre.pre-highlight-in-pair {
 
 }
 pre.pre-non-highlight-in-pair {
-  color: #000000;
   background-color: #eae2cb;
-  font-size: 12px;
-  padding: 10px;
   margin-top: 0px;
 
   border-bottom-right-radius: 6px;
@@ -68,11 +74,8 @@ pre.pre-non-highlight-in-pair {
  *   mlr cat foo.csv <---- command line
  */
 pre.pre-highlight-non-pair {
-  color: #000000;
   background-color: #c5b690;
-  font-size: 12px;
   font-weight: bold;
-  padding: 10px;
   margin-top: 2px;
   margin-bottom: 16px;
 
@@ -88,10 +91,7 @@ pre.pre-highlight-non-pair {
  *   4,5,6           <---- output line
  */
 pre.pre-non-highlight-non-pair {
-  color: #000000;
   background-color: #eae2cb;
-  font-size: 12px;
-  padding: 10px;
   margin-top: 2px;
   margin-bottom: 15px;
 
