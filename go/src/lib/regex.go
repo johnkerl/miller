@@ -54,33 +54,46 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 }
 
 // ----------------------------------------------------------------
-func RegexSub(input string, sregex string, replacement string) string {
-	regex := CompileMillerRegexOrDie(sregex)
-	return RegexSubGsubAux(input, regex, replacement, true)
-}
+// API functions
 
-func RegexReplaceOnce(
-	regex *regexp.Regexp,
+func RegexSub(
 	input string,
+	sregex string,
 	replacement string,
 ) string {
-	onFirst := true
-	output := regex.ReplaceAllStringFunc(input, func(s string) string {
-		if !onFirst {
-			return s
-		}
-		onFirst = false
-		return regex.ReplaceAllString(s, replacement)
-	})
-	return output
-}
-
-func RegexGsub(input string, sregex string, replacement string) string {
 	regex := CompileMillerRegexOrDie(sregex)
-	return RegexSubGsubAux(input, regex, replacement, false)
+	return regexSubGsubAux(input, regex, replacement, true)
+}
+func RegexSubCompiled(
+	input string,
+	regex *regexp.Regexp,
+	replacement string,
+) string {
+	return regexSubGsubAux(input, regex, replacement, true)
+}
+func RegexGsub(
+	input string,
+	sregex string,
+	replacement string,
+) string {
+	regex := CompileMillerRegexOrDie(sregex)
+	return regexSubGsubAux(input, regex, replacement, false)
+}
+func RegexMatches(input string, sregex string) bool {
+	regex := CompileMillerRegexOrDie(sregex)
+	stringMatch := regex.MatchString(input)
+	return stringMatch
 }
 
-func RegexSubGsubAux(input string, regex *regexp.Regexp, replacement string, breakOnFirst bool) string {
+// ----------------------------------------------------------------
+// Package-internal/implementation functions
+
+func regexSubGsubAux(
+	input string,
+	regex *regexp.Regexp,
+	replacement string,
+	breakOnFirst bool,
+) string {
 	matrix := regex.FindAllStringIndex(input, -1)
 	if matrix == nil || len(matrix) == 0 {
 		return input
@@ -94,7 +107,7 @@ func RegexSubGsubAux(input string, regex *regexp.Regexp, replacement string, bre
 	//
 	// Example: for pattern "foo" and input "abc foo def foo ghi" we'll have
 	// matrix [[4 7] [12 15]] which indicates matches from positions 4-6 and
-	// 12-14.  We simply need to print out:
+	// 12-14.  We simply need to concatenate
 	// *  0-3  "abc "  not matching
 	// *  4-6  "foo"   matching
 	// *  7-11 " def " not matching
@@ -102,7 +115,7 @@ func RegexSubGsubAux(input string, regex *regexp.Regexp, replacement string, bre
 	// * 15-18 " ghi"  not matching
 	//
 	// Example: with pattern "f.*o" and input "abc foo def foo ghi" we'll have
-	// matrix [[4 15]] so "foo def foo" will be a match.
+	// matrix [[4 15]] so "foo def foo" will be a matched substring.
 
 	var buffer bytes.Buffer // Faster since os.Stdout is unbuffered
 	nonMatchStartIndex := 0
@@ -117,16 +130,7 @@ func RegexSubGsubAux(input string, regex *regexp.Regexp, replacement string, bre
 	}
 
 	buffer.WriteString(input[nonMatchStartIndex:])
-
-	output := buffer.String()
-
-	return output
-}
-
-func RegexMatches(input string, sregex string) bool {
-	regex := CompileMillerRegexOrDie(sregex)
-	stringMatch := regex.MatchString(input)
-	return stringMatch
+	return buffer.String()
 }
 
 // xxx
@@ -134,41 +138,3 @@ func RegexMatches(input string, sregex string) bool {
 //   $b = sub($a, "(..)_(...)", "\2-\1");
 //   $c = sub($a, "(..)_(.)(..)", ":\1:\2:\3")
 // '
-
-//// ----------------------------------------------------------------
-//func luminLine(regex *regexp.Regexp, input string) string {
-//
-//	matrix := regex.FindAllStringIndex(input, -1)
-//	// fmt.Printf("%+v\n", matrix)
-//	if matrix == nil || len(matrix) == 0 {
-//		return input
-//	}
-//
-//	// The key is the Go library's regex.FindAllStringIndex.  It gives us start
-//	// (inclusive) and end (exclusive) indices for matches.
-//	//
-//	// Example: for pattern "foo" and input "abc foo def foo ghi" we'll have
-//	// matrix [[4 7] [12 15]] which indicates matches from positions 4-6 and
-//	// 12-14.  We simply need to print out:
-//	// *  0-3  "abc "  with default color
-//	// *  4-6  "foo"   with highlight color
-//	// *  7-11 " def " with default color
-//	// * 12-14 "foo"   with highlight color
-//	// * 15-18 " ghi"  with default color.
-//	//
-//	// Example: with pattern "f.*o" and input "abc foo def foo ghi" we'll have
-//	// matrix [[4 15]] so "foo def foo" will be highlighted.
-//
-//	var buffer bytes.Buffer // Faster since os.Stdout is unbuffered
-//	nonMatchStartIndex := 0
-//
-//	for _, startEnd := range matrix {
-//		buffer.WriteString(input[nonMatchStartIndex:startEnd[0]])
-//		buffer.WriteString(colors.Colorize(input[startEnd[0]:startEnd[1]]))
-//		nonMatchStartIndex = startEnd[1]
-//	}
-//
-//	buffer.WriteString(input[nonMatchStartIndex:])
-//
-//	return buffer.String()
-//}
