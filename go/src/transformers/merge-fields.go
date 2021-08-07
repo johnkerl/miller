@@ -465,7 +465,7 @@ func (tr *TransformerMergeFields) transformByCollapsing(
 		for _, valueFieldNameRegex := range tr.valueFieldNameRegexes {
 			matched = valueFieldNameRegex.MatchString(pe.Key)
 			if matched {
-				shortName = lib.RegexReplaceOnce(valueFieldNameRegex, valueFieldName, "")
+				shortName = lib.RegexSubCompiled(valueFieldName, valueFieldNameRegex, "")
 				break
 			}
 		}

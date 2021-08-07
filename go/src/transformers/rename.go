@@ -224,7 +224,7 @@ func (tr *TransformerRename) transformWithRegexes(
 						inrec.Rename(oldName, newName)
 					}
 				} else {
-					newName := lib.RegexReplaceOnce(regex, oldName, replacement)
+					newName := lib.RegexSubCompiled(oldName, regex, replacement)
 					if newName != oldName {
 						inrec.Rename(oldName, newName)
 					}
