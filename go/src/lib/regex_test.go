@@ -39,9 +39,9 @@ var dataForSubWithCaptures = []tDataForSubGsub{
 	{"abcde", "[a-z]", "X", "Xbcde"},
 	{"abcde", "[A-Z]", "X", "abcde"},
 
-	//{"ab_cde", "(..)_(...)e", "\\2\\1", "cdeab"},
-	//{"ab_cde", "(..)_(...)e", "\\2-\\1", "cde-ab"},
-	//{"ab_cde", "(..)_(...)e", "X\\2Y\\1Z", "XcdeYabZ"},
+	//{"ab_cde", "(..)_(...)", "\\2\\1", "cdeab"},
+	//{"ab_cde", "(..)_(...)", "\\2-\\1", "cde-ab"},
+	//{"ab_cde", "(..)_(...)", "X\\2Y\\1Z", "XcdeYabZ"},
 }
 
 var dataForGsubWithoutCaptures = []tDataForSubGsub{
@@ -64,66 +64,89 @@ var dataForGsubWithCaptures = []tDataForSubGsub{
 
 // xxx needs expected-capture data
 var dataForMatches = []tDataForMatches{
-	{"abcde", "[a-z]", true, nil},
 	{"abcde", "[A-Z]", false, nil},
+	{"abcde", "[a-z]", true, nil},
+	{"...ab_cde...", "(..)_(...)", true, []string{"", "ab", "cde", "", "", "", "", "", "", ""}},
 }
 
 // ----------------------------------------------------------------
 func TestRegexSubWithoutCaptures(t *testing.T) {
-	for _, entry := range dataForSubWithoutCaptures {
+	for i, entry := range dataForSubWithoutCaptures {
 		actualOutput := RegexSubWithoutCaptures(entry.input, entry.sregex, entry.replacement)
 		if actualOutput != entry.expectedOutput {
-			t.Fatalf("input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
-				entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
+			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
+				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
 			)
 		}
 	}
 }
 
 func TestRegexSubWithCaptures(t *testing.T) {
-	for _, entry := range dataForSubWithCaptures {
+	for i, entry := range dataForSubWithCaptures {
 		actualOutput := RegexSubWithCaptures(entry.input, entry.sregex, entry.replacement)
 		if actualOutput != entry.expectedOutput {
-			t.Fatalf("input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
-				entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
+			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
+				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
 			)
 		}
 	}
 }
 
 func TestRegexGsubWithoutCaptures(t *testing.T) {
-	for _, entry := range dataForGsubWithoutCaptures {
+	for i, entry := range dataForGsubWithoutCaptures {
 		actualOutput := RegexGsubWithoutCaptures(entry.input, entry.sregex, entry.replacement)
 		if actualOutput != entry.expectedOutput {
-			t.Fatalf("input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
-				entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
+			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
+				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
 			)
 		}
 	}
 }
 
 func TestRegexGsubWithCaptures(t *testing.T) {
-	for _, entry := range dataForGsubWithCaptures {
+	for i, entry := range dataForGsubWithCaptures {
 		actualOutput := RegexGsubWithCaptures(entry.input, entry.sregex, entry.replacement)
 		if actualOutput != entry.expectedOutput {
-			t.Fatalf("input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
-				entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
+			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
+				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
 			)
 		}
 	}
 }
 
 func TestRegexMatches(t *testing.T) {
-	for _, entry := range dataForMatches {
+	for i, entry := range dataForMatches {
 		actualOutput, actualCaptures := RegexMatches(entry.input, entry.sregex)
 		if actualOutput != entry.expectedOutput {
-			t.Fatalf("input \"%s\" sregex \"%s\" expected %v got %v\n",
-				entry.input, entry.sregex, entry.expectedOutput, actualOutput,
+			t.Fatalf("case %d input \"%s\" sregex \"%s\" expected %v got %v\n",
+				i, entry.input, entry.sregex, entry.expectedOutput, actualOutput,
 			)
 		}
-		// xxx compare actual/expected captures
-		// xxx make a comparator function
-		if actualCaptures == nil {
+		if !compareCaptures(actualCaptures, entry.expectedCaptures) {
+			t.Fatalf("case %d input \"%s\" sregex \"%s\" expected captures %#v got %#v\n",
+				i, entry.input, entry.sregex, entry.expectedCaptures, actualCaptures,
+			)
 		}
 	}
+}
+
+func compareCaptures(
+	actualCaptures []string,
+	expectedCaptures []string,
+) bool {
+	if actualCaptures == nil && expectedCaptures == nil {
+		return true
+	}
+	if actualCaptures == nil || expectedCaptures == nil {
+		return false
+	}
+	if len(actualCaptures) != len(expectedCaptures) {
+		return false
+	}
+	for i, _ := range expectedCaptures {
+		if actualCaptures[i] != expectedCaptures[i] {
+			return false
+		}
+	}
+	return true
 }
