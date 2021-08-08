@@ -62,11 +62,13 @@ var dataForGsubWithCaptures = []tDataForSubGsub{
 	//{"abacad", "a(.)", "<\\2>", "<b><c><d>"},
 }
 
-// xxx needs expected-capture data
 var dataForMatches = []tDataForMatches{
 	{"abcde", "[A-Z]", false, nil},
 	{"abcde", "[a-z]", true, nil},
 	{"...ab_cde...", "(..)_(...)", true, []string{"", "ab", "cde", "", "", "", "", "", "", ""}},
+	{"...ab_cde...fg_hij...", "(..)_(...)", true, []string{"", "ab", "cde", "", "", "", "", "", "", ""}},
+	{"foofoofoo", "(f.o)", true, []string{"", "foo", "", "", "", "", "", "", "", ""}},
+	{"foofoofoo", "(f.*o)", true, []string{"", "foofoofoo", "", "", "", "", "", "", "", ""}},
 }
 
 // ----------------------------------------------------------------
