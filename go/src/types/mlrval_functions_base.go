@@ -57,6 +57,10 @@ type UnaryFunc func(input1 *Mlrval) *Mlrval
 // at filename {FILENAME} record number {NR}'.
 type ContextualUnaryFunc func(input1 *Mlrval, context *Context) *Mlrval
 
+// Returns nil, or one-up captures array as array slots 1..9 of 10-element
+// array for "\1".."\9".
+type RegexCaptureBinaryFunc func(input *Mlrval, sregex *Mlrval) (*Mlrval, []string)
+
 // Helps keystroke-saving for wrapping Go math-library functions
 // Examples: cos, sin, etc.
 type mathLibUnaryFunc func(float64) float64

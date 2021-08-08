@@ -1,5 +1,10 @@
 package lib
 
+// TODO:
+// * cst state for captures array
+// * reset-hook for start of execution
+//   o UTs for that
+
 import (
 	"bytes"
 	"fmt"
@@ -56,39 +61,78 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 // ----------------------------------------------------------------
 // API functions
 
-func RegexSub(
+// xxx ReplacementHasCaptures function
+
+func RegexSubWithoutCaptures(
 	input string,
 	sregex string,
 	replacement string,
 ) string {
 	regex := CompileMillerRegexOrDie(sregex)
-	return regexSubGsubAux(input, regex, replacement, true)
+	return regexSubGsubWithCapturesAux(input, regex, replacement, true)
 }
-func RegexSubCompiled(
+
+func RegexSubWithCaptures(
+	input string,
+	sregex string,
+	replacement string,
+) string {
+	regex := CompileMillerRegexOrDie(sregex)
+	return regexSubGsubWithCapturesAux(input, regex, replacement, true)
+}
+
+func RegexSubWithoutCapturesCompiled(
 	input string,
 	regex *regexp.Regexp,
 	replacement string,
 ) string {
-	return regexSubGsubAux(input, regex, replacement, true)
+	return regexSubGsubWithCapturesAux(input, regex, replacement, true)
 }
-func RegexGsub(
+
+func RegexSubCompiledWithCaptures(
+	input string,
+	regex *regexp.Regexp,
+	replacement string,
+) string {
+	onFirst := true
+	output := regex.ReplaceAllStringFunc(input, func(s string) string {
+		if !onFirst {
+			return s
+		}
+		onFirst = false
+		return regex.ReplaceAllString(s, replacement)
+	})
+	return output
+}
+
+func RegexGsubWithoutCaptures(
 	input string,
 	sregex string,
 	replacement string,
 ) string {
 	regex := CompileMillerRegexOrDie(sregex)
-	return regexSubGsubAux(input, regex, replacement, false)
+	return regex.ReplaceAllString(input, replacement)
 }
-func RegexMatches(input string, sregex string) bool {
+
+func RegexGsubWithCaptures(
+	input string,
+	sregex string,
+	replacement string,
+) string {
+	regex := CompileMillerRegexOrDie(sregex)
+	return regexSubGsubWithCapturesAux(input, regex, replacement, false)
+}
+
+func RegexMatches(input string, sregex string) (matches bool, capturesOneUp []string) {
 	regex := CompileMillerRegexOrDie(sregex)
 	stringMatch := regex.MatchString(input)
-	return stringMatch
+	return stringMatch, nil // TODO
 }
 
 // ----------------------------------------------------------------
 // Package-internal/implementation functions
 
-func regexSubGsubAux(
+func regexSubGsubWithCapturesAux(
 	input string,
 	regex *regexp.Regexp,
 	replacement string,
@@ -100,7 +144,6 @@ func regexSubGsubAux(
 	}
 
 	// xxx instantiate a RegexCaptures object
-	// xxx extend lib.RegexReplaceOnce to lib.RegexReplaceOnceWithCaptures
 
 	// The key is the Go library's regex.FindAllStringIndex.  It gives us start
 	// (inclusive) and end (exclusive) indices for matches.

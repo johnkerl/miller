@@ -39,6 +39,8 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 			return root.BuildContextualUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.binaryFunc != nil {
 			return root.BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.regexCaptureBinaryFunc != nil {
+			return root.BuildRegexCaptureBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.ternaryFunc != nil {
 			return root.BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.variadicFunc != nil {
@@ -268,6 +270,86 @@ func (node *BinaryFunctionCallsiteNode) Evaluate(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),
 	)
+}
+
+// ----------------------------------------------------------------
+// RegexCaptureBinaryFunctionCallsiteNode special-cases the =~ and !=~
+// operators which set the CST State object's captures array for "\1".."\9".
+type RegexCaptureBinaryFunctionCallsiteNode struct {
+	regexCaptureBinaryFunc types.RegexCaptureBinaryFunc
+	evaluable1             IEvaluable
+	evaluable2             IEvaluable
+}
+
+func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
+	astNode *dsl.ASTNode,
+	builtinFunctionInfo *BuiltinFunctionInfo,
+) (IEvaluable, error) {
+	callsiteArity := len(astNode.Children)
+	expectedArity := 2
+	if callsiteArity != expectedArity {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"Miller: function %s invoked with %d argument%s; expected %d",
+				builtinFunctionInfo.name,
+				callsiteArity,
+				lib.Plural(callsiteArity),
+				expectedArity,
+			),
+		)
+	}
+
+	evaluable1, err := root.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+	evaluable2, err := root.BuildEvaluableNode(astNode.Children[1])
+	if err != nil {
+		return nil, err
+	}
+
+	// Special short-circuiting cases
+	if builtinFunctionInfo.name == "&&" {
+		return root.BuildLogicalANDOperatorNode(
+			evaluable1,
+			evaluable2,
+		), nil
+	}
+	if builtinFunctionInfo.name == "||" {
+		return root.BuildLogicalOROperatorNode(
+			evaluable1,
+			evaluable2,
+		), nil
+	}
+	if builtinFunctionInfo.name == "??" {
+		return root.BuildAbsentCoalesceOperatorNode(
+			evaluable1,
+			evaluable2,
+		), nil
+	}
+	if builtinFunctionInfo.name == "???" {
+		return root.BuildEmptyCoalesceOperatorNode(
+			evaluable1,
+			evaluable2,
+		), nil
+	}
+
+	return &RegexCaptureBinaryFunctionCallsiteNode{
+		regexCaptureBinaryFunc: builtinFunctionInfo.regexCaptureBinaryFunc,
+		evaluable1:             evaluable1,
+		evaluable2:             evaluable2,
+	}, nil
+}
+
+func (node *RegexCaptureBinaryFunctionCallsiteNode) Evaluate(
+	state *runtime.State,
+) *types.Mlrval {
+	// TODO
+	output, _ := node.regexCaptureBinaryFunc(
+		node.evaluable1.Evaluate(state),
+		node.evaluable2.Evaluate(state),
+	)
+	return output
 }
 
 // ----------------------------------------------------------------

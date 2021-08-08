@@ -33,17 +33,18 @@ const (
 
 // ================================================================
 type BuiltinFunctionInfo struct {
-	name                 string
-	class                TFunctionClass
-	help                 string
-	hasMultipleArities   bool
-	minimumVariadicArity int
-	zaryFunc             types.ZaryFunc
-	unaryFunc            types.UnaryFunc
-	contextualUnaryFunc  types.ContextualUnaryFunc // asserting_{typename}
-	binaryFunc           types.BinaryFunc
-	ternaryFunc          types.TernaryFunc
-	variadicFunc         types.VariadicFunc
+	name                   string
+	class                  TFunctionClass
+	help                   string
+	hasMultipleArities     bool
+	minimumVariadicArity   int
+	zaryFunc               types.ZaryFunc
+	unaryFunc              types.UnaryFunc
+	contextualUnaryFunc    types.ContextualUnaryFunc    // asserting_{typename}
+	regexCaptureBinaryFunc types.RegexCaptureBinaryFunc // =~ and !=~
+	binaryFunc             types.BinaryFunc
+	ternaryFunc            types.TernaryFunc
+	variadicFunc           types.VariadicFunc
 }
 
 // ================================================================
@@ -314,17 +315,17 @@ regex-match operator: try '$y = ~$x'.`,
 	},
 
 	{
-		name:       "=~",
-		class:      FUNC_CLASS_BOOLEAN,
-		help:       `String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.`,
-		binaryFunc: types.MlrvalStringMatchesRegexp,
+		name:                   "=~",
+		class:                  FUNC_CLASS_BOOLEAN,
+		help:                   `String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.`,
+		regexCaptureBinaryFunc: types.MlrvalStringMatchesRegexp,
 	},
 
 	{
-		name:       "!=~",
-		class:      FUNC_CLASS_BOOLEAN,
-		help:       `String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.`,
-		binaryFunc: types.MlrvalStringDoesNotMatchRegexp,
+		name:                   "!=~",
+		class:                  FUNC_CLASS_BOOLEAN,
+		help:                   `String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.`,
+		regexCaptureBinaryFunc: types.MlrvalStringDoesNotMatchRegexp,
 	},
 
 	{
@@ -1693,6 +1694,9 @@ func describeNargs(info *BuiltinFunctionInfo) string {
 		if info.binaryFunc != nil {
 			pieces = append(pieces, "2")
 		}
+		if info.regexCaptureBinaryFunc != nil {
+			pieces = append(pieces, "2")
+		}
 		if info.ternaryFunc != nil {
 			pieces = append(pieces, "3")
 			return "3"
@@ -1710,6 +1714,9 @@ func describeNargs(info *BuiltinFunctionInfo) string {
 			return "1"
 		}
 		if info.binaryFunc != nil {
+			return "2"
+		}
+		if info.regexCaptureBinaryFunc != nil {
 			return "2"
 		}
 		if info.ternaryFunc != nil {
