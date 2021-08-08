@@ -4,6 +4,7 @@ package lib
 // * cst state for captures array
 // * reset-hook for start of execution
 //   o UTs for that
+// * flesh out RegexCaptureBinaryFunctionCallsiteNode to do that
 
 import (
 	"bytes"
@@ -125,12 +126,23 @@ func RegexGsubWithCaptures(
 
 func RegexMatches(input string, sregex string) (matches bool, capturesOneUp []string) {
 	regex := CompileMillerRegexOrDie(sregex)
-	stringMatch := regex.MatchString(input)
-	return stringMatch, nil // TODO
+	return regexMatchesAux(input, regex)
 }
 
 // ----------------------------------------------------------------
 // Package-internal/implementation functions
+
+// xxx:
+// $ go run foo.go "ab_cde  ab_cde" "(ab)_(cde)"
+// MATRIX [][]int{[]int{0, 6, 0, 2, 3, 6}, []int{8, 14, 8, 10, 11, 14}}
+// 0 6 "ab_cde"
+// n:6
+//   2 0 2 "ab"
+//   4 3 6 "cde"
+// 8 14 "ab_cde"
+// n:6
+//   2 8 10 "ab"
+//   4 11 14 "cde"
 
 func regexSubGsubWithCapturesAux(
 	input string,
@@ -138,12 +150,14 @@ func regexSubGsubWithCapturesAux(
 	replacement string,
 	breakOnFirst bool,
 ) string {
-	matrix := regex.FindAllStringIndex(input, -1)
+	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
 	if matrix == nil || len(matrix) == 0 {
 		return input
 	}
 
 	// xxx instantiate a RegexCaptures object
+
+	// xxx update comment for FindAllSubmatchIndex
 
 	// The key is the Go library's regex.FindAllStringIndex.  It gives us start
 	// (inclusive) and end (exclusive) indices for matches.
@@ -176,8 +190,67 @@ func regexSubGsubWithCapturesAux(
 	return buffer.String()
 }
 
-// xxx
-// echo a=ab_cde | mlrgo --oxtab put '
-//   $b = sub($a, "(..)_(...)", "\2-\1");
-//   $c = sub($a, "(..)_(.)(..)", ":\1:\2:\3")
-// '
+// xxx comment:
+// xxx so we early-out
+//
+// $ go run foo.go "ab_cde  ab_cde" "(ab)_(cde)"
+// MATRIX [][]int{[]int{0, 6, 0, 2, 3, 6}, []int{8, 14, 8, 10, 11, 14}}
+// 0 6 "ab_cde"
+// n:6
+//   2 0 2 "ab"
+//   4 3 6 "cde"
+// 8 14 "ab_cde"
+// n:6
+//   2 8 10 "ab"
+//   4 11 14 "cde"
+
+func regexMatchesAux(
+	input string,
+	regex *regexp.Regexp,
+) (bool, []string) {
+	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
+	if matrix == nil || len(matrix) == 0 {
+		return false, nil
+	}
+
+	// 0 is ""; 1..9 for "\1".."\9"
+	captures := make([]string, 10)
+
+	// xxx update comment for FindAllSubmatchIndex
+
+	// The key is the Go library's regex.FindAllStringIndex.  It gives us start
+	// (inclusive) and end (exclusive) indices for matches.
+	//
+	// Example: for pattern "foo" and input "abc foo def foo ghi" we'll have
+	// matrix [[4 7] [12 15]] which indicates matches from positions 4-6 and
+	// 12-14.  We simply need to concatenate
+	// *  0-3  "abc "  not matching
+	// *  4-6  "foo"   matching
+	// *  7-11 " def " not matching
+	// * 12-14 "foo"   matching
+	// * 15-18 " ghi"  not matching
+	//
+	// Example: with pattern "f.*o" and input "abc foo def foo ghi" we'll have
+	// matrix [[4 15]] so "foo def foo" will be a matched substring.
+
+	// xxx comment first outer-match only
+	row := matrix[0]
+	n := len(row)
+	if n == 2 {
+		// xxx comment no captures
+		return true, nil
+	}
+
+	i := 1
+	for j := 2; j < n; j += 2 {
+		if i > 9 {
+			break
+		}
+		start := row[j]
+		end := row[j+1]
+		captures[i] = input[start:end]
+		i += 1
+	}
+
+	return true, captures
+}
