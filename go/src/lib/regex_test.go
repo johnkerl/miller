@@ -39,9 +39,14 @@ var dataForSubWithCaptures = []tDataForSubGsub{
 	{"abcde", "[a-z]", "X", "Xbcde"},
 	{"abcde", "[A-Z]", "X", "abcde"},
 
-	//{"ab_cde", "(..)_(...)", "\\2\\1", "cdeab"},
-	//{"ab_cde", "(..)_(...)", "\\2-\\1", "cde-ab"},
-	//{"ab_cde", "(..)_(...)", "X\\2Y\\1Z", "XcdeYabZ"},
+	{"ab_cde", "(..)_(...)", "\\2\\1", "cdeab"},
+	{"ab_cde", "(..)_(...)", "\\2-\\1", "cde-ab"},
+	{"ab_cde", "(..)_(...)", "X\\2Y\\1Z", "XcdeYabZ"},
+
+	{"foofoofoo", "(f.o)", "b\\1r", "bfoorfoofoo"},
+	{"foofoofoo", "(f.*o)", "b\\1r", "bfoofoofoor"},
+	{"foofoofoo", "(f.o)", "b\\2r", "brfoofoo"},
+	{"foofoofoo", "(f.*o)", "b\\2r", "br"},
 }
 
 var dataForGsubWithoutCaptures = []tDataForSubGsub{
@@ -59,7 +64,8 @@ var dataForGsubWithCaptures = []tDataForSubGsub{
 	{"abcde", "[A-Z]", "X", "abcde"},
 	{"abcde", "[c-d]", "X", "abXXe"},
 
-	//{"abacad", "a(.)", "<\\2>", "<b><c><d>"},
+	{"abacad", "a(.)", "<\\1>", "<b><c><d>"},
+	{"abacad", "a(.)", "<\\2>", "<><><>"},
 }
 
 var dataForMatches = []tDataForMatches{
