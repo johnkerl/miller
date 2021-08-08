@@ -31,6 +31,9 @@ import (
 	"strings"
 )
 
+// TODO: comment
+var captureSplitter = regexp.MustCompile("(\\\\[1-9])")
+
 // ================================================================
 // API functions
 
@@ -209,13 +212,72 @@ func regexSubGsubWithCapturesAux(
 		return input
 	}
 
+	// Example return value from FindAllSubmatchIndex with input
+	// "...ab_cde...fg_hij..." and regex "(..)_(...)":
+	//
+	// Matrix is [][]int{
+	//   []int{3, 9, 3, 5, 6, 9},
+	//   []int{12, 18, 12, 14, 15, 18},
+	// }
+	//
+	// * 3-9 is for the entire match "ab_cde"
+	// * 3-5 is for the first capture "ab"
+	// * 6-9 is for the second capture "cde"
+	//
+	// * 12-18 is for the entire match "fg_hij"
+	// * 12-14 is for the first capture "fg"
+	// * 15-18 is for the second capture "hij"
+
 	var buffer bytes.Buffer // Faster since os.Stdout is unbuffered
 	nonMatchStartIndex := 0
 
-	for _, startEnd := range matrix {
-		buffer.WriteString(input[nonMatchStartIndex:startEnd[0]])
-		buffer.WriteString(replacement)
-		nonMatchStartIndex = startEnd[1]
+	for _, row := range matrix {
+		buffer.WriteString(input[nonMatchStartIndex:row[0]])
+
+		// xxx need to map row to captures
+		// xxx split to helper function
+
+		// Slot 0 is ""; then slots 1..9 for "\1".."\9".
+		captures := make([]string, 10)
+		di := 1
+		n := len(row)
+		for si := 2; si < n && di <= 9; si += 2 {
+			start := row[si]
+			end := row[si+1]
+			captures[di] = input[start:end]
+			di += 1
+		}
+
+		// If the replacement had no captures, e.g. "xyz", we would insert it
+		//
+		//   "..."     -> "..."
+		//   "ab_cde"  -> "xyz"   --- here
+		//   "..."     -> "..."
+		//   "fg_hij"  -> "xyz"   --- and here
+		//   "..."     -> "..."
+		//
+		// using buffer.WriteString(replacement). However, this function exists
+		// to handle the case when the replacement string has captures like
+		// "\2:\1", so we need to produce
+		//
+		//   "..."     -> "..."
+		//   "ab_cde"  -> "cde:ab"   --- here
+		//   "..."     -> "..."
+		//   "fg_hij"  -> "hij:fg"   --- and here
+		//   "..."     -> "..."
+		//
+		interpolateCaptures(
+			replacement,
+			// TODO: move to caller where it can be precomputed and stored
+			captureSplitter.FindAllSubmatchIndex([]byte(replacement), -1),
+			captures,
+			&buffer,
+		)
+
+		// xxx already have split up replacement into its matrix, before entering this helper
+		// xxx have another helper to iterate over, taking &buffer as arg ...
+
+		nonMatchStartIndex = row[1]
 		if breakOnFirst {
 			break
 		}
@@ -223,6 +285,34 @@ func regexSubGsubWithCapturesAux(
 
 	buffer.WriteString(input[nonMatchStartIndex:])
 	return buffer.String()
+}
+
+// TODO: comment
+func interpolateCaptures(
+	replacementString string,
+	replacementMatrix [][]int,
+	captures []string,
+	buffer *bytes.Buffer,
+) {
+	if replacementMatrix == nil {
+		buffer.WriteString(replacementString)
+		return
+	}
+
+	nonMatchStartIndex := 0
+
+	for _, row := range replacementMatrix {
+		start := row[0]
+		buffer.WriteString(replacementString[nonMatchStartIndex:row[0]])
+
+		// xxx comment
+		index := replacementString[start+1] - '0'
+		buffer.WriteString(captures[index])
+
+		nonMatchStartIndex = row[1]
+	}
+
+	buffer.WriteString(replacementString[nonMatchStartIndex:])
 }
 
 // regexMatchesAux is the implementation for the =~ operator.
