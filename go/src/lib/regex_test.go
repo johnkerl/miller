@@ -10,6 +10,12 @@ import (
 )
 
 // ----------------------------------------------------------------
+type tDataForHasCaptures struct {
+	replacement         string
+	expectedHasCaptures bool
+	expectedMatrix      [][]int
+}
+
 type tDataForSubGsub struct {
 	input          string
 	sregex         string
@@ -25,6 +31,13 @@ type tDataForMatches struct {
 }
 
 // ----------------------------------------------------------------
+var dataForHasCaptures = []tDataForHasCaptures{
+	{"foo", false, nil},
+	{"\\0", false, nil},
+	{"\\3", true, [][]int{[]int{0, 2, 0, 2}}},
+	{"abc\\1def\\2ghi", true, [][]int{[]int{3, 5, 3, 5}, []int{8, 10, 8, 10}}},
+}
+
 var dataForSubWithoutCaptures = []tDataForSubGsub{
 	{"abcde", "c", "X", "abXde"},
 	{"abcde", "z", "X", "abcde"},
@@ -77,7 +90,22 @@ var dataForMatches = []tDataForMatches{
 	{"foofoofoo", "(f.*o)", true, []string{"", "foofoofoo", "", "", "", "", "", "", "", ""}},
 }
 
-// ----------------------------------------------------------------
+func TestRegexReplacementHasCaptures(t *testing.T) {
+	for i, entry := range dataForHasCaptures {
+		actualHasCaptures, actualMatrix := RegexReplacementHasCaptures(entry.replacement)
+		if actualHasCaptures != entry.expectedHasCaptures {
+			t.Fatalf("case %d replacement \"%s\" expected %v got %v\n",
+				i, entry.replacement, entry.expectedHasCaptures, actualHasCaptures,
+			)
+		}
+		if !compareMatrices(actualMatrix, entry.expectedMatrix) {
+			t.Fatalf("case %d replacement \"%s\" expected matrix %#v got %#v\n",
+				i, entry.replacement, entry.expectedMatrix, actualMatrix,
+			)
+		}
+	}
+}
+
 func TestRegexSubWithoutCaptures(t *testing.T) {
 	for i, entry := range dataForSubWithoutCaptures {
 		actualOutput := RegexSubWithoutCaptures(entry.input, entry.sregex, entry.replacement)
@@ -136,6 +164,34 @@ func TestRegexMatches(t *testing.T) {
 			)
 		}
 	}
+}
+
+func compareMatrices(
+	actualMatrix [][]int,
+	expectedMatrix [][]int,
+) bool {
+	if actualMatrix == nil && expectedMatrix == nil {
+		return true
+	}
+	if actualMatrix == nil || expectedMatrix == nil {
+		return false
+	}
+	if len(actualMatrix) != len(expectedMatrix) {
+		return false
+	}
+	for i, _ := range expectedMatrix {
+		actualRow := actualMatrix[i]
+		expectedRow := expectedMatrix[i]
+		if len(actualRow) != len(expectedRow) {
+			return false
+		}
+		for j, _ := range expectedRow {
+			if actualRow[j] != expectedRow[j] {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 func compareCaptures(

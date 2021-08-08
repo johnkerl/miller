@@ -29,6 +29,10 @@ w discussion re docs6 ...
 ----------------------------------------------------------------
 REGEX CAPTURES
 
+* https://github.com/johnkerl/miller/issues/388 is much cleaner
+  o keep current syntax for backward compatibility
+  o but encourage use of this
+
 * sub/gsub have function scope
 
   o MlrvalSub/MlrvalGsub
