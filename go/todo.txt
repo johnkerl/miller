@@ -11,10 +11,20 @@ TOP OF LIST:
 * survey email followups
 
 ----------------------------------------------------------------
-! docs css fixups -- different pres for different pairings -- font-weight in there -- etc
-! discussion re docs6 ...
-! favicon
-! rtd.io w/ branch -- ?
+docs:
+w discussion re docs6 ...
+* single cheatsheet page -- put out RFH?
+
+* abbrevations: https://squidfunk.github.io/mkdocs-material/reference/abbreviations/#configuration
+  admonitions:  https://squidfunk.github.io/mkdocs-material/reference/admonitions/#usage
+  content tabs: https://squidfunk.github.io/mkdocs-material/reference/content-tabs/#usage
+  footnotes:    https://squidfunk.github.io/mkdocs-material/reference/footnotes/#usage
+  meta tags:    https://squidfunk.github.io/mkdocs-material/reference/meta-tags/#usage
+
+* link to SE table ...
+  https://github.com/johnkerl/miller/discussions/609#discussioncomment-1115715
+
+* csv -> csv/tsv throughout
 
 ----------------------------------------------------------------
 DOC6
