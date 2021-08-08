@@ -17,6 +17,7 @@ import (
 )
 
 // TODO: comment
+var captureDetector = regexp.MustCompile("\\\\[1-9]")
 var captureSplitter = regexp.MustCompile("(\\\\[1-9])")
 
 // ================================================================
@@ -70,10 +71,22 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	return regex
 }
 
+// xxx comment
 // xxx MakeEmptyCaptures function for CST state
-
-// xxx ReplacementHasCaptures function
-//   xxx ReplacementMatrixExtractor ...
+// xxx UT
+// xxx more UT cases
+func RegexReplacementHasCaptures(
+	replacement string,
+) (
+	hasCaptures bool,
+	matrix [][]int,
+) {
+	if captureDetector.MatchString(replacement) {
+		return true, captureSplitter.FindAllSubmatchIndex([]byte(replacement), -1)
+	} else {
+		return false, nil
+	}
+}
 
 // RegexSubWithoutCaptures implements the sub DSL function when the replacement
 // string has none of "\1".."\9".
@@ -111,6 +124,7 @@ func RegexSubWithCaptures(
 	input string,
 	sregex string,
 	replacement string,
+	// TODO: matrix
 ) string {
 	regex := CompileMillerRegexOrDie(sregex)
 	return RegexSubCompiledWithCaptures(input, regex, replacement)
@@ -295,7 +309,10 @@ func interpolateCaptures(
 	buffer.WriteString(replacementString[nonMatchStartIndex:])
 }
 
-// regexMatchesAux is the implementation for the =~ operator.
+// regexMatchesAux is the implementation for the =~ operator.  Without
+// Miller-style regex captures this would a simple one-line
+// regex.MatchString(input). However, we return the captures array for the
+// benefit of subsequent references to "\1".."\9".
 func regexMatchesAux(
 	input string,
 	regex *regexp.Regexp,
