@@ -6,6 +6,7 @@
 package runtime
 
 import (
+	"mlr/src/lib"
 	"mlr/src/types"
 )
 
@@ -16,6 +17,7 @@ type State struct {
 	FilterExpression *types.Mlrval
 	Stack            *Stack
 	OutputChannel    chan<- *types.RecordAndContext
+	RegexCaptures    []string // TODO: comment
 }
 
 func NewEmptyState() *State {
@@ -27,6 +29,7 @@ func NewEmptyState() *State {
 		FilterExpression: types.MLRVAL_TRUE,
 		Stack:            NewStack(),
 		// OutputChannel is assigned after construction
+		RegexCaptures: lib.MakeEmptyRegexCaptures(),
 	}
 }
 
@@ -36,4 +39,5 @@ func (state *State) Update(
 ) {
 	state.Inrec = inrec
 	state.Context = context
+	state.RegexCaptures = lib.MakeEmptyRegexCaptures()
 }

@@ -29,6 +29,27 @@ w discussion re docs6 ...
 ----------------------------------------------------------------
 REGEX CAPTURES
 
+! to fix:
+  ! filter-statement must again be last b/c
+    mlr --opprint put '$FIELD =~ "(.)(.)" {$F0="\0";$F1="\1";$F2="\2...}
+    ! docmod !
+  ! "\0" needs to be the entire match string
+    ! doc-clarify !
+
+  mlrc put '$i > 5; $z=100' s
+  mlrc put '$z=100; $i > 5' s
+  mlr put '$i > 5; $z=100' s
+  mlr put '$z=100; $i > 5' s
+  mlrc filter '$i > 5; $z=100' s
+  mlrc filter '$z=100; $i > 5' s
+  mlr filter '$i > 5; $z=100' s
+  mlr filter '$z=100; $i > 5' s
+
+  mlr filter's final statement must be a bare boolean
+
+  * bare-boolean statements: no-ops unless they have side effects: namely, the matches/does-not-match
+    operators =~ and !=~ setting regex captures \1, \2, etc.
+
 * https://github.com/johnkerl/miller/issues/388 is much cleaner
   o keep current syntax for backward compatibility
   o but encourage use of this
@@ -52,6 +73,7 @@ REGEX CAPTURES
       $b = sub($a, $regex, $replacement)
     ? start with compiled-neither -- ?
     ? up-level analysis & then StaticRegexNode and RegexReplacementNode -- ?
+    ? take timings ?
 
   o =~/!=~ have callback scope
     - echo x=ab_cde | mlrc put 'if ($x =~ "(..)_(...)") { $y = "\1:\2"}'

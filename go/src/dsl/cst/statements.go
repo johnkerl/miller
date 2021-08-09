@@ -35,6 +35,7 @@ func (root *RootNode) BuildStatementNode(
 	case dsl.NodeTypeFilterStatement:
 		return root.BuildFilterStatementNode(astNode)
 	case dsl.NodeTypeBareBoolean:
+		// TODO: bare-booleans are implicit filters only if last
 		return root.BuildFilterStatementNode(astNode)
 
 	case dsl.NodeTypePrintStatement:

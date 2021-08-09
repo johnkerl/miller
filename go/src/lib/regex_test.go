@@ -33,7 +33,7 @@ type tDataForMatches struct {
 // ----------------------------------------------------------------
 var dataForHasCaptures = []tDataForHasCaptures{
 	{"foo", false, nil},
-	{"\\0", false, nil},
+	{"\\0", true, [][]int{[]int{0, 2, 0, 2}}},
 	{"\\3", true, [][]int{[]int{0, 2, 0, 2}}},
 	{"\\34", true, [][]int{[]int{0, 2, 0, 2}}},
 	{"abc\\1def\\2ghi", true, [][]int{[]int{3, 5, 3, 5}, []int{8, 10, 8, 10}}},
@@ -79,11 +79,11 @@ var dataForGsub = []tDataForSubGsub{
 
 var dataForMatches = []tDataForMatches{
 	{"abcde", "[A-Z]", false, nil},
-	{"abcde", "[a-z]", true, nil},
-	{"...ab_cde...", "(..)_(...)", true, []string{"", "ab", "cde", "", "", "", "", "", "", ""}},
-	{"...ab_cde...fg_hij...", "(..)_(...)", true, []string{"", "ab", "cde", "", "", "", "", "", "", ""}},
-	{"foofoofoo", "(f.o)", true, []string{"", "foo", "", "", "", "", "", "", "", ""}},
-	{"foofoofoo", "(f.*o)", true, []string{"", "foofoofoo", "", "", "", "", "", "", "", ""}},
+	{"abcde", "[a-z]", true, []string{"a", "", "", "", "", "", "", "", "", ""}},
+	{"...ab_cde...", "(..)_(...)", true, []string{"ab_cde", "ab", "cde", "", "", "", "", "", "", ""}},
+	{"...ab_cde...fg_hij...", "(..)_(...)", true, []string{"ab_cde", "ab", "cde", "", "", "", "", "", "", ""}},
+	{"foofoofoo", "(f.o)", true, []string{"foo", "foo", "", "", "", "", "", "", "", ""}},
+	{"foofoofoo", "(f.*o)", true, []string{"foofoofoo", "foofoofoo", "", "", "", "", "", "", "", ""}},
 }
 
 func TestRegexReplacementHasCaptures(t *testing.T) {
