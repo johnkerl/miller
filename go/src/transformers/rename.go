@@ -123,8 +123,9 @@ func transformerRenameParseCLI(
 
 // ----------------------------------------------------------------
 type tRegexAndReplacement struct {
-	regex       *regexp.Regexp
-	replacement string
+	regex                    *regexp.Regexp
+	replacement              string
+	replacementCaptureMatrix [][]int // TODO: comment
 }
 
 type TransformerRename struct {
@@ -163,9 +164,11 @@ func NewTransformerRename(
 			regexString := pe.Key
 			regex := lib.CompileMillerRegexOrDie(regexString)
 			replacement := pe.Value.(string)
+			_, replacementCaptureMatrix := lib.RegexReplacementHasCaptures(replacement)
 			regexAndReplacement := tRegexAndReplacement{
-				regex:       regex,
-				replacement: replacement,
+				regex:                    regex,
+				replacement:              replacement,
+				replacementCaptureMatrix: replacementCaptureMatrix,
 			}
 			tr.regexesAndReplacements.PushBack(&regexAndReplacement)
 		}
@@ -215,6 +218,7 @@ func (tr *TransformerRename) transformWithRegexes(
 			regexAndReplacement := pr.Value.(*tRegexAndReplacement)
 			regex := regexAndReplacement.regex
 			replacement := regexAndReplacement.replacement
+			replacementCaptureMatrix := regexAndReplacement.replacementCaptureMatrix
 
 			for pe := inrec.Head; pe != nil; pe = pe.Next {
 				oldName := pe.Key
@@ -224,7 +228,7 @@ func (tr *TransformerRename) transformWithRegexes(
 						inrec.Rename(oldName, newName)
 					}
 				} else {
-					newName := lib.RegexSubCompiledWithCaptures(oldName, regex, replacement)
+					newName := lib.RegexSubCompiled(oldName, regex, replacement, replacementCaptureMatrix)
 					if newName != oldName {
 						inrec.Rename(oldName, newName)
 					}
