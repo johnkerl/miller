@@ -344,11 +344,12 @@ func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
 func (node *RegexCaptureBinaryFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	// TODO
-	output, _ := node.regexCaptureBinaryFunc(
+	// TODO: comment
+	output, captures := node.regexCaptureBinaryFunc(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),
 	)
+	state.RegexCaptures = captures
 	return output
 }
 
