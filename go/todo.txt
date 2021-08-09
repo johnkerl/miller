@@ -33,37 +33,37 @@ REGEX CAPTURES
   o keep current syntax for backward compatibility
   o but encourage use of this
 
-* sub/gsub have function scope
+* callsites:
+  o merge-fields and rename verbs
+    - regex & replacements are both statically known before records arrive
+    - ok to compile regex & replacement both
+    - RegexSub -> RegexSubDoublyCompiled -- ?
+  o cut, grep, rename verbs ... direct use of Go REs -- ?
+    - lots of lib.CompileMillerRegex and regex.MatchString
 
-  o MlrvalSub/MlrvalGsub
-    - example: '$b = sub($a, "(..)_(...)", "\2-\1")'
-    - old: lib.RegexReplaceOnce/re.ReplaceAllString
-    - new:
-      > match input(1) against regex(2)
-      > replace each match with \d-enabled string
-      > lumin-like loop with as-is/as-will-be alternations
+  o sub/gsub have function scope; MlrvalSub/MlrvalGsub
+    > maybe compile regex & replacement both
+      $b = sub($a, "sta.*tic", "literal")
+    > maybe compile regex not replacement
+      $b = sub($a, "sta.*tic", $x)
+    > maybe compile replacement not regex
+      $b = sub($a, $regex, "literal")
+    > maybe compile neither one
+      $b = sub($a, $regex, $replacement)
+    ? start with compiled-neither -- ?
+    ? up-level analysis & then StaticRegexNode and RegexReplacementNode -- ?
 
-      $ echo a='12_345 67_890' | mlrc --oxtab put '$b = sub($a, "(..)_(...)", "\2-\1")'
-      a 12_345 67_890
-      b 345-12 67_890
+  o =~/!=~ have callback scope
+    - echo x=ab_cde | mlrc put 'if ($x =~ "(..)_(...)") { $y = "\1:\2"}'
+    - MlrvalStringMatchesRegexp/MlrvalStringDoesNotMatchRegexp
+      > maybe compile regex; no replacement string
+      > StaticRegexNode -- ?
+    - StringLiteralNode
+      > has replacement string; can be compiled
+      > RegexReplacementNode -- ?
+      > no, wait ... *all* string-literal nodes need to be capture-enabled :(
 
-      $ echo a='12_345 67_890' | mlrc --oxtab put '$b = gsub($a, "(..)_(...)", "\2-\1")'
-      a 12_345 67_890
-      b 345-12 890-67
-
-* =~/!=~ have callback scope
-
-  o MlrvalStringMatchesRegexp/MlrvalStringDoesNotMatchRegexp
-    - old: re.MatchString
-    - new:
-      > matcher needs to write the regex-captures object
-      > string-evaluator needs to check for captures -- ?
-        * BuildStringLiteralNode -- check if matches '.*\d.*' pattern
-
-    $ echo a=12_3456 | mlrc --oxtab put '$a =~ "(..)_(....)"; $b = "left_\1"; $c = "right_\2"'
-    a 12_3456
-    b left_12
-    c right_3456
+* TODO/xxx/XXX/comment-passes -- !!
 
 ----------------------------------------------------------------
 DOC6

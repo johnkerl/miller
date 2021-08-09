@@ -35,18 +35,16 @@ var dataForHasCaptures = []tDataForHasCaptures{
 	{"foo", false, nil},
 	{"\\0", false, nil},
 	{"\\3", true, [][]int{[]int{0, 2, 0, 2}}},
+	{"\\34", true, [][]int{[]int{0, 2, 0, 2}}},
 	{"abc\\1def\\2ghi", true, [][]int{[]int{3, 5, 3, 5}, []int{8, 10, 8, 10}}},
 }
 
-var dataForSubWithoutCaptures = []tDataForSubGsub{
+var dataForSub = []tDataForSubGsub{
 	{"abcde", "c", "X", "abXde"},
 	{"abcde", "z", "X", "abcde"},
 	{"abcde", "[a-z]", "X", "Xbcde"},
 	{"abcde", "[A-Z]", "X", "abcde"},
-	{"abcde", "ab(.)de", "X\\1Y", "X\\1Y"},
-}
 
-var dataForSubWithCaptures = []tDataForSubGsub{
 	{"abcde", "c", "X", "abXde"},
 	{"abcde", "z", "X", "abcde"},
 	{"abcde", "[a-z]", "X", "Xbcde"},
@@ -62,15 +60,13 @@ var dataForSubWithCaptures = []tDataForSubGsub{
 	{"foofoofoo", "(f.*o)", "b\\2r", "br"},
 }
 
-var dataForGsubWithoutCaptures = []tDataForSubGsub{
+var dataForGsub = []tDataForSubGsub{
 	{"abcde", "c", "X", "abXde"},
 	{"abcde", "z", "X", "abcde"},
 	{"abcde", "[a-z]", "X", "XXXXX"},
 	{"abcde", "[A-Z]", "X", "abcde"},
 	{"abcde", "[c-d]", "X", "abXXe"},
-}
 
-var dataForGsubWithCaptures = []tDataForSubGsub{
 	{"abcde", "c", "X", "abXde"},
 	{"abcde", "z", "X", "abcde"},
 	{"abcde", "[a-z]", "X", "XXXXX"},
@@ -106,9 +102,9 @@ func TestRegexReplacementHasCaptures(t *testing.T) {
 	}
 }
 
-func TestRegexSubWithoutCaptures(t *testing.T) {
-	for i, entry := range dataForSubWithoutCaptures {
-		actualOutput := RegexSubWithoutCaptures(entry.input, entry.sregex, entry.replacement)
+func TestRegexSub(t *testing.T) {
+	for i, entry := range dataForSub {
+		actualOutput := RegexSub(entry.input, entry.sregex, entry.replacement)
 		if actualOutput != entry.expectedOutput {
 			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
 				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
@@ -117,31 +113,9 @@ func TestRegexSubWithoutCaptures(t *testing.T) {
 	}
 }
 
-func TestRegexSubWithCaptures(t *testing.T) {
-	for i, entry := range dataForSubWithCaptures {
-		actualOutput := RegexSubWithCaptures(entry.input, entry.sregex, entry.replacement)
-		if actualOutput != entry.expectedOutput {
-			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
-				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
-			)
-		}
-	}
-}
-
-func TestRegexGsubWithoutCaptures(t *testing.T) {
-	for i, entry := range dataForGsubWithoutCaptures {
-		actualOutput := RegexGsubWithoutCaptures(entry.input, entry.sregex, entry.replacement)
-		if actualOutput != entry.expectedOutput {
-			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
-				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
-			)
-		}
-	}
-}
-
-func TestRegexGsubWithCaptures(t *testing.T) {
-	for i, entry := range dataForGsubWithCaptures {
-		actualOutput := RegexGsubWithCaptures(entry.input, entry.sregex, entry.replacement)
+func TestRegexGsub(t *testing.T) {
+	for i, entry := range dataForGsub {
+		actualOutput := RegexGsub(entry.input, entry.sregex, entry.replacement)
 		if actualOutput != entry.expectedOutput {
 			t.Fatalf("case %d input \"%s\" sregex \"%s\" replacement \"%s\" expected \"%s\" got \"%s\"\n",
 				i, entry.input, entry.sregex, entry.replacement, entry.expectedOutput, actualOutput,
