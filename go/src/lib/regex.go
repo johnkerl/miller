@@ -17,8 +17,8 @@ import (
 )
 
 // TODO: comment
-var captureDetector = regexp.MustCompile("\\\\[1-9]")
-var captureSplitter = regexp.MustCompile("(\\\\[1-9])")
+var captureDetector = regexp.MustCompile("\\\\[0-9]")
+var captureSplitter = regexp.MustCompile("(\\\\[0-9])")
 
 // CompileMillerRegex wraps Go regex-compile with some Miller-specific syntax
 // which predate the port of Miller from C to Go.  Miller regexes use a final
@@ -66,6 +66,11 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 		os.Exit(1)
 	}
 	return regex
+}
+
+// TODO: comment
+func MakeEmptyRegexCaptures() []string {
+	return nil
 }
 
 // xxx comment
@@ -142,10 +147,6 @@ func RegexMatchesCompiled(
 	// "\1" to "ab" and "\2" to "cde".
 	row := matrix[0]
 	n := len(row)
-	if n == 2 {
-		// There were no regex captures like "(..)" within the regex.
-		return true, nil
-	}
 
 	// Example return value from FindAllSubmatchIndex with input
 	// "...ab_cde...fg_hij..." and regex "(..)_(...)":
@@ -161,11 +162,13 @@ func RegexMatchesCompiled(
 	// * 3-5 is for the first capture "ab"
 	// * 6-9 is for the second capture "cde"
 
-	di := 1
-	for si := 2; si < n && di <= 9; si += 2 {
+	di := 0
+	for si := 0; si < n && di <= 9; si += 2 {
 		start := row[si]
 		end := row[si+1]
-		captures[di] = input[start:end]
+		if start >= 0 && end >= 0 { // TODO: comment
+			captures[di] = input[start:end]
+		}
 		di += 1
 	}
 
@@ -178,7 +181,7 @@ func InterpolateCaptures(
 	replacementMatrix [][]int,
 	captures []string,
 ) string {
-	if replacementMatrix == nil {
+	if replacementMatrix == nil || captures == nil {
 		return replacementString
 	}
 	var buffer bytes.Buffer
@@ -275,9 +278,9 @@ func regexSubGsubCompiled(
 
 		// Slot 0 is ""; then slots 1..9 for "\1".."\9".
 		captures := make([]string, 10)
-		di := 1
+		di := 0
 		n := len(row)
-		for si := 2; si < n && di <= 9; si += 2 {
+		for si := 0; si < n && di <= 9; si += 2 {
 			start := row[si]
 			end := row[si+1]
 			captures[di] = input[start:end]

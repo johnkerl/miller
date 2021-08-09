@@ -200,15 +200,42 @@ type StringLiteralNode struct {
 	literal types.Mlrval
 }
 
-func (root *RootNode) BuildStringLiteralNode(literal string) *StringLiteralNode {
-	return &StringLiteralNode{
-		literal: types.MlrvalFromString(literal),
+// TODO: comment
+type RegexCaptureReplacementNode struct {
+	replacementString        string
+	replacementCaptureMatrix [][]int
+}
+
+func (root *RootNode) BuildStringLiteralNode(literal string) IEvaluable {
+	hasCaptures, replacementCaptureMatrix := lib.RegexReplacementHasCaptures(literal)
+	if !hasCaptures {
+		return &StringLiteralNode{
+			literal: types.MlrvalFromString(literal),
+		}
+	} else {
+		return &RegexCaptureReplacementNode{
+			replacementString:        literal,
+			replacementCaptureMatrix: replacementCaptureMatrix,
+		}
 	}
 }
+
 func (node *StringLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	return &node.literal
+}
+
+func (node *RegexCaptureReplacementNode) Evaluate(
+	state *runtime.State,
+) *types.Mlrval {
+	return types.MlrvalPointerFromString(
+		lib.InterpolateCaptures(
+			node.replacementString,
+			node.replacementCaptureMatrix,
+			state.RegexCaptures,
+		),
+	)
 }
 
 // ----------------------------------------------------------------

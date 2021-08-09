@@ -23,7 +23,7 @@ func GetTypeName(mvtype MVType) string {
 
 // ----------------------------------------------------------------
 func (mv *Mlrval) IsLegit() bool {
-	return mv.mvtype > MT_VOID
+	return mv.mvtype >= MT_VOID
 }
 
 func (mv *Mlrval) IsErrorOrAbsent() bool {
