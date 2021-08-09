@@ -57,7 +57,11 @@ func MlrvalSub(input1, input2, input3 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 
-	stringOutput := lib.RegexSubWithCaptures(input1.printrep, input2.printrep, input3.printrep)
+	input := input1.printrep
+	sregex := input2.printrep
+	replacement := input3.printrep
+
+	stringOutput := lib.RegexSub(input, sregex, replacement)
 	return MlrvalPointerFromString(stringOutput)
 }
 
@@ -85,7 +89,11 @@ func MlrvalGsub(input1, input2, input3 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 
-	stringOutput := lib.RegexGsubWithCaptures(input1.printrep, input2.printrep, input3.printrep)
+	input := input1.printrep
+	sregex := input2.printrep
+	replacement := input3.printrep
+
+	stringOutput := lib.RegexGsub(input, sregex, replacement)
 	return MlrvalPointerFromString(stringOutput)
 }
 
