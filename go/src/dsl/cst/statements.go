@@ -32,10 +32,13 @@ func (root *RootNode) BuildStatementNode(
 			return nil, err
 		}
 
-	case dsl.NodeTypeFilterStatement:
-		return root.BuildFilterStatementNode(astNode)
+	// E.g. 'NR > 10' without if or '{...}' body.  For put, these are no-ops
+	// except side-effects (like regex-captures); for filter, they set the
+	// filter condition only if they're the last statement in the main block.
 	case dsl.NodeTypeBareBoolean:
-		// TODO: bare-booleans are implicit filters only if last
+		return root.BuildBareBooleanOrFilterStatementNode(astNode)
+	// E.g. 'filter NR > 10'.
+	case dsl.NodeTypeFilterStatement:
 		return root.BuildFilterStatementNode(astNode)
 
 	case dsl.NodeTypePrintStatement:
