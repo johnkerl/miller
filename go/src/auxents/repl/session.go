@@ -76,7 +76,7 @@ func NewRepl(
 	signal.Notify(sysToSignalHandlerChannel, os.Interrupt, syscall.SIGTERM)
 	go controlCHandler(sysToSignalHandlerChannel, appSignalNotificationChannel)
 
-	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions).WithRedefinableUDFUDS()
+	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions, cst.DSLInstanceTypeREPL).WithRedefinableUDFUDS()
 
 	// TODO
 

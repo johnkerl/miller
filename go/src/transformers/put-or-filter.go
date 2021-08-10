@@ -262,10 +262,14 @@ func transformerPutOrFilterParseCLI(
 		argi++
 	}
 
-	isFilter := verb == "filter"
+	var dslInstanceType cst.DSLInstanceType = cst.DSLInstanceTypePut
+	if verb == "filter" {
+		dslInstanceType = cst.DSLInstanceTypeFilter
+	}
+
 	transformer, err := NewTransformerPut(
 		dslStrings,
-		isFilter,
+		dslInstanceType,
 		presets,
 		echoDSLString,
 		printASTAsTree,
@@ -299,7 +303,7 @@ type TransformerPut struct {
 
 func NewTransformerPut(
 	dslStrings []string,
-	isFilter bool,
+	dslInstanceType cst.DSLInstanceType,
 	presets []string,
 	echoDSLString bool,
 	printASTAsTree bool,
@@ -313,7 +317,7 @@ func NewTransformerPut(
 	options *cliutil.TOptions,
 ) (*TransformerPut, error) {
 
-	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions)
+	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions, dslInstanceType)
 
 	for _, dslString := range dslStrings {
 		astRootNode, err := BuildASTFromStringWithMessage(dslString)
@@ -346,7 +350,6 @@ func NewTransformerPut(
 
 		err = cstRootNode.IngestAST(
 			astRootNode,
-			isFilter,
 			false, // isReplImmediate
 			doWarnings,
 			warningsAreFatal,

@@ -17,7 +17,7 @@ import (
 // ----------------------------------------------------------------
 func ValidateAST(
 	ast *dsl.AST,
-	isFilter bool, // false for 'mlr put', true for 'mlr filter'
+	dslInstanceType DSLInstanceType, // mlr put, mlr filter, mlr repl
 ) error {
 	atTopLevel := true
 	inLoop := false
@@ -31,7 +31,7 @@ func ValidateAST(
 	// They can do mlr put '': there are simply zero statements.
 	// But filter '' is an error.
 	if ast.RootNode.Children == nil || len(ast.RootNode.Children) == 0 {
-		if isFilter {
+		if dslInstanceType == DSLInstanceTypeFilter {
 			return errors.New("Miller: filter statement must not be empty.")
 		}
 	}
@@ -40,7 +40,7 @@ func ValidateAST(
 		for _, astChild := range ast.RootNode.Children {
 			err := validateASTAux(
 				astChild,
-				isFilter,
+				dslInstanceType,
 				atTopLevel,
 				inLoop,
 				inBeginOrEnd,
@@ -62,7 +62,7 @@ func ValidateAST(
 // ----------------------------------------------------------------
 func validateASTAux(
 	astNode *dsl.ASTNode,
-	isFilter bool,
+	dslInstanceType DSLInstanceType, // mlr put, mlr filter, mlr repl
 	atTopLevel bool,
 	inLoop bool,
 	inBeginOrEnd bool,
@@ -72,7 +72,6 @@ func validateASTAux(
 	isAssignmentLHS bool,
 	isUnset bool,
 ) error {
-	nextLevelIsFilter := isFilter
 	nextLevelAtTopLevel := false
 	nextLevelInLoop := inLoop
 	nextLevelInBeginOrEnd := inBeginOrEnd
@@ -82,12 +81,11 @@ func validateASTAux(
 	nextLevelIsUnset := isUnset
 
 	if astNode.Type == dsl.NodeTypeFilterStatement {
-		if isFilter {
+		if dslInstanceType == DSLInstanceTypeFilter {
 			return errors.New(
 				"Miller: filter expressions must not also contain the \"filter\" keyword.",
 			)
 		}
-		nextLevelIsFilter = true
 	}
 
 	// Check: begin/end/func/subr must be at top-level
@@ -235,7 +233,7 @@ func validateASTAux(
 			nextLevelIsUnset = astNode.Type == dsl.NodeTypeUnset
 			err := validateASTAux(
 				astChild,
-				nextLevelIsFilter,
+				dslInstanceType,
 				nextLevelAtTopLevel,
 				nextLevelInLoop,
 				nextLevelInBeginOrEnd,

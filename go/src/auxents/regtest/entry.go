@@ -32,6 +32,7 @@ func regTestUsage(verbName string, o *os.File, exitCode int) {
 	fmt.Fprintf(o, "-vvv     Also include full stdout/stderr/exit-code for each command-file.\n")
 	fmt.Fprintf(o, "-j       Just show the Miller command-line, put/filter script if any, and output.\n")
 	fmt.Fprintf(o, "-s {n}   After running tests, re-run first n failed .cmd files with verbosity level 3.\n")
+	fmt.Fprintf(o, "-S       After running tests, re-run all failed .cmd files with verbosity level 3.\n")
 	os.Exit(exitCode)
 }
 
@@ -81,6 +82,9 @@ func RegTestMain(args []string) int {
 			}
 			firstNFailsToShow = temp
 			argi++
+
+		} else if arg == "-S" {
+			firstNFailsToShow = 1000000000
 
 		} else if arg == "-p" {
 			doPopulate = true

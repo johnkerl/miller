@@ -14,6 +14,27 @@ import (
 )
 
 // ----------------------------------------------------------------
+// DSLInstanceType is for minor differences in DSL handling between mlr put,
+// mlr filter, and mlr repl.
+//
+// Namely, for "bare booleans" which are non-assignment statements like 'NR >
+// 10' or 'true' or '$x =~ "(..)_(...)" or even '1+2'.
+//
+// * For mlr put, bare booleans are no-ops; except side-effects (like
+//   regex-captures)
+// * For mlr filter, they set the filter condition only if they're the last
+//   statement in the main block.
+// * For mlr repl, similar to mlr filter: they are used to track the output to
+//   be printed for an expression entered at the REPL prompt.
+type DSLInstanceType int
+
+const (
+	DSLInstanceTypePut = iota
+	DSLInstanceTypeFilter
+	DSLInstanceTypeREPL
+)
+
+// ----------------------------------------------------------------
 // Please see root.go for context and comments.
 type RootNode struct {
 	beginBlocks                   []*StatementBlockNode
@@ -27,6 +48,7 @@ type RootNode struct {
 	unresolvedSubroutineCallsites *list.List
 	outputHandlerManagers         *list.List
 	recordWriterOptions           *cliutil.TWriterOptions
+	dslInstanceType               DSLInstanceType // put, filter, repl
 }
 
 // ----------------------------------------------------------------

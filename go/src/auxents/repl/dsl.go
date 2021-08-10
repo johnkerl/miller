@@ -58,7 +58,6 @@ func (repl *Repl) handleDSLStringAux(
 	// recorded, but any other statements are executed immediately.
 	err = repl.cstRootNode.IngestAST(
 		astRootNode,
-		false, /*isFilter*/
 		isReplImmediate,
 		doWarnings,
 		false, // warningsAreFatal

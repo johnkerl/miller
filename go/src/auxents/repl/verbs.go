@@ -429,8 +429,7 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 
 	err = repl.cstRootNode.IngestAST(
 		astRootNode,
-		false, /*isFilter*/
-		true,  /*isReplImmediate*/
+		true, /*isReplImmediate*/
 		repl.doWarnings,
 		false, // warningsAreFatal
 	)
