@@ -37,18 +37,40 @@ REGEX CAPTURES
     ! doc-clarify !
 
   mlrc put '$i > 5; $z=100' s
+  mlr  put '$i > 5; $z=100' s
   mlrc put '$z=100; $i > 5' s
-  mlr put '$i > 5; $z=100' s
-  mlr put '$z=100; $i > 5' s
+  mlr  put '$z=100; $i > 5' s
   mlrc filter '$i > 5; $z=100' s
+  mlr  filter '$i > 5; $z=100' s
   mlrc filter '$z=100; $i > 5' s
-  mlr filter '$i > 5; $z=100' s
-  mlr filter '$z=100; $i > 5' s
+  mlr  filter '$z=100; $i > 5' s
 
-  mlr filter's final statement must be a bare boolean
+  o mlr filter's final statement must be a bare boolean
 
-  * bare-boolean statements: no-ops unless they have side effects: namely, the matches/does-not-match
-    operators =~ and !=~ setting regex captures \1, \2, etc.
+  o bare-boolean statements in put: no-ops unless they have side effects:
+    namely, the matches/does-not-match operators =~ and !=~ setting regex
+    captures \1, \2, etc.
+
+  o isFilter / isREPLImmediate -> single enum in root
+    - REPL: always set the FilterExpression
+    - maybe replace with isPut -- ?
+
+  o mlr put must not accept -x
+
+  o mlr --opprint put '$fnr=FNR; $nr=NR' then filter 'if (FILENUM == 1) { FNR < 4} else { FNR > 4 }' s s
+    a   b   i  x                   y                   fnr nr
+    pan pan 1  0.3467901443380824  0.7268028627434533  1   1
+    eks pan 2  0.7586799647899636  0.5221511083334797  2   2
+    wye wye 3  0.20460330576630303 0.33831852551664776 3   3
+    wye pan 5  0.5732889198020006  0.8636244699032729  5   15
+    zee pan 6  0.5271261600918548  0.49322128674835697 6   16
+    eks zee 7  0.6117840605678454  0.1878849191181694  7   17
+    zee wye 8  0.5985540091064224  0.976181385699006   8   18
+    hat wye 9  0.03144187646093577 0.7495507603507059  9   19
+    pan wye 10 0.5026260055412137  0.9526183602969864  10  20
+
+    mlrc --opprint put '$fnr=FNR; $nr=NR' then filter 'if (FILENUM == 1) { FNR < 4} else { FNR > 4 }' s s
+    mlrc: filter expressions must end in a final boolean statement.
 
 * https://github.com/johnkerl/miller/issues/388 is much cleaner
   o keep current syntax for backward compatibility

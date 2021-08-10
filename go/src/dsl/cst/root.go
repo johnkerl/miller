@@ -21,6 +21,7 @@ import (
 // ----------------------------------------------------------------
 func NewEmptyRoot(
 	recordWriterOptions *cliutil.TWriterOptions,
+	dslInstanceType DSLInstanceType,
 ) *RootNode {
 	return &RootNode{
 		beginBlocks:                   make([]*StatementBlockNode, 0),
@@ -34,6 +35,7 @@ func NewEmptyRoot(
 		unresolvedSubroutineCallsites: list.New(),
 		outputHandlerManagers:         list.New(),
 		recordWriterOptions:           recordWriterOptions,
+		dslInstanceType:               dslInstanceType,
 	}
 }
 
@@ -52,8 +54,6 @@ func (root *RootNode) WithRedefinableUDFUDS() *RootNode {
 // the second defines, or mutual recursion across pieces, etc.
 func (root *RootNode) IngestAST(
 	ast *dsl.AST,
-	// False for 'mlr put', true for 'mlr filter':
-	isFilter bool,
 	// False for non-REPL use. Also false for bulk-load REPL use.  True for
 	// interactive REPL statements which are intended to be executed once
 	// (immediately) but not retained.
@@ -68,7 +68,7 @@ func (root *RootNode) IngestAST(
 	// Check for things that are syntax errors but not done in the AST for
 	// pragmatic reasons. For example, $anything in begin/end blocks;
 	// begin/end/func not at top level; etc.
-	err := ValidateAST(ast, isFilter)
+	err := ValidateAST(ast, root.dslInstanceType)
 	if err != nil {
 		return err
 	}
