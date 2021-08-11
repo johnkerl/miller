@@ -49,6 +49,7 @@ func (root *RootNode) BuildBareBooleanStatementNode(astNode *dsl.ASTNode) (IExec
 }
 
 func (node *BareBooleanStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
+	node.bareBooleanEvaluable.Evaluate(state)
 	return nil, nil
 }
 

@@ -29,48 +29,83 @@ w discussion re docs6 ...
 ----------------------------------------------------------------
 REGEX CAPTURES
 
+! TODO/XXX/etc neatens
+  gd -w -r main $(gff main|grep go$|grep -v lib_test|sed s:go/::)
+
 ! to fix:
-  ! filter-statement must again be last b/c
-    mlr --opprint put '$FIELD =~ "(.)(.)" {$F0="\0";$F1="\1";$F2="\2...}
-    ! docmod !
-  ! "\0" needs to be the entire match string
-    ! doc-clarify !
-
-  mlrc put '$i > 5; $z=100' s
-  mlr  put '$i > 5; $z=100' s
-  mlrc put '$z=100; $i > 5' s
-  mlr  put '$z=100; $i > 5' s
-  mlrc filter '$i > 5; $z=100' s
-  mlr  filter '$i > 5; $z=100' s
-  mlrc filter '$z=100; $i > 5' s
-  mlr  filter '$z=100; $i > 5' s
-
-  o mlr filter's final statement must be a bare boolean
-
-  o bare-boolean statements in put: no-ops unless they have side effects:
-    namely, the matches/does-not-match operators =~ and !=~ setting regex
-    captures \1, \2, etc.
-
-  o isFilter / isREPLImmediate -> single enum in root
-    - REPL: always set the FilterExpression
-    - maybe replace with isPut -- ?
 
   o mlr put must not accept -x
 
-  o mlr --opprint put '$fnr=FNR; $nr=NR' then filter 'if (FILENUM == 1) { FNR < 4} else { FNR > 4 }' s s
-    a   b   i  x                   y                   fnr nr
-    pan pan 1  0.3467901443380824  0.7268028627434533  1   1
-    eks pan 2  0.7586799647899636  0.5221511083334797  2   2
-    wye wye 3  0.20460330576630303 0.33831852551664776 3   3
-    wye pan 5  0.5732889198020006  0.8636244699032729  5   15
-    zee pan 6  0.5271261600918548  0.49322128674835697 6   16
-    eks zee 7  0.6117840605678454  0.1878849191181694  7   17
-    zee wye 8  0.5985540091064224  0.976181385699006   8   18
-    hat wye 9  0.03144187646093577 0.7495507603507059  9   19
-    pan wye 10 0.5026260055412137  0.9526183602969864  10  20
+  o "\t" etc in string literals
+    echo x=abc | mlrc put '$y="a\tb"'
+    echo x=abc | mlr  put '$y="a\tb"'
+    ! have explicit UTs for this -- should have been caught before regex testing; is more fundamental
 
-    mlrc --opprint put '$fnr=FNR; $nr=NR' then filter 'if (FILENUM == 1) { FNR < 4} else { FNR > 4 }' s s
-    mlrc: filter expressions must end in a final boolean statement.
+//char* mlr_alloc_unbackslash(char* input) {
+//	char* output = mlr_strdup_or_die(input);
+//	char* pi = input;
+//	char* po = output;
+//	int code = 0;
+//	while (*pi) {
+//		// https://en.wikipedia.org/wiki/Escape_sequences_in_C
+//		if (streqn(pi, "\\a", 2)) {
+//			pi += 2;
+//			*(po++) = '\a';
+//		} else if (streqn(pi, "\\b", 2)) {
+//			pi += 2;
+//			*(po++) = '\b';
+//		} else if (streqn(pi, "\\f", 2)) {
+//			pi += 2;
+//			*(po++) = '\f';
+//		} else if (streqn(pi, "\\n", 2)) {
+//			pi += 2;
+//			*(po++) = '\n';
+//		} else if (streqn(pi, "\\r", 2)) {
+//			pi += 2;
+//			*(po++) = '\r';
+//		} else if (streqn(pi, "\\t", 2)) {
+//			pi += 2;
+//			*(po++) = '\t';
+//		} else if (streqn(pi, "\\v", 2)) {
+//			pi += 2;
+//			*(po++) = '\v';
+//		} else if (streqn(pi, "\\\\", 2)) {
+//			pi += 2;
+//			*(po++) = '\\';
+//		} else if (streqn(pi, "\\'", 2)) {
+//			pi += 2;
+//			*(po++) = '\'';
+//		} else if (streqn(pi, "\\\"", 2)) {
+//			pi += 2;
+//			*(po++) = '"';
+//		} else if (streqn(pi, "\\?", 2)) {
+//			pi += 2;
+//			*(po++) = '?';
+//		} else if (is_backslash_octal(pi, &code)) {
+//			pi += 4;
+//			*(po++) = code;
+//		} else if (is_backslash_hex(pi, &code)) {
+//			pi += 4;
+//			*(po++) = code;
+//		} else {
+//			*po = *pi;
+//			pi++;
+//			po++;
+//		}
+//	}
+//	*po = 0;
+//
+//	return output;
+//}
+
+  o docfix: mlr filter's final statement must be a bare boolean -> now lifted so
+    mlr --opprint put '$fnr=FNR; $nr=NR' then filter 'if (FILENUM == 1) { FNR <= 5} else { FNR <= 2 }' s s
+
+  o doc clarify throughout: "\0" is the entire match
+
+  o doc: bare-boolean statements in put: no-ops unless they have side effects:
+    namely, the matches/does-not-match operators =~ and !=~ setting regex
+    captures \1, \2, etc.
 
 * https://github.com/johnkerl/miller/issues/388 is much cleaner
   o keep current syntax for backward compatibility
