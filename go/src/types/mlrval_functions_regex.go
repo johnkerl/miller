@@ -141,10 +141,9 @@ func MlrvalRegextract(input1, input2 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 	regex := lib.CompileMillerRegexOrDie(input2.printrep)
-	// TODO: See if we need FindStringIndex or FindStringSubmatch to distinguish from matching "".
-	match := regex.FindString(input1.printrep)
-	if match != "" {
-		return MlrvalPointerFromString(match)
+	match := regex.FindStringIndex(input1.printrep)
+	if match != nil {
+		return MlrvalPointerFromString(input1.printrep[match[0]:match[1]])
 	} else {
 		return MLRVAL_ABSENT
 	}
@@ -158,10 +157,9 @@ func MlrvalRegextractOrElse(input1, input2, input3 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 	regex := lib.CompileMillerRegexOrDie(input2.printrep)
-	// TODO: See if we need FindStringIndex or FindStringSubmatch to distinguish from matching "".
-	found := regex.FindString(input1.printrep)
-	if found != "" {
-		return MlrvalPointerFromString(found)
+	match := regex.FindStringIndex(input1.printrep)
+	if match != nil {
+		return MlrvalPointerFromString(input1.printrep[match[0]:match[1]])
 	} else {
 		return input3
 	}

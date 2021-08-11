@@ -128,7 +128,9 @@ func RegexMatchesCompiled(
 ) (bool, []string) {
 	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
 	if matrix == nil || len(matrix) == 0 {
-		return false, nil
+		// xxx temp
+		// return false, nil
+		return false, make([]string, 10)
 	}
 
 	// Slot 0 is ""; then slots 1..9 for "\1".."\9".
@@ -283,7 +285,9 @@ func regexSubGsubCompiled(
 		for si := 0; si < n && di <= 9; si += 2 {
 			start := row[si]
 			end := row[si+1]
-			captures[di] = input[start:end]
+			if start >= 0 && end >= 0 {
+				captures[di] = input[start:end]
+			}
 			di += 1
 		}
 

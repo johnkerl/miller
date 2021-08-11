@@ -308,32 +308,6 @@ func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
 		return nil, err
 	}
 
-	// Special short-circuiting cases
-	if builtinFunctionInfo.name == "&&" {
-		return root.BuildLogicalANDOperatorNode(
-			evaluable1,
-			evaluable2,
-		), nil
-	}
-	if builtinFunctionInfo.name == "||" {
-		return root.BuildLogicalOROperatorNode(
-			evaluable1,
-			evaluable2,
-		), nil
-	}
-	if builtinFunctionInfo.name == "??" {
-		return root.BuildAbsentCoalesceOperatorNode(
-			evaluable1,
-			evaluable2,
-		), nil
-	}
-	if builtinFunctionInfo.name == "???" {
-		return root.BuildEmptyCoalesceOperatorNode(
-			evaluable1,
-			evaluable2,
-		), nil
-	}
-
 	return &RegexCaptureBinaryFunctionCallsiteNode{
 		regexCaptureBinaryFunc: builtinFunctionInfo.regexCaptureBinaryFunc,
 		evaluable1:             evaluable1,
