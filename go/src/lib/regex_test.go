@@ -78,7 +78,7 @@ var dataForGsub = []tDataForSubGsub{
 }
 
 var dataForMatches = []tDataForMatches{
-	{"abcde", "[A-Z]", false, nil},
+	{"abcde", "[A-Z]", false, []string{"", "", "", "", "", "", "", "", "", ""}},
 	{"abcde", "[a-z]", true, []string{"a", "", "", "", "", "", "", "", "", ""}},
 	{"...ab_cde...", "(..)_(...)", true, []string{"ab_cde", "ab", "cde", "", "", "", "", "", "", ""}},
 	{"...ab_cde...fg_hij...", "(..)_(...)", true, []string{"ab_cde", "ab", "cde", "", "", "", "", "", "", ""}},
