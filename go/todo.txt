@@ -29,24 +29,9 @@ w discussion re docs6 ...
 ----------------------------------------------------------------
 REGEX CAPTURES
 
-! TODO/XXX/etc neatens
-  gd -w -r main $(gff main|grep go$|grep -v lib_test|sed s:go/::)
+! to do:
 
-! to document:
-
-  o double-backslashing:
-    - https://docs.python.org/3.9/library/re.html#raw-string-notation
-    - https://github.com/johnkerl/miller/issues/297
-    - c/lib/mlrregex.c
-    - c/lib/mlrutil.c
-      mlr_alloc_double_backslash
-    - mr regtest/regtest/cases-pending-go-port/dsl-filter-pattern-action/0031
-    - mr regtest/regtest/cases-pending-go-port/dsl-filter-pattern-action/0033
-    - exclusion zones:
-      sub/gsub arg 2
-      regextract/regextract_or_else arg 2
-      =~/!=~ arg 2
-    - note "\t\t" isn't the same as "\t"."\t" ... implicit 'r' ...
+  o testing:
 
       echo 'x=[.o*o.]' | mlr put '$y=gsub($x, "\[", "LEFT")'
       x=[.o*o.],y=LEFT.o*o.]
@@ -64,19 +49,6 @@ REGEX CAPTURES
       x=[.o*o.],y=[.o*o.RIGHT
 
   o mlr put must not accept -x
-
-  o docfix: mlr filter's final statement must be a bare boolean -> now lifted so
-    mlr --opprint put '$fnr=FNR; $nr=NR' then filter 'if (FILENUM == 1) { FNR <= 5} else { FNR <= 2 }' s s
-
-  o doc clarify throughout: "\0" is the entire match
-
-  o doc: bare-boolean statements in put: no-ops unless they have side effects:
-    namely, the matches/does-not-match operators =~ and !=~ setting regex
-    captures \1, \2, etc.
-
-* follow-on: https://github.com/johnkerl/miller/issues/388 is much cleaner
-  o keep current syntax for backward compatibility
-  o but encourage use of this
 
 ----------------------------------------------------------------
 DOC6
@@ -564,6 +536,10 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   - prepipe
   - system function
 
+* regex-capture follow-on: https://github.com/johnkerl/miller/issues/388 is much cleaner
+  o keep current syntax for backward compatibility
+  o but encourage use of this
+
 ----------------------------------------------------------------
 DOC6:
 
@@ -645,3 +621,10 @@ DOC6:
 * doclink re https://readthedocs.org/projects/miller/ & https://github.com/johnkerl/miller/settings/hooks
 * dotted-map doc ...
   o $*.foo["bar"] = NR b04k b/c precedence :(
+
+* docfix: mlr filter's final statement must be a bare boolean -> now lifted so
+  mlr --opprint put '$fnr=FNR; $nr=NR' then filter 'if (FILENUM == 1) { FNR <= 5} else { FNR <= 2 }' s s
+
+* doc clarify: bare-boolean statements in put: no-ops unless they have side effects:
+  namely, the matches/does-not-match operators =~ and !=~ setting regex
+  captures \1, \2, etc.

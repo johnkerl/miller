@@ -21,7 +21,7 @@ import (
 // ----------------------------------------------------------------
 func NewEmptyRoot(
 	recordWriterOptions *cliutil.TWriterOptions,
-	dslInstanceType DSLInstanceType,
+	dslInstanceType DSLInstanceType, // mlr put, mlr filter, or mlr repl
 ) *RootNode {
 	return &RootNode{
 		beginBlocks:                   make([]*StatementBlockNode, 0),
@@ -87,11 +87,12 @@ func (root *RootNode) IngestAST(
 		}
 	}
 
-	////fmt.Println("PRE")
-	////ast.Print()
+	// For debug:
+	// fmt.Println("PRE")
+	// ast.Print()
 	root.regexProtectPrePass(ast)
-	////fmt.Println("POST")
-	////ast.Print()
+	// fmt.Println("POST")
+	// ast.Print()
 
 	err = root.buildMainPass(ast, isReplImmediate)
 	if err != nil {

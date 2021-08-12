@@ -36,7 +36,9 @@ func MlrvalSsub(input1, input2, input3 *Mlrval) *Mlrval {
 // of the form "\1" .. "\9".
 //
 // TODO: make a variant which allows compiling the regexp once and reusing it
-// on each record
+// on each record. Likewise for other regex-using functions in this file.  But
+// first, do a profiling run to see how much time would be saved, and if this
+// precomputing+caching would be worthwhile.
 func MlrvalSub(input1, input2, input3 *Mlrval) *Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
@@ -67,8 +69,6 @@ func MlrvalSub(input1, input2, input3 *Mlrval) *Mlrval {
 
 // MlrvalGsub implements the gsub function, with support for regexes and regex captures
 // of the form "\1" .. "\9".
-// TODO: make a variant which allows compiling the regexp once and reusing it
-// on each record
 func MlrvalGsub(input1, input2, input3 *Mlrval) *Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
@@ -99,9 +99,6 @@ func MlrvalGsub(input1, input2, input3 *Mlrval) *Mlrval {
 
 // MlrvalStringMatchesRegexp implements the =~ operator, with support for
 // setting regex-captures for later expressions to access using "\1" .. "\9".
-//
-// TODO: make a variant which allows compiling the regexp once and reusing it
-// on each record
 func MlrvalStringMatchesRegexp(input1, input2 *Mlrval) (retval *Mlrval, captures []string) {
 	if !input1.IsLegit() {
 		return input1, nil
@@ -116,7 +113,6 @@ func MlrvalStringMatchesRegexp(input1, input2 *Mlrval) (retval *Mlrval, captures
 		return MLRVAL_ERROR, nil
 	}
 
-	// TODO
 	boolOutput, captures := lib.RegexMatches(input1.printrep, input2.printrep)
 	return MlrvalPointerFromBool(boolOutput), captures
 }
@@ -132,7 +128,6 @@ func MlrvalStringDoesNotMatchRegexp(input1, input2 *Mlrval) (retval *Mlrval, cap
 	}
 }
 
-// TODO: find a way to keep and stash a precompiled regex, somewhere in the CST ...
 func MlrvalRegextract(input1, input2 *Mlrval) *Mlrval {
 	if !input1.IsString() {
 		return MLRVAL_ERROR
