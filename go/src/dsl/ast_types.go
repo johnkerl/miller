@@ -25,6 +25,7 @@ type TNodeType string
 
 const (
 	NodeTypeStringLiteral             TNodeType = "string literal"
+	NodeTypeRegex                               = "regular expression"                  // not in the BNF -- written during CST pre-build pass
 	NodeTypeRegexCaseInsensitive                = "case-insensitive regular expression" // E.g. "a.*b"i -- note the trailing 'i'
 	NodeTypeIntLiteral                          = "int literal"
 	NodeTypeFloatLiteral                        = "float literal"

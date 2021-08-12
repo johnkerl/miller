@@ -32,71 +32,38 @@ REGEX CAPTURES
 ! TODO/XXX/etc neatens
   gd -w -r main $(gff main|grep go$|grep -v lib_test|sed s:go/::)
 
-! to fix:
+! to document:
+
+  o double-backslashing:
+    - https://docs.python.org/3.9/library/re.html#raw-string-notation
+    - https://github.com/johnkerl/miller/issues/297
+    - c/lib/mlrregex.c
+    - c/lib/mlrutil.c
+      mlr_alloc_double_backslash
+    - mr regtest/regtest/cases-pending-go-port/dsl-filter-pattern-action/0031
+    - mr regtest/regtest/cases-pending-go-port/dsl-filter-pattern-action/0033
+    - exclusion zones:
+      sub/gsub arg 2
+      regextract/regextract_or_else arg 2
+      =~/!=~ arg 2
+    - note "\t\t" isn't the same as "\t"."\t" ... implicit 'r' ...
+
+      echo 'x=[.o*o.]' | mlr put '$y=gsub($x, "\[", "LEFT")'
+      x=[.o*o.],y=LEFT.o*o.]
+
+      echo 'x=[.o*o.]' | mlr put '$y=gsub($x, ".",  "ALL")'
+      x=[.o*o.],y=ALLALLALLALLALLALLALL
+
+      echo 'x=[.o*o.]' | mlr put '$y=gsub($x, "\.", "DOT")'
+      x=[.o*o.],y=[DOTo*oDOT]
+
+      echo 'x=[.o*o.]' | mlr put '$y=gsub($x, "\*", "STAR")'
+      x=[.o*o.],y=[.oSTARo.]
+
+      echo 'x=[.o*o.]' | mlr put '$y=sub($x,  "\]", "RIGHT")'
+      x=[.o*o.],y=[.o*o.RIGHT
 
   o mlr put must not accept -x
-
-  o "\t" etc in string literals
-    echo x=abc | mlrc put '$y="a\tb"'
-    echo x=abc | mlr  put '$y="a\tb"'
-    ! have explicit UTs for this -- should have been caught before regex testing; is more fundamental
-
-//char* mlr_alloc_unbackslash(char* input) {
-//	char* output = mlr_strdup_or_die(input);
-//	char* pi = input;
-//	char* po = output;
-//	int code = 0;
-//	while (*pi) {
-//		// https://en.wikipedia.org/wiki/Escape_sequences_in_C
-//		if (streqn(pi, "\\a", 2)) {
-//			pi += 2;
-//			*(po++) = '\a';
-//		} else if (streqn(pi, "\\b", 2)) {
-//			pi += 2;
-//			*(po++) = '\b';
-//		} else if (streqn(pi, "\\f", 2)) {
-//			pi += 2;
-//			*(po++) = '\f';
-//		} else if (streqn(pi, "\\n", 2)) {
-//			pi += 2;
-//			*(po++) = '\n';
-//		} else if (streqn(pi, "\\r", 2)) {
-//			pi += 2;
-//			*(po++) = '\r';
-//		} else if (streqn(pi, "\\t", 2)) {
-//			pi += 2;
-//			*(po++) = '\t';
-//		} else if (streqn(pi, "\\v", 2)) {
-//			pi += 2;
-//			*(po++) = '\v';
-//		} else if (streqn(pi, "\\\\", 2)) {
-//			pi += 2;
-//			*(po++) = '\\';
-//		} else if (streqn(pi, "\\'", 2)) {
-//			pi += 2;
-//			*(po++) = '\'';
-//		} else if (streqn(pi, "\\\"", 2)) {
-//			pi += 2;
-//			*(po++) = '"';
-//		} else if (streqn(pi, "\\?", 2)) {
-//			pi += 2;
-//			*(po++) = '?';
-//		} else if (is_backslash_octal(pi, &code)) {
-//			pi += 4;
-//			*(po++) = code;
-//		} else if (is_backslash_hex(pi, &code)) {
-//			pi += 4;
-//			*(po++) = code;
-//		} else {
-//			*po = *pi;
-//			pi++;
-//			po++;
-//		}
-//	}
-//	*po = 0;
-//
-//	return output;
-//}
 
   o docfix: mlr filter's final statement must be a bare boolean -> now lifted so
     mlr --opprint put '$fnr=FNR; $nr=NR' then filter 'if (FILENUM == 1) { FNR <= 5} else { FNR <= 2 }' s s
@@ -107,42 +74,9 @@ REGEX CAPTURES
     namely, the matches/does-not-match operators =~ and !=~ setting regex
     captures \1, \2, etc.
 
-* https://github.com/johnkerl/miller/issues/388 is much cleaner
+* follow-on: https://github.com/johnkerl/miller/issues/388 is much cleaner
   o keep current syntax for backward compatibility
   o but encourage use of this
-
-* callsites:
-  o merge-fields and rename verbs
-    - regex & replacements are both statically known before records arrive
-    - ok to compile regex & replacement both
-    - RegexSub -> RegexSubDoublyCompiled -- ?
-  o cut, grep, rename verbs ... direct use of Go REs -- ?
-    - lots of lib.CompileMillerRegex and regex.MatchString
-
-  o sub/gsub have function scope; MlrvalSub/MlrvalGsub
-    > maybe compile regex & replacement both
-      $b = sub($a, "sta.*tic", "literal")
-    > maybe compile regex not replacement
-      $b = sub($a, "sta.*tic", $x)
-    > maybe compile replacement not regex
-      $b = sub($a, $regex, "literal")
-    > maybe compile neither one
-      $b = sub($a, $regex, $replacement)
-    ? start with compiled-neither -- ?
-    ? up-level analysis & then StaticRegexNode and RegexReplacementNode -- ?
-    ? take timings ?
-
-  o =~/!=~ have callback scope
-    - echo x=ab_cde | mlrc put 'if ($x =~ "(..)_(...)") { $y = "\1:\2"}'
-    - MlrvalStringMatchesRegexp/MlrvalStringDoesNotMatchRegexp
-      > maybe compile regex; no replacement string
-      > StaticRegexNode -- ?
-    - StringLiteralNode
-      > has replacement string; can be compiled
-      > RegexReplacementNode -- ?
-      > no, wait ... *all* string-literal nodes need to be capture-enabled :(
-
-* TODO/xxx/XXX/comment-passes -- !!
 
 ----------------------------------------------------------------
 DOC6

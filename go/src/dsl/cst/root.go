@@ -87,6 +87,12 @@ func (root *RootNode) IngestAST(
 		}
 	}
 
+	////fmt.Println("PRE")
+	////ast.Print()
+	root.regexProtectPrePass(ast)
+	////fmt.Println("POST")
+	////ast.Print()
+
 	err = root.buildMainPass(ast, isReplImmediate)
 	if err != nil {
 		return err
@@ -108,6 +114,76 @@ func (root *RootNode) Resolve() error {
 	}
 
 	return nil
+}
+
+// ----------------------------------------------------------------
+// regexProtectPrePass rewrites string-literal nodes in regex position (e.g.
+// second arg to gsub) to have regex node type. This is so we can have "\t" be
+// a tab character for string literals generally, but remain backslash-t for
+// regex literals.
+//
+// Callsites to have regexes protected:
+// * sub/gsub second argument;
+// * regextract/regextract_or_else second argument;
+// * =~ and !=~ right-hand side -- since these are infix operators, this means
+//   (in the AST point of view) second argument.
+//
+// Sample ASTs:
+//
+// $ mlr -n put -v '$y =~ "\t"'
+// AST:
+// * statement block
+//     * bare boolean
+//         * operator "=~"
+//             * direct field value "y"
+//             * string literal "	"
+//
+// $ mlr -n put -v '$y = sub($x, "\t", "TAB")'
+// AST:
+// * statement block
+//     * assignment "="
+//         * direct field value "y"
+//         * function callsite "sub"
+//             * direct field value "x"
+//             * string literal "	"
+//             * string literal "TAB"
+
+func (root *RootNode) regexProtectPrePass(ast *dsl.AST) {
+	root.regexProtectPrePassAux(ast.RootNode)
+}
+
+func (root *RootNode) regexProtectPrePassAux(astNode *dsl.ASTNode) {
+
+	if astNode.Children == nil || len(astNode.Children) == 0 {
+		return
+	}
+
+	isCallsiteOfInterest := false
+	if astNode.Type == dsl.NodeTypeOperator {
+		if astNode.Token != nil {
+			nodeName := string(astNode.Token.Lit)
+			if nodeName == "=~" || nodeName == "!=~" {
+				isCallsiteOfInterest = true
+			}
+		}
+	} else if astNode.Type == dsl.NodeTypeFunctionCallsite {
+		if astNode.Token != nil {
+			nodeName := string(astNode.Token.Lit)
+			if nodeName == "sub" || nodeName == "gsub" || nodeName == "regextract" || nodeName == "regextract_or_else" {
+				isCallsiteOfInterest = true
+			}
+		}
+	}
+
+	for i, astChild := range astNode.Children {
+		if isCallsiteOfInterest && i == 1 {
+			if astChild.Type == dsl.NodeTypeStringLiteral {
+				astChild.Type = dsl.NodeTypeRegex
+			}
+		}
+		root.regexProtectPrePassAux(astChild)
+	}
+
 }
 
 // ----------------------------------------------------------------

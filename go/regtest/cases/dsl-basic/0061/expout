@@ -1,0 +1,9 @@
+i     1
+a     <<abc>>
+t     <<a	b>>
+n     <<a
+b>>
+sl    <<a\b>>
+quote <<a"b>>
+B     <<aBb>>
+C     <<aBb>>
