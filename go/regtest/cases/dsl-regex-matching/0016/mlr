@@ -1,0 +1,5 @@
+$left  = gsub($input, "\[", "LEFT");
+$all   = gsub($input, ".",  "ALL");
+$dot   = gsub($input, "\.", "DOT");
+$star  = gsub($input, "\*", "STAR");
+$right = gsub($input, "\]", "RIGHT");
