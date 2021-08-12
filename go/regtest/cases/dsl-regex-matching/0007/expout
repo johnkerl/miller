@@ -7,6 +7,6 @@ AST:
     * bare boolean
         * operator "=~"
             * direct field value "y"
-            * string literal "".."
+            * string literal "\".."
 
 x=ABCDE,y="GHI"

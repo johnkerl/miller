@@ -9,11 +9,9 @@ import (
 	"unicode/utf8"
 )
 
-/* Interface */
+// Interface.
 
-/*
-Convert the literal value of a scanned token to rune
-*/
+// RuneValue will convert the literal value of a scanned token to a rune.
 func RuneValue(lit []byte) rune {
 	if lit[1] == '\\' {
 		return escapeCharVal(lit)
@@ -25,22 +23,17 @@ func RuneValue(lit []byte) rune {
 	return r
 }
 
-/*
-Convert the literal value of a scanned token to int64
-*/
+// UintValue will attempt to parse a byte-slice as a signed base-10 64-bit integer.
 func IntValue(lit []byte) (int64, error) {
 	return strconv.ParseInt(string(lit), 10, 64)
 }
 
-/*
-Convert the literal value of a scanned token to uint64
-*/
+// UintValue will attempt to parse a byte-slice as an unsigned base-10 64-bit integer.
 func UintValue(lit []byte) (uint64, error) {
 	return strconv.ParseUint(string(lit), 10, 64)
 }
 
-/* Util */
-
+// Helpers.
 func escapeCharVal(lit []byte) rune {
 	var i, base, max uint32
 	offset := 2
