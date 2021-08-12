@@ -1,1 +1,1 @@
-mlr --oxtab put '$y = regextract_or_else($x, "[op]*", "DEFAULT")' regtest/input/sub.dat
+mlr --oxtab put -f ${CASEDIR}/mlr regtest/input/sub.dat

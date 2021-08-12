@@ -27,30 +27,6 @@ w discussion re docs6 ...
 * csv -> csv/tsv throughout
 
 ----------------------------------------------------------------
-REGEX CAPTURES
-
-* testing:
-
-  echo 'x=[.o*o.]' | mlr put '$y=gsub($x, "\[", "LEFT")'
-  x=[.o*o.],y=LEFT.o*o.]
-
-  echo 'x=[.o*o.]' | mlr put '$y=gsub($x, ".",  "ALL")'
-  x=[.o*o.],y=ALLALLALLALLALLALLALL
-
-  echo 'x=[.o*o.]' | mlr put '$y=gsub($x, "\.", "DOT")'
-  x=[.o*o.],y=[DOTo*oDOT]
-
-  echo 'x=[.o*o.]' | mlr put '$y=gsub($x, "\*", "STAR")'
-  x=[.o*o.],y=[.oSTARo.]
-
-  echo 'x=[.o*o.]' | mlr put '$y=sub($x,  "\]", "RIGHT")'
-  x=[.o*o.],y=[.o*o.RIGHT
-
-* mlr put must not accept -x
-
-* torbiak informs x 2 commits
-
-----------------------------------------------------------------
 DOC6
 
 * all sorts of line-wraps in command-blocks

@@ -1,5 +1,5 @@
-FIELD             F1 F2 F3
-ABC123            \1 \2 \3
-ABC..123          \1 \2 \3
-..ABC..123..      \1 \2 \3
-none of the above \1 \2 \3
+FIELD
+ABC123
+ABC..123
+..ABC..123..
+none of the above
