@@ -133,7 +133,7 @@ func RegexMatchesCompiled(
 		return false, make([]string, 10)
 	}
 
-	// Slot 0 is ""; then slots 1..9 for "\1".."\9".
+	// "\0" .. "\9"
 	captures := make([]string, 10)
 
 	// If there are multiple matches -- e.g. input is
@@ -275,10 +275,7 @@ func regexSubGsubCompiled(
 	for _, row := range matrix {
 		buffer.WriteString(input[nonMatchStartIndex:row[0]])
 
-		// xxx need to map row to captures
-		// xxx split to helper function
-
-		// Slot 0 is ""; then slots 1..9 for "\1".."\9".
+		// "\0" .. "\9"
 		captures := make([]string, 10)
 		di := 0
 		n := len(row)

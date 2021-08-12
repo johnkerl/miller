@@ -44,6 +44,13 @@ func (root *RootNode) BuildLeafNode(
 	case dsl.NodeTypeStringLiteral:
 		return root.BuildStringLiteralNode(sval), nil
 		break
+
+	case dsl.NodeTypeRegex:
+		// TODO: comment more
+		return root.BuildRegexLiteralNode(sval), nil
+		break
+
+	// TODO: comment more
 	case dsl.NodeTypeRegexCaseInsensitive:
 		// StringLiteral nodes like '"abc"' entered by the user come in from
 		// the AST as 'abc', with double quotes removed. Case-insensitive
@@ -51,8 +58,9 @@ func (root *RootNode) BuildLeafNode(
 		// intact. We let the sub/regextract/etc functions deal with this.
 		// (The alternative would be to make a separate Mlrval type separate
 		// from string.)
-		return root.BuildStringLiteralNode(sval), nil
+		return root.BuildRegexLiteralNode(sval), nil
 		break
+
 	case dsl.NodeTypeIntLiteral:
 		return root.BuildIntLiteralNode(sval), nil
 		break
@@ -196,17 +204,38 @@ func (node *LocalVariableNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
+// TODO: comment
+type RegexLiteralNode struct {
+	literal types.Mlrval
+}
+
+func (root *RootNode) BuildRegexLiteralNode(literal string) IEvaluable {
+	return &RegexLiteralNode{
+		literal: types.MlrvalFromString(literal),
+	}
+}
+
+func (node *RegexLiteralNode) Evaluate(
+	state *runtime.State,
+) *types.Mlrval {
+	return &node.literal
+}
+
+// ----------------------------------------------------------------
 type StringLiteralNode struct {
 	literal types.Mlrval
 }
 
-// TODO: comment
 type RegexCaptureReplacementNode struct {
 	replacementString        string
 	replacementCaptureMatrix [][]int
 }
 
 func (root *RootNode) BuildStringLiteralNode(literal string) IEvaluable {
+
+	// Convert "\t" to tab character, "\"" to double-quote character, etc.
+	literal = lib.UnbackslashStringLiteral(literal)
+
 	hasCaptures, replacementCaptureMatrix := lib.RegexReplacementHasCaptures(literal)
 	if !hasCaptures {
 		return &StringLiteralNode{

@@ -1,0 +1,16 @@
+x afoob
+y afoob
+
+x a\tb
+y a	b
+
+x a\\tb
+y a\	b
+
+x a	b
+y a	b
+
+z 
+
+x 
+y 
