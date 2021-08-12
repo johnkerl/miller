@@ -1,3 +1,7 @@
+// ================================================================
+// See cst.BuildStringLiteralNode for more context.
+// ================================================================
+
 package lib
 
 import (
@@ -22,13 +26,16 @@ var unbackslashReplacements = map[byte]string{
 	'?':  "?",
 }
 
-// UnbackslashStringLiteral replaces "\t" with TAB, etc.  for DSL expresions
+// UnbackslashStringLiteral replaces "\t" with TAB, etc. for DSL expresions
 // like '$foo = "a\tb"'.  See also
 // https://en.wikipedia.org/wiki/Escape_sequences_in_C
 // (predates the port of Miller from C to Go).
 //
+// Note that a CST-build pre-pass intentionally excludes regex literals (2nd
+// argument to sub/gsub/regextract/etc) from being modified here.
+//
 // Note "\0" .. "\9" are used for regex captures within the DSL CST builder
-// and are not touched here.
+// and are not touched here. (See also lib/regex.go.)
 func UnbackslashStringLiteral(input string) string {
 	var buffer bytes.Buffer
 

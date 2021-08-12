@@ -275,6 +275,35 @@ func (node *BinaryFunctionCallsiteNode) Evaluate(
 // ----------------------------------------------------------------
 // RegexCaptureBinaryFunctionCallsiteNode special-cases the =~ and !=~
 // operators which set the CST State object's captures array for "\1".."\9".
+// This is identical to BinaryFunctionCallsite except that
+// BinaryFunctionCallsite's impl function takes two *types.Mlrval arguments and
+// returns a *types.Mlrval, whereas RegexCaptureBinaryFunctionCallsiteNode's
+// impl function takes two *types.Mlrval arguments but returns *types.Mlrval
+// along with a []string captures array. The captures are stored in the State
+// object for use in subsequent statements.
+//
+// Note the use of "capture" is ambiguous:
+//
+// * There is the regex-match part which captures submatches out
+//   of a full match expression, and saves them.
+//
+// * Then there is the part which inserts these captures into another string.
+//
+// * For sub/gsub, the former and latter are both within the sub/gsub routine.
+//   E.g. with
+//     $y = sub($x, "(..)_(...)", "\2:\1"
+//   and $x being "ab_cde", $y will be "cde:ab".
+//
+// * For =~ and !=~, the former are right there, but the latter can be several
+//   lines later. E.g.
+//     if ($x =~ "(..)_(...)") {
+//       ... other lines of code ...
+//       $y = "\2:\1";
+//     }
+//
+// So: this RegexCaptureBinaryFunctionCallsiteNode only refers to the =~ and
+// !=~ callsites only -- not sub/gsub, and not the capture-using replacement
+// statements like '$y = "\2:\1".
 type RegexCaptureBinaryFunctionCallsiteNode struct {
 	regexCaptureBinaryFunc types.RegexCaptureBinaryFunc
 	evaluable1             IEvaluable
@@ -318,7 +347,6 @@ func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
 func (node *RegexCaptureBinaryFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	// TODO: comment
 	output, captures := node.regexCaptureBinaryFunc(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),

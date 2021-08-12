@@ -46,11 +46,16 @@ func (root *RootNode) BuildLeafNode(
 		break
 
 	case dsl.NodeTypeRegex:
-		// TODO: comment more
+		// During the BNF parse all string literals -- "foo" or "(..)_(...)"
+		// regexes etc -- are marked as dsl.NodeTypeStringLiteral. However, a
+		// CST-build pre-pass relabels second argument to sub/gsub etc -- any
+		// known regex positions -- from dsl.NodeTypeStringLiteral to
+		// dsl.NodeTypeRegex. The RegexLiteralNode is responsible for
+		// handling backslash sequences for regex literals differently from
+		// those for non-regex string literals.
 		return root.BuildRegexLiteralNode(sval), nil
 		break
 
-	// TODO: comment more
 	case dsl.NodeTypeRegexCaseInsensitive:
 		// StringLiteral nodes like '"abc"' entered by the user come in from
 		// the AST as 'abc', with double quotes removed. Case-insensitive
@@ -204,7 +209,13 @@ func (node *LocalVariableNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
-// TODO: comment
+// During the BNF parse all string literals -- "foo" or "(..)_(...)" regexes
+// etc -- are marked as dsl.NodeTypeStringLiteral. However, a CST-build
+// pre-pass relabels second argument to sub/gsub etc -- any known regex
+// positions -- from dsl.NodeTypeStringLiteral to dsl.NodeTypeRegex. The
+// RegexLiteralNode is responsible for handling backslash sequences for
+// regex literals differently from those for non-regex string literals.
+
 type RegexLiteralNode struct {
 	literal types.Mlrval
 }
@@ -222,18 +233,36 @@ func (node *RegexLiteralNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
+// StringLiteralNode is for any string literal that doesn't have any "\0" ..
+// "\9" in it.
 type StringLiteralNode struct {
 	literal types.Mlrval
 }
 
+// RegexCaptureReplacementNode is for any string literal that has any "\0" ..
+// "\9" in it.  As of the original design of Miller, submatches are captured
+// in one place and interpolated in another. For example:
+//
+//   if ($x =~ "(..)_(...)" {
+//     ... other lines of code ...
+//     $y = "\2:\1";
+//   }
+//
+// This node type is for things like "\2:\1". They can occur quite far from the
+// =~ callsite so we need to check all string literals to see if they have "\0"
+// .. "\9" anywhere within them. If they do, we precompute a
+// replacementCaptureMatrix which is basically compiled information about the
+// replacement string -- the start/end offsets of the "\1", "\2", etc
+// substrings.
 type RegexCaptureReplacementNode struct {
 	replacementString        string
 	replacementCaptureMatrix [][]int
 }
 
 func (root *RootNode) BuildStringLiteralNode(literal string) IEvaluable {
-
 	// Convert "\t" to tab character, "\"" to double-quote character, etc.
+	// This is intentionally done for StringLiteralNode but not for
+	// RegexLiteralNode.  See also https://github.com/johnkerl/miller/issues/297.
 	literal = lib.UnbackslashStringLiteral(literal)
 
 	hasCaptures, replacementCaptureMatrix := lib.RegexReplacementHasCaptures(literal)
@@ -255,6 +284,16 @@ func (node *StringLiteralNode) Evaluate(
 	return &node.literal
 }
 
+// As noted above, in things like
+//
+//   if ($x =~ "(..)_(...)" {
+//     ... other lines of code ...
+//     $y = "\2:\1";
+//   }
+//
+// the captures can be set (by =~ or !=~) quite far from where they are used.
+// This is why we consult the state.RegexCaptures here, to see if they've been
+// set on some previous invocation of =~ or !=~.
 func (node *RegexCaptureReplacementNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
