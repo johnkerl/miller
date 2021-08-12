@@ -1,12 +1,32 @@
-// xxx update comment
+// ================================================================
+// Support for regexes in Miller.
+//
+// * By and large we use the Go library.
+//
+// * There is (for historical reasons) a DSL syntax "[a-z]"i (note the trailing i)
+//   for case-insensitive regular expressions which we map into Go syntax for
+//   regex-compilation.
+//
+// * Also for historical reasons, we allow things like
+//     if ($x =~ "(..)_(...)") {
+//       ... other lines of code ...
+//       $y = "\2:\1";
+//     }
+//   where the '=~' sets the captures and the "\2:\1" uses them.  (Note that
+//   https://github.com/johnkerl/miller/issues/388 has a better suggestion
+//   which would make the captures explicit as variables, rather than implicit
+//   within CST state -- regardless, the current syntax will still be supprted
+//   for backward compatability and so is here to stay.) Here we make use of Go
+//   regexp-library functions to write to, and then later interpolate from, a
+//   captures array which is stored within CST state. (See the `runtime.State`
+//   object.)
+//
+// * "\0" is for a full match; "\1" .. "\9" are for submatch cqptures. E.g.
+//   if $x is "foobarbaz" and the regex is "foo(.)(..)baz", then "\0" is
+//   "foobarbaz", "\1" is "b", "\2" is "ar", and "\3".."\9" are "".
+// ================================================================
 
 package lib
-
-// TODO:
-// * cst state for captures array
-// * reset-hook for start of execution
-//   o UTs for that
-// * flesh out RegexCaptureBinaryFunctionCallsiteNode to do that
 
 import (
 	"bytes"
@@ -16,14 +36,20 @@ import (
 	"strings"
 )
 
-// TODO: comment
+// captureDetector is used to see if a string literal interpolates previous
+// captures (like "\2:\1") or not (like "2:1").
 var captureDetector = regexp.MustCompile("\\\\[0-9]")
+
+// captureSplitter is used to precompute an offsets matrix for strings like
+// "\2:\1" so they don't need to be recomputed on every record.
 var captureSplitter = regexp.MustCompile("(\\\\[0-9])")
 
 // CompileMillerRegex wraps Go regex-compile with some Miller-specific syntax
 // which predate the port of Miller from C to Go.  Miller regexes use a final
-// 'i' to indicate case-insensitivity; Go regexes use an initial "(?i)".  Also
-// (TODO) I need to find all the right things to backslash-escape in Go.
+// 'i' to indicate case-insensitivity; Go regexes use an initial "(?i)".
+//
+// (See also mlr.bnf where we specify which things can be backslash-escaped
+// without a syntax error at parse time.)
 //
 // * If the regex_string is of the form a.*b, compiles it case-sensisitively.
 // * If the regex_string is of the form "a.*b", compiles a.*b case-sensisitively.
@@ -68,15 +94,16 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	return regex
 }
 
-// TODO: comment
+// For initial CST state at the start of executing the DSL expression for the
+// current record.  Even if '$x =~ "(..)_(...)" set "\1" and "\2" on the
+// previous record, at start of processing for the current record we need to
+// start with a clean slate.
 func MakeEmptyRegexCaptures() []string {
 	return nil
 }
 
-// xxx comment
-// xxx MakeEmptyCaptures function for CST state
-// xxx UT
-// xxx more UT cases
+// Used by the CST builder to see if string-literal is like "foo bar" or "foo \1 bar" --
+// in the latter case it needs to retain the compiled offsets-matrix information.
 func RegexReplacementHasCaptures(
 	replacement string,
 ) (
@@ -90,9 +117,8 @@ func RegexReplacementHasCaptures(
 	}
 }
 
-// RegexMatches implements the =~ DSL operator. There is no
-// with-captures/without-captures variant-pair since the captures are stored in
-// DSL state and may be used by a DSL statement after the =~. For example, in
+// RegexMatches implements the =~ DSL operator. The captures are stored in DSL
+// state and may be used by a DSL statement after the =~. For example, in
 //
 //   sub($a, "(..)_(...)", "\1:\2")
 //
@@ -100,8 +126,9 @@ func RegexReplacementHasCaptures(
 // confined to the implementation of the sub function.  Similarly for gsub. But
 // for the match operator, people can do
 //
-//   if ($a =~ "(..)_(...)") {
-//     $b = "\1:\2"
+//   if ($x =~ "(..)_(...)") {
+//     ... other lines of code ...
+//     $y = "\2:\1"
 //   }
 //
 // and the =~ callsite doesn't know if captures will be used or not. So,
@@ -121,15 +148,14 @@ func RegexMatches(
 // RegexMatchesCompiled is the implementation for the =~ operator.  Without
 // Miller-style regex captures this would a simple one-line
 // regex.MatchString(input). However, we return the captures array for the
-// benefit of subsequent references to "\1".."\9".
+// benefit of subsequent references to "\0".."\9".
 func RegexMatchesCompiled(
 	input string,
 	regex *regexp.Regexp,
 ) (bool, []string) {
 	matrix := regex.FindAllSubmatchIndex([]byte(input), -1)
 	if matrix == nil || len(matrix) == 0 {
-		// xxx temp
-		// return false, nil
+		// Set all captures to ""
 		return false, make([]string, 10)
 	}
 
@@ -168,7 +194,7 @@ func RegexMatchesCompiled(
 	for si := 0; si < n && di <= 9; si += 2 {
 		start := row[si]
 		end := row[si+1]
-		if start >= 0 && end >= 0 { // TODO: comment
+		if start >= 0 && end >= 0 {
 			captures[di] = input[start:end]
 		}
 		di += 1
@@ -177,7 +203,19 @@ func RegexMatchesCompiled(
 	return true, captures
 }
 
-// TODO: comment
+// InterpolateCaptures example:
+// * Input $x is "ab_cde"
+// * DSL expression
+//     if ($x =~ "(..)_(...)") {
+//       ... other lines of code ...
+//       $y = "\2:\1";
+//     }
+// * InterpolateCaptures is used on the evaluation of "\2:\1"
+// * replacementString is "\2:\1"
+// * replacementMatrix contains precomputed/cached offsets for the "\2" and
+//   "\1" substrings within "\2:\1"
+// * captures has slot 0 being "ab_cde" (for "\0"), slot 1 being "ab" (for "\1"),
+//   slot 2 being "cde" (for "\2"), and slots 3-9 being "".
 func InterpolateCaptures(
 	replacementString string,
 	replacementMatrix [][]int,
@@ -194,7 +232,7 @@ func InterpolateCaptures(
 		start := row[0]
 		buffer.WriteString(replacementString[nonMatchStartIndex:row[0]])
 
-		// xxx comment
+		// Map "\0".."\9" to integer index 0..9
 		index := replacementString[start+1] - '0'
 		buffer.WriteString(captures[index])
 
@@ -311,9 +349,6 @@ func regexSubGsubCompiled(
 			captures,
 		)
 		buffer.WriteString(updatedReplacement)
-
-		// xxx already have split up replacement into its matrix, before entering this helper
-		// xxx have another helper to iterate over, taking &buffer as arg ...
 
 		nonMatchStartIndex = row[1]
 		if breakOnFirst {

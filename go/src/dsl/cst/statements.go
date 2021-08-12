@@ -36,7 +36,7 @@ func (root *RootNode) BuildStatementNode(
 	// except side-effects (like regex-captures); for filter, they set the
 	// filter condition only if they're the last statement in the main block.
 	case dsl.NodeTypeBareBoolean:
-		return root.BuildBareBooleanOrFilterStatementNode(astNode)
+		return root.BuildBareBooleanStatementNode(astNode)
 	// E.g. 'filter NR > 10'.
 	case dsl.NodeTypeFilterStatement:
 		return root.BuildFilterStatementNode(astNode)

@@ -17,7 +17,9 @@ type State struct {
 	FilterExpression *types.Mlrval
 	Stack            *Stack
 	OutputChannel    chan<- *types.RecordAndContext
-	RegexCaptures    []string // TODO: comment
+	// For holding "\0".."\9" between where they are set via things like
+	// '$x =~ "(..)_(...)"', and interpolated via things like '$y = "\2:\1"'.
+	RegexCaptures []string
 }
 
 func NewEmptyState() *State {
@@ -28,7 +30,10 @@ func NewEmptyState() *State {
 		Oosvars:          oosvars,
 		FilterExpression: types.MLRVAL_TRUE,
 		Stack:            NewStack(),
+
 		// OutputChannel is assigned after construction
+
+		// See lib.MakeEmptyRegexCaptures for context.
 		RegexCaptures: lib.MakeEmptyRegexCaptures(),
 	}
 }
