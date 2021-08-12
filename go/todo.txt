@@ -1,14 +1,13 @@
 ================================================================
 TOP OF LIST:
 
-* nr-progress-mod
 * shell-commands.html; while-read
-* memory page
+* memory/streaming page
 
-* regex * fmtnum * localtime * stats1 --fr *
-* --nr-progress-mod * mlr -k * json comment-handling
+* I/O redirects * fmtnum * localtime * stats1 -r/--fr *
+* --nr-progress-mod * mlr -k * json comment-handling *
 * cli-audits * doc6 * survey * check issues * regtest pendings *
-* survey email followups
+* survey email followups/discussion-post *
 
 ----------------------------------------------------------------
 docs:
@@ -104,19 +103,11 @@ w survey
 ----------------------------------------------------------------
 BLOCKERS
 
-* regexes
-  o finish stats1 -r
-  o regex captures ...
-    - rename -r
-  ! separate DSL/non-DSL string-literal handlers
+* finish stats1 -r
 
 * regtest:
   o convert regtest/cases-pending-windows
   o convert regtest/cases-pending-go-port
-  w after regex
-
-* remaining functions:
-  o regextract regextract_or_else
 
 * JSON comment-handling
 
@@ -207,7 +198,6 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
 * UDF nexts:
   o more functions (see below)
   !! strlen for UTF-8; wat
-  ! regex captures
   o strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
   o DSL sort function https://github.com/johnkerl/miller/issues/77#issuecomment-321916921
 
