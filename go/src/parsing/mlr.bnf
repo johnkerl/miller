@@ -96,6 +96,9 @@ string_literal : '"' {_string_literal_element} '"' ;
 // Miller regexes are of the form "a.*b" for case-sensitive, or "a.*b"i for case-insensitive.
 regex_case_insensitive : '"' {_string_literal_element} '"' 'i';
 
+// Regex strings not to be unbackslashed but left as-is, e.g. for second argument to sub etc.:
+regex_r_string : 'r' '"' {_string_literal_element} '"';
+
 // Notes on int literals:
 // * Leading minus sign is handled via the unary-minus operator, not here.
 int_literal
@@ -1482,6 +1485,9 @@ MlrvalOrFunction
 
   | regex_case_insensitive
     << dsl.NewASTNode($0, dsl.NodeTypeRegexCaseInsensitive) >>
+
+  | regex_r_string
+    << dsl.NewASTNode($0, dsl.NodeTypeRegex) >>
 
   | int_literal
     << dsl.NewASTNode($0, dsl.NodeTypeIntLiteral) >>

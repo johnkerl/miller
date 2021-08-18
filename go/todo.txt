@@ -30,6 +30,12 @@ implicit r:
 * double-check end of reference-main-data-types.md.in
 
 ----------------------------------------------------------------
+r-strings:
+
+* UT
+* doc @ regex page including implicit-r
+
+----------------------------------------------------------------
 docs:
 w discussion re docs6 ...
 * single cheatsheet page -- put out RFH?
