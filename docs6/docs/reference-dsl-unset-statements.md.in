@@ -1,5 +1,5 @@
-DSL reference: unset statements
-# 
+# DSL unset statements
+
 You can clear a map key by assigning the empty string as its value: `$x=""` or `@x=""`. Using `unset` you can remove the key entirely. Examples:
 
 GENMD_RUN_COMMAND
@@ -20,4 +20,4 @@ GENMD_RUN_COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small
 GENMD_EOF
 
-If you use `unset all` (or `unset @*` which is synonymous), that will unset all out-of-stream variables which have been defined up to that point.
+If you use `unset all` (or `unset @*` which is synonymous), that will unset all out-of-stream variables which have been assigned up to that point.

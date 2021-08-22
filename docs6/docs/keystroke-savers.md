@@ -1,17 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # Keystroke-savers
 
-## Short format specifiers
+## Short format specifiers, including --c2p
 
-In our examples so far we've often made use of `mlr --icsv --opprint` or `mlr --icsv --ojson`. These are such frequently occurring patterns that they have short options like **--c2p** and **--c2j**:
+In our examples so far we've often made use of `mlr --icsv --opprint` or `mlr --icsv --ojson`. These are such frequently occurring patterns that they have short options like `--c2p` and `--c2j`:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p head -n 2 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag index quantity rate
-yellow triangle true 11    43.6498  9.8870
-red    square   true 15    79.2778  0.0130
+color  shape    flag k index quantity rate
+yellow triangle true 1 11    43.6498  9.8870
+red    square   true 2 15    79.2778  0.0130
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -22,6 +22,7 @@ red    square   true 15    79.2778  0.0130
   "color": "yellow",
   "shape": "triangle",
   "flag": true,
+  "k": 1,
   "index": 11,
   "quantity": 43.6498,
   "rate": 9.8870
@@ -30,15 +31,16 @@ red    square   true 15    79.2778  0.0130
   "color": "red",
   "shape": "square",
   "flag": true,
+  "k": 2,
   "index": 15,
   "quantity": 79.2778,
   "rate": 0.0130
 }
 </pre>
 
-You can get the full list here (TODO:linkify).
+You can get the full list [here](file-formats.md#data-conversion-keystroke-savers).
 
-## File names up front
+## File names up front, including --from
 
 Already we saw that you can put the filename first using `--from`. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:
 
@@ -46,10 +48,10 @@ Already we saw that you can put the filename first using `--from`. When you're i
 <b>mlr --c2p --from example.csv sort -nr index then head -n 3</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape  flag  index quantity rate
-purple square false 91    72.3735  8.2430
-yellow circle true  87    63.5058  8.3350
-yellow circle true  73    63.9785  4.2370
+color  shape  flag  k  index quantity rate
+purple square false 10 91    72.3735  8.2430
+yellow circle true  9  87    63.5058  8.3350
+yellow circle true  8  73    63.9785  4.2370
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -70,6 +72,6 @@ If there's more than one input file, you can use `--mfrom`, then however many fi
 
 ## .mlrrc file
 
-If you want the default file format for Miller to be CSV you can simply put `--csv` on a line by itself in your `~/.mlrrc` file. Then instead of `mlr --csv cat example.csv` you can just do `mlr cat example.csv`. This is just the default, though, so `mlr --opprint cat example.csv` will still use default CSV format for input, and PPRINT (tabular) for output.
+If you want the default file format for Miller to be CSV, you can simply put `--csv` on a line by itself in your `~/.mlrrc` file. Then instead of `mlr --csv cat example.csv` you can just do `mlr cat example.csv`. This is just a personal default, though, so `mlr --opprint cat example.csv` will use default CSV format for input, and PPRINT (tabular) for output.
 
 You can read more about this at the [Customization](customization.md) page.

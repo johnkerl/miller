@@ -2,7 +2,15 @@
 
 ## Overview
 
-Miller is a streaming record processor; commands are performed once per record. This makes Miller particularly suitable for single-pass algorithms, allowing many of its verbs to process files that are (much) larger than the amount of RAM present in your system. (Of course, Miller verbs such as `sort`, `tac`, etc. all must ingest and retain all input records before emitting any output records.) You can also use out-of-stream variables to perform multi-pass computations, at the price of retaining all input records in memory.
+Miller is a streaming record processor; commands are performed once per record.
+(See [here](reference-dsl.md#implicit-loop-over-records-for-main-statements)
+and [here](operating-on-all-records.md) for an introductory discussion.) This
+makes Miller particularly suitable for single-pass algorithms, allowing many of
+its verbs to process files that are (much) larger than the amount of RAM
+present in your system. (Of course, Miller verbs such as `sort`, `tac`, etc.
+all must ingest and retain all input records before emitting any output
+records.) You can also use out-of-stream variables to perform multi-pass
+computations, at the price of retaining all input records in memory.
 
 One of Miller's strengths is its compact notation: for example, given input of the form
 
@@ -32,7 +40,16 @@ GENMD_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum-grouped.sh)
 
 The former (`mlr stats1` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
 
-Nonetheless, out-of-stream variables (which I whimsically call *oosvars*), begin/end blocks, and emit statements give you the ability to implement logic -- if you wish to do so -- which isn't present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues) to get it implemented directly in Go as a Miller verb of its own.)
+Nonetheless,
+[out-of-stream variables](reference-dsl-variables.md#out-of-stream-variables) (which I
+whimsically call *oosvars*),
+[begin/end blocks](reference-main-overview.md), and
+[emit statements](reference-dsl-output-statements.md#emit-statements)  give
+you the ability to implement logic -- if you wish to do so -- which isn't
+present in other Miller verbs.  (If you find yourself often using the same
+out-of-stream-variable logic over and over, please file a request at
+[https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues)
+to get it implemented directly in Go as a Miller verb of its own.)
 
 The following examples compute some things using oosvars which are already computable using Miller verbs, by way of providing food for thought.
 
@@ -40,13 +57,43 @@ The following examples compute some things using oosvars which are already compu
 
 For example, mapping numeric values down a column to the percentage between their min and max values is two-pass: on the first pass you find the min and max values, then on the second, map each record's value to a percentage.
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/two-pass-percentage.sh)
+GENMD_RUN_COMMAND
+mlr --from data/small --opprint put -q '
+  # These are executed once per record, which is the first pass.
+  # The key is to use NR to index an out-of-stream variable to
+  # retain all the x-field values.
+  @x_min = min($x, @x_min);
+  @x_max = max($x, @x_max);
+  @x[NR] = $x;
+
+  # The second pass is in a for-loop in an end-block.
+  end {
+    for (nr, x in @x) {
+      @x_pct[nr] = 100 * (x - @x_min) / (@x_max - @x_min);
+    }
+    emit (@x, @x_pct), "NR"
+  }
+'
+GENMD_EOF
 
 ## Line-number ratios
 
 Similarly, finding the total record count requires first reading through all the data:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/two-pass-record-numbers.sh)
+GENMD_RUN_COMMAND
+mlr --opprint --from data/small put -q '
+  @records[NR] = $*;
+  end {
+    for((Istring,k),v in @records) {
+      int I = int(Istring);
+      @records[I]["I"] = I;
+      @records[I]["N"] = NR;
+      @records[I]["PCT"] = 100*I/NR
+    }
+    emit @records,"I"
+  }
+' then reorder -f I,N,PCT
+GENMD_EOF
 
 ## Records having max value
 
@@ -90,6 +137,8 @@ GENMD_EOF
 
 The previous section discussed how to fill out missing data fields within CSV with full header line -- so the list of all field names is present within the header line. Next, let's look at a related problem: we have data where each record has various key names but we want to produce rectangular output having the union of all key names.
 
+There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify). Here, we look at how to implement that in the DSL.
+
 For example, suppose you have JSON input like this:
 
 GENMD_RUN_COMMAND
@@ -113,8 +162,6 @@ GENMD_EOF
 GENMD_RUN_COMMAND
 mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
 GENMD_EOF
-
-There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify).
 
 ## Mean without/with oosvars
 

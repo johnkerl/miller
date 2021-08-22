@@ -47,7 +47,7 @@ GENMD_RUN_COMMAND
 echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
 GENMD_EOF
 
-## How can I put single-quotes into strings?
+## How can I put single quotes into strings?
 
 This is a little tricky due to the shell's handling of quotes. For simplicity, let's first put an update script into a file:
 
@@ -57,7 +57,7 @@ GENMD_RUN_COMMAND
 echo a=bcd | mlr put -f data/single-quote-example.mlr
 GENMD_EOF
 
-So, it's simple: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
+So: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
 
 Without putting the update expression in a file, it's messier:
 

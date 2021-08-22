@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# DSL reference: built-in functions
+# DSL built-in functions
 
 ## Summary
 
@@ -13,7 +13,7 @@ Each function takes a specific number of arguments, as shown below, except for f
 You can get a list of all functions using **mlr -f**, with details using **mlr -F**.
 
 
-<a id=colon />
+<a id=exclamation-point />
 ## \!
 
 <pre class="pre-non-highlight-non-pair">
@@ -28,6 +28,7 @@ You can get a list of all functions using **mlr -f**, with details using **mlr -
 </pre>
 
 
+<a id=regnotmatch />
 ## !=~
 
 <pre class="pre-non-highlight-non-pair">
@@ -42,6 +43,7 @@ You can get a list of all functions using **mlr -f**, with details using **mlr -
 </pre>
 
 
+<a id=bitwise-and />
 ## &
 
 <pre class="pre-non-highlight-non-pair">
@@ -49,6 +51,7 @@ You can get a list of all functions using **mlr -f**, with details using **mlr -
 </pre>
 
 
+<a id=logical-and />
 ## &&
 
 <pre class="pre-non-highlight-non-pair">
@@ -165,6 +168,7 @@ You can get a list of all functions using **mlr -f**, with details using **mlr -
 </pre>
 
 
+<a id=regmatch />
 ## =~
 
 <pre class="pre-non-highlight-non-pair">
@@ -224,6 +228,7 @@ You can get a list of all functions using **mlr -f**, with details using **mlr -
 </pre>
 
 
+<a id=bitwise-xor />
 ## ^
 
 <pre class="pre-non-highlight-non-pair">
@@ -231,6 +236,7 @@ You can get a list of all functions using **mlr -f**, with details using **mlr -
 </pre>
 
 
+<a id=logical-xor />
 ## ^^
 
 <pre class="pre-non-highlight-non-pair">
@@ -246,7 +252,8 @@ You can get a list of all functions using **mlr -f**, with details using **mlr -
 </pre>
 
 
-## ||
+<a id=logical-or />
+## \|\|
 
 <pre class="pre-non-highlight-non-pair">
 ||  (class=boolean #args=2) Logical OR.

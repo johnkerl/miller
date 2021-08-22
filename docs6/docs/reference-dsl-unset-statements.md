@@ -1,6 +1,6 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-DSL reference: unset statements
-# 
+# DSL unset statements
+
 You can clear a map key by assigning the empty string as its value: `$x=""` or `@x=""`. Using `unset` you can remove the key entirely. Examples:
 
 <pre class="pre-highlight-in-pair">
@@ -81,4 +81,4 @@ This can also be done, of course, using `mlr cut -x`. You can also clear out-of-
 }
 </pre>
 
-If you use `unset all` (or `unset @*` which is synonymous), that will unset all out-of-stream variables which have been defined up to that point.
+If you use `unset all` (or `unset @*` which is synonymous), that will unset all out-of-stream variables which have been assigned up to that point.

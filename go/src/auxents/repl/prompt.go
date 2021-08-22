@@ -52,7 +52,7 @@ func (repl *Repl) printStartupBanner() {
 	if repl.inputIsTerminal {
 		fmt.Printf("Miller %s REPL for %s:%s:%s\n", version.STRING, runtime.GOOS, runtime.GOARCH, runtime.Version())
 		fmt.Printf("Pre-release docs for Miller 6: %s\n", lib.DOC_URL)
-		fmt.Printf("Type ':help' for on-line help; ':quit' to quit.\n")
+		fmt.Printf("Type ':h' or ':help' for on-line help; ':q' or ':quit' to quit.\n")
 	}
 }
 

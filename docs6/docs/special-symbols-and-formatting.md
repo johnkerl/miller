@@ -85,7 +85,7 @@ Simply surround the field names with curly braces:
 x.a=3,y:b=4,z/c=5,product.all=60
 </pre>
 
-## How can I put single-quotes into strings?
+## How can I put single quotes into strings?
 
 This is a little tricky due to the shell's handling of quotes. For simplicity, let's first put an update script into a file:
 
@@ -100,7 +100,7 @@ $a = "It's OK, I said, then 'for now'."
 a=It's OK, I said, then 'for now'.
 </pre>
 
-So, it's simple: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
+So: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
 
 Without putting the update expression in a file, it's messier:
 

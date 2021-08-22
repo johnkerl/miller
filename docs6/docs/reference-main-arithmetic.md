@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Reference: arithmetic
+# Arithmetic
 
 ## Input scanning
 
@@ -17,7 +17,7 @@ The sum, difference, and product of integers is again integer, except for when t
 
 The short of it is that Miller does this transparently for you so you needn't think about it.
 
-Implementation details of this, for the interested: integer adds and subtracts overflow by at most one bit so it suffices to check sign-changes. Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers, converting only to float precisely when the result is less than -2\ :sup:`63` or greater than 2\ :sup:`63`\ -1.  Multiplies, on the other hand, can overflow by a word size and a sign-change technique does not suffice to detect overflow. Instead Miller tests whether the floating-point product exceeds the representable integer range. Now, 64-bit integers have 64-bit precision while IEEE-doubles have only 52-bit mantissas -- so, there are 53 bits including implicit leading one.  The following experiment explicitly demonstrates the resolution at this range:
+Implementation details of this, for the interested: integer adds and subtracts overflow by at most one bit so it suffices to check sign-changes. Thus, Miller allows you to add and subtract arbitrary 64-bit signed integers, converting only to float precisely when the result is less than -2\*\*63 or greater than 2\*\*63 - 1.  Multiplies, on the other hand, can overflow by a word size and a sign-change technique does not suffice to detect overflow. Instead, Miller tests whether the floating-point product exceeds the representable integer range. Now, 64-bit integers have 64-bit precision while IEEE-doubles have only 52-bit mantissas -- so, there are 53 bits including implicit leading one.  The following experiment explicitly demonstrates the resolution at this range:
 
 <pre class="pre-non-highlight-non-pair">
 64-bit integer     64-bit integer     Casted to double           Back to 64-bit
@@ -32,7 +32,7 @@ in hex             in decimal                                    integer
 0x7fffffffffffffff 9223372036854775807 9223372036854775808.000000 0x8000000000000000
 </pre>
 
-That is, one cannot check an integer product to see if it is precisely greater than 2\ :sup:`63`\ -1 or less than -2\ :sup:`63` using either integer arithmetic (it may have already overflowed) or using double-precision (due to granularity).  Instead Miller checks for overflow in 64-bit integer multiplication by seeing whether the absolute value of the double-precision product exceeds the largest representable IEEE double less than 2\ :sup:`63`, which we see from the listing above is 9223372036854774784. (An alternative would be to do all integer multiplies using handcrafted multi-word 128-bit arithmetic.  This approach is not taken.)
+That is, one cannot check an integer product to see if it is precisely greater than 2\*\*63 - 1 or less than -2\*\*63 using either integer arithmetic (it may have already overflowed) or using double-precision (due to granularity).  Instead, Miller checks for overflow in 64-bit integer multiplication by seeing whether the absolute value of the double-precision product exceeds the largest representable IEEE double less than 2\*\*63, which we see from the listing above is 9223372036854774784. (An alternative would be to do all integer multiplies using handcrafted multi-word 128-bit arithmetic.  This approach is not taken.)
 
 ## Pythonic division
 

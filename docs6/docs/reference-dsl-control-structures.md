@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# DSL reference: control structures
+# DSL control structures
 
 ## Pattern-action blocks
 
@@ -44,9 +44,9 @@ a=xyz_789
 <b>  data/put-gating-example-2.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=abc_123,b=left_\1,c=right_\2
+a=abc_123,b=left_abc,c=right_123
 a=some other name
-a=xyz_789,b=left_\1,c=right_\2
+a=xyz_789,b=left_xyz,c=right_789
 </pre>
 
 This produces heteregenous output which Miller, of course, has no problems with (see [Record Heterogeneity](record-heterogeneity.md)).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes `put` to evaluate the boolean expression (along with any side effects, namely, regex-captures `\1`, `\2`, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
@@ -55,6 +55,8 @@ This produces heteregenous output which Miller, of course, has no problems with 
 <b>mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+x=-1,y=NaN,z=NaN
+x=0,y=-Inf,z=NaN
 x=1,y=0,z=0
 x=2,y=0.3010299956639812,z=0.5486620049392715
 x=3,y=0.4771212547196624,z=0.6907396432228734
@@ -68,8 +70,9 @@ x=3,y=0.4771212547196624,z=0.6907396432228734
 <b>' data/put-gating-example-2.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=abc_123,b=left_\1,c=right_\2
-a=xyz_789,b=left_\1,c=right_\2
+a=abc_123,b=left_abc,c=right_123
+a=some other name,b=left_,c=right_
+a=xyz_789,b=left_xyz,c=right_789
 </pre>
 
 ## If-statements
@@ -131,12 +134,26 @@ x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 x=1,y=2,3=,4=,5=,foo=bar
 </pre>
 
-A `break` or `continue` within nested conditional blocks or if-statements will, of course, propagate to the innermost loop enclosing them, if any. A `break` or `continue` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
-The existence of `while`, `do-while`, and `for` loops in Miller's DSL means that you can create infinite-loop scenarios inadvertently.  In particular, please recall that DSL statements are executed once if in `begin` or `end` blocks, and once *per record* otherwise. For example, **while (NR < 10) will never terminate as NR is only incremented between records**.
+A `break` or `continue` within nested conditional blocks or if-statements will,
+of course, propagate to the innermost loop enclosing them, if any. A `break` or
+`continue` outside a loop is a syntax error that will be flagged as soon as the
+expression is parsed, before any input records are ingested.
+
+The existence of `while`, `do-while`, and `for` loops in Miller's DSL means
+that you can create infinite-loop scenarios inadvertently.  In particular,
+please recall that DSL statements are executed once if in `begin` or `end`
+blocks, and once *per record* otherwise. For example, **while (NR < 10) will
+never terminate**. The [`NR`
+variable](reference-dsl-variables.md#built-in-variables) is only incremented
+between records, and each DSL expression is invoked once per record: so, once
+for `NR=1`, once for `NR=2`, etc.
+
+If you do want to loop over records, see [Operating on all
+records](operating-on-all-records.md) for some options.
 
 ## For-loops
 
-While Miller's `while` and `do-while` statements are much as in many other languages, `for` loops are more idiosyncratic to Miller. They are loops over key-value pairs, whether in stream records, out-of-stream variables, local variables, or map-literals: more reminiscent of `foreach`, as in (for example) PHP. There are **for-loops over map keys** and **for-loops over key-value tuples**.  Additionally, Miller has a **C-style triple-for loop** with initialize, test, and update statements.
+While Miller's `while` and `do-while` statements are much as in many other languages, `for` loops are more idiosyncratic to Miller. They are loops over key-value pairs, whether in stream records, out-of-stream variables, local variables, or map-literals: more reminiscent of `foreach`, as in (for example) PHP. There are **for-loops over map keys** and **for-loops over key-value tuples**.  Additionally, Miller has a **C-style triple-for loop** with initialize, test, and update statements. Each is described below.
 
 As with `while` and `do-while`, a `break` or `continue` within nested control structures will propagate to the innermost loop enclosing them, if any, and a `break` or `continue` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
 
@@ -471,7 +488,7 @@ Notes:
 
 * Miller has no `++` or `--` operators.
 
-* As with all for/if/while statements in Miller, the curly braces are required even if the body is a single statement, or empty.
+* As with all `for`/`if`/`while` statements in Miller, the curly braces are required even if the body is a single statement, or empty.
 
 ## Begin/end blocks
 
@@ -510,7 +527,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 x_sum=2.264761728567491
 </pre>
 
-The **put -q** option is a shorthand which suppresses printing of each output record, with only `emit` statements being output. So to get only summary outputs, one could write
+The **put -q** option suppresses printing of each output record, with only `emit` statements being output. So to get only summary outputs, you could write
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put -q '</b>
@@ -539,7 +556,7 @@ x_count=5
 x_sum=2.264761728567491
 </pre>
 
-This is of course not much different than
+This is of course (see also [here](reference-dsl.md#verbs-compared-to-dsl)) not much different than
 
 <pre class="pre-highlight-in-pair">
 <b>mlr stats1 -a count,sum -f x ./data/small</b>
@@ -548,5 +565,5 @@ This is of course not much different than
 x_count=5,x_sum=2.264761728567491
 </pre>
 
-Note that it's a syntax error for begin/end blocks to refer to field names (beginning with `$`), since these execute outside the context of input records.
+Note that it's a syntax error for begin/end blocks to refer to field names (beginning with `$`), since begin/end blocks execute outside the context of input records.
 

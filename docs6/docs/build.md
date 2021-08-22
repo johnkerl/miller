@@ -3,6 +3,8 @@
 
 Please also see [Installation](installation.md) for information about pre-built executables.
 
+You will need to first install Go version 1.15 or higher: please see [https://go.dev](https://go.dev).
+
 ## Miller license
 
 Two-clause BSD license [https://github.com/johnkerl/miller/blob/master/LICENSE.txt](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
@@ -33,12 +35,12 @@ If you have any build errors, feel free to open an issue with "New Issue" at [ht
 
 These are necessary to produce the `mlr` executable.
 
-* Go version 1.16 or higher
+* Go version 1.15 or higher: please see [https://go.dev](https://go.dev)
 * Others packaged within `go.mod` and `go.sum` which you don't need to deal with manually -- the Go build process handles them for us
 
 ### Optional external dependencies
 
-This documentation pageset is built using Sphinx. Please see [https://github.com/johnkerl/miller/blob/main/docs6/README.md](https://github.com/johnkerl/miller/blob/main/docs6/README.md) for details.
+This documentation pageset is built using [https://www.mkdocs.org/](MkDocs). Please see [https://github.com/johnkerl/miller/blob/main/docs6/README.md](https://github.com/johnkerl/miller/blob/main/docs6/README.md) for details.
 
 ## Creating a new release: for developers
 
@@ -49,7 +51,6 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 * Update version found in `mlr --version` and `man mlr`:
 
     * Edit `go/src/version/version.go` from `6.1.0-dev` to `6.2.0`.
-    * Likewise `docs6/conf.py`
     * `cd ../docs6`
     * `export PATH=../go:$PATH`
     * `make html`
@@ -80,6 +81,7 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
     * Social-media updates.
 
 <pre class="pre-non-highlight-non-pair">
+# brew notes:
 git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
 git fetch upstream
 git rebase upstream/master
@@ -99,7 +101,7 @@ git push -u origin miller-6.1.0
 
 * Afterwork:
 
-    * Edit `go/src/version/version.go` and `docs6/conf.py` to change version from `6.2.0` to `6.2.0-dev`.
+    * Edit `go/src/version/version.go` to change version from `6.2.0` to `6.2.0-dev`.
     * `cd go`
     * `./build`
     * Commit and push.

@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Reference: I/O options
+# I/O options
 
 ## Formats
 
@@ -49,7 +49,7 @@ Additional notes:
 
 * DKVP (key-value-pair) format is the default for input and output. So, `--oxtab` is the same as `--idkvp --oxtab`.
 
-**Pro-tip:** Please use either **--format1**, or **--iformat1 --oformat2**.  If you use **--format1 --oformat2** then what happens is that flags are set up for input *and* output for format1, some of which are overwritten for output in format2. For technical reasons, having `--oformat2` clobber all the output-related effects of `--format1` also removes some flexibility from the command-line interface. See also [https://github.com/johnkerl/miller/issues/180](https://github.com/johnkerl/miller/issues/180) and [https://github.com/johnkerl/miller/issues/199](https://github.com/johnkerl/miller/issues/199).
+**Pro-tip:** Please use either **--format1**, or **--iformat1 --oformat2**.  If you use **--format1 --oformat2** then what happens is that flags are set up for input *and* output for format1, some of which are overwritten for output in format2. For technical reasons, having `--oformat2` clobber all the output-related effects of `--format1` also removes some flexibility from the command-line interface. See also Miller issues [180](https://github.com/johnkerl/miller/issues/180) and [199](https://github.com/johnkerl/miller/issues/199).
 
 ## In-place mode
 
@@ -120,25 +120,25 @@ Options:
 The command-line option `--ofmt {format string}` is the global number format for commands which generate numeric output, e.g. `stats1`, `stats2`, `histogram`, and `step`, as well as `mlr put`. Examples:
 
 <pre class="pre-non-highlight-non-pair">
---ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf
+--ofmt %.9e  --ofmt %.6f  --ofmt %.0f
 </pre>
 
-These are just familiar `printf` formats applied to double-precision numbers.  Please don't use `%s` or `%d`. Additionally, if you use leading width (e.g. `%18.12lf`) then the output will contain embedded whitespace, which may not be what you want if you pipe the output to something else, particularly CSV. I use Miller's pretty-print format (`mlr --opprint`) to column-align numerical data.
+These are just familiar `printf` formats.  (TODO: write about type-checking once that's implemented.) Additionally, if you use leading width (e.g. `%18.12f`) then the output will contain embedded whitespace, which may not be what you want if you pipe the output to something else, particularly CSV. I use Miller's pretty-print format (`mlr --opprint`) to column-align numerical data.
 
 To apply formatting to a single field, overriding the global `ofmt`, use `fmtnum` function within `mlr put`. For example:
 
 <pre class="pre-highlight-in-pair">
-<b>echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'</b>
+<b>echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08f")'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x=3.1,y=4.3,z=%!l(float64=00013.33)f
+x=3.1,y=4.3,z=13.330000
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'</b>
+<b>echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08x")'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x=0xffff,y=0xff,z=%!l(int=16711425)lx
+x=0xffff,y=0xff,z=00feff01
 </pre>
 
 Input conversion from hexadecimal is done automatically on fields handled by `mlr put` and `mlr filter` as long as the field value begins with "0x".  To apply output conversion to hexadecimal on a single column, you may use `fmtnum`, or the keystroke-saving `hexfmt` function. Example:

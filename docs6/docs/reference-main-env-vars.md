@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Reference: Miller environment variables
+# Miller environment variables
 
 The following environment variables affect how Miller works:
 

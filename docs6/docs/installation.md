@@ -7,13 +7,13 @@
 Once Miller 6 is released, the commands in this section will install Miller 6 for you.
 Until then, please see the following sections for how to get Miller 6.*
 
-[Homebrew](https://brew.sh/) installation support for OSX is available via
+[Homebrew](https://brew.sh/) installation support for OS X is available via
 
 <pre class="pre-highlight-non-pair">
 <b>brew update && brew install miller</b>
 </pre>
 
-...and also via [MacPorts](https://www.macports.org/):
+... and also via [MacPorts](https://www.macports.org/):
 
 <pre class="pre-highlight-non-pair">
 <b>sudo port selfupdate && sudo port install miller</b>
@@ -41,7 +41,7 @@ On Windows, Miller is available via [Chocolatey](https://chocolatey.org/):
 
 ## Prebuilt executables via GitHub per release
 
-Please see [https://github.com/johnkerl/miller/releases](https://github.com/johnkerl/miller/releases) where there are builds for OSX Yosemite, Linux x86-64 (dynamically linked), and Windows.
+Please see [https://github.com/johnkerl/miller/releases](https://github.com/johnkerl/miller/releases) where there are builds for OS X Yosemite, Linux x86-64 (dynamically linked), and Windows.
 
 ## Prebuilt executables via GitHub per commit
 

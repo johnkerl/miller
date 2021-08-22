@@ -156,7 +156,7 @@ resource=/some/other/path,loadsec=0.97,ok=false
 etc. and I just log them as needed. Then later, I can use `grep`, `mlr --opprint group-like`, etc.
 to analyze my logs.
 
-See [Reference: I/O options](reference-main-io-options.md) regarding how to specify separators other than the default equals-sign and comma.
+See the [I/O options reference](reference-main-io-options.md) regarding how to specify separators other than the default equals-sign and comma.
 
 ## NIDX: Index-numbered (toolkit style)
 
@@ -423,7 +423,7 @@ JSON isn't a parameterized format, so `RS`, `FS`, `PS` aren't specifiable. Nonet
 
 * Use `--jquoteall` to double-quote all object values. By default, integers, floating-point numbers, and booleans `true` and `false` are not double-quoted when they appear as JSON-object keys.
 
-* Use `--jflatsep youmd.inghere` to specify the string used for key concatenation: this defaults to a single colon.
+* Use `--jflatsep yourseparatorhere` to specify the string used for key concatenation: this defaults to a single dot.
 
 Again, please see [jq](https://stedolan.github.io/jq/) for a truly powerful, JSON-specific tool.
 
@@ -517,9 +517,10 @@ _networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
 
 <pre class="pre-highlight-in-pair">
 <b>$ grep -v '^#' /etc/passwd | head -n 2 | \</b>
+<b>  mlr --nidx --fs : --ojson --jvstack --jlistwrap \</b>
+<b>    label name,password,uid,gid,gecos,home_dir,shell</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-  mlr --nidx --fs : --ojson --jvstack --jlistwrap label name,password,uid,gid,gecos,home_dir,shell
 [
 {
   "name": "nobody",
@@ -529,8 +530,8 @@ _networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
   "gecos": "Unprivileged User",
   "home_dir": "/var/empty",
   "shell": "/usr/bin/false"
-}
-,{
+},
+{
   "name": "root",
   "password": "*",
   "uid": 0,
@@ -596,7 +597,7 @@ The line-ending autodetector triggers on the first line ending detected in the i
 
 If you use `--ors {something else}` with (default or explicitly specified) `--irs auto` then line endings are autodetected on input and set to what you specify on output.
 
-If you use `--irs {something else}` with (default or explicitly specified) `--ors auto` then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+If you use `--irs {something else}` with (default or explicitly specified) `--ors auto` then the output line endings used are LF on Unix/Linux/BSD/MacOS X, and CRLF on Windows.
 
 See also [Record/field/pair separators](reference-main-io-options.md#recordfieldpair-separators) for more information about record/field/pair separators.
 

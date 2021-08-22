@@ -8,8 +8,7 @@ You can install Miller for various platforms as follows:
 * Linux: `yum install miller` or `apt-get install miller` depending on your flavor of Linux
 * MacOS: `brew install miller` or `port install miller` depending on your preference of [Homebrew](https://brew.sh) or [MacPorts](https://macports.org).
 * Windows: `choco install miller`  using [Chocolatey](https://chocolatey.org).
-* You can get latest builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions).
-, selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
+* You can get latest builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
 * See also the [build page](build.md) if you prefer -- in particular, if your platform's package manager doesn't have the latest release.
 
 As a first check, you should be able to run `mlr --version` at your system's command prompt and see something like the following:
@@ -27,34 +26,34 @@ As a second check, given [example.csv](./example.csv) you should be able to do
 <b>mlr --csv cat example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color,shape,flag,index,quantity,rate
-yellow,triangle,true,11,43.6498,9.8870
-red,square,true,15,79.2778,0.0130
-red,circle,true,16,13.8103,2.9010
-red,square,false,48,77.5542,7.4670
-purple,triangle,false,51,81.2290,8.5910
-red,square,false,64,77.1991,9.5310
-purple,triangle,false,65,80.1405,5.8240
-yellow,circle,true,73,63.9785,4.2370
-yellow,circle,true,87,63.5058,8.3350
-purple,square,false,91,72.3735,8.2430
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+red,square,true,2,15,79.2778,0.0130
+red,circle,true,3,16,13.8103,2.9010
+red,square,false,4,48,77.5542,7.4670
+purple,triangle,false,5,51,81.2290,8.5910
+red,square,false,6,64,77.1991,9.5310
+purple,triangle,false,7,65,80.1405,5.8240
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+purple,square,false,10,91,72.3735,8.2430
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint cat example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag  index quantity rate
-yellow triangle true  11    43.6498  9.8870
-red    square   true  15    79.2778  0.0130
-red    circle   true  16    13.8103  2.9010
-red    square   false 48    77.5542  7.4670
-purple triangle false 51    81.2290  8.5910
-red    square   false 64    77.1991  9.5310
-purple triangle false 65    80.1405  5.8240
-yellow circle   true  73    63.9785  4.2370
-yellow circle   true  87    63.5058  8.3350
-purple square   false 91    72.3735  8.2430
+color  shape    flag  k  index quantity rate
+yellow triangle true  1  11    43.6498  9.8870
+red    square   true  2  15    79.2778  0.0130
+red    circle   true  3  16    13.8103  2.9010
+red    square   false 4  48    77.5542  7.4670
+purple triangle false 5  51    81.2290  8.5910
+red    square   false 6  64    77.1991  9.5310
+purple triangle false 7  65    80.1405  5.8240
+yellow circle   true  8  73    63.9785  4.2370
+yellow circle   true  9  87    63.5058  8.3350
+purple square   false 10 91    72.3735  8.2430
 </pre>
 
 If you run into issues on these checks, please check out the resources on the [community page](community.md) for help.
@@ -69,17 +68,17 @@ Let's take a quick look at some of the most useful Miller verbs -- file-format-a
 <b>mlr --csv cat example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color,shape,flag,index,quantity,rate
-yellow,triangle,true,11,43.6498,9.8870
-red,square,true,15,79.2778,0.0130
-red,circle,true,16,13.8103,2.9010
-red,square,false,48,77.5542,7.4670
-purple,triangle,false,51,81.2290,8.5910
-red,square,false,64,77.1991,9.5310
-purple,triangle,false,65,80.1405,5.8240
-yellow,circle,true,73,63.9785,4.2370
-yellow,circle,true,87,63.5058,8.3350
-purple,square,false,91,72.3735,8.2430
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+red,square,true,2,15,79.2778,0.0130
+red,circle,true,3,16,13.8103,2.9010
+red,square,false,4,48,77.5542,7.4670
+purple,triangle,false,5,51,81.2290,8.5910
+red,square,false,6,64,77.1991,9.5310
+purple,triangle,false,7,65,80.1405,5.8240
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+purple,square,false,10,91,72.3735,8.2430
 </pre>
 
 But `mlr cat` can also do format conversion -- for example, you can pretty-print in tabular format:
@@ -88,17 +87,17 @@ But `mlr cat` can also do format conversion -- for example, you can pretty-print
 <b>mlr --icsv --opprint cat example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag  index quantity rate
-yellow triangle true  11    43.6498  9.8870
-red    square   true  15    79.2778  0.0130
-red    circle   true  16    13.8103  2.9010
-red    square   false 48    77.5542  7.4670
-purple triangle false 51    81.2290  8.5910
-red    square   false 64    77.1991  9.5310
-purple triangle false 65    80.1405  5.8240
-yellow circle   true  73    63.9785  4.2370
-yellow circle   true  87    63.5058  8.3350
-purple square   false 91    72.3735  8.2430
+color  shape    flag  k  index quantity rate
+yellow triangle true  1  11    43.6498  9.8870
+red    square   true  2  15    79.2778  0.0130
+red    circle   true  3  16    13.8103  2.9010
+red    square   false 4  48    77.5542  7.4670
+purple triangle false 5  51    81.2290  8.5910
+red    square   false 6  64    77.1991  9.5310
+purple triangle false 7  65    80.1405  5.8240
+yellow circle   true  8  73    63.9785  4.2370
+yellow circle   true  9  87    63.5058  8.3350
+purple square   false 10 91    72.3735  8.2430
 </pre>
 
 `mlr head` and `mlr tail` count records rather than lines. Whether you're getting the first few records or the last few, the CSV header is included either way:
@@ -107,22 +106,22 @@ purple square   false 91    72.3735  8.2430
 <b>mlr --csv head -n 4 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color,shape,flag,index,quantity,rate
-yellow,triangle,true,11,43.6498,9.8870
-red,square,true,15,79.2778,0.0130
-red,circle,true,16,13.8103,2.9010
-red,square,false,48,77.5542,7.4670
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+red,square,true,2,15,79.2778,0.0130
+red,circle,true,3,16,13.8103,2.9010
+red,square,false,4,48,77.5542,7.4670
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv tail -n 4 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color,shape,flag,index,quantity,rate
-purple,triangle,false,65,80.1405,5.8240
-yellow,circle,true,73,63.9785,4.2370
-yellow,circle,true,87,63.5058,8.3350
-purple,square,false,91,72.3735,8.2430
+color,shape,flag,k,index,quantity,rate
+purple,triangle,false,7,65,80.1405,5.8240
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+purple,square,false,10,91,72.3735,8.2430
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -133,6 +132,7 @@ purple,square,false,91,72.3735,8.2430
   "color": "yellow",
   "shape": "circle",
   "flag": true,
+  "k": 9,
   "index": 87,
   "quantity": 63.5058,
   "rate": 8.3350
@@ -141,6 +141,7 @@ purple,square,false,91,72.3735,8.2430
   "color": "purple",
   "shape": "square",
   "flag": false,
+  "k": 10,
   "index": 91,
   "quantity": 72.3735,
   "rate": 8.2430
@@ -153,17 +154,17 @@ You can sort on a single field:
 <b>mlr --icsv --opprint sort -f shape example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag  index quantity rate
-red    circle   true  16    13.8103  2.9010
-yellow circle   true  73    63.9785  4.2370
-yellow circle   true  87    63.5058  8.3350
-red    square   true  15    79.2778  0.0130
-red    square   false 48    77.5542  7.4670
-red    square   false 64    77.1991  9.5310
-purple square   false 91    72.3735  8.2430
-yellow triangle true  11    43.6498  9.8870
-purple triangle false 51    81.2290  8.5910
-purple triangle false 65    80.1405  5.8240
+color  shape    flag  k  index quantity rate
+red    circle   true  3  16    13.8103  2.9010
+yellow circle   true  8  73    63.9785  4.2370
+yellow circle   true  9  87    63.5058  8.3350
+red    square   true  2  15    79.2778  0.0130
+red    square   false 4  48    77.5542  7.4670
+red    square   false 6  64    77.1991  9.5310
+purple square   false 10 91    72.3735  8.2430
+yellow triangle true  1  11    43.6498  9.8870
+purple triangle false 5  51    81.2290  8.5910
+purple triangle false 7  65    80.1405  5.8240
 </pre>
 
 Or, you can sort primarily alphabetically on one field, then secondarily numerically descending on another field, and so on:
@@ -172,17 +173,17 @@ Or, you can sort primarily alphabetically on one field, then secondarily numeric
 <b>mlr --icsv --opprint sort -f shape -nr index example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag  index quantity rate
-yellow circle   true  87    63.5058  8.3350
-yellow circle   true  73    63.9785  4.2370
-red    circle   true  16    13.8103  2.9010
-purple square   false 91    72.3735  8.2430
-red    square   false 64    77.1991  9.5310
-red    square   false 48    77.5542  7.4670
-red    square   true  15    79.2778  0.0130
-purple triangle false 65    80.1405  5.8240
-purple triangle false 51    81.2290  8.5910
-yellow triangle true  11    43.6498  9.8870
+color  shape    flag  k  index quantity rate
+yellow circle   true  9  87    63.5058  8.3350
+yellow circle   true  8  73    63.9785  4.2370
+red    circle   true  3  16    13.8103  2.9010
+purple square   false 10 91    72.3735  8.2430
+red    square   false 6  64    77.1991  9.5310
+red    square   false 4  48    77.5542  7.4670
+red    square   true  2  15    79.2778  0.0130
+purple triangle false 7  65    80.1405  5.8240
+purple triangle false 5  51    81.2290  8.5910
+yellow triangle true  1  11    43.6498  9.8870
 </pre>
 
 If there are fields you don't want to see in your data, you can use `cut` to keep only the ones you want, in the same order they appeared in the input data:
@@ -229,17 +230,17 @@ You can use `cut -x` to omit fields you don't care about:
 <b>mlr --icsv --opprint cut -x -f flag,shape example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  index quantity rate
-yellow 11    43.6498  9.8870
-red    15    79.2778  0.0130
-red    16    13.8103  2.9010
-red    48    77.5542  7.4670
-purple 51    81.2290  8.5910
-red    64    77.1991  9.5310
-purple 65    80.1405  5.8240
-yellow 73    63.9785  4.2370
-yellow 87    63.5058  8.3350
-purple 91    72.3735  8.2430
+color  k  index quantity rate
+yellow 1  11    43.6498  9.8870
+red    2  15    79.2778  0.0130
+red    3  16    13.8103  2.9010
+red    4  48    77.5542  7.4670
+purple 5  51    81.2290  8.5910
+red    6  64    77.1991  9.5310
+purple 7  65    80.1405  5.8240
+yellow 8  73    63.9785  4.2370
+yellow 9  87    63.5058  8.3350
+purple 10 91    72.3735  8.2430
 </pre>
 
 You can use `filter` to keep only records you care about:
@@ -248,20 +249,20 @@ You can use `filter` to keep only records you care about:
 <b>mlr --icsv --opprint filter '$color == "red"' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color shape  flag  index quantity rate
-red   square true  15    79.2778  0.0130
-red   circle true  16    13.8103  2.9010
-red   square false 48    77.5542  7.4670
-red   square false 64    77.1991  9.5310
+color shape  flag  k index quantity rate
+red   square true  2 15    79.2778  0.0130
+red   circle true  3 16    13.8103  2.9010
+red   square false 4 48    77.5542  7.4670
+red   square false 6 64    77.1991  9.5310
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color shape  flag index quantity rate
-red   square true 15    79.2778  0.0130
-red   circle true 16    13.8103  2.9010
+color shape  flag k index quantity rate
+red   square true 2 15    79.2778  0.0130
+red   circle true 3 16    13.8103  2.9010
 </pre>
 
 You can use `put` to create new fields which are computed from other fields:
@@ -273,17 +274,17 @@ You can use `put` to create new fields which are computed from other fields:
 <b>' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag  index quantity rate   ratio              color_shape
-yellow triangle true  11    43.6498  9.8870 4.414868008496004  yellow_triangle
-red    square   true  15    79.2778  0.0130 6098.292307692308  red_square
-red    circle   true  16    13.8103  2.9010 4.760530851430541  red_circle
-red    square   false 48    77.5542  7.4670 10.386259541984733 red_square
-purple triangle false 51    81.2290  8.5910 9.455127458968688  purple_triangle
-red    square   false 64    77.1991  9.5310 8.099790158430384  red_square
-purple triangle false 65    80.1405  5.8240 13.760388049450551 purple_triangle
-yellow circle   true  73    63.9785  4.2370 15.09995279679018  yellow_circle
-yellow circle   true  87    63.5058  8.3350 7.619172165566886  yellow_circle
-purple square   false 91    72.3735  8.2430 8.779995147397793  purple_square
+color  shape    flag  k  index quantity rate   ratio              color_shape
+yellow triangle true  1  11    43.6498  9.8870 4.414868008496004  yellow_triangle
+red    square   true  2  15    79.2778  0.0130 6098.292307692308  red_square
+red    circle   true  3  16    13.8103  2.9010 4.760530851430541  red_circle
+red    square   false 4  48    77.5542  7.4670 10.386259541984733 red_square
+purple triangle false 5  51    81.2290  8.5910 9.455127458968688  purple_triangle
+red    square   false 6  64    77.1991  9.5310 8.099790158430384  red_square
+purple triangle false 7  65    80.1405  5.8240 13.760388049450551 purple_triangle
+yellow circle   true  8  73    63.9785  4.2370 15.09995279679018  yellow_circle
+yellow circle   true  9  87    63.5058  8.3350 7.619172165566886  yellow_circle
+purple square   false 10 91    72.3735  8.2430 8.779995147397793  purple_square
 </pre>
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use `$[[3]]` to access the name of field 3 or `$[[[3]]]` to access the value of field 3:
@@ -292,41 +293,41 @@ Even though Miller's main selling point is name-indexing, sometimes you really w
 <b>mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    NEW   index quantity rate
-yellow triangle true  11    43.6498  9.8870
-red    square   true  15    79.2778  0.0130
-red    circle   true  16    13.8103  2.9010
-red    square   false 48    77.5542  7.4670
-purple triangle false 51    81.2290  8.5910
-red    square   false 64    77.1991  9.5310
-purple triangle false 65    80.1405  5.8240
-yellow circle   true  73    63.9785  4.2370
-yellow circle   true  87    63.5058  8.3350
-purple square   false 91    72.3735  8.2430
+color  shape    NEW   k  index quantity rate
+yellow triangle true  1  11    43.6498  9.8870
+red    square   true  2  15    79.2778  0.0130
+red    circle   true  3  16    13.8103  2.9010
+red    square   false 4  48    77.5542  7.4670
+purple triangle false 5  51    81.2290  8.5910
+red    square   false 6  64    77.1991  9.5310
+purple triangle false 7  65    80.1405  5.8240
+yellow circle   true  8  73    63.9785  4.2370
+yellow circle   true  9  87    63.5058  8.3350
+purple square   false 10 91    72.3735  8.2430
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag index quantity rate
-yellow triangle NEW  11    43.6498  9.8870
-red    square   NEW  15    79.2778  0.0130
-red    circle   NEW  16    13.8103  2.9010
-red    square   NEW  48    77.5542  7.4670
-purple triangle NEW  51    81.2290  8.5910
-red    square   NEW  64    77.1991  9.5310
-purple triangle NEW  65    80.1405  5.8240
-yellow circle   NEW  73    63.9785  4.2370
-yellow circle   NEW  87    63.5058  8.3350
-purple square   NEW  91    72.3735  8.2430
+color  shape    flag k  index quantity rate
+yellow triangle NEW  1  11    43.6498  9.8870
+red    square   NEW  2  15    79.2778  0.0130
+red    circle   NEW  3  16    13.8103  2.9010
+red    square   NEW  4  48    77.5542  7.4670
+purple triangle NEW  5  51    81.2290  8.5910
+red    square   NEW  6  64    77.1991  9.5310
+purple triangle NEW  7  65    80.1405  5.8240
+yellow circle   NEW  8  73    63.9785  4.2370
+yellow circle   NEW  9  87    63.5058  8.3350
+purple square   NEW  10 91    72.3735  8.2430
 </pre>
 
 You can find the full list of verbs at the [Verbs Reference](reference-verbs.md) page.
 
 ## Multiple input files
 
-Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files [data/a.csv](data/a.csv and [data/b.csv](data/b.csv), the system `cat` command will repeat header lines:
+Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files [data/a.csv](data/a.csv) and [data/b.csv](data/b.csv), the system `cat` command will repeat header lines:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/a.csv</b>
@@ -376,10 +377,10 @@ Often we want to chain queries together -- for example, sorting by a field and t
 <b>mlr --csv sort -nr index example.csv | mlr --icsv --opprint head -n 3</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape  flag  index quantity rate
-purple square false 91    72.3735  8.2430
-yellow circle true  87    63.5058  8.3350
-yellow circle true  73    63.9785  4.2370
+color  shape  flag  k  index quantity rate
+purple square false 10 91    72.3735  8.2430
+yellow circle true  9  87    63.5058  8.3350
+yellow circle true  8  73    63.9785  4.2370
 </pre>
 
 This works fine -- but Miller also lets you chain verbs together using the word `then`. Think of this as a Miller-internal pipe that lets you use fewer keystrokes:
@@ -388,10 +389,10 @@ This works fine -- but Miller also lets you chain verbs together using the word 
 <b>mlr --icsv --opprint sort -nr index then head -n 3 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape  flag  index quantity rate
-purple square false 91    72.3735  8.2430
-yellow circle true  87    63.5058  8.3350
-yellow circle true  73    63.9785  4.2370
+color  shape  flag  k  index quantity rate
+purple square false 10 91    72.3735  8.2430
+yellow circle true  9  87    63.5058  8.3350
+yellow circle true  8  73    63.9785  4.2370
 </pre>
 
 As another convenience, you can put the filename first using `--from`. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:
@@ -400,10 +401,10 @@ As another convenience, you can put the filename first using `--from`. When you'
 <b>mlr --icsv --opprint --from example.csv sort -nr index then head -n 3</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape  flag  index quantity rate
-purple square false 91    72.3735  8.2430
-yellow circle true  87    63.5058  8.3350
-yellow circle true  73    63.9785  4.2370
+color  shape  flag  k  index quantity rate
+purple square false 10 91    72.3735  8.2430
+yellow circle true  9  87    63.5058  8.3350
+yellow circle true  8  73    63.9785  4.2370
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -429,10 +430,10 @@ Here are the records with the top three `index` values:
 <b>mlr --icsv --opprint sort -nr index then head -n 3 example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape  flag  index quantity rate
-purple square false 91    72.3735  8.2430
-yellow circle true  87    63.5058  8.3350
-yellow circle true  73    63.9785  4.2370
+color  shape  flag  k  index quantity rate
+purple square false 10 91    72.3735  8.2430
+yellow circle true  9  87    63.5058  8.3350
+yellow circle true  8  73    63.9785  4.2370
 </pre>
 
 Lots of Miller commands take a `-g` option for group-by: here, `head -n 1 -g shape` outputs the first record for each distinct value of the `shape` field. This means we're finding the record with highest `index` field for each distinct `shape` field:
@@ -441,10 +442,10 @@ Lots of Miller commands take a `-g` option for group-by: here, `head -n 1 -g sha
 <b>mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag  index quantity rate
-yellow circle   true  87    63.5058  8.3350
-purple square   false 91    72.3735  8.2430
-purple triangle false 65    80.1405  5.8240
+color  shape    flag  k  index quantity rate
+yellow circle   true  9  87    63.5058  8.3350
+purple square   false 10 91    72.3735  8.2430
+purple triangle false 7  65    80.1405  5.8240
 </pre>
 
 Statistics can be computed with or without group-by field(s):
@@ -559,7 +560,7 @@ You can read more about this at the [File Formats](file-formats.md) page.
 
 Often we want to print output to the screen. Miller does this by default, as we've seen in the previous examples.
 
-Sometimes, though, we want to print output to another file. Just use **> outputfilenamegoeshere** at the end of your command:
+Sometimes, though, we want to print output to another file. Just use `> outputfilenamegoeshere` at the end of your command:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint cat example.csv > newfile.csv</b>
@@ -586,7 +587,7 @@ yellow circle   true     87    63.5058  8.3350
 purple square   false    91    72.3735  8.2430
 </pre>
 
-Other times we just want our files to be **changed in-place**: just use **mlr -I**:
+Other times we just want our files to be **changed in-place**: just use `mlr -I`:
 
 <pre class="pre-highlight-non-pair">
 <b>cp example.csv newfile.txt</b>
@@ -648,29 +649,29 @@ Lastly, using `tee` within `put`, you can split your input data into separate fi
 <b>cat circle.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color,shape,flag,index,quantity,rate
-red,circle,true,16,13.8103,2.9010
-yellow,circle,true,73,63.9785,4.2370
-yellow,circle,true,87,63.5058,8.3350
+color,shape,flag,k,index,quantity,rate
+red,circle,true,3,16,13.8103,2.9010
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>cat square.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color,shape,flag,index,quantity,rate
-red,square,true,15,79.2778,0.0130
-red,square,false,48,77.5542,7.4670
-red,square,false,64,77.1991,9.5310
-purple,square,false,91,72.3735,8.2430
+color,shape,flag,k,index,quantity,rate
+red,square,true,2,15,79.2778,0.0130
+red,square,false,4,48,77.5542,7.4670
+red,square,false,6,64,77.1991,9.5310
+purple,square,false,10,91,72.3735,8.2430
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>cat triangle.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color,shape,flag,index,quantity,rate
-yellow,triangle,true,11,43.6498,9.8870
-purple,triangle,false,51,81.2290,8.5910
-purple,triangle,false,65,80.1405,5.8240
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+purple,triangle,false,5,51,81.2290,8.5910
+purple,triangle,false,7,65,80.1405,5.8240
 </pre>

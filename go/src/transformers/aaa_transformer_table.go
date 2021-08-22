@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"mlr/src/colorizer"
 	"mlr/src/lib"
 )
 
@@ -108,6 +109,7 @@ func UsageVerbs() {
 		}
 		fmt.Printf("%s\n", separator)
 		lib.InternalCodingErrorIf(transformerSetup.UsageFunc == nil)
+		fmt.Println(colorizer.MaybeColorizeHelp(transformerSetup.Verb, true))
 		transformerSetup.UsageFunc(os.Stdout, false, 0)
 	}
 	fmt.Printf("%s\n", separator)

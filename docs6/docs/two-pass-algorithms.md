@@ -3,7 +3,15 @@
 
 ## Overview
 
-Miller is a streaming record processor; commands are performed once per record. This makes Miller particularly suitable for single-pass algorithms, allowing many of its verbs to process files that are (much) larger than the amount of RAM present in your system. (Of course, Miller verbs such as `sort`, `tac`, etc. all must ingest and retain all input records before emitting any output records.) You can also use out-of-stream variables to perform multi-pass computations, at the price of retaining all input records in memory.
+Miller is a streaming record processor; commands are performed once per record.
+(See [here](reference-dsl.md#implicit-loop-over-records-for-main-statements)
+and [here](operating-on-all-records.md) for an introductory discussion.) This
+makes Miller particularly suitable for single-pass algorithms, allowing many of
+its verbs to process files that are (much) larger than the amount of RAM
+present in your system. (Of course, Miller verbs such as `sort`, `tac`, etc.
+all must ingest and retain all input records before emitting any output
+records.) You can also use out-of-stream variables to perform multi-pass
+computations, at the price of retaining all input records in memory.
 
 One of Miller's strengths is its compact notation: for example, given input of the form
 
@@ -76,7 +84,16 @@ hat 1000.192668193983
 
 The former (`mlr stats1` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
 
-Nonetheless, out-of-stream variables (which I whimsically call *oosvars*), begin/end blocks, and emit statements give you the ability to implement logic -- if you wish to do so -- which isn't present in other Miller verbs.  (If you find yourself often using the same out-of-stream-variable logic over and over, please file a request at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues) to get it implemented directly in Go as a Miller verb of its own.)
+Nonetheless,
+[out-of-stream variables](reference-dsl-variables.md#out-of-stream-variables) (which I
+whimsically call *oosvars*),
+[begin/end blocks](reference-main-overview.md), and
+[emit statements](reference-dsl-output-statements.md#emit-statements)  give
+you the ability to implement logic -- if you wish to do so -- which isn't
+present in other Miller verbs.  (If you find yourself often using the same
+out-of-stream-variable logic over and over, please file a request at
+[https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues)
+to get it implemented directly in Go as a Miller verb of its own.)
 
 The following examples compute some things using oosvars which are already computable using Miller verbs, by way of providing food for thought.
 
@@ -119,7 +136,8 @@ Similarly, finding the total record count requires first reading through all the
 <b>mlr --opprint --from data/small put -q '</b>
 <b>  @records[NR] = $*;</b>
 <b>  end {</b>
-<b>    for((I,k),v in @records) {</b>
+<b>    for((Istring,k),v in @records) {</b>
+<b>      int I = int(Istring);</b>
 <b>      @records[I]["I"] = I;</b>
 <b>      @records[I]["N"] = NR;</b>
 <b>      @records[I]["PCT"] = 100*I/NR</b>
@@ -129,12 +147,12 @@ Similarly, finding the total record count requires first reading through all the
 <b>' then reorder -f I,N,PCT</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-I N PCT     a   b   i x                   y
-1 5 (error) pan pan 1 0.3467901443380824  0.7268028627434533
-2 5 (error) eks pan 2 0.7586799647899636  0.5221511083334797
-3 5 (error) wye wye 3 0.20460330576630303 0.33831852551664776
-4 5 (error) eks wye 4 0.38139939387114097 0.13418874328430463
-5 5 (error) wye pan 5 0.5732889198020006  0.8636244699032729
+I N PCT a   b   i x                   y
+1 5 20  pan pan 1 0.3467901443380824  0.7268028627434533
+2 5 40  eks pan 2 0.7586799647899636  0.5221511083334797
+3 5 60  wye wye 3 0.20460330576630303 0.33831852551664776
+4 5 80  eks wye 4 0.38139939387114097 0.13418874328430463
+5 5 100 wye pan 5 0.5732889198020006  0.8636244699032729
 </pre>
 
 ## Records having max value
@@ -342,6 +360,8 @@ uid2    0.08333333333333333
 
 The previous section discussed how to fill out missing data fields within CSV with full header line -- so the list of all field names is present within the header line. Next, let's look at a related problem: we have data where each record has various key names but we want to produce rectangular output having the union of all key names.
 
+There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify). Here, we look at how to implement that in the DSL.
+
 For example, suppose you have JSON input like this:
 
 <pre class="pre-highlight-in-pair">
@@ -447,8 +467,6 @@ a b v u x w
 1 - 2 - 3 -
 - - 1 - - 2
 </pre>
-
-There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify).
 
 ## Mean without/with oosvars
 

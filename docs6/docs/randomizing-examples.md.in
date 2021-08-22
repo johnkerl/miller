@@ -12,7 +12,6 @@ Namely:
 
 * Set the Miller random-number seed so this webdoc looks the same every time I regenerate it.
 * Use pretty-printed tabular output.
-* Use pretty-printed tabular output.
 * Use `seqgen` to produce 100,000 records `i=0`, `i=1`, etc.
 * Send those to a `put` step which defines an inverse-transform-sampling function and calls it twice, then computes the sum and product of samples.
 * Send those to a histogram, and from there to a bar-plotter. This is just for visualization; you could just as well output CSV and send that off to your own plotting tool, etc.

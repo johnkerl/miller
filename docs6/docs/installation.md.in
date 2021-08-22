@@ -6,13 +6,13 @@
 Once Miller 6 is released, the commands in this section will install Miller 6 for you.
 Until then, please see the following sections for how to get Miller 6.*
 
-[Homebrew](https://brew.sh/) installation support for OSX is available via
+[Homebrew](https://brew.sh/) installation support for OS X is available via
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 brew update && brew install miller
 GENMD_EOF
 
-...and also via [MacPorts](https://www.macports.org/):
+... and also via [MacPorts](https://www.macports.org/):
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 sudo port selfupdate && sudo port install miller
@@ -40,7 +40,7 @@ GENMD_EOF
 
 ## Prebuilt executables via GitHub per release
 
-Please see [https://github.com/johnkerl/miller/releases](https://github.com/johnkerl/miller/releases) where there are builds for OSX Yosemite, Linux x86-64 (dynamically linked), and Windows.
+Please see [https://github.com/johnkerl/miller/releases](https://github.com/johnkerl/miller/releases) where there are builds for OS X Yosemite, Linux x86-64 (dynamically linked), and Windows.
 
 ## Prebuilt executables via GitHub per commit
 

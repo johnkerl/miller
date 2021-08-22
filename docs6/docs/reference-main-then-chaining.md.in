@@ -1,4 +1,4 @@
-# Reference: then-chaining
+# Then-chaining
 
 In accord with the [Unix philosophy](http://en.wikipedia.org/wiki/Unix_philosophy), you can pipe data into or out of Miller. For example:
 

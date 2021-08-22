@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# DSL reference: syntax
+# DSL syntax
 
 ## Expression formatting
 
@@ -59,7 +59,7 @@ x_y_corr
 
 ## Expressions from files
 
-The simplest way to enter expressions for `put` and `filter` is between single quotes on the command line, e.g.
+The simplest way to enter expressions for `put` and `filter` is between single quotes on the command line (see also [here](miller-on-windows.md) for Windows). For example:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'</b>
@@ -133,7 +133,7 @@ A suggested use-case here is defining functions in files, and calling them from 
 
 Another suggested use-case is putting default parameter values in files, e.g. using `begin{@count=is_present(@count)?@count:10}` in the file, where you can precede that using `begin{@count=40}` using `-e`.
 
-Moreover, you can have one or more `-f` expressions (maybe one function per file, for example) and one or more `-e` expressions on the command line.  If you mix `-f` and `-e` then the expressions are evaluated in the order encountered. (Since the expressions are all simply concatenated together in order, don't forget intervening semicolons: e.g. not `mlr put -e '$x=1' -e '$y=2 ...'` but rather `mlr put -e '$x=1;' -e '$y=2' ...`.)
+Moreover, you can have one or more `-f` expressions (maybe one function per file, for example) and one or more `-e` expressions on the command line.  If you mix `-f` and `-e` then the expressions are evaluated in the order encountered.
 
 ## Semicolons, commas, newlines, and curly braces
 

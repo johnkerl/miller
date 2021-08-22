@@ -1,12 +1,12 @@
-# Reference: Miller commands
+# Miller command structure
 
 ## Overview
 
 The outline of an invocation of Miller is
 
 * `mlr`
-* Options controlling input/output formatting, etc. ([Reference: I/O options](reference-main-io-options.md)).
-* One or more verbs (such as `cut`, `sort`, etc.) ([Verbs Reference](reference-verbs.md)) -- chained together using [then](reference-main-then-chaining.md)). You use these to transform your data.
+* Options controlling input/output formatting, etc. (See [I/O options](reference-main-io-options.md)).
+* One or more verbs -- such as `cut`, `sort`, etc. (see [Verbs Reference](reference-verbs.md)) -- chained together using [then](reference-main-then-chaining.md). You use these to transform your data.
 * Zero or more filenames, with input taken from standard input if there are no filenames present.
 
 For example, reading from a file:

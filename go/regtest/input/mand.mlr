@@ -1,73 +1,86 @@
 # Mandelbrot set generator: simple example of Miller DSL as programming language.
 begin {
-	# Set defaults
-	@rcorn     = -2.0;
-	@icorn     = -2.0;
-	@side      = 4.0;
-	@iheight   = 50;
-	@iwidth    = 100;
-	@maxits    = 100;
-	@levelstep = 5;
-	@chars     = "@X*o-.";
-	@verbose   = false;
-
+  # Set defaults. They can be overridden by e.g.
+  #   mlr -n put -e 'begin{@maxits=200}' -f nameofthisfile.mlr
+  # or
+  #   mlr -n put -s maxits=200 -f nameofthisfile.mlr
+  @rcorn     ??= -2.0;
+  @icorn     ??= -2.0;
+  @side      ??=  4.0;
+  @iheight   ??=   50;
+  @iwidth    ??=  100;
+  @maxits    ??=  100;
+  @levelstep ??=    5;
+  @chars     ??= "@X*o-.";
+  @silent    ??= false;
+  @do_julia  ??= false;
+  @jr        ??= 0.0;      # Real part of Julia point, if any
+  @ji        ??= 0.0;      # Imaginary part of Julia point, if any
 }
-
-# Override defaults
-@rcorn     = $rcorn;
-@icorn     = $icorn;
-@side      = $side;
-@iheight   = $iheight;
-@iwidth    = $iwidth;
-@maxits    = $maxits;
-@levelstep = $levelstep;
-@chars     = $chars;
-@verbose   = $verbose;
 
 end {
-	if (@verbose) {
-		print "RCORN     = ".@rcorn;
-		print "ICORN     = ".@icorn;
-		print "SIDE      = ".@side;
-		print "IHEIGHT   = ".@iheight;
-		print "IWIDTH    = ".@iwidth;
-		print "MAXITS    = ".@maxits;
-		print "LEVELSTEP = ".@levelstep;
-		print "CHARS     = ".@chars;
-	}
+  if (!@silent) {
+    print "RCORN     = ".@rcorn;
+    print "ICORN     = ".@icorn;
+    print "SIDE      = ".@side;
+    print "IHEIGHT   = ".@iheight;
+    print "IWIDTH    = ".@iwidth;
+    print "MAXITS    = ".@maxits;
+    print "LEVELSTEP = ".@levelstep;
+    print "CHARS     = ".@chars;
+  }
 
-	for (int ii = @iheight-1; ii >= 0; ii -= 1) {
-		num ci = @icorn + (ii/@iheight) * @side;
-		for (int ir = 0; ir < @iwidth; ir += 1) {
-			num cr = @rcorn + (ir/@iwidth) * @side;
-			printn get_point_plot(cr, ci, @maxits);
-		}
-		print;
-	}
+  for (int ii = @iheight-1; ii >= 0; ii -= 1) {
+    num ci = @icorn + (ii/@iheight) * @side;
+    for (int ir = 0; ir < @iwidth; ir += 1) {
+      num cr = @rcorn + (ir/@iwidth) * @side;
+      str c = get_point_plot(cr, ci, @maxits, @do_julia, @jr, @ji);
+      if (!@silent) {
+        printn c
+      }
+    }
+    if (!@silent) {
+      print;
+    }
+  }
 }
 
-func get_point_plot(cr, ci, maxits) {
-	num zr = 0.0;
-	num zi = 0.0;
+func get_point_plot(num pr, num pi, int maxits, bool do_julia, num jr, num ji): str {
+  num zr = 0.0;
+  num zi = 0.0;
+  num cr = 0.0;
+  num ci = 0.0;
 
-	int iti = 0;
-	bool escaped = false;
-	num zt = 0;
-	for (iti = 0; iti < maxits; iti += 1) {
-		num mag = zr*zr + zi+zi;
-		if (mag > 4.0) {
-				escaped = true;
-				break;
-		}
-		# z := z^2 + c
-		zt = zr*zr - zi*zi + cr;
-		zi = 2*zr*zi + ci;
-		zr = zt;
-	}
-	if (!escaped) {
-		return ".";
-	} else {
-		int level = (iti // @levelstep) % strlen(@chars);
-		return substr(@chars, level, level);
-	}
+  if (!do_julia) {
+    zr = 0.0;
+    zi = 0.0;
+    cr = pr;
+    ci = pi;
+  } else {
+    zr = pr;
+    zi = pi;
+    cr = jr;
+    ci = ji;
+  }
+
+  int iti = 0;
+  bool escaped = false;
+  num zt = 0;
+  for (iti = 0; iti < maxits; iti += 1) {
+    num mag = zr*zr + zi+zi;
+    if (mag > 4.0) {
+        escaped = true;
+        break;
+    }
+    # z := z^2 + c
+    zt = zr*zr - zi*zi + cr;
+    zi = 2*zr*zi + ci;
+    zr = zt;
+  }
+  if (!escaped) {
+    return ".";
+  } else {
+    int level = (iti // @levelstep) % strlen(@chars);
+    return substr(@chars, level, level);
+  }
 }

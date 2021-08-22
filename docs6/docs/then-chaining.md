@@ -22,7 +22,7 @@ paid,debit,30.00
 Next, run the first step of your command, omitting anything from the first `then` onward:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --opprint count-distinct -f Status,Payment_Type data/then-example.csv</b>
+<b>mlr --from data/then-example.csv --c2p count-distinct -f Status,Payment_Type</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Status  Payment_Type count
@@ -35,9 +35,8 @@ paid    debit        1
 After that, run it with the next `then` step included:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --opprint count-distinct -f Status,Payment_Type \</b>
-<b>  then sort -nr count \</b>
-<b>  data/then-example.csv</b>
+<b>mlr --from data/then-example.csv --c2p count-distinct -f Status,Payment_Type \</b>
+<b>  then sort -nr count</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Status  Payment_Type count
@@ -52,8 +51,8 @@ Now if you use `then` to include another verb after that, the columns `Status`, 
 Note, by the way, that you'll get the same results using pipes:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv \</b>
-<b>| mlr --icsv --opprint sort -nr count</b>
+<b>mlr --from data/then-example.csv --csv count-distinct -f Status,Payment_Type \</b>
+<b>| mlr --c2p sort -nr count</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Status  Payment_Type count
@@ -81,7 +80,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 why don't I see `NR=1` and `NR=2` here??
 
 <pre class="pre-highlight-in-pair">
-<b>mlr filter '$x > 0.5' then put '$NR = NR' data/small</b>
+<b>mlr --from data/small filter '$x > 0.5' then put '$NR = NR'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NR=2

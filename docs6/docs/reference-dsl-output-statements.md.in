@@ -1,4 +1,4 @@
-# DSL reference: output statements
+# DSL output statements
 
 You can **output** variable-values or expressions in **five ways**:
 
@@ -10,7 +10,7 @@ You can **output** variable-values or expressions in **five ways**:
 
 * Use **tee** which formats the current stream record (not just an arbitrary string as with **print**) to a specific file.
 
-* Use **emit**/**emitp**/**emitf** to send out-of-stream variables' current values to the output record stream, e.g.  `@sum += $x; emit @sum` which produces an extra output record such as `sum=3.1648382`.
+* Use **emit**/**emitp**/**emitf** to send out-of-stream variables' current values to the output record stream, e.g.  `@sum += $x; emit @sum` which produces an extra record such as `sum=3.1648382`. These records, just like records from input file(s), participate in downstream [then-chaining](reference-main-then-chaining.md) to other verbs.
 
 For the first two options you are populating the output-records stream which feeds into the next verb in a `then`-chain (if any), or which otherwise is formatted for output using `--o...` flags.
 
@@ -24,11 +24,21 @@ The `print` statement is perhaps self-explanatory, but with a few light caveats:
 
 * Output goes directly to stdout/stderr, respectively: data produced this way do not go downstream to the next verb in a `then`-chain. (Use `emit` for that.)
 
-* Print statements are for strings (`print "hello"`), or things which can be made into strings: numbers (`print 3`, `print $a + $b`, or concatenations thereof (`print "a + b = " . ($a + $b)`). Maps (in `$*`, map-valued out-of-stream or local variables, and map literals) aren't convertible into strings. If you print a map, you get `{is-a-map}` as output. Please use `dump` to print maps.
+* Print statements are for strings (`print "hello"`), or things which can be made into strings: numbers (`print 3`, `print $a + $b`), or concatenations thereof (`print "a + b = " . ($a + $b)`). Maps (in `$*`, map-valued out-of-stream or local variables, and map literals) as well as arrays are printed as JSON.
 
-* You can redirect print output to a file: `mlr --from myfile.dat put 'print > "tap.txt", $x'` `mlr --from myfile.dat put 'o=$*; print > $a.".txt", $x'`.
+* You can redirect print output to a file:
 
-* See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
+GENMD_CARDIFY_HIGHLIGHT_ONE
+mlr --from myfile.dat put 'print > "tap.txt", $x'
+GENMD_EOF
+
+* You can redirect print output to multiple files, split by values present in various records:
+
+GENMD_CARDIFY_HIGHLIGHT_ONE
+mlr --from myfile.dat put 'print > $a.".txt", $x'
+GENMD_EOF
+
+See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
 ## Dump statements
 
@@ -38,7 +48,7 @@ The `dump` statement is for printing expressions, including maps, directly to st
 
 * Output goes directly to stdout/stderr, respectively: data produced this way do not go downstream to the next verb in a `then`-chain. (Use `emit` for that.)
 
-* You can use `dump` to output single strings, numbers, or expressions including map-valued data. Map-valued data are printed as JSON. Miller allows string and integer keys in its map literals while JSON allows only string keys, so use `mlr put --jknquoteint` if you want integer-valued map keys not double-quoted.
+* You can use `dump` to output single strings, numbers, or expressions including map-valued data. Map-valued data are printed as JSON.
 
 * If you use `dump` (or `edump`) with no arguments, you get a JSON structure representing the current values of all out-of-stream variables.
 
@@ -50,7 +60,13 @@ The `dump` statement is for printing expressions, including maps, directly to st
 
 Records produced by a `mlr put` go downstream to the next verb in your `then`-chain, if any, or otherwise to standard output.  If you want to additionally copy out records to files, you can do that using `tee`.
 
-The syntax is, by example, `mlr --from myfile.dat put 'tee > "tap.dat", $*' then sort -n index`.  First is `tee >`, then the filename expression (which can be an expression such as `"tap.".$a.".dat"`), then a comma, then `$*`. (Nothing else but `$*` is teeable.)
+The syntax is, by example:
+
+GENMD_CARDIFY_HIGHLIGHT_ONE
+mlr --from myfile.dat put 'tee > "tap.dat", $*' then sort -n index
+GENMD_EOF
+
+First is `tee >`, then the filename expression (which can be an expression such as `"tap.".$a.".dat"`), then a comma, then `$*`. (Nothing else but `$*` is teeable.)
 
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 

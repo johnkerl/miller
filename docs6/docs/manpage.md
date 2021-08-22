@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Manpage
+# Manual page
 
 This is simply a copy of what you should see on running **man mlr** at a command prompt, once Miller is installed on your system.
 

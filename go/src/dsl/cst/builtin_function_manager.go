@@ -12,6 +12,7 @@ import (
 	"sort"
 	"strings"
 
+	"mlr/src/colorizer"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -1589,7 +1590,7 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 }
 
 // ----------------------------------------------------------------
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionNames(o *os.File) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically(o *os.File) {
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		fmt.Fprintln(o, builtinFunctionInfo.name)
 	}
@@ -1605,27 +1606,14 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph(o *os
 }
 
 // ----------------------------------------------------------------
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages(o *os.File) {
-	manager.ListBuiltinFunctionUsagesDecorated(
-		o,
-		func(functionName string) { fmt.Print(functionName) }, // no decoration
-	)
-}
-
-// ListBuiltinFunctionUsagesDecorated is like ListBuiltinFunctionUsages but
-// allows the caller to specify a wrapping function around the function names
-// -- capitalization, ANSI color, etc.
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesDecorated(
-	o *os.File,
-	nameEmitter func(string),
-) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
 	for i, builtinFunctionInfo := range *manager.lookupTable {
 		if i > 0 {
-			fmt.Fprintln(o)
+			fmt.Println()
 		}
 		lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
-		nameEmitter(builtinFunctionInfo.name)
-		fmt.Fprintf(o, "  (class=%s #args=%s) %s\n",
+		fmt.Print(colorizer.MaybeColorizeHelp(builtinFunctionInfo.name, true))
+		fmt.Printf("  (class=%s #args=%s) %s\n",
 			builtinFunctionInfo.class,
 			describeNargs(&builtinFunctionInfo),
 			builtinFunctionInfo.help,
@@ -1642,20 +1630,19 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName str
 func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName string, o *os.File) bool {
 	builtinFunctionInfo := manager.LookUp(functionName)
 	if builtinFunctionInfo == nil {
-		manager.listBuiltinFunctionUsageApproximate(functionName, o)
+		manager.listBuiltinFunctionUsageApproximate(functionName)
 		return false
 	}
-	manager.listBuiltinFunctionUsageExact(builtinFunctionInfo, o)
+	manager.listBuiltinFunctionUsageExact(builtinFunctionInfo)
 	return true
 }
 
 func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
 	builtinFunctionInfo *BuiltinFunctionInfo,
-	o *os.File,
 ) {
 	lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
-	fmt.Fprintf(o, "%-s  (class=%s #args=%s) %s\n",
-		builtinFunctionInfo.name,
+	fmt.Printf("%-s  (class=%s #args=%s) %s\n",
+		colorizer.MaybeColorizeHelp(builtinFunctionInfo.name, true),
 		builtinFunctionInfo.class,
 		describeNargs(builtinFunctionInfo),
 		builtinFunctionInfo.help,
@@ -1664,18 +1651,17 @@ func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
 
 func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageApproximate(
 	text string,
-	o *os.File,
 ) {
-	fmt.Fprintf(o, "No exact match for \"%s\". Inexact matches:\n", text)
+	fmt.Printf("No exact match for \"%s\". Inexact matches:\n", text)
 	found := false
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		if strings.Contains(builtinFunctionInfo.name, text) {
-			fmt.Fprintf(o, "  %s\n", builtinFunctionInfo.name)
+			fmt.Printf("  %s\n", builtinFunctionInfo.name)
 			found = true
 		}
 	}
 	if !found {
-		fmt.Fprintln(o, "None found.")
+		fmt.Println("None found.")
 	}
 }
 

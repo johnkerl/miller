@@ -78,9 +78,9 @@ end {
 
 ## Mandelbrot-set generator
 
-The [Mandelbrot set](http://en.wikipedia.org/wiki/Mandelbrot_set) is also easily expressed. This isn't an important case of data-processing in the vein for which Miller was designed, but it is an example of Miller as a general-purpose programming language -- a test case for the expressiveness of the language.
+The [Mandelbrot set](http://en.wikipedia.org/wiki/Mandelbrot_set) is also easily expressed. This isn't an important case of data processing (the use-case Miller was designed for), but it is an example of Miller as a general-purpose programming language -- a test case for the expressiveness of the language.
 
-The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the Wikipedia article); how to render them is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
+The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the [Wikipedia article](https://en.wikipedia.org/wiki/Mandelbrot_set)); how to render them visually is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
 
 <pre class="pre-highlight-in-pair">
 <b>cat programs/mand.mlr</b>
@@ -88,40 +88,26 @@ The (approximate) computation of points in the complex plane which are and aren'
 <pre class="pre-non-highlight-in-pair">
 # Mandelbrot set generator: simple example of Miller DSL as programming language.
 begin {
-  # Set defaults
-  @rcorn     = -2.0;
-  @icorn     = -2.0;
-  @side      = 4.0;
-  @iheight   = 50;
-  @iwidth    = 100;
-  @maxits    = 100;
-  @levelstep = 5;
-  @chars     = "@X*o-."; # Palette of characters to print to the screen.
-  @verbose   = false;
-  @do_julia  = false;
-  @jr        = 0.0;      # Real part of Julia point, if any
-  @ji        = 0.0;      # Imaginary part of Julia point, if any
+  # Set defaults. They can be overridden by e.g.
+  #   mlr -n put -e 'begin{@maxits=200}' -f nameofthisfile.mlr
+  # or
+  #   mlr -n put -s maxits=200 -f nameofthisfile.mlr
+  @rcorn     ??= -2.0;
+  @icorn     ??= -2.0;
+  @side      ??=  4.0;
+  @iheight   ??=   50;
+  @iwidth    ??=  100;
+  @maxits    ??=  100;
+  @levelstep ??=    5;
+  @chars     ??= "@X*o-.";
+  @silent    ??= false;
+  @do_julia  ??= false;
+  @jr        ??= 0.0;      # Real part of Julia point, if any
+  @ji        ??= 0.0;      # Imaginary part of Julia point, if any
 }
 
-# Here, we can override defaults from an input file (if any).  In Miller's
-# put/filter DSL, absent-null right-hand sides result in no assignment so we
-# can simply put @rcorn = $rcorn: if there is a field in the input like
-# 'rcorn = -1.847' we'll read and use it, else we'll keep the default.
-@rcorn     = $rcorn;
-@icorn     = $icorn;
-@side      = $side;
-@iheight   = $iheight;
-@iwidth    = $iwidth;
-@maxits    = $maxits;
-@levelstep = $levelstep;
-@chars     = $chars;
-@verbose   = $verbose;
-@do_julia  = $do_julia;
-@jr        = $jr;
-@ji        = $ji;
-
 end {
-  if (@verbose) {
+  if (!@silent) {
     print "RCORN     = ".@rcorn;
     print "ICORN     = ".@icorn;
     print "SIDE      = ".@side;
@@ -132,21 +118,22 @@ end {
     print "CHARS     = ".@chars;
   }
 
-  # Iterate over a matrix of rows and columns, printing one character for each cell.
   for (int ii = @iheight-1; ii >= 0; ii -= 1) {
-    num pi = @icorn + (ii/@iheight) * @side;
+    num ci = @icorn + (ii/@iheight) * @side;
     for (int ir = 0; ir < @iwidth; ir += 1) {
-      num pr = @rcorn + (ir/@iwidth) * @side;
-      printn get_point_plot(pr, pi, @maxits, @do_julia, @jr, @ji);
+      num cr = @rcorn + (ir/@iwidth) * @side;
+      str c = get_point_plot(cr, ci, @maxits, @do_julia, @jr, @ji);
+      if (!@silent) {
+        printn c
+      }
     }
-    print;
+    if (!@silent) {
+      print;
+    }
   }
 }
 
-# This is a function to approximate membership in the Mandelbrot set (or Julia
-# set for a given Julia point if do_julia == true) for a given point in the
-# complex plane.
-func get_point_plot(pr, pi, maxits, do_julia, jr, ji) {
+func get_point_plot(num pr, num pi, int maxits, bool do_julia, num jr, num ji): str {
   num zr = 0.0;
   num zi = 0.0;
   num cr = 0.0;
@@ -181,7 +168,6 @@ func get_point_plot(pr, pi, maxits, do_julia, jr, ji) {
   if (!escaped) {
     return ".";
   } else {
-    # The // operator is Miller's (pythonic) integer-division operator
     int level = (iti // @levelstep) % strlen(@chars);
     return substr(@chars, level, level);
   }
@@ -191,59 +177,42 @@ func get_point_plot(pr, pi, maxits, do_julia, jr, ji) {
 At standard resolution this makes a nice little ASCII plot:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr -n put -f ./programs/mand.mlr</b>
+<b>mlr -n put -s iheight=25 -s iwidth=50 -f ./programs/mand.mlr</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXX.XXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXooXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXX**o..*XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXX*-....-oXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXX@XXXXXXXXXX*......o*XXXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXX**oo*-.-........oo.XXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXXX....................X..o-XXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@XXXXXXXXXXXXXXX*oo......................oXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@XXX*XXXXXXXXXXXX**o........................*X*X@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@XXXXXXooo***o*.*XX**X..........................o-XX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@XXXXXXXX*-.......-***.............................oXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@XXXXXXXX*@..........Xo............................*XX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@XXXX@XXXXXXXX*o@oX...........@...........................oXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-.........................................................o*XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@XXXXXXXXX*-.oX...........@...........................oXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@XXXXXXXXXX**@..........*o............................*XXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@XXXXXXXXXXXXX-........***.............................oXXXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@XXXXXXXXXXXXoo****o*.XX***@..........................o-XXXXXXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@XXXXX*XXXX*XXXXXXX**-........................***XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXXX*o*.....................@o*XXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXX*....................*..o-XX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXX*ooo*-.o........oo.X*XXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXX**@.....*XXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXX*o....-o*XXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXo*o..*XXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXXX*o*XXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXX@XXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXX@@XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+RCORN     = -2
+ICORN     = -2
+SIDE      = 4.0
+IHEIGHT   = 25
+IWIDTH    = 50
+MAXITS    = 100
+LEVELSTEP = 5
+CHARS     = @X*o-.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@XX.XX@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@XX*o.XXX@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@XX@XXXXX...oXXXXX@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@XXXXXX..........X.-X@@@@@@@@@@@@@@@@@@
+@@@@@@@@XXXXXXXX*o............XX@@@@@@@@@@@@@@@@@@
+@@@@@@XXXX-...-*...............X@@@@@@@@@@@@@@@@@@
+@XX@XXXXoo....................XX@@@@@@@@@@@@@@@@@@
+@@@XXXXX-o....................XXX@@@@@@@@@@@@@@@@@
+@@@@XXXXXX-....*...............XXXXX@@@@@@@@@@@@@@
+@@@@@@@XXXXX*XXX*-............*XXX@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@XXXXXX..........*.-X@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@XXXX*@..*XXXX@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@XXXXXoo.XXXX@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@XXXXXX@XXXX@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@XX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 </pre>
 
 But using a very small font size (as small as my Mac will let me go), and by choosing the coordinates to zoom in on a particular part of the complex plane, we can get a nice little picture:
@@ -253,8 +222,9 @@ But using a very small font size (as small as my Mac will let me go), and by cho
 # Get the number of rows and columns from the terminal window dimensions
 iheight=$(stty size | mlr --nidx --fs space cut -f 1)
 iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
-echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheight,iwidth=$iwidth" \
-| mlr put -f programs/mand.mlr
+mlr -n put \
+  -s rcorn=-1.755350 -s icorn=0.014230 -s side=0.000020 -s maxits=10000 -s iheight=$iheight -s iwidth=$iwidth \
+  -f programs/mand.mlr
 </pre>
 
 ![pix/mand.png](pix/mand.png)

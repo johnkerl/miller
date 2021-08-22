@@ -1,4 +1,4 @@
-# DSL reference: variables
+# DSL variables
 
 Miller has the following kinds of variables:
 
@@ -8,7 +8,7 @@ Miller has the following kinds of variables:
 
 **Out-of-stream variables** accessed using the `@` prefix. These refer to data which persist from one record to the next, including in `begin` and `end` blocks (which execute before/after the record stream is consumed, respectively). You use them to remember values across records, such as sums, differences, counters, and so on.  In a few contexts, presented below, you can refer to the entire out-of-stream-variables collection as `@*`.
 
-**Local variables** are limited in scope and extent to the current statements being executed: these include function arguments, bound variables in for loops, and explicitly declared local variables.
+**Local variables** are limited in scope and extent to the current statements being executed: these include function arguments, bound variables in for loops, and local variables.
 
 **Keywords** are not variables, but since their names are reserved, you cannot use these names for local variables.
 
@@ -38,9 +38,9 @@ GENMD_RUN_COMMAND
 mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
 GENMD_EOF
 
-The **extent** is for the duration of the put/filter: in a `begin` statement (which executes before the fimd.input record is consumed) you will find `NR=1` and in an `end` statement (which is executed after the last input record is consumed) you will find `NR` to be the total number of records ingested.
+The **extent** is for the duration of the put/filter: in a `begin` statement (which executes before the first input record is consumed) you will find `NR=1` and in an `end` statement (which is executed after the last input record is consumed) you will find `NR` to be the total number of records ingested.
 
-These are all **read-only** for the `mlr put` and `mlr filter` DSLs: they may be assigned from, e.g. `$nr=NR`, but they may not be assigned to: `NR=100` is a syntax error.
+These are all **read-only** for the `mlr put` and `mlr filter` DSL: they may be assigned from, e.g. `$nr=NR`, but they may not be assigned to: `NR=100` is a syntax error.
 
 ## Field names
 
@@ -172,7 +172,7 @@ Things which are completely unsurprising, resembling many other languages:
 
 * However, you cannot redeclare the *type* of an argument or a local: `var a=1; var a=2` is an error but `var a=1;  a=2` is OK.
 
-* All argument-passing is positional rather than by name; arguments are passed by value, not by reference. (This is also true for map-valued variables: they are not, and cannot be, passed by reference)
+* All argument-passing is positional rather than by name; arguments are passed by value, not by reference. (This is also true for map-valued variables: they are not, and cannot be, passed by reference.)
 
 * You can define locals (using `var`, `num`, etc.) at any scope (if-statements, else-statements, while-loops, for-loops, or the top-level scope), and nested scopes will have access (more details on scope in the next section).  If you define a local variable with the same name inside an inner scope, then a new variable is created with the narrower scope.
 
@@ -182,13 +182,13 @@ Things which are completely unsurprising, resembling many other languages:
 
 Things which are perhaps surprising compared to other languages:
 
-* Type declarations using `var`, or typed using `num`, `int`, `float`, `str`, and `bool` are necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using `var`. (Some examples are shown below.)
+* Type declarations using `var`, or typed using `num`, `int`, `float`, `str`, and `bool` are not necessary to declare local variables.  Function arguments and variables bound in for-loops over stream records and out-of-stream variables are *implicitly* declared using `var`. (Some examples are shown below.)
 
 * Type-checking is done at assignment time. For example, `float f = 0` is an error (since `0` is an integer), as is `float f = 0.0; f = 1`. For this reason I prefer to use `num` over `float` in most contexts since `num` encompasses integer and floating-point values. More information is at [Type-checking](reference-dsl-variables.md#type-checking).
 
 * Bound variables in for-loops over stream records and out-of-stream variables are implicitly local to that block. E.g. in `for (k, v in $*) { ... }` `for ((k1, k2), v in @*) { ... }` if there are `k`, `v`, etc. in the enclosing scope then those will be masked by the loop-local bound variables in the loop, and moreover the values of the loop-local bound variables are not available after the end of the loop.
 
-* For C-style triple-for loops, if a for-loop variable is defined using `var`, `int`, etc. then it is scoped to that for-loop. E.g. `for (i = 0; i < 10; i += 1) { ... }` and `for (int i = 0; i < 10; i += 1) { ... }`. (This is unsurprising.). If there is no typedecl and an outer-scope variable of that name exists, then it is used. (This is also unsurprising.) But of there is no outer-scope variable of that name then the variable is scoped to the for-loop only.
+* For C-style triple-for loops, if a for-loop variable is defined using `var`, `int`, etc. then it is scoped to that for-loop. E.g. `for (i = 0; i < 10; i += 1) { ... }` and `for (int i = 0; i < 10; i += 1) { ... }`. (This is unsurprising.). If there is no typedecl and an outer-scope variable of that name exists, then it is used. (This is also unsurprising.) But if there is no outer-scope variable of that name, then the variable is scoped to the for-loop only.
 
 The following example demonstrates the scope rules:
 
@@ -212,7 +212,7 @@ GENMD_EOF
 
 ## Map literals
 
-Miller's `put`/`filter` DSL has four kinds of hashmaps. **Stream records** are (single-level) maps from name to value. **Out-of-stream variables** and **local variables** can also be maps, although they can be multi-level hashmaps (e.g. `@sum[$x][$y]`).  The fourth kind is **map literals**. These cannot be on the left-hand side of assignment expressions. Syntactically they look like JSON, although Miller allows string and integer keys in its map literals while JSON allows only string keys (e.g. `"3"` rather than `3`).
+Miller's `put`/`filter` DSL has four kinds of hashmaps. **Stream records** are (single-level) maps from name to value. **Out-of-stream variables** and **local variables** can also be maps, although they can be multi-level hashmaps (e.g. `@sum[$x][$y]`).  The fourth kind is **map literals**. These cannot be on the left-hand side of assignment expressions. Syntactically they look like JSON, although Miller allows string and integer keys in its map literals while JSON allows only string keys (e.g. `"3"` rather than `3`). Note though that integer keys become stringified in Miller: `@mymap[3]=4` results in `@mymap` being `{"3":4}`.
 
 For example, the following swaps the input stream's `a` and `i` fields, modifies `y`, and drops the rest:
 
@@ -226,17 +226,15 @@ Like out-of-stream and local variables, map literals can be multi-level:
 
 GENMD_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-3.sh)
 
-By default, map-valued expressions are dumped using JSON formatting. If you use `dump` to print a hashmap with integer keys and you don't want them double-quoted (JSON-style) then you can use `mlr put --jknquoteint`. See also `mlr put --help`.
-
 ## Type-checking
 
-Miller's `put`/`filter` DSLs support two optional kinds of type-checking.  One is inline **type-tests** and **type-assertions** within expressions.  The other is **type declarations** for assignments to local variables, binding of arguments to user-defined functions, and return values from user-defined functions, These are discussed in the following subsections.
+Miller's `put`/`filter` DSL supports two optional kinds of type-checking.  One is inline **type-tests** and **type-assertions** within expressions.  The other is **type declarations** for assignments to local variables, binding of arguments to user-defined functions, and return values from user-defined functions, These are discussed in the following subsections.
 
 Use of type-checking is entirely up to you: omit it if you want flexibility with heterogeneous data; use it if you want to help catch misspellings in your DSL code or unexpected irregularities in your input data.
 
 ### Type-test and type-assertion expressions
 
-The following `is...` functions take a value and return a boolean indicating whether the argument is of the indicated type. The `assert_...` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
+The following `is_...` functions take a value and return a boolean indicating whether the argument is of the indicated type. The `assert_...` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
 GENMD_RUN_COMMAND
 mlr -f | grep ^is
@@ -321,7 +319,7 @@ GENMD_EOF
 
 ## Null data: empty and absent
 
-Please see [xxxx](reference-main-null-data.md).
+Please see the [null-data reference page](reference-main-null-data.md).
 
 ## Aggregate variable assignments
 
@@ -351,7 +349,7 @@ GENMD_EOF
 
 GENMD_RUN_COMMAND
 mlr --opprint put -q '
-  is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*};
+  is_null(@xmax) || $x > @xmax {@xmax = $x; @recmax = $*};
   end {emit @recmax}
 ' data/small
 GENMD_EOF

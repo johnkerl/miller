@@ -1,13 +1,13 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Reference: Miller commands
+# Miller command structure
 
 ## Overview
 
 The outline of an invocation of Miller is
 
 * `mlr`
-* Options controlling input/output formatting, etc. ([Reference: I/O options](reference-main-io-options.md)).
-* One or more verbs (such as `cut`, `sort`, etc.) ([Verbs Reference](reference-verbs.md)) -- chained together using [then](reference-main-then-chaining.md)). You use these to transform your data.
+* Options controlling input/output formatting, etc. (See [I/O options](reference-main-io-options.md)).
+* One or more verbs -- such as `cut`, `sort`, etc. (see [Verbs Reference](reference-verbs.md)) -- chained together using [then](reference-main-then-chaining.md). You use these to transform your data.
 * Zero or more filenames, with input taken from standard input if there are no filenames present.
 
 For example, reading from a file:
@@ -16,9 +16,9 @@ For example, reading from a file:
 <b>mlr --icsv --opprint head -n 2 then sort -f shape example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag index quantity rate
-red    square   true 15    79.2778  0.0130
-yellow triangle true 11    43.6498  9.8870
+color  shape    flag k index quantity rate
+red    square   true 2 15    79.2778  0.0130
+yellow triangle true 1 11    43.6498  9.8870
 </pre>
 
 Reading from standard input:
@@ -27,9 +27,9 @@ Reading from standard input:
 <b>cat example.csv | mlr --icsv --opprint head -n 2 then sort -f shape</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag index quantity rate
-red    square   true 15    79.2778  0.0130
-yellow triangle true 11    43.6498  9.8870
+color  shape    flag k index quantity rate
+red    square   true 2 15    79.2778  0.0130
+yellow triangle true 1 11    43.6498  9.8870
 </pre>
 
 The rest of this reference section gives you full information on each of these parts of the command line.

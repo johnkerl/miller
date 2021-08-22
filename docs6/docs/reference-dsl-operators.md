@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# DSL reference: operators
+# DSL operators
 
 ## Operator precedence
 
@@ -9,7 +9,7 @@ Operators are listed in order of decreasing precedence, highest first.
 Operators              Associativity
 ---------              -------------
 ()                     left to right
-**                    right to left
+**                     right to left
 ! ~ unary+ unary- &    right to left
 binary* / // %         left to right
 binary+ binary- .      left to right
@@ -30,11 +30,17 @@ binary+ binary- .      left to right
 
 * Functions are often pass-throughs straight to the system-standard Go libraries.
 
-* The `min` and `max` functions are different from other multi-argument functions which return null if any of their inputs are null: for `min` and `max`, by contrast, if one argument is absent-null, the other is returned. Empty-null loses min or max against numeric or boolean; empty-null is less than any other string.
+* The [`min`](reference-dsl-builtin-functions.md#min) and [`max`](reference-dsl-builtin-functions.md#max) functions are different from other multi-argument functions which return null if any of their inputs are null: for [`min`](reference-dsl-builtin-functions.md#min) and [`max`](reference-dsl-builtin-functions.md#max), by contrast, if one argument is absent-null, the other is returned. Empty-null loses min or max against numeric or boolean; empty-null is less than any other string.
 
-* Symmetrically with respect to the bitwise OR, XOR, and AND operators `|`, `^`, `&`, Miller has logical operators `||`, `^^`, `&&`: the logical XOR not existing in Go.
+* Symmetrically with respect to the bitwise OR, XOR, and AND operators
+[`|`](reference-dsl-builtin-functions.md#bitwise-or),
+[`&`](reference-dsl-builtin-functions.md#bitwise-and), and
+[`^`](reference-dsl-builtin-functions.md#bitwise-xor), Miller has logical operators
+[`||`](reference-dsl-builtin-functions.md#logical-or),
+[`&&`](reference-dsl-builtin-functions.md#logical-and), and
+[`^^`](reference-dsl-builtin-functions.md#logical-xor).
 
-* The exponentiation operator `**` is familiar from many languages.
+* The exponentiation operator [`**`](reference-dsl-builtin-functions.md#exponentiation) is familiar from many languages, except that an integer raised to an int power is int, not float.
 
-* The regex-match and regex-not-match operators `=~` and `!=~` are similar to those in Ruby and Perl.
+* The regex-match and regex-not-match operators [`=~`](reference-dsl-builtin-functions.md#regmatch) and [`!=~`](reference-dsl-builtin-functions.md#regnotmatch) are similar to those in Ruby and Perl.
 
