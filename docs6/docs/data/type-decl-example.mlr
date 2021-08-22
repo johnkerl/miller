@@ -1,37 +1,38 @@
-subr s(a, str b, int c) {                         # a is implicitly var (untyped).
-                                                  # b is explicitly str.
-                                                  # c is explicitly int.
-                                                  # The type-checking is done at the callsite
-                                                  # when arguments are bound to parameters.
-                                                  #
-    var b = 100;     # error                      # Re-declaration in the same scope is disallowed.
-    int n = 10;                                   # Declaration of variable local to the subroutine.
-    n = 20;                                       # Assignment is OK.
-    int n = 30;      # error                      # Re-declaration in the same scope is disallowed.
-    str n = "abc";   # error                      # Re-declaration in the same scope is disallowed.
-                                                  #
-    float f1 = 1;    # error                      # 1 is an int, not a float.
-    float f2 = 2.0;                               # 2.0 is a float.
-    num f3 = 3;                                   # 3 is a num.
-    num f4 = 4.0;                                 # 4.0 is a num.
-}                                                 #
-                                                  #
-call s(1, 2, 3);                                  # Type-assertion '3 is int' is done here at the callsite.
-                                                  #
-k = "def";                                        # Top-level variable k.
-                                                  #
-for (str k, v in $*) {                            # k and v are bound here, masking outer k.
-  print k . ":" . v;                              # k is explicitly str; v is implicitly var.
-}                                                 #
-                                                  #
-print "k is".k;                                   # k at this scope level is still "def".
-print "v is".v;                                   # v is undefined in this scope.
-                                                  #
-i = -1;                                           #
-for (i = 1, int j = 2; i <= 10; i += 1, j *= 2) { # C-style triple-for variables use enclosing scope, unless
-                                                  # declared local: i is outer, j is local to the loop.
-  print "inner i =" . i;                          #
-  print "inner j =" . j;                          #
-}                                                 #
-print "outer i =" . i;                            # i has been modified by the loop.
-print "outer j =" . j;                            # j is undefined in this scope.
+subr s(a, str b, int c) {   # a is implicitly var (untyped).
+                            # b is explicitly str.
+                            # c is explicitly int.
+                            # The type-checking is done at the callsite
+                            # when arguments are bound to parameters.
+                            #
+    var b = 100;   # error  # Re-declaration in the same scope is disallowed.
+    int n = 10;             # Declaration of variable local to the subroutine.
+    n = 20;                 # Assignment is OK.
+    int n = 30;    # error  # Re-declaration in the same scope is disallowed.
+    str n = "abc"; # error  # Re-declaration in the same scope is disallowed.
+                            #
+    float f1 = 1;  # error  # 1 is an int, not a float.
+    float f2 = 2.0;         # 2.0 is a float.
+    num f3 = 3;             # 3 is a num.
+    num f4 = 4.0;           # 4.0 is a num.
+}                           #
+                            #
+call s(1, 2, 3);            # Type-assertion '3 is int' is done here at the callsite.
+                            #
+k = "def";                  # Top-level variable k.
+                            #
+for (str k, v in $*) {      # k and v are bound here, masking outer k.
+  print k . ":" . v;        # k is explicitly str; v is implicitly var.
+}                           #
+                            #
+print "k is".k;             # k at this scope level is still "def".
+print "v is".v;             # v is undefined in this scope.
+                            #
+i = -1;                     #
+for (i = 1, int j = 2; i <= 10; i += 1, j *= 2) {
+                            # C-style triple-for variables use enclosing scope,
+                            # unless declared local: i is outer, j is local to the loop.
+  print "inner i =" . i;    #
+  print "inner j =" . j;    #
+}                           #
+print "outer i =" . i;      # i has been modified by the loop.
+print "outer j =" . j;      # j is undefined in this scope.

@@ -1,4 +1,4 @@
-# Reference: list of verbs
+# List of verbs
 
 ## Overview
 
@@ -17,7 +17,7 @@ These fall into categories as follows:
 
 * Particularly oriented toward [Record Heterogeneity](record-heterogeneity.md), although all Miller commands can handle heterogeneous records: [group-by](reference-verbs.md#group-by), [group-like](reference-verbs.md#group-like), [having-fields](reference-verbs.md#having-fields).
 
-* These draw from other sources (see also [How Original Is Miller?](originality.md)): [count-distinct](reference-verbs.md#count-distinct) is SQL-ish, and [rename](reference-verbs.md#rename) can be done by `sed` (which does it faster: see [Performance](performance.md). Verbs: [check](reference-verbs.md#check), [count-distinct](reference-verbs.md#count-distinct), [label](reference-verbs.md#label), [merge-fields](reference-verbs.md#merge-fields), [nest](reference-verbs.md#nest), [nothing](reference-verbs.md#nothing), [regularize](reference-verbs.md#regularize), [rename](reference-verbs.md#rename), [reorder](reference-verbs.md#reorder), [reshape](reference-verbs.md#reshape), [seqgen](reference-verbs.md#seqgen).
+* These draw from other sources (see also [How Original Is Miller?](originality.md)): [count-distinct](reference-verbs.md#count-distinct) is SQL-ish, and [rename](reference-verbs.md#rename) can be done by `sed` (which does it faster: see [Performance](performance.md)). Verbs: [check](reference-verbs.md#check), [count-distinct](reference-verbs.md#count-distinct), [label](reference-verbs.md#label), [merge-fields](reference-verbs.md#merge-fields), [nest](reference-verbs.md#nest), [nothing](reference-verbs.md#nothing), [regularize](reference-verbs.md#regularize), [rename](reference-verbs.md#rename), [reorder](reference-verbs.md#reorder), [reshape](reference-verbs.md#reshape), [seqgen](reference-verbs.md#seqgen).
 
 ## altkv
 
@@ -67,9 +67,8 @@ GENMD_EOF
 
 The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
 
-..
-    hard-coded, not live-code, since random sampling would generate different data on each doc run
-    which would needlessly complicate git diff
+<!--- hard-coded, not live-code, since random sampling would generate different data on each doc run
+    which would needlessly complicate git diff -->
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
@@ -445,7 +444,7 @@ GENMD_RUN_COMMAND
 mlr head --help
 GENMD_EOF
 
-Note that `head` is distinct from [top](reference-verbs.md#top) -- `head` shows fields which appear fimd.in the data stream; `top` shows fields which are numerically largest (or smallest).
+Note that `head` is distinct from [top](reference-verbs.md#top) -- `head` shows fields which appear first in the data stream; `top` shows fields which are numerically largest (or smallest).
 
 GENMD_RUN_COMMAND
 mlr --opprint head -n 4 data/medium
@@ -1048,7 +1047,7 @@ GENMD_RUN_COMMAND
 mlr top --help
 GENMD_EOF
 
-Note that `top` is distinct from [head](reference-verbs.md#head) -- `head` shows fields which appear fimd.in the data stream; `top` shows fields which are numerically largest (or smallest).
+Note that `top` is distinct from [head](reference-verbs.md#head) -- `head` shows fields which appear first in the data stream; `top` shows fields which are numerically largest (or smallest).
 
 GENMD_RUN_COMMAND
 mlr --opprint top -n 4 -f x data/medium

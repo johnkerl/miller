@@ -1,6 +1,18 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # Introduction
 
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a href="reference-verbs/index.html">[verbs]</a>
+&nbsp;
+<a href="reference-dsl-builtin-functions/index.html">[functions]</a>
+&nbsp;
+<a href="https://github.com/johnkerl/miller">[repository]</a>
+</span>
+</div>
+
 **Miller is a command-line tool for querying, shaping, and reformatting data files in various formats including CSV and JSON.**
 
 In several senses, Miller is more than one tool:

@@ -695,7 +695,7 @@ func listFunctions() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
 	} else {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNames(os.Stdout)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesVertically(os.Stdout)
 	}
 }
 
@@ -704,7 +704,7 @@ func listFunctionsAsParagraph() {
 }
 
 func usageFunctions() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages(os.Stdout)
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages()
 }
 
 func helpForFunction(arg string) {

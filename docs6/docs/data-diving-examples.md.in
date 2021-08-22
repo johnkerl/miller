@@ -7,7 +7,7 @@ The [flins.csv](data/flins.csv) file is some sample data obtained from [https://
 Vertical-tabular format is good for a quick look at CSV data layout -- seeing what columns you have to work with:
 
 GENMD_RUN_COMMAND
-head -n 2 data/flins.csv | mlr --icsv --oxtab cat
+mlr --icsv --oxtab --from data/flins.csv head -n 2
 GENMD_EOF
 
 A few simple queries:

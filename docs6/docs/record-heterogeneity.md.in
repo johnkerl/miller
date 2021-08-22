@@ -11,18 +11,14 @@ But heterogeneous data abound (today's no-SQL databases for example). Miller han
 Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get CSV per se as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite is that the former is RFC4180-compliant, while the latter readily handles heterogeneous data (which is non-compliant). For example:
 
 GENMD_RUN_COMMAND
-cat data/het.dkvp
+cat data/het.json
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --ocsvlite cat data/het.dkvp
+mlr --ijson --opprint cat data/het.json
 GENMD_EOF
 
-GENMD_RUN_COMMAND
-mlr --opprint cat data/het.dkvp
-GENMD_EOF
-
-Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
+Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
 
 GENMD_RUN_COMMAND
 cat data/ragged.csv
@@ -35,11 +31,11 @@ GENMD_EOF
 You may also find Miller's `group-like` feature handy (see also [Verbs Reference](reference-verbs.md)):
 
 GENMD_RUN_COMMAND
-mlr --ocsvlite group-like data/het.dkvp
+mlr --j2p cat data/het.json
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --opprint group-like data/het.dkvp
+mlr --j2p group-like data/het.json
 GENMD_EOF
 
 ### Key-value-pair, vertical-tabular, and index-numbered formats
@@ -47,19 +43,19 @@ GENMD_EOF
 For these formats, record-heterogeneity comes naturally:
 
 GENMD_RUN_COMMAND
-cat data/het.dkvp
+cat data/het.json
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --onidx --ofs ' ' cat data/het.dkvp
+mlr --ijson --onidx --ofs ' ' cat data/het.json
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --oxtab cat data/het.dkvp
+mlr --ijson --oxtab cat data/het.json
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --oxtab group-like data/het.dkvp
+mlr --ijson --oxtab group-like data/het.json
 GENMD_EOF
 
 ## For processing

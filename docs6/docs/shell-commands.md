@@ -30,21 +30,20 @@ wye pan 5 0.5732889198020006  0.8636244699032729  {5}
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint put '$o = system("echo -n ".$a."| sha1sum")' data/small</b>
+<b>mlr --opprint put '$o = system("echo -n ".$a."| md5")' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a   b   i x                   y                   o
-pan pan 1 0.3467901443380824  0.7268028627434533  f29c748220331c273ef16d5115f6ecd799947f13  -
-eks pan 2 0.7586799647899636  0.5221511083334797  456d988ecb3bf1b75f057fc6e9fe70db464e9388  -
-wye wye 3 0.20460330576630303 0.33831852551664776 eab0de043d67f441c7fd1e335f0ca38708e6ebf7  -
-eks wye 4 0.38139939387114097 0.13418874328430463 456d988ecb3bf1b75f057fc6e9fe70db464e9388  -
-wye pan 5 0.5732889198020006  0.8636244699032729  eab0de043d67f441c7fd1e335f0ca38708e6ebf7  -
+pan pan 1 0.3467901443380824  0.7268028627434533  ccc62bbd08bdc21905f4909463ccdf7c
+eks pan 2 0.7586799647899636  0.5221511083334797  585d25a8ff04840f77779eeff61167dc
+wye wye 3 0.20460330576630303 0.33831852551664776 fb6361a373147c163e65ada94719fa16
+eks wye 4 0.38139939387114097 0.13418874328430463 585d25a8ff04840f77779eeff61167dc
+wye pan 5 0.5732889198020006  0.8636244699032729  fb6361a373147c163e65ada94719fa16
 </pre>
 
 Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system `date` command for the current time in nanoseconds versus computing it in process:
 
-..
-    hard-coded, not live-code, since %N doesn't exist on all platforms
+<!--- hard-coded, not live-code, since %N doesn't exist on all platforms -->
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small</b>

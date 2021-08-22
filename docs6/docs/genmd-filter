@@ -36,6 +36,14 @@ def main
         line1 = lines.shift
         write_card([line1], lines, output_handle)
 
+      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_TWO$/
+        lines = read_until_genmd_eof(input_handle)
+        write_card(lines.slice(0,2), lines.slice(2, lines.length), output_handle)
+
+      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_THREE$/
+        lines = read_until_genmd_eof(input_handle)
+        write_card(lines.slice(0,3), lines.slice(3, lines.length), output_handle)
+
       elsif content_line =~ /^GENMD_RUN_COMMAND_TOLERATING_ERROR$/
         cmd_lines = read_until_genmd_eof(input_handle)
         run_command_tolerating_error(cmd_lines, output_handle)

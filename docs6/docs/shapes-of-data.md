@@ -15,7 +15,7 @@ Also try `od -xcv` and/or `cat -e` on your file to check for non-printable chara
 
 ## Diagnosing delimiter specifications
 
-Use the `file` command to see if there are CR/LF terminators (in this case, # there are not):
+Use the `file` command to see if there are CR/LF terminators (in this case, there are not):
 
 <pre class="pre-highlight-in-pair">
 <b>file data/colours.csv </b>
@@ -24,7 +24,7 @@ Use the `file` command to see if there are CR/LF terminators (in this case, # th
 data/colours.csv: UTF-8 Unicode text
 </pre>
 
-Look at the file to find names of fields
+Look at the file to find names of fields:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/colours.csv </b>
@@ -99,7 +99,7 @@ masterdata_colourcode_2;Czarny;Negru
 
 ## I assigned $9 and it's not 9th
 
-Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with `--implicit-csv-header`, Miller will sequentially assign keys of the form `1`, `2`, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data, when it is originally read from the input file(s).
+Miller records are ordered lists of key-value pairs. For NIDX format, DKVP format when keys are missing, or CSV/CSV-lite format with `--implicit-csv-header`, Miller will sequentially assign keys of the form `1`, `2`, etc. But these are not integer array indices: they're just field names taken from the initial field ordering in the input data, when it was originally read from the input file(s).
 
 <pre class="pre-highlight-in-pair">
 <b>echo x,y,z | mlr --dkvp cat</b>

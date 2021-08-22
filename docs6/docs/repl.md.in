@@ -2,7 +2,7 @@
 
 The Miller REPL (read-evaluate-print loop) is an interactive counterpart to record-processing using the `put`/`filter` language. (A REPL is anything that evaluates what you type into it -- like `python` with no arguments, or Ruby's `irb`, or `node` with no arguments, etc.)
 
-Miller's REPL isn't a source-level debugger which lets you execute one source-code *statement* at a time -- however, it does let you operate on one *record* at a time. Further, it lets you use "immediate expressions", namely, you can interact with the language without having to provide data from an input file.
+Miller's REPL isn't a source-level debugger which lets you execute one source-code *statement* at a time -- however, it does let you operate on one *record* at a time. Further, it lets you use "immediate expressions", namely, you can interact with the [Miller programming language](programming-language.md) without having to provide data from an input file.
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 mlr repl
@@ -25,7 +25,7 @@ Using `put` and `filter`, you can do the following as we've seen above:
 
 GENMD_RUN_COMMAND
 mlr --icsv --ojson --from example.csv head -n 2 \
-  then put 'begin {print "HELLO"} $z = $x + $y; end {print "GOODBYE"}'
+  then put 'begin {print "HELLO"} $qr = $quantity / $rate; end {print "GOODBYE"}'
 GENMD_EOF
 
 ## Using Miller with the REPL
@@ -65,7 +65,7 @@ printed to the terminal, e.g. if you type `1+2`, you will see `3`.
 ## Entering multi-line statements
 
 * To enter multi-line statements, enter `<` on a line by itself, then the code (taking care
-  for semicolons), then ">" on a line by itself. These will be executed immediately.
+  for semicolons), then `>` on a line by itself. These will be executed immediately.
 * If you enter `<<` on a line by itself, then the code, then `>>` on a line by
   itself, the statements will be remembered for executing on records with
   `:main`, as if you had done `:load` to load statements from a file.
@@ -130,7 +130,7 @@ mlr repl --csv
   "color": "yellow",
   "shape": "circle",
   "flag": 1,
-  "i": 99284,
+  "i": 496422,
   "u": 0.6530503199545348,
   "v": 0.23908588907834516,
   "w": 0.4799125551304738,

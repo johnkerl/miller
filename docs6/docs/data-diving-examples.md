@@ -8,12 +8,17 @@ The [flins.csv](data/flins.csv) file is some sample data obtained from [https://
 Vertical-tabular format is good for a quick look at CSV data layout -- seeing what columns you have to work with:
 
 <pre class="pre-highlight-in-pair">
-<b>head -n 2 data/flins.csv | mlr --icsv --oxtab cat</b>
+<b>mlr --icsv --oxtab --from data/flins.csv head -n 2</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 county   Seminole
 tiv_2011 22890.55
 tiv_2012 20848.71
+line     Residential
+
+county   Miami Dade
+tiv_2011 1158674.85
+tiv_2012 1076001.08
 line     Residential
 </pre>
 
@@ -122,13 +127,13 @@ Peek at the data:
 <b>head -n 6 data/colored-shapes.dkvp | mlr --opprint cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag i  u                   v                    w                   x
-yellow triangle 1    11 0.6321695890307647  0.9887207810889004   0.4364983936735774  5.7981881667050565
-red    square   1    15 0.21966833570651523 0.001257332190235938 0.7927778364718627  2.944117399716207
-red    circle   1    16 0.20901671281497636 0.29005231936593445  0.13810280912907674 5.065034003400998
-red    square   0    48 0.9562743938458542  0.7467203085342884   0.7755423050923582  7.117831369597269
-purple triangle 0    51 0.4355354501763202  0.8591292672156728   0.8122903963006748  5.753094629505863
-red    square   0    64 0.2015510269821953  0.9531098083420033   0.7719912015786777  5.612050466474166
+color  shape    flag i   u                   v                    w                   x
+yellow triangle 1    56  0.6321695890307647  0.9887207810889004   0.4364983936735774  5.7981881667050565
+red    square   1    80  0.21966833570651523 0.001257332190235938 0.7927778364718627  2.944117399716207
+red    circle   1    84  0.20901671281497636 0.29005231936593445  0.13810280912907674 5.065034003400998
+red    square   0    243 0.9562743938458542  0.7467203085342884   0.7755423050923582  7.117831369597269
+purple triangle 0    257 0.4355354501763202  0.8591292672156728   0.8122903963006748  5.753094629505863
+red    square   0    322 0.2015510269821953  0.9531098083420033   0.7719912015786777  5.612050466474166
 </pre>
 
 Look at uncategorized stats (using [creach](https://github.com/johnkerl/scripts/blob/master/fundam/creach) for spacing).

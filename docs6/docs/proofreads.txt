@@ -1,0 +1,199 @@
+----------------------------------------------------------------
+ALL:
+* unvisited links are still blue -- ?!?
+* GENMD_INCLUDE_AND_RUN_ESCAPED -> remove and replace with GENMD_RUN_COMMAND
+* example.csv rename index to something else, and add i column, update any code samples which use index
+* csv to csv,tsv throughout
+* rid of explicitly passing around os.Stdout in all various help functions, annoying
+* het.dkvp > het.json in more places
+* check each page for adequate h2 coverage
+
+----------------------------------------------------------------
+w compression page: make one! :)
+w flatten/unflatten page: make one! :)
+w flesh out arrays page!
+
+c GOMAXPROCS -- up it? separate page maybe -- ?
+  - note one goroutine for in, out, & each verb
+  - check and respect env-var
+
+* move aux-cmds down lower. maybe some other reorders as well.
+
+* new different-from-other-languages page
+  - no ++
+  - 1-up arrays
+    for (i = 1; i <= n; i += 1) { ... }
+  - hash-maps are order-preserving
+  - single-for over array: var is value; over map: var is key
+
+----------------------------------------------------------------
+
+index:
+E CSV -> CSV/TSV
+
+features:
+E CSV -> CSV/TSV
+
+feature-comparison:
+E even with newlines -- show an example
+
+file-formats:
+* line-wrap the static text
+* => to :
+* remove "." on numbers
+w tabularize by concatenating keys: update
+  o JSON-to-JSON
+  o JSON-to-not
+  o not-to-JSON
+  o not-to-not
+l arrays linkify
+? Formatting JSON Options: check each flag is still current
+? Data-conversion keystroke-savers: to/from separate page. and/or merge.
+? autodetect: hmmmmmmmm
+
+record-heterogeneity:
+? current csv-reader code handles this? i think not. check csvlite-reader too.
+
+new-in-miller-6:
+w flatten/unflatten -- needs a new separate page
+l gzin/bz2in linkify
+? TODO marks
+
+contributing:
+L add a pre-release note about https://johnkerl.org/miller6 & why no double RTD
+E update for sphinx -> mkdocs. and/or link to r.md.
+
+csv-with-and-without-headers:
+? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
+? cat out nas.csv first
+? ag -> just grep ?
+l Miller handles compliant CSV: include rfc4180 link
+? Regularizing ragged CSV: use regularize verb?!?
+
+shapes-of-data:
+? autodetect -- remove?
+E data/small -> example.csv (and throughout ...)
+E Rectangularizing data: cf regularize verb, & other page?
+
+special-symbols-and-formatting:
+? mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
+  o test this
+  o look for unbackslash callsites in the C impl
+  o SeparatorFromArg
+? How to escape '?' in regexes? -> still true? link to torbiak297?
+
+operating-on-all-records:
+o linkify map/array/etc
+o 1-up link at end
+o insord link at end
+o int2str@key link at end
+
+dates-and-times:
+? Caveat: localtime-handling in timezones with DST is still a work in progress -- fixed by torbiak?
+
+shell-commands:
+e while-read example from issues
+
+data-diving-examples:
+? mlr --from data/flins.csv --icsv --opprint \
+  stats1 -a min,mean,max -f tiv_2012 -g construction,line & next -- why zero output?
+? mlr --from data/flins.csv --icsv --opprint \
+  stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county -- more "_" b04k
+E head -n 6 data/colored-shapes.dkvp | mlr --opprint cat -- regen w/ fewer decimal places to avoid line-wraps
+E have a "conclusions:" ... w/ backrefs to generator scceipt & code-snippets
+
+log-processing-examples:
+l or Miller's having-fields, or is_present -> DSL is_present, & linkify
+? grep 'various sorts' *.log \
+  | sed 's/.*} //' \
+  | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status -- why no output?
+
+sql-examples:
+l Again, all the examples in the CSV section apply here -- linkify "CSV section"
+
+data-cleaning-examples:
+? mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv -- do false/true autotype -- ?
+
+statistics-examples:
+? 2nd card why no output?
+
+two-pass-algorithms:
+l link to "new" verbs x everywhere possible
+l Of course, Miller verbs such as sort, tac, etc. all must ... -> linkify to new memory/streaming page
+
+misc examples:
+? Program timing & subsequents -> another page
+
+reference-verbs:
+E mlr --opprint bar --auto -f x,y data/small -> use some int data to avoid line-wraps
+E data/colored-shapes.dkvp (this page & throughout) a CSV file ...
+* ... I ONLY READ UP TO CUT & PAUSED ...
+
+reference-main-io-options:
+E Compression: include new options
+
+reference-main-then-chaining:
+c On the other hand, Miller is single-threaded, while modern systems are usually multi-processor, and when streaming-data programs operate through pipes, each one can use a CPU. -> update for Go ... MAXPROCS ...
+
+reference-main-auxiliary-commands:
+c mlr lecat -> have the code use colors stuff not hard-coded -- ? patch into env vars -- ?
+c mlr lecat -> code check isatty
+
+reference-main-data-types:
+E field values are usually strings -> update
+E Field values are treated as numeric for the following: -> update
+? Miller's types for function processing are -> add JSON null; & check for others (array/map)
+E true/false -> add info about NaN and Inf et al.
+!! very much missing stuff!! where's the listing of mlrval types?!?
+  - reference-dsl-variables.md.in should link to it
+  - ditto programming-language.md.in
+c UTs for r"a" . r"b" and so on and so on
+
+reference-main-null-data:
+? more variants of is_... ?
+? Records with one or more empty sort-field values sort after records with all sort-field values present -> apparently not true for sort -nr
+
+reference-main-arithmetic:
+? remove references to put/filter -F
+? test stats1/step -F flag
+? The following, however, produce integer output if their inputs are integers: + - * / // % abs ceil floor max min round roundm sgn. As well, stats1 -a min, stats1 -a max, stats1 -a sum, step -a delta, and step -a rsum produce integer output if their inputs are integers. -> test all
+
+reference-main-regular-expressions:
+? regular expressions (of type POSIX.2) -> check/update; also link to Go page
+d separate escaping for "\t" etc in arg-2/regex position -- "\t"."\t" example as well ...
+
+reference-main-overview:
+E is that it is designed for -> write and link to streaming-operations page
+
+reference-dsl-variables:
+E cat data/type-decl-example.mlr -> narrow it
+
+reference-dsl-operators:
+c Operator precedence: add >>>; check for other new operators (like ??)
+c code: ** operator have int-int-to-int check?
+
+reference-dsl-control-structures:
+E emph p-a blocks are syntactic sugar for if-statements
+? mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp -> no longer true -- wtf? is this doc-snippet non-live?
+e while (NR < 10) will never terminate as NR is only incremented between records -> and each expression is invoked once per record so once for NR=1, once for NR=2, etc.
+E C-style triple-for loops: loop to NR -> NO!!!
+? or if a same-name variable is present in outer scope then it is modified. -> check that and make sure there is a UT
+l Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in awk, where they'd default to 0 either way) <-> xlink to other page
+
+reference-dsl-user-defined-functions:
+E User-defined subroutines -> non-factorial example -- maybe some useful aggregator
+
+reference-dsl-builtin-functions:
+c mlr: option "--list-all-functions-as-table" not recognized. Please run "mlr --help" for usage information -> fix
+! ... need to proofread entire list ...
+
+reference-dsl-output-statements:
+? NR %% 1000 == 0 -> why %%
+E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using dump), whereas Miller output records are lists of single-level key-value pairs -> link to flatten page
+? Use --oflatsep -> check
+? mlr --oxtab put -q --oflatsep / '
+  o 2 examples not 3?
+  o why not '--oflatsep /' respected?
+
+manpage:
+? [NEEDS READ-THROUGH]

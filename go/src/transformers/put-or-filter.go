@@ -159,7 +159,7 @@ func transformerPutOrFilterParseCLI(
 			fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from \"%s\": ",
 				"mlr", verb, filename)
 			fmt.Println(err)
-			return nil
+			os.Exit(1)
 		}
 		dslStrings = append(dslStrings, theseDSLStrings...)
 	}
@@ -183,7 +183,7 @@ func transformerPutOrFilterParseCLI(
 				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
 					"mlr", verb, filename)
 				fmt.Println(err)
-				return nil
+				os.Exit(1)
 			}
 			dslStrings = append(dslStrings, theseDSLStrings...)
 			haveDSLStringsHere = true

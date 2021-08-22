@@ -860,12 +860,7 @@ func handleHelpSingle(repl *Repl, arg string) {
 	}
 
 	if arg == "function-details" {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsagesDecorated(
-			os.Stdout,
-			func(functionName string) {
-				fmt.Println(colorizer.MaybeColorizeHelp(functionName, true))
-			},
-		)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages()
 		return
 	}
 
@@ -963,7 +958,7 @@ etc. depending on your platform.`)
 	fmt.Println()
 
 	fmt.Println(colorizer.MaybeColorizeHelp("On-line help:", true))
-	fmt.Println("Type ':help' to see more about your options. In particular, ':help examples'.")
+	fmt.Println("Type ':h' or ':help' to see more about your options. In particular, ':help examples'.")
 }
 
 // ----------------------------------------------------------------

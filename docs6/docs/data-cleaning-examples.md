@@ -1,7 +1,7 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # Data-cleaning examples
 
-Here are some ways to use the type-checking options as described in [Type-checking](reference-dsl-variables.md#type-checking).  Suppose you have the following data file, with inconsistent typing for boolean. (Also imagine that, for the sake of discussion, we have a million-line file rather than a four-line file, so we can't see it all at once and some automation is called for.)
+Here are some ways to use the type-checking options as described in the [Type-checking page](reference-dsl-variables.md#type-checking).  Suppose you have the following data file, with inconsistent typing for boolean. (Also imagine that, for the sake of discussion, we have a million-line file rather than a four-line file, so we can't see it all at once and some automation is called for.)
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/het-bool.csv</b>
@@ -70,7 +70,7 @@ fred   true
 wilma  1
 </pre>
 
-A third way is to abort the process on fimd.instance of bad data:
+A third way is to abort the process on first instance of bad data:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv</b>

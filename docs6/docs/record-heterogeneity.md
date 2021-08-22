@@ -12,38 +12,36 @@ But heterogeneous data abound (today's no-SQL databases for example). Miller han
 Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get CSV per se as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite is that the former is RFC4180-compliant, while the latter readily handles heterogeneous data (which is non-compliant). For example:
 
 <pre class="pre-highlight-in-pair">
-<b>cat data/het.dkvp</b>
+<b>cat data/het.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-resource=/path/to/file,loadsec=0.45,ok=true
-record_count=100,resource=/path/to/file
-resource=/path/to/second/file,loadsec=0.32,ok=true
-record_count=150,resource=/path/to/second/file
-resource=/some/other/path,loadsec=0.97,ok=false
+{
+  "resource": "/path/to/file",
+  "loadsec": 0.45,
+  "ok": true
+}
+{
+  "record_count": 100,
+  "resource": "/path/to/file"
+}
+{
+  "resource": "/path/to/second/file",
+  "loadsec": 0.32,
+  "ok": true
+}
+{
+  "record_count": 150,
+  "resource": "/path/to/second/file"
+}
+{
+  "resource": "/some/other/path",
+  "loadsec": 0.97,
+  "ok": false
+}
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --ocsvlite cat data/het.dkvp</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-resource,loadsec,ok
-/path/to/file,0.45,true
-
-record_count,resource
-100,/path/to/file
-
-resource,loadsec,ok
-/path/to/second/file,0.32,true
-
-record_count,resource
-150,/path/to/second/file
-
-resource,loadsec,ok
-/some/other/path,0.97,false
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --opprint cat data/het.dkvp</b>
+<b>mlr --ijson --opprint cat data/het.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 resource      loadsec ok
@@ -62,7 +60,7 @@ resource         loadsec ok
 /some/other/path 0.97    false
 </pre>
 
-Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
+Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/ragged.csv</b>
@@ -95,21 +93,27 @@ c 8
 You may also find Miller's `group-like` feature handy (see also [Verbs Reference](reference-verbs.md)):
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --ocsvlite group-like data/het.dkvp</b>
+<b>mlr --j2p cat data/het.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-resource,loadsec,ok
-/path/to/file,0.45,true
-/path/to/second/file,0.32,true
-/some/other/path,0.97,false
+resource      loadsec ok
+/path/to/file 0.45    true
 
-record_count,resource
-100,/path/to/file
-150,/path/to/second/file
+record_count resource
+100          /path/to/file
+
+resource             loadsec ok
+/path/to/second/file 0.32    true
+
+record_count resource
+150          /path/to/second/file
+
+resource         loadsec ok
+/some/other/path 0.97    false
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint group-like data/het.dkvp</b>
+<b>mlr --j2p group-like data/het.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 resource             loadsec ok
@@ -127,18 +131,36 @@ record_count resource
 For these formats, record-heterogeneity comes naturally:
 
 <pre class="pre-highlight-in-pair">
-<b>cat data/het.dkvp</b>
+<b>cat data/het.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-resource=/path/to/file,loadsec=0.45,ok=true
-record_count=100,resource=/path/to/file
-resource=/path/to/second/file,loadsec=0.32,ok=true
-record_count=150,resource=/path/to/second/file
-resource=/some/other/path,loadsec=0.97,ok=false
+{
+  "resource": "/path/to/file",
+  "loadsec": 0.45,
+  "ok": true
+}
+{
+  "record_count": 100,
+  "resource": "/path/to/file"
+}
+{
+  "resource": "/path/to/second/file",
+  "loadsec": 0.32,
+  "ok": true
+}
+{
+  "record_count": 150,
+  "resource": "/path/to/second/file"
+}
+{
+  "resource": "/some/other/path",
+  "loadsec": 0.97,
+  "ok": false
+}
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --onidx --ofs ' ' cat data/het.dkvp</b>
+<b>mlr --ijson --onidx --ofs ' ' cat data/het.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 /path/to/file 0.45 true
@@ -149,7 +171,7 @@ resource=/some/other/path,loadsec=0.97,ok=false
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --oxtab cat data/het.dkvp</b>
+<b>mlr --ijson --oxtab cat data/het.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 resource /path/to/file
@@ -172,7 +194,7 @@ ok       false
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --oxtab group-like data/het.dkvp</b>
+<b>mlr --ijson --oxtab group-like data/het.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 resource /path/to/file

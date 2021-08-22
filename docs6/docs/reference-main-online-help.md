@@ -1,9 +1,11 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Reference: online help
+# Online help
 
-TODO: expand this section
+Miller has several online help mechanisms built in.
 
-Examples:
+## Main help
+
+The front door is `mlr --help` or its synonym `mlr -h`. This leads you to `mlr help topics` with its list of specific areas:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --help</b>
@@ -17,7 +19,120 @@ Please also see https://johnkerl.org/miller6
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr sort --help</b>
+<b>mlr help topics</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Type 'mlr help {topic}' for any of the following:
+  mlr help topics
+  mlr help auxents
+  mlr help basic-examples
+  mlr help comments-in-data
+  mlr help compressed-data
+  mlr help csv-options
+  mlr help data-format-options
+  mlr help data-formats
+  mlr help double-quoting
+  mlr help format-conversion
+  mlr help function
+  mlr help keyword
+  mlr help list-functions
+  mlr help list-functions-as-paragraph
+  mlr help list-keywords
+  mlr help list-keywords-as-paragraph
+  mlr help list-verbs
+  mlr help list-verbs-as-paragraph
+  mlr help misc
+  mlr help mlrrc
+  mlr help number-formatting
+  mlr help output-colorization
+  mlr help separator-options
+  mlr help type-arithmetic-info
+  mlr help usage-functions
+  mlr help usage-keywords
+  mlr help usage-verbs
+  mlr help verb
+Shorthands:
+  mlr -l = mlr help list-verbs
+  mlr -L = mlr help usage-verbs
+  mlr -f = mlr help list-functions
+  mlr -F = mlr help usage-functions
+  mlr -k = mlr help list-keywords
+  mlr -K = mlr help usage-keywords
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr help functions</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Type 'mlr help {topic}' for any of the following:
+  mlr help topics
+  mlr help auxents
+  mlr help basic-examples
+  mlr help comments-in-data
+  mlr help compressed-data
+  mlr help csv-options
+  mlr help data-format-options
+  mlr help data-formats
+  mlr help double-quoting
+  mlr help format-conversion
+  mlr help function
+  mlr help keyword
+  mlr help list-functions
+  mlr help list-functions-as-paragraph
+  mlr help list-keywords
+  mlr help list-keywords-as-paragraph
+  mlr help list-verbs
+  mlr help list-verbs-as-paragraph
+  mlr help misc
+  mlr help mlrrc
+  mlr help number-formatting
+  mlr help output-colorization
+  mlr help separator-options
+  mlr help type-arithmetic-info
+  mlr help usage-functions
+  mlr help usage-keywords
+  mlr help usage-verbs
+  mlr help verb
+Shorthands:
+  mlr -l = mlr help list-verbs
+  mlr -L = mlr help usage-verbs
+  mlr -f = mlr help list-functions
+  mlr -F = mlr help usage-functions
+  mlr -k = mlr help list-keywords
+  mlr -K = mlr help usage-keywords
+</pre>
+
+Etc.
+
+## Per-verb help
+
+Given the name of a verb (from `mlr -l`) you can invoke it with `--help` or `-h` -- or, use `mlr help verb`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr cat --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr cat [options]
+Passes input records directly to output. Most useful for format conversion.
+Options:
+-n         Prepend field "n" to each record with record-counter starting at 1.
+-N {name}  Prepend field {name} to each record with record-counter starting at 1.
+-g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c
+-h|--help Show this message.
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr group-like -h</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr group-like [options]
+Outputs records in batches having identical field names.
+Options:
+-h|--help Show this message.
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr help verb sort</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr sort {flags}
@@ -40,3 +155,70 @@ Example:
 which is the same as:
   mlr sort -f a -f b -nr x -nr y -nr z
 </pre>
+
+Etc.
+
+## Per-function help
+
+Given the name of a DSL function (from `mlr -f`) you can use `mlr help function` for details:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr help function append</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+append  (class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr help function split</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+No exact match for "split". Inexact matches:
+  splita
+  splitax
+  splitkv
+  splitkvx
+  splitnv
+  splitnvx
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr help function splita</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+splita  (class=conversion #args=2) Splits string into array with type inference. Example:
+splita("3,4,5", ",") = [3,4,5]
+</pre>
+
+Etc.
+
+## REPL help
+
+You can use `:h` or `:help` inside the [REPL](repl.md):
+
+<!--- TODO: repl-executor genmd function -->
+<pre class="pre-highlight-in-pair">
+<b>$ mlr repl</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Miller v6.0.0-dev REPL for darwin:amd64:go1.16.5
+Pre-release docs for Miller 6: https://johnkerl.org/miller6
+Type ':h' or ':help' for on-line help; ':q' or ':quit' to quit.
+[mlr] :h
+Options:
+:help intro
+:help examples
+:help repl-list
+:help repl-details
+:help prompt
+:help function-names
+:help function-details
+:help {function name}, e.g. :help sec2gmt
+:help {function name}, e.g. :help sec2gmt
+[mlr]
+</pre>
+
+## Manual page
+
+If you've gotten Miller from a package installer, you should have `man mlr` producing a traditional manual page.
+If not, no worries -- the manual page is a concatenated listing of the same information also available by each of the topics in `mlr help topics`.

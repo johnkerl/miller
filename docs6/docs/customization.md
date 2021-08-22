@@ -29,13 +29,13 @@ Then you can just type things like
 <b>mlr sort -n id mydata.csv</b>
 </pre>
 
-and the `--csv` part will automatically be understood. (If you do want to process, say, a JSON file then `mlr --json ...` at the command line will override the default from your `.mlrrc`.)
+and the `--csv` part will automatically be understood. If you do want to process, say, a JSON file then `mlr --json ...` at the command line will still override the defaults you've placed in your `.mlrrc`.
 
 ## What you can put in your .mlrrc
 
 * You can include any command-line flags, except the "terminal" ones such as `--help`.
 
-* The `--prepipe`, `--load`, and `--mload` flags aren't allowed in `.mlrrc` as they control code execution, and could result in your scripts running things you don't expect if you receive data from someone with a `.mlrrc` in it.
+* The `--prepipe`, `--load`, and `--mload` flags aren't allowed in `.mlrrc` as they control code execution, and could result in your scripts running things you don't expect if you receive data from someone with a `./.mlrrc` in it.
 
 * The formatting rule is you need to put one flag beginning with `--` per line: for example, `--csv` on one line and `--nr-progress-mod 1000` on a separate line.
 
@@ -83,4 +83,4 @@ Otherwise:
 
 * If `./.mlrrc` exists, it's then also processed as above.
 
-* The idea is you can have all your settings in your `$HOME/.mlrrc`, then override maybe one or two for your current directory if you like.
+* The idea is you can have all your settings in your `$HOME/.mlrrc`, then maybe more project-specific settings for your current directory if you like.

@@ -7,8 +7,7 @@ You can install Miller for various platforms as follows:
 * Linux: `yum install miller` or `apt-get install miller` depending on your flavor of Linux
 * MacOS: `brew install miller` or `port install miller` depending on your preference of [Homebrew](https://brew.sh) or [MacPorts](https://macports.org).
 * Windows: `choco install miller`  using [Chocolatey](https://chocolatey.org).
-* You can get latest builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions).
-, selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
+* You can get latest builds for Linux, MacOS, and Windows by visiting [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), selecting the latest build, and clicking _Artifacts_. (These are retained for 5 days after each commit.)
 * See also the [build page](build.md) if you prefer -- in particular, if your platform's package manager doesn't have the latest release.
 
 As a first check, you should be able to run `mlr --version` at your system's command prompt and see something like the following:
@@ -122,7 +121,7 @@ You can find the full list of verbs at the [Verbs Reference](reference-verbs.md)
 
 ## Multiple input files
 
-Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files [data/a.csv](data/a.csv and [data/b.csv](data/b.csv), the system `cat` command will repeat header lines:
+Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files [data/a.csv](data/a.csv) and [data/b.csv](data/b.csv), the system `cat` command will repeat header lines:
 
 GENMD_RUN_COMMAND
 cat data/a.csv
@@ -272,7 +271,7 @@ You can read more about this at the [File Formats](file-formats.md) page.
 
 Often we want to print output to the screen. Miller does this by default, as we've seen in the previous examples.
 
-Sometimes, though, we want to print output to another file. Just use **> outputfilenamegoeshere** at the end of your command:
+Sometimes, though, we want to print output to another file. Just use `> outputfilenamegoeshere` at the end of your command:
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 mlr --icsv --opprint cat example.csv > newfile.csv
@@ -295,7 +294,7 @@ yellow circle   true     87    63.5058  8.3350
 purple square   false    91    72.3735  8.2430
 GENMD_EOF
 
-Other times we just want our files to be **changed in-place**: just use **mlr -I**:
+Other times we just want our files to be **changed in-place**: just use `mlr -I`:
 
 GENMD_CARDIFY_HIGHLIGHT_ONE
 cp example.csv newfile.txt

@@ -1,39 +1,25 @@
 # Mandelbrot set generator: simple example of Miller DSL as programming language.
 begin {
-  # Set defaults
-  @rcorn     = -2.0;
-  @icorn     = -2.0;
-  @side      = 4.0;
-  @iheight   = 50;
-  @iwidth    = 100;
-  @maxits    = 100;
-  @levelstep = 5;
-  @chars     = "@X*o-."; # Palette of characters to print to the screen.
-  @verbose   = false;
-  @do_julia  = false;
-  @jr        = 0.0;      # Real part of Julia point, if any
-  @ji        = 0.0;      # Imaginary part of Julia point, if any
+  # Set defaults. They can be overridden by e.g.
+  #   mlr -n put -e 'begin{@maxits=200}' -f nameofthisfile.mlr
+  # or
+  #   mlr -n put -s maxits=200 -f nameofthisfile.mlr
+  @rcorn     ??= -2.0;
+  @icorn     ??= -2.0;
+  @side      ??=  4.0;
+  @iheight   ??=   50;
+  @iwidth    ??=  100;
+  @maxits    ??=  100;
+  @levelstep ??=    5;
+  @chars     ??= "@X*o-.";
+  @silent    ??= false;
+  @do_julia  ??= false;
+  @jr        ??= 0.0;      # Real part of Julia point, if any
+  @ji        ??= 0.0;      # Imaginary part of Julia point, if any
 }
 
-# Here, we can override defaults from an input file (if any).  In Miller's
-# put/filter DSL, absent-null right-hand sides result in no assignment so we
-# can simply put @rcorn = $rcorn: if there is a field in the input like
-# 'rcorn = -1.847' we'll read and use it, else we'll keep the default.
-@rcorn     = $rcorn;
-@icorn     = $icorn;
-@side      = $side;
-@iheight   = $iheight;
-@iwidth    = $iwidth;
-@maxits    = $maxits;
-@levelstep = $levelstep;
-@chars     = $chars;
-@verbose   = $verbose;
-@do_julia  = $do_julia;
-@jr        = $jr;
-@ji        = $ji;
-
 end {
-  if (@verbose) {
+  if (!@silent) {
     print "RCORN     = ".@rcorn;
     print "ICORN     = ".@icorn;
     print "SIDE      = ".@side;
@@ -44,21 +30,22 @@ end {
     print "CHARS     = ".@chars;
   }
 
-  # Iterate over a matrix of rows and columns, printing one character for each cell.
   for (int ii = @iheight-1; ii >= 0; ii -= 1) {
-    num pi = @icorn + (ii/@iheight) * @side;
+    num ci = @icorn + (ii/@iheight) * @side;
     for (int ir = 0; ir < @iwidth; ir += 1) {
-      num pr = @rcorn + (ir/@iwidth) * @side;
-      printn get_point_plot(pr, pi, @maxits, @do_julia, @jr, @ji);
+      num cr = @rcorn + (ir/@iwidth) * @side;
+      str c = get_point_plot(cr, ci, @maxits, @do_julia, @jr, @ji);
+      if (!@silent) {
+        printn c
+      }
     }
-    print;
+    if (!@silent) {
+      print;
+    }
   }
 }
 
-# This is a function to approximate membership in the Mandelbrot set (or Julia
-# set for a given Julia point if do_julia == true) for a given point in the
-# complex plane.
-func get_point_plot(pr, pi, maxits, do_julia, jr, ji) {
+func get_point_plot(num pr, num pi, int maxits, bool do_julia, num jr, num ji): str {
   num zr = 0.0;
   num zi = 0.0;
   num cr = 0.0;
@@ -93,7 +80,6 @@ func get_point_plot(pr, pi, maxits, do_julia, jr, ji) {
   if (!escaped) {
     return ".";
   } else {
-    # The // operator is Miller's (pythonic) integer-division operator
     int level = (iti // @levelstep) % strlen(@chars);
     return substr(@chars, level, level);
   }

@@ -1,4 +1,4 @@
-site_name: Miller Documentation
+site_name: Miller 6 Documentation
 theme:
   name: material
   favicon: images/favicon.ico
@@ -6,6 +6,7 @@ theme:
   font:
     text: Lato
     code: Lato Mono
+extra_css: ['extra.css']
 nav:
   - "Introduction": "index.md"
   - 'Getting started':
@@ -29,6 +30,7 @@ nav:
     - "CSV, with and without headers": "csv-with-and-without-headers.md"
     - "Shapes of data": "shapes-of-data.md"
     - "Operating on all fields": "operating-on-all-fields.md"
+    - "Operating on all records": "operating-on-all-records.md"
     - "Special symbols and formatting": "special-symbols-and-formatting.md"
     - "Dates and times": "dates-and-times.md"
     - "Then-chaining": "then-chaining.md"
@@ -50,34 +52,34 @@ nav:
     - "How original is Miller?": "originality.md"
     - "Performance": "performance.md"
   - 'Reference':
-    - "Reference: Miller commands": "reference-main-overview.md"
-    - "Reference: list of verbs": "reference-verbs.md"
-    - "Reference: I/O options": "reference-main-io-options.md"
-    - "Reference: then-chaining": "reference-main-then-chaining.md"
-    - "Reference: auxiliary commands": "reference-main-auxiliary-commands.md"
-    - "Reference: data types": "reference-main-data-types.md"
-    - "Reference: arrays": "reference-dsl-arrays.md"
-    - "Reference: null data": "reference-main-null-data.md"
-    - "Reference: arithmetic": "reference-main-arithmetic.md"
-    - "Reference: regular expressions": "reference-main-regular-expressions.md"
-    - "Reference: Miller environment variables": "reference-main-env-vars.md"
-    - "Reference: online help": "reference-main-online-help.md"
-  - 'DSL reference':
-    - "DSL reference: overview": "reference-dsl.md"
-    - "DSL reference: syntax": "reference-dsl-syntax.md"
-    - "DSL reference: variables": "reference-dsl-variables.md"
-    - "DSL reference: operators": "reference-dsl-operators.md"
-    - "DSL reference: control structures": "reference-dsl-control-structures.md"
-    - "DSL reference: user-defined functions": "reference-dsl-user-defined-functions.md"
-    - "DSL reference: built-in functions": "reference-dsl-builtin-functions.md"
-    - "DSL reference: output statements": "reference-dsl-output-statements.md"
-    - "DSL reference: unset statements": "reference-dsl-unset-statements.md"
-    - "DSL reference: filter statements": "reference-dsl-filter-statements.md"
-    - "DSL reference: errors and transparency": "reference-dsl-errors.md"
-    - "DSL reference: a note on the complexity of Miller's expression language": "reference-dsl-complexity.md"
-  - 'Misc. reference':
-    - "Manpage": "manpage.md"
-    - "Documents by release": "release-docs.md"
-    - "Installation": "installation.md"
-    - "Building from source": "build.md"
-extra_css: ['extra.css']
+    - 'Main reference':
+      - "Miller command structure": "reference-main-overview.md"
+      - "Then-chaining": "reference-main-then-chaining.md"
+      - "I/O options": "reference-main-io-options.md"
+      - "List of verbs": "reference-verbs.md"
+      - "Data types": "reference-main-data-types.md"
+      - "Arrays": "reference-dsl-arrays.md"
+      - "Null data": "reference-main-null-data.md"
+      - "Arithmetic": "reference-main-arithmetic.md"
+      - "Regular expressions": "reference-main-regular-expressions.md"
+      - "Miller environment variables": "reference-main-env-vars.md"
+      - "Online help": "reference-main-online-help.md"
+      - "Auxiliary commands": "reference-main-auxiliary-commands.md"
+      - "Documents for previous releases": "release-docs.md"
+    - 'DSL reference':
+      - "DSL overview": "reference-dsl.md"
+      - "DSL syntax": "reference-dsl-syntax.md"
+      - "DSL variables": "reference-dsl-variables.md"
+      - "DSL operators": "reference-dsl-operators.md"
+      - "DSL control structures": "reference-dsl-control-structures.md"
+      - "DSL built-in functions": "reference-dsl-builtin-functions.md"
+      - "DSL user-defined functions": "reference-dsl-user-defined-functions.md"
+      - "DSL filter statements": "reference-dsl-filter-statements.md"
+      - "DSL output statements": "reference-dsl-output-statements.md"
+      - "DSL unset statements": "reference-dsl-unset-statements.md"
+      - "DSL errors and transparency": "reference-dsl-errors.md"
+      - "A note on the complexity of Miller's expression language": "reference-dsl-complexity.md"
+    - 'Misc. reference':
+      - "Manual page": "manpage.md"
+      - "Installation": "installation.md"
+      - "Building from source": "build.md"

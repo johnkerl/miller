@@ -2,15 +2,14 @@
 mlr cut -x -f i,y data/big | mlr sort -n y > /dev/null
 
 % time sh piped.sh
-real 0m2.828s
-user 0m3.183s
-sys  0m0.137s
-
+real    0m2.321s
+user    0m4.878s
+sys     0m1.564s
 
 % cat chained.sh
 mlr cut -x -f i,y then sort -n y data/big > /dev/null
 
 % time sh chained.sh
-real 0m2.082s
-user 0m1.933s
-sys  0m0.137s
+real    0m2.070s
+user    0m2.738s
+sys     0m1.259s

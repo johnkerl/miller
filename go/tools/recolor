@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat "$@" | grep -v no.such | lumin -c red -wi ^fail | lumin -c green -wi ^pass

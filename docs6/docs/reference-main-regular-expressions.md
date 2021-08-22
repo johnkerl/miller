@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Reference: regular expressions
+# Regular expressions
 
 Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
 
@@ -24,8 +24,6 @@ Points demonstrated by the above examples:
 * The `i` after the ending double quote indicates a case-insensitive regex.
 
 * Capture groups are wrapped with `(...)` rather than `\(...\)`; use `\(` and `\)` to match against parentheses.
-
-For `filter` and `put`, if the regular expression is a string literal (the normal case), it is precompiled at process start and reused thereafter, which is efficient. If the regular expression is a more complex expression, including string concatenation using `.`, or a column name (in which case you can take regular expressions from input data!), then regexes are compiled on each record which works but is less efficient. As well, in this case there is no way to specify case-insensitive matching.
 
 Example:
 
@@ -66,12 +64,6 @@ Regex captures of the form `\0` through `\9` are supported as
 
 <pre class="pre-highlight-non-pair">
 <b>mlr put '$a =~ "(..)_(....)' then {... something else ...} then put '$b = "left_\1"; $c = "right_\2"'</b>
-</pre>
-
-* Captures are ignored in `filter` for the `=~` and `!=~` operators. For example, there is no mechanism provided to refer to the first `(..)` as `\1` or to the second `(....)` as `\2` in the following filter statement:
-
-<pre class="pre-non-highlight-non-pair">
-mlr filter '$a =~ "(..)_(....)'
 </pre>
 
 * Up to nine matches are supported: `\1` through `\9`, while `\0` is the entire match string; `\15` is treated as `\1` followed by an unrelated `5`.

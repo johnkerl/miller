@@ -15,4 +15,4 @@ In a previous version of this page, I compared Miller to some items in the Unix 
 
 ## Summary
 
-Miller can do many kinds of processing on key-value-pair data using elapsed time roughly of the same order of magnitude as items in the Unix toolkit can handle positionally indexed data. Specific results vary widely by platform, implementation details, multi-core use (or not). Lastly, specific special-purpose non-record-aware processing will run far faster in `grep`, `sed`, etc.
+Miller can do many kinds of processing on key-value-pair data using elapsed time roughly of the same order of magnitude as items in the Unix toolkit can handle positionally indexed data. Specific results vary widely by platform, implementation details, and multi-core use (or not). Lastly, specific special-purpose non-record-aware processing will run far faster if implemented in `grep`, `sed`, etc.

@@ -28,7 +28,7 @@ Once PRs are merged, readthedocs creates [https://miller.readthedocs.io](https:/
 
 As of Miller-6's current pre-release status, the best way to test is to either build from source via [Building from source](build.md), or by getting a recent binary at [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), then click latest build, then *Artifacts*. Then simply use Miller for whatever you do, and create an issue at [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues).
 
-Do note that as of 2021-06-17 a few things have not been ported to Miller 6 -- most notably, including regex captures and localtime DSL functions.
+Do note that as of 2021-06-17 a few things have not been ported to Miller 6 -- most notably, including localtime DSL functions and other issues.
 
 ## Feature development
 

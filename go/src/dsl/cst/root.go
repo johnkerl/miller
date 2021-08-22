@@ -102,6 +102,8 @@ func (root *RootNode) IngestAST(
 	return nil
 }
 
+// Resolve is called after IngestAST has been called one or more times.
+// See comments above IngestAST.
 func (root *RootNode) Resolve() error {
 
 	err := root.resolveFunctionCallsites()

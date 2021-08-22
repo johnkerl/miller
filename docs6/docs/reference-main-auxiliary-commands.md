@@ -1,7 +1,7 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Reference: auxiliary commands
+# Auxiliary commands
 
-There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables but they're delivered within the main Miller executable for convenience.
+There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables, but instead they're delivered within the main Miller executable for convenience.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr aux-list</b>

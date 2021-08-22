@@ -16,9 +16,9 @@ GENMD_EOF
 
 ## Mandelbrot-set generator
 
-The [Mandelbrot set](http://en.wikipedia.org/wiki/Mandelbrot_set) is also easily expressed. This isn't an important case of data-processing in the vein for which Miller was designed, but it is an example of Miller as a general-purpose programming language -- a test case for the expressiveness of the language.
+The [Mandelbrot set](http://en.wikipedia.org/wiki/Mandelbrot_set) is also easily expressed. This isn't an important case of data processing (the use-case Miller was designed for), but it is an example of Miller as a general-purpose programming language -- a test case for the expressiveness of the language.
 
-The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the Wikipedia article); how to render them is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
+The (approximate) computation of points in the complex plane which are and aren't members is just a few lines of complex arithmetic (see the [Wikipedia article](https://en.wikipedia.org/wiki/Mandelbrot_set)); how to render them visually is another task.  Using graphics libraries you can create PNG or JPEG files, but another fun way to do this is by printing various characters to the screen:
 
 GENMD_RUN_COMMAND
 cat programs/mand.mlr
@@ -27,7 +27,7 @@ GENMD_EOF
 At standard resolution this makes a nice little ASCII plot:
 
 GENMD_RUN_COMMAND
-mlr -n put -f ./programs/mand.mlr
+mlr -n put -s iheight=25 -s iwidth=50 -f ./programs/mand.mlr
 GENMD_EOF
 
 But using a very small font size (as small as my Mac will let me go), and by choosing the coordinates to zoom in on a particular part of the complex plane, we can get a nice little picture:
@@ -37,8 +37,9 @@ GENMD_CARDIFY
 # Get the number of rows and columns from the terminal window dimensions
 iheight=$(stty size | mlr --nidx --fs space cut -f 1)
 iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
-echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheight,iwidth=$iwidth" \
-| mlr put -f programs/mand.mlr
+mlr -n put \
+  -s rcorn=-1.755350 -s icorn=0.014230 -s side=0.000020 -s maxits=10000 -s iheight=$iheight -s iwidth=$iwidth \
+  -f programs/mand.mlr
 GENMD_EOF
 
 ![pix/mand.png](pix/mand.png)

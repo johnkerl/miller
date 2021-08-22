@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Reference: null data
+# null data
 
 One of Miller's key features is its support for **heterogeneous** data.  For example, take `mlr sort`: if you try to sort on field `hostname` when not all records in the data stream *have* a field named `hostname`, it is not an error (although you could pre-filter the data stream using `mlr having-fields --at-least hostname then sort ...`).  Rather, records lacking one or more sort keys are simply output contiguously by `mlr sort`.
 
@@ -27,7 +27,7 @@ a=5,b=7
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr sort -n  a data/sort-null.dat</b>
+<b>mlr sort -n a data/sort-null.dat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a=1,b=8
@@ -106,7 +106,7 @@ The reasoning is as follows:
 
 * Absent out-of-stream-variable values are precisely what allow you to write `mlr put '@sum += $x'`. Otherwise you would have to write `mlr put 'begin{@sum = 0}; @sum += $x'` -- which is tolerable -- but for `mlr put 'begin{...}; @sum[$a][$b] += $x'` you'd have to pre-initialize `@sum` for all values of `$a` and `$b` in your input data stream, which is intolerable.
 
-* The penalty for the absent feature is that misspelled variables can be hard to find: e.g. in `mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'` the accumulator is spelt `@sumx` in the begin-block but `@sum` in the end-block, where since it is absent, `@sum*2` evaluates to 2. See also the section on [DSL reference: errors and transparency](reference-dsl-errors.md).
+* The penalty for the absent feature is that misspelled variables can be hard to find: e.g. in `mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'` the accumulator is spelt `@sumx` in the begin-block but `@sum` in the end-block, where since it is absent, `@sum*2` evaluates to 2. See also the section on [DSL errors and transparency](reference-dsl-errors.md).
 
 Since absent plus absent is absent (and likewise for other operators), accumulations such as `@sum += $x` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with `is_present`:
 

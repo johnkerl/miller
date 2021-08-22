@@ -1,18 +1,48 @@
 ================================================================
 TOP OF LIST:
 
+* doc6 proofreads
+* 'explicit r' issue 297: code, UT, doc
+
 * shell-commands.html; while-read
 * memory/streaming page
 
 * I/O redirects * fmtnum * localtime * stats1 -r/--fr *
 * --nr-progress-mod * mlr -k * json comment-handling *
 * cli-audits * doc6 * survey * check issues * regtest pendings *
-* survey email followups/discussion-post *
+* survey followups/discussion-post *
+
+* PD wtf !
+
+* GOMAXPROCS env-override, else default 8 with comment
+
+----------------------------------------------------------------
+indexing bug:
+
+  μεταμόρφωσις: x=[1,2,3,4,5]
+  μεταμόρφωσις: x[:2]
+  [1, 2]
+  μεταμόρφωσις: x[2:]
+  [2, 3, 4, 5]
+
+----------------------------------------------------------------
+implicit r:
+* double-check end of reference-main-data-types.md.in
 
 ----------------------------------------------------------------
 docs:
 w discussion re docs6 ...
 * single cheatsheet page -- put out RFH?
+
+* note somewhere (maybe 'what's new in miller6' and/or to-be-written survey review):
+  o miller was first of all a tool for myself, and anyone else who might find it useful
+  o since then it's been driven by feature requests -- people have great ideas and they get built
+  o a key finding of the survey, though -- as well as various social-media references to miller --
+    is "deserves to be better-known", "how have I not heard of this tool?", etc.
+    So for Miller6, while several new features and improvements have been added
+    by request at the code level, an equally strong effort has been put into
+    human factors such as usability, improved documentation, improved on-line
+    help, lower barrier to entry for developers, etc.
 
 * abbrevations: https://squidfunk.github.io/mkdocs-material/reference/abbreviations/#configuration
   admonitions:  https://squidfunk.github.io/mkdocs-material/reference/admonitions/#usage
@@ -26,13 +56,17 @@ w discussion re docs6 ...
 * csv -> csv/tsv throughout
 
 ----------------------------------------------------------------
-DOC6
+memory/streaming page
 
-* all sorts of line-wraps in command-blocks
+* https://github.com/johnkerl/miller/issues/587
+
+----------------------------------------------------------------
+DOC6
 
 * colored-shapes.dkvp -> csv; also mkdat2
 * data/small -> csv throughout. and/or just use example.csv
 * quicklinks -- ?
+* vim syntax highlighting for .mlr files -- highlight this somewhere
 
 * shell-commands.html
   while-read example issue
@@ -103,7 +137,19 @@ w survey
 ----------------------------------------------------------------
 BLOCKERS
 
+* bug:
+  μεταμόρφωσις: z[1].x
+  0.3467901443380824
+  μεταμόρφωσις: z[2].x
+  0.7586799647899636
+  μεταμόρφωσις: z[1]["x"] + z[2]["x"]
+  1.105470109128046
+  μεταμόρφωσις: z[1].x + z[2].x
+  (absent)
+
 * finish stats1 -r
+
+* what about -I mixed with .gzin -- ?
 
 * regtest:
   o convert regtest/cases-pending-windows
@@ -150,6 +196,8 @@ BLOCKERS
 
 ================================================================
 NON-BLOCKERS
+
+* parquet -- ?
 
 * case auxfiles: cat them too
 
@@ -394,6 +442,9 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * "mlr" -> os.Args[0] throughout the codebase
 * emitx later: 'emit([a,b,c],d,e,f)' for SR-conflict issues
 
+* repl set i/o flags @ cli w/o restart -- ?
+* genmds multi-line something something for autogen of repl examples -- ?
+
 * go doc ...
   o export GOPATH=$(pwd); go doc types.Mlrval
   o go get golang.org/x/tools/cmd/godoc
@@ -505,6 +556,8 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * regex-capture follow-on: https://github.com/johnkerl/miller/issues/388 is much cleaner
   o keep current syntax for backward compatibility
   o but encourage use of this
+
+* put -T -- ?
 
 ----------------------------------------------------------------
 DOC6:

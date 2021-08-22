@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"mlr/src/colorizer"
 	"mlr/src/lib"
 )
 
@@ -78,6 +79,7 @@ func UsageKeywords() {
 		if i > 0 {
 			fmt.Println()
 		}
+		fmt.Printf("%s: ", colorizer.MaybeColorizeHelp(entry.name, true))
 		entry.usageFunc()
 	}
 }
@@ -91,6 +93,7 @@ func UsageForKeyword(name string) {
 func TryUsageForKeyword(name string) bool {
 	for _, entry := range KEYWORD_USAGE_TABLE {
 		if entry.name == name {
+			fmt.Printf("%s: ", colorizer.MaybeColorizeHelp(entry.name, true))
 			entry.usageFunc()
 			return true
 		}
@@ -117,13 +120,13 @@ func ListKeywordsAsParagraph() {
 // ----------------------------------------------------------------
 func allKeywordUsage() {
 	fmt.Println(
-		`all: used in "emit", "emitp", and "unset" as a synonym for @*`,
+		`used in "emit", "emitp", and "unset" as a synonym for @*`,
 	)
 }
 
 func beginKeywordUsage() {
 	fmt.Println(
-		`begin: defines a block of statements to be executed before input records
+		`defines a block of statements to be executed before input records
 are ingested. The body statements must be wrapped in curly braces.
 
   Example: 'begin { @count = 0 }'`)
@@ -131,37 +134,37 @@ are ingested. The body statements must be wrapped in curly braces.
 
 func boolKeywordUsage() {
 	fmt.Println(
-		`bool: declares a boolean local variable in the current curly-braced scope.
+		`declares a boolean local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'bool b = 1' is an error.`)
 }
 
 func breakKeywordUsage() {
 	fmt.Println(
-		`break: causes execution to continue after the body of the current for/while/do-while loop.`)
+		`causes execution to continue after the body of the current for/while/do-while loop.`)
 }
 
 func callKeywordUsage() {
 	fmt.Println(
-		`call: used for invoking a user-defined subroutine.
+		`used for invoking a user-defined subroutine.
 
   Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'`)
 }
 
 func continueKeywordUsage() {
 	fmt.Println(
-		`continue: causes execution to skip the remaining statements in the body of
+		`causes execution to skip the remaining statements in the body of
 the current for/while/do-while loop. For-loop increments are still applied.`)
 }
 
 func doKeywordUsage() {
 	fmt.Println(
-		`do: with "while", introduces a do-while loop. The body statements must be wrapped
+		`with "while", introduces a do-while loop. The body statements must be wrapped
 in curly braces.`)
 }
 
 func dumpKeywordUsage() {
 	fmt.Println(
-		`dump: prints all currently defined out-of-stream variables immediately
+		`prints all currently defined out-of-stream variables immediately
 to stdout as JSON.
 
 With >, >>, or |, the data do not become part of the output record stream but
@@ -182,7 +185,7 @@ the main command line.
 
 func edumpKeywordUsage() {
 	fmt.Println(
-		`edump: prints all currently defined out-of-stream variables immediately
+		`prints all currently defined out-of-stream variables immediately
 to stderr as JSON.
 
   Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'`)
@@ -190,19 +193,19 @@ to stderr as JSON.
 
 func elifKeywordUsage() {
 	fmt.Println(
-		`elif: the way Miller spells "else if". The body statements must be wrapped
+		`the way Miller spells "else if". The body statements must be wrapped
 in curly braces.`)
 }
 
 func elseKeywordUsage() {
 	fmt.Println(
-		`else: terminates an if/elif/elif chain. The body statements must be wrapped
+		`terminates an if/elif/elif chain. The body statements must be wrapped
 in curly braces.`)
 }
 
 func emitKeywordUsage() {
 	fmt.Printf(
-		`emit: inserts an out-of-stream variable into the output record stream. Hashmap
+		`inserts an out-of-stream variable into the output record stream. Hashmap
 indices present in the data but not slotted by emit arguments are not output.
 
 With >, >>, or |, the data do not become part of the output record stream but
@@ -236,7 +239,7 @@ Please see %s://johnkerl.org/miller/doc for more information.
 
 func emitfKeywordUsage() {
 	fmt.Printf(
-		`emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
+		`inserts non-indexed out-of-stream variable(s) side-by-side into the
 output record stream.
 
 With >, >>, or |, the data do not become part of the output record stream but
@@ -267,7 +270,7 @@ Please see %s://johnkerl.org/miller/doc for more information.
 
 func emitpKeywordUsage() {
 	fmt.Printf(
-		`emitp: inserts an out-of-stream variable into the output record stream.
+		`inserts an out-of-stream variable into the output record stream.
 Hashmap indices present in the data but not slotted by emitp arguments are
 output concatenated with ":".
 
@@ -300,7 +303,7 @@ Please see %s://johnkerl.org/miller/doc for more information.
 
 func endKeywordUsage() {
 	fmt.Println(
-		`end: defines a block of statements to be executed after input records
+		`defines a block of statements to be executed after input records
 are ingested. The body statements must be wrapped in curly braces.
 
   Example: 'end { emit @count }'
@@ -309,7 +312,7 @@ are ingested. The body statements must be wrapped in curly braces.
 
 func eprintKeywordUsage() {
 	fmt.Println(
-		`eprint: prints expression immediately to stderr.
+		`prints expression immediately to stderr.
 
   Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
@@ -318,18 +321,18 @@ func eprintKeywordUsage() {
 
 func eprintnKeywordUsage() {
 	fmt.Println(
-		`eprintn: prints expression immediately to stderr, without trailing newline.
+		`prints expression immediately to stderr, without trailing newline.
 
   Example: mlr --from f.dat put -q 'eprintn "The sum of x and y is ".($x+$y); eprint ""'`)
 }
 
 func falseKeywordUsage() {
-	fmt.Println(`false: the boolean literal value.`)
+	fmt.Println(`the boolean literal value.`)
 }
 
 func filterKeywordUsage() {
 	fmt.Println(
-		`filter: includes/excludes the record in the output record stream.
+		`includes/excludes the record in the output record stream.
 
   Example: mlr --from f.dat put 'filter (NR == 2 || $x > 5.4)'
 
@@ -342,13 +345,13 @@ without printing the input record:
 
 func floatKeywordUsage() {
 	fmt.Println(
-		`float: declares a floating-point local variable in the current curly-braced scope.
+		`declares a floating-point local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'float x = 0' is an error.`)
 }
 
 func forKeywordUsage() {
 	fmt.Println(
-		`for: defines a for-loop using one of three styles. The body statements must
+		`defines a for-loop using one of three styles. The body statements must
 be wrapped in curly braces.
 For-loop over stream record:
 
@@ -367,43 +370,43 @@ C-style for-loop:
 
 func funcKeywordUsage() {
 	fmt.Println(
-		`func: used for defining a user-defined function.
+		`used for defining a user-defined function.
 
   Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'`)
 }
 
 func ifKeywordUsage() {
 	fmt.Println(
-		`if: starts an if/elif/elif chain. The body statements must be wrapped
+		`starts an if/elif/elif chain. The body statements must be wrapped
 in curly braces.`)
 }
 
 func inKeywordUsage() {
-	fmt.Println(`in: used in for-loops over stream records or out-of-stream variables.`)
+	fmt.Println(`used in for-loops over stream records or out-of-stream variables.`)
 }
 
 func intKeywordUsage() {
 	fmt.Println(
-		`int: declares an integer local variable in the current curly-braced scope.
+		`declares an integer local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'int x = 0.0' is an error.`)
 }
 
 func mapKeywordUsage() {
 	fmt.Println(
-		`map: declares an map-valued local variable in the current curly-braced scope.
+		`declares an map-valued local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
 always OK. map b = a is OK or not depending on whether a is a map.`)
 }
 
 func numKeywordUsage() {
 	fmt.Println(
-		`num: declares an int/float local variable in the current curly-braced scope.
+		`declares an int/float local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'num b = true' is an error.`)
 }
 
 func printKeywordUsage() {
 	fmt.Println(
-		`print: prints expression immediately to stdout.
+		`prints expression immediately to stdout.
 
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
@@ -412,46 +415,46 @@ func printKeywordUsage() {
 
 func printnKeywordUsage() {
 	fmt.Println(
-		`printn: prints expression immediately to stdout, without trailing newline.
+		`prints expression immediately to stdout, without trailing newline.
 
   Example: mlr --from f.dat put -q 'printn "."; end { print "" }'`)
 }
 
 func returnKeywordUsage() {
 	fmt.Println(
-		`return: specifies the return value from a user-defined function.
+		`specifies the return value from a user-defined function.
 Omitted return statements (including via if-branches) result in an absent-null
 return value, which in turns results in a skipped assignment to an LHS.`)
 }
 
 func stderrKeywordUsage() {
 	fmt.Println(
-		`stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
+		`Used for tee, emit, emitf, emitp, print, and dump in place of filename
 to print to standard error.`)
 }
 
 func stdoutKeywordUsage() {
 	fmt.Println(
-		`stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
+		`Used for tee, emit, emitf, emitp, print, and dump in place of filename
 to print to standard output.`)
 }
 
 func strKeywordUsage() {
 	fmt.Println(
-		`str: declares a string local variable in the current curly-braced scope.
+		`declares a string local variable in the current curly-braced scope.
 Type-checking happens at assignment.`)
 }
 
 func subrKeywordUsage() {
 	fmt.Println(
-		`subr: used for defining a subroutine.
+		`used for defining a subroutine.
 
   Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'`)
 }
 
 func teeKeywordUsage() {
 	fmt.Println(
-		`tee: prints the current record to specified file.
+		`prints the current record to specified file.
 This is an immediate print to the specified file (except for pprint format
 which of course waits until the end of the input stream to format all output).
 
@@ -478,12 +481,12 @@ output $*.
 }
 
 func trueKeywordUsage() {
-	fmt.Println(`true: the boolean literal value.`)
+	fmt.Println(`the boolean literal value.`)
 }
 
 func unsetKeywordUsage() {
 	fmt.Println(
-		`unset: clears field(s) from the current record, or an out-of-stream or local variable.
+		`clears field(s) from the current record, or an out-of-stream or local variable.
 
   Example: mlr --from f.dat put 'unset $x'
   Example: mlr --from f.dat put 'unset $*'
@@ -495,81 +498,81 @@ func unsetKeywordUsage() {
 
 func varKeywordUsage() {
 	fmt.Println(
-		`var: declares an untyped local variable in the current curly-braced scope.
+		`declares an untyped local variable in the current curly-braced scope.
 
   Examples: 'var a=1', 'var xyz=""'`)
 }
 
 func whileKeywordUsage() {
 	fmt.Println(
-		`while: introduces a while loop, or with "do", introduces a do-while loop.
+		`introduces a while loop, or with "do", introduces a do-while loop.
 The body statements must be wrapped in curly braces.`)
 }
 
 func ENVKeywordUsage() {
-	fmt.Println(`ENV: access to environment variables by name, e.g. '$home = ENV["HOME"]'`)
+	fmt.Println(`access to environment variables by name, e.g. '$home = ENV["HOME"]'`)
 }
 
 func FILENAMEKeywordUsage() {
-	fmt.Println(`FILENAME: evaluates to the name of the current file being processed.`)
+	fmt.Println(`evaluates to the name of the current file being processed.`)
 }
 
 func FILENUMKeywordUsage() {
 	fmt.Println(
-		`FILENUM: evaluates to the number of the current file being processed,
+		`evaluates to the number of the current file being processed,
 starting with 1.`)
 }
 
 func FNRKeywordUsage() {
 	fmt.Println(
-		`FNR: evaluates to the number of the current record within the current file
+		`evaluates to the number of the current record within the current file
 being processed, starting with 1. Resets at the start of each file.`)
 }
 
 func IFSKeywordUsage() {
-	fmt.Println(`IFS: evaluates to the input field separator from the command line.`)
+	fmt.Println(`evaluates to the input field separator from the command line.`)
 }
 
 func IPSKeywordUsage() {
-	fmt.Println(`IPS: evaluates to the input pair separator from the command line.`)
+	fmt.Println(`evaluates to the input pair separator from the command line.`)
 }
 
 func IRSKeywordUsage() {
 	fmt.Println(
-		`IRS: evaluates to the input record separator from the command line,
+		`evaluates to the input record separator from the command line,
 or to LF or CRLF from the input data if in autodetect mode (which is
 the default).`)
 }
 
 func M_EKeywordUsage() {
-	fmt.Println(`M_E: the mathematical constant e.`)
+	fmt.Println(`the mathematical constant e.`)
 }
 
 func M_PIKeywordUsage() {
-	fmt.Println(`M_PI: the mathematical constant pi.`)
+	fmt.Println(`the mathematical constant pi.`)
 }
 
 func NFKeywordUsage() {
-	fmt.Println(`NF: evaluates to the number of fields in the current record.`)
+	fmt.Println(`evaluates to the number of fields in the current record.`)
 }
 
 func NRKeywordUsage() {
 	fmt.Println(
-		`NR: evaluates to the number of the current record over all files
+		`evaluates to the number of the current record over all files
 being processed, starting with 1. Does not reset at the start of each file.`)
 }
 
 func OFSKeywordUsage() {
-	fmt.Println(`OFS: evaluates to the output field separator from the command line.`)
+	fmt.Println(`evaluates to the output field separator from the command line.`)
 }
 
 func OPSKeywordUsage() {
-	fmt.Println(`OPS: evaluates to the output pair separator from the command line.`)
+	fmt.Println(`evaluates to the output pair separator from the command line.`)
 }
 
 func ORSKeywordUsage() {
 	fmt.Println(
-		`ORS: evaluates to the output record separator from the command line,
+		`evaluates to the output record separator from the command line,
 or to LF or CRLF from the input data if in autodetect mode (which is
 the default).`)
 }

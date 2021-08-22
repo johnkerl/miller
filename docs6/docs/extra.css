@@ -10,30 +10,44 @@
 
 /* Top-of-page banner */
 .md-header {
-    background-color: #800000;
+  background-color: #800000;
 }
-.md-nav--primary .md-nav__title[for="__drawer"] {
-    color: #ffffff;
-    background-color: #800000;
-    padding: 3px;
-    border-radius: 6px;
+.md-footer {
+  background-color: #e0e0e0;
 }
 
-.md-footer {
-    background-color: #e0e0e0;
+.md-nav--primary .md-nav__title[for="__drawer"] {
+  color: #ffffff;
+  background-color: #800000;
+  padding: 3px;
+  border-radius: 6px;
 }
 
 /* Section headings in the navbar: bold them and stand them out a little */
 .md-nav__item--nested > .md-nav__link {
-    color: inherit;
-    font-weight: bold;
-    margin: 3px;
-    padding: 3px;
-    /*border: 1px solid white;*/
+  color: inherit;
+  font-weight: bold;
+  margin: 3px;
+  padding: 3px;
+  /*border: 1px solid white;*/
 }
 .md-nav__link:hover {
   /*border: 1px solid gray;*/
   background-color: #e0e0e0;
+}
+
+/* Centered quicklinks for Introduction page */
+div.quicklinks {
+  text-align: center;
+  overflow: hidden;
+}
+span.quicklinks {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 6px;
+  text-align: center;
+  display:table;
+  margin:0 auto;
 }
 
 /* Code samples using <pre> (which is currently in use) */
@@ -49,8 +63,12 @@
  * docs/genmd-filter script when it produces the docs/*.md files from their
  * respective docs/*.md.in files.
  */
+
+.md-typeset code {
+  font-size: 12px;
+}
+
 pre {
-  color: #000000;
   font-size: 12px;
   padding: 10px;
 
@@ -58,13 +76,11 @@ pre {
   white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
   white-space: -pre-wrap;      /* Opera 4-6 */
   white-space: -o-pre-wrap;    /* Opera 7 */
-  word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
+
 .md-typeset code, .md-typeset kbd, .md-typeset pre {
   color: #000000;
-  /*background-color: #e0e0e0;*/
   background-color: #eae2cb;
-  /*background-color: #c5b690;*/
   font-size: 12px;
   direction: ltr;
   border-radius: 3px;
@@ -122,19 +138,19 @@ pre.pre-non-highlight-non-pair {
   border-bottom-left-radius: 6px;
 }
 
-/* Section titles in content pages */
-h1 {
-  font-weight: bold;
+pre.pre-no-wrap {
+  font-size: 12px;
+  padding: 10px;
+
+  white-space: nowrap;       /* css-3 */
+  white-space: -moz-nowrap;  /* Mozilla, since 1999 */
+  white-space: -no-wrap;      /* Opera 4-6 */
+  white-space: -o-nowrap;    /* Opera 7 */
 }
+
+/* Section titles in content pages */
 .md-typeset h1 {
   font-weight: bold;
-}
-h1, h2, h3 {
-  color: #800000;
-  font-weight: bold;
-  border-radius: 6px;
-  padding: 6px;
-  background-color: #e0e0e0;
 }
 .md-typeset h1, .md-typeset h2, .md-typeset h3 {
   color: #800000;
@@ -145,11 +161,14 @@ h1, h2, h3 {
 }
 
 /* Hyperlinks in content pages */
-a, a:before, a:focus, a:hover, a:visited {
+a, a:before, a:focus, a:hover, a:link, a:visited {
   color: #800000;
 }
 
 .md-typeset a {
+  color: #800000;
+}
+.md-typeset a:link {
   color: #800000;
 }
 .md-typeset a:visited {
@@ -180,6 +199,7 @@ a, a:before, a:focus, a:hover, a:visited {
 .md-nav__link[data-md-state="blur"] {
   color: #800000;
 }
+
 nav a:hover {
   border-radius: 3px;
   background-color: #e0e0e0;
@@ -188,4 +208,19 @@ nav a:hover {
 /* Rounded corners for screenshots/images */
 img {
   border-radius: 6px;
+}
+
+.md-footer__link:hover {
+  background-color: #f0f0f0;
+}
+
+:root > * {
+  --md-code-fg-color: #000000;
+  --md-code-bg-color: #eae2cb;
+
+  --md-typeset-color: #000000;
+  --md-typeset-a-color: #800000;
+
+  --md-footer-fg-color: #800000;
+  --md-footer-fg-color: #eae2cb;
 }

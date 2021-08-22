@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# DSL reference: user-defined functions
+# DSL user-defined functions
 
 As of Miller 5.0.0 you can define your own functions, as well as subroutines.
 
@@ -36,17 +36,15 @@ Properties of user-defined functions:
 
 * Function bodies start with `func` and a parameter list, defined outside of `begin`, `end`, or other `func` or `subr` blocks. (I.e. the Miller DSL has no nested functions.)
 
-* A function (uniqified by its name) may not be redefined: either by redefining a user-defined function, or by redefining a built-in function. However, functions and subroutines have separate namespaces: you can define a subroutine `log` which does not clash with the mathematical `log` function.
+* A function (uniqified by its name) may not be redefined: either by redefining a user-defined function, or by redefining a built-in function. However, functions and subroutines have separate namespaces: you can define a subroutine `log` (for logging messages to stderr, say) which does not clash with the mathematical `log` (logarithm) function.
 
-* Functions may be defined either before or after use (there is an object-binding/linkage step at startup).  More specifically, functions may be either recursive or mutually recursive. Functions may not call subroutines.
+* Functions may be defined either before or after use -- there is an object-binding/linkage step at startup.  More specifically, functions may be either recursive or mutually recursive.
 
-* Functions may be defined and called either within `mlr put` or `mlr put`.
-
-* Functions have read access to `$`-variables and `@`-variables but may not modify them. See also [Memoization with out-of-stream variables](misc-examples.md#memoization-with-out-of-stream-variables) for an example.
+* Functions may be defined and called either within `mlr filter` or `mlr put`.
 
 * Argument values may be reassigned: they are not read-only.
 
-* When a return value is not implicitly returned, this results in a return value of absent-null. (In the example above, if there were records for which the argument to `f` is non-numeric, the assignments would be skipped.) See also the section on [xxxx](reference-main-null-data.md).
+* When a return value is not implicitly returned, this results in a return value of [absent-null](reference-main-null-data.md). (In the example above, if there were records for which the argument to `f` is non-numeric, the assignments would be skipped.) See also the [null-data reference page](reference-main-null-data.md).
 
 * See the section on [Local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
 
@@ -94,7 +92,7 @@ Properties of user-defined subroutines:
 
 * A subroutine (uniqified by its name) may not be redefined. However, functions and subroutines have separate namespaces: you can define a subroutine `log` which does not clash with the mathematical `log` function.
 
-* Subroutines may be defined either before or after use (there is an object-binding/linkage step at startup).  More specifically, subroutines may be either recursive or mutually recursive. Subroutines may call functions.
+* Subroutines may be defined either before or after use -- there is an object-binding/linkage step at startup.  More specifically, subroutines may be either recursive or mutually recursive. Subroutines may call functions.
 
 * Subroutines may be defined and called either within `mlr put` or `mlr put`.
 

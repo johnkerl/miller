@@ -1,5 +1,5 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Reference: list of verbs
+# List of verbs
 
 ## Overview
 
@@ -22,7 +22,7 @@ These fall into categories as follows:
 
 * Particularly oriented toward [Record Heterogeneity](record-heterogeneity.md), although all Miller commands can handle heterogeneous records: [group-by](reference-verbs.md#group-by), [group-like](reference-verbs.md#group-like), [having-fields](reference-verbs.md#having-fields).
 
-* These draw from other sources (see also [How Original Is Miller?](originality.md)): [count-distinct](reference-verbs.md#count-distinct) is SQL-ish, and [rename](reference-verbs.md#rename) can be done by `sed` (which does it faster: see [Performance](performance.md). Verbs: [check](reference-verbs.md#check), [count-distinct](reference-verbs.md#count-distinct), [label](reference-verbs.md#label), [merge-fields](reference-verbs.md#merge-fields), [nest](reference-verbs.md#nest), [nothing](reference-verbs.md#nothing), [regularize](reference-verbs.md#regularize), [rename](reference-verbs.md#rename), [reorder](reference-verbs.md#reorder), [reshape](reference-verbs.md#reshape), [seqgen](reference-verbs.md#seqgen).
+* These draw from other sources (see also [How Original Is Miller?](originality.md)): [count-distinct](reference-verbs.md#count-distinct) is SQL-ish, and [rename](reference-verbs.md#rename) can be done by `sed` (which does it faster: see [Performance](performance.md)). Verbs: [check](reference-verbs.md#check), [count-distinct](reference-verbs.md#count-distinct), [label](reference-verbs.md#label), [merge-fields](reference-verbs.md#merge-fields), [nest](reference-verbs.md#nest), [nothing](reference-verbs.md#nothing), [regularize](reference-verbs.md#regularize), [rename](reference-verbs.md#rename), [reorder](reference-verbs.md#reorder), [reshape](reference-verbs.md#reshape), [seqgen](reference-verbs.md#seqgen).
 
 ## altkv
 
@@ -143,9 +143,8 @@ Options:
 
 The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
 
-..
-    hard-coded, not live-code, since random sampling would generate different data on each doc run
-    which would needlessly complicate git diff
+<!--- hard-coded, not live-code, since random sampling would generate different data on each doc run
+    which would needlessly complicate git diff -->
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp</b>
@@ -1221,7 +1220,8 @@ In this example, since the sort is on field `a`, the first step is to group toge
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr group-like [options]
-Outputs records in batches having identical field names.Options:
+Outputs records in batches having identical field names.
+Options:
 -h|--help Show this message.
 </pre>
 
@@ -1321,7 +1321,7 @@ Options:
 -h|--help Show this message.
 </pre>
 
-Note that `head` is distinct from [top](reference-verbs.md#top) -- `head` shows fields which appear fimd.in the data stream; `top` shows fields which are numerically largest (or smallest).
+Note that `head` is distinct from [top](reference-verbs.md#top) -- `head` shows fields which appear first in the data stream; `top` shows fields which are numerically largest (or smallest).
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint head -n 4 data/medium</b>
@@ -3251,21 +3251,21 @@ Prints the last *n* records in the input stream, optionally by category.
 <b>mlr --opprint tail -n 4 data/colored-shapes.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag i     u                    v                   w                   x
-blue   square   1    99974 0.6189062525431605   0.2637962404841453  0.5311465405784674  6.210738209085753
-blue   triangle 0    99976 0.008110504040268474 0.8267274952432482  0.4732962944898885  6.146956761817328
-yellow triangle 0    99990 0.3839424618160777   0.55952913620132    0.5113763011485609  4.307973891915119
-yellow circle   1    99994 0.764950884927175    0.25284227383991364 0.49969878539567425 5.013809741826425
+color  shape    flag i      u                    v                   w                   x
+blue   square   1    499872 0.6189062525431605   0.2637962404841453  0.5311465405784674  6.210738209085753
+blue   triangle 0    499880 0.008110504040268474 0.8267274952432482  0.4732962944898885  6.146956761817328
+yellow triangle 0    499955 0.3839424618160777   0.55952913620132    0.5113763011485609  4.307973891915119
+yellow circle   1    499974 0.764950884927175    0.25284227383991364 0.49969878539567425 5.013809741826425
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag i     u                  v                   w                   x
-yellow triangle 0    99990 0.3839424618160777 0.55952913620132    0.5113763011485609  4.307973891915119
-blue   square   1    99974 0.6189062525431605 0.2637962404841453  0.5311465405784674  6.210738209085753
-yellow circle   1    99994 0.764950884927175  0.25284227383991364 0.49969878539567425 5.013809741826425
+color  shape    flag i      u                  v                   w                   x
+yellow triangle 0    499955 0.3839424618160777 0.55952913620132    0.5113763011485609  4.307973891915119
+blue   square   1    499872 0.6189062525431605 0.2637962404841453  0.5311465405784674  6.210738209085753
+yellow circle   1    499974 0.764950884927175  0.25284227383991364 0.49969878539567425 5.013809741826425
 </pre>
 
 ## tee
@@ -3327,7 +3327,7 @@ Prints the n records with smallest/largest values at specified fields,
 optionally by category.
 </pre>
 
-Note that `top` is distinct from [head](reference-verbs.md#head) -- `head` shows fields which appear fimd.in the data stream; `top` shows fields which are numerically largest (or smallest).
+Note that `top` is distinct from [head](reference-verbs.md#head) -- `head` shows fields which appear first in the data stream; `top` shows fields which are numerically largest (or smallest).
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint top -n 4 -f x data/medium</b>
