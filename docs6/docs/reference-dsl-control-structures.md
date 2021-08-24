@@ -157,78 +157,95 @@ While Miller's `while` and `do-while` statements are much as in many other langu
 
 As with `while` and `do-while`, a `break` or `continue` within nested control structures will propagate to the innermost loop enclosing them, if any, and a `break` or `continue` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
 
-### Key-only for-loops
+### Single-variable for-loops
 
-The `key` variable is always bound to the *key* of key-value pairs:
+For [maps](reference-dsl-maps.md), the single variable is always bound to the *key* of key-value pairs:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --from data/small put '</b>
+<b>mlr --from data/small put -q '</b>
 <b>  print "NR = ".NR;</b>
-<b>  for (key in $*) {</b>
-<b>    value = $[key];</b>
-<b>    print "  key:" . key . "  value:".value;</b>
+<b>  for (e in $*) {</b>
+<b>    print "  key:", e, "value:", $[e];</b>
 <b>  }</b>
-<b></b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 NR = 1
-  key:a  value:pan
-  key:b  value:pan
-  key:i  value:1
-  key:x  value:0.3467901443380824
-  key:y  value:0.7268028627434533
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+  key: a value: pan
+  key: b value: pan
+  key: i value: 1
+  key: x value: 0.3467901443380824
+  key: y value: 0.7268028627434533
 NR = 2
-  key:a  value:eks
-  key:b  value:pan
-  key:i  value:2
-  key:x  value:0.7586799647899636
-  key:y  value:0.5221511083334797
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+  key: a value: eks
+  key: b value: pan
+  key: i value: 2
+  key: x value: 0.7586799647899636
+  key: y value: 0.5221511083334797
 NR = 3
-  key:a  value:wye
-  key:b  value:wye
-  key:i  value:3
-  key:x  value:0.20460330576630303
-  key:y  value:0.33831852551664776
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+  key: a value: wye
+  key: b value: wye
+  key: i value: 3
+  key: x value: 0.20460330576630303
+  key: y value: 0.33831852551664776
 NR = 4
-  key:a  value:eks
-  key:b  value:wye
-  key:i  value:4
-  key:x  value:0.38139939387114097
-  key:y  value:0.13418874328430463
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+  key: a value: eks
+  key: b value: wye
+  key: i value: 4
+  key: x value: 0.38139939387114097
+  key: y value: 0.13418874328430463
 NR = 5
-  key:a  value:wye
-  key:b  value:pan
-  key:i  value:5
-  key:x  value:0.5732889198020006
-  key:y  value:0.8636244699032729
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+  key: a value: wye
+  key: b value: pan
+  key: i value: 5
+  key: x value: 0.5732889198020006
+  key: y value: 0.8636244699032729
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr -n put '</b>
+<b>mlr -n put -q '</b>
 <b>  end {</b>
-<b>    o = {1:2, 3:{4:5}};</b>
-<b>    for (key in o) {</b>
-<b>      print "  key:" . key . "  valuetype:" . typeof(o[key]);</b>
+<b>    o = {"a":1, "b":{"c":3}};</b>
+<b>    for (e in o) {</b>
+<b>      print "key:", e, "valuetype:", typeof(o[e]);</b>
 <b>    }</b>
 <b>  }</b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-  key:1  valuetype:int
-  key:3  valuetype:map
+key: a valuetype: int
+key: b valuetype: map
 </pre>
 
-Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in `$[key]` for stream records, or by indexing the looped-over variable using square brackets.
+Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in `$[e]` for stream records, or by indexing the looped-over variable using square brackets.
+
+For [arrays](reference-dsl-arrays.md), the single variable is always bound to the *value* (not the array index):
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put -q '</b>
+<b>  end {</b>
+<b>    o = [10, "20", {}, "four", true];</b>
+<b>    for (e in o) {</b>
+<b>      print "value:", e, "valuetype:", typeof(e);</b>
+<b>    }</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+value: 10 valuetype: int
+value: 20 valuetype: string
+value: {} valuetype: map
+value: four valuetype: string
+value: true valuetype: bool
+</pre>
 
 ### Key-value for-loops
 
-Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to to a scalar value (a string or a number) if the map stops at that level, or to a map-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
+For [maps](reference-dsl-maps.md), the first loop variable is the key and the
+second is the value; for [arrays](reference-dsl-arrays.md), the first loop
+variable is the (1-up) array index and the second is the value.
+
+Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to to a scalar value (non-array/non-map) if the map stops at that level, or to a map-valued or array-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/for-srec-example.tbl</b>

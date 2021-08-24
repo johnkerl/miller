@@ -1,7 +1,7 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # Manual page
 
-This is simply a copy of what you should see on running **man mlr** at a command prompt, once Miller is installed on your system.
+This is simply a copy of what you should see on running `man mlr` at a command prompt, once Miller is installed on your system.
 
 <pre class="pre-non-highlight-non-pair">
 MILLER(1)							     MILLER(1)

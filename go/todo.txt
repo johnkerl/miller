@@ -17,7 +17,10 @@ TOP OF LIST:
 * GOMAXPROCS env-override, else default 8 with comment
 
 ----------------------------------------------------------------
-indexing bug:
+* mlr repl (w/o mrpl) doesn't print final newline on EOF
+* also: feature/shorthand for repl newline before prompt
+
+* slice-indexing bug:
 
   μεταμόρφωσις: x=[1,2,3,4,5]
   μεταμόρφωσις: x[:2]
@@ -31,6 +34,9 @@ implicit r:
 
 ----------------------------------------------------------------
 docs:
+
+* src/man/doc hygiene @ build script
+
 w discussion re docs6 ...
 * single cheatsheet page -- put out RFH?
 

@@ -61,8 +61,24 @@ GENMD_RUN_COMMAND
 cat data/ragged.csv
 GENMD_EOF
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv.sh)
+GENMD_RUN_COMMAND
+mlr --from data/ragged.csv --fs comma --nidx put '
+  @maxnf = max(@maxnf, NF);
+  @nf = NF;
+  while(@nf < @maxnf) {
+    @nf += 1;
+    $[@nf] = ""
+  }
+'
+GENMD_EOF
 
 or, more simply,
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)
+GENMD_RUN_COMMAND
+mlr --from data/ragged.csv --fs comma --nidx put '
+  @maxnf = max(@maxnf, NF);
+  while(NF < @maxnf) {
+    $[NF+1] = "";
+  }
+'
+GENMD_EOF

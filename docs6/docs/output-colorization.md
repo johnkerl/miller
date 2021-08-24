@@ -10,7 +10,7 @@ Things having colors:
 * Keys in CSV header lines, JSON keys, etc
 * Values in CSV data lines, JSON scalar values, etc
 * "PASS" and "FAIL" in regression-test output
-* Some online-help strings
+* Some [online-help](online-help.md) strings
 
 Rules for colorization:
 

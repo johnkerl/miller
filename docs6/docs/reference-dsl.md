@@ -59,7 +59,7 @@ the body of the loop.
 
 (You can, if you like, use the per-record statements to grow a list of records,
 then loop over them all in an `end` block. This is described in the page on
-[operating over all records](operating-over-all-records.md)).
+[operating on all records](operating-on-all-records.md)).
 
 To see this in action, let's take a look at the [data/short.csv](./data/short.csv) file:
 
@@ -105,7 +105,7 @@ statement on each loop iteration.
 
 For almost all simple uses of the Miller programming language, this implicit
 looping over records is probably all you will need. (For more involved cases you
-can see the pages on [operating over all records](operating-on-all-records.md),
+can see the pages on [operating on all records](operating-on-all-records.md),
 [out-of-stream variables](reference-dsl-variables.md#out-of-stream-variables),
 and [two-pass algorithms](two-pass-algorithms.md).)
 

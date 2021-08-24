@@ -137,7 +137,13 @@ GENMD_EOF
 
 Then, join on the key field(s), and use unsparsify to zero-fill counters absent on one side but present on the other. Use `--ul` and `--ur` to emit unpaired records (namely, purple on the left and yellow on the right):
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/previous-to-current.sh)
+GENMD_RUN_COMMAND
+mlr --icsv --opprint \
+  join -j color --ul --ur -f data/prevtemp.csv \
+  then unsparsify --fill-with 0 \
+  then put '$count_delta = $current_count - $previous_count' \
+  data/currtemp.csv
+GENMD_EOF
 
 ## Memoization with out-of-stream variables
 

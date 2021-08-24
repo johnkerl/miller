@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-// For on-line help contexts like printing all the built-in DSL functions, or
+// For online help contexts like printing all the built-in DSL functions, or
 // the list of all verbs.
 func PrintWordsAsParagraph(words []string, o *os.File) {
 	separator := " "

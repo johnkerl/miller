@@ -6,7 +6,22 @@ As of Miller 5.0.0 you can define your own functions, as well as subroutines.
 
 Here's the obligatory example of a recursive function to compute the factorial function:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/factorial-example.sh)
+GENMD_RUN_COMMAND
+mlr --opprint --from data/small put '
+    func f(n) {
+        if (is_numeric(n)) {
+            if (n > 0) {
+                return n * f(n-1);
+            } else {
+                return 1;
+            }
+        }
+        # implicitly return absent-null if non-numeric
+    }
+    $ox = f($x + NR);
+    $oi = f($i);
+'
+GENMD_EOF
 
 Properties of user-defined functions:
 
@@ -30,7 +45,25 @@ Properties of user-defined functions:
 
 Example:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/subr-example.sh)
+GENMD_RUN_COMMAND
+mlr --opprint --from data/small put -q '
+  begin {
+    @call_count = 0;
+  }
+  subr s(n) {
+    @call_count += 1;
+    if (is_numeric(n)) {
+      if (n > 1) {
+        call s(n-1);
+      } else {
+        print "numcalls=" . @call_count;
+      }
+    }
+  }
+  print "NR=" . NR;
+  call s(NR);
+'
+GENMD_EOF
 
 Properties of user-defined subroutines:
 

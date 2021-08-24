@@ -5,7 +5,7 @@ See also the [list of issues tagged with go-port](https://github.com/johnkerl/mi
 
 ## Documentation improvements
 
-Documentation (what you're reading here) and on-line help (`mlr --help`) have been completely reworked.
+Documentation (what you're reading here) and online help (`mlr --help`) have been completely reworked.
 
 In the initial release, the focus was convincing users already familiar with
 `awk`/`grep`/`cut` that Miller was a viable alternative -- but over time it's
@@ -45,7 +45,7 @@ Binaries are reliably available using GitHub Actions: see also [Installation](in
 
 ## In-process support for compressed input
 
-In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly for `.z` and `.bz2` files.  Please see section [TODO:linkify] for more information.
+In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly for `.z` and `.bz2` files.  Please see the page on [Compressed data](reference-main-compressed-data.md) for more information.
 
 ## Output colorization
 

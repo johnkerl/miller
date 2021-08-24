@@ -154,6 +154,9 @@ func (repl *Repl) handleSession(istream *os.File) {
 
 		line, err := lineReader.ReadString('\n')
 		if err == io.EOF {
+			if repl.inputIsTerminal {
+				fmt.Println()
+			}
 			break
 		}
 
