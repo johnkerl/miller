@@ -219,7 +219,7 @@ OPTIONS
                      --jsonx --ojsonx  Keystroke-savers for --json --jvstack
                      --jsonx --ojsonx  and --ojson --jvstack, respectively.
                            --jlistwrap Wrap JSON output in outermost [ ].
-                   --oflatsep {string} Separator for flattening multi-level JSON keys,
+                   --flatsep {string} Separator for flattening multi-level JSON keys,
                                        e.g. '{"a":{"b":3}}' becomes a:b => 3 for
                                        non-JSON formats. Defaults to ..\n",
 
@@ -700,7 +700,7 @@ VERBS
        and value '{"b": { "c": 4 }}' becomes name 'a.b.c' and value 4.
        Options:
        -f Comma-separated list of field names to flatten (default all).
-       -s Separator, defaulting to mlr --oflatsep value.
+       -s Separator, defaulting to mlr --flatsep value.
        -h|--help Show this message.
 
    format-values
@@ -793,7 +793,8 @@ VERBS
 
    group-like
        Usage: mlr group-like [options]
-       Outputs records in batches having identical field names.Options:
+       Outputs records in batches having identical field names.
+       Options:
        -h|--help Show this message.
 
    having-fields
@@ -1465,7 +1466,7 @@ VERBS
        becomes name 'a' and value '{"b": { "c": 4 }}'.
        Options:
        -f {a,b,c} Comma-separated list of field names to unflatten (default all).
-       -s {string} Separator, defaulting to mlr --oflatsep value.
+       -s {string} Separator, defaulting to mlr --flatsep value.
        -h|--help Show this message.
 
    uniq
@@ -2520,4 +2521,4 @@ SEE ALSO
 
 
 
-                                  2021-07-08                         MILLER(1)
+                                  2021-08-23                         MILLER(1)

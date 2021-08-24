@@ -144,19 +144,53 @@ Out-of-stream variables are **read-write**: you can do `$sum=@sum`, `@sum=$sum`,
 
 Using an index on the `@count` and `@sum` variables, we get the benefit of the `-g` (group-by) option which `mlr stats1` and various other Miller commands have:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)
+GENMD_RUN_COMMAND
+mlr put -q '
+  @x_count[$a] += 1;
+  @x_sum[$a] += $x;
+  end {
+    emit @x_count, "a";
+    emit @x_sum, "a";
+  }
+' ./data/small
+GENMD_EOF
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)
+GENMD_RUN_COMMAND
+mlr stats1 -a count,sum -f x -g a ./data/small
+GENMD_EOF
 
 Indices can be arbitrarily deep -- here there are two or more of them:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)
+GENMD_RUN_COMMAND
+mlr --from data/medium put -q '
+  @x_count[$a][$b] += 1;
+  @x_sum[$a][$b] += $x;
+  end {
+    emit (@x_count, @x_sum), "a", "b";
+  }
+'
+GENMD_EOF
 
 The idea is that `stats1`, and other Miller verbs, encapsulate frequently-used patterns with a minimum of keystroking (and run a little faster), whereas using out-of-stream variables you have more flexibility and control in what you do.
 
 Begin/end blocks can be mixed with pattern/action blocks. For example:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)
+GENMD_RUN_COMMAND
+mlr put '
+  begin {
+    @num_total = 0;
+    @num_positive = 0;
+  };
+  @num_total += 1;
+  $x > 0.0 {
+    @num_positive += 1;
+    $y = log10($x); $z = sqrt($y)
+  };
+  end {
+    emitf @num_total, @num_positive
+  }
+' data/put-gating-example-1.dkvp
+GENMD_EOF
 
 ## Local variables
 
@@ -164,7 +198,24 @@ Local variables are similar to out-of-stream variables, except that their extent
 
 For example:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)
+GENMD_RUN_COMMAND
+# Here I'm using a specified random-number seed so this example always
+# produces the same output for this web document: in everyday practice we
+# would leave off the --seed 12345 part.
+mlr --seed 12345 seqgen --start 1 --stop 10 then put '
+  func f(a, b) {                          # function arguments a and b
+      r = 0.0;                            # local r scoped to the function
+      for (int i = 0; i < 6; i += 1) {    # local i scoped to the for-loop
+          num u = urand();                # local u scoped to the for-loop
+          r += u;                         # updates r from the enclosing scope
+      }
+      r /= 6;
+      return a + (b - a) * r;
+  }
+  num o = f(10, 20);                      # local to the top-level scope
+  $o = o;
+'
+GENMD_EOF
 
 Things which are completely unsurprising, resembling many other languages:
 
@@ -216,15 +267,51 @@ Miller's `put`/`filter` DSL has four kinds of hashmaps. **Stream records** are (
 
 For example, the following swaps the input stream's `a` and `i` fields, modifies `y`, and drops the rest:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-1.sh)
+GENMD_RUN_COMMAND
+mlr --opprint put '
+  $* = {
+    "a": $i,
+    "i": $a,
+    "y": $y * 10,
+  }
+' data/small
+GENMD_EOF
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-2.sh)
+GENMD_RUN_COMMAND
+mlr --from data/small put '
+  func f(map m): map {
+    m["x"] *= 200;
+    return m;
+  }
+  $* = f({"a": $a, "x": $x});
+'
+GENMD_EOF
 
 Like out-of-stream and local variables, map literals can be multi-level:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-3.sh)
+GENMD_RUN_COMMAND
+mlr --from data/small put -q '
+  begin {
+    @o = {
+      "nrec": 0,
+      "nkey": {"numeric":0, "non-numeric":0},
+    };
+  }
+  @o["nrec"] += 1;
+  for (k, v in $*) {
+    if (is_numeric(v)) {
+      @o["nkey"]["numeric"] += 1;
+    } else {
+      @o["nkey"]["non-numeric"] += 1;
+    }
+  }
+  end {
+    dump @o;
+  }
+'
+GENMD_EOF
 
 ## Type-checking
 

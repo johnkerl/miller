@@ -3,17 +3,26 @@
 
 ## Overview
 
-The outline of an invocation of Miller is
+The outline of an invocation of Miller is:
 
-* `mlr`
+* The program name `mlr`.
 * Options controlling input/output formatting, etc. (See [I/O options](reference-main-io-options.md)).
 * One or more verbs -- such as `cut`, `sort`, etc. (see [Verbs Reference](reference-verbs.md)) -- chained together using [then](reference-main-then-chaining.md). You use these to transform your data.
-* Zero or more filenames, with input taken from standard input if there are no filenames present.
+* Zero or more filenames, with input taken from standard input if there are no filenames present. (You can place the filenames up front using `--from` or `--mfrom` as described on the [keystroke-savers page](keystroke-savers.md#file-names-up-front-including-from).)
 
 For example, reading from a file:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint head -n 2 then sort -f shape example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag k index quantity rate
+red    square   true 2 15    79.2778  0.0130
+yellow triangle true 1 11    43.6498  9.8870
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --from example.csv --icsv --opprint head -n 2 then sort -f shape</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 color  shape    flag k index quantity rate
@@ -38,7 +47,7 @@ The rest of this reference section gives you full information on each of these p
 
 When you type `mlr {something} myfile.dat`, the `{something}` part is called a **verb**. It specifies how you want to transform your data. Most of the verbs are counterparts of built-in system tools like `cut` and `sort` -- but with file-format awareness, and giving you the ability to refer to fields by name.
 
-The verbs `put` and `filter` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found at [DSL reference](reference-dsl.md).
+The verbs `put` and `filter` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found at on the [Intro to Miller's programming language page](programming-language.md); see also [DSL reference](reference-dsl.md) for more details.
 
 Here's a comparison of verbs and `put`/`filter` DSL expressions:
 

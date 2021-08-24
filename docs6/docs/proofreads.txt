@@ -1,30 +1,28 @@
 ----------------------------------------------------------------
 ALL:
-* unvisited links are still blue -- ?!?
 * GENMD_INCLUDE_AND_RUN_ESCAPED -> remove and replace with GENMD_RUN_COMMAND
 * example.csv rename index to something else, and add i column, update any code samples which use index
 * csv to csv,tsv throughout
 * rid of explicitly passing around os.Stdout in all various help functions, annoying
 * het.dkvp > het.json in more places
 * check each page for adequate h2 coverage
+* hash-map / hashmap -> map everywhere
 
 ----------------------------------------------------------------
-w compression page: make one! :)
-w flatten/unflatten page: make one! :)
-w flesh out arrays page!
+E flatten/unflatten page: make one! :)
+E memory/streaming page
+E flesh out data-types page!
+E flesh out arrays page!
+E new maps page!
+  - insertion order ...
+  - for-k-v etc
+
+e reduce #digits in data/small
+e mcvt pass
 
 c GOMAXPROCS -- up it? separate page maybe -- ?
   - note one goroutine for in, out, & each verb
   - check and respect env-var
-
-* move aux-cmds down lower. maybe some other reorders as well.
-
-* new different-from-other-languages page
-  - no ++
-  - 1-up arrays
-    for (i = 1; i <= n; i += 1) { ... }
-  - hash-maps are order-preserving
-  - single-for over array: var is value; over map: var is key
 
 ----------------------------------------------------------------
 
@@ -56,12 +54,8 @@ record-heterogeneity:
 
 new-in-miller-6:
 w flatten/unflatten -- needs a new separate page
-l gzin/bz2in linkify
 ? TODO marks
-
-contributing:
-L add a pre-release note about https://johnkerl.org/miller6 & why no double RTD
-E update for sphinx -> mkdocs. and/or link to r.md.
+* ?? operator
 
 csv-with-and-without-headers:
 ? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
@@ -120,6 +114,7 @@ statistics-examples:
 two-pass-algorithms:
 l link to "new" verbs x everywhere possible
 l Of course, Miller verbs such as sort, tac, etc. all must ... -> linkify to new memory/streaming page
+x this (or wherever ...) maybe get rid of some of the too-many examples. pick some survivors; x the rest.
 
 misc examples:
 ? Program timing & subsequents -> another page
@@ -195,5 +190,9 @@ E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (d
   o 2 examples not 3?
   o why not '--oflatsep /' respected?
 
+reference-dsl-differences.md:
+l check for linkify opportunities
+
 manpage:
 ? [NEEDS READ-THROUGH]
+? 'Kerl .' and 'Veith .'

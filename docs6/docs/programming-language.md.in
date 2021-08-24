@@ -29,7 +29,12 @@ GENMD_RUN_COMMAND
 mlr --c2p put '$cost = $quantity * $rate; $index = $index * 100'  example.csv
 GENMD_EOF
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(dsl-example-multiline.sh)
+GENMD_RUN_COMMAND
+mlr --c2p put '
+  $cost = $quantity * $rate;
+  $index *= 100
+' example.csv
+GENMD_EOF
 
 One of Miller's key features is the ability to express data-transformation right there at the keyboard, interactively. But if you find yourself using expressions repeatedly, you can put everything between the single quotes into a file and refer to that using `put -f`:
 

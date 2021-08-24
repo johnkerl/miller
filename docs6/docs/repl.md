@@ -179,6 +179,6 @@ etc. depending on your platform.
 
 Suggestion: `alias mrpl='rlwrap mlr repl'` in your shell's startup file.
 
-## On-line help
+## Online help
 
 After `mlr repl`, type `:help` to see more about your options. In particular, `:help examples`.

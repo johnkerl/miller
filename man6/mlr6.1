@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-07-08
+.\"      Date: 2021-08-23
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-07-08" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-08-23" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -274,7 +274,7 @@ output separator to the given value.
               --jsonx --ojsonx  Keystroke-savers for --json --jvstack
               --jsonx --ojsonx  and --ojson --jvstack, respectively.
                     --jlistwrap Wrap JSON output in outermost [ ].
-            --oflatsep {string} Separator for flattening multi-level JSON keys,
+            --flatsep {string} Separator for flattening multi-level JSON keys,
                                 e.g. '{"a":{"b":3}}' becomes a:b => 3 for
                                 non-JSON formats. Defaults to ..\en",
 
@@ -919,7 +919,7 @@ Flattens multi-level maps to single-level ones. Example: field with name 'a'
 and value '{"b": { "c": 4 }}' becomes name 'a.b.c' and value 4.
 Options:
 -f Comma-separated list of field names to flatten (default all).
--s Separator, defaulting to mlr --oflatsep value.
+-s Separator, defaulting to mlr --flatsep value.
 -h|--help Show this message.
 .fi
 .if n \{\
@@ -1048,7 +1048,8 @@ Outputs records in batches having identical values at specified field names.Opti
 .\}
 .nf
 Usage: mlr group-like [options]
-Outputs records in batches having identical field names.Options:
+Outputs records in batches having identical field names.
+Options:
 -h|--help Show this message.
 .fi
 .if n \{\
@@ -1936,7 +1937,7 @@ Reverses flatten. Example: field with name 'a.b.c' and value 4
 becomes name 'a' and value '{"b": { "c": 4 }}'.
 Options:
 -f {a,b,c} Comma-separated list of field names to unflatten (default all).
--s {string} Separator, defaulting to mlr --oflatsep value.
+-s {string} Separator, defaulting to mlr --flatsep value.
 -h|--help Show this message.
 .fi
 .if n \{\

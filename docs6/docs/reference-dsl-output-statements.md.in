@@ -213,7 +213,18 @@ GENMD_EOF
 You can emit **multiple map-valued expressions side-by-side** by
 including their names in parentheses:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/emit-lashed.sh)
+GENMD_RUN_COMMAND
+mlr --from data/medium --opprint put -q '
+  @x_count[$a][$b] += 1;
+  @x_sum[$a][$b] += $x;
+  end {
+      for ((a, b), _ in @x_count) {
+          @x_mean[a][b] = @x_sum[a][b] / @x_count[a][b]
+      }
+      emit (@x_sum, @x_count, @x_mean), "a", "b"
+  }
+'
+GENMD_EOF
 
 What this does is walk through the first out-of-stream variable (`@x_sum` in this example) as usual, then for each keylist found (e.g. `pan,wye`), include the values for the remaining out-of-stream variables (here, `@x_count` and `@x_mean`). You should use this when all out-of-stream variables in the emit statement have **the same shape and the same keylists**.
 

@@ -61,37 +61,7 @@ Please see [Choices for printing to files](10min.md#choices-for-printing-to-file
 
 ## Compression
 
-Options:
-
-<pre class="pre-non-highlight-non-pair">
---prepipe {command}
-</pre>
-
-
-The prepipe command is anything which reads from standard input and produces data acceptable to Miller. Nominally this allows you to use whichever decompression utilities you have installed on your system, on a per-file basis. If the command has flags, quote them: e.g. `mlr --prepipe 'zcat -cf'`. Examples:
-
-<pre class="pre-non-highlight-non-pair">
-# These two produce the same output:
-$ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime
-$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz
-# With multiple input files you need --prepipe:
-$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz
-$ mlr --prepipe gunzip --idkvp --oxtab cut -f hostname,uptime myfile1.dat.gz myfile2.dat.gz
-</pre>
-
-<pre class="pre-non-highlight-non-pair">
-# Similar to the above, but with compressed output as well as input:
-$ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime | gzip > outfile.csv.gz
-$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz | gzip > outfile.csv.gz
-$ mlr --prepipe gunzip cut -f hostname,uptime myfile1.csv.gz myfile2.csv.gz | gzip > outfile.csv.gz
-</pre>
-
-<pre class="pre-non-highlight-non-pair">
-# Similar to the above, but with different compression tools for input and output:
-$ gunzip < myfile1.csv.gz | mlr cut -f hostname,uptime | xz -z > outfile.csv.xz
-$ xz -cd < myfile1.csv.xz | mlr cut -f hostname,uptime | gzip > outfile.csv.xz
-$ mlr --prepipe 'xz -cd' cut -f hostname,uptime myfile1.csv.xz myfile2.csv.xz | xz -z > outfile.csv.xz
-</pre>
+See the separate page on [Compressed data](reference-main-compressed-data.md).
 
 ## Record/field/pair separators
 

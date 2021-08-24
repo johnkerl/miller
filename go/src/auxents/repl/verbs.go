@@ -770,7 +770,7 @@ func usageQuit(repl *Repl) {
 }
 
 // The :quit command is handled outside this file; we have a help function,
-// though, to expose it for on-line help.
+// though, to expose it for online help.
 
 // ----------------------------------------------------------------
 func usageHelp(repl *Repl) {
@@ -957,7 +957,7 @@ delight. You may need 'brew install rlwrap', 'sudo apt-get install rlwrap',
 etc. depending on your platform.`)
 	fmt.Println()
 
-	fmt.Println(colorizer.MaybeColorizeHelp("On-line help:", true))
+	fmt.Println(colorizer.MaybeColorizeHelp("Online help:", true))
 	fmt.Println("Type ':h' or ':help' to see more about your options. In particular, ':help examples'.")
 }
 
