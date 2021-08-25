@@ -3,6 +3,7 @@
 // particular care is taken, which is what this file does.
 // ================================================================
 
+//go:build !windows
 // +build !windows
 
 package platform

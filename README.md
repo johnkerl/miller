@@ -43,6 +43,12 @@ of key-value-pair data in a variety of data formats.
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
+# Miller 6 (Go port) pre-release
+
+* Pre-release/WIP docs are at [http://johnkerl.org/miller6](http://johnkerl.org/miller6)
+* [go/README.md](./go/README.md)
+* [Tracking issue](https://github.com/johnkerl/miller/issues/372)
+
 # Build status
 
 [![Go-port multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
