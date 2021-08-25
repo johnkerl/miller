@@ -23,7 +23,7 @@ Namely, Miller supports the following five built-in variables for [filter and pu
 <b>mlr filter 'FNR == 2' data/small*</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
 1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
 a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
 </pre>
@@ -32,11 +32,11 @@ a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
 <b>mlr put '$fnr = FNR' data/small*</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,fnr=1
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,fnr=2
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,fnr=3
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,fnr=4
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,fnr=5
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,fnr=1
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,fnr=2
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,fnr=3
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,fnr=4
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,fnr=5
 1=a,2=b,3=i,4=x,5=y,fnr=1
 1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533,fnr=2
 1=eks,2=pan,3=2,4=0.7586799647899636,5=0.5221511083334797,fnr=3
@@ -121,66 +121,66 @@ Then using a computed field name, `$[ $[[3]] ]` is the value in the third field.
 <b>mlr cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put '$[[3]] = "NEW"' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,NEW=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,NEW=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,NEW=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,NEW=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,NEW=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,NEW=1,x=0.346791,y=0.726802
+a=eks,b=pan,NEW=2,x=0.758679,y=0.522151
+a=wye,b=wye,NEW=3,x=0.204603,y=0.338318
+a=eks,b=wye,NEW=4,x=0.381399,y=0.134188
+a=wye,b=pan,NEW=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put '$[[[3]]] = "NEW"' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=NEW,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=NEW,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=NEW,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=NEW,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=NEW,x=0.346791,y=0.726802
+a=eks,b=pan,i=NEW,x=0.758679,y=0.522151
+a=wye,b=wye,i=NEW,x=0.204603,y=0.338318
+a=eks,b=wye,i=NEW,x=0.381399,y=0.134188
+a=wye,b=pan,i=NEW,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put '$NEW = $[[NR]]' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=a
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=b
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=i
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=x
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=y
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,NEW=a
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,NEW=b
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,NEW=i
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,NEW=x
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,NEW=y
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put '$NEW = $[[[NR]]]' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=pan
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=pan
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=3
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=0.38139939387114097
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,NEW=pan
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,NEW=pan
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,NEW=3
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,NEW=0.381399
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,NEW=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put '$[[[NR]]] = "NEW"' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=NEW,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=NEW,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=NEW,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=NEW
+a=NEW,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=NEW,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=NEW,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=NEW,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=NEW
 </pre>
 
 Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than `NF` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
@@ -189,22 +189,22 @@ Right-hand side accesses to non-existent fields -- i.e. with index less than 1 o
 <b>mlr put '$[[6]] = "NEW"' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put '$[[[6]]] = "NEW"' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 ## Out-of-stream variables
@@ -268,18 +268,18 @@ Using an index on the `@count` and `@sum` variables, we get the benefit of the `
 a=pan,x_count=1
 a=eks,x_count=2
 a=wye,x_count=2
-a=pan,x_sum=0.3467901443380824
-a=eks,x_sum=1.1400793586611044
-a=wye,x_sum=0.7778922255683036
+a=pan,x_sum=0.346791
+a=eks,x_sum=1.140078
+a=wye,x_sum=0.777891
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr stats1 -a count,sum -f x -g a ./data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,x_count=1,x_sum=0.3467901443380824
-a=eks,x_count=2,x_sum=1.1400793586611044
-a=wye,x_count=2,x_sum=0.7778922255683036
+a=pan,x_count=1,x_sum=0.346791
+a=eks,x_count=2,x_sum=1.140078
+a=wye,x_count=2,x_sum=0.777891
 </pre>
 
 Indices can be arbitrarily deep -- here there are two or more of them:
@@ -517,11 +517,11 @@ i = -1;                     #
 for (i = 1, int j = 2; i <= 10; i += 1, j *= 2) {
                             # C-style triple-for variables use enclosing scope,
                             # unless declared local: i is outer, j is local to the loop.
-  print "inner i =" . i;    #
-  print "inner j =" . j;    #
+  print "inner i =", i;     #
+  print "inner j =", j;     #
 }                           #
-print "outer i =" . i;      # i has been modified by the loop.
-print "outer j =" . j;      # j is undefined in this scope.
+print "outer i =", i;       # i has been modified by the loop.
+print "outer j =", j;       # j is undefined in this scope.
 </pre>
 
 ## Map literals
@@ -541,11 +541,11 @@ For example, the following swaps the input stream's `a` and `i` fields, modifies
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a i   y
-1 pan 7.268028627434533
-2 eks 5.221511083334796
-3 wye 3.3831852551664774
-4 eks 1.3418874328430463
-5 wye 8.63624469903273
+1 pan 7.26802
+2 eks 5.22151
+3 wye 3.3831800000000003
+4 eks 1.34188
+5 wye 8.636239999999999
 </pre>
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
@@ -560,11 +560,11 @@ Likewise, you can assign map literals to out-of-stream variables or local variab
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,x=69.35802886761648
-a=eks,x=151.73599295799272
-a=wye,x=40.92066115326061
-a=eks,x=76.2798787742282
-a=wye,x=114.65778396040011
+a=pan,x=69.3582
+a=eks,x=151.7358
+a=wye,x=40.9206
+a=eks,x=76.2798
+a=wye,x=114.6576
 </pre>
 
 Like out-of-stream and local variables, map literals can be multi-level:
@@ -753,17 +753,17 @@ Example recursive copy of out-of-stream variables:
 <pre class="pre-non-highlight-in-pair">
 {
   "v": {
-    "sum": 2.264761728567491,
+    "sum": 2.26476,
     "count": 5
   }
 }
 {
   "v": {
-    "sum": 2.264761728567491,
+    "sum": 2.26476,
     "count": 5
   },
   "w": {
-    "sum": 2.264761728567491,
+    "sum": 2.26476,
     "count": 5
   }
 }
@@ -775,11 +775,11 @@ Example of out-of-stream variable assigned to full stream record, where the 2nd 
 <b>mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 Example of full stream record assigned to an out-of-stream variable, finding the record for which the `x` field has the largest value in the input stream:
@@ -788,11 +788,11 @@ Example of full stream record assigned to an out-of-stream variable, finding the
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -802,8 +802,8 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <b>' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                  y
-eks pan 2 0.7586799647899636 0.5221511083334797
+a   b   i x        y
+eks pan 2 0.758679 0.522151
 </pre>
 
 ## Keywords for filter and put

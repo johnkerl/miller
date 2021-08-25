@@ -21,24 +21,24 @@ These are as discussed in [File Formats](file-formats.md), with the exception of
 <b>mlr --opprint cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint --right cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-  a   b i                   x                   y 
-pan pan 1  0.3467901443380824  0.7268028627434533 
-eks pan 2  0.7586799647899636  0.5221511083334797 
-wye wye 3 0.20460330576630303 0.33831852551664776 
-eks wye 4 0.38139939387114097 0.13418874328430463 
-wye pan 5  0.5732889198020006  0.8636244699032729 
+  a   b i        x        y 
+pan pan 1 0.346791 0.726802 
+eks pan 2 0.758679 0.522151 
+wye wye 3 0.204603 0.338318 
+eks wye 4 0.381399 0.134188 
+wye pan 5 0.573288 0.863624 
 </pre>
 
 Additional notes:

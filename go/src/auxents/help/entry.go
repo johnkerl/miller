@@ -288,20 +288,20 @@ func helpDataFormats() {
 TSV: same but with tabs in places of commas
 +---------------------+
 | apple,bat,cog       |
-| 1,2,3               | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| 4,5,6               | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+| 1,2,3               | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| 4,5,6               | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +---------------------+
 
 JSON (sequence or array of objects):
 +---------------------+
 | {                   |
-|  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+|  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
 |  "bat": 2,          |
 |  "cog": 3           |
 | }                   |
 | {                   |
-|   "dish": {         | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
-|     "egg": 7,       |
+|   "dish": {         | Record 2: "dish:egg":"7",
+|     "egg": 7,       | "dish:flint":"8", "garlic":""
 |     "flint": 8      |
 |   },                |
 |   "garlic": ""      |
@@ -311,38 +311,38 @@ JSON (sequence or array of objects):
 PPRINT: pretty-printed tabular
 +---------------------+
 | apple bat cog       |
-| 1     2   3         | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| 4     5   6         | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+| 1     2   3         | Record 1: "apple:"1", "bat":"2", "cog":"3"
+| 4     5   6         | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +---------------------+
 
 Markdown tabular (supported for output only):
 +-----------------------+
 | | apple | bat | cog | |
 | | ---   | --- | --- | |
-| | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+| | 1     | 2   | 3   | | Record 1: "apple:"1", "bat":"2", "cog":"3"
+| | 4     | 5   | 6   | | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +-----------------------+
 
 XTAB: pretty-printed transposed tabular
 +---------------------+
-| apple 1             | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+| apple 1             | Record 1: "apple":"1", "bat":"2", "cog":"3"
 | bat   2             |
 | cog   3             |
 |                     |
-| dish 7              | Record 2: "dish" => "7", "egg" => "8"
+| dish 7              | Record 2: "dish":"7", "egg":"8"
 | egg  8              |
 +---------------------+
 
 DKVP: delimited key-value pairs (Miller default format)
 +---------------------+
-| apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-| dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
+| apple=1,bat=2,cog=3 | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
 +---------------------+
 
 NIDX: implicitly numerically indexed (Unix-toolkit style)
 +---------------------+
-| the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
-| fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
+| the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
+| fox jumped          | Record 2: "1":"fox", "2":"jumped"
 +---------------------+
 `)
 }

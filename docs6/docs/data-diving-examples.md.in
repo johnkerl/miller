@@ -4,52 +4,57 @@
 
 The [flins.csv](data/flins.csv) file is some sample data obtained from [https://support.spatialkey.com/spatialkey-sample-csv-data](https://support.spatialkey.com/spatialkey-sample-csv-data).
 
-Vertical-tabular format is good for a quick look at CSV data layout -- seeing what columns you have to work with:
+Vertical-tabular format is good for a quick look at CSV data layout -- seeing what columns you have to work with, as this is a file big enough that we can't just see it on a single screenful:
 
 GENMD_RUN_COMMAND
-mlr --icsv --oxtab --from data/flins.csv head -n 2
+wc -l data/flins.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2x --from data/flins.csv head -n 2
 GENMD_EOF
 
 A few simple queries:
 
 GENMD_RUN_COMMAND
-mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head
+mlr --c2p --from data/flins.csv count-distinct -f county | head
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line
+mlr --c2p --from data/flins.csv count-distinct -f line
 GENMD_EOF
 
 Categorization of total insured value:
 
 GENMD_RUN_COMMAND
-mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012
+mlr --c2x --from data/flins.csv stats1 -a min,mean,max -f tiv_2012
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --from data/flins.csv --icsv --opprint \
+mlr --c2p --from data/flins.csv \
   stats1 -a min,mean,max -f tiv_2012 -g construction,line
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --from data/flins.csv --icsv --oxtab \
+mlr --c2x --from data/flins.csv \
   stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --from data/flins.csv --icsv --opprint \
+mlr --c2p --from data/flins.csv \
   stats1 -a p95,p99,p100 -f hu_site_deductible -g county \
   then sort -f county | head
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --from data/flins.csv --icsv --oxtab \
+mlr --c2x --from data/flins.csv \
   stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --from data/flins.csv --icsv --opprint \
-  stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
+mlr --c2x --from data/flins.csv --ofmt '%.4f' \
+  stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county \
+  then head -n 5
 GENMD_EOF
 
 ## Color/shape data

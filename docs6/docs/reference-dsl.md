@@ -11,9 +11,9 @@ Example:
 <b>mlr stats1 -a sum -f x -g a data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,x_sum=0.3467901443380824
-a=eks,x_sum=1.1400793586611044
-a=wye,x_sum=0.7778922255683036
+a=pan,x_sum=0.346791
+a=eks,x_sum=1.140078
+a=wye,x_sum=0.777891
 </pre>
 
 * Verbs are coded in Go
@@ -28,9 +28,9 @@ Example:
 <b>mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,x_sum=0.3467901443380824
-a=eks,x_sum=1.1400793586611044
-a=wye,x_sum=0.7778922255683036
+a=pan,x_sum=0.346791
+a=eks,x_sum=1.140078
+a=wye,x_sum=0.777891
 </pre>
 
 * You get to write your own DSL expressions
@@ -119,11 +119,11 @@ input data:
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 you might retain only the records whose `a` field has value `eks`:
@@ -132,8 +132,8 @@ you might retain only the records whose `a` field has value `eks`:
 <b>mlr filter '$a == "eks"' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
 </pre>
 
 or you might add a new field which is a function of existing fields:
@@ -142,11 +142,11 @@ or you might add a new field which is a function of existing fields:
 <b>mlr put '$ab = $a . "_" . $b ' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,ab=pan_pan
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,ab=eks_pan
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,ab=wye_wye
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,ab=eks_wye
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,ab=wye_pan
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,ab=pan_pan
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,ab=eks_pan
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,ab=wye_wye
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,ab=eks_wye
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,ab=wye_pan
 </pre>
 
 ## Differences between put and filter

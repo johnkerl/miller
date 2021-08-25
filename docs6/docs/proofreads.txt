@@ -1,7 +1,5 @@
 ----------------------------------------------------------------
 ALL:
-* GENMD_INCLUDE_AND_RUN_ESCAPED -> remove and replace with GENMD_RUN_COMMAND
-* example.csv rename index to something else, and add i column, update any code samples which use index
 * csv to csv,tsv throughout
 * rid of explicitly passing around os.Stdout in all various help functions, annoying
 * het.dkvp > het.json in more places
@@ -17,13 +15,18 @@ E new maps page!
   - insertion order ...
   - for-k-v etc
 
-e reduce #digits in data/small
-e mcvt pass
-
 c GOMAXPROCS -- up it? separate page maybe -- ?
   - note one goroutine for in, out, & each verb
   - check and respect env-var
 
+e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
+? somewhere, do-it-all sequencing:
+  o go build
+  o go test
+  o make in man6
+  o regen.sh in docs6
+
+? why are purple.csv.cg red.csv.gz yellow.csv.gz changing on regens?
 ----------------------------------------------------------------
 
 index:
@@ -36,9 +39,6 @@ feature-comparison:
 E even with newlines -- show an example
 
 file-formats:
-* line-wrap the static text
-* => to :
-* remove "." on numbers
 w tabularize by concatenating keys: update
   o JSON-to-JSON
   o JSON-to-not
@@ -55,7 +55,8 @@ record-heterogeneity:
 new-in-miller-6:
 w flatten/unflatten -- needs a new separate page
 ? TODO marks
-* ?? operator
+* ?? and ??= operators
+  - link to BNF for operator-precedence table (wherever that is) as well
 
 csv-with-and-without-headers:
 ? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
@@ -88,14 +89,6 @@ dates-and-times:
 shell-commands:
 e while-read example from issues
 
-data-diving-examples:
-? mlr --from data/flins.csv --icsv --opprint \
-  stats1 -a min,mean,max -f tiv_2012 -g construction,line & next -- why zero output?
-? mlr --from data/flins.csv --icsv --opprint \
-  stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county -- more "_" b04k
-E head -n 6 data/colored-shapes.dkvp | mlr --opprint cat -- regen w/ fewer decimal places to avoid line-wraps
-E have a "conclusions:" ... w/ backrefs to generator scceipt & code-snippets
-
 log-processing-examples:
 l or Miller's having-fields, or is_present -> DSL is_present, & linkify
 ? grep 'various sorts' *.log \
@@ -109,7 +102,7 @@ data-cleaning-examples:
 ? mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv -- do false/true autotype -- ?
 
 statistics-examples:
-? 2nd card why no output?
+? 2nd card no output b/c stats1 --fr
 
 two-pass-algorithms:
 l link to "new" verbs x everywhere possible
@@ -124,15 +117,8 @@ E mlr --opprint bar --auto -f x,y data/small -> use some int data to avoid line-
 E data/colored-shapes.dkvp (this page & throughout) a CSV file ...
 * ... I ONLY READ UP TO CUT & PAUSED ...
 
-reference-main-io-options:
-E Compression: include new options
-
-reference-main-then-chaining:
-c On the other hand, Miller is single-threaded, while modern systems are usually multi-processor, and when streaming-data programs operate through pipes, each one can use a CPU. -> update for Go ... MAXPROCS ...
-
 reference-main-auxiliary-commands:
-c mlr lecat -> have the code use colors stuff not hard-coded -- ? patch into env vars -- ?
-c mlr lecat -> code check isatty
+c mlr lecat -> have the code use colors stuff not hard-coded -- ? patch into env vars -- ? code: check isatty.
 
 reference-main-data-types:
 E field values are usually strings -> update
@@ -159,9 +145,6 @@ d separate escaping for "\t" etc in arg-2/regex position -- "\t"."\t" example as
 
 reference-main-overview:
 E is that it is designed for -> write and link to streaming-operations page
-
-reference-dsl-variables:
-E cat data/type-decl-example.mlr -> narrow it
 
 reference-dsl-operators:
 c Operator precedence: add >>>; check for other new operators (like ??)

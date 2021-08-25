@@ -15,20 +15,20 @@ CSV/CSV-lite: comma-separated values with separate header line
 TSV: same but with tabs in places of commas
 +---------------------+
 | apple,bat,cog       |
-| 1,2,3               | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| 4,5,6               | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+| 1,2,3               | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| 4,5,6               | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +---------------------+
 
 JSON (sequence or array of objects):
 +---------------------+
 | {                   |
-|  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+|  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
 |  "bat": 2,          |
 |  "cog": 3           |
 | }                   |
 | {                   |
-|   "dish": {         | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
-|     "egg": 7,       |
+|   "dish": {         | Record 2: "dish:egg":"7",
+|     "egg": 7,       | "dish:flint":"8", "garlic":""
 |     "flint": 8      |
 |   },                |
 |   "garlic": ""      |
@@ -38,38 +38,38 @@ JSON (sequence or array of objects):
 PPRINT: pretty-printed tabular
 +---------------------+
 | apple bat cog       |
-| 1     2   3         | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| 4     5   6         | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+| 1     2   3         | Record 1: "apple:"1", "bat":"2", "cog":"3"
+| 4     5   6         | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +---------------------+
 
 Markdown tabular (supported for output only):
 +-----------------------+
 | | apple | bat | cog | |
 | | ---   | --- | --- | |
-| | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+| | 1     | 2   | 3   | | Record 1: "apple:"1", "bat":"2", "cog":"3"
+| | 4     | 5   | 6   | | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +-----------------------+
 
 XTAB: pretty-printed transposed tabular
 +---------------------+
-| apple 1             | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+| apple 1             | Record 1: "apple":"1", "bat":"2", "cog":"3"
 | bat   2             |
 | cog   3             |
 |                     |
-| dish 7              | Record 2: "dish" => "7", "egg" => "8"
+| dish 7              | Record 2: "dish":"7", "egg":"8"
 | egg  8              |
 +---------------------+
 
 DKVP: delimited key-value pairs (Miller default format)
 +---------------------+
-| apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-| dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
+| apple=1,bat=2,cog=3 | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
 +---------------------+
 
 NIDX: implicitly numerically indexed (Unix-toolkit style)
 +---------------------+
-| the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
-| fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
+| the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
+| fox jumped          | Record 2: "1":"fox", "2":"jumped"
 +---------------------+
 </pre>
 
@@ -116,11 +116,11 @@ Miller's default file format is DKVP, for **delimited key-value pairs**. Example
 <b>mlr cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 Such data are easy to generate, e.g. in Ruby with
@@ -170,22 +170,22 @@ Example with index-numbered output:
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --onidx --ofs ' ' cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-pan pan 1 0.3467901443380824 0.7268028627434533
-eks pan 2 0.7586799647899636 0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006 0.8636244699032729
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 Example with index-numbered input:
@@ -260,13 +260,13 @@ An **array of single-level objects** is, quite simply, **a table**:
 <pre class="pre-non-highlight-in-pair">
 {
   "color": "yellow",
-  "u": 0.6321695890307647,
-  "v": 0.9887207810889004
+  "u": 0.632170,
+  "v": 0.988721
 }
 {
   "color": "red",
-  "u": 0.21966833570651523,
-  "v": 0.001257332190235938
+  "u": 0.219668,
+  "v": 0.001257
 }
 </pre>
 
@@ -274,10 +274,10 @@ An **array of single-level objects** is, quite simply, **a table**:
 <b>mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-shape    u_mean              u_stddev            u_count
-triangle 0.5839952367477192  0.13118354465618046 3
-square   0.409355036804889   0.3654281755508655  4
-circle   0.36601268553826866 0.2090944565900053  3
+shape    u_mean             u_stddev            u_count
+triangle 0.5839953333333333 0.1311840005882324  3
+square   0.40935475         0.36542809552028616 4
+circle   0.3660126666666667 0.20909443245656578 3
 </pre>
 
 ### Nested JSON objects
@@ -436,23 +436,23 @@ Miller's pretty-print format is like CSV, but column-aligned.  For example, comp
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
+pan,pan,1,0.346791,0.726802
+eks,pan,2,0.758679,0.522151
+wye,wye,3,0.204603,0.338318
+eks,wye,4,0.381399,0.134188
+wye,pan,5,0.573288,0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on `tail -f` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
@@ -465,15 +465,15 @@ For output only (this isn't supported in the input-scanner as of 5.0.0) you can 
 <b>mlr --opprint --barred cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-+-----+-----+---+---------------------+---------------------+
-| a   | b   | i | x                   | y                   |
-+-----+-----+---+---------------------+---------------------+
-| pan | pan | 1 | 0.3467901443380824  | 0.7268028627434533  |
-| eks | pan | 2 | 0.7586799647899636  | 0.5221511083334797  |
-| wye | wye | 3 | 0.20460330576630303 | 0.33831852551664776 |
-| eks | wye | 4 | 0.38139939387114097 | 0.13418874328430463 |
-| wye | pan | 5 | 0.5732889198020006  | 0.8636244699032729  |
-+-----+-----+---+---------------------+---------------------+
++-----+-----+---+----------+----------+
+| a   | b   | i | x        | y        |
++-----+-----+---+----------+----------+
+| pan | pan | 1 | 0.346791 | 0.726802 |
+| eks | pan | 2 | 0.758679 | 0.522151 |
+| wye | wye | 3 | 0.204603 | 0.338318 |
+| eks | wye | 4 | 0.381399 | 0.134188 |
+| wye | pan | 5 | 0.573288 | 0.863624 |
++-----+-----+---+----------+----------+
 </pre>
 
 ## XTAB: Vertical tabular
@@ -553,11 +553,11 @@ Markdown format looks like this:
 <pre class="pre-non-highlight-in-pair">
 | a | b | i | x | y |
 | --- | --- | --- | --- | --- |
-| pan | pan | 1 | 0.3467901443380824 | 0.7268028627434533 |
-| eks | pan | 2 | 0.7586799647899636 | 0.5221511083334797 |
-| wye | wye | 3 | 0.20460330576630303 | 0.33831852551664776 |
-| eks | wye | 4 | 0.38139939387114097 | 0.13418874328430463 |
-| wye | pan | 5 | 0.5732889198020006 | 0.8636244699032729 |
+| pan | pan | 1 | 0.346791 | 0.726802 |
+| eks | pan | 2 | 0.758679 | 0.522151 |
+| wye | wye | 3 | 0.204603 | 0.338318 |
+| eks | wye | 4 | 0.381399 | 0.134188 |
+| wye | pan | 5 | 0.573288 | 0.863624 |
 </pre>
 
 which renders like this when dropped into various web tools (e.g. github comments):

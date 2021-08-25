@@ -160,22 +160,22 @@ Example: columns `x,i,a` were requested but they appear here in the order `a,i,x
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr cut -f x,i,a data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,i=1,x=0.3467901443380824
-a=eks,i=2,x=0.7586799647899636
-a=wye,i=3,x=0.20460330576630303
-a=eks,i=4,x=0.38139939387114097
-a=wye,i=5,x=0.5732889198020006
+a=pan,i=1,x=0.346791
+a=eks,i=2,x=0.758679
+a=wye,i=3,x=0.204603
+a=eks,i=4,x=0.381399
+a=wye,i=5,x=0.573288
 </pre>
 
 The issue is that Miller's `cut`, by default, outputs cut fields in the order they appear in the input data. This design decision was made intentionally to parallel the Unix/Linux system `cut` command, which has the same semantics.
@@ -186,11 +186,11 @@ The solution is to use the `-o` option:
 <b>mlr cut -o -f x,i,a data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x=0.3467901443380824,i=1,a=pan
-x=0.7586799647899636,i=2,a=eks
-x=0.20460330576630303,i=3,a=wye
-x=0.38139939387114097,i=4,a=eks
-x=0.5732889198020006,i=5,a=wye
+x=0.346791,i=1,a=pan
+x=0.758679,i=2,a=eks
+x=0.204603,i=3,a=wye
+x=0.381399,i=4,a=eks
+x=0.573288,i=5,a=wye
 </pre>
 
 ## Numbering and renumbering records
@@ -201,22 +201,22 @@ The `awk`-like built-in variable `NR` is incremented for each input record:
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put '$nr = NR' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nr=1
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nr=2
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,nr=4
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,nr=1
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,nr=2
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,nr=3
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,nr=4
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,nr=5
 </pre>
 
 However, this is the record number within the original input stream -- not after any filtering you may have done:
@@ -225,8 +225,8 @@ However, this is the record number within the original input stream -- not after
 <b>mlr filter '$a == "wye"' then put '$nr = NR' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,nr=3
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,nr=5
 </pre>
 
 There are two good options here. One is to use the `cat` verb with `-n`:
@@ -235,8 +235,8 @@ There are two good options here. One is to use the `cat` verb with `-n`:
 <b>mlr filter '$a == "wye"' then cat -n data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-n=1,a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+n=1,a=wye,b=wye,i=3,x=0.204603,y=0.338318
+n=2,a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 The other is to keep your own counter within the `put` DSL:
@@ -245,8 +245,8 @@ The other is to keep your own counter within the `put` DSL:
 <b>mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,n=1
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,n=1
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,n=2
 </pre>
 
 The difference is a matter of taste (although `mlr cat -n` puts the counter first).

@@ -35,11 +35,11 @@ Newlines within the expression are ignored, which can help increase legibility o
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a   b   i     x                    y                    nf nr fnr filenum filename
-pan pan 1     0.3467901443380824   0.7268028627434533   5  1  1   1       data/small
-eks pan 2     0.7586799647899636   0.5221511083334797   5  2  2   1       data/small
-wye wye 3     0.20460330576630303  0.33831852551664776  5  3  3   1       data/small
-eks wye 4     0.38139939387114097  0.13418874328430463  5  4  4   1       data/small
-wye pan 5     0.5732889198020006   0.8636244699032729   5  5  5   1       data/small
+pan pan 1     0.346791             0.726802             5  1  1   1       data/small
+eks pan 2     0.758679             0.522151             5  2  2   1       data/small
+wye wye 3     0.204603             0.338318             5  3  3   1       data/small
+eks wye 4     0.381399             0.134188             5  4  4   1       data/small
+wye pan 5     0.573288             0.863624             5  5  5   1       data/small
 pan eks 9999  0.267481232652199086 0.557077185510228001 5  6  1   2       data/small2
 wye eks 10000 0.734806020620654365 0.884788571337605134 5  7  2   2       data/small2
 pan wye 10001 0.870530722602517626 0.009854780514656930 5  8  3   2       data/small2
@@ -65,22 +65,22 @@ The simplest way to enter expressions for `put` and `filter` is between single q
 <b>mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,xy=0.805298171415408
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,xy=0.9209970096813562
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,xy=0.3953750836016352
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,xy=0.40431623334340655
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,xy=1.036583592538489
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --from data/small put 'func f(a, b) { return sqrt(a**2 + b**2) } $xy = f($x, $y)'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,xy=0.805298171415408
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,xy=0.9209970096813562
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,xy=0.3953750836016352
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,xy=0.40431623334340655
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,xy=1.036583592538489
 </pre>
 
 You may, though, find it convenient to put expressions into files for reuse, and read them
@@ -100,11 +100,11 @@ $xy = f($x, $y)
 <b>mlr --from data/small put -f data/fe-example-3.mlr</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,xy=0.805298171415408
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,xy=0.9209970096813562
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,xy=0.3953750836016352
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,xy=0.40431623334340655
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,xy=1.036583592538489
 </pre>
 
 If you have some of the logic in a file and you want to write the rest on the command line, you can **use the -f and -e options together**:
@@ -122,11 +122,11 @@ func f(a, b) {
 <b>mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.8052985815845617
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.9209978658539777
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.3953756915115773
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.40431685157744135
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584492737304
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,xy=0.805298171415408
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,xy=0.9209970096813562
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,xy=0.3953750836016352
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,xy=0.40431623334340655
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,xy=1.036583592538489
 </pre>
 
 A suggested use-case here is defining functions in files, and calling them from command-line expressions.

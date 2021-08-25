@@ -174,32 +174,32 @@ NR = 1
   key: a value: pan
   key: b value: pan
   key: i value: 1
-  key: x value: 0.3467901443380824
-  key: y value: 0.7268028627434533
+  key: x value: 0.346791
+  key: y value: 0.726802
 NR = 2
   key: a value: eks
   key: b value: pan
   key: i value: 2
-  key: x value: 0.7586799647899636
-  key: y value: 0.5221511083334797
+  key: x value: 0.758679
+  key: y value: 0.522151
 NR = 3
   key: a value: wye
   key: b value: wye
   key: i value: 3
-  key: x value: 0.20460330576630303
-  key: y value: 0.33831852551664776
+  key: x value: 0.204603
+  key: y value: 0.338318
 NR = 4
   key: a value: eks
   key: b value: wye
   key: i value: 4
-  key: x value: 0.38139939387114097
-  key: y value: 0.13418874328430463
+  key: x value: 0.381399
+  key: y value: 0.134188
 NR = 5
   key: a value: wye
   key: b value: pan
   key: i value: 5
-  key: x value: 0.5732889198020006
-  key: y value: 0.8636244699032729
+  key: x value: 0.573288
+  key: y value: 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -281,12 +281,12 @@ yellow blue   140 0   240 380  380  380
 <b>mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   a_type b_type i_type x_type y_type
-pan pan 1 0.3467901443380824  0.7268028627434533  string string int    float  float
-eks pan 2 0.7586799647899636  0.5221511083334797  string string int    float  float
-wye wye 3 0.20460330576630303 0.33831852551664776 string string int    float  float
-eks wye 4 0.38139939387114097 0.13418874328430463 string string int    float  float
-wye pan 5 0.5732889198020006  0.8636244699032729  string string int    float  float
+a   b   i x        y        a_type b_type i_type x_type y_type
+pan pan 1 0.346791 0.726802 string string int    float  float
+eks pan 2 0.758679 0.522151 string string int    float  float
+wye wye 3 0.204603 0.338318 string string int    float  float
+eks wye 4 0.381399 0.134188 string string int    float  float
+wye pan 5 0.573288 0.863624 string string int    float  float
 </pre>
 
 Note that the value of the current field in the for-loop can be gotten either using the bound variable `value`, or through a **computed field name** using square brackets as in `$[key]`.
@@ -306,12 +306,12 @@ Important note: to avoid inconsistent looping behavior in case you're setting ne
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   sum1               sum2
-pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356 8.294372028326142
-eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443  13.123324292493772
-wye wye 3 0.20460330576630303 0.33831852551664776 3.5429218312829507 14.171687325131803
-eks wye 4 0.38139939387114097 0.13418874328430463 4.515588137155445  18.06235254862178
-wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273  25.747653558821092
+a   b   i x        y        sum1               sum2
+pan pan 1 0.346791 0.726802 2.073593           8.294372
+eks pan 2 0.758679 0.522151 3.28083            13.12332
+wye wye 3 0.204603 0.338318 3.542921           14.171684
+eks wye 4 0.381399 0.134188 4.515587           18.062348
+wye pan 5 0.573288 0.863624 6.4369119999999995 25.747647999999998
 </pre>
 
 It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
@@ -328,12 +328,12 @@ It can be confusing to modify the stream record while iterating over a copy of i
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   sum
-pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356
-eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443
-wye wye 3 0.20460330576630303 0.33831852551664776 3.5429218312829507
-eks wye 4 0.38139939387114097 0.13418874328430463 4.515588137155445
-wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273
+a   b   i x        y        sum
+pan pan 1 0.346791 0.726802 2.073593
+eks pan 2 0.758679 0.522151 3.28083
+wye wye 3 0.204603 0.338318 3.542921
+eks wye 4 0.381399 0.134188 4.515587
+wye pan 5 0.573288 0.863624 6.4369119999999995
 </pre>
 
 You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
@@ -466,12 +466,12 @@ These are supported as follows:
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   suma
-pan pan 1 0.3467901443380824  0.7268028627434533  1
-eks pan 2 0.7586799647899636  0.5221511083334797  3
-wye wye 3 0.20460330576630303 0.33831852551664776 6
-eks wye 4 0.38139939387114097 0.13418874328430463 10
-wye pan 5 0.5732889198020006  0.8636244699032729  15
+a   b   i x        y        suma
+pan pan 1 0.346791 0.726802 1
+eks pan 2 0.758679 0.522151 3
+wye wye 3 0.204603 0.338318 6
+eks wye 4 0.381399 0.134188 10
+wye pan 5 0.573288 0.863624 15
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -487,12 +487,12 @@ wye pan 5 0.5732889198020006  0.8636244699032729  15
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   suma sumb
-pan pan 1 0.3467901443380824  0.7268028627434533  1    1
-eks pan 2 0.7586799647899636  0.5221511083334797  3    3
-wye wye 3 0.20460330576630303 0.33831852551664776 6    7
-eks wye 4 0.38139939387114097 0.13418874328430463 10   15
-wye pan 5 0.5732889198020006  0.8636244699032729  15   31
+a   b   i x        y        suma sumb
+pan pan 1 0.346791 0.726802 1    1
+eks pan 2 0.758679 0.522151 3    3
+wye wye 3 0.204603 0.338318 6    7
+eks wye 4 0.381399 0.134188 10   15
+wye pan 5 0.573288 0.863624 15   31
 </pre>
 
 Notes:
@@ -519,12 +519,12 @@ Miller supports an `awk`-like `begin/end` syntax.  The statements in the `begin`
 <b>' ./data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-x_sum=2.264761728567491
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
+x_sum=2.26476
 </pre>
 
 Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in `awk`, where they'd default to 0 either way), the above can be written more succinctly as
@@ -536,12 +536,12 @@ Since uninitialized out-of-stream variables default to 0 for addition/substracti
 <b>' ./data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-x_sum=2.264761728567491
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
+x_sum=2.26476
 </pre>
 
 The **put -q** option suppresses printing of each output record, with only `emit` statements being output. So to get only summary outputs, you could write
@@ -553,7 +553,7 @@ The **put -q** option suppresses printing of each output record, with only `emit
 <b>' ./data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x_sum=2.264761728567491
+x_sum=2.26476
 </pre>
 
 We can do similarly with multiple out-of-stream variables:
@@ -570,7 +570,7 @@ We can do similarly with multiple out-of-stream variables:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x_count=5
-x_sum=2.264761728567491
+x_sum=2.26476
 </pre>
 
 This is of course (see also [here](reference-dsl.md#verbs-compared-to-dsl)) not much different than
@@ -579,7 +579,7 @@ This is of course (see also [here](reference-dsl.md#verbs-compared-to-dsl)) not 
 <b>mlr stats1 -a count,sum -f x ./data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x_count=5,x_sum=2.264761728567491
+x_count=5,x_sum=2.26476
 </pre>
 
 Note that it's a syntax error for begin/end blocks to refer to field names (beginning with `$`), since begin/end blocks execute outside the context of input records.
