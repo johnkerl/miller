@@ -49,29 +49,7 @@ of key-value-pair data in a variety of data formats.
 * [go/README.md](./go/README.md)
 * [Tracking issue](https://github.com/johnkerl/miller/issues/372)
 
-# Build status
-
-[![Go-port multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
-
-[License: BSD2](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
-
-[Docs](https://miller.readthedocs.io/en/latest/?badge=latest)
-
-# Community
-
-* Discussion forum: https://github.com/johnkerl/miller/discussions
-* Feature requests / bug reports: https://github.com/johnkerl/miller/issues
-
-# Contributors
-
-Thanks to all the fine people who help make Miller better by contributing commits/PRs! (I wish there
-were an equally good way to honor all the fine people who contribute through issues and feature requests!)
-
-<a href="https://github.com/johnkerl/miller/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
-</a>
-
-# Distributions
+# Installing
 
 There's a good chance you can get Miller pre-built for your system:
 
@@ -98,6 +76,28 @@ There's a good chance you can get Miller pre-built for your system:
 |Windows|`choco install miller`|
 
 See also [building from source](https://miller.readthedocs.io/en/latest/build.html).
+
+# Build status
+
+[![Go-port multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
+
+[License: BSD2](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
+
+[Docs](https://miller.readthedocs.io/en/latest/?badge=latest)
+
+# Community
+
+* Discussion forum: https://github.com/johnkerl/miller/discussions
+* Feature requests / bug reports: https://github.com/johnkerl/miller/issues
+
+# Contributors
+
+Thanks to all the fine people who help make Miller better by contributing commits/PRs! (I wish there
+were an equally good way to honor all the fine people who contribute through issues and feature requests!)
+
+<a href="https://github.com/johnkerl/miller/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
+</a>
 
 # Features
 
