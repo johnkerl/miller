@@ -29,8 +29,8 @@ DESCRIPTION
 EXAMPLES
    COMMAND-LINE SYNTAX
        mlr --csv cut -f hostname,uptime mydata.csv
-       mlr --tsv --rs lf filter '$status != "down" && $upsec >= 10000' *.tsv
-       mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
+       mlr --tsv --rs lf filter '$status != "down" && $upsec &gt;= 10000' *.tsv
+       mlr --nidx put '$sum = $7 &lt; 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
        grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
        mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
        mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
@@ -45,40 +45,40 @@ EXAMPLES
 	 }
 	 $mean = $sum / $count # no assignment if count unset'
        mlr --from infile.dat put -f analyze.mlr
-       mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'
-       mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'
+       mlr --from infile.dat put 'tee &gt; "./taps/data-".$a."-".$b, $*'
+       mlr --from infile.dat put 'tee | "gzip &gt; ./taps/data-".$a."-".$b.".gz", $*'
        mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
-       mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+       mlr --from infile.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
 
    DATA FORMATS
 	 DKVP: delimited key-value pairs (Miller default format)
 	 +---------------------+
-	 | apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-	 | dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
+	 | apple=1,bat=2,cog=3 | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+	 | dish=7,egg=8,flint  | Record 2: "dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"
 	 +---------------------+
 
 	 NIDX: implicitly numerically indexed (Unix-toolkit style)
 	 +---------------------+
-	 | the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
-	 | fox jumped	       | Record 2: "1" => "fox", "2" => "jumped"
+	 | the quick brown     | Record 1: "1" =&gt; "the", "2" =&gt; "quick", "3" =&gt; "brown"
+	 | fox jumped	       | Record 2: "1" =&gt; "fox", "2" =&gt; "jumped"
 	 +---------------------+
 
 	 CSV/CSV-lite: comma-separated values with separate header line
 	 +---------------------+
 	 | apple,bat,cog       |
-	 | 1,2,3	       | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-	 | 4,5,6	       | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+	 | 1,2,3	       | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+	 | 4,5,6	       | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
 	 +---------------------+
 
 	 Tabular JSON: nested objects are supported, although arrays within them are not:
 	 +---------------------+
 	 | {		       |
-	 |  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+	 |  "apple": 1,        | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
 	 |  "bat": 2,	       |
 	 |  "cog": 3	       |
 	 | }		       |
 	 | {		       |
-	 |   "dish": {	       | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
+	 |   "dish": {	       | Record 2: "dish:egg" =&gt; "7", "dish:flint" =&gt; "8", "garlic" =&gt; ""
 	 |     "egg": 7,       |
 	 |     "flint": 8      |
 	 |   }, 	       |
@@ -89,17 +89,17 @@ EXAMPLES
 	 PPRINT: pretty-printed tabular
 	 +---------------------+
 	 | apple bat cog       |
-	 | 1	 2   3	       | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-	 | 4	 5   6	       | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+	 | 1	 2   3	       | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+	 | 4	 5   6	       | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
 	 +---------------------+
 
 	 XTAB: pretty-printed transposed tabular
 	 +---------------------+
-	 | apple 1	       | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+	 | apple 1	       | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
 	 | bat	 2	       |
 	 | cog	 3	       |
 	 |		       |
-	 | dish 7	       | Record 2: "dish" => "7", "egg" => "8"
+	 | dish 7	       | Record 2: "dish" =&gt; "7", "egg" =&gt; "8"
 	 | egg	8	       |
 	 +---------------------+
 
@@ -107,8 +107,8 @@ EXAMPLES
 	 +-----------------------+
 	 | | apple | bat | cog | |
 	 | | ---   | --- | --- | |
-	 | | 1	   | 2	 | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-	 | | 4	   | 5	 | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+	 | | 1	   | 2	 | 3   | | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+	 | | 4	   | 5	 | 6   | | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
 	 +-----------------------+
 
 OPTIONS
@@ -140,8 +140,8 @@ OPTIONS
 	top uniq unsparsify
 
    FUNCTION LIST
-	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ << >> bitcount == != =~ !=~
-	> >= < <= && || ^^ ! ? : . gsub regextract regextract_or_else strlen sub ssub
+	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ &lt;&lt; &gt;&gt; bitcount == != =~ !=~
+	&gt; &gt;= &lt; &lt;= && || ^^ ! ? : . gsub regextract regextract_or_else strlen sub ssub
 	substr tolower toupper truncate capitalize lstrip rstrip strip
 	collapse_whitespace clean_whitespace system abs acos acosh asin asinh atan
 	atan2 atanh cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10
@@ -220,7 +220,7 @@ OPTIONS
 			    --jvquoteall Quote map values in JSON output, even if they're
 					 numeric.
 		     --jflatsep {string} Separator for flattening multi-level JSON keys,
-					 e.g. '{"a":{"b":3}}' becomes a:b => 3 for
+					 e.g. '{"a":{"b":3}}' becomes a:b =&gt; 3 for
 					 non-JSON formats. Defaults to :.
 
 	 -p is a keystroke-saver for --nidx --fs space --repifs
@@ -265,13 +265,13 @@ OPTIONS
 
    COMPRESSED I/O
 	 --prepipe {command} This allows Miller to handle compressed inputs. You can do
-	 without this for single input files, e.g. "gunzip < myfile.csv.gz | mlr ...".
+	 without this for single input files, e.g. "gunzip &lt; myfile.csv.gz | mlr ...".
 
 	 However, when multiple input files are present, between-file separations are
 	 lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can
 	 specify an action to be taken on each input file. This pre-pipe command must
 	 be able to read from standard input; it will be invoked with
-	   {command} < {filename}.
+	   {command} &lt; {filename}.
 	 Examples:
 	   mlr --prepipe 'gunzip'
 	   mlr --prepipe 'zcat -cf'
@@ -588,7 +588,7 @@ VERBS
        --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
        --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
        Any of the output-format command-line flags (see mlr -h). Example: using
-	 mlr --icsv --opprint ... then put --ojson 'tee > "mytap-".$a.".dat", $*' then ...
+	 mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
        the input is CSV, the output is pretty-print tabular, but the tee-file output
        is written in JSON format.
        --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
@@ -635,11 +635,11 @@ VERBS
        Use # to comment to end of line.
 
        Examples:
-	 mlr filter 'log10($count) > 4.0'
+	 mlr filter 'log10($count) &gt; 4.0'
 	 mlr filter 'FNR == 2'	       (second record in each file)
-	 mlr filter 'urand() < 0.001'  (subsampling)
-	 mlr filter '$color != "blue" && $value > 4.2'
-	 mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'
+	 mlr filter 'urand() &lt; 0.001'  (subsampling)
+	 mlr filter '$color != "blue" && $value &gt; 4.2'
+	 mlr filter '($x&lt;.5 && $y&lt;.5) || ($x&gt;.5 && $y&gt;.5)'
 	 mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
 	 mlr filter '$ab = $a+$b; $cd = $c+$d; $ab != $cd'
 	 mlr filter '
@@ -766,7 +766,7 @@ VERBS
        --auto	     Automatically computes limits, ignoring --lo and --hi.
 		     Holds all values in memory before producing any output.
        -o {prefix}   Prefix for output field name. Default: no prefix.
-       Just a histogram. Input values < lo or > hi are not counted.
+       Just a histogram. Input values &lt; lo or &gt; hi are not counted.
 
    join
        Usage: mlr join [options]
@@ -962,7 +962,7 @@ VERBS
        --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
        --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
        Any of the output-format command-line flags (see mlr -h). Example: using
-	 mlr --icsv --opprint ... then put --ojson 'tee > "mytap-".$a.".dat", $*' then ...
+	 mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
        the input is CSV, the output is pretty-print tabular, but the tee-file output
        is written in JSON format.
        --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
@@ -1011,8 +1011,8 @@ VERBS
 
        Examples:
 	 mlr put '$y = log10($x); $z = sqrt($y)'
-	 mlr put '$x>0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x > 0.0
-	 mlr put '$x>0.0;  $y=log10($x); $z=sqrt($y)'	# does all three statements
+	 mlr put '$x&gt;0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x &gt; 0.0
+	 mlr put '$x&gt;0.0;  $y=log10($x); $z=sqrt($y)'	# does all three statements
 	 mlr put '$a =~ "([a-z]+)_([0-9]+);  $b = "left_\1"; $c = "right_\2"'
 	 mlr put '$a =~ "([a-z]+)_([0-9]+) { $b = "left_\1"; $c = "right_\2" }'
 	 mlr put '$filename = FILENAME'
@@ -1023,7 +1023,7 @@ VERBS
 	 mlr put -q '@sum[$a] += $x; end {emit @sum, "a"}'
 	 mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}'
 	 mlr put -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'
-	 mlr put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
+	 mlr put -q 'is_null(@xmax) || $x &gt; @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
 	 mlr put '
 	   $x = 1;
 	  #$y = 2;
@@ -1482,10 +1482,10 @@ FUNCTIONS FOR FILTER/PUT
        (class=arithmetic #args=1): Bitwise NOT. Beware '$y=~$x' since =~ is the
        regex-match operator: try '$y = ~$x'.
 
-   <<
+   &lt;&lt;
        (class=arithmetic #args=2): Bitwise left-shift.
 
-   >>
+   &gt;&gt;
        (class=arithmetic #args=2): Bitwise right-shift.
 
    bitcount
@@ -1507,19 +1507,19 @@ FUNCTIONS FOR FILTER/PUT
        (class=boolean #args=2): String (left-hand side) does not match regex
        (right-hand side), e.g. '$name !=~ "^a.*b$"'.
 
-   >
+   &gt;
        (class=boolean #args=2): String/numeric greater-than. Mixing number and string
        results in string compare.
 
-   >=
+   &gt;=
        (class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
        and string results in string compare.
 
-   <
+   &lt;
        (class=boolean #args=2): String/numeric less-than. Mixing number and string
        results in string compare.
 
-   <=
+   &lt;=
        (class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
        and string results in string compare.
 
@@ -1993,7 +1993,7 @@ FUNCTIONS FOR FILTER/PUT
        E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
 
    mapsum
-       (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
+       (class=maps variadic): With 0 args, returns empty map. With &gt;= 1 arg, returns a map with
        key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 
    splitkv
@@ -2046,19 +2046,19 @@ KEYWORDS FOR PUT AND FILTER
        dump: prints all currently defined out-of-stream variables immediately
 	 to stdout as JSON.
 
-	 With >, >>, or |, the data do not become part of the output record stream but
+	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
 	 are instead redirected.
 
-	 The > and >> are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for > is on first write, not per record. The | is for piping to
+	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
 	 a process which will process the data. There will be one open file for each
-	 distinct file name (for > and >>) or one subordinate process for each distinct
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
 	 value of the piped-to command (for |). Output-formatting flags are taken from
 	 the main command line.
 
 	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
-	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
-	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
+	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;  "mytap.dat"}'
+	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;&gt; "mytap.dat"}'
 	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
 
    edump
@@ -2079,29 +2079,29 @@ KEYWORDS FOR PUT AND FILTER
        emit: inserts an out-of-stream variable into the output record stream. Hashmap
 	 indices present in the data but not slotted by emit arguments are not output.
 
-	 With >, >>, or |, the data do not become part of the output record stream but
+	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
 	 are instead redirected.
 
-	 The > and >> are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for > is on first write, not per record. The | is for piping to
+	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
 	 a process which will process the data. There will be one open file for each
-	 distinct file name (for > and >>) or one subordinate process for each distinct
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
 	 value of the piped-to command (for |). Output-formatting flags are taken from
 	 the main command line.
 
 	 You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
 	 etc., to control the format of the output if the output is redirected. See also mlr -h.
 
-	 Example: mlr --from f.dat put 'emit >	"/tmp/data-".$a, $*'
-	 Example: mlr --from f.dat put 'emit >	"/tmp/data-".$a, mapexcept($*, "a")'
+	 Example: mlr --from f.dat put 'emit &gt;	"/tmp/data-".$a, $*'
+	 Example: mlr --from f.dat put 'emit &gt;	"/tmp/data-".$a, mapexcept($*, "a")'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
-	 Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit > "tap-".$a.$b.".dat", @sums'
+	 Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit &gt; "tap-".$a.$b.".dat", @sums'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >  "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >> "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip > mytap.dat.gz", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;  "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt; stderr, @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
 
 	 Please see http://johnkerl.org/miller/doc for more information.
@@ -2110,13 +2110,13 @@ KEYWORDS FOR PUT AND FILTER
        emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
 	 output record stream.
 
-	 With >, >>, or |, the data do not become part of the output record stream but
+	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
 	 are instead redirected.
 
-	 The > and >> are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for > is on first write, not per record. The | is for piping to
+	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
 	 a process which will process the data. There will be one open file for each
-	 distinct file name (for > and >>) or one subordinate process for each distinct
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
 	 value of the piped-to command (for |). Output-formatting flags are taken from
 	 the main command line.
 
@@ -2124,13 +2124,13 @@ KEYWORDS FOR PUT AND FILTER
 	 etc., to control the format of the output if the output is redirected. See also mlr -h.
 
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
-	 Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf > "tap-".$i.".dat", @a'
+	 Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf &gt; "tap-".$i.".dat", @a'
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > "mytap.dat", @a, @b, @c'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> "mytap.dat", @a, @b, @c'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > stderr, @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; "mytap.dat", @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt;&gt; "mytap.dat", @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; stderr, @a, @b, @c'
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern &gt; mytap.dat", @a, @b, @c'
 
 	 Please see http://johnkerl.org/miller/doc for more information.
 
@@ -2139,13 +2139,13 @@ KEYWORDS FOR PUT AND FILTER
 	 Hashmap indices present in the data but not slotted by emitp arguments are
 	 output concatenated with ":".
 
-	 With >, >>, or |, the data do not become part of the output record stream but
+	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
 	 are instead redirected.
 
-	 The > and >> are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for > is on first write, not per record. The | is for piping to
+	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
 	 a process which will process the data. There will be one open file for each
-	 distinct file name (for > and >>) or one subordinate process for each distinct
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
 	 value of the piped-to command (for |). Output-formatting flags are taken from
 	 the main command line.
 
@@ -2153,13 +2153,13 @@ KEYWORDS FOR PUT AND FILTER
 	 etc., to control the format of the output if the output is redirected. See also mlr -h.
 
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
-	 Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp > "tap-".$a.$b.".dat", @sums'
+	 Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp &gt; "tap-".$a.$b.".dat", @sums'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >  "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >> "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip > mytap.dat.gz", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;  "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt; stderr, @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
 
 	 Please see http://johnkerl.org/miller/doc for more information.
@@ -2173,7 +2173,7 @@ KEYWORDS FOR PUT AND FILTER
    eprint
        eprint: prints expression immediately to stderr.
 	 Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
-	 Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
+	 Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " =&gt; " . v }'
 	 Example: mlr --from f.dat put	'(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 
    eprintn
@@ -2186,7 +2186,7 @@ KEYWORDS FOR PUT AND FILTER
    filter
        filter: includes/excludes the record in the output record stream.
 
-	 Example: mlr --from f.dat put 'filter (NR == 2 || $x > 5.4)'
+	 Example: mlr --from f.dat put 'filter (NR == 2 || $x &gt; 5.4)'
 
 	 Instead of put with 'filter false' you can simply use put -q.	The following
 	 uses the input record to accumulate data but only prints the running sum
@@ -2208,7 +2208,7 @@ KEYWORDS FOR PUT AND FILTER
 	 Example: 'for ((k1, k2), v in @counts) { ... }'
 	 Example: 'for ((k1, k2, k3), v in @*) { ... }'
        C-style for-loop:
-	 Example:  'for (var i = 0, var b = 1; i < 10; i += 1, b *= 2) { ... }'
+	 Example:  'for (var i = 0, var b = 1; i &lt; 10; i += 1, b *= 2) { ... }'
 
    func
        func: used for defining a user-defined function.
@@ -2237,8 +2237,8 @@ KEYWORDS FOR PUT AND FILTER
    print
        print: prints expression immediately to stdout.
 	 Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
-	 Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
-	 Example: mlr --from f.dat put	'(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+	 Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " =&gt; " . v }'
+	 Example: mlr --from f.dat put	'(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
 
    printn
        printn: prints expression immediately to stdout, without trailing newline.
@@ -2270,10 +2270,10 @@ KEYWORDS FOR PUT AND FILTER
 	 This is an immediate print to the specified file (except for pprint format
 	 which of course waits until the end of the input stream to format all output).
 
-	 The > and >> are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for > is on first write, not per record. The | is for piping to
+	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
 	 a process which will process the data. There will be one open file for each
-	 distinct file name (for > and >>) or one subordinate process for each distinct
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
 	 value of the piped-to command (for |). Output-formatting flags are taken from
 	 the main command line.
 
@@ -2283,13 +2283,13 @@ KEYWORDS FOR PUT AND FILTER
 	 emit with redirect and tee with redirect are identical, except tee can only
 	 output $*.
 
-	 Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
-	 Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
-	 Example: mlr --from f.dat put 'tee >  stderr, $*'
+	 Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
+	 Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
+	 Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
 	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
-	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] > /tmp/data-".$a, $*'
-	 Example: mlr --from f.dat put -q 'tee | "gzip > /tmp/data-".$a.".gz", $*'
-	 Example: mlr --from f.dat put -q --ojson 'tee | "gzip > /tmp/data-".$a.".gz", $*'
+	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] &gt; /tmp/data-".$a, $*'
+	 Example: mlr --from f.dat put -q 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
+	 Example: mlr --from f.dat put -q --ojson 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
 
    true
        true: the boolean literal value.
@@ -2362,10 +2362,10 @@ KEYWORDS FOR PUT AND FILTER
        the default).
 
 AUTHOR
-       Miller is written by John Kerl <kerl.john.r@gmail.com>.
+       Miller is written by John Kerl &lt;kerl.john.r@gmail.com&gt;.
 
        This manual page has been composed from Miller's help output by Eric
-       MSP Veith <eveith@veith-m.de>.
+       MSP Veith &lt;eveith@veith-m.de&gt;.
 
 SEE ALSO
        awk(1), sed(1), cut(1), join(1), sort(1), RFC 4180: Common Format and

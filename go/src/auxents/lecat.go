@@ -49,7 +49,6 @@ func lecatMain(args []string) int {
 
 			istream, err := os.Open(filename)
 			if err != nil {
-				// TODO: "mlr"
 				fmt.Fprintln(os.Stderr, "mlr lecat:", err)
 				os.Exit(1)
 			}

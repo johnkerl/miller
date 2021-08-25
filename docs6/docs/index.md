@@ -13,7 +13,7 @@ Quick links:
 </span>
 </div>
 
-**Miller is a command-line tool for querying, shaping, and reformatting data files in various formats including CSV and JSON.**
+**Miller is a command-line tool for querying, shaping, and reformatting data files in various formats including CSV, TSV, and JSON.**
 
 In several senses, Miller is more than one tool:
 
@@ -34,7 +34,7 @@ pretty-print your data horizontally or vertically to make it easier to read.
 <b>mlr --json head -n 1 myfile.json</b>
 </pre>
 
-The `sort`, `head`, etc are called *verbs*. They're analogs of familiar command-line tools like `sort`, `head`, and so on -- but they're aware of name-indexed, multi-line file formats like CSV and JSON. In addition, though, using Miller's `put` verb you can use programming-language statements for expressions like
+The `sort`, `head`, etc are called *verbs*. They're analogs of familiar command-line tools like `sort`, `head`, and so on -- but they're aware of name-indexed, multi-line file formats like CSV, TSV, and JSON. In addition, though, using Miller's `put` verb you can use programming-language statements for expressions like
 
 <pre class="pre-highlight-non-pair">
 <b>mlr --csv put '$rate = $units / $seconds' input.csv</b>
@@ -44,6 +44,6 @@ which allow you to succintly express your own logic.
 
 **Multiple domains:** People use Miller for data analysis, data science, software engineering, devops/system-administration, journalism, scientific research, and more.
 
-In the following you can see how CSV, tabular, JSON, and other **file formats** share a common theme which is **lists of key-value-pairs**. Miller embraces this common theme.
+In the following you can see how CSV, TSV, tabular, JSON, and other **file formats** share a common theme which is **lists of key-value-pairs**. Miller embraces this common theme.
 
 ![coverart/cover-combined.png](coverart/cover-combined.png)

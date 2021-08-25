@@ -108,6 +108,295 @@ Here are things they have in common:
 
 * The `--implicit-csv-header` flag for input and the `--headerless-csv-output` flag for output.
 
+## JSON
+
+JSON is a format which supports scalars (numbers, strings, boolean, etc.) as
+well as "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for
+handling **tabular data** only.  By *tabular JSON* I mean the data is either a
+sequence of one or more objects, or an array consisting of one or more objects.
+Miller treats JSON objects as name-indexed records.
+
+This means Miller cannot (and should not) handle arbitrary JSON.  In practice,
+though, Miller can handle single JSON objects as well as list of them. The only
+kinds of JSON that are unmillerable are single scalars (e.g. file contents `3`)
+and arrays of non-object (e.g. file contents `[1,2,3,4,5]`).  Check out
+[jq](https://stedolan.github.io/jq/) for a tool which handles all valid JSON.
+
+In short, if you have tabular data represented in JSON -- lists of objects,
+either with or without outermost `[...]` -- [then Miller can handle that for
+you.
+
+### Single-level JSON objects
+
+An **array of single-level objects** is, quite simply, **a table**:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --json head -n 2 then cut -f color,shape data/json-example-1.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "color": "yellow",
+  "shape": "triangle"
+}
+{
+  "color": "red",
+  "shape": "square"
+}
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --json head -n 2 then cut -f color,u,v data/json-example-1.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "color": "yellow",
+  "u": 0.632170,
+  "v": 0.988721
+}
+{
+  "color": "red",
+  "u": 0.219668,
+  "v": 0.001257
+}
+</pre>
+
+Single-level JSON data goes back and forth between JSON and tabular formats
+in the direct way:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --opprint head -n 2 then cut -f color,u,v data/json-example-1.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  u        v
+yellow 0.632170 0.988721
+red    0.219668 0.001257
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --opprint cat data/json-example-1.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag i  u        v        w        x
+yellow triangle 1    11 0.632170 0.988721 0.436498 5.798188
+red    square   1    15 0.219668 0.001257 0.792778 2.944117
+red    circle   1    16 0.209017 0.290052 0.138103 5.065034
+red    square   0    48 0.956274 0.746720 0.775542 7.117831
+purple triangle 0    51 0.435535 0.859129 0.812290 5.753095
+red    square   0    64 0.201551 0.953110 0.771991 5.612050
+purple triangle 0    65 0.684281 0.582372 0.801405 5.805148
+yellow circle   1    73 0.603365 0.423708 0.639785 7.006414
+yellow circle   1    87 0.285656 0.833516 0.635058 6.350036
+purple square   0    91 0.259926 0.824322 0.723735 6.854221
+</pre>
+
+### Nested JSON objects
+
+Additionally, Miller can **tabularize nested objects by concatentating keys**. If your processing has
+input as well as output in JSON format, JSON structure is preserved throughout the processing:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --json --jvstack head -n 2 data/json-example-2.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "flag": 1,
+  "i": 11,
+  "attributes": {
+    "color": "yellow",
+    "shape": "triangle"
+  },
+  "values": {
+    "u": 0.632170,
+    "v": 0.988721,
+    "w": 0.436498,
+    "x": 5.798188
+  }
+}
+{
+  "flag": 1,
+  "i": 15,
+  "attributes": {
+    "color": "red",
+    "shape": "square"
+  },
+  "values": {
+    "u": 0.219668,
+    "v": 0.001257,
+    "w": 0.792778,
+    "x": 2.944117
+  }
+}
+</pre>
+
+But if the input format is JSON and the output format is not (or vice versa) then key-concatenation applies:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --opprint head -n 4 data/json-example-2.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+flag i  attributes.color attributes.shape values.u values.v values.w values.x
+1    11 yellow           triangle         0.632170 0.988721 0.436498 5.798188
+1    15 red              square           0.219668 0.001257 0.792778 2.944117
+1    16 red              circle           0.209017 0.290052 0.138103 5.065034
+0    48 red              square           0.956274 0.746720 0.775542 7.117831
+</pre>
+
+This is discussed in more detail on the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
+
+### JSON-formatting options
+
+JSON isn't a parameterized format, so `RS`, `FS`, `PS` aren't specifiable. Nonetheless, you can do the following:
+
+* Use `--no-jvstack` to print JSON objects one per line.  By default, each Miller record (JSON object) is pretty-printed in multi-line format.
+
+* Use `--jlistwrap` to print the sequence of JSON objects wrapped in an outermost `[` and `]`. By default, these aren't printed.
+
+<!---
+TODO: probably remove entirely
+* Use `--jquoteall` to double-quote all object values. By default, integers, floating-point numbers, and booleans `true` and `false` are not double-quoted when they appear as JSON-object keys.
+-->
+
+* Use `--jflatsep yourseparatorhere` to specify the string used for key concatenation: this defaults to a single dot.
+
+## PPRINT: Pretty-printed tabular
+
+Miller's pretty-print format is like CSV, but column-aligned.  For example, compare
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ocsv cat data/small</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,i,x,y
+pan,pan,1,0.346791,0.726802
+eks,pan,2,0.758679,0.522151
+wye,wye,3,0.204603,0.338318
+eks,wye,4,0.381399,0.134188
+wye,pan,5,0.573288,0.863624
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --opprint cat data/small</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
+</pre>
+
+Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on `tail -f` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
+
+See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
+
+For output only (this isn't supported in the input-scanner as of 5.0.0) you can use `--barred` with pprint output format:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --opprint --barred cat data/small</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
++-----+-----+---+----------+----------+
+| a   | b   | i | x        | y        |
++-----+-----+---+----------+----------+
+| pan | pan | 1 | 0.346791 | 0.726802 |
+| eks | pan | 2 | 0.758679 | 0.522151 |
+| wye | wye | 3 | 0.204603 | 0.338318 |
+| eks | wye | 4 | 0.381399 | 0.134188 |
+| wye | pan | 5 | 0.573288 | 0.863624 |
++-----+-----+---+----------+----------+
+</pre>
+
+## Markdown tabular
+
+Markdown format looks like this:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --omd cat data/small</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+| a | b | i | x | y |
+| --- | --- | --- | --- | --- |
+| pan | pan | 1 | 0.346791 | 0.726802 |
+| eks | pan | 2 | 0.758679 | 0.522151 |
+| wye | wye | 3 | 0.204603 | 0.338318 |
+| eks | wye | 4 | 0.381399 | 0.134188 |
+| wye | pan | 5 | 0.573288 | 0.863624 |
+</pre>
+
+which renders like this when dropped into various web tools (e.g. github comments):
+
+![pix/omd.png](pix/omd.png)
+
+As of Miller 4.3.0, markdown format is supported only for output, not input.
+
+## XTAB: Vertical tabular
+
+This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
+[ngrid](https://github.com/twosigma/ngrid/) for an entirely different, very powerful option). Namely:
+
+<pre class="pre-highlight-in-pair">
+<b>$ grep -v '^#' /etc/passwd | head -n 6 | mlr --nidx --fs : --opprint cat</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1          2 3  4  5                          6               7
+nobody     * -2 -2 Unprivileged User          /var/empty      /usr/bin/false
+root       * 0  0  System Administrator       /var/root       /bin/sh
+daemon     * 1  1  System Services            /var/root       /usr/bin/false
+_uucp      * 4  4  Unix to Unix Copy Protocol /var/spool/uucp /usr/sbin/uucico
+_taskgated * 13 13 Task Gate Daemon           /var/empty      /usr/bin/false
+_networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>$ grep -v '^#' /etc/passwd | head -n 2 | mlr --nidx --fs : --oxtab cat</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1 nobody
+2 *
+3 -2
+4 -2
+5 Unprivileged User
+6 /var/empty
+7 /usr/bin/false
+
+1 root
+2 *
+3 0
+4 0
+5 System Administrator
+6 /var/root
+7 /bin/sh
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>$ grep -v '^#' /etc/passwd | head -n 2 | \</b>
+<b>  mlr --nidx --fs : --ojson --jvstack --jlistwrap \</b>
+<b>    label name,password,uid,gid,gecos,home_dir,shell</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[
+{
+  "name": "nobody",
+  "password": "*",
+  "uid": -2,
+  "gid": -2,
+  "gecos": "Unprivileged User",
+  "home_dir": "/var/empty",
+  "shell": "/usr/bin/false"
+},
+{
+  "name": "root",
+  "password": "*",
+  "uid": 0,
+  "gid": 0,
+  "gecos": "System Administrator",
+  "home_dir": "/var/root",
+  "shell": "/bin/sh"
+}
+]
+</pre>
+
 ## DKVP: Key-value pairs
 
 Miller's default file format is DKVP, for **delimited key-value pairs**. Example:
@@ -227,295 +516,6 @@ say can
 the dawn's
 light
 </pre>
-
-## JSON
-
-JSON is a format which supports scalars (numbers, strings, boolean, etc.) as
-well as "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for
-handling **tabular data** only.  By *tabular JSON* I mean the data is either a
-sequence of one or more objects, or an array consisting of one or more objects.
-Miller treats JSON objects as name-indexed records.
-
-This means Miller cannot (and should not) handle arbitrary JSON.  In practice,
-though, Miller can handle single JSON objects as well as list of them. The only
-kinds of JSON that are unmillerable are single scalars (e.g. file contents `3`)
-and arrays of non-object (e.g. file contents `[1,2,3,4,5]`).  Check out
-[jq](https://stedolan.github.io/jq/) for a tool which handles all valid JSON.
-
-In short, if you have tabular data represented in JSON -- lists of objects,
-either with or without outermost `[...]` -- [then Miller can handle that for
-you.
-
-### Single-level JSON objects
-
-An **array of single-level objects** is, quite simply, **a table**:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --json head -n 2 then cut -f color,shape data/json-example-1.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "color": "yellow",
-  "shape": "triangle"
-}
-{
-  "color": "red",
-  "shape": "square"
-}
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --json head -n 2 then cut -f color,u,v data/json-example-1.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "color": "yellow",
-  "u": 0.632170,
-  "v": 0.988721
-}
-{
-  "color": "red",
-  "u": 0.219668,
-  "v": 0.001257
-}
-</pre>
-
-Single-level JSON data goes back and forth between JSON and tabular formats
-in the obvious way:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --ijson --opprint head -n 2 then cut -f color,u,v data/json-example-1.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-color  u        v
-yellow 0.632170 0.988721
-red    0.219668 0.001257
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --ijson --opprint cat data/json-example-1.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-color  shape    flag i  u        v        w        x
-yellow triangle 1    11 0.632170 0.988721 0.436498 5.798188
-red    square   1    15 0.219668 0.001257 0.792778 2.944117
-red    circle   1    16 0.209017 0.290052 0.138103 5.065034
-red    square   0    48 0.956274 0.746720 0.775542 7.117831
-purple triangle 0    51 0.435535 0.859129 0.812290 5.753095
-red    square   0    64 0.201551 0.953110 0.771991 5.612050
-purple triangle 0    65 0.684281 0.582372 0.801405 5.805148
-yellow circle   1    73 0.603365 0.423708 0.639785 7.006414
-yellow circle   1    87 0.285656 0.833516 0.635058 6.350036
-purple square   0    91 0.259926 0.824322 0.723735 6.854221
-</pre>
-
-### Nested JSON objects
-
-Additionally, Miller can **tabularize nested objects by concatentating keys**. If your processing has
-input as well as output in JSON format, JSON structure is preserved throughout the processing:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --json --jvstack head -n 2 data/json-example-2.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "flag": 1,
-  "i": 11,
-  "attributes": {
-    "color": "yellow",
-    "shape": "triangle"
-  },
-  "values": {
-    "u": 0.632170,
-    "v": 0.988721,
-    "w": 0.436498,
-    "x": 5.798188
-  }
-}
-{
-  "flag": 1,
-  "i": 15,
-  "attributes": {
-    "color": "red",
-    "shape": "square"
-  },
-  "values": {
-    "u": 0.219668,
-    "v": 0.001257,
-    "w": 0.792778,
-    "x": 2.944117
-  }
-}
-</pre>
-
-But if the input format is JSON and the output format is not (or vice versa) then key-concatenation applies:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --ijson --opprint head -n 4 data/json-example-2.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-flag i  attributes.color attributes.shape values.u values.v values.w values.x
-1    11 yellow           triangle         0.632170 0.988721 0.436498 5.798188
-1    15 red              square           0.219668 0.001257 0.792778 2.944117
-1    16 red              circle           0.209017 0.290052 0.138103 5.065034
-0    48 red              square           0.956274 0.746720 0.775542 7.117831
-</pre>
-
-This is discussed in more detail on the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
-
-### Formatting JSON options
-
-JSON isn't a parameterized format, so `RS`, `FS`, `PS` aren't specifiable. Nonetheless, you can do the following:
-
-* Use `--no-jvstack` to print JSON objects one per line.  By default, each Miller record (JSON object) is pretty-printed in multi-line format.
-
-* Use `--jlistwrap` to print the sequence of JSON objects wrapped in an outermost `[` and `]`. By default, these aren't printed.
-
-<!---
-TODO: probably remove entirely
-* Use `--jquoteall` to double-quote all object values. By default, integers, floating-point numbers, and booleans `true` and `false` are not double-quoted when they appear as JSON-object keys.
--->
-
-* Use `--jflatsep yourseparatorhere` to specify the string used for key concatenation: this defaults to a single dot.
-
-## PPRINT: Pretty-printed tabular
-
-Miller's pretty-print format is like CSV, but column-aligned.  For example, compare
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --ocsv cat data/small</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a,b,i,x,y
-pan,pan,1,0.346791,0.726802
-eks,pan,2,0.758679,0.522151
-wye,wye,3,0.204603,0.338318
-eks,wye,4,0.381399,0.134188
-wye,pan,5,0.573288,0.863624
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --opprint cat data/small</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a   b   i x        y
-pan pan 1 0.346791 0.726802
-eks pan 2 0.758679 0.522151
-wye wye 3 0.204603 0.338318
-eks wye 4 0.381399 0.134188
-wye pan 5 0.573288 0.863624
-</pre>
-
-Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on `tail -f` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
-
-See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
-
-For output only (this isn't supported in the input-scanner as of 5.0.0) you can use `--barred` with pprint output format:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --opprint --barred cat data/small</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-+-----+-----+---+----------+----------+
-| a   | b   | i | x        | y        |
-+-----+-----+---+----------+----------+
-| pan | pan | 1 | 0.346791 | 0.726802 |
-| eks | pan | 2 | 0.758679 | 0.522151 |
-| wye | wye | 3 | 0.204603 | 0.338318 |
-| eks | wye | 4 | 0.381399 | 0.134188 |
-| wye | pan | 5 | 0.573288 | 0.863624 |
-+-----+-----+---+----------+----------+
-</pre>
-
-## XTAB: Vertical tabular
-
-This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
-[ngrid](https://github.com/twosigma/ngrid/) for an entirely different, very powerful option). Namely:
-
-<pre class="pre-highlight-in-pair">
-<b>$ grep -v '^#' /etc/passwd | head -n 6 | mlr --nidx --fs : --opprint cat</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-1          2 3  4  5                          6               7
-nobody     * -2 -2 Unprivileged User          /var/empty      /usr/bin/false
-root       * 0  0  System Administrator       /var/root       /bin/sh
-daemon     * 1  1  System Services            /var/root       /usr/bin/false
-_uucp      * 4  4  Unix to Unix Copy Protocol /var/spool/uucp /usr/sbin/uucico
-_taskgated * 13 13 Task Gate Daemon           /var/empty      /usr/bin/false
-_networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>$ grep -v '^#' /etc/passwd | head -n 2 | mlr --nidx --fs : --oxtab cat</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-1 nobody
-2 *
-3 -2
-4 -2
-5 Unprivileged User
-6 /var/empty
-7 /usr/bin/false
-
-1 root
-2 *
-3 0
-4 0
-5 System Administrator
-6 /var/root
-7 /bin/sh
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>$ grep -v '^#' /etc/passwd | head -n 2 | \</b>
-<b>  mlr --nidx --fs : --ojson --jvstack --jlistwrap \</b>
-<b>    label name,password,uid,gid,gecos,home_dir,shell</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-[
-{
-  "name": "nobody",
-  "password": "*",
-  "uid": -2,
-  "gid": -2,
-  "gecos": "Unprivileged User",
-  "home_dir": "/var/empty",
-  "shell": "/usr/bin/false"
-},
-{
-  "name": "root",
-  "password": "*",
-  "uid": 0,
-  "gid": 0,
-  "gecos": "System Administrator",
-  "home_dir": "/var/root",
-  "shell": "/bin/sh"
-}
-]
-</pre>
-
-## Markdown tabular
-
-Markdown format looks like this:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --omd cat data/small</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-| a | b | i | x | y |
-| --- | --- | --- | --- | --- |
-| pan | pan | 1 | 0.346791 | 0.726802 |
-| eks | pan | 2 | 0.758679 | 0.522151 |
-| wye | wye | 3 | 0.204603 | 0.338318 |
-| eks | wye | 4 | 0.381399 | 0.134188 |
-| wye | pan | 5 | 0.573288 | 0.863624 |
-</pre>
-
-which renders like this when dropped into various web tools (e.g. github comments):
-
-![pix/omd.png](pix/omd.png)
-
-As of Miller 4.3.0, markdown format is supported only for output, not input.
 
 ## Data-conversion keystroke-savers
 

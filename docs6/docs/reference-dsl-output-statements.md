@@ -87,7 +87,7 @@ print: prints expression immediately to stdout.
 
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
-  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -250,7 +250,14 @@ Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more infor
 
 ## Emit statements
 
-There are three variants: `emitf`, `emit`, and `emitp`. Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using `dump`), whereas Miller output records are lists of single-level key-value pairs. The three emit variants allow you to control how the multilevel hashmaps are flatten down to output records. You can emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
+There are three variants: `emitf`, `emit`, and `emitp`. Keep in mind that
+out-of-stream variables are a nested, multi-level hashmap (directly viewable as
+JSON using `dump`), while Miller record values are as well during processing --
+but records may be flattened down for output to tabular formats. See the page
+[Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md) for more
+information.
+
+You can emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For `emitf` these mustn't have indexing using `@name[...]`. Example:
 

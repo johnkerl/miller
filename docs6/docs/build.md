@@ -72,10 +72,12 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 
 * Check the release-specific docs:
 
-    * Look at [https://miller.readthedocs.io](https://miller.readthedocs.io) for new-version docs, after a few minutes' propagation time.
+    * Look at [https://miller.readthedocs.io](https://miller.readthedocs.io) for new-version docs, after a few minutes' propagation time. Note this won't work until Miller 6 is released.
+    * ISP-push to [https://johnkerl.org/miller6](https://johnkerl.org/miller6). (Until release: this is a temporary substitute for readthedocs.)
 
 * Notify:
 
+    * Only do these once Miller 6 is released:
     * Submit `brew` pull request; notify any other distros which don't appear to have autoupdated since the previous release (notes below)
     * Similarly for `macports`: [https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile](https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile)
     * Social-media updates.

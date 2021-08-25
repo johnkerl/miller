@@ -17,18 +17,18 @@ Here are the I/O routines:
 #   bash$ python -i dkvp_io.py
 #
 #   # READ
-#   >>> map = dkvpline2map('x=1,y=2', '=', ',')
-#   >>> map
+#   &gt;&gt;&gt; map = dkvpline2map('x=1,y=2', '=', ',')
+#   &gt;&gt;&gt; map
 #   OrderedDict([('x', '1'), ('y', '2')])
 #
 #   # MODIFY
-#   >>> map['z'] = map['x'] + map['y']
-#   >>> map
+#   &gt;&gt;&gt; map['z'] = map['x'] + map['y']
+#   &gt;&gt;&gt; map
 #   OrderedDict([('x', '1'), ('y', '2'), ('z', 3)])
 #
 #   # WRITE
-#   >>> line = map2dkvpline(map, '=', ',')
-#   >>> line
+#   &gt;&gt;&gt; line = map2dkvpline(map, '=', ',')
+#   &gt;&gt;&gt; line
 #   'x=1,y=2,z=3'
 #
 # ================================================================
@@ -151,16 +151,16 @@ Here are the I/O routines:
 #   bash$ irb -I. -r dkvp_io.rb
 #
 #   # READ
-#   irb(main):001:0> map = dkvpline2map('x=1,y=2', '=', ',')
-#   => {"x"=>"1", "y"=>"2"}
+#   irb(main):001:0&gt; map = dkvpline2map('x=1,y=2', '=', ',')
+#   =&gt; {"x"=&gt;"1", "y"=&gt;"2"}
 #
 #   # MODIFY
-#   irb(main):001:0> map['z'] = map['x'] + map['y']
-#   => 3
+#   irb(main):001:0&gt; map['z'] = map['x'] + map['y']
+#   =&gt; 3
 #
 #   # WRITE
-#   irb(main):002:0> line = map2dkvpline(map, '=', ',')
-#   => "x=1,y=2,z=3"
+#   irb(main):002:0&gt; line = map2dkvpline(map, '=', ',')
+#   =&gt; "x=1,y=2,z=3"
 #
 # ================================================================
 

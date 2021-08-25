@@ -119,7 +119,12 @@ end
 
 # ----------------------------------------------------------------
 def include_escaped(included_file_name, output_handle)
-  write_card([], File.readlines(included_file_name).map{|line| line.chomp}, output_handle)
+  unescaped_lines = File.readlines(included_file_name)
+  escaped_lines = unescaped_lines.map do |line|
+    # Necessary for <pre> in Mkdocs
+    line.chomp.gsub("<", "&lt;").gsub(">", "&gt;")
+  end
+  write_card([], escaped_lines, output_handle)
 end
 
 # ----------------------------------------------------------------

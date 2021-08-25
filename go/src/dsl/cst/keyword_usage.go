@@ -316,7 +316,7 @@ func eprintKeywordUsage() {
 
   Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
-  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { eprint "Checkpoint ".NR}'`)
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'`)
 }
 
 func eprintnKeywordUsage() {
@@ -410,7 +410,7 @@ func printKeywordUsage() {
 
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
-  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { print > stderr, "Checkpoint ".NR}'`)
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'`)
 }
 
 func printnKeywordUsage() {

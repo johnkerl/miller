@@ -959,7 +959,7 @@ eprint: prints expression immediately to stderr.
 
   Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
-  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { eprint "Checkpoint ".NR}'
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 
 eprintn: prints expression immediately to stderr, without trailing newline.
 
@@ -1019,7 +1019,7 @@ print: prints expression immediately to stdout.
 
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
-  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 
 printn: prints expression immediately to stdout, without trailing newline.
 

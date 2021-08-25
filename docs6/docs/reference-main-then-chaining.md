@@ -19,7 +19,7 @@ Here's a performance comparison:
 
 <pre class="pre-non-highlight-non-pair">
 % cat piped.sh
-mlr cut -x -f i,y data/big | mlr sort -n y > /dev/null
+mlr cut -x -f i,y data/big | mlr sort -n y &gt; /dev/null
 
 % time sh piped.sh
 real    0m2.321s
@@ -27,7 +27,7 @@ user    0m4.878s
 sys     0m1.564s
 
 % cat chained.sh
-mlr cut -x -f i,y then sort -n y data/big > /dev/null
+mlr cut -x -f i,y then sort -n y data/big &gt; /dev/null
 
 % time sh chained.sh
 real    0m2.070s

@@ -52,27 +52,31 @@ a=xyz_789,b=left_xyz,c=right_789
 This produces heteregenous output which Miller, of course, has no problems with (see [Record Heterogeneity](record-heterogeneity.md)).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes `put` to evaluate the boolean expression (along with any side effects, namely, regex-captures `\1`, `\2`, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-x=-1,y=NaN,z=NaN
-x=0,y=-Inf,z=NaN
-x=1,y=0,z=0
-x=2,y=0.3010299956639812,z=0.5486620049392715
-x=3,y=0.4771212547196624,z=0.6907396432228734
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr put '</b>
+<b>mlr --opprint put '</b>
 <b>  $a =~ "([a-z]+)_([0-9]+)";</b>
 <b>  $b = "left_\1";</b>
 <b>  $c = "right_\2"</b>
 <b>' data/put-gating-example-2.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=abc_123,b=left_abc,c=right_123
-a=some other name,b=left_,c=right_
-a=xyz_789,b=left_xyz,c=right_789
+a               b        c
+abc_123         left_abc right_123
+some other name left_    right_
+xyz_789         left_xyz right_789
+</pre>
+
+Note that pattern-action blocks are just a syntactic variation of if-statements. The following do the same thing:
+
+<pre class="pre-non-highlight-non-pair">
+  boolean_condition {
+    body
+  }
+</pre>
+
+<pre class="pre-non-highlight-non-pair">
+  if (boolean_condition) {
+    body
+  }
 </pre>
 
 ## If-statements
