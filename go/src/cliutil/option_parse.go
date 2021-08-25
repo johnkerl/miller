@@ -602,7 +602,7 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = args[argi+1]
 		argi += 2
 
-	} else if args[argi] == "--csv" {
+	} else if args[argi] == "--csv" || args[argi] == "-c" {
 		readerOptions.InputFileFormat = "csv"
 		writerOptions.OutputFileFormat = "csv"
 		argi += 1
@@ -688,7 +688,7 @@ func ParseReaderWriterOptions(
 		writerOptions.OutputFileFormat = "dkvp"
 		argi += 1
 
-	} else if args[argi] == "--json" {
+	} else if args[argi] == "--json" || args[argi] == "-j" {
 		readerOptions.InputFileFormat = "json"
 		writerOptions.OutputFileFormat = "json"
 		argi += 1

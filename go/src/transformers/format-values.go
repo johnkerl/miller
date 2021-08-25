@@ -173,9 +173,9 @@ func (tr *TransformerFormatValues) Transform(
 			_, isNumeric := pe.Value.GetNumericToFloatValue()
 			if isNumeric {
 				pe.Value = tr.floatFormatter.Format(pe.Value)
-			} else {
+			} else if pe.Value.IsStringOrVoid() {
 				pe.Value = tr.stringFormatter.Format(pe.Value)
-			}
+			} // else, don't rewrite booleans, arrays, maps, etc.
 		} else {
 			_, isInt := pe.Value.GetIntValue()
 			_, isFloat := pe.Value.GetFloatValue()
@@ -183,9 +183,9 @@ func (tr *TransformerFormatValues) Transform(
 				pe.Value = tr.intFormatter.Format(pe.Value)
 			} else if isFloat {
 				pe.Value = tr.floatFormatter.Format(pe.Value)
-			} else {
+			} else if pe.Value.IsStringOrVoid() {
 				pe.Value = tr.stringFormatter.Format(pe.Value)
-			}
+			} // else, don't rewrite booleans, arrays, maps, etc.
 		}
 	}
 

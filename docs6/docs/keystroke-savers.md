@@ -70,6 +70,17 @@ If there's more than one input file, you can use `--mfrom`, then however many fi
 <b>mlr --c2p --mfrom data/*.csv -- sort -n index</b>
 </pre>
 
+## Shortest flags for CSV, TSV, and JSON
+
+The following have even shorter versions:
+
+* `-c` is the same as `--csv`
+* `-t` is the same as `--tsvlite`
+* `-j` is the same as `--json`
+
+I don't use these within these documents, since I want the docs to be self-explanatory on every page, and
+I think `mlr --csv ...` explains itself better than `mlr -c ...`. Nonetheless, they're there for you to use.
+
 ## .mlrrc file
 
 If you want the default file format for Miller to be CSV, you can simply put `--csv` on a line by itself in your `~/.mlrrc` file. Then instead of `mlr --csv cat example.csv` you can just do `mlr cat example.csv`. This is just a personal default, though, so `mlr --opprint cat example.csv` will use default CSV format for input, and PPRINT (tabular) for output.

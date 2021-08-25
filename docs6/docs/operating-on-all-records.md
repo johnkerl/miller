@@ -97,7 +97,7 @@ As discussed a bit more on the (TODO) page on streaming and memory, this doesn't
 
 ## Retain records in a map
 
-The second option is to retain entire records in a map, then loop over them in an `end` block.
+The second option is to retain entire records in a [map](reference-dsl-maps.md), then loop over them in an `end` block.
 
 Let's use the same short data file [data/short.csv](data/short.csv):
 
@@ -166,7 +166,7 @@ The downside to this, of course, is that this retains all records (plus data-str
 
 ## Retain records in an array
 
-The third option is to retain records in an array, then loop over them in an `end` block.
+The third option is to retain records in an [array](reference-dsl-arrays.md), then loop over them in an `end` block.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from data/short.csv put -q '</b>

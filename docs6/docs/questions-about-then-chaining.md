@@ -70,11 +70,11 @@ Given this input data:
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 why don't I see `NR=1` and `NR=2` here??
@@ -83,8 +83,8 @@ why don't I see `NR=1` and `NR=2` here??
 <b>mlr --from data/small filter '$x > 0.5' then put '$NR = NR'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NR=2
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NR=5
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,NR=2
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,NR=5
 </pre>
 
 The reason is that `NR` is computed for the original input records and isn't dynamically updated. By contrast, `NF` is dynamically updated: it's the number of fields in the current record, and if you add/remove a field, the value of `NF` will change:
@@ -112,9 +112,9 @@ nf1=3,u=4,nf2=5,nf3=3
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                  y                  nr1 nr2
-eks pan 2 0.7586799647899636 0.5221511083334797 2   1
-wye pan 5 0.5732889198020006 0.8636244699032729 5   2
+a   b   i x        y        nr1 nr2
+eks pan 2 0.758679 0.522151 2   1
+wye pan 5 0.573288 0.863624 5   2
 </pre>
 
 Or, simply use `mlr cat -n`:
@@ -123,6 +123,6 @@ Or, simply use `mlr cat -n`:
 <b>mlr filter '$x > 0.5' then cat -n data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-n=1,a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+n=1,a=eks,b=pan,i=2,x=0.758679,y=0.522151
+n=2,a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>

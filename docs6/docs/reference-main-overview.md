@@ -57,9 +57,9 @@ Example of using a verb for data processing:
 <b>mlr stats1 -a sum -f x -g a data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,x_sum=0.3467901443380824
-a=eks,x_sum=1.1400793586611044
-a=wye,x_sum=0.7778922255683036
+a=pan,x_sum=0.346791
+a=eks,x_sum=1.140078
+a=wye,x_sum=0.777891
 </pre>
 
 * Verbs are coded in Go
@@ -74,9 +74,9 @@ Example of doing the same thing using a DSL expression:
 <b>mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,x_sum=0.3467901443380824
-a=eks,x_sum=1.1400793586611044
-a=wye,x_sum=0.7778922255683036
+a=pan,x_sum=0.346791
+a=eks,x_sum=1.140078
+a=wye,x_sum=0.777891
 </pre>
 
 * You get to write your own expressions in Miller's programming language
