@@ -8,4 +8,7 @@ TODO
 * 1-var/2-var/n-var for-loops (link)
 * dump
 * $*
+* POLS mentions
+* auto-deepen
+* x[1]=2 is map not array if x doesn't exist -- xlink to arrays page
 * ...

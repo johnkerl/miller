@@ -56,7 +56,7 @@ mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --opprint bar --auto -f x,y data/small
+mlr --opprint bar --auto -f x,y -w 20 data/small
 GENMD_EOF
 
 ## bootstrap

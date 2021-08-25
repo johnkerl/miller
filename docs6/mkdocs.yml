@@ -18,9 +18,9 @@ nav:
     - "Structure of these documents": "structure-of-these-documents.md"
   - 'Miller in more detail':
     - "Features": "features.md"
-    - "Unix-toolkit context": "unix-toolkit-context.md"
     - "File formats": "file-formats.md"
     - "Record-heterogeneity": "record-heterogeneity.md"
+    - "Unix-toolkit context": "unix-toolkit-context.md"
     - "Internationalization": "internationalization.md"
     - "Output colorization": "output-colorization.md"
     - "Customization: .mlrrc": "customization.md"

@@ -7,13 +7,13 @@ ALL:
 * hash-map / hashmap -> map everywhere
 
 ----------------------------------------------------------------
-E flatten/unflatten page: make one! :)
-E memory/streaming page
-E flesh out data-types page!
-E flesh out arrays page!
-E new maps page!
-  - insertion order ...
-  - for-k-v etc
+E fill out flatten/unflatten page
+E fill out memory/streaming page
+  - rename maybe? add note on threading and how it scales on multicore arches
+  - GOMNAXPROCS
+E fill out data-types page
+E fill out arrays page
+E fill out maps page
 
 c GOMAXPROCS -- up it? separate page maybe -- ?
   - note one goroutine for in, out, & each verb
@@ -28,12 +28,6 @@ e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
 
 ? why are purple.csv.cg red.csv.gz yellow.csv.gz changing on regens?
 ----------------------------------------------------------------
-
-index:
-E CSV -> CSV/TSV
-
-features:
-E CSV -> CSV/TSV
 
 record-heterogeneity:
 ? current csv-reader code handles this? i think not. check csvlite-reader too.
@@ -75,23 +69,16 @@ data-cleaning-examples:
 ? mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv -- do false/true autotype -- ?
 
 statistics-examples:
-? 2nd card no output b/c stats1 --fr
+C 2nd card no output b/c stats1 --fr
 
 two-pass-algorithms:
 l link to "new" verbs x everywhere possible
 l Of course, Miller verbs such as sort, tac, etc. all must ... -> linkify to new memory/streaming page
 x this (or wherever ...) maybe get rid of some of the too-many examples. pick some survivors; x the rest.
 
-misc examples:
-? Program timing & subsequents -> another page
-
 reference-verbs:
-E mlr --opprint bar --auto -f x,y data/small -> use some int data to avoid line-wraps
 E data/colored-shapes.dkvp (this page & throughout) a CSV file ...
 * ... I ONLY READ UP TO CUT & PAUSED ...
-
-reference-main-auxiliary-commands:
-c mlr lecat -> have the code use colors stuff not hard-coded -- ? patch into env vars -- ? code: check isatty.
 
 reference-main-data-types:
 E field values are usually strings -> update
@@ -108,7 +95,7 @@ reference-main-null-data:
 ? Records with one or more empty sort-field values sort after records with all sort-field values present -> apparently not true for sort -nr
 
 reference-main-arithmetic:
-? remove references to put/filter -F
+? remove references to put/filter -F -- note stats1 keeps -F so maybe we should here as well -- ? or nah?
 ? test stats1/step -F flag
 ? The following, however, produce integer output if their inputs are integers: + - * / // % abs ceil floor max min round roundm sgn. As well, stats1 -a min, stats1 -a max, stats1 -a sum, step -a delta, and step -a rsum produce integer output if their inputs are integers. -> test all
 
@@ -117,8 +104,6 @@ reference-main-regular-expressions:
 d separate escaping for "\t" etc in arg-2/regex position -- "\t"."\t" example as well ...
 
 reference-dsl-control-structures:
-E emph p-a blocks are syntactic sugar for if-statements
-? mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp -> no longer true -- wtf? is this doc-snippet non-live?
 e while (NR < 10) will never terminate as NR is only incremented between records -> and each expression is invoked once per record so once for NR=1, once for NR=2, etc.
 E C-style triple-for loops: loop to NR -> NO!!!
 ? or if a same-name variable is present in outer scope then it is modified. -> check that and make sure there is a UT
@@ -132,16 +117,17 @@ c mlr: option "--list-all-functions-as-table" not recognized. Please run "mlr --
 ! ... need to proofread entire list ...
 
 reference-dsl-output-statements:
-? NR %% 1000 == 0 -> why %%
 E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using dump), whereas Miller output records are lists of single-level key-value pairs -> link to flatten page
-? Use --oflatsep -> check
+  - old: You can emit any map-valued expression, including `$*`, map-valued
+    out-of-stream variables, the entire out-of-stream-variable collection `@*`,
+    map-valued local variables, map literals, or map-valued function return
+    values.
+  - new: mlr: lashed-emit node types must be local variables, field names, or oosvars; got map literal.
+  c ?make FunctionCallsite an Emittable? does this work in the BNF?
+? Use --oflatsep -> check -- jflatsep, iflatsep, oflatsep as --csv/--icsv/--ocsv -- ? what was the thinking at the time?
 ? mlr --oxtab put -q --oflatsep / '
   o 2 examples not 3?
   o why not '--oflatsep /' respected?
 
-reference-dsl-differences.md:
-l check for linkify opportunities
-
 manpage:
 ? [NEEDS READ-THROUGH]
-? 'Kerl .' and 'Veith .'

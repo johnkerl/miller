@@ -24,10 +24,49 @@ semicolon.
 
 Note that since you also don't need a semicolon before or after closing curly
 braces (such as `begin`/`end` blocks, `if`-statements, `for`-loops, etc.) it's
-easy to key in several semicolon-free statements, and then to forget a
+easy to key in a few semicolon-free statements, and then to forget a
 semicolon where one is needed . The parser tries to remind you about semicolons
 whenever there's a chance a missing semicolon might be involved in a parse
 error.
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --csv --from example.csv put -q '</b>
+<b>  begin {</b>
+<b>    @count = 0 # No semicolon required -- before closing curly brace</b>
+<b>  }</b>
+<b>  $x=1         # No semicolon required -- at end of expression</b>
+<b>'</b>
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --from example.csv put -q '</b>
+<b>  begin {</b>
+<b>    @count = 0 # No semicolon required -- before closing curly brace</b>
+<b>  }</b>
+<b>  $x=1         # Needs a semicolon after it</b>
+<b>  $y=2         # No semicolon required -- at end of expression</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+mlr: cannot parse DSL expression.
+Parse error on token "$y" at line 6 columnn 3.
+Please check for missing semicolon.
+Expected one of:
+  $ ; > >> | ? || ^^ && ?? ??? =~ !=~ == != >= < <= ^ & << >>> + - .+ .- .
+  * / // % .* ./ .// ** [ [[ [[[
+</pre>
+
+## Required curly braces
+
+Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
+
+<pre class="pre-highlight-non-pair">
+<b>mlr ... put 'if ($x == 1) $y = 2' # Syntax error</b>
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr ... put 'if ($x == 1) { $y = 2 }' # This is OK</b>
+</pre>
 
 ## No autoconvert to boolean
 
@@ -120,7 +159,7 @@ Similarly, a final newline is printed for you; use [`printn`](reference-dsl-outp
 
 ## Insertion-order-preserving hashmaps
 
-Miller's hashmaps [TODO:linkify] (as in many modern languages) preserve insertion order. If you set `x["foo"]=1` and then `x["bar"]=2`, then you are guaranteed that any looping over `x` will retrieve the `"foo"` key-value pair first, and the `"bar"` key-value pair second.
+Miller's [maps](reference-dsl-maps.md) (as in many modern languages) preserve insertion order. If you set `x["foo"]=1` and then `x["bar"]=2`, then you are guaranteed that any looping over `x` will retrieve the `"foo"` key-value pair first, and the `"bar"` key-value pair second.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put -q 'end {</b>

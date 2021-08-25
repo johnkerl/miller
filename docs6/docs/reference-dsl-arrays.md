@@ -69,4 +69,8 @@ comment:
 }
 </pre>
 
-xxx null-gaps for auto-extend
+* 1-up and why
+* 1-var/2-var for-loops
+* auto-extend and null-gaps
+* x[1]=2 is map not array if x doesn't exist -- xlink to maps page
+* POLS mentions
