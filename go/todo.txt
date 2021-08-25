@@ -35,6 +35,11 @@ implicit r:
 ----------------------------------------------------------------
 docs:
 
+* mlr --j2x --no-auto-flatten cat $mlg/regtest/input/flatten-input-2.json
+  - code: make sure this does single-line json ...
+* mlr --j2c --no-auto-flatten cat $mlg/regtest/input/flatten-input-2.json
+  - code: this is ok ... maybe prefer single-line -- ?
+
 * src/man/doc hygiene @ build script
 
 w discussion re docs6 ...

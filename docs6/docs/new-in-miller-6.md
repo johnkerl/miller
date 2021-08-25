@@ -15,11 +15,12 @@ for command-line data processing.
 
 Similarly, the FAQ/recipe material has been expanded to include more, and
 simpler, use-cases including resolved questions from
-[https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues)
+[Miller Issues](https://github.com/johnkerl/miller/issues)
 and
-[https://github.com/johnkerl/miller/discussions](https://github.com/johnkerl/miller/discussions).
-More complex/niche material has been pushed farther down. The long reference
-pages have been split up into separate pages.
+[Miller Discussions](https://github.com/johnkerl/miller/discussions);
+more complex/niche material has been pushed farther down. The long reference
+pages have been split up into separate pages. (See also
+[Structure of these documents](structure-of-these-documents.md).)
 
 Since CSV is overwhelmingly the most popular data format for Miller, it is
 now discussed first, and more examples use CSV.
@@ -34,7 +35,7 @@ JSON support is improved:
 
 * Direct support for arrays means that you can now use Miller to process more JSON files.
 * Streamable JSON parsing: Miller's internal record-processing pipeline starts as soon as the first record is read (which was already the case for other file formats). This means that, unless records are wrapped with outermost `[...]`, Miller now handles JSON in `tail -f` contexts like it does for other file formats.
-* Flatten/unflatten -- TODO pick a name and link to a separate page/section
+* Flatten/unflatten -- conversion of JSON nested data structures (arrays and/or maps in record values) to/from non-JSON formats is a powerful new feature, discussed in the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
 
 ## Improved Windows experience
 
@@ -104,6 +105,9 @@ Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single
 * Platform-property functions [hostname](reference-dsl-builtin-functions.md#hostname), [os](reference-dsl-builtin-functions.md#os), and [version](reference-dsl-builtin-functions.md#version).
 
 * Unsigned right-shift [`>>>`](reference-dsl-builtin-functions.md#ursh) along with `>>>=`.
+
+* Absent-coalesce operator [`??`](reference-dsl-builtin-functions.md#absent-coalesce) along with `??=`;
+absent-empty-coalesce operator [`???`](reference-dsl-builtin-functions.md#absent-empty-coalesce) along with `???=`.
 
 ## Improved command-line parsing
 

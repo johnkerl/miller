@@ -43,7 +43,7 @@ Please see [Verbs Reference](reference-verbs.md) for information on verbs other 
 
 ## Implicit loop over records for main statements
 
-The most important point about the Miller DSL is that it is designed for _streaming operation over records_.
+The most important point about the Miller DSL is that it is designed for [streaming operation over records](streaming-and-memory.md).
 
 DSL statements include:
 
@@ -55,11 +55,11 @@ The feature of _streaming operation over records_ is implemented by the main
 statements getting invoked once per record. You don't explicitly loop over
 records, as you would in some dataframes contexts; rather, _Miller loops over
 records for you_, and it lets you specify what to do on each record: you write
-the body of the loop.
+the body of the loop, not the loop itself.
 
-(You can, if you like, use the per-record statements to grow a list of records,
-then loop over them all in an `end` block. This is described in the page on
-[operating on all records](operating-on-all-records.md)).
+(But you can, if you like, use those per-record statements to grow a list of
+records, then loop over them all in an `end` block. This is described in the
+page on [operating on all records](operating-on-all-records.md)).
 
 To see this in action, let's take a look at the [data/short.csv](./data/short.csv) file:
 
