@@ -35,28 +35,8 @@ E CSV -> CSV/TSV
 features:
 E CSV -> CSV/TSV
 
-feature-comparison:
-E even with newlines -- show an example
-
-file-formats:
-w tabularize by concatenating keys: update
-  o JSON-to-JSON
-  o JSON-to-not
-  o not-to-JSON
-  o not-to-not
-l arrays linkify
-? Formatting JSON Options: check each flag is still current
-? Data-conversion keystroke-savers: to/from separate page. and/or merge.
-? autodetect: hmmmmmmmm
-
 record-heterogeneity:
 ? current csv-reader code handles this? i think not. check csvlite-reader too.
-
-new-in-miller-6:
-w flatten/unflatten -- needs a new separate page
-? TODO marks
-* ?? and ??= operators
-  - link to BNF for operator-precedence table (wherever that is) as well
 
 csv-with-and-without-headers:
 ? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
@@ -66,7 +46,6 @@ l Miller handles compliant CSV: include rfc4180 link
 ? Regularizing ragged CSV: use regularize verb?!?
 
 shapes-of-data:
-? autodetect -- remove?
 E data/small -> example.csv (and throughout ...)
 E Rectangularizing data: cf regularize verb, & other page?
 
@@ -76,12 +55,6 @@ special-symbols-and-formatting:
   o look for unbackslash callsites in the C impl
   o SeparatorFromArg
 ? How to escape '?' in regexes? -> still true? link to torbiak297?
-
-operating-on-all-records:
-o linkify map/array/etc
-o 1-up link at end
-o insord link at end
-o int2str@key link at end
 
 dates-and-times:
 ? Caveat: localtime-handling in timezones with DST is still a work in progress -- fixed by torbiak?
@@ -142,13 +115,6 @@ reference-main-arithmetic:
 reference-main-regular-expressions:
 ? regular expressions (of type POSIX.2) -> check/update; also link to Go page
 d separate escaping for "\t" etc in arg-2/regex position -- "\t"."\t" example as well ...
-
-reference-main-overview:
-E is that it is designed for -> write and link to streaming-operations page
-
-reference-dsl-operators:
-c Operator precedence: add >>>; check for other new operators (like ??)
-c code: ** operator have int-int-to-int check?
 
 reference-dsl-control-structures:
 E emph p-a blocks are syntactic sugar for if-statements

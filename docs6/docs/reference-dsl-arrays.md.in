@@ -5,3 +5,27 @@ TODO
 GENMD_RUN_COMMAND
 mlr --json cat data/array-example.json
 GENMD_EOF
+
+## TBF
+
+[Arrays](reference-dsl-arrays.md) are supported [as of Miller 6](new-in-miller-6.md).
+
+Suppose we have arrays like this in our input data:
+
+GENMD_RUN_COMMAND
+cat data/json-example-3.json
+GENMD_EOF
+
+comment:
+
+GENMD_RUN_COMMAND
+mlr --ijson --oxtab cat data/json-example-3.json
+GENMD_EOF
+
+comment:
+
+GENMD_RUN_COMMAND
+mlr --json --jvstack cat data/json-example-3.json
+GENMD_EOF
+
+xxx null-gaps for auto-extend

@@ -42,17 +42,23 @@ mlr help list-functions | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
     linkname='logical-xor'
 
   elif [ "$funcname" = '?' ]; then
-    displayname='\?'
+    displayname='?'
     linkname='question-mark'
   elif [ "$funcname" = ':' ]; then
     displayname='\:'
     linkname='colon'
-  elif [ "$funcname" = '? :' ]; then
-    displayname='\?'
-    linkname='question-mark-colon'
   elif [ "$funcname" = '?:' ]; then
-    displayname='\?'
+    displayname='?:'
     linkname='question-mark-colon'
+  elif [ "$funcname" = '? :' ]; then
+    displayname='?:'
+    linkname='question-mark-colon'
+  elif [ "$funcname" = '??' ]; then
+    displayname='??'
+    linkname='absent-coalesce'
+  elif [ "$funcname" = '???' ]; then
+    displayname='???'
+    linkname='absent-empty-coalesce'
 
   elif [ "$funcname" = '!' ]; then
     displayname='\!'

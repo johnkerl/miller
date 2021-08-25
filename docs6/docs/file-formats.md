@@ -230,11 +230,21 @@ light
 
 ## JSON
 
-JSON is a format which supports arbitrarily deep nesting of "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for handling **tabular data** only. This means Miller cannot (and should not) handle arbitrary JSON. (Check out [jq](https://stedolan.github.io/jq/).)
+JSON is a format which supports scalars (numbers, strings, boolean, etc.) as
+well as "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for
+handling **tabular data** only.  By *tabular JSON* I mean the data is either a
+sequence of one or more objects, or an array consisting of one or more objects.
+Miller treats JSON objects as name-indexed records.
 
-But if you have tabular data represented in JSON then Miller can handle that for you.
+This means Miller cannot (and should not) handle arbitrary JSON.  In practice,
+though, Miller can handle single JSON objects as well as list of them. The only
+kinds of JSON that are unmillerable are single scalars (e.g. file contents `3`)
+and arrays of non-object (e.g. file contents `[1,2,3,4,5]`).  Check out
+[jq](https://stedolan.github.io/jq/) for a tool which handles all valid JSON.
 
-By *tabular JSON* I mean the data is either a sequence of one or more objects, or an array consisting of one or more orjects. Miller treats JSON objects as name-indexed records.
+In short, if you have tabular data represented in JSON -- lists of objects,
+either with or without outermost `[...]` -- [then Miller can handle that for
+you.
 
 ### Single-level JSON objects
 
@@ -255,7 +265,7 @@ An **array of single-level objects** is, quite simply, **a table**:
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json</b>
+<b>mlr --json head -n 2 then cut -f color,u,v data/json-example-1.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {
@@ -270,19 +280,39 @@ An **array of single-level objects** is, quite simply, **a table**:
 }
 </pre>
 
+Single-level JSON data goes back and forth between JSON and tabular formats
+in the obvious way:
+
 <pre class="pre-highlight-in-pair">
-<b>mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json</b>
+<b>mlr --ijson --opprint head -n 2 then cut -f color,u,v data/json-example-1.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-shape    u_mean             u_stddev            u_count
-triangle 0.5839953333333333 0.1311840005882324  3
-square   0.40935475         0.36542809552028616 4
-circle   0.3660126666666667 0.20909443245656578 3
+color  u        v
+yellow 0.632170 0.988721
+red    0.219668 0.001257
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --opprint cat data/json-example-1.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag i  u        v        w        x
+yellow triangle 1    11 0.632170 0.988721 0.436498 5.798188
+red    square   1    15 0.219668 0.001257 0.792778 2.944117
+red    circle   1    16 0.209017 0.290052 0.138103 5.065034
+red    square   0    48 0.956274 0.746720 0.775542 7.117831
+purple triangle 0    51 0.435535 0.859129 0.812290 5.753095
+red    square   0    64 0.201551 0.953110 0.771991 5.612050
+purple triangle 0    65 0.684281 0.582372 0.801405 5.805148
+yellow circle   1    73 0.603365 0.423708 0.639785 7.006414
+yellow circle   1    87 0.285656 0.833516 0.635058 6.350036
+purple square   0    91 0.259926 0.824322 0.723735 6.854221
 </pre>
 
 ### Nested JSON objects
 
-Additionally, Miller can **tabularize nested objects by concatentating keys**:
+Additionally, Miller can **tabularize nested objects by concatentating keys**. If your processing has
+input as well as output in JSON format, JSON structure is preserved throughout the processing:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --json --jvstack head -n 2 data/json-example-2.json</b>
@@ -318,6 +348,8 @@ Additionally, Miller can **tabularize nested objects by concatentating keys**:
 }
 </pre>
 
+But if the input format is JSON and the output format is not (or vice versa) then key-concatenation applies:
+
 <pre class="pre-highlight-in-pair">
 <b>mlr --ijson --opprint head -n 4 data/json-example-2.json</b>
 </pre>
@@ -329,103 +361,22 @@ flag i  attributes.color attributes.shape values.u values.v values.w values.x
 0    48 red              square           0.956274 0.746720 0.775542 7.117831
 </pre>
 
-Note in particular that as far as Miller's `put` and `filter`, as well as other I/O formats, are concerned, these are simply field names with colons in them:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --json --jvstack head -n 1 \</b>
-<b>  then put '${values:uv} = ${values:u} * ${values:v}' \</b>
-<b>  data/json-example-2.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "flag": 1,
-  "i": 11,
-  "attributes": {
-    "color": "yellow",
-    "shape": "triangle"
-  },
-  "values": {
-    "u": 0.632170,
-    "v": 0.988721,
-    "w": 0.436498,
-    "x": 5.798188
-  }
-}
-</pre>
-
-### Arrays
-
-Arrays (TODO: update for Miller6) aren't supported in Miller's `put`/`filter` DSL. By default, JSON arrays are read in as integer-keyed maps.
-
-Suppose we have arrays like this in our input data:
-
-<pre class="pre-highlight-in-pair">
-<b>cat data/json-example-3.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "label": "orange",
-  "values": [12.2, 13.8, 17.2]
-}
-{
-  "label": "purple",
-  "values": [27.0, 32.4]
-}
-</pre>
-
-Then integer indices (starting from 0 and counting up) are used as map keys:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --ijson --oxtab cat data/json-example-3.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-label    orange
-values.1 12.2
-values.2 13.8
-values.3 17.2
-
-label    purple
-values.1 27.0
-values.2 32.4
-</pre>
-
-When the data are written back out as JSON, field names are re-expanded as above, but what were arrays on input are now maps on output:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --json --jvstack cat data/json-example-3.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "label": "orange",
-  "values": [12.2, 13.8, 17.2]
-}
-{
-  "label": "purple",
-  "values": [27.0, 32.4]
-}
-</pre>
-
-This is non-ideal, but it allows Miller (5.x release being latest as of this writing) to handle JSON arrays at all.
-
-You might also use `mlr --json-skip-arrays-on-input` or `mlr --json-fatal-arrays-on-input`.
-
-To truly handle JSON, please use a JSON-processing tool such as [jq](https://stedolan.github.io/jq/).
+This is discussed in more detail on the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
 
 ### Formatting JSON options
 
 JSON isn't a parameterized format, so `RS`, `FS`, `PS` aren't specifiable. Nonetheless, you can do the following:
 
-* Use `--jvstack` to pretty-print JSON objects with multi-line (vertically stacked) spacing. By default, each Miller record (JSON object) is one per line.
-
-* Keystroke-savers: `--jsonx` simply means `--json --jvstack`, and `--ojsonx` simply means `--ojson --jvstack`.
+* Use `--no-jvstack` to print JSON objects one per line.  By default, each Miller record (JSON object) is pretty-printed in multi-line format.
 
 * Use `--jlistwrap` to print the sequence of JSON objects wrapped in an outermost `[` and `]`. By default, these aren't printed.
 
+<!---
+TODO: probably remove entirely
 * Use `--jquoteall` to double-quote all object values. By default, integers, floating-point numbers, and booleans `true` and `false` are not double-quoted when they appear as JSON-object keys.
+-->
 
 * Use `--jflatsep yourseparatorhere` to specify the string used for key concatenation: this defaults to a single dot.
-
-Again, please see [jq](https://stedolan.github.io/jq/) for a truly powerful, JSON-specific tool.
 
 ## PPRINT: Pretty-printed tabular
 
@@ -587,6 +538,9 @@ PPRINT, and markdown, respectively. Note that markdown format is available for
 output only.
 </pre>
 
+<!---
+TODO: probably entirely unsupport this feature in Miller6.
+
 ## Autodetect of line endings
 
 Default line endings (`--irs` and `--ors`) are `'auto'` which means **autodetect from the input file format**, as long as the input file(s) have lines ending in either LF (also known as linefeed, `'\n'`, `0x0a`, Unix-style) or CRLF (also known as carriage-return/linefeed pairs, `'\r\n'`, `0x0d 0x0a`, Windows style).
@@ -600,6 +554,7 @@ If you use `--ors {something else}` with (default or explicitly specified) `--ir
 If you use `--irs {something else}` with (default or explicitly specified) `--ors auto` then the output line endings used are LF on Unix/Linux/BSD/MacOS X, and CRLF on Windows.
 
 See also [Record/field/pair separators](reference-main-io-options.md#recordfieldpair-separators) for more information about record/field/pair separators.
+--->
 
 ## Comments in data
 

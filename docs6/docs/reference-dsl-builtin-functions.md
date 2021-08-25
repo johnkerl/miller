@@ -207,13 +207,14 @@ You can get a list of all functions using **mlr -f**, with details using **mlr -
 
 
 <a id=question-mark-colon />
-## \?
+## ?:
 
 <pre class="pre-non-highlight-non-pair">
 ?:  (class=boolean #args=3) Standard ternary operator.
 </pre>
 
 
+<a id=absent-coalesce />
 ## ??
 
 <pre class="pre-non-highlight-non-pair">
@@ -221,6 +222,7 @@ You can get a list of all functions using **mlr -f**, with details using **mlr -
 </pre>
 
 
+<a id=absent-empty-coalesce />
 ## ???
 
 <pre class="pre-non-highlight-non-pair">
