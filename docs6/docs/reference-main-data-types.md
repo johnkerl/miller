@@ -7,16 +7,13 @@ Miller's types for function processing are:
 
 * Scalars:
     * **string**
-    * **float** (double-precision)
-    * **int** (64-bit signed)
+    * **float** (double-precision) and **int** (64-bit signed): see the [Arithmetic](reference-main-arithmetic.md) page
     * **boolean**
 * Collections:
-    * **map**
-    * **array**
+    * **map**: see the [Maps](reference-main-maps.md) page
+    * **array**: see the [Arrays](reference-main-arrays.md) page
 * Nulls and error:
-    * **empty-null** (empty string)
-    * **absent-null** (reads of unset right-hand sides, or fall-through non-explicit return values from user-defined functions)
-    * **JSON-null** (TODO)
+    * **absent-null** (reads of unset right-hand sides, or fall-through non-explicit return values from user-defined functions) and **JSON-null**: see the [null-data page](reference-main-null-data.md)
     * **error** (TODO: give an example)
 
 TODO: point to null-data page; arrays page; arithmetic page; what else?

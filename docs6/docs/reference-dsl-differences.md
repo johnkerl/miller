@@ -105,9 +105,42 @@ int
 float
 </pre>
 
-## 1-up array indices
+## Print adds spaces around multiple arguments
 
-Arrays are indexed starting with 1, not 0. This is discussed in detail on the [arrays page](reference-dsl-arrays.md).
+As seen in the previous example,
+[`print`](reference-dsl-output-statements.md#print-statements) with multiple
+comma-delimited arguments fills in intervening spaces for you. If you want to
+avoid this, use the dot operator for string-concatenation instead.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put -q '</b>
+<b>  end {</b>
+<b>    print "[", "a", "b", "c", "]";</b>
+<b>    print "[" . "a" . "b" . "c" . "]";</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[ a b c ]
+[abc]
+</pre>
+
+Similarly, a final newline is printed for you; use [`printn`](reference-dsl-output-statements.md#print-statements) to avoid this.
+
+## Absent-null
+
+Miller has a somewhat novel flavor of null data called _absent_: if a record
+has a field `x` then `$y=$x` creates a field `y`, but if it doesn't then the assignment
+is skipped. See the [null-data page](reference-main-null-data.md) for more
+information.
+
+## Maps
+
+See the [maps page](reference-main-maps.md).
+
+## Arrays, including 1-up array indices
+
+Arrays are indexed starting with 1, not 0. This is discussed in detail on the [arrays page](reference-main-arrays.md).
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv --from data/short.csv cat</b>
@@ -135,50 +168,7 @@ Record 2 has word ball
 Record 3 has word cat
 </pre>
 
-## Print adds spaces around multiple arguments
-
-As seen in the previous example,
-[`print`](reference-dsl-output-statements.md#print-statements) with multiple
-comma-delimited arguments fills in intervening spaces for you. If you want to
-avoid this, use the dot operator for string-concatenation instead.
-
-<pre class="pre-highlight-in-pair">
-<b>mlr -n put -q '</b>
-<b>  end {</b>
-<b>    print "[", "a", "b", "c", "]";</b>
-<b>    print "[" . "a" . "b" . "c" . "]";</b>
-<b>  }</b>
-<b>'</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-[ a b c ]
-[abc]
-</pre>
-
-Similarly, a final newline is printed for you; use [`printn`](reference-dsl-output-statements.md#print-statements) to avoid this.
-
-## Insertion-order-preserving hashmaps
-
-Miller's [maps](reference-dsl-maps.md) (as in many modern languages) preserve insertion order. If you set `x["foo"]=1` and then `x["bar"]=2`, then you are guaranteed that any looping over `x` will retrieve the `"foo"` key-value pair first, and the `"bar"` key-value pair second.
-
-<pre class="pre-highlight-in-pair">
-<b>mlr -n put -q 'end {</b>
-<b>  x["foo"] = 1;</b>
-<b>  x["bar"] = 2;</b>
-<b>  dump x;</b>
-<b>  for (k,v in x) {</b>
-<b>    print "key", k, "value", v</b>
-<b>  }</b>
-<b>}'</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "foo": 1,
-  "bar": 2
-}
-key foo value 1
-key bar value 2
-</pre>
+See the [arrays page](reference-main-arrays.md) for more about arrays.
 
 ## Two-variable for-loops
 
@@ -187,10 +177,3 @@ Miller has a [key-value loop flavor](reference-dsl-control-structures.md#key-val
 ## Semantics for one-variable for-loops
 
 Miller also has a [single-variable loop flavor](reference-dsl-control-structures.md#single-variable-for-loops). If `x` is a map then `for (e in x) { ... }` binds `e` to successive map _keys_ (not values as in PHP). But if `x` is an array then `for e in x) { ... }` binds `e` to successive array _values_ (not indices).
-
-## Absent-null
-
-Miller has a somewhat novel flavor of null data called _absent_: if a record
-has a field `x` then `$y=$x` creates a field `y`, but if it doesn't then the assignment
-is skipped. See the [null-data page](reference-main-null-data.md) for more
-information.

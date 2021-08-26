@@ -3,11 +3,13 @@
 
 One of Miller's key features is its support for **heterogeneous** data.  For example, take `mlr sort`: if you try to sort on field `hostname` when not all records in the data stream *have* a field named `hostname`, it is not an error (although you could pre-filter the data stream using `mlr having-fields --at-least hostname then sort ...`).  Rather, records lacking one or more sort keys are simply output contiguously by `mlr sort`.
 
-Miller has two kinds of null data:
+Miller has three kinds of null data:
 
 * **Empty (key present, value empty)**: a field name is present in a record (or in an out-of-stream variable) with empty value: e.g. `x=,y=2` in the data input stream, or assignment `$x=""` or `@x=""` in `mlr put`.
 
 * **Absent (key not present)**: a field name is not present, e.g. input record is `x=1,y=2` and a `put` or `filter` expression refers to `$z`. Or, reading an out-of-stream variable which hasn't been assigned a value yet, e.g.  `mlr put -q '@sum += $x; end{emit @sum}'` or `mlr put -q '@sum[$a][$b] += $x; end{emit @sum, "a", "b"}'`.
+
+* **JSON null**: (TODO: describe)
 
 You can test these programatically using the functions `is_empty`/`is_not_empty`, `is_absent`/`is_present`, and `is_null`/`is_not_null`. For the last pair, note that null means either empty or absent.
 

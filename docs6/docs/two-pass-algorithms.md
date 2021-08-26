@@ -9,9 +9,11 @@ and [here](operating-on-all-records.md) for an introductory discussion.) This
 makes Miller particularly suitable for single-pass algorithms, allowing many of
 its verbs to process files that are (much) larger than the amount of RAM
 present in your system. (Of course, Miller verbs such as `sort`, `tac`, etc.
-all must ingest and retain all input records before emitting any output
-records.) You can also use out-of-stream variables to perform multi-pass
-computations, at the price of retaining all input records in memory.
+all must ingest and retain all input records before emitting any output records
+-- see the [page on streaming processing and memory
+usage](streaming-and-memory.md).) You can also use [out-of-stream
+variables](reference-dsl-variables.md#out-of-stream-variables) to perform
+multi-pass computations, at the price of retaining all input records in memory.
 
 One of Miller's strengths is its compact notation: for example, given input of the form
 
@@ -197,7 +199,7 @@ red    purple 4 0.477187
 blue   red    4 0.007487
 </pre>
 
-Of course, the largest value of `n` isn't known until after all data have been read. Using an out-of-stream variable we can retain all records as they are read, then filter them at the end:
+Of course, the largest value of `n` isn't known until after all data have been read. Using an [out-of-stream variable](reference-dsl-variables.md#out-of-stream-variables) we can [retain all records as they are read](operating-on-all-records.md), then filter them at the end:
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/maxrows.mlr</b>

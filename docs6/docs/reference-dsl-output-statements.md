@@ -251,7 +251,7 @@ Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more infor
 ## Emit statements
 
 There are three variants: `emitf`, `emit`, and `emitp`. Keep in mind that
-out-of-stream variables are a nested, multi-level hashmap (directly viewable as
+out-of-stream variables are a nested, multi-level [map](reference-main-maps.md) (directly viewable as
 JSON using `dump`), while Miller record values are as well during processing --
 but records may be flattened down for output to tabular formats. See the page
 [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md) for more
@@ -403,7 +403,7 @@ a=wye,b=wye,i=3,sum=0.204603
 a=wye,b=pan,i=5,sum=0.573288
 </pre>
 
-Now for **emitp**: if you have as many names following `emit` as there are levels in the out-of-stream variable's hashmap, then `emit` and `emitp` do the same thing. Where they differ is when you don't specify as many names as there are hashmap levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: `emitp` includes full prefixing (hence the `p` in `emitp`) while `emit` takes the deepest hashmap key as the output-record key:
+Now for **emitp**: if you have as many names following `emit` as there are levels in the out-of-stream variable's map, then `emit` and `emitp` do the same thing. Where they differ is when you don't specify as many names as there are map levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: `emitp` includes full prefixing (hence the `p` in `emitp`) while `emit` takes the deepest map key as the output-record key:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small</b>

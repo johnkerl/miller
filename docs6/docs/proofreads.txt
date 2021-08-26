@@ -4,7 +4,8 @@ ALL:
 * rid of explicitly passing around os.Stdout in all various help functions, annoying
 * het.dkvp > het.json in more places
 * check each page for adequate h2 coverage
-* hash-map / hashmap -> map everywhere
+
+* deduping pass!
 
 ----------------------------------------------------------------
 E fill out flatten/unflatten page
@@ -13,7 +14,11 @@ E fill out memory/streaming page
   - GOMNAXPROCS
 E fill out data-types page
 E fill out arrays page
+  - xref to fla/unfla page
+  - slices including semantics for out-of-range slices
 E fill out maps page
+  - xref to fla/unfla page
+  - move from reference-dsl-variables
 
 c GOMAXPROCS -- up it? separate page maybe -- ?
   - note one goroutine for in, out, & each verb
@@ -25,8 +30,6 @@ e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
   o go test
   o make in man6
   o regen.sh in docs6
-
-? why are purple.csv.cg red.csv.gz yellow.csv.gz changing on regens?
 ----------------------------------------------------------------
 
 record-heterogeneity:
@@ -55,15 +58,12 @@ dates-and-times:
 shell-commands:
 e while-read example from issues
 
-data-cleaning-examples:
-? mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv -- do false/true autotype -- ?
-
 statistics-examples:
 C 2nd card no output b/c stats1 --fr
 
 two-pass-algorithms:
 l link to "new" verbs x everywhere possible
-l Of course, Miller verbs such as sort, tac, etc. all must ... -> linkify to new memory/streaming page
+e section-renames for consistency
 x this (or wherever ...) maybe get rid of some of the too-many examples. pick some survivors; x the rest.
 
 reference-verbs:

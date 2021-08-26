@@ -28,7 +28,7 @@ now discussed first, and more examples use CSV.
 ## JSON support, and arrays
 
 Arrays are now supported in Miller's `put`/`filter` programming language, as
-described in the [Arrays reference](reference-dsl-arrays.md). Also, `array` is
+described in the [Arrays reference](reference-main-arrays.md). Also, `array` is
 now a keyword so this is no longer usable as a local-variable or UDF name.
 
 JSON support is improved:

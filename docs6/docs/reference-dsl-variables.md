@@ -17,7 +17,7 @@ Miller has the following kinds of variables:
 
 These are written all in capital letters, such as `NR`, `NF`, `FILENAME`, and only a small, specific set of them is defined by Miller.
 
-Namely, Miller supports the following five built-in variables for [filter and put](reference-dsl.md), all `awk`-inspired: `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME`, as well as the mathematical constants `M_PI` and `M_E`.  Lastly, the `ENV` hashmap allows read access to environment variables, e.g.  `ENV["HOME"]` or `ENV["foo_".$hostname]`.
+Namely, Miller supports the following five built-in variables for [filter and put](reference-dsl.md), all `awk`-inspired: `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME`, as well as the mathematical constants `M_PI` and `M_E`.  Lastly, the `ENV` map allows read access to environment variables, e.g.  `ENV["HOME"]` or `ENV["foo_".$hostname]`.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr filter 'FNR == 2' data/small*</b>
@@ -209,7 +209,7 @@ a=wye,b=pan,i=5,x=0.573288,y=0.863624
 
 ## Out-of-stream variables
 
-These are prefixed with an at-sign, e.g. `@sum`.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested hashmap: you can do `@sum += $quanity`, or `@sum[$color] += $quanity`, or `@sum[$color][$shape] += $quanity`. The keys for the multi-level hashmap can be any expression which evaluates to string or integer: e.g.  `@sum[NR] = $a + $b`, `@sum[$a."-".$b] = $x`, etc.
+These are prefixed with an at-sign, e.g. `@sum`.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested map: you can do `@sum += $quanity`, or `@sum[$color] += $quanity`, or `@sum[$color][$shape] += $quanity`. The keys for the multi-level map can be any expression which evaluates to string or integer: e.g.  `@sum[NR] = $a + $b`, `@sum[$a."-".$b] = $x`, etc.
 
 Their names and their values are entirely under your control; they change only when you assign to them.
 
@@ -526,7 +526,7 @@ print "outer j =", j;       # j is undefined in this scope.
 
 ## Map literals
 
-Miller's `put`/`filter` DSL has four kinds of hashmaps. **Stream records** are (single-level) maps from name to value. **Out-of-stream variables** and **local variables** can also be maps, although they can be multi-level hashmaps (e.g. `@sum[$x][$y]`).  The fourth kind is **map literals**. These cannot be on the left-hand side of assignment expressions. Syntactically they look like JSON, although Miller allows string and integer keys in its map literals while JSON allows only string keys (e.g. `"3"` rather than `3`). Note though that integer keys become stringified in Miller: `@mymap[3]=4` results in `@mymap` being `{"3":4}`.
+Miller's `put`/`filter` DSL has four kinds of maps. **Stream records** are (single-level) maps from name to value. **Out-of-stream variables** and **local variables** can also be maps, although they can be multi-level maps (e.g. `@sum[$x][$y]`).  The fourth kind is **map literals**. These cannot be on the left-hand side of assignment expressions. Syntactically they look like JSON, although Miller allows string and integer keys in its map literals while JSON allows only string keys (e.g. `"3"` rather than `3`). Note though that integer keys become stringified in Miller: `@mymap[3]=4` results in `@mymap` being `{"3":4}`.
 
 For example, the following swaps the input stream's `a` and `i` fields, modifies `y`, and drops the rest:
 

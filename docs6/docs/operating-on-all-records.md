@@ -101,7 +101,7 @@ running out of memory.
 
 ## Retain records in a map
 
-The second option is to retain entire records in a [map](reference-dsl-maps.md), then loop over them in an `end` block.
+The second option is to retain entire records in a [map](reference-main-maps.md), then loop over them in an `end` block.
 
 Let's use the same short data file [data/short.csv](data/short.csv):
 
@@ -170,7 +170,7 @@ The downside to this, of course, is that this retains all records (plus data-str
 
 ## Retain records in an array
 
-The third option is to retain records in an [array](reference-dsl-arrays.md), then loop over them in an `end` block.
+The third option is to retain records in an [array](reference-main-arrays.md), then loop over them in an `end` block.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from data/short.csv put -q '</b>
@@ -219,12 +219,12 @@ over records.
 
 Retaining records as a map or as an array is a matter of taste. Some things to note:
 
-If we initialize `@records = {}` in the `begin` block (or, if we don't initialize it at all and just start writing to it in the main statements) then `@records` is a [map](reference-dsl-maps.md) . If we initialize `@records=[]` then it's an array.
+If we initialize `@records = {}` in the `begin` block (or, if we don't initialize it at all and just start writing to it in the main statements) then `@records` is a [map](reference-main-maps.md) . If we initialize `@records=[]` then it's an array.
 
 Arrays are, of course, contiguously indexed. (And, in Miller, their indices
-start with 1, not 0 as discussed in the [Arrays](reference-dsl-arrays.md)
+start with 1, not 0 as discussed in the [Arrays](reference-main-arrays.md)
 page.) This means that if you are only retaining a subset of records then your
-array will have [null-gaps](reference-dsl-arrays.md) in it:
+array will have [null-gaps](reference-main-arrays.md) in it:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from data/short.csv put -q '</b>
@@ -333,10 +333,10 @@ If you use a map to retain records, then this is a non-issue: maps can retain wh
 }
 </pre>
 
-Do note that Miller [maps](reference-dsl-maps.md) preserve insertion order, so
+Do note that Miller [maps](reference-main-maps.md) preserve insertion order, so
 at the end you're guaranteed to loop over records in the same order you read
-them. Also note that when you index a Miller hashmap with an integer key, this
-works, but the [key is stringified](reference-dsl-maps.md).
+them. Also note that when you index a Miller map with an integer key, this
+works, but the [key is stringified](reference-main-maps.md).
 
 ## Retain partial records in map or array
 
