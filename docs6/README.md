@@ -9,7 +9,7 @@
 
 ## Contributing
 
-* You need `pip install mkdocs` (or `pip3 install mkdocs`).
+* You need `pip install mkdocs` (or `pip3 install mkdocs`) as well as `pip install mkdocs-material`.
 * The docs include lots of live code examples which will be invoked using `mlr` which must be somewhere in your `$PATH`.
 * Clone https://github.com/johnkerl/miller and cd into `docs6/` within your clone.
 * Quick-editing loop:

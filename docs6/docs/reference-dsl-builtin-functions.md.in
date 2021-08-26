@@ -2,7 +2,7 @@
 
 ## Summary
 
-GENMD_RUN_CONTENT_GENERATOR(mk-func-table.rb)
+GENMD_RUN_CONTENT_GENERATOR(./mk-func-table.rb)
 
 ## List of functions
 
@@ -10,4 +10,4 @@ Each function takes a specific number of arguments, as shown below, except for f
 
 You can get a list of all functions using **mlr -f**, with details using **mlr -F**.
 
-GENMD_RUN_CONTENT_GENERATOR(mk-func-h2s.sh)
+GENMD_RUN_CONTENT_GENERATOR(./mk-func-h2s.sh)
