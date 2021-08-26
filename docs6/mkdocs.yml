@@ -10,6 +10,7 @@ extra_css: ['extra.css']
 nav:
   - "Introduction": "index.md"
   - 'Getting started':
+    - "Installing Miller": "installing-miller.md"
     - "Miller in 10 minutes": "10min.md"
     - "Keystroke-savers": "keystroke-savers.md"
     - "Intro to Miller's programming language": "programming-language.md"

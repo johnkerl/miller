@@ -101,6 +101,11 @@ For compressed output:
 
 * For [`tee` statements](reference-dsl-output-statements.md#tee-statements), which write output to files rather than stdout, use `tee`'s redirect syntax:
 
+<!---
+  gzip by default puts timestamp into the header, so every regen of these *.md.in files makes a modified
+  file, which is annoying for version control. That can be suppressed by using 'gzip -n' but then that's
+  confusing for the reader, who has no need for -n. We handle this by making this code sample non-live.
+--->
 <pre class="pre-highlight-non-pair">
 <b>mlr --from example.csv --csv put -q '</b>
 <b>  filename = $color.".csv.gz";</b>

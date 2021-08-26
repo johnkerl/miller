@@ -72,7 +72,12 @@ For compressed output:
 
 * For [`tee` statements](reference-dsl-output-statements.md#tee-statements), which write output to files rather than stdout, use `tee`'s redirect syntax:
 
-GENMD_RUN_COMMAND
+<!---
+  gzip by default puts timestamp into the header, so every regen of these *.md.in files makes a modified
+  file, which is annoying for version control. That can be suppressed by using 'gzip -n' but then that's
+  confusing for the reader, who has no need for -n. We handle this by making this code sample non-live.
+--->
+GENMD_CARDIFY_HIGHLIGHT_FOUR
 mlr --from example.csv --csv put -q '
   filename = $color.".csv.gz";
   tee | "gzip > ".filename, $*
@@ -86,8 +91,12 @@ purple.csv.gz: gzip compressed data, last modified: Mon Aug 23 02:34:05 2021, fr
 yellow.csv.gz: gzip compressed data, last modified: Mon Aug 23 02:34:05 2021, from Unix, original size modulo 2^32 158
 GENMD_EOF
 
-GENMD_RUN_COMMAND
+GENMD_CARDIFY_HIGHLIGHT_ONE
 mlr --csv cat yellow.csv.gz
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
 GENMD_EOF
 
 * Using the [in-place flag](reference-main-io-options.md#in-place-mode) `-I`,

@@ -40,7 +40,6 @@ l Miller handles compliant CSV: include rfc4180 link
 ? Regularizing ragged CSV: use regularize verb?!?
 
 shapes-of-data:
-E data/small -> example.csv (and throughout ...)
 E Rectangularizing data: cf regularize verb, & other page?
 
 special-symbols-and-formatting:
@@ -55,15 +54,6 @@ dates-and-times:
 
 shell-commands:
 e while-read example from issues
-
-log-processing-examples:
-l or Miller's having-fields, or is_present -> DSL is_present, & linkify
-? grep 'various sorts' *.log \
-  | sed 's/.*} //' \
-  | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status -- why no output?
-
-sql-examples:
-l Again, all the examples in the CSV section apply here -- linkify "CSV section"
 
 data-cleaning-examples:
 ? mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv -- do false/true autotype -- ?

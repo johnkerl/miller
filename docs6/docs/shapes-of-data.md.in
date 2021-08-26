@@ -118,14 +118,14 @@ GENMD_EOF
 
 ## Why doesn't mlr cut put fields in the order I want?
 
-Example: columns `x,i,a` were requested but they appear here in the order `a,i,x`:
+Example: columns `rate,shape,flag` were requested but they appear here in the order `shape,flag,rate`:
 
 GENMD_RUN_COMMAND
-cat data/small
+cat example.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr cut -f x,i,a data/small
+mlr --csv cut -f rate,shape,flag example.csv
 GENMD_EOF
 
 The issue is that Miller's `cut`, by default, outputs cut fields in the order they appear in the input data. This design decision was made intentionally to parallel the Unix/Linux system `cut` command, which has the same semantics.
@@ -133,7 +133,7 @@ The issue is that Miller's `cut`, by default, outputs cut fields in the order th
 The solution is to use the `-o` option:
 
 GENMD_RUN_COMMAND
-mlr cut -o -f x,i,a data/small
+mlr --csv cut -o -f rate,shape,flag example.csv
 GENMD_EOF
 
 ## Numbering and renumbering records
@@ -141,29 +141,29 @@ GENMD_EOF
 The `awk`-like built-in variable `NR` is incremented for each input record:
 
 GENMD_RUN_COMMAND
-cat data/small
+cat example.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr put '$nr = NR' data/small
+mlr --csv put '$nr = NR' example.csv
 GENMD_EOF
 
 However, this is the record number within the original input stream -- not after any filtering you may have done:
 
 GENMD_RUN_COMMAND
-mlr filter '$a == "wye"' then put '$nr = NR' data/small
+mlr --csv filter '$color == "yellow"' then put '$nr = NR' example.csv
 GENMD_EOF
 
 There are two good options here. One is to use the `cat` verb with `-n`:
 
 GENMD_RUN_COMMAND
-mlr filter '$a == "wye"' then cat -n data/small
+mlr --csv filter '$color == "yellow"' then cat -n example.csv
 GENMD_EOF
 
 The other is to keep your own counter within the `put` DSL:
 
 GENMD_RUN_COMMAND
-mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small
+mlr --csv filter '$color == "yellow"' then put 'begin {@n = 1} $n = @n; @n += 1' example.csv
 GENMD_EOF
 
 The difference is a matter of taste (although `mlr cat -n` puts the counter first).

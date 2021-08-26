@@ -104,8 +104,6 @@ standard 10009872    108
 ...
 </pre>
 
-Again, all the examples in the CSV section apply here -- just change the input-format flags.
-
 ## SQL-input examples
 
 One use of NIDX (value-only, no keys) format is for loading up SQL tables.
