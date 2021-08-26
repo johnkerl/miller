@@ -60,7 +60,7 @@ op=cache,type=A9,hit=0
 time=1472819742,batch_size=100,num_filtered=728
 </pre>
 
-Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system `grep` command, or Miller's `having-fields`, or `is_present`, we can pick out the parts we want and analyze them:
+Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system `grep` command, or Miller's [having-fields verb](reference-verbs.md#having-fields), or the [is_present DSL function](reference-dsl-builtin-functions.md#is_present), we can pick out the parts we want and analyze them:
 
 <pre class="pre-highlight-in-pair">
 <b>grep op=cache log.txt \</b>
@@ -209,8 +209,11 @@ This, of course, depends highly on what's in your log files. But, as an example,
 
 I prefer to pre-filter with `grep` and/or `sed` to extract the structured text, then hand that to Miller. Example:
 
-<pre class="pre-highlight-non-pair">
+<pre class="pre-highlight-in-pair">
 <b>grep 'various sorts' *.log \</b>
 <b>  | sed 's/.*} //' \</b>
 <b>  | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+... output here ...
 </pre>

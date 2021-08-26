@@ -14,7 +14,7 @@ GENMD_RUN_COMMAND
 cat log.txt
 GENMD_EOF
 
-Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system `grep` command, or Miller's `having-fields`, or `is_present`, we can pick out the parts we want and analyze them:
+Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system `grep` command, or Miller's [having-fields verb](reference-verbs.md#having-fields), or the [is_present DSL function](reference-dsl-builtin-functions.md#is_present), we can pick out the parts we want and analyze them:
 
 GENMD_RUN_COMMAND
 grep op=cache log.txt \
@@ -48,8 +48,9 @@ GENMD_EOF
 
 I prefer to pre-filter with `grep` and/or `sed` to extract the structured text, then hand that to Miller. Example:
 
-GENMD_SHOW_COMMAND
+GENMD_CARDIFY_HIGHLIGHT_THREE
 grep 'various sorts' *.log \
   | sed 's/.*} //' \
   | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
+... output here ...
 GENMD_EOF
