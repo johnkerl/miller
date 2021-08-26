@@ -133,16 +133,16 @@ Miller retains only as much data as needed. This means that whenever
 functionally possible, you can operate on files which are larger than your
 system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
 
-* Miller is **pipe-friendly** and interoperates with the Unix toolkit
+* Miller is **pipe-friendly** and interoperates with the Unix toolkit.
 
 * Miller's I/O formats include **tabular pretty-printing**, **positionally
-  indexed** (Unix-toolkit style), CSV, JSON, and others
+  indexed** (Unix-toolkit style), CSV, JSON, and others.
 
-* Miller does **conversion** between formats
+* Miller does **conversion** between formats.
 
-* Miller's **processing is format-aware**: e.g. CSV `sort` and `tac` keep header lines first
+* Miller's **processing is format-aware**: e.g. CSV `sort` and `tac` keep header lines first.
 
-* Miller has high-throughput **performance** on par with the Unix toolkit
+* Miller has high-throughput **performance** on par with the Unix toolkit.
 
 * Not unlike `jq` (http://stedolan.github.io/jq/) for JSON, Miller is written
 in portable, modern C, with **zero runtime dependencies**. You can download or
