@@ -1,7 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
 # DSL overview
 
+_DSL_ stands for _domain-specific language_: it's language particular to Miller
+which you can use to write expressions to specify customer transformations to
+your data. (See [Miller programming language](programming-language.md) for an
+introduction.)
+
 ## Verbs compared to DSL
+
+While `put` and `filter` are [verbs](reference-verbs.md), they're different
+from the rest in that they let you use the DSL -- so we often contrast _DSL_
+(things you can do in the `put` and `filter` verbs), and _verbs_ (things you
+can do using the other verbs besides `put` and `filter`.)
 
 Here's comparison of verbs and `put`/`filter` DSL expressions:
 

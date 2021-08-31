@@ -5,11 +5,13 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
-<a href="reference-verbs/index.html">[verbs]</a>
+<a class="quicklink" href="reference-verbs/index.html">Verb list</a>
 &nbsp;
-<a href="reference-dsl-builtin-functions/index.html">[functions]</a>
+<a class="quicklink" href="reference-dsl-builtin-functions/index.html">Function list</a>
 &nbsp;
-<a href="https://github.com/johnkerl/miller">[repository]</a>
+<a class="quicklink" href="glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller">Repository</a>
 </span>
 </div>
 

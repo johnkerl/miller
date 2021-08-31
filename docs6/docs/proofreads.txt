@@ -6,8 +6,21 @@ ALL:
 * check each page for adequate h2 coverage
 
 * deduping pass!
+* 1-up/0-up -> one-up/zero-up everywhere
+
+* flags-doc
+  C refactor cli-parser w/ LUT & help strings
+  C refector mlr help w/ mlr help flags
+  c reorg manpage a bit
+* top-of-page jargon-check for each one
 
 ----------------------------------------------------------------
+C flags LUTs
+? twi-dm re all-contribs: all-contributors.org
+
+e new ragged/rectangular/sparse/etc page
+e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
+
 E fill out flatten/unflatten page
 E fill out memory/streaming page
   - rename maybe? add note on threading and how it scales on multicore arches
@@ -19,10 +32,20 @@ E fill out arrays page
 E fill out maps page
   - xref to fla/unfla page
   - move from reference-dsl-variables
+E show-all-flags help -- fully alpha, or alpha-by-type ...
 
 c GOMAXPROCS -- up it? separate page maybe -- ?
   - note one goroutine for in, out, & each verb
   - check and respect env-var
+
+* functions: somewhere organize by type. olh/man6/docs6 ...
+
+* regex: more about what is / is not
+  https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
+
+* shorter version for --headerless-csv-output, & doc everywhere
+
+c? mlr -S / -F outside of put/filter -- ?
 
 e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
 ? somewhere, do-it-all sequencing:
@@ -31,6 +54,9 @@ e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
   o make in man6
   o regen.sh in docs6
 ----------------------------------------------------------------
+
+reference-main-overview:
+e verbage on record, field, key-value pair, stream, etc
 
 record-heterogeneity:
 ? current csv-reader code handles this? i think not. check csvlite-reader too.
@@ -80,12 +106,16 @@ E true/false -> add info about NaN and Inf et al.
   - ditto programming-language.md.in
 c UTs for r"a" . r"b" and so on and so on
 
+reference-dsl-variables.md:
+e 'five' -> more; see BNF; all Ixx/Oxx; FLATSEP as well; IFLATSEP & OFLATSEP -- ?
+
 reference-main-null-data:
 ? more variants of is_... ?
 ? Records with one or more empty sort-field values sort after records with all sort-field values present -> apparently not true for sort -nr
+e split out h2's
+! spell out JSON-null
 
 reference-main-arithmetic:
-? remove references to put/filter -F -- note stats1 keeps -F so maybe we should here as well -- ? or nah?
 ? test stats1/step -F flag
 ? The following, however, produce integer output if their inputs are integers: + - * / // % abs ceil floor max min round roundm sgn. As well, stats1 -a min, stats1 -a max, stats1 -a sum, step -a delta, and step -a rsum produce integer output if their inputs are integers. -> test all
 
@@ -101,10 +131,18 @@ l Since uninitialized out-of-stream variables default to 0 for addition/substrac
 
 reference-dsl-user-defined-functions:
 E User-defined subroutines -> non-factorial example -- maybe some useful aggregator
+l link to --load and --mload
 
 reference-dsl-builtin-functions:
 c mlr: option "--list-all-functions-as-table" not recognized. Please run "mlr --help" for usage information -> fix
 ! ... need to proofread entire list ...
+
+built-in vars:
+IPS IFS IRS
+OPS OFS ORS
+FLATSEP
+NF NR FNR
+FILENAME FILENUM
 
 reference-dsl-output-statements:
 E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using dump), whereas Miller output records are lists of single-level key-value pairs -> link to flatten page
@@ -119,5 +157,22 @@ E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (d
   o 2 examples not 3?
   o why not '--oflatsep /' respected?
 
+diffs other langs:
+e slice incl/excl; split-in-half
+e localvars in if/else
+e elif
+
+contributing:
+* kitchen-sink-builder script
+
+glossary:
+* need a link for [current record](...) -- maybe page-internal #record
+! after it's done, link-check *all* ........ :^/
+
 manpage:
 ? [NEEDS READ-THROUGH]
+
+install:
+* n.b. homebrew linux https://github.com/johnkerl/miller/issues/77#issuecomment-536611087
+
+mk-func-table.rb: port comments from sphinx to mkdocs

@@ -179,6 +179,12 @@ a, a:before, a:focus, a:hover, a:link, a:visited {
   color: #800000;
 }
 
+a.quicklink {
+  border-radius: 3px;
+  padding: 3px;
+  background-color: #e0e0e0;
+}
+
 /* Hyperlinks in navbar */
 .md-nav__item,
 .md-nav__item:focus,

@@ -66,6 +66,9 @@ w discussion re docs6 ...
 
 * csv -> csv/tsv throughout
 
+* cheatsheet someday? example:
+  https://twitter.com/icymi_py/status/1426622817785765898/photo/1
+
 ----------------------------------------------------------------
 memory/streaming page
 
@@ -324,6 +327,9 @@ MAYBES
   go get github.com/kisielk/godepgraph
   godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
   flamegraph etc double-check
+
+* more data formats:
+  https://indico.cern.ch/event/613842/contributions/2585787/attachments/1463230/2260889/pivarski-data-formats.pdf
 
 ----------------------------------------------------------------
 DEFER:

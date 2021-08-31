@@ -3,82 +3,15 @@
 
 Miller has the following kinds of variables:
 
-**Built-in variables** such as `NF`, `NF`, `FILENAME`, `M_PI`, and `M_E`.  These are all capital letters and are read-only (although some of them change value from one record to another).
-
 **Fields of stream records**, accessed using the `$` prefix. These refer to fields of the current data-stream record. For example, in `echo x=1,y=2 | mlr put '$z = $x + $y'`, `$x` and `$y` refer to input fields, and `$z` refers to a new, computed output field. In a few contexts, presented below, you can refer to the entire record as `$*`.
 
 **Out-of-stream variables** accessed using the `@` prefix. These refer to data which persist from one record to the next, including in `begin` and `end` blocks (which execute before/after the record stream is consumed, respectively). You use them to remember values across records, such as sums, differences, counters, and so on.  In a few contexts, presented below, you can refer to the entire out-of-stream-variables collection as `@*`.
 
 **Local variables** are limited in scope and extent to the current statements being executed: these include function arguments, bound variables in for loops, and local variables.
 
+**Built-in variables** such as `NF`, `NF`, `FILENAME`, `M_PI`, and `M_E`.  These are all capital letters and are read-only (although some of them change value from one record to another).
+
 **Keywords** are not variables, but since their names are reserved, you cannot use these names for local variables.
-
-## Built-in variables
-
-These are written all in capital letters, such as `NR`, `NF`, `FILENAME`, and only a small, specific set of them is defined by Miller.
-
-Namely, Miller supports the following five built-in variables for [filter and put](reference-dsl.md), all `awk`-inspired: `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME`, as well as the mathematical constants `M_PI` and `M_E`.  Lastly, the `ENV` map allows read access to environment variables, e.g.  `ENV["HOME"]` or `ENV["foo_".$hostname]`.
-
-<pre class="pre-highlight-in-pair">
-<b>mlr filter 'FNR == 2' data/small*</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a=eks,b=pan,i=2,x=0.758679,y=0.522151
-1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
-a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr put '$fnr = FNR' data/small*</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.346791,y=0.726802,fnr=1
-a=eks,b=pan,i=2,x=0.758679,y=0.522151,fnr=2
-a=wye,b=wye,i=3,x=0.204603,y=0.338318,fnr=3
-a=eks,b=wye,i=4,x=0.381399,y=0.134188,fnr=4
-a=wye,b=pan,i=5,x=0.573288,y=0.863624,fnr=5
-1=a,2=b,3=i,4=x,5=y,fnr=1
-1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533,fnr=2
-1=eks,2=pan,3=2,4=0.7586799647899636,5=0.5221511083334797,fnr=3
-1=wye,2=wye,3=3,4=0.20460330576630303,5=0.33831852551664776,fnr=4
-1=eks,2=wye,3=4,4=0.38139939387114097,5=0.13418874328430463,fnr=5
-1=wye,2=pan,3=5,4=0.5732889198020006,5=0.8636244699032729,fnr=6
-a=pan,b=eks,i=9999,x=0.267481232652199086,y=0.557077185510228001,fnr=1
-a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134,fnr=2
-a=pan,b=wye,i=10001,x=0.870530722602517626,y=0.009854780514656930,fnr=3
-a=hat,b=wye,i=10002,x=0.321507044286237609,y=0.568893318795083758,fnr=4
-a=pan,b=zee,i=10003,x=0.272054845593895200,y=0.425789896597056627,fnr=5
-</pre>
-
-Their values of `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME` change from one record to the next as Miller scans through your input data stream. The mathematical constants, of course, do not change; `ENV` is populated from the system environment variables at the time Miller starts and is read-only for the remainder of program execution.
-
-Their **scope is global**: you can refer to them in any `filter` or `put` statement. Their values are assigned by the input-record reader:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --csv put '$nr = NR' data/a.csv</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a,b,c,nr
-1,2,3,1
-4,5,6,2
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a,b,c,nr
-1,2,3,1
-1,2,3,1
-1,2,3,1
-4,5,6,2
-4,5,6,2
-4,5,6,2
-</pre>
-
-The **extent** is for the duration of the put/filter: in a `begin` statement (which executes before the first input record is consumed) you will find `NR=1` and in an `end` statement (which is executed after the last input record is consumed) you will find `NR` to be the total number of records ingested.
-
-These are all **read-only** for the `mlr put` and `mlr filter` DSL: they may be assigned from, e.g. `$nr=NR`, but they may not be assigned to: `NR=100` is a syntax error.
 
 ## Field names
 
@@ -600,6 +533,78 @@ Like out-of-stream and local variables, map literals can be multi-level:
 }
 </pre>
 
+## Built-in variables
+
+These are written all in capital letters, and only a small, specific set of them is defined by Miller.
+
+Namely, Miller supports the following five built-in variables for [filter and put](reference-dsl.md), all `awk`-inspired: `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME`, as well as the mathematical constants `M_PI` and `M_E`.  Lastly, the `ENV` map allows read/write access to environment variables, e.g.  `ENV["HOME"]` or `ENV["foo_".$hostname]` or `ENV["VERSION"]="1.2.3"`.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr filter 'FNR == 2' data/small*</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
+a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr put '$fnr = FNR' data/small*</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,fnr=1
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,fnr=2
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,fnr=3
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,fnr=4
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,fnr=5
+1=a,2=b,3=i,4=x,5=y,fnr=1
+1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533,fnr=2
+1=eks,2=pan,3=2,4=0.7586799647899636,5=0.5221511083334797,fnr=3
+1=wye,2=wye,3=3,4=0.20460330576630303,5=0.33831852551664776,fnr=4
+1=eks,2=wye,3=4,4=0.38139939387114097,5=0.13418874328430463,fnr=5
+1=wye,2=pan,3=5,4=0.5732889198020006,5=0.8636244699032729,fnr=6
+a=pan,b=eks,i=9999,x=0.267481232652199086,y=0.557077185510228001,fnr=1
+a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134,fnr=2
+a=pan,b=wye,i=10001,x=0.870530722602517626,y=0.009854780514656930,fnr=3
+a=hat,b=wye,i=10002,x=0.321507044286237609,y=0.568893318795083758,fnr=4
+a=pan,b=zee,i=10003,x=0.272054845593895200,y=0.425789896597056627,fnr=5
+</pre>
+
+Their values of `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME` change from one
+record to the next as Miller scans through your input data stream. The
+mathematical constants, of course, do not change; `ENV` is populated from the
+system environment variables at the time Miller starts. Any changes made to
+`ENV` by assigning to it will affect any subprocesses, such as using
+[piped tee](reference-dsl-output-statements.md#redirected-output-statements).
+
+Their **scope is global**: you can refer to them in any `filter` or `put` statement. Their values are assigned by the input-record reader:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv put '$nr = NR' data/a.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c,nr
+1,2,3,1
+4,5,6,2
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c,nr
+1,2,3,1
+1,2,3,1
+1,2,3,1
+4,5,6,2
+4,5,6,2
+4,5,6,2
+</pre>
+
+The **extent** is for the duration of the put/filter: in a `begin` statement (which executes before the first input record is consumed) you will find `NR=1` and in an `end` statement (which is executed after the last input record is consumed) you will find `NR` to be the total number of records ingested.
+
+These are all **read-only** for the `mlr put` and `mlr filter` DSL: they may be assigned from, e.g. `$nr=NR`, but they may not be assigned to: `NR=100` is a syntax error.
+
 ## Type-checking
 
 Miller's `put`/`filter` DSL supports two optional kinds of type-checking.  One is inline **type-tests** and **type-assertions** within expressions.  The other is **type declarations** for assignments to local variables, binding of arguments to user-defined functions, and return values from user-defined functions, These are discussed in the following subsections.
@@ -733,10 +738,6 @@ func f(map m, int i): bool {
 }
 </pre>
 
-## Null data: empty and absent
-
-Please see the [null-data reference page](reference-main-null-data.md).
-
 ## Aggregate variable assignments
 
 There are three remaining kinds of variable assignment using out-of-stream variables, the last two of which use the `$*` syntax:
@@ -748,7 +749,15 @@ There are three remaining kinds of variable assignment using out-of-stream varia
 Example recursive copy of out-of-stream variables:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small</b>
+<b>mlr --opprint --from data/small put -q '</b>
+<b>  @v["sum"] += $x;</b>
+<b>  @v["count"] += 1;</b>
+<b>  end{</b>
+<b>    dump;</b>
+<b>    @w = @v;</b>
+<b>    dump</b>
+<b>  }</b>
+<b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {
@@ -809,7 +818,67 @@ eks pan 2 0.758679 0.522151
 ## Keywords for filter and put
 
 <pre class="pre-highlight-in-pair">
-<b>mlr help usage-keywords</b>
+<b>mlr help list-keywords # you can also use mlr -k</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+all
+begin
+bool
+break
+call
+continue
+do
+dump
+edump
+elif
+else
+emit
+emitf
+emitp
+end
+eprint
+eprintn
+false
+filter
+float
+for
+func
+if
+in
+int
+map
+num
+print
+printn
+return
+stderr
+stdout
+str
+subr
+tee
+true
+unset
+var
+while
+ENV
+FILENAME
+FILENUM
+FNR
+IFS
+IPS
+IRS
+M_E
+M_PI
+NF
+NR
+OFS
+OPS
+ORS
+</pre>
+
+
+<pre class="pre-highlight-in-pair">
+<b>mlr help usage-keywords # you can also use mlr -K</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 all: used in "emit", "emitp", and "unset" as a synonym for @*

@@ -65,7 +65,7 @@ nav:
       - "Arithmetic": "reference-main-arithmetic.md"
       - "Maps": "reference-main-maps.md"
       - "Arrays": "reference-main-arrays.md"
-      - "Null data": "reference-main-null-data.md"
+      - "Null/empty/absent data": "reference-main-null-data.md"
       - "Regular expressions": "reference-main-regular-expressions.md"
       - "Flatten/unflatten: JSON vs. tabular formats": "flatten-unflatten.md"
       - "Compressed data": "reference-main-compressed-data.md"
@@ -90,3 +90,4 @@ nav:
       - "Installation": "installation.md"
       - "Building from source": "build.md"
     - "Documents for previous releases": "release-docs.md"
+    - "Glossary": "glossary.md"
