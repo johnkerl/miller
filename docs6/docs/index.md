@@ -1,19 +1,19 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
-# Introduction
-
 <div>
 <span class="quicklinks">
 Quick links:
 &nbsp;
-<a class="quicklink" href="reference-verbs/index.html">Verb list</a>
+<a class="quicklink" href="./reference-verbs/index.html">Verb list</a>
 &nbsp;
-<a class="quicklink" href="reference-dsl-builtin-functions/index.html">Function list</a>
+<a class="quicklink" href="./reference-dsl-builtin-functions/index.html">Function list</a>
 &nbsp;
-<a class="quicklink" href="glossary/index.html">Glossary</a>
+<a class="quicklink" href="./glossary/index.html">Glossary</a>
 &nbsp;
-<a class="quicklink" href="https://github.com/johnkerl/miller">Repository</a>
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
 </span>
 </div>
+
+# Introduction
 
 **Miller is a command-line tool for querying, shaping, and reformatting data files in various formats including CSV, TSV, and JSON.**
 

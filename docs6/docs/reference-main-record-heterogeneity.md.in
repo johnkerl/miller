@@ -1,0 +1,188 @@
+# Record-heterogeneity
+
+We think of CSV tables as rectangular: if there are 17 columns in the header
+then there are 17 columns for every row, else the data have a formatting error.
+
+But heterogeneous data abound -- log-file entries, JSON documents, today's
+no-SQL databases, etc. Miller handles heterogeneity in multiple ways.
+
+## Examples and terminology
+
+### Homogeneous/rectangular
+
+A **homogeneoust** list of records is one in which all records have the _same keys, in the same order_.
+For example, if a well-formed [CSV file](file-formats.md#csvtsvasvusvetc) looks like
+
+GENMD_CARDIFY
+a,b,c
+1,2,3
+4,5,6
+7,8,9
+GENMD_EOF
+
+then there are three records (written here using JSON formatting):
+
+GENMD_CARDIFY
+{"a": 1, "b": 2, "c": 3}
+{"a": 4, "b": 5, "c": 6}
+{"a": 7, "b": 8, "c": 9}
+GENMD_EOF
+
+And every row has the same keys, in the same order: `a,b,c`.
+
+These are also sometimes called **rectangular** since if we pretty-print them we get a nice rectangle:
+
+GENMD_CARDIFY
+a b c
+1 2 3
+4 5 6
+7 8 9
+GENMD_EOF
+
+### Fillable
+
+A second example has some empty cells which could be **filled**:
+
+GENMD_CARDIFY
+a,b,c
+1,2,3
+4,,6
+,8,9
+GENMD_EOF
+
+GENMD_CARDIFY
+{"a": 1, "b": 2, "c": 3}
+{"a": 4, "b": "", "c": 6}
+{"a": "", "b": 8, "c": 9}
+GENMD_EOF
+
+This example is still homogeneous, though: every row has the same keys, in the same order: `a,b,c`.
+
+TODO: link to fill-down etc (here or below)
+
+### Ragged
+
+Next let's look at non-well-formed CSV files. For a third example:
+
+GENMD_CARDIFY
+a,b,c
+1,2,3
+4,5
+7,8,9,10
+GENMD_EOF
+
+TODO: named data/x for all these.
+
+If you `mlr csv cat` this, you'll get an error message like `CSV header/data
+length mismatch 3 != 2 at filename (stdin) row 3.` This kind of data is referred to as **ragged**.
+
+### Regular/irregular
+
+Next let's look at some JSON data:
+
+GENMD_CARDIFY
+{"a": 1, "b": 2, "c": 3}
+{"c": 6, "a": 4, "b": 5}
+{"b": 8, "c": 9, "a": 7}
+GENMD_EOF
+
+xxx same. xxx regularize.
+
+xxx regularize then unsparsify.
+
+xxx refer to data-cleaning prominently, maybe in the page title
+xxx link data-cleaning examples <--> here, both ways
+
+xxx on how sparse originates -- log files / etc from software which removes (or
+never populates) keys with empty values.
+
+## TBF
+
+```
+  heterogeneity ragged/rectangular sparse/unsparse regularize
+  - heterogeneity 'all the same' = same keys in same order
+  - rectangular = homoegeneous
+  - ragged = varying number of keys; maybe 'sparse'
+  - sparse / unsparsify = not rect due to either empty values or absent keys
+  - irregular / regularize = sort keys -- a,b,c / c,a,b problem
+
+  record-heterogeneity.md.in
+
+  shapes-of-data.md: instead, use the following
+  csv-with-and-without-headers.md.in:## Regularizing ragged CSV
+  misc-examples.md.in:Then, join on the key field(s), and use unsparsify to zero-fill counters
+  questions-about-joins.md.in:To fix this, we can use **unsparsify**:
+  two-pass-algorithms.md.in:There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify)
+  programming-language.md.in:easy for you to handle non-heterogeneous data
+  two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
+```
+
+## Reading and writing heterogeneous data
+
+### Rectangular file formats: CSV and pretty-print
+
+Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get CSV per se as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite is that the former is RFC4180-compliant, while the latter readily handles heterogeneous data (which is non-compliant). For example:
+
+GENMD_RUN_COMMAND
+cat data/het.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --opprint cat data/het.json
+GENMD_EOF
+
+Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
+
+GENMD_RUN_COMMAND
+cat data/ragged.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv
+GENMD_EOF
+
+You may also find Miller's `group-like` feature handy (see also [Verbs Reference](reference-verbs.md)):
+
+GENMD_RUN_COMMAND
+mlr --j2p cat data/het.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --j2p group-like data/het.json
+GENMD_EOF
+
+### Non-rectangular file formats: JSON, XTAB, NIDX, DKVP
+
+For these formats, record-heterogeneity comes naturally:
+
+GENMD_RUN_COMMAND
+cat data/het.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --onidx --ofs ' ' cat data/het.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --oxtab cat data/het.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --oxtab group-like data/het.json
+GENMD_EOF
+
+## Processing heterogeneous data
+
+Miller operates on specified fields and takes the rest along: for example, if you are sorting on the `count` field then all records in the input stream must have a `count` field but the other fields can vary, and moreover the sorted-on field name(s) don't need to be in the same position on each line:
+
+GENMD_RUN_COMMAND
+cat data/sort-het.dkvp
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr sort -n count data/sort-het.dkvp
+GENMD_EOF
+
+## Making data more heterogeneous
+
+TODO

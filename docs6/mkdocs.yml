@@ -20,7 +20,6 @@ nav:
   - 'Miller in more detail':
     - "Features": "features.md"
     - "File formats": "file-formats.md"
-    - "Record-heterogeneity": "record-heterogeneity.md"
     - "Unix-toolkit context": "unix-toolkit-context.md"
     - "Internationalization": "internationalization.md"
     - "Output colorization": "output-colorization.md"
@@ -61,6 +60,7 @@ nav:
       - "I/O options": "reference-main-io-options.md"
       - "List of verbs": "reference-verbs.md"
       - "Streaming processing, and memory usage": "streaming-and-memory.md"
+      - "Record-heterogeneity": "reference-main-record-heterogeneity.md"
       - "Data types": "reference-main-data-types.md"
       - "Arithmetic": "reference-main-arithmetic.md"
       - "Maps": "reference-main-maps.md"

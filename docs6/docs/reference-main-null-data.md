@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Null/empty/absent data
 
 One of Miller's key features is its support for **heterogeneous** data.  For example, take `mlr sort`: if you try to sort on field `hostname` when not all records in the data stream *have* a field named `hostname`, it is not an error (although you could pre-filter the data stream using `mlr having-fields --at-least hostname then sort ...`).  Rather, records lacking one or more sort keys are simply output contiguously by `mlr sort`.

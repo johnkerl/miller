@@ -68,6 +68,29 @@ GENMD_EOF
 
 First is `tee >`, then the filename expression (which can be an expression such as `"tap.".$a.".dat"`), then a comma, then `$*`. (Nothing else but `$*` is teeable.)
 
+You can also write to a variable file name -- for example, you can split a
+single file into multiple ones on field names:
+
+GENMD_RUN_COMMAND
+mlr --csv cat example.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv cat circle.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv cat square.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv cat triangle.csv
+GENMD_EOF
+
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
 ## Redirected-output statements

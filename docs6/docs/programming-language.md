@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Intro to Miller's programming language
 
 In the [Miller in 10 minutes](10min.md) page we took a tour of some of Miller's most-used [verbs](reference-verbs.md) including `cat`, `head`, `tail`, `cut`, and `sort`. These are analogs of familiar system commands, but empowered by field-name indexing and file-format awareness: the system `sort` command only knows about lines and column names like `1,2,3,4`, while `mlr sort` knows about CSV/TSV/JSON/etc records, and field names like `color,shape,flag,index`.

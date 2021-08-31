@@ -13,6 +13,18 @@ ALL:
   C refector mlr help w/ mlr help flags
   c reorg manpage a bit
 * top-of-page jargon-check for each one
+? i would LOVE to have small prev-page/next-page links at the *top* not bottom ...
+  https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
+
+----------------------------------------------------------------
+glossary home stretch
+
+> need a centralized page: ref-main-rec-het
+
+* need a centralized page:
+  separators: IFS IPS IRS OFS OPS ORS FLATSEP (IFLATSEP/OFLATSEP?)
+
+* streaming
 
 ----------------------------------------------------------------
 C flags LUTs
@@ -107,7 +119,12 @@ E true/false -> add info about NaN and Inf et al.
 c UTs for r"a" . r"b" and so on and so on
 
 reference-dsl-variables.md:
-e 'five' -> more; see BNF; all Ixx/Oxx; FLATSEP as well; IFLATSEP & OFLATSEP -- ?
+e 'five' -> more; FLATSEP as well; IFLATSEP & OFLATSEP -- ?
+  NF NR FNR
+  FILENAME FILENUM
+  IPS IFS IRS
+  OPS OFS ORS
+  FLATSEP
 
 reference-main-null-data:
 ? more variants of is_... ?
@@ -136,13 +153,6 @@ l link to --load and --mload
 reference-dsl-builtin-functions:
 c mlr: option "--list-all-functions-as-table" not recognized. Please run "mlr --help" for usage information -> fix
 ! ... need to proofread entire list ...
-
-built-in vars:
-IPS IFS IRS
-OPS OFS ORS
-FLATSEP
-NF NR FNR
-FILENAME FILENUM
 
 reference-dsl-output-statements:
 E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using dump), whereas Miller output records are lists of single-level key-value pairs -> link to flatten page

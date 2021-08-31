@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Glossary
 
 _Under construction_
@@ -7,10 +20,10 @@ _Under construction_
 
 All [key](#key)-[value](#value) pairs in the current [record](#record), as a [map](reference-main-maps.md).
 
-For example, if `myfile.csv` has header line `a,b,c`, and the third line after
-the header is `7,8,9`, then the third record processed by Miller will be the
-ordered list of key-value pairs `a=7`, `b=8`, `c=9`, and `$*` will be (using
-JSON formatting) `{"a": 7, "b": 8, "c": 9 }`.
+For example, if `myfile.csv` has [header line](#header-line) `a,b,c`, and the
+third [line after the header](#data-line) is `7,8,9`, then the third record
+processed by Miller will be the ordered list of key-value pairs `a=7`, `b=8`,
+`c=9`, and `$*` will be (using JSON formatting) `{"a": 7, "b": 8, "c": 9 }`.
 
 ## @*
 
@@ -678,7 +691,24 @@ called for its side effects rather than for returning a value.
 
 ## tee
 
-TODO
+In Unix-like and other systems, a
+[tee](https://en.wikipedia.org/wiki/Tee_(command)) is a command which reads
+standard input and writes both standard output and a specified file --
+duplicating its output. The name comes from the T-splitter used in plumbing
+whose shape looks like the capital letter T.
+
+One particular use-case is to snapshot data at an intermediate point in a
+processing pipeline -- e.g. `thing1 | thing2 | tee output2.dat | thing3 |
+thing4`.
+
+Miller has a tee in two places: (1) a [verb](#verb) you can insert into a
+Miller then-chain, and (2) an [output statement](reference-dsl-output-statements.md)
+in the [Miller programming language](programming-language.md). Using the latter,
+you have the additional option of using a tee-to file name which is variable,
+perhaps depending on the current record. For example, if you have a large
+file with an `id` column, you can split it into several files, one for each
+distinct `id`. See the [section on tee statements](reference-dsl-output-statements.md#tee-statements) for
+an example.
 
 ## terminator
 

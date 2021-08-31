@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DSL output statements
 
 You can **output** variable-values or expressions in **five ways**:
@@ -68,6 +81,61 @@ The syntax is, by example:
 </pre>
 
 First is `tee >`, then the filename expression (which can be an expression such as `"tap.".$a.".dat"`), then a comma, then `$*`. (Nothing else but `$*` is teeable.)
+
+You can also write to a variable file name -- for example, you can split a
+single file into multiple ones on field names:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+red,square,true,2,15,79.2778,0.0130
+red,circle,true,3,16,13.8103,2.9010
+red,square,false,4,48,77.5542,7.4670
+purple,triangle,false,5,51,81.2290,8.5910
+red,square,false,6,64,77.1991,9.5310
+purple,triangle,false,7,65,80.1405,5.8240
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+purple,square,false,10,91,72.3735,8.2430
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'</b>
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat circle.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+red,circle,true,3,16,13.8103,2.9010
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat square.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+red,square,true,2,15,79.2778,0.0130
+red,square,false,4,48,77.5542,7.4670
+red,square,false,6,64,77.1991,9.5310
+purple,square,false,10,91,72.3735,8.2430
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat triangle.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+purple,triangle,false,5,51,81.2290,8.5910
+purple,triangle,false,7,65,80.1405,5.8240
+</pre>
 
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
