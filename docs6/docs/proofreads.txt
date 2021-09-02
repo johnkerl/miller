@@ -19,18 +19,12 @@ ALL:
 ----------------------------------------------------------------
 glossary home stretch
 
-> need a centralized page: ref-main-rec-het
-
 * need a centralized page:
   separators: IFS IPS IRS OFS OPS ORS FLATSEP (IFLATSEP/OFLATSEP?)
 
 ----------------------------------------------------------------
 C flags LUTs
 ? twi-dm re all-contribs: all-contributors.org
-
-streaming
-e fix CSS table styling
-C? flag in verb struct for streaming properties -- ?
 
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
@@ -182,11 +176,7 @@ e slice incl/excl; split-in-half
 e localvars in if/else
 e elif
 
-contributing:
-* kitchen-sink-builder script
-
 glossary:
-* need a link for [current record](...) -- maybe page-internal #record
 ! after it's done, link-check *all* ........ :^/
 
 manpage:

@@ -7,12 +7,12 @@ only a single record in memory at a time, rather than ingesting all input
 before producing any output.
 
 This is contrast to, say, the dataframes approach where you ingest all data,
-wait for end of file, then start manipulating the data.
+wait for **end of file**, then start manipulating the data.
 
 Both approaches have their advantages: the dataframes approach requires that
-all data fit in system memory (which, as hardware gets larger over time, is
+all data fit in **system memory** (which, as hardware gets larger over time, is
 less and less of a constraint); the streaming approach requires that you
-sometimes need to accumulate results on records (rows) as they arrive rather
+sometimes need to accumulate results on records (rows) **as they arrive** rather
 than looping through them explicitly.
 
 Since Miller takes the streaming approach when possible (see below for
@@ -56,86 +56,105 @@ Yet other verbs, such as [`stats1`](reference-verbs.md#stats1) and
 records they visit. These are memory-friendly: memory usage is bounded. However,
 they only produce output at the end of the record stream.
 
-TODO: incremental stats ...
+## Fully streaming verbs
 
-| Verb      | Description                          |
-| ----------- | ------------------------------------ |
-| `foo`       | TODO  |
-| `bar`       | TODO |
-| `sort`      | Non-streaming: retains all records, then emits sorted data after end of input stream |
-| `tac`       | Non-streaming: retains all records, then emits reversed data after end of input stream |
-| All others  | Streaming: operate on records independently |
+These don't retain any state from one record to the next.
+They are memory-friendly, and they don't wait for end of input to produce their output.
 
-per-record:
+* [altkv](#altkv)
+* [bar](#bar) -- if not auto-mode
+* [cat](#cat)
+* [check](#check)
+* [clean-whitespace](#clean-whitespace)
+* [cut](#cut)
+* [decimate](#decimate)
+* [fill-down](#fill-down)
+* [fill-empty](#fill-empty)
+* [flatten](#flatten)
+* [format-values](#format-values)
+* [gap](#gap)
+* [grep](#grep)
+* [having-fields](#having-fields)
+* [head](#head)
+* [json-parse](#json-parse)
+* [json-stringify](#json-stringify)
+* [label](#label)
+* [merge-fields](#merge-fields)
+* [nest](#nest) -- if not `implode-values-across-records`
+* [nothing](#nothing)
+* [regularize](#regularize)
+* [rename](#rename)
+* [reorder](#reorder)
+* [repeat](#repeat)
+* [reshape](#reshape) -- if not long-to-wide
+* [sec2gmt](#sec2gmt)
+* [sec2gmtdate](#sec2gmtdate)
+* [seqgen](#seqgen)
+* [skip-trivial-records](#skip-trivial-records)
+* [sort-within-records](#sort-within-records)
+* [step](#step)
+* [tee](#tee)
+* [template](#template)
+* [unflatten](#unflatten)
+* [unsparsify](#unsparsify) if invoked with `-f`
 
-altkv
-cat
-fill-down
-fill-empty
-filter -- but end-blocks
-nothing
-put -- but end-blocks
-rename
-reorder
-repeat
-sec2gmt
-sec2gmtdate
-skip-trivial-records
-sort-within-records
-step
-unflatten
-gap
-grep
-flatten
-cut
-tee
-label
+## Non-streaming, retaining all records
 
-xxx section for optionals:
-e.g. stats1 incremental
-e.g. put/filter w/o end blocks
+These retain all records from one record to the next.
+They are memory-unfriendly, and they wait for end of input to produce their output.
 
-retain-all:
-sort
-shuffle
-tac
+* [bar](#bar) -- if auto-mode
+* [bootstrap](#bootstrap)
+* [count-similar](#count-similar)
+* [fraction](#fraction)
+* [group-by](#group-by)
+* [group-like](#group-like)
+* [least-frequent](#least-frequent)
+* [most-frequent](#most-frequent)
+* [nest](#nest) -- if `implode-values-across-records`
+* [remove-empty-columns](#remove-empty-columns)
+* [reshape](#reshape) -- if long-to-wide
+* [sample](#sample)
+* [shuffle](#shuffle)
+* [sort](#sort)
+* [tac](#tac)
+* [uniq](#uniq) -- if `mlr uniq -a -c`
+* [unsparsify](#unsparsify) if invoked without `-f`
 
-retain-state, results at EOS:
-stats1
-stats2
+## Non-streaming, retaining some records
 
+These retain a bounded number of records from one record to the next.
+They are memory-friendly, but they wait for end of input to produce their output.
 
-TBF:
+* [tail](#tail)
+* [top](#top)
 
-bar
-bootstrap
-check
-clean-whitespace
-count-distinct
-count
-count-similar
-decimate
-format-values
-fraction
-group-by
-group-like
-having-fields
-head
-histogram
-json-parse
-json-stringify
-join
-least-frequent
-merge-fields
-most-frequent
-nest
-regularize
-remove-empty-columns
-reshape
-sample
-seqgen
-tail
-template
-top
-uniq
-unsparsify
+## Non-streaming, retaining some state
+
+These retain an amount of state from one record to the next, but less than if
+they were to retain all records in memory.  They are variably memory-friendly
+-- depending on how many distinct values for the group-by keys exist in the
+input data -- and they wait for end of input to produce their output.
+
+* [count-distinct](#count-distinct)
+* [count](#count)
+* [histogram](#histogram)
+* [stats1](#stats1) -- except `mlr stats1 -s` for incremental stats before end of stream
+* [stats2](#stats2)
+* [uniq](#uniq) -- if not `mlr uniq -a -c`
+
+## Variable
+
+Any `end` blocks you provide will not be executed until end of stream; otherwise these
+don't want for end of stream. Similarly, if you write logic to retain all records
+(see also the page on [operating on all records](operating-on-all-records.md.in))
+these will be memory-unfriendly; otherwhise they are memory-friendly.
+
+Most simple operations such as `mlr put '$z = $x + $y'` are fully streaming.
+
+* [filter](#filter)
+* [put](#put)
+
+## Half-streaming
+
+The main input files are streamed, but the join file (using `-f`) is loaded into memory at the start.

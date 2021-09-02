@@ -667,7 +667,13 @@ indicating that a variable is intended to be of type
 
 ## streaming
 
-TODO
+Refers to operations which can be done a record at a time, so (a) output is
+produced as input records arrive, before end of input stream, and (b) memory
+usage is typically bounded.  The latter means that a streaming processor can
+operate on data files larger than system memory.  Most of Miller's operations
+are streaming; some (such as `sort`) need to see all data before producing any
+output, and are non-streaming. Please see the page on [Streaming processing and
+memory usage](streaming-and-memory.md).
 
 ## subr
 
