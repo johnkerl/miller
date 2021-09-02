@@ -1,0 +1,69 @@
+<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
+# Separators
+
+under construction
+
+## RS, FS, and PS
+
+Miller has record separators IRS and ORS, field separators IFS and OFS, and
+pair separators IPS and OPS. For example, in the
+[DKVP](file-formats.md#dkvp-key-value-pairs) record `a=1,b=2,c=31, the **record
+separator** is newline, the **field separator** is comma, and the **pair
+separator** is the equals sign. These are the default values, which you can
+override with flags such as `--ips` and `--ops` (below).
+
+Not all [file formats](file-formats.md) have all these, and for not all of them
+are they programmable.  For example, in [JSON objects](file-formats.md#json),
+the pair separator is `:` and the field-separator id `,` -- we write
+`{"a":1,"b":2,"c":3}` -- but these aren't modifiable.  If you do `mlr --json
+--ips : --ips '|' cat myfile.json` then you do not get `{"a"|1,"b"|2,"c"|3}`.
+
+## Command-line flags
+
+xxx content here from reference-main-io-options/#recordfieldpair-separators
+
+## Which file formats support which flags
+
+* CSV/TSV/ASV/USV/etc.:
+    * xxx
+    * xxx
+    * xxx
+* JSON
+    * xxx
+    * xxx
+    * xxx
+* PPRINT
+    * xxx
+    * xxx
+    * xxx
+* Markdown tabular
+    * xxx
+    * xxx
+    * xxx
+* XTAB
+    * xxx
+    * xxx
+    * xxx
+* DKVP
+    * xxx
+    * xxx
+    * xxx
+* NIDX
+    * xxx
+    * xxx
+    * xxx
+
+xxx note about regex options ... link to issue ... also `--repifs` ...

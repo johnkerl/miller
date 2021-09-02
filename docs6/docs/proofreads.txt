@@ -29,9 +29,6 @@ C flags LUTs
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
 E fill out flatten/unflatten page
-E fill out memory/streaming page
-  - rename maybe? add note on threading and how it scales on multicore arches
-  - GOMNAXPROCS
 E fill out data-types page
 E fill out arrays page
   - xref to fla/unfla page
@@ -44,6 +41,7 @@ E show-all-flags help -- fully alpha, or alpha-by-type ...
 c GOMAXPROCS -- up it? separate page maybe -- ?
   - note one goroutine for in, out, & each verb
   - check and respect env-var
+  - add note on threading and how it scales on multicore arches
 
 * functions: somewhere organize by type. olh/man6/docs6 ...
 
@@ -55,19 +53,12 @@ c GOMAXPROCS -- up it? separate page maybe -- ?
 c? mlr -S / -F outside of put/filter -- ?
 
 e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
-? somewhere, do-it-all sequencing:
-  o go build
-  o go test
-  o make in man6
-  o regen.sh in docs6
 ----------------------------------------------------------------
-
-reference-main-overview:
-e verbage on record, field, key-value pair, stream, etc
 
 record-heterogeneity:
 ? current csv-reader code handles this? i think not. check csvlite-reader too.
 ? --allow-ragged-csv-input: link to new flags page once it's written
+l link-to's:
   shapes-of-data.md: instead, use the following
   csv-with-and-without-headers.md.in:## Regularizing ragged CSV
   misc-examples.md.in:Then, join on the key field(s), and use unsparsify to zero-fill counters
@@ -83,9 +74,6 @@ csv-with-and-without-headers:
 ? ag -> just grep ?
 l Miller handles compliant CSV: include rfc4180 link
 ? Regularizing ragged CSV: use regularize verb?!?
-
-shapes-of-data:
-E Rectangularizing data: cf regularize verb, & other page?
 
 special-symbols-and-formatting:
 ? mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v

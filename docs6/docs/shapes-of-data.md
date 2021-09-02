@@ -484,3 +484,7 @@ outer=3,middle=30,inner1=300,inner2=301
 outer=3,middle=31,inner1=312,inner2=301
 outer=3,middle=31,inner1=313,inner2=314
 </pre>
+
+See also the [record-heterogeneity page](record-heterogeneity.md); see in
+particular the [`regularize` verb](reference-verbs.md#regularize) for a way to
+do this with much less keystroking.
