@@ -14,8 +14,6 @@ Quick links:
 </div>
 # Glossary
 
-_Under construction_
-
 ## $*
 
 All [key](#key)-[value](#value) pairs in the current [record](#record), as a [map](reference-main-maps.md).
@@ -94,7 +92,7 @@ A [keyword](#keyword) used for invoking a
 ## colorization
 
 Miller uses configurable colors for some output to the terminal.  See the
-[output-colorization.md](output-colorization page) for more information.
+[output-colorization page](output-colorization.md) for more information.
 
 ## compression
 
@@ -109,8 +107,8 @@ without executing the remaining loop-body statements on the current iteration.
 
 ## CSV
 
-Stands for _comma-separated values_.  A popular [file
-format](file-formats.md#csvtsvasvusvetc) for tabular data supported by Miller.
+Stands for _comma-separated values_.  A popular
+[file format](file-formats.md#csvtsvasvusvetc) for tabular data, which Miller supports.
 
 ## Cygwin
 
@@ -141,8 +139,7 @@ _delimiter_ can be used as a synonym for [_separator_](#separator).
 
 ## division
 
-Miller uses [python
-division](http://127.0.0.1:8000/reference-main-arithmetic/#pythonic-division)
+Miller uses [pythonic division](http://127.0.0.1:8000/reference-main-arithmetic/#pythonic-division)
 for quotients of integers, with the exception that integer divided by integer
 is integer (not float) if the quotient can be represented exactly as an
 integer.
@@ -153,8 +150,7 @@ Stands for _delimited key-value pairs_.  A Miller-specific [file
 format](file-formats.md#dkvp-key-value-pairs), with each line of a file being
 of the form `x=1,y=2,z=3`.  For historical reasons, this is Miller's default
 format unless [flags](reference-main-io-options.md) such as `--csv` are
-supplied.  You can also make CSV your default format using a [.mlrrc
-file(customization.md).
+supplied.  You can also make CSV your default format using a [.mlrrc file](customization.md).
 
 ## do
 
@@ -349,7 +345,8 @@ and the [Miller CSV section](file-formats.md#csvtsvasvusvetc).
 
 ## heterogeneity
 
-TODO
+Referring to data where all records have the same keys, in the same order.  See the
+[record-heterogeneity page](record-heterogeneity.md#homogeneousrectangular-data).
 
 ## if
 
@@ -462,7 +459,8 @@ Note that Miller operates on [records](#records) by treating them as maps.
 A file you can create, nominally in your home directory, to customize the
 default flag-settings used by Miller. For example, while Miller's default file
 format is [DKVP](#dkvp), you can make the default format be CSV so that instead
-of `mlr --csv sort myfile.csv` you can simply do `mlr sort myfile.csv`.
+of `mlr --csv sort myfile.csv` you can simply do `mlr sort myfile.csv`.  See
+the [customization page](customization.md).
 
 ## MSYS2
 
@@ -502,7 +500,7 @@ See also the [file-formats page](file-formats.md).
 
 ## NR
 
-Stands for _number of records. Unlike [`NF`](#nf), which counts definitely the
+Stands for _number of records_. Unlike [`NF`](#nf), which counts definitely the
 total number of [fields](#field) within the current [record](#record), since
 Miller is [streaming](#streaming) the `NR` [built-in
 variable](reference-dsl-variables.md#built-in-variables) counts the number of
@@ -544,6 +542,7 @@ TODO: type more.
 
 A way of indexing [arrays](#array). If `x=["a", "b", "c"]`, then using one-up indexing,
 `x[1]` is `"a"`, `x[2]` is `"b"`, and `x[3]` is `"c"`. Miller uses [one-up indexing](#one-up).
+Contrast [zero-up indexing](#zero-up).
 
 See also the [arrays page](reference-main-arrays.md), as well as the page on
 [differences from other programming languages](reference-dsl-differences.md).
@@ -601,7 +600,9 @@ See the [DSL overview](#reference-dsl).
 
 ## ragged
 
-TODO
+Referring to data where not all records have the same number of keys,
+particularly in a malformed-CSV context.  See the
+[record-heterogeneity page](record-heterogeneity.md#ragged-data).
 
 ## record
 
@@ -625,7 +626,9 @@ See also the [Miller command structure page](reference-main-overview.md).
 
 ## rectangular
 
-TODO
+Referring to data where all records have the same keys, in the same order. Synonymous
+with [heterogeneous](#heterogeneity).  See the
+[record-heterogeneity page](record-heterogeneity.md#homogeneousrectangular-data).
 
 ## REPL
 
@@ -651,7 +654,9 @@ TODO
 
 ## sparse
 
-TODO
+Referring to data where not all records have the same keys.  See the
+[record-heterogeneity
+page](record-heterogeneity.md#sparse-data).
 
 ## stderr
 
@@ -702,13 +707,14 @@ processing pipeline -- e.g. `thing1 | thing2 | tee output2.dat | thing3 |
 thing4`.
 
 Miller has a tee in two places: (1) a [verb](#verb) you can insert into a
-Miller then-chain, and (2) an [output statement](reference-dsl-output-statements.md)
-in the [Miller programming language](programming-language.md). Using the latter,
-you have the additional option of using a tee-to file name which is variable,
-perhaps depending on the current record. For example, if you have a large
-file with an `id` column, you can split it into several files, one for each
-distinct `id`. See the [section on tee statements](reference-dsl-output-statements.md#tee-statements) for
-an example.
+Miller [then-chain](reference-main-then-chaining.md), and (2) an [output
+statement](reference-dsl-output-statements.md) in the [Miller programming
+language](programming-language.md). Using the latter, you have the additional
+option of using a tee-to file name which is variable, perhaps depending on the
+current record. For example, if you have a large file with an `id` column, you
+can split it into several files, one for each distinct `id`. See the [section
+on tee statements](reference-dsl-output-statements.md#tee-statements) for an
+example.
 
 ## terminator
 
@@ -768,7 +774,9 @@ See the [DSL unset statements page](reference-dsl-unset-statements.md).
 
 ## unsparse
 
-TODO
+Transforming data so that all records have the same keys, by filling in default values.  See the
+[record-heterogeneity
+page](record-heterogeneity.md#sparse-data).
 
 ## value
 
@@ -821,4 +829,4 @@ See also the [arrays page](reference-main-arrays.md), as well as the page on
 ## ZLIB / .z
 
 A [data-compression format supported by Miller](reference-main-compressed-data.md).
-Files compressed using ZLIB compression normally end in`.z`.
+Files compressed using ZLIB compression normally end in `.z`.

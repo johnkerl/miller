@@ -24,13 +24,14 @@ glossary home stretch
 * need a centralized page:
   separators: IFS IPS IRS OFS OPS ORS FLATSEP (IFLATSEP/OFLATSEP?)
 
-* streaming
-
 ----------------------------------------------------------------
 C flags LUTs
 ? twi-dm re all-contribs: all-contributors.org
 
-e new ragged/rectangular/sparse/etc page
+streaming
+e fix CSS table styling
+C? flag in verb struct for streaming properties -- ?
+
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
 E fill out flatten/unflatten page
@@ -72,6 +73,15 @@ e verbage on record, field, key-value pair, stream, etc
 
 record-heterogeneity:
 ? current csv-reader code handles this? i think not. check csvlite-reader too.
+? --allow-ragged-csv-input: link to new flags page once it's written
+  shapes-of-data.md: instead, use the following
+  csv-with-and-without-headers.md.in:## Regularizing ragged CSV
+  misc-examples.md.in:Then, join on the key field(s), and use unsparsify to zero-fill counters
+  questions-about-joins.md.in:To fix this, we can use **unsparsify**:
+  two-pass-algorithms.md.in:There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify)
+  programming-language.md.in:easy for you to handle non-heterogeneous data
+  two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
+? back out of ref section -- ?
 
 csv-with-and-without-headers:
 ? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?

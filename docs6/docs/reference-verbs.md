@@ -33,7 +33,7 @@ These fall into categories as follows:
 
 * Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
 
-* Particularly oriented toward [Record Heterogeneity](reference-main-record-heterogeneity.md), although all Miller commands can handle heterogeneous records: [group-by](reference-verbs.md#group-by), [group-like](reference-verbs.md#group-like), [having-fields](reference-verbs.md#having-fields).
+* Particularly oriented toward [Record Heterogeneity](record-heterogeneity.md), although all Miller commands can handle heterogeneous records: [group-by](reference-verbs.md#group-by), [group-like](reference-verbs.md#group-like), [having-fields](reference-verbs.md#having-fields).
 
 * These draw from other sources (see also [How Original Is Miller?](originality.md)): [count-distinct](reference-verbs.md#count-distinct) is SQL-ish, and [rename](reference-verbs.md#rename) can be done by `sed` (which does it faster: see [Performance](performance.md)). Verbs: [check](reference-verbs.md#check), [count-distinct](reference-verbs.md#count-distinct), [label](reference-verbs.md#label), [merge-fields](reference-verbs.md#merge-fields), [nest](reference-verbs.md#nest), [nothing](reference-verbs.md#nothing), [regularize](reference-verbs.md#regularize), [rename](reference-verbs.md#rename), [reorder](reference-verbs.md#reorder), [reshape](reference-verbs.md#reshape), [seqgen](reference-verbs.md#seqgen).
 
@@ -815,7 +815,7 @@ Options:
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>cat data/fill-down.csv</b>
+<b>cat data/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
@@ -825,7 +825,7 @@ a,b,c
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv fill-down -f b data/fill-down.csv</b>
+<b>mlr --csv fill-down -f b data/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
@@ -835,13 +835,55 @@ a,b,c
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv fill-down -a -f b data/fill-down.csv</b>
+<b>mlr --csv fill-down -a -f b data/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
 1,,3
 4,5,6
 7,,9
+</pre>
+
+## fill-empty
+
+<pre class="pre-highlight-in-pair">
+<b>mlr fill-empty --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr fill-empty [options]
+Fills empty-string fields with specified fill-value.
+Options:
+-v {string} Fill-value: defaults to "N/A"
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/fillable.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,,3
+4,5,6
+7,,9
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv fill-empty data/fillable.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,N/A,3
+4,5,6
+7,N/A,9
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv fill-empty -v something data/fillable.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,something,3
+4,5,6
+7,something,9
 </pre>
 
 ## filter
@@ -1238,7 +1280,7 @@ Options:
 -h|--help Show this message.
 </pre>
 
-This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in [Record Heterogeneity](reference-main-record-heterogeneity.md) -- in particular, in preparation for CSV or pretty-print output.
+This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in [Record Heterogeneity](record-heterogeneity.md) -- in particular, in preparation for CSV or pretty-print output.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr cat data/het.dkvp</b>
@@ -2030,8 +2072,7 @@ Please see the [DSL reference](reference-dsl.md) for more information about the 
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr regularize [options]
-Outputs records sorted lexically ascending by keys.
-Options:
+Outputs records sorted lexically ascending by keys.Options:
 -h|--help Show this message.
 </pre>
 
