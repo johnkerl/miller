@@ -6,13 +6,30 @@ import (
 	"runtime"
 	"runtime/debug"
 	"runtime/pprof"
+	"strconv"
 
 	"mlr/src/entrypoint"
 )
 
 // ----------------------------------------------------------------
 func main() {
-	runtime.GOMAXPROCS(4)   // Seems reasonable these days
+
+	// Respect env $GOMAXPROCS, if provided, else set default.
+	haveSetGoMaxProcs := false
+	goMaxProcsString := os.Getenv("GOMAXPROCS")
+	if goMaxProcsString != "" {
+		goMaxProcs, err := strconv.Atoi(goMaxProcsString)
+		if err != nil {
+			runtime.GOMAXPROCS(goMaxProcs)
+			haveSetGoMaxProcs = true
+		}
+	}
+	if !haveSetGoMaxProcs {
+		// As of Go 1.16 this is the default anyway. For 1.15 and below we need
+		// to explicitly set this.
+		runtime.GOMAXPROCS(runtime.NumCPU())
+	}
+
 	debug.SetGCPercent(500) // Empirical: See README-profiling.md
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

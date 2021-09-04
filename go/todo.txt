@@ -1,39 +1,22 @@
 ================================================================
 TOP OF LIST:
 
-* pre-release:
-  o explicit punchdown list
-  o draft release w/ m6 binaries YYYYMMDD -- ?
-  o gha download steps clearer
-  
 ! allcontribs
 
-* doc6 proofreads
+! doc6 proofreads.txt
 * 'explicit r' issue 297: code, UT, doc
 
 * shell-commands.html; while-read
-* memory/streaming page
 
 * I/O redirects * fmtnum * localtime * stats1 -r/--fr *
 * --nr-progress-mod * mlr -k * json comment-handling *
 * cli-audits * doc6 * survey * check issues * regtest pendings *
 * survey followups/discussion-post *
 
-* PD wtf !
-
-* GOMAXPROCS env-override, else default 8 with comment
-
-----------------------------------------------------------------
-* mlr repl (w/o mrpl) doesn't print final newline on EOF
-* also: feature/shorthand for repl newline before prompt
-
-* slice-indexing bug:
-
-  μεταμόρφωσις: x=[1,2,3,4,5]
-  μεταμόρφωσις: x[:2]
-  [1, 2]
-  μεταμόρφωσις: x[2:]
-  [2, 3, 4, 5]
+d pre-release:
+  o explicit punchdown list
+  o draft release w/ m6 binaries YYYYMMDD -- ?
+  o gha download steps clearer
 
 ----------------------------------------------------------------
 implicit r:
@@ -47,10 +30,8 @@ docs:
 * mlr --j2c --no-auto-flatten cat $mlg/regtest/input/flatten-input-2.json
   - code: this is ok ... maybe prefer single-line -- ?
 
-* src/man/doc hygiene @ build script
-
-w discussion re docs6 ...
 * single cheatsheet page -- put out RFH?
+  https://twitter.com/icymi_py/status/1426622817785765898/photo/1
 
 * note somewhere (maybe 'what's new in miller6' and/or to-be-written survey review):
   o miller was first of all a tool for myself, and anyone else who might find it useful
@@ -71,45 +52,18 @@ w discussion re docs6 ...
 * link to SE table ...
   https://github.com/johnkerl/miller/discussions/609#discussioncomment-1115715
 
-* csv -> csv/tsv throughout
-
-* cheatsheet someday? example:
-  https://twitter.com/icymi_py/status/1426622817785765898/photo/1
-
-----------------------------------------------------------------
-memory/streaming page
-
-* https://github.com/johnkerl/miller/issues/587
-
 ----------------------------------------------------------------
 DOC6
 
 * colored-shapes.dkvp -> csv; also mkdat2
 * data/small -> csv throughout. and/or just use example.csv
-* quicklinks -- ?
-* vim syntax highlighting for .mlr files -- highlight this somewhere
 
 * shell-commands.html
   while-read example issue
 
-* memory page:
-  o open with "out of memory" -- what next?
-  o streaming vs non-streaming
-  o unsparsify -f
-  o no out-of-core sort yet ...
-  o older versions
-
 * number-formatting page
 
-* list-of-verbs shortlist @ top
-
 * check <-> manpage/olh sections & doc6 sections
-
-* fill out:
-  o new-in-miller-6: flatten/unflatten
-  o JSON flatten/unflatten section
-  o Arrays section including 1-up and why
-  o differences from other languages (cf. juliadocs)
 
 * doc notes about --jknquotein & --jvquoteall. make sure they're ignore-accepted in the CLIP.
 
@@ -168,6 +122,9 @@ BLOCKERS
   μεταμόρφωσις: z[1].x + z[2].x
   (absent)
 
+! repifs
+! seps "\001" etc
+
 * finish stats1 -r
 
 * what about -I mixed with .gzin -- ?
@@ -225,6 +182,8 @@ NON-BLOCKERS
 * uniqify-field-names in record-readers -- which issue?
 
 * non-blocker: commenting passes ...
+
+* non-blocker: feature/shorthand for repl newline before prompt
 
 * non-blocker: new functions:
   o new columns-to-arrays and arrays-to-columns for stan format

@@ -63,6 +63,7 @@ nav:
       - "Separators": "reference-main-separators.md"
       - "List of verbs": "reference-verbs.md"
       - "Streaming processing, and memory usage": "streaming-and-memory.md"
+      - "CPU/multicore usage": "cpu.md"
       - "Data types": "reference-main-data-types.md"
       - "Arithmetic": "reference-main-arithmetic.md"
       - "Maps": "reference-main-maps.md"

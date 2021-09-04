@@ -37,11 +37,6 @@ E fill out maps page
 E make flags page
   C show-all-flags help -- fully alpha, or alpha-by-type; LUT refactor
 
-c GOMAXPROCS -- up it? separate page maybe -- ?
-  - note one goroutine for in, out, & each verb
-  - check and respect env-var
-  - add note on threading and how it scales on multicore arches
-
 * functions: somewhere organize by type. olh/man6/docs6 ...
 
 * regex: more about what is / is not
@@ -154,20 +149,13 @@ E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (d
   o why not '--oflatsep /' respected?
 
 diffs other langs:
-e slice incl/excl; split-in-half
+e slice incl/excl; split-in-half: x[:2] x[2:] vs x[:2] x[3:]
 e localvars in if/else
-e elif
-
-glossary:
-! after it's done, link-check *all* ........ :^/
 
 separators:
 E write up which file formats support which flags
 
 manpage:
 ? [NEEDS READ-THROUGH]
-
-install:
-* n.b. homebrew linux https://github.com/johnkerl/miller/issues/77#issuecomment-536611087
 
 mk-func-table.rb: port comments from sphinx to mkdocs

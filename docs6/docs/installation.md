@@ -33,6 +33,8 @@ Note:
 <b>sudo port selfupdate && sudo port install miller</b>
 </pre>
 
+Note that Homebrew is available for Linux as well: [https://docs.brew.sh/linux](https://docs.brew.sh/linux).
+
 You may already have the `mlr` executable available in your platform's package manager on NetBSD, Debian Linux, Ubuntu Xenial and upward, Arch Linux, or perhaps other distributions. For example, on various Linux distributions you might do one of the following:
 
 <pre class="pre-highlight-non-pair">
