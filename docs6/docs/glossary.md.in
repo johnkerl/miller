@@ -125,7 +125,7 @@ _delimiter_ can be used as a synonym for [_separator_](#separator).
 
 ## division
 
-Miller uses [pythonic division](http://127.0.0.1:8000/reference-main-arithmetic/#pythonic-division)
+Miller uses [pythonic division](http://127.0.0.1:8000/reference-main-arithmetic.md#pythonic-division)
 for quotients of integers, with the exception that integer divided by integer
 is integer (not float) if the quotient can be represented exactly as an
 integer.
@@ -147,7 +147,7 @@ in the [Miller programming language](programming-language.md).
 
 Stands for _domain-specific language_.
 The [Miller programming language](programming-language.md) is embedded within
-the [put and filter verbs](reference-dsl). It's a language with its own syntax
+the [put and filter verbs](reference-dsl.md). It's a language with its own syntax
 and semantics; the Miller executable does not embed, say, Python or Lua as a
 language for put and filter statements. This makes the Miller programming
 language an _embedded domain-specific language_, or _domain-specific language_,
@@ -280,7 +280,7 @@ stream](#streaming).  If you have `mlr ... a.csv b.csv` where `a.csv` has 10
 records and `b.csv` has 20, then `FNR` will be 10 on the last record of
 `a.csv`, then it will have value 1 on the first record of `b.csv`.
 
-See also the [section on built-in variables](reference-dsl-variables/#built-in-variables.md).
+See also the [section on built-in variables](reference-dsl-variables.md#built-in-variables.md).
 
 ## for
 
@@ -341,9 +341,7 @@ in the [Miller programming language](programming-language.md).
 
 ## IFS
 
-Stands for _input field separator_.
-
-TODO: type more.
+Stands for _input field separator_. See the [separators page](reference-main-separators.md).
 
 ## in
 
@@ -380,15 +378,11 @@ reference-dsl-variables.md#type-declarations-for-local-variables-function-parame
 
 ## IPS
 
-Stands for _input pair separator_.
-
-TODO: type more.
+Stands for _input pair separator_. See the [separators page](reference-main-separators.md).
 
 ## IRS
 
-Stands for _input record separator_.
-
-TODO: type more.
+Stands for _input record separator_. See the [separators page](reference-main-separators.md).
 
 ## JSON
 
@@ -500,7 +494,7 @@ record of `b.csv`.
 
 See also [`FNR`](#fnr).
 
-See also the [section on built-in variables](reference-dsl-variables.md/#built-in-variables).
+See also the [section on built-in variables](reference-dsl-variables.md#built-in-variables).
 
 ## null
 
@@ -520,9 +514,7 @@ _numbers_, rather than ints and floats separately.
 
 ## OFS
 
-Stands for _output field separator_.
-
-TODO: type more.
+Stands for _output field separator_. See the [separators page](reference-main-separators.md).
 
 ## one-up
 
@@ -539,15 +531,11 @@ A whimsical shorthand for [out-of-stream variable](#out-of-stream-variable).
 
 ## OPS
 
-Stands for _output pair separator_.
-
-TODO: type more.
+Stands for _output pair separator_. See the [separators page](reference-main-separators.md).
 
 ## ORS
 
-Stands for _output record separator_.
-
-TODO: type more.
+Stands for _output record separator_. See the [separators page](reference-main-separators.md).
 
 ## Out-of-stream variable
 
@@ -636,7 +624,19 @@ Semicolons are used to [delimit statements](reference-dsl-syntax.md) in the
 
 ## separator
 
-TODO
+Used in two senses:
+
+(1) In some programming languages, such as C, C++, and Java, semicolons are
+required after every statement; in others such as Python, they're not required
+at all; in yet others, they're required _in between_ statements but are
+optional after the last. Miller is in the third category, so we can say that
+semicolons are _separators_, not [_terminators_](#terminator), within the
+[Miller programming language](programming-language.md).
+
+(2) Refers to character sequences which separate records from one another (like
+newlines, sometimes), fields from one another (like commas in CSV), and keys
+from values in key-value pairs (`=` or `:`, perhaps).  See the [separators
+page](reference-main-separators.md) for more information.
 
 ## sparse
 
@@ -648,14 +648,14 @@ page](record-heterogeneity.md#sparse-data).
 
 A [keyword](#keyword) in the
 [Miller programming language](programming-language.md)
-for [print, dump, and tee statements](http://127.0.0.1:8000/reference-dsl-output-statements/#tee-statements)
+for [print, dump, and tee statements](http://127.0.0.1:8000/reference-dsl-output-statements.md#tee-statements)
 indicating that data are to be sent to the [_standard output_](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stderr)).
 
 ## stdout
 
 A [keyword](#keyword) in the
 [Miller programming language](programming-language.md)
-for [print, dump, and tee statements](http://127.0.0.1:8000/reference-dsl-output-statements/#tee-statements)
+for [print, dump, and tee statements](http://127.0.0.1:8000/reference-dsl-output-statements.md#tee-statements)
 indicating that data are to be sent to the [_standard output_](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stdout)).
 
 ## str

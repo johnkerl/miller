@@ -81,25 +81,7 @@ See the separate page on [Compressed data](reference-main-compressed-data.md).
 
 ## Record/field/pair separators
 
-Miller has record separators `IRS` and `ORS`, field separators `IFS` and `OFS`, and pair separators `IPS` and `OPS`.  For example, in the DKVP line `a=1,b=2,c=3`, the record separator is newline, field separator is comma, and pair separator is the equals sign. These are the default values.
-
-Options:
-
-<pre class="pre-non-highlight-non-pair">
---rs --irs --ors
---fs --ifs --ofs --repifs
---ps --ips --ops
-</pre>
-
-* You can change a separator from input to output via e.g. `--ifs = --ofs :`. Or, you can specify that the same separator is to be used for input and output via e.g. `--fs :`.
-
-* The pair separator is only relevant to DKVP format.
-
-* Pretty-print and xtab formats ignore the separator arguments altogether.
-
-* The `--repifs` means that multiple successive occurrences of the field separator count as one.  For example, in CSV data we often signify nulls by empty strings, e.g. `2,9,,,,,6,5,4`. On the other hand, if the field separator is a space, it might be more natural to parse `2 4    5` the same as `2 4 5`: `--repifs --ifs ' '` lets this happen.  In fact, the `--ipprint` option above is internally implemented in terms of `--repifs`.
-
-* Just write out the desired separator, e.g. `--ofs '|'`. But you may use the symbolic names `newline`, `space`, `tab`, `pipe`, or `semicolon` if you like.
+See the separate page on [separators](reference-main-separators.md).
 
 ## Number formatting
 

@@ -19,21 +19,13 @@ ALL:
   https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
 
 ----------------------------------------------------------------
-glossary home stretch
-
-* need a centralized page:
-  separators: IFS IPS IRS OFS OPS ORS FLATSEP (IFLATSEP/OFLATSEP?)
-* schema := header line; also rm schema x go x .md.in
-
-----------------------------------------------------------------
-* vimrc
-
+c! repifs !!
+c! seps \001 etc !
 C flags LUTs
 ? twi-dm re all-contribs: all-contributors.org
 
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
-E fill out separators page
 E fill out flatten/unflatten page
 E fill out data-types page
 E fill out arrays page
@@ -118,12 +110,7 @@ E true/false -> add info about NaN and Inf et al.
 c UTs for r"a" . r"b" and so on and so on
 
 reference-dsl-variables.md:
-e 'five' -> more; FLATSEP as well; IFLATSEP & OFLATSEP -- ?
-  NF NR FNR
-  FILENAME FILENUM
-  IPS IFS IRS
-  OPS OFS ORS
-  FLATSEP
+? IFLATSEP & OFLATSEP -- ?
 
 reference-main-null-data:
 ? more variants of is_... ?
@@ -173,6 +160,9 @@ e elif
 
 glossary:
 ! after it's done, link-check *all* ........ :^/
+
+separators:
+E write up which file formats support which flags
 
 manpage:
 ? [NEEDS READ-THROUGH]
