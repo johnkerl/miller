@@ -122,11 +122,11 @@ func (reader *RecordReaderDKVP) recordFromDKVPLine(
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
-			value := types.MlrvalPointerFromInferredType(kv[0])
+			value := types.MlrvalPointerFromInferredTypeForDataFiles(kv[0])
 			record.PutReference(key, value)
 		} else {
 			key := kv[0]
-			value := types.MlrvalPointerFromInferredType(kv[1])
+			value := types.MlrvalPointerFromInferredTypeForDataFiles(kv[1])
 			record.PutReference(key, value)
 		}
 	}

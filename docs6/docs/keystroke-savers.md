@@ -34,7 +34,7 @@ red    square   true 2 15    79.2778  0.0130
 {
   "color": "yellow",
   "shape": "triangle",
-  "flag": true,
+  "flag": "true",
   "k": 1,
   "index": 11,
   "quantity": 43.6498,
@@ -43,7 +43,7 @@ red    square   true 2 15    79.2778  0.0130
 {
   "color": "red",
   "shape": "square",
-  "flag": true,
+  "flag": "true",
   "k": 2,
   "index": 15,
   "quantity": 79.2778,

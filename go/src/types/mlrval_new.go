@@ -101,10 +101,42 @@ func MlrvalPointerFromBoolString(input string) *Mlrval {
 	}
 }
 
+var floatNamesToNotInfer = map[string]bool{
+	"Inf":       true,
+	"+Inf":      true,
+	"-Inf":      true,
+	"Infinity":  true,
+	"+Infinity": true,
+	"-Infinity": true,
+	"nan":       true,
+	"NaN":       true,
+}
+
+// MlrvalPointerFromInferredTypeForDataFiles is for parsing field values from
+// data files (except JSON, which is typed -- "true" and true are distinct).
+// Mostly the same as MlrvalPointerFromInferredType, except it doesn't
+// auto-infer true/false to bool; don't auto-infer NaN/Inf to float; etc.
+func MlrvalPointerFromInferredTypeForDataFiles(input string) *Mlrval {
+	if input == "" {
+		return MLRVAL_VOID
+	}
+
+	_, iok := lib.TryIntFromString(input)
+	if iok {
+		return MlrvalPointerFromIntString(input)
+	}
+
+	if floatNamesToNotInfer[input] == false {
+		_, fok := lib.TryFloat64FromString(input)
+		if fok {
+			return MlrvalPointerFromFloat64String(input)
+		}
+	}
+
+	return MlrvalPointerFromString(input)
+}
+
 func MlrvalPointerFromInferredType(input string) *Mlrval {
-	// xxx the parsing has happened so stash it ...
-	// xxx emphasize the invariant that a non-invalid printrep always
-	// matches the nval ...
 	if input == "" {
 		return MLRVAL_VOID
 	}

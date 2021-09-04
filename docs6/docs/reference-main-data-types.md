@@ -92,7 +92,7 @@ ta float
 b  3
 tb int
 c  true
-tc bool
+tc string
 d  1.2true
 td string
 e  7

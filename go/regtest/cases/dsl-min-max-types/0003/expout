@@ -1,12 +1,12 @@
 {
   "n": 1,
-  "b": true,
+  "b": "true",
   "v": "",
   "s": "abc",
   "le": {
     "n": {
       "n": true,
-      "b": false,
+      "b": true,
       "v": false,
       "s": true
     },
@@ -18,13 +18,13 @@
     },
     "v": {
       "n": true,
-      "b": false,
+      "b": true,
       "v": true,
       "s": true
     },
     "s": {
       "n": false,
-      "b": false,
+      "b": true,
       "v": false,
       "s": true
     }

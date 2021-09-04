@@ -3,14 +3,17 @@ TOP:
 c data-types:
   ! don't auto-infer bools; then, data-types page
   ! don't auto-infer Infinity, etc -- ?!? then, data-types page
+  RT-check
+  https://github.com/johnkerl/miller/issues/241
+  https://github.com/johnkerl/miller/issues/357
   MlrvalPointerFromInferredType -> mk variant
-E flatten/unflatten page
 c! seps \001 etc !
   mlrc --iusv --oxtab cat regtest/input/example.usv
   mlr  --iusv --oxtab cat regtest/input/example.usv
 C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
-? twi-dm re all-contribs: all-contributors.org
 
+E flatten/unflatten page
+? twi-dm re all-contribs: all-contributors.org
 C flags LUTs
 
 ----------------------------------------------------------------
