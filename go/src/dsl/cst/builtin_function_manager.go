@@ -1591,7 +1591,7 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 }
 
 // ----------------------------------------------------------------
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionClasses(o *os.File) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionClasses() {
 	classesList := manager.getBuiltinFunctionClasses()
 	for _, class := range classesList {
 		fmt.Println(class)
@@ -1613,32 +1613,32 @@ func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 }
 
 // ----------------------------------------------------------------
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string, o *os.File) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string) {
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		if string(builtinFunctionInfo.class) == class {
-			fmt.Fprintln(o, builtinFunctionInfo.name)
+			fmt.Println(builtinFunctionInfo.name)
 		}
 	}
 }
 
 // ----------------------------------------------------------------
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically(o *os.File) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically() {
 	for _, builtinFunctionInfo := range *manager.lookupTable {
-		fmt.Fprintln(o, builtinFunctionInfo.name)
+		fmt.Println(builtinFunctionInfo.name)
 	}
 }
 
 // ----------------------------------------------------------------
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph(o *os.File) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph() {
 	functionNames := make([]string, len(*manager.lookupTable))
 	for i, builtinFunctionInfo := range *manager.lookupTable {
 		functionNames[i] = builtinFunctionInfo.name
 	}
-	lib.PrintWordsAsParagraph(functionNames, o)
+	lib.PrintWordsAsParagraph(functionNames)
 }
 
 // ----------------------------------------------------------------
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionsAsTable(o *os.File) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
 	fmt.Printf("%-30s %-12s %s\n", "Name", "Class", "Args")
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		fmt.Printf("%-30s %-12s %s\n",
@@ -1689,13 +1689,13 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
 	}
 }
 
-func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string, o *os.File) {
-	if !manager.TryListBuiltinFunctionUsage(functionName, o) {
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string) {
+	if !manager.TryListBuiltinFunctionUsage(functionName) {
 		fmt.Fprintf(os.Stderr, "Function \"%s\" not found.\n", functionName)
 	}
 }
 
-func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName string, o *os.File) bool {
+func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName string) bool {
 	builtinFunctionInfo := manager.LookUp(functionName)
 	if builtinFunctionInfo == nil {
 		manager.listBuiltinFunctionUsageApproximate(functionName)

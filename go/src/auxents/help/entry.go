@@ -697,26 +697,26 @@ func helpTypeArithmeticInfo() {
 // ----------------------------------------------------------------
 func listFunctions() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph()
 	} else {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesVertically(os.Stdout)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesVertically()
 	}
 }
 
 func listFunctionClasses() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionClasses(os.Stdout)
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionClasses()
 }
 
 func listFunctionsInClass(class string) {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsInClass(class, os.Stdout)
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsInClass(class)
 }
 
 func listFunctionsAsParagraph() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph()
 }
 
 func listFunctionsAsTable() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsAsTable(os.Stdout)
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsAsTable()
 }
 
 func usageFunctions() {
@@ -728,7 +728,7 @@ func usageFunctionsByClass() {
 }
 
 func helpForFunction(arg string) {
-	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout)
+	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg)
 }
 
 // ----------------------------------------------------------------

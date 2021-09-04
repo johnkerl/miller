@@ -3,8 +3,11 @@ TOP:
 c data-types:
   ! don't auto-infer bools; then, data-types page
   ! don't auto-infer Infinity, etc -- ?!? then, data-types page
+  MlrvalPointerFromInferredType -> mk variant
 E flatten/unflatten page
 c! seps \001 etc !
+  mlrc --iusv --oxtab cat regtest/input/example.usv
+  mlr  --iusv --oxtab cat regtest/input/example.usv
 C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
 ? twi-dm re all-contribs: all-contributors.org
 
@@ -13,12 +16,10 @@ C flags LUTs
 ----------------------------------------------------------------
 ALL:
 * csv to csv,tsv throughout
-* rid of explicitly passing around os.Stdout in all various help functions, annoying
 * het.dkvp > het.json in more places
 * check each page for adequate h2 coverage
 
 * deduping pass!
-* 1-up/0-up -> one-up/zero-up everywhere
 
 * flags-doc
   C refactor cli-parser w/ LUT & help strings
