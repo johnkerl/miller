@@ -27,7 +27,7 @@ const (
 	FUNC_CLASS_HASHING                    = "hashing"
 	FUNC_CLASS_CONVERSION                 = "conversion"
 	FUNC_CLASS_TYPING                     = "typing"
-	FUNC_CLASS_COLLECTIONS                = "maps/arrays"
+	FUNC_CLASS_COLLECTIONS                = "collections"
 	FUNC_CLASS_SYSTEM                     = "system"
 	FUNC_CLASS_TIME                       = "time"
 )
@@ -470,22 +470,22 @@ regex-match operator: try '$y = ~$x'.`,
 		name:  "substr0",
 		class: FUNC_CLASS_STRING,
 		help: `substr0(s,m,n) gives substring of s from 0-up position m to n
-inclusive. Negative indices -len .. -1 alias to 0 .. len-1.`,
+inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.`,
 		ternaryFunc: types.MlrvalSubstr0Up,
 	},
 	{
 		name:  "substr1",
 		class: FUNC_CLASS_STRING,
 		help: `substr1(s,m,n) gives substring of s from 1-up position m to n
-inclusive. Negative indices -len .. -1 alias to 1 .. len.`,
+inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.`,
 		ternaryFunc: types.MlrvalSubstr1Up,
 	},
 	{
 		name:  "substr",
 		class: FUNC_CLASS_STRING,
 		help: `substr is an alias for substr0. See also substr1. Miller is generally 1-up
-with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
-Arrays are new in Miller 6; the substr function is older.`,
+with all array and string indices, but, this is a backward-compatibility issue with Miller 5
+and below. Arrays are new in Miller 6; the substr function is older.`,
 		ternaryFunc: types.MlrvalSubstr0Up,
 	},
 
@@ -1591,6 +1591,37 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 }
 
 // ----------------------------------------------------------------
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionClasses(o *os.File) {
+	classesList := manager.getBuiltinFunctionClasses()
+	for _, class := range classesList {
+		fmt.Println(class)
+	}
+}
+
+func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
+	classesSeen := make(map[string]bool)
+	classesList := make([]string, 0)
+	for _, builtinFunctionInfo := range *manager.lookupTable {
+		class := string(builtinFunctionInfo.class)
+		if classesSeen[class] == false {
+			classesList = append(classesList, class)
+			classesSeen[class] = true
+		}
+	}
+	sort.Strings(classesList)
+	return classesList
+}
+
+// ----------------------------------------------------------------
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string, o *os.File) {
+	for _, builtinFunctionInfo := range *manager.lookupTable {
+		if string(builtinFunctionInfo.class) == class {
+			fmt.Fprintln(o, builtinFunctionInfo.name)
+		}
+	}
+}
+
+// ----------------------------------------------------------------
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically(o *os.File) {
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		fmt.Fprintln(o, builtinFunctionInfo.name)
@@ -1607,6 +1638,18 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph(o *os
 }
 
 // ----------------------------------------------------------------
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionsAsTable(o *os.File) {
+	fmt.Printf("%-30s %-12s %s\n", "Name", "Class", "Args")
+	for _, builtinFunctionInfo := range *manager.lookupTable {
+		fmt.Printf("%-30s %-12s %s\n",
+			builtinFunctionInfo.name,
+			builtinFunctionInfo.class,
+			describeNargs(&builtinFunctionInfo),
+		)
+	}
+}
+
+// ----------------------------------------------------------------
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
 	for i, builtinFunctionInfo := range *manager.lookupTable {
 		if i > 0 {
@@ -1619,6 +1662,30 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
 			describeNargs(&builtinFunctionInfo),
 			builtinFunctionInfo.help,
 		)
+	}
+}
+
+// ----------------------------------------------------------------
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
+	classesList := manager.getBuiltinFunctionClasses()
+
+	for _, class := range classesList {
+		fmt.Println()
+		fmt.Println(colorizer.MaybeColorizeHelp(strings.ToUpper(class), true))
+		fmt.Println()
+		for _, builtinFunctionInfo := range *manager.lookupTable {
+			if string(builtinFunctionInfo.class) != class {
+				continue
+			}
+			lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
+			fmt.Print(colorizer.MaybeColorizeHelp(builtinFunctionInfo.name, true))
+			fmt.Printf("  (class=%s #args=%s) %s\n",
+				builtinFunctionInfo.class,
+				describeNargs(&builtinFunctionInfo),
+				builtinFunctionInfo.help,
+			)
+			fmt.Println()
+		}
 	}
 }
 

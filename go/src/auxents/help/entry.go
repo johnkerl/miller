@@ -65,7 +65,10 @@ func init() {
 		{name: "function", unaryHandlerFunc: helpForFunction},
 		{name: "keyword", unaryHandlerFunc: helpForKeyword},
 		{name: "list-functions", zaryHandlerFunc: listFunctions},
+		{name: "list-function-classes", zaryHandlerFunc: listFunctionClasses},
+		{name: "list-functions-in-class", unaryHandlerFunc: listFunctionsInClass},
 		{name: "list-functions-as-paragraph", zaryHandlerFunc: listFunctionsAsParagraph},
+		{name: "list-functions-as-table", zaryHandlerFunc: listFunctionsAsTable},
 		{name: "list-keywords", zaryHandlerFunc: listKeywords},
 		{name: "list-keywords-as-paragraph", zaryHandlerFunc: listKeywordsAsParagraph},
 		{name: "list-verbs", zaryHandlerFunc: listVerbs},
@@ -77,6 +80,7 @@ func init() {
 		{name: "separator-options", zaryHandlerFunc: helpSeparatorOptions},
 		{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
 		{name: "usage-functions", zaryHandlerFunc: usageFunctions},
+		{name: "usage-functions-by-class", zaryHandlerFunc: usageFunctionsByClass},
 		{name: "usage-keywords", zaryHandlerFunc: usageKeywords},
 		{name: "usage-verbs", zaryHandlerFunc: usageVerbs},
 		{name: "verb", unaryHandlerFunc: helpForVerb},
@@ -699,12 +703,28 @@ func listFunctions() {
 	}
 }
 
+func listFunctionClasses() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionClasses(os.Stdout)
+}
+
+func listFunctionsInClass(class string) {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsInClass(class, os.Stdout)
+}
+
 func listFunctionsAsParagraph() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
 }
 
+func listFunctionsAsTable() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsAsTable(os.Stdout)
+}
+
 func usageFunctions() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages()
+}
+
+func usageFunctionsByClass() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsagesByClass()
 }
 
 func helpForFunction(arg string) {

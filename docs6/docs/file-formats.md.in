@@ -118,6 +118,13 @@ TODO: probably remove entirely
 
 * Use `--jflatsep yourseparatorhere` to specify the string used for key concatenation: this defaults to a single dot.
 
+### JSON-in-CSV
+
+It's quite common to have CSV data which contains stringified JSON as a column.
+See the [JSON parse and stringify
+section](reference-main-data-types.md#json-parse-and-stringify) for ways to
+decode these in Miller.
+
 ## PPRINT: Pretty-printed tabular
 
 Miller's pretty-print format is like CSV, but column-aligned.  For example, compare

@@ -7,6 +7,9 @@ theme:
     text: Lato
     code: Lato Mono
 extra_css: ['extra.css']
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
+  - javascripts/tables.js
 nav:
   - "Introduction": "index.md"
   - 'Getting started':
@@ -62,16 +65,17 @@ nav:
       - "I/O options": "reference-main-io-options.md"
       - "Separators": "reference-main-separators.md"
       - "List of verbs": "reference-verbs.md"
-      - "Streaming processing, and memory usage": "streaming-and-memory.md"
-      - "CPU/multicore usage": "cpu.md"
       - "Data types": "reference-main-data-types.md"
+      - "Strings": "reference-main-strings.md"
+      - "Regular expressions": "reference-main-regular-expressions.md"
       - "Arithmetic": "reference-main-arithmetic.md"
       - "Maps": "reference-main-maps.md"
       - "Arrays": "reference-main-arrays.md"
       - "Null/empty/absent data": "reference-main-null-data.md"
-      - "Regular expressions": "reference-main-regular-expressions.md"
       - "Flatten/unflatten: JSON vs. tabular formats": "flatten-unflatten.md"
       - "Compressed data": "reference-main-compressed-data.md"
+      - "Streaming processing, and memory usage": "streaming-and-memory.md"
+      - "CPU/multicore usage": "cpu.md"
       - "Miller environment variables": "reference-main-env-vars.md"
     - 'DSL reference':
       - "DSL overview": "reference-dsl.md"

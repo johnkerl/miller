@@ -194,3 +194,12 @@ Miller has a [key-value loop flavor](reference-dsl-control-structures.md#key-val
 ## Semantics for one-variable for-loops
 
 Miller also has a [single-variable loop flavor](reference-dsl-control-structures.md#single-variable-for-loops). If `x` is a map then `for (e in x) { ... }` binds `e` to successive map _keys_ (not values as in PHP). But if `x` is an array then `for e in x) { ... }` binds `e` to successive array _values_ (not indices).
+
+## JSON parse, stringify, decode, encode
+
+Miller has the verbs
+[`json-parse`](reference-verbs.md#json-parse) and
+[`json-stringify`](reference-verbs.md#json-stringify), and the DSL functions
+[`json_parse`](reference-dsl-builtin-functions.md#json_parse) and
+[`json_stringify`](reference-dsl-builtin-functions.md#json_stringify).
+In some other lannguages these are called `json_decode` and `json_encode`.

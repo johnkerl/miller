@@ -49,7 +49,10 @@ Type 'mlr help {topic}' for any of the following:
   mlr help function
   mlr help keyword
   mlr help list-functions
+  mlr help list-function-classes
+  mlr help list-functions-in-class
   mlr help list-functions-as-paragraph
+  mlr help list-functions-as-table
   mlr help list-keywords
   mlr help list-keywords-as-paragraph
   mlr help list-verbs
@@ -61,6 +64,7 @@ Type 'mlr help {topic}' for any of the following:
   mlr help separator-options
   mlr help type-arithmetic-info
   mlr help usage-functions
+  mlr help usage-functions-by-class
   mlr help usage-keywords
   mlr help usage-verbs
   mlr help verb
@@ -91,7 +95,10 @@ Type 'mlr help {topic}' for any of the following:
   mlr help function
   mlr help keyword
   mlr help list-functions
+  mlr help list-function-classes
+  mlr help list-functions-in-class
   mlr help list-functions-as-paragraph
+  mlr help list-functions-as-table
   mlr help list-keywords
   mlr help list-keywords-as-paragraph
   mlr help list-verbs
@@ -103,6 +110,7 @@ Type 'mlr help {topic}' for any of the following:
   mlr help separator-options
   mlr help type-arithmetic-info
   mlr help usage-functions
+  mlr help usage-functions-by-class
   mlr help usage-keywords
   mlr help usage-verbs
   mlr help verb
@@ -179,7 +187,7 @@ Given the name of a DSL function (from `mlr -f`) you can use `mlr help function`
 <b>mlr help function append</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-append  (class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
+append  (class=collections #args=2) Appends second argument to end of first argument, which must be an array.
 </pre>
 
 <pre class="pre-highlight-in-pair">
