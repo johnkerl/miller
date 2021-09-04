@@ -1,6 +1,13 @@
 ================================================================
 TOP OF LIST:
 
+* pre-release:
+  o explicit punchdown list
+  o draft release w/ m6 binaries YYYYMMDD -- ?
+  o gha download steps clearer
+  
+! allcontribs
+
 * doc6 proofreads
 * 'explicit r' issue 297: code, UT, doc
 
@@ -65,6 +72,9 @@ w discussion re docs6 ...
   https://github.com/johnkerl/miller/discussions/609#discussioncomment-1115715
 
 * csv -> csv/tsv throughout
+
+* cheatsheet someday? example:
+  https://twitter.com/icymi_py/status/1426622817785765898/photo/1
 
 ----------------------------------------------------------------
 memory/streaming page
@@ -325,6 +335,9 @@ MAYBES
   godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
   flamegraph etc double-check
 
+* more data formats:
+  https://indico.cern.ch/event/613842/contributions/2585787/attachments/1463230/2260889/pivarski-data-formats.pdf
+
 ----------------------------------------------------------------
 DEFER:
 * parser-fu:
@@ -433,17 +446,6 @@ i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older
   o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
 i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * substr(7,5) -- "" or error?
-* write up re auto-deepen logic -- foo[NR] -- should create a map not an array unless already array
-  o idea is arrays are created with explicit array literals, then extended as such
-  o otherwise preserve map semantics for backward/awkish compatbility
-  o arrays for JSON
-  o doc clearly that these are different:
-    begin {
-      foo = []
-    }
-    foo[NR] = $foo # auto-extends a array with indices 1,2,3,...
-    --versus--
-    foo[NR] = $foo # auto-creates and auto-extends a map with keys "1","2","3",...
 * reorder locations of get/put/remove methods in mlrval/mlrmap
 * grep out all error message from regtest outputs & doc them all & make sure index-searchable at readthedocs
 * short 'asserting' functions (absent/error); and/or put --strict or somesuch
@@ -577,18 +579,9 @@ DOC6:
 * godoc ...
 * mlrdoc false && 4, true || 4 because of short-circuiting requirement
 * doc: no boolish truthy falsy
-* 1-up note from mlrval_collections -> doc6
-  o substr -- not backward-compatible
-  o example of key-stringify to get truly awkish associative-array behavior
-  o also $1 vs $[1] -- the former 'sticks' with input-data ordering.
-  o moral: miller is a name-indexed tool as its primary purpose. positional
-    indexing is supported but it can be confusing.
 * mlrdoc: there should have always been a >>> and >>>=, and now there are
-* doc note 'array' is now a keyword
-* document array-unset as shiftback
 * error if UDF has same name as built-in
 * doc that multi-arg print interleaves spaces; they can strcat to avoid
-* doc one-variable for is over keys for maps, elements for arrays
 * more text examples in mlr-put doc
 * window.mlr, window2.mlr -> doc somewhere
 * mlrdoc for new go-only verbs

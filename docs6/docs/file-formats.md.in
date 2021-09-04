@@ -48,7 +48,7 @@ Here are things they have in common:
 ## JSON
 
 JSON is a format which supports scalars (numbers, strings, boolean, etc.) as
-well as "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for
+well as "objects" (maps) and "arrays" (lists), while Miller is a tool for
 handling **tabular data** only.  By *tabular JSON* I mean the data is either a
 sequence of one or more objects, or an array consisting of one or more objects.
 Miller treats JSON objects as name-indexed records.

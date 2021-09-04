@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # I/O options
 
 ## Formats
@@ -57,6 +70,9 @@ Use the `mlr -I` flag to process files in-place. For example, `mlr -I --csv cut 
 
 By default, Miller output goes to the screen (or you can redirect a file using `>` or to another process using `|`). With `-I`, for each file name on the command line, output is written to a temporary file in the same directory. Miller writes its output into that temp file, which is then renamed over the original.  Then, processing continues on the next file. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file; statistics are only over each file's own records; and so on.
 
+Since this replaces your data with modified data, it's often a good idea to back up your original files somewhere
+first, to protect against keystroking errors.
+
 Please see [Choices for printing to files](10min.md#choices-for-printing-to-files) for examples.
 
 ## Compression
@@ -65,25 +81,7 @@ See the separate page on [Compressed data](reference-main-compressed-data.md).
 
 ## Record/field/pair separators
 
-Miller has record separators `IRS` and `ORS`, field separators `IFS` and `OFS`, and pair separators `IPS` and `OPS`.  For example, in the DKVP line `a=1,b=2,c=3`, the record separator is newline, field separator is comma, and pair separator is the equals sign. These are the default values.
-
-Options:
-
-<pre class="pre-non-highlight-non-pair">
---rs --irs --ors
---fs --ifs --ofs --repifs
---ps --ips --ops
-</pre>
-
-* You can change a separator from input to output via e.g. `--ifs = --ofs :`. Or, you can specify that the same separator is to be used for input and output via e.g. `--fs :`.
-
-* The pair separator is only relevant to DKVP format.
-
-* Pretty-print and xtab formats ignore the separator arguments altogether.
-
-* The `--repifs` means that multiple successive occurrences of the field separator count as one.  For example, in CSV data we often signify nulls by empty strings, e.g. `2,9,,,,,6,5,4`. On the other hand, if the field separator is a space, it might be more natural to parse `2 4    5` the same as `2 4 5`: `--repifs --ifs ' '` lets this happen.  In fact, the `--ipprint` option above is internally implemented in terms of `--repifs`.
-
-* Just write out the desired separator, e.g. `--ofs '|'`. But you may use the symbolic names `newline`, `space`, `tab`, `pipe`, or `semicolon` if you like.
+See the separate page on [separators](reference-main-separators.md).
 
 ## Number formatting
 

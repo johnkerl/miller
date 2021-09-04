@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # List of verbs
 
 ## Overview
@@ -802,7 +815,7 @@ Options:
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>cat data/fill-down.csv</b>
+<b>cat data/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
@@ -812,7 +825,7 @@ a,b,c
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv fill-down -f b data/fill-down.csv</b>
+<b>mlr --csv fill-down -f b data/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
@@ -822,13 +835,55 @@ a,b,c
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv fill-down -a -f b data/fill-down.csv</b>
+<b>mlr --csv fill-down -a -f b data/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
 1,,3
 4,5,6
 7,,9
+</pre>
+
+## fill-empty
+
+<pre class="pre-highlight-in-pair">
+<b>mlr fill-empty --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr fill-empty [options]
+Fills empty-string fields with specified fill-value.
+Options:
+-v {string} Fill-value: defaults to "N/A"
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/fillable.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,,3
+4,5,6
+7,,9
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv fill-empty data/fillable.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,N/A,3
+4,5,6
+7,N/A,9
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv fill-empty -v something data/fillable.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,something,3
+4,5,6
+7,something,9
 </pre>
 
 ## filter

@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # A note on the complexity of Miller's expression language
 
 One of Miller's strengths is its brevity: it's much quicker -- and less
@@ -28,7 +41,7 @@ the same complexity level as `awk`; as of 5.0.0 we have [user-defined
 functions](reference-dsl-user-defined-functions.md) and [map-valued
 variables](reference-dsl-variables.md), again on about the same complexity level
 as `awk` along with optional type-declaration syntax; as of Miller 6 we have
-full support for [arrays](reference-dsl-arrays.md).  While I'm excited by these
+full support for [arrays](reference-main-arrays.md).  While I'm excited by these
 powerful language features, I hope to keep new features focused on Miller's
 sweet spot which is speed plus simplicity.
 

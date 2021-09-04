@@ -291,15 +291,33 @@ mlr fill-down --help
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-cat data/fill-down.csv
+cat data/fillable.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --csv fill-down -f b data/fill-down.csv
+mlr --csv fill-down -f b data/fillable.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --csv fill-down -a -f b data/fill-down.csv
+mlr --csv fill-down -a -f b data/fillable.csv
+GENMD_EOF
+
+## fill-empty
+
+GENMD_RUN_COMMAND
+mlr fill-empty --help
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+cat data/fillable.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv fill-empty data/fillable.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv fill-empty -v something data/fillable.csv
 GENMD_EOF
 
 ## filter

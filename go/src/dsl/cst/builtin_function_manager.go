@@ -52,6 +52,7 @@ type BuiltinFunctionInfo struct {
 // Sort the function table.  Useful for online help and autogenned docs / manpage.
 func init() {
 	// Go sort API: for ascending sort, return true if element i < element j.
+	// Put symbols like '||' after text like 'gsub', not before.
 	sort.Slice(_BUILTIN_FUNCTION_LOOKUP_TABLE, func(i, j int) bool {
 		namei := _BUILTIN_FUNCTION_LOOKUP_TABLE[i].name
 		namej := _BUILTIN_FUNCTION_LOOKUP_TABLE[j].name

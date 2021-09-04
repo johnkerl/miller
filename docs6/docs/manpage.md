@@ -1,10 +1,23 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Manual page
 
 This is simply a copy of what you should see on running `man mlr` at a command prompt, once Miller is installed on your system.
 
 <pre class="pre-non-highlight-non-pair">
-MILLER(1)							     MILLER(1)
+MILLER(1)                                                            MILLER(1)
 
 
 
@@ -14,7 +27,11 @@ NAME
 
 SYNOPSIS
        Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or
-       more file names}
+       more file names} Output of one verb may be chained as input to another
+       using "then", e.g.
+         mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
+       Please see 'mlr help topics' for more information.  Please also see
+       https://johnkerl.org/miller6
 
 
 DESCRIPTION
@@ -24,92 +41,149 @@ DESCRIPTION
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents Miller v5.10.1.
+       manpage documents Miller v6.0.0-dev.
 
 EXAMPLES
-   COMMAND-LINE SYNTAX
-       mlr --csv cut -f hostname,uptime mydata.csv
-       mlr --tsv --rs lf filter '$status != "down" && $upsec &gt;= 10000' *.tsv
-       mlr --nidx put '$sum = $7 &lt; 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
-       grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
-       mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-       mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
-       mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
-       mlr stats2 -a linreg-pca -f u,v -g shape data/*
-       mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
-       mlr --from estimates.tbl put '
-	 for (k,v in $*) {
-	   if (is_numeric(v) && k =~ "^[t-z].*$") {
-	     $sum += v; $count += 1
-	   }
-	 }
-	 $mean = $sum / $count # no assignment if count unset'
-       mlr --from infile.dat put -f analyze.mlr
-       mlr --from infile.dat put 'tee &gt; "./taps/data-".$a."-".$b, $*'
-       mlr --from infile.dat put 'tee | "gzip &gt; ./taps/data-".$a."-".$b.".gz", $*'
-       mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
-       mlr --from infile.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
+       mlr --icsv --opprint cat example.csv
+       mlr --icsv --opprint sort -f shape example.csv
+       mlr --icsv --opprint sort -f shape -nr index example.csv
+       mlr --icsv --opprint cut -f flag,shape example.csv
+       mlr --csv filter '$color == "red"' example.csv
+       mlr --icsv --ojson put '$ratio = $quantity / $rate' example.csv
+       mlr --icsv --opprint --from example.csv sort -nr index then cut -f shape,quantity
 
-   DATA FORMATS
-	 DKVP: delimited key-value pairs (Miller default format)
-	 +---------------------+
-	 | apple=1,bat=2,cog=3 | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-	 | dish=7,egg=8,flint  | Record 2: "dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"
-	 +---------------------+
+DATA FORMATS
+       CSV/CSV-lite: comma-separated values with separate header line
+       TSV: same but with tabs in places of commas
+       +---------------------+
+       | apple,bat,cog       |
+       | 1,2,3               | Record 1: "apple":"1", "bat":"2", "cog":"3"
+       | 4,5,6               | Record 2: "apple":"4", "bat":"5", "cog":"6"
+       +---------------------+
 
-	 NIDX: implicitly numerically indexed (Unix-toolkit style)
-	 +---------------------+
-	 | the quick brown     | Record 1: "1" =&gt; "the", "2" =&gt; "quick", "3" =&gt; "brown"
-	 | fox jumped	       | Record 2: "1" =&gt; "fox", "2" =&gt; "jumped"
-	 +---------------------+
+       JSON (sequence or array of objects):
+       +---------------------+
+       | {                   |
+       |  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
+       |  "bat": 2,          |
+       |  "cog": 3           |
+       | }                   |
+       | {                   |
+       |   "dish": {         | Record 2: "dish:egg":"7",
+       |     "egg": 7,       | "dish:flint":"8", "garlic":""
+       |     "flint": 8      |
+       |   },                |
+       |   "garlic": ""      |
+       | }                   |
+       +---------------------+
 
-	 CSV/CSV-lite: comma-separated values with separate header line
-	 +---------------------+
-	 | apple,bat,cog       |
-	 | 1,2,3	       | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-	 | 4,5,6	       | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
-	 +---------------------+
+       PPRINT: pretty-printed tabular
+       +---------------------+
+       | apple bat cog       |
+       | 1     2   3         | Record 1: "apple:"1", "bat":"2", "cog":"3"
+       | 4     5   6         | Record 2: "apple":"4", "bat":"5", "cog":"6"
+       +---------------------+
 
-	 Tabular JSON: nested objects are supported, although arrays within them are not:
-	 +---------------------+
-	 | {		       |
-	 |  "apple": 1,        | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-	 |  "bat": 2,	       |
-	 |  "cog": 3	       |
-	 | }		       |
-	 | {		       |
-	 |   "dish": {	       | Record 2: "dish:egg" =&gt; "7", "dish:flint" =&gt; "8", "garlic" =&gt; ""
-	 |     "egg": 7,       |
-	 |     "flint": 8      |
-	 |   }, 	       |
-	 |   "garlic": ""      |
-	 | }		       |
-	 +---------------------+
+       Markdown tabular (supported for output only):
+       +-----------------------+
+       | | apple | bat | cog | |
+       | | ---   | --- | --- | |
+       | | 1     | 2   | 3   | | Record 1: "apple:"1", "bat":"2", "cog":"3"
+       | | 4     | 5   | 6   | | Record 2: "apple":"4", "bat":"5", "cog":"6"
+       +-----------------------+
 
-	 PPRINT: pretty-printed tabular
-	 +---------------------+
-	 | apple bat cog       |
-	 | 1	 2   3	       | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-	 | 4	 5   6	       | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
-	 +---------------------+
+       XTAB: pretty-printed transposed tabular
+       +---------------------+
+       | apple 1             | Record 1: "apple":"1", "bat":"2", "cog":"3"
+       | bat   2             |
+       | cog   3             |
+       |                     |
+       | dish 7              | Record 2: "dish":"7", "egg":"8"
+       | egg  8              |
+       +---------------------+
 
-	 XTAB: pretty-printed transposed tabular
-	 +---------------------+
-	 | apple 1	       | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-	 | bat	 2	       |
-	 | cog	 3	       |
-	 |		       |
-	 | dish 7	       | Record 2: "dish" =&gt; "7", "egg" =&gt; "8"
-	 | egg	8	       |
-	 +---------------------+
+       DKVP: delimited key-value pairs (Miller default format)
+       +---------------------+
+       | apple=1,bat=2,cog=3 | Record 1: "apple":"1", "bat":"2", "cog":"3"
+       | dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
+       +---------------------+
 
-	 Markdown tabular (supported for output only):
-	 +-----------------------+
-	 | | apple | bat | cog | |
-	 | | ---   | --- | --- | |
-	 | | 1	   | 2	 | 3   | | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-	 | | 4	   | 5	 | 6   | | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
-	 +-----------------------+
+       NIDX: implicitly numerically indexed (Unix-toolkit style)
+       +---------------------+
+       | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
+       | fox jumped          | Record 2: "1":"fox", "2":"jumped"
+       +---------------------+
+
+VERB LIST
+       altkv bar bootstrap cat check clean-whitespace count-distinct count
+       count-similar cut decimate fill-down fill-empty filter flatten format-values
+       fraction gap grep group-by group-like having-fields head histogram json-parse
+       json-stringify join label least-frequent merge-fields most-frequent nest
+       nothing put regularize remove-empty-columns rename reorder repeat reshape
+       sample sec2gmtdate sec2gmt seqgen shuffle skip-trivial-records sort
+       sort-within-records stats1 stats2 step tac tail tee template top unflatten
+       uniq unsparsify
+
+FUNCTION LIST
+       abs acos acosh append arrayify asin asinh asserting_absent asserting_array
+       asserting_bool asserting_boolean asserting_empty asserting_empty_map
+       asserting_error asserting_float asserting_int asserting_map
+       asserting_nonempty_map asserting_not_array asserting_not_empty
+       asserting_not_map asserting_not_null asserting_null asserting_numeric
+       asserting_present asserting_string atan atan2 atanh bitcount boolean
+       capitalize cbrt ceil clean_whitespace collapse_whitespace cos cosh depth
+       dhms2fsec dhms2sec erf erfc exp expm1 flatten float floor fmtnum fsec2dhms
+       fsec2hms get_keys get_values gmt2sec gsub haskey hexfmt hms2fsec hms2sec
+       hostname int invqnorm is_absent is_array is_bool is_boolean is_empty
+       is_empty_map is_error is_float is_int is_map is_nonempty_map is_not_array
+       is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
+       joink joinkv joinv json_parse json_stringify leafcount length log log10 log1p
+       logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul
+       msub os pow qnorm regextract regextract_or_else round roundm rstrip sec2dhms
+       sec2gmt sec2gmtdate sec2hms sgn sha1 sha256 sha512 sin sinh splita splitax
+       splitkv splitkvx splitnv splitnvx sqrt ssub strftime string strip strlen
+       strptime sub substr substr0 substr1 system systime systimeint tan tanh tolower
+       toupper truncate typeof unflatten uptime urand urand32 urandint urandrange
+       version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt;
+       ?: ?? ??? ^ ^^ | || ~
+
+HELP OPTIONS
+       Type 'mlr help {topic}' for any of the following:
+         mlr help topics
+         mlr help auxents
+         mlr help basic-examples
+         mlr help comments-in-data
+         mlr help compressed-data
+         mlr help csv-options
+         mlr help data-format-options
+         mlr help data-formats
+         mlr help double-quoting
+         mlr help format-conversion
+         mlr help function
+         mlr help keyword
+         mlr help list-functions
+         mlr help list-functions-as-paragraph
+         mlr help list-keywords
+         mlr help list-keywords-as-paragraph
+         mlr help list-verbs
+         mlr help list-verbs-as-paragraph
+         mlr help misc
+         mlr help mlrrc
+         mlr help number-formatting
+         mlr help output-colorization
+         mlr help separator-options
+         mlr help type-arithmetic-info
+         mlr help usage-functions
+         mlr help usage-keywords
+         mlr help usage-verbs
+         mlr help verb
+       Shorthands:
+         mlr -l = mlr help list-verbs
+         mlr -L = mlr help usage-verbs
+         mlr -f = mlr help list-functions
+         mlr -F = mlr help usage-functions
+         mlr -k = mlr help list-keywords
+         mlr -K = mlr help usage-keywords
 
 OPTIONS
        In the following option flags, the version with "i" designates the
@@ -118,299 +192,288 @@ OPTIONS
        sets the input record separator, --ors the output record separator, and
        --rs sets both the input and output separator to the given value.
 
-   HELP OPTIONS
-	 -h or --help		      Show this message.
-	 --version		      Show the software version.
-	 {verb name} --help	      Show verb-specific help.
-	 --help-all-verbs	      Show help on all verbs.
-	 -l or --list-all-verbs       List only verb names.
-	 -L			      List only verb names, one per line.
-	 -f or --help-all-functions   Show help on all built-in functions.
-	 -F			      Show a bare listing of built-in functions by name.
-	 -k or --help-all-keywords    Show help on all keywords.
-	 -K			      Show a bare listing of keywords by name.
+   DATA-FORMAT OPTIONS
+       --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
+                                        (Miller's default format).
 
-   VERB LIST
-	altkv bar bootstrap cat check clean-whitespace count count-distinct
-	count-similar cut decimate fill-down filter format-values fraction grep
-	group-by group-like having-fields head histogram join label least-frequent
-	merge-fields most-frequent nest nothing put regularize remove-empty-columns
-	rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle
-	skip-trivial-records sort sort-within-records stats1 stats2 step tac tail tee
-	top uniq unsparsify
+       --inidx   --onidx   --nidx      Implicitly-integer-indexed fields (Unix-toolkit style).
+       -T                              Synonymous with "--nidx --fs tab".
 
-   FUNCTION LIST
-	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ &lt;&lt; &gt;&gt; bitcount == != =~ !=~
-	&gt; &gt;= &lt; &lt;= && || ^^ ! ? : . gsub regextract regextract_or_else strlen sub ssub
-	substr tolower toupper truncate capitalize lstrip rstrip strip
-	collapse_whitespace clean_whitespace system abs acos acosh asin asinh atan
-	atan2 atanh cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10
-	log1p logifit madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh
-	sqrt tan tanh urand urandrange urand32 urandint dhms2fsec dhms2sec fsec2dhms
-	fsec2hms gmt2sec localtime2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmt
-	sec2gmtdate sec2localtime sec2localtime sec2localdate sec2hms strftime
-	strftime_local strptime strptime_local systime is_absent is_bool is_boolean
-	is_empty is_empty_map is_float is_int is_map is_nonempty_map is_not_empty
-	is_not_map is_not_null is_null is_numeric is_present is_string
-	asserting_absent asserting_bool asserting_boolean asserting_empty
-	asserting_empty_map asserting_float asserting_int asserting_map
-	asserting_nonempty_map asserting_not_empty asserting_not_map
-	asserting_not_null asserting_null asserting_numeric asserting_present
-	asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
-	joink joinkv joinv leafcount length mapdiff mapexcept mapselect mapsum splitkv
-	splitkvx splitnv splitnvx
+       --icsv    --ocsv    --csv       Comma-separated value (or tab-separated with --fs tab, etc.)
 
-       Please use "mlr --help-function {function name}" for function-specific help.
+       --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
+                                       "--ocsv --ofs tab", "--csv --fs tab".
+       --iasv    --oasv    --asv       Similar but using ASCII FS 0x1f and RS 0x1e\n",
+       --iusv    --ousv    --usv       Similar but using Unicode FS U+241F (UTF-8 0xe2909f)\n",
+                                       and RS U+241E (UTF-8 0xe2909e)\n",
 
-   I/O FORMATTING
-	 --idkvp   --odkvp   --dkvp	 Delimited key-value pairs, e.g "a=1,b=2"
-					 (this is Miller's default format).
+       --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated with --fs tab, etc.).
+                                              The 'lite' CSV does not handle RFC-CSV double-quoting rules; is
+                                              slightly faster and handles heterogeneity in the input stream via
+                                              empty newline followed by new header line. See also
+                                               https://johnkerl.org/miller6/file-formats.html#csv-tsv-asv-usv-etc
 
-	 --inidx   --onidx   --nidx	 Implicitly-integer-indexed fields
-					 (Unix-toolkit style).
-	 -T				 Synonymous with "--nidx --fs tab".
+       --itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
+                                       "--ocsvlite --ofs tab", "--csvlite --fs tab".
+       -t                              Synonymous with --tsvlite.
+       --iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS 0x1f and RS 0x1e\n",
+       --iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS U+241F (UTF-8 0xe2909f)\n",
+                                       and RS U+241E (UTF-8 0xe2909e)\n",
 
-	 --icsv    --ocsv    --csv	 Comma-separated value (or tab-separated
-					 with --fs tab, etc.)
+       --ipprint --opprint --pprint    Pretty-printed tabular (produces no
+                                       output until all input is in).
+                           --right     Right-justifies all fields for PPRINT output.
+                           --barred    Prints a border around PPRINT output
+                                       (only available for output).
 
-	 --itsv    --otsv    --tsv	 Keystroke-savers for "--icsv --ifs tab",
-					 "--ocsv --ofs tab", "--csv --fs tab".
-	 --iasv    --oasv    --asv	 Similar but using ASCII FS 0x1f and RS 0x1e
-	 --iusv    --ousv    --usv	 Similar but using Unicode FS U+241F (UTF-8 0xe2909f)
-					 and RS U+241E (UTF-8 0xe2909e)
+                 --omd                 Markdown-tabular (only available for output).
 
-	 --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated
-					 with --fs tab, etc.). The 'lite' CSV does not handle
-					 RFC-CSV double-quoting rules; is slightly faster;
-					 and handles heterogeneity in the input stream via
-					 empty newline followed by new header line. See also
-					 http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/etc.
+       --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
+                           --xvright   Right-justifies values for XTAB format.
 
-	 --itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
-					 "--ocsvlite --ofs tab", "--csvlite --fs tab".
-	 -t				 Synonymous with --tsvlite.
-	 --iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS 0x1f and RS 0x1e
-	 --iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS U+241F (UTF-8 0xe2909f)
-					 and RS U+241E (UTF-8 0xe2909e)
+       --ijson   --ojson   --json      JSON tabular: sequence or list of one-level
+                                       maps: {...}{...} or [{...},{...}].
+                           --jvstack   Put one key-value pair per line for JSON output.
+                        --no-jvstack   Put objects/arrays all on one line for JSON output.
+                     --jsonx --ojsonx  Keystroke-savers for --json --jvstack
+                     --jsonx --ojsonx  and --ojson --jvstack, respectively.
+                           --jlistwrap Wrap JSON output in outermost [ ].
+                   --flatsep {string} Separator for flattening multi-level JSON keys,
+                                       e.g. '{"a":{"b":3}}' becomes a:b =&gt; 3 for
+                                       non-JSON formats. Defaults to ..\n",
 
-	 --ipprint --opprint --pprint	 Pretty-printed tabular (produces no
-					 output until all input is in).
-			     --right	 Right-justifies all fields for PPRINT output.
-			     --barred	 Prints a border around PPRINT output
-					 (only available for output).
+       -p is a keystroke-saver for --nidx --fs space --repifs
 
-		   --omd		 Markdown-tabular (only available for output).
+       Examples: --csv for CSV-formatted input and output; --icsv --opprint for
+       CSV-formatted input and pretty-printed output.
 
-	 --ixtab   --oxtab   --xtab	 Pretty-printed vertical-tabular.
-			     --xvright	 Right-justifies values for XTAB format.
-
-	 --ijson   --ojson   --json	 JSON tabular: sequence or list of one-level
-					 maps: {...}{...} or [{...},{...}].
-	   --json-map-arrays-on-input	 JSON arrays are unmillerable. --json-map-arrays-on-input
-	   --json-skip-arrays-on-input	 is the default: arrays are converted to integer-indexed
-	   --json-fatal-arrays-on-input  maps. The other two options cause them to be skipped, or
-					 to be treated as errors.  Please use the jq tool for full
-					 JSON (pre)processing.
-			     --jvstack	 Put one key-value pair per line for JSON
-					 output.
-		       --jsonx --ojsonx  Keystroke-savers for --json --jvstack
-		       --jsonx --ojsonx  and --ojson --jvstack, respectively.
-			     --jlistwrap Wrap JSON output in outermost [ ].
-			   --jknquoteint Do not quote non-string map keys in JSON output.
-			    --jvquoteall Quote map values in JSON output, even if they're
-					 numeric.
-		     --jflatsep {string} Separator for flattening multi-level JSON keys,
-					 e.g. '{"a":{"b":3}}' becomes a:b =&gt; 3 for
-					 non-JSON formats. Defaults to :.
-
-	 -p is a keystroke-saver for --nidx --fs space --repifs
-
-	 Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
-	 DKVP-formatted input and pretty-printed output.
-
-	 Please use --iformat1 --oformat2 rather than --format1 --oformat2.
-	 The latter sets up input and output flags for format1, not all of which
-	 are overridden in all cases by setting output format to format2.
-
-   COMMENTS IN DATA
-	 --skip-comments		 Ignore commented lines (prefixed by "#")
-					 within the input.
-	 --skip-comments-with {string}	 Ignore commented lines within input, with
-					 specified prefix.
-	 --pass-comments		 Immediately print commented lines (prefixed by "#")
-					 within the input.
-	 --pass-comments-with {string}	 Immediately print commented lines within input, with
-					 specified prefix.
-       Notes:
-       * Comments are only honored at the start of a line.
-       * In the absence of any of the above four options, comments are data like
-	 any other text.
-       * When pass-comments is used, comment lines are written to standard output
-	 immediately upon being read; they are not part of the record stream.
-	 Results may be counterintuitive. A suggestion is to place comments at the
-	 start of data files.
+       Please use --iformat1 --oformat2 rather than --format1 --oformat2.
+       The latter sets up input and output flags for format1, not all of which
+       are overridden in all cases by setting output format to format2.
 
    FORMAT-CONVERSION KEYSTROKE-SAVERS
        As keystroke-savers for format-conversion you may use the following:
-	       --c2t --c2d --c2n --c2j --c2x --c2p --c2m
-	 --t2c	     --t2d --t2n --t2j --t2x --t2p --t2m
-	 --d2c --d2t	   --d2n --d2j --d2x --d2p --d2m
-	 --n2c --n2t --n2d	 --n2j --n2x --n2p --n2m
-	 --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
-	 --x2c --x2t --x2d --x2n --x2j	     --x2p --x2m
-	 --p2c --p2t --p2d --p2n --p2j --p2x	   --p2m
+       --c2t --c2d --c2n --c2j --c2x --c2p --c2m
+       --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
+       --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
+       --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
+       --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
+       --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
+       --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
        The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
        PPRINT, and markdown, respectively. Note that markdown format is available for
        output only.
 
-   COMPRESSED I/O
-	 --prepipe {command} This allows Miller to handle compressed inputs. You can do
-	 without this for single input files, e.g. "gunzip &lt; myfile.csv.gz | mlr ...".
-
-	 However, when multiple input files are present, between-file separations are
-	 lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can
-	 specify an action to be taken on each input file. This pre-pipe command must
-	 be able to read from standard input; it will be invoked with
-	   {command} &lt; {filename}.
-	 Examples:
-	   mlr --prepipe 'gunzip'
-	   mlr --prepipe 'zcat -cf'
-	   mlr --prepipe 'xz -cd'
-	   mlr --prepipe cat
-	   mlr --prepipe-gunzip
-	   mlr --prepipe-zcat
-	 Note that this feature is quite general and is not limited to decompression
-	 utilities. You can use it to apply per-file filters of your choice.
-	 For output compression (or other) utilities, simply pipe the output:
-	   mlr ... | {your compression command}
-
-	 There are shorthands --prepipe-zcat and --prepipe-gunzip which are
-	 valid in .mlrrc files. The --prepipe flag is not valid in .mlrrc
-	 files since that would put execution of the prepipe command under
-	 control of the .mlrrc file.
-
    SEPARATORS
-	 --rs	  --irs     --ors	       Record separators, e.g. 'lf' or '\r\n'
-	 --fs	  --ifs     --ofs  --repifs    Field separators, e.g. comma
-	 --ps	  --ips     --ops	       Pair separators, e.g. equals sign
+       THIS IS STILL TBD FOR MILLER 6
 
-	 Notes about line endings:
-	 * Default line endings (--irs and --ors) are "auto" which means autodetect from
-	   the input file format, as long as the input file(s) have lines ending in either
-	   LF (also known as linefeed, '\n', 0x0a, Unix-style) or CRLF (also known as
-	   carriage-return/linefeed pairs, '\r\n', 0x0d 0x0a, Windows style).
-	 * If both irs and ors are auto (which is the default) then LF input will lead to LF
-	   output and CRLF input will lead to CRLF output, regardless of the platform you're
-	   running on.
-	 * The line-ending autodetector triggers on the first line ending detected in the input
-	   stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
-	   LF-terminated file then autodetected line endings will be CRLF.
-	 * If you use --ors {something else} with (default or explicitly specified) --irs auto
-	   then line endings are autodetected on input and set to what you specify on output.
-	 * If you use --irs {something else} with (default or explicitly specified) --ors auto
-	   then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+   COMPRESSED I/O
+       Decompression done within the Miller process itself:
+       --gzin  Uncompress gzip within the Miller process. Done by default if file ends in ".gz".
+       --bz2in Uncompress bz2ip within the Miller process. Done by default if file ends in ".bz2".
+       --zin   Uncompress zlib within the Miller process. Done by default if file ends in ".z".
 
-	 Notes about all other separators:
-	 * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
-	   do key-value pairs appear juxtaposed.
-	 * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
-	   XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
-	   a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs
-	   auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
-	 * OFS must be single-character for PPRINT format. This is because it is used
-	   with repetition for alignment; multi-character separators would make
-	   alignment impossible.
-	 * OPS may be multi-character for XTAB format, in which case alignment is
-	   disabled.
-	 * TSV is simply CSV using tab as field separator ("--fs tab").
-	 * FS/PS are ignored for markdown format; RS is used.
-	 * All FS and PS options are ignored for JSON format, since they are not relevant
-	   to the JSON format.
-	 * You can specify separators in any of the following ways, shown by example:
-	   - Type them out, quoting as necessary for shell escapes, e.g.
-	     "--fs '|' --ips :"
-	   - C-style escape sequences, e.g. "--rs '\r\n' --fs '\t'".
-	   - To avoid backslashing, you can use any of the following names:
-	     cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
-	 * Default separators by format:
-	     File format  RS	   FS	    PS
-	     gen	  N/A	   (N/A)    (N/A)
-	     dkvp	  auto	   ,	    =
-	     json	  auto	   (N/A)    (N/A)
-	     nidx	  auto	   space    (N/A)
-	     csv	  auto	   ,	    (N/A)
-	     csvlite	  auto	   ,	    (N/A)
-	     markdown	  auto	   (N/A)    (N/A)
-	     pprint	  auto	   space    (N/A)
-	     xtab	  (N/A)    auto     space
+       Decompression done outside the Miller process:
+       --prepipe {command} You can, of course, already do without this for single input files,
+         e.g. "gunzip &lt; myfile.csv.gz | mlr ..."
+       --prepipex {command} Like --prepipe with one exception: doesn't insert '&lt;' between
+         command and filename at runtime. Useful for some commands like 'unzip -qc'
+         which don't read standard input.
+
+       Using --prepipe and --prepipex you can specify an action to be taken on each
+       input file. This prepipe command must be able to read from standard input; it
+       will be invoked with {command} &lt; {filename}.
+
+       Examples:
+         mlr --prepipe gunzip
+         mlr --prepipe zcat -cf
+         mlr --prepipe xz -cd
+         mlr --prepipe cat
+
+       Note that this feature is quite general and is not limited to decompression
+       utilities. You can use it to apply per-file filters of your choice.  For output
+       compression (or other) utilities, simply pipe the output:
+       mlr ... | {your compression command} &gt; outputfilenamegoeshere
+
+       Lastly, note that if --prepipe or --prepipex is specified, it replaces any
+       decisions that might have been made based on the file suffix. Also,
+       --gzin/--bz2in/--zin are ignored if --prepipe is also specified.
+
+   COMMENTS IN DATA
+       --skip-comments                 Ignore commented lines (prefixed by "#")
+                                       within the input.
+       --skip-comments-with {string}   Ignore commented lines within input, with
+                                       specified prefix.
+       --pass-comments                 Immediately print commented lines (prefixed by "#")
+                                       within the input.
+       --pass-comments-with {string}   Immediately print commented lines within input, with
+                                       specified prefix.
+
+       Notes:
+       * Comments are only honored at the start of a line.
+       * In the absence of any of the above four options, comments are data like
+         any other text.
+       * When pass-comments is used, comment lines are written to standard output
+         immediately upon being read; they are not part of the record stream.  Results
+         may be counterintuitive. A suggestion is to place comments at the start of
+         data files.
 
    CSV-SPECIFIC OPTIONS
-	 --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
-			    of input files. Tip: combine with "label" to recreate
-			    missing headers.
-	 --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,
-			    fill remaining keys with empty string. If a data line has more
-			    fields than the header line, use integer field labels as in
-			    the implicit-header case.
-	 --headerless-csv-output   Print only CSV data lines.
-	 -N		    Keystroke-saver for --implicit-csv-header --headerless-csv-output.
+       --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
+                          of input files. Tip: combine with "label" to recreate
+                          missing headers.
+       --no-implicit-csv-header Do not use --implicit-csv-header. This is the default
+                          anyway -- the main use is for the flags to 'mlr join' if you have
+                          main file(s) which are headerless but you want to join in on
+                          a file which does have a CSV header. Then you could use
+                          'mlr --csv --implicit-csv-header join --no-implicit-csv-header
+                          -l your-join-in-with-header.csv ... your-headerless.csv'
+       --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,
+                          fill remaining keys with empty string. If a data line has more
+                          fields than the header line, use integer field labels as in
+                          the implicit-header case.
+       --headerless-csv-output   Print only CSV data lines.
+       -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.
 
    DOUBLE-QUOTING FOR CSV/CSVLITE OUTPUT
-	 --quote-all	    Wrap all fields in double quotes
-	 --quote-none	    Do not wrap any fields in double quotes, even if they have
-			    OFS or ORS in them
-	 --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
-			    in them (default)
-	 --quote-numeric    Wrap fields in double quotes only if they have numbers
-			    in them
-	 --quote-original   Wrap fields in double quotes if and only if they were
-			    quoted on input. This isn't sticky for computed fields:
-			    e.g. if fields a and b were quoted on input and you do
-			    "put '$c = $a . $b'" then field c won't inherit a or b's
-			    was-quoted-on-input flag.
+       THIS IS STILL WIP FOR MILLER 6
+       --quote-all        Wrap all fields in double quotes
+       --quote-none       Do not wrap any fields in double quotes, even if they have
+                          OFS or ORS in them
+       --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
+                          in them (default)
+       --quote-numeric    Wrap fields in double quotes only if they have numbers
+                          in them
+       --quote-original   Wrap fields in double quotes if and only if they were
+                          quoted on input. This isn't sticky for computed fields:
+                          e.g. if fields a and b were quoted on input and you do
+                          "put '$c = $a . $b'" then field c won't inherit a or b's
+                          was-quoted-on-input flag.
 
-   NUMERICAL FORMATTING
-	 --ofmt {format}    E.g. %.18lf, %.0lf. Please use sprintf-style codes for
-			    double-precision. Applies to verbs which compute new
-			    values, e.g. put, stats1, stats2. See also the fmtnum
-			    function within mlr put (mlr --help-all-functions).
-			    Defaults to %lf.
+   NUMBER FORMATTING
+       THIS IS STILL WIP FOR MILLER 6
+         --ofmt {format}    E.g. %.18f, %.0f, %9.6e. Please use sprintf-style codes for
+                            floating-point nummbers. If not specified, default formatting is used.
+                            See also the fmtnum function within mlr put (mlr --help-all-functions);
+                            see also the format-values function.
 
    OTHER OPTIONS
-	 --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
-			    urand()/urandint()/urand32().
-	 --nr-progress-mod {m}, with m a positive integer: print filename and record
-			    count to stderr every m input records.
-	 --from {filename}  Use this to specify an input file before the verb(s),
-			    rather than after. May be used more than once. Example:
-			    "mlr --from a.dat --from b.dat cat" is the same as
-			    "mlr cat a.dat b.dat".
-	 -n		    Process no input files, nor standard input either. Useful
-			    for mlr put with begin/end statements only. (Same as --from
-			    /dev/null.) Also useful in "mlr -n put -v '...'" for
-			    analyzing abstract syntax trees (if that's your thing).
-	 -I		    Process files in-place. For each file name on the command
-			    line, output is written to a temp file in the same
-			    directory, which is then renamed over the original. Each
-			    file is processed in isolation: if the output format is
-			    CSV, CSV headers will be present in each output file;
-			    statistics are only over each file's own records; and so on.
+       --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
+                          urand()/urandint()/urand32().
+       --nr-progress-mod {m}, with m a positive integer: print filename and record
+                          count to os.Stderr every m input records.
+       --from {filename}  Use this to specify an input file before the verb(s),
+                          rather than after. May be used more than once. Example:
+                          "mlr --from a.dat --from b.dat cat" is the same as
+                          "mlr cat a.dat b.dat".
+       --mfrom {filenames} --  Use this to specify one of more input files before the verb(s),
+                          rather than after. May be used more than once.
+                          The list of filename must end with "--". This is useful
+                          for example since "--from *.csv" doesn't do what you might
+                          hope but "--mfrom *.csv --" does.
+       --load {filename}  Load DSL script file for all put/filter operations on the command line.
+                          If the name following --load is a directory, load all "*.mlr" files
+                          in that directory. This is just like "put -f" and "filter -f"
+                          except it's up-front on the command line, so you can do something like
+                          alias mlr='mlr --load ~/myscripts' if you like.
+       --mload {names} -- Like --load but works with more than one filename,
+                          e.g. '--mload *.mlr --'.
+       -n                 Process no input files, nor standard input either. Useful
+                          for mlr put with begin/end statements only. (Same as --from
+                          /dev/null.) Also useful in "mlr -n put -v '...'" for
+                          analyzing abstract syntax trees (if that's your thing).
+       -I                 Process files in-place. For each file name on the command
+                          line, output is written to a temp file in the same
+                          directory, which is then renamed over the original. Each
+                          file is processed in isolation: if the output format is
+                          CSV, CSV headers will be present in each output file
+                          statistics are only over each file's own records; and so on.
 
-   THEN-CHAINING
-       Output of one verb may be chained as input to another using "then", e.g.
-	 mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
-
-   AUXILIARY COMMANDS
-       Miller has a few otherwise-standalone executables packaged within it.
-       They do not participate in any other parts of Miller.
+AUXILIARY COMMANDS
        Available subcommands:
-	 aux-list
-	 lecat
-	 termcvt
-	 hex
-	 unhex
-	 netbsd-strptime
-       For more information, please invoke mlr {subcommand} --help
+         aux-list
+         hex
+         lecat
+         termcvt
+         unhex
+         help
+         regtest
+         repl
+       For more information, please invoke mlr {subcommand} --help.
+
+REPL
+       Usage: mlr repl [options] {zero or more data-file names}
+       -v Prints the expressions's AST (abstract syntax tree), which gives
+          full transparency on the precedence and associativity rules of
+          Miller's grammar, to stdout.
+
+       -d Like -v but uses a parenthesized-expression format for the AST.
+
+       -D Like -d but with output all on one line.
+
+       -w Show warnings about uninitialized variables
+
+       -q Don't show startup banner
+
+       -s Don't show prompts
+
+       --load {DSL script file} Load script file before presenting the prompt.
+          If the name following --load is a directory, load all "*.mlr" files
+          in that directory.
+
+       --mload {DSL script files} -- Like --load but works with more than one filename,
+          e.g. '--mload *.mlr --'.
+
+       -h|--help Show this message.
+
+       Or any --icsv, --ojson, etc. reader/writer options as for the main Miller command line.
+
+       Any data-file names are opened just as if you had waited and typed :open {filenames}
+       at the Miller REPL prompt.
+
+OUTPUT COLORIZATION
+       Things having colors:
+       * Keys in CSV header lines, JSON keys, etc
+       * Values in CSV data lines, JSON scalar values, etc
+        in regression-test output
+       * Some online-help strings
+
+       Rules for coloring:
+       * By default, colorize output only if writing to stdout and stdout is a TTY.
+         * Example: color: mlr --csv cat foo.csv
+         * Example: no color: mlr --csv cat foo.csv &gt; bar.csv
+         * Example: no color: mlr --csv cat foo.csv | less
+       * The default colors were chosen since they look OK with white or black terminal background,
+         and are differentiable with common varieties of human color vision.
+
+       Mechanisms for coloring:
+       * Miller uses ANSI escape sequences only. This does not work on Windows except on Cygwin.
+       * Requires TERM environment variable to be set to non-empty string.
+       * Doesn't try to check to see whether the terminal is capable of 256-color
+         ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
+         then 16-color ANSI escapes are used, so this is in the user's control.
+
+       How you can control colorization:
+       * Suppression/unsuppression:
+         * Environment variable export MLR_NO_COLOR=true means don't color even if stdout+TTY.
+         * Environment variable export MLR_ALWAYS_COLOR=true means do color even if not stdout+TTY.
+           For example, you might want to use this when piping mlr output to less -r.
+         * Command-line flags --no-color or -M, --always-color or -C.
+
+       * Color choices can be specified by using environment variables, or command-line flags,
+         with values 0..255:
+         * export MLR_KEY_COLOR=208, MLR_VALUE_COLOR-33, etc.:
+           MLR_KEY_COLOR MLR_VALUE_COLOR MLR_PASS_COLOR MLR_FAIL_COLOR
+           MLR_REPL_PS1_COLOR MLR_REPL_PS2_COLOR MLR_HELP_COLOR
+         * Command-line flags --key-color 208, --value-color 33, etc.:
+           --key-color --value-color --pass-color --fail-color
+           --repl-ps1-color --repl-ps2-color --help-color
+         * This is particularly useful if your terminal's background color clashes with current settings.
+
+       If environment-variable settings and command-line flags are both provided,the latter take precedence.
+
+       Please do mlr --list-color-codes to see the available color codes (like 170), and
+       mlr --list-color-names to see available names (like orchid).
 
 MLRRC
        You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
@@ -431,85 +494,84 @@ MLRRC
 
        How to specify location of .mlrrc:
        * If $MLRRC is set:
-	 o If its value is "__none__" then no .mlrrc files are processed.
-	 o Otherwise, its value (as a filename) is loaded and processed. If there are syntax
-	   errors, they abort mlr with a usage message (as if you had mistyped something on the
-	   command line). If the file can't be loaded at all, though, it is silently skipped.
-	 o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is
-	   set in the environment.
+         o If its value is "__none__" then no .mlrrc files are processed.
+         o Otherwise, its value (as a filename) is loaded and processed. If there are syntax
+           errors, they abort mlr with a usage message (as if you had mistyped something on the
+           command line). If the file can't be loaded at all, though, it is silently skipped.
+         o Any .mlrrc in your home directory or current directory is ignored whenever $MLRRC is
+           set in the environment.
        * Otherwise:
-	 o If $HOME/.mlrrc exists, it's then processed as above.
-	 o If ./.mlrrc exists, it's then also processed as above.
-	 (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)
+         o If $HOME/.mlrrc exists, it's then processed as above.
+         o If ./.mlrrc exists, it's then also processed as above.
+         (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)
 
        See also:
-       https://johnkerl.org/miller/doc/customization.html
+       https://miller.readthedocs.io/en/latest/customization.html
 
 VERBS
    altkv
-       Usage: mlr altkv [no options]
+       Usage: mlr altkv [options]
        Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
+       Options:
+       -h|--help Show this message.
 
    bar
        Usage: mlr bar [options]
        Replaces a numeric field with a number of asterisks, allowing for cheesy
        bar plots. These align best with --opprint or --oxtab output format.
        Options:
-       -f   {a,b,c}	 Field names to convert to bars.
+       -f   {a,b,c}      Field names to convert to bars.
+       --lo {lo}         Lower-limit value for min-width bar: default '0.000000'.
+       --hi {hi}         Upper-limit value for max-width bar: default '100.000000'.
+       -w   {n}          Bar-field width: default '40'.
+       --auto            Automatically computes limits, ignoring --lo and --hi.
+                         Holds all records in memory before producing any output.
        -c   {character}  Fill character: default '*'.
        -x   {character}  Out-of-bounds character: default '#'.
        -b   {character}  Blank character: default '.'.
-       --lo {lo}	 Lower-limit value for min-width bar: default '0.000000'.
-       --hi {hi}	 Upper-limit value for max-width bar: default '100.000000'.
-       -w   {n} 	 Bar-field width: default '40'.
-       --auto		 Automatically computes limits, ignoring --lo and --hi.
-			 Holds all records in memory before producing any output.
+       Nominally the fill, out-of-bounds, and blank characters will be strings of length 1.
+       However you can make them all longer if you so desire.
+       -h|--help Show this message.
 
    bootstrap
        Usage: mlr bootstrap [options]
        Emits an n-sample, with replacement, of the input records.
-       Options:
-       -n {number} Number of samples to output. Defaults to number of input records.
-		   Must be non-negative.
        See also mlr sample and mlr shuffle.
+       Options:
+        -n Number of samples to output. Defaults to number of input records.
+           Must be non-negative.
+       -h|--help Show this message.
 
    cat
        Usage: mlr cat [options]
        Passes input records directly to output. Most useful for format conversion.
        Options:
-       -n	 Prepend field "n" to each record with record-counter starting at 1
-       -g {comma-separated field name(s)} When used with -n/-N, writes record-counters
-		 keyed by specified field name(s).
-       -v	 Write a low-level record-structure dump to stderr.
-       -N {name} Prepend field {name} to each record with record-counter starting at 1
+       -n         Prepend field "n" to each record with record-counter starting at 1.
+       -N {name}  Prepend field {name} to each record with record-counter starting at 1.
+       -g {a,b,c} Optional group-by-field names for counters, e.g. a,b,c
+       -h|--help Show this message.
 
    check
-       Usage: mlr check
+       Usage: mlr check [options]
        Consumes records without printing any output.
        Useful for doing a well-formatted check on input data.
+       Options:
+       -h|--help Show this message.
 
    clean-whitespace
        Usage: mlr clean-whitespace [options]
-       For each record, for each field in the record, whitespace-cleans the keys and
+       For each record, for each field in the record, whitespace-cleans the keys and/or
        values. Whitespace-cleaning entails stripping leading and trailing whitespace,
        and replacing multiple whitespace with singles. For finer-grained control,
        please see the DSL functions lstrip, rstrip, strip, collapse_whitespace,
        and clean_whitespace.
 
        Options:
-       -k|--keys-only	 Do not touch values.
+       -k|--keys-only    Do not touch values.
        -v|--values-only  Do not touch keys.
        It is an error to specify -k as well as -v -- to clean keys and values,
        leave off -k as well as -v.
-
-   count
-       Usage: mlr count [options]
-       Prints number of records, optionally grouped by distinct values for specified field names.
-
-       Options:
-       -g {a,b,c}    Field names for distinct count.
-       -n	     Show only the number of distinct values. Not interesting without -g.
-       -o {name}     Field name for output count. Default "count".
+       -h|--help Show this message.
 
    count-distinct
        Usage: mlr count-distinct [options]
@@ -518,141 +580,147 @@ VERBS
 
        Options:
        -f {a,b,c}    Field names for distinct count.
-       -n	     Show only the number of distinct values. Not compatible with -u.
+       -n            Show only the number of distinct values. Not compatible with -u.
        -o {name}     Field name for output count. Default "count".
-		     Ignored with -u.
-       -u	     Do unlashed counts for multiple field names. With -f a,b and
-		     without -u, computes counts for distinct combinations of a
-		     and b field values. With -f a,b and with -u, computes counts
-		     for distinct a field values and counts for distinct b field
-		     values separately.
+                     Ignored with -u.
+       -u            Do unlashed counts for multiple field names. With -f a,b and
+                     without -u, computes counts for distinct combinations of a
+                     and b field values. With -f a,b and with -u, computes counts
+                     for distinct a field values and counts for distinct b field
+                     values separately.
+
+   count
+       Usage: mlr count [options]
+       Prints number of records, optionally grouped by distinct values for specified field names.
+       Options:
+       -g {a,b,c} Optional group-by-field names for counts, e.g. a,b,c
+       -n {n} Show only the number of distinct values. Not interesting without -g.
+       -o {name} Field name for output-count. Default "count".
+       -h|--help Show this message.
 
    count-similar
        Usage: mlr count-similar [options]
        Ingests all records, then emits each record augmented by a count of
        the number of other records having the same group-by field values.
        Options:
-       -g {d,e,f} Group-by-field names for counts.
-       -o {name}  Field name for output count. Default "count".
+       -g {a,b,c} Group-by-field names for counts, e.g. a,b,c
+       -o {name} Field name for output-counts. Defaults to "count".
+       -h|--help Show this message.
 
    cut
        Usage: mlr cut [options]
        Passes through input records with specified fields included/excluded.
-       -f {a,b,c}	Field names to include for cut.
-       -o		Retain fields in the order specified here in the argument list.
-			Default is to retain them in the order found in the input data.
-       -x|--complement	Exclude, rather than include, field names specified by -f.
-       -r		Treat field names as regular expressions. "ab", "a.*b" will
-			match any field name containing the substring "ab" or matching
-			"a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may
-			be used. The -o flag is ignored when -r is present.
+       Options:
+        -f {a,b,c} Comma-separated field names for cut, e.g. a,b,c.
+        -o Retain fields in the order specified here in the argument list.
+           Default is to retain them in the order found in the input data.
+        -x|--complement  Exclude, rather than include, field names specified by -f.
+        -r Treat field names as regular expressions. "ab", "a.*b" will
+          match any field name containing the substring "ab" or matching
+          "a.*b", respectively; anchors of the form "^ab$", "^a.*b$" may
+          be used. The -o flag is ignored when -r is present.
+       -h|--help Show this message.
        Examples:
-	 mlr cut -f hostname,status
-	 mlr cut -x -f hostname,status
-	 mlr cut -r -f '^status$,sda[0-9]'
-	 mlr cut -r -f '^status$,"sda[0-9]"'
-	 mlr cut -r -f '^status$,"sda[0-9]"i' (this is case-insensitive)
+         mlr cut -f hostname,status
+         mlr cut -x -f hostname,status
+         mlr cut -r -f '^status$,sda[0-9]'
+         mlr cut -r -f '^status$,"sda[0-9]"'
+         mlr cut -r -f '^status$,"sda[0-9]"i' (this is case-insensitive)
 
    decimate
        Usage: mlr decimate [options]
-       -n {count}    Decimation factor; default 10
-       -b	     Decimate by printing first of every n.
-       -e	     Decimate by printing last of every n (default).
-       -g {a,b,c}    Optional group-by-field names for decimate counts
        Passes through one of every n records, optionally by category.
+       Options:
+        -b Decimate by printing first of every n.
+        -e Decimate by printing last of every n (default).
+        -g {a,b,c} Optional group-by-field names for decimate counts, e.g. a,b,c.
+        -n {n} Decimation factor (default 10).
+       -h|--help Show this message.
 
    fill-down
        Usage: mlr fill-down [options]
-       -f {a,b,c}	   Field names for fill-down
-       -a|--only-if-absent Field names for fill-down
        If a given record has a missing value for a given field, fill that from
        the corresponding value from a previous record, if any.
        By default, a 'missing' field either is absent, or has the empty-string value.
        With -a, a field is 'missing' only if it is absent.
 
+       Options:
+        --all Operate on all fields in the input.
+        -a|--only-if-absent If a given record has a missing value for a given field,
+            fill that from the corresponding value from a previous record, if any.
+            By default, a 'missing' field either is absent, or has the empty-string value.
+            With -a, a field is 'missing' only if it is absent.
+        -f  Field names for fill-down.
+        -h|--help Show this message.
+
+   fill-empty
+       Usage: mlr fill-empty [options]
+       Fills empty-string fields with specified fill-value.
+       Options:
+       -v {string} Fill-value: defaults to "N/A"
+
    filter
-       Usage: mlr filter [options] {expression}
-       Prints records for which {expression} evaluates to true.
-       If there are multiple semicolon-delimited expressions, all of them are
-       evaluated and the last one is used as the filter criterion.
+       Usage: mlr put [options] {DSL expression}
+       Options:
+       -f {file name} File containing a DSL expression. If the filename is a directory,
+          all *.mlr files in that directory are loaded.
 
-       Conversion options:
-       -S: Keeps field values as strings with no type inference to int or float.
-       -F: Keeps field values as strings or floats with no inference to int.
-       All field values are type-inferred to int/float/string unless this behavior is
-       suppressed with -S or -F.
+       -e {expression} You can use this after -f to add an expression. Example use
+          case: define functions/subroutines in a file you specify with -f, then call
+          them with an expression you specify with -e.
 
-       Output/formatting options:
-       --oflatsep {string}: Separator to use when flattening multi-level @-variables
-	   to output records for emit. Default ":".
-       --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
-       --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
-       Any of the output-format command-line flags (see mlr -h). Example: using
-	 mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
-       the input is CSV, the output is pretty-print tabular, but the tee-file output
-       is written in JSON format.
-       --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
-	   record.
-
-       Expression-specification options:
-       -f {filename}: the DSL expression is taken from the specified file rather
-	   than from the command line. Outer single quotes wrapping the expression
-	   should not be placed in the file. If -f is specified more than once,
-	   all input files specified using -f are concatenated to produce the expression.
-	   (For example, you can define functions in one file and call them from another.)
-       -e {expression}: You can use this after -f to add an expression. Example use
-	   case: define functions/subroutines in a file you specify with -f, then call
-	   them with an expression you specify with -e.
        (If you mix -e and -f then the expressions are evaluated in the order encountered.
        Since the expression pieces are simply concatenated, please be sure to use intervening
        semicolons to separate expressions.)
 
-       -s name=value: Predefines out-of-stream variable @name to have value "value".
-	   Thus mlr filter put -s foo=97 '$column += @foo' is like
-	   mlr filter put 'begin {@foo = 97} $column += @foo'.
-	   The value part is subject to type-inferencing as specified by -S/-F.
-	   May be specified more than once, e.g. -s name1=value1 -s name2=value2.
-	   Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
+       -s name=value: Predefines out-of-stream variable @name to have
+           Thus mlr put -s foo=97 '$column += @foo' is like
+           mlr put 'begin {@foo = 97} $column += @foo'.
+           The value part is subject to type-inferencing.
+           May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+           Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
 
-       Tracing options:
-       -v: Prints the expressions's AST (abstract syntax tree), which gives
-	   full transparency on the precedence and associativity rules of
-	   Miller's grammar, to stdout.
-       -a: Prints a low-level stack-allocation trace to stdout.
-       -t: Prints a low-level parser trace to stderr.
-       -T: Prints a every statement to stderr as it is executed.
+       -x (default false) Prints records for which {expression} evaluates to false, not true,
+          i.e. invert the sense of the filter expression.
 
-       Other options:
-       -x: Prints records for which {expression} evaluates to false.
+       -q Does not include the modified record in the output stream.
+          Useful for when all desired output is in begin and/or end blocks.
 
-       Please use a dollar sign for field names and double-quotes for string
-       literals. If field names have special characters such as "." then you might
-       use braces, e.g. '${field.name}'. Miller built-in variables are
-       NF NR FNR FILENUM FILENAME M_PI M_E, and ENV["namegoeshere"] to access environment
-       variables. The environment-variable name may be an expression, e.g. a field
-       value.
+       -S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+          by the record-readers before filter/put is executed. Supported as no-op pass-through
+          flags for backward compatibility.
 
-       Use # to comment to end of line.
+       -h|--help Show this message.
 
-       Examples:
-	 mlr filter 'log10($count) &gt; 4.0'
-	 mlr filter 'FNR == 2'	       (second record in each file)
-	 mlr filter 'urand() &lt; 0.001'  (subsampling)
-	 mlr filter '$color != "blue" && $value &gt; 4.2'
-	 mlr filter '($x&lt;.5 && $y&lt;.5) || ($x&gt;.5 && $y&gt;.5)'
-	 mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
-	 mlr filter '$ab = $a+$b; $cd = $c+$d; $ab != $cd'
-	 mlr filter '
-	   NR == 1 ||
-	  #NR == 2 ||
-	   NR == 3
-	 '
+       Parser-info options:
 
-       Please see https://miller.readthedocs.io/en/latest/reference.html for more information
-       including function list. Or "mlr -f". Please also see "mlr grep" which is
-       useful when you don't yet know which field name(s) you're looking for.
-       Please see in particular:
-	 http://www.johnkerl.org/miller/doc/reference-verbs.html#filter
+       -w Print warnings about things like uninitialized variables.
+
+       -W Same as -w, but exit the process if there are any warnings.
+
+       -p Prints the expressions's AST (abstract syntax tree), which gives full
+         transparency on the precedence and associativity rules of Miller's grammar,
+         to stdout.
+
+       -d Like -p but uses a parenthesized-expression format for the AST.
+
+       -D Like -d but with output all on one line.
+
+       -E Echo DSL expression before printing parse-tree
+
+       -v Same as -E -p.
+
+       -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
+          only want to look at parser information.
+
+   flatten
+       Usage: mlr flatten [options]
+       Flattens multi-level maps to single-level ones. Example: field with name 'a'
+       and value '{"b": { "c": 4 }}' becomes name 'a.b.c' and value 4.
+       Options:
+       -f Comma-separated list of field names to flatten (default all).
+       -s Separator, defaulting to mlr --flatsep value.
+       -h|--help Show this message.
 
    format-values
        Usage: mlr format-values [options]
@@ -668,29 +736,29 @@ VERBS
        undefined behavior and/or program crashes.  See your system's "man printf".
 
        Options:
-       -i {integer format} Defaults to "%lld".
-			   Examples: "%06lld", "%08llx".
-			   Note that Miller integers are long long so you must use
-			   formats which apply to long long, e.g. with ll in them.
-			   Undefined behavior results otherwise.
-       -f {float format}   Defaults to "%lf".
-			   Examples: "%8.3lf", "%.6le".
-			   Note that Miller floats are double-precision so you must
-			   use formats which apply to double, e.g. with l[efg] in them.
-			   Undefined behavior results otherwise.
+       -i {integer format} Defaults to "%d".
+                           Examples: "%06lld", "%08llx".
+                           Note that Miller integers are long long so you must use
+                           formats which apply to long long, e.g. with ll in them.
+                           Undefined behavior results otherwise.
+       -f {float format}   Defaults to "%f".
+                           Examples: "%8.3lf", "%.6le".
+                           Note that Miller floats are double-precision so you must
+                           use formats which apply to double, e.g. with l[efg] in them.
+                           Undefined behavior results otherwise.
        -s {string format}  Defaults to "%s".
-			   Examples: "_%s", "%08s".
-			   Note that you must use formats which apply to string, e.g.
-			   with s in them. Undefined behavior results otherwise.
-       -n		   Coerce field values autodetected as int to float, and then
-			   apply the float format.
+                           Examples: "_%s", "%08s".
+                           Note that you must use formats which apply to string, e.g.
+                           with s in them. Undefined behavior results otherwise.
+       -n                  Coerce field values autodetected as int to float, and then
+                           apply the float format.
 
    fraction
        Usage: mlr fraction [options]
        For each record's value in specified fields, computes the ratio of that
        value to the sum of values in that field over all input records.
-       E.g. with input records	x=1  x=2  x=3  and  x=4, emits output records
-       x=1,x_fraction=0.1  x=2,x_fraction=0.2  x=3,x_fraction=0.3  and	x=4,x_fraction=0.4
+       E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
+       x=1,x_fraction=0.1  x=2,x_fraction=0.2  x=3,x_fraction=0.3  and  x=4,x_fraction=0.4
 
        Note: this is internally a two-pass algorithm: on the first pass it retains
        input records and accumulates sums; on the second pass it computes quotients
@@ -699,20 +767,32 @@ VERBS
        Options:
        -f {a,b,c}    Field name(s) for fraction calculation
        -g {d,e,f}    Optional group-by-field name(s) for fraction counts
-       -p	     Produce percents [0..100], not fractions [0..1]. Output field names
-		     end with "_percent" rather than "_fraction"
-       -c	     Produce cumulative distributions, i.e. running sums: each output
-		     value folds in the sum of the previous for the specified group
-		     E.g. with input records  x=1  x=2	x=3  and  x=4, emits output records
-		     x=1,x_cumulative_fraction=0.1  x=2,x_cumulative_fraction=0.3
-		     x=3,x_cumulative_fraction=0.6  and  x=4,x_cumulative_fraction=1.0
+       -p            Produce percents [0..100], not fractions [0..1]. Output field names
+                     end with "_percent" rather than "_fraction"
+       -c            Produce cumulative distributions, i.e. running sums: each output
+                     value folds in the sum of the previous for the specified group
+                     E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
+                     x=1,x_cumulative_fraction=0.1  x=2,x_cumulative_fraction=0.3
+                     x=3,x_cumulative_fraction=0.6  and  x=4,x_cumulative_fraction=1.0
+
+   gap
+       Usage: mlr gap [options]
+       Emits an empty record every n records, or when certain values change.
+       Options:
+       Emits an empty record every n records, or when certain values change.
+       -g {a,b,c} Print a gap whenever values of these fields (e.g. a,b,c) changes.
+       -n {n} Print a gap every n records.
+       One of -f or -g is required.
+       -n is ignored if -g is present.
+       -h|--help Show this message.
 
    grep
        Usage: mlr grep [options] {regular expression}
-       Passes through records which match {regex}.
+       Passes through records which match the regular expression.
        Options:
-       -i    Use case-insensitive search.
-       -v    Invert: pass through records which do not match the regex.
+       -i  Use case-insensitive search.
+       -v  Invert: pass through records which do not match the regex.
+       -h|--help Show this message.
        Note that "mlr filter" is more powerful, but requires you to know field names.
        By contrast, "mlr grep" allows you to regex-match the entire record. It does
        this by formatting each record in memory as DKVP, using command-line-specified
@@ -723,102 +803,101 @@ VERBS
        "x=1,y=2,z=3".  Furthermore, not all the options to system grep are supported,
        and this command is intended to be merely a keystroke-saver. To get all the
        features of system grep, you can do
-	 "mlr --odkvp ... | grep ... | mlr --idkvp ..."
+         "mlr --odkvp ... | grep ... | mlr --idkvp ..."
 
    group-by
-       Usage: mlr group-by {comma-separated field names}
-       Outputs records in batches having identical values at specified field names.
+       Usage: mlr group-by [options] {comma-separated field names}
+       Outputs records in batches having identical values at specified field names.Options:
+       -h|--help Show this message.
 
    group-like
-       Usage: mlr group-like
+       Usage: mlr group-like [options]
        Outputs records in batches having identical field names.
+       Options:
+       -h|--help Show this message.
 
    having-fields
        Usage: mlr having-fields [options]
        Conditionally passes through records depending on each record's field names.
        Options:
-	 --at-least	 {comma-separated names}
-	 --which-are	 {comma-separated names}
-	 --at-most	 {comma-separated names}
-	 --all-matching  {regular expression}
-	 --any-matching  {regular expression}
-	 --none-matching {regular expression}
+         --at-least      {comma-separated names}
+         --which-are     {comma-separated names}
+         --at-most       {comma-separated names}
+         --all-matching  {regular expression}
+         --any-matching  {regular expression}
+         --none-matching {regular expression}
        Examples:
-	 mlr having-fields --which-are amount,status,owner
-	 mlr having-fields --any-matching 'sda[0-9]'
-	 mlr having-fields --any-matching '"sda[0-9]"'
-	 mlr having-fields --any-matching '"sda[0-9]"i' (this is case-insensitive)
+         mlr having-fields --which-are amount,status,owner
+         mlr having-fields --any-matching 'sda[0-9]'
+         mlr having-fields --any-matching '"sda[0-9]"'
+         mlr having-fields --any-matching '"sda[0-9]"i' (this is case-insensitive)
 
    head
        Usage: mlr head [options]
-       -n {count}    Head count to print; default 10
-       -g {a,b,c}    Optional group-by-field names for head counts
        Passes through the first n records, optionally by category.
-       Without -g, ceases consuming more input (i.e. is fast) when n
-       records have been read.
+       Options:
+       -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
+       -n {n} Head-count to print. Default 10.
+       -h|--help Show this message.
 
    histogram
+       Just a histogram. Input values &lt; lo or &gt; hi are not counted.
        Usage: mlr histogram [options]
        -f {a,b,c}    Value-field names for histogram counts
        --lo {lo}     Histogram low value
        --hi {hi}     Histogram high value
        --nbins {n}   Number of histogram bins
-       --auto	     Automatically computes limits, ignoring --lo and --hi.
-		     Holds all values in memory before producing any output.
+       --auto        Automatically computes limits, ignoring --lo and --hi.
+                     Holds all values in memory before producing any output.
        -o {prefix}   Prefix for output field name. Default: no prefix.
-       Just a histogram. Input values &lt; lo or &gt; hi are not counted.
+       -h|--help Show this message.
+
+   json-parse
+       Usage: mlr json-parse [options]
+       Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -&gt; [1,2,3].
+       Options:
+       -f {...} Comma-separated list of field names to json-parse (default all).
+       -h|--help Show this message.
+
+   json-stringify
+       Usage: mlr json-stringify [options]
+       Produces string field values from field-value data, e.g. [1,2,3] -&gt; "[1,2,3]".
+       Options:
+       -f {...} Comma-separated list of field names to json-parse (default all).
+       --jvstack Produce multi-line JSON output.
+       --no-jvstack Produce single-line JSON output per record (default).
+       -h|--help Show this message.
 
    join
-       Usage: mlr join [options]
-       Joins records from specified left file name with records from all file names
-       at the end of the Miller argument list.
-       Functionality is essentially the same as the system "join" command, but for
-       record streams.
+       Usage: mlr sort {flags}
+       Sorts records primarily by the first specified field, secondarily by the second
+       field, and so on.  (Any records not having all specified sort keys will appear
+       at the end of the output, in the order they were encountered, regardless of the
+       specified sort order.) The sort is stable: records that compare equal will sort
+       in the order they were encountered in the input record stream.
+
        Options:
-	 -f {left file name}
-	 -j {a,b,c}   Comma-separated join-field names for output
-	 -l {a,b,c}   Comma-separated join-field names for left input file;
-		      defaults to -j values if omitted.
-	 -r {a,b,c}   Comma-separated join-field names for right input file(s);
-		      defaults to -j values if omitted.
-	 --lp {text}  Additional prefix for non-join output field names from
-		      the left file
-	 --rp {text}  Additional prefix for non-join output field names from
-		      the right file(s)
-	 --np	      Do not emit paired records
-	 --ul	      Emit unpaired records from the left file
-	 --ur	      Emit unpaired records from the right file(s)
-	 -s|--sorted-input  Require sorted input: records must be sorted
-		      lexically by their join-field names, else not all records will
-		      be paired. The only likely use case for this is with a left
-		      file which is too big to fit into system memory otherwise.
-	 -u	      Enable unsorted input. (This is the default even without -u.)
-		      In this case, the entire left file will be loaded into memory.
-	 --prepipe {command} As in main input options; see mlr --help for details.
-		      If you wish to use a prepipe command for the main input as well
-		      as here, it must be specified there as well as here.
-       File-format options default to those for the right file names on the Miller
-       argument list, but may be overridden for the left file as follows. Please see
-       the main "mlr --help" for more information on syntax for these arguments.
-	 -i {one of csv,dkvp,nidx,pprint,xtab}
-	 --irs {record-separator character}
-	 --ifs {field-separator character}
-	 --ips {pair-separator character}
-	 --repifs
-	 --repips
-       Please use "mlr --usage-separator-options" for information on specifying separators.
-       Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
-       including examples.
+       -f  {comma-separated field names}  Lexical ascending
+       -n  {comma-separated field names}  Numerical ascending; nulls sort last
+       -nf {comma-separated field names}  Same as -n
+       -r  {comma-separated field names}  Lexical descending
+       -nr {comma-separated field names}  Numerical descending; nulls sort first
+       -h|--help Show this message.
+
+       Example:
+         mlr sort -f a,b -nr x,y,z
+       which is the same as:
+         mlr sort -f a -f b -nr x -nr y -nr z
 
    label
-       Usage: mlr label {new1,new2,new3,...}
+       Usage: mlr label [options] {new1,new2,new3,...}
        Given n comma-separated names, renames the first n fields of each record to
        have the respective name. (Fields past the nth are left with their original
        names.) Particularly useful with --inidx or --implicit-csv-header, to give
        useful names to otherwise integer-indexed fields.
-       Examples:
-	 "echo 'a b c d' | mlr --inidx --odkvp cat"	  gives "1=a,2=b,3=c,4=d"
-	 "echo 'a b c d' | mlr --inidx --odkvp label s,t" gives "s=a,t=b,3=c,4=d"
+
+       Options:
+       -h|--help Show this message.
 
    least-frequent
        Usage: mlr least-frequent [options]
@@ -827,7 +906,7 @@ VERBS
        Options:
        -f {one or more comma-separated field names}. Required flag.
        -n {count}. Optional flag defaulting to 10.
-       -b	   Suppress counts; show only field values.
+       -b          Suppress counts; show only field values.
        -o {name}   Field name for output count. Default "count".
        See also "mlr most-frequent".
 
@@ -837,30 +916,29 @@ VERBS
        specified fields.
        Options:
        -a {sum,count,...}  Names of accumulators. One or more of:
-	 count	   Count instances of fields
-	 mode	   Find most-frequently-occurring values for fields; first-found wins tie
-	 antimode  Find least-frequently-occurring values for fields; first-found wins tie
-	 sum	   Compute sums of specified fields
-	 mean	   Compute averages (sample means) of specified fields
-	 stddev    Compute sample standard deviation of specified fields
-	 var	   Compute sample variance of specified fields
-	 meaneb    Estimate error bars for averages (assuming no sample autocorrelation)
-	 skewness  Compute sample skewness of specified fields
-	 kurtosis  Compute sample kurtosis of specified fields
-	 min	   Compute minimum values of specified fields
-	 max	   Compute maximum values of specified fields
+         count    Count instances of fields
+         mode     Find most-frequently-occurring values for fields; first-found wins tie
+         antimode Find least-frequently-occurring values for fields; first-found wins tie
+         sum      Compute sums of specified fields
+         mean     Compute averages (sample means) of specified fields
+         var      Compute sample variance of specified fields
+         stddev   Compute sample standard deviation of specified fields
+         meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
+         skewness Compute sample skewness of specified fields
+         kurtosis Compute sample kurtosis of specified fields
+         min      Compute minimum values of specified fields
+         max      Compute maximum values of specified fields
        -f {a,b,c}  Value-field names on which to compute statistics. Requires -o.
        -r {a,b,c}  Regular expressions for value-field names on which to compute
-		   statistics. Requires -o.
+                   statistics. Requires -o.
        -c {a,b,c}  Substrings for collapse mode. All fields which have the same names
-		   after removing substrings will be accumulated together. Please see
-		   examples below.
-       -i	   Use interpolated percentiles, like R's type=7; default like type=1.
-		   Not sensical for string-valued fields.
+                   after removing substrings will be accumulated together. Please see
+                   examples below.
+       -i          Use interpolated percentiles, like R's type=7; default like type=1.
+                   Not sensical for string-valued fields.
        -o {name}   Output field basename for -f/-r.
-       -k	   Keep the input fields which contributed to the output statistics;
-		   the default is to omit them.
-       -F	   Computes integerable things (e.g. count) in floating point.
+       -k          Keep the input fields which contributed to the output statistics;
+                   the default is to omit them.
 
        String-valued data make sense unless arithmetic on them is required,
        e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
@@ -868,14 +946,14 @@ VERBS
 
        Example input data: "a_in_x=1,a_out_x=2,b_in_y=4,b_out_x=8".
        Example: mlr merge-fields -a sum,count -f a_in_x,a_out_x -o foo
-	 produces "b_in_y=4,b_out_x=8,foo_sum=3,foo_count=2" since "a_in_x,a_out_x" are
-	 summed over.
+         produces "b_in_y=4,b_out_x=8,foo_sum=3,foo_count=2" since "a_in_x,a_out_x" are
+         summed over.
        Example: mlr merge-fields -a sum,count -r in_,out_ -o bar
-	 produces "bar_sum=15,bar_count=4" since all four fields are summed over.
+         produces "bar_sum=15,bar_count=4" since all four fields are summed over.
        Example: mlr merge-fields -a sum,count -c in_,out_
-	 produces "a_x_sum=3,a_x_count=2,b_y_sum=4,b_y_count=1,b_x_sum=8,b_x_count=1"
-	 since "a_in_x" and "a_out_x" both collapse to "a_x", "b_in_y" collapses to
-	 "b_y", and "b_out_x" collapses to "b_x".
+         produces "a_x_sum=3,a_x_count=2,b_y_sum=4,b_y_count=1,b_x_sum=8,b_x_count=1"
+         since "a_in_x" and "a_out_x" both collapse to "a_x", "b_in_y" collapses to
+         "b_y", and "b_out_x" collapses to "b_x".
 
    most-frequent
        Usage: mlr most-frequent [options]
@@ -884,7 +962,7 @@ VERBS
        Options:
        -f {one or more comma-separated field names}. Required flag.
        -n {count}. Optional flag defaulting to 10.
-       -b	   Suppress counts; show only field values.
+       -b          Suppress counts; show only field values.
        -o {name}   Field name for output count. Default "count".
        See also "mlr least-frequent".
 
@@ -892,190 +970,160 @@ VERBS
        Usage: mlr nest [options]
        Explodes specified field values into separate fields/records, or reverses this.
        Options:
-	 --explode,--implode   One is required.
-	 --values,--pairs      One is required.
-	 --across-records,--across-fields One is required.
-	 -f {field name}       Required.
-	 --nested-fs {string}  Defaults to ";". Field separator for nested values.
-	 --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
-	 --evar {string}       Shorthand for --explode --values ---across-records --nested-fs {string}
-	 --ivar {string}       Shorthand for --implode --values ---across-records --nested-fs {string}
+         --explode,--implode   One is required.
+         --values,--pairs      One is required.
+         --across-records,--across-fields One is required.
+         -f {field name}       Required.
+         --nested-fs {string}  Defaults to ";". Field separator for nested values.
+         --nested-ps {string}  Defaults to ":". Pair separator for nested key-value pairs.
+         --evar {string}       Shorthand for --explode --values ---across-records --nested-fs {string}
+         --ivar {string}       Shorthand for --implode --values ---across-records --nested-fs {string}
        Please use "mlr --usage-separator-options" for information on specifying separators.
 
        Examples:
 
-	 mlr nest --explode --values --across-records -f x
-	 with input record "x=a;b;c,y=d" produces output records
-	   "x=a,y=d"
-	   "x=b,y=d"
-	   "x=c,y=d"
-	 Use --implode to do the reverse.
+         mlr nest --explode --values --across-records -f x
+         with input record "x=a;b;c,y=d" produces output records
+           "x=a,y=d"
+           "x=b,y=d"
+           "x=c,y=d"
+         Use --implode to do the reverse.
 
-	 mlr nest --explode --values --across-fields -f x
-	 with input record "x=a;b;c,y=d" produces output records
-	   "x_1=a,x_2=b,x_3=c,y=d"
-	 Use --implode to do the reverse.
+         mlr nest --explode --values --across-fields -f x
+         with input record "x=a;b;c,y=d" produces output records
+           "x_1=a,x_2=b,x_3=c,y=d"
+         Use --implode to do the reverse.
 
-	 mlr nest --explode --pairs --across-records -f x
-	 with input record "x=a:1;b:2;c:3,y=d" produces output records
-	   "a=1,y=d"
-	   "b=2,y=d"
-	   "c=3,y=d"
+         mlr nest --explode --pairs --across-records -f x
+         with input record "x=a:1;b:2;c:3,y=d" produces output records
+           "a=1,y=d"
+           "b=2,y=d"
+           "c=3,y=d"
 
-	 mlr nest --explode --pairs --across-fields -f x
-	 with input record "x=a:1;b:2;c:3,y=d" produces output records
-	   "a=1,b=2,c=3,y=d"
+         mlr nest --explode --pairs --across-fields -f x
+         with input record "x=a:1;b:2;c:3,y=d" produces output records
+           "a=1,b=2,c=3,y=d"
 
        Notes:
        * With --pairs, --implode doesn't make sense since the original field name has
-	 been lost.
+         been lost.
        * The combination "--implode --values --across-records" is non-streaming:
-	 no output records are produced until all input records have been read. In
-	 particular, this means it won't work in tail -f contexts. But all other flag
-	 combinations result in streaming (tail -f friendly) data processing.
+         no output records are produced until all input records have been read. In
+         particular, this means it won't work in tail -f contexts. But all other flag
+         combinations result in streaming (tail -f friendly) data processing.
        * It's up to you to ensure that the nested-fs is distinct from your data's IFS:
-	 e.g. by default the former is semicolon and the latter is comma.
+         e.g. by default the former is semicolon and the latter is comma.
        See also mlr reshape.
 
    nothing
-       Usage: mlr nothing
+       Usage: mlr nothing [options]
        Drops all input records. Useful for testing, or after tee/print/etc. have
        produced other output.
+       Options:
+       -h|--help Show this message.
 
    put
-       Usage: mlr put [options] {expression}
-       Adds/updates specified field(s). Expressions are semicolon-separated and must
-       either be assignments, or evaluate to boolean.  Booleans with following
-       statements in curly braces control whether those statements are executed;
-       booleans without following curly braces do nothing except side effects (e.g.
-       regex-captures into \1, \2, etc.).
+       Usage: mlr put [options] {DSL expression}
+       Options:
+       -f {file name} File containing a DSL expression. If the filename is a directory,
+          all *.mlr files in that directory are loaded.
 
-       Conversion options:
-       -S: Keeps field values as strings with no type inference to int or float.
-       -F: Keeps field values as strings or floats with no inference to int.
-       All field values are type-inferred to int/float/string unless this behavior is
-       suppressed with -S or -F.
+       -e {expression} You can use this after -f to add an expression. Example use
+          case: define functions/subroutines in a file you specify with -f, then call
+          them with an expression you specify with -e.
 
-       Output/formatting options:
-       --oflatsep {string}: Separator to use when flattening multi-level @-variables
-	   to output records for emit. Default ":".
-       --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
-       --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
-       Any of the output-format command-line flags (see mlr -h). Example: using
-	 mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
-       the input is CSV, the output is pretty-print tabular, but the tee-file output
-       is written in JSON format.
-       --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
-	   record.
-
-       Expression-specification options:
-       -f {filename}: the DSL expression is taken from the specified file rather
-	   than from the command line. Outer single quotes wrapping the expression
-	   should not be placed in the file. If -f is specified more than once,
-	   all input files specified using -f are concatenated to produce the expression.
-	   (For example, you can define functions in one file and call them from another.)
-       -e {expression}: You can use this after -f to add an expression. Example use
-	   case: define functions/subroutines in a file you specify with -f, then call
-	   them with an expression you specify with -e.
        (If you mix -e and -f then the expressions are evaluated in the order encountered.
        Since the expression pieces are simply concatenated, please be sure to use intervening
        semicolons to separate expressions.)
 
-       -s name=value: Predefines out-of-stream variable @name to have value "value".
-	   Thus mlr put put -s foo=97 '$column += @foo' is like
-	   mlr put put 'begin {@foo = 97} $column += @foo'.
-	   The value part is subject to type-inferencing as specified by -S/-F.
-	   May be specified more than once, e.g. -s name1=value1 -s name2=value2.
-	   Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
+       -s name=value: Predefines out-of-stream variable @name to have
+           Thus mlr put -s foo=97 '$column += @foo' is like
+           mlr put 'begin {@foo = 97} $column += @foo'.
+           The value part is subject to type-inferencing.
+           May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+           Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
 
-       Tracing options:
-       -v: Prints the expressions's AST (abstract syntax tree), which gives
-	   full transparency on the precedence and associativity rules of
-	   Miller's grammar, to stdout.
-       -a: Prints a low-level stack-allocation trace to stdout.
-       -t: Prints a low-level parser trace to stderr.
-       -T: Prints a every statement to stderr as it is executed.
+       -x (default false) Prints records for which {expression} evaluates to false, not true,
+          i.e. invert the sense of the filter expression.
 
-       Other options:
-       -q: Does not include the modified record in the output stream. Useful for when
-	   all desired output is in begin and/or end blocks.
+       -q Does not include the modified record in the output stream.
+          Useful for when all desired output is in begin and/or end blocks.
 
-       Please use a dollar sign for field names and double-quotes for string
-       literals. If field names have special characters such as "." then you might
-       use braces, e.g. '${field.name}'. Miller built-in variables are
-       NF NR FNR FILENUM FILENAME M_PI M_E, and ENV["namegoeshere"] to access environment
-       variables. The environment-variable name may be an expression, e.g. a field
-       value.
+       -S and -F: There are no-ops in Miller 6 and above, since now type-inferencing is done
+          by the record-readers before filter/put is executed. Supported as no-op pass-through
+          flags for backward compatibility.
 
-       Use # to comment to end of line.
+       -h|--help Show this message.
 
-       Examples:
-	 mlr put '$y = log10($x); $z = sqrt($y)'
-	 mlr put '$x&gt;0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x &gt; 0.0
-	 mlr put '$x&gt;0.0;  $y=log10($x); $z=sqrt($y)'	# does all three statements
-	 mlr put '$a =~ "([a-z]+)_([0-9]+);  $b = "left_\1"; $c = "right_\2"'
-	 mlr put '$a =~ "([a-z]+)_([0-9]+) { $b = "left_\1"; $c = "right_\2" }'
-	 mlr put '$filename = FILENAME'
-	 mlr put '$colored_shape = $color . "_" . $shape'
-	 mlr put '$y = cos($theta); $z = atan2($y, $x)'
-	 mlr put '$name = sub($name, "http.*com"i, "")'
-	 mlr put -q '@sum += $x; end {emit @sum}'
-	 mlr put -q '@sum[$a] += $x; end {emit @sum, "a"}'
-	 mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}'
-	 mlr put -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'
-	 mlr put -q 'is_null(@xmax) || $x &gt; @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
-	 mlr put '
-	   $x = 1;
-	  #$y = 2;
-	   $z = 3
-	 '
+       Parser-info options:
 
-       Please see also 'mlr -k' for examples using redirected output.
+       -w Print warnings about things like uninitialized variables.
 
-       Please see https://miller.readthedocs.io/en/latest/reference.html for more information
-       including function list. Or "mlr -f".
-       Please see in particular:
-	 http://www.johnkerl.org/miller/doc/reference-verbs.html#put
+       -W Same as -w, but exit the process if there are any warnings.
+
+       -p Prints the expressions's AST (abstract syntax tree), which gives full
+         transparency on the precedence and associativity rules of Miller's grammar,
+         to stdout.
+
+       -d Like -p but uses a parenthesized-expression format for the AST.
+
+       -D Like -d but with output all on one line.
+
+       -E Echo DSL expression before printing parse-tree
+
+       -v Same as -E -p.
+
+       -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
+          only want to look at parser information.
 
    regularize
-       Usage: mlr regularize
-       For records seen earlier in the data stream with same field names in
-       a different order, outputs them with field names in the previously
-       encountered order.
-       Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8
-       output as	      a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8
+       Usage: mlr regularize [options]
+       Outputs records sorted lexically ascending by keys.Options:
+       -h|--help Show this message.
 
    remove-empty-columns
-       Usage: mlr remove-empty-columns
+       Usage: mlr remove-empty-columns [options]
        Omits fields which are empty on every input row. Non-streaming.
+       Options:
+       -h|--help Show this message.
 
    rename
        Usage: mlr rename [options] {old1,new1,old2,new2,...}
        Renames specified fields.
        Options:
-       -r	  Treat old field  names as regular expressions. "ab", "a.*b"
-		  will match any field name containing the substring "ab" or
-		  matching "a.*b", respectively; anchors of the form "^ab$",
-		  "^a.*b$" may be used. New field names may be plain strings,
-		  or may contain capture groups of the form "\1" through
-		  "\9". Wrapping the regex in double quotes is optional, but
-		  is required if you wish to follow it with 'i' to indicate
-		  case-insensitivity.
-       -g	  Do global replacement within each field name rather than
-		  first-match replacement.
+       -r         Treat old field  names as regular expressions. "ab", "a.*b"
+                  will match any field name containing the substring "ab" or
+                  matching "a.*b", respectively; anchors of the form "^ab$",
+                  "^a.*b$" may be used. New field names may be plain strings,
+                  or may contain capture groups of the form "\1" through
+                  "\9". Wrapping the regex in double quotes is optional, but
+                  is required if you wish to follow it with 'i' to indicate
+                  case-insensitivity.
+       -g         Do global replacement within each field name rather than
+                  first-match replacement.
+       -h|--help Show this message.
        Examples:
        mlr rename old_name,new_name'
        mlr rename old_name_1,new_name_1,old_name_2,new_name_2'
        mlr rename -r 'Date_[0-9]+,Date,'  Rename all such fields to be "Date"
        mlr rename -r '"Date_[0-9]+",Date' Same
        mlr rename -r 'Date_([0-9]+).*,\1' Rename all such fields to be of the form 20151015
-       mlr rename -r '"name"i,Name'	  Rename "name", "Name", "NAME", etc. to "Name"
+       mlr rename -r '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
 
    reorder
        Usage: mlr reorder [options]
-       -f {a,b,c}   Field names to reorder.
-       -e	    Put specified field names at record end: default is to put
-		    them at record start.
+       Moves specified names to start of record, or end of record.
+       Options:
+       -e Put specified field names at record end: default is to put them at record start.
+       -f {a,b,c} Field names to reorder.
+       -b {x}     Put field names specified with -f before field name specified by {x},
+                  if any. If {x} isn't present in a given record, the specified fields
+                  will not be moved.
+       -a {x}     Put field names specified with -f after field name specified by {x},
+                  if any. If {x} isn't present in a given record, the specified fields
+                  will not be moved.
+       -h|--help Show this message.
+
        Examples:
        mlr reorder    -f a,b sends input record "d=4,b=2,a=1,c=3" to "a=1,b=2,d=4,c=3".
        mlr reorder -e -f a,b sends input record "d=4,b=2,a=1,c=3" to "d=4,c=3,a=1,b=2".
@@ -1084,210 +1132,229 @@ VERBS
        Usage: mlr repeat [options]
        Copies input records to output records multiple times.
        Options must be exactly one of the following:
-	 -n {repeat count}  Repeat each input record this many times.
-	 -f {field name}    Same, but take the repeat count from the specified
-			    field name of each input record.
+       -n {repeat count}  Repeat each input record this many times.
+       -f {field name}    Same, but take the repeat count from the specified
+                          field name of each input record.
+       -h|--help Show this message.
        Example:
-	 echo x=0 | mlr repeat -n 4 then put '$x=urand()'
+         echo x=0 | mlr repeat -n 4 then put '$x=urand()'
        produces:
-	x=0.488189
-	x=0.484973
-	x=0.704983
-	x=0.147311
+        x=0.488189
+        x=0.484973
+        x=0.704983
+        x=0.147311
        Example:
-	 echo a=1,b=2,c=3 | mlr repeat -f b
+         echo a=1,b=2,c=3 | mlr repeat -f b
        produces:
-	 a=1,b=2,c=3
-	 a=1,b=2,c=3
+         a=1,b=2,c=3
+         a=1,b=2,c=3
        Example:
-	 echo a=1,b=2,c=3 | mlr repeat -f c
+         echo a=1,b=2,c=3 | mlr repeat -f c
        produces:
-	 a=1,b=2,c=3
-	 a=1,b=2,c=3
-	 a=1,b=2,c=3
+         a=1,b=2,c=3
+         a=1,b=2,c=3
+         a=1,b=2,c=3
 
    reshape
        Usage: mlr reshape [options]
        Wide-to-long options:
-	 -i {input field names}   -o {key-field name,value-field name}
-	 -r {input field regexes} -o {key-field name,value-field name}
-	 These pivot/reshape the input data such that the input fields are removed
-	 and separate records are emitted for each key/value pair.
-	 Note: this works with tail -f and produces output records for each input
-	 record seen.
+         -i {input field names}   -o {key-field name,value-field name}
+         -r {input field regexes} -o {key-field name,value-field name}
+         These pivot/reshape the input data such that the input fields are removed
+         and separate records are emitted for each key/value pair.
+         Note: this works with tail -f and produces output records for each input
+         record seen.
        Long-to-wide options:
-	 -s {key-field name,value-field name}
-	 These pivot/reshape the input data to undo the wide-to-long operation.
-	 Note: this does not work with tail -f; it produces output records only after
-	 all input records have been read.
+         -s {key-field name,value-field name}
+         These pivot/reshape the input data to undo the wide-to-long operation.
+         Note: this does not work with tail -f; it produces output records only after
+         all input records have been read.
 
        Examples:
 
-	 Input file "wide.txt":
-	   time       X 	  Y
-	   2009-01-01 0.65473572  2.4520609
-	   2009-01-02 -0.89248112 0.2154713
-	   2009-01-03 0.98012375  1.3179287
+         Input file "wide.txt":
+           time       X           Y
+           2009-01-01 0.65473572  2.4520609
+           2009-01-02 -0.89248112 0.2154713
+           2009-01-03 0.98012375  1.3179287
 
-	 mlr --pprint reshape -i X,Y -o item,value wide.txt
-	   time       item value
-	   2009-01-01 X    0.65473572
-	   2009-01-01 Y    2.4520609
-	   2009-01-02 X    -0.89248112
-	   2009-01-02 Y    0.2154713
-	   2009-01-03 X    0.98012375
-	   2009-01-03 Y    1.3179287
+         mlr --pprint reshape -i X,Y -o item,value wide.txt
+           time       item value
+           2009-01-01 X    0.65473572
+           2009-01-01 Y    2.4520609
+           2009-01-02 X    -0.89248112
+           2009-01-02 Y    0.2154713
+           2009-01-03 X    0.98012375
+           2009-01-03 Y    1.3179287
 
-	 mlr --pprint reshape -r '[A-Z]' -o item,value wide.txt
-	   time       item value
-	   2009-01-01 X    0.65473572
-	   2009-01-01 Y    2.4520609
-	   2009-01-02 X    -0.89248112
-	   2009-01-02 Y    0.2154713
-	   2009-01-03 X    0.98012375
-	   2009-01-03 Y    1.3179287
+         mlr --pprint reshape -r '[A-Z]' -o item,value wide.txt
+           time       item value
+           2009-01-01 X    0.65473572
+           2009-01-01 Y    2.4520609
+           2009-01-02 X    -0.89248112
+           2009-01-02 Y    0.2154713
+           2009-01-03 X    0.98012375
+           2009-01-03 Y    1.3179287
 
-	 Input file "long.txt":
-	   time       item value
-	   2009-01-01 X    0.65473572
-	   2009-01-01 Y    2.4520609
-	   2009-01-02 X    -0.89248112
-	   2009-01-02 Y    0.2154713
-	   2009-01-03 X    0.98012375
-	   2009-01-03 Y    1.3179287
+         Input file "long.txt":
+           time       item value
+           2009-01-01 X    0.65473572
+           2009-01-01 Y    2.4520609
+           2009-01-02 X    -0.89248112
+           2009-01-02 Y    0.2154713
+           2009-01-03 X    0.98012375
+           2009-01-03 Y    1.3179287
 
-	 mlr --pprint reshape -s item,value long.txt
-	   time       X 	  Y
-	   2009-01-01 0.65473572  2.4520609
-	   2009-01-02 -0.89248112 0.2154713
-	   2009-01-03 0.98012375  1.3179287
+         mlr --pprint reshape -s item,value long.txt
+           time       X           Y
+           2009-01-01 0.65473572  2.4520609
+           2009-01-02 -0.89248112 0.2154713
+           2009-01-03 0.98012375  1.3179287
        See also mlr nest.
 
    sample
        Usage: mlr sample [options]
        Reservoir sampling (subsampling without replacement), optionally by category.
-       -k {count}    Required: number of records to output, total, or by group if using -g.
-       -g {a,b,c}    Optional: group-by-field names for samples.
        See also mlr bootstrap and mlr shuffle.
+       Options:
+       -g {a,b,c} Optional: group-by-field names for samples, e.g. a,b,c.
+       -k {k} Required: number of records to output in total, or by group if using -g.
+       -h|--help Show this message.
+
+   sec2gmtdate
+       Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
+       Replaces a numeric field representing seconds since the epoch with the
+       corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
+       This is nothing more than a keystroke-saver for the sec2gmtdate function:
+         ../c/mlr sec2gmtdate time1,time2
+       is the same as
+         ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
 
    sec2gmt
        Usage: mlr sec2gmt [options] {comma-separated list of field names}
        Replaces a numeric field representing seconds since the epoch with the
        corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
        more than a keystroke-saver for the sec2gmt function:
-	 mlr sec2gmt time1,time2
+         mlr sec2gmt time1,time2
        is the same as
-	 mlr put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'
+         mlr put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'
        Options:
        -1 through -9: format the seconds using 1..9 decimal places, respectively.
-
-   sec2gmtdate
-       Usage: mlr sec2gmtdate {comma-separated list of field names}
-       Replaces a numeric field representing seconds since the epoch with the
-       corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
-       This is nothing more than a keystroke-saver for the sec2gmtdate function:
-	 mlr sec2gmtdate time1,time2
-       is the same as
-	 mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+       --millis Input numbers are treated as milliseconds since the epoch.
+       --micros Input numbers are treated as microseconds since the epoch.
+       --nanos  Input numbers are treated as nanoseconds since the epoch.
+       -h|--help Show this message.
 
    seqgen
        Usage: mlr seqgen [options]
+       Passes input records directly to output. Most useful for format conversion.
        Produces a sequence of counters.  Discards the input record stream. Produces
-       output as specified by the following options:
-       -f {name} Field name for counters; default "i".
-       --start {number} Inclusive start value; default "1".
-       --stop  {number} Inclusive stop value; default "100".
-       --step  {number} Step value; default "1".
+       output as specified by the options
+
+       Options:
+       -f {name} (default "i") Field name for counters.
+       --start {value} (default 1) Inclusive start value.
+       --step {value} (default 1) Step value.
+       --stop {value} (default 100) Inclusive stop value.
+       -h|--help Show this message.
        Start, stop, and/or step may be floating-point. Output is integer if start,
        stop, and step are all integers. Step may be negative. It may not be zero
        unless start == stop.
 
    shuffle
-       Usage: mlr shuffle {no options}
+       Usage: mlr shuffle [options]
        Outputs records randomly permuted. No output records are produced until
-       all input records are read.
-       See also mlr bootstrap and mlr sample.
+       all input records are read. See also mlr bootstrap and mlr sample.
+       Options:
+       -h|--help Show this message.
 
    skip-trivial-records
        Usage: mlr skip-trivial-records [options]
-       Passes through all records except:
-       * those with zero fields;
-       * those for which all fields have empty value.
+       Passes through all records except those with zero fields,
+       or those for which all fields have empty value.
+       Options:
+       -h|--help Show this message.
 
    sort
        Usage: mlr sort {flags}
-       Flags:
-	 -f  {comma-separated field names}  Lexical ascending
-	 -n  {comma-separated field names}  Numerical ascending; nulls sort last
-	 -nf {comma-separated field names}  Same as -n
-	 -r  {comma-separated field names}  Lexical descending
-	 -nr {comma-separated field names}  Numerical descending; nulls sort first
        Sorts records primarily by the first specified field, secondarily by the second
        field, and so on.  (Any records not having all specified sort keys will appear
        at the end of the output, in the order they were encountered, regardless of the
        specified sort order.) The sort is stable: records that compare equal will sort
        in the order they were encountered in the input record stream.
 
+       Options:
+       -f  {comma-separated field names}  Lexical ascending
+       -n  {comma-separated field names}  Numerical ascending; nulls sort last
+       -nf {comma-separated field names}  Same as -n
+       -r  {comma-separated field names}  Lexical descending
+       -nr {comma-separated field names}  Numerical descending; nulls sort first
+       -h|--help Show this message.
+
        Example:
-	 mlr sort -f a,b -nr x,y,z
+         mlr sort -f a,b -nr x,y,z
        which is the same as:
-	 mlr sort -f a -f b -nr x -nr y -nr z
+         mlr sort -f a -f b -nr x -nr y -nr z
 
    sort-within-records
-       Usage: mlr sort-within-records [no options]
+       Usage: mlr sort-within-records [options]
        Outputs records sorted lexically ascending by keys.
+       Options:
+       -r        Recursively sort subobjects/submaps, e.g. for JSON input.
+       -h|--help Show this message.
 
    stats1
        Usage: mlr stats1 [options]
        Computes univariate statistics for one or more given fields, accumulated across
        the input record stream.
        Options:
-       -a {sum,count,...}  Names of accumulators: p10 p25.2 p50 p98 p100 etc. and/or
-			   one or more of:
-	  count     Count instances of fields
-	  mode	    Find most-frequently-occurring values for fields; first-found wins tie
-	  antimode  Find least-frequently-occurring values for fields; first-found wins tie
-	  sum	    Compute sums of specified fields
-	  mean	    Compute averages (sample means) of specified fields
-	  stddev    Compute sample standard deviation of specified fields
-	  var	    Compute sample variance of specified fields
-	  meaneb    Estimate error bars for averages (assuming no sample autocorrelation)
-	  skewness  Compute sample skewness of specified fields
-	  kurtosis  Compute sample kurtosis of specified fields
-	  min	    Compute minimum values of specified fields
-	  max	    Compute maximum values of specified fields
+       -a {sum,count,...} Names of accumulators: one or more of:
+         median   This is the same as p50
+         p10 p25.2 p50 p98 p100 etc.
+         TODO: flags for interpolated percentiles
+         count    Count instances of fields
+         mode     Find most-frequently-occurring values for fields; first-found wins tie
+         antimode Find least-frequently-occurring values for fields; first-found wins tie
+         sum      Compute sums of specified fields
+         mean     Compute averages (sample means) of specified fields
+         var      Compute sample variance of specified fields
+         stddev   Compute sample standard deviation of specified fields
+         meaneb   Estimate error bars for averages (assuming no sample autocorrelation)
+         skewness Compute sample skewness of specified fields
+         kurtosis Compute sample kurtosis of specified fields
+         min      Compute minimum values of specified fields
+         max      Compute maximum values of specified fields
+
        -f {a,b,c}   Value-field names on which to compute statistics
-       --fr {regex} Regex for value-field names on which to compute statistics
-		    (compute statistics on values in all field names matching regex)
-       --fx {regex} Inverted regex for value-field names on which to compute statistics
-		    (compute statistics on values in all field names not matching regex)
        -g {d,e,f}   Optional group-by-field names
-       --gr {regex} Regex for optional group-by-field names
-		    (group by values in field names matching regex)
-       --gx {regex} Inverted regex for optional group-by-field names
-		    (group by values in field names not matching regex)
-       --grfx {regex} Shorthand for --gr {regex} --fx {that same regex}
-       -i	    Use interpolated percentiles, like R's type=7; default like type=1.
-		    Not sensical for string-valued fields.
-       -s	    Print iterative stats. Useful in tail -f contexts (in which
-		    case please avoid pprint-format output since end of input
-		    stream will never be seen).
-       -F	    Computes integerable things (e.g. count) in floating point.
+
+       -i           Use interpolated percentiles, like R's type=7; default like type=1.\n");
+                    Not sensical for string-valued fields.\n");
+       -s           Print iterative stats. Useful in tail -f contexts (in which
+                    case please avoid pprint-format output since end of input
+                    stream will never be seen).
+       -h|--help    Show this message.
+       [TODO: more]
        Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
+        mlr stats1
        Example: mlr stats1 -a count,mode -f size
+        mlr stats1
        Example: mlr stats1 -a count,mode -f size -g shape
+        mlr stats1
        Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'
-		This computes count and mode statistics on all field names beginning
-		with a through h, grouped by all field names starting with k.
+        mlr stats1
+               This computes count and mode statistics on all field names beginning
+                with a through h, grouped by all field names starting with k.
+
        Notes:
        * p50 and median are synonymous.
        * min and max output the same results as p0 and p100, respectively, but use
-	 less memory.
+         less memory.
        * String-valued data make sense unless arithmetic on them is required,
-	 e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
-	 numbers are less than strings.
+         e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
+         numbers are less than strings.
        * count and mode allow text input; the rest require numeric input.
-	 In particular, 1 and 1.0 are distinct text for count and mode.
+         In particular, 1 and 1.0 are distinct text for count and mode.
        * When there are mode ties, the first-encountered datum wins.
 
    stats2
@@ -1295,24 +1362,24 @@ VERBS
        Computes bivariate statistics for one or more given field-name pairs,
        accumulated across the input record stream.
        -a {linreg-ols,corr,...}  Names of accumulators: one or more of:
-	 linreg-pca   Linear regression using principal component analysis
-	 linreg-ols   Linear regression using ordinary least squares
-	 r2	      Quality metric for linreg-ols (linreg-pca emits its own)
-	 logireg      Logistic regression
-	 corr	      Sample correlation
-	 cov	      Sample covariance
-	 covx	      Sample-covariance matrix
+         linreg-ols Linear regression using ordinary least squares
+         linreg-pca Linear regression using principal component analysis
+         r2       Quality metric for linreg-ols (linreg-pca emits its own)
+         logireg  Logistic regression
+         corr     Sample correlation
+         cov      Sample covariance
+         covx     Sample-covariance matrix
        -f {a,b,c,d}   Value-field name-pairs on which to compute statistics.
-		      There must be an even number of names.
+                      There must be an even number of names.
        -g {e,f,g}     Optional group-by-field names.
-       -v	      Print additional output for linreg-pca.
-       -s	      Print iterative stats. Useful in tail -f contexts (in which
-		      case please avoid pprint-format output since end of input
-		      stream will never be seen).
-       --fit	      Rather than printing regression parameters, applies them to
-		      the input data to compute new fit fields. All input records are
-		      held in memory until end of input stream. Has effect only for
-		      linreg-ols, linreg-pca, and logireg.
+       -v             Print additional output for linreg-pca.
+       -s             Print iterative stats. Useful in tail -f contexts (in which
+                      case please avoid pprint-format output since end of input
+                      stream will never be seen).
+       --fit          Rather than printing regression parameters, applies them to
+                      the input data to compute new fit fields. All input records are
+                      held in memory until end of input stream. Has effect only for
+                      linreg-ols, linreg-pca, and logireg.
        Only one of -s or --fit may be used.
        Example: mlr stats2 -a linreg-pca -f x,y
        Example: mlr stats2 -a linreg-ols,r2 -f x,y -g size,shape
@@ -1320,77 +1387,106 @@ VERBS
 
    step
        Usage: mlr step [options]
-       Computes values dependent on the previous record, optionally grouped
-       by category.
-
+       Computes values dependent on the previous record, optionally grouped by category.
        Options:
        -a {delta,rsum,...}   Names of steppers: comma-separated, one or more of:
-	 delta	  Compute differences in field(s) between successive records
-	 shift	  Include value(s) in field(s) from previous record, if any
-	 from-first Compute differences in field(s) from first record
-	 ratio	  Compute ratios in field(s) between successive records
-	 rsum	  Compute running sums of field(s) between successive records
-	 counter  Count instances of field(s) between successive records
-	 ewma	  Exponentially weighted moving average over successive records
+         delta    Compute differences in field(s) between successive records
+         shift    Include value(s) in field(s) from previous record, if any
+         from-first Compute differences in field(s) from first record
+         ratio    Compute ratios in field(s) between successive records
+         rsum     Compute running sums of field(s) between successive records
+         counter  Count instances of field(s) between successive records
+         ewma     Exponentially weighted moving average over successive records
+
        -f {a,b,c} Value-field names on which to compute statistics
        -g {d,e,f} Optional group-by-field names
-       -F	  Computes integerable things (e.g. counter) in floating point.
+       -F         Computes integerable things (e.g. counter) in floating point.
+                  As of Miller 6 this happens automatically, but the flag is accepted
+                  as a no-op for backward compatibility with Miller 5 and below.
        -d {x,y,z} Weights for ewma. 1 means current sample gets all weight (no
-		  smoothing), near under under 1 is light smoothing, near over 0 is
-		  heavy smoothing. Multiple weights may be specified, e.g.
-		  "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
-		  is "-d 0.5".
+                  smoothing), near under under 1 is light smoothing, near over 0 is
+                  heavy smoothing. Multiple weights may be specified, e.g.
+                  "mlr step -a ewma -f sys_load -d 0.01,0.1,0.9". Default if omitted
+                  is "-d 0.5".
        -o {a,b,c} Custom suffixes for EWMA output fields. If omitted, these default to
-		  the -d values. If supplied, the number of -o values must be the same
-		  as the number of -d values.
+                  the -d values. If supplied, the number of -o values must be the same
+                  as the number of -d values.
+       -h|--help Show this message.
 
        Examples:
-	 mlr step -a rsum -f request_size
-	 mlr step -a delta -f request_size -g hostname
-	 mlr step -a ewma -d 0.1,0.9 -f x,y
-	 mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
-	 mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
+         mlr step -a rsum -f request_size
+         mlr step -a delta -f request_size -g hostname
+         mlr step -a ewma -d 0.1,0.9 -f x,y
+         mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
+         mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
 
        Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#filter or
        https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
        for more information on EWMA.
 
    tac
-       Usage: mlr tac
+       Usage: mlr tac [options]
        Prints records in reverse order from the order in which they were encountered.
+       Options:
+       -h|--help Show this message.
 
    tail
        Usage: mlr tail [options]
-       -n {count}    Tail count to print; default 10
-       -g {a,b,c}    Optional group-by-field names for tail counts
        Passes through the last n records, optionally by category.
+       Options:
+       -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
+       -n {n} Head-count to print. Default 10.
+       -h|--help Show this message.
 
    tee
        Usage: mlr tee [options] {filename}
-       Passes through input records (like mlr cat) but also writes to specified output
-       file, using output-format flags from the command line (e.g. --ocsv). See also
-       the "tee" keyword within mlr put, which allows data-dependent filenames.
        Options:
-       -a:	    append to existing file, if any, rather than overwriting.
-       --no-fflush: don't call fflush() after every record.
+       -a    Append to existing file, if any, rather than overwriting.
+       -p    Treat filename as a pipe-to command.
        Any of the output-format command-line flags (see mlr -h). Example: using
-	 mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
+         mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
        the input is CSV, the output is pretty-print tabular, but the tee-file output
        is written in JSON format.
+
+       -h|--help Show this message.
+
+   template
+       Usage: mlr template [options]
+       Places input-record fields in the order specified by list of column names.
+       If the input record is missing a specified field, it will be filled with the fill-with.
+       If the input record possesses an unspecified field, it will be discarded.
+       Options:
+        -f {a,b,c} Comma-separated field names for template, e.g. a,b,c.
+        -t {filename} CSV file whose header line will be used for template.
+       --fill-with {filler string}  What to fill absent fields with. Defaults to the empty string.
+       -h|--help Show this message.
+       Example:
+       * Specified fields are a,b,c.
+       * Input record is c=3,a=1,f=6.
+       * Output record is a=1,b=,c=3.
 
    top
        Usage: mlr top [options]
        -f {a,b,c}    Value-field names for top counts.
        -g {d,e,f}    Optional group-by-field names for top counts.
        -n {count}    How many records to print per category; default 1.
-       -a	     Print all fields for top-value records; default is
-		     to print only value and group-by fields. Requires a single
-		     value-field name only.
-       --min	     Print top smallest values; default is top largest values.
-       -F	     Keep top values as floats even if they look like integers.
+       -a            Print all fields for top-value records; default is
+                     to print only value and group-by fields. Requires a single
+                     value-field name only.
+       --min         Print top smallest values; default is top largest values.
+       -F            Keep top values as floats even if they look like integers.
        -o {name}     Field name for output indices. Default "top_idx".
        Prints the n records with smallest/largest values at specified fields,
        optionally by category.
+
+   unflatten
+       Usage: mlr unflatten [options]
+       Reverses flatten. Example: field with name 'a.b.c' and value 4
+       becomes name 'a' and value '{"b": { "c": 4 }}'.
+       Options:
+       -f {a,b,c} Comma-separated list of field names to unflatten (default all).
+       -s {string} Separator, defaulting to mlr --flatsep value.
+       -h|--help Show this message.
 
    uniq
        Usage: mlr uniq [options]
@@ -1399,619 +1495,675 @@ VERBS
 
        Options:
        -g {d,e,f}    Group-by-field names for uniq counts.
-       -c	     Show repeat counts in addition to unique values.
-       -n	     Show only the number of distinct values.
+       -c            Show repeat counts in addition to unique values.
+       -n            Show only the number of distinct values.
        -o {name}     Field name for output count. Default "count".
-       -a	     Output each unique record only once. Incompatible with -g.
-		     With -c, produces unique records, with repeat counts for each.
-		     With -n, produces only one record which is the unique-record count.
-		     With neither -c nor -n, produces unique records.
+       -a            Output each unique record only once. Incompatible with -g.
+                     With -c, produces unique records, with repeat counts for each.
+                     With -n, produces only one record which is the unique-record count.
+                     With neither -c nor -n, produces unique records.
 
    unsparsify
        Usage: mlr unsparsify [options]
        Prints records with the union of field names over all input records.
-       For field names absent in a given record but present in others, fills in a
-       value. Without -f, this verb retains all input before producing any output.
-
+       For field names absent in a given record but present in others, fills in
+       a value. This verb retains all input before producing any output.
        Options:
        --fill-with {filler string}  What to fill absent fields with. Defaults to
-				    the empty string.
+                                    the empty string.
        -f {a,b,c} Specify field names to be operated on. Any other fields won't be
-				    modified, and operation will be streaming.
-
+                  modified, and operation will be streaming.
+       -h|--help  Show this message.
        Example: if the input is two records, one being 'a=1,b=2' and the other
        being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
        'a=,b=3,c=4'.
 
 FUNCTIONS FOR FILTER/PUT
-   +
-       (class=arithmetic #args=2): Addition.
-
-       + (class=arithmetic #args=1): Unary plus.
-
-   -
-       (class=arithmetic #args=2): Subtraction.
-
-       - (class=arithmetic #args=1): Unary minus.
-
-   *
-       (class=arithmetic #args=2): Multiplication.
-
-   /
-       (class=arithmetic #args=2): Division.
-
-   //
-       (class=arithmetic #args=2): Integer division: rounds to negative (pythonic).
-
-   .+
-       (class=arithmetic #args=2): Addition, with integer-to-integer overflow
-
-       .+ (class=arithmetic #args=1): Unary plus, with integer-to-integer overflow.
-
-   .-
-       (class=arithmetic #args=2): Subtraction, with integer-to-integer overflow.
-
-       .- (class=arithmetic #args=1): Unary minus, with integer-to-integer overflow.
-
-   .*
-       (class=arithmetic #args=2): Multiplication, with integer-to-integer overflow.
-
-   ./
-       (class=arithmetic #args=2): Division, with integer-to-integer overflow.
-
-   .//
-       (class=arithmetic #args=2): Integer division: rounds to negative (pythonic), with integer-to-integer overflow.
-
-   %
-       (class=arithmetic #args=2): Remainder; never negative-valued (pythonic).
-
-   **
-       (class=arithmetic #args=2): Exponentiation; same as pow, but as an infix
-       operator.
-
-   |
-       (class=arithmetic #args=2): Bitwise OR.
-
-   ^
-       (class=arithmetic #args=2): Bitwise XOR.
-
-   &
-       (class=arithmetic #args=2): Bitwise AND.
-
-   ~
-       (class=arithmetic #args=1): Bitwise NOT. Beware '$y=~$x' since =~ is the
-       regex-match operator: try '$y = ~$x'.
-
-   &lt;&lt;
-       (class=arithmetic #args=2): Bitwise left-shift.
-
-   &gt;&gt;
-       (class=arithmetic #args=2): Bitwise right-shift.
-
-   bitcount
-       (class=arithmetic #args=1): Count of 1-bits
-
-   ==
-       (class=boolean #args=2): String/numeric equality. Mixing number and string
-       results in string compare.
-
-   !=
-       (class=boolean #args=2): String/numeric inequality. Mixing number and string
-       results in string compare.
-
-   =~
-       (class=boolean #args=2): String (left-hand side) matches regex (right-hand
-       side), e.g. '$name =~ "^a.*b$"'.
-
-   !=~
-       (class=boolean #args=2): String (left-hand side) does not match regex
-       (right-hand side), e.g. '$name !=~ "^a.*b$"'.
-
-   &gt;
-       (class=boolean #args=2): String/numeric greater-than. Mixing number and string
-       results in string compare.
-
-   &gt;=
-       (class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
-       and string results in string compare.
-
-   &lt;
-       (class=boolean #args=2): String/numeric less-than. Mixing number and string
-       results in string compare.
-
-   &lt;=
-       (class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
-       and string results in string compare.
-
-   &&
-       (class=boolean #args=2): Logical AND.
-
-   ||
-       (class=boolean #args=2): Logical OR.
-
-   ^^
-       (class=boolean #args=2): Logical XOR.
-
-   !
-       (class=boolean #args=1): Logical negation.
-
-   ? :
-       (class=boolean #args=3): Ternary operator.
-
-   .
-       (class=string #args=2): String concatenation.
-
-   gsub
-       (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
-       (replace all).
-
-   regextract
-       (class=string #args=2): Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
-       .
-
-   regextract_or_else
-       (class=string #args=3): Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
-       .
-
-   strlen
-       (class=string #args=1): String length.
-
-   sub
-       (class=string #args=3): Example: '$name=sub($name, "old", "new")'
-       (replace once).
-
-   ssub
-       (class=string #args=3): Like sub but does no regexing. No characters are special.
-
-   substr
-       (class=string #args=3): substr(s,m,n) gives substring of s from 0-up position m to n
-       inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
-
-   tolower
-       (class=string #args=1): Convert string to lowercase.
-
-   toupper
-       (class=string #args=1): Convert string to uppercase.
-
-   truncate
-       (class=string #args=2): Truncates string first argument to max length of int second argument.
-
-   capitalize
-       (class=string #args=1): Convert string's first character to uppercase.
-
-   lstrip
-       (class=string #args=1): Strip leading whitespace from string.
-
-   rstrip
-       (class=string #args=1): Strip trailing whitespace from string.
-
-   strip
-       (class=string #args=1): Strip leading and trailing whitespace from string.
-
-   collapse_whitespace
-       (class=string #args=1): Strip repeated whitespace from string.
-
-   clean_whitespace
-       (class=string #args=1): Same as collapse_whitespace and strip.
-
-   system
-       (class=string #args=1): Run command string, yielding its stdout minus final carriage return.
-
    abs
-       (class=math #args=1): Absolute value.
+        (class=math #args=1) Absolute value.
 
    acos
-       (class=math #args=1): Inverse trigonometric cosine.
+        (class=math #args=1) Inverse trigonometric cosine.
 
    acosh
-       (class=math #args=1): Inverse hyperbolic cosine.
+        (class=math #args=1) Inverse hyperbolic cosine.
+
+   append
+        (class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
+
+   arrayify
+        (class=maps/arrays #args=1) Walks through a nested map/array, converting any map with consecutive keys
+       "1", "2", ... into an array. Useful to wrap the output of unflatten.
 
    asin
-       (class=math #args=1): Inverse trigonometric sine.
+        (class=math #args=1) Inverse trigonometric sine.
 
    asinh
-       (class=math #args=1): Inverse hyperbolic sine.
+        (class=math #args=1) Inverse hyperbolic sine.
+
+   asserting_absent
+        (class=typing #args=1) Aborts with an error if is_absent on the argument returns false,
+       else returns its argument.
+
+   asserting_array
+        (class=typing #args=1) Aborts with an error if is_array on the argument returns false,
+       else returns its argument.
+
+   asserting_bool
+        (class=typing #args=1) Aborts with an error if is_bool on the argument returns false,
+       else returns its argument.
+
+   asserting_boolean
+        (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false,
+       else returns its argument.
+
+   asserting_empty
+        (class=typing #args=1) Aborts with an error if is_empty on the argument returns false,
+       else returns its argument.
+
+   asserting_empty_map
+        (class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false,
+       else returns its argument.
+
+   asserting_error
+        (class=typing #args=1) Aborts with an error if is_error on the argument returns false,
+       else returns its argument.
+
+   asserting_float
+        (class=typing #args=1) Aborts with an error if is_float on the argument returns false,
+       else returns its argument.
+
+   asserting_int
+        (class=typing #args=1) Aborts with an error if is_int on the argument returns false,
+       else returns its argument.
+
+   asserting_map
+        (class=typing #args=1) Aborts with an error if is_map on the argument returns false,
+       else returns its argument.
+
+   asserting_nonempty_map
+        (class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false,
+       else returns its argument.
+
+   asserting_not_array
+        (class=typing #args=1) Aborts with an error if is_not_array on the argument returns false,
+       else returns its argument.
+
+   asserting_not_empty
+        (class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false,
+       else returns its argument.
+
+   asserting_not_map
+        (class=typing #args=1) Aborts with an error if is_not_map on the argument returns false,
+       else returns its argument.
+
+   asserting_not_null
+        (class=typing #args=1) Aborts with an error if is_not_null on the argument returns false,
+       else returns its argument.
+
+   asserting_null
+        (class=typing #args=1) Aborts with an error if is_null on the argument returns false,
+       else returns its argument.
+
+   asserting_numeric
+        (class=typing #args=1) Aborts with an error if is_numeric on the argument returns false,
+       else returns its argument.
+
+   asserting_present
+        (class=typing #args=1) Aborts with an error if is_present on the argument returns false,
+       else returns its argument.
+
+   asserting_string
+        (class=typing #args=1) Aborts with an error if is_string on the argument returns false,
+       else returns its argument.
 
    atan
-       (class=math #args=1): One-argument arctangent.
+        (class=math #args=1) One-argument arctangent.
 
    atan2
-       (class=math #args=2): Two-argument arctangent.
+        (class=math #args=2) Two-argument arctangent.
 
    atanh
-       (class=math #args=1): Inverse hyperbolic tangent.
+        (class=math #args=1) Inverse hyperbolic tangent.
+
+   bitcount
+        (class=arithmetic #args=1) Count of 1-bits.
+
+   boolean
+        (class=conversion #args=1) Convert int/float/bool/string to boolean.
+
+   capitalize
+        (class=string #args=1) Convert string's first character to uppercase.
 
    cbrt
-       (class=math #args=1): Cube root.
+        (class=math #args=1) Cube root.
 
    ceil
-       (class=math #args=1): Ceiling: nearest integer at or above.
+        (class=math #args=1) Ceiling: nearest integer at or above.
+
+   clean_whitespace
+        (class=string #args=1) Same as collapse_whitespace and strip.
+
+   collapse_whitespace
+        (class=string #args=1) Strip repeated whitespace from string.
 
    cos
-       (class=math #args=1): Trigonometric cosine.
+        (class=math #args=1) Trigonometric cosine.
 
    cosh
-       (class=math #args=1): Hyperbolic cosine.
+        (class=math #args=1) Hyperbolic cosine.
 
-   erf
-       (class=math #args=1): Error function.
-
-   erfc
-       (class=math #args=1): Complementary error function.
-
-   exp
-       (class=math #args=1): Exponential function e**x.
-
-   expm1
-       (class=math #args=1): e**x - 1.
-
-   floor
-       (class=math #args=1): Floor: nearest integer at or below.
-
-   invqnorm
-       (class=math #args=1): Inverse of normal cumulative distribution
-       function. Note that invqorm(urand()) is normally distributed.
-
-   log
-       (class=math #args=1): Natural (base-e) logarithm.
-
-   log10
-       (class=math #args=1): Base-10 logarithm.
-
-   log1p
-       (class=math #args=1): log(1-x).
-
-   logifit
-       (class=math #args=3): Given m and b from logistic regression, compute
-       fit: $yhat=logifit($x,$m,$b).
-
-   madd
-       (class=math #args=3): a + b mod m (integers)
-
-   max
-       (class=math variadic): max of n numbers; null loses
-
-   mexp
-       (class=math #args=3): a ** b mod m (integers)
-
-   min
-       (class=math variadic): Min of n numbers; null loses
-
-   mmul
-       (class=math #args=3): a * b mod m (integers)
-
-   msub
-       (class=math #args=3): a - b mod m (integers)
-
-   pow
-       (class=math #args=2): Exponentiation; same as **.
-
-   qnorm
-       (class=math #args=1): Normal cumulative distribution function.
-
-   round
-       (class=math #args=1): Round to nearest integer.
-
-   roundm
-       (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
-       the same as round($x/$m)*$m
-
-   sgn
-       (class=math #args=1): +1 for positive input, 0 for zero input, -1 for
-       negative input.
-
-   sin
-       (class=math #args=1): Trigonometric sine.
-
-   sinh
-       (class=math #args=1): Hyperbolic sine.
-
-   sqrt
-       (class=math #args=1): Square root.
-
-   tan
-       (class=math #args=1): Trigonometric tangent.
-
-   tanh
-       (class=math #args=1): Hyperbolic tangent.
-
-   urand
-       (class=math #args=0): Floating-point numbers uniformly distributed on the unit interval.
-       Int-valued example: '$n=floor(20+urand()*11)'.
-
-   urandrange
-       (class=math #args=2): Floating-point numbers uniformly distributed on the interval [a, b).
-
-   urand32
-       (class=math #args=0): Integer uniformly distributed 0 and 2**32-1
-       inclusive.
-
-   urandint
-       (class=math #args=2): Integer uniformly distributed between inclusive
-       integer endpoints.
+   depth
+        (class=maps/arrays #args=1) Prints maximum depth of map/array. Scalars have depth 0.
 
    dhms2fsec
-       (class=time #args=1): Recovers floating-point seconds as in
-       dhms2fsec("5d18h53m20.250000s") = 500000.250000
+        (class=time #args=1) Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
 
    dhms2sec
-       (class=time #args=1): Recovers integer seconds as in
-       dhms2sec("5d18h53m20s") = 500000
+        (class=time #args=1) Recovers integer seconds as in dhms2sec("5d18h53m20s") = 500000
+
+   erf
+        (class=math #args=1) Error function.
+
+   erfc
+        (class=math #args=1) Complementary error function.
+
+   exp
+        (class=math #args=1) Exponential function e**x.
+
+   expm1
+        (class=math #args=1) e**x - 1.
+
+   flatten
+        (class=maps/arrays #args=3) Flattens multi-level maps to single-level ones. Examples:
+       flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+       flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+       Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
+       Useful for nested JSON-like structures for non-JSON file formats like CSV.
+
+   float
+        (class=conversion #args=1) Convert int/float/bool/string to float.
+
+   floor
+        (class=math #args=1) Floor: nearest integer at or below.
+
+   fmtnum
+        (class=conversion #args=2) Convert int/float/bool to string using
+       printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
 
    fsec2dhms
-       (class=time #args=1): Formats floating-point seconds as in
-       fsec2dhms(500000.25) = "5d18h53m20.250000s"
+        (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
 
    fsec2hms
-       (class=time #args=1): Formats floating-point seconds as in
-       fsec2hms(5000.25) = "01:23:20.250000"
+        (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
+
+   get_keys
+        (class=maps/arrays #args=1) Returns array of keys of map or array
+
+   get_values
+        (class=maps/arrays #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
 
    gmt2sec
-       (class=time #args=1): Parses GMT timestamp as integer seconds since
-       the epoch.
+        (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
 
-   localtime2sec
-       (class=time #args=1): Parses local timestamp as integer seconds since
-       the epoch. Consults $TZ environment variable.
+   gsub
+        (class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
+
+   haskey
+        (class=maps/arrays #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+       'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
+       Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
+
+   hexfmt
+        (class=conversion #args=1) Convert int to hex string, e.g. 255 to "0xff".
 
    hms2fsec
-       (class=time #args=1): Recovers floating-point seconds as in
-       hms2fsec("01:23:20.250000") = 5000.250000
+        (class=time #args=1) Recovers floating-point seconds as in hms2fsec("01:23:20.250000") = 5000.250000
 
    hms2sec
-       (class=time #args=1): Recovers integer seconds as in
-       hms2sec("01:23:20") = 5000
+        (class=time #args=1) Recovers integer seconds as in hms2sec("01:23:20") = 5000
+
+   hostname
+        (class=system #args=0) Returns the hostname as a string.
+
+   int
+        (class=conversion #args=1) Convert int/float/bool/string to int.
+
+   invqnorm
+        (class=math #args=1) Inverse of normal cumulative distribution function.
+       Note that invqorm(urand()) is normally distributed.
+
+   is_absent
+        (class=typing #args=1) False if field is present in input, true otherwise
+
+   is_array
+        (class=typing #args=1) True if argument is an array.
+
+   is_bool
+        (class=typing #args=1) True if field is present with boolean value. Synonymous with is_boolean.
+
+   is_boolean
+        (class=typing #args=1) True if field is present with boolean value. Synonymous with is_bool.
+
+   is_empty
+        (class=typing #args=1) True if field is present in input with empty string value, false otherwise.
+
+   is_empty_map
+        (class=typing #args=1) True if argument is a map which is empty.
+
+   is_error
+        (class=typing #args=1) True if if argument is an error, such as taking string length of an integer.
+
+   is_float
+        (class=typing #args=1) True if field is present with value inferred to be float
+
+   is_int
+        (class=typing #args=1) True if field is present with value inferred to be int
+
+   is_map
+        (class=typing #args=1) True if argument is a map.
+
+   is_nonempty_map
+        (class=typing #args=1) True if argument is a map which is non-empty.
+
+   is_not_array
+        (class=typing #args=1) True if argument is not an array.
+
+   is_not_empty
+        (class=typing #args=1) False if field is present in input with empty value, true otherwise
+
+   is_not_map
+        (class=typing #args=1) True if argument is not a map.
+
+   is_not_null
+        (class=typing #args=1) False if argument is null (empty or absent), true otherwise.
+
+   is_null
+        (class=typing #args=1) True if argument is null (empty or absent), false otherwise.
+
+   is_numeric
+        (class=typing #args=1) True if field is present with value inferred to be int or float
+
+   is_present
+        (class=typing #args=1) True if field is present in input, false otherwise.
+
+   is_string
+        (class=typing #args=1) True if field is present with string (including empty-string) value
+
+   joink
+        (class=conversion #args=2) Makes string from map/array keys. Examples:
+       joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
+       joink([1,2,3], ",") = "1,2,3".
+
+   joinkv
+        (class=conversion #args=3) Makes string from map/array key-value pairs. Examples:
+       joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
+       joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+
+   joinv
+        (class=conversion #args=2) Makes string from map/array values.
+       joinv([3,4,5], ",") = "3,4,5"
+       joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
+
+   json_parse
+        (class=maps/arrays #args=1) Converts value from JSON-formatted string.
+
+   json_stringify
+        (class=maps/arrays #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
+       With optional second boolean argument set to true, produces multiline output.
+
+   leafcount
+        (class=maps/arrays #args=1) Counts total number of terminal values in map/array. For single-level
+       map/array, same as length.
+
+   length
+        (class=maps/arrays #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
+
+   log
+        (class=math #args=1) Natural (base-e) logarithm.
+
+   log10
+        (class=math #args=1) Base-10 logarithm.
+
+   log1p
+        (class=math #args=1) log(1-x).
+
+   logifit
+        (class=math #args=3)  Given m and b from logistic regression, compute fit:
+       $yhat=logifit($x,$m,$b).
+
+   lstrip
+        (class=string #args=1) Strip leading whitespace from string.
+
+   madd
+        (class=arithmetic #args=3) a + b mod m (integers)
+
+   mapdiff
+        (class=maps/arrays #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
+       With 2 or more, returns copy of arg 1 with all keys from any of remaining
+       argument maps removed.
+
+   mapexcept
+        (class=maps/arrays #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
+       Remaining arguments can be strings or arrays of string.
+       E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
+       and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
+
+   mapselect
+        (class=maps/arrays #args=variadic) Returns a map with only keys from remaining arguments set.
+       Remaining arguments can be strings or arrays of string.
+       E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
+       and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
+
+   mapsum
+        (class=maps/arrays #args=variadic) With 0 args, returns empty map. With &gt;= 1 arg, returns a map with
+       key-value pairs from all arguments. Rightmost collisions win, e.g.
+       'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
+
+   max
+        (class=math #args=variadic) Max of n numbers; null loses.
+
+   md5
+        (class=hashing #args=1) MD5 hash.
+
+   mexp
+        (class=arithmetic #args=3) a ** b mod m (integers)
+
+   min
+        (class=math #args=variadic) Min of n numbers; null loses.
+
+   mmul
+        (class=arithmetic #args=3) a * b mod m (integers)
+
+   msub
+        (class=arithmetic #args=3) a - b mod m (integers)
+
+   os
+        (class=system #args=0) Returns the operating-system name as a string.
+
+   pow
+        (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
+
+   qnorm
+        (class=math #args=1) Normal cumulative distribution function.
+
+   regextract
+        (class=string #args=2) Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
+
+   regextract_or_else
+        (class=string #args=3) Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
+
+   round
+        (class=math #args=1) Round to nearest integer.
+
+   roundm
+        (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is
+       the same as round($x/$m)*$m.
+
+   rstrip
+        (class=string #args=1) Strip trailing whitespace from string.
 
    sec2dhms
-       (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
-       = "5d18h53m20s"
+        (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
 
    sec2gmt
-       (class=time #args=1): Formats seconds since epoch (integer part)
+        (class=time #args=1,2) Formats seconds since epoch (integer part)
        as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-       Leaves non-numbers as-is.
-
-       sec2gmt (class=time #args=2): Formats seconds since epoch as GMT timestamp with n
-       decimal places for seconds, e.g. sec2gmt(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
-       Leaves non-numbers as-is.
+       Leaves non-numbers as-is. With second integer argument n, includes n decimal places
+       for the seconds part
 
    sec2gmtdate
-       (class=time #args=1): Formats seconds since epoch (integer part)
+        (class=time #args=1) Formats seconds since epoch (integer part)
        as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
        Leaves non-numbers as-is.
 
-   sec2localtime
-       (class=time #args=1): Formats seconds since epoch (integer part)
-       as local timestamp, e.g. sec2localtime(1440768801.7) = "2015-08-28T13:33:21Z".
-       Consults $TZ environment variable. Leaves non-numbers as-is.
-
-       sec2localtime (class=time #args=2): Formats seconds since epoch as local timestamp with n
-       decimal places for seconds, e.g. sec2localtime(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
-       Consults $TZ environment variable. Leaves non-numbers as-is.
-
-   sec2localdate
-       (class=time #args=1): Formats seconds since epoch (integer part)
-       as local timestamp with year-month-date, e.g. sec2localdate(1440768801.7) = "2015-08-28".
-       Consults $TZ environment variable. Leaves non-numbers as-is.
-
    sec2hms
-       (class=time #args=1): Formats integer seconds as in
-       sec2hms(5000) = "01:23:20"
+        (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
 
-   strftime
-       (class=time #args=2): Formats seconds since the epoch as timestamp, e.g.
-       strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
-       strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
-       Format strings are as in the C library (please see "man strftime" on your system),
-       with the Miller-specific addition of "%1S" through "%9S" which format the seconds
-       with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
-       See also strftime_local.
+   sgn
+        (class=math #args=1)  +1, 0, -1 for positive, zero, negative input respectively.
 
-   strftime_local
-       (class=time #args=2): Like strftime but consults the $TZ environment variable to get local time zone.
+   sha1
+        (class=hashing #args=1) SHA1 hash.
 
-   strptime
-       (class=time #args=2): Parses timestamp as floating-point seconds since the epoch,
-       e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
-       and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
-       See also strptime_local.
+   sha256
+        (class=hashing #args=1) SHA256 hash.
 
-   strptime_local
-       (class=time #args=2): Like strptime, but consults $TZ environment variable to find and use local timezone.
+   sha512
+        (class=hashing #args=1) SHA512 hash.
 
-   systime
-       (class=time #args=0): Floating-point seconds since the epoch,
-       e.g. 1440768801.748936.
+   sin
+        (class=math #args=1) Trigonometric sine.
 
-   is_absent
-       (class=typing #args=1): False if field is present in input, true otherwise
+   sinh
+        (class=math #args=1) Hyperbolic sine.
 
-   is_bool
-       (class=typing #args=1): True if field is present with boolean value. Synonymous with is_boolean.
+   splita
+        (class=conversion #args=2) Splits string into array with type inference. Example:
+       splita("3,4,5", ",") = [3,4,5]
 
-   is_boolean
-       (class=typing #args=1): True if field is present with boolean value. Synonymous with is_bool.
-
-   is_empty
-       (class=typing #args=1): True if field is present in input with empty string value, false otherwise.
-
-   is_empty_map
-       (class=typing #args=1): True if argument is a map which is empty.
-
-   is_float
-       (class=typing #args=1): True if field is present with value inferred to be float
-
-   is_int
-       (class=typing #args=1): True if field is present with value inferred to be int
-
-   is_map
-       (class=typing #args=1): True if argument is a map.
-
-   is_nonempty_map
-       (class=typing #args=1): True if argument is a map which is non-empty.
-
-   is_not_empty
-       (class=typing #args=1): False if field is present in input with empty value, true otherwise
-
-   is_not_map
-       (class=typing #args=1): True if argument is not a map.
-
-   is_not_null
-       (class=typing #args=1): False if argument is null (empty or absent), true otherwise.
-
-   is_null
-       (class=typing #args=1): True if argument is null (empty or absent), false otherwise.
-
-   is_numeric
-       (class=typing #args=1): True if field is present with value inferred to be int or float
-
-   is_present
-       (class=typing #args=1): True if field is present in input, false otherwise.
-
-   is_string
-       (class=typing #args=1): True if field is present with string (including empty-string) value
-
-   asserting_absent
-       (class=typing #args=1): Returns argument if it is absent in the input data, else
-       throws an error.
-
-   asserting_bool
-       (class=typing #args=1): Returns argument if it is present with boolean value, else
-       throws an error.
-
-   asserting_boolean
-       (class=typing #args=1): Returns argument if it is present with boolean value, else
-       throws an error.
-
-   asserting_empty
-       (class=typing #args=1): Returns argument if it is present in input with empty value,
-       else throws an error.
-
-   asserting_empty_map
-       (class=typing #args=1): Returns argument if it is a map with empty value, else
-       throws an error.
-
-   asserting_float
-       (class=typing #args=1): Returns argument if it is present with float value, else
-       throws an error.
-
-   asserting_int
-       (class=typing #args=1): Returns argument if it is present with int value, else
-       throws an error.
-
-   asserting_map
-       (class=typing #args=1): Returns argument if it is a map, else throws an error.
-
-   asserting_nonempty_map
-       (class=typing #args=1): Returns argument if it is a non-empty map, else throws
-       an error.
-
-   asserting_not_empty
-       (class=typing #args=1): Returns argument if it is present in input with non-empty
-       value, else throws an error.
-
-   asserting_not_map
-       (class=typing #args=1): Returns argument if it is not a map, else throws an error.
-
-   asserting_not_null
-       (class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent),
-       else throws an error.
-
-   asserting_null
-       (class=typing #args=1): Returns argument if it is null (empty or absent), else throws
-       an error.
-
-   asserting_numeric
-       (class=typing #args=1): Returns argument if it is present with int or float value,
-       else throws an error.
-
-   asserting_present
-       (class=typing #args=1): Returns argument if it is present in input, else throws
-       an error.
-
-   asserting_string
-       (class=typing #args=1): Returns argument if it is present with string (including
-       empty-string) value, else throws an error.
-
-   boolean
-       (class=conversion #args=1): Convert int/float/bool/string to boolean.
-
-   float
-       (class=conversion #args=1): Convert int/float/bool/string to float.
-
-   fmtnum
-       (class=conversion #args=2): Convert int/float/bool to string using
-       printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'. WARNING: Miller numbers
-       are all long long or double. If you use formats like %d or %f, behavior is undefined.
-
-   hexfmt
-       (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
-
-   int
-       (class=conversion #args=1): Convert int/float/bool/string to int.
-
-   string
-       (class=conversion #args=1): Convert int/float/bool/string to string.
-
-   typeof
-       (class=conversion #args=1): Convert argument to type of argument (e.g.
-       MT_STRING). For debug.
-
-   depth
-       (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
-
-   haskey
-       (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
-       'haskey(mymap, mykey)'. Error if 1st argument is not a map.
-
-   joink
-       (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
-
-   joinkv
-       (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'
-
-   joinv
-       (class=maps #args=2): Makes string from map values. E.g. 'joinv(mymap, ",")'.
-
-   leafcount
-       (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps,
-       same as length.
-
-   length
-       (class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
-
-   mapdiff
-       (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg.
-       With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
-
-   mapexcept
-       (class=maps variadic): Returns a map with keys from remaining arguments, if any, unset.
-       E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
-
-   mapselect
-       (class=maps variadic): Returns a map with only keys from remaining arguments set.
-       E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
-
-   mapsum
-       (class=maps variadic): With 0 args, returns empty map. With &gt;= 1 arg, returns a map with
-       key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
+   splitax
+        (class=conversion #args=2) Splits string into array without type inference. Example:
+       splita("3,4,5", ",") = ["3","4","5"]
 
    splitkv
-       (class=maps #args=3): Splits string by separators into map with type inference.
-       E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
+        (class=conversion #args=3) Splits string by separators into map with type inference. Example:
+       splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 
    splitkvx
-       (class=maps #args=3): Splits string by separators into map without type inference (keys and
-       values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives
-       '{"a" : "1", "b" : "2", "c" : "3"}'.
+        (class=conversion #args=3) Splits string by separators into map without type inference (keys and
+       values are strings). Example:
+       splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 
    splitnv
-       (class=maps #args=2): Splits string by separator into integer-indexed map with type inference.
-       E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
+        (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example:
+       splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 
    splitnvx
-       (class=maps #args=2): Splits string by separator into integer-indexed map without type
-       inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
+        (class=conversion #args=2) Splits string by separator into integer-indexed map without type
+       inference (values are strings). Example:
+       splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
+
+   sqrt
+        (class=math #args=1) Square root.
+
+   ssub
+        (class=string #args=3) Like sub but does no regexing. No characters are special.
+
+   strftime
+        (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.
+            strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
+            strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
+            Format strings are as in the C library (please see "man strftime" on your system),
+            with the Miller-specific addition of "%1S" through "%9S" which format the seconds
+            with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
+            See also strftime_local.
+
+   string
+        (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
+
+   strip
+        (class=string #args=1) Strip leading and trailing whitespace from string.
+
+   strlen
+        (class=string #args=1) String length.
+
+   strptime
+        (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch,
+            e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
+            and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
+            See also strptime_local.
+
+   sub
+        (class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace once).
+
+   substr
+        (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
+       with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
+       Arrays are new in Miller 6; the substr function is older.
+
+   substr0
+        (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
+       inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
+
+   substr1
+        (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
+       inclusive. Negative indices -len .. -1 alias to 1 .. len.
+
+   system
+        (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
+
+   systime
+        (class=time #args=0) help string will go here
+
+   systimeint
+        (class=time #args=0) help string will go here
+
+   tan
+        (class=math #args=1) Trigonometric tangent.
+
+   tanh
+        (class=math #args=1) Hyperbolic tangent.
+
+   tolower
+        (class=string #args=1) Convert string to lowercase.
+
+   toupper
+        (class=string #args=1) Convert string to uppercase.
+
+   truncate
+        (class=string #args=2) Truncates string first argument to max length of int second argument.
+
+   typeof
+        (class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
+
+   unflatten
+        (class=maps/arrays #args=2) Reverses flatten. Example:
+       unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
+       Useful for nested JSON-like structures for non-JSON file formats like CSV.
+       See also arrayify.
+
+   uptime
+        (class=time #args=0) help string will go here
+
+   urand
+        (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
+       Int-valued example: '$n=floor(20+urand()*11)'.
+
+   urand32
+        (class=math #args=0) Integer uniformly distributed 0 and 2**32-1 inclusive.
+
+   urandint
+        (class=math #args=2) Integer uniformly distributed between inclusive integer endpoints.
+
+   urandrange
+        (class=math #args=2) Floating-point numbers uniformly distributed on the interval [a, b).
+
+   version
+        (class=system #args=0) Returns the Miller version as a string.
+
+   !
+        (class=boolean #args=1) Logical negation.
+
+   !=
+        (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
+
+   !=~
+        (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
+
+   %
+        (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
+
+   &
+        (class=arithmetic #args=2) Bitwise AND.
+
+   &&
+        (class=boolean #args=2) Logical AND.
+
+   *
+        (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
+
+   **
+        (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
+
+   +
+        (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
+
+   -
+        (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
+
+   .
+        (class=string #args=2) String concatenation.
+
+   .*
+        (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
+
+   .+
+        (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
+
+   .-
+        (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
+
+   ./
+        (class=arithmetic #args=2) Integer division; not pythonic.
+
+   /
+        (class=arithmetic #args=2) Division. Integer / integer is floating-point.
+
+   //
+        (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
+
+   &lt;
+        (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
+
+   &lt;&lt;
+        (class=arithmetic #args=2) Bitwise left-shift.
+
+   &lt;=
+        (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
+
+   ==
+        (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
+
+   =~
+        (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
+
+   &gt;
+        (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
+
+   &gt;=
+        (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
+
+   &gt;&gt;
+        (class=arithmetic #args=2) Bitwise signed right-shift.
+
+   &gt;&gt;&gt;
+        (class=arithmetic #args=2) Bitwise unsigned right-shift.
+
+   ?:
+        (class=boolean #args=3) Standard ternary operator.
+
+   ??
+        (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
+
+   ???
+        (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
+
+   ^
+        (class=arithmetic #args=2) Bitwise XOR.
+
+   ^^
+        (class=boolean #args=2) Logical XOR.
+
+   |
+        (class=arithmetic #args=2) Bitwise OR.
+
+   ||
+        (class=boolean #args=2) Logical OR.
+
+   ~
+        (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
+       regex-match operator: try '$y = ~$x'.
 
 KEYWORDS FOR PUT AND FILTER
    all
@@ -2020,19 +2172,20 @@ KEYWORDS FOR PUT AND FILTER
    begin
        begin: defines a block of statements to be executed before input records
        are ingested. The body statements must be wrapped in curly braces.
-       Example: 'begin { @count = 0 }'
+
+         Example: 'begin { @count = 0 }'
 
    bool
        bool: declares a boolean local variable in the current curly-braced scope.
        Type-checking happens at assignment: 'bool b = 1' is an error.
 
    break
-       break: causes execution to continue after the body of the current
-       for/while/do-while loop.
+       break: causes execution to continue after the body of the current for/while/do-while loop.
 
    call
        call: used for invoking a user-defined subroutine.
-       Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
+
+         Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 
    continue
        continue: causes execution to skip the remaining statements in the body of
@@ -2044,28 +2197,28 @@ KEYWORDS FOR PUT AND FILTER
 
    dump
        dump: prints all currently defined out-of-stream variables immediately
-	 to stdout as JSON.
+       to stdout as JSON.
 
-	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-	 are instead redirected.
+       With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+       are instead redirected.
 
-	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
-	 a process which will process the data. There will be one open file for each
-	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-	 value of the piped-to command (for |). Output-formatting flags are taken from
-	 the main command line.
+       The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+       file-overwrite for &gt; is on first write, not per record. The | is for piping to
+       a process which will process the data. There will be one open file for each
+       distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+       value of the piped-to command (for |). Output-formatting flags are taken from
+       the main command line.
 
-	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
-	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;  "mytap.dat"}'
-	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;&gt; "mytap.dat"}'
-	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
+         Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
+         Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;  "mytap.dat"}'
+         Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;&gt; "mytap.dat"}'
+         Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
 
    edump
        edump: prints all currently defined out-of-stream variables immediately
-	 to stderr as JSON.
+       to stderr as JSON.
 
-	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
+         Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
 
    elif
        elif: the way Miller spells "else if". The body statements must be wrapped
@@ -2077,108 +2230,111 @@ KEYWORDS FOR PUT AND FILTER
 
    emit
        emit: inserts an out-of-stream variable into the output record stream. Hashmap
-	 indices present in the data but not slotted by emit arguments are not output.
+       indices present in the data but not slotted by emit arguments are not output.
 
-	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-	 are instead redirected.
+       With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+       are instead redirected.
 
-	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
-	 a process which will process the data. There will be one open file for each
-	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-	 value of the piped-to command (for |). Output-formatting flags are taken from
-	 the main command line.
+       The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+       file-overwrite for &gt; is on first write, not per record. The | is for piping to
+       a process which will process the data. There will be one open file for each
+       distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+       value of the piped-to command (for |). Output-formatting flags are taken from
+       the main command line.
 
-	 You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-	 etc., to control the format of the output if the output is redirected. See also mlr -h.
+       You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+       etc., to control the format of the output if the output is redirected. See also mlr -h.
 
-	 Example: mlr --from f.dat put 'emit &gt;	"/tmp/data-".$a, $*'
-	 Example: mlr --from f.dat put 'emit &gt;	"/tmp/data-".$a, mapexcept($*, "a")'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
-	 Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit &gt; "tap-".$a.$b.".dat", @sums'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;  "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;&gt; "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt; stderr, @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
+         Example: mlr --from f.dat put 'emit &gt;  "/tmp/data-".$a, $*'
+         Example: mlr --from f.dat put 'emit &gt;  "/tmp/data-".$a, mapexcept($*, "a")'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
+         Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit &gt; "tap-".$a.$b.".dat", @sums'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;  "mytap.dat", @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt; stderr, @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
 
-	 Please see http://johnkerl.org/miller/doc for more information.
+       Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
 
    emitf
        emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
-	 output record stream.
+       output record stream.
 
-	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-	 are instead redirected.
+       With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+       are instead redirected.
 
-	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
-	 a process which will process the data. There will be one open file for each
-	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-	 value of the piped-to command (for |). Output-formatting flags are taken from
-	 the main command line.
+       The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+       file-overwrite for &gt; is on first write, not per record. The | is for piping to
+       a process which will process the data. There will be one open file for each
+       distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+       value of the piped-to command (for |). Output-formatting flags are taken from
+       the main command line.
 
-	 You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-	 etc., to control the format of the output if the output is redirected. See also mlr -h.
+       You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+       etc., to control the format of the output if the output is redirected. See also mlr -h.
 
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
-	 Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf &gt; "tap-".$i.".dat", @a'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; "mytap.dat", @a, @b, @c'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt;&gt; "mytap.dat", @a, @b, @c'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; stderr, @a, @b, @c'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
-	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern &gt; mytap.dat", @a, @b, @c'
+         Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
+         Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf &gt; "tap-".$i.".dat", @a'
+         Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
+         Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; "mytap.dat", @a, @b, @c'
+         Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt;&gt; "mytap.dat", @a, @b, @c'
+         Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; stderr, @a, @b, @c'
+         Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
+         Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern &gt; mytap.dat", @a, @b, @c'
 
-	 Please see http://johnkerl.org/miller/doc for more information.
+       Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
 
    emitp
        emitp: inserts an out-of-stream variable into the output record stream.
-	 Hashmap indices present in the data but not slotted by emitp arguments are
-	 output concatenated with ":".
+       Hashmap indices present in the data but not slotted by emitp arguments are
+       output concatenated with ":".
 
-	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-	 are instead redirected.
+       With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+       are instead redirected.
 
-	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
-	 a process which will process the data. There will be one open file for each
-	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-	 value of the piped-to command (for |). Output-formatting flags are taken from
-	 the main command line.
+       The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+       file-overwrite for &gt; is on first write, not per record. The | is for piping to
+       a process which will process the data. There will be one open file for each
+       distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+       value of the piped-to command (for |). Output-formatting flags are taken from
+       the main command line.
 
-	 You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-	 etc., to control the format of the output if the output is redirected. See also mlr -h.
+       You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+       etc., to control the format of the output if the output is redirected. See also mlr -h.
 
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
-	 Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp &gt; "tap-".$a.$b.".dat", @sums'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;  "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;&gt; "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt; stderr, @*, "index1", "index2"'
-	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
+         Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp &gt; "tap-".$a.$b.".dat", @sums'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;  "mytap.dat", @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt; stderr, @*, "index1", "index2"'
+         Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
 
-	 Please see http://johnkerl.org/miller/doc for more information.
+       Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
 
    end
        end: defines a block of statements to be executed after input records
        are ingested. The body statements must be wrapped in curly braces.
-       Example: 'end { emit @count }'
-       Example: 'end { eprint "Final count is " . @count }'
+
+         Example: 'end { emit @count }'
+         Example: 'end { eprint "Final count is " . @count }'
 
    eprint
        eprint: prints expression immediately to stderr.
-	 Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
-	 Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " =&gt; " . v }'
-	 Example: mlr --from f.dat put	'(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
+
+         Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
+         Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " =&gt; " . v }'
+         Example: mlr --from f.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 
    eprintn
        eprintn: prints expression immediately to stderr, without trailing newline.
-	 Example: mlr --from f.dat put -q 'eprintn "The sum of x and y is ".($x+$y); eprint ""'
+
+         Example: mlr --from f.dat put -q 'eprintn "The sum of x and y is ".($x+$y); eprint ""'
 
    false
        false: the boolean literal value.
@@ -2186,13 +2342,13 @@ KEYWORDS FOR PUT AND FILTER
    filter
        filter: includes/excludes the record in the output record stream.
 
-	 Example: mlr --from f.dat put 'filter (NR == 2 || $x &gt; 5.4)'
+         Example: mlr --from f.dat put 'filter (NR == 2 || $x &gt; 5.4)'
 
-	 Instead of put with 'filter false' you can simply use put -q.	The following
-	 uses the input record to accumulate data but only prints the running sum
-	 without printing the input record:
+       Instead of put with 'filter false' you can simply use put -q.  The following
+       uses the input record to accumulate data but only prints the running sum
+       without printing the input record:
 
-	 Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
+         Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
 
    float
        float: declares a floating-point local variable in the current curly-braced scope.
@@ -2202,17 +2358,23 @@ KEYWORDS FOR PUT AND FILTER
        for: defines a for-loop using one of three styles. The body statements must
        be wrapped in curly braces.
        For-loop over stream record:
-	 Example:  'for (k, v in $*) { ... }'
+
+         Example:  'for (k, v in $*) { ... }'
+
        For-loop over out-of-stream variables:
-	 Example: 'for (k, v in @counts) { ... }'
-	 Example: 'for ((k1, k2), v in @counts) { ... }'
-	 Example: 'for ((k1, k2, k3), v in @*) { ... }'
+
+         Example: 'for (k, v in @counts) { ... }'
+         Example: 'for ((k1, k2), v in @counts) { ... }'
+         Example: 'for ((k1, k2, k3), v in @*) { ... }'
+
        C-style for-loop:
-	 Example:  'for (var i = 0, var b = 1; i &lt; 10; i += 1, b *= 2) { ... }'
+
+         Example:  'for (var i = 0, var b = 1; i &lt; 10; i += 1, b *= 2) { ... }'
 
    func
        func: used for defining a user-defined function.
-       Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
+
+         Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
 
    if
        if: starts an if/elif/elif chain. The body statements must be wrapped
@@ -2236,13 +2398,15 @@ KEYWORDS FOR PUT AND FILTER
 
    print
        print: prints expression immediately to stdout.
-	 Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
-	 Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " =&gt; " . v }'
-	 Example: mlr --from f.dat put	'(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
+
+         Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
+         Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " =&gt; " . v }'
+         Example: mlr --from f.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
 
    printn
        printn: prints expression immediately to stdout, without trailing newline.
-	 Example: mlr --from f.dat put -q 'printn "."; end { print "" }'
+
+         Example: mlr --from f.dat put -q 'printn "."; end { print "" }'
 
    return
        return: specifies the return value from a user-defined function.
@@ -2251,11 +2415,11 @@ KEYWORDS FOR PUT AND FILTER
 
    stderr
        stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
-	 to print to standard error.
+       to print to standard error.
 
    stdout
        stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
-	 to print to standard output.
+       to print to standard output.
 
    str
        str: declares a string local variable in the current curly-braced scope.
@@ -2263,33 +2427,34 @@ KEYWORDS FOR PUT AND FILTER
 
    subr
        subr: used for defining a subroutine.
-       Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
+
+         Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 
    tee
        tee: prints the current record to specified file.
-	 This is an immediate print to the specified file (except for pprint format
-	 which of course waits until the end of the input stream to format all output).
+       This is an immediate print to the specified file (except for pprint format
+       which of course waits until the end of the input stream to format all output).
 
-	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
-	 a process which will process the data. There will be one open file for each
-	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-	 value of the piped-to command (for |). Output-formatting flags are taken from
-	 the main command line.
+       The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+       file-overwrite for &gt; is on first write, not per record. The | is for piping to
+       a process which will process the data. There will be one open file for each
+       distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+       value of the piped-to command (for |). Output-formatting flags are taken from
+       the main command line.
 
-	 You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-	 etc., to control the format of the output. See also mlr -h.
+       You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+       etc., to control the format of the output. See also mlr -h.
 
-	 emit with redirect and tee with redirect are identical, except tee can only
-	 output $*.
+       emit with redirect and tee with redirect are identical, except tee can only
+       output $*.
 
-	 Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
-	 Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
-	 Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
-	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
-	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] &gt; /tmp/data-".$a, $*'
-	 Example: mlr --from f.dat put -q 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
-	 Example: mlr --from f.dat put -q --ojson 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
+         Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
+         Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
+         Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
+         Example: mlr --from f.dat put -q 'tee | "tr \[a-z\\] \[A-Z\\]", $*'
+         Example: mlr --from f.dat put -q 'tee | "tr \[a-z\\] \[A-Z\\] &gt; /tmp/data-".$a, $*'
+         Example: mlr --from f.dat put -q 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
+         Example: mlr --from f.dat put -q --ojson 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
 
    true
        true: the boolean literal value.
@@ -2297,16 +2462,17 @@ KEYWORDS FOR PUT AND FILTER
    unset
        unset: clears field(s) from the current record, or an out-of-stream or local variable.
 
-	 Example: mlr --from f.dat put 'unset $x'
-	 Example: mlr --from f.dat put 'unset $*'
-	 Example: mlr --from f.dat put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
-	 Example: mlr --from f.dat put '...; unset @sums'
-	 Example: mlr --from f.dat put '...; unset @sums["green"]'
-	 Example: mlr --from f.dat put '...; unset @*'
+         Example: mlr --from f.dat put 'unset $x'
+         Example: mlr --from f.dat put 'unset $*'
+         Example: mlr --from f.dat put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
+         Example: mlr --from f.dat put '...; unset @sums'
+         Example: mlr --from f.dat put '...; unset @sums["green"]'
+         Example: mlr --from f.dat put '...; unset @*'
 
    var
        var: declares an untyped local variable in the current curly-braced scope.
-       Examples: 'var a=1', 'var xyz=""'
+
+         Examples: 'var a=1', 'var xyz=""'
 
    while
        while: introduces a while loop, or with "do", introduces a do-while loop.
@@ -2369,10 +2535,10 @@ AUTHOR
 
 SEE ALSO
        awk(1), sed(1), cut(1), join(1), sort(1), RFC 4180: Common Format and
-       MIME Type for Comma-Separated Values (CSV) Files, the miller website
-       http://johnkerl.org/miller/doc
+       MIME Type for Comma-Separated Values (CSV) Files, the Miller docsite
+       https://miller.readthedocs.io
 
 
 
-				  2021-03-22			     MILLER(1)
+                                  2021-08-26                         MILLER(1)
 </pre>

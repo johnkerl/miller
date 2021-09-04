@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # File formats
 
 Miller handles name-indexed data using several formats: some you probably know by name, such as CSV, TSV, and JSON -- and other formats you're likely already seeing and using in your structured data.
@@ -111,7 +124,7 @@ Here are things they have in common:
 ## JSON
 
 JSON is a format which supports scalars (numbers, strings, boolean, etc.) as
-well as "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for
+well as "objects" (maps) and "arrays" (lists), while Miller is a tool for
 handling **tabular data** only.  By *tabular JSON* I mean the data is either a
 sequence of one or more objects, or an array consisting of one or more objects.
 Miller treats JSON objects as name-indexed records.

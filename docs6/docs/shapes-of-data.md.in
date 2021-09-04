@@ -256,3 +256,7 @@ mlr --from data/rect.txt put -q '
     emit @r
   }'
 GENMD_EOF
+
+See also the [record-heterogeneity page](record-heterogeneity.md); see in
+particular the [`regularize` verb](reference-verbs.md#regularize) for a way to
+do this with much less keystroking.

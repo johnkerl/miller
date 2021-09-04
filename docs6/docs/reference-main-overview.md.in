@@ -27,6 +27,10 @@ GENMD_EOF
 
 The rest of this reference section gives you full information on each of these parts of the command line.
 
+See also the [Glossary](glossary.md) for more about terms such as
+[record](glossary.md#record), [field](glossary.md#field),
+[key](glossary.md#value), [streaming](glossary.md#streaming), and more.
+
 ## Verbs vs DSL
 
 When you type `mlr {something} myfile.dat`, the `{something}` part is called a **verb**. It specifies how you want to transform your data. Most of the verbs are counterparts of built-in system tools like `cut` and `sort` -- but with file-format awareness, and giving you the ability to refer to fields by name.

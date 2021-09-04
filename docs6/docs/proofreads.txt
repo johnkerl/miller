@@ -1,36 +1,71 @@
 ----------------------------------------------------------------
+! merge 3 new 4 !
+
 ALL:
 * csv to csv,tsv throughout
 * rid of explicitly passing around os.Stdout in all various help functions, annoying
 * het.dkvp > het.json in more places
 * check each page for adequate h2 coverage
-* hash-map / hashmap -> map everywhere
+
+* deduping pass!
+* 1-up/0-up -> one-up/zero-up everywhere
+
+* flags-doc
+  C refactor cli-parser w/ LUT & help strings
+  C refector mlr help w/ mlr help flags
+  c reorg manpage a bit
+* top-of-page jargon-check for each one
+? i would LOVE to have small prev-page/next-page links at the *top* not bottom ...
+  https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
 
 ----------------------------------------------------------------
+c! repifs !!
+c! seps \001 etc !
+C flags LUTs
+? twi-dm re all-contribs: all-contributors.org
+
+e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
+
 E fill out flatten/unflatten page
-E fill out memory/streaming page
-  - rename maybe? add note on threading and how it scales on multicore arches
-  - GOMNAXPROCS
 E fill out data-types page
 E fill out arrays page
+  - xref to fla/unfla page
+  - slices including semantics for out-of-range slices
 E fill out maps page
+  - xref to fla/unfla page
+  - move from reference-dsl-variables
+E make flags page
+  C show-all-flags help -- fully alpha, or alpha-by-type; LUT refactor
 
 c GOMAXPROCS -- up it? separate page maybe -- ?
   - note one goroutine for in, out, & each verb
   - check and respect env-var
+  - add note on threading and how it scales on multicore arches
+
+* functions: somewhere organize by type. olh/man6/docs6 ...
+
+* regex: more about what is / is not
+  https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
+
+* shorter version for --headerless-csv-output, & doc everywhere
+
+c? mlr -S / -F outside of put/filter -- ?
 
 e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
-? somewhere, do-it-all sequencing:
-  o go build
-  o go test
-  o make in man6
-  o regen.sh in docs6
-
-? why are purple.csv.cg red.csv.gz yellow.csv.gz changing on regens?
 ----------------------------------------------------------------
 
 record-heterogeneity:
 ? current csv-reader code handles this? i think not. check csvlite-reader too.
+? --allow-ragged-csv-input: link to new flags page once it's written
+l link-to's:
+  shapes-of-data.md: instead, use the following
+  csv-with-and-without-headers.md.in:## Regularizing ragged CSV
+  misc-examples.md.in:Then, join on the key field(s), and use unsparsify to zero-fill counters
+  questions-about-joins.md.in:To fix this, we can use **unsparsify**:
+  two-pass-algorithms.md.in:There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify)
+  programming-language.md.in:easy for you to handle non-heterogeneous data
+  two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
+? back out of ref section -- ?
 
 csv-with-and-without-headers:
 ? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
@@ -38,9 +73,6 @@ csv-with-and-without-headers:
 ? ag -> just grep ?
 l Miller handles compliant CSV: include rfc4180 link
 ? Regularizing ragged CSV: use regularize verb?!?
-
-shapes-of-data:
-E Rectangularizing data: cf regularize verb, & other page?
 
 special-symbols-and-formatting:
 ? mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
@@ -55,15 +87,12 @@ dates-and-times:
 shell-commands:
 e while-read example from issues
 
-data-cleaning-examples:
-? mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv -- do false/true autotype -- ?
-
 statistics-examples:
 C 2nd card no output b/c stats1 --fr
 
 two-pass-algorithms:
 l link to "new" verbs x everywhere possible
-l Of course, Miller verbs such as sort, tac, etc. all must ... -> linkify to new memory/streaming page
+e section-renames for consistency
 x this (or wherever ...) maybe get rid of some of the too-many examples. pick some survivors; x the rest.
 
 reference-verbs:
@@ -80,12 +109,16 @@ E true/false -> add info about NaN and Inf et al.
   - ditto programming-language.md.in
 c UTs for r"a" . r"b" and so on and so on
 
+reference-dsl-variables.md:
+? IFLATSEP & OFLATSEP -- ?
+
 reference-main-null-data:
 ? more variants of is_... ?
 ? Records with one or more empty sort-field values sort after records with all sort-field values present -> apparently not true for sort -nr
+e split out h2's
+! spell out JSON-null
 
 reference-main-arithmetic:
-? remove references to put/filter -F -- note stats1 keeps -F so maybe we should here as well -- ? or nah?
 ? test stats1/step -F flag
 ? The following, however, produce integer output if their inputs are integers: + - * / // % abs ceil floor max min round roundm sgn. As well, stats1 -a min, stats1 -a max, stats1 -a sum, step -a delta, and step -a rsum produce integer output if their inputs are integers. -> test all
 
@@ -101,6 +134,7 @@ l Since uninitialized out-of-stream variables default to 0 for addition/substrac
 
 reference-dsl-user-defined-functions:
 E User-defined subroutines -> non-factorial example -- maybe some useful aggregator
+l link to --load and --mload
 
 reference-dsl-builtin-functions:
 c mlr: option "--list-all-functions-as-table" not recognized. Please run "mlr --help" for usage information -> fix
@@ -119,5 +153,21 @@ E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (d
   o 2 examples not 3?
   o why not '--oflatsep /' respected?
 
+diffs other langs:
+e slice incl/excl; split-in-half
+e localvars in if/else
+e elif
+
+glossary:
+! after it's done, link-check *all* ........ :^/
+
+separators:
+E write up which file formats support which flags
+
 manpage:
 ? [NEEDS READ-THROUGH]
+
+install:
+* n.b. homebrew linux https://github.com/johnkerl/miller/issues/77#issuecomment-536611087
+
+mk-func-table.rb: port comments from sphinx to mkdocs

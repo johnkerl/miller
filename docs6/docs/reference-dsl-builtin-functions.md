@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DSL built-in functions
 
 ## Summary
@@ -11,263 +24,6 @@ Please run "mlr --help" for usage information.
 Each function takes a specific number of arguments, as shown below, except for functions marked as variadic such as `min` and `max`. (The latter compute min and max of any number of numerical arguments.) There is no notion of optional or default-on-absent arguments. All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
 
 You can get a list of all functions using **mlr -f**, with details using **mlr -F**.
-
-
-<a id=exclamation-point />
-## \!
-
-<pre class="pre-non-highlight-non-pair">
-!  (class=boolean #args=1) Logical negation.
-</pre>
-
-
-## !=
-
-<pre class="pre-non-highlight-non-pair">
-!=  (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
-</pre>
-
-
-<a id=regnotmatch />
-## !=~
-
-<pre class="pre-non-highlight-non-pair">
-!=~  (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
-</pre>
-
-
-## %
-
-<pre class="pre-non-highlight-non-pair">
-%  (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
-</pre>
-
-
-<a id=bitwise-and />
-## &
-
-<pre class="pre-non-highlight-non-pair">
-&  (class=arithmetic #args=2) Bitwise AND.
-</pre>
-
-
-<a id=logical-and />
-## &&
-
-<pre class="pre-non-highlight-non-pair">
-&&  (class=boolean #args=2) Logical AND.
-</pre>
-
-
-<a id=times />
-## \*
-
-<pre class="pre-non-highlight-non-pair">
-*  (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
-</pre>
-
-
-<a id=exponentiation />
-## \**
-
-<pre class="pre-non-highlight-non-pair">
-**  (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
-</pre>
-
-
-<a id=plus />
-## \+
-
-<pre class="pre-non-highlight-non-pair">
-+  (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
-</pre>
-
-
-<a id=minus />
-## \-
-
-<pre class="pre-non-highlight-non-pair">
--  (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
-</pre>
-
-
-## .
-
-<pre class="pre-non-highlight-non-pair">
-.  (class=string #args=2) String concatenation.
-</pre>
-
-
-## .*
-
-<pre class="pre-non-highlight-non-pair">
-.*  (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
-</pre>
-
-
-## .+
-
-<pre class="pre-non-highlight-non-pair">
-.+  (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
-</pre>
-
-
-## .-
-
-<pre class="pre-non-highlight-non-pair">
-.-  (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
-</pre>
-
-
-## ./
-
-<pre class="pre-non-highlight-non-pair">
-./  (class=arithmetic #args=2) Integer division; not pythonic.
-</pre>
-
-
-## /
-
-<pre class="pre-non-highlight-non-pair">
-/  (class=arithmetic #args=2) Division. Integer / integer is floating-point.
-</pre>
-
-
-## //
-
-<pre class="pre-non-highlight-non-pair">
-//  (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
-</pre>
-
-
-## <
-
-<pre class="pre-non-highlight-non-pair">
-<  (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
-</pre>
-
-
-## <<
-
-<pre class="pre-non-highlight-non-pair">
-<<  (class=arithmetic #args=2) Bitwise left-shift.
-</pre>
-
-
-## <=
-
-<pre class="pre-non-highlight-non-pair">
-<=  (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
-</pre>
-
-
-## ==
-
-<pre class="pre-non-highlight-non-pair">
-==  (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
-</pre>
-
-
-<a id=regmatch />
-## =~
-
-<pre class="pre-non-highlight-non-pair">
-=~  (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
-</pre>
-
-
-## >
-
-<pre class="pre-non-highlight-non-pair">
->  (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
-</pre>
-
-
-## >=
-
-<pre class="pre-non-highlight-non-pair">
->=  (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
-</pre>
-
-
-<a id=srsh />
-## \>\>
-
-<pre class="pre-non-highlight-non-pair">
->>  (class=arithmetic #args=2) Bitwise signed right-shift.
-</pre>
-
-
-<a id=ursh />
-## \>\>\>
-
-<pre class="pre-non-highlight-non-pair">
->>>  (class=arithmetic #args=2) Bitwise unsigned right-shift.
-</pre>
-
-
-<a id=question-mark-colon />
-## ?:
-
-<pre class="pre-non-highlight-non-pair">
-?:  (class=boolean #args=3) Standard ternary operator.
-</pre>
-
-
-<a id=absent-coalesce />
-## ??
-
-<pre class="pre-non-highlight-non-pair">
-??  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
-</pre>
-
-
-<a id=absent-empty-coalesce />
-## ???
-
-<pre class="pre-non-highlight-non-pair">
-???  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
-</pre>
-
-
-<a id=bitwise-xor />
-## ^
-
-<pre class="pre-non-highlight-non-pair">
-^  (class=arithmetic #args=2) Bitwise XOR.
-</pre>
-
-
-<a id=logical-xor />
-## ^^
-
-<pre class="pre-non-highlight-non-pair">
-^^  (class=boolean #args=2) Logical XOR.
-</pre>
-
-
-<a id=bitwise-or />
-## \|
-
-<pre class="pre-non-highlight-non-pair">
-|  (class=arithmetic #args=2) Bitwise OR.
-</pre>
-
-
-<a id=logical-or />
-## \|\|
-
-<pre class="pre-non-highlight-non-pair">
-||  (class=boolean #args=2) Logical OR.
-</pre>
-
-
-## ~
-
-<pre class="pre-non-highlight-non-pair">
-~  (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
-regex-match operator: try '$y = ~$x'.
-</pre>
 
 
 ## abs
@@ -1430,5 +1186,262 @@ urandrange  (class=math #args=2) Floating-point numbers uniformly distributed on
 
 <pre class="pre-non-highlight-non-pair">
 version  (class=system #args=0) Returns the Miller version as a string.
+</pre>
+
+
+<a id=exclamation-point />
+## \!
+
+<pre class="pre-non-highlight-non-pair">
+!  (class=boolean #args=1) Logical negation.
+</pre>
+
+
+## !=
+
+<pre class="pre-non-highlight-non-pair">
+!=  (class=boolean #args=2) String/numeric inequality. Mixing number and string results in string compare.
+</pre>
+
+
+<a id=regnotmatch />
+## !=~
+
+<pre class="pre-non-highlight-non-pair">
+!=~  (class=boolean #args=2) String (left-hand side) does not match regex (right-hand side), e.g. '$name !=~ "^a.*b$"'.
+</pre>
+
+
+## %
+
+<pre class="pre-non-highlight-non-pair">
+%  (class=arithmetic #args=2) Remainder; never negative-valued (pythonic).
+</pre>
+
+
+<a id=bitwise-and />
+## &
+
+<pre class="pre-non-highlight-non-pair">
+&  (class=arithmetic #args=2) Bitwise AND.
+</pre>
+
+
+<a id=logical-and />
+## &&
+
+<pre class="pre-non-highlight-non-pair">
+&&  (class=boolean #args=2) Logical AND.
+</pre>
+
+
+<a id=times />
+## \*
+
+<pre class="pre-non-highlight-non-pair">
+*  (class=arithmetic #args=2) Multiplication, with integer*integer overflow to float.
+</pre>
+
+
+<a id=exponentiation />
+## \**
+
+<pre class="pre-non-highlight-non-pair">
+**  (class=arithmetic #args=2) Exponentiation. Same as pow, but as an infix operator.
+</pre>
+
+
+<a id=plus />
+## \+
+
+<pre class="pre-non-highlight-non-pair">
++  (class=arithmetic #args=1,2) Addition as binary operator; unary plus operator.
+</pre>
+
+
+<a id=minus />
+## \-
+
+<pre class="pre-non-highlight-non-pair">
+-  (class=arithmetic #args=1,2) Subtraction as binary operator; unary negation operator.
+</pre>
+
+
+## .
+
+<pre class="pre-non-highlight-non-pair">
+.  (class=string #args=2) String concatenation.
+</pre>
+
+
+## .*
+
+<pre class="pre-non-highlight-non-pair">
+.*  (class=arithmetic #args=2) Multiplication, with integer-to-integer overflow.
+</pre>
+
+
+## .+
+
+<pre class="pre-non-highlight-non-pair">
+.+  (class=arithmetic #args=2) Addition, with integer-to-integer overflow.
+</pre>
+
+
+## .-
+
+<pre class="pre-non-highlight-non-pair">
+.-  (class=arithmetic #args=2) Subtraction, with integer-to-integer overflow.
+</pre>
+
+
+## ./
+
+<pre class="pre-non-highlight-non-pair">
+./  (class=arithmetic #args=2) Integer division; not pythonic.
+</pre>
+
+
+## /
+
+<pre class="pre-non-highlight-non-pair">
+/  (class=arithmetic #args=2) Division. Integer / integer is floating-point.
+</pre>
+
+
+## //
+
+<pre class="pre-non-highlight-non-pair">
+//  (class=arithmetic #args=2) Pythonic integer division, rounding toward negative.
+</pre>
+
+
+## <
+
+<pre class="pre-non-highlight-non-pair">
+<  (class=boolean #args=2) String/numeric less-than. Mixing number and string results in string compare.
+</pre>
+
+
+## <<
+
+<pre class="pre-non-highlight-non-pair">
+<<  (class=arithmetic #args=2) Bitwise left-shift.
+</pre>
+
+
+## <=
+
+<pre class="pre-non-highlight-non-pair">
+<=  (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
+</pre>
+
+
+## ==
+
+<pre class="pre-non-highlight-non-pair">
+==  (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.
+</pre>
+
+
+<a id=regmatch />
+## =~
+
+<pre class="pre-non-highlight-non-pair">
+=~  (class=boolean #args=2) String (left-hand side) matches regex (right-hand side), e.g. '$name =~ "^a.*b$"'.
+</pre>
+
+
+## >
+
+<pre class="pre-non-highlight-non-pair">
+>  (class=boolean #args=2) String/numeric greater-than. Mixing number and string results in string compare.
+</pre>
+
+
+## >=
+
+<pre class="pre-non-highlight-non-pair">
+>=  (class=boolean #args=2) String/numeric greater-than-or-equals. Mixing number and string results in string compare.
+</pre>
+
+
+<a id=srsh />
+## \>\>
+
+<pre class="pre-non-highlight-non-pair">
+>>  (class=arithmetic #args=2) Bitwise signed right-shift.
+</pre>
+
+
+<a id=ursh />
+## \>\>\>
+
+<pre class="pre-non-highlight-non-pair">
+>>>  (class=arithmetic #args=2) Bitwise unsigned right-shift.
+</pre>
+
+
+<a id=question-mark-colon />
+## ?:
+
+<pre class="pre-non-highlight-non-pair">
+?:  (class=boolean #args=3) Standard ternary operator.
+</pre>
+
+
+<a id=absent-coalesce />
+## ??
+
+<pre class="pre-non-highlight-non-pair">
+??  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record.
+</pre>
+
+
+<a id=absent-empty-coalesce />
+## ???
+
+<pre class="pre-non-highlight-non-pair">
+???  (class=boolean #args=2) Absent-coalesce operator. $a ?? 1 evaluates to 1 if $a isn't defined in the current record, or has empty value.
+</pre>
+
+
+<a id=bitwise-xor />
+## ^
+
+<pre class="pre-non-highlight-non-pair">
+^  (class=arithmetic #args=2) Bitwise XOR.
+</pre>
+
+
+<a id=logical-xor />
+## ^^
+
+<pre class="pre-non-highlight-non-pair">
+^^  (class=boolean #args=2) Logical XOR.
+</pre>
+
+
+<a id=bitwise-or />
+## \|
+
+<pre class="pre-non-highlight-non-pair">
+|  (class=arithmetic #args=2) Bitwise OR.
+</pre>
+
+
+<a id=logical-or />
+## \|\|
+
+<pre class="pre-non-highlight-non-pair">
+||  (class=boolean #args=2) Logical OR.
+</pre>
+
+
+## ~
+
+<pre class="pre-non-highlight-non-pair">
+~  (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
+regex-match operator: try '$y = ~$x'.
 </pre>
 

@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DSL user-defined functions
 
 As of Miller 5.0.0 you can define your own functions, as well as subroutines.
@@ -103,3 +116,11 @@ Properties of user-defined subroutines:
 * See the section on [local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
 
 * See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.
+
+# Differences between functions and subroutines
+
+Subroutines cannot return values, and they are invoked by the keyword `call`.
+
+In hindsight, subroutines needn't have been invented. If `foo` is a function
+then you can write `foo(1,2,3)` while ignoring its return value, and that plays
+the role of subroutine quite well.

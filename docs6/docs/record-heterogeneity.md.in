@@ -1,14 +1,191 @@
 # Record-heterogeneity
 
-We think of CSV tables as rectangular: if there are 17 columns in the header then there are 17 columns for every row, else the data have a formatting error.
+We think of CSV tables as rectangular: if there are 17 columns in the header
+then there are 17 columns for every row, else the data have a formatting error.
 
-But heterogeneous data abound (today's no-SQL databases for example). Miller handles this.
+But heterogeneous data abound -- log-file entries, JSON documents, no-SQL
+databases such as MongoDB, etc. -- not to mention **data-cleaning
+opportunities** we'll look at in this page. Miller offers several ways to
+handle data heterogeneity.
 
-## For I/O
+## Terminology, examples, and solutions
 
-### CSV and pretty-print
+Different kinds of heterogeneous data include _ragged_, _irregular_, and _sparse_.
 
-Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get CSV per se as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite is that the former is RFC4180-compliant, while the latter readily handles heterogeneous data (which is non-compliant). For example:
+### Homogeneous/rectangular data
+
+A **homogeneous** list of records is one in which all records have _the same keys, in the same order_.
+For example, here is a well-formed [CSV file](file-formats.md#csvtsvasvusvetc):
+
+GENMD_RUN_COMMAND
+mlr --csv cat data/het/hom.csv
+GENMD_EOF
+
+It has three records (written here using JSON formatting):
+
+GENMD_RUN_COMMAND
+mlr --icsv --ojson --no-jvstack cat data/het/hom.csv
+GENMD_EOF
+
+Here every row has the same keys, in the same order: `a,b,c`.
+
+These are also sometimes called **rectangular** since if we pretty-print them we get a nice rectangle:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint cat data/het/hom.csv
+GENMD_EOF
+
+### Fillable data
+
+A second example has some empty cells which could be **filled**:
+
+GENMD_RUN_COMMAND
+mlr --csv cat data/het/fillable.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --icsv --ojson --no-jvstack cat data/het/fillable.csv
+GENMD_EOF
+
+This example is still homogeneous, though: every row has the same keys, in the same order: `a,b,c`.
+Empty values don't make the data heterogeneous.
+
+Note however that we can use the [`fill-down`](reference-verbs.md#fill-empty) verb to make these
+values non-empty, if we like:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint fill-empty -v filler data/het/fillable.csv
+GENMD_EOF
+
+### Ragged data
+
+Next let's look at non-well-formed CSV files. For a third example:
+
+GENMD_RUN_COMMAND
+cat data/het/ragged.csv
+GENMD_EOF
+
+If you `mlr csv cat` this, you'll get an error message:
+
+GENMD_RUN_COMMAND_TOLERATING_ERROR
+mlr --csv cat data/het/ragged.csv
+GENMD_EOF
+
+There are two kinds of raggedness here. Since CSVs form records by zipping the
+keys from the header line together with the values from each data line, the
+second record has a missing value for key `c` (which ought to be fillable),
+while the third record has a value `10` with no key for it.
+
+Using the `--allow-ragged-csv-input` option we can fill values in too-short
+rows, and provide a key (column number starting with 1) for too-long rows:
+
+GENMD_RUN_COMMAND_TOLERATING_ERROR
+mlr --icsv --ojson --allow-ragged-csv-input cat data/het/ragged.csv
+GENMD_EOF
+
+### Irregular data
+
+Here's another situation -- this file has, in some sense, the "same" data as
+our `ragged.csv` example above:
+
+GENMD_RUN_COMMAND
+cat data/het/irregular.json
+GENMD_EOF
+
+For example, on the second record, `a` is 4, `b` is 5, `c` is 6. But this data
+is heterogeneous because the keys `a,b,c` aren't in the same order in each
+record.
+
+This kind of data arises often in practice. One reason is that, while many
+programming languages (including the Miller DSL) [preserve insertion
+order](reference-main-maps.md#insertion-order-is-preserved) in maps; others do
+not. So someone might have written `{"a":4,"b":5,"c":6}` in the source code,
+but the data may not have printed that way into a given data file.
+
+We can use the [`regularize`](reference-verbs.md#regularize) or
+[`sort-within-records`](reference-verbs.md#sort-within-records) verb to order
+the keys:
+
+GENMD_RUN_COMMAND
+mlr --json --no-jvstack regularize data/het/irregular.json
+GENMD_EOF
+
+The `regularize` verb tries to re-order subsequent rows to look like the first
+(whatever order that is); the `sort-within-records` verb simply uses
+alphabetical order (which is the same in the above example where the first
+record has keys in the order `a,b,c`).
+
+### Sparse data
+
+Here's another frequently occurring situation -- quite often, systems will log
+data for items which are present, but won't log data for items which aren't.
+
+GENMD_RUN_COMMAND
+mlr --json cat data/het/sparse.json
+GENMD_EOF
+
+This data is called **sparse** (from the [data-storage term](https://en.wikipedia.org/wiki/Sparse_matrix)).
+
+We can use the [`unsparsify`](reference-verbs.md#unsparsify) verb to make sure
+every record has the same keys:
+
+GENMD_RUN_COMMAND
+mlr --json unsparsify data/het/sparse.json
+GENMD_EOF
+
+Since this data is now homogeneous (rectangular), it pretty-prints nicely:
+
+GENMD_RUN_COMMAND
+mlr --ijson --opprint unsparsify data/het/sparse.json
+GENMD_EOF
+
+## Reading and writing heterogeneous data
+
+In the previous sections we saw different kinds of data heterogeneity, and ways
+to transform the data to make it homogeneous.
+
+### Non-rectangular file formats: JSON, XTAB, NIDX, DKVP
+
+For these formats, record-heterogeneity comes naturally:
+
+GENMD_RUN_COMMAND
+cat data/het/sparse.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --onidx --ofs ' ' cat data/het/sparse.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --oxtab cat data/het/sparse.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --odkvp cat data/het/sparse.json
+GENMD_EOF
+
+Even then, we may wish to put like with like, using the [`group-like`](reference-verbs.md#group-like) verb:
+
+GENMD_RUN_COMMAND
+mlr --ijson --odkvp cat data/het.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --odkvp group-like data/het.json
+GENMD_EOF
+
+### Rectangular file formats: CSV and pretty-print
+
+CSV and pretty-print formats expect rectangular structure. But Miller lets you
+process non-rectangular using CSV and pretty-print.
+
+Miller simply prints a newline and a new header when there is a schema change
+-- where by _schema_ we mean simply the list of record keys in the order they
+are encountered. When there is no schema change, you get CSV per se as a
+special case. Likewise, Miller reads heterogeneous CSV or pretty-print input
+the same way. The difference between CSV and CSV-lite is that the former is
+[RFC-4180-compliant](file-formats.md#csvtsvasvusvetc), while the latter readily
+handles heterogeneous data (which is non-compliant). For example:
 
 GENMD_RUN_COMMAND
 cat data/het.json
@@ -18,49 +195,25 @@ GENMD_RUN_COMMAND
 mlr --ijson --opprint cat data/het.json
 GENMD_EOF
 
-Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows:
-
 GENMD_RUN_COMMAND
-cat data/ragged.csv
+mlr --ijson --opprint group-like data/het.json
 GENMD_EOF
 
-GENMD_RUN_COMMAND
-mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv
+Miller handles explicit header changes as just shown. If your CSV input contains ragged data -- if there are implicit header changes (no intervening blank line and new header line) as seen above -- you can use `--allow-ragged-csv-input` (or keystroke-saver `--ragged`).
+
+GENMD_RUN_COMMAND_TOLERATING_ERROR
+mlr --csv --ragged cat data/het/ragged.csv
 GENMD_EOF
 
-You may also find Miller's `group-like` feature handy (see also [Verbs Reference](reference-verbs.md)):
+## Processing heterogeneous data
 
-GENMD_RUN_COMMAND
-mlr --j2p cat data/het.json
-GENMD_EOF
+Above we saw how to make heterogeneous data homogeneous, and then how to print heterogeneous data.
+As for other processing, record-heterogeneity is not a problem for Miller.
 
-GENMD_RUN_COMMAND
-mlr --j2p group-like data/het.json
-GENMD_EOF
-
-### Key-value-pair, vertical-tabular, and index-numbered formats
-
-For these formats, record-heterogeneity comes naturally:
-
-GENMD_RUN_COMMAND
-cat data/het.json
-GENMD_EOF
-
-GENMD_RUN_COMMAND
-mlr --ijson --onidx --ofs ' ' cat data/het.json
-GENMD_EOF
-
-GENMD_RUN_COMMAND
-mlr --ijson --oxtab cat data/het.json
-GENMD_EOF
-
-GENMD_RUN_COMMAND
-mlr --ijson --oxtab group-like data/het.json
-GENMD_EOF
-
-## For processing
-
-Miller operates on specified fields and takes the rest along: for example, if you are sorting on the `count` field then all records in the input stream must have a `count` field but the other fields can vary, and moreover the sorted-on field name(s) don't need to be in the same position on each line:
+Miller operates on specified fields and takes the rest along: for example, if
+you are sorting on the `count` field then all records in the input stream must
+have a `count` field but the other fields can vary, and moreover the sorted-on
+field name(s) don't need to be in the same position on each line:
 
 GENMD_RUN_COMMAND
 cat data/sort-het.dkvp

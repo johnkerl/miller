@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Miller command structure
 
 ## Overview
@@ -42,6 +55,10 @@ yellow triangle true 1 11    43.6498  9.8870
 </pre>
 
 The rest of this reference section gives you full information on each of these parts of the command line.
+
+See also the [Glossary](glossary.md) for more about terms such as
+[record](glossary.md#record), [field](glossary.md#field),
+[key](glossary.md#value), [streaming](glossary.md#streaming), and more.
 
 ## Verbs vs DSL
 

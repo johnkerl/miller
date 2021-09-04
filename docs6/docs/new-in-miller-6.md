@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # What's new in Miller 6
 
 See also the [list of issues tagged with go-port](https://github.com/johnkerl/miller/issues?q=label%3Ago-port).
@@ -28,7 +41,7 @@ now discussed first, and more examples use CSV.
 ## JSON support, and arrays
 
 Arrays are now supported in Miller's `put`/`filter` programming language, as
-described in the [Arrays reference](reference-dsl-arrays.md). Also, `array` is
+described in the [Arrays reference](reference-main-arrays.md). Also, `array` is
 now a keyword so this is no longer usable as a local-variable or UDF name.
 
 JSON support is improved:

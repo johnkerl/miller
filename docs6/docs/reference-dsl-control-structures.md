@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DSL control structures
 
 ## Pattern-action blocks
@@ -163,7 +176,7 @@ As with `while` and `do-while`, a `break` or `continue` within nested control st
 
 ### Single-variable for-loops
 
-For [maps](reference-dsl-maps.md), the single variable is always bound to the *key* of key-value pairs:
+For [maps](reference-main-maps.md), the single variable is always bound to the *key* of key-value pairs:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --from data/small put -q '</b>
@@ -223,7 +236,7 @@ key: b valuetype: map
 
 Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in `$[e]` for stream records, or by indexing the looped-over variable using square brackets.
 
-For [arrays](reference-dsl-arrays.md), the single variable is always bound to the *value* (not the array index):
+For [arrays](reference-main-arrays.md), the single variable is always bound to the *value* (not the array index):
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put -q '</b>
@@ -245,8 +258,8 @@ value: true valuetype: bool
 
 ### Key-value for-loops
 
-For [maps](reference-dsl-maps.md), the first loop variable is the key and the
-second is the value; for [arrays](reference-dsl-arrays.md), the first loop
+For [maps](reference-main-maps.md), the first loop variable is the key and the
+second is the value; for [arrays](reference-main-arrays.md), the first loop
 variable is the (1-up) array index and the second is the value.
 
 Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to to a scalar value (non-array/non-map) if the map stops at that level, or to a map-valued or array-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
@@ -340,7 +353,7 @@ eks wye 4 0.381399 0.134188 4.515587
 wye pan 5 0.573288 0.863624 6.4369119999999995
 </pre>
 
-You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
+You can also start iterating on sub-maps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-map as it was before the loop started.  The sub-map is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
 
 <pre class="pre-non-highlight-non-pair">
 # Parentheses are optional for single key:

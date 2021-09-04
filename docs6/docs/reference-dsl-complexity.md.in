@@ -27,7 +27,7 @@ the same complexity level as `awk`; as of 5.0.0 we have [user-defined
 functions](reference-dsl-user-defined-functions.md) and [map-valued
 variables](reference-dsl-variables.md), again on about the same complexity level
 as `awk` along with optional type-declaration syntax; as of Miller 6 we have
-full support for [arrays](reference-dsl-arrays.md).  While I'm excited by these
+full support for [arrays](reference-main-arrays.md).  While I'm excited by these
 powerful language features, I hope to keep new features focused on Miller's
 sweet spot which is speed plus simplicity.
 
