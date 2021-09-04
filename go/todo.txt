@@ -1,6 +1,13 @@
 ================================================================
 TOP OF LIST:
 
+* pre-release:
+  o explicit punchdown list
+  o draft release w/ m6 binaries YYYYMMDD -- ?
+  o gha download steps clearer
+  
+! allcontribs
+
 * doc6 proofreads
 * 'explicit r' issue 297: code, UT, doc
 

@@ -1,4 +1,6 @@
 ----------------------------------------------------------------
+! merge 3 new 4 !
+
 ALL:
 * csv to csv,tsv throughout
 * rid of explicitly passing around os.Stdout in all various help functions, annoying
@@ -21,13 +23,17 @@ glossary home stretch
 
 * need a centralized page:
   separators: IFS IPS IRS OFS OPS ORS FLATSEP (IFLATSEP/OFLATSEP?)
+* schema := header line; also rm schema x go x .md.in
 
 ----------------------------------------------------------------
+* vimrc
+
 C flags LUTs
 ? twi-dm re all-contribs: all-contributors.org
 
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
+E fill out separators page
 E fill out flatten/unflatten page
 E fill out data-types page
 E fill out arrays page
@@ -36,7 +42,8 @@ E fill out arrays page
 E fill out maps page
   - xref to fla/unfla page
   - move from reference-dsl-variables
-E show-all-flags help -- fully alpha, or alpha-by-type ...
+E make flags page
+  C show-all-flags help -- fully alpha, or alpha-by-type; LUT refactor
 
 c GOMAXPROCS -- up it? separate page maybe -- ?
   - note one goroutine for in, out, & each verb
