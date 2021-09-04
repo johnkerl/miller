@@ -69,6 +69,10 @@ Expected one of:
   * / // % .* ./ .// ** [ [[ [[[
 </pre>
 
+## elif
+
+Miller has [`elif`](reference-dsl-control-structures.md#if-statements), not `else if` or `elsif`.
+
 ## Required curly braces
 
 Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:

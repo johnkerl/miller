@@ -1,6 +1,13 @@
-----------------------------------------------------------------
-! merge 3 new 4 !
+TOP:
 
+E data-types page
+E flatten/unflatten page
+c! repifs !!
+c! seps \001 etc !
+C flags LUTs
+? twi-dm re all-contribs: all-contributors.org
+
+----------------------------------------------------------------
 ALL:
 * csv to csv,tsv throughout
 * rid of explicitly passing around os.Stdout in all various help functions, annoying
@@ -19,14 +26,18 @@ ALL:
   https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
 
 ----------------------------------------------------------------
-c! repifs !!
-c! seps \001 etc !
-C flags LUTs
-? twi-dm re all-contribs: all-contributors.org
 
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
+? figure out flatsep vs iflatsep/oflatsep & have a story around the choice either way
+  - ctx ptr-split for invars
 E fill out flatten/unflatten page
+  echo a.b.c=3 | mlr --ojson cat
+  echo a.b.c=3 | mlr --ojson --no-jvstack cat | mlr --j2c --oflatsep : cat
+  echo a:b:c=3 | mlr --ojson --no-jvstack cat
+  echo a:b:c=3 | mlr --ojson --no-jvstack --oflatsep : cat
+  -> call it --flatsep
+
 E fill out data-types page
 E fill out arrays page
   - xref to fla/unfla page
@@ -36,11 +47,6 @@ E fill out maps page
   - move from reference-dsl-variables
 E make flags page
   C show-all-flags help -- fully alpha, or alpha-by-type; LUT refactor
-
-c GOMAXPROCS -- up it? separate page maybe -- ?
-  - note one goroutine for in, out, & each verb
-  - check and respect env-var
-  - add note on threading and how it scales on multicore arches
 
 * functions: somewhere organize by type. olh/man6/docs6 ...
 
@@ -154,20 +160,13 @@ E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (d
   o why not '--oflatsep /' respected?
 
 diffs other langs:
-e slice incl/excl; split-in-half
+e slice incl/excl; split-in-half: x[:2] x[2:] vs x[:2] x[3:]
 e localvars in if/else
-e elif
-
-glossary:
-! after it's done, link-check *all* ........ :^/
 
 separators:
 E write up which file formats support which flags
 
 manpage:
 ? [NEEDS READ-THROUGH]
-
-install:
-* n.b. homebrew linux https://github.com/johnkerl/miller/issues/77#issuecomment-536611087
 
 mk-func-table.rb: port comments from sphinx to mkdocs

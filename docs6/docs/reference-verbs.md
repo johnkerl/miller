@@ -2072,7 +2072,8 @@ Please see the [DSL reference](reference-dsl.md) for more information about the 
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr regularize [options]
-Outputs records sorted lexically ascending by keys.Options:
+Outputs records sorted lexically ascending by keys.
+Options:
 -h|--help Show this message.
 </pre>
 
