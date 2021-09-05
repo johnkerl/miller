@@ -125,6 +125,12 @@ of words would result in some strings mixed with some booleans. Use the
 `boolean` function to coerce: e.g. giving the record `x=1,y=2,w=false` to `mlr
 filter '$z=($x<$y) || boolean($w)'`.
 
+The same is true for `inf`, `+inf`, `-inf`, `infinity`, `+infinity`,
+`-infinity`, `NaN`, and all upper-cased/lower-cased/mixed-case variants of
+those. These are valid IEEE floating-point numbers, but Miller treats these as
+strings. You can explicit force conversion: if `x=infinity` in a data file,
+then `typeof($x)` is `string` but `typeof(float($x))` is `float`.
+
 ## JSON parse and stringify
 
 If you have, say, a CSV file whose columns contain strings which are well-formatted JSON,

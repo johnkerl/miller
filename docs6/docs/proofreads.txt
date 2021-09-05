@@ -1,12 +1,5 @@
 TOP:
 
-c data-types:
-  ! don't auto-infer bools; then, data-types page
-  ! don't auto-infer Infinity, etc -- ?!? then, data-types page
-  RT-check
-  https://github.com/johnkerl/miller/issues/241
-  https://github.com/johnkerl/miller/issues/357
-  MlrvalPointerFromInferredType -> mk variant
 c! seps \001 etc !
   mlrc --iusv --oxtab cat regtest/input/example.usv
   mlr  --iusv --oxtab cat regtest/input/example.usv
@@ -112,24 +105,12 @@ reference-verbs:
 E data/colored-shapes.dkvp (this page & throughout) a CSV file ...
 * ... I ONLY READ UP TO CUT & PAUSED ...
 
-reference-main-data-types:
-! don't auto-infer bool from input data :(
-E field values are usually strings -> update
-E Field values are treated as numeric for the following: -> update
-E true/false -> add info about NaN and Inf et al.
-!! very much missing stuff!! where's the listing of mlrval types?!?
-  - reference-dsl-variables.md.in should link to it
-  - ditto programming-language.md.in
-c UTs for r"a" . r"b" and so on and so on
-
-reference-dsl-variables.md:
-? IFLATSEP & OFLATSEP -- ?
+reference-dsl-variables.md: FLATSEP
 
 reference-main-null-data:
 ? more variants of is_... ?
 ? Records with one or more empty sort-field values sort after records with all sort-field values present -> apparently not true for sort -nr
 e split out h2's
-! spell out JSON-null
 
 reference-main-arithmetic:
 ? test stats1/step -F flag

@@ -6,6 +6,7 @@ package types
 
 import (
 	"errors"
+	"strings"
 
 	"mlr/src/lib"
 )
@@ -101,15 +102,14 @@ func MlrvalPointerFromBoolString(input string) *Mlrval {
 	}
 }
 
-var floatNamesToNotInfer = map[string]bool{
-	"Inf":       true,
-	"+Inf":      true,
-	"-Inf":      true,
-	"Infinity":  true,
-	"+Infinity": true,
-	"-Infinity": true,
+var downcasedFloatNamesToNotInfer = map[string]bool{
+	"inf":       true,
+	"+inf":      true,
+	"-inf":      true,
+	"infinity":  true,
+	"+infinity": true,
+	"-infinity": true,
 	"nan":       true,
-	"NaN":       true,
 }
 
 // MlrvalPointerFromInferredTypeForDataFiles is for parsing field values from
@@ -126,7 +126,7 @@ func MlrvalPointerFromInferredTypeForDataFiles(input string) *Mlrval {
 		return MlrvalPointerFromIntString(input)
 	}
 
-	if floatNamesToNotInfer[input] == false {
+	if downcasedFloatNamesToNotInfer[strings.ToLower(input)] == false {
 		_, fok := lib.TryFloat64FromString(input)
 		if fok {
 			return MlrvalPointerFromFloat64String(input)

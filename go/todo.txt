@@ -113,6 +113,8 @@ w survey
 ----------------------------------------------------------------
 BLOCKERS
 
+* UTs for r"a" . r"b" and so on and so on
+
 * document precedence issue:
 ! probably remove this feature !
 
