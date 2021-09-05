@@ -143,7 +143,10 @@ HELP OPTIONS
          mlr help function
          mlr help keyword
          mlr help list-functions
+         mlr help list-function-classes
+         mlr help list-functions-in-class
          mlr help list-functions-as-paragraph
+         mlr help list-functions-as-table
          mlr help list-keywords
          mlr help list-keywords-as-paragraph
          mlr help list-verbs
@@ -155,6 +158,7 @@ HELP OPTIONS
          mlr help separator-options
          mlr help type-arithmetic-info
          mlr help usage-functions
+         mlr help usage-functions-by-class
          mlr help usage-keywords
          mlr help usage-verbs
          mlr help verb
@@ -1059,7 +1063,8 @@ VERBS
 
    regularize
        Usage: mlr regularize [options]
-       Outputs records sorted lexically ascending by keys.Options:
+       Outputs records sorted lexically ascending by keys.
+       Options:
        -h|--help Show this message.
 
    remove-empty-columns
@@ -1510,10 +1515,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) Inverse hyperbolic cosine.
 
    append
-        (class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
+        (class=collections #args=2) Appends second argument to end of first argument, which must be an array.
 
    arrayify
-        (class=maps/arrays #args=1) Walks through a nested map/array, converting any map with consecutive keys
+        (class=collections #args=1) Walks through a nested map/array, converting any map with consecutive keys
        "1", "2", ... into an array. Useful to wrap the output of unflatten.
 
    asin
@@ -1635,7 +1640,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) Hyperbolic cosine.
 
    depth
-        (class=maps/arrays #args=1) Prints maximum depth of map/array. Scalars have depth 0.
+        (class=collections #args=1) Prints maximum depth of map/array. Scalars have depth 0.
 
    dhms2fsec
         (class=time #args=1) Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
@@ -1656,7 +1661,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) e**x - 1.
 
    flatten
-        (class=maps/arrays #args=3) Flattens multi-level maps to single-level ones. Examples:
+        (class=collections #args=3) Flattens multi-level maps to single-level ones. Examples:
        flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
        flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
        Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
@@ -1679,10 +1684,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
 
    get_keys
-        (class=maps/arrays #args=1) Returns array of keys of map or array
+        (class=collections #args=1) Returns array of keys of map or array
 
    get_values
-        (class=maps/arrays #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
+        (class=collections #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
 
    gmt2sec
         (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
@@ -1691,7 +1696,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
 
    haskey
-        (class=maps/arrays #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+        (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
        'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
        Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
 
@@ -1787,18 +1792,18 @@ FUNCTIONS FOR FILTER/PUT
        joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 
    json_parse
-        (class=maps/arrays #args=1) Converts value from JSON-formatted string.
+        (class=collections #args=1) Converts value from JSON-formatted string.
 
    json_stringify
-        (class=maps/arrays #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
+        (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
        With optional second boolean argument set to true, produces multiline output.
 
    leafcount
-        (class=maps/arrays #args=1) Counts total number of terminal values in map/array. For single-level
+        (class=collections #args=1) Counts total number of terminal values in map/array. For single-level
        map/array, same as length.
 
    length
-        (class=maps/arrays #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
+        (class=collections #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
 
    log
         (class=math #args=1) Natural (base-e) logarithm.
@@ -1820,24 +1825,24 @@ FUNCTIONS FOR FILTER/PUT
         (class=arithmetic #args=3) a + b mod m (integers)
 
    mapdiff
-        (class=maps/arrays #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
+        (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
        With 2 or more, returns copy of arg 1 with all keys from any of remaining
        argument maps removed.
 
    mapexcept
-        (class=maps/arrays #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
+        (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
        Remaining arguments can be strings or arrays of string.
        E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
        and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
 
    mapselect
-        (class=maps/arrays #args=variadic) Returns a map with only keys from remaining arguments set.
+        (class=collections #args=variadic) Returns a map with only keys from remaining arguments set.
        Remaining arguments can be strings or arrays of string.
        E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
        and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
 
    mapsum
-        (class=maps/arrays #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with
+        (class=collections #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with
        key-value pairs from all arguments. Rightmost collisions win, e.g.
        'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 
@@ -1980,16 +1985,16 @@ FUNCTIONS FOR FILTER/PUT
 
    substr
         (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
-       with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
-       Arrays are new in Miller 6; the substr function is older.
+       with all array and string indices, but, this is a backward-compatibility issue with Miller 5
+       and below. Arrays are new in Miller 6; the substr function is older.
 
    substr0
         (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
-       inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
+       inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.
 
    substr1
         (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
-       inclusive. Negative indices -len .. -1 alias to 1 .. len.
+       inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.
 
    system
         (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
@@ -2019,7 +2024,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
 
    unflatten
-        (class=maps/arrays #args=2) Reverses flatten. Example:
+        (class=collections #args=2) Reverses flatten. Example:
        unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
        Useful for nested JSON-like structures for non-JSON file formats like CSV.
        See also arrayify.
@@ -2521,4 +2526,4 @@ SEE ALSO
 
 
 
-                                  2021-08-26                         MILLER(1)
+                                  2021-09-05                         MILLER(1)
