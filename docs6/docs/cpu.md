@@ -14,8 +14,7 @@ Quick links:
 </div>
 # CPU/multicore usage
 
-Miller 6 is written in [Go](https://golang.org/) which supports multicore
-programming.
+Miller 6 is written in [Go](https://golang.org/) which supports multicore programming.
 
 Miller uses Go's _channel_ concept. The following are all separate goroutines:
 

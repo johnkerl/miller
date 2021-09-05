@@ -65,6 +65,8 @@ nav:
       - "I/O options": "reference-main-io-options.md"
       - "Separators": "reference-main-separators.md"
       - "List of verbs": "reference-verbs.md"
+      - "Streaming processing, and memory usage": "streaming-and-memory.md"
+      - "CPU/multicore usage": "cpu.md"
       - "Data types": "reference-main-data-types.md"
       - "Strings": "reference-main-strings.md"
       - "Regular expressions": "reference-main-regular-expressions.md"

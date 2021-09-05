@@ -133,6 +133,9 @@ BLOCKERS
 ! repifs
 ! seps "\001" etc
 
+! repifs
+! seps "\001" etc
+
 * finish stats1 -r
 
 * what about -I mixed with .gzin -- ?
