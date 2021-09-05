@@ -855,7 +855,7 @@ func handleHelpSingle(repl *Repl, arg string) {
 	}
 
 	if arg == "function-names" {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph()
 		return
 	}
 
@@ -868,7 +868,7 @@ func handleHelpSingle(repl *Repl, arg string) {
 		return
 	}
 
-	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout) {
+	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg) {
 		return
 	}
 

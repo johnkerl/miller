@@ -8,7 +8,7 @@ Miller has three kinds of null data:
 
 * **Absent (key not present)**: a field name is not present, e.g. input record is `x=1,y=2` and a `put` or `filter` expression refers to `$z`. Or, reading an out-of-stream variable which hasn't been assigned a value yet, e.g.  `mlr put -q '@sum += $x; end{emit @sum}'` or `mlr put -q '@sum[$a][$b] += $x; end{emit @sum, "a", "b"}'`.
 
-* **JSON null**: (TODO: describe)
+* **JSON null**: The main purpose of this is to support reading the `null` type in JSON files. The [Miller programming language](programming-language.md) has a `null` keyword as well, so you can also write the null type using `$x = null`. Addtionally, though, when you write past the end of an array, leaving gaps -- e.g. writing `a[12]` when the array `a` has length 10 -- JSON-null is used to fill the gaps. See also the [arrays page](reference-main-arrays.md#auto-extend-and-null-gaps).
 
 You can test these programatically using the functions `is_empty`/`is_not_empty`, `is_absent`/`is_present`, and `is_null`/`is_not_null`. For the last pair, note that null means either empty or absent.
 

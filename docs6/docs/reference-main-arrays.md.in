@@ -108,9 +108,9 @@ GENMD_EOF
 
 Once an array is initialized, it can be extended by assigning to indices beyond
 its length.  If each write is one past the end of the array, the array will
-grow by one. (Memory management, handled for you, is a little more careful: not
-to worry, capacity is doubled so performance doesn't suffer a rellocate on
-every single extend.)
+grow by one. (Memory management, handled for you, is careful handled here in
+Miller: not to worry, capacity is doubled so performance doesn't suffer a
+rellocate on every single extend.)
 
 This is important in Miller so you can do things like `@records[NR] = $*` with
 a minimum of keystrokes without worrying about explicitly resizing arrays. In

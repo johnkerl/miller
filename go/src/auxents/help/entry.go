@@ -65,7 +65,10 @@ func init() {
 		{name: "function", unaryHandlerFunc: helpForFunction},
 		{name: "keyword", unaryHandlerFunc: helpForKeyword},
 		{name: "list-functions", zaryHandlerFunc: listFunctions},
+		{name: "list-function-classes", zaryHandlerFunc: listFunctionClasses},
+		{name: "list-functions-in-class", unaryHandlerFunc: listFunctionsInClass},
 		{name: "list-functions-as-paragraph", zaryHandlerFunc: listFunctionsAsParagraph},
+		{name: "list-functions-as-table", zaryHandlerFunc: listFunctionsAsTable},
 		{name: "list-keywords", zaryHandlerFunc: listKeywords},
 		{name: "list-keywords-as-paragraph", zaryHandlerFunc: listKeywordsAsParagraph},
 		{name: "list-verbs", zaryHandlerFunc: listVerbs},
@@ -77,6 +80,7 @@ func init() {
 		{name: "separator-options", zaryHandlerFunc: helpSeparatorOptions},
 		{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
 		{name: "usage-functions", zaryHandlerFunc: usageFunctions},
+		{name: "usage-functions-by-class", zaryHandlerFunc: usageFunctionsByClass},
 		{name: "usage-keywords", zaryHandlerFunc: usageKeywords},
 		{name: "usage-verbs", zaryHandlerFunc: usageVerbs},
 		{name: "verb", unaryHandlerFunc: helpForVerb},
@@ -693,22 +697,38 @@ func helpTypeArithmeticInfo() {
 // ----------------------------------------------------------------
 func listFunctions() {
 	if isatty.IsTerminal(os.Stdout.Fd()) {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph()
 	} else {
-		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesVertically(os.Stdout)
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesVertically()
 	}
 }
 
+func listFunctionClasses() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionClasses()
+}
+
+func listFunctionsInClass(class string) {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsInClass(class)
+}
+
 func listFunctionsAsParagraph() {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph(os.Stdout)
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionNamesAsParagraph()
+}
+
+func listFunctionsAsTable() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsAsTable()
 }
 
 func usageFunctions() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsages()
 }
 
+func usageFunctionsByClass() {
+	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsagesByClass()
+}
+
 func helpForFunction(arg string) {
-	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, os.Stdout)
+	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg)
 }
 
 // ----------------------------------------------------------------

@@ -1,14 +1,21 @@
-----------------------------------------------------------------
-! merge 3 new 4 !
+TOP:
 
+c! seps \001 etc !
+  mlrc --iusv --oxtab cat regtest/input/example.usv
+  mlr  --iusv --oxtab cat regtest/input/example.usv
+C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
+
+E flatten/unflatten page
+? twi-dm re all-contribs: all-contributors.org
+C flags LUTs
+
+----------------------------------------------------------------
 ALL:
 * csv to csv,tsv throughout
-* rid of explicitly passing around os.Stdout in all various help functions, annoying
 * het.dkvp > het.json in more places
 * check each page for adequate h2 coverage
 
 * deduping pass!
-* 1-up/0-up -> one-up/zero-up everywhere
 
 * flags-doc
   C refactor cli-parser w/ LUT & help strings
@@ -19,15 +26,21 @@ ALL:
   https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
 
 ----------------------------------------------------------------
-c! repifs !!
-c! seps \001 etc !
-C flags LUTs
-? twi-dm re all-contribs: all-contributors.org
 
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
+? figure out flatsep vs iflatsep/oflatsep & have a story around the choice either way
+  - ctx ptr-split for invars
 E fill out flatten/unflatten page
-E fill out data-types page
+  echo a.b.c=3 | mlr --ojson cat
+  echo a.b.c=3 | mlr --ojson --no-jvstack cat | mlr --j2c --oflatsep : cat
+  echo a:b:c=3 | mlr --ojson --no-jvstack cat
+  echo a:b:c=3 | mlr --ojson --no-jvstack --oflatsep : cat
+  -> call it --flatsep
+
+E fill out strings page
+  e substr0/substr1/substr. slices & string-indexing new in m6.
+  c "abcde"[2:3] works but "abcde"[2] does not :(
 E fill out arrays page
   - xref to fla/unfla page
   - slices including semantics for out-of-range slices
@@ -36,8 +49,6 @@ E fill out maps page
   - move from reference-dsl-variables
 E make flags page
   C show-all-flags help -- fully alpha, or alpha-by-type; LUT refactor
-
-* functions: somewhere organize by type. olh/man6/docs6 ...
 
 * regex: more about what is / is not
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
@@ -94,24 +105,12 @@ reference-verbs:
 E data/colored-shapes.dkvp (this page & throughout) a CSV file ...
 * ... I ONLY READ UP TO CUT & PAUSED ...
 
-reference-main-data-types:
-E field values are usually strings -> update
-E Field values are treated as numeric for the following: -> update
-? Miller's types for function processing are -> add JSON null; & check for others (array/map)
-E true/false -> add info about NaN and Inf et al.
-!! very much missing stuff!! where's the listing of mlrval types?!?
-  - reference-dsl-variables.md.in should link to it
-  - ditto programming-language.md.in
-c UTs for r"a" . r"b" and so on and so on
-
-reference-dsl-variables.md:
-? IFLATSEP & OFLATSEP -- ?
+reference-dsl-variables.md: FLATSEP
 
 reference-main-null-data:
 ? more variants of is_... ?
 ? Records with one or more empty sort-field values sort after records with all sort-field values present -> apparently not true for sort -nr
 e split out h2's
-! spell out JSON-null
 
 reference-main-arithmetic:
 ? test stats1/step -F flag
@@ -132,7 +131,6 @@ E User-defined subroutines -> non-factorial example -- maybe some useful aggrega
 l link to --load and --mload
 
 reference-dsl-builtin-functions:
-c mlr: option "--list-all-functions-as-table" not recognized. Please run "mlr --help" for usage information -> fix
 ! ... need to proofread entire list ...
 
 reference-dsl-output-statements:
@@ -157,5 +155,3 @@ E write up which file formats support which flags
 
 manpage:
 ? [NEEDS READ-THROUGH]
-
-mk-func-table.rb: port comments from sphinx to mkdocs

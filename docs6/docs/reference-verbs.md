@@ -1639,6 +1639,34 @@ left_a left_b left_c right_a right_b right_c
 1      4      5      1       4       5
 </pre>
 
+## json-parse
+
+<pre class="pre-highlight-in-pair">
+<b>mlr json-parse --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr json-parse [options]
+Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].
+Options:
+-f {...} Comma-separated list of field names to json-parse (default all).
+-h|--help Show this message.
+</pre>
+
+## json-stringify
+
+<pre class="pre-highlight-in-pair">
+<b>mlr json-stringify --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr json-stringify [options]
+Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
+Options:
+-f {...} Comma-separated list of field names to json-parse (default all).
+--jvstack Produce multi-line JSON output.
+--no-jvstack Produce single-line JSON output per record (default).
+-h|--help Show this message.
+</pre>
+
 ## label
 
 <pre class="pre-highlight-in-pair">

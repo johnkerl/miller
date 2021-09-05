@@ -96,7 +96,7 @@ func ListVerbNamesAsParagraph() {
 		verbNames[i] = transformerSetup.Verb
 	}
 
-	lib.PrintWordsAsParagraph(verbNames, os.Stdout)
+	lib.PrintWordsAsParagraph(verbNames)
 }
 
 // ----------------------------------------------------------------

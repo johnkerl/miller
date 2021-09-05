@@ -3,6 +3,8 @@ package cliutil
 import (
 	"fmt"
 	"os"
+
+	"mlr/src/lib"
 )
 
 // For flags with values, e.g. ["-n" "10"], while we're looking at the "-n"
@@ -39,16 +41,8 @@ var SEPARATOR_NAMES_TO_VALUES = map[string]string{
 func SeparatorFromArg(name string) string {
 	sep, ok := SEPARATOR_NAMES_TO_VALUES[name]
 	if !ok {
-		// xxx temp
-		//fmt.Fprintf(os.Stderr, "Miller: could not handle separator \"%s\".\n", name)
-		//os.Exit(1)
-		// It's OK if they do '--ifs ,' -- just pass it back.
-		return name
+		// "\001" -> control-A, etc.
+		return lib.UnbackslashStringLiteral(name)
 	}
 	return sep
-	//	char* chars = lhmss_get(get_desc_to_chars_map(), arg);
-	//	if (chars != nil) // E.g. crlf
-	//		return mlr_strdup_or_die(chars);
-	//	else // E.g. '\r\n'
-	//		return mlr_alloc_unbackslash(arg);
 }

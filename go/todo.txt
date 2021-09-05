@@ -8,6 +8,7 @@ TOP OF LIST:
 
 * shell-commands.html; while-read
 
+* repifs * "\001" et al. *
 * I/O redirects * fmtnum * localtime * stats1 -r/--fr *
 * --nr-progress-mod * mlr -k * json comment-handling *
 * cli-audits * doc6 * survey * check issues * regtest pendings *
@@ -112,15 +113,25 @@ w survey
 ----------------------------------------------------------------
 BLOCKERS
 
-* bug:
+* UTs for r"a" . r"b" and so on and so on
+
+* document precedence issue:
+! probably remove this feature !
+
+  μεταμόρφωσις: z = [{"x":3}, {"x":4}]
   μεταμόρφωσις: z[1].x
-  0.3467901443380824
+  3
   μεταμόρφωσις: z[2].x
-  0.7586799647899636
+  4
   μεταμόρφωσις: z[1]["x"] + z[2]["x"]
-  1.105470109128046
+  7
   μεταμόρφωσις: z[1].x + z[2].x
   (absent)
+  μεταμόρφωσις: (z[1].x) + (z[2].x)
+  7
+
+! repifs
+! seps "\001" etc
 
 ! repifs
 ! seps "\001" etc

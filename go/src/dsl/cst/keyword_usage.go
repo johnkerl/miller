@@ -2,7 +2,6 @@ package cst
 
 import (
 	"fmt"
-	"os"
 
 	"mlr/src/colorizer"
 	"mlr/src/lib"
@@ -114,7 +113,7 @@ func ListKeywordsAsParagraph() {
 	for i, entry := range KEYWORD_USAGE_TABLE {
 		keywords[i] = entry.name
 	}
-	lib.PrintWordsAsParagraph(keywords, os.Stdout)
+	lib.PrintWordsAsParagraph(keywords)
 }
 
 // ----------------------------------------------------------------

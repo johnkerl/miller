@@ -1,1 +1,1 @@
-mlr --oxtab put    -f ${CASEDIR}/mlr ./${CASEDIR}/input
+mlr --oxtab put -f ${CASEDIR}/mlr ./${CASEDIR}/input
