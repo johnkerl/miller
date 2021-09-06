@@ -3,7 +3,7 @@ package transformers
 import (
 	"os"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/types"
 )
 
@@ -29,7 +29,7 @@ type TransformerParseCLIFunc func(
 	pargi *int,
 	argc int,
 	args []string,
-	mainOptions *cliutil.TOptions,
+	mainOptions *cli.TOptions,
 ) IRecordTransformer
 
 type TransformerSetup struct {

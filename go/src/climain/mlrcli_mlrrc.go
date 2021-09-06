@@ -1,4 +1,4 @@
-package cli
+package climain
 
 import (
 	"bufio"
@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 )
 
 // ----------------------------------------------------------------
@@ -19,7 +19,7 @@ import (
 
 // TODO: move to separate file?
 func loadMlrrcOrDie(
-	options *cliutil.TOptions,
+	options *cli.TOptions,
 ) {
 	env_mlrrc := os.Getenv("MLRRC")
 
@@ -42,7 +42,7 @@ func loadMlrrcOrDie(
 }
 
 func tryLoadMlrrc(
-	options *cliutil.TOptions,
+	options *cli.TOptions,
 	path string,
 ) bool {
 	handle, err := os.Open(path)
@@ -86,7 +86,7 @@ func tryLoadMlrrc(
 }
 
 func handleMlrrcLine(
-	options *cliutil.TOptions,
+	options *cli.TOptions,
 	line string,
 ) bool {
 
@@ -117,14 +117,14 @@ func handleMlrrcLine(
 	} else if args[0] == "--load" || args[0] == "--mload" {
 		// Don't allow code execution via .mlrrc
 		return false
-	} else if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
+	} else if cli.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
 		// handled
-	} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
+	} else if cli.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
 		// handled
-	} else if cliutil.ParseReaderWriterOptions(args, argc, &argi,
+	} else if cli.ParseReaderWriterOptions(args, argc, &argi,
 		&options.ReaderOptions, &options.WriterOptions) {
 		// handled
-	} else if cliutil.ParseMiscOptions(args, argc, &argi, options) {
+	} else if cli.ParseMiscOptions(args, argc, &argi, options) {
 		// handled
 	} else {
 		return false

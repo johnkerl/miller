@@ -26,19 +26,19 @@ import (
 	"strconv"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------
 type RecordReaderCSVLite struct {
-	readerOptions     *cliutil.TReaderOptions
+	readerOptions     *cli.TReaderOptions
 	emptyStringMlrval types.Mlrval
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
+func NewRecordReaderCSVLite(readerOptions *cli.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
 		readerOptions:     readerOptions,
 		emptyStringMlrval: types.MlrvalFromString(""),
@@ -46,7 +46,7 @@ func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReader
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderPPRINT(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
+func NewRecordReaderPPRINT(readerOptions *cli.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
 		readerOptions:     readerOptions,
 		emptyStringMlrval: types.MlrvalFromString(""),
@@ -150,10 +150,10 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 
 			// Check for comments-in-data feature
 			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-				if reader.readerOptions.CommentHandling == cliutil.PassComments {
+				if reader.readerOptions.CommentHandling == cli.PassComments {
 					inputChannel <- types.NewOutputString(line, context)
 					continue
-				} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
+				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 					continue
 				}
 				// else comments are data
@@ -258,10 +258,10 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 
 			// Check for comments-in-data feature
 			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-				if reader.readerOptions.CommentHandling == cliutil.PassComments {
+				if reader.readerOptions.CommentHandling == cli.PassComments {
 					inputChannel <- types.NewOutputString(line, context)
 					continue
-				} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
+				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 					continue
 				}
 				// else comments are data

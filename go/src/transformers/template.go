@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -48,7 +48,7 @@ func transformerTemplateParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -70,10 +70,10 @@ func transformerTemplateParseCLI(
 			transformerTemplateUsage(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-t" {
-			templateFileName := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			templateFileName := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			temp, err := lib.ReadCSVHeader(templateFileName)
 			if err != nil {
 				fmt.Println(err)
@@ -82,7 +82,7 @@ func transformerTemplateParseCLI(
 			fieldNames = temp
 
 		} else if opt == "--fill-with" {
-			fillWith = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fillWith = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerTemplateUsage(os.Stderr, true, 1)

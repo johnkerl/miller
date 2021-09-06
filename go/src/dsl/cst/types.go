@@ -7,7 +7,7 @@ package cst
 import (
 	"container/list"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/dsl"
 	"mlr/src/runtime"
 	"mlr/src/types"
@@ -47,7 +47,7 @@ type RootNode struct {
 	unresolvedFunctionCallsites   *list.List
 	unresolvedSubroutineCallsites *list.List
 	outputHandlerManagers         *list.List
-	recordWriterOptions           *cliutil.TWriterOptions
+	recordWriterOptions           *cli.TWriterOptions
 	dslInstanceType               DSLInstanceType // put, filter, repl
 }
 

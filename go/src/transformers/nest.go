@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -96,7 +96,7 @@ func transformerNestParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -128,7 +128,7 @@ func transformerNestParseCLI(
 			transformerNestUsage(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			fieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--explode" || opt == "-e" {
 			doExplode = true
@@ -152,15 +152,15 @@ func transformerNestParseCLI(
 			doAcrossFieldsSpecified = true
 
 		} else if opt == "--nested-fs" || opt == "-S" {
-			nestedFS = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			nestedFS = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "--nested-ps" || opt == "-P" {
-			nestedPS = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			nestedPS = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--evar" {
-			evfs = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			evfs = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--ivar" {
-			ivfs = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			ivfs = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerNestUsage(os.Stderr, true, 1)
@@ -240,8 +240,8 @@ func NewTransformerNest(
 
 	tr := &TransformerNest{
 		fieldName: fieldName,
-		nestedFS:  cliutil.SeparatorFromArg(nestedFS), // "pipe" -> "|", etc
-		nestedPS:  cliutil.SeparatorFromArg(nestedPS),
+		nestedFS:  cli.SeparatorFromArg(nestedFS), // "pipe" -> "|", etc
+		nestedPS:  cli.SeparatorFromArg(nestedPS),
 	}
 
 	// For implode across fields

@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -47,7 +47,7 @@ func transformerHistogramParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -74,22 +74,22 @@ func transformerHistogramParseCLI(
 			transformerHistogramUsage(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			valueFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--lo" {
-			lo = cliutil.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
+			lo = cli.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--nbins" {
-			nbins = cliutil.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			nbins = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--hi" {
-			hi = cliutil.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
+			hi = cli.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--auto" {
 			doAuto = true
 
 		} else if opt == "-o" {
-			outputPrefix = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputPrefix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerHistogramUsage(os.Stderr, true, 1)

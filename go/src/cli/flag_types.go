@@ -1,7 +1,7 @@
 // TODO: comment
 // TODO: note complexity b/c serving many uses: main CLI, .mlrrc, some verbs; OLH/man/docs autogen
 
-package cliutil
+package cli
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ import (
 
 // ----------------------------------------------------------------
 // Callsites:
-// * src/cli/mlrcli_parse.go
+// * src/climain/mlrcli_parse.go
 //   ParseCommandLine
 //     MainOptions (--cpuprofile, --version, etc)
 //     ParseReaderOptions
@@ -25,7 +25,7 @@ import (
 // * nest/tee/join/put/filter:
 //     ParseReaderOptions
 //     ParseWriterOptions
-//   !! must use only cliutil package, not cli package
+//   !! must use only cli package, not cli package
 
 // sections:
 //   how to factor

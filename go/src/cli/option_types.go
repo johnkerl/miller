@@ -4,7 +4,7 @@
 // miller/transforming.
 // ================================================================
 
-package cliutil
+package cli
 
 import (
 	"mlr/src/lib"

@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -61,7 +61,7 @@ func transformerCountDistinctParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -86,13 +86,13 @@ func transformerCountDistinctParseCLI(
 			transformerCountDistinctUsage(os.Stdout, true, 0)
 
 		} else if opt == "-g" || opt == "-f" {
-			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-n" {
 			showNumDistinctOnly = true
 
 		} else if opt == "-o" {
-			outputFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-u" {
 			doLashed = false
@@ -160,7 +160,7 @@ func transformerUniqParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -186,7 +186,7 @@ func transformerUniqParseCLI(
 			transformerUniqUsage(os.Stdout, true, 0)
 
 		} else if opt == "-g" || opt == "-f" {
-			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-c" {
 			showCounts = true
@@ -195,7 +195,7 @@ func transformerUniqParseCLI(
 			showNumDistinctOnly = true
 
 		} else if opt == "-o" {
-			outputFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-a" {
 			uniqifyEntireRecords = true

@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/types"
 )
 
@@ -39,7 +39,7 @@ func transformerFillEmptyParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -60,7 +60,7 @@ func transformerFillEmptyParseCLI(
 			transformerFillEmptyUsage(os.Stdout, true, 0)
 
 		} else if opt == "-v" {
-			fillString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fillString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerFillEmptyUsage(os.Stderr, true, 1)

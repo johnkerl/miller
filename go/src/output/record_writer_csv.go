@@ -5,13 +5,13 @@ import (
 	"io"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/colorizer"
 	"mlr/src/types"
 )
 
 type RecordWriterCSV struct {
-	writerOptions *cliutil.TWriterOptions
+	writerOptions *cli.TWriterOptions
 	csvWriter     *csv.Writer
 	// For reporting schema changes: we print a newline and the new header
 	lastJoinedHeader *string
@@ -19,7 +19,7 @@ type RecordWriterCSV struct {
 	justWroteEmptyLine bool
 }
 
-func NewRecordWriterCSV(writerOptions *cliutil.TWriterOptions) *RecordWriterCSV {
+func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) *RecordWriterCSV {
 	return &RecordWriterCSV{
 		writerOptions:      writerOptions,
 		csvWriter:          nil, // will be set on first Write() wherein we have the ostream

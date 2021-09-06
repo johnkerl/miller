@@ -10,7 +10,7 @@ import (
 
 	"github.com/mattn/go-isatty"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/dsl/cst"
 	"mlr/src/lib"
 	"mlr/src/transformers"
@@ -225,8 +225,8 @@ Notes:
   may be counterintuitive. A suggestion is to place comments at the start of
   data files.
 `,
-		cliutil.DEFAULT_COMMENT_STRING,
-		cliutil.DEFAULT_COMMENT_STRING)
+		cli.DEFAULT_COMMENT_STRING,
+		cli.DEFAULT_COMMENT_STRING)
 }
 
 // ----------------------------------------------------------------
@@ -412,16 +412,16 @@ Please use --iformat1 --oformat2 rather than --format1 --oformat2.
 The latter sets up input and output flags for format1, not all of which
 are overridden in all cases by setting output format to format2.`,
 
-		cliutil.ASV_FS_FOR_HELP,
-		cliutil.ASV_RS_FOR_HELP,
-		cliutil.USV_FS_FOR_HELP,
-		cliutil.USV_RS_FOR_HELP,
+		cli.ASV_FS_FOR_HELP,
+		cli.ASV_RS_FOR_HELP,
+		cli.USV_FS_FOR_HELP,
+		cli.USV_RS_FOR_HELP,
 		lib.DOC_URL,
-		cliutil.ASV_FS_FOR_HELP,
-		cliutil.ASV_RS_FOR_HELP,
-		cliutil.USV_FS_FOR_HELP,
-		cliutil.USV_RS_FOR_HELP,
-		cliutil.DEFAULT_JSON_FLATTEN_SEPARATOR,
+		cli.ASV_FS_FOR_HELP,
+		cli.ASV_RS_FOR_HELP,
+		cli.USV_FS_FOR_HELP,
+		cli.USV_RS_FOR_HELP,
+		cli.DEFAULT_JSON_FLATTEN_SEPARATOR,
 	)
 	fmt.Println()
 }

@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/input"
 	"mlr/src/lib"
 	"mlr/src/transformers/utils"
@@ -48,7 +48,7 @@ type tJoinOptions struct {
 	prepipeIsRaw bool
 
 	// These allow the joiner to have its own different format/delimiter for the left-file:
-	joinReaderOptions cliutil.TReaderOptions
+	joinReaderOptions cli.TReaderOptions
 }
 
 func newJoinOptions() *tJoinOptions {
@@ -137,7 +137,7 @@ func transformerJoinParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	mainOptions *cliutil.TOptions, // Options for the right-files
+	mainOptions *cli.TOptions, // Options for the right-files
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -164,30 +164,30 @@ func transformerJoinParseCLI(
 			transformerSortUsage(os.Stdout, true, 0)
 
 		} else if opt == "--prepipe" {
-			opts.prepipe = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.prepipe = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			opts.prepipeIsRaw = false
 
 		} else if opt == "--prepipex" {
-			opts.prepipe = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.prepipe = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			opts.prepipeIsRaw = true
 
 		} else if opt == "-f" {
-			opts.leftFileName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.leftFileName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-j" {
-			opts.outputJoinFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			opts.outputJoinFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-l" {
-			opts.leftJoinFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			opts.leftJoinFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-r" {
-			opts.rightJoinFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			opts.rightJoinFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--lp" {
-			opts.leftPrefix = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.leftPrefix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--rp" {
-			opts.rightPrefix = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.rightPrefix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--np" {
 			opts.emitPairables = false
@@ -209,7 +209,7 @@ func transformerJoinParseCLI(
 			// loop (so individual if-statements don't need to). However,
 			// ParseReaderOptions expects it unadvanced.
 			rargi := argi - 1
-			if cliutil.ParseReaderOptions(args, argc, &rargi, &opts.joinReaderOptions) {
+			if cli.ParseReaderOptions(args, argc, &rargi, &opts.joinReaderOptions) {
 				// This lets mlr main and mlr join have different input formats.
 				// Nothing else to handle here.
 				argi = rargi

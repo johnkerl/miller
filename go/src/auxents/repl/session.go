@@ -26,7 +26,7 @@ import (
 	"strings"
 	"syscall"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/dsl/cst"
 	"mlr/src/input"
 	"mlr/src/lib"
@@ -43,7 +43,7 @@ func NewRepl(
 	showPrompts bool,
 	astPrintMode ASTPrintMode,
 	doWarnings bool,
-	options *cliutil.TOptions,
+	options *cli.TOptions,
 ) (*Repl, error) {
 
 	recordReader := input.Create(&options.ReaderOptions)

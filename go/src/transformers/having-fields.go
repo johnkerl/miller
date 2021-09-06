@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -66,7 +66,7 @@ func transformerHavingFieldsParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	havingFieldsCriterion := havingFieldsCriterionUnspecified
@@ -90,32 +90,32 @@ func transformerHavingFieldsParseCLI(
 
 		} else if opt == "--at-least" {
 			havingFieldsCriterion = havingFieldsAtLeast
-			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			regexString = ""
 
 		} else if opt == "--which-are" {
 			havingFieldsCriterion = havingFieldsWhichAre
-			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			regexString = ""
 
 		} else if opt == "--at-most" {
 			havingFieldsCriterion = havingFieldsAtMost
-			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			regexString = ""
 
 		} else if opt == "--all-matching" {
 			havingFieldsCriterion = havingAllFieldsMatching
-			regexString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			regexString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			fieldNames = nil
 
 		} else if opt == "--any-matching" {
 			havingFieldsCriterion = havingAnyFieldsMatching
-			regexString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			regexString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			fieldNames = nil
 
 		} else if opt == "--none-matching" {
 			havingFieldsCriterion = havingNoFieldsMatching
-			regexString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			regexString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			fieldNames = nil
 
 		} else {

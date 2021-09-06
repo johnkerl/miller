@@ -1,11 +1,11 @@
-package cli
+package climain
 
 import (
 	"fmt"
 	"os"
 
 	"mlr/src/auxents/help"
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/transformers"
 	"mlr/src/types"
@@ -14,11 +14,11 @@ import (
 
 // ----------------------------------------------------------------
 func ParseCommandLine(args []string) (
-	options cliutil.TOptions,
+	options cli.TOptions,
 	recordTransformers []transformers.IRecordTransformer,
 	err error,
 ) {
-	options = cliutil.DefaultOptions()
+	options = cli.DefaultOptions()
 	argc := len(args)
 	argi := 1
 
@@ -37,7 +37,7 @@ func ParseCommandLine(args []string) (
 
 		} else if args[argi] == "--cpuprofile" {
 			// Already handled in main(); ignore here.
-			cliutil.CheckArgCount(args, argi, argc, 1)
+			cli.CheckArgCount(args, argi, argc, 1)
 			argi += 2
 		} else if args[argi] == "--version" {
 			fmt.Printf("Miller %s\n", version.STRING)
@@ -49,17 +49,17 @@ func ParseCommandLine(args []string) (
 			os.Exit(0)
 
 			// TODO
-			//		} else if cliutil.FLAG_TABLE.Parse(args, argc, &argi, &options) {
+			//		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, &options) {
 			//			// handled
 
-		} else if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
+		} else if cli.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
 			// handled
-		} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
+		} else if cli.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
 			// handled
-		} else if cliutil.ParseReaderWriterOptions(args, argc, &argi,
+		} else if cli.ParseReaderWriterOptions(args, argc, &argi,
 			&options.ReaderOptions, &options.WriterOptions) {
 			// handled
-		} else if cliutil.ParseMiscOptions(args, argc, &argi, &options) {
+		} else if cli.ParseMiscOptions(args, argc, &argi, &options) {
 			// handled
 		} else {
 			// unhandled
@@ -69,8 +69,8 @@ func ParseCommandLine(args []string) (
 		}
 	}
 
-	cliutil.ApplyReaderOptionDefaults(&options.ReaderOptions)
-	cliutil.ApplyWriterOptionDefaults(&options.WriterOptions)
+	cli.ApplyReaderOptionDefaults(&options.ReaderOptions)
+	cli.ApplyWriterOptionDefaults(&options.WriterOptions)
 
 	// Set an optional global formatter for floating-point values
 	if options.WriterOptions.FPOFMT != "" {
@@ -88,7 +88,7 @@ func ParseCommandLine(args []string) (
 		options.NoInput = true // e.g. then-chain begins with seqgen
 	}
 
-	if cliutil.DecideFinalFlatten(&options) {
+	if cli.DecideFinalFlatten(&options) {
 		// E.g. '{"req": {"method": "GET", "path": "/api/check"}}' becomes
 		// req.method=GET,req.path=/api/check.
 		transformer, err := transformers.NewTransformerFlatten(options.WriterOptions.FLATSEP, nil)
@@ -97,7 +97,7 @@ func ParseCommandLine(args []string) (
 		recordTransformers = append(recordTransformers, transformer)
 	}
 
-	if cliutil.DecideFinalUnflatten(&options) {
+	if cli.DecideFinalUnflatten(&options) {
 		// E.g.  req.method=GET,req.path=/api/check becomes
 		// '{"req": {"method": "GET", "path": "/api/check"}}'
 		transformer, err := transformers.NewTransformerUnflatten(options.WriterOptions.FLATSEP, nil)
@@ -137,7 +137,7 @@ func parseTransformers(
 	args []string,
 	pargi *int,
 	argc int,
-	options *cliutil.TOptions,
+	options *cli.TOptions,
 ) (
 	transformerList []transformers.IRecordTransformer,
 	ignoresInput bool,
@@ -164,7 +164,7 @@ func parseTransformers(
 	onFirst := true
 
 	for {
-		cliutil.CheckArgCount(args, argi, argc, 1)
+		cli.CheckArgCount(args, argi, argc, 1)
 		verb := args[argi]
 
 		transformerSetup := transformers.LookUp(verb)

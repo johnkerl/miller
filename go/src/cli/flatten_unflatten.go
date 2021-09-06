@@ -1,4 +1,4 @@
-package cliutil
+package cli
 
 // ================================================================
 // Decide whether to insert a flatten or unflatten verb at the end of the

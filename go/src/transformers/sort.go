@@ -48,7 +48,7 @@ import (
 	"sort"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -97,7 +97,7 @@ func transformerSortParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -119,14 +119,14 @@ func transformerSortParseCLI(
 			transformerSortUsage(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalAscendingComparator)
 			}
 
 		} else if opt == "-r" {
-			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalDescendingComparator)
@@ -159,7 +159,7 @@ func transformerSortParseCLI(
 			if args[argi] == "-f" {
 				// Treat like "-nf"
 				argi++
-				subList := cliutil.VerbGetStringArrayArgOrDie(verb, "-nf", args, &argi, argc)
+				subList := cli.VerbGetStringArrayArgOrDie(verb, "-nf", args, &argi, argc)
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
@@ -168,7 +168,7 @@ func transformerSortParseCLI(
 			} else if args[argi] == "-r" {
 				// Treat like "-nr"
 				argi++
-				subList := cliutil.VerbGetStringArrayArgOrDie(verb, "-nr", args, &argi, argc)
+				subList := cli.VerbGetStringArrayArgOrDie(verb, "-nr", args, &argi, argc)
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparator)
@@ -176,7 +176,7 @@ func transformerSortParseCLI(
 
 			} else {
 				// Treat like "-n"
-				subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+				subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 				for _, item := range subList {
 					groupByFieldNames = append(groupByFieldNames, item)
 					comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
@@ -184,14 +184,14 @@ func transformerSortParseCLI(
 			}
 
 		} else if opt == "-nf" {
-			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericAscendingComparator)
 			}
 
 		} else if opt == "-nr" {
-			subList := cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.NumericDescendingComparator)

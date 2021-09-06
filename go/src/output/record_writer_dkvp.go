@@ -4,16 +4,16 @@ import (
 	"bytes"
 	"io"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/colorizer"
 	"mlr/src/types"
 )
 
 type RecordWriterDKVP struct {
-	writerOptions *cliutil.TWriterOptions
+	writerOptions *cli.TWriterOptions
 }
 
-func NewRecordWriterDKVP(writerOptions *cliutil.TWriterOptions) *RecordWriterDKVP {
+func NewRecordWriterDKVP(writerOptions *cli.TWriterOptions) *RecordWriterDKVP {
 	return &RecordWriterDKVP{
 		writerOptions: writerOptions,
 	}

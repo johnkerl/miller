@@ -1,4 +1,4 @@
-package cli
+package climain
 
 // ================================================================
 // Stuff needing to be ported from C
