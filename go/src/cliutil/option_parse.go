@@ -25,6 +25,98 @@ const USV_FS_FOR_HELP = "U+241F (UTF-8 0xe2909f)"
 const USV_RS_FOR_HELP = "U+241E (UTF-8 0xe2909e)"
 const DEFAULT_JSON_FLATTEN_SEPARATOR = "."
 
+// ----------------------------------------------------------------
+// TODO: move these to their own file
+
+// E.g. if IFS isn't specified, it's space for NIDX and comma for DKVP, etc.
+
+var defaultFSes = map[string]string{
+	// "gen" : // TODO
+	"csv":      ",",
+	"csvlite":  ",",
+	"dkvp":     ",",
+	"json":     ",", // not honored; not parameterizable in JSON format
+	"nidx":     " ",
+	"markdown": " ",
+	"pprint":   " ",
+	"xtab":     "\n", // todo: windows-dependent ...
+}
+
+var defaultPSes = map[string]string{
+	"csv":      "=",
+	"csvlite":  "=",
+	"dkvp":     "=",
+	"json":     "=", // not honored; not parameterizable in JSON format
+	"markdown": "=",
+	"nidx":     "=",
+	"pprint":   "=",
+	"xtab":     " ", // todo: windows-dependent ...
+}
+
+var defaultRSes = map[string]string{
+	"csv":      "\n",
+	"csvlite":  "\n",
+	"dkvp":     "\n",
+	"json":     "\n", // not honored; not parameterizable in JSON format
+	"markdown": "\n",
+	"nidx":     "\n",
+	"pprint":   "\n",
+	"xtab":     "\n\n", // todo: maybe jettison the idea of this being alterable
+}
+
+var defaultAllowRepeatIFSes = map[string]bool{
+	"csv":      false,
+	"csvlite":  false,
+	"dkvp":     false,
+	"json":     false,
+	"markdown": false,
+	"nidx":     false,
+	"pprint":   true,
+	"xtab":     false,
+}
+
+var defaultAllowRepeatIPSes = map[string]bool{
+	"csv":      false,
+	"csvlite":  false,
+	"dkvp":     false,
+	"json":     false,
+	"markdown": false,
+	"nidx":     false,
+	"pprint":   false,
+	"xtab":     true,
+}
+
+func ApplyReaderOptionDefaults(readerOptions *TReaderOptions) {
+	if !readerOptions.IFSWasSpecified {
+		readerOptions.IFS = defaultFSes[readerOptions.InputFileFormat]
+	}
+	if !readerOptions.IPSWasSpecified {
+		readerOptions.IPS = defaultPSes[readerOptions.InputFileFormat]
+	}
+	if !readerOptions.IRSWasSpecified {
+		readerOptions.IRS = defaultRSes[readerOptions.InputFileFormat]
+	}
+	if !readerOptions.AllowRepeatIFSWasSpecified {
+		readerOptions.AllowRepeatIFS = defaultAllowRepeatIFSes[readerOptions.InputFileFormat]
+	}
+	if !readerOptions.AllowRepeatIPSWasSpecified {
+		readerOptions.AllowRepeatIPS = defaultAllowRepeatIPSes[readerOptions.InputFileFormat]
+	}
+}
+
+func ApplyWriterOptionDefaults(writerOptions *TWriterOptions) {
+	if !writerOptions.OFSWasSpecified {
+		writerOptions.OFS = defaultFSes[writerOptions.OutputFileFormat]
+	}
+	if !writerOptions.OPSWasSpecified {
+		writerOptions.OPS = defaultPSes[writerOptions.OutputFileFormat]
+	}
+	if !writerOptions.ORSWasSpecified {
+		writerOptions.ORS = defaultRSes[writerOptions.OutputFileFormat]
+	}
+}
+
+// ----------------------------------------------------------------
 // Returns true if the current flag was handled. Exported for use by join.
 func ParseReaderOptions(
 	args []string,
@@ -1155,96 +1247,1923 @@ func ParseMiscOptions(
 		}
 		argi += 2
 
+	} else if args[argi] == "--list" {
+		argi += 1
+		FLAG_TABLE.ListTemp()
+		os.Exit(0)
+
 	}
 	*pargi = argi
 	return argi != oargi
 }
 
-// ----------------------------------------------------------------
-// E.g. if IFS isn't specified, it's space for NIDX and comma for DKVP, etc.
+// ================================================================
 
-var defaultFSes = map[string]string{
-	// "gen" : // TODO
-	"csv":      ",",
-	"csvlite":  ",",
-	"dkvp":     ",",
-	"json":     ",", // not honored; not parameterizable in JSON format
-	"nidx":     " ",
-	"markdown": " ",
-	"pprint":   " ",
-	"xtab":     "\n", // todo: windows-dependent ...
+var FLAG_TABLE = FlagTable{
+	sections: []*FlagSection{
+		&LegacyFlagSection,
+		&SeparatorFlagSection,
+		&JSONOnlyFlagSection,
+		&FileFormatFlagSection,
+		&CSVOnlyFlagSection,
+		&CompressedDataFlagSection,
+		&CommentsInDataFlagSection,
+		&OutputColorizationFlagSection,
+		&FlattenUnflattenFlagSection,
+		&MiscFlagSection,
+	},
 }
 
-var defaultPSes = map[string]string{
-	"csv":      "=",
-	"csvlite":  "=",
-	"dkvp":     "=",
-	"json":     "=", // not honored; not parameterizable in JSON format
-	"markdown": "=",
-	"nidx":     "=",
-	"pprint":   "=",
-	"xtab":     " ", // todo: windows-dependent ...
+func init() {
+	FLAG_TABLE.Sort()
 }
 
-var defaultRSes = map[string]string{
-	"csv":      "\n",
-	"csvlite":  "\n",
-	"dkvp":     "\n",
-	"json":     "\n", // not honored; not parameterizable in JSON format
-	"markdown": "\n",
-	"nidx":     "\n",
-	"pprint":   "\n",
-	"xtab":     "\n\n", // todo: maybe jettison the idea of this being alterable
+// ================================================================
+// SEPARATOR FLAGS
+
+func init() { SeparatorFlagSection.Sort() }
+
+var SeparatorFlagSection = FlagSection{
+	name: "separator flags",
+	flags: []Flag{
+
+		{
+			name: "--ifs",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.IFS = SeparatorFromArg(args[*pargi+1])
+				options.ReaderOptions.IFSWasSpecified = true
+				*pargi += 2
+			},
+			forReader: true,
+			forWriter: false,
+		},
+
+		{
+			name: "--ips",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.IPS = SeparatorFromArg(args[*pargi+1])
+				options.ReaderOptions.IPSWasSpecified = true
+				*pargi += 2
+			},
+			forReader: true,
+			forWriter: false,
+		},
+
+		{
+			name: "--irs",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.IRS = SeparatorFromArg(args[*pargi+1])
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 2
+			},
+			forReader: true,
+			forWriter: false,
+		},
+
+		{
+			name: "--repifs",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.AllowRepeatIFS = true
+				options.ReaderOptions.AllowRepeatIFSWasSpecified = true
+				*pargi += 1
+			},
+			forReader: true,
+		},
+
+		{
+			name: "--rs",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.IRS = SeparatorFromArg(args[*pargi+1])
+				options.WriterOptions.ORS = SeparatorFromArg(args[*pargi+1])
+				options.ReaderOptions.IRSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 2
+			},
+			forReader: true,
+			forWriter: true,
+		},
+
+		{
+			name: "--fs",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.IFS = SeparatorFromArg(args[*pargi+1])
+				options.WriterOptions.OFS = SeparatorFromArg(args[*pargi+1])
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 2
+			},
+			forReader: true,
+			forWriter: true,
+		},
+
+		{
+			name: "--ps",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.IPS = SeparatorFromArg(args[*pargi+1])
+				options.WriterOptions.OPS = SeparatorFromArg(args[*pargi+1])
+				options.ReaderOptions.IPSWasSpecified = true
+				options.WriterOptions.OPSWasSpecified = true
+				*pargi += 2
+			},
+			forReader: true,
+			forWriter: true,
+		},
+	},
 }
 
-var defaultAllowRepeatIFSes = map[string]bool{
-	"csv":      false,
-	"csvlite":  false,
-	"dkvp":     false,
-	"json":     false,
-	"markdown": false,
-	"nidx":     false,
-	"pprint":   true,
-	"xtab":     false,
+// ================================================================
+// JSON-ONLY FLAGS
+
+func init() { JSONOnlyFlagSection.Sort() }
+
+var JSONOnlyFlagSection = FlagSection{
+	name: "json-only flags",
+	flags: []Flag{
+
+		{
+			name: "--jvstack",
+			help: "Help goes here",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.JSONOutputMultiline = true
+				*pargi += 1
+			},
+			forWriter: true,
+		},
+
+		{
+			name: "--no-jvstack",
+			help: "Help goes here",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.JSONOutputMultiline = false
+				*pargi += 1
+			},
+			forWriter: true,
+		},
+
+		{
+			name: "--jlistwrap",
+			help: "Help goes here",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.WrapJSONOutputInOuterList = true
+				*pargi += 1
+			},
+			forWriter: true,
+		},
+
+		{
+			name:   "--jknquoteint",
+			help:   NoOpHelp,
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--jquoteall",
+			help:   NoOpHelp,
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--jvquoteall",
+			help:   NoOpHelp,
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--json-fatal-arrays-on-input",
+			help:   NoOpHelp,
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--json-skip-arrays-on-input",
+			help:   NoOpHelp,
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--json-skip-arrays-on-input",
+			help:   NoOpHelp,
+			parser: NoOpParse1,
+		},
+	},
 }
 
-var defaultAllowRepeatIPSes = map[string]bool{
-	"csv":      false,
-	"csvlite":  false,
-	"dkvp":     false,
-	"json":     false,
-	"markdown": false,
-	"nidx":     false,
-	"pprint":   false,
-	"xtab":     true,
+// ================================================================
+// LEGACY FLAGS
+
+func init() { LegacyFlagSection.Sort() }
+
+var LegacyFlagSection = FlagSection{
+	name: "legacy flags",
+	flags: []Flag{
+
+		{
+			name:      "--mmap",
+			help:      NoOpHelp,
+			parser:    NoOpParse1,
+			forReader: true,
+		},
+
+		{
+			name:      "--no-mmap",
+			help:      NoOpHelp,
+			parser:    NoOpParse1,
+			forReader: true,
+		},
+
+		{
+			name:      "--no-fflush",
+			help:      NoOpHelp,
+			parser:    NoOpParse1,
+			forWriter: true,
+		},
+	},
 }
 
-func ApplyReaderOptionDefaults(readerOptions *TReaderOptions) {
-	if !readerOptions.IFSWasSpecified {
-		readerOptions.IFS = defaultFSes[readerOptions.InputFileFormat]
-	}
-	if !readerOptions.IPSWasSpecified {
-		readerOptions.IPS = defaultPSes[readerOptions.InputFileFormat]
-	}
-	if !readerOptions.IRSWasSpecified {
-		readerOptions.IRS = defaultRSes[readerOptions.InputFileFormat]
-	}
-	if !readerOptions.AllowRepeatIFSWasSpecified {
-		readerOptions.AllowRepeatIFS = defaultAllowRepeatIFSes[readerOptions.InputFileFormat]
-	}
-	if !readerOptions.AllowRepeatIPSWasSpecified {
-		readerOptions.AllowRepeatIPS = defaultAllowRepeatIPSes[readerOptions.InputFileFormat]
-	}
+// ================================================================
+// FILE-FORMAT FLAGS
+
+func init() { FileFormatFlagSection.Sort() }
+
+var FileFormatFlagSection = FlagSection{
+	name: "file-format flags",
+	flags: []Flag{
+
+		{
+			name: "--icsv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--icsvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--itsv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--itsvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--iasv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = ASV_FS
+				options.ReaderOptions.IRS = ASV_RS
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--iasvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = ASV_FS
+				options.ReaderOptions.IRS = ASV_RS
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--iusv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = USV_FS
+				options.ReaderOptions.IRS = USV_RS
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--iusvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = USV_FS
+				options.ReaderOptions.IRS = USV_RS
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--idkvp",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ijson",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--inidx",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ixtab",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ipprint",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.ReaderOptions.IFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "-i",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.InputFileFormat = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+
+		//{
+		//	name: "--igen",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.ReaderOptions.InputFileFormat = "gen"
+		//		*pargi += 1
+		//	},
+		//},
+		//{
+		//	name: "--gen-start",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.ReaderOptions.InputFileFormat = "gen"
+		//		CheckArgCount(args, *pargi, argc, 2)
+		//		if sscanf(args[*pargi+1], "%lld", &options.ReaderOptions.generator_opts.start) != 1 {
+		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
+		//				"mlr", args[*pargi+1])
+		//		}
+		//		*pargi += 2
+		//	},
+		//},
+		//{
+		//	name: "--gen-stop",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.ReaderOptions.InputFileFormat = "gen"
+		//		CheckArgCount(args, *pargi, argc, 2)
+		//		if sscanf(args[*pargi+1], "%lld", &options.ReaderOptions.generator_opts.stop) != 1 {
+		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
+		//				"mlr", args[*pargi+1])
+		//		}
+		//		*pargi += 2
+		//	},
+		//},
+		//{
+		//	name: "--gen-step",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.ReaderOptions.InputFileFormat = "gen"
+		//		CheckArgCount(args, *pargi, argc, 2)
+		//		if sscanf(args[*pargi+1], "%lld", &options.ReaderOptions.generator_opts.step) != 1 {
+		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
+		//				"mlr", args[*pargi+1])
+		//		}
+		//		*pargi += 2
+		//	},
+		//},
+
+		{
+			name: "--ors",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.WriterOptions.ORS = SeparatorFromArg(args[*pargi+1])
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--ofs",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.WriterOptions.OFS = SeparatorFromArg(args[*pargi+1])
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--ops",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.WriterOptions.OPS = SeparatorFromArg(args[*pargi+1])
+				options.WriterOptions.OPSWasSpecified = true
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "-o",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.WriterOptions.OutputFileFormat = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--ocsv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "csv"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ocsvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--otsv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.OFS = "\t"
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--otsvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.WriterOptions.OFS = "\t"
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--oasv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.WriterOptions.OFS = ASV_FS
+				options.WriterOptions.ORS = ASV_RS
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--oasvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.WriterOptions.OFS = ASV_FS
+				options.WriterOptions.ORS = ASV_RS
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ousv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.WriterOptions.OFS = USV_FS
+				options.WriterOptions.ORS = USV_RS
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ousvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.WriterOptions.OFS = USV_FS
+				options.WriterOptions.ORS = USV_RS
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--omd",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--odkvp",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--ojson",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--ojsonx",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				// --jvstack is now the default in Miller 6 so this is just for backward compatibility
+				options.WriterOptions.OutputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--onidx",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "nidx"
+				options.WriterOptions.OFS = " "
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--oxtab",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "xtab"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--opprint",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.OutputFileFormat = "pprint"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--right",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.RightAlignedPprintOutput = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--barred",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.BarredPprintOutput = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--io",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				if defaultFSes[args[*pargi+1]] == "" {
+					fmt.Fprintf(os.Stderr, "%s: unrecognized I/O format \"%s\".\n",
+						"mlr", args[*pargi+1])
+					os.Exit(1)
+				}
+				options.ReaderOptions.InputFileFormat = args[*pargi+1]
+				options.WriterOptions.OutputFileFormat = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+
+		{
+			name:     "--csv",
+			altNames: []string{"-c"},
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.WriterOptions.OutputFileFormat = "csv"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--csvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.WriterOptions.OutputFileFormat = "csv"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--tsv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.WriterOptions.OFS = "\t"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name:     "--tsvlite",
+			altNames: []string{"-t"},
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = "\t"
+				options.WriterOptions.OFS = "\t"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--asv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = ASV_FS
+				options.WriterOptions.OFS = ASV_FS
+				options.ReaderOptions.IRS = ASV_RS
+				options.WriterOptions.ORS = ASV_RS
+				options.ReaderOptions.IFSWasSpecified = true
+
+				options.ReaderOptions.IRSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--asvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = ASV_FS
+				options.WriterOptions.OFS = ASV_FS
+				options.ReaderOptions.IRS = ASV_RS
+				options.WriterOptions.ORS = ASV_RS
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--usv",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = USV_FS
+				options.WriterOptions.OFS = USV_FS
+				options.ReaderOptions.IRS = USV_RS
+				options.WriterOptions.ORS = USV_RS
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--usvlite",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csvlite"
+				options.WriterOptions.OutputFileFormat = "csvlite"
+				options.ReaderOptions.IFS = USV_FS
+				options.WriterOptions.OFS = USV_FS
+				options.ReaderOptions.IRS = USV_RS
+				options.WriterOptions.ORS = USV_RS
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--dkvp",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				*pargi += 1
+			},
+		},
+
+		{
+			name:     "--json",
+			altNames: []string{"-j"},
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--jsonx",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				// --jvstack is now the default in Miller 6 so this is just for backward compatibility
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--nidx",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OFS = " "
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "-T",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				options.ReaderOptions.IFS = "\t"
+				options.WriterOptions.OFS = "\t"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--xtab",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "xtab"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--pprint",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OutputFileFormat = "pprint"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--c2t",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.WriterOptions.OFS = "\t"
+				options.ReaderOptions.IRSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--c2d",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--c2n",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				options.WriterOptions.OFS = " "
+				options.ReaderOptions.IRSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--c2j",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--c2p",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--c2b",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				options.WriterOptions.BarredPprintOutput = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--c2x",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "xtab"
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--c2m",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "markdown"
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--t2c",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--t2d",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--t2n",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				options.WriterOptions.OFS = " "
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--t2j",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "json"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--t2p",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--t2b",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				options.WriterOptions.BarredPprintOutput = true
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--t2x",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "xtab"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--t2m",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "csv"
+				options.ReaderOptions.IFS = "\t"
+				options.ReaderOptions.IRS = "auto"
+				options.WriterOptions.OutputFileFormat = "markdown"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.ReaderOptions.IRSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--d2c",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--d2t",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.WriterOptions.OFS = "\t"
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--d2n",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				options.WriterOptions.OFS = " "
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--d2j",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--d2p",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--d2b",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				options.WriterOptions.BarredPprintOutput = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--d2x",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "xtab"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--d2m",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "dkvp"
+				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--n2c",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--n2t",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.WriterOptions.OFS = "\t"
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--n2d",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--n2j",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--n2p",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--n2b",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				options.WriterOptions.BarredPprintOutput = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--n2x",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "xtab"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--n2m",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--j2c",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--j2t",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.WriterOptions.OFS = "\t"
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--j2d",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--j2n",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--j2p",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--j2b",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				options.WriterOptions.BarredPprintOutput = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--j2x",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "xtab"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--j2m",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "json"
+				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--p2c",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--p2t",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.WriterOptions.OFS = "\t"
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--p2d",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				options.ReaderOptions.IFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--p2n",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OutputFileFormat = "nidx"
+				options.ReaderOptions.IFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--p2j",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OutputFileFormat = "json"
+				options.ReaderOptions.IFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--p2x",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OutputFileFormat = "xtab"
+				options.ReaderOptions.IFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--p2m",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OutputFileFormat = "markdown"
+				options.ReaderOptions.IFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--x2c",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--x2t",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.ORS = "auto"
+				options.WriterOptions.OFS = "\t"
+				options.WriterOptions.OFSWasSpecified = true
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--x2d",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "dkvp"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--x2n",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--x2j",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "json"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--x2p",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--x2b",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "pprint"
+				options.WriterOptions.BarredPprintOutput = true
+				*pargi += 1
+			},
+		},
+		{
+			name: "--x2m",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "markdown"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "-p",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OFS = " "
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				options.ReaderOptions.AllowRepeatIFS = true
+				options.ReaderOptions.AllowRepeatIFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+	},
 }
 
-func ApplyWriterOptionDefaults(writerOptions *TWriterOptions) {
-	if !writerOptions.OFSWasSpecified {
-		writerOptions.OFS = defaultFSes[writerOptions.OutputFileFormat]
-	}
-	if !writerOptions.OPSWasSpecified {
-		writerOptions.OPS = defaultPSes[writerOptions.OutputFileFormat]
-	}
-	if !writerOptions.ORSWasSpecified {
-		writerOptions.ORS = defaultRSes[writerOptions.OutputFileFormat]
-	}
+// ================================================================
+// CSV FLAGS
+
+func init() { CSVOnlyFlagSection.Sort() }
+
+var CSVOnlyFlagSection = FlagSection{
+	name: "CSV-only flags",
+	flags: []Flag{
+
+		{
+			name: "--no-implicit-csv-header",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.UseImplicitCSVHeader = false
+				*pargi += 1
+			},
+		},
+
+		{
+			name:     "--allow-ragged-csv-input",
+			altNames: []string{"--ragged"},
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.AllowRaggedCSVInput = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--implicit-csv-header",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.UseImplicitCSVHeader = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--headerless-csv-output",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.HeaderlessCSVOutput = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "-N",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.UseImplicitCSVHeader = true
+				options.WriterOptions.HeaderlessCSVOutput = true
+				*pargi += 1
+			},
+		},
+
+		//{
+		//		name: "--quote-all",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.WriterOptions.oquoting = QUOTE_ALL
+		//		*pargi += 1
+		//	},
+		//},
+		//{
+		//	name: "--quote-none",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.WriterOptions.oquoting = QUOTE_NONE
+		//		*pargi += 1
+		//	},
+		//},
+		//{
+		//	name: "--quote-minimal",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.WriterOptions.oquoting = QUOTE_MINIMAL
+		//		*pargi += 1
+		//	},
+		//},
+		//{
+		//	name: "--quote-numeric",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.WriterOptions.oquoting = QUOTE_NUMERIC
+		//		*pargi += 1
+		//	},
+		//},
+		//{
+		//	name: "--quote-original",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.WriterOptions.oquoting = QUOTE_ORIGINAL
+		//		*pargi += 1
+		//	},
+		//},
+
+	},
+}
+
+// ================================================================
+// COMPRESSED-DATA FLAGS
+
+func init() { CompressedDataFlagSection.Sort() }
+
+var CompressedDataFlagSection = FlagSection{
+	name: "compressed-data flags",
+	flags: []Flag{
+
+		{
+			name: "--prepipe",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.Prepipe = args[*pargi+1]
+				options.ReaderOptions.PrepipeIsRaw = false
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--prepipex",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.Prepipe = args[*pargi+1]
+				options.ReaderOptions.PrepipeIsRaw = true
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--prepipe-gunzip",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.Prepipe = "gunzip"
+				options.ReaderOptions.PrepipeIsRaw = false
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--prepipe-zcat",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.Prepipe = "zcat"
+				options.ReaderOptions.PrepipeIsRaw = false
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--prepipe-bz2",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.Prepipe = "bz2"
+				options.ReaderOptions.PrepipeIsRaw = false
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--gzin",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingGzip
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--zin",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingZlib
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--bz2in",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingBzip2
+				*pargi += 1
+			},
+		},
+	},
+}
+
+// ================================================================
+// COMMENTS-IN-DATA FLAGS
+
+func init() { CommentsInDataFlagSection.Sort() }
+
+var CommentsInDataFlagSection = FlagSection{
+	name: "comments-in-data flags",
+	flags: []Flag{
+
+		{
+			name: "--skip-comments",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.CommentString = DEFAULT_COMMENT_STRING
+				options.ReaderOptions.CommentHandling = SkipComments
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--skip-comments-with",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.CommentString = args[*pargi+1]
+				options.ReaderOptions.CommentHandling = SkipComments
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--pass-comments",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.CommentString = DEFAULT_COMMENT_STRING
+				options.ReaderOptions.CommentHandling = PassComments
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--pass-comments-with",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.CommentString = args[*pargi+1]
+				options.ReaderOptions.CommentHandling = PassComments
+				*pargi += 2
+			},
+		},
+	},
+}
+
+// ================================================================
+// OUTPUT-COLORIZATION FLAGS
+
+func init() { OutputColorizationFlagSection.Sort() }
+
+var OutputColorizationFlagSection = FlagSection{
+	name: "output-colorization flags",
+	flags: []Flag{
+
+		{
+			name: "--list-color-codes",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				colorizer.ListColorCodes()
+				os.Exit(0)
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--list-color-names",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				colorizer.ListColorNames()
+				os.Exit(0)
+				*pargi += 1
+			},
+		},
+
+		{
+			name:     "--no-color",
+			altNames: []string{"-M"},
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				colorizer.SetColorization(colorizer.ColorizeOutputNever)
+				*pargi += 1
+			},
+		},
+
+		{
+			name:     "--always-color",
+			altNames: []string{"-C"},
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				colorizer.SetColorization(colorizer.ColorizeOutputAlways)
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--key-color",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				ok := colorizer.SetKeyColor(args[*pargi+1])
+				if !ok {
+					fmt.Fprintf(os.Stderr,
+						"%s: --key-color argument unrecognized; got \"%s\".\n",
+						"mlr", args[*pargi+1])
+					os.Exit(1)
+				}
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--value-color",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				ok := colorizer.SetValueColor(args[*pargi+1])
+				if !ok {
+					fmt.Fprintf(os.Stderr,
+						"%s: --value-color argument unrecognized; got \"%s\".\n",
+						"mlr", args[*pargi+1])
+					os.Exit(1)
+				}
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--pass-color",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				ok := colorizer.SetPassColor(args[*pargi+1])
+				if !ok {
+					fmt.Fprintf(os.Stderr,
+						"%s: --pass-color argument unrecognized; got \"%s\".\n",
+						"mlr", args[*pargi+1])
+					os.Exit(1)
+				}
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--fail-color",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				ok := colorizer.SetFailColor(args[*pargi+1])
+				if !ok {
+					fmt.Fprintf(os.Stderr,
+						"%s: --fail-color argument unrecognized; got \"%s\".\n",
+						"mlr", args[*pargi+1])
+					os.Exit(1)
+				}
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--help-color",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				ok := colorizer.SetHelpColor(args[*pargi+1])
+				if !ok {
+					fmt.Fprintf(os.Stderr,
+						"%s: --help-color argument unrecognized; got \"%s\".\n",
+						"mlr", args[*pargi+1])
+					os.Exit(1)
+				}
+				*pargi += 2
+			},
+		},
+	},
+}
+
+// ================================================================
+// FLATTEN/UNFLATTEN FLAGS
+
+func init() { FlattenUnflattenFlagSection.Sort() }
+
+var FlattenUnflattenFlagSection = FlagSection{
+	name: "flatten-unflatten flags",
+	flags: []Flag{
+
+		{
+			name:     "--flatsep",
+			altNames: []string{"--jflatsep", "--oflatsep"}, // TODO: really need all for miller5 back-compat?
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.WriterOptions.FLATSEP = SeparatorFromArg(args[*pargi+1])
+				*pargi += 2
+			},
+		},
+
+		//{
+		//	name: "--xvright",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		options.WriterOptions.right_justify_xtab_value = true
+		//		*pargi += 1
+		//	},
+		//},
+
+		//{
+		//	name: "--vflatsep",
+		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//		CheckArgCount(args, *pargi, argc, 2)
+		//		// No-op pass-through for backward compatibility with Miller 5
+		//		*pargi += 2
+		// },
+		//},
+
+		{
+			name: "--no-auto-flatten",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.AutoFlatten = false
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--no-auto-unflatten",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.AutoUnflatten = false
+				*pargi += 1
+			},
+		},
+	},
+}
+
+// ================================================================
+// MISC FLAGS
+
+func init() { MiscFlagSection.Sort() }
+
+var MiscFlagSection = FlagSection{
+	name: "miscellaneous flags",
+	flags: []Flag{
+
+		{
+			name: "-n",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.NoInput = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "-I",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.DoInPlace = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--from",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.FileNames = append(options.FileNames, args[*pargi+1])
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--mfrom",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				*pargi += 1
+				for *pargi < argc && args[*pargi] != "--" {
+					options.FileNames = append(options.FileNames, args[*pargi])
+					*pargi += 1
+				}
+				if args[*pargi] == "--" {
+					*pargi += 1
+				}
+			},
+		},
+
+		{
+			name: "--ofmt",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.WriterOptions.FPOFMT = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+
+		// TODO: move to another (or new) section
+		{
+			name: "--load",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[*pargi+1])
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--mload",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				*pargi += 1
+				for *pargi < argc && args[*pargi] != "--" {
+					options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[*pargi])
+					*pargi += 1
+				}
+				if args[*pargi] == "--" {
+					*pargi += 1
+				}
+			},
+		},
+
+		//		name: "--nr-progress-mod",
+		//			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+		//				CheckArgCount(args, *pargi, argc, 2);
+		//				if (sscanf(args[*pargi+1], "%lld", &options.nr_progress_mod) != 1) {
+		//					fmt.Fprintf(os.Stderr,
+		//						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+		//						"mlr", args[*pargi+1]);
+		//					mainUsageShort()
+		//					os.Exit(1);
+		//				}
+		//				if (options.nr_progress_mod <= 0) {
+		//					fmt.Fprintf(os.Stderr,
+		//						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+		//						"mlr", args[*pargi+1]);
+		//					mainUsageShort()
+		//					os.Exit(1);
+		//				}
+		//				*pargi += 2;
+		// },
+
+		{
+			name: "--seed",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				randSeed, ok := lib.TryIntFromString(args[*pargi+1])
+				if ok {
+					options.RandSeed = randSeed
+					options.HaveRandSeed = true
+				} else {
+					fmt.Fprintf(os.Stderr,
+						"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
+						"mlr", args[*pargi+1])
+					fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", "mlr")
+					os.Exit(1)
+				}
+				*pargi += 2
+			},
+		},
+	},
 }

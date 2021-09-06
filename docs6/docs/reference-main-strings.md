@@ -16,17 +16,11 @@ Quick links:
 
 TODO
 
-xxx concat
-
-xxx index and slice 1-up
-
-xxx lib functions
-
-always double-quote
-
-single-quote for shell; see windows page
-
-dot operator ...
+* concat w/ dot operator
+* index and slice 1-up
+* lib functions
+* always double-quote
+* single-quote for shell; see windows page
 
 ## Escape sequences for string literals
 

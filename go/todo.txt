@@ -113,6 +113,15 @@ w survey
 ----------------------------------------------------------------
 BLOCKERS
 
+* backcompat fail https://github.com/johnkerl/miller/discussions/640
+  μεταμόρφωσις: mapselect(splitnvx(host,"-"),1,2)
+  (error)
+  μεταμόρφωσις: mapselect(splitnvx(host,"-"),"1","2")
+  {
+    "1": "ab",
+    "2": "cd"
+  }
+
 * UTs for r"a" . r"b" and so on and so on
 
 * document precedence issue:
@@ -193,6 +202,8 @@ NON-BLOCKERS
 * uniqify-field-names in record-readers -- which issue?
 
 * non-blocker: commenting passes ...
+
+* non-blocker: array and string slices on LHS of assignments
 
 * non-blocker: feature/shorthand for repl newline before prompt
 

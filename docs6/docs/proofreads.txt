@@ -7,7 +7,16 @@ C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as wel
 
 E flatten/unflatten page
 ? twi-dm re all-contribs: all-contributors.org
+
 C flags LUTs
+  o cli,clutil package renames
+  o FlagSection type? w/ common-info func + entries
+  o Flag type? w/ name(s) & func
+  o internal-only help-verbs
+  o fold-sort
+  o uncolor " or "
+
+? mrpl print strings as "..." -- ?
 
 ----------------------------------------------------------------
 ALL:
@@ -40,10 +49,11 @@ E fill out flatten/unflatten page
 
 E fill out strings page
   e substr0/substr1/substr. slices & string-indexing new in m6.
-  c "abcde"[2:3] works but "abcde"[2] does not :(
+  t RT for string/array indexing/slicing: like python: idx oob -> error; slice out -> empty
 E fill out arrays page
   - xref to fla/unfla page
   - slices including semantics for out-of-range slices
+  t oob like python: idx oob -> error; slice out -> empty
 E fill out maps page
   - xref to fla/unfla page
   - move from reference-dsl-variables
