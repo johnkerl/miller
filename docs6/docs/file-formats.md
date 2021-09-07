@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -545,17 +547,14 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 <b>mlr help format-conversion</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-As keystroke-savers for format-conversion you may use the following:
---c2t --c2d --c2n --c2j --c2x --c2p --c2m
---t2c       --t2d --t2n --t2j --t2x --t2p --t2m
---d2c --d2t       --d2n --d2j --d2x --d2p --d2m
---n2c --n2t --n2d       --n2j --n2x --n2p --n2m
---j2c --j2t --j2d --j2n       --j2x --j2p --j2m
---x2c --x2t --x2d --x2n --x2j       --x2p --x2m
---p2c --p2t --p2d --p2n --p2j --p2x       --p2m
-The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
-PPRINT, and markdown, respectively. Note that markdown format is available for
-output only.
+TO DO: brief list of formats w/ xref to m6 webdocs.
+
+Examples: --csv for CSV-formatted input and output; --icsv --opprint for
+CSV-formatted input and pretty-printed output.
+
+Please use --iformat1 --oformat2 rather than --format1 --oformat2.
+The latter sets up input and output flags for format1, not all of which
+are overridden in all cases by setting output format to format2.
 </pre>
 
 <!---
@@ -584,20 +583,18 @@ You can include comments within your data files, and either have them ignored, o
 <b>mlr help comments-in-data</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
---skip-comments                 Ignore commented lines (prefixed by "#")
-                                within the input.
---skip-comments-with {string}   Ignore commented lines within input, with
-                                specified prefix.
---pass-comments                 Immediately print commented lines (prefixed by "#")
-                                within the input.
---pass-comments-with {string}   Immediately print commented lines within input, with
-                                specified prefix.
+Miller lets you put comments in your data, such as
+
+    # This is a comment for a CSV file
+    a,b,c
+    1,2,3
+    4,5,6
 
 Notes:
 * Comments are only honored at the start of a line.
-* In the absence of any of the above four options, comments are data like
-  any other text.
-* When pass-comments is used, comment lines are written to standard output
+* In the absence of any of the below four options, comments are data like
+  any other text. (The comments-in-data feature is opt-in.)
+* When `--pass-comments` is used, comment lines are written to standard output
   immediately upon being read; they are not part of the record stream.  Results
   may be counterintuitive. A suggestion is to place comments at the start of
   data files.

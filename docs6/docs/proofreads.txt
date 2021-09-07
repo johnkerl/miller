@@ -9,14 +9,26 @@ E flatten/unflatten page
 ? twi-dm re all-contribs: all-contributors.org
 
 C flags LUTs
-  o cli,clutil package renames
-  o FlagSection type? w/ common-info func + entries
-  o Flag type? w/ name(s) & func
-  o internal-only help-verbs
-  o fold-sort
-  o uncolor " or "
+  o bootstrap internal-only list-sections and help-for-section and a prototype autogen.rb
+  o implement autogen for docs6 flags page
+    - internal-only help-verbs as support for docs6 autogen
+    - audit backticking
+  o audit `mlr --list` section output
+    - file-format top
+    - flatten/unflatten top
+    - separator top
+  o audit `mlr --list` flag output
+    - then nilabend on empty help
+  o connect to climain & remove old if-else-if chains
+    - needs forReader / forWriter flags
+  o width-32 programmatic w/ splits on "\n"
+    - uncolor " or "
+  o assert non-nulls on all flag/section/table elements
+  o width-80 audits on mlr --list
+  o desc-to-chars map
+  o default_xses
 
-? mrpl print strings as "..." -- ?
+* nikos materials -> fold in
 
 ----------------------------------------------------------------
 ALL:
@@ -25,6 +37,7 @@ ALL:
 * check each page for adequate h2 coverage
 
 * deduping pass!
+* make table CSS on-brand
 
 * flags-doc
   C refactor cli-parser w/ LUT & help strings
@@ -159,6 +172,7 @@ E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (d
 diffs other langs:
 e slice incl/excl; split-in-half: x[:2] x[2:] vs x[:2] x[3:]
 e localvars in if/else
+e "arrays, including ..." -> 1-up array/string indexing/slicing
 
 separators:
 E write up which file formats support which flags

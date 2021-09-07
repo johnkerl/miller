@@ -1,5 +1,7 @@
 // TODO: comment
 // TODO: note complexity b/c serving many uses: main CLI, .mlrrc, some verbs; OLH/man/docs autogen
+// TODO: why not go flags
+// TODO: auto-alpha
 
 package cli
 
@@ -38,12 +40,26 @@ import (
 
 // ----------------------------------------------------------------
 // TODO: comment
+
 type FlagParser func(
 	args []string,
 	argc int,
 	pargi *int,
 	options *TOptions,
 )
+
+type SectionInfoPrinter func()
+
+type FlagTable struct {
+	sections []*FlagSection
+}
+
+type FlagSection struct {
+	name string // TODO: lowercase? capcase? upper? make methods?
+	// xxx common-info func
+	infoPrinter SectionInfoPrinter
+	flags       []Flag
+}
 
 type Flag struct {
 	// More common case: the flag has just one spelling, like "--ifs".
@@ -52,6 +68,9 @@ type Flag struct {
 	// Less common case: the flag has more than one spelling, like "-h" and "--help",
 	// or "-c" and "--csv".
 	altNames []string
+
+	// If not "", a name for the flag's argument, for on-line help. E.g. the "bar" in ""--foo {bar}".
+	arg  string
 
 	help string
 
@@ -62,65 +81,18 @@ type Flag struct {
 	forWriter bool
 }
 
-type FlagSection struct {
-	name string // TODO: lowercase? capcase? upper? make methods?
-	// xxx common-info func
-	flags []Flag
-}
+// ================================================================
+// FlagTable methods
 
-type FlagTable struct {
-	sections []*FlagSection
-}
-
-// ----------------------------------------------------------------
-// NoOpParse1 is a helper function for flags which take no argument and are
-// backward-compatibility no-ops.
-func NoOpParse1(args []string, argc int, pargi *int, options *TOptions) {
-	*pargi += 1
-}
-
-var NoOpHelp string = "No-op pass-through for backward compatibility with Miller 5."
-
-// ----------------------------------------------------------------
-// Owns determines whether this object handles a command-line flag such as "--foo".
-func (flag *Flag) Owns(input string) bool {
-	if input == flag.name {
-		return true
-	}
-
-	if flag.altNames != nil {
-		for _, name := range flag.altNames {
-			if input == name {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-// ----------------------------------------------------------------
-// Sort organizes the flags in the section alphabetically, to make on-line help
-// easier to read.
-
-func (fs *FlagSection) Sort() {
-	// Go sort API: for ascending sort, return true if element i < element j.
-	sort.Slice(fs.flags, func(i, j int) bool {
-		return strings.ToLower(fs.flags[i].name) < strings.ToLower(fs.flags[j].name)
-	})
-}
-
-// ----------------------------------------------------------------
 // Sort organizes the sections in the table alphabetically, to make on-line help
 // easier to read.
-
 func (ft *FlagTable) Sort() {
 	// Go sort API: for ascending sort, return true if element i < element j.
 	sort.Slice(ft.sections, func(i, j int) bool {
-		return ft.sections[i].name < ft.sections[j].name
+		return strings.ToLower(ft.sections[i].name) < strings.ToLower(ft.sections[j].name)
 	})
 }
 
-// ----------------------------------------------------------------
 func (ft *FlagTable) Parse(
 	args []string,
 	argc int,
@@ -142,42 +114,164 @@ func (ft *FlagTable) Parse(
 	return false
 }
 
-// ----------------------------------------------------------------
 // TODO: more options for OLH
 func (ft *FlagTable) ListTemp() {
 	for i, section := range ft.sections {
-		// TODO: colorize
 		if i > 0 {
 			fmt.Println()
 		}
 		fmt.Println(colorizer.MaybeColorizeHelp(strings.ToUpper(section.name), true))
 		fmt.Println()
-		section.ListTemp()
+		section.PrintInfo()
+		section.ShowHelpForFlags()
+	}
+}
+
+// TODO: comment more. For webdoc/manpage autogen.
+func (ft *FlagTable) ListFlagSections() {
+	for _, section := range ft.sections {
+		fmt.Println(section.name)
+	}
+}
+
+// TODO: comment more. For webdoc/manpage autogen.
+func (ft *FlagTable) PrintInfoForSection(sectionName string) bool {
+	for _, section := range ft.sections {
+		if sectionName == section.name {
+			section.PrintInfo()
+			return true
+		}
+	}
+	return false
+}
+
+// TODO: comment more. For webdoc/manpage autogen.
+func (ft *FlagTable) ListFlagsForSection(sectionName string) bool {
+	for _, section := range ft.sections {
+		if sectionName == section.name {
+			section.ListFlags()
+			return true
+		}
+	}
+	return false
+}
+
+// TODO: comment more. For webdoc/manpage autogen.
+func (ft *FlagTable) ShowHeadlineForFlag(flagName string) bool {
+	for _, fs := range ft.sections {
+		for _, flag := range fs.flags {
+			if flag.Owns(flagName) {
+				fmt.Println(flag.GetHeadline())
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// TODO: comment more. For webdoc/manpage autogen.
+func (ft *FlagTable) ShowHelpForFlag(flagName string) bool {
+	for _, fs := range ft.sections {
+		for _, flag := range fs.flags {
+			if flag.Owns(flagName) {
+				fmt.Println(flag.GetHelpOneLine())
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// ================================================================
+// FlagSection methods
+
+// TODO: more options for OLH
+
+// Sort organizes the flags in the section alphabetically, to make on-line help
+// easier to read.
+func (fs *FlagSection) Sort() {
+	// Go sort API: for ascending sort, return true if element i < element j.
+	sort.Slice(fs.flags, func(i, j int) bool {
+		return strings.ToLower(fs.flags[i].name) < strings.ToLower(fs.flags[j].name)
+	})
+}
+
+func (fs *FlagSection) PrintInfo() {
+	// TODO: remove with nilabend check
+	if fs.infoPrinter != nil {
+		fs.infoPrinter()
+		fmt.Println()
 	}
 }
 
 // TODO: more options for OLH
-func (fs *FlagSection) ListTemp() {
+func (fs *FlagSection) ListFlags() {
 	for _, flag := range fs.flags {
-		// TODO: colorize
-		//if i > 0 {
-		//fmt.Println()
-		//}
+		fmt.Println(flag.name)
+	}
+}
+
+// TODO: more options for OLH
+func (fs *FlagSection) ShowHelpForFlags() {
+	for _, flag := range fs.flags {
 		flag.ListTemp()
 	}
 }
 
+// ================================================================
+// Flag methods
+
+// Owns determines whether this object handles a command-line flag such as "--foo".
+func (flag *Flag) Owns(input string) bool {
+	if input == flag.name {
+		return true
+	}
+	if flag.altNames != nil {
+		for _, name := range flag.altNames {
+			if input == name {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func (flag *Flag) ListTemp() {
-	// TODO: make method?
+	displayText := fmt.Sprintf("%-31s", flag.GetHeadline())
+	// TODO: abend if flag.help == ""
+	help := flag.help
+	if help == "" {
+		help = "TODO WRITEME"
+	}
+	fmt.Printf("%s %s\n", colorizer.MaybeColorizeHelp(displayText, true), help)
+}
+
+// TODO: comment
+func (flag *Flag) GetHeadline() string {
 	displayNames := make([]string, 1)
 	displayNames[0] = flag.name
 	if flag.altNames != nil {
 		displayNames = append(displayNames, flag.altNames...)
 	}
 	displayText := strings.Join(displayNames, " or ")
-	// TODO: abend if flag.help == ""
-	//displayText = fmt.Sprintf("%32s", displayText)
-	//fmt.Printf("  %s: %s\n", colorizer.MaybeColorizeHelp(displayText, true), flag.help)
-	displayText = fmt.Sprintf("%-32s", displayText)
-	fmt.Printf("  %s %s\n", colorizer.MaybeColorizeHelp(displayText, true), flag.help)
+	if flag.arg != "" {
+		displayText += " "
+		displayText += flag.arg
+	}
+	return displayText
 }
+
+func (flag *Flag) GetHelpOneLine() string {
+	return strings.Join(strings.Split(flag.help, "\n"), " ")
+}
+
+// ================================================================
+// Helper methods
+
+// NoOpParse1 is a helper function for flags which take no argument and are
+// backward-compatibility no-ops.
+func NoOpParse1(args []string, argc int, pargi *int, options *TOptions) {
+	*pargi += 1
+}
+
+var NoOpHelp string = "No-op pass-through for backward compatibility with Miller 5."

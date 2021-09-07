@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -24,7 +26,7 @@ The front door is `mlr --help` or its synonym `mlr -h`. This leads you to `mlr h
 <b>mlr --help</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
+Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see 'mlr help topics' for more information.
@@ -39,35 +41,32 @@ Type 'mlr help {topic}' for any of the following:
   mlr help topics
   mlr help auxents
   mlr help basic-examples
-  mlr help comments-in-data
-  mlr help compressed-data
-  mlr help csv-options
-  mlr help data-format-options
   mlr help data-formats
-  mlr help double-quoting
-  mlr help format-conversion
   mlr help function
   mlr help keyword
   mlr help list-functions
   mlr help list-function-classes
   mlr help list-functions-in-class
   mlr help list-functions-as-paragraph
-  mlr help list-functions-as-table
   mlr help list-keywords
   mlr help list-keywords-as-paragraph
   mlr help list-verbs
   mlr help list-verbs-as-paragraph
-  mlr help misc
   mlr help mlrrc
   mlr help number-formatting
-  mlr help output-colorization
-  mlr help separator-options
   mlr help type-arithmetic-info
   mlr help usage-functions
   mlr help usage-functions-by-class
   mlr help usage-keywords
   mlr help usage-verbs
   mlr help verb
+  mlr help comments-in-data
+  mlr help compressed-data
+  mlr help data-format-options
+  mlr help double-quoting
+  mlr help format-conversion
+  mlr help separator-options
+  mlr help output-colorization
 Shorthands:
   mlr -l = mlr help list-verbs
   mlr -L = mlr help usage-verbs
@@ -85,35 +84,32 @@ Type 'mlr help {topic}' for any of the following:
   mlr help topics
   mlr help auxents
   mlr help basic-examples
-  mlr help comments-in-data
-  mlr help compressed-data
-  mlr help csv-options
-  mlr help data-format-options
   mlr help data-formats
-  mlr help double-quoting
-  mlr help format-conversion
   mlr help function
   mlr help keyword
   mlr help list-functions
   mlr help list-function-classes
   mlr help list-functions-in-class
   mlr help list-functions-as-paragraph
-  mlr help list-functions-as-table
   mlr help list-keywords
   mlr help list-keywords-as-paragraph
   mlr help list-verbs
   mlr help list-verbs-as-paragraph
-  mlr help misc
   mlr help mlrrc
   mlr help number-formatting
-  mlr help output-colorization
-  mlr help separator-options
   mlr help type-arithmetic-info
   mlr help usage-functions
   mlr help usage-functions-by-class
   mlr help usage-keywords
   mlr help usage-verbs
   mlr help verb
+  mlr help comments-in-data
+  mlr help compressed-data
+  mlr help data-format-options
+  mlr help double-quoting
+  mlr help format-conversion
+  mlr help separator-options
+  mlr help output-colorization
 Shorthands:
   mlr -l = mlr help list-verbs
   mlr -L = mlr help usage-verbs

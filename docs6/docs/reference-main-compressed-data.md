@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -89,6 +91,10 @@ data acceptable to Miller. Nominally this allows you to use whichever
 decompression utilities you have installed on your system, on a per-file basis.
 
 If the command has flags, quote them: e.g. `mlr --prepipe 'zcat -cf'`.
+
+In your [.mlrrc file](customization.md), `--prepipe` and `--prepipex` are not
+allowed as they could be used for unexpected code execution. You can use
+`--prepipe-bz2`, `--prepipe-gunzip`, and `--prepipe-zcat` in `.mlrrc`, though.
 
 Note that this feature is quite general and is not limited to decompression
 utilities. You can use it to apply per-file filters of your choice: e.g. `mlr

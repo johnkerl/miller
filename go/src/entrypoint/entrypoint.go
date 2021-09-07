@@ -14,8 +14,8 @@ import (
 	"mlr/src/platform"
 
 	"mlr/src/auxents"
-	"mlr/src/climain"
 	"mlr/src/cli"
+	"mlr/src/climain"
 	"mlr/src/lib"
 	"mlr/src/stream"
 	"mlr/src/transformers"

@@ -1263,9 +1263,11 @@ var FLAG_TABLE = FlagTable{
 	sections: []*FlagSection{
 		&LegacyFlagSection,
 		&SeparatorFlagSection,
-		&JSONOnlyFlagSection,
 		&FileFormatFlagSection,
+		&FormatConversionKeystrokeSaverFlagSection,
+		&JSONOnlyFlagSection,
 		&CSVOnlyFlagSection,
+		&PPRINTOnlyFlagSection,
 		&CompressedDataFlagSection,
 		&CommentsInDataFlagSection,
 		&OutputColorizationFlagSection,
@@ -1281,14 +1283,84 @@ func init() {
 // ================================================================
 // SEPARATOR FLAGS
 
+func SeparatorPrintInfo() {
+	fmt.Print(`Separator options:
+
+    --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'
+    --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
+    --ps     --ips     --ops              Pair separators, e.g. equals sign
+
+TODO: auto-detect is still TBD for Miller 6
+
+Notes about line endings:
+
+* Default line endings (`+"`--irs`"+` and `+"`--ors`"+`) are "auto" which means autodetect from
+  the input file format, as long as the input file(s) have lines ending in either
+  LF (also known as linefeed, `+"`\\n`"+`, `+"`0x0a`"+`, or Unix-style) or CRLF (also known as
+  carriage-return/linefeed pairs, `+"`\\r\\n`"+`, `+"`0x0d 0x0a`"+`, or Windows-style).
+* If both `+"`irs`"+` and `+"`ors`"+` are `+"`auto`"+` (which is the default) then LF input will lead to LF
+  output and CRLF input will lead to CRLF output, regardless of the platform you're
+  running on.
+* The line-ending autodetector triggers on the first line ending detected in the input
+  stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
+  LF-terminated file then autodetected line endings will be CRLF.
+* If you use `+"`--ors {something else}`"+` with (default or explicitly specified) `+"`--irs auto`"+`
+  then line endings are autodetected on input and set to what you specify on output.
+* If you use `+"`--irs {something else}`"+` with (default or explicitly specified) `+"`--ors auto`"+`
+  then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+
+Notes about all other separators:
+
+* IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
+  do key-value pairs appear juxtaposed.
+* IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
+  XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
+  a blank line. Everything above about `+"`--irs/--ors/--rs auto`"+` becomes `+"`--ifs/--ofs/--fs`"+`
+  auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
+* OFS must be single-character for PPRINT format. This is because it is used
+  with repetition for alignment; multi-character separators would make
+  alignment impossible.
+* OPS may be multi-character for XTAB format, in which case alignment is
+  disabled.
+* TSV is simply CSV using tab as field separator (`+"`--fs tab`"+`).
+* FS/PS are ignored for markdown format; RS is used.
+* All FS and PS options are ignored for JSON format, since they are not relevant
+  to the JSON format.
+* You can specify separators in any of the following ways, shown by example:
+  - Type them out, quoting as necessary for shell escapes, e.g.
+    `+"`--fs '|' --ips :`"+`
+  - C-style escape sequences, e.g. `+"`--rs '\\r\\n' --fs '\\t'`"+`.
+  - To avoid backslashing, you can use any of the following names:
+	  TODO desc-to-chars map
+
+* Default separators by format:
+	TODO default_xses
+`)
+}
+
+//      %-12s %-8s %-8s %s\n", "File format", "RS", "FS", "PS")
+//	lhmss_t* default_rses = get_default_rses()
+//	lhmss_t* default_fses = get_default_fses()
+//	lhmss_t* default_pses = get_default_pses()
+//	for (lhmsse_t* pe = default_rses.phead; pe != nil; pe = pe.pnext) {
+//		char* filefmt = pe.key
+//		char* rs = pe.value
+//		char* fs = lhmss_get(default_fses, filefmt)
+//		char* ps = lhmss_get(default_pses, filefmt)
+//      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps))
+//	}
+
 func init() { SeparatorFlagSection.Sort() }
 
 var SeparatorFlagSection = FlagSection{
-	name: "separator flags",
+	name:        "Separator flags",
+	infoPrinter: SeparatorPrintInfo,
 	flags: []Flag{
 
 		{
 			name: "--ifs",
+			arg: "{string}",
+			help: "Specify FS for input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.IFS = SeparatorFromArg(args[*pargi+1])
@@ -1301,6 +1373,8 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--ips",
+			arg: "{string}",
+			help: "Specify PS for input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.IPS = SeparatorFromArg(args[*pargi+1])
@@ -1313,6 +1387,8 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--irs",
+			arg: "{string}",
+			help: "Specify RS for input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.IRS = SeparatorFromArg(args[*pargi+1])
@@ -1325,6 +1401,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--repifs",
+			help: "Let IFS be repeated: e.g. for splitting on multiple spaces.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.AllowRepeatIFS = true
 				options.ReaderOptions.AllowRepeatIFSWasSpecified = true
@@ -1334,7 +1411,45 @@ var SeparatorFlagSection = FlagSection{
 		},
 
 		{
+			name: "--ors",
+			arg: "{string}",
+			help: "Specify RS for output.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.WriterOptions.ORS = SeparatorFromArg(args[*pargi+1])
+				options.WriterOptions.ORSWasSpecified = true
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--ofs",
+			arg: "{string}",
+			help: "Specify FS for output.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.WriterOptions.OFS = SeparatorFromArg(args[*pargi+1])
+				options.WriterOptions.OFSWasSpecified = true
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--ops",
+			arg: "{string}",
+			help: "Specify PS for output.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.WriterOptions.OPS = SeparatorFromArg(args[*pargi+1])
+				options.WriterOptions.OPSWasSpecified = true
+				*pargi += 2
+			},
+		},
+
+		{
 			name: "--rs",
+			arg: "{string}",
+			help: "Specify RS for input and output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.IRS = SeparatorFromArg(args[*pargi+1])
@@ -1349,6 +1464,8 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--fs",
+			arg: "{string}",
+			help: "Specify FS for input and output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.IFS = SeparatorFromArg(args[*pargi+1])
@@ -1363,6 +1480,8 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--ps",
+			arg: "{string}",
+			help: "Specify PS for input and output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.IPS = SeparatorFromArg(args[*pargi+1])
@@ -1380,15 +1499,20 @@ var SeparatorFlagSection = FlagSection{
 // ================================================================
 // JSON-ONLY FLAGS
 
+func JSONOnlyPrintInfo() {
+	fmt.Println("These are flags which are applicable to JSON format.")
+}
+
 func init() { JSONOnlyFlagSection.Sort() }
 
 var JSONOnlyFlagSection = FlagSection{
-	name: "json-only flags",
+	name: "JSON-only flags",
+	infoPrinter: JSONOnlyPrintInfo,
 	flags: []Flag{
 
 		{
 			name: "--jvstack",
-			help: "Help goes here",
+			help: "Put one key-value pair per line for JSON output (multi-line output).",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.JSONOutputMultiline = true
 				*pargi += 1
@@ -1398,7 +1522,7 @@ var JSONOnlyFlagSection = FlagSection{
 
 		{
 			name: "--no-jvstack",
-			help: "Help goes here",
+			help: "Put objects/arrays all on one line for JSON output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.JSONOutputMultiline = false
 				*pargi += 1
@@ -1408,7 +1532,8 @@ var JSONOnlyFlagSection = FlagSection{
 
 		{
 			name: "--jlistwrap",
-			help: "Help goes here",
+			altNames: []string{"--jl"},
+			help: "Wrap JSON output in outermost `[ ]`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				*pargi += 1
@@ -1416,40 +1541,39 @@ var JSONOnlyFlagSection = FlagSection{
 			forWriter: true,
 		},
 
+	},
+}
+
+// ================================================================
+// PPRINT-ONLY FLAGS
+
+func PPRINTOnlyPrintInfo() {
+	fmt.Println("These are flags which are applicable to PPRINT output format.")
+}
+
+func init() { PPRINTOnlyFlagSection.Sort() }
+
+var PPRINTOnlyFlagSection = FlagSection{
+	name: "PPRINT-only flags",
+	infoPrinter: PPRINTOnlyPrintInfo,
+	flags: []Flag{
+
 		{
-			name:   "--jknquoteint",
-			help:   NoOpHelp,
-			parser: NoOpParse1,
+			name: "--right",
+			help: "Right-justifies all fields for PPRINT output.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.RightAlignedPprintOutput = true
+				*pargi += 1
+			},
 		},
 
 		{
-			name:   "--jquoteall",
-			help:   NoOpHelp,
-			parser: NoOpParse1,
-		},
-
-		{
-			name:   "--jvquoteall",
-			help:   NoOpHelp,
-			parser: NoOpParse1,
-		},
-
-		{
-			name:   "--json-fatal-arrays-on-input",
-			help:   NoOpHelp,
-			parser: NoOpParse1,
-		},
-
-		{
-			name:   "--json-skip-arrays-on-input",
-			help:   NoOpHelp,
-			parser: NoOpParse1,
-		},
-
-		{
-			name:   "--json-skip-arrays-on-input",
-			help:   NoOpHelp,
-			parser: NoOpParse1,
+			name: "--barred",
+			help: "Prints a border around PPRINT output (not available for input).",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.BarredPprintOutput = true
+				*pargi += 1
+			},
 		},
 	},
 }
@@ -1457,31 +1581,73 @@ var JSONOnlyFlagSection = FlagSection{
 // ================================================================
 // LEGACY FLAGS
 
+func LegacyFlagInfoPrint() {
+	fmt.Println(`These are flags which don't do anything in the current Miller version.
+They are accepted as no-op flags in order to keep old scripts from breaking.`)
+}
+
 func init() { LegacyFlagSection.Sort() }
 
 var LegacyFlagSection = FlagSection{
-	name: "legacy flags",
+	name: "Legacy flags",
+	infoPrinter: LegacyFlagInfoPrint,
 	flags: []Flag{
 
 		{
 			name:      "--mmap",
-			help:      NoOpHelp,
+			help: "Miller no longer uses memory-mapping to access data files.",
 			parser:    NoOpParse1,
 			forReader: true,
 		},
 
 		{
 			name:      "--no-mmap",
-			help:      NoOpHelp,
+			help: "Miller no longer uses memory-mapping to access data files.",
 			parser:    NoOpParse1,
 			forReader: true,
 		},
 
 		{
 			name:      "--no-fflush",
-			help:      NoOpHelp,
+			help: "The current implementation of Miller does not use buffered output, so there is no longer anything to suppress here.",
 			parser:    NoOpParse1,
 			forWriter: true,
+		},
+
+		{
+			name:   "--jknquoteint",
+			help:   "Type information from JSON input files is now preserved throughout the processing stream.",
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--jquoteall",
+			help:   "Type information from JSON input files is now preserved throughout the processing stream.",
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--jvquoteall",
+			help:   "Type information from JSON input files is now preserved throughout the processing stream.",
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--json-fatal-arrays-on-input",
+			help:   "Miller now supports arrays as of version 6.",
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--json-skip-arrays-on-input",
+			help:   "Miller now supports arrays as of version 6.",
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--json-skip-arrays-on-input",
+			help:   "Miller now supports arrays as of version 6.",
+			parser: NoOpParse1,
 		},
 	},
 }
@@ -1489,14 +1655,73 @@ var LegacyFlagSection = FlagSection{
 // ================================================================
 // FILE-FORMAT FLAGS
 
+func FileFormatPrintInfo() {
+	// TODO
+	fmt.Println(`TO DO: brief list of formats w/ xref to m6 webdocs.
+
+Examples: `+"`--csv`"+` for CSV-formatted input and output; `+"`--icsv --opprint`"+` for
+CSV-formatted input and pretty-printed output.
+
+Please use `+"`--iformat1 --oformat2`"+` rather than `+"`--format1 --oformat2`"+`.
+The latter sets up input and output flags for `+"`format1`"+`, not all of which
+are overridden in all cases by setting output format to `+"`format2`"+`.`)
+}
+
+//--idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
+//                                 (Miller's default format).
+
+//--inidx   --onidx   --nidx      Implicitly-integer-indexed fields (Unix-toolkit style).
+//-T                              Synonymous with "--nidx --fs tab".
+
+//--icsv    --ocsv    --csv       Comma-separated value (or tab-separated with --fs tab, etc.)
+
+//--itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
+//                                "--ocsv --ofs tab", "--csv --fs tab".
+
+//--iasv    --oasv    --asv       Similar but using ASCII FS `+ASV_FS_FOR_HELP+` and RS `+ASV_RS_FOR_HELP+`\n",
+
+//--iusv    --ousv    --usv       Similar but using Unicode FS `+USV_FS_FOR_HELP+`\n",
+//                                and RS `+USV_RS_FOR_HELP+`\n",
+
+//--icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated with --fs tab, etc.).
+//							    The 'lite' CSV does not handle RFC-CSV double-quoting rules; is
+//							    slightly faster and handles heterogeneity in the input stream via
+//							    empty newline followed by new header line. See also
+//								`+DOC_URl+`/file-formats#csv-tsv-asv-usv-etc
+
+//--itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
+//                                "--ocsvlite --ofs tab", "--csvlite --fs tab".
+
+//--iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS `+ASV_FS_FOR_HELP+` and RS `+ASV_RS_FOR_HELP+`\n",
+
+//--iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS `+USV_FS_FOR_HELP+`\n",
+//                                and RS `+USV_RS_FOR_HELP+`\n",
+
+//--ipprint --opprint --pprint    Pretty-printed tabular (produces no
+//                                output until all input is in).
+
+//          --omd                 Markdown-tabular (only available for output).
+
+//--ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
+//                    --xvright   Right-justifies values for XTAB format.
+
+//--ijson   --ojson   --json      JSON tabular: sequence or list of one-level
+//                                maps: {...}{...} or [{...},{...}].
+
+//              --jsonx --ojsonx  Keystroke-savers for --json --jvstack
+
+//              --jsonx --ojsonx  and --ojson --jvstack, respectively.
+
 func init() { FileFormatFlagSection.Sort() }
 
 var FileFormatFlagSection = FlagSection{
-	name: "file-format flags",
+	name:        "File-format flags",
+	infoPrinter: FileFormatPrintInfo,
 	flags: []Flag{
 
 		{
 			name: "--icsv",
+			help: "Use CSV format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				*pargi += 1
@@ -1505,6 +1730,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--icsvlite",
+			help: "Use CSV-lite format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				*pargi += 1
@@ -1513,6 +1739,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--itsv",
+			help: "Use TSV format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
@@ -1522,6 +1749,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--itsvlite",
+			help: "Use TSV-lite format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.ReaderOptions.IFS = "\t"
@@ -1531,7 +1759,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--iasv",
+			name:     "--iasv",
+			altNames: []string{"--iasvlite"},
+			help:     "Use ASV format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.ReaderOptions.IFS = ASV_FS
@@ -1543,31 +1773,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--iasvlite",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csvlite"
-				options.ReaderOptions.IFS = ASV_FS
-				options.ReaderOptions.IRS = ASV_RS
-				options.ReaderOptions.IFSWasSpecified = true
-				options.ReaderOptions.IRSWasSpecified = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--iusv",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csvlite"
-				options.ReaderOptions.IFS = USV_FS
-				options.ReaderOptions.IRS = USV_RS
-				options.ReaderOptions.IFSWasSpecified = true
-				options.ReaderOptions.IRSWasSpecified = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--iusvlite",
+			name:     "--iusv",
+			altNames: []string{"--iusvlite"},
+			help:     "Use USV format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.ReaderOptions.IFS = USV_FS
@@ -1580,6 +1788,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--idkvp",
+			help: "Use DKVP format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				*pargi += 1
@@ -1588,6 +1797,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--ijson",
+			help: "Use JSON format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				*pargi += 1
@@ -1596,6 +1806,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--inidx",
+			help: "Use NIDX format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				*pargi += 1
@@ -1604,6 +1815,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--ixtab",
+			help: "Use XTAB format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				*pargi += 1
@@ -1612,6 +1824,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--ipprint",
+			help: "Use PPRINT format for input data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
@@ -1622,6 +1835,8 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "-i",
+			arg: "{format name}",
+			help: "Use format name for input data. For example: `-i csv` is the same as `--icsv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.InputFileFormat = args[*pargi+1]
@@ -1674,37 +1889,9 @@ var FileFormatFlagSection = FlagSection{
 		//},
 
 		{
-			name: "--ors",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
-				options.WriterOptions.ORS = SeparatorFromArg(args[*pargi+1])
-				options.WriterOptions.ORSWasSpecified = true
-				*pargi += 2
-			},
-		},
-
-		{
-			name: "--ofs",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
-				options.WriterOptions.OFS = SeparatorFromArg(args[*pargi+1])
-				options.WriterOptions.OFSWasSpecified = true
-				*pargi += 2
-			},
-		},
-
-		{
-			name: "--ops",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				CheckArgCount(args, *pargi, argc, 2)
-				options.WriterOptions.OPS = SeparatorFromArg(args[*pargi+1])
-				options.WriterOptions.OPSWasSpecified = true
-				*pargi += 2
-			},
-		},
-
-		{
 			name: "-o",
+			arg: "{format name}",
+			help: "Use format name for output data.  For example: `-o csv` is the same as `--ocsv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.WriterOptions.OutputFileFormat = args[*pargi+1]
@@ -1714,6 +1901,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--ocsv",
+			help: "Use CSV format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "csv"
 				*pargi += 1
@@ -1722,6 +1910,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--ocsvlite",
+			help: "Use CSV-lite format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				*pargi += 1
@@ -1730,6 +1919,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--otsv",
+			help: "Use TSV format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "csv"
 				options.WriterOptions.OFS = "\t"
@@ -1740,6 +1930,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--otsvlite",
+			help: "Use TSV-lite format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				options.WriterOptions.OFS = "\t"
@@ -1749,7 +1940,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--oasv",
+			name:     "--oasv",
+			altNames: []string{"--oasvlite"},
+			help:     "Use ASV format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				options.WriterOptions.OFS = ASV_FS
@@ -1761,31 +1954,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--oasvlite",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.OutputFileFormat = "csvlite"
-				options.WriterOptions.OFS = ASV_FS
-				options.WriterOptions.ORS = ASV_RS
-				options.WriterOptions.OFSWasSpecified = true
-				options.WriterOptions.ORSWasSpecified = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--ousv",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.OutputFileFormat = "csvlite"
-				options.WriterOptions.OFS = USV_FS
-				options.WriterOptions.ORS = USV_RS
-				options.WriterOptions.OFSWasSpecified = true
-				options.WriterOptions.ORSWasSpecified = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--ousvlite",
+			name:     "--ousv",
+			altNames: []string{"--ousvlite"},
+			help:     "Use USV format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "csvlite"
 				options.WriterOptions.OFS = USV_FS
@@ -1798,6 +1969,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--omd",
+			help: "Use markdown-tabular format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "markdown"
 				*pargi += 1
@@ -1806,6 +1978,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--odkvp",
+			help: "Use DKVP format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				*pargi += 1
@@ -1814,6 +1987,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--ojson",
+			help: "Use JSON format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "json"
 				*pargi += 1
@@ -1821,6 +1995,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--ojsonx",
+			help: "TODO", // move to legacy
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				// --jvstack is now the default in Miller 6 so this is just for backward compatibility
 				options.WriterOptions.OutputFileFormat = "json"
@@ -1830,6 +2005,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--onidx",
+			help: "Use NIDX format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.WriterOptions.OFS = " "
@@ -1840,6 +2016,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--oxtab",
+			help: "Use XTAB format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "xtab"
 				*pargi += 1
@@ -1848,6 +2025,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--opprint",
+			help: "Use PPRINT format for output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.OutputFileFormat = "pprint"
 				*pargi += 1
@@ -1855,28 +2033,14 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--right",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.RightAlignedPprintOutput = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--barred",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.BarredPprintOutput = true
-				*pargi += 1
-			},
-		},
-
-		{
 			name: "--io",
+			arg: "{format name}",
+			help: "Use format name for input and output data. For example: `--io csv` is the same as `--csv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				if defaultFSes[args[*pargi+1]] == "" {
-					fmt.Fprintf(os.Stderr, "%s: unrecognized I/O format \"%s\".\n",
-						"mlr", args[*pargi+1])
+					fmt.Fprintf(os.Stderr, "mlr: unrecognized I/O format \"%s\".\n",
+						args[*pargi+1])
 					os.Exit(1)
 				}
 				options.ReaderOptions.InputFileFormat = args[*pargi+1]
@@ -1887,6 +2051,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name:     "--csv",
+			help:     "Use CSV format for input and output data.",
 			altNames: []string{"-c"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
@@ -1897,6 +2062,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--csvlite",
+			help: "Use CSV-lite format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -1906,6 +2072,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--tsv",
+			help: "Use TSV format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -1919,6 +2086,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name:     "--tsvlite",
+			help:     "Use TSV-lite format for input and output data.",
 			altNames: []string{"-t"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
@@ -1932,7 +2100,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--asv",
+			name:     "--asv",
+			altNames: []string{"--asvlite"},
+			help:     "Use ASV format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.WriterOptions.OutputFileFormat = "csvlite"
@@ -1950,41 +2120,9 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--asvlite",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csvlite"
-				options.WriterOptions.OutputFileFormat = "csvlite"
-				options.ReaderOptions.IFS = ASV_FS
-				options.WriterOptions.OFS = ASV_FS
-				options.ReaderOptions.IRS = ASV_RS
-				options.WriterOptions.ORS = ASV_RS
-				options.ReaderOptions.IFSWasSpecified = true
-				options.ReaderOptions.IRSWasSpecified = true
-				options.WriterOptions.OFSWasSpecified = true
-				options.WriterOptions.ORSWasSpecified = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--usv",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "csvlite"
-				options.WriterOptions.OutputFileFormat = "csvlite"
-				options.ReaderOptions.IFS = USV_FS
-				options.WriterOptions.OFS = USV_FS
-				options.ReaderOptions.IRS = USV_RS
-				options.WriterOptions.ORS = USV_RS
-				options.ReaderOptions.IFSWasSpecified = true
-				options.ReaderOptions.IRSWasSpecified = true
-				options.WriterOptions.OFSWasSpecified = true
-				options.WriterOptions.ORSWasSpecified = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--usvlite",
+			name:     "--usv",
+			altNames: []string{"--usvlite"},
+			help:     "Use USV format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
 				options.WriterOptions.OutputFileFormat = "csvlite"
@@ -2002,6 +2140,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--dkvp",
+			help: "Use DKVP format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "dkvp"
@@ -2011,6 +2150,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name:     "--json",
+			help:     "Use JSON format for input and output data.",
 			altNames: []string{"-j"},
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 
@@ -2021,6 +2161,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--jsonx",
+			help: "TODO", // move to legacy
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				// --jvstack is now the default in Miller 6 so this is just for backward compatibility
 				options.ReaderOptions.InputFileFormat = "json"
@@ -2031,6 +2172,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--nidx",
+			help: "Use NIDX format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "nidx"
@@ -2043,7 +2185,72 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
+			name: "--xtab",
+			help: "Use XTAB format for input and output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "xtab"
+				options.WriterOptions.OutputFileFormat = "xtab"
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--pprint",
+			help: "Use PPRINT format for input and output data.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "pprint"
+				options.ReaderOptions.IFS = " "
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OutputFileFormat = "pprint"
+				*pargi += 1
+			},
+		},
+	},
+}
+
+// ================================================================
+// FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
+
+func FormatConversionKeystrokeSaverPrintInfo() {
+	fmt.Println(`As keystroke-savers for format-conversion you may use the following:
+      --c2t --c2d --c2n --c2j --c2x --c2p --c2m
+--t2c       --t2d --t2n --t2j --t2x --t2p --t2m
+--d2c --d2t       --d2n --d2j --d2x --d2p --d2m
+--n2c --n2t --n2d       --n2j --n2x --n2p --n2m
+--j2c --j2t --j2d --j2n       --j2x --j2p --j2m
+--x2c --x2t --x2d --x2n --x2j       --x2p --x2m
+--p2c --p2t --p2d --p2n --p2j --p2x       --p2m
+The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
+PPRINT, and markdown, respectively. Note that markdown format is available for
+output only.`)
+}
+
+func init() { FormatConversionKeystrokeSaverFlagSection.Sort() }
+
+var FormatConversionKeystrokeSaverFlagSection = FlagSection{
+	name:        "Format-conversion keystroke-saver flags",
+	infoPrinter: FormatConversionKeystrokeSaverPrintInfo,
+	flags: []Flag{
+
+		{
+			name: "-p",
+			help: "Keystroke-saver for `--nidx --fs space --repifs`.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "nidx"
+				options.WriterOptions.OutputFileFormat = "nidx"
+				options.ReaderOptions.IFS = " "
+				options.WriterOptions.OFS = " "
+				options.ReaderOptions.IFSWasSpecified = true
+				options.WriterOptions.OFSWasSpecified = true
+				options.ReaderOptions.AllowRepeatIFS = true
+				options.ReaderOptions.AllowRepeatIFSWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		{
 			name: "-T",
+			help: "Keystroke-saver for `--nidx --fs tab`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "nidx"
@@ -2056,26 +2263,8 @@ var FileFormatFlagSection = FlagSection{
 		},
 
 		{
-			name: "--xtab",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "xtab"
-				options.WriterOptions.OutputFileFormat = "xtab"
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--pprint",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "pprint"
-				options.ReaderOptions.IFS = " "
-				options.ReaderOptions.IFSWasSpecified = true
-				options.WriterOptions.OutputFileFormat = "pprint"
-				*pargi += 1
-			},
-		},
-		{
 			name: "--c2t",
+			help: "Use CSV for input, TSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IRS = "auto"
@@ -2090,6 +2279,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--c2d",
+			help: "Use CSV for input, DKVP for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IRS = "auto"
@@ -2100,6 +2290,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--c2n",
+			help: "Use CSV for input, NIDX for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IRS = "auto"
@@ -2112,6 +2303,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--c2j",
+			help: "Use CSV for input, JSON for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IRS = "auto"
@@ -2122,6 +2314,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--c2p",
+			help: "Use CSV for input, PPRINT for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IRS = "auto"
@@ -2132,6 +2325,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--c2b",
+			help: "Use CSV for input, PPRINT with `--barred` for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IRS = "auto"
@@ -2143,6 +2337,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--c2x",
+			help: "Use CSV for input, XTAB for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IRS = "auto"
@@ -2153,6 +2348,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--c2m",
+			help: "Use CSV for input, markdown-tabular for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IRS = "auto"
@@ -2164,6 +2360,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--t2c",
+			help: "Use TSV for input, CSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
@@ -2178,6 +2375,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--t2d",
+			help: "Use TSV for input, DKVP for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
@@ -2190,6 +2388,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--t2n",
+			help: "Use TSV for input, NIDX for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
@@ -2204,6 +2403,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--t2j",
+			help: "Use TSV for input, JSON for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
@@ -2216,6 +2416,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--t2p",
+			help: "Use TSV for input, PPRINT for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
@@ -2228,6 +2429,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--t2b",
+			help: "Use TSV for input, PPRINT with `--barred` for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
@@ -2241,6 +2443,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--t2x",
+			help: "Use TSV for input, XTAB for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
@@ -2253,6 +2456,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--t2m",
+			help: "Use TSV for input, markdown-tabular for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
@@ -2266,6 +2470,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--d2c",
+			help: "Use DKVP for input, CSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -2275,6 +2480,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--d2t",
+			help: "Use DKVP for input, TSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -2287,6 +2493,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--d2n",
+			help: "Use DKVP for input, NIDX for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "nidx"
@@ -2297,6 +2504,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--d2j",
+			help: "Use DKVP for input, JSON for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "json"
@@ -2305,6 +2513,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--d2p",
+			help: "Use DKVP for input, PPRINT for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "pprint"
@@ -2313,6 +2522,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--d2b",
+			help: "Use DKVP for input, PPRINT with `--barred` for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "pprint"
@@ -2322,6 +2532,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--d2x",
+			help: "Use DKVP for input, XTAB for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "xtab"
@@ -2330,6 +2541,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--d2m",
+			help: "Use DKVP for input, markdown-tabular for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "markdown"
@@ -2339,6 +2551,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--n2c",
+			help: "Use NIDX for input, CSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -2349,6 +2562,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--n2t",
+			help: "Use NIDX for input, TSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -2361,6 +2575,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--n2d",
+			help: "Use NIDX for input, DKVP for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "dkvp"
@@ -2369,6 +2584,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--n2j",
+			help: "Use NIDX for input, JSON for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "json"
@@ -2377,6 +2593,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--n2p",
+			help: "Use NIDX for input, PPRINT for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "pprint"
@@ -2385,6 +2602,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--n2b",
+			help: "Use NIDX for input, PPRINT with `--barred` for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "pprint"
@@ -2394,6 +2612,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--n2x",
+			help: "Use NIDX for input, XTAB for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "xtab"
@@ -2402,6 +2621,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--n2m",
+			help: "Use NIDX for input, markdown-tabular for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "markdown"
@@ -2411,6 +2631,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--j2c",
+			help: "Use JSON for input, CSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -2421,6 +2642,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--j2t",
+			help: "Use JSON for input, TSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -2433,6 +2655,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--j2d",
+			help: "Use JSON for input, DKVP for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "dkvp"
@@ -2441,6 +2664,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--j2n",
+			help: "Use JSON for input, NIDX for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "nidx"
@@ -2449,6 +2673,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--j2p",
+			help: "Use JSON for input, PPRINT for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "pprint"
@@ -2457,6 +2682,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--j2b",
+			help: "Use JSON for input, PPRINT with --barred for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "pprint"
@@ -2466,6 +2692,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--j2x",
+			help: "Use JSON for input, XTAB for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "xtab"
@@ -2474,6 +2701,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--j2m",
+			help: "Use JSON for input, markdown-tabular for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "markdown"
@@ -2483,6 +2711,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--p2c",
+			help: "Use PPRINT for input, CSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
@@ -2495,6 +2724,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--p2t",
+			help: "Use PPRINT for input, TSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
@@ -2509,6 +2739,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--p2d",
+			help: "Use PPRINT for input, DKVP for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
@@ -2519,6 +2750,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--p2n",
+			help: "Use PPRINT for input, NIDX for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
@@ -2529,6 +2761,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--p2j",
+			help: "Use PPRINT for input, JSON for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
@@ -2539,6 +2772,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--p2x",
+			help: "Use PPRINT for input, XTAB for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
@@ -2549,6 +2783,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--p2m",
+			help: "Use PPRINT for input, markdown-tabular for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
@@ -2560,6 +2795,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--x2c",
+			help: "Use XTAB for input, CSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -2570,6 +2806,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--x2t",
+			help: "Use XTAB for input, TSV for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "csv"
@@ -2582,6 +2819,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--x2d",
+			help: "Use XTAB for input, DKVP for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "dkvp"
@@ -2590,6 +2828,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--x2n",
+			help: "Use XTAB for input, NIDX for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "nidx"
@@ -2598,6 +2837,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--x2j",
+			help: "Use XTAB for input, JSON for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "json"
@@ -2606,6 +2846,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--x2p",
+			help: "Use XTAB for input, PPRINT for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "pprint"
@@ -2614,6 +2855,7 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--x2b",
+			help: "Use XTAB for input, PPRINT with `--barred` for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "pprint"
@@ -2623,24 +2865,10 @@ var FileFormatFlagSection = FlagSection{
 		},
 		{
 			name: "--x2m",
+			help: "Use XTAB for input, markdown-tabular for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "markdown"
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "-p",
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.InputFileFormat = "nidx"
-				options.WriterOptions.OutputFileFormat = "nidx"
-				options.ReaderOptions.IFS = " "
-				options.WriterOptions.OFS = " "
-				options.ReaderOptions.IFSWasSpecified = true
-				options.WriterOptions.OFSWasSpecified = true
-				options.ReaderOptions.AllowRepeatIFS = true
-				options.ReaderOptions.AllowRepeatIFSWasSpecified = true
 				*pargi += 1
 			},
 		},
@@ -2658,6 +2886,7 @@ var CSVOnlyFlagSection = FlagSection{
 
 		{
 			name: "--no-implicit-csv-header",
+			help: "Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.UseImplicitCSVHeader = false
 				*pargi += 1
@@ -2667,6 +2896,7 @@ var CSVOnlyFlagSection = FlagSection{
 		{
 			name:     "--allow-ragged-csv-input",
 			altNames: []string{"--ragged"},
+			help: "If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.AllowRaggedCSVInput = true
 				*pargi += 1
@@ -2675,6 +2905,7 @@ var CSVOnlyFlagSection = FlagSection{
 
 		{
 			name: "--implicit-csv-header",
+			help: "Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.UseImplicitCSVHeader = true
 				*pargi += 1
@@ -2683,6 +2914,7 @@ var CSVOnlyFlagSection = FlagSection{
 
 		{
 			name: "--headerless-csv-output",
+			help: "Print only CSV data lines; do not print CSV header lines.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.HeaderlessCSVOutput = true
 				*pargi += 1
@@ -2691,6 +2923,7 @@ var CSVOnlyFlagSection = FlagSection{
 
 		{
 			name: "-N",
+			help: "Keystroke-saver for `--implicit-csv-header --headerless-csv-output`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.UseImplicitCSVHeader = true
 				options.WriterOptions.HeaderlessCSVOutput = true
@@ -2699,7 +2932,7 @@ var CSVOnlyFlagSection = FlagSection{
 		},
 
 		//{
-		//		name: "--quote-all",
+		//	name: "--quote-all",
 		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
 		//		options.WriterOptions.oquoting = QUOTE_ALL
 		//		*pargi += 1
@@ -2740,14 +2973,47 @@ var CSVOnlyFlagSection = FlagSection{
 // ================================================================
 // COMPRESSED-DATA FLAGS
 
+func CompressedDataPrintInfo() {
+	fmt.Print(`Miller offers a few different ways to handle reading data files which have been compressed.
+
+* Decompression done within the Miller process itself: `+"`--bz2in`"+` `+"`--gzin`"+` `+"`--zin`"+`
+* Decompression done outside the Miller process: `+"`--prepipe`"+` `+"`--prepipex`"+`
+
+Using `+"`--prepipe`"+` and `+"`--prepipex`"+` you can specify an action to be
+taken on each input file.  The prepipe command must be able to read from
+standard input; it will be invoked with `+"`{command} < {filename}`"+`.  The
+prepipex command must take a filename as argument; it will be invoked with
+`+"`{command} {filename}`"+`.
+
+Examples:
+
+    mlr --prepipe gunzip
+    mlr --prepipe zcat -cf
+    mlr --prepipe xz -cd
+    mlr --prepipe cat
+
+Note that this feature is quite general and is not limited to decompression
+utilities. You can use it to apply per-file filters of your choice.  For output
+compression (or other) utilities, simply pipe the output:
+`+"`mlr ... | {your compression command} > outputfilenamegoeshere`"+`
+
+Lastly, note that if `+"`--prepipe`"+` or `+"`--prepipex`"+` is specified, it replaces any
+decisions that might have been made based on the file suffix. Likewise,
+`+"`--gzin`"+`/`+"`--bz2in`"+`/`+"`--zin`"+` are ignored if `+"`--prepipe`"+` is also specified.
+`)
+}
+
 func init() { CompressedDataFlagSection.Sort() }
 
 var CompressedDataFlagSection = FlagSection{
-	name: "compressed-data flags",
+	name:        "Compressed-data flags",
+	infoPrinter: CompressedDataPrintInfo,
 	flags: []Flag{
 
 		{
 			name: "--prepipe",
+			arg: "{decompression command}",
+			help: "You can, of course, already do without this for single input files, e.g. `gunzip < myfile.csv.gz | mlr ...`.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.Prepipe = args[*pargi+1]
@@ -2758,6 +3024,8 @@ var CompressedDataFlagSection = FlagSection{
 
 		{
 			name: "--prepipex",
+			arg: "{decompression command}",
+			help: "Like `--prepipe` with one exception: doesn't insert `<` between command and filename at runtime. Useful for some commands like `unzip -qc` which don't read standard input.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.Prepipe = args[*pargi+1]
@@ -2768,6 +3036,7 @@ var CompressedDataFlagSection = FlagSection{
 
 		{
 			name: "--prepipe-gunzip",
+			help: "Same as  `--prepipe gunzip`, except this is allowed in `.mlrrc`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.Prepipe = "gunzip"
 				options.ReaderOptions.PrepipeIsRaw = false
@@ -2777,6 +3046,7 @@ var CompressedDataFlagSection = FlagSection{
 
 		{
 			name: "--prepipe-zcat",
+			help: "Same as  `--prepipe zcat`, except this is allowed in `.mlrrc`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.Prepipe = "zcat"
 				options.ReaderOptions.PrepipeIsRaw = false
@@ -2786,6 +3056,7 @@ var CompressedDataFlagSection = FlagSection{
 
 		{
 			name: "--prepipe-bz2",
+			help: "Same as  `--prepipe bz2`, except this is allowed in `.mlrrc`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.Prepipe = "bz2"
 				options.ReaderOptions.PrepipeIsRaw = false
@@ -2795,6 +3066,7 @@ var CompressedDataFlagSection = FlagSection{
 
 		{
 			name: "--gzin",
+			help: "Uncompress gzip within the Miller process. Done by default if file ends in `.gz`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingGzip
 				*pargi += 1
@@ -2803,6 +3075,7 @@ var CompressedDataFlagSection = FlagSection{
 
 		{
 			name: "--zin",
+			help: "Uncompress zlib within the Miller process. Done by default if file ends in `.z`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingZlib
 				*pargi += 1
@@ -2811,6 +3084,7 @@ var CompressedDataFlagSection = FlagSection{
 
 		{
 			name: "--bz2in",
+			help: "Uncompress bzip2 within the Miller process. Done by default if file ends in `.bz2`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingBzip2
 				*pargi += 1
@@ -2822,14 +3096,36 @@ var CompressedDataFlagSection = FlagSection{
 // ================================================================
 // COMMENTS-IN-DATA FLAGS
 
+func CommentsInDataPrintInfo() {
+	fmt.Printf(`Miller lets you put comments in your data, such as
+
+    # This is a comment for a CSV file
+    a,b,c
+    1,2,3
+    4,5,6
+
+Notes:
+
+* Comments are only honored at the start of a line.
+* In the absence of any of the below four options, comments are data like
+  any other text. (The comments-in-data feature is opt-in.)
+* When ` + "`--pass-comments`" + ` is used, comment lines are written to standard output
+  immediately upon being read; they are not part of the record stream.  Results
+  may be counterintuitive. A suggestion is to place comments at the start of
+  data files.
+`)
+}
+
 func init() { CommentsInDataFlagSection.Sort() }
 
 var CommentsInDataFlagSection = FlagSection{
-	name: "comments-in-data flags",
+	name:        "Comments-in-data flags",
+	infoPrinter: CommentsInDataPrintInfo,
 	flags: []Flag{
 
 		{
 			name: "--skip-comments",
+			help: "Ignore commented lines (prefixed by `"+DEFAULT_COMMENT_STRING+"`) within the input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.CommentString = DEFAULT_COMMENT_STRING
 				options.ReaderOptions.CommentHandling = SkipComments
@@ -2839,6 +3135,8 @@ var CommentsInDataFlagSection = FlagSection{
 
 		{
 			name: "--skip-comments-with",
+			arg: "{string}",
+			help: "Ignore commented lines within input, with specified prefix.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.CommentString = args[*pargi+1]
@@ -2849,6 +3147,7 @@ var CommentsInDataFlagSection = FlagSection{
 
 		{
 			name: "--pass-comments",
+			help: "Immediately print commented lines (prefixed by `"+DEFAULT_COMMENT_STRING+"`) within the input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.CommentString = DEFAULT_COMMENT_STRING
 				options.ReaderOptions.CommentHandling = PassComments
@@ -2858,6 +3157,8 @@ var CommentsInDataFlagSection = FlagSection{
 
 		{
 			name: "--pass-comments-with",
+			arg: "{string}",
+			help: "Immediately print commented lines within input, with specified prefix.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.CommentString = args[*pargi+1]
@@ -2871,10 +3172,63 @@ var CommentsInDataFlagSection = FlagSection{
 // ================================================================
 // OUTPUT-COLORIZATION FLAGS
 
+func OutputColorizationPrintInfo() {
+	fmt.Print(`Miller uses colors to highlight outputs. You can specify color preferences.
+Note: output colorization does not work on Windows.
+
+Things having colors:
+
+* Keys in CSV header lines, JSON keys, etc
+* Values in CSV data lines, JSON scalar values, etc in regression-test output
+* Some online-help strings
+
+Rules for coloring:
+
+* By default, colorize output only if writing to stdout and stdout is a TTY.
+    * Example: color: `+"`mlr --csv cat foo.csv`"+`
+    * Example: no color: `+"`mlr --csv cat foo.csv > bar.csv`"+`
+    * Example: no color: `+"`mlr --csv cat foo.csv | less`"+`
+* The default colors were chosen since they look OK with white or black terminal background,
+  and are differentiable with common varieties of human color vision.
+
+Mechanisms for coloring:
+
+* Miller uses ANSI escape sequences only. This does not work on Windows except within Cygwin.
+* Requires `+"`TERM`"+` environment variable to be set to non-empty string.
+* Doesn't try to check to see whether the terminal is capable of 256-color
+  ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
+  then 16-color ANSI escapes are used, so this is in the user's control.
+
+How you can control colorization:
+
+* Suppression/unsuppression:
+    * Environment variable `+"`export MLR_NO_COLOR=true`"+` means don't color even if stdout+TTY.
+    * Environment variable `+"`export MLR_ALWAYS_COLOR=true`"+` means do color even if not stdout+TTY.
+      For example, you might want to use this when piping mlr output to `+"`less -r`"+`.
+    * Command-line flags `+"`--no-color`"+` or `+"`-M`"+`, `+"`--always-color`"+` or `+"`-C`"+`.
+
+* Color choices can be specified by using environment variables, or command-line flags,
+  with values 0..255:
+  	* `+"`export MLR_KEY_COLOR=208`"+`, `+"`MLR_VALUE_COLOR=33`"+`, etc.:
+    	`+"`MLR_KEY_COLOR`"+` `+"`MLR_VALUE_COLOR`"+` `+"`MLR_PASS_COLOR`"+` `+"`MLR_FAIL_COLOR`"+`
+    	`+"`MLR_REPL_PS1_COLOR`"+` `+"`MLR_REPL_PS2_COLOR`"+` `+"`MLR_HELP_COLOR`"+`
+  	* Command-line flags `+"`--key-color 208`"+`, `+"`--value-color 33`"+`, etc.:
+    	`+"`--key-color`"+` `+"`--value-color`"+` `+"`--pass-color`"+` `+"`--fail-color`"+`
+    	`+"`--repl-ps1-color`"+` `+"`--repl-ps2-color`"+` `+"`--help-color`"+`
+  	* This is particularly useful if your terminal's background color clashes with current settings.
+
+If environment-variable settings and command-line flags are both provided, the latter take precedence.
+
+Please do mlr `+"`--list-color-codes`"+` to see the available color codes (like 170), and
+`+"`mlr --list-color-names`"+` to see available names (like `+"`orchid`"+`).
+`)
+}
+
 func init() { OutputColorizationFlagSection.Sort() }
 
 var OutputColorizationFlagSection = FlagSection{
-	name: "output-colorization flags",
+	name:        "Output-colorization flags",
+	infoPrinter: OutputColorizationPrintInfo,
 	flags: []Flag{
 
 		{
@@ -2920,8 +3274,8 @@ var OutputColorizationFlagSection = FlagSection{
 				ok := colorizer.SetKeyColor(args[*pargi+1])
 				if !ok {
 					fmt.Fprintf(os.Stderr,
-						"%s: --key-color argument unrecognized; got \"%s\".\n",
-						"mlr", args[*pargi+1])
+						"mlr: --key-color argument unrecognized; got \"%s\".\n",
+						args[*pargi+1])
 					os.Exit(1)
 				}
 				*pargi += 2
@@ -2935,8 +3289,8 @@ var OutputColorizationFlagSection = FlagSection{
 				ok := colorizer.SetValueColor(args[*pargi+1])
 				if !ok {
 					fmt.Fprintf(os.Stderr,
-						"%s: --value-color argument unrecognized; got \"%s\".\n",
-						"mlr", args[*pargi+1])
+						"mlr: --value-color argument unrecognized; got \"%s\".\n",
+						args[*pargi+1])
 					os.Exit(1)
 				}
 				*pargi += 2
@@ -2950,8 +3304,8 @@ var OutputColorizationFlagSection = FlagSection{
 				ok := colorizer.SetPassColor(args[*pargi+1])
 				if !ok {
 					fmt.Fprintf(os.Stderr,
-						"%s: --pass-color argument unrecognized; got \"%s\".\n",
-						"mlr", args[*pargi+1])
+						"mlr: --pass-color argument unrecognized; got \"%s\".\n",
+						args[*pargi+1])
 					os.Exit(1)
 				}
 				*pargi += 2
@@ -2965,8 +3319,8 @@ var OutputColorizationFlagSection = FlagSection{
 				ok := colorizer.SetFailColor(args[*pargi+1])
 				if !ok {
 					fmt.Fprintf(os.Stderr,
-						"%s: --fail-color argument unrecognized; got \"%s\".\n",
-						"mlr", args[*pargi+1])
+						"mlr: --fail-color argument unrecognized; got \"%s\".\n",
+						args[*pargi+1])
 					os.Exit(1)
 				}
 				*pargi += 2
@@ -2980,8 +3334,8 @@ var OutputColorizationFlagSection = FlagSection{
 				ok := colorizer.SetHelpColor(args[*pargi+1])
 				if !ok {
 					fmt.Fprintf(os.Stderr,
-						"%s: --help-color argument unrecognized; got \"%s\".\n",
-						"mlr", args[*pargi+1])
+						"mlr: --help-color argument unrecognized; got \"%s\".\n",
+						args[*pargi+1])
 					os.Exit(1)
 				}
 				*pargi += 2
@@ -2996,12 +3350,14 @@ var OutputColorizationFlagSection = FlagSection{
 func init() { FlattenUnflattenFlagSection.Sort() }
 
 var FlattenUnflattenFlagSection = FlagSection{
-	name: "flatten-unflatten flags",
+	name: "Flatten-unflatten flags",
 	flags: []Flag{
 
 		{
 			name:     "--flatsep",
 			altNames: []string{"--jflatsep", "--oflatsep"}, // TODO: really need all for miller5 back-compat?
+			arg: "{string}",
+			help: "Separator for flattening multi-level JSON keys, e.g. `{\"a\":{\"b\":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `"+DEFAULT_JSON_FLATTEN_SEPARATOR+"`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.WriterOptions.FLATSEP = SeparatorFromArg(args[*pargi+1])
@@ -3050,11 +3406,12 @@ var FlattenUnflattenFlagSection = FlagSection{
 func init() { MiscFlagSection.Sort() }
 
 var MiscFlagSection = FlagSection{
-	name: "miscellaneous flags",
+	name: "Miscellaneous flags",
 	flags: []Flag{
 
 		{
 			name: "-n",
+			help: "Process no input files, nor standard input either. Useful for `mlr put` with `begin`/`end` statements only. (Same as `--from /dev/null`.) Also useful in `mlr -n put -v '...'` for analyzing abstract syntax trees (if that's your thing).",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.NoInput = true
 				*pargi += 1
@@ -3063,6 +3420,7 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "-I",
+			help: "Process files in-place. For each file name on the command line, output is written to a temp file in the same directory, which is then renamed over the original. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file, statistics are only over each file's own records; and so on.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.DoInPlace = true
 				*pargi += 1
@@ -3071,6 +3429,8 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--from",
+			arg: "{filename}",
+			help: "Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.FileNames = append(options.FileNames, args[*pargi+1])
@@ -3080,6 +3440,8 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--mfrom",
+			arg: "{filenames}",
+			help: "Use this to specify one of more input files before the verb(s), rather than after. May be used more than once.  The list of filename must end with `--`. This is useful for example since `--from *.csv` doesn't do what you might hope but `--mfrom *.csv --` does.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				*pargi += 1
@@ -3105,6 +3467,8 @@ var MiscFlagSection = FlagSection{
 		// TODO: move to another (or new) section
 		{
 			name: "--load",
+			arg: "{filename}",
+			help: "Load DSL script file for all put/filter operations on the command line.  If the name following `--load` is a directory, load all `*.mlr` files in that directory. This is just like `put -f` and `filter -f` except it's up-front on the command line, so you can do something like `alias mlr='mlr --load ~/myscripts'` if you like.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.DSLPreloadFileNames = append(options.DSLPreloadFileNames, args[*pargi+1])
@@ -3114,6 +3478,8 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--mload",
+			arg: "{filenames}",
+			help: "Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				*pargi += 1
@@ -3128,6 +3494,9 @@ var MiscFlagSection = FlagSection{
 		},
 
 		//		name: "--nr-progress-mod",
+		//		arg: {m}",
+		//      help: `With m a positive integer: print filename and record
+		//                                count to os.Stderr every m input records.`,
 		//			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 		//				CheckArgCount(args, *pargi, argc, 2);
 		//				if (sscanf(args[*pargi+1], "%lld", &options.nr_progress_mod) != 1) {
@@ -3149,6 +3518,9 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--seed",
+			arg: "{n}",
+			help: "with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.",
+
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				randSeed, ok := lib.TryIntFromString(args[*pargi+1])
@@ -3157,9 +3529,9 @@ var MiscFlagSection = FlagSection{
 					options.HaveRandSeed = true
 				} else {
 					fmt.Fprintf(os.Stderr,
-						"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
-						"mlr", args[*pargi+1])
-					fmt.Fprintf(os.Stderr, "Please run \"%s --help\" for detailed usage information.\n", "mlr")
+						"mlr: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
+						args[*pargi+1])
+					fmt.Fprintf(os.Stderr, "Please run \"mlr --help\" for detailed usage information.\n")
 					os.Exit(1)
 				}
 				*pargi += 2

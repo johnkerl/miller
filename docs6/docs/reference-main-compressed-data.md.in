@@ -48,6 +48,10 @@ decompression utilities you have installed on your system, on a per-file basis.
 
 If the command has flags, quote them: e.g. `mlr --prepipe 'zcat -cf'`.
 
+In your [.mlrrc file](customization.md), `--prepipe` and `--prepipex` are not
+allowed as they could be used for unexpected code execution. You can use
+`--prepipe-bz2`, `--prepipe-gunzip`, and `--prepipe-zcat` in `.mlrrc`, though.
+
 Note that this feature is quite general and is not limited to decompression
 utilities. You can use it to apply per-file filters of your choice: e.g. `mlr
 --prepipe head -n 10 ...`, if you like.

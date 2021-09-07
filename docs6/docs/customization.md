@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -48,7 +50,7 @@ and the `--csv` part will automatically be understood. If you do want to process
 
 * You can include any command-line flags, except the "terminal" ones such as `--help`.
 
-* The `--prepipe`, `--load`, and `--mload` flags aren't allowed in `.mlrrc` as they control code execution, and could result in your scripts running things you don't expect if you receive data from someone with a `./.mlrrc` in it.
+* The `--prepipe`, `--load`, and `--mload` flags aren't allowed in `.mlrrc` as they control code execution, and could result in your scripts running things you don't expect if you receive data from someone with a `./.mlrrc` in it. You can use `--prepipe-bz2`, `--prepipe-gunzip`, and `--prepipe-zcat` in `.mlrrc`, though.
 
 * The formatting rule is you need to put one flag beginning with `--` per line: for example, `--csv` on one line and `--nr-progress-mod 1000` on a separate line.
 
