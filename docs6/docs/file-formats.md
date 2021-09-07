@@ -539,7 +539,7 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 </pre>
 <pre class="pre-non-highlight-in-pair">
 As keystroke-savers for format-conversion you may use the following:
-      --c2t --c2d --c2n --c2j --c2x --c2p --c2m
+--c2t --c2d --c2n --c2j --c2x --c2p --c2m
 --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
 --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
 --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
