@@ -85,6 +85,9 @@ type FlagSection struct {
 	name        string
 	infoPrinter func()
 	flags       []Flag
+	// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+	// need to print a tedious 60-line list.
+	suppressFlagEnumeration bool
 }
 
 // Flag is a container for all runtime as well as documentation information for
@@ -287,6 +290,16 @@ func (ft *FlagTable) GetDowndashSectionNames() []string {
 	return downdashSectionNames
 }
 
+// TODO: comment
+func (ft *FlagTable) NilCheck() {
+	lib.InternalCodingErrorWithMessageIf(ft.sections == nil, "Nil table sections")
+	lib.InternalCodingErrorWithMessageIf(len(ft.sections) == 0, "Zero table sections")
+	for _, fs := range ft.sections {
+		fs.NilCheck()
+	}
+	fmt.Println("Flag-table nil check completed successfully.")
+}
+
 // ================================================================
 // FlagSection methods
 
@@ -303,6 +316,11 @@ func (fs *FlagSection) Sort() {
 // ShowHelpForFlags prints all-in-one on-line help, nominally for `mlr help
 // flags`.
 func (fs *FlagSection) ShowHelpForFlags() {
+	// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+	// need to print a tedious 60-line list.
+	if fs.suppressFlagEnumeration {
+		return
+	}
 	for _, flag := range fs.flags {
 		flag.ShowHelp()
 	}
@@ -332,6 +350,17 @@ func (fs *FlagSection) ListFlags() {
 // help in `mlr help topics`.
 func (fs *FlagSection) GetDowndashSectionName() string {
 	return strings.ReplaceAll(strings.ToLower(fs.name), " ", "-")
+}
+
+// TODO: comment
+func (fs *FlagSection) NilCheck() {
+	lib.InternalCodingErrorWithMessageIf(fs.name == "", "Empty section name")
+	lib.InternalCodingErrorWithMessageIf(fs.infoPrinter == nil, "Nil infoPrinter for section "+fs.name)
+	lib.InternalCodingErrorWithMessageIf(fs.flags == nil, "Nil flags for section "+fs.name)
+	lib.InternalCodingErrorWithMessageIf(len(fs.flags) == 0, "Zero flags for section "+fs.name)
+	for _, flag := range fs.flags {
+		flag.NilCheck()
+	}
 }
 
 // ================================================================
@@ -448,6 +477,13 @@ func (flag *Flag) GetHeadline() string {
 // line-wraps as the user resizes the window.
 func (flag *Flag) GetHelpOneLine() string {
 	return strings.Join(strings.Split(flag.help, "\n"), " ")
+}
+
+// TODO: comment
+func (flag *Flag) NilCheck() {
+	lib.InternalCodingErrorWithMessageIf(flag.name == "", "Empty flag name")
+	lib.InternalCodingErrorWithMessageIf(flag.help == "", "Empty flag help for flag "+flag.name)
+	lib.InternalCodingErrorWithMessageIf(flag.parser == nil, "Nil parser help for flag "+flag.name)
 }
 
 // ================================================================

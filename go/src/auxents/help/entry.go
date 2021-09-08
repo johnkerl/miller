@@ -55,7 +55,6 @@ var handlerLookupTable = tHandlerLookupTable{}
 var shorthandLookupTable = tShorthandTable{}
 
 func init() {
-
 	// For things like 'mlr help foo', invoked through the auxent framework
 	// which goes through our HelpMain().
 	handlerLookupTable = tHandlerLookupTable{
@@ -115,17 +114,18 @@ func init() {
 				name:     "Internal/docgen",
 				internal: true,
 				handlerInfos: []tHandlerInfo{
-					{name: "list-verbs-as-paragraph", zaryHandlerFunc: listVerbsAsParagraph},
-					{name: "list-functions-as-paragraph", zaryHandlerFunc: listFunctionsAsParagraph},
-					{name: "list-keywords-as-paragraph", zaryHandlerFunc: listKeywordsAsParagraph},
-					{name: "list-functions-as-table", zaryHandlerFunc: listFunctionsAsTable},
+					{name: "flag-table-nil-check", zaryHandlerFunc: flagTableNilCheck},
 					{name: "list-flag-sections", zaryHandlerFunc: listFlagSections},
-					{name: "print-info-for-section", unaryHandlerFunc: printInfoForSection},
 					{name: "list-flags-for-section", unaryHandlerFunc: listFlagsForSection},
-					{name: "show-help-for-section", unaryHandlerFunc: showHelpForSection},
-					{name: "show-help-for-section-via-downdash", unaryHandlerFunc: showHelpForSectionViaDowndash},
+					{name: "list-functions-as-paragraph", zaryHandlerFunc: listFunctionsAsParagraph},
+					{name: "list-functions-as-table", zaryHandlerFunc: listFunctionsAsTable},
+					{name: "list-keywords-as-paragraph", zaryHandlerFunc: listKeywordsAsParagraph},
+					{name: "list-verbs-as-paragraph", zaryHandlerFunc: listVerbsAsParagraph},
+					{name: "print-info-for-section", unaryHandlerFunc: printInfoForSection},
 					{name: "show-headline-for-flag", unaryHandlerFunc: showHeadlineForFlag},
 					{name: "show-help-for-flag", unaryHandlerFunc: showHelpForFlag},
+					{name: "show-help-for-section", unaryHandlerFunc: showHelpForSection},
+					{name: "show-help-for-section-via-downdash", unaryHandlerFunc: showHelpForSectionViaDowndash},
 				},
 			},
 		},
@@ -136,19 +136,6 @@ func init() {
 	// flag-section named "CSV-only flags", etc. Here we can't key in the names
 	// since we want to compute them dynamically from cli.FLAG_TABLE which is
 	// Miller's wqy of tracking command-line flags.
-
-	//{name: "comments-in-data-flags"},
-	//{name: "compressed-data-flags"},
-	//{name: "csv-only-flags"},
-	//{name: "file-format-flags"},
-	//{name: "flatten-unflatten-flags"},
-	//{name: "format-conversion-keystroke-saver-flags"},
-	//{name: "json-only-flags"},
-	//{name: "legacy-flags"},
-	//{name: "miscellaneous-flags"},
-	//{name: "output-colorization-flags"},
-	//{name: "pprint-only-flags"},
-	//{name: "separator-flags"},
 
 	// For this file's topic-lookup table, find and extend the section called "Flags".
 	for i, section := range handlerLookupTable.sections {
@@ -609,4 +596,13 @@ func usageKeywords() {
 
 func helpForKeyword(arg string) {
 	cst.UsageForKeyword(arg)
+}
+
+// ----------------------------------------------------------------
+// flagTableNilCheckflagTableNilCheck is invoked by an internal-only
+// command-handler. It's intended to be invoked from a regression-test context.
+// It makes sure (at build time) that the flags-table isn't missing help strigs
+// for any flags, etc.
+func flagTableNilCheck() {
+	cli.FLAG_TABLE.NilCheck()
 }

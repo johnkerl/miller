@@ -9,21 +9,18 @@ E flatten/unflatten page
 ? twi-dm re all-contribs: all-contributors.org
 
 C flags LUTs
-  o audit `mlr --list` section output
+  o audit sections/flags for WRITEMEs
     - file-format top
     - flatten/unflatten top
     - separator top
-  o audit `mlr --list` flag output
-    - then nilabend on empty help
+    - flags ...
   o connect to climain & remove old if-else-if chains
     - needs forReader / forWriter flags
-  o assert non-nulls on all flag/section/table elements
-  o width-80 audits on mlr --list
   o desc-to-chars map
   o default_xses
   o work off all TODOs in src/auxents/help/entry.go, src/cli/flag_types.go, src/cli/option_parse.go
     - also just be happy w/ the code
-  ? mlr help topics autogen namee from FLAG_TABLE -- ?
+  i MLR_ALWAYS_COLOR=true mlr help flags|less
 
 // ----------------------------------------------------------------
 // TODO: REMOVE
@@ -53,10 +50,6 @@ ALL:
 * deduping pass!
 * make table CSS on-brand
 
-* flags-doc
-  C refactor cli-parser w/ LUT & help strings
-  C refector mlr help w/ mlr help flags
-  c reorg manpage a bit
 * top-of-page jargon-check for each one
 ? i would LOVE to have small prev-page/next-page links at the *top* not bottom ...
   https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
@@ -187,6 +180,7 @@ diffs other langs:
 e slice incl/excl; split-in-half: x[:2] x[2:] vs x[:2] x[3:]
 e localvars in if/else
 e "arrays, including ..." -> 1-up array/string indexing/slicing
+e no boolish truthy falsy
 
 separators:
 E write up which file formats support which flags

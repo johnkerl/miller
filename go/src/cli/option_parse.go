@@ -1296,20 +1296,21 @@ TODO: auto-detect is still TBD for Miller 6
 
 Notes about line endings:
 
-* Default line endings (` + "`--irs`" + ` and ` + "`--ors`" + `) are "auto" which means autodetect from
-  the input file format, as long as the input file(s) have lines ending in either
+* Default line endings (` + "`--irs`" + ` and ` + "`--ors`" + `) are "auto" which means autodetect
+  from the input file format, as long as the input file(s) have lines ending in either
   LF (also known as linefeed, ` + "`\\n`" + `, ` + "`0x0a`" + `, or Unix-style) or CRLF (also known as
   carriage-return/linefeed pairs, ` + "`\\r\\n`" + `, ` + "`0x0d 0x0a`" + `, or Windows-style).
-* If both ` + "`irs`" + ` and ` + "`ors`" + ` are ` + "`auto`" + ` (which is the default) then LF input will lead to LF
-  output and CRLF input will lead to CRLF output, regardless of the platform you're
+* If both ` + "`irs`" + ` and ` + "`ors`" + ` are ` + "`auto`" + ` (which is the default) then LF input will
+  lead to LF output and CRLF input will lead to CRLF output, regardless of the platform you're
   running on.
-* The line-ending autodetector triggers on the first line ending detected in the input
-  stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
+* The line-ending autodetector triggers on the first line ending detected in the
+  input stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
   LF-terminated file then autodetected line endings will be CRLF.
 * If you use ` + "`--ors {something else}`" + ` with (default or explicitly specified) ` + "`--irs auto`" + `
   then line endings are autodetected on input and set to what you specify on output.
 * If you use ` + "`--irs {something else}`" + ` with (default or explicitly specified) ` + "`--ors auto`" + `
-  then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+  then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF
+  on Windows.
 
 Notes about all other separators:
 
@@ -2206,15 +2207,15 @@ The letters c, t, j, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
 JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format is
 available for output only.
 
-| In \ out | CSV   | TSV   | JSON   | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
-| CSV      |       | --c2t | --c2j  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
-| TSV      | --t2c |       | --t2j  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
-| JSON     | --j2c | --j2t |        | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
-| DKVP     | --d2c | --d2t | --d2j  |        | --d2n  | --d2x  | --d2p  | --d2m    |
-| NIDX     | --n2c | --n2t | --n2j  | --n2d  |        | --n2x  | --n2p  | --n2m    |
-| XTAB     | --x2c | --x2t | --x2j  | --x2d  | --x2n  |        | --x2p  | --x2m    |
-| PPRINT   | --p2c | --p2t | --p2j  | --p2d  | --p2n  | --p2x  |        | --p2m    |
-`)
+| In\out | CSV   | TSV   | JSON   | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
++--------+-------+-------+--------+--------+--------+--------+--------+----------+
+| CSV    |       | --c2t | --c2j  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
+| TSV    | --t2c |       | --t2j  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
+| JSON   | --j2c | --j2t |        | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
+| DKVP   | --d2c | --d2t | --d2j  |        | --d2n  | --d2x  | --d2p  | --d2m    |
+| NIDX   | --n2c | --n2t | --n2j  | --n2d  |        | --n2x  | --n2p  | --n2m    |
+| XTAB   | --x2c | --x2t | --x2j  | --x2d  | --x2n  |        | --x2p  | --x2m    |
+| PPRINT | --p2c | --p2t | --p2j  | --p2d  | --p2n  | --p2x  |        | --p2m    |`)
 }
 
 func init() { FormatConversionKeystrokeSaverFlagSection.Sort() }
@@ -2222,6 +2223,11 @@ func init() { FormatConversionKeystrokeSaverFlagSection.Sort() }
 var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 	name:        "Format-conversion keystroke-saver flags",
 	infoPrinter: FormatConversionKeystrokeSaverPrintInfo,
+
+	// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+	// need to print a tedious 60-line list.
+	suppressFlagEnumeration: true,
+
 	flags: []Flag{
 
 		{
@@ -2870,10 +2876,15 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 // ================================================================
 // CSV FLAGS
 
+func CSVOnlyPrintInfo() {
+	fmt.Println("These are flags which are applicable to CSV format.")
+}
+
 func init() { CSVOnlyFlagSection.Sort() }
 
 var CSVOnlyFlagSection = FlagSection{
-	name: "CSV-only flags",
+	name:        "CSV-only flags",
+	infoPrinter: CSVOnlyPrintInfo,
 	flags: []Flag{
 
 		{
@@ -2983,7 +2994,8 @@ var CSVOnlyFlagSection = FlagSection{
 // COMPRESSED-DATA FLAGS
 
 func CompressedDataPrintInfo() {
-	fmt.Print(`Miller offers a few different ways to handle reading data files which have been compressed.
+	fmt.Print(`Miller offers a few different ways to handle reading data files
+	which have been compressed.
 
 * Decompression done within the Miller process itself: ` + "`--bz2in`" + ` ` + "`--gzin`" + ` ` + "`--zin`" + `
 * Decompression done outside the Miller process: ` + "`--prepipe`" + ` ` + "`--prepipex`" + `
@@ -3197,12 +3209,14 @@ Rules for coloring:
     * Example: color: ` + "`mlr --csv cat foo.csv`" + `
     * Example: no color: ` + "`mlr --csv cat foo.csv > bar.csv`" + `
     * Example: no color: ` + "`mlr --csv cat foo.csv | less`" + `
-* The default colors were chosen since they look OK with white or black terminal background,
-  and are differentiable with common varieties of human color vision.
+* The default colors were chosen since they look OK with white or black
+  terminal background, and are differentiable with common varieties of human
+  color vision.
 
 Mechanisms for coloring:
 
-* Miller uses ANSI escape sequences only. This does not work on Windows except within Cygwin.
+* Miller uses ANSI escape sequences only. This does not work on Windows
+  except within Cygwin.
 * Requires ` + "`TERM`" + ` environment variable to be set to non-empty string.
 * Doesn't try to check to see whether the terminal is capable of 256-color
   ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
@@ -3211,25 +3225,29 @@ Mechanisms for coloring:
 How you can control colorization:
 
 * Suppression/unsuppression:
-    * Environment variable ` + "`export MLR_NO_COLOR=true`" + ` means don't color even if stdout+TTY.
-    * Environment variable ` + "`export MLR_ALWAYS_COLOR=true`" + ` means do color even if not stdout+TTY.
+    * Environment variable ` + "`export MLR_NO_COLOR=true`" + ` means don't color
+      even if stdout+TTY.
+    * Environment variable ` + "`export MLR_ALWAYS_COLOR=true`" + ` means do color
+      even if not stdout+TTY.
       For example, you might want to use this when piping mlr output to ` + "`less -r`" + `.
     * Command-line flags ` + "`--no-color`" + ` or ` + "`-M`" + `, ` + "`--always-color`" + ` or ` + "`-C`" + `.
 
-* Color choices can be specified by using environment variables, or command-line flags,
-  with values 0..255:
+* Color choices can be specified by using environment variables, or command-line
+  flags, with values 0..255:
     * ` + "`export MLR_KEY_COLOR=208`" + `, ` + "`MLR_VALUE_COLOR=33`" + `, etc.:
         ` + "`MLR_KEY_COLOR`" + ` ` + "`MLR_VALUE_COLOR`" + ` ` + "`MLR_PASS_COLOR`" + ` ` + "`MLR_FAIL_COLOR`" + `
         ` + "`MLR_REPL_PS1_COLOR`" + ` ` + "`MLR_REPL_PS2_COLOR`" + ` ` + "`MLR_HELP_COLOR`" + `
     * Command-line flags ` + "`--key-color 208`" + `, ` + "`--value-color 33`" + `, etc.:
         ` + "`--key-color`" + ` ` + "`--value-color`" + ` ` + "`--pass-color`" + ` ` + "`--fail-color`" + `
         ` + "`--repl-ps1-color`" + ` ` + "`--repl-ps2-color`" + ` ` + "`--help-color`" + `
-    * This is particularly useful if your terminal's background color clashes with current settings.
+    * This is particularly useful if your terminal's background color clashes
+      with current settings.
 
-If environment-variable settings and command-line flags are both provided, the latter take precedence.
+If environment-variable settings and command-line flags are both provided, the
+latter take precedence.
 
-Please do mlr ` + "`--list-color-codes`" + ` to see the available color codes (like 170), and
-` + "`mlr --list-color-names`" + ` to see available names (like ` + "`orchid`" + `).
+Please do mlr ` + "`--list-color-codes`" + ` to see the available color codes (like 170),
+and ` + "`mlr --list-color-names`" + ` to see available names (like ` + "`orchid`" + `).
 `)
 }
 
@@ -3242,6 +3260,7 @@ var OutputColorizationFlagSection = FlagSection{
 
 		{
 			name: "--list-color-codes",
+			help: "Show the available color codes in the range 0..255, such as 170 for example.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				colorizer.ListColorCodes()
 				os.Exit(0)
@@ -3251,6 +3270,7 @@ var OutputColorizationFlagSection = FlagSection{
 
 		{
 			name: "--list-color-names",
+			help: "Show the names for the available color codes, such as `orchid` for example.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				colorizer.ListColorNames()
 				os.Exit(0)
@@ -3261,6 +3281,7 @@ var OutputColorizationFlagSection = FlagSection{
 		{
 			name:     "--no-color",
 			altNames: []string{"-M"},
+			help:     "Instructs Miller to not colorize any output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				colorizer.SetColorization(colorizer.ColorizeOutputNever)
 				*pargi += 1
@@ -3270,6 +3291,7 @@ var OutputColorizationFlagSection = FlagSection{
 		{
 			name:     "--always-color",
 			altNames: []string{"-C"},
+			help:     "Instructs Miller to colorize output even when it normally would not. Useful for piping output to `less -r`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				colorizer.SetColorization(colorizer.ColorizeOutputAlways)
 				*pargi += 1
@@ -3278,6 +3300,7 @@ var OutputColorizationFlagSection = FlagSection{
 
 		{
 			name: "--key-color",
+			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for record keys.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				ok := colorizer.SetKeyColor(args[*pargi+1])
@@ -3293,6 +3316,7 @@ var OutputColorizationFlagSection = FlagSection{
 
 		{
 			name: "--value-color",
+			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for record values.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				ok := colorizer.SetValueColor(args[*pargi+1])
@@ -3308,6 +3332,7 @@ var OutputColorizationFlagSection = FlagSection{
 
 		{
 			name: "--pass-color",
+			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for passing cases in `mlr regtest`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				ok := colorizer.SetPassColor(args[*pargi+1])
@@ -3323,6 +3348,7 @@ var OutputColorizationFlagSection = FlagSection{
 
 		{
 			name: "--fail-color",
+			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for failing cases in `mlr regtest`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				ok := colorizer.SetFailColor(args[*pargi+1])
@@ -3338,6 +3364,7 @@ var OutputColorizationFlagSection = FlagSection{
 
 		{
 			name: "--help-color",
+			help: "Specify the color (see `--list-color-codes` and `--list-color-names`) for highlights in `mlr help` output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				ok := colorizer.SetHelpColor(args[*pargi+1])
@@ -3356,15 +3383,20 @@ var OutputColorizationFlagSection = FlagSection{
 // ================================================================
 // FLATTEN/UNFLATTEN FLAGS
 
+func FlattenUnflattenPrintInfo() {
+	fmt.Print("TODO: write section description.")
+}
+
 func init() { FlattenUnflattenFlagSection.Sort() }
 
 var FlattenUnflattenFlagSection = FlagSection{
-	name: "Flatten-unflatten flags",
+	name:        "Flatten-unflatten flags",
+	infoPrinter: FlattenUnflattenPrintInfo,
 	flags: []Flag{
 
 		{
 			name:     "--flatsep",
-			altNames: []string{"--jflatsep", "--oflatsep"}, // TODO: really need all for miller5 back-compat?
+			altNames: []string{"--jflatsep"},
 			arg:      "{string}",
 			help:     "Separator for flattening multi-level JSON keys, e.g. `{\"a\":{\"b\":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `" + DEFAULT_JSON_FLATTEN_SEPARATOR + "`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
@@ -3393,6 +3425,7 @@ var FlattenUnflattenFlagSection = FlagSection{
 
 		{
 			name: "--no-auto-flatten",
+			help: "When output is non-JSON, suppress the default auto-flatten behavior. Default: if `$y = [7,8,9]` then this flattens to `y.1=7,y.2=8,y.3=9, and similarly for maps. With `--no-auto-flatten`, instead we get `$y=[1, 2, 3]`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.AutoFlatten = false
 				*pargi += 1
@@ -3401,6 +3434,7 @@ var FlattenUnflattenFlagSection = FlagSection{
 
 		{
 			name: "--no-auto-unflatten",
+			help: "When input non-JSON and output is JSON, suppress the default auto-unflatten behavior. Default: if the input has `y.1=7,y.2=8,y.3=9` then this unflattens to `$y=[7,8,9]`.  flattens to `y.1=7,y.2=8,y.3=9. With `--no-auto-flatten`, instead we get `${y.1}=7,${y.2}=8,${y.3}=9`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.AutoUnflatten = false
 				*pargi += 1
@@ -3412,10 +3446,15 @@ var FlattenUnflattenFlagSection = FlagSection{
 // ================================================================
 // MISC FLAGS
 
+func MiscPrintInfo() {
+	fmt.Print("These are flags which don't fit into any other category.")
+}
+
 func init() { MiscFlagSection.Sort() }
 
 var MiscFlagSection = FlagSection{
-	name: "Miscellaneous flags",
+	name:        "Miscellaneous flags",
+	infoPrinter: MiscPrintInfo,
 	flags: []Flag{
 
 		{
@@ -3475,7 +3514,6 @@ var MiscFlagSection = FlagSection{
 			},
 		},
 
-		// TODO: move to another (or new) section
 		{
 			name: "--load",
 			arg:  "{filename}",

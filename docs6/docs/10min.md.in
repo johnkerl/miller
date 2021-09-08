@@ -60,25 +60,6 @@ GENMD_RUN_COMMAND
 mlr --icsv --opprint cut -x -f flag,shape example.csv
 GENMD_EOF
 
-You can use `filter` to keep only records you care about:
-
-GENMD_RUN_COMMAND
-mlr --icsv --opprint filter '$color == "red"' example.csv
-GENMD_EOF
-
-GENMD_RUN_COMMAND
-mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv
-GENMD_EOF
-
-You can use `put` to create new fields which are computed from other fields:
-
-GENMD_RUN_COMMAND
-mlr --icsv --opprint put '
-  $ratio = $quantity / $rate;
-  $color_shape = $color . "_" . $shape
-' example.csv
-GENMD_EOF
-
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use `$[[3]]` to access the name of field 3 or `$[[[3]]]` to access the value of field 3:
 
 GENMD_RUN_COMMAND
@@ -90,6 +71,41 @@ mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv
 GENMD_EOF
 
 You can find the full list of verbs at the [Verbs Reference](reference-verbs.md) page.
+
+## Filtering
+
+You can use `filter` to keep only records you care about:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint filter '$color == "red"' example.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv
+GENMD_EOF
+
+## Computing new fields
+
+You can use `put` to create new fields which are computed from other fields:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint put '
+  $ratio = $quantity / $rate;
+  $color_shape = $color . "_" . $shape
+' example.csv
+GENMD_EOF
+
+When you create a new field, it can immediately be used in subsequent statements:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint --from example.csv put '
+  $y = $index + 1;
+  $z = $y**2 + $k;
+'
+GENMD_EOF
+
+For `put` and `filter` we were able to type out expressions using a programming-language syntax.
+See the [Miller programming language page](programming-language.md) for more information.
 
 ## Multiple input files
 

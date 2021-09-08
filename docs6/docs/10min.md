@@ -201,45 +201,6 @@ yellow 9  87    63.5058  8.3350
 purple 10 91    72.3735  8.2430
 </pre>
 
-You can use `filter` to keep only records you care about:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --icsv --opprint filter '$color == "red"' example.csv</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-color shape  flag  k index quantity rate
-red   square true  2 15    79.2778  0.0130
-red   circle true  3 16    13.8103  2.9010
-red   square false 4 48    77.5542  7.4670
-red   square false 6 64    77.1991  9.5310
-</pre>
-
-<pre class="pre-highlight-non-pair">
-<b>mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv</b>
-</pre>
-
-You can use `put` to create new fields which are computed from other fields:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --icsv --opprint put '</b>
-<b>  $ratio = $quantity / $rate;</b>
-<b>  $color_shape = $color . "_" . $shape</b>
-<b>' example.csv</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-color  shape    flag  k  index quantity rate   ratio              color_shape
-yellow triangle true  1  11    43.6498  9.8870 4.414868008496004  yellow_triangle
-red    square   true  2  15    79.2778  0.0130 6098.292307692308  red_square
-red    circle   true  3  16    13.8103  2.9010 4.760530851430541  red_circle
-red    square   false 4  48    77.5542  7.4670 10.386259541984733 red_square
-purple triangle false 5  51    81.2290  8.5910 9.455127458968688  purple_triangle
-red    square   false 6  64    77.1991  9.5310 8.099790158430384  red_square
-purple triangle false 7  65    80.1405  5.8240 13.760388049450551 purple_triangle
-yellow circle   true  8  73    63.9785  4.2370 15.09995279679018  yellow_circle
-yellow circle   true  9  87    63.5058  8.3350 7.619172165566886  yellow_circle
-purple square   false 10 91    72.3735  8.2430 8.779995147397793  purple_square
-</pre>
-
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use `$[[3]]` to access the name of field 3 or `$[[[3]]]` to access the value of field 3:
 
 <pre class="pre-highlight-in-pair">
@@ -277,6 +238,74 @@ purple square   NEW  10 91    72.3735  8.2430
 </pre>
 
 You can find the full list of verbs at the [Verbs Reference](reference-verbs.md) page.
+
+## Filtering
+
+You can use `filter` to keep only records you care about:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint filter '$color == "red"' example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color shape  flag  k index quantity rate
+red   square true  2 15    79.2778  0.0130
+red   circle true  3 16    13.8103  2.9010
+red   square false 4 48    77.5542  7.4670
+red   square false 6 64    77.1991  9.5310
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv</b>
+</pre>
+
+## Computing new fields
+
+You can use `put` to create new fields which are computed from other fields:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint put '</b>
+<b>  $ratio = $quantity / $rate;</b>
+<b>  $color_shape = $color . "_" . $shape</b>
+<b>' example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   ratio              color_shape
+yellow triangle true  1  11    43.6498  9.8870 4.414868008496004  yellow_triangle
+red    square   true  2  15    79.2778  0.0130 6098.292307692308  red_square
+red    circle   true  3  16    13.8103  2.9010 4.760530851430541  red_circle
+red    square   false 4  48    77.5542  7.4670 10.386259541984733 red_square
+purple triangle false 5  51    81.2290  8.5910 9.455127458968688  purple_triangle
+red    square   false 6  64    77.1991  9.5310 8.099790158430384  red_square
+purple triangle false 7  65    80.1405  5.8240 13.760388049450551 purple_triangle
+yellow circle   true  8  73    63.9785  4.2370 15.09995279679018  yellow_circle
+yellow circle   true  9  87    63.5058  8.3350 7.619172165566886  yellow_circle
+purple square   false 10 91    72.3735  8.2430 8.779995147397793  purple_square
+</pre>
+
+When you create a new field, it can immediately be used in subsequent statements:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint --from example.csv put '</b>
+<b>  $y = $index + 1;</b>
+<b>  $z = $y**2 + $k;</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   y  z
+yellow triangle true  1  11    43.6498  9.8870 12 145
+red    square   true  2  15    79.2778  0.0130 16 258
+red    circle   true  3  16    13.8103  2.9010 17 292
+red    square   false 4  48    77.5542  7.4670 49 2405
+purple triangle false 5  51    81.2290  8.5910 52 2709
+red    square   false 6  64    77.1991  9.5310 65 4231
+purple triangle false 7  65    80.1405  5.8240 66 4363
+yellow circle   true  8  73    63.9785  4.2370 74 5484
+yellow circle   true  9  87    63.5058  8.3350 88 7753
+purple square   false 10 91    72.3735  8.2430 92 8474
+</pre>
+
+For `put` and `filter` we were able to type out expressions using a programming-language syntax.
+See the [Miller programming language page](programming-language.md) for more information.
 
 ## Multiple input files
 

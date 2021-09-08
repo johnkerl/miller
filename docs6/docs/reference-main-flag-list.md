@@ -51,7 +51,8 @@ Notes:
 
 ## Compressed-data flags
 
-Miller offers a few different ways to handle reading data files which have been compressed.
+Miller offers a few different ways to handle reading data files
+	which have been compressed.
 
 * Decompression done within the Miller process itself: `--bz2in` `--gzin` `--zin`
 * Decompression done outside the Miller process: `--prepipe` `--prepipex`
@@ -99,6 +100,8 @@ decisions that might have been made based on the file suffix. Likewise,
 `: Uncompress zlib within the Miller process. Done by default if file ends in `.z`.
 
 ## CSV-only flags
+
+These are flags which are applicable to CSV format.
 
 
 **Flags:**
@@ -205,15 +208,16 @@ are overridden in all cases by setting output format to `format2`.
 
 ## Flatten-unflatten flags
 
+TODO: write section description.
 
 **Flags:**
 
 * `--flatsep or --jflatsep or --oflatsep {string}
 `: Separator for flattening multi-level JSON keys, e.g. `{"a":{"b":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `.`.
 * `--no-auto-flatten
-`: 
+`: TODO: WRITEME
 * `--no-auto-unflatten
-`: 
+`: TODO: WRITEME
 
 ## Format-conversion keystroke-saver flags
 
@@ -283,6 +287,7 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 
 ## Miscellaneous flags
 
+These are flags which don't fit into any other category.
 
 **Flags:**
 
@@ -320,12 +325,14 @@ Rules for coloring:
     * Example: color: `mlr --csv cat foo.csv`
     * Example: no color: `mlr --csv cat foo.csv > bar.csv`
     * Example: no color: `mlr --csv cat foo.csv | less`
-* The default colors were chosen since they look OK with white or black terminal background,
-  and are differentiable with common varieties of human color vision.
+* The default colors were chosen since they look OK with white or black
+  terminal background, and are differentiable with common varieties of human
+  color vision.
 
 Mechanisms for coloring:
 
-* Miller uses ANSI escape sequences only. This does not work on Windows except within Cygwin.
+* Miller uses ANSI escape sequences only. This does not work on Windows
+  except within Cygwin.
 * Requires `TERM` environment variable to be set to non-empty string.
 * Doesn't try to check to see whether the terminal is capable of 256-color
   ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
@@ -334,47 +341,51 @@ Mechanisms for coloring:
 How you can control colorization:
 
 * Suppression/unsuppression:
-    * Environment variable `export MLR_NO_COLOR=true` means don't color even if stdout+TTY.
-    * Environment variable `export MLR_ALWAYS_COLOR=true` means do color even if not stdout+TTY.
+    * Environment variable `export MLR_NO_COLOR=true` means don't color
+      even if stdout+TTY.
+    * Environment variable `export MLR_ALWAYS_COLOR=true` means do color
+      even if not stdout+TTY.
       For example, you might want to use this when piping mlr output to `less -r`.
     * Command-line flags `--no-color` or `-M`, `--always-color` or `-C`.
 
-* Color choices can be specified by using environment variables, or command-line flags,
-  with values 0..255:
+* Color choices can be specified by using environment variables, or command-line
+  flags, with values 0..255:
     * `export MLR_KEY_COLOR=208`, `MLR_VALUE_COLOR=33`, etc.:
         `MLR_KEY_COLOR` `MLR_VALUE_COLOR` `MLR_PASS_COLOR` `MLR_FAIL_COLOR`
         `MLR_REPL_PS1_COLOR` `MLR_REPL_PS2_COLOR` `MLR_HELP_COLOR`
     * Command-line flags `--key-color 208`, `--value-color 33`, etc.:
         `--key-color` `--value-color` `--pass-color` `--fail-color`
         `--repl-ps1-color` `--repl-ps2-color` `--help-color`
-    * This is particularly useful if your terminal's background color clashes with current settings.
+    * This is particularly useful if your terminal's background color clashes
+      with current settings.
 
-If environment-variable settings and command-line flags are both provided, the latter take precedence.
+If environment-variable settings and command-line flags are both provided, the
+latter take precedence.
 
-Please do mlr `--list-color-codes` to see the available color codes (like 170), and
-`mlr --list-color-names` to see available names (like `orchid`).
+Please do mlr `--list-color-codes` to see the available color codes (like 170),
+and `mlr --list-color-names` to see available names (like `orchid`).
 
 
 **Flags:**
 
 * `--always-color or -C
-`: 
+`: TODO: WRITEME
 * `--fail-color
-`: 
+`: TODO: WRITEME
 * `--help-color
-`: 
+`: TODO: WRITEME
 * `--key-color
-`: 
+`: TODO: WRITEME
 * `--list-color-codes
-`: 
+`: TODO: WRITEME
 * `--list-color-names
-`: 
+`: TODO: WRITEME
 * `--no-color or -M
-`: 
+`: TODO: WRITEME
 * `--pass-color
-`: 
+`: TODO: WRITEME
 * `--value-color
-`: 
+`: TODO: WRITEME
 
 ## PPRINT-only flags
 
@@ -400,20 +411,21 @@ TODO: auto-detect is still TBD for Miller 6
 
 Notes about line endings:
 
-* Default line endings (`--irs` and `--ors`) are "auto" which means autodetect from
-  the input file format, as long as the input file(s) have lines ending in either
+* Default line endings (`--irs` and `--ors`) are "auto" which means autodetect
+  from the input file format, as long as the input file(s) have lines ending in either
   LF (also known as linefeed, `\n`, `0x0a`, or Unix-style) or CRLF (also known as
   carriage-return/linefeed pairs, `\r\n`, `0x0d 0x0a`, or Windows-style).
-* If both `irs` and `ors` are `auto` (which is the default) then LF input will lead to LF
-  output and CRLF input will lead to CRLF output, regardless of the platform you're
+* If both `irs` and `ors` are `auto` (which is the default) then LF input will
+  lead to LF output and CRLF input will lead to CRLF output, regardless of the platform you're
   running on.
-* The line-ending autodetector triggers on the first line ending detected in the input
-  stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
+* The line-ending autodetector triggers on the first line ending detected in the
+  input stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
   LF-terminated file then autodetected line endings will be CRLF.
 * If you use `--ors {something else}` with (default or explicitly specified) `--irs auto`
   then line endings are autodetected on input and set to what you specify on output.
 * If you use `--irs {something else}` with (default or explicitly specified) `--ors auto`
-  then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+  then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF
+  on Windows.
 
 Notes about all other separators:
 

@@ -44,6 +44,18 @@ Essentials:
   mlr help data-formats
 Flags:
   mlr help flags
+  mlr help comments-in-data-flags
+  mlr help compressed-data-flags
+  mlr help csv-only-flags
+  mlr help file-format-flags
+  mlr help flatten-unflatten-flags
+  mlr help format-conversion-keystroke-saver-flags
+  mlr help json-only-flags
+  mlr help legacy-flags
+  mlr help miscellaneous-flags
+  mlr help output-colorization-flags
+  mlr help pprint-only-flags
+  mlr help separator-flags
 Verbs:
   mlr help list-verbs
   mlr help usage-verbs
@@ -85,6 +97,18 @@ Essentials:
   mlr help data-formats
 Flags:
   mlr help flags
+  mlr help comments-in-data-flags
+  mlr help compressed-data-flags
+  mlr help csv-only-flags
+  mlr help file-format-flags
+  mlr help flatten-unflatten-flags
+  mlr help format-conversion-keystroke-saver-flags
+  mlr help json-only-flags
+  mlr help legacy-flags
+  mlr help miscellaneous-flags
+  mlr help output-colorization-flags
+  mlr help pprint-only-flags
+  mlr help separator-flags
 Verbs:
   mlr help list-verbs
   mlr help usage-verbs

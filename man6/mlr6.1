@@ -140,6 +140,18 @@ Essentials:
   mlr help data-formats
 Flags:
   mlr help flags
+  mlr help comments-in-data-flags
+  mlr help compressed-data-flags
+  mlr help csv-only-flags
+  mlr help file-format-flags
+  mlr help flatten-unflatten-flags
+  mlr help format-conversion-keystroke-saver-flags
+  mlr help json-only-flags
+  mlr help legacy-flags
+  mlr help miscellaneous-flags
+  mlr help output-colorization-flags
+  mlr help pprint-only-flags
+  mlr help separator-flags
 Verbs:
   mlr help list-verbs
   mlr help usage-verbs
@@ -260,7 +272,8 @@ Notes:
 .RS 0
 .\}
 .nf
-Miller offers a few different ways to handle reading data files which have been compressed.
+Miller offers a few different ways to handle reading data files
+	which have been compressed.
 
 * Decompression done within the Miller process itself: `--bz2in` `--gzin` `--zin`
 * Decompression done outside the Miller process: `--prepipe` `--prepipex`
@@ -320,6 +333,8 @@ decisions that might have been made based on the file suffix. Likewise,
 .RS 0
 .\}
 .nf
+These are flags which are applicable to CSV format.
+
 --allow-ragged-csv-input or --ragged
                          If a data line has fewer fields than the header line,
                          fill remaining keys with empty string. If a data line
@@ -409,12 +424,13 @@ are overridden in all cases by setting output format to `format2`.
 .RS 0
 .\}
 .nf
+TODO: write section description.
 --flatsep or --jflatsep or --oflatsep {string}
                          Separator for flattening multi-level JSON keys, e.g.
                          `{"a":{"b":3}}` becomes `a:b => 3` for non-JSON
                          formats. Defaults to `.`.
---no-auto-flatten        
---no-auto-unflatten      
+--no-auto-flatten        TODO: WRITEME
+--no-auto-unflatten      TODO: WRITEME
 .fi
 .if n \{\
 .RE
@@ -425,78 +441,21 @@ are overridden in all cases by setting output format to `format2`.
 .RS 0
 .\}
 .nf
-As keystroke-savers for format-conversion you may use the following:
-      --c2t --c2d --c2n --c2j --c2x --c2p --c2m
---t2c       --t2d --t2n --t2j --t2x --t2p --t2m
---d2c --d2t       --d2n --d2j --d2x --d2p --d2m
---n2c --n2t --n2d       --n2j --n2x --n2p --n2m
---j2c --j2t --j2d --j2n       --j2x --j2p --j2m
---x2c --x2t --x2d --x2n --x2j       --x2p --x2m
---p2c --p2t --p2d --p2n --p2j --p2x       --p2m
-The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
-PPRINT, and markdown, respectively. Note that markdown format is available for
-output only.
+As keystroke-savers for format-conversion you may use the following.
+The letters c, t, j, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
+JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format is
+available for output only.
 
---c2b                    Use CSV for input, PPRINT with `--barred` for output.
---c2d                    Use CSV for input, DKVP for output.
---c2j                    Use CSV for input, JSON for output.
---c2m                    Use CSV for input, markdown-tabular for output.
---c2n                    Use CSV for input, NIDX for output.
---c2p                    Use CSV for input, PPRINT for output.
---c2t                    Use CSV for input, TSV for output.
---c2x                    Use CSV for input, XTAB for output.
---d2b                    Use DKVP for input, PPRINT with `--barred` for
-                         output.
---d2c                    Use DKVP for input, CSV for output.
---d2j                    Use DKVP for input, JSON for output.
---d2m                    Use DKVP for input, markdown-tabular for output.
---d2n                    Use DKVP for input, NIDX for output.
---d2p                    Use DKVP for input, PPRINT for output.
---d2t                    Use DKVP for input, TSV for output.
---d2x                    Use DKVP for input, XTAB for output.
---j2b                    Use JSON for input, PPRINT with --barred for output.
---j2c                    Use JSON for input, CSV for output.
---j2d                    Use JSON for input, DKVP for output.
---j2m                    Use JSON for input, markdown-tabular for output.
---j2n                    Use JSON for input, NIDX for output.
---j2p                    Use JSON for input, PPRINT for output.
---j2t                    Use JSON for input, TSV for output.
---j2x                    Use JSON for input, XTAB for output.
---n2b                    Use NIDX for input, PPRINT with `--barred` for
-                         output.
---n2c                    Use NIDX for input, CSV for output.
---n2d                    Use NIDX for input, DKVP for output.
---n2j                    Use NIDX for input, JSON for output.
---n2m                    Use NIDX for input, markdown-tabular for output.
---n2p                    Use NIDX for input, PPRINT for output.
---n2t                    Use NIDX for input, TSV for output.
---n2x                    Use NIDX for input, XTAB for output.
---p2c                    Use PPRINT for input, CSV for output.
---p2d                    Use PPRINT for input, DKVP for output.
---p2j                    Use PPRINT for input, JSON for output.
---p2m                    Use PPRINT for input, markdown-tabular for output.
---p2n                    Use PPRINT for input, NIDX for output.
---p2t                    Use PPRINT for input, TSV for output.
---p2x                    Use PPRINT for input, XTAB for output.
---t2b                    Use TSV for input, PPRINT with `--barred` for output.
---t2c                    Use TSV for input, CSV for output.
---t2d                    Use TSV for input, DKVP for output.
---t2j                    Use TSV for input, JSON for output.
---t2m                    Use TSV for input, markdown-tabular for output.
---t2n                    Use TSV for input, NIDX for output.
---t2p                    Use TSV for input, PPRINT for output.
---t2x                    Use TSV for input, XTAB for output.
---x2b                    Use XTAB for input, PPRINT with `--barred` for
-                         output.
---x2c                    Use XTAB for input, CSV for output.
---x2d                    Use XTAB for input, DKVP for output.
---x2j                    Use XTAB for input, JSON for output.
---x2m                    Use XTAB for input, markdown-tabular for output.
---x2n                    Use XTAB for input, NIDX for output.
---x2p                    Use XTAB for input, PPRINT for output.
---x2t                    Use XTAB for input, TSV for output.
--p                       Keystroke-saver for `--nidx --fs space --repifs`.
--T                       Keystroke-saver for `--nidx --fs tab`.
+| In\eout | CSV   | TSV   | JSON   | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
++--------+-------+-------+--------+--------+--------+--------+--------+----------+
+| CSV    |       | --c2t | --c2j  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
+| TSV    | --t2c |       | --t2j  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
+| JSON   | --j2c | --j2t |        | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
+| DKVP   | --d2c | --d2t | --d2j  |        | --d2n  | --d2x  | --d2p  | --d2m    |
+| NIDX   | --n2c | --n2t | --n2j  | --n2d  |        | --n2x  | --n2p  | --n2m    |
+| XTAB   | --x2c | --x2t | --x2j  | --x2d  | --x2n  |        | --x2p  | --x2m    |
+| PPRINT | --p2c | --p2t | --p2j  | --p2d  | --p2n  | --p2x  |        | --p2m    |
+
 .fi
 .if n \{\
 .RE
@@ -557,6 +516,7 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 .RS 0
 .\}
 .nf
+These are flags which don't fit into any other category.
 --from {filename}        Use this to specify an input file before the verb(s),
                          rather than after. May be used more than once.
                          Example: `mlr --from a.dat --from b.dat cat` is the
@@ -618,12 +578,14 @@ Rules for coloring:
     * Example: color: `mlr --csv cat foo.csv`
     * Example: no color: `mlr --csv cat foo.csv > bar.csv`
     * Example: no color: `mlr --csv cat foo.csv | less`
-* The default colors were chosen since they look OK with white or black terminal background,
-  and are differentiable with common varieties of human color vision.
+* The default colors were chosen since they look OK with white or black
+  terminal background, and are differentiable with common varieties of human
+  color vision.
 
 Mechanisms for coloring:
 
-* Miller uses ANSI escape sequences only. This does not work on Windows except within Cygwin.
+* Miller uses ANSI escape sequences only. This does not work on Windows
+  except within Cygwin.
 * Requires `TERM` environment variable to be set to non-empty string.
 * Doesn't try to check to see whether the terminal is capable of 256-color
   ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
@@ -632,35 +594,39 @@ Mechanisms for coloring:
 How you can control colorization:
 
 * Suppression/unsuppression:
-    * Environment variable `export MLR_NO_COLOR=true` means don't color even if stdout+TTY.
-    * Environment variable `export MLR_ALWAYS_COLOR=true` means do color even if not stdout+TTY.
+    * Environment variable `export MLR_NO_COLOR=true` means don't color
+      even if stdout+TTY.
+    * Environment variable `export MLR_ALWAYS_COLOR=true` means do color
+      even if not stdout+TTY.
       For example, you might want to use this when piping mlr output to `less -r`.
     * Command-line flags `--no-color` or `-M`, `--always-color` or `-C`.
 
-* Color choices can be specified by using environment variables, or command-line flags,
-  with values 0..255:
+* Color choices can be specified by using environment variables, or command-line
+  flags, with values 0..255:
     * `export MLR_KEY_COLOR=208`, `MLR_VALUE_COLOR=33`, etc.:
         `MLR_KEY_COLOR` `MLR_VALUE_COLOR` `MLR_PASS_COLOR` `MLR_FAIL_COLOR`
         `MLR_REPL_PS1_COLOR` `MLR_REPL_PS2_COLOR` `MLR_HELP_COLOR`
     * Command-line flags `--key-color 208`, `--value-color 33`, etc.:
         `--key-color` `--value-color` `--pass-color` `--fail-color`
         `--repl-ps1-color` `--repl-ps2-color` `--help-color`
-    * This is particularly useful if your terminal's background color clashes with current settings.
+    * This is particularly useful if your terminal's background color clashes
+      with current settings.
 
-If environment-variable settings and command-line flags are both provided, the latter take precedence.
+If environment-variable settings and command-line flags are both provided, the
+latter take precedence.
 
-Please do mlr `--list-color-codes` to see the available color codes (like 170), and
-`mlr --list-color-names` to see available names (like `orchid`).
+Please do mlr `--list-color-codes` to see the available color codes (like 170),
+and `mlr --list-color-names` to see available names (like `orchid`).
 
---always-color or -C     
---fail-color             
---help-color             
---key-color              
---list-color-codes       
---list-color-names       
---no-color or -M         
---pass-color             
---value-color            
+--always-color or -C     TODO: WRITEME
+--fail-color             TODO: WRITEME
+--help-color             TODO: WRITEME
+--key-color              TODO: WRITEME
+--list-color-codes       TODO: WRITEME
+--list-color-names       TODO: WRITEME
+--no-color or -M         TODO: WRITEME
+--pass-color             TODO: WRITEME
+--value-color            TODO: WRITEME
 .fi
 .if n \{\
 .RE
@@ -696,20 +662,21 @@ TODO: auto-detect is still TBD for Miller 6
 
 Notes about line endings:
 
-* Default line endings (`--irs` and `--ors`) are "auto" which means autodetect from
-  the input file format, as long as the input file(s) have lines ending in either
+* Default line endings (`--irs` and `--ors`) are "auto" which means autodetect
+  from the input file format, as long as the input file(s) have lines ending in either
   LF (also known as linefeed, `\en`, `0x0a`, or Unix-style) or CRLF (also known as
   carriage-return/linefeed pairs, `\er\en`, `0x0d 0x0a`, or Windows-style).
-* If both `irs` and `ors` are `auto` (which is the default) then LF input will lead to LF
-  output and CRLF input will lead to CRLF output, regardless of the platform you're
+* If both `irs` and `ors` are `auto` (which is the default) then LF input will
+  lead to LF output and CRLF input will lead to CRLF output, regardless of the platform you're
   running on.
-* The line-ending autodetector triggers on the first line ending detected in the input
-  stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
+* The line-ending autodetector triggers on the first line ending detected in the
+  input stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
   LF-terminated file then autodetected line endings will be CRLF.
 * If you use `--ors {something else}` with (default or explicitly specified) `--irs auto`
   then line endings are autodetected on input and set to what you specify on output.
 * If you use `--irs {something else}` with (default or explicitly specified) `--ors auto`
-  then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+  then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF
+  on Windows.
 
 Notes about all other separators:
 
