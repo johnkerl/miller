@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # SQL examples
 
 ## SQL-output examples
@@ -103,8 +116,6 @@ standard 10003924    392
 standard 10009872    108
 ...
 </pre>
-
-Again, all the examples in the CSV section apply here -- just change the input-format flags.
 
 ## SQL-input examples
 

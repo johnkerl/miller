@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Operating on all fields
 
 ## Bulk rename of fields
@@ -99,11 +112,11 @@ Using Miller 5.0.0's map literals and assigning to `$*`, you can fully generaliz
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -124,9 +137,9 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <b>' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-z=0.3467901443380824,KEYFIELD=pan,i=1,b=pan,y=0.3467901443380824,x=0.7268028627434533
-z=0.7586799647899636,KEYFIELD=eks,i=3,b=pan,y=0.7586799647899636,x=0.5221511083334797
-z=0.20460330576630303,KEYFIELD=wye,i=6,b=wye,y=0.20460330576630303,x=0.33831852551664776
-z=0.38139939387114097,KEYFIELD=eks,i=10,b=wye,y=0.38139939387114097,x=0.13418874328430463
-z=0.5732889198020006,KEYFIELD=wye,i=15,b=pan,y=0.5732889198020006,x=0.8636244699032729
+z=0.346791,KEYFIELD=pan,i=1,b=pan,y=0.346791,x=0.726802
+z=0.758679,KEYFIELD=eks,i=3,b=pan,y=0.758679,x=0.522151
+z=0.204603,KEYFIELD=wye,i=6,b=wye,y=0.204603,x=0.338318
+z=0.381399,KEYFIELD=eks,i=10,b=wye,y=0.381399,x=0.134188
+z=0.573288,KEYFIELD=wye,i=15,b=pan,y=0.573288,x=0.863624
 </pre>

@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Why call it Miller?
 
 The Unix toolkit was created in the **1970s** and is a mainstay to this day.  Miller's look and feel adheres closely to the [classic toolkit style](http://en.wikipedia.org/wiki/Unix_philosophy): if this were music, Miller would be a **tribute album**. Likewise, since commands are subcommands of the `mlr` executable, the result is a **band**, if you will, of command-line tools. Put these together and the namesake is another classic product of the 1970s: the [Steve Miller Band](http://en.wikipedia.org/wiki/Steve%5fMiller%5fBand).

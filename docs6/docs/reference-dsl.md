@@ -1,7 +1,30 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DSL overview
 
+_DSL_ stands for _domain-specific language_: it's language particular to Miller
+which you can use to write expressions to specify customer transformations to
+your data. (See [Miller programming language](programming-language.md) for an
+introduction.)
+
 ## Verbs compared to DSL
+
+While `put` and `filter` are [verbs](reference-verbs.md), they're different
+from the rest in that they let you use the DSL -- so we often contrast _DSL_
+(things you can do in the `put` and `filter` verbs), and _verbs_ (things you
+can do using the other verbs besides `put` and `filter`.)
 
 Here's comparison of verbs and `put`/`filter` DSL expressions:
 
@@ -11,9 +34,9 @@ Example:
 <b>mlr stats1 -a sum -f x -g a data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,x_sum=0.3467901443380824
-a=eks,x_sum=1.1400793586611044
-a=wye,x_sum=0.7778922255683036
+a=pan,x_sum=0.346791
+a=eks,x_sum=1.140078
+a=wye,x_sum=0.777891
 </pre>
 
 * Verbs are coded in Go
@@ -28,9 +51,9 @@ Example:
 <b>mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,x_sum=0.3467901443380824
-a=eks,x_sum=1.1400793586611044
-a=wye,x_sum=0.7778922255683036
+a=pan,x_sum=0.346791
+a=eks,x_sum=1.140078
+a=wye,x_sum=0.777891
 </pre>
 
 * You get to write your own DSL expressions
@@ -43,7 +66,7 @@ Please see [Verbs Reference](reference-verbs.md) for information on verbs other 
 
 ## Implicit loop over records for main statements
 
-The most important point about the Miller DSL is that it is designed for _streaming operation over records_.
+The most important point about the Miller DSL is that it is designed for [streaming operation over records](streaming-and-memory.md).
 
 DSL statements include:
 
@@ -55,11 +78,11 @@ The feature of _streaming operation over records_ is implemented by the main
 statements getting invoked once per record. You don't explicitly loop over
 records, as you would in some dataframes contexts; rather, _Miller loops over
 records for you_, and it lets you specify what to do on each record: you write
-the body of the loop.
+the body of the loop, not the loop itself.
 
-(You can, if you like, use the per-record statements to grow a list of records,
-then loop over them all in an `end` block. This is described in the page on
-[operating over all records](operating-over-all-records.md)).
+(But you can, if you like, use those per-record statements to grow a list of
+records, then loop over them all in an `end` block. This is described in the
+page on [operating on all records](operating-on-all-records.md)).
 
 To see this in action, let's take a look at the [data/short.csv](./data/short.csv) file:
 
@@ -105,7 +128,7 @@ statement on each loop iteration.
 
 For almost all simple uses of the Miller programming language, this implicit
 looping over records is probably all you will need. (For more involved cases you
-can see the pages on [operating over all records](operating-on-all-records.md),
+can see the pages on [operating on all records](operating-on-all-records.md),
 [out-of-stream variables](reference-dsl-variables.md#out-of-stream-variables),
 and [two-pass algorithms](two-pass-algorithms.md).)
 
@@ -119,11 +142,11 @@ input data:
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 you might retain only the records whose `a` field has value `eks`:
@@ -132,8 +155,8 @@ you might retain only the records whose `a` field has value `eks`:
 <b>mlr filter '$a == "eks"' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
 </pre>
 
 or you might add a new field which is a function of existing fields:
@@ -142,11 +165,11 @@ or you might add a new field which is a function of existing fields:
 <b>mlr put '$ab = $a . "_" . $b ' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,ab=pan_pan
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,ab=eks_pan
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,ab=wye_wye
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,ab=eks_wye
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,ab=wye_pan
+a=pan,b=pan,i=1,x=0.346791,y=0.726802,ab=pan_pan
+a=eks,b=pan,i=2,x=0.758679,y=0.522151,ab=eks_pan
+a=wye,b=wye,i=3,x=0.204603,y=0.338318,ab=wye_wye
+a=eks,b=wye,i=4,x=0.381399,y=0.134188,ab=eks_wye
+a=wye,b=pan,i=5,x=0.573288,y=0.863624,ab=wye_pan
 </pre>
 
 ## Differences between put and filter

@@ -6,7 +6,22 @@ As of Miller 5.0.0 you can define your own functions, as well as subroutines.
 
 Here's the obligatory example of a recursive function to compute the factorial function:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/factorial-example.sh)
+GENMD_RUN_COMMAND
+mlr --opprint --from data/small put '
+    func f(n) {
+        if (is_numeric(n)) {
+            if (n > 0) {
+                return n * f(n-1);
+            } else {
+                return 1;
+            }
+        }
+        # implicitly return absent-null if non-numeric
+    }
+    $ox = f($x + NR);
+    $oi = f($i);
+'
+GENMD_EOF
 
 Properties of user-defined functions:
 
@@ -30,7 +45,25 @@ Properties of user-defined functions:
 
 Example:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/subr-example.sh)
+GENMD_RUN_COMMAND
+mlr --opprint --from data/small put -q '
+  begin {
+    @call_count = 0;
+  }
+  subr s(n) {
+    @call_count += 1;
+    if (is_numeric(n)) {
+      if (n > 1) {
+        call s(n-1);
+      } else {
+        print "numcalls=" . @call_count;
+      }
+    }
+  }
+  print "NR=" . NR;
+  call s(NR);
+'
+GENMD_EOF
 
 Properties of user-defined subroutines:
 
@@ -49,3 +82,11 @@ Properties of user-defined subroutines:
 * See the section on [local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
 
 * See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.
+
+# Differences between functions and subroutines
+
+Subroutines cannot return values, and they are invoked by the keyword `call`.
+
+In hindsight, subroutines needn't have been invented. If `foo` is a function
+then you can write `foo(1,2,3)` while ignoring its return value, and that plays
+the role of subroutine quite well.

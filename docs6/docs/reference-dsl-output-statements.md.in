@@ -68,6 +68,29 @@ GENMD_EOF
 
 First is `tee >`, then the filename expression (which can be an expression such as `"tap.".$a.".dat"`), then a comma, then `$*`. (Nothing else but `$*` is teeable.)
 
+You can also write to a variable file name -- for example, you can split a
+single file into multiple ones on field names:
+
+GENMD_RUN_COMMAND
+mlr --csv cat example.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv cat circle.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv cat square.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv cat triangle.csv
+GENMD_EOF
+
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
 ## Redirected-output statements
@@ -108,7 +131,14 @@ GENMD_EOF
 
 ## Emit statements
 
-There are three variants: `emitf`, `emit`, and `emitp`. Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using `dump`), whereas Miller output records are lists of single-level key-value pairs. The three emit variants allow you to control how the multilevel hashmaps are flatten down to output records. You can emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
+There are three variants: `emitf`, `emit`, and `emitp`. Keep in mind that
+out-of-stream variables are a nested, multi-level [map](reference-main-maps.md) (directly viewable as
+JSON using `dump`), while Miller record values are as well during processing --
+but records may be flattened down for output to tabular formats. See the page
+[Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md) for more
+information.
+
+You can emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For `emitf` these mustn't have indexing using `@name[...]`. Example:
 
@@ -164,7 +194,7 @@ mlr put -q '
 ' data/small
 GENMD_EOF
 
-Now for **emitp**: if you have as many names following `emit` as there are levels in the out-of-stream variable's hashmap, then `emit` and `emitp` do the same thing. Where they differ is when you don't specify as many names as there are hashmap levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: `emitp` includes full prefixing (hence the `p` in `emitp`) while `emit` takes the deepest hashmap key as the output-record key:
+Now for **emitp**: if you have as many names following `emit` as there are levels in the out-of-stream variable's map, then `emit` and `emitp` do the same thing. Where they differ is when you don't specify as many names as there are map levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: `emitp` includes full prefixing (hence the `p` in `emitp`) while `emit` takes the deepest map key as the output-record key:
 
 GENMD_RUN_COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
@@ -213,7 +243,18 @@ GENMD_EOF
 You can emit **multiple map-valued expressions side-by-side** by
 including their names in parentheses:
 
-GENMD_INCLUDE_AND_RUN_ESCAPED(data/emit-lashed.sh)
+GENMD_RUN_COMMAND
+mlr --from data/medium --opprint put -q '
+  @x_count[$a][$b] += 1;
+  @x_sum[$a][$b] += $x;
+  end {
+      for ((a, b), _ in @x_count) {
+          @x_mean[a][b] = @x_sum[a][b] / @x_count[a][b]
+      }
+      emit (@x_sum, @x_count, @x_mean), "a", "b"
+  }
+'
+GENMD_EOF
 
 What this does is walk through the first out-of-stream variable (`@x_sum` in this example) as usual, then for each keylist found (e.g. `pan,wye`), include the values for the remaining out-of-stream variables (here, `@x_count` and `@x_mean`). You should use this when all out-of-stream variables in the emit statement have **the same shape and the same keylists**.
 

@@ -31,8 +31,8 @@ i = -1;                     #
 for (i = 1, int j = 2; i <= 10; i += 1, j *= 2) {
                             # C-style triple-for variables use enclosing scope,
                             # unless declared local: i is outer, j is local to the loop.
-  print "inner i =" . i;    #
-  print "inner j =" . j;    #
+  print "inner i =", i;     #
+  print "inner j =", j;     #
 }                           #
-print "outer i =" . i;      # i has been modified by the loop.
-print "outer j =" . j;      # j is undefined in this scope.
+print "outer i =", i;       # i has been modified by the loop.
+print "outer j =", j;       # j is undefined in this scope.

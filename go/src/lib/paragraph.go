@@ -2,12 +2,11 @@ package lib
 
 import (
 	"fmt"
-	"os"
 )
 
-// For on-line help contexts like printing all the built-in DSL functions, or
+// For online help contexts like printing all the built-in DSL functions, or
 // the list of all verbs.
-func PrintWordsAsParagraph(words []string, o *os.File) {
+func PrintWordsAsParagraph(words []string) {
 	separator := " "
 	maxlen := 80
 
@@ -19,14 +18,14 @@ func PrintWordsAsParagraph(words []string, o *os.File) {
 		wordlen := len(word)
 		linelen += separatorlen + wordlen
 		if linelen >= maxlen {
-			fmt.Fprintf(o, "\n")
+			fmt.Printf("\n")
 			linelen = separatorlen + wordlen
 			j = 0
 		}
 		if j > 0 {
-			fmt.Fprint(o, separator)
+			fmt.Print(separator)
 		}
-		fmt.Fprint(o, word)
+		fmt.Print(word)
 		j++
 	}
 

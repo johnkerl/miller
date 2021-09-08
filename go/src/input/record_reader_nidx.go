@@ -121,7 +121,7 @@ func recordFromNIDXLine(
 	for _, value := range values {
 		i++
 		key := strconv.Itoa(i)
-		mval := types.MlrvalPointerFromInferredType(value)
+		mval := types.MlrvalPointerFromInferredTypeForDataFiles(value)
 		record.PutReference(key, mval)
 	}
 	return record

@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Miscellaneous examples
 
 Column select:
@@ -105,7 +118,7 @@ Tap/trace:
 This admittedly artificial example demonstrates using Miller time and stats functions to introspectively acquire some information about Miller's own runtime. The `delta` function computes the difference between successive timestamps.
 
 <pre class="pre-non-highlight-non-pair">
-$ ruby -e '10000.times{|i|puts "i=#{i+1}"}' > lines.txt
+$ ruby -e '10000.times{|i|puts "i=#{i+1}"}' &gt; lines.txt
 
 $ head -n 5 lines.txt
 i=1
@@ -126,7 +139,7 @@ i     t                 t_delta
 mlr --ofmt '%.9le' --oxtab \
   put '$t=systime()' then \
   step -a delta -f t then \
-  filter '$i>1' then \
+  filter '$i&gt;1' then \
   stats1 -a min,mean,max -f t_delta \
   lines.txt
 t_delta_min  2.861022949e-06
@@ -220,7 +233,7 @@ The recursive function for the Fibonacci sequence is famous for its computationa
 mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
   func f(n) {
       @fcount += 1;              # count number of calls to the function
-      if (n < 2) {
+      if (n &lt; 2) {
           return 1
       } else {
           return f(n-1) + f(n-2) # recurse
@@ -278,7 +291,7 @@ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
       return @fcache[n]
     } else {                      # cache miss
       num rv = 1;
-      if (n >= 2) {
+      if (n &gt;= 2) {
         rv = f(n-1) + f(n-2)      # recurse
       }
       @fcache[n] = rv;

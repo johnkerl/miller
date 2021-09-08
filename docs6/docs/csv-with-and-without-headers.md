@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # CSV, with and without headers
 
 ## Headerless CSV on input or output
@@ -48,22 +61,22 @@ Likewise, if you need to produce CSV which is lacking its header, you can pipe M
 </pre>
 <pre class="pre-non-highlight-in-pair">
 color,shape,flag,i,u,v,w,x
-yellow,triangle,1,56,0.6321695890307647,0.9887207810889004,0.4364983936735774,5.7981881667050565
-red,square,1,80,0.21966833570651523,0.001257332190235938,0.7927778364718627,2.944117399716207
-red,circle,1,84,0.20901671281497636,0.29005231936593445,0.13810280912907674,5.065034003400998
-red,square,0,243,0.9562743938458542,0.7467203085342884,0.7755423050923582,7.117831369597269
-purple,triangle,0,257,0.4355354501763202,0.8591292672156728,0.8122903963006748,5.753094629505863
+yellow,triangle,1,56,0.632170,0.988721,0.436498,5.798188
+red,square,1,80,0.219668,0.001257,0.792778,2.944117
+red,circle,1,84,0.209017,0.290052,0.138103,5.065034
+red,square,0,243,0.956274,0.746720,0.775542,7.117831
+purple,triangle,0,257,0.435535,0.859129,0.812290,5.753095
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-yellow,triangle,1,56,0.6321695890307647,0.9887207810889004,0.4364983936735774,5.7981881667050565
-red,square,1,80,0.21966833570651523,0.001257332190235938,0.7927778364718627,2.944117399716207
-red,circle,1,84,0.20901671281497636,0.29005231936593445,0.13810280912907674,5.065034003400998
-red,square,0,243,0.9562743938458542,0.7467203085342884,0.7755423050923582,7.117831369597269
-purple,triangle,0,257,0.4355354501763202,0.8591292672156728,0.8122903963006748,5.753094629505863
+yellow,triangle,1,56,0.632170,0.988721,0.436498,5.798188
+red,square,1,80,0.219668,0.001257,0.792778,2.944117
+red,circle,1,84,0.209017,0.290052,0.138103,5.065034
+red,square,0,243,0.956274,0.746720,0.775542,7.117831
+purple,triangle,0,257,0.435535,0.859129,0.812290,5.753095
 </pre>
 
 Lastly, often we say "CSV" or "TSV" when we have positionally indexed data in columns which are separated by commas or tabs, respectively. In this case it's perhaps simpler to **just use NIDX format** which was designed for this purpose. (See also [File Formats](file-formats.md).) For example:

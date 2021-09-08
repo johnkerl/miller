@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Output colorization
 
 As of version 6.0.0, Miller supports output-colorization. Here are examples using side-by-side black-background and white-background terminals:
@@ -10,7 +23,7 @@ Things having colors:
 * Keys in CSV header lines, JSON keys, etc
 * Values in CSV data lines, JSON scalar values, etc
 * "PASS" and "FAIL" in regression-test output
-* Some online-help strings
+* Some [online-help](online-help.md) strings
 
 Rules for colorization:
 

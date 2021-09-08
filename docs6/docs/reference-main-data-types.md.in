@@ -2,65 +2,110 @@
 
 ## List of types
 
-Miller's types for function processing are:
+Miller's types are:
 
 * Scalars:
-    * **string**
-    * **float** (double-precision)
-    * **int** (64-bit signed)
-    * **boolean**
+    * **string**: such as `"abcdefg"`, supporting concatenation, one-up indexing and slicing, and [library functions](reference-dsl-builtin-functions.md#string-functions). See the pages on [strings](reference-main-strings.md) and [regular expressions](reference-main-regular-expressions.md).
+    * **float** and **int**: such as `1.2` and `3`: double-precision and 64-bit signed, respectively. See the section on [arithmetic operators and math-related library functions](reference-dsl-builtin-functions.md#math-functions) as well as the [Arithmetic](reference-main-arithmetic.md) page.
+    * **boolean**: literals `true` and `false`; results of `==`, `<`, `>`, etc. See the section on [boolean operators](reference-dsl-builtin-functions.md#boolean-functions).
 * Collections:
-    * **map**
-    * **array**
+    * **map**: such as `{"a":1,"b":[2,3,4]}`, supporting key-indexing, preservation of insertion order, [library functions](reference-dsl-builtin-functions.md#collections-functions), etc. See the [Maps](reference-main-maps.md) page.
+    * **array**: such as `["a", 2, true]`, supporting one-up indexing and slicing, [library functions](reference-dsl-builtin-functions.md#collections-functions), etc. See the [Arrays](reference-main-arrays.md) page.
 * Nulls and error:
-    * **empty-null** (empty string)
-    * **absent-null** (reads of unset right-hand sides, or fall-through non-explicit return values from user-defined functions)
-    * **JSON-null** (TODO)
-    * **error** (TODO: give an example)
+    * **absent-null**: Such as on reads of unset right-hand sides, or fall-through non-explicit return values from user-defined functions. See the [null-data page](reference-main-null-data.md).
+    * **JSON-null**: For `null` in JSON files; also used in [gapped auto-extend of arrays](reference-main-arrays.md#auto-extend-and-null-gaps). See the [null-data page](reference-main-null-data.md).
+    * **error** -- for various results which cannot be computed, often when the input to a [built-in function](reference-dsl-builtin-functions.md) is of the wrong type. For example, doing [strlen](reference-dsl-builtin-functions.md#strlen) or [substr](reference-dsl-builtin-functions.md#substr) on a non-string, [sec2gmt](reference-dsl-builtin-functions.md#sec2gmt) on a non-integer, etc.
 
-TODO: point to null-data page; arrays page; arithmetic page; what else?
+See also the list of [type-checking
+functions](reference-dsl-builtin-functions.md#type-checkin -functions) for the
+[Miller programming language](programming-language.md).
 
-## To be ported
+See also [Differences from other programming languages](reference-dsl-differences.md).
 
-Miller's input and output are all string-oriented: there is (as of August 2015 anyway) no support for binary record packing. In this sense, everything is a string in and out of Miller.  During processing, field names are always strings, even if they have names like "3"; field values can have various data types.  Field values' ability to be interpreted as a non-string type only has meaning when comparison or function operations are done on them.  And it is an error condition if Miller encounters non-numeric (or otherwise mistyped) data in a field in which it has been asked to do numeric (or otherwise type-specific) operations.
+## Type inference for literal and record data
 
-Field values are treated as numeric for the following:
+Miller's input and output are all text-oriented: all the
+[file formats supported by Miller](file-formats.md) are human-readable text,
+such as CSV, TSV, and JSON; binary formats such as
+[BSON](https://bsonspec.org/) and [Parquet](https://parquet.apache.org/) are
+not supported (as of mid-2021). In this sense, everything is a string in and out of
+Miller -- be it in data files, or in DSL expressions you key in.
 
-* Numeric sort: `mlr sort -n`, `mlr sort -nr`.
-* Statistics: `mlr histogram`, `mlr stats1`, `mlr stats2`.
-* Cross-record arithmetic: `mlr step`.
+In the [DSL](programming-language.md), `7` is an `int` and `8.9` is a float, as
+one would expect.  Likewise, on input from [data files](file-formats.md),
+string values representable as numbers, e.g. `1.2` or `3`, are treated as int
+or float, respectively. If a record has `x=1,y=2` then `mlr put '$z=$x+$y'`
+will produce `x=1,y=2,z=3`.
 
-For `mlr put` and `mlr filter`:
+Numbers retain their original string representation, so if `x` is `1.2` on one
+record and `1.200` on another, they'll print out that way on output (unless of
+course they've been modified during processing, e.g. `mlr put '$x = $x + 10`).
 
-* Miller's types for function processing are **empty-null** (empty string), **absent-null** (reads of unset right-hand sides, or fall-through non-explicit return values from user-defined functions), **error**, **string**, **float** (double-precision), **int** (64-bit signed), and **boolean**.
+Generally strings, numbers, and booleans don't mix; use type-casting like
+`string($x)` to convert. However, the dot (string-concatenation) operator has
+been special-cased: `mlr put '$z=$x.$y'` does not give an error, because the
+dot operator has been generalized to stringify non-strings
 
-* On input, string values representable as numbers, e.g. "3" or "3.1", are treated as int or float, respectively. If a record has `x=1,y=2` then `mlr put '$z=$x+$y'` will produce `x=1,y=2,z=3`, and `mlr put '$z=$x.$y'` does not give an error, but only because the dot operator has been generalized to stringify non-strings.  To coerce back to string for processing, use the `string` function: `mlr put '$z=string($x).string($y)'` will produce `x=1,y=2,z=12`.
+Examples:
 
-* On input, string values representable as boolean  (e.g. `"true"`, `"false"`) are *not* automatically treated as boolean.  (This is because `"true"` and `"false"` are ordinary words, and auto string-to-boolean on a column consisting of words would result in some strings mixed with some booleans.) Use the `boolean` function to coerce: e.g. giving the record `x=1,y=2,w=false` to `mlr put '$z=($x<$y) || boolean($w)'`.
+GENMD_RUN_COMMAND
+mlr --csv cat data/type-infer.csv
+GENMD_EOF
 
-* Functions take types as described in `mlr --help-all-functions`: for example, `log10` takes float input and produces float output, `gmt2sec` maps string to int, and `sec2gmt` maps int to string.
+GENMD_RUN_COMMAND
+mlr --icsv --oxtab --from data/type-infer.csv put '
+  $d = $a . $c;
+  $e = 7;
+  $f = 8.9;
+  $g = $e + $f;
+  $ta = typeof($a);
+  $tb = typeof($b);
+  $tc = typeof($c);
+  $td = typeof($d);
+  $te = typeof($e);
+  $tf = typeof($f);
+  $tg = typeof($g);
+' then reorder -f a,ta,b,tb,c,tc,d,td,e,te,f,tf,g,tg
+GENMD_EOF
 
-* All math functions described in `mlr --help-all-functions` take integer as well as float input.
+On input, string values representable as boolean  (e.g. `"true"`, `"false"`)
+are *not* automatically treated as boolean.  This is because `"true"` and
+`"false"` are ordinary words, and auto string-to-boolean on a column consisting
+of words would result in some strings mixed with some booleans. Use the
+`boolean` function to coerce: e.g. giving the record `x=1,y=2,w=false` to `mlr
+filter '$z=($x<$y) || boolean($w)'`.
 
-## Escape sequences for string literals
+The same is true for `inf`, `+inf`, `-inf`, `infinity`, `+infinity`,
+`-infinity`, `NaN`, and all upper-cased/lower-cased/mixed-case variants of
+those. These are valid IEEE floating-point numbers, but Miller treats these as
+strings. You can explicit force conversion: if `x=infinity` in a data file,
+then `typeof($x)` is `string` but `typeof(float($x))` is `float`.
 
-You can use the following backslash escapes for strings such as between the double quotes in contexts such as `mlr filter '$name =~ "..."'`, `mlr put '$name = $othername . "..."'`, `mlr put '$name = sub($name, "...", "...")`, etc.:
+## JSON parse and stringify
 
-* `\a`: ASCII code 0x07 (alarm/bell)
-* `\b`: ASCII code 0x08 (backspace)
-* `\f`: ASCII code 0x0c (formfeed)
-* `\n`: ASCII code 0x0a (LF/linefeed/newline)
-* `\r`: ASCII code 0x0d (CR/carriage return)
-* `\t`: ASCII code 0x09 (tab)
-* `\v`: ASCII code 0x0b (vertical tab)
-* `\\`: backslash
-* `\"`: double quote
-* `\123`: Octal 123, etc. for `\000` up to `\377`
-* `\x7f`: Hexadecimal 7f, etc. for `\x00` up to `\xff`
+If you have, say, a CSV file whose columns contain strings which are well-formatted JSON,
+they will not be auto-converted, but you can use the
+[`json-parse` verb](reference-verbs.md#json-parse)
+or the
+[`json_parse` DSL function](reference-dsl-builtin-functions.md#json_parse):
 
-See also [https://en.wikipedia.org/wiki/Escape_sequences_in_C](https://en.wikipedia.org/wiki/Escape_sequences_in_C).
+GENMD_RUN_COMMAND
+mlr --csv --from data/json-in-csv.csv cat
+GENMD_EOF
 
-These replacements apply only to strings you key in for the DSL expressions for `filter` and `put`: that is, if you type `\t` in a string literal for a `filter`/`put` expression, it will be turned into a tab character. If you want a backslash followed by a `t`, then please type `\\t`.
+GENMD_RUN_COMMAND
+mlr --icsv --ojson --from data/json-in-csv.csv cat
+GENMD_EOF
 
-However, these replacements are done automatically only for string literals within DSL expressions -- they are not done automatically to fields within your data stream.  If you wish to make these replacements, you can do (for example) `mlr put '$field = gsub($field, "\\t", "\t")'`. If you need to make such a replacement for all fields in your data, you should probably use the system `sed` command instead. 
+GENMD_RUN_COMMAND
+mlr --icsv --ojson --from data/json-in-csv.csv json-parse -f blob
+GENMD_EOF
 
+GENMD_RUN_COMMAND
+mlr --icsv --ojson --from data/json-in-csv.csv put '$blob = json_parse($blob)'
+GENMD_EOF
+
+These have their respective operations to convert back to string: the
+[`json-stringify` verb](reference-verbs.md#json-stringify)
+and
+[`json_stringify` DSL function](reference-dsl-builtin-functions.md#json_stringify).

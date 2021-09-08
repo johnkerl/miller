@@ -19,6 +19,11 @@ def main
 
   output_handle.puts("<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->")
 
+  # The filename on the command line is used for link-generation; file contents
+  # are read from standard input.
+  input_filename = ARGV[0]
+  write_quicklinks_header(output_handle, input_filename)
+
   while true
     begin
       content_line = input_handle.readline
@@ -43,6 +48,10 @@ def main
       elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_THREE$/
         lines = read_until_genmd_eof(input_handle)
         write_card(lines.slice(0,3), lines.slice(3, lines.length), output_handle)
+
+      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_FOUR$/
+        lines = read_until_genmd_eof(input_handle)
+        write_card(lines.slice(0,4), lines.slice(4, lines.length), output_handle)
 
       elsif content_line =~ /^GENMD_RUN_COMMAND_TOLERATING_ERROR$/
         cmd_lines = read_until_genmd_eof(input_handle)
@@ -76,6 +85,50 @@ def main
       break
     end
   end
+end
+
+# ----------------------------------------------------------------
+# Our job is to read foo.md.in and write foo.md. Then Mkdocs will create HTML
+# in the build directory. However, Mkdocs writes not foo.html but
+# foo/index.html. This is true for all pages except the base index.html. Also,
+# in this funciton we're writing raw HTML not Markdown so we can't leverage
+# Mkdocs foo.md -> foo/index.html renaming.  This also means we need to be
+# mindful of directory structure. Given input
+#   index.md.in
+#   foo.md.in
+#   bar.md.in
+# we'll generate
+#   index.md
+#   foo.md
+#   bar.md
+# However, Mkdocs will create
+#   index.html
+#   foo/index.html
+#   bar/index.html
+# So if the input_filename is 'index.md.in' we need need to quicklink
+# to ./glossary/index.html et al; if it's anything else, we need to
+# quicklink to ../glossary/index.html.
+
+def write_quicklinks_header(output_handle, input_filename)
+  relative_path = '..'
+  if input_filename == 'index.md.in'
+  relative_path = '.'
+  end
+  output_handle.puts <<EOF
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="#{relative_path}/reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="#{relative_path}/reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="#{relative_path}/glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
+EOF
 end
 
 # ----------------------------------------------------------------
@@ -119,7 +172,12 @@ end
 
 # ----------------------------------------------------------------
 def include_escaped(included_file_name, output_handle)
-  write_card([], File.readlines(included_file_name).map{|line| line.chomp}, output_handle)
+  unescaped_lines = File.readlines(included_file_name)
+  escaped_lines = unescaped_lines.map do |line|
+    # Necessary for <pre> in Mkdocs
+    line.chomp.gsub("<", "&lt;").gsub(">", "&gt;")
+  end
+  write_card([], escaped_lines, output_handle)
 end
 
 # ----------------------------------------------------------------

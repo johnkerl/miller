@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DSL output statements
 
 You can **output** variable-values or expressions in **five ways**:
@@ -69,6 +82,61 @@ The syntax is, by example:
 
 First is `tee >`, then the filename expression (which can be an expression such as `"tap.".$a.".dat"`), then a comma, then `$*`. (Nothing else but `$*` is teeable.)
 
+You can also write to a variable file name -- for example, you can split a
+single file into multiple ones on field names:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+red,square,true,2,15,79.2778,0.0130
+red,circle,true,3,16,13.8103,2.9010
+red,square,false,4,48,77.5542,7.4670
+purple,triangle,false,5,51,81.2290,8.5910
+red,square,false,6,64,77.1991,9.5310
+purple,triangle,false,7,65,80.1405,5.8240
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+purple,square,false,10,91,72.3735,8.2430
+</pre>
+
+<pre class="pre-highlight-non-pair">
+<b>mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'</b>
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat circle.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+red,circle,true,3,16,13.8103,2.9010
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat square.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+red,square,true,2,15,79.2778,0.0130
+red,square,false,4,48,77.5542,7.4670
+red,square,false,6,64,77.1991,9.5310
+purple,square,false,10,91,72.3735,8.2430
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat triangle.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+purple,triangle,false,5,51,81.2290,8.5910
+purple,triangle,false,7,65,80.1405,5.8240
+</pre>
+
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
 ## Redirected-output statements
@@ -87,7 +155,7 @@ print: prints expression immediately to stdout.
 
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
-  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -250,7 +318,14 @@ Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more infor
 
 ## Emit statements
 
-There are three variants: `emitf`, `emit`, and `emitp`. Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using `dump`), whereas Miller output records are lists of single-level key-value pairs. The three emit variants allow you to control how the multilevel hashmaps are flatten down to output records. You can emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
+There are three variants: `emitf`, `emit`, and `emitp`. Keep in mind that
+out-of-stream variables are a nested, multi-level [map](reference-main-maps.md) (directly viewable as
+JSON using `dump`), while Miller record values are as well during processing --
+but records may be flattened down for output to tabular formats. See the page
+[Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md) for more
+information.
+
+You can emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For `emitf` these mustn't have indexing using `@name[...]`. Example:
 
@@ -263,7 +338,7 @@ Use **emitf** to output several out-of-stream variables side-by-side in the same
 <b>' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-count=5,x_sum=2.264761728567491,y_sum=2.585085709781158
+count=5,x_sum=2.26476,y_sum=2.585083
 </pre>
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
@@ -272,11 +347,11 @@ Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -284,7 +359,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {
-  "sum": 2.264761728567491
+  "sum": 2.26476
 }
 </pre>
 
@@ -292,7 +367,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <b>mlr put -q '@sum += $x; end { emit @sum }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-sum=2.264761728567491
+sum=2.26476
 </pre>
 
 If it's indexed then use as many names after `emit` as there are indices:
@@ -303,9 +378,9 @@ If it's indexed then use as many names after `emit` as there are indices:
 <pre class="pre-non-highlight-in-pair">
 {
   "sum": {
-    "pan": 0.3467901443380824,
-    "eks": 1.1400793586611044,
-    "wye": 0.7778922255683036
+    "pan": 0.346791,
+    "eks": 1.140078,
+    "wye": 0.777891
   }
 }
 </pre>
@@ -314,9 +389,9 @@ If it's indexed then use as many names after `emit` as there are indices:
 <b>mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,sum=0.3467901443380824
-a=eks,sum=1.1400793586611044
-a=wye,sum=0.7778922255683036
+a=pan,sum=0.346791
+a=eks,sum=1.140078
+a=wye,sum=0.777891
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -326,15 +401,15 @@ a=wye,sum=0.7778922255683036
 {
   "sum": {
     "pan": {
-      "pan": 0.3467901443380824
+      "pan": 0.346791
     },
     "eks": {
-      "pan": 0.7586799647899636,
-      "wye": 0.38139939387114097
+      "pan": 0.758679,
+      "wye": 0.381399
     },
     "wye": {
-      "wye": 0.20460330576630303,
-      "pan": 0.5732889198020006
+      "wye": 0.204603,
+      "pan": 0.573288
     }
   }
 }
@@ -344,11 +419,11 @@ a=wye,sum=0.7778922255683036
 <b>mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,sum=0.3467901443380824
-a=eks,b=pan,sum=0.7586799647899636
-a=eks,b=wye,sum=0.38139939387114097
-a=wye,b=wye,sum=0.20460330576630303
-a=wye,b=pan,sum=0.5732889198020006
+a=pan,b=pan,sum=0.346791
+a=eks,b=pan,sum=0.758679
+a=eks,b=wye,sum=0.381399
+a=wye,b=wye,sum=0.204603
+a=wye,b=pan,sum=0.573288
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -359,23 +434,23 @@ a=wye,b=pan,sum=0.5732889198020006
   "sum": {
     "pan": {
       "pan": {
-        "1": 0.3467901443380824
+        "1": 0.346791
       }
     },
     "eks": {
       "pan": {
-        "2": 0.7586799647899636
+        "2": 0.758679
       },
       "wye": {
-        "4": 0.38139939387114097
+        "4": 0.381399
       }
     },
     "wye": {
       "wye": {
-        "3": 0.20460330576630303
+        "3": 0.204603
       },
       "pan": {
-        "5": 0.5732889198020006
+        "5": 0.573288
       }
     }
   }
@@ -389,14 +464,14 @@ a=wye,b=pan,sum=0.5732889198020006
 <b>' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,sum=0.3467901443380824
-a=eks,b=pan,i=2,sum=0.7586799647899636
-a=eks,b=wye,i=4,sum=0.38139939387114097
-a=wye,b=wye,i=3,sum=0.20460330576630303
-a=wye,b=pan,i=5,sum=0.5732889198020006
+a=pan,b=pan,i=1,sum=0.346791
+a=eks,b=pan,i=2,sum=0.758679
+a=eks,b=wye,i=4,sum=0.381399
+a=wye,b=wye,i=3,sum=0.204603
+a=wye,b=pan,i=5,sum=0.573288
 </pre>
 
-Now for **emitp**: if you have as many names following `emit` as there are levels in the out-of-stream variable's hashmap, then `emit` and `emitp` do the same thing. Where they differ is when you don't specify as many names as there are hashmap levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: `emitp` includes full prefixing (hence the `p` in `emitp`) while `emit` takes the deepest hashmap key as the output-record key:
+Now for **emitp**: if you have as many names following `emit` as there are levels in the out-of-stream variable's map, then `emit` and `emitp` do the same thing. Where they differ is when you don't specify as many names as there are map levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: `emitp` includes full prefixing (hence the `p` in `emitp`) while `emit` takes the deepest map key as the output-record key:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small</b>
@@ -405,15 +480,15 @@ Now for **emitp**: if you have as many names following `emit` as there are level
 {
   "sum": {
     "pan": {
-      "pan": 0.3467901443380824
+      "pan": 0.346791
     },
     "eks": {
-      "pan": 0.7586799647899636,
-      "wye": 0.38139939387114097
+      "pan": 0.758679,
+      "wye": 0.381399
     },
     "wye": {
-      "wye": 0.20460330576630303,
-      "pan": 0.5732889198020006
+      "wye": 0.204603,
+      "pan": 0.573288
     }
   }
 }
@@ -423,45 +498,45 @@ Now for **emitp**: if you have as many names following `emit` as there are level
 <b>mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,pan=0.3467901443380824
-a=eks,pan=0.7586799647899636,wye=0.38139939387114097
-a=wye,wye=0.20460330576630303,pan=0.5732889198020006
+a=pan,pan=0.346791
+a=eks,pan=0.758679,wye=0.381399
+a=wye,wye=0.204603,pan=0.573288
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-pan=0.3467901443380824
-pan=0.7586799647899636,wye=0.38139939387114097
-wye=0.20460330576630303,pan=0.5732889198020006
+pan=0.346791
+pan=0.758679,wye=0.381399
+wye=0.204603,pan=0.573288
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,sum.pan=0.3467901443380824
-a=eks,sum.pan=0.7586799647899636,sum.wye=0.38139939387114097
-a=wye,sum.wye=0.20460330576630303,sum.pan=0.5732889198020006
+a=pan,sum.pan=0.346791
+a=eks,sum.pan=0.758679,sum.wye=0.381399
+a=wye,sum.wye=0.204603,sum.pan=0.573288
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.38139939387114097,sum.wye.wye=0.20460330576630303,sum.wye.pan=0.5732889198020006
+sum.pan.pan=0.346791,sum.eks.pan=0.758679,sum.eks.wye=0.381399,sum.wye.wye=0.204603,sum.wye.pan=0.573288
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-sum.pan.pan 0.3467901443380824
-sum.eks.pan 0.7586799647899636
-sum.eks.wye 0.38139939387114097
-sum.wye.wye 0.20460330576630303
-sum.wye.pan 0.5732889198020006
+sum.pan.pan 0.346791
+sum.eks.pan 0.758679
+sum.eks.wye 0.381399
+sum.wye.wye 0.204603
+sum.wye.pan 0.573288
 </pre>
 
 Use **--oflatsep** to specify the character which joins multilevel
@@ -471,16 +546,16 @@ keys for `emitp` (it defaults to a colon):
 <b>mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,sum.pan=0.3467901443380824
-a=eks,sum.pan=0.7586799647899636,sum.wye=0.38139939387114097
-a=wye,sum.wye=0.20460330576630303,sum.pan=0.5732889198020006
+a=pan,sum.pan=0.346791
+a=eks,sum.pan=0.758679,sum.wye=0.381399
+a=wye,sum.wye=0.204603,sum.pan=0.573288
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.38139939387114097,sum.wye.wye=0.20460330576630303,sum.wye.pan=0.5732889198020006
+sum.pan.pan=0.346791,sum.eks.pan=0.758679,sum.eks.wye=0.381399,sum.wye.wye=0.204603,sum.wye.pan=0.573288
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -490,11 +565,11 @@ sum.pan.pan=0.3467901443380824,sum.eks.pan=0.7586799647899636,sum.eks.wye=0.3813
 <b>' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-sum.pan.pan 0.3467901443380824
-sum.eks.pan 0.7586799647899636
-sum.eks.wye 0.38139939387114097
-sum.wye.wye 0.20460330576630303
-sum.wye.pan 0.5732889198020006
+sum.pan.pan 0.346791
+sum.eks.pan 0.758679
+sum.eks.wye 0.381399
+sum.wye.wye 0.204603
+sum.wye.pan 0.573288
 </pre>
 
 ## Multi-emit statements
@@ -557,12 +632,12 @@ Use **emit all** (or `emit @*` which is synonymous) to output all out-of-stream 
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   v.sum               v.count
-pan pan 0.3467901443380824  1
-eks pan 0.7586799647899636  1
-eks wye 0.38139939387114097 1
-wye wye 0.20460330576630303 1
-wye pan 0.5732889198020006  1
+a   b   v.sum    v.count
+pan pan 0.346791 1
+eks pan 0.758679 1
+eks wye 0.381399 1
+wye wye 0.204603 1
+wye pan 0.573288 1
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -574,11 +649,11 @@ wye pan 0.5732889198020006  1
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a   b   sum
-pan pan 0.3467901443380824
-eks pan 0.7586799647899636
-eks wye 0.38139939387114097
-wye wye 0.20460330576630303
-wye pan 0.5732889198020006
+pan pan 0.346791
+eks pan 0.758679
+eks wye 0.381399
+wye wye 0.204603
+wye pan 0.573288
 
 a   b   count
 pan pan 1
@@ -596,11 +671,11 @@ wye pan 1
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   sum                 count
-pan pan 0.3467901443380824  1
-eks pan 0.7586799647899636  1
-eks wye 0.38139939387114097 1
-wye wye 0.20460330576630303 1
-wye pan 0.5732889198020006  1
+a   b   sum      count
+pan pan 0.346791 1
+eks pan 0.758679 1
+eks wye 0.381399 1
+wye wye 0.204603 1
+wye pan 0.573288 1
 </pre>
 

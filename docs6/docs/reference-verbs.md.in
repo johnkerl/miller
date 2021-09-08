@@ -9,7 +9,7 @@ GENMD_INCLUDE_ESCAPED(data/subcommand-example.txt)
 
 These fall into categories as follows:
 
-* Analogs of their Unix-toolkit namesakes, discussed below as well as in [Unix-toolkit Context](feature-comparison.md): [cat](reference-verbs.md#cat), [cut](reference-verbs.md#cut), [grep](reference-verbs.md#grep), [head](reference-verbs.md#head), [join](reference-verbs.md#join), [sort](reference-verbs.md#sort), [tac](reference-verbs.md#tac), [tail](reference-verbs.md#tail), [top](reference-verbs.md#top), [uniq](reference-verbs.md#uniq).
+* Analogs of their Unix-toolkit namesakes, discussed below as well as in [Unix-toolkit Context](unix-toolkit-context.md): [cat](reference-verbs.md#cat), [cut](reference-verbs.md#cut), [grep](reference-verbs.md#grep), [head](reference-verbs.md#head), [join](reference-verbs.md#join), [sort](reference-verbs.md#sort), [tac](reference-verbs.md#tac), [tail](reference-verbs.md#tail), [top](reference-verbs.md#top), [uniq](reference-verbs.md#uniq).
 
 * `awk`-like functionality: [filter](reference-verbs.md#filter), [put](reference-verbs.md#put), [sec2gmt](reference-verbs.md#sec2gmt), [sec2gmtdate](reference-verbs.md#sec2gmtdate), [step](reference-verbs.md#step), [tee](reference-verbs.md#tee).
 
@@ -56,7 +56,7 @@ mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --opprint bar --auto -f x,y data/small
+mlr --opprint bar --auto -f x,y -w 20 data/small
 GENMD_EOF
 
 ## bootstrap
@@ -291,15 +291,33 @@ mlr fill-down --help
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-cat data/fill-down.csv
+cat data/fillable.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --csv fill-down -f b data/fill-down.csv
+mlr --csv fill-down -f b data/fillable.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --csv fill-down -a -f b data/fill-down.csv
+mlr --csv fill-down -a -f b data/fillable.csv
+GENMD_EOF
+
+## fill-empty
+
+GENMD_RUN_COMMAND
+mlr fill-empty --help
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+cat data/fillable.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv fill-empty data/fillable.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --csv fill-empty -v something data/fillable.csv
 GENMD_EOF
 
 ## filter
@@ -528,6 +546,18 @@ Use zero join columns:
 
 GENMD_RUN_COMMAND
 mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+GENMD_EOF
+
+## json-parse
+
+GENMD_RUN_COMMAND
+mlr json-parse --help
+GENMD_EOF
+
+## json-stringify
+
+GENMD_RUN_COMMAND
+mlr json-stringify --help
 GENMD_EOF
 
 ## label

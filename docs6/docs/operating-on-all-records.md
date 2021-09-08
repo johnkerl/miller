@@ -1,14 +1,28 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Operating on all records
 
 As we saw in the DSL-overview page, the Miller programming language has an
 [implicit loop over records for main statements](reference-dsl.md#implicit-loop-over-records-for-main-statements).
 
-Miller's feature of _streaming operation over records_ is implemented by the
-main statements (everything outside `begin`/`end`/`func`/`subr`) getting
-invoked once per record. You don't explicitly loop over records, as you would
-in some dataframes contexts; rather, _Miller loops over records for you_, and
-it lets you specify what to do on each record: you write the body of the loop.
+Miller's feature of [_streaming operation over
+records_](streaming-and-memory.md) is implemented by the main statements
+(everything outside `begin`/`end`/`func`/`subr`) getting invoked once per
+record. You don't explicitly loop over records, as you would in some dataframes
+contexts; rather, _Miller loops over records for you_, and it lets you specify
+what to do on each record: you write the body of the loop.
 
 That's fine for most simple use-cases, but sometimes you _do_ want to loop over
 all records. Here we describe a few options.
@@ -93,11 +107,14 @@ And if all we want is the final output and not the input data, we can use `put
 }
 </pre>
 
-As discussed a bit more on the (TODO) page on streaming and memory, this doesn't keep all records in memory, only the count and sum variables. You can use this on very large files without running out of memory.
+As discussed a bit more on the page on [streaming processing and memory
+usage](streaming-and-memory.md), this doesn't keep all records in memory, only
+the count and sum variables. You can use this on very large files without
+running out of memory.
 
 ## Retain records in a map
 
-The second option is to retain entire records in a map, then loop over them in an `end` block.
+The second option is to retain entire records in a [map](reference-main-maps.md), then loop over them in an `end` block.
 
 Let's use the same short data file [data/short.csv](data/short.csv):
 
@@ -166,7 +183,7 @@ The downside to this, of course, is that this retains all records (plus data-str
 
 ## Retain records in an array
 
-The third option is to retain records in an array, then loop over them in an `end` block.
+The third option is to retain records in an [array](reference-main-arrays.md), then loop over them in an `end` block.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from data/short.csv put -q '</b>
@@ -215,11 +232,12 @@ over records.
 
 Retaining records as a map or as an array is a matter of taste. Some things to note:
 
-If we initialize `@records = {}` in the `begin` block (or, if we don't initialize it at all and just start writing to it in the main statements) then `@records` is a map (TODO: linkify). If we initialize `@records=[]` then it's an array.
+If we initialize `@records = {}` in the `begin` block (or, if we don't initialize it at all and just start writing to it in the main statements) then `@records` is a [map](reference-main-maps.md) . If we initialize `@records=[]` then it's an array.
 
 Arrays are, of course, contiguously indexed. (And, in Miller, their indices
-start with 1, not 0 (TODO:linkify).) This means that if you are only retaining
-a subset of records then your array will have null-gaps (TODO:linkify) in it:
+start with 1, not 0 as discussed in the [Arrays](reference-main-arrays.md)
+page.) This means that if you are only retaining a subset of records then your
+array will have [null-gaps](reference-main-arrays.md) in it:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from data/short.csv put -q '</b>
@@ -328,7 +346,10 @@ If you use a map to retain records, then this is a non-issue: maps can retain wh
 }
 </pre>
 
-Do note that Miller maps (TODO:linkify) preserve insertion order, so at the end you're guaranteed to loop over records in the same order you read them. Also note that when you index a Miller hashmap with an integer key, this works, but (TODO:linkify) the key is stringified.
+Do note that Miller [maps](reference-main-maps.md) preserve insertion order, so
+at the end you're guaranteed to loop over records in the same order you read
+them. Also note that when you index a Miller map with an integer key, this
+works, but the [key is stringified](reference-main-maps.md).
 
 ## Retain partial records in map or array
 

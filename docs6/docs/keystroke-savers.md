@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Keystroke-savers
 
 ## Short format specifiers, including --c2p
@@ -21,7 +34,7 @@ red    square   true 2 15    79.2778  0.0130
 {
   "color": "yellow",
   "shape": "triangle",
-  "flag": true,
+  "flag": "true",
   "k": 1,
   "index": 11,
   "quantity": 43.6498,
@@ -30,7 +43,7 @@ red    square   true 2 15    79.2778  0.0130
 {
   "color": "red",
   "shape": "square",
-  "flag": true,
+  "flag": "true",
   "k": 2,
   "index": 15,
   "quantity": 79.2778,
@@ -69,6 +82,17 @@ If there's more than one input file, you can use `--mfrom`, then however many fi
 <pre class="pre-highlight-non-pair">
 <b>mlr --c2p --mfrom data/*.csv -- sort -n index</b>
 </pre>
+
+## Shortest flags for CSV, TSV, and JSON
+
+The following have even shorter versions:
+
+* `-c` is the same as `--csv`
+* `-t` is the same as `--tsvlite`
+* `-j` is the same as `--json`
+
+I don't use these within these documents, since I want the docs to be self-explanatory on every page, and
+I think `mlr --csv ...` explains itself better than `mlr -c ...`. Nonetheless, they're there for you to use.
 
 ## .mlrrc file
 

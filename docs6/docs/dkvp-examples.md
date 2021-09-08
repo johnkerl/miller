@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DKVP I/O examples
 
 ## DKVP I/O in Python
@@ -17,18 +30,18 @@ Here are the I/O routines:
 #   bash$ python -i dkvp_io.py
 #
 #   # READ
-#   >>> map = dkvpline2map('x=1,y=2', '=', ',')
-#   >>> map
+#   &gt;&gt;&gt; map = dkvpline2map('x=1,y=2', '=', ',')
+#   &gt;&gt;&gt; map
 #   OrderedDict([('x', '1'), ('y', '2')])
 #
 #   # MODIFY
-#   >>> map['z'] = map['x'] + map['y']
-#   >>> map
+#   &gt;&gt;&gt; map['z'] = map['x'] + map['y']
+#   &gt;&gt;&gt; map
 #   OrderedDict([('x', '1'), ('y', '2'), ('z', 3)])
 #
 #   # WRITE
-#   >>> line = map2dkvpline(map, '=', ',')
-#   >>> line
+#   &gt;&gt;&gt; line = map2dkvpline(map, '=', ',')
+#   &gt;&gt;&gt; line
 #   'x=1,y=2,z=3'
 #
 # ================================================================
@@ -114,11 +127,11 @@ Run as-is:
 <b>python polyglot-dkvp-io/example.py < data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,y=0.7268028627434533,ab=panpan,iy=1.7268028627434533,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
-a=eks,b=pan,i=2,y=0.5221511083334797,ab=ekspan,iy=2.5221511083334796,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
-a=wye,b=wye,i=3,y=0.33831852551664776,ab=wyewye,iy=3.3383185255166477,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
-a=eks,b=wye,i=4,y=0.13418874328430463,ab=ekswye,iy=4.134188743284304,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
-a=wye,b=pan,i=5,y=0.8636244699032729,ab=wyepan,iy=5.863624469903273,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
+a=pan,b=pan,i=1,y=0.726802,ab=panpan,iy=1.726802,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
+a=eks,b=pan,i=2,y=0.522151,ab=ekspan,iy=2.522151,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
+a=wye,b=wye,i=3,y=0.338318,ab=wyewye,iy=3.338318,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
+a=eks,b=wye,i=4,y=0.134188,ab=ekswye,iy=4.134188,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
+a=wye,b=pan,i=5,y=0.863624,ab=wyepan,iy=5.863624,ta=str,tb=str,ti=int,ty=float,tab=str,tiy=float
 </pre>
 
 Run as-is, then pipe to Miller for pretty-printing:
@@ -127,12 +140,12 @@ Run as-is, then pipe to Miller for pretty-printing:
 <b>python polyglot-dkvp-io/example.py < data/small | mlr --opprint cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i y                   ab     iy                 ta  tb  ti  ty    tab tiy
-pan pan 1 0.7268028627434533  panpan 1.7268028627434533 str str int float str float
-eks pan 2 0.5221511083334797  ekspan 2.5221511083334796 str str int float str float
-wye wye 3 0.33831852551664776 wyewye 3.3383185255166477 str str int float str float
-eks wye 4 0.13418874328430463 ekswye 4.134188743284304  str str int float str float
-wye pan 5 0.8636244699032729  wyepan 5.863624469903273  str str int float str float
+a   b   i y        ab     iy       ta  tb  ti  ty    tab tiy
+pan pan 1 0.726802 panpan 1.726802 str str int float str float
+eks pan 2 0.522151 ekspan 2.522151 str str int float str float
+wye wye 3 0.338318 wyewye 3.338318 str str int float str float
+eks wye 4 0.134188 ekswye 4.134188 str str int float str float
+wye pan 5 0.863624 wyepan 5.863624 str str int float str float
 </pre>
 
 ## DKVP I/O in Ruby
@@ -151,16 +164,16 @@ Here are the I/O routines:
 #   bash$ irb -I. -r dkvp_io.rb
 #
 #   # READ
-#   irb(main):001:0> map = dkvpline2map('x=1,y=2', '=', ',')
-#   => {"x"=>"1", "y"=>"2"}
+#   irb(main):001:0&gt; map = dkvpline2map('x=1,y=2', '=', ',')
+#   =&gt; {"x"=&gt;"1", "y"=&gt;"2"}
 #
 #   # MODIFY
-#   irb(main):001:0> map['z'] = map['x'] + map['y']
-#   => 3
+#   irb(main):001:0&gt; map['z'] = map['x'] + map['y']
+#   =&gt; 3
 #
 #   # WRITE
-#   irb(main):002:0> line = map2dkvpline(map, '=', ',')
-#   => "x=1,y=2,z=3"
+#   irb(main):002:0&gt; line = map2dkvpline(map, '=', ',')
+#   =&gt; "x=1,y=2,z=3"
 #
 # ================================================================
 
@@ -232,11 +245,11 @@ Run as-is:
 <b>ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,y=0.7268028627434533,ab=panpan,iy=1.7268028627434533,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
-a=eks,b=pan,i=2,y=0.5221511083334797,ab=ekspan,iy=2.5221511083334796,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
-a=wye,b=wye,i=3,y=0.33831852551664776,ab=wyewye,iy=3.3383185255166477,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
-a=eks,b=wye,i=4,y=0.13418874328430463,ab=ekswye,iy=4.134188743284304,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
-a=wye,b=pan,i=5,y=0.8636244699032729,ab=wyepan,iy=5.863624469903273,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
+a=pan,b=pan,i=1,y=0.726802,ab=panpan,iy=1.726802,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
+a=eks,b=pan,i=2,y=0.522151,ab=ekspan,iy=2.522151,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
+a=wye,b=wye,i=3,y=0.338318,ab=wyewye,iy=3.338318,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
+a=eks,b=wye,i=4,y=0.134188,ab=ekswye,iy=4.134188,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
+a=wye,b=pan,i=5,y=0.863624,ab=wyepan,iy=5.863624,ta=String,tb=String,ti=Integer,ty=Float,tab=String,tiy=Float
 </pre>
 
 Run as-is, then pipe to Miller for pretty-printing:
@@ -245,10 +258,10 @@ Run as-is, then pipe to Miller for pretty-printing:
 <b>ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/small | mlr --opprint cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i y                   ab     iy                 ta     tb     ti      ty    tab    tiy
-pan pan 1 0.7268028627434533  panpan 1.7268028627434533 String String Integer Float String Float
-eks pan 2 0.5221511083334797  ekspan 2.5221511083334796 String String Integer Float String Float
-wye wye 3 0.33831852551664776 wyewye 3.3383185255166477 String String Integer Float String Float
-eks wye 4 0.13418874328430463 ekswye 4.134188743284304  String String Integer Float String Float
-wye pan 5 0.8636244699032729  wyepan 5.863624469903273  String String Integer Float String Float
+a   b   i y        ab     iy       ta     tb     ti      ty    tab    tiy
+pan pan 1 0.726802 panpan 1.726802 String String Integer Float String Float
+eks pan 2 0.522151 ekspan 2.522151 String String Integer Float String Float
+wye wye 3 0.338318 wyewye 3.338318 String String Integer Float String Float
+eks wye 4 0.134188 ekswye 4.134188 String String Integer Float String Float
+wye pan 5 0.863624 wyepan 5.863624 String String Integer Float String Float
 </pre>

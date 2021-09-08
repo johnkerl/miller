@@ -1,0 +1,31 @@
+# Flatten/unflatten: JSON vs. tabular formats
+
+TODO
+
+* JSON-to-JSON
+* JSON-to-not
+* not-to-JSON
+* not-to-not
+* 'concatening keys'
+* to-array heuristic
+* no-flatten / no-unflatten options
+
+## TBF
+
+Suppose we have arrays like this in our input data:
+
+GENMD_RUN_COMMAND
+cat data/json-example-3.json
+GENMD_EOF
+
+comment:
+
+GENMD_RUN_COMMAND
+mlr --ijson --oxtab cat data/json-example-3.json
+GENMD_EOF
+
+comment:
+
+GENMD_RUN_COMMAND
+mlr --json --jvstack cat data/json-example-3.json
+GENMD_EOF

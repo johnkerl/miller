@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DSL unset statements
 
 You can clear a map key by assigning the empty string as its value: `$x=""` or `@x=""`. Using `unset` you can remove the key entirely. Examples:
@@ -7,22 +20,22 @@ You can clear a map key by assigning the empty string as its value: `$x=""` or `
 <b>cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr put 'unset $x, $a' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-b=pan,i=1,y=0.7268028627434533
-b=pan,i=2,y=0.5221511083334797
-b=wye,i=3,y=0.33831852551664776
-b=wye,i=4,y=0.13418874328430463
-b=pan,i=5,y=0.8636244699032729
+b=pan,i=1,y=0.726802
+b=pan,i=2,y=0.522151
+b=wye,i=3,y=0.338318
+b=wye,i=4,y=0.134188
+b=pan,i=5,y=0.863624
 </pre>
 
 This can also be done, of course, using `mlr cut -x`. You can also clear out-of-stream or local variables, at the base name level, or at an indexed sublevel:
@@ -34,15 +47,15 @@ This can also be done, of course, using `mlr cut -x`. You can also clear out-of-
 {
   "sum": {
     "pan": {
-      "pan": 0.3467901443380824
+      "pan": 0.346791
     },
     "eks": {
-      "pan": 0.7586799647899636,
-      "wye": 0.38139939387114097
+      "pan": 0.758679,
+      "wye": 0.381399
     },
     "wye": {
-      "wye": 0.20460330576630303,
-      "pan": 0.5732889198020006
+      "wye": 0.204603,
+      "pan": 0.573288
     }
   }
 }
@@ -56,26 +69,26 @@ This can also be done, of course, using `mlr cut -x`. You can also clear out-of-
 {
   "sum": {
     "pan": {
-      "pan": 0.3467901443380824
+      "pan": 0.346791
     },
     "eks": {
-      "pan": 0.7586799647899636,
-      "wye": 0.38139939387114097
+      "pan": 0.758679,
+      "wye": 0.381399
     },
     "wye": {
-      "wye": 0.20460330576630303,
-      "pan": 0.5732889198020006
+      "wye": 0.204603,
+      "pan": 0.573288
     }
   }
 }
 {
   "sum": {
     "pan": {
-      "pan": 0.3467901443380824
+      "pan": 0.346791
     },
     "wye": {
-      "wye": 0.20460330576630303,
-      "pan": 0.5732889198020006
+      "wye": 0.204603,
+      "pan": 0.573288
     }
   }
 }

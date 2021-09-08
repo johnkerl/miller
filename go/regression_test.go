@@ -13,14 +13,14 @@ import (
 	"testing"
 
 	"mlr/src/auxents/regtest"
-	"mlr/src/lib"
 )
 
 func TestRegression(t *testing.T) {
 	regtester := regtest.NewRegTester(
-		"mlr",
+		"mlr", // exeName
 		false, // doPopulate
 		0,     // verbosityLevel
+		false, // plainMode
 		0,     // firstNFailsToShow
 	)
 

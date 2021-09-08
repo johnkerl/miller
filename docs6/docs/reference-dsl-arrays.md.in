@@ -1,7 +1,0 @@
-# Arrays
-
-TODO
-
-GENMD_RUN_COMMAND
-mlr --json cat data/array-example.json
-GENMD_EOF

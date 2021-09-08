@@ -14,6 +14,7 @@ Overview
    file-formats
    record-heterogeneity
    internationalization
+   install
    community
    contact
 
@@ -27,7 +28,6 @@ Using Miller
    log-processing-examples
    data-examples
    customization
-   install
 
 Details
 ----------------------------------------------------------------

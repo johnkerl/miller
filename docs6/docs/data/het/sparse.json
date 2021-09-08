@@ -1,0 +1,15 @@
+{
+  "host": "xy01.east",
+  "status": "running",
+  "volume": "/dev/sda1"
+}
+{
+  "host": "xy92.west",
+  "status": "running"
+}
+{
+  "purpose": "failover",
+  "host": "xy55.east",
+  "volume": "/dev/sda1",
+  "reimaged": true
+}

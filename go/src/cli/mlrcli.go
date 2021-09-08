@@ -49,7 +49,7 @@ package cli
 //	return singleton_pdesc_to_chars_map;
 //}
 
-//// For displaying the default separators in on-line help
+//// For displaying the default separators in online help
 //static char* rebackslash(char* sep) {
 //	if sep == "\r"))
 //		return "\\r";

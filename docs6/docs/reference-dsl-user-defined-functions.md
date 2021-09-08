@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DSL user-defined functions
 
 As of Miller 5.0.0 you can define your own functions, as well as subroutines.
@@ -24,12 +37,12 @@ Here's the obligatory example of a recursive function to compute the factorial f
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   ox                  oi
-pan pan 1 0.3467901443380824  0.7268028627434533  0.46705354854811026 1
-eks pan 2 0.7586799647899636  0.5221511083334797  3.680838410072862   2
-wye wye 3 0.20460330576630303 0.33831852551664776 1.7412511955594865  6
-eks wye 4 0.38139939387114097 0.13418874328430463 18.588348778962008  24
-wye pan 5 0.5732889198020006  0.8636244699032729  211.38730958519247  120
+a   b   i x        y        ox                 oi
+pan pan 1 0.346791 0.726802 0.4670549976810001 1
+eks pan 2 0.758679 0.522151 3.6808304227112796 2
+wye wye 3 0.204603 0.338318 1.7412477437471126 6
+eks wye 4 0.381399 0.134188 18.588317372151177 24
+wye pan 5 0.573288 0.863624 211.38663947090302 120
 </pre>
 
 Properties of user-defined functions:
@@ -103,3 +116,11 @@ Properties of user-defined subroutines:
 * See the section on [local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
 
 * See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.
+
+# Differences between functions and subroutines
+
+Subroutines cannot return values, and they are invoked by the keyword `call`.
+
+In hindsight, subroutines needn't have been invented. If `foo` is a function
+then you can write `foo(1,2,3)` while ignoring its return value, and that plays
+the role of subroutine quite well.

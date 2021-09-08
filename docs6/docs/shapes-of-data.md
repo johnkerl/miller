@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Shapes of data
 
 ## No output at all
@@ -154,28 +167,40 @@ z,x,y
 
 ## Why doesn't mlr cut put fields in the order I want?
 
-Example: columns `x,i,a` were requested but they appear here in the order `a,i,x`:
+Example: columns `rate,shape,flag` were requested but they appear here in the order `shape,flag,rate`:
 
 <pre class="pre-highlight-in-pair">
-<b>cat data/small</b>
+<b>cat example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+red,square,true,2,15,79.2778,0.0130
+red,circle,true,3,16,13.8103,2.9010
+red,square,false,4,48,77.5542,7.4670
+purple,triangle,false,5,51,81.2290,8.5910
+red,square,false,6,64,77.1991,9.5310
+purple,triangle,false,7,65,80.1405,5.8240
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+purple,square,false,10,91,72.3735,8.2430
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr cut -f x,i,a data/small</b>
+<b>mlr --csv cut -f rate,shape,flag example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,i=1,x=0.3467901443380824
-a=eks,i=2,x=0.7586799647899636
-a=wye,i=3,x=0.20460330576630303
-a=eks,i=4,x=0.38139939387114097
-a=wye,i=5,x=0.5732889198020006
+shape,flag,rate
+triangle,true,9.8870
+square,true,0.0130
+circle,true,2.9010
+square,false,7.4670
+triangle,false,8.5910
+square,false,9.5310
+triangle,false,5.8240
+circle,true,4.2370
+circle,true,8.3350
+square,false,8.2430
 </pre>
 
 The issue is that Miller's `cut`, by default, outputs cut fields in the order they appear in the input data. This design decision was made intentionally to parallel the Unix/Linux system `cut` command, which has the same semantics.
@@ -183,14 +208,20 @@ The issue is that Miller's `cut`, by default, outputs cut fields in the order th
 The solution is to use the `-o` option:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr cut -o -f x,i,a data/small</b>
+<b>mlr --csv cut -o -f rate,shape,flag example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x=0.3467901443380824,i=1,a=pan
-x=0.7586799647899636,i=2,a=eks
-x=0.20460330576630303,i=3,a=wye
-x=0.38139939387114097,i=4,a=eks
-x=0.5732889198020006,i=5,a=wye
+rate,shape,flag
+9.8870,triangle,true
+0.0130,square,true
+2.9010,circle,true
+7.4670,square,false
+8.5910,triangle,false
+9.5310,square,false
+5.8240,triangle,false
+4.2370,circle,true
+8.3350,circle,true
+8.2430,square,false
 </pre>
 
 ## Numbering and renumbering records
@@ -198,55 +229,73 @@ x=0.5732889198020006,i=5,a=wye
 The `awk`-like built-in variable `NR` is incremented for each input record:
 
 <pre class="pre-highlight-in-pair">
-<b>cat data/small</b>
+<b>cat example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+red,square,true,2,15,79.2778,0.0130
+red,circle,true,3,16,13.8103,2.9010
+red,square,false,4,48,77.5542,7.4670
+purple,triangle,false,5,51,81.2290,8.5910
+red,square,false,6,64,77.1991,9.5310
+purple,triangle,false,7,65,80.1405,5.8240
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+purple,square,false,10,91,72.3735,8.2430
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr put '$nr = NR' data/small</b>
+<b>mlr --csv put '$nr = NR' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,nr=1
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,nr=2
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,nr=4
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
+color,shape,flag,k,index,quantity,rate,nr
+yellow,triangle,true,1,11,43.6498,9.8870,1
+red,square,true,2,15,79.2778,0.0130,2
+red,circle,true,3,16,13.8103,2.9010,3
+red,square,false,4,48,77.5542,7.4670,4
+purple,triangle,false,5,51,81.2290,8.5910,5
+red,square,false,6,64,77.1991,9.5310,6
+purple,triangle,false,7,65,80.1405,5.8240,7
+yellow,circle,true,8,73,63.9785,4.2370,8
+yellow,circle,true,9,87,63.5058,8.3350,9
+purple,square,false,10,91,72.3735,8.2430,10
 </pre>
 
 However, this is the record number within the original input stream -- not after any filtering you may have done:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr filter '$a == "wye"' then put '$nr = NR' data/small</b>
+<b>mlr --csv filter '$color == "yellow"' then put '$nr = NR' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,nr=3
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
+color,shape,flag,k,index,quantity,rate,nr
+yellow,triangle,true,1,11,43.6498,9.8870,1
+yellow,circle,true,8,73,63.9785,4.2370,8
+yellow,circle,true,9,87,63.5058,8.3350,9
 </pre>
 
 There are two good options here. One is to use the `cat` verb with `-n`:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr filter '$a == "wye"' then cat -n data/small</b>
+<b>mlr --csv filter '$color == "yellow"' then cat -n example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-n=1,a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+n,color,shape,flag,k,index,quantity,rate
+1,yellow,triangle,true,1,11,43.6498,9.8870
+2,yellow,circle,true,8,73,63.9785,4.2370
+3,yellow,circle,true,9,87,63.5058,8.3350
 </pre>
 
 The other is to keep your own counter within the `put` DSL:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small</b>
+<b>mlr --csv filter '$color == "yellow"' then put 'begin {@n = 1} $n = @n; @n += 1' example.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,n=1
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
+color,shape,flag,k,index,quantity,rate,n
+yellow,triangle,true,1,11,43.6498,9.8870,1
+yellow,circle,true,8,73,63.9785,4.2370,2
+yellow,circle,true,9,87,63.5058,8.3350,3
 </pre>
 
 The difference is a matter of taste (although `mlr cat -n` puts the counter first).
@@ -435,3 +484,7 @@ outer=3,middle=30,inner1=300,inner2=301
 outer=3,middle=31,inner1=312,inner2=301
 outer=3,middle=31,inner1=313,inner2=314
 </pre>
+
+See also the [record-heterogeneity page](record-heterogeneity.md); see in
+particular the [`regularize` verb](reference-verbs.md#regularize) for a way to
+do this with much less keystroking.

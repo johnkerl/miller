@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # DSL control structures
 
 ## Pattern-action blocks
@@ -52,27 +65,31 @@ a=xyz_789,b=left_xyz,c=right_789
 This produces heteregenous output which Miller, of course, has no problems with (see [Record Heterogeneity](record-heterogeneity.md)).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes `put` to evaluate the boolean expression (along with any side effects, namely, regex-captures `\1`, `\2`, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr put '$x > 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-x=-1,y=NaN,z=NaN
-x=0,y=-Inf,z=NaN
-x=1,y=0,z=0
-x=2,y=0.3010299956639812,z=0.5486620049392715
-x=3,y=0.4771212547196624,z=0.6907396432228734
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr put '</b>
+<b>mlr --opprint put '</b>
 <b>  $a =~ "([a-z]+)_([0-9]+)";</b>
 <b>  $b = "left_\1";</b>
 <b>  $c = "right_\2"</b>
 <b>' data/put-gating-example-2.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=abc_123,b=left_abc,c=right_123
-a=some other name,b=left_,c=right_
-a=xyz_789,b=left_xyz,c=right_789
+a               b        c
+abc_123         left_abc right_123
+some other name left_    right_
+xyz_789         left_xyz right_789
+</pre>
+
+Note that pattern-action blocks are just a syntactic variation of if-statements. The following do the same thing:
+
+<pre class="pre-non-highlight-non-pair">
+  boolean_condition {
+    body
+  }
+</pre>
+
+<pre class="pre-non-highlight-non-pair">
+  if (boolean_condition) {
+    body
+  }
 </pre>
 
 ## If-statements
@@ -157,78 +174,95 @@ While Miller's `while` and `do-while` statements are much as in many other langu
 
 As with `while` and `do-while`, a `break` or `continue` within nested control structures will propagate to the innermost loop enclosing them, if any, and a `break` or `continue` outside a loop is a syntax error that will be flagged as soon as the expression is parsed, before any input records are ingested.
 
-### Key-only for-loops
+### Single-variable for-loops
 
-The `key` variable is always bound to the *key* of key-value pairs:
+For [maps](reference-main-maps.md), the single variable is always bound to the *key* of key-value pairs:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --from data/small put '</b>
+<b>mlr --from data/small put -q '</b>
 <b>  print "NR = ".NR;</b>
-<b>  for (key in $*) {</b>
-<b>    value = $[key];</b>
-<b>    print "  key:" . key . "  value:".value;</b>
+<b>  for (e in $*) {</b>
+<b>    print "  key:", e, "value:", $[e];</b>
 <b>  }</b>
-<b></b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 NR = 1
-  key:a  value:pan
-  key:b  value:pan
-  key:i  value:1
-  key:x  value:0.3467901443380824
-  key:y  value:0.7268028627434533
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+  key: a value: pan
+  key: b value: pan
+  key: i value: 1
+  key: x value: 0.346791
+  key: y value: 0.726802
 NR = 2
-  key:a  value:eks
-  key:b  value:pan
-  key:i  value:2
-  key:x  value:0.7586799647899636
-  key:y  value:0.5221511083334797
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+  key: a value: eks
+  key: b value: pan
+  key: i value: 2
+  key: x value: 0.758679
+  key: y value: 0.522151
 NR = 3
-  key:a  value:wye
-  key:b  value:wye
-  key:i  value:3
-  key:x  value:0.20460330576630303
-  key:y  value:0.33831852551664776
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+  key: a value: wye
+  key: b value: wye
+  key: i value: 3
+  key: x value: 0.204603
+  key: y value: 0.338318
 NR = 4
-  key:a  value:eks
-  key:b  value:wye
-  key:i  value:4
-  key:x  value:0.38139939387114097
-  key:y  value:0.13418874328430463
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+  key: a value: eks
+  key: b value: wye
+  key: i value: 4
+  key: x value: 0.381399
+  key: y value: 0.134188
 NR = 5
-  key:a  value:wye
-  key:b  value:pan
-  key:i  value:5
-  key:x  value:0.5732889198020006
-  key:y  value:0.8636244699032729
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+  key: a value: wye
+  key: b value: pan
+  key: i value: 5
+  key: x value: 0.573288
+  key: y value: 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr -n put '</b>
+<b>mlr -n put -q '</b>
 <b>  end {</b>
-<b>    o = {1:2, 3:{4:5}};</b>
-<b>    for (key in o) {</b>
-<b>      print "  key:" . key . "  valuetype:" . typeof(o[key]);</b>
+<b>    o = {"a":1, "b":{"c":3}};</b>
+<b>    for (e in o) {</b>
+<b>      print "key:", e, "valuetype:", typeof(o[e]);</b>
 <b>    }</b>
 <b>  }</b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-  key:1  valuetype:int
-  key:3  valuetype:map
+key: a valuetype: int
+key: b valuetype: map
 </pre>
 
-Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in `$[key]` for stream records, or by indexing the looped-over variable using square brackets.
+Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in `$[e]` for stream records, or by indexing the looped-over variable using square brackets.
+
+For [arrays](reference-main-arrays.md), the single variable is always bound to the *value* (not the array index):
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put -q '</b>
+<b>  end {</b>
+<b>    o = [10, "20", {}, "four", true];</b>
+<b>    for (e in o) {</b>
+<b>      print "value:", e, "valuetype:", typeof(e);</b>
+<b>    }</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+value: 10 valuetype: int
+value: 20 valuetype: string
+value: {} valuetype: map
+value: four valuetype: string
+value: true valuetype: bool
+</pre>
 
 ### Key-value for-loops
 
-Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to to a scalar value (a string or a number) if the map stops at that level, or to a map-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
+For [maps](reference-main-maps.md), the first loop variable is the key and the
+second is the value; for [arrays](reference-main-arrays.md), the first loop
+variable is the (1-up) array index and the second is the value.
+
+Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to to a scalar value (non-array/non-map) if the map stops at that level, or to a map-valued or array-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/for-srec-example.tbl</b>
@@ -264,12 +298,12 @@ yellow blue   140 0   240 380  380  380
 <b>mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   a_type b_type i_type x_type y_type
-pan pan 1 0.3467901443380824  0.7268028627434533  string string int    float  float
-eks pan 2 0.7586799647899636  0.5221511083334797  string string int    float  float
-wye wye 3 0.20460330576630303 0.33831852551664776 string string int    float  float
-eks wye 4 0.38139939387114097 0.13418874328430463 string string int    float  float
-wye pan 5 0.5732889198020006  0.8636244699032729  string string int    float  float
+a   b   i x        y        a_type b_type i_type x_type y_type
+pan pan 1 0.346791 0.726802 string string int    float  float
+eks pan 2 0.758679 0.522151 string string int    float  float
+wye wye 3 0.204603 0.338318 string string int    float  float
+eks wye 4 0.381399 0.134188 string string int    float  float
+wye pan 5 0.573288 0.863624 string string int    float  float
 </pre>
 
 Note that the value of the current field in the for-loop can be gotten either using the bound variable `value`, or through a **computed field name** using square brackets as in `$[key]`.
@@ -289,12 +323,12 @@ Important note: to avoid inconsistent looping behavior in case you're setting ne
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   sum1               sum2
-pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356 8.294372028326142
-eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443  13.123324292493772
-wye wye 3 0.20460330576630303 0.33831852551664776 3.5429218312829507 14.171687325131803
-eks wye 4 0.38139939387114097 0.13418874328430463 4.515588137155445  18.06235254862178
-wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273  25.747653558821092
+a   b   i x        y        sum1               sum2
+pan pan 1 0.346791 0.726802 2.073593           8.294372
+eks pan 2 0.758679 0.522151 3.28083            13.12332
+wye wye 3 0.204603 0.338318 3.542921           14.171684
+eks wye 4 0.381399 0.134188 4.515587           18.062348
+wye pan 5 0.573288 0.863624 6.4369119999999995 25.747647999999998
 </pre>
 
 It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
@@ -311,15 +345,15 @@ It can be confusing to modify the stream record while iterating over a copy of i
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   sum
-pan pan 1 0.3467901443380824  0.7268028627434533  2.0735930070815356
-eks pan 2 0.7586799647899636  0.5221511083334797  3.280831073123443
-wye wye 3 0.20460330576630303 0.33831852551664776 3.5429218312829507
-eks wye 4 0.38139939387114097 0.13418874328430463 4.515588137155445
-wye pan 5 0.5732889198020006  0.8636244699032729  6.436913389705273
+a   b   i x        y        sum
+pan pan 1 0.346791 0.726802 2.073593
+eks pan 2 0.758679 0.522151 3.28083
+wye wye 3 0.204603 0.338318 3.542921
+eks wye 4 0.381399 0.134188 4.515587
+wye pan 5 0.573288 0.863624 6.4369119999999995
 </pre>
 
-You can also start iterating on sub-hashmaps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-hashmap as it was before the loop started.  The sub-hashmap is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
+You can also start iterating on sub-maps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-map as it was before the loop started.  The sub-map is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
 
 <pre class="pre-non-highlight-non-pair">
 # Parentheses are optional for single key:
@@ -449,12 +483,12 @@ These are supported as follows:
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   suma
-pan pan 1 0.3467901443380824  0.7268028627434533  1
-eks pan 2 0.7586799647899636  0.5221511083334797  3
-wye wye 3 0.20460330576630303 0.33831852551664776 6
-eks wye 4 0.38139939387114097 0.13418874328430463 10
-wye pan 5 0.5732889198020006  0.8636244699032729  15
+a   b   i x        y        suma
+pan pan 1 0.346791 0.726802 1
+eks pan 2 0.758679 0.522151 3
+wye wye 3 0.204603 0.338318 6
+eks wye 4 0.381399 0.134188 10
+wye pan 5 0.573288 0.863624 15
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -470,12 +504,12 @@ wye pan 5 0.5732889198020006  0.8636244699032729  15
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y                   suma sumb
-pan pan 1 0.3467901443380824  0.7268028627434533  1    1
-eks pan 2 0.7586799647899636  0.5221511083334797  3    3
-wye wye 3 0.20460330576630303 0.33831852551664776 6    7
-eks wye 4 0.38139939387114097 0.13418874328430463 10   15
-wye pan 5 0.5732889198020006  0.8636244699032729  15   31
+a   b   i x        y        suma sumb
+pan pan 1 0.346791 0.726802 1    1
+eks pan 2 0.758679 0.522151 3    3
+wye wye 3 0.204603 0.338318 6    7
+eks wye 4 0.381399 0.134188 10   15
+wye pan 5 0.573288 0.863624 15   31
 </pre>
 
 Notes:
@@ -502,12 +536,12 @@ Miller supports an `awk`-like `begin/end` syntax.  The statements in the `begin`
 <b>' ./data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-x_sum=2.264761728567491
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
+x_sum=2.26476
 </pre>
 
 Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in `awk`, where they'd default to 0 either way), the above can be written more succinctly as
@@ -519,12 +553,12 @@ Since uninitialized out-of-stream variables default to 0 for addition/substracti
 <b>' ./data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-x_sum=2.264761728567491
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
+x_sum=2.26476
 </pre>
 
 The **put -q** option suppresses printing of each output record, with only `emit` statements being output. So to get only summary outputs, you could write
@@ -536,7 +570,7 @@ The **put -q** option suppresses printing of each output record, with only `emit
 <b>' ./data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x_sum=2.264761728567491
+x_sum=2.26476
 </pre>
 
 We can do similarly with multiple out-of-stream variables:
@@ -553,7 +587,7 @@ We can do similarly with multiple out-of-stream variables:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 x_count=5
-x_sum=2.264761728567491
+x_sum=2.26476
 </pre>
 
 This is of course (see also [here](reference-dsl.md#verbs-compared-to-dsl)) not much different than
@@ -562,7 +596,7 @@ This is of course (see also [here](reference-dsl.md#verbs-compared-to-dsl)) not 
 <b>mlr stats1 -a count,sum -f x ./data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-x_count=5,x_sum=2.264761728567491
+x_count=5,x_sum=2.26476
 </pre>
 
 Note that it's a syntax error for begin/end blocks to refer to field names (beginning with `$`), since begin/end blocks execute outside the context of input records.

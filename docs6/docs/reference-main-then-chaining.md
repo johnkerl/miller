@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Then-chaining
 
 In accord with the [Unix philosophy](http://en.wikipedia.org/wiki/Unix_philosophy), you can pipe data into or out of Miller. For example:
@@ -19,7 +32,7 @@ Here's a performance comparison:
 
 <pre class="pre-non-highlight-non-pair">
 % cat piped.sh
-mlr cut -x -f i,y data/big | mlr sort -n y > /dev/null
+mlr cut -x -f i,y data/big | mlr sort -n y &gt; /dev/null
 
 % time sh piped.sh
 real    0m2.321s
@@ -27,7 +40,7 @@ user    0m4.878s
 sys     0m1.564s
 
 % cat chained.sh
-mlr cut -x -f i,y then sort -n y data/big > /dev/null
+mlr cut -x -f i,y then sort -n y data/big &gt; /dev/null
 
 % time sh chained.sh
 real    0m2.070s
@@ -35,6 +48,6 @@ user    0m2.738s
 sys     0m1.259s
 </pre>
 
-There are two reasons to use then-chaining: one is for performance, although I don't expect this to be a win in all cases.  Using then-chaining avoids redundant string-parsing and string-formatting at each pipeline step: instead input records are parsed once, they are fed through each pipeline stage in memory, and then output records are formatted once. On the other hand, Miller is single-threaded, while modern systems are usually multi-processor, and when streaming-data programs operate through pipes, each one can use a CPU.  Rest assured you get the same results either way.
+There are two reasons to use then-chaining: one is for performance, although I don't expect this to be a win in all cases.  Using then-chaining avoids redundant string-parsing and string-formatting at each pipeline step: instead input records are parsed once, they are fed through each pipeline stage in memory, and then output records are formatted once.
 
 The other reason to use then-chaining is for simplicity: you don't have re-type formatting flags (e.g. `--csv --fs tab`) at every pipeline stage.

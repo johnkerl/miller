@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # File formats
 
 Miller handles name-indexed data using several formats: some you probably know by name, such as CSV, TSV, and JSON -- and other formats you're likely already seeing and using in your structured data.
@@ -15,20 +28,20 @@ CSV/CSV-lite: comma-separated values with separate header line
 TSV: same but with tabs in places of commas
 +---------------------+
 | apple,bat,cog       |
-| 1,2,3               | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| 4,5,6               | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+| 1,2,3               | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| 4,5,6               | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +---------------------+
 
 JSON (sequence or array of objects):
 +---------------------+
 | {                   |
-|  "apple": 1,        | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+|  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
 |  "bat": 2,          |
 |  "cog": 3           |
 | }                   |
 | {                   |
-|   "dish": {         | Record 2: "dish:egg" => "7", "dish:flint" => "8", "garlic" => ""
-|     "egg": 7,       |
+|   "dish": {         | Record 2: "dish:egg":"7",
+|     "egg": 7,       | "dish:flint":"8", "garlic":""
 |     "flint": 8      |
 |   },                |
 |   "garlic": ""      |
@@ -38,38 +51,38 @@ JSON (sequence or array of objects):
 PPRINT: pretty-printed tabular
 +---------------------+
 | apple bat cog       |
-| 1     2   3         | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| 4     5   6         | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+| 1     2   3         | Record 1: "apple:"1", "bat":"2", "cog":"3"
+| 4     5   6         | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +---------------------+
 
 Markdown tabular (supported for output only):
 +-----------------------+
 | | apple | bat | cog | |
 | | ---   | --- | --- | |
-| | 1     | 2   | 3   | | Record 1: "apple => "1", "bat" => "2", "cog" => "3"
-| | 4     | 5   | 6   | | Record 2: "apple" => "4", "bat" => "5", "cog" => "6"
+| | 1     | 2   | 3   | | Record 1: "apple:"1", "bat":"2", "cog":"3"
+| | 4     | 5   | 6   | | Record 2: "apple":"4", "bat":"5", "cog":"6"
 +-----------------------+
 
 XTAB: pretty-printed transposed tabular
 +---------------------+
-| apple 1             | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
+| apple 1             | Record 1: "apple":"1", "bat":"2", "cog":"3"
 | bat   2             |
 | cog   3             |
 |                     |
-| dish 7              | Record 2: "dish" => "7", "egg" => "8"
+| dish 7              | Record 2: "dish":"7", "egg":"8"
 | egg  8              |
 +---------------------+
 
 DKVP: delimited key-value pairs (Miller default format)
 +---------------------+
-| apple=1,bat=2,cog=3 | Record 1: "apple" => "1", "bat" => "2", "cog" => "3"
-| dish=7,egg=8,flint  | Record 2: "dish" => "7", "egg" => "8", "3" => "flint"
+| apple=1,bat=2,cog=3 | Record 1: "apple":"1", "bat":"2", "cog":"3"
+| dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
 +---------------------+
 
 NIDX: implicitly numerically indexed (Unix-toolkit style)
 +---------------------+
-| the quick brown     | Record 1: "1" => "the", "2" => "quick", "3" => "brown"
-| fox jumped          | Record 2: "1" => "fox", "2" => "jumped"
+| the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
+| fox jumped          | Record 2: "1":"fox", "2":"jumped"
 +---------------------+
 </pre>
 
@@ -108,133 +121,23 @@ Here are things they have in common:
 
 * The `--implicit-csv-header` flag for input and the `--headerless-csv-output` flag for output.
 
-## DKVP: Key-value pairs
-
-Miller's default file format is DKVP, for **delimited key-value pairs**. Example:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr cat data/small</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-
-Such data are easy to generate, e.g. in Ruby with
-
-<pre class="pre-non-highlight-non-pair">
-puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
-</pre>
-
-<pre class="pre-non-highlight-non-pair">
-puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
-</pre>
-
-or `print` statements in various languages, e.g.
-
-<pre class="pre-non-highlight-non-pair">
-echo "type=3,user=$USER,date=$date\n";
-</pre>
-
-<pre class="pre-non-highlight-non-pair">
-logger.log("type=3,user=$USER,date=$date\n");
-</pre>
-
-Fields lacking an IPS will have positional index (starting at 1) used as the key, as in NIDX format. For example, `dish=7,egg=8,flint` is parsed as `"dish" => "7", "egg" => "8", "3" => "flint"` and `dish,egg,flint` is parsed as `"1" => "dish", "2" => "egg", "3" => "flint"`.
-
-As discussed in [Record Heterogeneity](record-heterogeneity.md), Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
-
-<pre class="pre-non-highlight-non-pair">
-resource=/path/to/file,loadsec=0.45,ok=true
-record_count=100, resource=/path/to/file
-resource=/some/other/path,loadsec=0.97,ok=false
-</pre>
-
-etc. and I just log them as needed. Then later, I can use `grep`, `mlr --opprint group-like`, etc.
-to analyze my logs.
-
-See the [I/O options reference](reference-main-io-options.md) regarding how to specify separators other than the default equals-sign and comma.
-
-## NIDX: Index-numbered (toolkit style)
-
-With `--inidx --ifs ' ' --repifs`, Miller splits lines on whitespace and assigns integer field names starting with 1.
-
-This recapitulates Unix-toolkit behavior.
-
-Example with index-numbered output:
-
-<pre class="pre-highlight-in-pair">
-<b>cat data/small</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --onidx --ofs ' ' cat data/small</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-pan pan 1 0.3467901443380824 0.7268028627434533
-eks pan 2 0.7586799647899636 0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006 0.8636244699032729
-</pre>
-
-Example with index-numbered input:
-
-<pre class="pre-highlight-in-pair">
-<b>cat data/mydata.txt</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-oh say can you see
-by the dawn's
-early light
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-1=oh,2=say,3=can,4=you,5=see
-1=by,2=the,3=dawn's
-1=early,2=light
-</pre>
-
-Example with index-numbered input and output:
-
-<pre class="pre-highlight-in-pair">
-<b>cat data/mydata.txt</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-oh say can you see
-by the dawn's
-early light
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-say can
-the dawn's
-light
-</pre>
-
 ## JSON
 
-JSON is a format which supports arbitrarily deep nesting of "objects" (hashmaps) and "arrays" (lists), while Miller is a tool for handling **tabular data** only. This means Miller cannot (and should not) handle arbitrary JSON. (Check out [jq](https://stedolan.github.io/jq/).)
+JSON is a format which supports scalars (numbers, strings, boolean, etc.) as
+well as "objects" (maps) and "arrays" (lists), while Miller is a tool for
+handling **tabular data** only.  By *tabular JSON* I mean the data is either a
+sequence of one or more objects, or an array consisting of one or more objects.
+Miller treats JSON objects as name-indexed records.
 
-But if you have tabular data represented in JSON then Miller can handle that for you.
+This means Miller cannot (and should not) handle arbitrary JSON.  In practice,
+though, Miller can handle single JSON objects as well as list of them. The only
+kinds of JSON that are unmillerable are single scalars (e.g. file contents `3`)
+and arrays of non-object (e.g. file contents `[1,2,3,4,5]`).  Check out
+[jq](https://stedolan.github.io/jq/) for a tool which handles all valid JSON.
 
-By *tabular JSON* I mean the data is either a sequence of one or more objects, or an array consisting of one or more orjects. Miller treats JSON objects as name-indexed records.
+In short, if you have tabular data represented in JSON -- lists of objects,
+either with or without outermost `[...]` -- [then Miller can handle that for
+you.
 
 ### Single-level JSON objects
 
@@ -255,34 +158,54 @@ An **array of single-level objects** is, quite simply, **a table**:
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json</b>
+<b>mlr --json head -n 2 then cut -f color,u,v data/json-example-1.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {
   "color": "yellow",
-  "u": 0.6321695890307647,
-  "v": 0.9887207810889004
+  "u": 0.632170,
+  "v": 0.988721
 }
 {
   "color": "red",
-  "u": 0.21966833570651523,
-  "v": 0.001257332190235938
+  "u": 0.219668,
+  "v": 0.001257
 }
 </pre>
 
+Single-level JSON data goes back and forth between JSON and tabular formats
+in the direct way:
+
 <pre class="pre-highlight-in-pair">
-<b>mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json</b>
+<b>mlr --ijson --opprint head -n 2 then cut -f color,u,v data/json-example-1.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-shape    u_mean              u_stddev            u_count
-triangle 0.5839952367477192  0.13118354465618046 3
-square   0.409355036804889   0.3654281755508655  4
-circle   0.36601268553826866 0.2090944565900053  3
+color  u        v
+yellow 0.632170 0.988721
+red    0.219668 0.001257
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --opprint cat data/json-example-1.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag i  u        v        w        x
+yellow triangle 1    11 0.632170 0.988721 0.436498 5.798188
+red    square   1    15 0.219668 0.001257 0.792778 2.944117
+red    circle   1    16 0.209017 0.290052 0.138103 5.065034
+red    square   0    48 0.956274 0.746720 0.775542 7.117831
+purple triangle 0    51 0.435535 0.859129 0.812290 5.753095
+red    square   0    64 0.201551 0.953110 0.771991 5.612050
+purple triangle 0    65 0.684281 0.582372 0.801405 5.805148
+yellow circle   1    73 0.603365 0.423708 0.639785 7.006414
+yellow circle   1    87 0.285656 0.833516 0.635058 6.350036
+purple square   0    91 0.259926 0.824322 0.723735 6.854221
 </pre>
 
 ### Nested JSON objects
 
-Additionally, Miller can **tabularize nested objects by concatentating keys**:
+Additionally, Miller can **tabularize nested objects by concatentating keys**. If your processing has
+input as well as output in JSON format, JSON structure is preserved throughout the processing:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --json --jvstack head -n 2 data/json-example-2.json</b>
@@ -318,6 +241,8 @@ Additionally, Miller can **tabularize nested objects by concatentating keys**:
 }
 </pre>
 
+But if the input format is JSON and the output format is not (or vice versa) then key-concatenation applies:
+
 <pre class="pre-highlight-in-pair">
 <b>mlr --ijson --opprint head -n 4 data/json-example-2.json</b>
 </pre>
@@ -329,103 +254,29 @@ flag i  attributes.color attributes.shape values.u values.v values.w values.x
 0    48 red              square           0.956274 0.746720 0.775542 7.117831
 </pre>
 
-Note in particular that as far as Miller's `put` and `filter`, as well as other I/O formats, are concerned, these are simply field names with colons in them:
+This is discussed in more detail on the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
 
-<pre class="pre-highlight-in-pair">
-<b>mlr --json --jvstack head -n 1 \</b>
-<b>  then put '${values:uv} = ${values:u} * ${values:v}' \</b>
-<b>  data/json-example-2.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "flag": 1,
-  "i": 11,
-  "attributes": {
-    "color": "yellow",
-    "shape": "triangle"
-  },
-  "values": {
-    "u": 0.632170,
-    "v": 0.988721,
-    "w": 0.436498,
-    "x": 5.798188
-  }
-}
-</pre>
-
-### Arrays
-
-Arrays (TODO: update for Miller6) aren't supported in Miller's `put`/`filter` DSL. By default, JSON arrays are read in as integer-keyed maps.
-
-Suppose we have arrays like this in our input data:
-
-<pre class="pre-highlight-in-pair">
-<b>cat data/json-example-3.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "label": "orange",
-  "values": [12.2, 13.8, 17.2]
-}
-{
-  "label": "purple",
-  "values": [27.0, 32.4]
-}
-</pre>
-
-Then integer indices (starting from 0 and counting up) are used as map keys:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --ijson --oxtab cat data/json-example-3.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-label    orange
-values.1 12.2
-values.2 13.8
-values.3 17.2
-
-label    purple
-values.1 27.0
-values.2 32.4
-</pre>
-
-When the data are written back out as JSON, field names are re-expanded as above, but what were arrays on input are now maps on output:
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --json --jvstack cat data/json-example-3.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "label": "orange",
-  "values": [12.2, 13.8, 17.2]
-}
-{
-  "label": "purple",
-  "values": [27.0, 32.4]
-}
-</pre>
-
-This is non-ideal, but it allows Miller (5.x release being latest as of this writing) to handle JSON arrays at all.
-
-You might also use `mlr --json-skip-arrays-on-input` or `mlr --json-fatal-arrays-on-input`.
-
-To truly handle JSON, please use a JSON-processing tool such as [jq](https://stedolan.github.io/jq/).
-
-### Formatting JSON options
+### JSON-formatting options
 
 JSON isn't a parameterized format, so `RS`, `FS`, `PS` aren't specifiable. Nonetheless, you can do the following:
 
-* Use `--jvstack` to pretty-print JSON objects with multi-line (vertically stacked) spacing. By default, each Miller record (JSON object) is one per line.
-
-* Keystroke-savers: `--jsonx` simply means `--json --jvstack`, and `--ojsonx` simply means `--ojson --jvstack`.
+* Use `--no-jvstack` to print JSON objects one per line.  By default, each Miller record (JSON object) is pretty-printed in multi-line format.
 
 * Use `--jlistwrap` to print the sequence of JSON objects wrapped in an outermost `[` and `]`. By default, these aren't printed.
 
+<!---
+TODO: probably remove entirely
 * Use `--jquoteall` to double-quote all object values. By default, integers, floating-point numbers, and booleans `true` and `false` are not double-quoted when they appear as JSON-object keys.
+-->
 
 * Use `--jflatsep yourseparatorhere` to specify the string used for key concatenation: this defaults to a single dot.
 
-Again, please see [jq](https://stedolan.github.io/jq/) for a truly powerful, JSON-specific tool.
+### JSON-in-CSV
+
+It's quite common to have CSV data which contains stringified JSON as a column.
+See the [JSON parse and stringify
+section](reference-main-data-types.md#json-parse-and-stringify) for ways to
+decode these in Miller.
 
 ## PPRINT: Pretty-printed tabular
 
@@ -436,23 +287,23 @@ Miller's pretty-print format is like CSV, but column-aligned.  For example, comp
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
+pan,pan,1,0.346791,0.726802
+eks,pan,2,0.758679,0.522151
+wye,wye,3,0.204603,0.338318
+eks,wye,4,0.381399,0.134188
+wye,pan,5,0.573288,0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on `tail -f` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
@@ -465,16 +316,39 @@ For output only (this isn't supported in the input-scanner as of 5.0.0) you can 
 <b>mlr --opprint --barred cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-+-----+-----+---+---------------------+---------------------+
-| a   | b   | i | x                   | y                   |
-+-----+-----+---+---------------------+---------------------+
-| pan | pan | 1 | 0.3467901443380824  | 0.7268028627434533  |
-| eks | pan | 2 | 0.7586799647899636  | 0.5221511083334797  |
-| wye | wye | 3 | 0.20460330576630303 | 0.33831852551664776 |
-| eks | wye | 4 | 0.38139939387114097 | 0.13418874328430463 |
-| wye | pan | 5 | 0.5732889198020006  | 0.8636244699032729  |
-+-----+-----+---+---------------------+---------------------+
++-----+-----+---+----------+----------+
+| a   | b   | i | x        | y        |
++-----+-----+---+----------+----------+
+| pan | pan | 1 | 0.346791 | 0.726802 |
+| eks | pan | 2 | 0.758679 | 0.522151 |
+| wye | wye | 3 | 0.204603 | 0.338318 |
+| eks | wye | 4 | 0.381399 | 0.134188 |
+| wye | pan | 5 | 0.573288 | 0.863624 |
++-----+-----+---+----------+----------+
 </pre>
+
+## Markdown tabular
+
+Markdown format looks like this:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --omd cat data/small</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+| a | b | i | x | y |
+| --- | --- | --- | --- | --- |
+| pan | pan | 1 | 0.346791 | 0.726802 |
+| eks | pan | 2 | 0.758679 | 0.522151 |
+| wye | wye | 3 | 0.204603 | 0.338318 |
+| eks | wye | 4 | 0.381399 | 0.134188 |
+| wye | pan | 5 | 0.573288 | 0.863624 |
+</pre>
+
+which renders like this when dropped into various web tools (e.g. github comments):
+
+![pix/omd.png](pix/omd.png)
+
+As of Miller 4.3.0, markdown format is supported only for output, not input.
 
 ## XTAB: Vertical tabular
 
@@ -543,28 +417,125 @@ _networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
 ]
 </pre>
 
-## Markdown tabular
+## DKVP: Key-value pairs
 
-Markdown format looks like this:
+Miller's default file format is DKVP, for **delimited key-value pairs**. Example:
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --omd cat data/small</b>
+<b>mlr cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-| a | b | i | x | y |
-| --- | --- | --- | --- | --- |
-| pan | pan | 1 | 0.3467901443380824 | 0.7268028627434533 |
-| eks | pan | 2 | 0.7586799647899636 | 0.5221511083334797 |
-| wye | wye | 3 | 0.20460330576630303 | 0.33831852551664776 |
-| eks | wye | 4 | 0.38139939387114097 | 0.13418874328430463 |
-| wye | pan | 5 | 0.5732889198020006 | 0.8636244699032729 |
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
 </pre>
 
-which renders like this when dropped into various web tools (e.g. github comments):
+Such data are easy to generate, e.g. in Ruby with
 
-![pix/omd.png](pix/omd.png)
+<pre class="pre-non-highlight-non-pair">
+puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
+</pre>
 
-As of Miller 4.3.0, markdown format is supported only for output, not input.
+<pre class="pre-non-highlight-non-pair">
+puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
+</pre>
+
+or `print` statements in various languages, e.g.
+
+<pre class="pre-non-highlight-non-pair">
+echo "type=3,user=$USER,date=$date\n";
+</pre>
+
+<pre class="pre-non-highlight-non-pair">
+logger.log("type=3,user=$USER,date=$date\n");
+</pre>
+
+Fields lacking an IPS will have positional index (starting at 1) used as the key, as in NIDX format. For example, `dish=7,egg=8,flint` is parsed as `"dish" => "7", "egg" => "8", "3" => "flint"` and `dish,egg,flint` is parsed as `"1" => "dish", "2" => "egg", "3" => "flint"`.
+
+As discussed in [Record Heterogeneity](record-heterogeneity.md), Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
+
+<pre class="pre-non-highlight-non-pair">
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100, resource=/path/to/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+
+etc. and I just log them as needed. Then later, I can use `grep`, `mlr --opprint group-like`, etc.
+to analyze my logs.
+
+See the [I/O options reference](reference-main-io-options.md) regarding how to specify separators other than the default equals-sign and comma.
+
+## NIDX: Index-numbered (toolkit style)
+
+With `--inidx --ifs ' ' --repifs`, Miller splits lines on whitespace and assigns integer field names starting with 1.
+
+This recapitulates Unix-toolkit behavior.
+
+Example with index-numbered output:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/small</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a=pan,b=pan,i=1,x=0.346791,y=0.726802
+a=eks,b=pan,i=2,x=0.758679,y=0.522151
+a=wye,b=wye,i=3,x=0.204603,y=0.338318
+a=eks,b=wye,i=4,x=0.381399,y=0.134188
+a=wye,b=pan,i=5,x=0.573288,y=0.863624
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --onidx --ofs ' ' cat data/small</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
+</pre>
+
+Example with index-numbered input:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/mydata.txt</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+oh say can you see
+by the dawn's
+early light
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1=oh,2=say,3=can,4=you,5=see
+1=by,2=the,3=dawn's
+1=early,2=light
+</pre>
+
+Example with index-numbered input and output:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/mydata.txt</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+oh say can you see
+by the dawn's
+early light
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+say can
+the dawn's
+light
+</pre>
 
 ## Data-conversion keystroke-savers
 
@@ -587,6 +558,9 @@ PPRINT, and markdown, respectively. Note that markdown format is available for
 output only.
 </pre>
 
+<!---
+TODO: probably entirely unsupport this feature in Miller6.
+
 ## Autodetect of line endings
 
 Default line endings (`--irs` and `--ors`) are `'auto'` which means **autodetect from the input file format**, as long as the input file(s) have lines ending in either LF (also known as linefeed, `'\n'`, `0x0a`, Unix-style) or CRLF (also known as carriage-return/linefeed pairs, `'\r\n'`, `0x0d 0x0a`, Windows style).
@@ -600,6 +574,7 @@ If you use `--ors {something else}` with (default or explicitly specified) `--ir
 If you use `--irs {something else}` with (default or explicitly specified) `--ors auto` then the output line endings used are LF on Unix/Linux/BSD/MacOS X, and CRLF on Windows.
 
 See also [Record/field/pair separators](reference-main-io-options.md#recordfieldpair-separators) for more information about record/field/pair separators.
+--->
 
 ## Comments in data
 

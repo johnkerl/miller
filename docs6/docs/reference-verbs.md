@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # List of verbs
 
 ## Overview
@@ -14,7 +27,7 @@ mlr sort -f hostname,uptime *.dat
 
 These fall into categories as follows:
 
-* Analogs of their Unix-toolkit namesakes, discussed below as well as in [Unix-toolkit Context](feature-comparison.md): [cat](reference-verbs.md#cat), [cut](reference-verbs.md#cut), [grep](reference-verbs.md#grep), [head](reference-verbs.md#head), [join](reference-verbs.md#join), [sort](reference-verbs.md#sort), [tac](reference-verbs.md#tac), [tail](reference-verbs.md#tail), [top](reference-verbs.md#top), [uniq](reference-verbs.md#uniq).
+* Analogs of their Unix-toolkit namesakes, discussed below as well as in [Unix-toolkit Context](unix-toolkit-context.md): [cat](reference-verbs.md#cat), [cut](reference-verbs.md#cut), [grep](reference-verbs.md#grep), [head](reference-verbs.md#head), [join](reference-verbs.md#join), [sort](reference-verbs.md#sort), [tac](reference-verbs.md#tac), [tail](reference-verbs.md#tail), [top](reference-verbs.md#top), [uniq](reference-verbs.md#uniq).
 
 * `awk`-like functionality: [filter](reference-verbs.md#filter), [put](reference-verbs.md#put), [sec2gmt](reference-verbs.md#sec2gmt), [sec2gmtdate](reference-verbs.md#sec2gmtdate), [step](reference-verbs.md#step), [tee](reference-verbs.md#tee).
 
@@ -82,12 +95,12 @@ However you can make them all longer if you so desire.
 <b>mlr --opprint cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -115,15 +128,15 @@ wye pan 5 **********************************...... *****************************
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint bar --auto -f x,y data/small</b>
+<b>mlr --opprint bar --auto -f x,y -w 20 data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                                                                                 y
-pan pan 1 [0.20460330576630303]**********..............................[0.7586799647899636] [0.13418874328430463]********************************........[0.8636244699032729]
-eks pan 2 [0.20460330576630303]***************************************#[0.7586799647899636] [0.13418874328430463]*********************...................[0.8636244699032729]
-wye wye 3 [0.20460330576630303]#.......................................[0.7586799647899636] [0.13418874328430463]***********.............................[0.8636244699032729]
-eks wye 4 [0.20460330576630303]************............................[0.7586799647899636] [0.13418874328430463]#.......................................[0.8636244699032729]
-wye pan 5 [0.20460330576630303]**************************..............[0.7586799647899636] [0.13418874328430463]***************************************#[0.8636244699032729]
+a   b   i x                                        y
+pan pan 1 [0.204603]*****...............[0.758679] [0.134188]****************....[0.863624]
+eks pan 2 [0.204603]*******************#[0.758679] [0.134188]**********..........[0.863624]
+wye wye 3 [0.204603]#...................[0.758679] [0.134188]*****...............[0.863624]
+eks wye 4 [0.204603]******..............[0.758679] [0.134188]#...................[0.863624]
+wye pan 5 [0.204603]*************.......[0.758679] [0.134188]*******************#[0.863624]
 </pre>
 
 ## bootstrap
@@ -273,24 +286,24 @@ n,a,b,c
 <b>mlr --opprint cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint cat -n -g a data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-n a   b   i x                   y
-1 pan pan 1 0.3467901443380824  0.7268028627434533
-1 eks pan 2 0.7586799647899636  0.5221511083334797
-1 wye wye 3 0.20460330576630303 0.33831852551664776
-2 eks wye 4 0.38139939387114097 0.13418874328430463
-2 wye pan 5 0.5732889198020006  0.8636244699032729
+n a   b   i x        y
+1 pan pan 1 0.346791 0.726802
+1 eks pan 2 0.758679 0.522151
+1 wye wye 3 0.204603 0.338318
+2 eks wye 4 0.381399 0.134188
+2 wye pan 5 0.573288 0.863624
 </pre>
 
 ## check
@@ -729,24 +742,24 @@ Examples:
 <b>mlr --opprint cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint cut -f y,x,i data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-i x                   y
-1 0.3467901443380824  0.7268028627434533
-2 0.7586799647899636  0.5221511083334797
-3 0.20460330576630303 0.33831852551664776
-4 0.38139939387114097 0.13418874328430463
-5 0.5732889198020006  0.8636244699032729
+i x        y
+1 0.346791 0.726802
+2 0.758679 0.522151
+3 0.204603 0.338318
+4 0.381399 0.134188
+5 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -802,7 +815,7 @@ Options:
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>cat data/fill-down.csv</b>
+<b>cat data/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
@@ -812,7 +825,7 @@ a,b,c
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv fill-down -f b data/fill-down.csv</b>
+<b>mlr --csv fill-down -f b data/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
@@ -822,13 +835,55 @@ a,b,c
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --csv fill-down -a -f b data/fill-down.csv</b>
+<b>mlr --csv fill-down -a -f b data/fillable.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b,c
 1,,3
 4,5,6
 7,,9
+</pre>
+
+## fill-empty
+
+<pre class="pre-highlight-in-pair">
+<b>mlr fill-empty --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr fill-empty [options]
+Fills empty-string fields with specified fill-value.
+Options:
+-v {string} Fill-value: defaults to "N/A"
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/fillable.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,,3
+4,5,6
+7,,9
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv fill-empty data/fillable.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,N/A,3
+4,5,6
+7,N/A,9
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv fill-empty -v something data/fillable.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b,c
+1,something,3
+4,5,6
+7,something,9
 </pre>
 
 ## filter
@@ -937,11 +992,11 @@ Options:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a   b   i x        y
-pan pan 1 0.346790 0.726803
-eks pan 2 0.758680 0.522151
-wye wye 3 0.204603 0.338319
-eks wye 4 0.381399 0.134189
-wye pan 5 0.573289 0.863624
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -949,11 +1004,11 @@ wye pan 5 0.573289 0.863624
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a   b   i        x        y
-pan pan 1.000000 0.346790 0.726803
-eks pan 2.000000 0.758680 0.522151
-wye wye 3.000000 0.204603 0.338319
-eks wye 4.000000 0.381399 0.134189
-wye pan 5.000000 0.573289 0.863624
+pan pan 1.000000 0.346791 0.726802
+eks pan 2.000000 0.758679 0.522151
+wye wye 3.000000 0.204603 0.338318
+eks wye 4.000000 0.381399 0.134188
+wye pan 5.000000 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -961,11 +1016,11 @@ wye pan 5.000000 0.573289 0.863624
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a     b     i                   x                      y
-XpanX XpanX %!l(int=00000001)lx %!l(float64=0.34679)e  %!l(float64=0.726803)e
-XeksX XpanX %!l(int=00000002)lx %!l(float64=0.75868)e  %!l(float64=0.522151)e
-XwyeX XwyeX %!l(int=00000003)lx %!l(float64=0.204603)e %!l(float64=0.338319)e
-XeksX XwyeX %!l(int=00000004)lx %!l(float64=0.381399)e %!l(float64=0.134189)e
-XwyeX XpanX %!l(int=00000005)lx %!l(float64=0.573289)e %!l(float64=0.863624)e
+XpanX XpanX %!l(int=00000001)lx %!l(float64=0.346791)e %!l(float64=0.726802)e
+XeksX XpanX %!l(int=00000002)lx %!l(float64=0.758679)e %!l(float64=0.522151)e
+XwyeX XwyeX %!l(int=00000003)lx %!l(float64=0.204603)e %!l(float64=0.338318)e
+XeksX XwyeX %!l(int=00000004)lx %!l(float64=0.381399)e %!l(float64=0.134188)e
+XwyeX XpanX %!l(int=00000005)lx %!l(float64=0.573288)e %!l(float64=0.863624)e
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -973,11 +1028,11 @@ XwyeX XpanX %!l(int=00000005)lx %!l(float64=0.573289)e %!l(float64=0.863624)e
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a     b     i               x                      y
-XpanX XpanX %!l(float64=1)e %!l(float64=0.34679)e  %!l(float64=0.726803)e
-XeksX XpanX %!l(float64=2)e %!l(float64=0.75868)e  %!l(float64=0.522151)e
-XwyeX XwyeX %!l(float64=3)e %!l(float64=0.204603)e %!l(float64=0.338319)e
-XeksX XwyeX %!l(float64=4)e %!l(float64=0.381399)e %!l(float64=0.134189)e
-XwyeX XpanX %!l(float64=5)e %!l(float64=0.573289)e %!l(float64=0.863624)e
+XpanX XpanX %!l(float64=1)e %!l(float64=0.346791)e %!l(float64=0.726802)e
+XeksX XpanX %!l(float64=2)e %!l(float64=0.758679)e %!l(float64=0.522151)e
+XwyeX XwyeX %!l(float64=3)e %!l(float64=0.204603)e %!l(float64=0.338318)e
+XeksX XwyeX %!l(float64=4)e %!l(float64=0.381399)e %!l(float64=0.134188)e
+XwyeX XpanX %!l(float64=5)e %!l(float64=0.573288)e %!l(float64=0.863624)e
 </pre>
 
 ## fraction
@@ -1191,24 +1246,24 @@ This is similar to `sort` but with less work. Namely, Miller's sort has three st
 <b>mlr --opprint group-by a data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye wye 3 0.20460330576630303 0.33831852551664776
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+eks wye 4 0.381399 0.134188
+wye wye 3 0.204603 0.338318
+wye pan 5 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint sort -f a data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-eks pan 2 0.7586799647899636  0.5221511083334797
-eks wye 4 0.38139939387114097 0.13418874328430463
-pan pan 1 0.3467901443380824  0.7268028627434533
-wye wye 3 0.20460330576630303 0.33831852551664776
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+eks pan 2 0.758679 0.522151
+eks wye 4 0.381399 0.134188
+pan pan 1 0.346791 0.726802
+wye wye 3 0.204603 0.338318
+wye pan 5 0.573288 0.863624
 </pre>
 
 In this example, since the sort is on field `a`, the first step is to group together all records having the same value for field `a`; the second step is to sort the distinct `a`-field values `pan`, `eks`, and `wye` into `eks`, `pan`, and `wye`; the third step is to print out the record-list for `a=eks`, then the record-list for `a=pan`, then the record-list for `a=wye`.  The group-by operation omits the middle sort and just puts like records together, for those times when a sort isn't desired. In particular, the ordering of group-by fields for group-by is the order in which they were encountered in the data stream, which in some cases may be more interesting to you.
@@ -1582,6 +1637,34 @@ left_a left_b left_c right_a right_b right_c
 1      4      5      1       2       3
 1      2      3      1       4       5
 1      4      5      1       4       5
+</pre>
+
+## json-parse
+
+<pre class="pre-highlight-in-pair">
+<b>mlr json-parse --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr json-parse [options]
+Tries to convert string field values to parsed JSON, e.g. "[1,2,3]" -> [1,2,3].
+Options:
+-f {...} Comma-separated list of field names to json-parse (default all).
+-h|--help Show this message.
+</pre>
+
+## json-stringify
+
+<pre class="pre-highlight-in-pair">
+<b>mlr json-stringify --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr json-stringify [options]
+Produces string field values from field-value data, e.g. [1,2,3] -> "[1,2,3]".
+Options:
+-f {...} Comma-separated list of field names to json-parse (default all).
+--jvstack Produce multi-line JSON output.
+--no-jvstack Produce single-line JSON output per record (default).
+-h|--help Show this message.
 </pre>
 
 ## label
@@ -2017,7 +2100,8 @@ Please see the [DSL reference](reference-dsl.md) for more information about the 
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr regularize [options]
-Outputs records sorted lexically ascending by keys.Options:
+Outputs records sorted lexically ascending by keys.
+Options:
 -h|--help Show this message.
 </pre>
 
@@ -2092,24 +2176,24 @@ mlr rename -r '"name"i,Name'       Rename "name", "Name", "NAME", etc. to "Name"
 <b>mlr --opprint cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint rename i,INDEX,b,COLUMN2 data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   COLUMN2 INDEX x                   y
-pan pan     1     0.3467901443380824  0.7268028627434533
-eks pan     2     0.7586799647899636  0.5221511083334797
-wye wye     3     0.20460330576630303 0.33831852551664776
-eks wye     4     0.38139939387114097 0.13418874328430463
-wye pan     5     0.5732889198020006  0.8636244699032729
+a   COLUMN2 INDEX x        y
+pan pan     1     0.346791 0.726802
+eks pan     2     0.758679 0.522151
+wye wye     3     0.204603 0.338318
+eks wye     4     0.381399 0.134188
+wye pan     5     0.573288 0.863624
 </pre>
 
 As discussed in [Performance](performance.md), `sed` is significantly faster than Miller at doing this. However, Miller is format-aware, so it knows to do renames only within specified field keys and not any others, nor in field values which may happen to contain the same pattern. Example:
@@ -2118,22 +2202,22 @@ As discussed in [Performance](performance.md), `sed` is significantly faster tha
 <b>sed 's/y/COLUMN5/g' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,COLUMN5=0.5221511083334797
-a=wCOLUMN5e,b=wCOLUMN5e,i=3,x=0.20460330576630303,COLUMN5=0.33831852551664776
-a=eks,b=wCOLUMN5e,i=4,x=0.38139939387114097,COLUMN5=0.13418874328430463
-a=wCOLUMN5e,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,COLUMN5=0.726802
+a=eks,b=pan,i=2,x=0.758679,COLUMN5=0.522151
+a=wCOLUMN5e,b=wCOLUMN5e,i=3,x=0.204603,COLUMN5=0.338318
+a=eks,b=wCOLUMN5e,i=4,x=0.381399,COLUMN5=0.134188
+a=wCOLUMN5e,b=pan,i=5,x=0.573288,COLUMN5=0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr rename y,COLUMN5 data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a=pan,b=pan,i=1,x=0.3467901443380824,COLUMN5=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,COLUMN5=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,COLUMN5=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,COLUMN5=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
+a=pan,b=pan,i=1,x=0.346791,COLUMN5=0.726802
+a=eks,b=pan,i=2,x=0.758679,COLUMN5=0.522151
+a=wye,b=wye,i=3,x=0.204603,COLUMN5=0.338318
+a=eks,b=wye,i=4,x=0.381399,COLUMN5=0.134188
+a=wye,b=pan,i=5,x=0.573288,COLUMN5=0.863624
 </pre>
 
 See also [label](reference-verbs.md#label).
@@ -2170,36 +2254,36 @@ two to the front of line where you can give a quick visual scan.
 <b>mlr --opprint cat data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-eks pan 2 0.7586799647899636  0.5221511083334797
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-wye pan 5 0.5732889198020006  0.8636244699032729
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+wye wye 3 0.204603 0.338318
+eks wye 4 0.381399 0.134188
+wye pan 5 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint reorder -f i,b data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-i b   a   x                   y
-1 pan pan 0.3467901443380824  0.7268028627434533
-2 pan eks 0.7586799647899636  0.5221511083334797
-3 wye wye 0.20460330576630303 0.33831852551664776
-4 wye eks 0.38139939387114097 0.13418874328430463
-5 pan wye 0.5732889198020006  0.8636244699032729
+i b   a   x        y
+1 pan pan 0.346791 0.726802
+2 pan eks 0.758679 0.522151
+3 wye wye 0.204603 0.338318
+4 wye eks 0.381399 0.134188
+5 pan wye 0.573288 0.863624
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint reorder -e -f i,b data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   x                   y                   i b
-pan 0.3467901443380824  0.7268028627434533  1 pan
-eks 0.7586799647899636  0.5221511083334797  2 pan
-wye 0.20460330576630303 0.33831852551664776 3 wye
-eks 0.38139939387114097 0.13418874328430463 4 wye
-wye 0.5732889198020006  0.8636244699032729  5 pan
+a   x        y        i b
+pan 0.346791 0.726802 1 pan
+eks 0.758679 0.522151 2 pan
+wye 0.204603 0.338318 3 wye
+eks 0.381399 0.134188 4 wye
+wye 0.573288 0.863624 5 pan
 </pre>
 
 ## repeat
@@ -2583,12 +2667,12 @@ Example:
 <b>mlr --opprint sort -f a -nr x data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a   b   i x                   y
-eks pan 2 0.7586799647899636  0.5221511083334797
-eks wye 4 0.38139939387114097 0.13418874328430463
-pan pan 1 0.3467901443380824  0.7268028627434533
-wye pan 5 0.5732889198020006  0.8636244699032729
-wye wye 3 0.20460330576630303 0.33831852551664776
+a   b   i x        y
+eks pan 2 0.758679 0.522151
+eks wye 4 0.381399 0.134188
+pan pan 1 0.346791 0.726802
+wye pan 5 0.573288 0.863624
+wye wye 3 0.204603 0.338318
 </pre>
 
 Here's an example filtering log data: suppose multiple threads (labeled here by color) are all logging progress counts to a single log file. The log file is (by nature) chronological, so the progress of various threads is interleaved:
@@ -2846,13 +2930,13 @@ zee 0.5042419022900586 0.5029967546798116
 <b>  data/colored-shapes.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  u_p50               u_p99              v_p50               v_p99              ur                 vr
-yellow 0.5010187906650703  0.9890464545334569 0.5206303554834582  0.9870337429747029 1.9740705797093183 1.8958436298977264
-red    0.48503770531462564 0.9900536015797581 0.49258608624814926 0.9944442307252868 2.0411889441410493 2.0188232239761583
-purple 0.501319018852234   0.9888929892441335 0.5045708384576747  0.9882869130316426 1.9725822321846005 1.9586683131600438
-green  0.5020151016389706  0.9907635833945612 0.5053591509128329  0.9901745564521951 1.9735732653458684 1.9593482272234264
-blue   0.525225660059      0.9926547550299167 0.48516993577967726 0.993872833141726  1.8899586035427312 2.0485045750919286
-orange 0.4835478569328253  0.9936350141409035 0.48091255603363914 0.9891023960550895 2.0548845370623567 2.0567198415711636
+color  u_p50    u_p99    v_p50    v_p99    ur                 vr
+yellow 0.501019 0.989046 0.520630 0.987034 1.974068847688411  1.895845418051207
+red    0.485038 0.990054 0.492586 0.994444 2.0411885254351203 2.0188231090611586
+purple 0.501319 0.988893 0.504571 0.988287 1.9725823278192132 1.9586678584381585
+green  0.502015 0.990764 0.505359 0.990175 1.9735744947860123 1.9593496900223406
+blue   0.525226 0.992655 0.485170 0.993873 1.8899578467174132 2.048504647855391
+orange 0.483548 0.993635 0.480913 0.989102 2.054883899840347  2.056717119312641
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2949,7 +3033,7 @@ distributed on the unit interval. Here we remove half the data and fit a line to
 <pre class="pre-non-highlight-non-pair">
 
 # Prepare input data:
-mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)' data/medium > data/medium-squares
+mlr filter '($x&lt;.5 && $y&lt;.5) || ($x&gt;.5 && $y&gt;.5)' data/medium &gt; data/medium-squares
 
 # Do a linear regression and examine coefficients:
 mlr --ofs newline stats2 -a linreg-pca -f x,y data/medium-squares
@@ -3251,21 +3335,21 @@ Prints the last *n* records in the input stream, optionally by category.
 <b>mlr --opprint tail -n 4 data/colored-shapes.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag i      u                    v                   w                   x
-blue   square   1    499872 0.6189062525431605   0.2637962404841453  0.5311465405784674  6.210738209085753
-blue   triangle 0    499880 0.008110504040268474 0.8267274952432482  0.4732962944898885  6.146956761817328
-yellow triangle 0    499955 0.3839424618160777   0.55952913620132    0.5113763011485609  4.307973891915119
-yellow circle   1    499974 0.764950884927175    0.25284227383991364 0.49969878539567425 5.013809741826425
+color  shape    flag i      u        v        w        x
+blue   square   1    499872 0.618906 0.263796 0.531147 6.210738
+blue   triangle 0    499880 0.008111 0.826727 0.473296 6.146957
+yellow triangle 0    499955 0.383942 0.559529 0.511376 4.307974
+yellow circle   1    499974 0.764951 0.252842 0.499699 5.013810
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  shape    flag i      u                  v                   w                   x
-yellow triangle 0    499955 0.3839424618160777 0.55952913620132    0.5113763011485609  4.307973891915119
-blue   square   1    499872 0.6189062525431605 0.2637962404841453  0.5311465405784674  6.210738209085753
-yellow circle   1    499974 0.764950884927175  0.25284227383991364 0.49969878539567425 5.013809741826425
+color  shape    flag i      u        v        w        x
+yellow triangle 0    499955 0.383942 0.559529 0.511376 4.307974
+blue   square   1    499872 0.618906 0.263796 0.531147 6.210738
+yellow circle   1    499974 0.764951 0.252842 0.499699 5.013810
 </pre>
 
 ## tee

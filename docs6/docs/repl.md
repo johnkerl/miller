@@ -1,4 +1,17 @@
 <!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # The REPL
 
 The Miller REPL (read-evaluate-print loop) is an interactive counterpart to record-processing using the `put`/`filter` language. (A REPL is anything that evaluates what you type into it -- like `python` with no arguments, or Ruby's `irb`, or `node` with no arguments, etc.)
@@ -35,7 +48,7 @@ HELLO
 {
   "color": "yellow",
   "shape": "triangle",
-  "flag": true,
+  "flag": "true",
   "k": 1,
   "index": 11,
   "quantity": 43.6498,
@@ -45,7 +58,7 @@ HELLO
 {
   "color": "red",
   "shape": "square",
-  "flag": true,
+  "flag": "true",
   "k": 2,
   "index": 15,
   "quantity": 79.2778,
@@ -179,6 +192,6 @@ etc. depending on your platform.
 
 Suggestion: `alias mrpl='rlwrap mlr repl'` in your shell's startup file.
 
-## On-line help
+## Online help
 
 After `mlr repl`, type `:help` to see more about your options. In particular, `:help examples`.

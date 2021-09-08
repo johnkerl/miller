@@ -1,0 +1,1 @@
+mlr --json format-values -i 0x%x regtest/input/flatten-input-2.json

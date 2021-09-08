@@ -16,6 +16,8 @@ for name in $names; do
   if [ -f $name.md ]; then # Won't exist yet on first run
     chmod u+w $name.md
   fi
-  genmd-filter < $name.md.in > $name.md
+  # The filename is used for link-generation; file contents
+  # are read from standard input.
+  ./genmd-filter $name.md.in < $name.md.in > $name.md
   chmod 400 $name.md
 done
