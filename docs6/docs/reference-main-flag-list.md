@@ -162,8 +162,6 @@ are overridden in all cases by setting output format to `format2`.
 `: Use XTAB format for input data.
 * `--json or -j
 `: Use JSON format for input and output data.
-* `--jsonx
-`: TODO
 * `--nidx
 `: Use NIDX format for input and output data.
 * `--oasv or --oasvlite
@@ -176,8 +174,6 @@ are overridden in all cases by setting output format to `format2`.
 `: Use DKVP format for output data.
 * `--ojson
 `: Use JSON format for output data.
-* `--ojsonx
-`: TODO
 * `--omd
 `: Use markdown-tabular format for output data.
 * `--onidx
@@ -268,10 +264,12 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 `: Type information from JSON input files is now preserved throughout the processing stream.
 * `--json-fatal-arrays-on-input
 `: Miller now supports arrays as of version 6.
-* `--json-skip-arrays-on-input
+* `--json-map-arrays-on-input
 `: Miller now supports arrays as of version 6.
 * `--json-skip-arrays-on-input
 `: Miller now supports arrays as of version 6.
+* `--jsonx
+`: The `--jvstack` flag is now default true in Miller 6.
 * `--jvquoteall
 `: Type information from JSON input files is now preserved throughout the processing stream.
 * `--mmap
@@ -280,6 +278,8 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 `: The current implementation of Miller does not use buffered output, so there is no longer anything to suppress here.
 * `--no-mmap
 `: Miller no longer uses memory-mapping to access data files.
+* `--ojsonx
+`: The `--jvstack` flag is now default true in Miller 6.
 
 ## Miscellaneous flags
 
@@ -294,8 +294,8 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 `: Use this to specify one of more input files before the verb(s), rather than after. May be used more than once.  The list of filename must end with `--`. This is useful for example since `--from *.csv` doesn't do what you might hope but `--mfrom *.csv --` does.
 * `--mload {filenames}
 `: Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.
-* `--ofmt
-`: 
+* `--ofmt {format}
+`: E.g. %.18f, %.0f, %9.6e. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
 * `--seed {n}
 `: with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.
 * `-I
@@ -341,13 +341,13 @@ How you can control colorization:
 
 * Color choices can be specified by using environment variables, or command-line flags,
   with values 0..255:
-  	* `export MLR_KEY_COLOR=208`, `MLR_VALUE_COLOR=33`, etc.:
-    	`MLR_KEY_COLOR` `MLR_VALUE_COLOR` `MLR_PASS_COLOR` `MLR_FAIL_COLOR`
-    	`MLR_REPL_PS1_COLOR` `MLR_REPL_PS2_COLOR` `MLR_HELP_COLOR`
-  	* Command-line flags `--key-color 208`, `--value-color 33`, etc.:
-    	`--key-color` `--value-color` `--pass-color` `--fail-color`
-    	`--repl-ps1-color` `--repl-ps2-color` `--help-color`
-  	* This is particularly useful if your terminal's background color clashes with current settings.
+    * `export MLR_KEY_COLOR=208`, `MLR_VALUE_COLOR=33`, etc.:
+        `MLR_KEY_COLOR` `MLR_VALUE_COLOR` `MLR_PASS_COLOR` `MLR_FAIL_COLOR`
+        `MLR_REPL_PS1_COLOR` `MLR_REPL_PS2_COLOR` `MLR_HELP_COLOR`
+    * Command-line flags `--key-color 208`, `--value-color 33`, etc.:
+        `--key-color` `--value-color` `--pass-color` `--fail-color`
+        `--repl-ps1-color` `--repl-ps2-color` `--help-color`
+    * This is particularly useful if your terminal's background color clashes with current settings.
 
 If environment-variable settings and command-line flags are both provided, the latter take precedence.
 

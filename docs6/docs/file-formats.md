@@ -547,14 +547,41 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 <b>mlr help format-conversion</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-TO DO: brief list of formats w/ xref to m6 webdocs.
-
-Examples: --csv for CSV-formatted input and output; --icsv --opprint for
-CSV-formatted input and pretty-printed output.
-
-Please use --iformat1 --oformat2 rather than --format1 --oformat2.
-The latter sets up input and output flags for format1, not all of which
-are overridden in all cases by setting output format to format2.
+Type 'mlr help {topic}' for any of the following:
+Essentials:
+  mlr help topics
+  mlr help basic-examples
+  mlr help data-formats
+Flags:
+  mlr help flags
+Verbs:
+  mlr help list-verbs
+  mlr help usage-verbs
+  mlr help verb
+Functions:
+  mlr help list-functions
+  mlr help list-function-classes
+  mlr help list-functions-in-class
+  mlr help usage-functions
+  mlr help usage-functions-by-class
+  mlr help function
+Keywords:
+  mlr help list-keywords
+  mlr help usage-keywords
+  mlr help keyword
+Other:
+  mlr help auxents
+  mlr help mlrrc
+  mlr help output-colorization
+  mlr help type-arithmetic-info
+Shorthands:
+  mlr -g = mlr help flags
+  mlr -l = mlr help list-verbs
+  mlr -L = mlr help usage-verbs
+  mlr -f = mlr help list-functions
+  mlr -F = mlr help usage-functions
+  mlr -k = mlr help list-keywords
+  mlr -K = mlr help usage-keywords
 </pre>
 
 <!---
@@ -583,21 +610,41 @@ You can include comments within your data files, and either have them ignored, o
 <b>mlr help comments-in-data</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Miller lets you put comments in your data, such as
-
-    # This is a comment for a CSV file
-    a,b,c
-    1,2,3
-    4,5,6
-
-Notes:
-* Comments are only honored at the start of a line.
-* In the absence of any of the below four options, comments are data like
-  any other text. (The comments-in-data feature is opt-in.)
-* When `--pass-comments` is used, comment lines are written to standard output
-  immediately upon being read; they are not part of the record stream.  Results
-  may be counterintuitive. A suggestion is to place comments at the start of
-  data files.
+Type 'mlr help {topic}' for any of the following:
+Essentials:
+  mlr help topics
+  mlr help basic-examples
+  mlr help data-formats
+Flags:
+  mlr help flags
+Verbs:
+  mlr help list-verbs
+  mlr help usage-verbs
+  mlr help verb
+Functions:
+  mlr help list-functions
+  mlr help list-function-classes
+  mlr help list-functions-in-class
+  mlr help usage-functions
+  mlr help usage-functions-by-class
+  mlr help function
+Keywords:
+  mlr help list-keywords
+  mlr help usage-keywords
+  mlr help keyword
+Other:
+  mlr help auxents
+  mlr help mlrrc
+  mlr help output-colorization
+  mlr help type-arithmetic-info
+Shorthands:
+  mlr -g = mlr help flags
+  mlr -l = mlr help list-verbs
+  mlr -L = mlr help usage-verbs
+  mlr -f = mlr help list-functions
+  mlr -F = mlr help usage-functions
+  mlr -k = mlr help list-keywords
+  mlr -K = mlr help usage-keywords
 </pre>
 
 Examples:

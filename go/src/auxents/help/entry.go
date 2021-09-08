@@ -21,82 +21,174 @@ import (
 type tZaryHandlerFunc func()
 type tUnaryHandlerFunc func(arg string)
 
-type shorthandInfo struct {
-	shorthand string
-	longhand  string
+type tHandlerLookupTable struct {
+	sections []tHandlerInfoSection
 }
 
-type handlerInfo struct {
-	name             string
-	zaryHandlerFunc  tZaryHandlerFunc
-	unaryHandlerFunc tUnaryHandlerFunc
+type tHandlerInfoSection struct {
+	name         string
+	handlerInfos []tHandlerInfo
 
 	// Some handlers are used only for webdoc/manpage autogen and needn't
 	// clutter up the on-line help experience for the interactive user
 	internal bool
 }
 
+type tHandlerInfo struct {
+	name             string
+	zaryHandlerFunc  tZaryHandlerFunc
+	unaryHandlerFunc tUnaryHandlerFunc
+}
+
+type tShorthandTable struct {
+	shorthandInfos []tShorthandInfo
+}
+
+type tShorthandInfo struct {
+	shorthand string
+	longhand  string
+}
+
 // We get a Golang "initialization loop" if this is defined statically. So, we
 // use a "package init" function.
-var shorthandLookupTable = []shorthandInfo{}
-var handlerLookupTable = []handlerInfo{}
+var handlerLookupTable = tHandlerLookupTable{}
+var shorthandLookupTable = tShorthandTable{}
 
 func init() {
-	// For things like 'mlr -f', invoked through the CLI parser which does not
-	// go through our HelpMain().
-	shorthandLookupTable = []shorthandInfo{
-		{shorthand: "-l", longhand: "list-verbs"},
-		{shorthand: "-L", longhand: "usage-verbs"},
-		{shorthand: "-f", longhand: "list-functions"},
-		{shorthand: "-F", longhand: "usage-functions"},
-		{shorthand: "-k", longhand: "list-keywords"},
-		{shorthand: "-K", longhand: "usage-keywords"},
-	}
 
 	// For things like 'mlr help foo', invoked through the auxent framework
 	// which goes through our HelpMain().
-	handlerLookupTable = []handlerInfo{
-		{name: "topics", zaryHandlerFunc: listTopics},
-		{name: "auxents", zaryHandlerFunc: helpAuxents},
-		{name: "basic-examples", zaryHandlerFunc: helpBasicExamples},
-		{name: "data-formats", zaryHandlerFunc: helpDataFormats},
-		{name: "function", unaryHandlerFunc: helpForFunction},
-		{name: "keyword", unaryHandlerFunc: helpForKeyword},
-		{name: "list-functions", zaryHandlerFunc: listFunctions},
-		{name: "list-function-classes", zaryHandlerFunc: listFunctionClasses},
-		{name: "list-functions-in-class", unaryHandlerFunc: listFunctionsInClass},
-		{name: "list-functions-as-paragraph", zaryHandlerFunc: listFunctionsAsParagraph},
-		{name: "list-keywords", zaryHandlerFunc: listKeywords},
-		{name: "list-keywords-as-paragraph", zaryHandlerFunc: listKeywordsAsParagraph},
-		{name: "list-verbs", zaryHandlerFunc: listVerbs},
-		{name: "list-verbs-as-paragraph", zaryHandlerFunc: listVerbsAsParagraph},
-		{name: "mlrrc", zaryHandlerFunc: helpMlrrc},
-		{name: "number-formatting", zaryHandlerFunc: helpNumberFormatting},
-		{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
-		{name: "usage-functions", zaryHandlerFunc: usageFunctions},
-		{name: "usage-functions-by-class", zaryHandlerFunc: usageFunctionsByClass},
-		{name: "usage-keywords", zaryHandlerFunc: usageKeywords},
-		{name: "usage-verbs", zaryHandlerFunc: usageVerbs},
-		{name: "verb", unaryHandlerFunc: helpForVerb},
+	handlerLookupTable = tHandlerLookupTable{
+		sections: []tHandlerInfoSection{
+			{
+				name: "Essentials",
+				handlerInfos: []tHandlerInfo{
+					{name: "topics", zaryHandlerFunc: listTopics},
+					{name: "basic-examples", zaryHandlerFunc: helpBasicExamples},
+					{name: "data-formats", zaryHandlerFunc: helpDataFormats},
+				},
+			},
+			{
+				name: "Flags",
+				handlerInfos: []tHandlerInfo{
+					{name: "flags", zaryHandlerFunc: showFlagHelp},
+					// Per-section entries will be computed and installed below
+				},
+			},
+			{
+				name: "Verbs",
+				handlerInfos: []tHandlerInfo{
+					{name: "list-verbs", zaryHandlerFunc: listVerbs},
+					{name: "usage-verbs", zaryHandlerFunc: usageVerbs},
+					{name: "verb", unaryHandlerFunc: helpForVerb},
+				},
+			},
+			{
+				name: "Functions",
+				handlerInfos: []tHandlerInfo{
+					{name: "list-functions", zaryHandlerFunc: listFunctions},
+					{name: "list-function-classes", zaryHandlerFunc: listFunctionClasses},
+					{name: "list-functions-in-class", unaryHandlerFunc: listFunctionsInClass},
+					{name: "usage-functions", zaryHandlerFunc: usageFunctions},
+					{name: "usage-functions-by-class", zaryHandlerFunc: usageFunctionsByClass},
+					{name: "function", unaryHandlerFunc: helpForFunction},
+				},
+			},
+			{
+				name: "Keywords",
+				handlerInfos: []tHandlerInfo{
+					{name: "list-keywords", zaryHandlerFunc: listKeywords},
+					{name: "usage-keywords", zaryHandlerFunc: usageKeywords},
+					{name: "keyword", unaryHandlerFunc: helpForKeyword},
+				},
+			},
+			{
+				name: "Other",
+				handlerInfos: []tHandlerInfo{
+					{name: "auxents", zaryHandlerFunc: helpAuxents},
+					{name: "mlrrc", zaryHandlerFunc: helpMlrrc},
+					{name: "output-colorization", zaryHandlerFunc: helpOutputColorization},
+					{name: "type-arithmetic-info", zaryHandlerFunc: helpTypeArithmeticInfo},
+				},
+			},
+			{
+				name:     "Internal/docgen",
+				internal: true,
+				handlerInfos: []tHandlerInfo{
+					{name: "list-verbs-as-paragraph", zaryHandlerFunc: listVerbsAsParagraph},
+					{name: "list-functions-as-paragraph", zaryHandlerFunc: listFunctionsAsParagraph},
+					{name: "list-keywords-as-paragraph", zaryHandlerFunc: listKeywordsAsParagraph},
+					{name: "list-functions-as-table", zaryHandlerFunc: listFunctionsAsTable},
+					{name: "list-flag-sections", zaryHandlerFunc: listFlagSections},
+					{name: "print-info-for-section", unaryHandlerFunc: printInfoForSection},
+					{name: "list-flags-for-section", unaryHandlerFunc: listFlagsForSection},
+					{name: "show-help-for-section", unaryHandlerFunc: showHelpForSection},
+					{name: "show-help-for-section-via-downdash", unaryHandlerFunc: showHelpForSectionViaDowndash},
+					{name: "show-headline-for-flag", unaryHandlerFunc: showHeadlineForFlag},
+					{name: "show-help-for-flag", unaryHandlerFunc: showHelpForFlag},
+				},
+			},
+		},
+	}
 
-		// TODO: to flags-sections
-		{name: "comments-in-data", zaryHandlerFunc: helpCommentsInData},
-		{name: "compressed-data", zaryHandlerFunc: helpCompressedDataOptions},
-		{name: "data-format-options", zaryHandlerFunc: helpDataFormatOptions},
-		{name: "double-quoting", zaryHandlerFunc: helpDoubleQuoting},
-		{name: "format-conversion", zaryHandlerFunc: helpFormatConversionKeystrokeSaverOptions},
-		{name: "separator-options", zaryHandlerFunc: helpSeparatorOptions},
+	// This is a wee bit clever. The rest of the topics in the table have names
+	// manually keyed in. But we want to produce `mlr help csv-only-flags` for
+	// flag-section named "CSV-only flags", etc. Here we can't key in the names
+	// since we want to compute them dynamically from cli.FLAG_TABLE which is
+	// Miller's wqy of tracking command-line flags.
 
-		// Internal-only
-		{name: "list-functions-as-table", zaryHandlerFunc: listFunctionsAsTable, internal: true},
-		{name: "list-flag-sections", zaryHandlerFunc: listFlagSections, internal: true},
-		{name: "print-info-for-section", unaryHandlerFunc: printInfoForSection, internal: true},
-		{name: "list-flags-for-section", unaryHandlerFunc: listFlagsForSection, internal: true},
-		{name: "show-headline-for-flag", unaryHandlerFunc: showHeadlineForFlag, internal: true},
-		{name: "show-help-for-flag", unaryHandlerFunc: showHelpForFlag, internal: true},
+	//{name: "comments-in-data-flags"},
+	//{name: "compressed-data-flags"},
+	//{name: "csv-only-flags"},
+	//{name: "file-format-flags"},
+	//{name: "flatten-unflatten-flags"},
+	//{name: "format-conversion-keystroke-saver-flags"},
+	//{name: "json-only-flags"},
+	//{name: "legacy-flags"},
+	//{name: "miscellaneous-flags"},
+	//{name: "output-colorization-flags"},
+	//{name: "pprint-only-flags"},
+	//{name: "separator-flags"},
 
-		// TBD: have an info-only handler in addition to flags-section
-		{name: "output-colorization", zaryHandlerFunc: helpOutputColorization},
+	// For this file's topic-lookup table, find and extend the section called "Flags".
+	for i, section := range handlerLookupTable.sections {
+		if section.name != "Flags" {
+			continue
+		}
+
+		// Ask the flags table for a list of flag-section names, downcased and
+		// with spaces replaced with dashes -- "downdashed" -- making the
+		// punctuation/casing style for online help.
+		downdashSectionNames := cli.FLAG_TABLE.GetDowndashSectionNames()
+		// Note: `j, _` rather than `_, downdashSectionName` since the latter
+		// is a data copy while the former allows us to do a reference. The
+		// former won't produce correct lookup-table data.
+		for j, _ := range downdashSectionNames {
+			downdashSectionName := downdashSectionNames[j]
+			// Patch a new entry into the "Flags" section of our lookup table.
+			entry := tHandlerInfo{
+				name: downdashSectionName,
+				// Make a function which passes in "csv-only-flags" etc. to the FLAG_TABLE.
+				zaryHandlerFunc: func() {
+					showHelpForSectionViaDowndash(downdashSectionName)
+				},
+			}
+			handlerLookupTable.sections[i].handlerInfos = append(handlerLookupTable.sections[i].handlerInfos, entry)
+		}
+	}
+
+	// For things like 'mlr -f', invoked through the CLI parser which does not
+	// go through our HelpMain().
+	shorthandLookupTable = tShorthandTable{
+		shorthandInfos: []tShorthandInfo{
+			{shorthand: "-g", longhand: "flags"},
+			{shorthand: "-l", longhand: "list-verbs"},
+			{shorthand: "-L", longhand: "usage-verbs"},
+			{shorthand: "-f", longhand: "list-functions"},
+			{shorthand: "-F", longhand: "usage-functions"},
+			{shorthand: "-k", longhand: "list-keywords"},
+			{shorthand: "-K", longhand: "usage-keywords"},
+		},
 	}
 }
 
@@ -115,25 +207,27 @@ func HelpMain(args []string) int {
 
 	// "mlr help something" where we recognize the something
 	name := args[0]
-	for _, info := range handlerLookupTable {
-		if info.name == name {
-			if info.zaryHandlerFunc != nil {
-				if len(args) != 1 {
-					fmt.Printf("mlr help %s takes no additional argument.\n", name)
+	for _, section := range handlerLookupTable.sections {
+		for _, info := range section.handlerInfos {
+			if info.name == name {
+				if info.zaryHandlerFunc != nil {
+					if len(args) != 1 {
+						fmt.Printf("mlr help %s takes no additional argument.\n", name)
+						return 0
+					}
+					info.zaryHandlerFunc()
 					return 0
 				}
-				info.zaryHandlerFunc()
-				return 0
-			}
-			if info.unaryHandlerFunc != nil {
-				if len(args) < 2 {
-					fmt.Printf("mlr help %s takes at least one required argument.\n", name)
+				if info.unaryHandlerFunc != nil {
+					if len(args) < 2 {
+						fmt.Printf("mlr help %s takes at least one required argument.\n", name)
+						return 0
+					}
+					for _, arg := range args[1:] {
+						info.unaryHandlerFunc(arg)
+					}
 					return 0
 				}
-				for _, arg := range args[1:] {
-					info.unaryHandlerFunc(arg)
-				}
-				return 0
 			}
 		}
 	}
@@ -164,12 +258,14 @@ func ParseTerminalUsage(arg string) bool {
 		return true
 	}
 	// "mlr -l" is shorthand for "mlr help list-verbs", etc.
-	for _, sinfo := range shorthandLookupTable {
+	for _, sinfo := range shorthandLookupTable.shorthandInfos {
 		if sinfo.shorthand == arg {
-			for _, info := range handlerLookupTable {
-				if info.name == sinfo.longhand {
-					info.zaryHandlerFunc()
-					return true
+			for _, section := range handlerLookupTable.sections {
+				for _, info := range section.handlerInfos {
+					if info.name == sinfo.longhand {
+						info.zaryHandlerFunc()
+						return true
+					}
 				}
 			}
 		}
@@ -185,15 +281,23 @@ func handleDefault() {
 // ----------------------------------------------------------------
 func listTopics() {
 	fmt.Println("Type 'mlr help {topic}' for any of the following:")
-	for _, info := range handlerLookupTable {
-		if !info.internal {
-			fmt.Printf("  mlr help %s\n", info.name)
+	for _, section := range handlerLookupTable.sections {
+		if !section.internal {
+			fmt.Printf("%s:\n", section.name)
+			for _, info := range section.handlerInfos {
+				fmt.Printf("  mlr help %s\n", info.name)
+			}
 		}
 	}
 	fmt.Println("Shorthands:")
-	for _, info := range shorthandLookupTable {
+	for _, info := range shorthandLookupTable.shorthandInfos {
 		fmt.Printf("  mlr %s = mlr help %s\n", info.shorthand, info.longhand)
 	}
+}
+
+// ----------------------------------------------------------------
+func showFlagHelp() {
+	cli.FLAG_TABLE.ShowHelp()
 }
 
 // ----------------------------------------------------------------
@@ -217,16 +321,6 @@ mlr --csv filter '$color == "red"' example.csv
 mlr --icsv --ojson put '$ratio = $quantity / $rate' example.csv
 mlr --icsv --opprint --from example.csv sort -nr index then cut -f shape,quantity
 `)
-}
-
-// ----------------------------------------------------------------
-func helpCommentsInData() {
-	cli.CommentsInDataPrintInfo()
-}
-
-// ----------------------------------------------------------------
-func helpCompressedDataOptions() {
-	cli.CompressedDataPrintInfo()
 }
 
 // ----------------------------------------------------------------
@@ -296,36 +390,6 @@ NIDX: implicitly numerically indexed (Unix-toolkit style)
 }
 
 // ----------------------------------------------------------------
-func helpDataFormatOptions() {
-	cli.FileFormatPrintInfo()
-}
-
-// ----------------------------------------------------------------
-// TBD FOR MILLER 6:
-
-func helpDoubleQuoting() {
-	fmt.Printf("THIS IS STILL WIP FOR MILLER 6\n")
-	fmt.Println(
-		`--quote-all        Wrap all fields in double quotes
---quote-none       Do not wrap any fields in double quotes, even if they have
-                   OFS or ORS in them
---quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
-                   in them (default)
---quote-numeric    Wrap fields in double quotes only if they have numbers
-                   in them
---quote-original   Wrap fields in double quotes if and only if they were
-                   quoted on input. This isn't sticky for computed fields:
-                   e.g. if fields a and b were quoted on input and you do
-                   "put '$c = $a . $b'" then field c won't inherit a or b's
-                   was-quoted-on-input flag.`)
-}
-
-// ----------------------------------------------------------------
-func helpFormatConversionKeystrokeSaverOptions() {
-	cli.FileFormatPrintInfo()
-}
-
-// ----------------------------------------------------------------
 func helpMlrrc() {
 	fmt.Print(
 		`You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
@@ -368,24 +432,6 @@ func helpOutputColorization() {
 }
 
 // ----------------------------------------------------------------
-// TBD FOR MILLER 6:
-
-func helpNumberFormatting() {
-	fmt.Printf("THIS IS STILL WIP FOR MILLER 6\n")
-	fmt.Printf("  --ofmt {format}    E.g. %%.18f, %%.0f, %%9.6e. Please use sprintf-style codes for\n")
-	fmt.Printf("                     floating-point nummbers. If not specified, default formatting is used.\n")
-	fmt.Printf("                     See also the fmtnum function within mlr put (mlr --help-all-functions);\n")
-	fmt.Printf("                     see also the format-values function.\n")
-}
-
-// ----------------------------------------------------------------
-// TBD FOR MILLER 6:
-
-func helpSeparatorOptions() {
-	cli.SeparatorPrintInfo()
-}
-
-// ----------------------------------------------------------------
 func helpTypeArithmeticInfo() {
 	mlrvals := []*types.Mlrval{
 		types.MlrvalPointerFromInt(1),
@@ -420,10 +466,14 @@ func helpTypeArithmeticInfo() {
 }
 
 // ----------------------------------------------------------------
-// listFlagSections is for webdoc/manpage autogen.
+// listFlagSections et al. are for webdoc/manpage autogen in the miller/docs
+// and miller/man subdirectories. Unlike showFlagHelp where all looping over
+// the flags table, its sections, and flags within each section is done within
+// this Go program, by contrast the following few methods expose the hierarchy
+// to standard output, letting the calling programs (nominally Ruby autogen
+// scripts) control their own looping and formatting.
 
 func listFlagSections() {
-	// xxx temp factorization
 	cli.FLAG_TABLE.ListFlagSections()
 }
 
@@ -443,16 +493,64 @@ func listFlagsForSection(sectionName string) {
 	}
 }
 
+// For manpage autogen: just produce text
+func showHelpForSection(sectionName string) {
+	if !cli.FLAG_TABLE.ShowHelpForSection(sectionName) {
+		fmt.Printf(
+			"mlr: flag-section \"%s\" not found. Please use \"mlr help list-flag-sections\" for a list.\n",
+			sectionName)
+	}
+}
+
+// For on-the-fly `mlr help foo-bar-flags` where `Foo-bar flags` is the name of
+// a section in the FLAG_TABLE. See the func-init block at the top of this
+// file.
+func showHelpForSectionViaDowndash(downdashSectionName string) {
+	if !cli.FLAG_TABLE.ShowHelpForSectionViaDowndash(downdashSectionName) {
+		fmt.Printf("mlr: flag-section \"%s\" not found.\n", downdashSectionName)
+	}
+}
+
+// For webdocs autogen: we want the headline separately so we can backtick it.
 func showHeadlineForFlag(flagName string) {
 	if !cli.FLAG_TABLE.ShowHeadlineForFlag(flagName) {
 		fmt.Printf("mlr: flag \"%s\" not found..\n", flagName)
 	}
 }
 
+// For webdocs autogen
 func showHelpForFlag(flagName string) {
 	if !cli.FLAG_TABLE.ShowHelpForFlag(flagName) {
 		fmt.Printf("mlr: flag \"%s\" not found..\n", flagName)
 	}
+}
+
+// ----------------------------------------------------------------
+func listVerbs() {
+	if isatty.IsTerminal(os.Stdout.Fd()) {
+		transformers.ListVerbNamesAsParagraph()
+	} else {
+		transformers.ListVerbNamesVertically()
+	}
+}
+
+func listVerbsAsParagraph() {
+	transformers.ListVerbNamesAsParagraph()
+}
+
+func helpForVerb(arg string) {
+	transformerSetup := transformers.LookUp(arg)
+	if transformerSetup != nil {
+		transformerSetup.UsageFunc(os.Stdout, true, 0)
+	} else {
+		fmt.Printf(
+			"mlr: verb \"%s\" not found. Please use \"mlr help list-verbs\" for a list.\n",
+			arg)
+	}
+}
+
+func usageVerbs() {
+	transformers.UsageVerbs()
 }
 
 // ----------------------------------------------------------------
@@ -511,32 +609,4 @@ func usageKeywords() {
 
 func helpForKeyword(arg string) {
 	cst.UsageForKeyword(arg)
-}
-
-// ----------------------------------------------------------------
-func listVerbs() {
-	if isatty.IsTerminal(os.Stdout.Fd()) {
-		transformers.ListVerbNamesAsParagraph()
-	} else {
-		transformers.ListVerbNamesVertically()
-	}
-}
-
-func listVerbsAsParagraph() {
-	transformers.ListVerbNamesAsParagraph()
-}
-
-func helpForVerb(arg string) {
-	transformerSetup := transformers.LookUp(arg)
-	if transformerSetup != nil {
-		transformerSetup.UsageFunc(os.Stdout, true, 0)
-	} else {
-		fmt.Printf(
-			"mlr: verb \"%s\" not found. Please use \"mlr help list-verbs\" for a list.\n",
-			arg)
-	}
-}
-
-func usageVerbs() {
-	transformers.UsageVerbs()
 }

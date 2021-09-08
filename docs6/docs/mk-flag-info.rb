@@ -48,10 +48,6 @@ EOF
       help = `mlr help show-help-for-flag '#{flag}'`
       puts "* `#{headline}`: #{help}"
     end
-
-    #puts '```'
-    #system("mlr help list-flags-for-section '#{section_name}'")
-    #puts '```'
   end
 
   puts

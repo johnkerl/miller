@@ -43,61 +43,29 @@ a special case.) This manpage documents #{`mlr --version`.chomp}."""
 	print make_section('DATA FORMATS', [])
 	print make_code_block(`mlr help data-formats`)
 
+	print make_section('HELP OPTIONS', [])
+	print make_code_block(`mlr help topics`)
+
 	print make_section('VERB LIST', [])
 	print make_code_block(`mlr help list-verbs-as-paragraph`)
 
 	print make_section('FUNCTION LIST', [])
 	print make_code_block(`mlr help list-functions-as-paragraph`)
 
-	print make_section('HELP OPTIONS', [])
-	print make_code_block(`mlr help topics`)
-
-  print make_section('OPTIONS', [
-"""In the following option flags, the version with \"i\" designates the input
-stream, \"o\" the output stream, and the version without prefix sets the option
-for both input and output stream. For example: --irs sets the input record
-separator, --ors the output record separator, and --rs sets both the input and
-output separator to the given value."""
-  ])
-
-	print make_subsection('DATA-FORMAT OPTIONS', [])
-	print make_code_block(`mlr help data-format-options`)
-
-	print make_subsection('FORMAT-CONVERSION KEYSTROKE-SAVERS', [])
-	print make_code_block(`mlr help format-conversion`)
-
-	print make_subsection('SEPARATORS', [])
-	print make_code_block(`mlr help separator-options`)
-
-	print make_subsection('COMPRESSED I/O', [])
-	print make_code_block(`mlr help compressed-data`)
-
-	print make_subsection('COMMENTS IN DATA', [])
-	print make_code_block(`mlr help comments-in-data`)
-
-	print make_subsection('CSV-SPECIFIC OPTIONS', [])
-	print make_code_block(`mlr help csv-options`)
-
-	print make_subsection('DOUBLE-QUOTING FOR CSV/CSVLITE OUTPUT', [])
-	print make_code_block(`mlr help double-quoting`)
-
-	print make_subsection('NUMBER FORMATTING', [])
-	print make_code_block(`mlr help number-formatting`)
-
-	print make_subsection('OTHER OPTIONS', [])
-	print make_code_block(`mlr help misc`)
+  section_names = `mlr help list-flag-sections`.split("\n")
+  for section_name in section_names
+	  print make_section(section_name.upcase, [""])
+	  print make_code_block(`mlr help show-help-for-section '#{section_name}'`)
+  end
 
 	print make_section('AUXILIARY COMMANDS', [])
 	print make_code_block(`mlr aux-list`)
 
-  print make_section('REPL', [])
-  print make_code_block(`mlr repl -h`)
-
-  print make_section('OUTPUT COLORIZATION', [])
-  print make_code_block(`mlr help output-colorization`)
-
   print make_section('MLRRC', [])
   print make_code_block(`mlr help mlrrc`)
+
+  print make_section('REPL', [])
+  print make_code_block(`mlr repl -h`)
 
   verbs = `mlr help list-verbs`
   print make_section('VERBS', [

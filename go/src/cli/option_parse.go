@@ -1247,9 +1247,10 @@ func ParseMiscOptions(
 		}
 		argi += 2
 
-	} else if args[argi] == "--list" {
+		// TODO: some terminal/main/something
+	} else if args[argi] == "-g" {
 		argi += 1
-		FLAG_TABLE.ListTemp()
+		FLAG_TABLE.ShowHelp()
 		os.Exit(0)
 
 	}
@@ -1265,6 +1266,7 @@ var FLAG_TABLE = FlagTable{
 		&SeparatorFlagSection,
 		&FileFormatFlagSection,
 		&FormatConversionKeystrokeSaverFlagSection,
+		// TODO: &HelpFlags, here or in climain?
 		&JSONOnlyFlagSection,
 		&CSVOnlyFlagSection,
 		&PPRINTOnlyFlagSection,
@@ -1294,19 +1296,19 @@ TODO: auto-detect is still TBD for Miller 6
 
 Notes about line endings:
 
-* Default line endings (`+"`--irs`"+` and `+"`--ors`"+`) are "auto" which means autodetect from
+* Default line endings (` + "`--irs`" + ` and ` + "`--ors`" + `) are "auto" which means autodetect from
   the input file format, as long as the input file(s) have lines ending in either
-  LF (also known as linefeed, `+"`\\n`"+`, `+"`0x0a`"+`, or Unix-style) or CRLF (also known as
-  carriage-return/linefeed pairs, `+"`\\r\\n`"+`, `+"`0x0d 0x0a`"+`, or Windows-style).
-* If both `+"`irs`"+` and `+"`ors`"+` are `+"`auto`"+` (which is the default) then LF input will lead to LF
+  LF (also known as linefeed, ` + "`\\n`" + `, ` + "`0x0a`" + `, or Unix-style) or CRLF (also known as
+  carriage-return/linefeed pairs, ` + "`\\r\\n`" + `, ` + "`0x0d 0x0a`" + `, or Windows-style).
+* If both ` + "`irs`" + ` and ` + "`ors`" + ` are ` + "`auto`" + ` (which is the default) then LF input will lead to LF
   output and CRLF input will lead to CRLF output, regardless of the platform you're
   running on.
 * The line-ending autodetector triggers on the first line ending detected in the input
   stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
   LF-terminated file then autodetected line endings will be CRLF.
-* If you use `+"`--ors {something else}`"+` with (default or explicitly specified) `+"`--irs auto`"+`
+* If you use ` + "`--ors {something else}`" + ` with (default or explicitly specified) ` + "`--irs auto`" + `
   then line endings are autodetected on input and set to what you specify on output.
-* If you use `+"`--irs {something else}`"+` with (default or explicitly specified) `+"`--ors auto`"+`
+* If you use ` + "`--irs {something else}`" + ` with (default or explicitly specified) ` + "`--ors auto`" + `
   then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 
 Notes about all other separators:
@@ -1315,21 +1317,21 @@ Notes about all other separators:
   do key-value pairs appear juxtaposed.
 * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
   XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
-  a blank line. Everything above about `+"`--irs/--ors/--rs auto`"+` becomes `+"`--ifs/--ofs/--fs`"+`
+  a blank line. Everything above about ` + "`--irs/--ors/--rs auto`" + ` becomes ` + "`--ifs/--ofs/--fs`" + `
   auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
 * OFS must be single-character for PPRINT format. This is because it is used
   with repetition for alignment; multi-character separators would make
   alignment impossible.
 * OPS may be multi-character for XTAB format, in which case alignment is
   disabled.
-* TSV is simply CSV using tab as field separator (`+"`--fs tab`"+`).
+* TSV is simply CSV using tab as field separator (` + "`--fs tab`" + `).
 * FS/PS are ignored for markdown format; RS is used.
 * All FS and PS options are ignored for JSON format, since they are not relevant
   to the JSON format.
 * You can specify separators in any of the following ways, shown by example:
   - Type them out, quoting as necessary for shell escapes, e.g.
-    `+"`--fs '|' --ips :`"+`
-  - C-style escape sequences, e.g. `+"`--rs '\\r\\n' --fs '\\t'`"+`.
+    ` + "`--fs '|' --ips :`" + `
+  - C-style escape sequences, e.g. ` + "`--rs '\\r\\n' --fs '\\t'`" + `.
   - To avoid backslashing, you can use any of the following names:
 	  TODO desc-to-chars map
 
@@ -1359,7 +1361,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--ifs",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Specify FS for input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1373,7 +1375,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--ips",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Specify PS for input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1387,7 +1389,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--irs",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Specify RS for input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1412,7 +1414,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--ors",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Specify RS for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1424,7 +1426,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--ofs",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Specify FS for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1436,7 +1438,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--ops",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Specify PS for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1448,7 +1450,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--rs",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Specify RS for input and output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1464,7 +1466,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--fs",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Specify FS for input and output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1480,7 +1482,7 @@ var SeparatorFlagSection = FlagSection{
 
 		{
 			name: "--ps",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Specify PS for input and output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1506,7 +1508,7 @@ func JSONOnlyPrintInfo() {
 func init() { JSONOnlyFlagSection.Sort() }
 
 var JSONOnlyFlagSection = FlagSection{
-	name: "JSON-only flags",
+	name:        "JSON-only flags",
 	infoPrinter: JSONOnlyPrintInfo,
 	flags: []Flag{
 
@@ -1531,16 +1533,15 @@ var JSONOnlyFlagSection = FlagSection{
 		},
 
 		{
-			name: "--jlistwrap",
+			name:     "--jlistwrap",
 			altNames: []string{"--jl"},
-			help: "Wrap JSON output in outermost `[ ]`.",
+			help:     "Wrap JSON output in outermost `[ ]`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.WrapJSONOutputInOuterList = true
 				*pargi += 1
 			},
 			forWriter: true,
 		},
-
 	},
 }
 
@@ -1554,7 +1555,7 @@ func PPRINTOnlyPrintInfo() {
 func init() { PPRINTOnlyFlagSection.Sort() }
 
 var PPRINTOnlyFlagSection = FlagSection{
-	name: "PPRINT-only flags",
+	name:        "PPRINT-only flags",
 	infoPrinter: PPRINTOnlyPrintInfo,
 	flags: []Flag{
 
@@ -1589,29 +1590,40 @@ They are accepted as no-op flags in order to keep old scripts from breaking.`)
 func init() { LegacyFlagSection.Sort() }
 
 var LegacyFlagSection = FlagSection{
-	name: "Legacy flags",
+	name:        "Legacy flags",
 	infoPrinter: LegacyFlagInfoPrint,
 	flags: []Flag{
 
 		{
 			name:      "--mmap",
-			help: "Miller no longer uses memory-mapping to access data files.",
+			help:      "Miller no longer uses memory-mapping to access data files.",
 			parser:    NoOpParse1,
 			forReader: true,
 		},
 
 		{
 			name:      "--no-mmap",
-			help: "Miller no longer uses memory-mapping to access data files.",
+			help:      "Miller no longer uses memory-mapping to access data files.",
 			parser:    NoOpParse1,
 			forReader: true,
 		},
 
 		{
 			name:      "--no-fflush",
-			help: "The current implementation of Miller does not use buffered output, so there is no longer anything to suppress here.",
+			help:      "The current implementation of Miller does not use buffered output, so there is no longer anything to suppress here.",
 			parser:    NoOpParse1,
 			forWriter: true,
+		},
+
+		{
+			name:   "--jsonx",
+			help:   "The `--jvstack` flag is now default true in Miller 6.",
+			parser: NoOpParse1,
+		},
+		{
+			name:   "--ojsonx",
+			help:   "The `--jvstack` flag is now default true in Miller 6.",
+			parser: NoOpParse1,
 		},
 
 		{
@@ -1639,7 +1651,7 @@ var LegacyFlagSection = FlagSection{
 		},
 
 		{
-			name:   "--json-skip-arrays-on-input",
+			name:   "--json-map-arrays-on-input",
 			help:   "Miller now supports arrays as of version 6.",
 			parser: NoOpParse1,
 		},
@@ -1659,12 +1671,12 @@ func FileFormatPrintInfo() {
 	// TODO
 	fmt.Println(`TO DO: brief list of formats w/ xref to m6 webdocs.
 
-Examples: `+"`--csv`"+` for CSV-formatted input and output; `+"`--icsv --opprint`"+` for
+Examples: ` + "`--csv`" + ` for CSV-formatted input and output; ` + "`--icsv --opprint`" + ` for
 CSV-formatted input and pretty-printed output.
 
-Please use `+"`--iformat1 --oformat2`"+` rather than `+"`--format1 --oformat2`"+`.
-The latter sets up input and output flags for `+"`format1`"+`, not all of which
-are overridden in all cases by setting output format to `+"`format2`"+`.`)
+Please use ` + "`--iformat1 --oformat2`" + ` rather than ` + "`--format1 --oformat2`" + `.
+The latter sets up input and output flags for ` + "`format1`" + `, not all of which
+are overridden in all cases by setting output format to ` + "`format2`" + `.`)
 }
 
 //--idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
@@ -1707,10 +1719,6 @@ are overridden in all cases by setting output format to `+"`format2`"+`.`)
 
 //--ijson   --ojson   --json      JSON tabular: sequence or list of one-level
 //                                maps: {...}{...} or [{...},{...}].
-
-//              --jsonx --ojsonx  Keystroke-savers for --json --jvstack
-
-//              --jsonx --ojsonx  and --ojson --jvstack, respectively.
 
 func init() { FileFormatFlagSection.Sort() }
 
@@ -1835,7 +1843,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "-i",
-			arg: "{format name}",
+			arg:  "{format name}",
 			help: "Use format name for input data. For example: `-i csv` is the same as `--icsv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1890,7 +1898,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "-o",
-			arg: "{format name}",
+			arg:  "{format name}",
 			help: "Use format name for output data.  For example: `-o csv` is the same as `--ocsv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -1993,15 +2001,6 @@ var FileFormatFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
-		{
-			name: "--ojsonx",
-			help: "TODO", // move to legacy
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				// --jvstack is now the default in Miller 6 so this is just for backward compatibility
-				options.WriterOptions.OutputFileFormat = "json"
-				*pargi += 1
-			},
-		},
 
 		{
 			name: "--onidx",
@@ -2034,7 +2033,7 @@ var FileFormatFlagSection = FlagSection{
 
 		{
 			name: "--io",
-			arg: "{format name}",
+			arg:  "{format name}",
 			help: "Use format name for input and output data. For example: `--io csv` is the same as `--csv`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -2159,16 +2158,6 @@ var FileFormatFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
-		{
-			name: "--jsonx",
-			help: "TODO", // move to legacy
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				// --jvstack is now the default in Miller 6 so this is just for backward compatibility
-				options.ReaderOptions.InputFileFormat = "json"
-				options.WriterOptions.OutputFileFormat = "json"
-				*pargi += 1
-			},
-		},
 
 		{
 			name: "--nidx",
@@ -2212,17 +2201,20 @@ var FileFormatFlagSection = FlagSection{
 // FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
 
 func FormatConversionKeystrokeSaverPrintInfo() {
-	fmt.Println(`As keystroke-savers for format-conversion you may use the following:
-      --c2t --c2d --c2n --c2j --c2x --c2p --c2m
---t2c       --t2d --t2n --t2j --t2x --t2p --t2m
---d2c --d2t       --d2n --d2j --d2x --d2p --d2m
---n2c --n2t --n2d       --n2j --n2x --n2p --n2m
---j2c --j2t --j2d --j2n       --j2x --j2p --j2m
---x2c --x2t --x2d --x2n --x2j       --x2p --x2m
---p2c --p2t --p2d --p2n --p2j --p2x       --p2m
-The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
-PPRINT, and markdown, respectively. Note that markdown format is available for
-output only.`)
+	fmt.Println(`As keystroke-savers for format-conversion you may use the following.
+The letters c, t, j, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
+JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format is
+available for output only.
+
+| In \ out | CSV   | TSV   | JSON   | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
+| CSV      |       | --c2t | --c2j  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
+| TSV      | --t2c |       | --t2j  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
+| JSON     | --j2c | --j2t |        | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
+| DKVP     | --d2c | --d2t | --d2j  |        | --d2n  | --d2x  | --d2p  | --d2m    |
+| NIDX     | --n2c | --n2t | --n2j  | --n2d  |        | --n2x  | --n2p  | --n2m    |
+| XTAB     | --x2c | --x2t | --x2j  | --x2d  | --x2n  |        | --x2p  | --x2m    |
+| PPRINT   | --p2c | --p2t | --p2j  | --p2d  | --p2n  | --p2x  |        | --p2m    |
+`)
 }
 
 func init() { FormatConversionKeystrokeSaverFlagSection.Sort() }
@@ -2896,7 +2888,7 @@ var CSVOnlyFlagSection = FlagSection{
 		{
 			name:     "--allow-ragged-csv-input",
 			altNames: []string{"--ragged"},
-			help: "If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.",
+			help:     "If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.AllowRaggedCSVInput = true
 				*pargi += 1
@@ -2967,6 +2959,23 @@ var CSVOnlyFlagSection = FlagSection{
 		//	},
 		//},
 
+		//func helpDoubleQuoting() {
+		//    fmt.Printf("THIS IS STILL WIP FOR MILLER 6\n")
+		//    fmt.Println(
+		//        `--quote-all        Wrap all fields in double quotes
+		//--quote-none       Do not wrap any fields in double quotes, even if they have
+		//                   OFS or ORS in them
+		//--quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
+		//                   in them (default)
+		//--quote-numeric    Wrap fields in double quotes only if they have numbers
+		//                   in them
+		//--quote-original   Wrap fields in double quotes if and only if they were
+		//                   quoted on input. This isn't sticky for computed fields:
+		//                   e.g. if fields a and b were quoted on input and you do
+		//                   "put '$c = $a . $b'" then field c won't inherit a or b's
+		//                   was-quoted-on-input flag.`)
+		//}
+
 	},
 }
 
@@ -2976,14 +2985,14 @@ var CSVOnlyFlagSection = FlagSection{
 func CompressedDataPrintInfo() {
 	fmt.Print(`Miller offers a few different ways to handle reading data files which have been compressed.
 
-* Decompression done within the Miller process itself: `+"`--bz2in`"+` `+"`--gzin`"+` `+"`--zin`"+`
-* Decompression done outside the Miller process: `+"`--prepipe`"+` `+"`--prepipex`"+`
+* Decompression done within the Miller process itself: ` + "`--bz2in`" + ` ` + "`--gzin`" + ` ` + "`--zin`" + `
+* Decompression done outside the Miller process: ` + "`--prepipe`" + ` ` + "`--prepipex`" + `
 
-Using `+"`--prepipe`"+` and `+"`--prepipex`"+` you can specify an action to be
+Using ` + "`--prepipe`" + ` and ` + "`--prepipex`" + ` you can specify an action to be
 taken on each input file.  The prepipe command must be able to read from
-standard input; it will be invoked with `+"`{command} < {filename}`"+`.  The
+standard input; it will be invoked with ` + "`{command} < {filename}`" + `.  The
 prepipex command must take a filename as argument; it will be invoked with
-`+"`{command} {filename}`"+`.
+` + "`{command} {filename}`" + `.
 
 Examples:
 
@@ -2995,11 +3004,11 @@ Examples:
 Note that this feature is quite general and is not limited to decompression
 utilities. You can use it to apply per-file filters of your choice.  For output
 compression (or other) utilities, simply pipe the output:
-`+"`mlr ... | {your compression command} > outputfilenamegoeshere`"+`
+` + "`mlr ... | {your compression command} > outputfilenamegoeshere`" + `
 
-Lastly, note that if `+"`--prepipe`"+` or `+"`--prepipex`"+` is specified, it replaces any
+Lastly, note that if ` + "`--prepipe`" + ` or ` + "`--prepipex`" + ` is specified, it replaces any
 decisions that might have been made based on the file suffix. Likewise,
-`+"`--gzin`"+`/`+"`--bz2in`"+`/`+"`--zin`"+` are ignored if `+"`--prepipe`"+` is also specified.
+` + "`--gzin`" + `/` + "`--bz2in`" + `/` + "`--zin`" + ` are ignored if ` + "`--prepipe`" + ` is also specified.
 `)
 }
 
@@ -3012,7 +3021,7 @@ var CompressedDataFlagSection = FlagSection{
 
 		{
 			name: "--prepipe",
-			arg: "{decompression command}",
+			arg:  "{decompression command}",
 			help: "You can, of course, already do without this for single input files, e.g. `gunzip < myfile.csv.gz | mlr ...`.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -3024,7 +3033,7 @@ var CompressedDataFlagSection = FlagSection{
 
 		{
 			name: "--prepipex",
-			arg: "{decompression command}",
+			arg:  "{decompression command}",
 			help: "Like `--prepipe` with one exception: doesn't insert `<` between command and filename at runtime. Useful for some commands like `unzip -qc` which don't read standard input.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -3125,7 +3134,7 @@ var CommentsInDataFlagSection = FlagSection{
 
 		{
 			name: "--skip-comments",
-			help: "Ignore commented lines (prefixed by `"+DEFAULT_COMMENT_STRING+"`) within the input.",
+			help: "Ignore commented lines (prefixed by `" + DEFAULT_COMMENT_STRING + "`) within the input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.CommentString = DEFAULT_COMMENT_STRING
 				options.ReaderOptions.CommentHandling = SkipComments
@@ -3135,7 +3144,7 @@ var CommentsInDataFlagSection = FlagSection{
 
 		{
 			name: "--skip-comments-with",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Ignore commented lines within input, with specified prefix.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -3147,7 +3156,7 @@ var CommentsInDataFlagSection = FlagSection{
 
 		{
 			name: "--pass-comments",
-			help: "Immediately print commented lines (prefixed by `"+DEFAULT_COMMENT_STRING+"`) within the input.",
+			help: "Immediately print commented lines (prefixed by `" + DEFAULT_COMMENT_STRING + "`) within the input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.CommentString = DEFAULT_COMMENT_STRING
 				options.ReaderOptions.CommentHandling = PassComments
@@ -3157,7 +3166,7 @@ var CommentsInDataFlagSection = FlagSection{
 
 		{
 			name: "--pass-comments-with",
-			arg: "{string}",
+			arg:  "{string}",
 			help: "Immediately print commented lines within input, with specified prefix.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -3185,16 +3194,16 @@ Things having colors:
 Rules for coloring:
 
 * By default, colorize output only if writing to stdout and stdout is a TTY.
-    * Example: color: `+"`mlr --csv cat foo.csv`"+`
-    * Example: no color: `+"`mlr --csv cat foo.csv > bar.csv`"+`
-    * Example: no color: `+"`mlr --csv cat foo.csv | less`"+`
+    * Example: color: ` + "`mlr --csv cat foo.csv`" + `
+    * Example: no color: ` + "`mlr --csv cat foo.csv > bar.csv`" + `
+    * Example: no color: ` + "`mlr --csv cat foo.csv | less`" + `
 * The default colors were chosen since they look OK with white or black terminal background,
   and are differentiable with common varieties of human color vision.
 
 Mechanisms for coloring:
 
 * Miller uses ANSI escape sequences only. This does not work on Windows except within Cygwin.
-* Requires `+"`TERM`"+` environment variable to be set to non-empty string.
+* Requires ` + "`TERM`" + ` environment variable to be set to non-empty string.
 * Doesn't try to check to see whether the terminal is capable of 256-color
   ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
   then 16-color ANSI escapes are used, so this is in the user's control.
@@ -3202,25 +3211,25 @@ Mechanisms for coloring:
 How you can control colorization:
 
 * Suppression/unsuppression:
-    * Environment variable `+"`export MLR_NO_COLOR=true`"+` means don't color even if stdout+TTY.
-    * Environment variable `+"`export MLR_ALWAYS_COLOR=true`"+` means do color even if not stdout+TTY.
-      For example, you might want to use this when piping mlr output to `+"`less -r`"+`.
-    * Command-line flags `+"`--no-color`"+` or `+"`-M`"+`, `+"`--always-color`"+` or `+"`-C`"+`.
+    * Environment variable ` + "`export MLR_NO_COLOR=true`" + ` means don't color even if stdout+TTY.
+    * Environment variable ` + "`export MLR_ALWAYS_COLOR=true`" + ` means do color even if not stdout+TTY.
+      For example, you might want to use this when piping mlr output to ` + "`less -r`" + `.
+    * Command-line flags ` + "`--no-color`" + ` or ` + "`-M`" + `, ` + "`--always-color`" + ` or ` + "`-C`" + `.
 
 * Color choices can be specified by using environment variables, or command-line flags,
   with values 0..255:
-  	* `+"`export MLR_KEY_COLOR=208`"+`, `+"`MLR_VALUE_COLOR=33`"+`, etc.:
-    	`+"`MLR_KEY_COLOR`"+` `+"`MLR_VALUE_COLOR`"+` `+"`MLR_PASS_COLOR`"+` `+"`MLR_FAIL_COLOR`"+`
-    	`+"`MLR_REPL_PS1_COLOR`"+` `+"`MLR_REPL_PS2_COLOR`"+` `+"`MLR_HELP_COLOR`"+`
-  	* Command-line flags `+"`--key-color 208`"+`, `+"`--value-color 33`"+`, etc.:
-    	`+"`--key-color`"+` `+"`--value-color`"+` `+"`--pass-color`"+` `+"`--fail-color`"+`
-    	`+"`--repl-ps1-color`"+` `+"`--repl-ps2-color`"+` `+"`--help-color`"+`
-  	* This is particularly useful if your terminal's background color clashes with current settings.
+    * ` + "`export MLR_KEY_COLOR=208`" + `, ` + "`MLR_VALUE_COLOR=33`" + `, etc.:
+        ` + "`MLR_KEY_COLOR`" + ` ` + "`MLR_VALUE_COLOR`" + ` ` + "`MLR_PASS_COLOR`" + ` ` + "`MLR_FAIL_COLOR`" + `
+        ` + "`MLR_REPL_PS1_COLOR`" + ` ` + "`MLR_REPL_PS2_COLOR`" + ` ` + "`MLR_HELP_COLOR`" + `
+    * Command-line flags ` + "`--key-color 208`" + `, ` + "`--value-color 33`" + `, etc.:
+        ` + "`--key-color`" + ` ` + "`--value-color`" + ` ` + "`--pass-color`" + ` ` + "`--fail-color`" + `
+        ` + "`--repl-ps1-color`" + ` ` + "`--repl-ps2-color`" + ` ` + "`--help-color`" + `
+    * This is particularly useful if your terminal's background color clashes with current settings.
 
 If environment-variable settings and command-line flags are both provided, the latter take precedence.
 
-Please do mlr `+"`--list-color-codes`"+` to see the available color codes (like 170), and
-`+"`mlr --list-color-names`"+` to see available names (like `+"`orchid`"+`).
+Please do mlr ` + "`--list-color-codes`" + ` to see the available color codes (like 170), and
+` + "`mlr --list-color-names`" + ` to see available names (like ` + "`orchid`" + `).
 `)
 }
 
@@ -3356,8 +3365,8 @@ var FlattenUnflattenFlagSection = FlagSection{
 		{
 			name:     "--flatsep",
 			altNames: []string{"--jflatsep", "--oflatsep"}, // TODO: really need all for miller5 back-compat?
-			arg: "{string}",
-			help: "Separator for flattening multi-level JSON keys, e.g. `{\"a\":{\"b\":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `"+DEFAULT_JSON_FLATTEN_SEPARATOR+"`.",
+			arg:      "{string}",
+			help:     "Separator for flattening multi-level JSON keys, e.g. `{\"a\":{\"b\":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `" + DEFAULT_JSON_FLATTEN_SEPARATOR + "`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.WriterOptions.FLATSEP = SeparatorFromArg(args[*pargi+1])
@@ -3429,7 +3438,7 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--from",
-			arg: "{filename}",
+			arg:  "{filename}",
 			help: "Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -3440,7 +3449,7 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--mfrom",
-			arg: "{filenames}",
+			arg:  "{filenames}",
 			help: "Use this to specify one of more input files before the verb(s), rather than after. May be used more than once.  The list of filename must end with `--`. This is useful for example since `--from *.csv` doesn't do what you might hope but `--mfrom *.csv --` does.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -3457,6 +3466,8 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--ofmt",
+			arg:  "{format}",
+			help: "E.g. %.18f, %.0f, %9.6e. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.WriterOptions.FPOFMT = args[*pargi+1]
@@ -3467,7 +3478,7 @@ var MiscFlagSection = FlagSection{
 		// TODO: move to another (or new) section
 		{
 			name: "--load",
-			arg: "{filename}",
+			arg:  "{filename}",
 			help: "Load DSL script file for all put/filter operations on the command line.  If the name following `--load` is a directory, load all `*.mlr` files in that directory. This is just like `put -f` and `filter -f` except it's up-front on the command line, so you can do something like `alias mlr='mlr --load ~/myscripts'` if you like.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -3478,7 +3489,7 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--mload",
-			arg: "{filenames}",
+			arg:  "{filenames}",
 			help: "Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
@@ -3518,7 +3529,7 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--seed",
-			arg: "{n}",
+			arg:  "{n}",
 			help: "with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.",
 
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {

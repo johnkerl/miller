@@ -49,18 +49,18 @@ func ParseCommandLine(args []string) (
 			os.Exit(0)
 
 			// TODO
-			//		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, &options) {
-			//			// handled
+		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, &options) {
+			// handled
 
-		} else if cli.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
-			// handled
-		} else if cli.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
-			// handled
-		} else if cli.ParseReaderWriterOptions(args, argc, &argi,
-			&options.ReaderOptions, &options.WriterOptions) {
-			// handled
-		} else if cli.ParseMiscOptions(args, argc, &argi, &options) {
-			// handled
+			//} else if cli.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
+			//// handled
+			//} else if cli.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
+			//// handled
+			//} else if cli.ParseReaderWriterOptions(args, argc, &argi,
+			//&options.ReaderOptions, &options.WriterOptions) {
+			//// handled
+			//} else if cli.ParseMiscOptions(args, argc, &argi, &options) {
+			//// handled
 		} else {
 			// unhandled
 			fmt.Fprintf(os.Stderr, "%s: option \"%s\" not recognized.\n", "mlr", args[argi])

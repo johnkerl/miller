@@ -9,10 +9,6 @@ E flatten/unflatten page
 ? twi-dm re all-contribs: all-contributors.org
 
 C flags LUTs
-  o bootstrap internal-only list-sections and help-for-section and a prototype autogen.rb
-  o implement autogen for docs6 flags page
-    - internal-only help-verbs as support for docs6 autogen
-    - audit backticking
   o audit `mlr --list` section output
     - file-format top
     - flatten/unflatten top
@@ -21,12 +17,30 @@ C flags LUTs
     - then nilabend on empty help
   o connect to climain & remove old if-else-if chains
     - needs forReader / forWriter flags
-  o width-32 programmatic w/ splits on "\n"
-    - uncolor " or "
   o assert non-nulls on all flag/section/table elements
   o width-80 audits on mlr --list
   o desc-to-chars map
   o default_xses
+  o work off all TODOs in src/auxents/help/entry.go, src/cli/flag_types.go, src/cli/option_parse.go
+    - also just be happy w/ the code
+  ? mlr help topics autogen namee from FLAG_TABLE -- ?
+
+// ----------------------------------------------------------------
+// TODO: REMOVE
+// Callsites:
+// * src/climain/mlrcli_parse.go
+//   ParseCommandLine
+//     MainOptions (--cpuprofile, --version, etc)
+//     ParseReaderOptions
+//     ParseWriterOptions
+//     ParseReaderWriterOptions
+//     ParseMiscOptions
+//     help.ParseTerminalUsage
+// * handleMlrrcLine
+// * nest/tee/join/put/filter:
+//     ParseReaderOptions
+//     ParseWriterOptions
+//   !! must use only cli package, not climain package
 
 * nikos materials -> fold in
 
