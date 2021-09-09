@@ -315,6 +315,32 @@ The other is to keep your own counter within the ``put`` DSL:
 
 The difference is a matter of taste (although ``mlr cat -n`` puts the counter first).
 
+Splitting a string and taking a few of the components
+----------------------------------------------------------------
+
+Suppose you want to just keep the first two components of the hostnames:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    cat data/hosts.csv
+    host,status
+    xy01.east.acme.org,up
+    ab02.west.acme.org,down
+    ac91.west.acme.org,up
+
+While [Miller 6](https://johnkerl.org/miller6) we will have arrays, for Miller 5 we need to split using
+maps, taking map keys `1` and `2`:
+
+.. code-block:: none
+   :emphasize-lines: 1,1
+
+    mlr --csv --from data/hosts.csv put '$host = joinv(mapselect(splitnvx($host,"."),1,2),".")'
+    host,status
+    xy01.east,up
+    ab02.west,down
+    ac91.west,up
+
 Options for dealing with duplicate rows
 ----------------------------------------------------------------
 

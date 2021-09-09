@@ -9,23 +9,6 @@ E flatten/unflatten page
 
 ? twi-dm re all-contribs: all-contributors.org
 
-// ----------------------------------------------------------------
-// TODO: REMOVE
-// Callsites:
-// * src/climain/mlrcli_parse.go
-//   ParseCommandLine
-//     MainOptions (--cpuprofile, --version, etc)
-//     ParseReaderOptions
-//     ParseWriterOptions
-//     ParseReaderWriterOptions
-//     ParseMiscOptions
-//     help.ParseTerminalUsage
-// * handleMlrrcLine
-// * nest/tee/join/put/filter:
-//     ParseReaderOptions
-//     ParseWriterOptions
-//   !! must use only cli package, not climain package
-
 * nikos materials -> fold in
 
 ----------------------------------------------------------------

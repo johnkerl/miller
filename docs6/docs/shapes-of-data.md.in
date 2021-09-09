@@ -168,6 +168,22 @@ GENMD_EOF
 
 The difference is a matter of taste (although `mlr cat -n` puts the counter first).
 
+## Splitting a string and taking a few of the components
+
+Suppose you want to just keep the first two components of the hostnames:
+
+GENMD_RUN_COMMAND
+cat data/hosts.csv
+GENMD_EOF
+
+Using the [`splita`](reference-dsl-builtin-functions.md#splita) and
+[`joinv`](reference-dsl-builtin-functions.md#joinv) functions, along with
+[array slicing](reference-main-arrays.md#slicing), we get
+
+GENMD_RUN_COMMAND
+mlr --csv --from data/hosts.csv put '$host = joinv(splita($host, ".")[1:2], ".")'
+GENMD_EOF
+
 ## Splitting nested fields
 
 Suppose you have a TSV file like this:

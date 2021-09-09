@@ -302,6 +302,34 @@ yellow,circle,true,9,87,63.5058,8.3350,3
 
 The difference is a matter of taste (although `mlr cat -n` puts the counter first).
 
+## Splitting a string and taking a few of the components
+
+Suppose you want to just keep the first two components of the hostnames:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/hosts.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+host,status
+xy01.east.acme.org,up
+ab02.west.acme.org,down
+ac91.west.acme.org,up
+</pre>
+
+Using the [`splita`](reference-dsl-builtin-functions.md#splita) and
+[`joinv`](reference-dsl-builtin-functions.md#joinv) functions, along with
+[array slicing](reference-main-arrays.md#slicing), we get
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --from data/hosts.csv put '$host = joinv(splita($host, ".")[1:2], ".")'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+host,status
+xy01.east,up
+ab02.west,down
+ac91.west,up
+</pre>
+
 ## Splitting nested fields
 
 Suppose you have a TSV file like this:
