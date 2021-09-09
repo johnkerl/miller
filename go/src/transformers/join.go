@@ -48,7 +48,7 @@ type tJoinOptions struct {
 	prepipeIsRaw bool
 
 	// These allow the joiner to have its own different format/delimiter for the left-file:
-	joinReaderOptions cli.TReaderOptions
+	joinFlagOptions cli.TOptions
 }
 
 func newJoinOptions() *tJoinOptions {
@@ -150,7 +150,7 @@ func transformerJoinParseCLI(
 
 	if mainOptions != nil { // for 'mlr --usage-all-verbs', it's nil
 		// TODO: make sure this is a full nested-struct copy.
-		opts.joinReaderOptions = mainOptions.ReaderOptions // struct copy
+		opts.joinFlagOptions = *mainOptions // struct copy
 	}
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -207,19 +207,19 @@ func transformerJoinParseCLI(
 		} else {
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
-			// ParseReaderOptions expects it unadvanced.
-			rargi := argi - 1
-			if cli.ParseReaderOptions(args, argc, &rargi, &opts.joinReaderOptions) {
+			// cli.Parse expects it unadvanced.
+			largi := argi - 1
+			if cli.FLAG_TABLE.Parse(args, argc, &largi, &opts.joinFlagOptions) {
 				// This lets mlr main and mlr join have different input formats.
 				// Nothing else to handle here.
-				argi = rargi
+				argi = largi
 			} else {
 				transformerJoinUsage(os.Stderr, true, 1)
 			}
 		}
 	}
 
-	cli.ApplyReaderOptionDefaults(&opts.joinReaderOptions)
+	cli.ApplyReaderOptionDefaults(&opts.joinFlagOptions.ReaderOptions)
 
 	if opts.leftFileName == "" {
 		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", "mlr", verb)
@@ -318,7 +318,7 @@ func NewTransformerJoin(
 		tr.joinBucketKeeper = utils.NewJoinBucketKeeper(
 			//		opts.prepipe,
 			opts.leftFileName,
-			&opts.joinReaderOptions,
+			&opts.joinFlagOptions.ReaderOptions,
 			opts.leftJoinFieldNames,
 		)
 
@@ -440,7 +440,7 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 // processes the main/right files.
 
 func (tr *TransformerJoin) ingestLeftFile() {
-	readerOpts := &tr.opts.joinReaderOptions
+	readerOpts := &tr.opts.joinFlagOptions.ReaderOptions
 
 	// Instantiate the record-reader
 	recordReader := input.Create(readerOpts)

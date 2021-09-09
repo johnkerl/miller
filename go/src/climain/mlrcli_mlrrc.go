@@ -117,14 +117,7 @@ func handleMlrrcLine(
 	} else if args[0] == "--load" || args[0] == "--mload" {
 		// Don't allow code execution via .mlrrc
 		return false
-	} else if cli.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
-		// handled
-	} else if cli.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
-		// handled
-	} else if cli.ParseReaderWriterOptions(args, argc, &argi,
-		&options.ReaderOptions, &options.WriterOptions) {
-		// handled
-	} else if cli.ParseMiscOptions(args, argc, &argi, options) {
+	} else if cli.FLAG_TABLE.Parse(args, argc, &argi, options) {
 		// handled
 	} else {
 		return false

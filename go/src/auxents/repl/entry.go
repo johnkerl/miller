@@ -137,13 +137,7 @@ func ReplMain(args []string) int {
 				argi += 1
 			}
 
-		} else if cli.ParseReaderWriterOptions(
-			args, argc, &argi, &options.ReaderOptions, &options.WriterOptions,
-		) {
-
-		} else if cli.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
-
-		} else if cli.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
+		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, &options) {
 
 		} else {
 			replUsage(replName, os.Stderr, 1)

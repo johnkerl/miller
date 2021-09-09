@@ -9,10 +9,6 @@ E flatten/unflatten page
 
 ? twi-dm re all-contribs: all-contributors.org
 
-C flags LUTs
-  o connect to climain & remove old if-else-if chains
-    - needs forReader / forWriter flags
-
 // ----------------------------------------------------------------
 // TODO: REMOVE
 // Callsites:
@@ -68,8 +64,6 @@ E fill out arrays page
 E fill out maps page
   - xref to fla/unfla page
   - move from reference-dsl-variables
-E make flags page
-  C show-all-flags help -- fully alpha, or alpha-by-type; LUT refactor
 
 * regex: more about what is / is not
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828

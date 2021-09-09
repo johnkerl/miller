@@ -238,11 +238,11 @@ func transformerPutOrFilterParseCLI(
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.
-			wargi := argi - 1
-			if cli.ParseWriterOptions(args, argc, &wargi, &options.WriterOptions) {
+			largi := argi - 1
+			if cli.FLAG_TABLE.Parse(args, argc, &largi, options) {
 				// This lets mlr main and mlr put have different output formats.
 				// Nothing else to handle here.
-				argi = wargi
+				argi = largi
 			} else {
 				transformerPutUsage(os.Stderr, true, 1)
 			}

@@ -1467,25 +1467,53 @@ my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
 <b>mlr join --help</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Usage: mlr sort {flags}
-Sorts records primarily by the first specified field, secondarily by the second
-field, and so on.  (Any records not having all specified sort keys will appear
-at the end of the output, in the order they were encountered, regardless of the
-specified sort order.) The sort is stable: records that compare equal will sort
-in the order they were encountered in the input record stream.
-
+Usage: mlr join [options]
+Joins records from specified left file name with records from all file names
+at the end of the Miller argument list.
+Functionality is essentially the same as the system "join" command, but for
+record streams.
 Options:
--f  {comma-separated field names}  Lexical ascending
--n  {comma-separated field names}  Numerical ascending; nulls sort last
--nf {comma-separated field names}  Same as -n
--r  {comma-separated field names}  Lexical descending
--nr {comma-separated field names}  Numerical descending; nulls sort first
--h|--help Show this message.
-
-Example:
-  mlr sort -f a,b -nr x,y,z
-which is the same as:
-  mlr sort -f a -f b -nr x -nr y -nr z
+  -f {left file name}
+  -j {a,b,c}   Comma-separated join-field names for output
+  -l {a,b,c}   Comma-separated join-field names for left input file;
+               defaults to -j values if omitted.
+  -r {a,b,c}   Comma-separated join-field names for right input file(s);
+               defaults to -j values if omitted.
+  --lp {text}  Additional prefix for non-join output field names from
+               the left file
+  --rp {text}  Additional prefix for non-join output field names from
+               the right file(s)
+  --np         Do not emit paired records
+  --ul         Emit unpaired records from the left file
+  --ur         Emit unpaired records from the right file(s)
+  -s|--sorted-input  Require sorted input: records must be sorted
+               lexically by their join-field names, else not all records will
+               be paired. The only likely use case for this is with a left
+               file which is too big to fit into system memory otherwise.
+  -u           Enable unsorted input. (This is the default even without -u.)
+               In this case, the entire left file will be loaded into memory.
+  --prepipe {command} As in main input options; see mlr --help for details.
+               If you wish to use a prepipe command for the main input as well
+               as here, it must be specified there as well as here.
+  --prepipex {command} Likewise.
+File-format options default to those for the right file names on the Miller
+argument list, but may be overridden for the left file as follows. Please see
+the main "mlr --help" for more information on syntax for these arguments:
+  -i {one of csv,dkvp,nidx,pprint,xtab}
+  --irs {record-separator character}
+  --ifs {field-separator character}
+  --ips {pair-separator character}
+  --repifs
+  --repips
+  --implicit-csv-header
+  --no-implicit-csv-header
+For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will
+be specified CSV as well unless you override with 'mlr --csv ... join --ijson -l foo' etc.
+Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be
+expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.
+Please use "mlr --usage-separator-options" for information on specifying separators.
+Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
+including examples.
 </pre>
 
 Examples:

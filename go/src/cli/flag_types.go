@@ -120,14 +120,6 @@ type Flag struct {
 
 	// A function for parsing the command line, as described above.
 	parser FlagParser
-
-	// Any flag intended for record-reading only (e.g. for `mlr join`)
-	// should set forReader = true.
-	// Any flag intended for record-writing only (e.g. for `mlr tee`)
-	// should set forWriter = true.
-	// TODO: rethink this to make the normal case non-error-prone.
-	forReader bool
-	forWriter bool
 }
 
 // ================================================================
@@ -152,7 +144,6 @@ func (ft *FlagTable) Parse(
 	argc int,
 	pargi *int,
 	options *TOptions,
-	// TODO forReader, forWriter
 ) bool {
 	for _, section := range ft.sections {
 		for _, flag := range section.flags {
