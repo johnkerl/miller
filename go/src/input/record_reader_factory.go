@@ -1,10 +1,10 @@
 package input
 
 import (
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 )
 
-func Create(readerOptions *cliutil.TReaderOptions) IRecordReader {
+func Create(readerOptions *cli.TReaderOptions) IRecordReader {
 	switch readerOptions.InputFileFormat {
 	case "csv":
 		return NewRecordReaderCSV(readerOptions)

@@ -113,7 +113,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/input"
 	"mlr/src/lib"
 	"mlr/src/types"
@@ -160,7 +160,7 @@ type JoinBucketKeeper struct {
 func NewJoinBucketKeeper(
 	// TODO prepipe string,
 	leftFileName string,
-	joinReaderOptions *cliutil.TReaderOptions,
+	joinReaderOptions *cli.TReaderOptions,
 	leftJoinFieldNames []string,
 ) *JoinBucketKeeper {
 

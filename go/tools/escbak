@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+# Replaces L` and R` with Go-compatible backtick-inside-backticking.
+# Makes it eaiser for me to type markdown-generating Go code.
+ARGF.each do |line|
+  line.chomp!
+  line.gsub!('L`', '`+"`')
+  line.gsub!('R`', '`"+`')
+  puts line
+end

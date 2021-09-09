@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -44,7 +44,7 @@ func transformerFlattenParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -66,10 +66,10 @@ func transformerFlattenParseCLI(
 			transformerFlattenUsage(os.Stdout, true, 0)
 
 		} else if opt == "-s" {
-			oFlatSep = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			oFlatSep = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-f" {
-			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerFlattenUsage(os.Stderr, true, 1)

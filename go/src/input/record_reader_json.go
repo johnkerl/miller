@@ -7,16 +7,16 @@ import (
 
 	"encoding/json"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
 
 type RecordReaderJSON struct {
-	readerOptions *cliutil.TReaderOptions
+	readerOptions *cli.TReaderOptions
 }
 
-func NewRecordReaderJSON(readerOptions *cliutil.TReaderOptions) *RecordReaderJSON {
+func NewRecordReaderJSON(readerOptions *cli.TReaderOptions) *RecordReaderJSON {
 	return &RecordReaderJSON{
 		readerOptions: readerOptions,
 	}

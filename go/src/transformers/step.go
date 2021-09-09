@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -79,7 +79,7 @@ func transformerStepParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -104,19 +104,19 @@ func transformerStepParseCLI(
 			transformerStepUsage(os.Stdout, true, 0)
 
 		} else if opt == "-a" {
-			stepperNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			stepperNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-f" {
-			valueFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-g" {
-			groupByFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-d" {
-			stringAlphas = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			stringAlphas = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-o" {
-			ewmaSuffixes = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			ewmaSuffixes = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-F" {
 			// As of Miller 6 this happens automatically, but the flag is accepted

@@ -5,20 +5,20 @@ import (
 	"io"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/colorizer"
 	"mlr/src/types"
 )
 
 type RecordWriterCSVLite struct {
-	writerOptions *cliutil.TWriterOptions
+	writerOptions *cli.TWriterOptions
 	// For reporting schema changes: we print a newline and the new header
 	lastJoinedHeader *string
 	// Only write one blank line for schema changes / blank input lines
 	justWroteEmptyLine bool
 }
 
-func NewRecordWriterCSVLite(writerOptions *cliutil.TWriterOptions) *RecordWriterCSVLite {
+func NewRecordWriterCSVLite(writerOptions *cli.TWriterOptions) *RecordWriterCSVLite {
 
 	return &RecordWriterCSVLite{
 		writerOptions:      writerOptions,

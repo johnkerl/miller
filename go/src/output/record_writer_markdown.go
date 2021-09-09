@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"io"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/colorizer"
 	"mlr/src/types"
 )
 
 type RecordWriterMarkdown struct {
-	writerOptions *cliutil.TWriterOptions
+	writerOptions *cli.TWriterOptions
 
 	numHeaderLinesOutput int
 	lastJoinedHeader     string
 }
 
-func NewRecordWriterMarkdown(writerOptions *cliutil.TWriterOptions) *RecordWriterMarkdown {
+func NewRecordWriterMarkdown(writerOptions *cli.TWriterOptions) *RecordWriterMarkdown {
 	return &RecordWriterMarkdown{
 		writerOptions: writerOptions,
 

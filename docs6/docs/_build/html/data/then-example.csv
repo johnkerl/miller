@@ -1,6 +1,0 @@
-Status,Payment_Type,Amount
-paid,cash,10.00
-pending,debit,20.00
-paid,cash,50.00
-pending,credit,40.00
-paid,debit,30.00

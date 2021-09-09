@@ -8,13 +8,13 @@ import (
 	"regexp"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
 
 type RecordReaderXTAB struct {
-	readerOptions *cliutil.TReaderOptions
+	readerOptions *cli.TReaderOptions
 	ifsRegex      *regexp.Regexp
 	// TODO: parameterize IRS
 
@@ -25,7 +25,7 @@ type RecordReaderXTAB struct {
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderXTAB(readerOptions *cliutil.TReaderOptions) *RecordReaderXTAB {
+func NewRecordReaderXTAB(readerOptions *cli.TReaderOptions) *RecordReaderXTAB {
 	return &RecordReaderXTAB{
 		readerOptions: readerOptions,
 		// TODO: incorporate IFS
@@ -112,10 +112,10 @@ func (reader *RecordReaderXTAB) processHandle(
 
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-			if reader.readerOptions.CommentHandling == cliutil.PassComments {
+			if reader.readerOptions.CommentHandling == cli.PassComments {
 				inputChannel <- types.NewOutputString(line, context)
 				continue
-			} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
+			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
 			}
 			// else comments are data

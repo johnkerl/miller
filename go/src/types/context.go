@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strconv"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as
@@ -101,7 +101,7 @@ type Context struct {
 	FLATSEP string
 }
 
-func NewContext(options *cliutil.TOptions) *Context {
+func NewContext(options *cli.TOptions) *Context {
 	context := &Context{
 		FILENAME: "(stdin)",
 		FILENUM:  0,

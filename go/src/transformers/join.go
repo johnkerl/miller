@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/input"
 	"mlr/src/lib"
 	"mlr/src/transformers/utils"
@@ -48,7 +48,7 @@ type tJoinOptions struct {
 	prepipeIsRaw bool
 
 	// These allow the joiner to have its own different format/delimiter for the left-file:
-	joinReaderOptions cliutil.TReaderOptions
+	joinFlagOptions cli.TOptions
 }
 
 func newJoinOptions() *tJoinOptions {
@@ -137,7 +137,7 @@ func transformerJoinParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	mainOptions *cliutil.TOptions, // Options for the right-files
+	mainOptions *cli.TOptions, // Options for the right-files
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -150,7 +150,7 @@ func transformerJoinParseCLI(
 
 	if mainOptions != nil { // for 'mlr --usage-all-verbs', it's nil
 		// TODO: make sure this is a full nested-struct copy.
-		opts.joinReaderOptions = mainOptions.ReaderOptions // struct copy
+		opts.joinFlagOptions = *mainOptions // struct copy
 	}
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
@@ -161,33 +161,33 @@ func transformerJoinParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSortUsage(os.Stdout, true, 0)
+			transformerJoinUsage(os.Stdout, true, 0)
 
 		} else if opt == "--prepipe" {
-			opts.prepipe = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.prepipe = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			opts.prepipeIsRaw = false
 
 		} else if opt == "--prepipex" {
-			opts.prepipe = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.prepipe = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			opts.prepipeIsRaw = true
 
 		} else if opt == "-f" {
-			opts.leftFileName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.leftFileName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-j" {
-			opts.outputJoinFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			opts.outputJoinFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-l" {
-			opts.leftJoinFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			opts.leftJoinFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-r" {
-			opts.rightJoinFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			opts.rightJoinFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--lp" {
-			opts.leftPrefix = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.leftPrefix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--rp" {
-			opts.rightPrefix = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			opts.rightPrefix = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--np" {
 			opts.emitPairables = false
@@ -207,34 +207,36 @@ func transformerJoinParseCLI(
 		} else {
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
-			// ParseReaderOptions expects it unadvanced.
-			rargi := argi - 1
-			if cliutil.ParseReaderOptions(args, argc, &rargi, &opts.joinReaderOptions) {
+			// cli.Parse expects it unadvanced.
+			largi := argi - 1
+			if cli.FLAG_TABLE.Parse(args, argc, &largi, &opts.joinFlagOptions) {
 				// This lets mlr main and mlr join have different input formats.
 				// Nothing else to handle here.
-				argi = rargi
+				argi = largi
 			} else {
 				transformerJoinUsage(os.Stderr, true, 1)
 			}
 		}
 	}
 
+	cli.ApplyReaderOptionDefaults(&opts.joinFlagOptions.ReaderOptions)
+
 	if opts.leftFileName == "" {
 		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", "mlr", verb)
-		transformerSortUsage(os.Stderr, true, 1)
+		transformerJoinUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if !opts.emitPairables && !opts.emitLeftUnpairables && !opts.emitRightUnpairables {
 		fmt.Fprintf(os.Stderr, "%s %s: all emit flags are unset; no output is possible.\n",
 			"mlr", verb)
-		transformerSortUsage(os.Stderr, true, 1)
+		transformerJoinUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if opts.outputJoinFieldNames == nil {
 		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", "mlr", verb)
-		transformerSortUsage(os.Stderr, true, 1)
+		transformerJoinUsage(os.Stderr, true, 1)
 		return nil
 	}
 
@@ -316,7 +318,7 @@ func NewTransformerJoin(
 		tr.joinBucketKeeper = utils.NewJoinBucketKeeper(
 			//		opts.prepipe,
 			opts.leftFileName,
-			&opts.joinReaderOptions,
+			&opts.joinFlagOptions.ReaderOptions,
 			opts.leftJoinFieldNames,
 		)
 
@@ -438,7 +440,7 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 // processes the main/right files.
 
 func (tr *TransformerJoin) ingestLeftFile() {
-	readerOpts := &tr.opts.joinReaderOptions
+	readerOpts := &tr.opts.joinFlagOptions.ReaderOptions
 
 	// Instantiate the record-reader
 	recordReader := input.Create(readerOpts)

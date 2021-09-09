@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="./reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="./reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="./reference-dsl-builtin-functions/index.html">Function list</a>

@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/transformers/utils"
 	"mlr/src/types"
@@ -52,7 +52,7 @@ func transformerTopParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -79,11 +79,11 @@ func transformerTopParseCLI(
 			transformerTopUsage(os.Stdout, true, 0)
 
 		} else if opt == "-n" {
-			topCount = cliutil.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			topCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-f" {
-			valueFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-g" {
-			groupByFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-a" {
 			showFullRecords = true
 		} else if opt == "--max" {
@@ -93,7 +93,7 @@ func transformerTopParseCLI(
 		} else if opt == "-F" {
 			// Ignored in Miller 6; allowed for command-line backward compatibility
 		} else if opt == "-o" {
-			outputFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerTopUsage(os.Stderr, true, 1)

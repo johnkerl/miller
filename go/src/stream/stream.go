@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/input"
 	"mlr/src/output"
 	"mlr/src/transformers"
@@ -31,7 +31,7 @@ func Stream(
 	// fileNames argument is separate from options.FileNames for in-place mode,
 	// which sends along only one file name per call to Stream():
 	fileNames []string,
-	options cliutil.TOptions,
+	options cli.TOptions,
 	recordTransformers []transformers.IRecordTransformer,
 	outputStream *os.File,
 	outputIsStdout bool,

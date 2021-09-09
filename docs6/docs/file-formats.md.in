@@ -7,7 +7,7 @@ Additionally, Miller gives you the option of including comments within your data
 ## Examples
 
 GENMD_RUN_COMMAND
-mlr help data-formats
+mlr help file-formats
 GENMD_EOF
 
 ## CSV/TSV/ASV/USV/etc.

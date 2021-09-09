@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -43,7 +43,7 @@ func transformerTailParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -65,10 +65,10 @@ func transformerTailParseCLI(
 			transformerTailUsage(os.Stdout, true, 0)
 
 		} else if opt == "-n" {
-			tailCount = cliutil.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			tailCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-g" {
-			groupByFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerTailUsage(os.Stderr, true, 1)

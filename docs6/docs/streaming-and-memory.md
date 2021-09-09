@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -26,22 +28,24 @@ wait for **end of file**, then start manipulating the data.
 Both approaches have their advantages: the dataframes approach requires that
 all data fit in **system memory** (which, as hardware gets larger over time, is
 less and less of a constraint); the streaming approach requires that you
-sometimes need to accumulate results on records (rows) **as they arrive** rather
-than looping through them explicitly.
+sometimes need to accumulate results on records (rows) **as they arrive**
+rather than looping through them explicitly.
 
 Since Miller takes the streaming approach when possible (see below for
 exceptions), you can often operate on files which are larger than your system's
 memory . It also means you can do `tail -f some-file | mlr --some-flags` and
-Miller will operate on records as they arrive one at a time.  You don't have
-to wait for and end-of-file marker (which never arrives with `tail-f`) to
-start seeing partial results. This also means if you pipe Miller's output
-to other streaming tools (like `cat`, `grep`, `sed`, and so on), they
-will also output partial results as data arrives.
+Miller will operate on records as they arrive one at a time.  You don't have to
+wait for and end-of-file marker (which never arrives with `tail-f`) to start
+seeing partial results. This also means if you pipe Miller's output to other
+streaming tools (like `cat`, `grep`, `sed`, and so on), they will also output
+partial results as data arrives.
 
 The statements in the [Miller programming language](programming-language.md)
 (outside of optional `begin`/`end` blocks which execute before and after all
 records have been read, respectively) are implicit callbacks which are executed
-once per record.
+once per record. For example, using `mlr --csv put '$z = $x + $y' myfile.csv`,
+the statement `$z = $x + $y` will be executed 10,000 times if you `myfile.csv`
+has 10,000 records.
 
 If you do wish to accumulate all records into memory and loop over them
 explicitly, you can do so -- see the page on [operating on all

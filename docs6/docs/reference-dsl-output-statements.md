@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -539,11 +541,11 @@ sum.wye.wye 0.204603
 sum.wye.pan 0.573288
 </pre>
 
-Use **--oflatsep** to specify the character which joins multilevel
+Use **--flatsep** to specify the character which joins multilevel
 keys for `emitp` (it defaults to a colon):
 
 <pre class="pre-highlight-in-pair">
-<b>mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small</b>
+<b>mlr put -q --flatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a=pan,sum.pan=0.346791
@@ -552,14 +554,14 @@ a=wye,sum.wye=0.204603,sum.pan=0.573288
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small</b>
+<b>mlr put -q --flatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 sum.pan.pan=0.346791,sum.eks.pan=0.758679,sum.eks.wye=0.381399,sum.wye.wye=0.204603,sum.wye.pan=0.573288
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --oxtab put -q --oflatsep / '</b>
+<b>mlr --oxtab put -q --flatsep / '</b>
 <b>  @sum[$a][$b] += $x;</b>
 <b>  end { emitp @sum }</b>
 <b>' data/small</b>

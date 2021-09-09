@@ -4,16 +4,16 @@ import (
 	"bytes"
 	"io"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/colorizer"
 	"mlr/src/types"
 )
 
 type RecordWriterNIDX struct {
-	writerOptions *cliutil.TWriterOptions
+	writerOptions *cli.TWriterOptions
 }
 
-func NewRecordWriterNIDX(writerOptions *cliutil.TWriterOptions) *RecordWriterNIDX {
+func NewRecordWriterNIDX(writerOptions *cli.TWriterOptions) *RecordWriterNIDX {
 	return &RecordWriterNIDX{
 		writerOptions: writerOptions,
 	}

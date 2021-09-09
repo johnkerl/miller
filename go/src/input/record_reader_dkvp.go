@@ -6,17 +6,17 @@ import (
 	"strconv"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
 
 type RecordReaderDKVP struct {
-	readerOptions *cliutil.TReaderOptions
+	readerOptions *cli.TReaderOptions
 	// TODO: parameterize IRS
 }
 
-func NewRecordReaderDKVP(readerOptions *cliutil.TReaderOptions) *RecordReaderDKVP {
+func NewRecordReaderDKVP(readerOptions *cli.TReaderOptions) *RecordReaderDKVP {
 	return &RecordReaderDKVP{
 		readerOptions: readerOptions,
 	}
@@ -84,10 +84,10 @@ func (reader *RecordReaderDKVP) processHandle(
 
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-			if reader.readerOptions.CommentHandling == cliutil.PassComments {
+			if reader.readerOptions.CommentHandling == cli.PassComments {
 				inputChannel <- types.NewOutputString(line, context)
 				continue
-			} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
+			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
 			}
 			// else comments are data
