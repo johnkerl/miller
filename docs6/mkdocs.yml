@@ -62,6 +62,7 @@ nav:
     - 'Main reference':
       - "Miller command structure": "reference-main-overview.md"
       - "Then-chaining": "reference-main-then-chaining.md"
+      - "List of command-line flags": "reference-main-flag-list.md"
       - "I/O options": "reference-main-io-options.md"
       - "Separators": "reference-main-separators.md"
       - "List of verbs": "reference-verbs.md"

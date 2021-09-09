@@ -15,7 +15,7 @@ import (
 
 	"mlr/src/auxents"
 	"mlr/src/cli"
-	"mlr/src/cliutil"
+	"mlr/src/climain"
 	"mlr/src/lib"
 	"mlr/src/stream"
 	"mlr/src/transformers"
@@ -45,7 +45,7 @@ func Main() {
 	// found then this function will not return.
 	auxents.Dispatch(os.Args)
 
-	options, recordTransformers, err := cli.ParseCommandLine(os.Args)
+	options, recordTransformers, err := climain.ParseCommandLine(os.Args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 		os.Exit(1)
@@ -62,7 +62,7 @@ func Main() {
 // processToStdout is normal processing without mlr -I.
 
 func processToStdout(
-	options cliutil.TOptions,
+	options cli.TOptions,
 	recordTransformers []transformers.IRecordTransformer,
 ) {
 	err := stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
@@ -86,7 +86,7 @@ func processToStdout(
 // approach leads to greater code stability.
 
 func processInPlace(
-	originalOptions cliutil.TOptions,
+	originalOptions cli.TOptions,
 ) {
 	// This should have been already checked by the CLI parser when validating
 	// the -I flag.
@@ -121,7 +121,7 @@ func processInPlace(
 		}
 		tempFileName := handle.Name()
 
-		options, recordTransformers, err := cli.ParseCommandLine(os.Args)
+		options, recordTransformers, err := climain.ParseCommandLine(os.Args)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 			os.Exit(1)

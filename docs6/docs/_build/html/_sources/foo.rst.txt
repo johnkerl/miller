@@ -1,7 +1,0 @@
-
-No output at all
-----------------------------------------------------------------
-
-Try ``od -xcv`` and/or ``cat -e`` on your file to check for non-printable characters.
-
-If you're using Miller version less than 5.0.0 (try ``mlr --version`` on your system to find out), when the line-ending-autodetect feature was introduced, please see http://johnkerl.org/miller-releases/miller-4.5.0/doc/index.html.

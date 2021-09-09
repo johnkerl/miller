@@ -7,7 +7,7 @@ Expected one of:
   braced_oosvar_name full_oosvar all non_sigil_name arr bool float int map
   num str var + - .+ .- ! ~ string_literal regex_case_insensitive int_literal
   float_literal boolean_literal null_literal const_M_PI const_M_E panic [
-  ctx_IPS ctx_IFS ctx_IRS ctx_OPS ctx_OFS ctx_ORS ctx_OFLATSEP ctx_NF ctx_NR
+  ctx_IPS ctx_IFS ctx_IRS ctx_OPS ctx_OFS ctx_ORS ctx_FLATSEP ctx_NF ctx_NR
   ctx_FNR ctx_FILENAME ctx_FILENUM env call begin end if while do for break
   continue func subr return
 

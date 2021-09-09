@@ -7,7 +7,7 @@ package repl
 import (
 	"os"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/dsl/cst"
 	"mlr/src/input"
 	"mlr/src/output"
@@ -43,7 +43,7 @@ type Repl struct {
 	doWarnings   bool
 	cstRootNode  *cst.RootNode
 
-	options *cliutil.TOptions
+	options *cli.TOptions
 
 	inputChannel chan *types.RecordAndContext
 	errorChannel chan error

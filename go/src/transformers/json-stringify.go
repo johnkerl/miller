@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -44,7 +44,7 @@ func transformerJSONStringifyParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -66,7 +66,7 @@ func transformerJSONStringifyParseCLI(
 			transformerJSONStringifyUsage(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--jvstack" {
 			jvStack = true

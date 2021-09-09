@@ -64,8 +64,6 @@ DOC6
 
 * number-formatting page
 
-* check <-> manpage/olh sections & doc6 sections
-
 * doc notes about --jknquotein & --jvquoteall. make sure they're ignore-accepted in the CLIP.
 
 * file-formats:
@@ -113,6 +111,15 @@ w survey
 ----------------------------------------------------------------
 BLOCKERS
 
+* backcompat fail https://github.com/johnkerl/miller/discussions/640
+  μεταμόρφωσις: mapselect(splitnvx(host,"-"),1,2)
+  (error)
+  μεταμόρφωσις: mapselect(splitnvx(host,"-"),"1","2")
+  {
+    "1": "ab",
+    "2": "cd"
+  }
+
 * UTs for r"a" . r"b" and so on and so on
 
 * document precedence issue:
@@ -143,6 +150,10 @@ BLOCKERS
 * regtest:
   o convert regtest/cases-pending-windows
   o convert regtest/cases-pending-go-port
+
+* smarter head-stop etc https://github.com/johnkerl/miller/issues/291
+  o done-reading back-channels in stream.go
+    https://gobyexample.com/non-blocking-channel-operations
 
 * JSON comment-handling
 
@@ -186,6 +197,8 @@ BLOCKERS
 ================================================================
 NON-BLOCKERS
 
+* XYZWasSpecified -> XYZ = "default" w/ check-after -- ?
+
 * parquet -- ?
 
 * case auxfiles: cat them too
@@ -193,6 +206,8 @@ NON-BLOCKERS
 * uniqify-field-names in record-readers -- which issue?
 
 * non-blocker: commenting passes ...
+
+* non-blocker: array and string slices on LHS of assignments
 
 * non-blocker: feature/shorthand for repl newline before prompt
 
@@ -229,10 +244,6 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
   o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
   o https://docs.fluentbit.io/manual/pipeline/parsers/ltsv is just DKVP with IFS tab and IPS colon
 * do some profiling every so often
-
-! smarter head-stop etc https://github.com/johnkerl/miller/issues/291
-  o done-reading back-channels in stream.go
-    https://gobyexample.com/non-blocking-channel-operations
 
 * UDF nexts:
   o more functions (see below)
@@ -326,16 +337,12 @@ GOCC UPSTREAMS:
 ----------------------------------------------------------------
 TBF:
 * go 1.16 at some point
-* delve tool
 * tools/perf:
   o https://eng.uber.com/pprof-go-profiler/
   o profile mlr --j2x cat mappings.json
   o golang static-analysis tool -- ?
 * iconv note
-* throughout -- 'map' used too much -- 'mapping/mapper' -> 'transform' or something?
-* cli/cliutil import structure -- rethink entirely
 * AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
-* mlr verb -h -> stdout & exit 0
 * cst printer with reflect.TypeOf -- ?
 ? makefile for build-dsl: if $bnf newer than productionstable.go
 * I/O perf delta between C & Go is smaller for CSV, middle for DKVP, large for JSON -- debug
@@ -360,10 +367,7 @@ TBF:
 * support 0b0101 et al.? mlrdoc if so
 ? dsl/ast.go -> parsing/ast.go? then, put new-ast ctor -> parsing package
   o if so, update r.mds
-* keep or get rid of $[[[ ]]] ... ?
-! head early-out -- cite the relevant issue & fix the right way ...
 * relnotes: label b,i,x vs x,i,b change
-* dump is now redundant? print @*
 * double-check dump CR-terminators depending on expression type
 * good example of wording for why/when to make a breaking release:
   https://webpack.js.org/blog/2020-10-10-webpack-5-release/
@@ -376,7 +380,6 @@ TBF:
 * check triple-dash at mlr fill-down-h ; check others
 * clean up unused exitCode arg in sort/put usage.
   o also document pre/post conditions for flag and non-flag usages x all mappers
-* need to fix up ;; and start-with-; handling in the grammar so multiple put -f/-e work right :^/
 ? emit @x or emit x -- should make k/v pairs w/ "x" & value -- ? check against C impl
 i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older (emitp 3.5.0).
   if i were starting clean-slate, i'd have had just a single `emit`.
@@ -402,17 +405,7 @@ i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older
   o consider a --errors or --strict mode; something
 * note about non-determinism for DSL print/dump vs record output-stream now ...
 * put/filter updates:
-  o filter statement needn't come last anymore: '$u = 1; NR > 5; $v = 2'
-  o put 'NR > 3' and put 'filter NR > 3' are the same.
-    more generally, bare-boolean and filter bare-boolean are synonymous -- 'filter' DSL keyword
-    is legacy.
-  o mlr put and mlr filter are identical except:
-    - mlr put accepts zero statements like 'mlr put ""'; mlr filter requires at least one.
-    - mlr filter 'filter NR > 2' is a syntax error <---- rethink even that .....
 * [[...]] / [[[...]]]:
-  o ....
-  o ....
-  o ....
   o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
 i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * substr(7,5) -- "" or error?
@@ -422,10 +415,9 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * function metadata: auto-sort on mlr -f?
 * --x2b @ help-doc .go; etc
 ? remove flagSet x all -- ? for consistency?
-* "mlr" -> os.Args[0] throughout the codebase
+* os.Args[0] etc -> "mlr" throughout the codebase
 * emitx later: 'emit([a,b,c],d,e,f)' for SR-conflict issues
 
-* repl set i/o flags @ cli w/o restart -- ?
 * genmds multi-line something something for autogen of repl examples -- ?
 
 * go doc ...
@@ -464,10 +456,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 
 * readeropts/writeropts/readerwriteropts -> cliutil funcs
   o then put into join.go, put.go, & repl
-* surface the REPL at:
-  o go/README.md
-  o man mlr
-  o readthedocs (once mlr6 is there ...)
 * mlr inp parse error failstring retback?
 * https://blog.golang.org/go1.13-errors
 * split REPL lines on ';' -- ?
@@ -522,15 +510,9 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 * doc6 re warnings
 * -W to mlr main also -- so it can be used with .mlrrc
 * push/pop/shift/unshift functions
-* port format-specific default separators from C. E.g. NIDX's IFS should default to space.
 * 0035.cmd
   begin{@x=1} func f(x) { dump; print "hello"; tee  > ENV["outdir"]."/udf-x", $* } $o=f($i)
-? ENV as entire string-string map at RHS/LHS -- ?
 
-* OLH re no --prepipe and --load/--mload in .mlrrc for vulnerability avoidance
-  o --prepipe-foo
-  o local-alias suggestions
-* make an io.ReadCloser wrapper for bzip2
 * zlib: n.b. brew install pigz, then pigz -z
 * find a way to legitimize regtest/cases-non-windows for GHA
   - prepipe
@@ -545,13 +527,11 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 ----------------------------------------------------------------
 DOC6:
 
-* mlr --help-for w/ stdout redirect for manpage -- ?
 * godoc ...
 * mlrdoc false && 4, true || 4 because of short-circuiting requirement
 * doc: no boolish truthy falsy
 * mlrdoc: there should have always been a >>> and >>>=, and now there are
 * error if UDF has same name as built-in
-* doc that multi-arg print interleaves spaces; they can strcat to avoid
 * more text examples in mlr-put doc
 * window.mlr, window2.mlr -> doc somewhere
 * mlrdoc for new go-only verbs
@@ -587,10 +567,7 @@ DOC6:
 
 * doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.
 * doc re two-arg flatten
-* doc md5/sha1/sha256/sha512
-* doc autodetect for .bz2/.gz/.z
 * sec2gmt --millis/--micros/--nanos doc
-* doc --mfrom
 * sort-within-records --recursive doc
 * doc re --load/--mload at mlrmain & repl
 * doc re put -f dirname will load dirname/*.mlr
@@ -599,25 +576,7 @@ DOC6:
 
 * docs nest simplers now that we have getoptish
 * mongo examples to doc :D
-* doc for array auto-extend:
-  - fill with absent is not ok
-    > Miller internal coding error: absent-values should not have been assigned
-    > cmt mlrval_new.go
-  - fill with empty results in these situations :(
-    > https://miller.readthedocs.io/en/latest/reference.html#null-data-empty-and-absent
-      "Empty values are explicit in the data so they should explicitly affect
-      accumulations: mlr put '@sum += $x' should accumulate numeric x values
-      into the sum but an empty x, when encountered in the input data stream,
-      should make the sum non-numeric."
-  - use JSON null here
-  - needs doc-ent for JSON_NULL -- only for JSON user data only only ... except for this
 * doclink re https://readthedocs.org/projects/miller/ & https://github.com/johnkerl/miller/settings/hooks
 * dotted-map doc ...
   o $*.foo["bar"] = NR b04k b/c precedence :(
-
-* docfix: mlr filter's final statement must be a bare boolean -> now lifted so
-  mlr --opprint put '$fnr=FNR; $nr=NR' then filter 'if (FILENUM == 1) { FNR <= 5} else { FNR <= 2 }' s s
-
-* doc clarify: bare-boolean statements in put: no-ops unless they have side effects:
-  namely, the matches/does-not-match operators =~ and !=~ setting regex
-  captures \1, \2, etc.
+  o change precedence?

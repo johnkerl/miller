@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/types"
 )
 
@@ -59,7 +59,7 @@ func transformerBarParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -88,21 +88,21 @@ func transformerBarParseCLI(
 			transformerBarUsage(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			fieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			fieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--lo" {
-			lo = cliutil.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
+			lo = cli.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-w" {
-			width = cliutil.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			width = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "--hi" {
-			hi = cliutil.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
+			hi = cli.VerbGetFloatArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-c" {
-			fillString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			fillString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-x" {
-			oobString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			oobString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-b" {
-			blankString = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			blankString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "--auto" {
 			doAuto = true

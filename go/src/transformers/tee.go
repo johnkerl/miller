@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/output"
 	"mlr/src/types"
 )
@@ -46,7 +46,7 @@ func transformerTeeParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	mainOptions *cliutil.TOptions,
+	mainOptions *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -57,10 +57,10 @@ func transformerTeeParseCLI(
 	appending := false
 	piping := false
 	// TODO: make sure this is a full nested-struct copy.
-	var recordWriterOptions *cliutil.TWriterOptions = nil
+	var localOptions *cli.TOptions = nil
 	if mainOptions != nil {
-		copyThereof := mainOptions.WriterOptions // struct copy
-		recordWriterOptions = &copyThereof
+		copyThereof := *mainOptions // struct copy
+		localOptions = &copyThereof
 	}
 
 	// Parse local flags.
@@ -87,16 +87,18 @@ func transformerTeeParseCLI(
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.
-			wargi := argi - 1
-			if cliutil.ParseWriterOptions(args, argc, &wargi, recordWriterOptions) {
+			largi := argi - 1
+			if cli.FLAG_TABLE.Parse(args, argc, &largi, localOptions) {
 				// This lets mlr main and mlr tee have different output formats.
 				// Nothing else to handle here.
-				argi = wargi
+				argi = largi
 			} else {
 				transformerTeeUsage(os.Stderr, true, 1)
 			}
 		}
 	}
+
+	cli.ApplyWriterOptionDefaults(&localOptions.WriterOptions)
 
 	// Get the filename/command from the command line, after the flags
 	if argi >= argc {
@@ -109,7 +111,7 @@ func transformerTeeParseCLI(
 		appending,
 		piping,
 		filenameOrCommand,
-		recordWriterOptions,
+		&localOptions.WriterOptions,
 	)
 	if err != nil {
 		// Error message already printed out
@@ -130,7 +132,7 @@ func NewTransformerTee(
 	appending bool,
 	piping bool,
 	filenameOrCommand string,
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) (*TransformerTee, error) {
 	var fileOutputHandler *output.FileOutputHandler = nil
 	var err error = nil

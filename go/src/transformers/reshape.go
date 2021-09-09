@@ -33,7 +33,7 @@ import (
 	"regexp"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -122,7 +122,7 @@ func transformerReshapeParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -147,13 +147,13 @@ func transformerReshapeParseCLI(
 			transformerReshapeUsage(os.Stdout, true, 0)
 
 		} else if opt == "-i" {
-			inputFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			inputFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-r" {
-			inputFieldRegexStrings = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			inputFieldRegexStrings = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-o" {
-			outputFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-s" {
-			splitOutFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			splitOutFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerReshapeUsage(os.Stderr, true, 1)

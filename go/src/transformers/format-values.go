@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/types"
 )
 
@@ -68,7 +68,7 @@ func transformerFormatValuesParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -92,11 +92,11 @@ func transformerFormatValuesParseCLI(
 			transformerFormatValuesUsage(os.Stdout, true, 0)
 
 		} else if opt == "-s" {
-			stringFormat = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			stringFormat = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-i" {
-			intFormat = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			intFormat = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-f" {
-			floatFormat = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			floatFormat = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 		} else if opt == "-n" {
 			coerceIntToFloat = true
 

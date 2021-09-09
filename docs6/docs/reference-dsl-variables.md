@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -155,7 +157,7 @@ a=wye,b=pan,i=5,x=0.573288,y=0.863624
 
 ## Out-of-stream variables
 
-These are prefixed with an at-sign, e.g. `@sum`.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested map: you can do `@sum += $quanity`, or `@sum[$color] += $quanity`, or `@sum[$color][$shape] += $quanity`. The keys for the multi-level map can be any expression which evaluates to string or integer: e.g.  `@sum[NR] = $a + $b`, `@sum[$a."-".$b] = $x`, etc.
+These are prefixed with an at-sign, e.g. `@sum`.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested map: you can do `@sum += $quantity`, or `@sum[$color] += $quantity`, or `@sum[$color][$shape] += $quantity`. The keys for the multi-level map can be any expression which evaluates to string or integer: e.g.  `@sum[NR] = $a + $b`, `@sum[$a."-".$b] = $x`, etc.
 
 Their names and their values are entirely under your control; they change only when you assign to them.
 

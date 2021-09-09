@@ -585,11 +585,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 					expectedStderrFileName,
 				)
 			}
-			// TODO: needs normalization of os.Args[0] -> "mlr" throughout the codebase,
-			// else we get spurious mismatch between expected strings like 'mlr: ...'
-			// and actuals like 'C:\miller\go\mlr.exe: ...'
-
-			// passed = false
+			passed = false
 		}
 
 		// Compare exit code

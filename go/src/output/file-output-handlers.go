@@ -18,7 +18,7 @@ import (
 	"io"
 	"os"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -51,12 +51,12 @@ type MultiOutputHandlerManager struct {
 	// TOOD: make an enum
 	append              bool // True for ">>", false for ">" and "|"
 	pipe                bool // True for "|", false for ">" and ">>"
-	recordWriterOptions *cliutil.TWriterOptions
+	recordWriterOptions *cli.TWriterOptions
 }
 
 // ----------------------------------------------------------------
 func NewFileWritetHandlerManager(
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) *MultiOutputHandlerManager {
 	return &MultiOutputHandlerManager{
 		outputHandlers:      make(map[string]OutputHandler),
@@ -68,7 +68,7 @@ func NewFileWritetHandlerManager(
 }
 
 func NewFileAppendHandlerManager(
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) *MultiOutputHandlerManager {
 	return &MultiOutputHandlerManager{
 		outputHandlers:      make(map[string]OutputHandler),
@@ -80,7 +80,7 @@ func NewFileAppendHandlerManager(
 }
 
 func NewPipeWriteHandlerManager(
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) *MultiOutputHandlerManager {
 	return &MultiOutputHandlerManager{
 		outputHandlers:      make(map[string]OutputHandler),
@@ -92,7 +92,7 @@ func NewPipeWriteHandlerManager(
 }
 
 func NewStdoutWriteHandlerManager(
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) *MultiOutputHandlerManager {
 	return &MultiOutputHandlerManager{
 		outputHandlers:      make(map[string]OutputHandler),
@@ -104,7 +104,7 @@ func NewStdoutWriteHandlerManager(
 }
 
 func NewStderrWriteHandlerManager(
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) *MultiOutputHandlerManager {
 	return &MultiOutputHandlerManager{
 		outputHandlers:      make(map[string]OutputHandler),
@@ -208,7 +208,7 @@ type FileOutputHandler struct {
 	// lazily created on WriteRecord. The record-writer / channel parts are
 	// called only by WriteRecrod which is called by emit and tee variants;
 	// print and dump variants call WriteString.
-	recordWriterOptions *cliutil.TWriterOptions
+	recordWriterOptions *cli.TWriterOptions
 	recordWriter        IRecordWriter
 	recordOutputChannel chan *types.RecordAndContext
 	recordDoneChannel   chan bool
@@ -218,7 +218,7 @@ func newOutputHandlerCommon(
 	filename string,
 	handle io.WriteCloser,
 	closeable bool,
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) *FileOutputHandler {
 	return &FileOutputHandler{
 		filename:  filename,
@@ -235,7 +235,7 @@ func newOutputHandlerCommon(
 // ----------------------------------------------------------------
 func NewFileWriteOutputHandler(
 	filename string,
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) (*FileOutputHandler, error) {
 	handle, err := os.OpenFile(
 		filename,
@@ -255,7 +255,7 @@ func NewFileWriteOutputHandler(
 
 func NewFileAppendOutputHandler(
 	filename string,
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) (*FileOutputHandler, error) {
 	handle, err := os.OpenFile(
 		filename,
@@ -275,7 +275,7 @@ func NewFileAppendOutputHandler(
 
 func NewPipeWriteOutputHandler(
 	commandString string,
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) (*FileOutputHandler, error) {
 	writePipe, err := lib.OpenOutboundHalfPipe(commandString)
 	if err != nil {
@@ -297,7 +297,7 @@ func NewPipeWriteOutputHandler(
 }
 
 func newStdoutOutputHandler(
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) *FileOutputHandler {
 	return newOutputHandlerCommon(
 		"(stdout)",
@@ -308,7 +308,7 @@ func newStdoutOutputHandler(
 }
 
 func newStderrOutputHandler(
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 ) *FileOutputHandler {
 	return newOutputHandlerCommon(
 		"(stderr)",

@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -24,7 +26,7 @@ The front door is `mlr --help` or its synonym `mlr -h`. This leads you to `mlr h
 <b>mlr --help</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
+Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 Please see 'mlr help topics' for more information.
@@ -36,39 +38,46 @@ Please also see https://johnkerl.org/miller6
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Type 'mlr help {topic}' for any of the following:
+Essentials:
   mlr help topics
-  mlr help auxents
   mlr help basic-examples
-  mlr help comments-in-data
-  mlr help compressed-data
-  mlr help csv-options
-  mlr help data-format-options
-  mlr help data-formats
-  mlr help double-quoting
-  mlr help format-conversion
-  mlr help function
-  mlr help keyword
+  mlr help file-formats
+Flags:
+  mlr help flags
+  mlr help comments-in-data-flags
+  mlr help compressed-data-flags
+  mlr help csv-only-flags
+  mlr help file-format-flags
+  mlr help flatten-unflatten-flags
+  mlr help format-conversion-keystroke-saver-flags
+  mlr help json-only-flags
+  mlr help legacy-flags
+  mlr help miscellaneous-flags
+  mlr help output-colorization-flags
+  mlr help pprint-only-flags
+  mlr help separator-flags
+Verbs:
+  mlr help list-verbs
+  mlr help usage-verbs
+  mlr help verb
+Functions:
   mlr help list-functions
   mlr help list-function-classes
   mlr help list-functions-in-class
-  mlr help list-functions-as-paragraph
-  mlr help list-functions-as-table
-  mlr help list-keywords
-  mlr help list-keywords-as-paragraph
-  mlr help list-verbs
-  mlr help list-verbs-as-paragraph
-  mlr help misc
-  mlr help mlrrc
-  mlr help number-formatting
-  mlr help output-colorization
-  mlr help separator-options
-  mlr help type-arithmetic-info
   mlr help usage-functions
   mlr help usage-functions-by-class
+  mlr help function
+Keywords:
+  mlr help list-keywords
   mlr help usage-keywords
-  mlr help usage-verbs
-  mlr help verb
+  mlr help keyword
+Other:
+  mlr help auxents
+  mlr help mlrrc
+  mlr help output-colorization
+  mlr help type-arithmetic-info
 Shorthands:
+  mlr -g = mlr help flags
   mlr -l = mlr help list-verbs
   mlr -L = mlr help usage-verbs
   mlr -f = mlr help list-functions
@@ -82,39 +91,46 @@ Shorthands:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Type 'mlr help {topic}' for any of the following:
+Essentials:
   mlr help topics
-  mlr help auxents
   mlr help basic-examples
-  mlr help comments-in-data
-  mlr help compressed-data
-  mlr help csv-options
-  mlr help data-format-options
-  mlr help data-formats
-  mlr help double-quoting
-  mlr help format-conversion
-  mlr help function
-  mlr help keyword
+  mlr help file-formats
+Flags:
+  mlr help flags
+  mlr help comments-in-data-flags
+  mlr help compressed-data-flags
+  mlr help csv-only-flags
+  mlr help file-format-flags
+  mlr help flatten-unflatten-flags
+  mlr help format-conversion-keystroke-saver-flags
+  mlr help json-only-flags
+  mlr help legacy-flags
+  mlr help miscellaneous-flags
+  mlr help output-colorization-flags
+  mlr help pprint-only-flags
+  mlr help separator-flags
+Verbs:
+  mlr help list-verbs
+  mlr help usage-verbs
+  mlr help verb
+Functions:
   mlr help list-functions
   mlr help list-function-classes
   mlr help list-functions-in-class
-  mlr help list-functions-as-paragraph
-  mlr help list-functions-as-table
-  mlr help list-keywords
-  mlr help list-keywords-as-paragraph
-  mlr help list-verbs
-  mlr help list-verbs-as-paragraph
-  mlr help misc
-  mlr help mlrrc
-  mlr help number-formatting
-  mlr help output-colorization
-  mlr help separator-options
-  mlr help type-arithmetic-info
   mlr help usage-functions
   mlr help usage-functions-by-class
+  mlr help function
+Keywords:
+  mlr help list-keywords
   mlr help usage-keywords
-  mlr help usage-verbs
-  mlr help verb
+  mlr help keyword
+Other:
+  mlr help auxents
+  mlr help mlrrc
+  mlr help output-colorization
+  mlr help type-arithmetic-info
 Shorthands:
+  mlr -g = mlr help flags
   mlr -l = mlr help list-verbs
   mlr -L = mlr help usage-verbs
   mlr -f = mlr help list-functions
@@ -125,8 +141,14 @@ Shorthands:
 
 Etc.
 
+## Command-line flags
+
+This is a command-line version of the [List of command-line flags](reference-main-flag-list.md) page.
+See `mlr help flags` for a full listing.
+
 ## Per-verb help
 
+This is a command-line version of the [List of verbs](reference-verbs.md) page.
 Given the name of a verb (from `mlr -l`) you can invoke it with `--help` or `-h` -- or, use `mlr help verb`:
 
 <pre class="pre-highlight-in-pair">
@@ -181,6 +203,7 @@ Etc.
 
 ## Per-function help
 
+This is a command-line version of the [DSL built-in functions](reference-dsl-builtin-functions.md) page.
 Given the name of a DSL function (from `mlr -f`) you can use `mlr help function` for details:
 
 <pre class="pre-highlight-in-pair">

@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/transformers/utils"
 	"mlr/src/types"
@@ -81,7 +81,7 @@ func transformerMergeFieldsParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -107,22 +107,22 @@ func transformerMergeFieldsParseCLI(
 			transformerMergeFieldsUsage(os.Stdout, true, 0)
 
 		} else if opt == "-a" {
-			accumulatorNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			accumulatorNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-f" {
-			valueFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			doWhich = e_MERGE_BY_NAME_LIST
 
 		} else if opt == "-r" {
-			valueFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			doWhich = e_MERGE_BY_NAME_REGEX
 
 		} else if opt == "-c" {
-			valueFieldNameList = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 			doWhich = e_MERGE_BY_COLLAPSING
 
 		} else if opt == "-o" {
-			outputFieldBasename = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldBasename = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-k" {
 			keepInputFields = true

@@ -1,10 +1,10 @@
 package output
 
 import (
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 )
 
-func Create(writerOptions *cliutil.TWriterOptions) IRecordWriter {
+func Create(writerOptions *cli.TWriterOptions) IRecordWriter {
 	switch writerOptions.OutputFileFormat {
 	case "csv":
 		return NewRecordWriterCSV(writerOptions)

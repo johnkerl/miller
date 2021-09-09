@@ -20,8 +20,14 @@ GENMD_EOF
 
 Etc.
 
+## Command-line flags
+
+This is a command-line version of the [List of command-line flags](reference-main-flag-list.md) page.
+See `mlr help flags` for a full listing.
+
 ## Per-verb help
 
+This is a command-line version of the [List of verbs](reference-verbs.md) page.
 Given the name of a verb (from `mlr -l`) you can invoke it with `--help` or `-h` -- or, use `mlr help verb`:
 
 GENMD_RUN_COMMAND
@@ -40,6 +46,7 @@ Etc.
 
 ## Per-function help
 
+This is a command-line version of the [DSL built-in functions](reference-dsl-builtin-functions.md) page.
 Given the name of a DSL function (from `mlr -f`) you can use `mlr help function` for details:
 
 GENMD_RUN_COMMAND
