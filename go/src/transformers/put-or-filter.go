@@ -249,6 +249,8 @@ func transformerPutOrFilterParseCLI(
 		}
 	}
 
+	cli.ApplyWriterOptionDefaults(&options.WriterOptions)
+
 	// If they've used either of 'mlr put -f {filename}' or 'mlr put -e
 	// {expression}' then that specifies their DSL expression. But if they've
 	// done neither then we expect 'mlr put {expression}'.

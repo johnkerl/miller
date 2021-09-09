@@ -6,21 +6,12 @@ c! seps \001 etc !
 C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
 
 E flatten/unflatten page
+
 ? twi-dm re all-contribs: all-contributors.org
 
 C flags LUTs
-  o audit sections/flags for WRITEMEs
-    - file-format top
-    - flatten/unflatten top
-    - separator top
-    - flags ...
   o connect to climain & remove old if-else-if chains
     - needs forReader / forWriter flags
-  o desc-to-chars map
-  o default_xses
-  o work off all TODOs in src/auxents/help/entry.go, src/cli/flag_types.go, src/cli/option_parse.go
-    - also just be happy w/ the code
-  i MLR_ALWAYS_COLOR=true mlr help flags|less
 
 // ----------------------------------------------------------------
 // TODO: REMOVE
@@ -58,13 +49,13 @@ ALL:
 
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
-? figure out flatsep vs iflatsep/oflatsep & have a story around the choice either way
+? figure out flatsep vs iflatsep/flatsep & have a story around the choice either way
   - ctx ptr-split for invars
 E fill out flatten/unflatten page
   echo a.b.c=3 | mlr --ojson cat
-  echo a.b.c=3 | mlr --ojson --no-jvstack cat | mlr --j2c --oflatsep : cat
+  echo a.b.c=3 | mlr --ojson --no-jvstack cat | mlr --j2c --flatsep : cat
   echo a:b:c=3 | mlr --ojson --no-jvstack cat
-  echo a:b:c=3 | mlr --ojson --no-jvstack --oflatsep : cat
+  echo a:b:c=3 | mlr --ojson --no-jvstack --flatsep : cat
   -> call it --flatsep
 
 E fill out strings page
@@ -88,6 +79,11 @@ E make flags page
 c? mlr -S / -F outside of put/filter -- ?
 
 e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
+
+c -i, -o, --io need to set more than just file format
+t test --ifs pipe --icsv as well as --icsv --ifs pipe
+  ? entrypoint? or cli? map -i foo to --ifoo, -o foo to --ofoo, and --io foo to --foo
+
 ----------------------------------------------------------------
 
 record-heterogeneity:
@@ -171,10 +167,10 @@ E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (d
     values.
   - new: mlr: lashed-emit node types must be local variables, field names, or oosvars; got map literal.
   c ?make FunctionCallsite an Emittable? does this work in the BNF?
-? Use --oflatsep -> check -- jflatsep, iflatsep, oflatsep as --csv/--icsv/--ocsv -- ? what was the thinking at the time?
-? mlr --oxtab put -q --oflatsep / '
+? Use --flatsep -> check -- jflatsep, iflatsep, flatsep as --csv/--icsv/--ocsv -- ? what was the thinking at the time?
+? mlr --oxtab put -q --flatsep / '
   o 2 examples not 3?
-  o why not '--oflatsep /' respected?
+  o why not '--flatsep /' respected?
 
 diffs other langs:
 e slice incl/excl; split-in-half: x[:2] x[2:] vs x[:2] x[3:]

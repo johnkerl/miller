@@ -1,5 +1,3 @@
 # List of command-line flags
 
-_Under construction_
-
 GENMD_RUN_CONTENT_GENERATOR(./mk-flag-info.rb)

@@ -98,6 +98,8 @@ func transformerTeeParseCLI(
 		}
 	}
 
+	cli.ApplyWriterOptionDefaults(recordWriterOptions)
+
 	// Get the filename/command from the command line, after the flags
 	if argi >= argc {
 		transformerTeeUsage(os.Stderr, true, 1)

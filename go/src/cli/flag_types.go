@@ -206,7 +206,10 @@ func (ft *FlagTable) ShowHelpForSection(sectionName string) bool {
 	return false
 }
 
-// TODO: comment
+// Sections are named like "CSV-only flags". `mlr help` uses `mlr help
+// csv-only-flags`. The latter is downcased from the former, with spaces
+// replaced by dashes -- hence "downdashed section name". Here we look up
+// flag-section help given a downdashed section name.
 func (ft *FlagTable) ShowHelpForSectionViaDowndash(downdashSectionName string) bool {
 	for _, section := range ft.sections {
 		if downdashSectionName == section.GetDowndashSectionName() {
@@ -261,7 +264,6 @@ func (ft *FlagTable) ShowHeadlineForFlag(flagName string) bool {
 	return false
 }
 
-// TODO: individualize these comments
 // ShowHelpForFlag prints the flag's help-string all on one line.  This is for
 // webdoc usage where the browser does dynamic line-wrapping, as the user
 // resizes the browser window.
@@ -290,7 +292,13 @@ func (ft *FlagTable) GetDowndashSectionNames() []string {
 	return downdashSectionNames
 }
 
-// TODO: comment
+// NilCheck checks to see if any flag/section is missing help info. This arises
+// since in Go you needn't specify all struct initializers, so for example a
+// Flag struct-initializer which doesn't say `help: "..."` will have empty help
+// string. This nil-checking doesn't need to be done on every Miller
+// invocation, but rather, only at build time. The `mlr help` auxent has an
+// entry point wherein a regression-test case can do `mlr help nil-check` and
+// make this function exits cleanly.
 func (ft *FlagTable) NilCheck() {
 	lib.InternalCodingErrorWithMessageIf(ft.sections == nil, "Nil table sections")
 	lib.InternalCodingErrorWithMessageIf(len(ft.sections) == 0, "Zero table sections")
@@ -330,11 +338,8 @@ func (fs *FlagSection) ShowHelpForFlags() {
 // for on-line help and webdocs can traverse the structure with looping inside
 // their own code.
 func (fs *FlagSection) PrintInfo() {
-	// TODO: remove with nilabend check
-	if fs.infoPrinter != nil {
-		fs.infoPrinter()
-		fmt.Println()
-	}
+	fs.infoPrinter()
+	fmt.Println()
 }
 
 // ListFlags exposes some of the flags-table structure, so Ruby autogen scripts
@@ -352,7 +357,7 @@ func (fs *FlagSection) GetDowndashSectionName() string {
 	return strings.ReplaceAll(strings.ToLower(fs.name), " ", "-")
 }
 
-// TODO: comment
+// See comments above FlagTable's NilCheck method.
 func (fs *FlagSection) NilCheck() {
 	lib.InternalCodingErrorWithMessageIf(fs.name == "", "Empty section name")
 	lib.InternalCodingErrorWithMessageIf(fs.infoPrinter == nil, "Nil infoPrinter for section "+fs.name)
@@ -479,7 +484,7 @@ func (flag *Flag) GetHelpOneLine() string {
 	return strings.Join(strings.Split(flag.help, "\n"), " ")
 }
 
-// TODO: comment
+// See comments above FlagTable's NilCheck method.
 func (flag *Flag) NilCheck() {
 	lib.InternalCodingErrorWithMessageIf(flag.name == "", "Empty flag name")
 	lib.InternalCodingErrorWithMessageIf(flag.help == "", "Empty flag help for flag "+flag.name)

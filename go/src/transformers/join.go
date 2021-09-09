@@ -161,7 +161,7 @@ func transformerJoinParseCLI(
 		argi++
 
 		if opt == "-h" || opt == "--help" {
-			transformerSortUsage(os.Stdout, true, 0)
+			transformerJoinUsage(os.Stdout, true, 0)
 
 		} else if opt == "--prepipe" {
 			opts.prepipe = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
@@ -219,22 +219,24 @@ func transformerJoinParseCLI(
 		}
 	}
 
+	cli.ApplyReaderOptionDefaults(&opts.joinReaderOptions)
+
 	if opts.leftFileName == "" {
 		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", "mlr", verb)
-		transformerSortUsage(os.Stderr, true, 1)
+		transformerJoinUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if !opts.emitPairables && !opts.emitLeftUnpairables && !opts.emitRightUnpairables {
 		fmt.Fprintf(os.Stderr, "%s %s: all emit flags are unset; no output is possible.\n",
 			"mlr", verb)
-		transformerSortUsage(os.Stderr, true, 1)
+		transformerJoinUsage(os.Stderr, true, 1)
 		return nil
 	}
 
 	if opts.outputJoinFieldNames == nil {
 		fmt.Fprintf(os.Stderr, "%s %s: need output field names\n", "mlr", verb)
-		transformerSortUsage(os.Stderr, true, 1)
+		transformerJoinUsage(os.Stderr, true, 1)
 		return nil
 	}
 

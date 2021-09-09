@@ -1,7 +1,0 @@
-mlr --opprint put '
-  $nf       = NF;
-  $nr       = NR;
-  $fnr      = FNR;
-  $filenum  = FILENUM;
-  $filename = FILENAME
-' data/small data/small2

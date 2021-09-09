@@ -64,7 +64,7 @@ func init() {
 				handlerInfos: []tHandlerInfo{
 					{name: "topics", zaryHandlerFunc: listTopics},
 					{name: "basic-examples", zaryHandlerFunc: helpBasicExamples},
-					{name: "data-formats", zaryHandlerFunc: helpDataFormats},
+					{name: "file-formats", zaryHandlerFunc: helpFileFormats},
 				},
 			},
 			{
@@ -311,7 +311,7 @@ mlr --icsv --opprint --from example.csv sort -nr index then cut -f shape,quantit
 }
 
 // ----------------------------------------------------------------
-func helpDataFormats() {
+func helpFileFormats() {
 	fmt.Printf(
 		`CSV/CSV-lite: comma-separated values with separate header line
 TSV: same but with tabs in places of commas

@@ -16,8 +16,6 @@ Quick links:
 </div>
 # List of command-line flags
 
-_Under construction_
-
 ## Comments-in-data flags
 
 Miller lets you put comments in your data, such as
@@ -119,7 +117,8 @@ These are flags which are applicable to CSV format.
 
 ## File-format flags
 
-TO DO: brief list of formats w/ xref to m6 webdocs.
+See the File formats doc page, and or `mlr help file-formats`, for more
+about file formats Miller supports.
 
 Examples: `--csv` for CSV-formatted input and output; `--icsv --opprint` for
 CSV-formatted input and pretty-printed output.
@@ -208,16 +207,19 @@ are overridden in all cases by setting output format to `format2`.
 
 ## Flatten-unflatten flags
 
-TODO: write section description.
+These flags control how Miller converts record values which are maps or arrays, when input is JSON and ouput is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
+
+See the Flatten/unflatten doc page for more information.
+
 
 **Flags:**
 
-* `--flatsep or --jflatsep or --oflatsep {string}
+* `--flatsep or --jflatsep {string}
 `: Separator for flattening multi-level JSON keys, e.g. `{"a":{"b":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `.`.
 * `--no-auto-flatten
-`: TODO: WRITEME
+`: When output is non-JSON, suppress the default auto-flatten behavior. Default: if `$y = [7,8,9]` then this flattens to `y.1=7,y.2=8,y.3=9, and similarly for maps. With `--no-auto-flatten`, instead we get `$y=[1, 2, 3]`.
 * `--no-auto-unflatten
-`: TODO: WRITEME
+`: When input non-JSON and output is JSON, suppress the default auto-unflatten behavior. Default: if the input has `y.1=7,y.2=8,y.3=9` then this unflattens to `$y=[7,8,9]`.  flattens to `y.1=7,y.2=8,y.3=9. With `--no-auto-flatten`, instead we get `${y.1}=7,${y.2}=8,${y.3}=9`.
 
 ## Format-conversion keystroke-saver flags
 
@@ -369,23 +371,23 @@ and `mlr --list-color-names` to see available names (like `orchid`).
 **Flags:**
 
 * `--always-color or -C
-`: TODO: WRITEME
+`: Instructs Miller to colorize output even when it normally would not. Useful for piping output to `less -r`.
 * `--fail-color
-`: TODO: WRITEME
+`: Specify the color (see `--list-color-codes` and `--list-color-names`) for failing cases in `mlr regtest`.
 * `--help-color
-`: TODO: WRITEME
+`: Specify the color (see `--list-color-codes` and `--list-color-names`) for highlights in `mlr help` output.
 * `--key-color
-`: TODO: WRITEME
+`: Specify the color (see `--list-color-codes` and `--list-color-names`) for record keys.
 * `--list-color-codes
-`: TODO: WRITEME
+`: Show the available color codes in the range 0..255, such as 170 for example.
 * `--list-color-names
-`: TODO: WRITEME
+`: Show the names for the available color codes, such as `orchid` for example.
 * `--no-color or -M
-`: TODO: WRITEME
+`: Instructs Miller to not colorize any output.
 * `--pass-color
-`: TODO: WRITEME
+`: Specify the color (see `--list-color-codes` and `--list-color-names`) for passing cases in `mlr regtest`.
 * `--value-color
-`: TODO: WRITEME
+`: Specify the color (see `--list-color-codes` and `--list-color-names`) for record values.
 
 ## PPRINT-only flags
 
@@ -401,31 +403,46 @@ These are flags which are applicable to PPRINT output format.
 
 ## Separator flags
 
-Separator options:
+See the Separators doc page for more about record separators, field
+separators, and pair separators. Also see the File formats doc page, or
+`mlr help file-formats`, for more about the file formats Miller supports.
 
-    --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'
-    --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
-    --ps     --ips     --ops              Pair separators, e.g. equals sign
+In brief:
 
-TODO: auto-detect is still TBD for Miller 6
+* For DKVP records like `x=1,y=2,z=3`, the fields are separated by a comma,
+  the key-value pairs are separated by a comma, and each record is separated
+  from the next by a newline.
+* Each file format has its own default separators.
+* Most formats, such as CSV, don't support pair-separators: keys are on the CSV
+  header line and values are on each CSV data line; keys and values are not
+  placed next to one another.
+* Some separators are not programmable: for example JSON uses a colon as a
+  pair separator but this is non-modifiable in the JSON spec.
+* You can set separators differently between Miller's input and output --
+  hence `--ifs` and `--ofs`, etc.
+
+TODO: auto-detect is still TBD for Miller 6.
 
 Notes about line endings:
 
-* Default line endings (`--irs` and `--ors`) are "auto" which means autodetect
-  from the input file format, as long as the input file(s) have lines ending in either
-  LF (also known as linefeed, `\n`, `0x0a`, or Unix-style) or CRLF (also known as
-  carriage-return/linefeed pairs, `\r\n`, `0x0d 0x0a`, or Windows-style).
-* If both `irs` and `ors` are `auto` (which is the default) then LF input will
-  lead to LF output and CRLF input will lead to CRLF output, regardless of the platform you're
-  running on.
-* The line-ending autodetector triggers on the first line ending detected in the
-  input stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
-  LF-terminated file then autodetected line endings will be CRLF.
-* If you use `--ors {something else}` with (default or explicitly specified) `--irs auto`
-  then line endings are autodetected on input and set to what you specify on output.
-* If you use `--irs {something else}` with (default or explicitly specified) `--ors auto`
-  then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF
-  on Windows.
+* Default line endings (`--irs` and `--ors`) are "auto"
+  which means autodetect from the input file format, as long as the input
+  file(s) have lines ending in either LF (also known as linefeed, `\n`, `0x0a`, or Unix-style) or CRLF (also known as
+  carriage-return/linefeed pairs, `\r\n`, `0x0d 0x0a`, or
+  Windows-style).
+* If both `irs` and `ors` are `auto` (which is
+  the default) then LF input will lead to LF output and CRLF input will lead to
+  CRLF output, regardless of the platform you're running on.
+* The line-ending autodetector triggers on the first line ending detected in
+  the input stream. E.g. if you specify a CRLF-terminated file on the command
+  line followed by an LF-terminated file then autodetected line endings will be
+  CRLF.
+* If you use `--ors {something else}` with (default or explicitly
+  specified) `--irs auto` then line endings are autodetected on input
+  and set to what you specify on output.
+* If you use `--irs {something else}` with (default or explicitly
+  specified) `--ors auto` then the output line endings used are LF on
+  Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 
 Notes about all other separators:
 
@@ -449,10 +466,34 @@ Notes about all other separators:
     `--fs '|' --ips :`
   - C-style escape sequences, e.g. `--rs '\r\n' --fs '\t'`.
   - To avoid backslashing, you can use any of the following names:
-	  TODO desc-to-chars map
+
+          colon      = ":"
+          comma      = ","
+          cr         = "\r"
+          crcr       = "\r\r"
+          crlf       = "\r\n"
+          crlfcrlf   = "\r\n\r\n"
+          equals     = "="
+          lf         = "\n"
+          lflf       = "\n\n"
+          newline    = "\n"
+          pipe       = "|"
+          semicolon  = ";"
+          slash      = "/"
+          space      = " "
+          tab        = "\t"
 
 * Default separators by format:
-	TODO default_xses
+
+        Format   FS     PS     RS
+        csv      ","    N/A    "\n"
+        csvlite  ","    N/A    "\n"
+        dkvp     ","    "="    "\n"
+        json     N/A    N/A    N/A
+        markdown " "    N/A    "\n"
+        nidx     " "    N/A    "\n"
+        pprint   " "    N/A    "\n"
+        xtab     "\n"   " "    "\n\n"
 
 
 **Flags:**

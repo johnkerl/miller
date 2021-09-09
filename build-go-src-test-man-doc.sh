@@ -14,6 +14,7 @@
 set -euo pipefail
 
 cd go
+go fmt ./...
 ./build
 
 cd ../man6

@@ -9,6 +9,7 @@ package cli
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"mlr/src/colorizer"
 	"mlr/src/lib"
@@ -35,7 +36,7 @@ var defaultFSes = map[string]string{
 	"csv":      ",",
 	"csvlite":  ",",
 	"dkvp":     ",",
-	"json":     ",", // not honored; not parameterizable in JSON format
+	"json":     "N/A", // not honored; not parameterizable in JSON format
 	"nidx":     " ",
 	"markdown": " ",
 	"pprint":   " ",
@@ -43,13 +44,13 @@ var defaultFSes = map[string]string{
 }
 
 var defaultPSes = map[string]string{
-	"csv":      "=",
-	"csvlite":  "=",
+	"csv":      "N/A",
+	"csvlite":  "N/A",
 	"dkvp":     "=",
-	"json":     "=", // not honored; not parameterizable in JSON format
-	"markdown": "=",
-	"nidx":     "=",
-	"pprint":   "=",
+	"json":     "N/A", // not honored; not parameterizable in JSON format
+	"markdown": "N/A",
+	"nidx":     "N/A",
+	"pprint":   "N/A",
 	"xtab":     " ", // todo: windows-dependent ...
 }
 
@@ -57,7 +58,7 @@ var defaultRSes = map[string]string{
 	"csv":      "\n",
 	"csvlite":  "\n",
 	"dkvp":     "\n",
-	"json":     "\n", // not honored; not parameterizable in JSON format
+	"json":     "N/A", // not honored; not parameterizable in JSON format
 	"markdown": "\n",
 	"nidx":     "\n",
 	"pprint":   "\n",
@@ -176,11 +177,6 @@ func ParseReaderOptions(
 		readerOptions.AllowRaggedCSVInput = true
 		argi += 1
 
-	} else if args[argi] == "-i" {
-		CheckArgCount(args, argi, argc, 2)
-		readerOptions.InputFileFormat = args[argi+1]
-		argi += 2
-
 		//	} else if args[argi] == "--igen" {
 		//		readerOptions.InputFileFormat = "gen";
 		//		argi += 1;
@@ -208,6 +204,11 @@ func ParseReaderOptions(
 		//				"mlr", args[argi+1]);
 		//		}
 		//		argi += 2;
+
+	} else if args[argi] == "-i" {
+		CheckArgCount(args, argi, argc, 2)
+		readerOptions.InputFileFormat = args[argi+1]
+		argi += 2
 
 	} else if args[argi] == "--icsv" {
 		readerOptions.InputFileFormat = "csv"
@@ -389,7 +390,7 @@ func ParseWriterOptions(
 		writerOptions.OPSWasSpecified = true
 		argi += 2
 
-	} else if args[argi] == "--flatsep" || args[argi] == "--jflatsep" || args[argi] == "--oflatsep" {
+	} else if args[argi] == "--flatsep" || args[argi] == "--jflatsep" {
 		CheckArgCount(args, argi, argc, 2)
 		writerOptions.FLATSEP = SeparatorFromArg(args[argi+1])
 		argi += 2
@@ -1247,8 +1248,8 @@ func ParseMiscOptions(
 		}
 		argi += 2
 
-		// TODO: some terminal/main/something
 	} else if args[argi] == "-g" {
+		// TODO: some terminal/main/something
 		argi += 1
 		FLAG_TABLE.ShowHelp()
 		os.Exit(0)
@@ -1286,31 +1287,47 @@ func init() {
 // SEPARATOR FLAGS
 
 func SeparatorPrintInfo() {
-	fmt.Print(`Separator options:
+	fmt.Println(`See the Separators doc page for more about record separators, field
+separators, and pair separators. Also see the File formats doc page, or
+` + "`mlr help file-formats`" + `, for more about the file formats Miller supports.
 
-    --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'
-    --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
-    --ps     --ips     --ops              Pair separators, e.g. equals sign
+In brief:
 
-TODO: auto-detect is still TBD for Miller 6
+* For DKVP records like ` + "`x=1,y=2,z=3`" + `, the fields are separated by a comma,
+  the key-value pairs are separated by a comma, and each record is separated
+  from the next by a newline.
+* Each file format has its own default separators.
+* Most formats, such as CSV, don't support pair-separators: keys are on the CSV
+  header line and values are on each CSV data line; keys and values are not
+  placed next to one another.
+* Some separators are not programmable: for example JSON uses a colon as a
+  pair separator but this is non-modifiable in the JSON spec.
+* You can set separators differently between Miller's input and output --
+  hence ` + "`--ifs`" + ` and ` + "`--ofs`" + `, etc.
+
+TODO: auto-detect is still TBD for Miller 6.
 
 Notes about line endings:
 
-* Default line endings (` + "`--irs`" + ` and ` + "`--ors`" + `) are "auto" which means autodetect
-  from the input file format, as long as the input file(s) have lines ending in either
-  LF (also known as linefeed, ` + "`\\n`" + `, ` + "`0x0a`" + `, or Unix-style) or CRLF (also known as
-  carriage-return/linefeed pairs, ` + "`\\r\\n`" + `, ` + "`0x0d 0x0a`" + `, or Windows-style).
-* If both ` + "`irs`" + ` and ` + "`ors`" + ` are ` + "`auto`" + ` (which is the default) then LF input will
-  lead to LF output and CRLF input will lead to CRLF output, regardless of the platform you're
-  running on.
-* The line-ending autodetector triggers on the first line ending detected in the
-  input stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
-  LF-terminated file then autodetected line endings will be CRLF.
-* If you use ` + "`--ors {something else}`" + ` with (default or explicitly specified) ` + "`--irs auto`" + `
-  then line endings are autodetected on input and set to what you specify on output.
-* If you use ` + "`--irs {something else}`" + ` with (default or explicitly specified) ` + "`--ors auto`" + `
-  then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF
-  on Windows.
+* Default line endings (` + "`--irs`" + ` and ` + "`--ors`" + `) are "auto"
+  which means autodetect from the input file format, as long as the input
+  file(s) have lines ending in either LF (also known as linefeed, ` + "`\\n`" +
+		`, ` + "`0x0a`" + `, or Unix-style) or CRLF (also known as
+  carriage-return/linefeed pairs, ` + "`\\r\\n`" + `, ` + "`0x0d 0x0a`" + `, or
+  Windows-style).
+* If both ` + "`irs`" + ` and ` + "`ors`" + ` are ` + "`auto`" + ` (which is
+  the default) then LF input will lead to LF output and CRLF input will lead to
+  CRLF output, regardless of the platform you're running on.
+* The line-ending autodetector triggers on the first line ending detected in
+  the input stream. E.g. if you specify a CRLF-terminated file on the command
+  line followed by an LF-terminated file then autodetected line endings will be
+  CRLF.
+* If you use ` + "`--ors {something else}`" + ` with (default or explicitly
+  specified) ` + "`--irs auto`" + ` then line endings are autodetected on input
+  and set to what you specify on output.
+* If you use ` + "`--irs {something else}`" + ` with (default or explicitly
+  specified) ` + "`--ors auto`" + ` then the output line endings used are LF on
+  Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 
 Notes about all other separators:
 
@@ -1333,25 +1350,41 @@ Notes about all other separators:
   - Type them out, quoting as necessary for shell escapes, e.g.
     ` + "`--fs '|' --ips :`" + `
   - C-style escape sequences, e.g. ` + "`--rs '\\r\\n' --fs '\\t'`" + `.
-  - To avoid backslashing, you can use any of the following names:
-	  TODO desc-to-chars map
+  - To avoid backslashing, you can use any of the following names:`)
+	fmt.Println()
 
-* Default separators by format:
-	TODO default_xses
-`)
+	// Go doesn't preserve insertion order in its arrays so here we are inlining a sort.
+	aliases := lib.GetArrayKeysSorted(SEPARATOR_NAMES_TO_VALUES_FOR_ONLINE_HELP)
+	for _, alias := range aliases {
+		// Really absurd level of indent needed to get fixed-with font in mkdocs here,
+		// I don't know why. Usually it only takes 4, not 10.
+		fmt.Printf("          %-10s = \"%s\"\n", alias, SEPARATOR_NAMES_TO_VALUES_FOR_ONLINE_HELP[alias])
+	}
+	fmt.Println()
+
+	fmt.Println("* Default separators by format:")
+	fmt.Println()
+
+	formats := lib.GetArrayKeysSorted(defaultFSes)
+	// Really absurd level of indent needed to get fixed-with font in mkdocs here,
+	// I don't know why. Usually it only takes 4, not 8.
+	fmt.Printf("        %-8s %-6s %-6s %-s\n", "Format", "FS", "PS", "RS")
+	for _, format := range formats {
+		defaultFS := "\"" + strings.ReplaceAll(defaultFSes[format], "\n", "\\n") + "\""
+		defaultPS := "\"" + strings.ReplaceAll(defaultPSes[format], "\n", "\\n") + "\""
+		defaultRS := "\"" + strings.ReplaceAll(defaultRSes[format], "\n", "\\n") + "\""
+		if defaultFS == "\"N/A\"" {
+			defaultFS = "N/A"
+		}
+		if defaultPS == "\"N/A\"" {
+			defaultPS = "N/A"
+		}
+		if defaultRS == "\"N/A\"" {
+			defaultRS = "N/A"
+		}
+		fmt.Printf("        %-8s %-6s %-6s %-s\n", format, defaultFS, defaultPS, defaultRS)
+	}
 }
-
-//      %-12s %-8s %-8s %s\n", "File format", "RS", "FS", "PS")
-//	lhmss_t* default_rses = get_default_rses()
-//	lhmss_t* default_fses = get_default_fses()
-//	lhmss_t* default_pses = get_default_pses()
-//	for (lhmsse_t* pe = default_rses.phead; pe != nil; pe = pe.pnext) {
-//		char* filefmt = pe.key
-//		char* rs = pe.value
-//		char* fs = lhmss_get(default_fses, filefmt)
-//		char* ps = lhmss_get(default_pses, filefmt)
-//      %-12s %-8s %-8s %s\n", filefmt, rebackslash(rs), rebackslash(fs), rebackslash(ps))
-//	}
 
 func init() { SeparatorFlagSection.Sort() }
 
@@ -1669,8 +1702,8 @@ var LegacyFlagSection = FlagSection{
 // FILE-FORMAT FLAGS
 
 func FileFormatPrintInfo() {
-	// TODO
-	fmt.Println(`TO DO: brief list of formats w/ xref to m6 webdocs.
+	fmt.Println(`See the File formats doc page, and or ` + "`mlr help file-formats`" + `, for more
+about file formats Miller supports.
 
 Examples: ` + "`--csv`" + ` for CSV-formatted input and output; ` + "`--icsv --opprint`" + ` for
 CSV-formatted input and pretty-printed output.
@@ -3384,7 +3417,9 @@ var OutputColorizationFlagSection = FlagSection{
 // FLATTEN/UNFLATTEN FLAGS
 
 func FlattenUnflattenPrintInfo() {
-	fmt.Print("TODO: write section description.")
+	fmt.Println("These flags control how Miller converts record values which are maps or arrays, when input is JSON and ouput is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).")
+	fmt.Println()
+	fmt.Println("See the Flatten/unflatten doc page for more information.")
 }
 
 func init() { FlattenUnflattenFlagSection.Sort() }

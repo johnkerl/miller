@@ -197,6 +197,8 @@ BLOCKERS
 ================================================================
 NON-BLOCKERS
 
+* XYZWasSpecified -> XYZ = "default" w/ check-after -- ?
+
 * parquet -- ?
 
 * case auxfiles: cat them too

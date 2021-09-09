@@ -41,7 +41,7 @@ Type 'mlr help {topic}' for any of the following:
 Essentials:
   mlr help topics
   mlr help basic-examples
-  mlr help data-formats
+  mlr help file-formats
 Flags:
   mlr help flags
   mlr help comments-in-data-flags
@@ -94,7 +94,7 @@ Type 'mlr help {topic}' for any of the following:
 Essentials:
   mlr help topics
   mlr help basic-examples
-  mlr help data-formats
+  mlr help file-formats
 Flags:
   mlr help flags
   mlr help comments-in-data-flags

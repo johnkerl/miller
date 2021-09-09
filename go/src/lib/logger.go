@@ -3,6 +3,7 @@ package lib
 import (
 	"fmt"
 	"os"
+	"path"
 	"runtime"
 )
 
@@ -17,7 +18,9 @@ func InternalCodingErrorIf(condition bool) {
 		fmt.Fprintf(
 			os.Stderr,
 			"Internal coding error detected at file %s line %d\n",
-			fileName,
+			// Full path preferred but breaks diffs on regression-test actual vs expected
+			// stderr comparison on expect-fail cases.
+			path.Base(fileName),
 			fileLine,
 		)
 	} else {
@@ -43,7 +46,7 @@ func InternalCodingErrorWithMessageIf(condition bool, message string) {
 		fmt.Fprintf(
 			os.Stderr,
 			"Internal coding error detected at file %s line %d: %s\n",
-			fileName,
+			path.Base(fileName),
 			fileLine,
 			message,
 		)
@@ -68,7 +71,7 @@ func InternalCodingErrorPanic(message string) {
 		panic(
 			fmt.Sprintf(
 				"Internal coding error detected at file %s line %d: %s\n",
-				fileName,
+				path.Base(fileName),
 				fileLine,
 				message,
 			),

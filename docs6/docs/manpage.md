@@ -55,73 +55,60 @@ EXAMPLES
        mlr --icsv --opprint --from example.csv sort -nr index then cut -f shape,quantity
 
 DATA FORMATS
-       CSV/CSV-lite: comma-separated values with separate header line
-       TSV: same but with tabs in places of commas
-       +---------------------+
-       | apple,bat,cog       |
-       | 1,2,3               | Record 1: "apple":"1", "bat":"2", "cog":"3"
-       | 4,5,6               | Record 2: "apple":"4", "bat":"5", "cog":"6"
-       +---------------------+
-
-       JSON (sequence or array of objects):
-       +---------------------+
-       | {                   |
-       |  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
-       |  "bat": 2,          |
-       |  "cog": 3           |
-       | }                   |
-       | {                   |
-       |   "dish": {         | Record 2: "dish:egg":"7",
-       |     "egg": 7,       | "dish:flint":"8", "garlic":""
-       |     "flint": 8      |
-       |   },                |
-       |   "garlic": ""      |
-       | }                   |
-       +---------------------+
-
-       PPRINT: pretty-printed tabular
-       +---------------------+
-       | apple bat cog       |
-       | 1     2   3         | Record 1: "apple:"1", "bat":"2", "cog":"3"
-       | 4     5   6         | Record 2: "apple":"4", "bat":"5", "cog":"6"
-       +---------------------+
-
-       Markdown tabular (supported for output only):
-       +-----------------------+
-       | | apple | bat | cog | |
-       | | ---   | --- | --- | |
-       | | 1     | 2   | 3   | | Record 1: "apple:"1", "bat":"2", "cog":"3"
-       | | 4     | 5   | 6   | | Record 2: "apple":"4", "bat":"5", "cog":"6"
-       +-----------------------+
-
-       XTAB: pretty-printed transposed tabular
-       +---------------------+
-       | apple 1             | Record 1: "apple":"1", "bat":"2", "cog":"3"
-       | bat   2             |
-       | cog   3             |
-       |                     |
-       | dish 7              | Record 2: "dish":"7", "egg":"8"
-       | egg  8              |
-       +---------------------+
-
-       DKVP: delimited key-value pairs (Miller default format)
-       +---------------------+
-       | apple=1,bat=2,cog=3 | Record 1: "apple":"1", "bat":"2", "cog":"3"
-       | dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
-       +---------------------+
-
-       NIDX: implicitly numerically indexed (Unix-toolkit style)
-       +---------------------+
-       | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
-       | fox jumped          | Record 2: "1":"fox", "2":"jumped"
-       +---------------------+
+       Type 'mlr help {topic}' for any of the following:
+       Essentials:
+         mlr help topics
+         mlr help basic-examples
+         mlr help file-formats
+       Flags:
+         mlr help flags
+         mlr help comments-in-data-flags
+         mlr help compressed-data-flags
+         mlr help csv-only-flags
+         mlr help file-format-flags
+         mlr help flatten-unflatten-flags
+         mlr help format-conversion-keystroke-saver-flags
+         mlr help json-only-flags
+         mlr help legacy-flags
+         mlr help miscellaneous-flags
+         mlr help output-colorization-flags
+         mlr help pprint-only-flags
+         mlr help separator-flags
+       Verbs:
+         mlr help list-verbs
+         mlr help usage-verbs
+         mlr help verb
+       Functions:
+         mlr help list-functions
+         mlr help list-function-classes
+         mlr help list-functions-in-class
+         mlr help usage-functions
+         mlr help usage-functions-by-class
+         mlr help function
+       Keywords:
+         mlr help list-keywords
+         mlr help usage-keywords
+         mlr help keyword
+       Other:
+         mlr help auxents
+         mlr help mlrrc
+         mlr help output-colorization
+         mlr help type-arithmetic-info
+       Shorthands:
+         mlr -g = mlr help flags
+         mlr -l = mlr help list-verbs
+         mlr -L = mlr help usage-verbs
+         mlr -f = mlr help list-functions
+         mlr -F = mlr help usage-functions
+         mlr -k = mlr help list-keywords
+         mlr -K = mlr help usage-keywords
 
 HELP OPTIONS
        Type 'mlr help {topic}' for any of the following:
        Essentials:
          mlr help topics
          mlr help basic-examples
-         mlr help data-formats
+         mlr help file-formats
        Flags:
          mlr help flags
          mlr help comments-in-data-flags
@@ -305,7 +292,8 @@ CSV-ONLY FLAGS
                                 --headerless-csv-output`.
 
 FILE-FORMAT FLAGS
-       TO DO: brief list of formats w/ xref to m6 webdocs.
+       See the File formats doc page, and or `mlr help file-formats`, for more
+       about file formats Miller supports.
 
        Examples: `--csv` for CSV-formatted input and output; `--icsv --opprint` for
        CSV-formatted input and pretty-printed output.
@@ -356,13 +344,25 @@ FILE-FORMAT FLAGS
                                 csv` is the same as `--ocsv`.
 
 FLATTEN-UNFLATTEN FLAGS
-       TODO: write section description.
-       --flatsep or --jflatsep or --oflatsep {string}
+       These flags control how Miller converts record values which are maps or arrays, when input is JSON and ouput is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
+
+       See the Flatten/unflatten doc page for more information.
+
+       --flatsep or --jflatsep {string}
                                 Separator for flattening multi-level JSON keys, e.g.
                                 `{"a":{"b":3}}` becomes `a:b =&gt; 3` for non-JSON
                                 formats. Defaults to `.`.
-       --no-auto-flatten        TODO: WRITEME
-       --no-auto-unflatten      TODO: WRITEME
+       --no-auto-flatten        When output is non-JSON, suppress the default
+                                auto-flatten behavior. Default: if `$y = [7,8,9]`
+                                then this flattens to `y.1=7,y.2=8,y.3=9, and
+                                similarly for maps. With `--no-auto-flatten`, instead
+                                we get `$y=[1, 2, 3]`.
+       --no-auto-unflatten      When input non-JSON and output is JSON, suppress the
+                                default auto-unflatten behavior. Default: if the
+                                input has `y.1=7,y.2=8,y.3=9` then this unflattens to
+                                `$y=[7,8,9]`. flattens to `y.1=7,y.2=8,y.3=9. With
+                                `--no-auto-flatten`, instead we get
+                                `${y.1}=7,${y.2}=8,${y.3}=9`.
 
 FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
        As keystroke-savers for format-conversion you may use the following.
@@ -510,15 +510,27 @@ OUTPUT-COLORIZATION FLAGS
        Please do mlr `--list-color-codes` to see the available color codes (like 170),
        and `mlr --list-color-names` to see available names (like `orchid`).
 
-       --always-color or -C     TODO: WRITEME
-       --fail-color             TODO: WRITEME
-       --help-color             TODO: WRITEME
-       --key-color              TODO: WRITEME
-       --list-color-codes       TODO: WRITEME
-       --list-color-names       TODO: WRITEME
-       --no-color or -M         TODO: WRITEME
-       --pass-color             TODO: WRITEME
-       --value-color            TODO: WRITEME
+       --always-color or -C     Instructs Miller to colorize output even when it
+                                normally would not. Useful for piping output to `less
+                                -r`.
+       --fail-color             Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for failing cases in `mlr
+                                regtest`.
+       --help-color             Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for highlights in `mlr help`
+                                output.
+       --key-color              Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for record keys.
+       --list-color-codes       Show the available color codes in the range 0..255,
+                                such as 170 for example.
+       --list-color-names       Show the names for the available color codes, such as
+                                `orchid` for example.
+       --no-color or -M         Instructs Miller to not colorize any output.
+       --pass-color             Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for passing cases in `mlr
+                                regtest`.
+       --value-color            Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for record values.
 
 PPRINT-ONLY FLAGS
        These are flags which are applicable to PPRINT output format.
@@ -528,31 +540,46 @@ PPRINT-ONLY FLAGS
        --right                  Right-justifies all fields for PPRINT output.
 
 SEPARATOR FLAGS
-       Separator options:
+       See the Separators doc page for more about record separators, field
+       separators, and pair separators. Also see the File formats doc page, or
+       `mlr help file-formats`, for more about the file formats Miller supports.
 
-           --rs     --irs     --ors              Record separators, e.g. 'lf' or '\\r\\n'
-           --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
-           --ps     --ips     --ops              Pair separators, e.g. equals sign
+       In brief:
 
-       TODO: auto-detect is still TBD for Miller 6
+       * For DKVP records like `x=1,y=2,z=3`, the fields are separated by a comma,
+         the key-value pairs are separated by a comma, and each record is separated
+         from the next by a newline.
+       * Each file format has its own default separators.
+       * Most formats, such as CSV, don't support pair-separators: keys are on the CSV
+         header line and values are on each CSV data line; keys and values are not
+         placed next to one another.
+       * Some separators are not programmable: for example JSON uses a colon as a
+         pair separator but this is non-modifiable in the JSON spec.
+       * You can set separators differently between Miller's input and output --
+         hence `--ifs` and `--ofs`, etc.
+
+       TODO: auto-detect is still TBD for Miller 6.
 
        Notes about line endings:
 
-       * Default line endings (`--irs` and `--ors`) are "auto" which means autodetect
-         from the input file format, as long as the input file(s) have lines ending in either
-         LF (also known as linefeed, `\n`, `0x0a`, or Unix-style) or CRLF (also known as
-         carriage-return/linefeed pairs, `\r\n`, `0x0d 0x0a`, or Windows-style).
-       * If both `irs` and `ors` are `auto` (which is the default) then LF input will
-         lead to LF output and CRLF input will lead to CRLF output, regardless of the platform you're
-         running on.
-       * The line-ending autodetector triggers on the first line ending detected in the
-         input stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
-         LF-terminated file then autodetected line endings will be CRLF.
-       * If you use `--ors {something else}` with (default or explicitly specified) `--irs auto`
-         then line endings are autodetected on input and set to what you specify on output.
-       * If you use `--irs {something else}` with (default or explicitly specified) `--ors auto`
-         then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF
-         on Windows.
+       * Default line endings (`--irs` and `--ors`) are "auto"
+         which means autodetect from the input file format, as long as the input
+         file(s) have lines ending in either LF (also known as linefeed, `\n`, `0x0a`, or Unix-style) or CRLF (also known as
+         carriage-return/linefeed pairs, `\r\n`, `0x0d 0x0a`, or
+         Windows-style).
+       * If both `irs` and `ors` are `auto` (which is
+         the default) then LF input will lead to LF output and CRLF input will lead to
+         CRLF output, regardless of the platform you're running on.
+       * The line-ending autodetector triggers on the first line ending detected in
+         the input stream. E.g. if you specify a CRLF-terminated file on the command
+         line followed by an LF-terminated file then autodetected line endings will be
+         CRLF.
+       * If you use `--ors {something else}` with (default or explicitly
+         specified) `--irs auto` then line endings are autodetected on input
+         and set to what you specify on output.
+       * If you use `--irs {something else}` with (default or explicitly
+         specified) `--ors auto` then the output line endings used are LF on
+         Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 
        Notes about all other separators:
 
@@ -576,10 +603,34 @@ SEPARATOR FLAGS
            `--fs '|' --ips :`
          - C-style escape sequences, e.g. `--rs '\r\n' --fs '\t'`.
          - To avoid backslashing, you can use any of the following names:
-              TODO desc-to-chars map
+
+                 colon      = ":"
+                 comma      = ","
+                 cr         = "\r"
+                 crcr       = "\r\r"
+                 crlf       = "\r\n"
+                 crlfcrlf   = "\r\n\r\n"
+                 equals     = "="
+                 lf         = "\n"
+                 lflf       = "\n\n"
+                 newline    = "\n"
+                 pipe       = "|"
+                 semicolon  = ";"
+                 slash      = "/"
+                 space      = " "
+                 tab        = "\t"
 
        * Default separators by format:
-            TODO default_xses
+
+               Format   FS     PS     RS
+               csv      ","    N/A    "\n"
+               csvlite  ","    N/A    "\n"
+               dkvp     ","    "="    "\n"
+               json     N/A    N/A    N/A
+               markdown " "    N/A    "\n"
+               nidx     " "    N/A    "\n"
+               pprint   " "    N/A    "\n"
+               xtab     "\n"   " "    "\n\n"
 
        --fs {string}            Specify FS for input and output.
        --ifs {string}           Specify FS for input.
@@ -2701,5 +2752,5 @@ SEE ALSO
 
 
 
-                                  2021-09-08                         MILLER(1)
+                                  2021-09-09                         MILLER(1)
 </pre>

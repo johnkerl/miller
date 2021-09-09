@@ -23,7 +23,7 @@ Additionally, Miller gives you the option of including comments within your data
 ## Examples
 
 <pre class="pre-highlight-in-pair">
-<b>mlr help data-formats</b>
+<b>mlr help file-formats</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 CSV/CSV-lite: comma-separated values with separate header line
@@ -551,7 +551,7 @@ Type 'mlr help {topic}' for any of the following:
 Essentials:
   mlr help topics
   mlr help basic-examples
-  mlr help data-formats
+  mlr help file-formats
 Flags:
   mlr help flags
   mlr help comments-in-data-flags
@@ -626,7 +626,7 @@ Type 'mlr help {topic}' for any of the following:
 Essentials:
   mlr help topics
   mlr help basic-examples
-  mlr help data-formats
+  mlr help file-formats
 Flags:
   mlr help flags
   mlr help comments-in-data-flags

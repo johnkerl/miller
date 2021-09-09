@@ -18,24 +18,40 @@ func CheckArgCount(args []string, argi int, argc int, n int) {
 }
 
 // ----------------------------------------------------------------
-// xxx temp -- still needs '\002' etc
-
 var SEPARATOR_NAMES_TO_VALUES = map[string]string{
+	"colon":     ":",
+	"comma":     ",",
 	"cr":        "\r",
 	"crcr":      "\r\r",
-	"newline":   "\n",
-	"lf":        "\n",
-	"lflf":      "\n\n",
 	"crlf":      "\r\n",
 	"crlfcrlf":  "\r\n\r\n",
-	"tab":       "\t",
-	"space":     " ",
-	"comma":     ",",
-	"pipe":      "|",
-	"slash":     "/",
-	"colon":     ":",
-	"semicolon": ";",
 	"equals":    "=",
+	"lf":        "\n",
+	"lflf":      "\n\n",
+	"newline":   "\n",
+	"pipe":      "|",
+	"semicolon": ";",
+	"slash":     "/",
+	"space":     " ",
+	"tab":       "\t",
+}
+
+var SEPARATOR_NAMES_TO_VALUES_FOR_ONLINE_HELP = map[string]string{
+	"colon":     ":",
+	"comma":     ",",
+	"cr":        "\\r",
+	"crcr":      "\\r\\r",
+	"crlf":      "\\r\\n",
+	"crlfcrlf":  "\\r\\n\\r\\n",
+	"equals":    "=",
+	"lf":        "\\n",
+	"lflf":      "\\n\\n",
+	"newline":   "\\n",
+	"pipe":      "|",
+	"semicolon": ";",
+	"slash":     "/",
+	"space":     " ",
+	"tab":       "\\t",
 }
 
 func SeparatorFromArg(name string) string {

@@ -117,3 +117,17 @@ func TryBoolFromBoolString(input string) (bool, bool) {
 		return false, false
 	}
 }
+
+// Go doesn't preserve insertion order in its arrays, so here we make an
+// accessor for getting the keys in sorted order for the benefit of
+// map-printers.
+func GetArrayKeysSorted(input map[string]string) []string {
+	keys := make([]string, len(input))
+	i := 0
+	for key, _ := range input {
+		keys[i] = key
+		i++
+	}
+	sort.Strings(keys)
+	return keys
+}
