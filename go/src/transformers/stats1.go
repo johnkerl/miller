@@ -308,6 +308,9 @@ func (tr *TransformerStats1) handleInputRecord(
 		if valueFieldValue == nil {
 			continue
 		}
+		if valueFieldValue.IsVoid() {
+			continue
+		}
 		level3 := level2.(*lib.OrderedMap).Get(valueFieldName)
 		if level3 == nil {
 			level3 = lib.NewOrderedMap()
