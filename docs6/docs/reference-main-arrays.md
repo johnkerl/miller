@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -107,6 +109,33 @@ while positive indices read forward from the start. If an array has length `n` t
 [40, 50]
 </pre>
 
+## Slicing
+
+Miller supports slicing using `[lo:hi]` syntax.  Either or both of the indices
+in a slice can be negatively aliased as described above.  Unlike in Python,
+Miller array-slice indices are inclusive on both sides: `x[3:5]` means `[x[3],
+x[4], x[5]]`.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    x = [10, 20, 30, 40, 50];</b>
+<b>    print x[3:4];</b>
+<b>    print x[:2];</b>
+<b>    print x[3:];</b>
+<b>    print x[1:-1];</b>
+<b>    print x[2:-2];</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[30, 40]
+[10, 20]
+[30, 40, 50]
+[10, 20, 30, 40, 50]
+[20, 30, 40]
+</pre>
+
 ## Auto-create results in maps
 
 As noted on the [maps page](reference-main-maps.md), indexing any
@@ -162,9 +191,9 @@ If you want to auto-extend an [array](reference-main-arrays.md), initialize it e
 
 Once an array is initialized, it can be extended by assigning to indices beyond
 its length.  If each write is one past the end of the array, the array will
-grow by one. (Memory management, handled for you, is a little more careful: not
-to worry, capacity is doubled so performance doesn't suffer a rellocate on
-every single extend.)
+grow by one. (Memory management, handled for you, is careful handled here in
+Miller: not to worry, capacity is doubled so performance doesn't suffer a
+rellocate on every single extend.)
 
 This is important in Miller so you can do things like `@records[NR] = $*` with
 a minimum of keystrokes without worrying about explicitly resizing arrays. In

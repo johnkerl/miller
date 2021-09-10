@@ -8,13 +8,13 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/colorizer"
 	"mlr/src/types"
 )
 
 type RecordWriterPPRINT struct {
-	writerOptions *cliutil.TWriterOptions
+	writerOptions *cli.TWriterOptions
 	// Input:
 	records *list.List
 
@@ -23,7 +23,7 @@ type RecordWriterPPRINT struct {
 	batch            *list.List
 }
 
-func NewRecordWriterPPRINT(writerOptions *cliutil.TWriterOptions) *RecordWriterPPRINT {
+func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) *RecordWriterPPRINT {
 	return &RecordWriterPPRINT{
 		writerOptions: writerOptions,
 		records:       list.New(),

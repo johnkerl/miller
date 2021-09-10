@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -58,9 +60,9 @@ A second option is to flag badly formatted data within the output stream:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 name   reachable format_ok
-barney false     false
-betty  true      false
-fred   true      false
+barney false     true
+betty  true      true
+fred   true      true
 wilma  1         false
 </pre>
 
@@ -72,9 +74,6 @@ Or perhaps to flag badly formatted data outside the output stream:
 <b>' data/het-bool.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Malformed at NR=1
-Malformed at NR=2
-Malformed at NR=3
 Malformed at NR=4
 name   reachable
 barney false
@@ -89,5 +88,5 @@ A third way is to abort the process on first instance of bad data:
 <b>mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Miller: is_string type-assertion failed at NR=1 FNR=1 FILENAME=data/het-bool.csv
+Miller: is_string type-assertion failed at NR=4 FNR=4 FILENAME=data/het-bool.csv
 </pre>

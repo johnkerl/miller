@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -125,6 +127,8 @@ If you `mlr csv cat` this, you'll get an error message:
 <b>mlr --csv cat data/het/ragged.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+a,b,c
+1,2,3
 mlr :  Miller: CSV header/data length mismatch 3 != 2 at filename data/het/ragged.csv row 3.
 </pre>
 

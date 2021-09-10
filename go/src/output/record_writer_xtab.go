@@ -5,17 +5,17 @@ import (
 	"io"
 	"unicode/utf8"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/colorizer"
 	"mlr/src/types"
 )
 
 type RecordWriterXTAB struct {
-	writerOptions *cliutil.TWriterOptions
+	writerOptions *cli.TWriterOptions
 	onFirst       bool
 }
 
-func NewRecordWriterXTAB(writerOptions *cliutil.TWriterOptions) *RecordWriterXTAB {
+func NewRecordWriterXTAB(writerOptions *cli.TWriterOptions) *RecordWriterXTAB {
 	return &RecordWriterXTAB{
 		writerOptions: writerOptions,
 		onFirst:       true,

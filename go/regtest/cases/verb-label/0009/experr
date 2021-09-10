@@ -1,2 +1,2 @@
 mlr label: labels must be unique; got duplicate "d"
-Internal coding error detected at file /Users/kerl/tmp/miller/go/src/cli/mlrcli_parse.go line 189
+Internal coding error detected at file mlrcli_parse.go line 184

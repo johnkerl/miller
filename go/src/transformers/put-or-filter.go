@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/dsl"
 	"mlr/src/dsl/cst"
 	"mlr/src/lib"
@@ -123,7 +123,7 @@ func transformerPutOrFilterParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	mainOptions *cliutil.TOptions,
+	mainOptions *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -145,7 +145,7 @@ func transformerPutOrFilterParseCLI(
 	presets := make([]string, 0)
 
 	// TODO: make sure this is a full nested-struct copy.
-	var options *cliutil.TOptions = nil
+	var options *cli.TOptions = nil
 	if mainOptions != nil {
 		copyThereof := *mainOptions // struct copy
 		options = &copyThereof
@@ -177,7 +177,7 @@ func transformerPutOrFilterParseCLI(
 
 		} else if opt == "-f" {
 			// Get a DSL string from the user-specified filename
-			filename := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			filename := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			theseDSLStrings, err := lib.LoadStringsFromFileOrDir(filename, ".mlr")
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "%s %s: cannot load DSL expression from file \"%s\": ",
@@ -189,7 +189,7 @@ func transformerPutOrFilterParseCLI(
 			haveDSLStringsHere = true
 
 		} else if opt == "-e" {
-			dslString := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			dslString := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			dslStrings = append(dslStrings, dslString)
 			haveDSLStringsHere = true
 
@@ -198,7 +198,7 @@ func transformerPutOrFilterParseCLI(
 			//   mlr put -s sum=0
 			// is like
 			//   mlr put -s 'begin {@sum = 0}'
-			preset := cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			preset := cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 			presets = append(presets, preset)
 
 		} else if opt == "-x" {
@@ -238,16 +238,18 @@ func transformerPutOrFilterParseCLI(
 			// This is inelegant. For error-proofing we advance argi already in our
 			// loop (so individual if-statements don't need to). However,
 			// ParseWriterOptions expects it unadvanced.
-			wargi := argi - 1
-			if cliutil.ParseWriterOptions(args, argc, &wargi, &options.WriterOptions) {
+			largi := argi - 1
+			if cli.FLAG_TABLE.Parse(args, argc, &largi, options) {
 				// This lets mlr main and mlr put have different output formats.
 				// Nothing else to handle here.
-				argi = wargi
+				argi = largi
 			} else {
 				transformerPutUsage(os.Stderr, true, 1)
 			}
 		}
 	}
+
+	cli.ApplyWriterOptionDefaults(&options.WriterOptions)
 
 	// If they've used either of 'mlr put -f {filename}' or 'mlr put -e
 	// {expression}' then that specifies their DSL expression. But if they've
@@ -314,7 +316,7 @@ func NewTransformerPut(
 	warningsAreFatal bool,
 	invertFilter bool,
 	suppressOutputRecord bool,
-	options *cliutil.TOptions,
+	options *cli.TOptions,
 ) (*TransformerPut, error) {
 
 	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions, dslInstanceType)

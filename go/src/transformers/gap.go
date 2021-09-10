@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/types"
 )
 
@@ -44,7 +44,7 @@ func transformerGapParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -66,10 +66,10 @@ func transformerGapParseCLI(
 			transformerGapUsage(os.Stdout, true, 0)
 
 		} else if opt == "-n" {
-			gapCount = cliutil.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			gapCount = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-g" {
-			groupByFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerGapUsage(os.Stderr, true, 1)

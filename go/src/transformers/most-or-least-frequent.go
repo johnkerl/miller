@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -78,7 +78,7 @@ func transformerMostFrequentParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, true, transformerMostFrequentUsage)
 }
@@ -87,7 +87,7 @@ func transformerLeastFrequentParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, false, transformerLeastFrequentUsage)
 }
@@ -122,16 +122,16 @@ func transformerMostOrLeastFrequentParseCLI(
 			usageFunc(os.Stdout, true, 0)
 
 		} else if opt == "-f" {
-			groupByFieldNames = cliutil.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNames = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-n" {
-			maxOutputLength = cliutil.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			maxOutputLength = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
 		} else if opt == "-b" {
 			showCounts = false
 
 		} else if opt == "-o" {
-			outputFieldName = cliutil.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
+			outputFieldName = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			usageFunc(os.Stderr, true, 1)

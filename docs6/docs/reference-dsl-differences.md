@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -144,6 +146,28 @@ avoid this, use the dot operator for string-concatenation instead.
 
 Similarly, a final newline is printed for you; use [`printn`](reference-dsl-output-statements.md#print-statements) to avoid this.
 
+## String literals with double quotes only
+
+In some languages, like Ruby and Bash, string literals can be in single quotes or double quotes,
+where single quotes suppress `\n` converting to a newline character and double quotes allowing it:
+`'a\nb'` prints as the four characters `a`, `\`, `n`, and `b` on one line; `"a\nb"` prints as an
+`a` on one line and a `b` on another.
+
+In others, like Python and JavaScript, string literals can be in single quotes or double quotes,
+interchangeably -- so you can have `"don't"` or `'the "right" thing'` as you wish.
+
+In yet others, such as C/C++ and Java, string literals are in double auotes, like `"abc"`,
+while single quotes are for character literals like `'a'` or `'\n'`. In these, if `s` is a non-empty string,
+then `s[0]` is its first character.
+
+In the [Miller programming language](programming-language.md):
+
+* String literals are always in double quotes, like `"abc"`.
+* String-indexing/slicing always results in strings (even of length 1): `"abc"[1:1]` is the string `"a"`, and there is no notion in the Miller programming language of a character type.
+* The single-quote character plays no role whatsoever in the grammar of the Miller programming language.
+* Single quotes are reserved for wrapping expressions at the system command line. For example, in `mlr put '$message = "hello"' ...`, the [`put` verb](reference-dsl.md) gets the string `$message = "hello"`; the shell has consumed the outer single quotes by the time the Miller parser receives it.
+* Things are a little different on Windows, where `"""` sequences are sometimes necessary: see the [Miller on Windows page](miller-on-windows.md).
+
 ## Absent-null
 
 Miller has a somewhat novel flavor of null data called _absent_: if a record
@@ -194,3 +218,12 @@ Miller has a [key-value loop flavor](reference-dsl-control-structures.md#key-val
 ## Semantics for one-variable for-loops
 
 Miller also has a [single-variable loop flavor](reference-dsl-control-structures.md#single-variable-for-loops). If `x` is a map then `for (e in x) { ... }` binds `e` to successive map _keys_ (not values as in PHP). But if `x` is an array then `for e in x) { ... }` binds `e` to successive array _values_ (not indices).
+
+## JSON parse, stringify, decode, and encode
+
+Miller has the verbs
+[`json-parse`](reference-verbs.md#json-parse) and
+[`json-stringify`](reference-verbs.md#json-stringify), and the DSL functions
+[`json_parse`](reference-dsl-builtin-functions.md#json_parse) and
+[`json_stringify`](reference-dsl-builtin-functions.md#json_stringify).
+In some other lannguages these are called `json_decode` and `json_encode`.

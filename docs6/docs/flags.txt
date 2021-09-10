@@ -115,7 +115,7 @@
 "--ocsv"
 "--ocsvlite"
 "--odkvp"
-"--oflatsep"
+"--flatsep"
 "--ofmt"
 "--ofs"
 "--ojson"

@@ -86,6 +86,8 @@ func (repl *Repl) handleDSLStringAux(
 		filterExpression := repl.runtimeState.FilterExpression
 		if filterExpression.IsVoid() {
 			// nothing to print
+		} else if filterExpression.IsString() {
+			fmt.Printf("\"%s\"\n", filterExpression.String())
 		} else {
 			fmt.Println(filterExpression.String())
 		}

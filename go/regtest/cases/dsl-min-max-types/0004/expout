@@ -1,6 +1,6 @@
 {
   "n": 1,
-  "b": true,
+  "b": "true",
   "v": "",
   "s": "abc",
   "ge": {
@@ -11,10 +11,10 @@
       "s": false
     },
     "b": {
-      "n": false,
+      "n": true,
       "b": true,
-      "v": false,
-      "s": false
+      "v": true,
+      "s": true
     },
     "v": {
       "n": false,

@@ -26,19 +26,19 @@ import (
 	"strconv"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------
 type RecordReaderCSVLite struct {
-	readerOptions     *cliutil.TReaderOptions
+	readerOptions     *cli.TReaderOptions
 	emptyStringMlrval types.Mlrval
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
+func NewRecordReaderCSVLite(readerOptions *cli.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
 		readerOptions:     readerOptions,
 		emptyStringMlrval: types.MlrvalFromString(""),
@@ -46,7 +46,7 @@ func NewRecordReaderCSVLite(readerOptions *cliutil.TReaderOptions) *RecordReader
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderPPRINT(readerOptions *cliutil.TReaderOptions) *RecordReaderCSVLite {
+func NewRecordReaderPPRINT(readerOptions *cli.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
 		readerOptions:     readerOptions,
 		emptyStringMlrval: types.MlrvalFromString(""),
@@ -150,10 +150,10 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 
 			// Check for comments-in-data feature
 			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-				if reader.readerOptions.CommentHandling == cliutil.PassComments {
+				if reader.readerOptions.CommentHandling == cli.PassComments {
 					inputChannel <- types.NewOutputString(line, context)
 					continue
-				} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
+				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 					continue
 				}
 				// else comments are data
@@ -193,7 +193,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				record := types.NewMlrmap()
 				if !reader.readerOptions.AllowRaggedCSVInput {
 					for i, field := range fields {
-						value := types.MlrvalPointerFromInferredType(field)
+						value := types.MlrvalPointerFromInferredTypeForDataFiles(field)
 						record.PutCopy(headerStrings[i], value)
 					}
 				} else {
@@ -202,14 +202,14 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 					n := lib.IntMin2(nh, nd)
 					var i int
 					for i = 0; i < n; i++ {
-						value := types.MlrvalPointerFromInferredType(fields[i])
+						value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
 						record.PutCopy(headerStrings[i], value)
 					}
 					if nh < nd {
 						// if header shorter than data: use 1-up itoa keys
 						for i = nh; i < nd; i++ {
 							key := strconv.Itoa(i + 1)
-							value := types.MlrvalPointerFromInferredType(fields[i])
+							value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
 							record.PutCopy(key, value)
 						}
 					}
@@ -258,10 +258,10 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 
 			// Check for comments-in-data feature
 			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-				if reader.readerOptions.CommentHandling == cliutil.PassComments {
+				if reader.readerOptions.CommentHandling == cli.PassComments {
 					inputChannel <- types.NewOutputString(line, context)
 					continue
-				} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
+				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 					continue
 				}
 				// else comments are data
@@ -306,7 +306,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			record := types.NewMlrmap()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
-					value := types.MlrvalPointerFromInferredType(field)
+					value := types.MlrvalPointerFromInferredTypeForDataFiles(field)
 					record.PutCopy(headerStrings[i], value)
 				}
 			} else {
@@ -315,13 +315,13 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 				n := lib.IntMin2(nh, nd)
 				var i int
 				for i = 0; i < n; i++ {
-					value := types.MlrvalPointerFromInferredType(fields[i])
+					value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
 					record.PutCopy(headerStrings[i], value)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					key := strconv.Itoa(i + 1)
-					value := types.MlrvalPointerFromInferredType(fields[i])
+					value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
 					record.PutCopy(key, value)
 				}
 				if nh > nd {

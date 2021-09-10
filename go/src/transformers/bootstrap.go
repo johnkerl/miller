@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
@@ -47,7 +47,7 @@ func transformerBootstrapParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cliutil.TOptions,
+	_ *cli.TOptions,
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -68,7 +68,7 @@ func transformerBootstrapParseCLI(
 			transformerBootstrapUsage(os.Stdout, true, 0)
 
 		} else if opt == "-n" {
-			nout = cliutil.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
+			nout = cli.VerbGetIntArgOrDie(verb, opt, args, &argi, argc)
 
 		} else {
 			transformerBootstrapUsage(os.Stderr, true, 1)

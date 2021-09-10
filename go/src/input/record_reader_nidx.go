@@ -6,17 +6,17 @@ import (
 	"strconv"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
 
 type RecordReaderNIDX struct {
 	// TODO: use the parameterization for readerOptions.IFS/readerOptions.IPS
-	readerOptions *cliutil.TReaderOptions
+	readerOptions *cli.TReaderOptions
 }
 
-func NewRecordReaderNIDX(readerOptions *cliutil.TReaderOptions) *RecordReaderNIDX {
+func NewRecordReaderNIDX(readerOptions *cli.TReaderOptions) *RecordReaderNIDX {
 	return &RecordReaderNIDX{
 		readerOptions: readerOptions,
 	}
@@ -86,10 +86,10 @@ func (reader *RecordReaderNIDX) processHandle(
 
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-			if reader.readerOptions.CommentHandling == cliutil.PassComments {
+			if reader.readerOptions.CommentHandling == cli.PassComments {
 				inputChannel <- types.NewOutputString(line, context)
 				continue
-			} else if reader.readerOptions.CommentHandling == cliutil.SkipComments {
+			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
 			}
 			// else comments are data
@@ -121,7 +121,7 @@ func recordFromNIDXLine(
 	for _, value := range values {
 		i++
 		key := strconv.Itoa(i)
-		mval := types.MlrvalPointerFromInferredType(value)
+		mval := types.MlrvalPointerFromInferredTypeForDataFiles(value)
 		record.PutReference(key, mval)
 	}
 	return record

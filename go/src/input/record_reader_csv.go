@@ -9,19 +9,19 @@ import (
 	"strconv"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/lib"
 	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------
 type RecordReaderCSV struct {
-	readerOptions     *cliutil.TReaderOptions
+	readerOptions     *cli.TReaderOptions
 	emptyStringMlrval types.Mlrval
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderCSV(readerOptions *cliutil.TReaderOptions) *RecordReaderCSV {
+func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) *RecordReaderCSV {
 	return &RecordReaderCSV{
 		readerOptions:     readerOptions,
 		emptyStringMlrval: types.MlrvalFromString(""),
@@ -140,7 +140,7 @@ func (reader *RecordReaderCSV) processHandle(
 		if nh == nd {
 			for i := 0; i < nh; i++ {
 				key := header[i]
-				value := types.MlrvalPointerFromInferredType(csvRecord[i])
+				value := types.MlrvalPointerFromInferredTypeForDataFiles(csvRecord[i])
 				record.PutReference(key, value)
 			}
 
@@ -160,13 +160,13 @@ func (reader *RecordReaderCSV) processHandle(
 				n := lib.IntMin2(nh, nd)
 				for i = 0; i < n; i++ {
 					key := header[i]
-					value := types.MlrvalPointerFromInferredType(csvRecord[i])
+					value := types.MlrvalPointerFromInferredTypeForDataFiles(csvRecord[i])
 					record.PutReference(key, value)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					key := strconv.Itoa(i + 1)
-					value := types.MlrvalPointerFromInferredType(csvRecord[i])
+					value := types.MlrvalPointerFromInferredTypeForDataFiles(csvRecord[i])
 					record.PutCopy(key, value)
 				}
 				if nh > nd {
@@ -194,7 +194,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 ) bool {
-	if reader.readerOptions.CommentHandling == cliutil.CommentsAreData {
+	if reader.readerOptions.CommentHandling == cli.CommentsAreData {
 		// Nothing is to be construed as a comment
 		return true
 	}
@@ -211,7 +211,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 	}
 
 	// Is a comment
-	if reader.readerOptions.CommentHandling == cliutil.PassComments {
+	if reader.readerOptions.CommentHandling == cli.PassComments {
 		// What we want to do here is simple enough: write the record back into
 		// a buffer -- basically string-join on IFS but with csvWriter's
 		// double-quote handling -- and then pass the resulting string along
@@ -226,7 +226,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 		csvWriter.Write(csvRecord)
 		csvWriter.Flush()
 		inputChannel <- types.NewOutputString(buffer.String(), context)
-	} else /* reader.readerOptions.CommentHandling == cliutil.SkipComments */ {
+	} else /* reader.readerOptions.CommentHandling == cli.SkipComments */ {
 		// discard entirely
 	}
 	return false

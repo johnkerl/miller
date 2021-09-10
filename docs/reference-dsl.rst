@@ -503,7 +503,7 @@ Right-hand side accesses to non-existent fields -- i.e. with index less than 1 o
 Out-of-stream variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-These are prefixed with an at-sign, e.g. ``@sum``.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested hashmap: you can do ``@sum += $quanity``, or ``@sum[$color] += $quanity``, or ``@sum[$color][$shape] += $quanity``. The keys for the multi-level hashmap can be any expression which evaluates to string or integer: e.g.  ``@sum[NR] = $a + $b``, ``@sum[$a."-".$b] = $x``, etc.
+These are prefixed with an at-sign, e.g. ``@sum``.  Furthermore, unlike built-in variables and stream-record fields, they are maintained in an arbitrarily nested hashmap: you can do ``@sum += $quantity``, or ``@sum[$color] += $quantity``, or ``@sum[$color][$shape] += $quantity``. The keys for the multi-level hashmap can be any expression which evaluates to string or integer: e.g.  ``@sum[NR] = $a + $b``, ``@sum[$a."-".$b] = $x``, etc.
 
 Their names and their values are entirely under your control; they change only when you assign to them.
 

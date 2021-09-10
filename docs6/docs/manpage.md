@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -26,9 +28,9 @@ NAME
        as CSV and tabular JSON.
 
 SYNOPSIS
-       Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or
-       more file names} Output of one verb may be chained as input to another
-       using "then", e.g.
+       Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more
+       file names} Output of one verb may be chained as input to another using
+       "then", e.g.
          mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
        Please see 'mlr help topics' for more information.  Please also see
        https://johnkerl.org/miller6
@@ -53,66 +55,102 @@ EXAMPLES
        mlr --icsv --opprint --from example.csv sort -nr index then cut -f shape,quantity
 
 DATA FORMATS
-       CSV/CSV-lite: comma-separated values with separate header line
-       TSV: same but with tabs in places of commas
-       +---------------------+
-       | apple,bat,cog       |
-       | 1,2,3               | Record 1: "apple":"1", "bat":"2", "cog":"3"
-       | 4,5,6               | Record 2: "apple":"4", "bat":"5", "cog":"6"
-       +---------------------+
+       Type 'mlr help {topic}' for any of the following:
+       Essentials:
+         mlr help topics
+         mlr help basic-examples
+         mlr help file-formats
+       Flags:
+         mlr help flags
+         mlr help comments-in-data-flags
+         mlr help compressed-data-flags
+         mlr help csv-only-flags
+         mlr help file-format-flags
+         mlr help flatten-unflatten-flags
+         mlr help format-conversion-keystroke-saver-flags
+         mlr help json-only-flags
+         mlr help legacy-flags
+         mlr help miscellaneous-flags
+         mlr help output-colorization-flags
+         mlr help pprint-only-flags
+         mlr help separator-flags
+       Verbs:
+         mlr help list-verbs
+         mlr help usage-verbs
+         mlr help verb
+       Functions:
+         mlr help list-functions
+         mlr help list-function-classes
+         mlr help list-functions-in-class
+         mlr help usage-functions
+         mlr help usage-functions-by-class
+         mlr help function
+       Keywords:
+         mlr help list-keywords
+         mlr help usage-keywords
+         mlr help keyword
+       Other:
+         mlr help auxents
+         mlr help mlrrc
+         mlr help output-colorization
+         mlr help type-arithmetic-info
+       Shorthands:
+         mlr -g = mlr help flags
+         mlr -l = mlr help list-verbs
+         mlr -L = mlr help usage-verbs
+         mlr -f = mlr help list-functions
+         mlr -F = mlr help usage-functions
+         mlr -k = mlr help list-keywords
+         mlr -K = mlr help usage-keywords
 
-       JSON (sequence or array of objects):
-       +---------------------+
-       | {                   |
-       |  "apple": 1,        | Record 1: "apple":"1", "bat":"2", "cog":"3"
-       |  "bat": 2,          |
-       |  "cog": 3           |
-       | }                   |
-       | {                   |
-       |   "dish": {         | Record 2: "dish:egg":"7",
-       |     "egg": 7,       | "dish:flint":"8", "garlic":""
-       |     "flint": 8      |
-       |   },                |
-       |   "garlic": ""      |
-       | }                   |
-       +---------------------+
-
-       PPRINT: pretty-printed tabular
-       +---------------------+
-       | apple bat cog       |
-       | 1     2   3         | Record 1: "apple:"1", "bat":"2", "cog":"3"
-       | 4     5   6         | Record 2: "apple":"4", "bat":"5", "cog":"6"
-       +---------------------+
-
-       Markdown tabular (supported for output only):
-       +-----------------------+
-       | | apple | bat | cog | |
-       | | ---   | --- | --- | |
-       | | 1     | 2   | 3   | | Record 1: "apple:"1", "bat":"2", "cog":"3"
-       | | 4     | 5   | 6   | | Record 2: "apple":"4", "bat":"5", "cog":"6"
-       +-----------------------+
-
-       XTAB: pretty-printed transposed tabular
-       +---------------------+
-       | apple 1             | Record 1: "apple":"1", "bat":"2", "cog":"3"
-       | bat   2             |
-       | cog   3             |
-       |                     |
-       | dish 7              | Record 2: "dish":"7", "egg":"8"
-       | egg  8              |
-       +---------------------+
-
-       DKVP: delimited key-value pairs (Miller default format)
-       +---------------------+
-       | apple=1,bat=2,cog=3 | Record 1: "apple":"1", "bat":"2", "cog":"3"
-       | dish=7,egg=8,flint  | Record 2: "dish":"7", "egg":"8", "3":"flint"
-       +---------------------+
-
-       NIDX: implicitly numerically indexed (Unix-toolkit style)
-       +---------------------+
-       | the quick brown     | Record 1: "1":"the", "2":"quick", "3":"brown"
-       | fox jumped          | Record 2: "1":"fox", "2":"jumped"
-       +---------------------+
+HELP OPTIONS
+       Type 'mlr help {topic}' for any of the following:
+       Essentials:
+         mlr help topics
+         mlr help basic-examples
+         mlr help file-formats
+       Flags:
+         mlr help flags
+         mlr help comments-in-data-flags
+         mlr help compressed-data-flags
+         mlr help csv-only-flags
+         mlr help file-format-flags
+         mlr help flatten-unflatten-flags
+         mlr help format-conversion-keystroke-saver-flags
+         mlr help json-only-flags
+         mlr help legacy-flags
+         mlr help miscellaneous-flags
+         mlr help output-colorization-flags
+         mlr help pprint-only-flags
+         mlr help separator-flags
+       Verbs:
+         mlr help list-verbs
+         mlr help usage-verbs
+         mlr help verb
+       Functions:
+         mlr help list-functions
+         mlr help list-function-classes
+         mlr help list-functions-in-class
+         mlr help usage-functions
+         mlr help usage-functions-by-class
+         mlr help function
+       Keywords:
+         mlr help list-keywords
+         mlr help usage-keywords
+         mlr help keyword
+       Other:
+         mlr help auxents
+         mlr help mlrrc
+         mlr help output-colorization
+         mlr help type-arithmetic-info
+       Shorthands:
+         mlr -g = mlr help flags
+         mlr -l = mlr help list-verbs
+         mlr -L = mlr help usage-verbs
+         mlr -f = mlr help list-functions
+         mlr -F = mlr help usage-functions
+         mlr -k = mlr help list-keywords
+         mlr -K = mlr help usage-keywords
 
 VERB LIST
        altkv bar bootstrap cat check clean-whitespace count-distinct count
@@ -147,247 +185,464 @@ FUNCTION LIST
        version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt;
        ?: ?? ??? ^ ^^ | || ~
 
-HELP OPTIONS
-       Type 'mlr help {topic}' for any of the following:
-         mlr help topics
-         mlr help auxents
-         mlr help basic-examples
-         mlr help comments-in-data
-         mlr help compressed-data
-         mlr help csv-options
-         mlr help data-format-options
-         mlr help data-formats
-         mlr help double-quoting
-         mlr help format-conversion
-         mlr help function
-         mlr help keyword
-         mlr help list-functions
-         mlr help list-functions-as-paragraph
-         mlr help list-keywords
-         mlr help list-keywords-as-paragraph
-         mlr help list-verbs
-         mlr help list-verbs-as-paragraph
-         mlr help misc
-         mlr help mlrrc
-         mlr help number-formatting
-         mlr help output-colorization
-         mlr help separator-options
-         mlr help type-arithmetic-info
-         mlr help usage-functions
-         mlr help usage-keywords
-         mlr help usage-verbs
-         mlr help verb
-       Shorthands:
-         mlr -l = mlr help list-verbs
-         mlr -L = mlr help usage-verbs
-         mlr -f = mlr help list-functions
-         mlr -F = mlr help usage-functions
-         mlr -k = mlr help list-keywords
-         mlr -K = mlr help usage-keywords
+COMMENTS-IN-DATA FLAGS
+       Miller lets you put comments in your data, such as
 
-OPTIONS
-       In the following option flags, the version with "i" designates the
-       input stream, "o" the output stream, and the version without prefix
-       sets the option for both input and output stream. For example: --irs
-       sets the input record separator, --ors the output record separator, and
-       --rs sets both the input and output separator to the given value.
-
-   DATA-FORMAT OPTIONS
-       --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
-                                        (Miller's default format).
-
-       --inidx   --onidx   --nidx      Implicitly-integer-indexed fields (Unix-toolkit style).
-       -T                              Synonymous with "--nidx --fs tab".
-
-       --icsv    --ocsv    --csv       Comma-separated value (or tab-separated with --fs tab, etc.)
-
-       --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
-                                       "--ocsv --ofs tab", "--csv --fs tab".
-       --iasv    --oasv    --asv       Similar but using ASCII FS 0x1f and RS 0x1e\n",
-       --iusv    --ousv    --usv       Similar but using Unicode FS U+241F (UTF-8 0xe2909f)\n",
-                                       and RS U+241E (UTF-8 0xe2909e)\n",
-
-       --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated with --fs tab, etc.).
-                                              The 'lite' CSV does not handle RFC-CSV double-quoting rules; is
-                                              slightly faster and handles heterogeneity in the input stream via
-                                              empty newline followed by new header line. See also
-                                               https://johnkerl.org/miller6/file-formats.html#csv-tsv-asv-usv-etc
-
-       --itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
-                                       "--ocsvlite --ofs tab", "--csvlite --fs tab".
-       -t                              Synonymous with --tsvlite.
-       --iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS 0x1f and RS 0x1e\n",
-       --iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS U+241F (UTF-8 0xe2909f)\n",
-                                       and RS U+241E (UTF-8 0xe2909e)\n",
-
-       --ipprint --opprint --pprint    Pretty-printed tabular (produces no
-                                       output until all input is in).
-                           --right     Right-justifies all fields for PPRINT output.
-                           --barred    Prints a border around PPRINT output
-                                       (only available for output).
-
-                 --omd                 Markdown-tabular (only available for output).
-
-       --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
-                           --xvright   Right-justifies values for XTAB format.
-
-       --ijson   --ojson   --json      JSON tabular: sequence or list of one-level
-                                       maps: {...}{...} or [{...},{...}].
-                           --jvstack   Put one key-value pair per line for JSON output.
-                        --no-jvstack   Put objects/arrays all on one line for JSON output.
-                     --jsonx --ojsonx  Keystroke-savers for --json --jvstack
-                     --jsonx --ojsonx  and --ojson --jvstack, respectively.
-                           --jlistwrap Wrap JSON output in outermost [ ].
-                   --flatsep {string} Separator for flattening multi-level JSON keys,
-                                       e.g. '{"a":{"b":3}}' becomes a:b =&gt; 3 for
-                                       non-JSON formats. Defaults to ..\n",
-
-       -p is a keystroke-saver for --nidx --fs space --repifs
-
-       Examples: --csv for CSV-formatted input and output; --icsv --opprint for
-       CSV-formatted input and pretty-printed output.
-
-       Please use --iformat1 --oformat2 rather than --format1 --oformat2.
-       The latter sets up input and output flags for format1, not all of which
-       are overridden in all cases by setting output format to format2.
-
-   FORMAT-CONVERSION KEYSTROKE-SAVERS
-       As keystroke-savers for format-conversion you may use the following:
-       --c2t --c2d --c2n --c2j --c2x --c2p --c2m
-       --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
-       --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
-       --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
-       --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
-       --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
-       --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
-       The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
-       PPRINT, and markdown, respectively. Note that markdown format is available for
-       output only.
-
-   SEPARATORS
-       THIS IS STILL TBD FOR MILLER 6
-
-   COMPRESSED I/O
-       Decompression done within the Miller process itself:
-       --gzin  Uncompress gzip within the Miller process. Done by default if file ends in ".gz".
-       --bz2in Uncompress bz2ip within the Miller process. Done by default if file ends in ".bz2".
-       --zin   Uncompress zlib within the Miller process. Done by default if file ends in ".z".
-
-       Decompression done outside the Miller process:
-       --prepipe {command} You can, of course, already do without this for single input files,
-         e.g. "gunzip &lt; myfile.csv.gz | mlr ..."
-       --prepipex {command} Like --prepipe with one exception: doesn't insert '&lt;' between
-         command and filename at runtime. Useful for some commands like 'unzip -qc'
-         which don't read standard input.
-
-       Using --prepipe and --prepipex you can specify an action to be taken on each
-       input file. This prepipe command must be able to read from standard input; it
-       will be invoked with {command} &lt; {filename}.
-
-       Examples:
-         mlr --prepipe gunzip
-         mlr --prepipe zcat -cf
-         mlr --prepipe xz -cd
-         mlr --prepipe cat
-
-       Note that this feature is quite general and is not limited to decompression
-       utilities. You can use it to apply per-file filters of your choice.  For output
-       compression (or other) utilities, simply pipe the output:
-       mlr ... | {your compression command} &gt; outputfilenamegoeshere
-
-       Lastly, note that if --prepipe or --prepipex is specified, it replaces any
-       decisions that might have been made based on the file suffix. Also,
-       --gzin/--bz2in/--zin are ignored if --prepipe is also specified.
-
-   COMMENTS IN DATA
-       --skip-comments                 Ignore commented lines (prefixed by "#")
-                                       within the input.
-       --skip-comments-with {string}   Ignore commented lines within input, with
-                                       specified prefix.
-       --pass-comments                 Immediately print commented lines (prefixed by "#")
-                                       within the input.
-       --pass-comments-with {string}   Immediately print commented lines within input, with
-                                       specified prefix.
+           # This is a comment for a CSV file
+           a,b,c
+           1,2,3
+           4,5,6
 
        Notes:
+
        * Comments are only honored at the start of a line.
-       * In the absence of any of the above four options, comments are data like
-         any other text.
-       * When pass-comments is used, comment lines are written to standard output
+       * In the absence of any of the below four options, comments are data like
+         any other text. (The comments-in-data feature is opt-in.)
+       * When `--pass-comments` is used, comment lines are written to standard output
          immediately upon being read; they are not part of the record stream.  Results
          may be counterintuitive. A suggestion is to place comments at the start of
          data files.
 
-   CSV-SPECIFIC OPTIONS
-       --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
-                          of input files. Tip: combine with "label" to recreate
-                          missing headers.
-       --no-implicit-csv-header Do not use --implicit-csv-header. This is the default
-                          anyway -- the main use is for the flags to 'mlr join' if you have
-                          main file(s) which are headerless but you want to join in on
-                          a file which does have a CSV header. Then you could use
-                          'mlr --csv --implicit-csv-header join --no-implicit-csv-header
-                          -l your-join-in-with-header.csv ... your-headerless.csv'
-       --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,
-                          fill remaining keys with empty string. If a data line has more
-                          fields than the header line, use integer field labels as in
-                          the implicit-header case.
-       --headerless-csv-output   Print only CSV data lines.
-       -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.
+       --pass-comments          Immediately print commented lines (prefixed by `#`)
+                                within the input.
+       --pass-comments-with {string}
+                                Immediately print commented lines within input, with
+                                specified prefix.
+       --skip-comments          Ignore commented lines (prefixed by `#`) within the
+                                input.
+       --skip-comments-with {string}
+                                Ignore commented lines within input, with specified
+                                prefix.
 
-   DOUBLE-QUOTING FOR CSV/CSVLITE OUTPUT
-       THIS IS STILL WIP FOR MILLER 6
-       --quote-all        Wrap all fields in double quotes
-       --quote-none       Do not wrap any fields in double quotes, even if they have
-                          OFS or ORS in them
-       --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
-                          in them (default)
-       --quote-numeric    Wrap fields in double quotes only if they have numbers
-                          in them
-       --quote-original   Wrap fields in double quotes if and only if they were
-                          quoted on input. This isn't sticky for computed fields:
-                          e.g. if fields a and b were quoted on input and you do
-                          "put '$c = $a . $b'" then field c won't inherit a or b's
-                          was-quoted-on-input flag.
+COMPRESSED-DATA FLAGS
+       Miller offers a few different ways to handle reading data files
+            which have been compressed.
 
-   NUMBER FORMATTING
-       THIS IS STILL WIP FOR MILLER 6
-         --ofmt {format}    E.g. %.18f, %.0f, %9.6e. Please use sprintf-style codes for
-                            floating-point nummbers. If not specified, default formatting is used.
-                            See also the fmtnum function within mlr put (mlr --help-all-functions);
-                            see also the format-values function.
+       * Decompression done within the Miller process itself: `--bz2in` `--gzin` `--zin`
+       * Decompression done outside the Miller process: `--prepipe` `--prepipex`
 
-   OTHER OPTIONS
-       --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
-                          urand()/urandint()/urand32().
-       --nr-progress-mod {m}, with m a positive integer: print filename and record
-                          count to os.Stderr every m input records.
-       --from {filename}  Use this to specify an input file before the verb(s),
-                          rather than after. May be used more than once. Example:
-                          "mlr --from a.dat --from b.dat cat" is the same as
-                          "mlr cat a.dat b.dat".
-       --mfrom {filenames} --  Use this to specify one of more input files before the verb(s),
-                          rather than after. May be used more than once.
-                          The list of filename must end with "--". This is useful
-                          for example since "--from *.csv" doesn't do what you might
-                          hope but "--mfrom *.csv --" does.
-       --load {filename}  Load DSL script file for all put/filter operations on the command line.
-                          If the name following --load is a directory, load all "*.mlr" files
-                          in that directory. This is just like "put -f" and "filter -f"
-                          except it's up-front on the command line, so you can do something like
-                          alias mlr='mlr --load ~/myscripts' if you like.
-       --mload {names} -- Like --load but works with more than one filename,
-                          e.g. '--mload *.mlr --'.
-       -n                 Process no input files, nor standard input either. Useful
-                          for mlr put with begin/end statements only. (Same as --from
-                          /dev/null.) Also useful in "mlr -n put -v '...'" for
-                          analyzing abstract syntax trees (if that's your thing).
-       -I                 Process files in-place. For each file name on the command
-                          line, output is written to a temp file in the same
-                          directory, which is then renamed over the original. Each
-                          file is processed in isolation: if the output format is
-                          CSV, CSV headers will be present in each output file
-                          statistics are only over each file's own records; and so on.
+       Using `--prepipe` and `--prepipex` you can specify an action to be
+       taken on each input file.  The prepipe command must be able to read from
+       standard input; it will be invoked with `{command} &lt; {filename}`.  The
+       prepipex command must take a filename as argument; it will be invoked with
+       `{command} {filename}`.
+
+       Examples:
+
+           mlr --prepipe gunzip
+           mlr --prepipe zcat -cf
+           mlr --prepipe xz -cd
+           mlr --prepipe cat
+
+       Note that this feature is quite general and is not limited to decompression
+       utilities. You can use it to apply per-file filters of your choice.  For output
+       compression (or other) utilities, simply pipe the output:
+       `mlr ... | {your compression command} &gt; outputfilenamegoeshere`
+
+       Lastly, note that if `--prepipe` or `--prepipex` is specified, it replaces any
+       decisions that might have been made based on the file suffix. Likewise,
+       `--gzin`/`--bz2in`/`--zin` are ignored if `--prepipe` is also specified.
+
+       --bz2in                  Uncompress bzip2 within the Miller process. Done by
+                                default if file ends in `.bz2`.
+       --gzin                   Uncompress gzip within the Miller process. Done by
+                                default if file ends in `.gz`.
+       --prepipe {decompression command}
+                                You can, of course, already do without this for
+                                single input files, e.g. `gunzip &lt; myfile.csv.gz |
+                                mlr ...`. Allowed at the command line, but not in
+                                `.mlrrc` to avoid unexpected code execution.
+       --prepipe-bz2            Same as `--prepipe bz2`, except this is allowed in
+                                `.mlrrc`.
+       --prepipe-gunzip         Same as `--prepipe gunzip`, except this is allowed in
+                                `.mlrrc`.
+       --prepipe-zcat           Same as `--prepipe zcat`, except this is allowed in
+                                `.mlrrc`.
+       --prepipex {decompression command}
+                                Like `--prepipe` with one exception: doesn't insert
+                                `&lt;` between command and filename at runtime. Useful
+                                for some commands like `unzip -qc` which don't read
+                                standard input. Allowed at the command line, but not
+                                in `.mlrrc` to avoid unexpected code execution.
+       --zin                    Uncompress zlib within the Miller process. Done by
+                                default if file ends in `.z`.
+
+CSV-ONLY FLAGS
+       These are flags which are applicable to CSV format.
+
+       --allow-ragged-csv-input or --ragged
+                                If a data line has fewer fields than the header line,
+                                fill remaining keys with empty string. If a data line
+                                has more fields than the header line, use integer
+                                field labels as in the implicit-header case.
+       --headerless-csv-output  Print only CSV data lines; do not print CSV header
+                                lines.
+       --implicit-csv-header    Use 1,2,3,... as field labels, rather than from line
+                                1 of input files. Tip: combine with `label` to
+                                recreate missing headers.
+       --no-implicit-csv-header Opposite of `--implicit-csv-header`. This is the
+                                default anyway -- the main use is for the flags to
+                                `mlr join` if you have main file(s) which are
+                                headerless but you want to join in on a file which
+                                does have a CSV header. Then you could use `mlr --csv
+                                --implicit-csv-header join --no-implicit-csv-header
+                                -l your-join-in-with-header.csv ...
+                                your-headerless.csv`.
+       -N                       Keystroke-saver for `--implicit-csv-header
+                                --headerless-csv-output`.
+
+FILE-FORMAT FLAGS
+       See the File formats doc page, and or `mlr help file-formats`, for more
+       about file formats Miller supports.
+
+       Examples: `--csv` for CSV-formatted input and output; `--icsv --opprint` for
+       CSV-formatted input and pretty-printed output.
+
+       Please use `--iformat1 --oformat2` rather than `--format1 --oformat2`.
+       The latter sets up input and output flags for `format1`, not all of which
+       are overridden in all cases by setting output format to `format2`.
+
+       --asv or --asvlite       Use ASV format for input and output data.
+       --csv or -c              Use CSV format for input and output data.
+       --csvlite                Use CSV-lite format for input and output data.
+       --dkvp                   Use DKVP format for input and output data.
+       --iasv or --iasvlite     Use ASV format for input data.
+       --icsv                   Use CSV format for input data.
+       --icsvlite               Use CSV-lite format for input data.
+       --idkvp                  Use DKVP format for input data.
+       --ijson                  Use JSON format for input data.
+       --inidx                  Use NIDX format for input data.
+       --io {format name}       Use format name for input and output data. For
+                                example: `--io csv` is the same as `--csv`.
+       --ipprint                Use PPRINT format for input data.
+       --itsv                   Use TSV format for input data.
+       --itsvlite               Use TSV-lite format for input data.
+       --iusv or --iusvlite     Use USV format for input data.
+       --ixtab                  Use XTAB format for input data.
+       --json or -j             Use JSON format for input and output data.
+       --nidx                   Use NIDX format for input and output data.
+       --oasv or --oasvlite     Use ASV format for output data.
+       --ocsv                   Use CSV format for output data.
+       --ocsvlite               Use CSV-lite format for output data.
+       --odkvp                  Use DKVP format for output data.
+       --ojson                  Use JSON format for output data.
+       --omd                    Use markdown-tabular format for output data.
+       --onidx                  Use NIDX format for output data.
+       --opprint                Use PPRINT format for output data.
+       --otsv                   Use TSV format for output data.
+       --otsvlite               Use TSV-lite format for output data.
+       --ousv or --ousvlite     Use USV format for output data.
+       --oxtab                  Use XTAB format for output data.
+       --pprint                 Use PPRINT format for input and output data.
+       --tsv                    Use TSV format for input and output data.
+       --tsvlite or -t          Use TSV-lite format for input and output data.
+       --usv or --usvlite       Use USV format for input and output data.
+       --xtab                   Use XTAB format for input and output data.
+       -i {format name}         Use format name for input data. For example: `-i csv`
+                                is the same as `--icsv`.
+       -o {format name}         Use format name for output data. For example: `-o
+                                csv` is the same as `--ocsv`.
+
+FLATTEN-UNFLATTEN FLAGS
+       These flags control how Miller converts record values which are maps or arrays, when input is JSON and ouput is non-JSON (flattening) or input is non-JSON and output is JSON (unflattening).
+
+       See the Flatten/unflatten doc page for more information.
+
+       --flatsep or --jflatsep {string}
+                                Separator for flattening multi-level JSON keys, e.g.
+                                `{"a":{"b":3}}` becomes `a:b =&gt; 3` for non-JSON
+                                formats. Defaults to `.`.
+       --no-auto-flatten        When output is non-JSON, suppress the default
+                                auto-flatten behavior. Default: if `$y = [7,8,9]`
+                                then this flattens to `y.1=7,y.2=8,y.3=9, and
+                                similarly for maps. With `--no-auto-flatten`, instead
+                                we get `$y=[1, 2, 3]`.
+       --no-auto-unflatten      When input non-JSON and output is JSON, suppress the
+                                default auto-unflatten behavior. Default: if the
+                                input has `y.1=7,y.2=8,y.3=9` then this unflattens to
+                                `$y=[7,8,9]`. flattens to `y.1=7,y.2=8,y.3=9. With
+                                `--no-auto-flatten`, instead we get
+                                `${y.1}=7,${y.2}=8,${y.3}=9`.
+
+FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
+       As keystroke-savers for format-conversion you may use the following.
+       The letters c, t, j, d, n, x, p, and m refer to formats CSV, TSV, DKVP, NIDX,
+       JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format is
+       available for output only.
+
+       | In\out | CSV   | TSV   | JSON   | DKVP   | NIDX   | XTAB   | PPRINT | Markdown |
+       +--------+-------+-------+--------+--------+--------+--------+--------+----------+
+       | CSV    |       | --c2t | --c2j  | --c2d  | --c2n  | --c2x  | --c2p  | --c2m    |
+       | TSV    | --t2c |       | --t2j  | --t2d  | --t2n  | --t2x  | --t2p  | --t2m    |
+       | JSON   | --j2c | --j2t |        | --j2d  | --j2n  | --j2x  | --j2p  | --j2m    |
+       | DKVP   | --d2c | --d2t | --d2j  |        | --d2n  | --d2x  | --d2p  | --d2m    |
+       | NIDX   | --n2c | --n2t | --n2j  | --n2d  |        | --n2x  | --n2p  | --n2m    |
+       | XTAB   | --x2c | --x2t | --x2j  | --x2d  | --x2n  |        | --x2p  | --x2m    |
+       | PPRINT | --p2c | --p2t | --p2j  | --p2d  | --p2n  | --p2x  |        | --p2m    |
+
+
+JSON-ONLY FLAGS
+       These are flags which are applicable to JSON format.
+
+       --jlistwrap or --jl      Wrap JSON output in outermost `[ ]`.
+       --jvstack                Put one key-value pair per line for JSON output
+                                (multi-line output).
+       --no-jvstack             Put objects/arrays all on one line for JSON output.
+
+LEGACY FLAGS
+       These are flags which don't do anything in the current Miller version.
+       They are accepted as no-op flags in order to keep old scripts from breaking.
+
+       --jknquoteint            Type information from JSON input files is now
+                                preserved throughout the processing stream.
+       --jquoteall              Type information from JSON input files is now
+                                preserved throughout the processing stream.
+       --json-fatal-arrays-on-input
+                                Miller now supports arrays as of version 6.
+       --json-map-arrays-on-input
+                                Miller now supports arrays as of version 6.
+       --json-skip-arrays-on-input
+                                Miller now supports arrays as of version 6.
+       --jsonx                  The `--jvstack` flag is now default true in Miller 6.
+       --jvquoteall             Type information from JSON input files is now
+                                preserved throughout the processing stream.
+       --mmap                   Miller no longer uses memory-mapping to access data
+                                files.
+       --no-fflush              The current implementation of Miller does not use
+                                buffered output, so there is no longer anything to
+                                suppress here.
+       --no-mmap                Miller no longer uses memory-mapping to access data
+                                files.
+       --ojsonx                 The `--jvstack` flag is now default true in Miller 6.
+
+MISCELLANEOUS FLAGS
+       These are flags which don't fit into any other category.
+       --from {filename}        Use this to specify an input file before the verb(s),
+                                rather than after. May be used more than once.
+                                Example: `mlr --from a.dat --from b.dat cat` is the
+                                same as `mlr cat a.dat b.dat`.
+       --load {filename}        Load DSL script file for all put/filter operations on
+                                the command line. If the name following `--load` is a
+                                directory, load all `*.mlr` files in that directory.
+                                This is just like `put -f` and `filter -f` except
+                                it's up-front on the command line, so you can do
+                                something like `alias mlr='mlr --load ~/myscripts'`
+                                if you like.
+       --mfrom {filenames}      Use this to specify one of more input files before
+                                the verb(s), rather than after. May be used more than
+                                once. The list of filename must end with `--`. This
+                                is useful for example since `--from *.csv` doesn't do
+                                what you might hope but `--mfrom *.csv --` does.
+       --mload {filenames}      Like `--load` but works with more than one filename,
+                                e.g. `--mload *.mlr --`.
+       --ofmt {format}          E.g. %.18f, %.0f, %9.6e. Please use sprintf-style
+                                codes for floating-point nummbers. If not specified,
+                                default formatting is used. See also the `fmtnum`
+                                function and the `format-values` verb.
+       --seed {n}               with `n` of the form `12345678` or `0xcafefeed`. For
+                                `put`/`filter` `urand`, `urandint`, and `urand32`.
+       -I                       Process files in-place. For each file name on the
+                                command line, output is written to a temp file in the
+                                same directory, which is then renamed over the
+                                original. Each file is processed in isolation: if the
+                                output format is CSV, CSV headers will be present in
+                                each output file, statistics are only over each
+                                file's own records; and so on.
+       -n                       Process no input files, nor standard input either.
+                                Useful for `mlr put` with `begin`/`end` statements
+                                only. (Same as `--from /dev/null`.) Also useful in
+                                `mlr -n put -v '...'` for analyzing abstract syntax
+                                trees (if that's your thing).
+
+OUTPUT-COLORIZATION FLAGS
+       Miller uses colors to highlight outputs. You can specify color preferences.
+       Note: output colorization does not work on Windows.
+
+       Things having colors:
+
+       * Keys in CSV header lines, JSON keys, etc
+       * Values in CSV data lines, JSON scalar values, etc in regression-test output
+       * Some online-help strings
+
+       Rules for coloring:
+
+       * By default, colorize output only if writing to stdout and stdout is a TTY.
+           * Example: color: `mlr --csv cat foo.csv`
+           * Example: no color: `mlr --csv cat foo.csv &gt; bar.csv`
+           * Example: no color: `mlr --csv cat foo.csv | less`
+       * The default colors were chosen since they look OK with white or black
+         terminal background, and are differentiable with common varieties of human
+         color vision.
+
+       Mechanisms for coloring:
+
+       * Miller uses ANSI escape sequences only. This does not work on Windows
+         except within Cygwin.
+       * Requires `TERM` environment variable to be set to non-empty string.
+       * Doesn't try to check to see whether the terminal is capable of 256-color
+         ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
+         then 16-color ANSI escapes are used, so this is in the user's control.
+
+       How you can control colorization:
+
+       * Suppression/unsuppression:
+           * Environment variable `export MLR_NO_COLOR=true` means don't color
+             even if stdout+TTY.
+           * Environment variable `export MLR_ALWAYS_COLOR=true` means do color
+             even if not stdout+TTY.
+             For example, you might want to use this when piping mlr output to `less -r`.
+           * Command-line flags `--no-color` or `-M`, `--always-color` or `-C`.
+
+       * Color choices can be specified by using environment variables, or command-line
+         flags, with values 0..255:
+           * `export MLR_KEY_COLOR=208`, `MLR_VALUE_COLOR=33`, etc.:
+               `MLR_KEY_COLOR` `MLR_VALUE_COLOR` `MLR_PASS_COLOR` `MLR_FAIL_COLOR`
+               `MLR_REPL_PS1_COLOR` `MLR_REPL_PS2_COLOR` `MLR_HELP_COLOR`
+           * Command-line flags `--key-color 208`, `--value-color 33`, etc.:
+               `--key-color` `--value-color` `--pass-color` `--fail-color`
+               `--repl-ps1-color` `--repl-ps2-color` `--help-color`
+           * This is particularly useful if your terminal's background color clashes
+             with current settings.
+
+       If environment-variable settings and command-line flags are both provided, the
+       latter take precedence.
+
+       Please do mlr `--list-color-codes` to see the available color codes (like 170),
+       and `mlr --list-color-names` to see available names (like `orchid`).
+
+       --always-color or -C     Instructs Miller to colorize output even when it
+                                normally would not. Useful for piping output to `less
+                                -r`.
+       --fail-color             Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for failing cases in `mlr
+                                regtest`.
+       --help-color             Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for highlights in `mlr help`
+                                output.
+       --key-color              Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for record keys.
+       --list-color-codes       Show the available color codes in the range 0..255,
+                                such as 170 for example.
+       --list-color-names       Show the names for the available color codes, such as
+                                `orchid` for example.
+       --no-color or -M         Instructs Miller to not colorize any output.
+       --pass-color             Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for passing cases in `mlr
+                                regtest`.
+       --value-color            Specify the color (see `--list-color-codes` and
+                                `--list-color-names`) for record values.
+
+PPRINT-ONLY FLAGS
+       These are flags which are applicable to PPRINT output format.
+
+       --barred                 Prints a border around PPRINT output (not available
+                                for input).
+       --right                  Right-justifies all fields for PPRINT output.
+
+SEPARATOR FLAGS
+       See the Separators doc page for more about record separators, field
+       separators, and pair separators. Also see the File formats doc page, or
+       `mlr help file-formats`, for more about the file formats Miller supports.
+
+       In brief:
+
+       * For DKVP records like `x=1,y=2,z=3`, the fields are separated by a comma,
+         the key-value pairs are separated by a comma, and each record is separated
+         from the next by a newline.
+       * Each file format has its own default separators.
+       * Most formats, such as CSV, don't support pair-separators: keys are on the CSV
+         header line and values are on each CSV data line; keys and values are not
+         placed next to one another.
+       * Some separators are not programmable: for example JSON uses a colon as a
+         pair separator but this is non-modifiable in the JSON spec.
+       * You can set separators differently between Miller's input and output --
+         hence `--ifs` and `--ofs`, etc.
+
+       TODO: auto-detect is still TBD for Miller 6.
+
+       Notes about line endings:
+
+       * Default line endings (`--irs` and `--ors`) are "auto"
+         which means autodetect from the input file format, as long as the input
+         file(s) have lines ending in either LF (also known as linefeed, `\n`, `0x0a`, or Unix-style) or CRLF (also known as
+         carriage-return/linefeed pairs, `\r\n`, `0x0d 0x0a`, or
+         Windows-style).
+       * If both `irs` and `ors` are `auto` (which is
+         the default) then LF input will lead to LF output and CRLF input will lead to
+         CRLF output, regardless of the platform you're running on.
+       * The line-ending autodetector triggers on the first line ending detected in
+         the input stream. E.g. if you specify a CRLF-terminated file on the command
+         line followed by an LF-terminated file then autodetected line endings will be
+         CRLF.
+       * If you use `--ors {something else}` with (default or explicitly
+         specified) `--irs auto` then line endings are autodetected on input
+         and set to what you specify on output.
+       * If you use `--irs {something else}` with (default or explicitly
+         specified) `--ors auto` then the output line endings used are LF on
+         Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+
+       Notes about all other separators:
+
+       * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
+         do key-value pairs appear juxtaposed.
+       * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
+         XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
+         a blank line. Everything above about `--irs/--ors/--rs auto` becomes `--ifs/--ofs/--fs`
+         auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
+       * OFS must be single-character for PPRINT format. This is because it is used
+         with repetition for alignment; multi-character separators would make
+         alignment impossible.
+       * OPS may be multi-character for XTAB format, in which case alignment is
+         disabled.
+       * TSV is simply CSV using tab as field separator (`--fs tab`).
+       * FS/PS are ignored for markdown format; RS is used.
+       * All FS and PS options are ignored for JSON format, since they are not relevant
+         to the JSON format.
+       * You can specify separators in any of the following ways, shown by example:
+         - Type them out, quoting as necessary for shell escapes, e.g.
+           `--fs '|' --ips :`
+         - C-style escape sequences, e.g. `--rs '\r\n' --fs '\t'`.
+         - To avoid backslashing, you can use any of the following names:
+
+                 colon      = ":"
+                 comma      = ","
+                 cr         = "\r"
+                 crcr       = "\r\r"
+                 crlf       = "\r\n"
+                 crlfcrlf   = "\r\n\r\n"
+                 equals     = "="
+                 lf         = "\n"
+                 lflf       = "\n\n"
+                 newline    = "\n"
+                 pipe       = "|"
+                 semicolon  = ";"
+                 slash      = "/"
+                 space      = " "
+                 tab        = "\t"
+
+       * Default separators by format:
+
+               Format   FS     PS     RS
+               csv      ","    N/A    "\n"
+               csvlite  ","    N/A    "\n"
+               dkvp     ","    "="    "\n"
+               json     N/A    N/A    N/A
+               markdown " "    N/A    "\n"
+               nidx     " "    N/A    "\n"
+               pprint   " "    N/A    "\n"
+               xtab     "\n"   " "    "\n\n"
+
+       --fs {string}            Specify FS for input and output.
+       --ifs {string}           Specify FS for input.
+       --ips {string}           Specify PS for input.
+       --irs {string}           Specify RS for input.
+       --ofs {string}           Specify FS for output.
+       --ops {string}           Specify PS for output.
+       --ors {string}           Specify RS for output.
+       --ps {string}            Specify PS for input and output.
+       --repifs                 Let IFS be repeated: e.g. for splitting on multiple
+                                spaces.
+       --rs {string}            Specify RS for input and output.
 
 AUXILIARY COMMANDS
        Available subcommands:
@@ -400,80 +655,6 @@ AUXILIARY COMMANDS
          regtest
          repl
        For more information, please invoke mlr {subcommand} --help.
-
-REPL
-       Usage: mlr repl [options] {zero or more data-file names}
-       -v Prints the expressions's AST (abstract syntax tree), which gives
-          full transparency on the precedence and associativity rules of
-          Miller's grammar, to stdout.
-
-       -d Like -v but uses a parenthesized-expression format for the AST.
-
-       -D Like -d but with output all on one line.
-
-       -w Show warnings about uninitialized variables
-
-       -q Don't show startup banner
-
-       -s Don't show prompts
-
-       --load {DSL script file} Load script file before presenting the prompt.
-          If the name following --load is a directory, load all "*.mlr" files
-          in that directory.
-
-       --mload {DSL script files} -- Like --load but works with more than one filename,
-          e.g. '--mload *.mlr --'.
-
-       -h|--help Show this message.
-
-       Or any --icsv, --ojson, etc. reader/writer options as for the main Miller command line.
-
-       Any data-file names are opened just as if you had waited and typed :open {filenames}
-       at the Miller REPL prompt.
-
-OUTPUT COLORIZATION
-       Things having colors:
-       * Keys in CSV header lines, JSON keys, etc
-       * Values in CSV data lines, JSON scalar values, etc
-        in regression-test output
-       * Some online-help strings
-
-       Rules for coloring:
-       * By default, colorize output only if writing to stdout and stdout is a TTY.
-         * Example: color: mlr --csv cat foo.csv
-         * Example: no color: mlr --csv cat foo.csv &gt; bar.csv
-         * Example: no color: mlr --csv cat foo.csv | less
-       * The default colors were chosen since they look OK with white or black terminal background,
-         and are differentiable with common varieties of human color vision.
-
-       Mechanisms for coloring:
-       * Miller uses ANSI escape sequences only. This does not work on Windows except on Cygwin.
-       * Requires TERM environment variable to be set to non-empty string.
-       * Doesn't try to check to see whether the terminal is capable of 256-color
-         ANSI vs 16-color ANSI. Note that if colors are in the range 0..15
-         then 16-color ANSI escapes are used, so this is in the user's control.
-
-       How you can control colorization:
-       * Suppression/unsuppression:
-         * Environment variable export MLR_NO_COLOR=true means don't color even if stdout+TTY.
-         * Environment variable export MLR_ALWAYS_COLOR=true means do color even if not stdout+TTY.
-           For example, you might want to use this when piping mlr output to less -r.
-         * Command-line flags --no-color or -M, --always-color or -C.
-
-       * Color choices can be specified by using environment variables, or command-line flags,
-         with values 0..255:
-         * export MLR_KEY_COLOR=208, MLR_VALUE_COLOR-33, etc.:
-           MLR_KEY_COLOR MLR_VALUE_COLOR MLR_PASS_COLOR MLR_FAIL_COLOR
-           MLR_REPL_PS1_COLOR MLR_REPL_PS2_COLOR MLR_HELP_COLOR
-         * Command-line flags --key-color 208, --value-color 33, etc.:
-           --key-color --value-color --pass-color --fail-color
-           --repl-ps1-color --repl-ps2-color --help-color
-         * This is particularly useful if your terminal's background color clashes with current settings.
-
-       If environment-variable settings and command-line flags are both provided,the latter take precedence.
-
-       Please do mlr --list-color-codes to see the available color codes (like 170), and
-       mlr --list-color-names to see available names (like orchid).
 
 MLRRC
        You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
@@ -507,6 +688,36 @@ MLRRC
 
        See also:
        https://miller.readthedocs.io/en/latest/customization.html
+
+REPL
+       Usage: mlr repl [options] {zero or more data-file names}
+       -v Prints the expressions's AST (abstract syntax tree), which gives
+          full transparency on the precedence and associativity rules of
+          Miller's grammar, to stdout.
+
+       -d Like -v but uses a parenthesized-expression format for the AST.
+
+       -D Like -d but with output all on one line.
+
+       -w Show warnings about uninitialized variables
+
+       -q Don't show startup banner
+
+       -s Don't show prompts
+
+       --load {DSL script file} Load script file before presenting the prompt.
+          If the name following --load is a directory, load all "*.mlr" files
+          in that directory.
+
+       --mload {DSL script files} -- Like --load but works with more than one filename,
+          e.g. '--mload *.mlr --'.
+
+       -h|--help Show this message.
+
+       Or any --icsv, --ojson, etc. reader/writer options as for the main Miller command line.
+
+       Any data-file names are opened just as if you had waited and typed :open {filenames}
+       at the Miller REPL prompt.
 
 VERBS
    altkv
@@ -869,25 +1080,53 @@ VERBS
        -h|--help Show this message.
 
    join
-       Usage: mlr sort {flags}
-       Sorts records primarily by the first specified field, secondarily by the second
-       field, and so on.  (Any records not having all specified sort keys will appear
-       at the end of the output, in the order they were encountered, regardless of the
-       specified sort order.) The sort is stable: records that compare equal will sort
-       in the order they were encountered in the input record stream.
-
+       Usage: mlr join [options]
+       Joins records from specified left file name with records from all file names
+       at the end of the Miller argument list.
+       Functionality is essentially the same as the system "join" command, but for
+       record streams.
        Options:
-       -f  {comma-separated field names}  Lexical ascending
-       -n  {comma-separated field names}  Numerical ascending; nulls sort last
-       -nf {comma-separated field names}  Same as -n
-       -r  {comma-separated field names}  Lexical descending
-       -nr {comma-separated field names}  Numerical descending; nulls sort first
-       -h|--help Show this message.
-
-       Example:
-         mlr sort -f a,b -nr x,y,z
-       which is the same as:
-         mlr sort -f a -f b -nr x -nr y -nr z
+         -f {left file name}
+         -j {a,b,c}   Comma-separated join-field names for output
+         -l {a,b,c}   Comma-separated join-field names for left input file;
+                      defaults to -j values if omitted.
+         -r {a,b,c}   Comma-separated join-field names for right input file(s);
+                      defaults to -j values if omitted.
+         --lp {text}  Additional prefix for non-join output field names from
+                      the left file
+         --rp {text}  Additional prefix for non-join output field names from
+                      the right file(s)
+         --np         Do not emit paired records
+         --ul         Emit unpaired records from the left file
+         --ur         Emit unpaired records from the right file(s)
+         -s|--sorted-input  Require sorted input: records must be sorted
+                      lexically by their join-field names, else not all records will
+                      be paired. The only likely use case for this is with a left
+                      file which is too big to fit into system memory otherwise.
+         -u           Enable unsorted input. (This is the default even without -u.)
+                      In this case, the entire left file will be loaded into memory.
+         --prepipe {command} As in main input options; see mlr --help for details.
+                      If you wish to use a prepipe command for the main input as well
+                      as here, it must be specified there as well as here.
+         --prepipex {command} Likewise.
+       File-format options default to those for the right file names on the Miller
+       argument list, but may be overridden for the left file as follows. Please see
+       the main "mlr --help" for more information on syntax for these arguments:
+         -i {one of csv,dkvp,nidx,pprint,xtab}
+         --irs {record-separator character}
+         --ifs {field-separator character}
+         --ips {pair-separator character}
+         --repifs
+         --repips
+         --implicit-csv-header
+         --no-implicit-csv-header
+       For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will
+       be specified CSV as well unless you override with 'mlr --csv ... join --ijson -l foo' etc.
+       Likewise, if you have 'mlr --csv --implicit-csv-header ...' then the join-in file will be
+       expected to be headerless as well unless you put '--no-implicit-csv-header' after 'join'.
+       Please use "mlr --usage-separator-options" for information on specifying separators.
+       Please see https://miller.readthedocs.io/en/latest/reference-verbs.html#join for more information
+       including examples.
 
    label
        Usage: mlr label [options] {new1,new2,new3,...}
@@ -1078,7 +1317,8 @@ VERBS
 
    regularize
        Usage: mlr regularize [options]
-       Outputs records sorted lexically ascending by keys.Options:
+       Outputs records sorted lexically ascending by keys.
+       Options:
        -h|--help Show this message.
 
    remove-empty-columns
@@ -1529,10 +1769,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) Inverse hyperbolic cosine.
 
    append
-        (class=maps/arrays #args=2) Appends second argument to end of first argument, which must be an array.
+        (class=collections #args=2) Appends second argument to end of first argument, which must be an array.
 
    arrayify
-        (class=maps/arrays #args=1) Walks through a nested map/array, converting any map with consecutive keys
+        (class=collections #args=1) Walks through a nested map/array, converting any map with consecutive keys
        "1", "2", ... into an array. Useful to wrap the output of unflatten.
 
    asin
@@ -1654,7 +1894,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) Hyperbolic cosine.
 
    depth
-        (class=maps/arrays #args=1) Prints maximum depth of map/array. Scalars have depth 0.
+        (class=collections #args=1) Prints maximum depth of map/array. Scalars have depth 0.
 
    dhms2fsec
         (class=time #args=1) Recovers floating-point seconds as in dhms2fsec("5d18h53m20.250000s") = 500000.250000
@@ -1675,7 +1915,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) e**x - 1.
 
    flatten
-        (class=maps/arrays #args=3) Flattens multi-level maps to single-level ones. Examples:
+        (class=collections #args=3) Flattens multi-level maps to single-level ones. Examples:
        flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
        flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
        Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
@@ -1698,10 +1938,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
 
    get_keys
-        (class=maps/arrays #args=1) Returns array of keys of map or array
+        (class=collections #args=1) Returns array of keys of map or array
 
    get_values
-        (class=maps/arrays #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
+        (class=collections #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
 
    gmt2sec
         (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
@@ -1710,7 +1950,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
 
    haskey
-        (class=maps/arrays #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+        (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
        'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
        Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
 
@@ -1806,18 +2046,18 @@ FUNCTIONS FOR FILTER/PUT
        joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 
    json_parse
-        (class=maps/arrays #args=1) Converts value from JSON-formatted string.
+        (class=collections #args=1) Converts value from JSON-formatted string.
 
    json_stringify
-        (class=maps/arrays #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
+        (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
        With optional second boolean argument set to true, produces multiline output.
 
    leafcount
-        (class=maps/arrays #args=1) Counts total number of terminal values in map/array. For single-level
+        (class=collections #args=1) Counts total number of terminal values in map/array. For single-level
        map/array, same as length.
 
    length
-        (class=maps/arrays #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
+        (class=collections #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
 
    log
         (class=math #args=1) Natural (base-e) logarithm.
@@ -1839,24 +2079,24 @@ FUNCTIONS FOR FILTER/PUT
         (class=arithmetic #args=3) a + b mod m (integers)
 
    mapdiff
-        (class=maps/arrays #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
+        (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
        With 2 or more, returns copy of arg 1 with all keys from any of remaining
        argument maps removed.
 
    mapexcept
-        (class=maps/arrays #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
+        (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
        Remaining arguments can be strings or arrays of string.
        E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
        and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
 
    mapselect
-        (class=maps/arrays #args=variadic) Returns a map with only keys from remaining arguments set.
+        (class=collections #args=variadic) Returns a map with only keys from remaining arguments set.
        Remaining arguments can be strings or arrays of string.
        E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
        and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
 
    mapsum
-        (class=maps/arrays #args=variadic) With 0 args, returns empty map. With &gt;= 1 arg, returns a map with
+        (class=collections #args=variadic) With 0 args, returns empty map. With &gt;= 1 arg, returns a map with
        key-value pairs from all arguments. Rightmost collisions win, e.g.
        'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 
@@ -1999,16 +2239,16 @@ FUNCTIONS FOR FILTER/PUT
 
    substr
         (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
-       with all array indices, but, this is a backward-compatibility issue with Miller 5 and below.
-       Arrays are new in Miller 6; the substr function is older.
+       with all array and string indices, but, this is a backward-compatibility issue with Miller 5
+       and below. Arrays are new in Miller 6; the substr function is older.
 
    substr0
         (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
-       inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
+       inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.
 
    substr1
         (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
-       inclusive. Negative indices -len .. -1 alias to 1 .. len.
+       inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.
 
    system
         (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
@@ -2038,7 +2278,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
 
    unflatten
-        (class=maps/arrays #args=2) Reverses flatten. Example:
+        (class=collections #args=2) Reverses flatten. Example:
        unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
        Useful for nested JSON-like structures for non-JSON file formats like CSV.
        See also arrayify.
@@ -2540,5 +2780,5 @@ SEE ALSO
 
 
 
-                                  2021-08-26                         MILLER(1)
+                                  2021-09-09                         MILLER(1)
 </pre>

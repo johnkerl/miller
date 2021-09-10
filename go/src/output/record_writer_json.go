@@ -6,14 +6,14 @@ import (
 	"io"
 	"os"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/types"
 )
 
 // ----------------------------------------------------------------
 type RecordWriterJSON struct {
 	// Parameters:
-	writerOptions  *cliutil.TWriterOptions
+	writerOptions  *cli.TWriterOptions
 	jsonFormatting types.TJSONFormatting
 
 	// State:
@@ -21,7 +21,7 @@ type RecordWriterJSON struct {
 }
 
 // ----------------------------------------------------------------
-func NewRecordWriterJSON(writerOptions *cliutil.TWriterOptions) *RecordWriterJSON {
+func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) *RecordWriterJSON {
 	var jsonFormatting types.TJSONFormatting = types.JSON_SINGLE_LINE
 	if writerOptions.JSONOutputMultiline {
 		jsonFormatting = types.JSON_MULTILINE

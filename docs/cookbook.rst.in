@@ -105,6 +105,18 @@ POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n 
 
 The difference is a matter of taste (although ``mlr cat -n`` puts the counter first).
 
+Splitting a string and taking a few of the components
+----------------------------------------------------------------
+
+Suppose you want to just keep the first two components of the hostnames:
+
+POKI_RUN_COMMAND{{cat data/hosts.csv}}HERE
+
+While [Miller 6](https://johnkerl.org/miller6) we will have arrays, for Miller 5 we need to split using
+maps, taking map keys `1` and `2`:
+
+POKI_RUN_COMMAND{{mlr --csv --from data/hosts.csv put '$host = joinv(mapselect(splitnvx($host,"."),1,2),".")'}}HERE
+
 Options for dealing with duplicate rows
 ----------------------------------------------------------------
 

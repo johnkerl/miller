@@ -220,19 +220,19 @@ GENMD_RUN_COMMAND
 mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
 GENMD_EOF
 
-Use **--oflatsep** to specify the character which joins multilevel
+Use **--flatsep** to specify the character which joins multilevel
 keys for `emitp` (it defaults to a colon):
 
 GENMD_RUN_COMMAND
-mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+mlr put -q --flatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+mlr put -q --flatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --oxtab put -q --oflatsep / '
+mlr --oxtab put -q --flatsep / '
   @sum[$a][$b] += $x;
   end { emitp @sum }
 ' data/small

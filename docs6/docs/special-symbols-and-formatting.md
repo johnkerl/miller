@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -83,8 +85,8 @@ characters as delimiters -- here, control-A:
 <b>mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Name=Xiao, Lin\001Role=administrator
-Name=Khavari, Darius\001Role=tester
+Name=Xiao, Lin^ARole=administrator
+Name=Khavari, Darius^ARole=tester
 </pre>
 
 ## How can I handle field names with special symbols in them?

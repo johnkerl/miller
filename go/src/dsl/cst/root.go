@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"os"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 	"mlr/src/dsl"
 	"mlr/src/output"
 	"mlr/src/runtime"
@@ -20,7 +20,7 @@ import (
 
 // ----------------------------------------------------------------
 func NewEmptyRoot(
-	recordWriterOptions *cliutil.TWriterOptions,
+	recordWriterOptions *cli.TWriterOptions,
 	dslInstanceType DSLInstanceType, // mlr put, mlr filter, or mlr repl
 ) *RootNode {
 	return &RootNode{

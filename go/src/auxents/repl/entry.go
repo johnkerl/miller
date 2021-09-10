@@ -27,7 +27,7 @@ import (
 	"path"
 	"strings"
 
-	"mlr/src/cliutil"
+	"mlr/src/cli"
 )
 
 // ================================================================
@@ -35,9 +35,9 @@ func replUsage(verbName string, o *os.File, exitCode int) {
 	exeName := path.Base(os.Args[0])
 	fmt.Fprintf(o, "Usage: %s %s [options] {zero or more data-file names}\n", exeName, verbName)
 
-	// TODO: cliutil/UsageForReaderOptions
-	// TODO: cliutil/UsageForWriterOptions
-	// TODO: cliutil/UsageForReaderWriterOptions
+	// TODO: cli/UsageForReaderOptions
+	// TODO: cli/UsageForWriterOptions
+	// TODO: cli/UsageForReaderWriterOptions
 
 	// TODO: maybe -f/-e as in put?
 	// TODO: maybe -s as in put?
@@ -88,7 +88,7 @@ func ReplMain(args []string) int {
 	showPrompts := true
 	astPrintMode := ASTPrintNone
 	doWarnings := false
-	options := cliutil.DefaultOptions()
+	options := cli.DefaultOptions()
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		if !strings.HasPrefix(args[argi], "-") {
@@ -137,23 +137,20 @@ func ReplMain(args []string) int {
 				argi += 1
 			}
 
-		} else if cliutil.ParseReaderWriterOptions(
-			args, argc, &argi, &options.ReaderOptions, &options.WriterOptions,
-		) {
-
-		} else if cliutil.ParseReaderOptions(args, argc, &argi, &options.ReaderOptions) {
-
-		} else if cliutil.ParseWriterOptions(args, argc, &argi, &options.WriterOptions) {
+		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, &options) {
 
 		} else {
 			replUsage(replName, os.Stderr, 1)
 		}
 	}
 
+	cli.ApplyReaderOptionDefaults(&options.ReaderOptions)
+	cli.ApplyWriterOptionDefaults(&options.WriterOptions)
+
 	// --auto-flatten is on by default. But if input and output formats are both JSON,
 	// then we don't need to actually do anything. See also mlrcli_parse.go.
-	options.WriterOptions.AutoFlatten = cliutil.DecideFinalFlatten(&options)
-	options.WriterOptions.AutoUnflatten = cliutil.DecideFinalUnflatten(&options)
+	options.WriterOptions.AutoFlatten = cli.DecideFinalFlatten(&options)
+	options.WriterOptions.AutoUnflatten = cli.DecideFinalUnflatten(&options)
 
 	repl, err := NewRepl(
 		exeName,

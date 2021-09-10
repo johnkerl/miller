@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -39,6 +41,13 @@ In practice, profiling has shown that the input-reader uses the most CPU of all
 the above. This means CPUs running verbs may not be 100% utilized, since they
 are likely to be spending some of their time waiting for input data.
 
+Running Miller on a machine with more CPUs than active channels (as listed
+above) won't speed up a given invocation of Miller. However, of course, you'll
+be able to run more invocations of Miller at the same time if you like.
+
 You can set the Go-standard environment variable `GOMAXPROCS` if you like. If
 you don't, Miller will (as is standard for Go programs in Go 1.16 and above) up
 to all available CPUs.
+
+If you set `$GOMAXPROCS=1` in the environment, that's fine -- the Go runtime
+will multiplex different channel-handling goroutines onto the same CPU.

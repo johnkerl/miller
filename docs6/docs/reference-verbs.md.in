@@ -548,6 +548,18 @@ GENMD_RUN_COMMAND
 mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
 GENMD_EOF
 
+## json-parse
+
+GENMD_RUN_COMMAND
+mlr json-parse --help
+GENMD_EOF
+
+## json-stringify
+
+GENMD_RUN_COMMAND
+mlr json-stringify --help
+GENMD_EOF
+
 ## label
 
 GENMD_RUN_COMMAND

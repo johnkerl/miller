@@ -3,6 +3,8 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
 <a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
 &nbsp;
 <a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
@@ -21,7 +23,7 @@ Additionally, Miller gives you the option of including comments within your data
 ## Examples
 
 <pre class="pre-highlight-in-pair">
-<b>mlr help data-formats</b>
+<b>mlr help file-formats</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 CSV/CSV-lite: comma-separated values with separate header line
@@ -270,6 +272,13 @@ TODO: probably remove entirely
 -->
 
 * Use `--jflatsep yourseparatorhere` to specify the string used for key concatenation: this defaults to a single dot.
+
+### JSON-in-CSV
+
+It's quite common to have CSV data which contains stringified JSON as a column.
+See the [JSON parse and stringify
+section](reference-main-data-types.md#json-parse-and-stringify) for ways to
+decode these in Miller.
 
 ## PPRINT: Pretty-printed tabular
 
@@ -538,17 +547,53 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 <b>mlr help format-conversion</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-As keystroke-savers for format-conversion you may use the following:
---c2t --c2d --c2n --c2j --c2x --c2p --c2m
---t2c       --t2d --t2n --t2j --t2x --t2p --t2m
---d2c --d2t       --d2n --d2j --d2x --d2p --d2m
---n2c --n2t --n2d       --n2j --n2x --n2p --n2m
---j2c --j2t --j2d --j2n       --j2x --j2p --j2m
---x2c --x2t --x2d --x2n --x2j       --x2p --x2m
---p2c --p2t --p2d --p2n --p2j --p2x       --p2m
-The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
-PPRINT, and markdown, respectively. Note that markdown format is available for
-output only.
+Type 'mlr help {topic}' for any of the following:
+Essentials:
+  mlr help topics
+  mlr help basic-examples
+  mlr help file-formats
+Flags:
+  mlr help flags
+  mlr help comments-in-data-flags
+  mlr help compressed-data-flags
+  mlr help csv-only-flags
+  mlr help file-format-flags
+  mlr help flatten-unflatten-flags
+  mlr help format-conversion-keystroke-saver-flags
+  mlr help json-only-flags
+  mlr help legacy-flags
+  mlr help miscellaneous-flags
+  mlr help output-colorization-flags
+  mlr help pprint-only-flags
+  mlr help separator-flags
+Verbs:
+  mlr help list-verbs
+  mlr help usage-verbs
+  mlr help verb
+Functions:
+  mlr help list-functions
+  mlr help list-function-classes
+  mlr help list-functions-in-class
+  mlr help usage-functions
+  mlr help usage-functions-by-class
+  mlr help function
+Keywords:
+  mlr help list-keywords
+  mlr help usage-keywords
+  mlr help keyword
+Other:
+  mlr help auxents
+  mlr help mlrrc
+  mlr help output-colorization
+  mlr help type-arithmetic-info
+Shorthands:
+  mlr -g = mlr help flags
+  mlr -l = mlr help list-verbs
+  mlr -L = mlr help usage-verbs
+  mlr -f = mlr help list-functions
+  mlr -F = mlr help usage-functions
+  mlr -k = mlr help list-keywords
+  mlr -K = mlr help usage-keywords
 </pre>
 
 <!---
@@ -577,23 +622,53 @@ You can include comments within your data files, and either have them ignored, o
 <b>mlr help comments-in-data</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
---skip-comments                 Ignore commented lines (prefixed by "#")
-                                within the input.
---skip-comments-with {string}   Ignore commented lines within input, with
-                                specified prefix.
---pass-comments                 Immediately print commented lines (prefixed by "#")
-                                within the input.
---pass-comments-with {string}   Immediately print commented lines within input, with
-                                specified prefix.
-
-Notes:
-* Comments are only honored at the start of a line.
-* In the absence of any of the above four options, comments are data like
-  any other text.
-* When pass-comments is used, comment lines are written to standard output
-  immediately upon being read; they are not part of the record stream.  Results
-  may be counterintuitive. A suggestion is to place comments at the start of
-  data files.
+Type 'mlr help {topic}' for any of the following:
+Essentials:
+  mlr help topics
+  mlr help basic-examples
+  mlr help file-formats
+Flags:
+  mlr help flags
+  mlr help comments-in-data-flags
+  mlr help compressed-data-flags
+  mlr help csv-only-flags
+  mlr help file-format-flags
+  mlr help flatten-unflatten-flags
+  mlr help format-conversion-keystroke-saver-flags
+  mlr help json-only-flags
+  mlr help legacy-flags
+  mlr help miscellaneous-flags
+  mlr help output-colorization-flags
+  mlr help pprint-only-flags
+  mlr help separator-flags
+Verbs:
+  mlr help list-verbs
+  mlr help usage-verbs
+  mlr help verb
+Functions:
+  mlr help list-functions
+  mlr help list-function-classes
+  mlr help list-functions-in-class
+  mlr help usage-functions
+  mlr help usage-functions-by-class
+  mlr help function
+Keywords:
+  mlr help list-keywords
+  mlr help usage-keywords
+  mlr help keyword
+Other:
+  mlr help auxents
+  mlr help mlrrc
+  mlr help output-colorization
+  mlr help type-arithmetic-info
+Shorthands:
+  mlr -g = mlr help flags
+  mlr -l = mlr help list-verbs
+  mlr -L = mlr help usage-verbs
+  mlr -f = mlr help list-functions
+  mlr -F = mlr help usage-functions
+  mlr -k = mlr help list-keywords
+  mlr -K = mlr help usage-keywords
 </pre>
 
 Examples:

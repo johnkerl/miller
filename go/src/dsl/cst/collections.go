@@ -51,7 +51,7 @@ func (node *ArrayLiteralNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
-type ArrayOrMapIndexAccessNode struct {
+type CollectionIndexAccessNode struct {
 	baseEvaluable  IEvaluable
 	indexEvaluable IEvaluable
 }
@@ -74,13 +74,13 @@ func (node *RootNode) BuildArrayOrMapIndexAccessNode(
 		return nil, err
 	}
 
-	return &ArrayOrMapIndexAccessNode{
+	return &CollectionIndexAccessNode{
 		baseEvaluable:  baseEvaluable,
 		indexEvaluable: indexEvaluable,
 	}, nil
 }
 
-func (node *ArrayOrMapIndexAccessNode) Evaluate(
+func (node *CollectionIndexAccessNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	baseMlrval := node.baseEvaluable.Evaluate(state)
@@ -93,6 +93,20 @@ func (node *ArrayOrMapIndexAccessNode) Evaluate(
 	} else if baseMlrval.IsMap() {
 		output := baseMlrval.MapGet(indexMlrval)
 		return &output
+	} else if baseMlrval.IsStringOrVoid() {
+		mindex, isInt := indexMlrval.GetIntValue()
+		if !isInt {
+			return types.MLRVAL_ERROR
+		}
+		// Handle UTF-8 correctly: len(input1.printrep) will count bytes, not runes.
+		runes := []rune(baseMlrval.String())
+		// Miller uses 1-up, and negatively aliased, indexing for strings and arrays.
+		zindex, inBounds := types.UnaliasArrayLengthIndex(len(runes), mindex)
+		if !inBounds {
+			return types.MLRVAL_ERROR
+		}
+		return types.MlrvalPointerFromString(string(runes[zindex]))
+
 	} else if baseMlrval.IsAbsent() {
 		return types.MLRVAL_ABSENT
 	} else {
