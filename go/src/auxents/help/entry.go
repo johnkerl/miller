@@ -377,8 +377,6 @@ NIDX: implicitly numerically indexed (Unix-toolkit style)
 }
 
 // ----------------------------------------------------------------
-}
-
 func helpMlrrc() {
 	fmt.Print(
 		`You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.
