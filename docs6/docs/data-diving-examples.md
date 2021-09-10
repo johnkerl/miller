@@ -262,6 +262,7 @@ u_max     0.999969
 v_min     -0.092709
 v_mean    0.49778696586624427
 v_max     1.0725
+
 </pre>
 
 The histogram shows the different distribution of 0/1 flags:

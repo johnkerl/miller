@@ -1,15 +1,21 @@
 TOP:
 
-c! seps \001 etc !
-  mlrc --iusv --oxtab cat regtest/input/example.usv
-  mlr  --iusv --oxtab cat regtest/input/example.usv
-C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
-
-E flatten/unflatten page
+! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
+  - needs UTs as well
+E fill out flatten/unflatten page
+  - info early on in the intro!
+E arrays and maps pages: xref to fla/unfla page
+c array+string slice UTs
+! mapselect int-key etc -- fix + UT
 
 ? twi-dm re all-contribs: all-contributors.org
 
 * nikos materials -> fold in
+
+c! seps \001 etc !
+  mlrc --iusv --oxtab cat regtest/input/example.usv
+  mlr  --iusv --oxtab cat regtest/input/example.usv
+C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
 
 ----------------------------------------------------------------
 ALL:
@@ -37,17 +43,6 @@ E fill out flatten/unflatten page
   echo a:b:c=3 | mlr --ojson --no-jvstack --flatsep : cat
   -> call it --flatsep
 
-E fill out strings page
-  e substr0/substr1/substr. slices & string-indexing new in m6.
-  t RT for string/array indexing/slicing: like python: idx oob -> error; slice out -> empty
-E fill out arrays page
-  - xref to fla/unfla page
-  - slices including semantics for out-of-range slices
-  t oob like python: idx oob -> error; slice out -> empty
-E fill out maps page
-  - xref to fla/unfla page
-  - move from reference-dsl-variables
-
 * regex: more about what is / is not
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
 
@@ -57,12 +52,14 @@ c? mlr -S / -F outside of put/filter -- ?
 
 e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
 
-c -i, -o, --io need to set more than just file format
-t test --ifs pipe --icsv as well as --icsv --ifs pipe
-  ? entrypoint? or cli? map -i foo to --ifoo, -o foo to --ofoo, and --io foo to --foo
+csv-with-and-without-headers:
+? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
+? cat out nas.csv first
+? ag -> just grep ?
+l Miller handles compliant CSV: include rfc4180 link
+? Regularizing ragged CSV: use regularize verb?!?
 
 ----------------------------------------------------------------
-
 record-heterogeneity:
 ? current csv-reader code handles this? i think not. check csvlite-reader too.
 ? --allow-ragged-csv-input: link to new flags page once it's written
@@ -75,13 +72,6 @@ l link-to's:
   programming-language.md.in:easy for you to handle non-heterogeneous data
   two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
 ? back out of ref section -- ?
-
-csv-with-and-without-headers:
-? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
-? cat out nas.csv first
-? ag -> just grep ?
-l Miller handles compliant CSV: include rfc4180 link
-? Regularizing ragged CSV: use regularize verb?!?
 
 special-symbols-and-formatting:
 ? mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
@@ -144,19 +134,9 @@ E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (d
     values.
   - new: mlr: lashed-emit node types must be local variables, field names, or oosvars; got map literal.
   c ?make FunctionCallsite an Emittable? does this work in the BNF?
-? Use --flatsep -> check -- jflatsep, iflatsep, flatsep as --csv/--icsv/--ocsv -- ? what was the thinking at the time?
 ? mlr --oxtab put -q --flatsep / '
   o 2 examples not 3?
   o why not '--flatsep /' respected?
 
-diffs other langs:
-e slice incl/excl; split-in-half: x[:2] x[2:] vs x[:2] x[3:]
-e localvars in if/else
-e "arrays, including ..." -> 1-up array/string indexing/slicing
-e no boolish truthy falsy
-
 separators:
-E write up which file formats support which flags
-
-manpage:
-? [NEEDS READ-THROUGH]
+E write up which file formats support which flags (TODO comments)

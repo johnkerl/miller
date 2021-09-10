@@ -130,6 +130,7 @@ If you `mlr csv cat` this, you'll get an error message:
 a,b,c
 1,2,3
 mlr :  Miller: CSV header/data length mismatch 3 != 2 at filename data/het/ragged.csv row 3.
+
 </pre>
 
 There are two kinds of raggedness here. Since CSVs form records by zipping the

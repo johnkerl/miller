@@ -40,8 +40,8 @@ a special case.) This manpage documents #{`mlr --version`.chomp}."""
   ])
 	print make_code_block(`mlr help basic-examples`)
 
-	print make_section('DATA FORMATS', [])
-	print make_code_block(`mlr help data-formats`)
+	print make_section('FILE FORMATS', [])
+	print make_code_block(`mlr help file-formats`)
 
 	print make_section('HELP OPTIONS', [])
 	print make_code_block(`mlr help topics`)

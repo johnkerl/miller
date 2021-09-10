@@ -357,6 +357,7 @@ KEY IS c VALUE IS 3
 KEY IS a VALUE IS 4
 KEY IS b VALUE IS 5
 KEY IS c VALUE IS 6
+
 </pre>
 
 Here we used the local variables `k` and `v`. Now we've seen four kinds of variables:

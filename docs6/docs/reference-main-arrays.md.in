@@ -39,7 +39,8 @@ Also note that several [built-in functions](reference-dsl-builtin-functions.md) 
 ## 1-up indexing
 
 The most important difference between Miller's arrays and arrays in other
-languages is that indices start with 1, not 0. This is intentional.
+languages is that indices start with 1, not 0.  (The same is true for [Miller
+strings](reference-main-strings.md).) This is intentional.
 
 1-up array indices may feel like a thing of the past, belonging to Fortran and
 Matlab, say; or R and Julia as well, which are more modern.  But the overall
@@ -87,6 +88,34 @@ mlr -n put '
     print x[3:];
     print x[1:-1];
     print x[2:-2];
+  }
+'
+GENMD_EOF
+
+## Out-of-bounds indexing
+
+Somewhat imitating Python, out-of-bounds index accesses are
+[absent](reference-main-null-data.md), but out-of-bounds slice accesses result
+in trimming the indices, resulting in a short array or even the empty array:
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    x = [10, 20, 30, 40, 50];
+    print x[1];
+    print x[5];
+    print x[6]; # absent
+  }
+'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    x = [10, 20, 30, 40, 50];
+    print x[1:2];
+    print x[1:6];
+    print x[10:20];
   }
 '
 GENMD_EOF

@@ -67,7 +67,7 @@ def make_func_details
   function_classes = `mlr help list-function-classes`.split
 
   puts
-  puts "## Summary"
+  puts "## Functions by class"
   puts
   for function_class in function_classes
     class_link_name = "#"+"#{function_class}-functions"

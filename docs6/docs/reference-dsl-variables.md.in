@@ -283,6 +283,8 @@ mlr --from data/small put -q '
 '
 GENMD_EOF
 
+See also the [Maps page](reference-main-maps.md).
+
 ## Built-in variables
 
 These are written all in capital letters, and only a small, specific set of them is defined by Miller.

@@ -16,6 +16,28 @@ Quick links:
 </div>
 # List of command-line flags
 
+Here are flags you can use when invoking Miller.  For example, when you type
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson head -n 1 example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "color": "yellow",
+  "shape": "triangle",
+  "flag": "true",
+  "k": 1,
+  "index": 11,
+  "quantity": 43.6498,
+  "rate": 9.8870
+}
+</pre>
+
+the `--icsv` and `--ojson` bits are _flags_.  See the [Miller command
+structure](reference-main-overview.md) page for context.
+
+Also, at the command line, you can use `mlr -g` for a list much like this one.
+
 ## Comments-in-data flags
 
 Miller lets you put comments in your data, such as

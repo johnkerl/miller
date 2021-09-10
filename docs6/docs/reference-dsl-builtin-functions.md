@@ -16,6 +16,36 @@ Quick links:
 </div>
 # DSL built-in functions
 
+These are functions in the [Miller programming language](programming-language.md)
+that you can call when you use `mlr put` and `mlr filter`. For example, when you type
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint --from example.csv put '</b>
+<b>  $color = toupper($color);</b>
+<b>  $shape = gsub($shape, "[aeiou]", "*");</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate
+YELLOW tr**ngl* true  1  11    43.6498  9.8870
+RED    sq**r*   true  2  15    79.2778  0.0130
+RED    c*rcl*   true  3  16    13.8103  2.9010
+RED    sq**r*   false 4  48    77.5542  7.4670
+PURPLE tr**ngl* false 5  51    81.2290  8.5910
+RED    sq**r*   false 6  64    77.1991  9.5310
+PURPLE tr**ngl* false 7  65    80.1405  5.8240
+YELLOW c*rcl*   true  8  73    63.9785  4.2370
+YELLOW c*rcl*   true  9  87    63.5058  8.3350
+PURPLE sq**r*   false 10 91    72.3735  8.2430
+</pre>
+
+the `toupper` and `gsub` bits are _functions_.
+
+## Overview
+
+At the command line, you can use `mlr -f` and `mlr -F` for information much
+like what's on this page.
+
 Each function takes a specific number of arguments, as shown below, except for
 functions marked as variadic such as `min` and `max`. (The latter compute min
 and max of any number of arguments.) There is no notion of optional or
@@ -35,7 +65,7 @@ is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
 `? :` operator shows an argument-count of 3.
 
 
-## Summary
+## Functions by class
 
 * [**Arithmetic functions**](#arithmetic-functions):  [bitcount](#bitcount),  [madd](#madd),  [mexp](#mexp),  [mmul](#mmul),  [msub](#msub),  [pow](#pow),  [%](#percent),  [&](#bitwise-and),  [\*](#times),  [\**](#exponentiation),  [\+](#plus),  [\-](#minus),  [\.\*](#dot-times),  [\.\+](#dot-plus),  [\.\-](#dot-minus),  [\./](#dot-slash),  [/](#slash),  [//](#slash-slash),  [<<](#lsh),  [>>](#srsh),  [>>>](#ursh),  [^](#bitwise-xor),  [\|](#bitwise-or),  [~](#bitwise-not).
 * [**Boolean functions**](#boolean-functions):  [\!](#exclamation-point),  [\!=](#exclamation-point-equals),  [!=~](#regnotmatch),  [&&](#logical-and),  [<](#less-than),  [<=](#less-than-or-equals),  [==](#double-equals),  [=~](#regmatch),  [>](#greater-than),  [>=](#greater-than-or-equals),  [?:](#question-mark-colon),  [??](#absent-coalesce),  [???](#absent-empty-coalesce),  [^^](#logical-xor),  [\|\|](#logical-or).

@@ -548,6 +548,8 @@ Like out-of-stream and local variables, map literals can be multi-level:
 }
 </pre>
 
+See also the [Maps page](reference-main-maps.md).
+
 ## Built-in variables
 
 These are written all in capital letters, and only a small, specific set of them is defined by Miller.

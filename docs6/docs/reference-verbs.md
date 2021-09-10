@@ -16,10 +16,31 @@ Quick links:
 </div>
 # List of verbs
 
+Verbs are the building blocks of how you can use Miller to process your data.
+When you type
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --opprint sort -n quanity then head -n 4 example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k index quantity rate
+yellow triangle true  1 11    43.6498  9.8870
+red    square   true  2 15    79.2778  0.0130
+red    circle   true  3 16    13.8103  2.9010
+red    square   false 4 48    77.5542  7.4670
+</pre>
+
+the `sort` and `head` bits are _verbs_.  See the [Miller command
+structure](reference-main-overview.md) page for context.
+
+At the command line, you can use `mlr -l` and `mlr -L` for information much
+like what's on this page.
+
 ## Overview
 
 Whereas the Unix toolkit is made of the separate executables `cat`, `tail`, `cut`,
-`sort`, etc., Miller has subcommands, or **verbs**, invoked as follows:
+`sort`, etc., Miller has subcommands, or **verbs**, such as `mlr cat`, `mlr tail`, `mlr cut`, and
+`mlr sort`, invoked as follows:
 
 <pre class="pre-non-highlight-non-pair">
 mlr tac *.dat

@@ -71,7 +71,8 @@ Also note that several [built-in functions](reference-dsl-builtin-functions.md) 
 ## 1-up indexing
 
 The most important difference between Miller's arrays and arrays in other
-languages is that indices start with 1, not 0. This is intentional.
+languages is that indices start with 1, not 0.  (The same is true for [Miller
+strings](reference-main-strings.md).) This is intentional.
 
 1-up array indices may feel like a thing of the past, belonging to Fortran and
 Matlab, say; or R and Julia as well, which are more modern.  But the overall
@@ -134,6 +135,44 @@ x[4], x[5]]`.
 [30, 40, 50]
 [10, 20, 30, 40, 50]
 [20, 30, 40]
+</pre>
+
+## Out-of-bounds indexing
+
+Somewhat imitating Python, out-of-bounds index accesses are
+[absent](reference-main-null-data.md), but out-of-bounds slice accesses result
+in trimming the indices, resulting in a short array or even the empty array:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    x = [10, 20, 30, 40, 50];</b>
+<b>    print x[1];</b>
+<b>    print x[5];</b>
+<b>    print x[6]; # absent</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+10
+50
+
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    x = [10, 20, 30, 40, 50];</b>
+<b>    print x[1:2];</b>
+<b>    print x[1:6];</b>
+<b>    print x[10:20];</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[10, 20]
+[10, 20, 30, 40, 50]
+[]
 </pre>
 
 ## Auto-create results in maps

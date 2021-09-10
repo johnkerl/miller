@@ -69,11 +69,39 @@ Please check for missing semicolon.
 Expected one of:
   $ ; > >> | ? || ^^ && ?? ??? =~ !=~ == != >= < <= ^ & << >>> + - .+ .- .
   * / // % .* ./ .// ** [ [[ [[[
+
 </pre>
 
 ## elif
 
 Miller has [`elif`](reference-dsl-control-structures.md#if-statements), not `else if` or `elsif`.
+
+## If-statement variable scoping
+
+Miller is simple-minded about scoping [local variables](reference-dsl-variables.md#local-variables) to blocks.
+If you have
+
+<pre class="pre-non-highlight-non-pair">
+  if (something) {
+    x = 1
+  } else {
+    x = 2
+  }
+</pre>
+
+then there are two `x` variable, each confined only to their enclosing curly
+braces; there is no hoisting out of the `if` and `else` blocks.
+
+A suggestion is
+
+<pre class="pre-non-highlight-non-pair">
+  var x
+  if (something) {
+    x = 1
+  } else {
+    x = 2
+  }
+</pre>
 
 ## Required curly braces
 
@@ -89,6 +117,7 @@ Bodies for all compound statements must be enclosed in curly braces, even if the
 
 ## No autoconvert to boolean
 
+I.e. ints/strings/etc are neither "truthy" nor "falsy".
 Boolean tests in `if`/`while`/`for`/etc must always take a boolean expression:
 `if (1) {...}` results in the parse error
 `Miller: conditional expression did not evaluate to boolean.`,
@@ -181,7 +210,9 @@ See the [maps page](reference-main-maps.md).
 
 ## Arrays, including 1-up array indices
 
-Arrays are indexed starting with 1, not 0. This is discussed in detail on the [arrays page](reference-main-arrays.md).
+Arrays and strings are indexed starting with 1, not 0. This is discussed in
+detail on the [arrays page](reference-main-arrays.md) and the [strings
+page](reference-main-strings.md).
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv --from data/short.csv cat</b>
@@ -209,7 +240,11 @@ Record 2 has word ball
 Record 3 has word cat
 </pre>
 
-See the [arrays page](reference-main-arrays.md) for more about arrays.
+Also, slices for arrays and strings are _doubly inclusive_: `x[3:5]` gets you
+elements 3, 4, and 5 of the array or string named `x`.
+
+See the [arrays page](reference-main-arrays.md) for more about arrays; see the
+[strings page](reference-main-strings.md) for more about strings.
 
 ## Two-variable for-loops
 
