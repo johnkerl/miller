@@ -124,7 +124,7 @@ func TryBoolFromBoolString(input string) (bool, bool) {
 func GetArrayKeysSorted(input map[string]string) []string {
 	keys := make([]string, len(input))
 	i := 0
-	for key, _ := range input {
+	for key := range input {
 		keys[i] = key
 		i++
 	}

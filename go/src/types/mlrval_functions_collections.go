@@ -319,7 +319,7 @@ func MlrvalJoinK(input1, input2 *Mlrval) *Mlrval {
 	} else if input1.mvtype == MT_ARRAY {
 		var buffer bytes.Buffer
 
-		for i, _ := range input1.arrayval {
+		for i := range input1.arrayval {
 			if i > 0 {
 				buffer.WriteString(fieldSeparator)
 			}
@@ -596,7 +596,7 @@ func MlrvalGetKeys(input1 *Mlrval) *Mlrval {
 
 	} else if input1.mvtype == MT_ARRAY {
 		output := NewSizedMlrvalArray(int(len(input1.arrayval)))
-		for i, _ := range input1.arrayval {
+		for i := range input1.arrayval {
 			output.arrayval[i] = MlrvalFromInt(int(i + 1)) // Miller user-space indices are 1-up
 		}
 		return output
@@ -724,7 +724,7 @@ func MlrvalArrayify(input1 *Mlrval) *Mlrval {
 	} else if input1.mvtype == MT_ARRAY {
 		// TODO: comment (or rethink) that this modifies its inputs!!
 		output := input1.Copy()
-		for i, _ := range input1.arrayval {
+		for i := range input1.arrayval {
 			output.arrayval[i] = *MlrvalArrayify(&output.arrayval[i])
 		}
 		return output

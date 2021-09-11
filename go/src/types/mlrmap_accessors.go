@@ -377,6 +377,9 @@ func (mlrmap *Mlrmap) Clear() {
 	// Assuming everything unreferenced is getting GC'ed by the Go runtime
 	mlrmap.Head = nil
 	mlrmap.Tail = nil
+	if mlrmap.keysToEntries != nil {
+		mlrmap.keysToEntries = make(map[string]*MlrmapEntry)
+	}
 }
 
 // ----------------------------------------------------------------
@@ -635,7 +638,9 @@ func (mlrmap *Mlrmap) Rename(oldKey string, newKey string) bool {
 		// Rename field from 'a' to 'b' where there are both 'a' and 'b':
 		// remove old 'a' and put its value into the slot of 'b'.
 		existing.Value = entry.Value
-		delete(mlrmap.keysToEntries, oldKey)
+		if mlrmap.keysToEntries != nil {
+			delete(mlrmap.keysToEntries, oldKey)
+		}
 		mlrmap.Unlink(entry)
 	}
 
@@ -812,6 +817,9 @@ func (mlrmap *Mlrmap) linkAtHead(pe *MlrmapEntry) {
 		mlrmap.Head.Prev = pe
 		mlrmap.Head = pe
 	}
+	if mlrmap.keysToEntries != nil {
+		mlrmap.keysToEntries[pe.Key] = pe
+	}
 	mlrmap.FieldCount++
 }
 
@@ -827,6 +835,9 @@ func (mlrmap *Mlrmap) linkAtTail(pe *MlrmapEntry) {
 		pe.Next = nil
 		mlrmap.Tail.Next = pe
 		mlrmap.Tail = pe
+	}
+	if mlrmap.keysToEntries != nil {
+		mlrmap.keysToEntries[pe.Key] = pe
 	}
 	mlrmap.FieldCount++
 }

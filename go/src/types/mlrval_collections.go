@@ -546,7 +546,7 @@ func MakePointerArray(
 	valueArray []Mlrval,
 ) (pointerArray []*Mlrval) {
 	pointerArray = make([]*Mlrval, len(valueArray))
-	for i, _ := range valueArray {
+	for i := range valueArray {
 		pointerArray[i] = &valueArray[i]
 	}
 	return pointerArray

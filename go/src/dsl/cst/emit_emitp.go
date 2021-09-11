@@ -527,7 +527,7 @@ func (node *EmitXStatementNode) executeIndexed(
 
 	// TODO: libify this
 	indices := make([]*types.Mlrval, len(node.indexEvaluables))
-	for i, _ := range node.indexEvaluables {
+	for i := range node.indexEvaluables {
 		indices[i] = node.indexEvaluables[i].Evaluate(state)
 		if indices[i].IsAbsent() {
 			return nil

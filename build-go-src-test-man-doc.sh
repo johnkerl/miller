@@ -15,6 +15,7 @@ set -euo pipefail
 
 cd go
 go fmt ./...
+gofmt -s -w $(find . -name \*.go | grep -v src/parsing)
 ./build
 
 cd ../man6

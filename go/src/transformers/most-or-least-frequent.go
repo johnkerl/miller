@@ -261,7 +261,7 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 		for i := 0; i < outputLength; i++ {
 			outrec := types.NewMlrmapAsRecord()
 			groupByFieldValues := tr.valuesForGroup[sortPairs[i].groupingKey]
-			for j, _ := range tr.groupByFieldNames {
+			for j := range tr.groupByFieldNames {
 				outrec.PutCopy(
 					tr.groupByFieldNames[j],
 					groupByFieldValues[j],

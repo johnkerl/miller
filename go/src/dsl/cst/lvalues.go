@@ -1012,7 +1012,7 @@ func (node *IndexedLvalueNode) Assign(
 ) error {
 	indices := make([]*types.Mlrval, len(node.indexEvaluables))
 
-	for i, _ := range node.indexEvaluables {
+	for i := range node.indexEvaluables {
 		indices[i] = node.indexEvaluables[i].Evaluate(state)
 		if indices[i].IsAbsent() {
 			return nil
@@ -1042,7 +1042,7 @@ func (node *IndexedLvalueNode) Unassign(
 	state *runtime.State,
 ) {
 	indices := make([]*types.Mlrval, len(node.indexEvaluables))
-	for i, _ := range node.indexEvaluables {
+	for i := range node.indexEvaluables {
 		indices[i] = node.indexEvaluables[i].Evaluate(state)
 	}
 

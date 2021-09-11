@@ -150,7 +150,7 @@ func init() {
 		// Note: `j, _` rather than `_, downdashSectionName` since the latter
 		// is a data copy while the former allows us to do a reference. The
 		// former won't produce correct lookup-table data.
-		for j, _ := range downdashSectionNames {
+		for j := range downdashSectionNames {
 			downdashSectionName := downdashSectionNames[j]
 			// Patch a new entry into the "Flags" section of our lookup table.
 			entry := tHandlerInfo{
@@ -229,8 +229,10 @@ func HelpMain(args []string) int {
 func MainUsage(o *os.File) {
 	fmt.Fprintf(o,
 		`Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
+If zero file names are provided, standard input is read. Example:
+  mlr --csv sort -f shape example.csv
 Output of one verb may be chained as input to another using "then", e.g.
-  mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
+  mlr --csv stats1 -a min,mean,max -f quantity then sort -f color example.csv
 Please see 'mlr help topics' for more information.
 `)
 	fmt.Fprintf(o, "Please also see %s\n", lib.DOC_URL)

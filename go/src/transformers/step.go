@@ -584,13 +584,13 @@ func (stepper *tStepperEWMA) process(
 	inrec *types.Mlrmap,
 ) {
 	if !stepper.havePrevs {
-		for i, _ := range stepper.alphas {
+		for i := range stepper.alphas {
 			inrec.PutCopy(stepper.outputFieldNames[i], valueFieldValue)
 			stepper.prevs[i] = valueFieldValue.Copy()
 		}
 		stepper.havePrevs = true
 	} else {
-		for i, _ := range stepper.alphas {
+		for i := range stepper.alphas {
 			curr := valueFieldValue.Copy()
 			// xxx pending pointer-output refactor
 			product1 := types.MlrvalTimes(curr, &stepper.alphas[i])

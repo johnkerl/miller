@@ -44,7 +44,7 @@ func (node *ArrayLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	mlrvals := make([]types.Mlrval, len(node.evaluables))
-	for i, _ := range node.evaluables {
+	for i := range node.evaluables {
 		mlrvals[i] = *node.evaluables[i].Evaluate(state)
 	}
 	return types.MlrvalPointerFromArrayLiteralReference(mlrvals)
@@ -539,7 +539,7 @@ func (node *MapLiteralNode) Evaluate(
 ) *types.Mlrval {
 	output := types.MlrvalPointerFromEmptyMap()
 
-	for i, _ := range node.evaluablePairs {
+	for i := range node.evaluablePairs {
 		key := node.evaluablePairs[i].Key.Evaluate(state)
 		value := node.evaluablePairs[i].Value.Evaluate(state)
 

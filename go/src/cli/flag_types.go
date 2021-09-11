@@ -85,9 +85,6 @@ type FlagSection struct {
 	name        string
 	infoPrinter func()
 	flags       []Flag
-	// For format-conversion keystroke-savers, a matrix is plenty -- we don't
-	// need to print a tedious 60-line list.
-	suppressFlagEnumeration bool
 }
 
 // Flag is a container for all runtime as well as documentation information for
@@ -120,6 +117,10 @@ type Flag struct {
 
 	// A function for parsing the command line, as described above.
 	parser FlagParser
+
+	// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+	// need to print a tedious 60-line list.
+	suppressFlagEnumeration bool
 }
 
 // ================================================================
@@ -315,12 +316,12 @@ func (fs *FlagSection) Sort() {
 // ShowHelpForFlags prints all-in-one on-line help, nominally for `mlr help
 // flags`.
 func (fs *FlagSection) ShowHelpForFlags() {
-	// For format-conversion keystroke-savers, a matrix is plenty -- we don't
-	// need to print a tedious 60-line list.
-	if fs.suppressFlagEnumeration {
-		return
-	}
 	for _, flag := range fs.flags {
+		// For format-conversion keystroke-savers, a matrix is plenty -- we don't
+		// need to print a tedious 60-line list.
+		if flag.suppressFlagEnumeration {
+			continue
+		}
 		flag.ShowHelp()
 	}
 }

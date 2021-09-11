@@ -112,7 +112,7 @@ func (site *UDFCallsite) Evaluate(
 	numArguments := len(site.udf.signature.typeGatedParameterNames)
 	arguments := make([]*types.Mlrval, numArguments)
 
-	for i, _ := range site.udf.signature.typeGatedParameterNames {
+	for i := range site.udf.signature.typeGatedParameterNames {
 		arguments[i] = site.argumentNodes[i].Evaluate(state)
 
 		err := site.udf.signature.typeGatedParameterNames[i].Check(arguments[i])
@@ -127,7 +127,7 @@ func (site *UDFCallsite) Evaluate(
 	state.Stack.PushStackFrameSet()
 	defer state.Stack.PopStackFrameSet()
 
-	for i, _ := range arguments {
+	for i := range arguments {
 		err := state.Stack.DefineTypedAtScope(
 			runtime.NewStackVariable(site.udf.signature.typeGatedParameterNames[i].Name),
 			site.udf.signature.typeGatedParameterNames[i].TypeName,

@@ -393,6 +393,8 @@ FORMAT-CONVERSION KEYSTROKE-SAVER FLAGS
        | XTAB   | --x2c | --x2t | --x2j  | --x2d  | --x2n  |        | --x2p  | --x2m    |
        | PPRINT | --p2c | --p2t | --p2j  | --p2d  | --p2n  | --p2x  |        | --p2m    |
 
+       -p                       Keystroke-saver for `--nidx --fs space --repifs`.
+       -T                       Keystroke-saver for `--nidx --fs tab`.
 
 JSON-ONLY FLAGS
        These are flags which are applicable to JSON format.
@@ -2793,5 +2795,5 @@ SEE ALSO
 
 
 
-                                  2021-09-09                         MILLER(1)
+                                  2021-09-10                         MILLER(1)
 </pre>

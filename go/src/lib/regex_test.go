@@ -33,10 +33,10 @@ type tDataForMatches struct {
 // ----------------------------------------------------------------
 var dataForHasCaptures = []tDataForHasCaptures{
 	{"foo", false, nil},
-	{"\\0", true, [][]int{[]int{0, 2, 0, 2}}},
-	{"\\3", true, [][]int{[]int{0, 2, 0, 2}}},
-	{"\\34", true, [][]int{[]int{0, 2, 0, 2}}},
-	{"abc\\1def\\2ghi", true, [][]int{[]int{3, 5, 3, 5}, []int{8, 10, 8, 10}}},
+	{"\\0", true, [][]int{{0, 2, 0, 2}}},
+	{"\\3", true, [][]int{{0, 2, 0, 2}}},
+	{"\\34", true, [][]int{{0, 2, 0, 2}}},
+	{"abc\\1def\\2ghi", true, [][]int{{3, 5, 3, 5}, {8, 10, 8, 10}}},
 }
 
 var dataForSub = []tDataForSubGsub{
@@ -153,13 +153,13 @@ func compareMatrices(
 	if len(actualMatrix) != len(expectedMatrix) {
 		return false
 	}
-	for i, _ := range expectedMatrix {
+	for i := range expectedMatrix {
 		actualRow := actualMatrix[i]
 		expectedRow := expectedMatrix[i]
 		if len(actualRow) != len(expectedRow) {
 			return false
 		}
-		for j, _ := range expectedRow {
+		for j := range expectedRow {
 			if actualRow[j] != expectedRow[j] {
 				return false
 			}
@@ -181,7 +181,7 @@ func compareCaptures(
 	if len(actualCaptures) != len(expectedCaptures) {
 		return false
 	}
-	for i, _ := range expectedCaptures {
+	for i := range expectedCaptures {
 		if actualCaptures[i] != expectedCaptures[i] {
 			return false
 		}

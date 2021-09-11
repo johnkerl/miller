@@ -7,6 +7,7 @@ E fill out flatten/unflatten page
 E arrays and maps pages: xref to fla/unfla page
 c array+string slice UTs
 ! mapselect int-key etc -- fix + UT
+c UT per se for lrec ops
 
 ? twi-dm re all-contribs: all-contributors.org
 

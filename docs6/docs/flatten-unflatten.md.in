@@ -29,3 +29,104 @@ comment:
 GENMD_RUN_COMMAND
 mlr --json --jvstack cat data/json-example-3.json
 GENMD_EOF
+
+TBF
+
+j2c cat data/flatten.json
+a,b.1,b.2
+1,2,3
+4,5,6
+$ mlr --j2c --no-auto-flatten cat data/flatten.json
+a,b
+1,"[2, 3]"
+4,"[5, 6]"
+$ mlr --j2c cat data/flatten.json | mlr --c2j cat
+{
+  "a": 1,
+  "b": {
+    "1": 2,
+    "2": 3
+  }
+}
+{
+  "a": 4,
+  "b": {
+    "1": 5,
+    "2": 6
+  }
+}
+$ mlr --j2c cat data/flatten.json | mlr --c2j --no-auto-unflatten cat
+{
+  "a": 1,
+  "b.1": 2,
+  "b.2": 3
+}
+{
+  "a": 4,
+  "b.1": 5,
+  "b.2": 6
+}
+$ mlr --j2c cat data/flatten.json | mlr --c2j cat
+{
+  "a": 1,
+  "b": {
+    "1": 2,
+    "2": 3
+  }
+}
+{
+  "a": 4,
+  "b": {
+    "1": 5,
+    "2": 6
+  }
+}
+$ mlr --j2c --no-auto-flatten cat data/flatten.json | mlr --c2j cat
+{
+  "a": 1,
+  "b": "[2, 3]"
+}
+{
+  "a": 4,
+  "b": "[5, 6]"
+}
+$ mlr --j2c --no-auto-flatten cat data/flatten.json | mlr --c2j json-parse -f b
+{
+  "a": 1,
+  "b": [2, 3]
+}
+{
+  "a": 4,
+  "b": [5, 6]
+}
+$ mlr --j2c --no-auto-flatten cat data/flatten.json | mlr --c2j json-parse
+{
+  "a": 1,
+  "b": [2, 3]
+}
+{
+  "a": 4,
+  "b": [5, 6]
+}
+johnkerl@ip-192-168-1-5[docs]$
+
+The second is that Miller 6 "flattens" arrays/maps by key-spreading if the output format is not JSON:
+
+$ echo x=a_vs_b | mlr --ocsv put '$property = splitax($x, "_vs_")'
+x,property.1,property.2
+a_vs_b,a,b
+
+A few new things in MIller 6:
+
+    Arrays exist at all
+    Record values can be arrays or maps throughout the processing chain
+
+If the output format doesn't support nested structures (i.e. anything other than JSON) these get spread out into the property.1 and property.2 you're seeing.
+
+The doc material for flatten/unflatten isn't written yet (https://johnkerl.org/miller6/flatten-unflatten) but this is one of my next things to do. See also https://johnkerl.org/miller6/new-in-miller-6/
+
+On the one hand I'm very excited -- this takes CSV <-> JSON interoperability to new levels, and is (I think ...) quite intuitive.
+
+However I'm not sure everyone will see it that way; maybe the flattening and unflattening will just confuse people.
+
+My current intention is to make flatten/unflatten on by default; there are --no-auto-flatten and no-auto-unflatten flags in the flag-list page. But if people really hate it, maybe it would be best to make it default 'off' ...
