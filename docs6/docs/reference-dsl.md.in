@@ -58,7 +58,7 @@ the body of the loop, not the loop itself.
 
 (But you can, if you like, use those per-record statements to grow a list of
 records, then loop over them all in an `end` block. This is described in the
-page on [operating on all records](operating-on-all-records.md)).
+page on [operating on all records](operating-on-all-records.md).)
 
 To see this in action, let's take a look at the [data/short.csv](./data/short.csv) file:
 

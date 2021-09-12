@@ -24,17 +24,19 @@ pages have been split up into separate pages. (See also
 Since CSV is overwhelmingly the most popular data format for Miller, it is
 now discussed first, and more examples use CSV.
 
-## JSON support, and arrays
+## Improved JSON support, and arrays
 
 Arrays are now supported in Miller's `put`/`filter` programming language, as
-described in the [Arrays reference](reference-main-arrays.md). Also, `array` is
-now a keyword so this is no longer usable as a local-variable or UDF name.
+described in the [Arrays reference](reference-main-arrays.md). (Also, `array` is
+now a keyword so this is no longer usable as a local-variable or UDF name.)
 
 JSON support is improved:
 
 * Direct support for arrays means that you can now use Miller to process more JSON files.
 * Streamable JSON parsing: Miller's internal record-processing pipeline starts as soon as the first record is read (which was already the case for other file formats). This means that, unless records are wrapped with outermost `[...]`, Miller now handles JSON in `tail -f` contexts like it does for other file formats.
 * Flatten/unflatten -- conversion of JSON nested data structures (arrays and/or maps in record values) to/from non-JSON formats is a powerful new feature, discussed in the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
+
+See the [Arrays reference](reference-main-arrays.md) for more information.
 
 ## Improved Windows experience
 

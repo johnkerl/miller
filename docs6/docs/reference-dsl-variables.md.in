@@ -293,9 +293,11 @@ Namely, Miller supports the following five built-in variables for [filter and
 put](reference-dsl.md), all `awk`-inspired: `NF`, `NR`, `FNR`, `FILENUM`, and
 `FILENAME`, as well as the mathematical constants `M_PI` and `M_E`.  As well,
 there are the read-only separator variables `IRS`, `ORS`, `IFS`, `OFS`, `IPS`,
-and `OPS` as discussed on the [separators page](reference-main-separators.md).
-Lastly, the `ENV` map allows read/write access to environment variables, e.g.
-`ENV["HOME"]` or `ENV["foo_".$hostname]` or `ENV["VERSION"]="1.2.3"`.
+and `OPS` as discussed on the [separators page](reference-main-separators.md),
+and the flatten/unflatten separator `FLATSEP` discussed on the
+[flatten/unflatten page](flatten-unflatten.md).  Lastly, the `ENV` map allows
+read/write access to environment variables, e.g.  `ENV["HOME"]` or
+`ENV["foo_".$hostname]` or `ENV["VERSION"]="1.2.3"`.
 
 <!--- TODO: FLATSEP IFLATSEP OFLATSEP --->
 

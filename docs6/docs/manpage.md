@@ -29,11 +29,13 @@ NAME
 
 SYNOPSIS
        Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more
-       file names} Output of one verb may be chained as input to another using
-       "then", e.g.
-         mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
-       Please see 'mlr help topics' for more information.  Please also see
-       https://johnkerl.org/miller6
+       file names} If zero file names are provided, standard input is read.
+       Example:
+         mlr --csv sort -f shape example.csv Output of one verb may be chained
+       as input to another using "then", e.g.
+         mlr --csv stats1 -a min,mean,max -f quantity then sort -f color
+       example.csv Please see 'mlr help topics' for more information.  Please
+       also see https://johnkerl.org/miller6
 
 
 DESCRIPTION
@@ -2795,5 +2797,5 @@ SEE ALSO
 
 
 
-                                  2021-09-10                         MILLER(1)
+                                  2021-09-11                         MILLER(1)
 </pre>

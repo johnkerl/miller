@@ -1,132 +1,179 @@
-# Flatten/unflatten: JSON vs. tabular formats
+# Flatten/unflatten: converting between JSON and tabular formats
 
-TODO
+Miller has long supported reading and writing multiple [file
+formats](file-formats.md) including CSV and JSON, as well as converting back
+and forth between them. Two things new in [Miller 6](new-in-miller-6-md),
+though, are that [arrays are now fully supported](reference-main-arrays.md),
+and that [record values are typed](new-in-miller-6.md#improved-numeric-conversion)
+throughout Miller's processing chain from input through [verbs](reference-verbs.md)
+to output -- which includes improved handling for [maps](reference-main-maps.md) and
+[arrays](reference-main-arrays.md) as record values.
 
-* JSON-to-JSON
-* JSON-to-not
-* not-to-JSON
-* not-to-not
-* 'concatening keys'
-* to-array heuristic
-* no-flatten / no-unflatten options
-
-## TBF
-
-Suppose we have arrays like this in our input data:
-
-GENMD_RUN_COMMAND
-cat data/json-example-3.json
-GENMD_EOF
-
-comment:
+This raises the question, though, of how to handle maps and arrays as record values.
+For [JSON files](file-formats.md#json), this is easy -- JSON is a nested format where values
+can be maps or arrays, which can contain other maps or arrays, and so on, with the nesting
+happily indicated by curly braces:
 
 GENMD_RUN_COMMAND
-mlr --ijson --oxtab cat data/json-example-3.json
+cat data/map-values.json
 GENMD_EOF
-
-comment:
 
 GENMD_RUN_COMMAND
-mlr --json --jvstack cat data/json-example-3.json
+cat data/map-values-nested.json
 GENMD_EOF
 
-TBF
+Miller's [other formats](file-formats.md), though, such as CSV, are all non-nested -- a cell
+in a CSV row can't contain another entire row. As we'll see in this section, there are two main
+ways to **flatten** nested data structures down to individual CSV cells -- either by _key-spreading_
+(which is the default), or by _JSON-stringifying):
 
-j2c cat data/flatten.json
-a,b.1,b.2
-1,2,3
-4,5,6
-$ mlr --j2c --no-auto-flatten cat data/flatten.json
-a,b
-1,"[2, 3]"
-4,"[5, 6]"
-$ mlr --j2c cat data/flatten.json | mlr --c2j cat
-{
-  "a": 1,
-  "b": {
-    "1": 2,
-    "2": 3
-  }
-}
-{
-  "a": 4,
-  "b": {
-    "1": 5,
-    "2": 6
-  }
-}
-$ mlr --j2c cat data/flatten.json | mlr --c2j --no-auto-unflatten cat
-{
-  "a": 1,
-  "b.1": 2,
-  "b.2": 3
-}
-{
-  "a": 4,
-  "b.1": 5,
-  "b.2": 6
-}
-$ mlr --j2c cat data/flatten.json | mlr --c2j cat
-{
-  "a": 1,
-  "b": {
-    "1": 2,
-    "2": 3
-  }
-}
-{
-  "a": 4,
-  "b": {
-    "1": 5,
-    "2": 6
-  }
-}
-$ mlr --j2c --no-auto-flatten cat data/flatten.json | mlr --c2j cat
-{
-  "a": 1,
-  "b": "[2, 3]"
-}
-{
-  "a": 4,
-  "b": "[5, 6]"
-}
-$ mlr --j2c --no-auto-flatten cat data/flatten.json | mlr --c2j json-parse -f b
-{
-  "a": 1,
-  "b": [2, 3]
-}
-{
-  "a": 4,
-  "b": [5, 6]
-}
-$ mlr --j2c --no-auto-flatten cat data/flatten.json | mlr --c2j json-parse
-{
-  "a": 1,
-  "b": [2, 3]
-}
-{
-  "a": 4,
-  "b": [5, 6]
-}
-johnkerl@ip-192-168-1-5[docs]$
+* **Key-spreading** is when the single map-valued field
+`b={"x": 2, "y": 3}` spreads into multiple fields `b.x=2,b.y=3`;
+* **JSON-stringifying** is when the single map-valued field `"b": {"x": 2, "y": 3}` becomes the single string-valued field `b="{\"x\":2,\"y\":3}"`.
 
-The second is that Miller 6 "flattens" arrays/maps by key-spreading if the output format is not JSON:
+Miller intends to provide intuitive default behavior for these conversions, while also
+providing you with more control when you need it.
 
-$ echo x=a_vs_b | mlr --ocsv put '$property = splitax($x, "_vs_")'
-x,property.1,property.2
-a_vs_b,a,b
+## Converting maps between JSON and non-JSON
 
-A few new things in MIller 6:
+Let's first look at the default behavior with map-valued fields. Miller's
+default behavior is to spread the map values into multiple keys -- using
+Miller's `flatsep` separator, which defaults to `.` -- to join the original
+record key with map keys:
 
-    Arrays exist at all
-    Record values can be arrays or maps throughout the processing chain
+GENMD_RUN_COMMAND
+cat data/map-values.json
+GENMD_EOF
 
-If the output format doesn't support nested structures (i.e. anything other than JSON) these get spread out into the property.1 and property.2 you're seeing.
+Flattened to CSV format:
 
-The doc material for flatten/unflatten isn't written yet (https://johnkerl.org/miller6/flatten-unflatten) but this is one of my next things to do. See also https://johnkerl.org/miller6/new-in-miller-6/
+GENMD_RUN_COMMAND
+mlr --ijson --ocsv cat data/map-values.json
+GENMD_EOF
 
-On the one hand I'm very excited -- this takes CSV <-> JSON interoperability to new levels, and is (I think ...) quite intuitive.
+Flattened to pretty-print format:
 
-However I'm not sure everyone will see it that way; maybe the flattening and unflattening will just confuse people.
+GENMD_RUN_COMMAND
+mlr --ijson --opprint cat data/map-values.json
+GENMD_EOF
 
-My current intention is to make flatten/unflatten on by default; there are --no-auto-flatten and no-auto-unflatten flags in the flag-list page. But if people really hate it, maybe it would be best to make it default 'off' ...
+Using flatten-separator `:` instead of the default `.`:
+
+GENMD_RUN_COMMAND
+mlr --ijson --opprint --flatsep : cat data/map-values.json
+GENMD_EOF
+
+If the maps are more deeply nested, each level of map keys is joined in:
+
+GENMD_RUN_COMMAND
+cat data/map-values-nested.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --opprint cat data/map-values-nested.json
+GENMD_EOF
+
+## Flattening arrays from JSON to non-JSON
+
+If the input data contains arrays, these are also flattened similarly: the
+[1-up array indices](reference-main-arrays.md#1-up-indexing) `1,2,3,...` become string keys
+`"1","2","3",...`:
+
+GENMD_RUN_COMMAND
+cat data/array-values.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --opprint cat data/array-values.json
+GENMD_EOF
+
+If the arrays are more deeply nested, each level of arrays keys is joined in:
+
+GENMD_RUN_COMMAND
+cat data/array-values-nested.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --opprint cat data/array-values-nested.json
+GENMD_EOF
+
+In the nested-data examples shown here, nested map values are shown containing
+maps, and nested array values are shown containing arrays -- of course (even
+though not shown here) nested map values can contain arrays, and vice versa.
+
+## Unflattening maps from non-JSON to JSON
+
+Miller's default unflattening behavior from non-JSON to JSON formats is the opposite of the flattening
+behavior:
+
+GENMD_RUN_COMMAND
+cat data/map-values-spread.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --icsv --ojson cat data/map-values-spread.csv
+GENMD_EOF
+
+Here too the `--flatsep` flag can be used to specify the separator in the data if it's not the default `.`:
+
+GENMD_RUN_COMMAND
+cat data/map-values-spread-colon.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --icsv --ojson --flatsep : cat data/map-values-spread-colon.csv
+GENMD_EOF
+
+## Unflattening arrays from non-JSON to JSON
+
+Arrays are unflattened similarly:
+
+TODO: check why auto-infer is NOT happening :(
+
+GENMD_RUN_COMMAND
+cat data/array-values-spread.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --icsv --ojson cat data/array-values-spread.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+cat data/array-values-spread-colon.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --icsv --ojson --flatsep : cat data/array-values-spread-colon.csv
+GENMD_EOF
+
+xxx mention (aftre fixing!) the heuristic: if keys 1..n all integerable, and consecutive, then infer
+array. else map. w/ genmd'ed example.
+
+## TODO: xxx simple examples w/o flatten/unflatten
+
+GENMD_RUN_COMMAND
+cat data/map-values.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --j2c --no-auto-flatten cat data/map-values.json
+GENMD_EOF
+
+and back
+
+x 2 for the back -- w/ json-parse
+
+## TODO
+
+TODO: try out in-DSL array-create (e.g. splita) for CSV to CSV ...
+
+## TODO
+
+TODO: manual control w/ f/uf verb/func
+
+```
+$ mlr --csv put '$z=[1,2,3]' example.csv
+color,shape,flag,k,index,quantity,rate,z.1,z.2,z.3
+yellow,triangle,true,1,11,43.6498,9.8870,1,2,3
+red,square,true,2,15,79.2778,0.0130,1,2,3
+```

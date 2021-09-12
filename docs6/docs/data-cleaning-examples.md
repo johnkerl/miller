@@ -88,5 +88,9 @@ A third way is to abort the process on first instance of bad data:
 <b>mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+name,reachable
+barney,false
+betty,true
+fred,true
 Miller: is_string type-assertion failed at NR=4 FNR=4 FILENAME=data/het-bool.csv
 </pre>
