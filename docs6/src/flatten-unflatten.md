@@ -58,10 +58,13 @@ happily indicated by curly braces:
 }
 </pre>
 
-Miller's [other formats](file-formats.md), though, such as CSV, are all non-nested -- a cell
-in a CSV row can't contain another entire row. As we'll see in this section, there are two main
-ways to **flatten** nested data structures down to individual CSV cells -- either by _key-spreading_
-(which is the default), or by _JSON-stringifying):
+How can we represent these in CSV files?
+
+Miller's [non-JSON formats](file-formats.md), such as CSV, are all non-nested -- a
+cell in a CSV row can't contain another entire row. As we'll see in this
+section, there are two main ways to **flatten** nested data structures down to
+individual CSV cells -- either by _key-spreading_ (which is the default), or by
+_JSON-stringifying_:
 
 * **Key-spreading** is when the single map-valued field
 `b={"x": 2, "y": 3}` spreads into multiple fields `b.x=2,b.y=3`;
@@ -149,7 +152,52 @@ a b.s.w b.s.x b.t.y b.t.z
 6 7     8     9     10
 </pre>
 
-## Flattening arrays from JSON to non-JSON
+**Unflattening** is simply the reverse -- from non-JSON back to JSON:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/map-values.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "a": 1,
+  "b": {"x": 2, "y": 3}
+}
+{
+  "a": 4,
+  "b": {"x": 5, "y": 6}
+}
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsv cat data/map-values.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a,b.x,b.y
+1,2,3
+4,5,6
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsv cat data/map-values.json | mlr --icsv --ojson cat</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "a": 1,
+  "b": {
+    "x": 2,
+    "y": 3
+  }
+}
+{
+  "a": 4,
+  "b": {
+    "x": 5,
+    "y": 6
+  }
+}
+</pre>
+
+## Converting arrays between JSON and non-JSON
 
 If the input data contains arrays, these are also flattened similarly: the
 [1-up array indices](reference-main-arrays.md#1-up-indexing) `1,2,3,...` become string keys
@@ -207,79 +255,24 @@ In the nested-data examples shown here, nested map values are shown containing
 maps, and nested array values are shown containing arrays -- of course (even
 though not shown here) nested map values can contain arrays, and vice versa.
 
-## Unflattening maps from non-JSON to JSON
-
-Miller's default unflattening behavior from non-JSON to JSON formats is the opposite of the flattening
-behavior:
+**Unflattening** arrays is, again, simply the reverse -- from non-JSON back to JSON:
 
 <pre class="pre-highlight-in-pair">
-<b>cat data/map-values-spread.csv</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a,b.x,b.y
-1,2,3
-4,5,6
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --icsv --ojson cat data/map-values-spread.csv</b>
+<b>cat data/array-values.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {
   "a": 1,
-  "b": {
-    "x": 2,
-    "y": 3
-  }
+  "b": [2, 3]
 }
 {
   "a": 4,
-  "b": {
-    "x": 5,
-    "y": 6
-  }
+  "b": [5, 6]
 }
 </pre>
 
-Here too the `--flatsep` flag can be used to specify the separator in the data if it's not the default `.`:
-
 <pre class="pre-highlight-in-pair">
-<b>cat data/map-values-spread-colon.csv</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a,b:x,b:y
-1,2,3
-4,5,6
-</pre>
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --icsv --ojson --flatsep : cat data/map-values-spread-colon.csv</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "a": 1,
-  "b": {
-    "x": 2,
-    "y": 3
-  }
-}
-{
-  "a": 4,
-  "b": {
-    "x": 5,
-    "y": 6
-  }
-}
-</pre>
-
-## Unflattening arrays from non-JSON to JSON
-
-Arrays are unflattened similarly:
-
-TODO: check why auto-infer is NOT happening :(
-
-<pre class="pre-highlight-in-pair">
-<b>cat data/array-values-spread.csv</b>
+<b>mlr --ijson --ocsv cat data/array-values.json</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 a,b.1,b.2
@@ -288,7 +281,7 @@ a,b.1,b.2
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --ojson cat data/array-values-spread.csv</b>
+<b>mlr --ijson --ocsv cat data/array-values.json | mlr --icsv --ojson cat</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {
@@ -301,78 +294,57 @@ a,b.1,b.2
 }
 </pre>
 
+## Auto-inferencing of arrays on unflatten
+
+Note that the CSV field names `b.x` and `b.y` aren't too different from `b.1`
+and `b.2`.  Miller has the heuristic that if it's unflattening and gets a map
+with keys `"1"`, `"2"`, etc.  -- starting with `"1"`, consecutively, and with
+no gaps -- it turns that back into an array.  This is precisely to undo the
+flatten conversion. However, it may (or may not) be surprising:
+
 <pre class="pre-highlight-in-pair">
-<b>cat data/array-values-spread-colon.csv</b>
+<b>cat data/consecutive.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a,b:1,b:2
-1,2,3
+a.1,a.2,a.3
 4,5,6
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --icsv --ojson --flatsep : cat data/array-values-spread-colon.csv</b>
+<b>mlr --c2j cat data/consecutive.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 {
-  "a": 1,
-  "b": [2, 3]
-}
-{
-  "a": 4,
-  "b": [5, 6]
-}
-</pre>
-
-xxx mention (aftre fixing!) the heuristic: if keys 1..n all integerable, and consecutive, then infer
-array. else map. w/ genmd'ed example.
-
-## TODO: xxx simple examples w/o flatten/unflatten
-
-<pre class="pre-highlight-in-pair">
-<b>cat data/map-values.json</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-{
-  "a": 1,
-  "b": {"x": 2, "y": 3}
-}
-{
-  "a": 4,
-  "b": {"x": 5, "y": 6}
+  "a": [4, 5, 6]
 }
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --j2c --no-auto-flatten cat data/map-values.json</b>
+<b>cat data/non-consecutive.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a,b
-1,"{
-  ""x"": 2,
-  ""y"": 3
-}"
-4,"{
-  ""x"": 5,
-  ""y"": 6
-}"
+a.1,a.3,a.5
+4,5,6
 </pre>
 
-and back
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2j cat data/non-consecutive.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "a": {
+    "1": 4,
+    "3": 5,
+    "5": 6
+  }
+}
+</pre>
 
-x 2 for the back -- w/ json-parse
+## TODO: w/o defaults
 
-## TODO
+* list the auto-flatten/a-uf rules & what they do in terms of appending to the chain.
+* also: csv-to-csv w/ $z=[1,2,3] (or, better, splita) example
+* show behavior w/ these being used.
+* show json-parse, json-stringify.
+* xref to JSON-in-CSV
 
-TODO: try out in-DSL array-create (e.g. splita) for CSV to CSV ...
-
-## TODO
-
-TODO: manual control w/ f/uf verb/func
-
-```
-$ mlr --csv put '$z=[1,2,3]' example.csv
-color,shape,flag,k,index,quantity,rate,z.1,z.2,z.3
-yellow,triangle,true,1,11,43.6498,9.8870,1,2,3
-red,square,true,2,15,79.2778,0.0130,1,2,3
-```

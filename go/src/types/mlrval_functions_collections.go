@@ -553,8 +553,8 @@ func MlrvalSplitA(input1, input2 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-// splitax("3,4,5", ",") -> ["3","4","5"]
-
+// MlrvalSplitAX splits a string to an array, without type-inference:
+// e.g. splitax("3,4,5", ",") -> ["3","4","5"]
 func MlrvalSplitAX(input1, input2 *Mlrval) *Mlrval {
 	if input1.mvtype != MT_STRING {
 		return MLRVAL_ERROR
@@ -568,7 +568,8 @@ func MlrvalSplitAX(input1, input2 *Mlrval) *Mlrval {
 	return mlrvalSplitAXHelper(input, fieldSeparator)
 }
 
-// Split out for MlrvalSplitAX and MlrvalUnflatten
+// mlrvalSplitAXHelper is Split out for the benefit of MlrvalSplitAX and
+// MlrvalUnflatten.
 func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 	fields := lib.SplitString(input, separator)
 

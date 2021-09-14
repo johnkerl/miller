@@ -127,8 +127,6 @@ If you `mlr csv cat` this, you'll get an error message:
 <b>mlr --csv cat data/het/ragged.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a,b,c
-1,2,3
 mlr :  Miller: CSV header/data length mismatch 3 != 2 at filename data/het/ragged.csv row 3.
 
 </pre>

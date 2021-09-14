@@ -22,10 +22,13 @@ GENMD_RUN_COMMAND
 cat data/map-values-nested.json
 GENMD_EOF
 
-Miller's [other formats](file-formats.md), though, such as CSV, are all non-nested -- a cell
-in a CSV row can't contain another entire row. As we'll see in this section, there are two main
-ways to **flatten** nested data structures down to individual CSV cells -- either by _key-spreading_
-(which is the default), or by _JSON-stringifying):
+How can we represent these in CSV files?
+
+Miller's [non-JSON formats](file-formats.md), such as CSV, are all non-nested -- a
+cell in a CSV row can't contain another entire row. As we'll see in this
+section, there are two main ways to **flatten** nested data structures down to
+individual CSV cells -- either by _key-spreading_ (which is the default), or by
+_JSON-stringifying_:
 
 * **Key-spreading** is when the single map-valued field
 `b={"x": 2, "y": 3}` spreads into multiple fields `b.x=2,b.y=3`;
@@ -73,7 +76,21 @@ GENMD_RUN_COMMAND
 mlr --ijson --opprint cat data/map-values-nested.json
 GENMD_EOF
 
-## Flattening arrays from JSON to non-JSON
+**Unflattening** is simply the reverse -- from non-JSON back to JSON:
+
+GENMD_RUN_COMMAND
+cat data/map-values.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --ocsv cat data/map-values.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --ocsv cat data/map-values.json | mlr --icsv --ojson cat
+GENMD_EOF
+
+## Converting arrays between JSON and non-JSON
 
 If the input data contains arrays, these are also flattened similarly: the
 [1-up array indices](reference-main-arrays.md#1-up-indexing) `1,2,3,...` become string keys
@@ -101,79 +118,49 @@ In the nested-data examples shown here, nested map values are shown containing
 maps, and nested array values are shown containing arrays -- of course (even
 though not shown here) nested map values can contain arrays, and vice versa.
 
-## Unflattening maps from non-JSON to JSON
-
-Miller's default unflattening behavior from non-JSON to JSON formats is the opposite of the flattening
-behavior:
+**Unflattening** arrays is, again, simply the reverse -- from non-JSON back to JSON:
 
 GENMD_RUN_COMMAND
-cat data/map-values-spread.csv
+cat data/array-values.json
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --icsv --ojson cat data/map-values-spread.csv
-GENMD_EOF
-
-Here too the `--flatsep` flag can be used to specify the separator in the data if it's not the default `.`:
-
-GENMD_RUN_COMMAND
-cat data/map-values-spread-colon.csv
+mlr --ijson --ocsv cat data/array-values.json
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --icsv --ojson --flatsep : cat data/map-values-spread-colon.csv
+mlr --ijson --ocsv cat data/array-values.json | mlr --icsv --ojson cat
 GENMD_EOF
 
-## Unflattening arrays from non-JSON to JSON
+## Auto-inferencing of arrays on unflatten
 
-Arrays are unflattened similarly:
-
-TODO: check why auto-infer is NOT happening :(
-
-GENMD_RUN_COMMAND
-cat data/array-values-spread.csv
-GENMD_EOF
+Note that the CSV field names `b.x` and `b.y` aren't too different from `b.1`
+and `b.2`.  Miller has the heuristic that if it's unflattening and gets a map
+with keys `"1"`, `"2"`, etc.  -- starting with `"1"`, consecutively, and with
+no gaps -- it turns that back into an array.  This is precisely to undo the
+flatten conversion. However, it may (or may not) be surprising:
 
 GENMD_RUN_COMMAND
-mlr --icsv --ojson cat data/array-values-spread.csv
+cat data/consecutive.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-cat data/array-values-spread-colon.csv
+mlr --c2j cat data/consecutive.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --icsv --ojson --flatsep : cat data/array-values-spread-colon.csv
-GENMD_EOF
-
-xxx mention (aftre fixing!) the heuristic: if keys 1..n all integerable, and consecutive, then infer
-array. else map. w/ genmd'ed example.
-
-## TODO: xxx simple examples w/o flatten/unflatten
-
-GENMD_RUN_COMMAND
-cat data/map-values.json
+cat data/non-consecutive.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --j2c --no-auto-flatten cat data/map-values.json
+mlr --c2j cat data/non-consecutive.csv
 GENMD_EOF
 
-and back
+## TODO: w/o defaults
 
-x 2 for the back -- w/ json-parse
+* list the auto-flatten/a-uf rules & what they do in terms of appending to the chain.
+* also: csv-to-csv w/ $z=[1,2,3] (or, better, splita) example
+* show behavior w/ these being used.
+* show json-parse, json-stringify.
+* xref to JSON-in-CSV
 
-## TODO
-
-TODO: try out in-DSL array-create (e.g. splita) for CSV to CSV ...
-
-## TODO
-
-TODO: manual control w/ f/uf verb/func
-
-```
-$ mlr --csv put '$z=[1,2,3]' example.csv
-color,shape,flag,k,index,quantity,rate,z.1,z.2,z.3
-yellow,triangle,true,1,11,43.6498,9.8870,1,2,3
-red,square,true,2,15,79.2778,0.0130,1,2,3
-```
