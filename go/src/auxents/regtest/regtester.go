@@ -445,8 +445,9 @@ func (regtester *RegTester) executeSingleCmdFile(
 	}
 
 	if regtester.doPopulate {
-		// Populate mode: write out the actual stdout/stderr/exit-code to disk
-		// as expected values for subsequent runs.
+		// Populate mode, not verify mode: write out the actual
+		// stdout/stderr/exit-code to disk as expected values for subsequent
+		// runs.
 
 		// TODO: temp replace-all for CR/LF to LF. Will need re-work once auto-detect is ported.
 		actualStdout = strings.ReplaceAll(actualStdout, "\r\n", "\n")
@@ -504,7 +505,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 		}
 
 	} else {
-		// Verify mode: check actuals against expecteds
+		// Verify mode, not populate mode: check actuals against expecteds
 
 		// Load the .expout file
 		expectedStdout, err := regtester.loadFile(expectedStdoutFileName, caseDir)
@@ -573,6 +574,10 @@ func (regtester *RegTester) executeSingleCmdFile(
 					expectedStdoutFileName,
 				)
 			}
+
+			if verbosityLevel >= 3 {
+				fmt.Println(RunDiffCommand(actualStdout, expectedStdout))
+			}
 			passed = false
 		}
 
@@ -584,6 +589,9 @@ func (regtester *RegTester) executeSingleCmdFile(
 					cmdFilePath,
 					expectedStderrFileName,
 				)
+			}
+			if verbosityLevel >= 3 {
+				fmt.Println(RunDiffCommand(actualStderr, expectedStderr))
 			}
 			passed = false
 		}

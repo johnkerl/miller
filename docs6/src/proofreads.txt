@@ -1,8 +1,15 @@
 TOP:
 
-! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
-  - needs UTs as well
 E fill out flatten/unflatten page
+  ! autodiff
+  ! mr -v regtest/cases/verb-flatten-unflatten regtest/cases/dsl-flatten-unflatten
+  ! code-dedupe MlrvalUnflatten Mlrmap::Unflatten Mlrmap::UnflattenFields
+  ! infer-array heuristic
+    mlr --csv --from $mldd/example.csv head -n 1 then put '$z=[1,2,3]'
+    mlr --csv --from $mldd/example.csv head -n 1 then put '$z=[1,2,3]' | mlr --c2j cat
+    - unflatten verb -- mlrmap::Unflatten
+    - unflatten function
+    - main: adds an unflatten verb to the end of the chain
   o info early on in the intro!
   o flatsep -> glossary
   o flatsep <-> fuf pg
@@ -14,6 +21,8 @@ c array+string slice UTs
 c UT per se for lrec ops
 * concatenating key -> key-folding analog of key-spreading
   e key-fold key-spread -> glossary
+! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
+  - needs UTs as well
 
 ? twi-dm re all-contribs: all-contributors.org
 

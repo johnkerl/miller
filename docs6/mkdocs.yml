@@ -6,6 +6,7 @@ theme:
   font:
     text: Lato
     code: Lato Mono
+docs_dir: './src'
 extra_css: ['extra.css']
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js

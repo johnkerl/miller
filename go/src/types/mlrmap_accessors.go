@@ -8,6 +8,11 @@ import (
 )
 
 // ----------------------------------------------------------------
+func (mlrmap *Mlrmap) IsEmpty() bool {
+	return mlrmap.Head == nil
+}
+
+// ----------------------------------------------------------------
 func (mlrmap *Mlrmap) Has(key string) bool {
 	return mlrmap.findEntry(key) != nil
 }

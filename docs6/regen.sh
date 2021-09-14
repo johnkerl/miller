@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-pushd docs
+pushd src
 ./genmds
 popd
 mkdocs build

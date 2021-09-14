@@ -14,17 +14,17 @@
 * Clone https://github.com/johnkerl/miller and cd into `docs6/` within your clone.
 * Quick-editing loop:
   * In one terminal, cd to this directory and leave `mkdocs serve` running.
-  * In another terminal, cd to the `docs` subdirectory of `docs6` and edit `*.md.in`.
+  * In another terminal, cd to the `src` subdirectory of `docs6` and edit `*.md.in`.
   * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited.
   * In your browser, visit http://127.0.0.1:8000
 * Alternate editing loop:
   * Leave one terminal open as a place you will run `mkdocs build`
-  * In one terminal, cd to the `docs` subdirectory of `docs6` and edit `*.md.in`.
-  * Generate `docs/*.md` from `docs/*.md.in`, and then from that generate the `site/*/*.html`:
+  * In one terminal, cd to the `src` subdirectory of `docs6` and edit `*.md.in`.
+  * Generate `src/*.md` from `src/*.md.in`, and then from that generate the `site/*/*.html`:
     * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited.
     * In the first terminal, run `mkdocs build` which will populate the `site` directory.
     * See also [./regen.sh](./regen.sh) which combines the `genmds` and `mkdocs build` steps.
-  * In your browser, visit `file:///your/path/to/miller/docs/site/index.html`
+  * In your browser, visit `file:///your/path/to/miller/docs6/site/index.html`
   * Link-checking:
     * `sudo pip3 install git+https://github.com/linkchecker/linkchecker.git`
     * `cd site` and `linkchecker .`
@@ -34,7 +34,7 @@
 ## Notes
 
 * CSS:
-  * I used the Mkdocs Readthedocs theme which I like a lot. I customized `docs6/docs/extra.css` for Miller coloring/branding.
+  * I used the Mkdocs Readthedocs theme which I like a lot. I customized `docs6/src/extra.css` for Miller coloring/branding.
 * Live code:
   * I didn't find a way to include non-Python live-code examples within Mkdocs so I adapted the pre-Mkdocs Miller-doc strategy which is to have a generator script read a template file (here, `foo.md.in`), run the marked lines, and generate the output file (`foo.md`). This is `genmds`.
   * Edit the `*.md.in` files, not `*.md` directly.

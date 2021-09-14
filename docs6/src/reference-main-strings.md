@@ -1,18 +1,47 @@
+<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
+<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="../glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
 # Strings
 
 ## Essentials
 
 Miller string literals are always written with double quotes, like `"abcde"`; single quotes
-are not part of the grammar of [Miller's programming language](programming-langauge.md).
+are not part of the grammar of [Miller's programming language](programming-language.md).
 Single quotes are used for wrapping `put`/`filter` statements, as in `mlr put '$b=$a.".suffix"' myfile.csv'`:
 the single-quotes are consumed by the shell and Miller gets `$b=$a.".suffix"`. (See however the
 [Miller on Windows page](miller-on-windows.md).)
 
 A basic string operation is the `.` (concatenation) operator:
 
-GENMD_RUN_COMMAND
-mlr --c2p --from example.csv put '$output = $color . ":" . $shape'
-GENMD_EOF
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv put '$output = $color . ":" . $shape'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   output
+yellow triangle true  1  11    43.6498  9.8870 yellow:triangle
+red    square   true  2  15    79.2778  0.0130 red:square
+red    circle   true  3  16    13.8103  2.9010 red:circle
+red    square   false 4  48    77.5542  7.4670 red:square
+purple triangle false 5  51    81.2290  8.5910 purple:triangle
+red    square   false 6  64    77.1991  9.5310 red:square
+purple triangle false 7  65    80.1405  5.8240 purple:triangle
+yellow circle   true  8  73    63.9785  4.2370 yellow:circle
+yellow circle   true  9  87    63.5058  8.3350 yellow:circle
+purple square   false 10 91    72.3735  8.2430 purple:square
+</pre>
 
 Also see the [list of string-related built-in functions](reference-dsl-builtin-functions.md#string-functions).
 
@@ -47,17 +76,23 @@ backward from the end of the string, while positive indices read forward from
 the start. If a string has length `n` then `-n..-1` are aliases for `1..n`,
 respectively; 0 is never a valid string index in Miller.
 
-GENMD_RUN_COMMAND
-mlr -n put '
-  end {
-    x = "abcde";
-    print x[1];
-    print x[-1];
-    print x[1:2];
-    print x[-2:-1];
-  }
-'
-GENMD_EOF
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    x = "abcde";</b>
+<b>    print x[1];</b>
+<b>    print x[-1];</b>
+<b>    print x[1:2];</b>
+<b>    print x[-2:-1];</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a
+e
+ab
+de
+</pre>
 
 ## Slicing
 
@@ -65,18 +100,25 @@ Miller supports slicing using `[lo:hi]` syntax.  Either or both of the indices
 in a slice can be negatively aliased as described above.  Unlike in Python,
 Miller string-slice indices are inclusive on both sides: `x[3:5]` means `x[3] . x[4] . x[5]`.
 
-GENMD_RUN_COMMAND
-mlr -n put '
-  end {
-    x = "abcde";
-    print x[3:4];
-    print x[:2];
-    print x[3:];
-    print x[1:-1];
-    print x[2:-2];
-  }
-'
-GENMD_EOF
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    x = "abcde";</b>
+<b>    print x[3:4];</b>
+<b>    print x[:2];</b>
+<b>    print x[3:];</b>
+<b>    print x[1:-1];</b>
+<b>    print x[2:-2];</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+cd
+ab
+cde
+abcde
+bcd
+</pre>
 
 ## Out-of-bounds indexing
 
@@ -84,27 +126,37 @@ Somewhat imitating Python, out-of-bounds index accesses are
 [errors](reference-main-data-types.md), but out-of-bounds slice accesses result
 in trimming the indices, resulting in a short string or even the empty string:
 
-GENMD_RUN_COMMAND
-mlr -n put '
-  end {
-    x = "abcde";
-    print x[1];
-    print x[5];
-    print x[6]; # absent
-  }
-'
-GENMD_EOF
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    x = "abcde";</b>
+<b>    print x[1];</b>
+<b>    print x[5];</b>
+<b>    print x[6]; # absent</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a
+e
+(error)
+</pre>
 
-GENMD_RUN_COMMAND
-mlr -n put '
-  end {
-    x = "abcde";
-    print x[1:2];
-    print x[1:6];
-    print x[10:20];
-  }
-'
-GENMD_EOF
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    x = "abcde";</b>
+<b>    print x[1:2];</b>
+<b>    print x[1:6];</b>
+<b>    print x[10:20];</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+ab
+
+
+</pre>
 
 ## Escape sequences for string literals
 

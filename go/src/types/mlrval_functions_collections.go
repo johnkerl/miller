@@ -683,13 +683,7 @@ func MlrvalUnflatten(input1, input2 *Mlrval) *Mlrval {
 	}
 	oldmap := input1.mapval
 	separator := input2.printrep
-	newmap := NewMlrmap()
-
-	for pe := oldmap.Head; pe != nil; pe = pe.Next {
-		// TODO: factor out a shared helper function bewteen here and MlrvalSplitAX.
-		arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
-		newmap.PutIndexed(MakePointerArray(arrayOfIndices.arrayval), pe.Value.Copy())
-	}
+	newmap := oldmap.CopyUnflattened(separator)
 	return MlrvalPointerFromMapReferenced(newmap)
 }
 
@@ -697,6 +691,10 @@ func MlrvalUnflatten(input1, input2 *Mlrval) *Mlrval {
 // Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
 func MlrvalArrayify(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_MAP {
+		if input1.mapval.IsEmpty() {
+			return input1
+		}
+
 		convertible := true
 		i := 0
 		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {

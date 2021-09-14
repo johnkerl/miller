@@ -97,12 +97,29 @@ func (mlrmap *Mlrmap) isFlattenable() bool {
 }
 
 // ----------------------------------------------------------------
-func (mlrmap *Mlrmap) Unflatten(separator string) {
-	other := NewMlrmapAsRecord()
+// For mlr unflatten without -f.
+// TODO: comment more
+func (mlrmap *Mlrmap) Unflatten(
+	separator string,
+) {
+	*mlrmap = *(mlrmap.CopyUnflattened(separator))
+}
 
+func (mlrmap *Mlrmap) CopyUnflattened(
+	separator string,
+) *Mlrmap {
+	other := NewMlrmapAsRecord()
+	// TODO: comment
+	affectedBaseIndices := make(map[string]bool)
+
+	// TODO: comment what happens when "z.a=3,z,b=4" comes in here
+	// TODO: comment what happens when "z.1=3,z,2=4" comes in here
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		if strings.Contains(pe.Key, separator) {
 			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
+			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
+			baseIndex := arrayOfIndices.arrayval[0].String()
+			affectedBaseIndices[baseIndex] = true
 			other.PutIndexed(
 				MakePointerArray(arrayOfIndices.arrayval),
 				unflattenTerminal(pe.Value).Copy(),
@@ -112,15 +129,31 @@ func (mlrmap *Mlrmap) Unflatten(separator string) {
 		}
 	}
 
-	*mlrmap = *other
+	for baseIndex := range affectedBaseIndices {
+		oldValue := other.Get(baseIndex)
+		lib.InternalCodingErrorIf(oldValue == nil)
+		newValue := MlrvalArrayify(oldValue)
+		other.PutReference(baseIndex, newValue)
+	}
+	// TODO: arrayify affected base indices
+
+	return other
 }
 
 // ----------------------------------------------------------------
 // For mlr unflatten -f.
+// TODO: comment more
 func (mlrmap *Mlrmap) UnflattenFields(
 	fieldNameSet map[string]bool,
 	separator string,
 ) {
+	*mlrmap = *(mlrmap.CopyUnflattenFields(fieldNameSet, separator))
+}
+
+func (mlrmap *Mlrmap) CopyUnflattenFields(
+	fieldNameSet map[string]bool,
+	separator string,
+) *Mlrmap {
 	other := NewMlrmapAsRecord()
 
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
@@ -140,8 +173,9 @@ func (mlrmap *Mlrmap) UnflattenFields(
 			other.PutReference(pe.Key, unflattenTerminal(pe.Value))
 		}
 	}
+	// TODO: arrayify affected base indices
 
-	*mlrmap = *other
+	return other
 }
 
 // ----------------------------------------------------------------
