@@ -192,6 +192,8 @@ func MlrvalMapSelect(mlrvals []*Mlrval) *Mlrval {
 	for _, selectArg := range mlrvals[1:] {
 		if selectArg.mvtype == MT_STRING {
 			newKeys[selectArg.printrep] = true
+		} else if selectArg.mvtype == MT_INT {
+			newKeys[selectArg.String()] = true
 		} else if selectArg.mvtype == MT_ARRAY {
 			for _, element := range selectArg.arrayval {
 				if element.mvtype == MT_STRING {
@@ -229,6 +231,8 @@ func MlrvalMapExcept(mlrvals []*Mlrval) *Mlrval {
 	for _, exceptArg := range mlrvals[1:] {
 		if exceptArg.mvtype == MT_STRING {
 			newMap.Remove(exceptArg.printrep)
+		} else if exceptArg.mvtype == MT_INT {
+			newMap.Remove(exceptArg.String())
 		} else if exceptArg.mvtype == MT_ARRAY {
 			for _, element := range exceptArg.arrayval {
 				if element.mvtype == MT_STRING {
