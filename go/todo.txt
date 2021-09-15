@@ -584,3 +584,6 @@ DOC6:
 * dotted-map doc ...
   o $*.foo["bar"] = NR b04k b/c precedence :(
   o change precedence?
+
+? * would LOVE to have small prev-page/next-page links at the *top* not bottom ...
+  https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme

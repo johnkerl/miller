@@ -19,7 +19,7 @@ Quick links:
 At [https://github.com/johnkerl/miller/tree/main/vim](https://github.com/johnkerl/miller/tree/main/vim) you will
 find [ftdetect](https://github.com/johnkerl/miller/tree/main/vim/ftdetect) for telling the `vim` text editor
 about the `.mlr` file extension, [syntax](https://github.com/johnkerl/miller/tree/main/vim/syntax) for syntax-highlighting source files in the
-[Miller programming language](miller-programming-language.md), and a [README file](https://github.com/johnkerl/miller/blob/main/vim/README.md) shwoing you where to put these where `vim` can find them.
+[Miller programming language](miller-programming-language.md), and a [README file](https://github.com/johnkerl/miller/blob/main/vim/README.md) showing you where to put these where `vim` can find them.
 
 Before-and-after images:
 

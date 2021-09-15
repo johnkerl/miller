@@ -1242,6 +1242,23 @@ male   yellow 1192 88.95463510848126
 male   orange 448  100
 </pre>
 
+## gap
+
+<pre class="pre-highlight-in-pair">
+<b>mlr gap -h</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr gap [options]
+Emits an empty record every n records, or when certain values change.
+Options:
+Emits an empty record every n records, or when certain values change.
+-g {a,b,c} Print a gap whenever values of these fields (e.g. a,b,c) changes.
+-n {n} Print a gap every n records.
+One of -f or -g is required.
+-n is ignored if -g is present.
+-h|--help Show this message.
+</pre>
+
 ## grep
 
 <pre class="pre-highlight-in-pair">
@@ -1278,19 +1295,7 @@ Outputs records in batches having identical values at specified field names.Opti
 -h|--help Show this message.
 </pre>
 
-This is similar to `sort` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear.
-
-<pre class="pre-highlight-in-pair">
-<b>mlr --opprint group-by a data/small</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-a   b   i x        y
-pan pan 1 0.346791 0.726802
-eks pan 2 0.758679 0.522151
-eks wye 4 0.381399 0.134188
-wye wye 3 0.204603 0.338318
-wye pan 5 0.573288 0.863624
-</pre>
+This is similar to `sort` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint sort -f a data/small</b>
@@ -1300,6 +1305,18 @@ a   b   i x        y
 eks pan 2 0.758679 0.522151
 eks wye 4 0.381399 0.134188
 pan pan 1 0.346791 0.726802
+wye wye 3 0.204603 0.338318
+wye pan 5 0.573288 0.863624
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --opprint group-by a data/small</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a   b   i x        y
+pan pan 1 0.346791 0.726802
+eks pan 2 0.758679 0.522151
+eks wye 4 0.381399 0.134188
 wye wye 3 0.204603 0.338318
 wye pan 5 0.573288 0.863624
 </pre>

@@ -416,6 +416,12 @@ GENMD_RUN_COMMAND
 mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv
 GENMD_EOF
 
+## gap
+
+GENMD_RUN_COMMAND
+mlr gap -h
+GENMD_EOF
+
 ## grep
 
 GENMD_RUN_COMMAND
@@ -428,14 +434,14 @@ GENMD_RUN_COMMAND
 mlr group-by --help
 GENMD_EOF
 
-This is similar to `sort` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear.
-
-GENMD_RUN_COMMAND
-mlr --opprint group-by a data/small
-GENMD_EOF
+This is similar to `sort` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear:
 
 GENMD_RUN_COMMAND
 mlr --opprint sort -f a data/small
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --opprint group-by a data/small
 GENMD_EOF
 
 In this example, since the sort is on field `a`, the first step is to group together all records having the same value for field `a`; the second step is to sort the distinct `a`-field values `pan`, `eks`, and `wye` into `eks`, `pan`, and `wye`; the third step is to print out the record-list for `a=eks`, then the record-list for `a=pan`, then the record-list for `a=wye`.  The group-by operation omits the middle sort and just puts like records together, for those times when a sort isn't desired. In particular, the ordering of group-by fields for group-by is the order in which they were encountered in the data stream, which in some cases may be more interesting to you.

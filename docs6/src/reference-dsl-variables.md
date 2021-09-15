@@ -24,7 +24,7 @@ Miller has the following kinds of variables:
 
 **Local variables** are limited in scope and extent to the current statements being executed: these include function arguments, bound variables in for loops, and local variables.
 
-**Built-in variables** such as `NF`, `NF`, `FILENAME`, `M_PI`, and `M_E`.  These are all capital letters and are read-only (although some of them change value from one record to another).
+**Built-in variables** such as `NF`, `NR`, `FILENAME`, `M_PI`, and `M_E`.  These are all capital letters and are read-only (although some of them change value from one record to another).
 
 **Keywords** are not variables, but since their names are reserved, you cannot use these names for local variables.
 

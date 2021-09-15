@@ -12,23 +12,30 @@
 * You need `pip install mkdocs` (or `pip3 install mkdocs`) as well as `pip install mkdocs-material`.
 * The docs include lots of live code examples which will be invoked using `mlr` which must be somewhere in your `$PATH`.
 * Clone https://github.com/johnkerl/miller and cd into `docs6/` within your clone.
+* Overview of flow:
+  * `docs6/src` has `*.md.in` files containing markdown as well as directives for auto-generating code samples.
+  * A `genmds` script reads `docs6/src/*.md.in` and writes `docs6/src/*.md`.
+  * The `mkdocs build` tools reads `docs6/src/*.md` and writes HTML files in `docs6/site`.
 * Quick-editing loop:
   * In one terminal, cd to this directory and leave `mkdocs serve` running.
   * In another terminal, cd to the `src` subdirectory of `docs6` and edit `*.md.in`.
   * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited.
   * In your browser, visit http://127.0.0.1:8000
-* Alternate editing loop:
+  * This doesn't write HTML in `docs6/site`; HTML is served up directly in the browser -- this is nice for previewing interactive edits
+* For-publish editing loop:
   * Leave one terminal open as a place you will run `mkdocs build`
   * In one terminal, cd to the `src` subdirectory of `docs6` and edit `*.md.in`.
   * Generate `src/*.md` from `src/*.md.in`, and then from that generate the `site/*/*.html`:
     * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited.
     * In the first terminal, run `mkdocs build` which will populate the `site` directory.
     * See also [./regen.sh](./regen.sh) which combines the `genmds` and `mkdocs build` steps.
+  * This does write HTML in `docs6/site`.
   * In your browser, visit `file:///your/path/to/miller/docs6/site/index.html`
   * Link-checking:
     * `sudo pip3 install git+https://github.com/linkchecker/linkchecker.git`
     * `cd site` and `linkchecker .`
 * Submitting:
+  * Do the for-publish editing steps -- in particular, `docs6/src/*md.in` and `docs6/src/*md` are both checked in to source control.
   * `git add` your modified files, `git commit`, `git push`, and submit a PR at https://github.com/johnkerl/miller.
 
 ## Notes

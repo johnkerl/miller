@@ -18,29 +18,24 @@ c! seps \001 etc !
 
 C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
 
+c spaceship operator for sorts -- ?
+C sort for maps and arrays; latter by key or value; w/ 
+  sorta , sortaf -- <=> or callback
+  sortmk, sortmkv, sortmkf, sortmvf, sortmpf -- by keys, by values, by UDF on k, v, pair?
+
+! precedence of "." operator: mlr -n put -v 'a.b+c.d'
+
 ----------------------------------------------------------------
-ALL:
 * deduping pass!
-* make table CSS on-brand
-
-* top-of-page jargon-check for each one
-? i would LOVE to have small prev-page/next-page links at the *top* not bottom ...
-  https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
-
-----------------------------------------------------------------
-
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
 * regex: more about what is / is not
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
 
-* shorter version for --headerless-csv-output, & doc everywhere
-
 c? mlr -S / -F outside of put/filter -- ?
 
-e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
-
 csv-with-and-without-headers:
+? shorter version for --headerless-csv-output, & doc everywhere -- -H -- ?
 ? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
 ? cat out nas.csv first
 ? ag -> just grep ?
@@ -49,7 +44,6 @@ l Miller handles compliant CSV: include rfc4180 link
 
 ----------------------------------------------------------------
 record-heterogeneity:
-? current csv-reader code handles this? i think not. check csvlite-reader too.
 ? --allow-ragged-csv-input: link to new flags page once it's written
 l link-to's:
   shapes-of-data.md: instead, use the following
@@ -62,10 +56,7 @@ l link-to's:
 ? back out of ref section -- ?
 
 special-symbols-and-formatting:
-? mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
-  o test this
-  o look for unbackslash callsites in the C impl
-  o SeparatorFromArg
+? check: mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
 ? How to escape '?' in regexes? -> still true? link to torbiak297?
 
 dates-and-times:
