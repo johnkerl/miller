@@ -9,7 +9,7 @@ top: .always
 	echo mkman start
 	./mkman.rb > mlr6.1
 	./mkman.rb | groff -man -Tascii | col -b | expand -8 > manpage.txt
-	cp manpage.txt ../docs6/docs
+	cp manpage.txt ../docs6/src/
 	echo mkman end
 
 # These targets are only for local dev work.

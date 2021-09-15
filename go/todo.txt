@@ -197,6 +197,8 @@ BLOCKERS
 ================================================================
 NON-BLOCKERS
 
+* unarrayify function
+
 * XYZWasSpecified -> XYZ = "default" w/ check-after -- ?
 
 * parquet -- ?
@@ -276,6 +278,8 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
     -> most definitely needed
   o multiple-valued return/assign -- ?
     - array destructure at LHS for multi-retval assign (maps too?)
+
+* UT per se for lrec ops
 
 * "Miller: " prefixes on all errors.New
 * libify errors.New callsites for DSL/CST

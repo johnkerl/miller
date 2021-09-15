@@ -1,0 +1,143 @@
+TOP:
+
+c array+string slice UTs
+! mapselect int-key etc -- fix + UT
+! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
+  - needs UTs as well
+
+? nidx no output-coloring?
+
+e fix -I + auto-decompress
+
+? twi-dm re all-contribs: all-contributors.org
+
+* nikos materials -> fold in
+
+c! seps \001 etc !
+  mlrc --iusv --oxtab cat regtest/input/example.usv
+  mlr  --iusv --oxtab cat regtest/input/example.usv
+C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
+
+----------------------------------------------------------------
+ALL:
+* csv to csv,tsv throughout
+* het.dkvp > het.json in more places
+* check each page for adequate h2 coverage
+
+* deduping pass!
+* make table CSS on-brand
+
+* top-of-page jargon-check for each one
+? i would LOVE to have small prev-page/next-page links at the *top* not bottom ...
+  https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
+
+----------------------------------------------------------------
+
+e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
+
+? figure out flatsep vs iflatsep/flatsep & have a story around the choice either way
+  - ctx ptr-split for invars
+E fill out flatten/unflatten page
+  echo a.b.c=3 | mlr --ojson cat
+  echo a.b.c=3 | mlr --ojson --no-jvstack cat | mlr --j2c --flatsep : cat
+  echo a:b:c=3 | mlr --ojson --no-jvstack cat
+  echo a:b:c=3 | mlr --ojson --no-jvstack --flatsep : cat
+  -> call it --flatsep
+
+* regex: more about what is / is not
+  https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
+
+* shorter version for --headerless-csv-output, & doc everywhere
+
+c? mlr -S / -F outside of put/filter -- ?
+
+e docs6/rmd: big picture .md.in -> .md -> build -> isp/rtd; or live
+
+csv-with-and-without-headers:
+? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
+? cat out nas.csv first
+? ag -> just grep ?
+l Miller handles compliant CSV: include rfc4180 link
+? Regularizing ragged CSV: use regularize verb?!?
+
+----------------------------------------------------------------
+record-heterogeneity:
+? current csv-reader code handles this? i think not. check csvlite-reader too.
+? --allow-ragged-csv-input: link to new flags page once it's written
+l link-to's:
+  shapes-of-data.md: instead, use the following
+  csv-with-and-without-headers.md.in:## Regularizing ragged CSV
+  misc-examples.md.in:Then, join on the key field(s), and use unsparsify to zero-fill counters
+  questions-about-joins.md.in:To fix this, we can use **unsparsify**:
+  two-pass-algorithms.md.in:There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify)
+  programming-language.md.in:easy for you to handle non-heterogeneous data
+  two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
+? back out of ref section -- ?
+
+special-symbols-and-formatting:
+? mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
+  o test this
+  o look for unbackslash callsites in the C impl
+  o SeparatorFromArg
+? How to escape '?' in regexes? -> still true? link to torbiak297?
+
+dates-and-times:
+? Caveat: localtime-handling in timezones with DST is still a work in progress -- fixed by torbiak?
+
+shell-commands:
+e while-read example from issues
+
+statistics-examples:
+C 2nd card no output b/c stats1 --fr
+
+two-pass-algorithms:
+l link to "new" verbs x everywhere possible
+e section-renames for consistency
+x this (or wherever ...) maybe get rid of some of the too-many examples. pick some survivors; x the rest.
+
+reference-verbs:
+E data/colored-shapes.dkvp (this page & throughout) a CSV file ...
+* ... I ONLY READ UP TO CUT & PAUSED ...
+
+reference-dsl-variables.md: FLATSEP
+
+reference-main-null-data:
+? more variants of is_... ?
+? Records with one or more empty sort-field values sort after records with all sort-field values present -> apparently not true for sort -nr
+e split out h2's
+
+reference-main-arithmetic:
+? test stats1/step -F flag
+? The following, however, produce integer output if their inputs are integers: + - * / // % abs ceil floor max min round roundm sgn. As well, stats1 -a min, stats1 -a max, stats1 -a sum, step -a delta, and step -a rsum produce integer output if their inputs are integers. -> test all
+
+reference-main-regular-expressions:
+? regular expressions (of type POSIX.2) -> check/update; also link to Go page
+d separate escaping for "\t" etc in arg-2/regex position -- "\t"."\t" example as well ...
+
+reference-dsl-control-structures:
+e while (NR < 10) will never terminate as NR is only incremented between records -> and each expression is invoked once per record so once for NR=1, once for NR=2, etc.
+E C-style triple-for loops: loop to NR -> NO!!!
+? or if a same-name variable is present in outer scope then it is modified. -> check that and make sure there is a UT
+l Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in awk, where they'd default to 0 either way) <-> xlink to other page
+
+reference-dsl-user-defined-functions:
+E User-defined subroutines -> non-factorial example -- maybe some useful aggregator
+l link to --load and --mload
+
+reference-dsl-builtin-functions:
+! ... need to proofread entire list ...
+
+reference-dsl-output-statements:
+E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using dump), whereas Miller output records are lists of single-level key-value pairs -> link to flatten page
+  - old: You can emit any map-valued expression, including `$*`, map-valued
+    out-of-stream variables, the entire out-of-stream-variable collection `@*`,
+    map-valued local variables, map literals, or map-valued function return
+    values.
+  - new: mlr: lashed-emit node types must be local variables, field names, or oosvars; got map literal.
+  c ?make FunctionCallsite an Emittable? does this work in the BNF?
+? mlr --oxtab put -q --flatsep / '
+  o 2 examples not 3?
+  o why not '--flatsep /' respected?
+
+separators:
+E write up which file formats support which flags (TODO comments)

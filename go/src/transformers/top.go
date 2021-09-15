@@ -197,7 +197,7 @@ func (tr *TransformerTop) ingest(
 	}
 
 	// for "x", "y" and "1", "2"
-	for i, _ := range tr.valueFieldNames {
+	for i := range tr.valueFieldNames {
 		valueFieldName := tr.valueFieldNames[i]
 		valueFieldValue := valueFieldValues[i]
 		if valueFieldValue.IsVoid() {
@@ -253,7 +253,7 @@ func (tr *TransformerTop) emit(
 				newrec := types.NewMlrmapAsRecord()
 
 				// Add in a=s,b=t fields:
-				for j, _ := range tr.groupByFieldNames {
+				for j := range tr.groupByFieldNames {
 					newrec.PutCopy(tr.groupByFieldNames[j], groupByFieldValues[j])
 				}
 

@@ -18,10 +18,10 @@
       "content-encoding": "plain"
     }
   },
-  "empty1": "{}",
-  "empty2": "[]",
+  "empty1": {},
+  "empty2": [],
   "wrapper": {
-    "empty3": "{}",
-    "emtpy4": "[]"
+    "empty3": {},
+    "emtpy4": []
   }
 }

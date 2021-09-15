@@ -531,7 +531,7 @@ func (node *VariadicFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	args := make([]*types.Mlrval, len(node.evaluables))
-	for i, _ := range node.evaluables {
+	for i := range node.evaluables {
 		args[i] = node.evaluables[i].Evaluate(state)
 	}
 	return node.variadicFunc(args)

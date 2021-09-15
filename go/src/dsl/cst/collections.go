@@ -44,7 +44,7 @@ func (node *ArrayLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	mlrvals := make([]types.Mlrval, len(node.evaluables))
-	for i, _ := range node.evaluables {
+	for i := range node.evaluables {
 		mlrvals[i] = *node.evaluables[i].Evaluate(state)
 	}
 	return types.MlrvalPointerFromArrayLiteralReference(mlrvals)
@@ -206,18 +206,36 @@ func (node *ArraySliceAccessNode) Evaluate(
 		return types.MlrvalPointerFromArrayLiteralReference(make([]types.Mlrval, 0))
 	}
 
-	// Say x=[1,2,3,4,5]. Then x[3:10] is [3,4,5].
+	// Semantics: say x=[1,2,3,4,5]. Then x[3:10] is [3,4,5].
+	//
+	// Cases:
+	//      [* * * * *]              actual data
+	//  [o o]                        1. attempted indexing: lo, hi both out of bounds
+	//  [o o o o o o ]               2. attempted indexing: hi in bounds, lo out
+	//  [o o o o o o o o o o o o]    3. attempted indexing: lo, hi both out of bounds
+	//        [o o o]                4. attempted indexing: lo, hi in bounds
+	//        [o o o o o o ]         5. attempted indexing: lo in bounds, hi out
+	//                  [o o o o]    6. attempted indexing: lo, hi both out of bounds
+
 	if lowerZindex < 0 {
 		lowerZindex = 0
+		if lowerZindex > upperZindex {
+			return types.MlrvalPointerFromArrayLiteralReference(make([]types.Mlrval, 0))
+		}
 	}
 	if upperZindex > n-1 {
 		upperZindex = n - 1
+		if lowerZindex > upperZindex {
+			return types.MlrvalPointerFromArrayLiteralReference(make([]types.Mlrval, 0))
+		}
 	}
 
 	// Go     slices have inclusive lower bound, exclusive upper bound.
 	// Miller slices have inclusive lower bound, inclusive upper bound.
 	var m = upperZindex - lowerZindex + 1
+
 	retval := make([]types.Mlrval, m)
+
 	di := 0
 	for si := lowerZindex; si <= upperZindex; si++ {
 		retval[di] = *array[si].Copy()
@@ -521,7 +539,7 @@ func (node *MapLiteralNode) Evaluate(
 ) *types.Mlrval {
 	output := types.MlrvalPointerFromEmptyMap()
 
-	for i, _ := range node.evaluablePairs {
+	for i := range node.evaluablePairs {
 		key := node.evaluablePairs[i].Key.Evaluate(state)
 		value := node.evaluablePairs[i].Value.Evaluate(state)
 

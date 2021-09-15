@@ -1,0 +1,233 @@
+#!/usr/bin/env ruby
+
+$us = File.basename $0
+
+require 'getoptlong'
+require 'fileutils'
+require 'json'
+
+# ----------------------------------------------------------------
+# This is used to run live code for Miller Sphinx docs.
+# * Edit foo.md.in
+# * Run this script to generate foo.md
+# * The caller should chmod 400 the foo.md file
+# * See README.md for more information.
+
+def main
+  input_handle = $stdin
+  output_handle = $stdout
+
+  output_handle.puts("<!---  PLEASE DO NOT EDIT DIRECTLY. EDIT THE .md.in FILE PLEASE. --->")
+
+  # The filename on the command line is used for link-generation; file contents
+  # are read from standard input.
+  input_filename = ARGV[0]
+  write_quicklinks_header(output_handle, input_filename)
+
+  while true
+    begin
+      content_line = input_handle.readline
+
+      if content_line =~ /^GENMD_RUN_COMMAND$/
+        cmd_lines = read_until_genmd_eof(input_handle)
+        run_command(cmd_lines, output_handle)
+
+      elsif content_line =~ /^GENMD_CARDIFY$/
+        lines = read_until_genmd_eof(input_handle)
+        write_card([], lines, output_handle)
+
+      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_ONE$/
+        lines = read_until_genmd_eof(input_handle)
+        line1 = lines.shift
+        write_card([line1], lines, output_handle)
+
+      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_TWO$/
+        lines = read_until_genmd_eof(input_handle)
+        write_card(lines.slice(0,2), lines.slice(2, lines.length), output_handle)
+
+      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_THREE$/
+        lines = read_until_genmd_eof(input_handle)
+        write_card(lines.slice(0,3), lines.slice(3, lines.length), output_handle)
+
+      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_FOUR$/
+        lines = read_until_genmd_eof(input_handle)
+        write_card(lines.slice(0,4), lines.slice(4, lines.length), output_handle)
+
+      elsif content_line =~ /^GENMD_RUN_COMMAND_TOLERATING_ERROR$/
+        cmd_lines = read_until_genmd_eof(input_handle)
+        run_command_tolerating_error(cmd_lines, output_handle)
+
+      elsif content_line =~ /^GENMD_SHOW_COMMAND$/
+        cmd_lines = read_until_genmd_eof(input_handle)
+        show_command(cmd_lines, output_handle)
+
+      elsif content_line =~ /^GENMD_INCLUDE_ESCAPED\(([^)]+)\)$/
+        included_file_name = $1
+        include_escaped(included_file_name, output_handle)
+
+      elsif content_line =~ /^GENMD_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)$/
+        included_file_name = $1
+        cmd_lines = File.readlines(included_file_name).map{|line| line.chomp}
+        run_command(cmd_lines, output_handle)
+
+      elsif content_line =~ /^GENMD_RUN_CONTENT_GENERATOR\(([^)]+)\)$/
+        cmd = $1
+        run_content_generator(cmd, output_handle)
+
+      elsif content_line =~ /^GENMD/
+        raise "Unhandled genmd line #{content_line}"
+        output_handle.write(content_line)
+
+      else
+        output_handle.write(content_line)
+      end
+    rescue EOFError
+      break
+    end
+  end
+end
+
+# ----------------------------------------------------------------
+# Our job is to read foo.md.in and write foo.md. Then Mkdocs will create HTML
+# in the build directory. However, Mkdocs writes not foo.html but
+# foo/index.html. This is true for all pages except the base index.html. Also,
+# in this funciton we're writing raw HTML not Markdown so we can't leverage
+# Mkdocs foo.md -> foo/index.html renaming.  This also means we need to be
+# mindful of directory structure. Given input
+#   index.md.in
+#   foo.md.in
+#   bar.md.in
+# we'll generate
+#   index.md
+#   foo.md
+#   bar.md
+# However, Mkdocs will create
+#   index.html
+#   foo/index.html
+#   bar/index.html
+# So if the input_filename is 'index.md.in' we need need to quicklink
+# to ./glossary/index.html et al; if it's anything else, we need to
+# quicklink to ../glossary/index.html.
+
+def write_quicklinks_header(output_handle, input_filename)
+  relative_path = '..'
+  if input_filename == 'index.md.in'
+  relative_path = '.'
+  end
+  output_handle.puts <<EOF
+<div>
+<span class="quicklinks">
+Quick links:
+&nbsp;
+<a class="quicklink" href="#{relative_path}/reference-main-flag-list/index.html">Flag list</a>
+&nbsp;
+<a class="quicklink" href="#{relative_path}/reference-verbs/index.html">Verb list</a>
+&nbsp;
+<a class="quicklink" href="#{relative_path}/reference-dsl-builtin-functions/index.html">Function list</a>
+&nbsp;
+<a class="quicklink" href="#{relative_path}/glossary/index.html">Glossary</a>
+&nbsp;
+<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+</span>
+</div>
+EOF
+end
+
+# ----------------------------------------------------------------
+def read_until_genmd_eof(input_handle)
+  begin
+
+    lines = []
+    while true
+      line = input_handle.readline.chomp
+      if line == 'GENMD_EOF'
+        break
+      end
+      lines << line
+    end
+    return lines
+
+  rescue EOFError
+    $stderr.puts "$0: did not find GENMD_EOF"
+    exit 1
+  end
+end
+
+# ----------------------------------------------------------------
+# The command can be multi-line
+def run_command(cmd_lines, output_handle)
+  cmd = cmd_lines.join("\n")
+  cmd_output = `#{cmd} 2>&1`
+  status = $?.to_i
+  if status != 0
+    raise "\"#{cmd}\" exited with non-zero code #{status}."
+  end
+  # chomp and split so "a\nb\nc\n" splits to ["a", "b", "c"]
+  write_card(cmd_lines, cmd_output.chomp.split(/\n/, -1), output_handle)
+end
+
+# ----------------------------------------------------------------
+def run_command_tolerating_error(cmd_lines, output_handle)
+  cmd = cmd_lines.join("\n")
+  cmd_output = `#{cmd} 2>&1`
+  # chomp and split so "a\nb\nc\n" splits to ["a", "b", "c"]
+  write_card(cmd_lines, cmd_output.chomp.split(/\n/, -1), output_handle)
+end
+
+# ----------------------------------------------------------------
+def include_escaped(included_file_name, output_handle)
+  unescaped_lines = File.readlines(included_file_name)
+  escaped_lines = unescaped_lines.map do |line|
+    # Necessary for <pre> in Mkdocs
+    line.chomp.gsub("<", "&lt;").gsub(">", "&gt;")
+  end
+  write_card([], escaped_lines, output_handle)
+end
+
+# ----------------------------------------------------------------
+def show_command(cmd_lines, output_handle)
+  # The command can be multi-line
+  write_card(cmd_lines, [], output_handle)
+end
+
+# ----------------------------------------------------------------
+def run_content_generator(cmd, output_handle)
+  cmd_output = `#{cmd} 2>&1`
+  status = $?.to_i
+  if status != 0
+    raise "\"#{cmd}\" exited with non-zero code #{status}."
+  end
+  output_handle.puts(cmd_output)
+end
+
+# ----------------------------------------------------------------
+def write_card(command_lines, output_lines, output_handle)
+
+  if command_lines.length > 0
+    if output_lines.length > 0
+      output_handle.puts('<pre class="pre-highlight-in-pair">')
+    else
+      output_handle.puts('<pre class="pre-highlight-non-pair">')
+    end
+    command_lines.each do |command_line|
+      output_handle.puts("<b>"+command_line+"</b>")
+    end
+    output_handle.puts("</pre>")
+  end
+
+  if output_lines.length > 0
+    if command_lines.length > 0
+      output_handle.puts('<pre class="pre-non-highlight-in-pair">')
+    else
+      output_handle.puts('<pre class="pre-non-highlight-non-pair">')
+    end
+    output_lines.each do |output_line|
+      output_handle.puts(output_line)
+    end
+    output_handle.puts("</pre>")
+  end
+
+end
+
+# ================================================================
+main()

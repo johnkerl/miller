@@ -319,7 +319,7 @@ func MlrvalJoinK(input1, input2 *Mlrval) *Mlrval {
 	} else if input1.mvtype == MT_ARRAY {
 		var buffer bytes.Buffer
 
-		for i, _ := range input1.arrayval {
+		for i := range input1.arrayval {
 			if i > 0 {
 				buffer.WriteString(fieldSeparator)
 			}
@@ -553,8 +553,8 @@ func MlrvalSplitA(input1, input2 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-// splitax("3,4,5", ",") -> ["3","4","5"]
-
+// MlrvalSplitAX splits a string to an array, without type-inference:
+// e.g. splitax("3,4,5", ",") -> ["3","4","5"]
 func MlrvalSplitAX(input1, input2 *Mlrval) *Mlrval {
 	if input1.mvtype != MT_STRING {
 		return MLRVAL_ERROR
@@ -568,7 +568,8 @@ func MlrvalSplitAX(input1, input2 *Mlrval) *Mlrval {
 	return mlrvalSplitAXHelper(input, fieldSeparator)
 }
 
-// Split out for MlrvalSplitAX and MlrvalUnflatten
+// mlrvalSplitAXHelper is Split out for the benefit of MlrvalSplitAX and
+// MlrvalUnflatten.
 func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 	fields := lib.SplitString(input, separator)
 
@@ -596,7 +597,7 @@ func MlrvalGetKeys(input1 *Mlrval) *Mlrval {
 
 	} else if input1.mvtype == MT_ARRAY {
 		output := NewSizedMlrvalArray(int(len(input1.arrayval)))
-		for i, _ := range input1.arrayval {
+		for i := range input1.arrayval {
 			output.arrayval[i] = MlrvalFromInt(int(i + 1)) // Miller user-space indices are 1-up
 		}
 		return output
@@ -683,13 +684,7 @@ func MlrvalUnflatten(input1, input2 *Mlrval) *Mlrval {
 	}
 	oldmap := input1.mapval
 	separator := input2.printrep
-	newmap := NewMlrmap()
-
-	for pe := oldmap.Head; pe != nil; pe = pe.Next {
-		// TODO: factor out a shared helper function bewteen here and MlrvalSplitAX.
-		arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
-		newmap.PutIndexed(MakePointerArray(arrayOfIndices.arrayval), pe.Value.Copy())
-	}
+	newmap := oldmap.CopyUnflattened(separator)
 	return MlrvalPointerFromMapReferenced(newmap)
 }
 
@@ -697,6 +692,10 @@ func MlrvalUnflatten(input1, input2 *Mlrval) *Mlrval {
 // Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
 func MlrvalArrayify(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_MAP {
+		if input1.mapval.IsEmpty() {
+			return input1
+		}
+
 		convertible := true
 		i := 0
 		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
@@ -724,7 +723,7 @@ func MlrvalArrayify(input1 *Mlrval) *Mlrval {
 	} else if input1.mvtype == MT_ARRAY {
 		// TODO: comment (or rethink) that this modifies its inputs!!
 		output := input1.Copy()
-		for i, _ := range input1.arrayval {
+		for i := range input1.arrayval {
 			output.arrayval[i] = *MlrvalArrayify(&output.arrayval[i])
 		}
 		return output

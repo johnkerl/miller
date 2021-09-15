@@ -121,7 +121,7 @@ func (site *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	state.Stack.PushStackFrameSet()
 	defer state.Stack.PopStackFrameSet()
 
-	for i, _ := range arguments {
+	for i := range arguments {
 		err := state.Stack.DefineTypedAtScope(
 			runtime.NewStackVariable(site.uds.signature.typeGatedParameterNames[i].Name),
 			site.uds.signature.typeGatedParameterNames[i].TypeName,

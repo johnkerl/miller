@@ -2,9 +2,11 @@ package regtest
 
 import (
 	"bytes"
+	"os"
 	"os/exec"
 	"strings"
 
+	"mlr/src/lib"
 	"mlr/src/platform"
 )
 
@@ -58,4 +60,45 @@ func RunMillerCommand(
 	}
 
 	return stdout, stderr, exitCode, nil
+}
+
+// RunCompareCommand runs either diff or fc (not-Windows / Windows respectively)
+// to show differences between actual and expected regression-test output.
+func RunDiffCommand(
+	actualOutput string,
+	expectedOutput string,
+) (
+	diffOutput string,
+) {
+	actualOutputFileName := lib.WriteTempFileOrDie(actualOutput)
+	expectedOutputFileName := lib.WriteTempFileOrDie(expectedOutput)
+	defer os.Remove(actualOutputFileName)
+	defer os.Remove(expectedOutputFileName)
+
+	// This is diff or fc
+	diffRunArray := platform.GetDiffRunArray(actualOutputFileName, expectedOutputFileName)
+
+	cmd := exec.Command(diffRunArray[0], diffRunArray[1:]...)
+
+	var stdoutBuffer bytes.Buffer
+	var stderrBuffer bytes.Buffer
+	cmd.Stdout = &stdoutBuffer
+	cmd.Stderr = &stderrBuffer
+
+	// Ignore the error-return since it's likely the fact that diff exits
+	// non-zero when files differ at all. Otherwise it's a failure to invoke
+	// diff itself, about which we can do little within the regtest.  A diff
+	// output is simply something (in addition to printing the actual &
+	// expected outputs) to help people debug, and hey, we tried.
+
+	// err := cmd.Run()
+	_ = cmd.Run()
+	//if err != nil {
+	//	fmt.Printf("Error executing %s:\n", strings.Join(diffRunArray, " "))
+	//	fmt.Println(err)
+	//	fmt.Println(stderrBuffer.String())
+	//	os.Exit(1)
+	//}
+
+	return stdoutBuffer.String()
 }

@@ -819,7 +819,7 @@ func MlrvalVariadicMin(mlrvals []*Mlrval) *Mlrval {
 		return MLRVAL_VOID
 	} else {
 		retval := mlrvals[0]
-		for i, _ := range mlrvals {
+		for i := range mlrvals {
 			if i > 0 {
 				retval = MlrvalBinaryMin(retval, mlrvals[i])
 			}
@@ -902,7 +902,7 @@ func MlrvalVariadicMax(mlrvals []*Mlrval) *Mlrval {
 		return MLRVAL_VOID
 	} else {
 		retval := mlrvals[0]
-		for i, _ := range mlrvals {
+		for i := range mlrvals {
 			if i > 0 {
 				retval = MlrvalBinaryMax(retval, mlrvals[i])
 			}

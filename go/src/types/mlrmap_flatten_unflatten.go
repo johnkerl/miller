@@ -34,6 +34,12 @@ import (
 // nullity of the fieldNameSet) since the flatten/unflatten check is done by
 // default on ALL Miller records whenever we convert to/from JSON. So, the
 // default path should be fast.
+//
+// Examples:
+// * The single field x = {"a": 7, "b": 8, "c": 9} becomes the three fields
+//   x.a = 7, x.b = 8, x.c = 9.
+// * The single field x = [7,8,9] becomes the three fields
+//   x.1 = 7, x.2 = 8, x.3 = 9.
 
 func (mlrmap *Mlrmap) Flatten(separator string) {
 	if !mlrmap.isFlattenable() { // fast path: don't modify the record at all
@@ -97,12 +103,45 @@ func (mlrmap *Mlrmap) isFlattenable() bool {
 }
 
 // ----------------------------------------------------------------
-func (mlrmap *Mlrmap) Unflatten(separator string) {
-	other := NewMlrmapAsRecord()
+// For mlr unflatten without -f. This undoes Unflatten.  This is for conversion
+// from non-JSON to JSON.  If there are fields x.a, x.b, x.c, etc. they're put
+// into a single field x with map-valued value keyed by "a", "b", "c".
 
+// Special case: if the resulting string keys are string representations of 1,
+// 2, 3, etc -- without gaps -- then the map is converted to an array.
+//
+// Examples:
+//
+// * The three fields x.a = 7, x.b = 8, x.c = 9  become
+//   the single field x = {"a": 7, "b": 8, "c": 9}.
+//
+// * The three fields x.1 = 7, x.2 = 8, x.3 = 9 become
+//   the single field x = [7,8,9].
+//
+// * The two fields x.1 = 7, x.3 = 9 become
+//   the single field x = {"1": 7, "3": 9}
+func (mlrmap *Mlrmap) Unflatten(
+	separator string,
+) {
+	*mlrmap = *(mlrmap.CopyUnflattened(separator))
+}
+
+func (mlrmap *Mlrmap) CopyUnflattened(
+	separator string,
+) *Mlrmap {
+	other := NewMlrmapAsRecord()
+	affectedBaseIndices := make(map[string]bool)
+
+	// We'll come through this loop once for x.a, another for x.b, etc.
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
+		// Is the field name something dot something?
 		if strings.Contains(pe.Key, separator) {
 			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
+			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
+			// If the input field name was "x.a" then remember the "x".
+			baseIndex := arrayOfIndices.arrayval[0].String()
+			affectedBaseIndices[baseIndex] = true
+			// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
 			other.PutIndexed(
 				MakePointerArray(arrayOfIndices.arrayval),
 				unflattenTerminal(pe.Value).Copy(),
@@ -112,27 +151,52 @@ func (mlrmap *Mlrmap) Unflatten(separator string) {
 		}
 	}
 
-	*mlrmap = *other
+	// Go through all the field names which were turned into maps -- e.g.  "x"
+	// in the example above -- and see if the keys were like "1", "2", etc and
+	// if so then convert to array. This undoes how Flatten flattens arrays.
+	for baseIndex := range affectedBaseIndices {
+		oldValue := other.Get(baseIndex)
+		lib.InternalCodingErrorIf(oldValue == nil)
+		newValue := MlrvalArrayify(oldValue)
+		other.PutReference(baseIndex, newValue)
+	}
+
+	return other
 }
 
 // ----------------------------------------------------------------
-// For mlr unflatten -f.
+// For mlr unflatten -f. See comments on Unflatten. Largely copypasta of
+// Unflatten, but split out separately since Flatten needn't check a
+// fieldNameSet.
 func (mlrmap *Mlrmap) UnflattenFields(
 	fieldNameSet map[string]bool,
 	separator string,
 ) {
-	other := NewMlrmapAsRecord()
+	*mlrmap = *(mlrmap.CopyUnflattenFields(fieldNameSet, separator))
+}
 
+func (mlrmap *Mlrmap) CopyUnflattenFields(
+	fieldNameSet map[string]bool,
+	separator string,
+) *Mlrmap {
+	other := NewMlrmapAsRecord()
+	affectedBaseIndices := make(map[string]bool)
+
+	// We'll come through this loop once for x.a, another for x.b, etc.
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
+		// Is the field name something dot something?
 		if strings.Contains(pe.Key, separator) {
 			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
 			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
+			// If the input field name was "x.a" then remember the "x".
 			baseIndex := arrayOfIndices.arrayval[0].String()
 			if fieldNameSet[baseIndex] {
+				// Use PutIndexed to assign $x["a"] = 7, or $x["b"] = 8, etc.
 				other.PutIndexed(
 					MakePointerArray(arrayOfIndices.arrayval),
 					unflattenTerminal(pe.Value).Copy(),
 				)
+				affectedBaseIndices[baseIndex] = true
 			} else {
 				other.PutReference(pe.Key, unflattenTerminal(pe.Value))
 			}
@@ -141,7 +205,17 @@ func (mlrmap *Mlrmap) UnflattenFields(
 		}
 	}
 
-	*mlrmap = *other
+	// Go through all the field names which were turned into maps -- e.g.  "x"
+	// in the example above -- and see if the keys were like "1", "2", etc and
+	// if so then convert to array. This undoes how Flatten flattens arrays.
+	for baseIndex := range affectedBaseIndices {
+		oldValue := other.Get(baseIndex)
+		lib.InternalCodingErrorIf(oldValue == nil)
+		newValue := MlrvalArrayify(oldValue)
+		other.PutReference(baseIndex, newValue)
+	}
+
+	return other
 }
 
 // ----------------------------------------------------------------

@@ -1,0 +1,14 @@
+# List of command-line flags
+
+Here are flags you can use when invoking Miller.  For example, when you type
+
+GENMD_RUN_COMMAND
+mlr --icsv --ojson head -n 1 example.csv
+GENMD_EOF
+
+the `--icsv` and `--ojson` bits are _flags_.  See the [Miller command
+structure](reference-main-overview.md) page for context.
+
+Also, at the command line, you can use `mlr -g` for a list much like this one.
+
+GENMD_RUN_CONTENT_GENERATOR(./mk-flag-info.rb)
