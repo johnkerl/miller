@@ -1,7 +1,6 @@
 TOP:
 
 c array+string slice UTs
-! mapselect int-key etc -- fix + UT
 ! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
   - needs UTs as well
 
@@ -16,14 +15,11 @@ e fix -I + auto-decompress
 c! seps \001 etc !
   mlrc --iusv --oxtab cat regtest/input/example.usv
   mlr  --iusv --oxtab cat regtest/input/example.usv
+
 C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
 
 ----------------------------------------------------------------
 ALL:
-* csv to csv,tsv throughout
-* het.dkvp > het.json in more places
-* check each page for adequate h2 coverage
-
 * deduping pass!
 * make table CSS on-brand
 
@@ -34,15 +30,6 @@ ALL:
 ----------------------------------------------------------------
 
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
-
-? figure out flatsep vs iflatsep/flatsep & have a story around the choice either way
-  - ctx ptr-split for invars
-E fill out flatten/unflatten page
-  echo a.b.c=3 | mlr --ojson cat
-  echo a.b.c=3 | mlr --ojson --no-jvstack cat | mlr --j2c --flatsep : cat
-  echo a:b:c=3 | mlr --ojson --no-jvstack cat
-  echo a:b:c=3 | mlr --ojson --no-jvstack --flatsep : cat
-  -> call it --flatsep
 
 * regex: more about what is / is not
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
@@ -98,8 +85,6 @@ x this (or wherever ...) maybe get rid of some of the too-many examples. pick so
 reference-verbs:
 E data/colored-shapes.dkvp (this page & throughout) a CSV file ...
 * ... I ONLY READ UP TO CUT & PAUSED ...
-
-reference-dsl-variables.md: FLATSEP
 
 reference-main-null-data:
 ? more variants of is_... ?
