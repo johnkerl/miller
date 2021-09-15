@@ -33,9 +33,9 @@ binary+ binary- .      left to right
 ^                      left to right
 |                      left to right
 < <= > >=              left to right
-== != =~ !=~           left to right
-???
-??
+== != =~ !=~ <=>       left to right
+???                    left to right
+??                     left to right
 &&                     left to right
 ^^                     left to right
 ||                     left to right
@@ -61,3 +61,6 @@ binary+ binary- .      left to right
 
 * The regex-match and regex-not-match operators [`=~`](reference-dsl-builtin-functions.md#regmatch) and [`!=~`](reference-dsl-builtin-functions.md#regnotmatch) are similar to those in Ruby and Perl.
 
+## Detailed listing
+
+Operators are listed on the [DSL built-in functions page](reference-dsl-builtin-functions.md).

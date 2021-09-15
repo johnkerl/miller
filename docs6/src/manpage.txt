@@ -176,8 +176,8 @@ FUNCTION LIST
        splitkv splitkvx splitnv splitnvx sqrt ssub strftime string strip strlen
        strptime sub substr substr0 substr1 system systime systimeint tan tanh tolower
        toupper truncate typeof unflatten uptime urand urand32 urandint urandrange
-       version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= == =~ > >= >> >>>
-       ?: ?? ??? ^ ^^ | || ~
+       version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= <=> == =~ > >= >>
+       >>> ?: ?? ??? ^ ^^ | || ~
 
 COMMENTS-IN-DATA FLAGS
        Miller lets you put comments in your data, such as
@@ -2357,6 +2357,9 @@ FUNCTIONS FOR FILTER/PUT
 
    <=
         (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
+
+   <=>
+        (class=boolean #args=2) Comparator, nominally for sorting. Given a <=> b, returns <0, 0, >0 as a < b, a == b, or a > b, respectively.
 
    ==
         (class=boolean #args=2) String/numeric equality. Mixing number and string results in string compare.

@@ -9,6 +9,40 @@ import (
 )
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// string_cmp implements the spaceship operator for strings.
+func string_cmp(a, b string) int {
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
+}
+
+// int_cmp implements the spaceship operator for ints.
+func int_cmp(a, b int) int {
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
+}
+
+// float_cmp implements the spaceship operator for floats.
+func float_cmp(a, b float64) int {
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_ss(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.printrep == input2.printrep)
 }
@@ -26,6 +60,9 @@ func lt_b_ss(input1, input2 *Mlrval) *Mlrval {
 }
 func le_b_ss(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.printrep <= input2.printrep)
+}
+func cmp_b_ss(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(string_cmp(input1.printrep, input2.printrep))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -47,6 +84,9 @@ func lt_b_xs(input1, input2 *Mlrval) *Mlrval {
 func le_b_xs(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.String() <= input2.printrep)
 }
+func cmp_b_xs(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(string_cmp(input1.String(), input2.printrep))
+}
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_sx(input1, input2 *Mlrval) *Mlrval {
@@ -66,6 +106,9 @@ func lt_b_sx(input1, input2 *Mlrval) *Mlrval {
 }
 func le_b_sx(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.printrep <= input2.String())
+}
+func cmp_b_sx(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(string_cmp(input1.printrep, input2.String()))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -87,6 +130,9 @@ func lt_b_ii(input1, input2 *Mlrval) *Mlrval {
 func le_b_ii(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.intval <= input2.intval)
 }
+func cmp_b_ii(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(int_cmp(input1.intval, input2.intval))
+}
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_if(input1, input2 *Mlrval) *Mlrval {
@@ -106,6 +152,9 @@ func lt_b_if(input1, input2 *Mlrval) *Mlrval {
 }
 func le_b_if(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(float64(input1.intval) <= input2.floatval)
+}
+func cmp_b_if(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(float_cmp(float64(input1.intval), input2.floatval))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,6 +176,9 @@ func lt_b_fi(input1, input2 *Mlrval) *Mlrval {
 func le_b_fi(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.floatval <= float64(input2.intval))
 }
+func cmp_b_fi(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(float_cmp(input1.floatval, float64(input2.intval)))
+}
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_ff(input1, input2 *Mlrval) *Mlrval {
@@ -146,6 +198,9 @@ func lt_b_ff(input1, input2 *Mlrval) *Mlrval {
 }
 func le_b_ff(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.floatval <= input2.floatval)
+}
+func cmp_b_ff(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(float_cmp(input1.floatval, input2.floatval))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -170,6 +225,9 @@ func lt_b_bb(input1, input2 *Mlrval) *Mlrval {
 }
 func le_b_bb(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(lib.BoolToInt(input1.boolval) <= lib.BoolToInt(input2.boolval))
+}
+func cmp_b_bb(input1, input2 *Mlrval) *Mlrval {
+	return MlrvalPointerFromInt(int_cmp(lib.BoolToInt(input1.boolval), lib.BoolToInt(input2.boolval)))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -296,6 +354,20 @@ var le_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*MAP    */ {_erro, _absn, _absn, _fals, _fals, _fals, _fals, _fals, _fals, _erro},
 }
 
+var cmp_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+	//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY  MAP
+	/*ERROR  */ {_erro, _erro, _true, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*ABSENT */ {_erro, _absn, _fals, _absn, _absn, _absn, _absn, _absn, _absn, _absn},
+	/*NULL   */ {_fals, _true, _true, _fals, _fals, _fals, _fals, _fals, _absn, _absn},
+	/*VOID   */ {_erro, _absn, _true, cmp_b_ss, cmp_b_ss, cmp_b_sx, cmp_b_sx, _fals, _fals, _fals},
+	/*STRING */ {_erro, _absn, _true, cmp_b_ss, cmp_b_ss, cmp_b_sx, cmp_b_sx, _fals, _fals, _fals},
+	/*INT    */ {_erro, _absn, _true, cmp_b_xs, cmp_b_xs, cmp_b_ii, cmp_b_if, _fals, _fals, _fals},
+	/*FLOAT  */ {_erro, _absn, _true, cmp_b_xs, cmp_b_xs, cmp_b_fi, cmp_b_ff, _fals, _fals, _fals},
+	/*BOOL   */ {_erro, _absn, _true, _fals, _fals, _fals, _fals, cmp_b_bb, _fals, _fals},
+	/*ARRAY  */ {_erro, _absn, _absn, _fals, _fals, _fals, _fals, _fals, _erro, _fals},
+	/*MAP    */ {_erro, _absn, _absn, _fals, _fals, _fals, _fals, _fals, _fals, _erro},
+}
+
 func MlrvalEquals(input1, input2 *Mlrval) *Mlrval {
 	return eq_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
@@ -313,6 +385,9 @@ func MlrvalLessThan(input1, input2 *Mlrval) *Mlrval {
 }
 func MlrvalLessThanOrEquals(input1, input2 *Mlrval) *Mlrval {
 	return le_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+}
+func MlrvalCmp(input1, input2 *Mlrval) *Mlrval {
+	return cmp_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
 // For Go's sort.Slice.

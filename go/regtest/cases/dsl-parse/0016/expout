@@ -6,11 +6,11 @@ AST:
 * statement block
     * assignment "="
         * direct field value "x"
-        * dot operator "."
-            * operator "+"
-                * operator "*"
-                    * int literal "2"
-                    * direct field value "a"
+        * operator "+"
+            * operator "*"
+                * int literal "2"
+                * direct field value "a"
+            * dot operator "."
                 * direct field value "b"
-            * direct field value "c"
+                * direct field value "c"
 

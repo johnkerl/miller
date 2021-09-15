@@ -225,8 +225,8 @@ sec2gmt sec2gmtdate sec2hms sgn sha1 sha256 sha512 sin sinh splita splitax
 splitkv splitkvx splitnv splitnvx sqrt ssub strftime string strip strlen
 strptime sub substr substr0 substr1 system systime systimeint tan tanh tolower
 toupper truncate typeof unflatten uptime urand urand32 urandint urandrange
-version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= == =~ > >= >> >>>
-?: ?? ??? ^ ^^ | || ~
+version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= <=> == =~ > >= >>
+>>> ?: ?? ??? ^ ^^ | || ~
 .fi
 .if n \{\
 .RE
@@ -3928,6 +3928,15 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .\}
 .nf
  (class=boolean #args=2) String/numeric less-than-or-equals. Mixing number and string results in string compare.
+.fi
+.if n \{\
+.RE
+.SS "<=>"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=boolean #args=2) Comparator, nominally for sorting. Given a <=> b, returns <0, 0, >0 as a < b, a == b, or a > b, respectively.
 .fi
 .if n \{\
 .RE

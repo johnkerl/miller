@@ -303,6 +303,13 @@ regex-match operator: try '$y = ~$x'.`,
 	},
 
 	{
+		name:       "<=>",
+		help:       `Comparator, nominally for sorting. Given a <=> b, returns <0, 0, >0 as a < b, a == b, or a > b, respectively.`,
+		class:      FUNC_CLASS_BOOLEAN,
+		binaryFunc: types.MlrvalCmp,
+	},
+
+	{
 		name:       "<",
 		class:      FUNC_CLASS_BOOLEAN,
 		help:       `String/numeric less-than. Mixing number and string results in string compare.`,
