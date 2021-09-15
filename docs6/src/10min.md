@@ -305,7 +305,7 @@ purple square   false 10 91    72.3735  8.2430 92 8474
 </pre>
 
 For `put` and `filter` we were able to type out expressions using a programming-language syntax.
-See the [Miller programming language page](programming-language.md) for more information.
+See the [Miller programming language page](miller-programming-language.md) for more information.
 
 ## Multiple input files
 
@@ -537,6 +537,130 @@ How to specify these to Miller:
 * If you use `--icsv` and `--ojson` (note the extra `i` and `o`) then Miller will use CSV for input and JSON for output, etc.  See also [Keystroke Savers](keystroke-savers.md) for even shorter options like `--c2j`.
 
 You can read more about this at the [File Formats](file-formats.md) page.
+
+If all record values are numbers, strings, etc., then converting back and forth between CSV and JSON is
+a matter of specifying input-format and output-format flags:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --json cat example.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "color": "yellow",
+  "shape": "triangle",
+  "flag": "true",
+  "k": 1,
+  "index": 11,
+  "quantity": 43.6498,
+  "rate": 9.8870
+}
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "true",
+  "k": 2,
+  "index": 15,
+  "quantity": 79.2778,
+  "rate": 0.0130
+}
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsv cat example.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+red,square,true,2,15,79.2778,0.0130
+</pre>
+
+However, if JSON data has map-valued or array-valued fields, Miller gives you choices on how to
+convert these to CSV columns. For example, here's some JSON data with map-valued fields:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/server-log.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  }
+}
+</pre>
+
+We can convert this to CSV, or other tabular formats:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --ocsv cat data/server-log.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+hostname,pid,req.id,req.method,req.path,req.host,req.headers.host,req.headers.user-agent,res.status_code,res.header.content-type,res.header.content-encoding
+localhost,12345,6789,GET,api/check,foo.bar,bar.baz,browser,200,text,plain
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --oxtab cat data/server-log.json</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+hostname                    localhost
+pid                         12345
+req.id                      6789
+req.method                  GET
+req.path                    api/check
+req.host                    foo.bar
+req.headers.host            bar.baz
+req.headers.user-agent      browser
+res.status_code             200
+res.header.content-type     text
+res.header.content-encoding plain
+</pre>
+
+These transformations are reversible:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ijson --oxtab cat data/server-log.json | mlr --ixtab --ojson cat</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "hostname": "localhost",
+  "pid": 12345,
+  "req": {
+    "id": 6789,
+    "method": "GET",
+    "path": "api/check",
+    "host": "foo.bar",
+    "headers": {
+      "host": "bar.baz",
+      "user-agent": "browser"
+    }
+  },
+  "res": {
+    "status_code": 200,
+    "header": {
+      "content-type": "text",
+      "content-encoding": "plain"
+    }
+  }
+}
+</pre>
+
+See the [flatten/unflatten page](flatten-unflatten.md) for more information.
 
 ## Choices for printing to files
 

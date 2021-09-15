@@ -14,7 +14,7 @@ GENMD_EOF
 
 When `mlr` is invoked with the `--csv` or `--csvlite` option, key names are found on the first record and values are taken from subsequent records.  This includes the case of CSV-formatted files.  See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles changes of field names within a single data stream.
 
-Miller has record separator `RS` and field separator `FS`, just as `awk` does.  For TSV, use `--fs tab`; to convert TSV to CSV, use `--ifs tab --ofs comma`, etc.  (See also [Record/field/pair separators](reference-main-io-options.md#recordfieldpair-separators).)
+Miller has record separator `RS` and field separator `FS`, just as `awk` does.  For TSV, use `--fs tab`; to convert TSV to CSV, use `--ifs tab --ofs comma`, etc.  (See also the [separators page](reference-main-separators.md).)
 
 **TSV (tab-separated values):** the following are synonymous pairs:
 
@@ -121,8 +121,7 @@ TODO: probably remove entirely
 ### JSON-in-CSV
 
 It's quite common to have CSV data which contains stringified JSON as a column.
-See the [JSON parse and stringify
-section](reference-main-data-types.md#json-parse-and-stringify) for ways to
+See the [JSON parse and stringify section](reference-main-data-types.md#json-parse-and-stringify) for ways to
 decode these in Miller.
 
 ## PPRINT: Pretty-printed tabular
@@ -263,7 +262,7 @@ GENMD_EOF
 etc. and I just log them as needed. Then later, I can use `grep`, `mlr --opprint group-like`, etc.
 to analyze my logs.
 
-See the [I/O options reference](reference-main-io-options.md) regarding how to specify separators other than the default equals-sign and comma.
+See the [seprators page](reference-main-separators.md) regarding how to specify separators other than the default equals-sign and comma.
 
 ## NIDX: Index-numbered (toolkit style)
 
@@ -324,7 +323,7 @@ If you use `--ors {something else}` with (default or explicitly specified) `--ir
 
 If you use `--irs {something else}` with (default or explicitly specified) `--ors auto` then the output line endings used are LF on Unix/Linux/BSD/MacOS X, and CRLF on Windows.
 
-See also [Record/field/pair separators](reference-main-io-options.md#recordfieldpair-separators) for more information about record/field/pair separators.
+See also the [separators page](reference-main-separators.md) for more information about record/field/pair separators.
 --->
 
 ## Comments in data

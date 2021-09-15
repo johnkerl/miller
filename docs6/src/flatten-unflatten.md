@@ -340,11 +340,133 @@ a.1,a.3,a.5
 }
 </pre>
 
-## TODO: w/o defaults
+## Manual control
 
-* list the auto-flatten/a-uf rules & what they do in terms of appending to the chain.
-* also: csv-to-csv w/ $z=[1,2,3] (or, better, splita) example
-* show behavior w/ these being used.
-* show json-parse, json-stringify.
-* xref to JSON-in-CSV
+To see what our options are for manually controlling flattening and
+unflattening (if the defaults aren't working for us in a particular situation),
+let's first look a little into how they're implemented.
 
+* There are two [verbs](reference-verbs.md) called [flatten](reference-verbs.md#flatten) and [unflatten](reference-verbs.md#unflatten).
+* When the output format is not JSON, if you've specified `mlr ... cat then sort ...` (some [chain](reference-main-then-chaining.md) of verbs) then Miller appends, in effect, `then flatten` to the end of the chain.
+    * This behavior is on by default but it can be suppressed using the `--no-auto-flatten` [flag](reference-main-flag-list.md#flatten-unflatten-flags).
+* When the output format is JSON and the input format is not JSON, then (similarly) appends, in effect, `then unflatten`   to the end of the chain.
+    * This behavior is on by default but it can be suppressed using the `--no-auto-unflatten` [flag](reference-main-flag-list.md#flatten-unflatten-flags).
+
+Note in particular that auto-flatten happens even when the input format and the
+output format are both non-JSON, e.g. even for CSV-to-CSV processing. This is
+because
+[map](reference-main-maps.md)-valued/[array](reference-main-arrays.md)-valued
+fields can be produced using [DSL statements](miller-programming-language.md):
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/hostnames.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+host,status
+apoapsis.east.our.org,up
+nadir.west.our.org,down
+</pre>
+
+Using JSON output, we can see that `splita` has produced an array-valued field named `components`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --ojson --from data/hostnames.csv put '$components = splita($host, ".")'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "host": "apoapsis.east.our.org",
+  "status": "up",
+  "components": ["apoapsis", "east", "our", "org"]
+}
+{
+  "host": "nadir.west.our.org",
+  "status": "down",
+  "components": ["nadir", "west", "our", "org"]
+}
+</pre>
+
+Using CSV output, with default auto-flatten, we get `components.1` through `components.4`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --from data/hostnames.csv put '$components = splita($host, ".")'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+host,status,components.1,components.2,components.3,components.4
+apoapsis.east.our.org,up,apoapsis,east,our,org
+nadir.west.our.org,down,nadir,west,our,org
+</pre>
+
+Using CSV output, without default auto-flatten, we get a JSON-stringified encoding of the `components` field:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --from data/hostnames.csv --no-auto-flatten put '$components = splita($host, ".")'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+host,status,components
+apoapsis.east.our.org,up,"[""apoapsis"", ""east"", ""our"", ""org""]"
+nadir.west.our.org,down,"[""nadir"", ""west"", ""our"", ""org""]"
+</pre>
+
+Now suppose we ran this
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --icsv --oxtab --from data/hostnames.csv --no-auto-flatten put '</b>
+<b>  $a = splita($host, ".");</b>
+<b>  $b = splita($host, ".");</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+host   apoapsis.east.our.org
+status up
+a      ["apoapsis", "east", "our", "org"]
+b      ["apoapsis", "east", "our", "org"]
+
+host   nadir.west.our.org
+status down
+a      ["nadir", "west", "our", "org"]
+b      ["nadir", "west", "our", "org"]
+</pre>
+
+into a file [data/hostnames.xtab](./data/hostnames.xtab):
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/hostnames.xtab</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+host   apoapsis.east.our.org
+status up
+a      ["apoapsis", "east", "our", "org"]
+b      ["apoapsis", "east", "our", "org"]
+
+host   nadir.west.our.org
+status down
+a      ["nadir", "west", "our", "org"]
+b      ["nadir", "west", "our", "org"]
+</pre>
+
+This was written with `--no-auto-unflatten` so we need to manually revive the
+array-valued fields, if we choose -- here, we can JSON-parse the `a` field and
+leave `b` JSON-stringified:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --ixtab --ojson json-parse -f a data/hostnames.xtab</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "host": "apoapsis.east.our.org",
+  "status": "up",
+  "a": ["apoapsis", "east", "our", "org"],
+  "b": "[\"apoapsis\", \"east\", \"our\", \"org\"]"
+}
+{
+  "host": "nadir.west.our.org",
+  "status": "down",
+  "a": ["nadir", "west", "our", "org"],
+  "b": "[\"nadir\", \"west\", \"our\", \"org\"]"
+}
+</pre>
+
+See also the
+[JSON parse and stringify section](reference-main-data-types.md#json-parse-and-stringify) section for
+more on this -- for example, when Miller is producing SQL-query output from
+tables having one or more columns that contain JSON-encoded data.

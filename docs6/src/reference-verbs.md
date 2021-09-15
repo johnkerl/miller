@@ -973,6 +973,21 @@ Parser-info options:
 
 Please see [DSL reference](reference-dsl.md) for more information about the expression language for `mlr filter`.
 
+## flatten
+
+<pre class="pre-highlight-in-pair">
+<b>mlr flatten --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr flatten [options]
+Flattens multi-level maps to single-level ones. Example: field with name 'a'
+and value '{"b": { "c": 4 }}' becomes name 'a.b.c' and value 4.
+Options:
+-f Comma-separated list of field names to flatten (default all).
+-s Separator, defaulting to mlr --flatsep value.
+-h|--help Show this message.
+</pre>
+
 ## format-values
 
 <pre class="pre-highlight-in-pair">
@@ -3501,6 +3516,21 @@ wye 1       0.9998228522652893
 wye 2       0.9992635865771493
 zee 1       0.9994904324789629
 zee 2       0.9994378171787394
+</pre>
+
+## unflatten
+
+<pre class="pre-highlight-in-pair">
+<b>mlr unflatten --help</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Usage: mlr unflatten [options]
+Reverses flatten. Example: field with name 'a.b.c' and value 4
+becomes name 'a' and value '{"b": { "c": 4 }}'.
+Options:
+-f {a,b,c} Comma-separated list of field names to unflatten (default all).
+-s {string} Separator, defaulting to mlr --flatsep value.
+-h|--help Show this message.
 </pre>
 
 ## uniq

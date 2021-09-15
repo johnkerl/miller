@@ -18,7 +18,7 @@ Miller's types are:
 
 See also the list of [type-checking
 functions](reference-dsl-builtin-functions.md#type-checkin -functions) for the
-[Miller programming language](programming-language.md).
+[Miller programming language](miller-programming-language.md).
 
 See also [Differences from other programming languages](reference-dsl-differences.md).
 
@@ -31,7 +31,7 @@ such as CSV, TSV, and JSON; binary formats such as
 not supported (as of mid-2021). In this sense, everything is a string in and out of
 Miller -- be it in data files, or in DSL expressions you key in.
 
-In the [DSL](programming-language.md), `7` is an `int` and `8.9` is a float, as
+In the [DSL](miller-programming-language.md), `7` is an `int` and `8.9` is a float, as
 one would expect.  Likewise, on input from [data files](file-formats.md),
 string values representable as numbers, e.g. `1.2` or `3`, are treated as int
 or float, respectively. If a record has `x=1,y=2` then `mlr put '$z=$x+$y'`

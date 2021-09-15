@@ -21,8 +21,8 @@ Quick links:
 The outline of an invocation of Miller is:
 
 * The program name `mlr`.
-* Options controlling input/output formatting, etc. (See [I/O options](reference-main-io-options.md)).
-* One or more verbs -- such as `cut`, `sort`, etc. (see [Verbs Reference](reference-verbs.md)) -- chained together using [then](reference-main-then-chaining.md). You use these to transform your data.
+* Flags controlling input/output formatting, etc. (see the [flags reference](reference-main-flag-list.md)).
+* One or more verbs -- such as `cut`, `sort`, etc. (see [verbs reference](reference-verbs.md)) -- chained together using [then](reference-main-then-chaining.md). You use these to transform your data.
 * Zero or more filenames, with input taken from standard input if there are no filenames present. (You can place the filenames up front using `--from` or `--mfrom` as described on the [keystroke-savers page](keystroke-savers.md#file-names-up-front-including-from).)
 
 For example, reading from a file:
@@ -66,7 +66,7 @@ See also the [Glossary](glossary.md) for more about terms such as
 
 When you type `mlr {something} myfile.dat`, the `{something}` part is called a **verb**. It specifies how you want to transform your data. Most of the verbs are counterparts of built-in system tools like `cut` and `sort` -- but with file-format awareness, and giving you the ability to refer to fields by name.
 
-The verbs `put` and `filter` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found at on the [Intro to Miller's programming language page](programming-language.md); see also [DSL reference](reference-dsl.md) for more details.
+The verbs `put` and `filter` are special in that they have a rich expression language (domain-specific language, or "DSL"). More information about them can be found at on the [Intro to Miller's programming language page](miller-programming-language.md); see also [DSL reference](reference-dsl.md) for more details.
 
 Here's a comparison of verbs and `put`/`filter` DSL expressions:
 

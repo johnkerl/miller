@@ -227,3 +227,7 @@ GENMD_EOF
 ## Looping
 
 See [single-variable for-loops](reference-dsl-control-structures.md#single-variable-for-loops) and [key-value for-loops](reference-dsl-control-structures.md#key-value-for-loops).
+
+## Array-valued fields in CSV files
+
+See the [flatten/unflatten page](flatten-unflatten.md).

@@ -151,7 +151,7 @@ yellow,circle,true,8,73,63.9785,4.2370
 yellow,circle,true,9,87,63.5058,8.3350
 </pre>
 
-* Using the [in-place flag](reference-main-io-options.md#in-place-mode) `-I`,
+* Using the [in-place flag](reference-main-in-place-processing.md) `-I`,
 as of August 2021 the overwritten file will _not_ be compressed as it was when it was read:
 e.g. `mlr -I --csv cat gz-example.csv.gz` will write `gz-example.csv.gz` which contains
 a plain, uncompressed CSV contents. This is a bug and will be fixed.

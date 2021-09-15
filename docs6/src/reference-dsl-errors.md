@@ -16,7 +16,7 @@ Quick links:
 </div>
 # DSL errors and transparency
 
-As soon as you have a [programming language](programming-language.md), you start having the problem *What is my code doing, and why?* This includes getting syntax errors -- which are always annoying -- as well as the even more annoying problem of a program which parses without syntax error but doesn't do what you expect.
+As soon as you have a [programming language](miller-programming-language.md), you start having the problem *What is my code doing, and why?* This includes getting syntax errors -- which are always annoying -- as well as the even more annoying problem of a program which parses without syntax error but doesn't do what you expect.
 
 The syntax-error message gives you line/column position for the syntax that couldn't be parsed. The cause may be clear from that information, or perhaps not.  Here are some common causes of syntax errors:
 

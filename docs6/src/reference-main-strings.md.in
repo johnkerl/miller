@@ -3,7 +3,7 @@
 ## Essentials
 
 Miller string literals are always written with double quotes, like `"abcde"`; single quotes
-are not part of the grammar of [Miller's programming language](programming-language.md).
+are not part of the grammar of [Miller's programming language](miller-programming-language.md).
 Single quotes are used for wrapping `put`/`filter` statements, as in `mlr put '$b=$a.".suffix"' myfile.csv'`:
 the single-quotes are consumed by the shell and Miller gets `$b=$a.".suffix"`. (See however the
 [Miller on Windows page](miller-on-windows.md).)

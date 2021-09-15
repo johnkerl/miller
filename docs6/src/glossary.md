@@ -59,14 +59,14 @@ information.
 
 ## begin
 
-A [keyword](#keyword) in the [Miller programming language](programming-language.md)
+A [keyword](#keyword) in the [Miller programming language](miller-programming-language.md)
 indicating the start of a begin
 [block](#block) within an instance of the [`put`](#put) or [`filter`](#filter)
 [verb](reference-verbs.md).  See [begin/end blocks](reference-dsl-control-structures.md#beginend-blocks).
 
 ## block
 
-A group of statements between `{` and `}` in the [Miller programming language](programming-language.md),
+A group of statements between `{` and `}` in the [Miller programming language](miller-programming-language.md),
 including [if-statement bodies](#if), [for-loop bodies](#for), [begin-block bodies](#begin),
 [end-block bodies](#end), etc.
 
@@ -151,18 +151,18 @@ integer.
 Stands for _delimited key-value pairs_.  A Miller-specific [file
 format](file-formats.md#dkvp-key-value-pairs), with each line of a file being
 of the form `x=1,y=2,z=3`.  For historical reasons, this is Miller's default
-format unless [flags](reference-main-io-options.md) such as `--csv` are
+format unless [flags](reference-main-flag-list.md) such as `--csv` are
 supplied.  You can also make CSV your default format using a [.mlrrc file](customization.md).
 
 ## do
 
 A [keyword](#keyword) which is used to indicate the start of a [do-while loop](reference-dsl-control-structures.md)
-in the [Miller programming language](programming-language.md).
+in the [Miller programming language](miller-programming-language.md).
 
 ## DSL
 
 Stands for _domain-specific language_.
-The [Miller programming language](programming-language.md) is embedded within
+The [Miller programming language](miller-programming-language.md) is embedded within
 the [put and filter verbs](reference-dsl.md). It's a language with its own syntax
 and semantics; the Miller executable does not embed, say, Python or Lua as a
 language for put and filter statements. This makes the Miller programming
@@ -172,7 +172,7 @@ or (more briefly) a _DSL_.
 ## dump
 
 A [keyword](#keyword) in the [Miller programming
-language](programming-language.md) which is used for printing variables to the
+language](miller-programming-language.md) which is used for printing variables to the
 screen (namely, to [stdout](#stdout)). Largely synonymous with
 [`print`](#print), except that `print` with no arguments prints nothing, while
 `dump` with no arguments displays all currently defined [out-of-stream
@@ -190,7 +190,7 @@ See also [dump statements](reference-dsl-output-statements.md#dump-statements).
 
 A [keyword](#keyword)  which is used to indicate the else-if-part of an
 [if-statement](reference-dsl-control-structures.md) in the [Miller programming
-language](programming-language.md).  In [some
+language](miller-programming-language.md).  In [some
 languages](reference-dsl-differences.md) this is `elsif` or `else if`; in
 Miller's programming language, `elif`.
 
@@ -198,12 +198,12 @@ Miller's programming language, `elif`.
 
 A [keyword](#keyword) which is used to indicate the else-part of an
 [if-statement](reference-dsl-control-structures.md) in the [Miller programming
-language](programming-language.md). See also [`elif`](#elif).
+language](miller-programming-language.md). See also [`elif`](#elif).
 
 ## emit, emitf, emitp
 
 Three [keywords](#keyword) in the
-[Miller programming language](programming-language.md)
+[Miller programming language](miller-programming-language.md)
 for injecting new records into the [record](#record) [stream](#stream)
 using the [put](#put) or [filter](#filter) [verbs](#verb).
 
@@ -216,7 +216,7 @@ Refers to the string with zero characters. For example, in a CSV file with [head
 
 ## end
 
-A [keyword](#keyword) in the [Miller programming language](programming-language.md)
+A [keyword](#keyword) in the [Miller programming language](miller-programming-language.md)
 indicating the start of an end
 [block](#block) within an instance of the [`put`](#put) or [`filter`](#filter)
 [verb](reference-verbs.md).  See [begin/end blocks](reference-dsl-control-structures.md#beginend-blocks).
@@ -225,7 +225,7 @@ indicating the start of an end
 
 A
 [keyword](#keyword) in the
-[Miller programming language](programming-language.md)
+[Miller programming language](miller-programming-language.md)
 for accessing a readable/writable
 [map](#map) of [environment variables](https://en.wikipedia.org/wiki/Environment_variable)
 
@@ -239,7 +239,7 @@ Same as [`printn`](#printn), except it prints to [stderr](#stderr) rather than [
 
 ## false
 
-A [keyword](#keyword) in the [Miller programming language](programming-language.md) for the
+A [keyword](#keyword) in the [Miller programming language](miller-programming-language.md) for the
 boolean literal; signified by `true` in Python; in some languages (such as C)
 signified by the zero integer value.
 
@@ -256,7 +256,7 @@ Examples include [CSV](#csv), [TSV](#tsv), and [JSON](#json). See the
 ## FILENAME
 
 A [built-in variable](reference-dsl-variables.md#built-in-variables) in the
-[Miller programming language](programming-language.md) referring to the name
+[Miller programming language](miller-programming-language.md) referring to the name
 of the current file being processed as Miller [streams](#stream) through your data.
 
 See the section on [built-in variables](reference-dsl-variables.md#built-in-variables).
@@ -264,7 +264,7 @@ See the section on [built-in variables](reference-dsl-variables.md#built-in-vari
 ## FILENUM
 
 A [built-in variable](reference-dsl-variables.md#built-in-variables) in the
-[Miller programming language](programming-language.md) referring to the [one-up](#one-up)
+[Miller programming language](miller-programming-language.md) referring to the [one-up](#one-up)
 index of the current file being processed as Miller [streams](#stream) through your data.
 
 See the section on [built-in variables](reference-dsl-variables.md#built-in-variables).
@@ -272,17 +272,25 @@ See the section on [built-in variables](reference-dsl-variables.md#built-in-vari
 ## filter
 
 Along with [put](#put), one of the Miller [verbs](#verb) which use the [Miller
-programming language](programming-language.md).
+programming language](miller-programming-language.md).
 
 Also, a [keyword](#keyword) which you can use within `put` statements: see the
 page on [DSL filter statements](reference-dsl-filter-statements.md).
 
 See the [DSL overview](#reference-dsl).
 
+## flatten
+
+To convert map-valued and/or array-valued fields to something representable in CSV
+and other non-JSON [file formats](file-formats.md) -- either by JSON-stringifying
+them or by _key spreading_. See the [flatten/unflatten page](flatten-unflatten.md).
+
+See also [unflatten](#unflatten).
+
 ## float
 
 A floating-point number as a value in Miller records, and in the [Miller
-programming language](programming-language.md). Floats interconvert seamlessly
+programming language](miller-programming-language.md). Floats interconvert seamlessly
 with [integers](#int) using Miller's [arithmetic rules](reference-main-arithmetic.md),
 so usually you only need to think of _numbers_, rather than ints and floats separately.
 
@@ -301,7 +309,7 @@ See also the [section on built-in variables](reference-dsl-variables.md#built-in
 ## for
 
 A [keyword](#keyword)  which is used to indicate the start of a [for-loop](reference-dsl-control-structures.md)
-in the [Miller programming language](programming-language.md).
+in the [Miller programming language](miller-programming-language.md).
 
 ## format
 
@@ -311,12 +319,12 @@ See [file format](#file-format).
 
 A [keyword](#keyword) used for defining a
 [user-defined functions](reference-dsl-user-defined-functions.md) in the
-[Miller programming language](programming-language.md).
+[Miller programming language](miller-programming-language.md).
 
 ## function
 
 A bit of callable code in the
-[Miller programming language](programming-language.md)
+[Miller programming language](miller-programming-language.md)
 which takes zero or more arguments, and optionall returns a value.
 
 See the [page on built-in functions](reference-dsl-builtin-functions.md) to see
@@ -353,7 +361,7 @@ Referring to data where all records have the same keys, in the same order.  See 
 ## if
 
 A [keyword](#keyword)  which is used to indicate the start of an [if-statement](reference-dsl-control-structures.md)
-in the [Miller programming language](programming-language.md).
+in the [Miller programming language](miller-programming-language.md).
 
 ## IFS
 
@@ -362,7 +370,7 @@ Stands for _input field separator_. See the [separators page](reference-main-sep
 ## in
 
 A [keyword](#keyword) in the
-[Miller programming language](programming-language.md)
+[Miller programming language](miller-programming-language.md)
 for [single-variable for-loops](reference-dsl-control-structures.md#single-variable-for-loops)
 and [key-value for-loops](reference-dsl-control-structures.md#key-value-for-loops).
 
@@ -379,12 +387,12 @@ In all these cases, the original `myfile.csv` is left unmodified.
 But using Miller's `-I` flag, we can update the original file: e.g. `mlr -I --csv sort myfile.csv`
 won't print the sorted output to the terminal, but rather will write it back to `myfile.csv`.
 
-See also the [section on in-place mode](reference-main-io-options.md#in-place-mode).
+See also the [section on in-place mode](reference-main-in-place-processing.md).
 
 ## int
 
 A 64-bit signed integer as a value in Miller records, and in the [Miller
-programming language](programming-language.md). Ints interconvert seamlessly
+programming language](miller-programming-language.md). Ints interconvert seamlessly
 with [floats](#float) using Miller's [arithmetic
 rules](reference-main-arithmetic.md), so usually you only need to think of
 _numbers_, rather than ints and floats separately.
@@ -412,7 +420,7 @@ The string index in a [map](#map). Also, the name of a field in a [record](#reco
 ## keyword
 
 A reserved name in the
-[Miller programming language](programming-language.md)
+[Miller programming language](miller-programming-language.md)
 which you can't use for any other purpose. For example, `if`, `for`, and `while` are keywords;
 trying to define a [local variable](#local-variable) `if = 3` will result in a parse error.
 
@@ -425,7 +433,7 @@ as non-line-oriented formats such as [CSV, TSV, JSON, and others](file-formats.m
 
 ## local variable
 
-A [variable](#variable) in the [Miller programming language](programming-language.md)
+A [variable](#variable) in the [Miller programming language](miller-programming-language.md)
 whose extent is limited to the expression in which it appears; contrast
 [out-of-stream variables](#out-of-stream-variable) which endure across the
 entire [record stream](#streaming). See the
@@ -444,7 +452,7 @@ Regardless, you can find the same content [within this documentation site](manpa
 
 ## map
 
-A data structure in the [Miller programming language](programming-language.md) containing
+A data structure in the [Miller programming language](miller-programming-language.md) containing
 an ordered sequence of [key](#key)-[value](#value) pairs.
 See the [maps page](reference-main-maps.md) for more information.
 
@@ -468,13 +476,13 @@ Miller version 6](miller-on-windows.md).
 ## M_E
 
 A [built-in variable](reference-dsl-variables.md#built-in-variables) in the
-[Miller programming language](programming-language.md) referring to the mathematic
+[Miller programming language](miller-programming-language.md) referring to the mathematic
 constant [e](https://en.wikipedia.org/wiki/E_(mathematical_constant)). The _M_ is for _math_.
 
 ## M_PI
 
 A [built-in variable](reference-dsl-variables.md#built-in-variables) in the
-[Miller programming language](programming-language.md) referring to the
+[Miller programming language](miller-programming-language.md) referring to the
 mathematic constant
 [π](https://en.wikipedia.org/wiki/Pi). The _M_ is for _math_.
 
@@ -482,7 +490,7 @@ mathematic constant
 
 Stands for _number of fields_. A read-only [built-in
 variable](reference-dsl-variables.md#built-in-variables) in the [Miller
-programming language](programming-language.md) which shows the number of fields
+programming language](miller-programming-language.md) which shows the number of fields
 in the current record.
 
 ## NIDX
@@ -522,7 +530,7 @@ Miller has more than one kind: see the page on [null/empty/absent data](referenc
 
 The `num` [keyword](#keyword) is used for [type declaration](
 reference-dsl-variables.md#type-declarations-for-local-variables-function-parameter-and-function-return-values)
-in the [Miller programming language](programming-language.md). The `num` type
+in the [Miller programming language](miller-programming-language.md). The `num` type
 encompasses both [`int`](#int) and [`float`](#float).  Ints and floats
 interconvert seamlessly using Miller's [arithmetic
 rules](reference-main-arithmetic.md), so usually you only need to think of
@@ -556,7 +564,7 @@ Stands for _output record separator_. See the [separators page](reference-main-s
 ## Out-of-stream variable
 
 [Variables](#variable), prefixed with the `@` sigil, which persist their values
-across multiple records in the [Miller programming language](programming-language.md).
+across multiple records in the [Miller programming language](miller-programming-language.md).
 See [out-of-stream variables](reference-dsl-variables.md#out-of-stream-variables)
 for more information.
 
@@ -567,7 +575,7 @@ for [key](#key)-[value](#value) pairs, with columns vertically aligned for easy 
 
 ## print
 
-A [keyword](#keyword) in the [Miller programming language](programming-language.md) for
+A [keyword](#keyword) in the [Miller programming language](miller-programming-language.md) for
 printing things to the terminal, with final newline printed for you.
 
 See also [`printn`](#printn) which does not insert the final newline.
@@ -576,7 +584,7 @@ See also [`emit`](#emit) which inserts new [records](#record) into the [record s
 
 ## printn
 
-A [keyword](#keyword) in the [Miller programming language](programming-language.md) for
+A [keyword](#keyword) in the [Miller programming language](miller-programming-language.md) for
 printing things to the terminal, with no final newline printed for you.
 
 See also [`print`](#print) which does insert the final newline.
@@ -584,7 +592,7 @@ See also [`print`](#print) which does insert the final newline.
 ## put
 
 Along with [filter](#filter), one of the Miller [verbs](#verb) which
-use the [Miller programming language](programming-language.md).
+use the [Miller programming language](miller-programming-language.md).
 
 See the [DSL overview](#reference-dsl).
 
@@ -628,7 +636,7 @@ arguments: a place where you can type `1+2` and get `3`. Miller has a
 
 ## return
 
-A [keyword](#keyword) in the [Miller programming language](programming-language.md) which
+A [keyword](#keyword) in the [Miller programming language](miller-programming-language.md) which
 is used for returning control from a
 [function](reference-dsl-user-defined-functions.md) to its caller, optionally
 returning a value from the function.
@@ -636,7 +644,7 @@ returning a value from the function.
 ## semicolon
 
 Semicolons are used to [delimit statements](reference-dsl-syntax.md) in the
-[Miller programming language](programming-language.md).
+[Miller programming language](miller-programming-language.md).
 
 ## separator
 
@@ -647,7 +655,7 @@ required after every statement; in others such as Python, they're not required
 at all; in yet others, they're required _in between_ statements but are
 optional after the last. Miller is in the third category, so we can say that
 semicolons are _separators_, not [_terminators_](#terminator), within the
-[Miller programming language](programming-language.md).
+[Miller programming language](miller-programming-language.md).
 
 (2) Refers to character sequences which separate records from one another (like
 newlines, sometimes), fields from one another (like commas in CSV), and keys
@@ -663,14 +671,14 @@ page](record-heterogeneity.md#sparse-data).
 ## stderr
 
 A [keyword](#keyword) in the
-[Miller programming language](programming-language.md)
+[Miller programming language](miller-programming-language.md)
 for [print, dump, and tee statements](http://127.0.0.1:8000/reference-dsl-output-statements.md#tee-statements)
 indicating that data are to be sent to the [_standard output_](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stderr)).
 
 ## stdout
 
 A [keyword](#keyword) in the
-[Miller programming language](programming-language.md)
+[Miller programming language](miller-programming-language.md)
 for [print, dump, and tee statements](http://127.0.0.1:8000/reference-dsl-output-statements.md#tee-statements)
 indicating that data are to be sent to the [_standard output_](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stdout)).
 
@@ -699,7 +707,7 @@ A [keyword](#keyword) used for defining a
 ## subroutine
 
 A [user-definable bit of code](reference-dsl-user-defined-functions.md) in the
-[Miller programming language](programming-language.md), intended to be
+[Miller programming language](miller-programming-language.md), intended to be
 called for its side effects rather than for returning a value.
 
 ## tee
@@ -717,7 +725,7 @@ thing4`.
 Miller has a tee in two places: (1) a [verb](#verb) you can insert into a
 Miller [then-chain](reference-main-then-chaining.md), and (2) an [output
 statement](reference-dsl-output-statements.md) in the [Miller programming
-language](programming-language.md). Using the latter, you have the additional
+language](miller-programming-language.md). Using the latter, you have the additional
 option of using a tee-to file name which is variable, perhaps depending on the
 current record. For example, if you have a large file with an `id` column, you
 can split it into several files, one for each distinct `id`. See the [section
@@ -738,7 +746,7 @@ required after every statement; in others such as Python, they're not required
 at all; in yet others, they're required _in between_ statements but are
 optional after the last. Miller is in the third category, so we can say that
 semicolons are [_separators_](#separator), not _terminators_, within the
-[Miller programming language](programming-language.md).
+[Miller programming language](miller-programming-language.md).
 
 ## toolkit
 
@@ -746,7 +754,7 @@ See [Unix toolkit](#unix-toolkit).
 
 ## true
 
-A [keyword](#keyword) in the [Miller programming language](programming-language.md) for the boolean
+A [keyword](#keyword) in the [Miller programming language](miller-programming-language.md) for the boolean
 literal; signified by `True` in Python; in some languages (such as C) signified by
 non-zero integer values.
 
@@ -755,6 +763,13 @@ non-zero integer values.
 Stands for _tab-separated values_.
 A popular [file format](file-formats.md#csvtsvasvusvetc) for tabular data
 (tab-separated values) supported by Miller.
+
+## unflatten
+
+To undo the [flatten](#flatten) operation, restoring map-valued and/or
+array-valued fields encoded in CSV and other non-JSON [file
+formats](file-formats.md) for JSON output.  See the [flatten/unflatten
+page](flatten-unflatten.md).
 
 ## Unix toolkit
 
@@ -774,7 +789,7 @@ to operate on richer [file formats](file-formats.md) such as [CSV](#csv), [TSV](
 
 ## unset
 
-A [keyword](#keyword) in the [Miller programming language](programming-language.md)
+A [keyword](#keyword) in the [Miller programming language](miller-programming-language.md)
 for removing the definition of a local or out-of-stream variable, or for removing
 a [key](#key) from the current [record](#record).
 
@@ -800,7 +815,7 @@ letting you declare a new variable, in an inner scope, of the same name as anoth
 
 ## variable
 
-A way to access data by name within the [Miller programming language](programming-language.md).
+A way to access data by name within the [Miller programming language](miller-programming-language.md).
 See the [DSL variables page](reference-dsl-variables.md).
 
 ## verb
@@ -817,7 +832,7 @@ See the [List of verbs](reference-verbs.md) page.
 
 A [keyword](#keyword)  which is used to indicate the start of a
 [while-loop](reference-dsl-control-structures.md), and also used in do-while
-loops, in the [Miller programming language](programming-language.md).
+loops, in the [Miller programming language](miller-programming-language.md).
 
 ## XTAB
 

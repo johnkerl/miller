@@ -1,0 +1,9 @@
+host   apoapsis.east.our.org
+status up
+a      ["apoapsis", "east", "our", "org"]
+b      ["apoapsis", "east", "our", "org"]
+
+host   nadir.west.our.org
+status down
+a      ["nadir", "west", "our", "org"]
+b      ["nadir", "west", "our", "org"]

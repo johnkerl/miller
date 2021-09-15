@@ -158,7 +158,7 @@ In yet others, such as C/C++ and Java, string literals are in double auotes, lik
 while single quotes are for character literals like `'a'` or `'\n'`. In these, if `s` is a non-empty string,
 then `s[0]` is its first character.
 
-In the [Miller programming language](programming-language.md):
+In the [Miller programming language](miller-programming-language.md):
 
 * String literals are always in double quotes, like `"abc"`.
 * String-indexing/slicing always results in strings (even of length 1): `"abc"[1:1]` is the string `"a"`, and there is no notion in the Miller programming language of a character type.

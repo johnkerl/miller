@@ -25,7 +25,7 @@ The goal is _multiple levels of detail_.
 * The _Background_ section is some **non-essential historical** and meta material on why Miller was created.
 * The _Reference_ section aims to answer all questions the previous sections didn't. The discussion is **concept-driven**, although there are still plenty of examples throughout for concreteness.
     * _Main reference_ goes carefully through various aspects of Miller, concept by concept.
-    * _DSL reference_ focuses on the [Miller programming language](programming-language.md), again following a concept-at-a-time approach.
+    * _DSL reference_ focuses on the [Miller programming language](miller-programming-language.md), again following a concept-at-a-time approach.
     * _Misc. reference_ is aptly named, with things like build-from-source notes.
     * _Documents for previous releases_ is not only for historical curiosity -- experience has shown that various Linux/BSD distros update their Miller versions on their own cadences, so the version on your system (as shown by `mlr --version`) might be best-served by its respective documentation version.
 * Lastly, new with the Miller 6 documents is a very easy-to-access **Search field** at the top of each page.

@@ -2,7 +2,7 @@
 
 _DSL_ stands for _domain-specific language_: it's language particular to Miller
 which you can use to write expressions to specify customer transformations to
-your data. (See [Miller programming language](programming-language.md) for an
+your data. (See [Miller programming language](miller-programming-language.md) for an
 introduction.)
 
 ## Verbs compared to DSL

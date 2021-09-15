@@ -1,20 +1,13 @@
 TOP:
 
-E fill out flatten/unflatten page
-  o info early on in the intro!
-  o flatsep -> glossary
-  o flatsep <-> f/uf pg
-  o flatsep <-> seps pg
-E arrays and maps pages: xref to fla/unfla page
 c array+string slice UTs
 ! mapselect int-key etc -- fix + UT
-c UT per se for lrec ops
-* concatenating key -> key-folding analog of key-spreading
-  e key-fold key-spread -> glossary
 ! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
   - needs UTs as well
 
 ? nidx no output-coloring?
+
+e fix -I + auto-decompress
 
 ? twi-dm re all-contribs: all-contributors.org
 

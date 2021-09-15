@@ -344,6 +344,12 @@ GENMD_EOF
 
 Please see [DSL reference](reference-dsl.md) for more information about the expression language for `mlr filter`.
 
+## flatten
+
+GENMD_RUN_COMMAND
+mlr flatten --help
+GENMD_EOF
+
 ## format-values
 
 GENMD_RUN_COMMAND
@@ -1103,6 +1109,12 @@ GENMD_EOF
 
 GENMD_RUN_COMMAND
 mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
+GENMD_EOF
+
+## unflatten
+
+GENMD_RUN_COMMAND
+mlr unflatten --help
 GENMD_EOF
 
 ## uniq

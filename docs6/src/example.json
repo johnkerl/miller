@@ -1,0 +1,18 @@
+{
+  "color": "yellow",
+  "shape": "triangle",
+  "flag": "true",
+  "k": 1,
+  "index": 11,
+  "quantity": 43.6498,
+  "rate": 9.8870
+}
+{
+  "color": "red",
+  "shape": "square",
+  "flag": "true",
+  "k": 2,
+  "index": 15,
+  "quantity": 79.2778,
+  "rate": 0.0130
+}

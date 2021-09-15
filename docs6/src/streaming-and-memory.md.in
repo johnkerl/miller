@@ -24,7 +24,7 @@ seeing partial results. This also means if you pipe Miller's output to other
 streaming tools (like `cat`, `grep`, `sed`, and so on), they will also output
 partial results as data arrives.
 
-The statements in the [Miller programming language](programming-language.md)
+The statements in the [Miller programming language](miller-programming-language.md)
 (outside of optional `begin`/`end` blocks which execute before and after all
 records have been read, respectively) are implicit callbacks which are executed
 once per record. For example, using `mlr --csv put '$z = $x + $y' myfile.csv`,

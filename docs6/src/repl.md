@@ -18,7 +18,7 @@ Quick links:
 
 The Miller REPL (read-evaluate-print loop) is an interactive counterpart to record-processing using the `put`/`filter` language. (A REPL is anything that evaluates what you type into it -- like `python` with no arguments, or Ruby's `irb`, or `node` with no arguments, etc.)
 
-Miller's REPL isn't a source-level debugger which lets you execute one source-code *statement* at a time -- however, it does let you operate on one *record* at a time. Further, it lets you use "immediate expressions", namely, you can interact with the [Miller programming language](programming-language.md) without having to provide data from an input file.
+Miller's REPL isn't a source-level debugger which lets you execute one source-code *statement* at a time -- however, it does let you operate on one *record* at a time. Further, it lets you use "immediate expressions", namely, you can interact with the [Miller programming language](miller-programming-language.md) without having to provide data from an input file.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr repl</b>

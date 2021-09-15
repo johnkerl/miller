@@ -16,7 +16,7 @@ Quick links:
 </div>
 # DSL built-in functions
 
-These are functions in the [Miller programming language](programming-language.md)
+These are functions in the [Miller programming language](miller-programming-language.md)
 that you can call when you use `mlr put` and `mlr filter`. For example, when you type
 
 <pre class="pre-highlight-in-pair">

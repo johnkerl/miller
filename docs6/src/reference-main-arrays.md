@@ -310,3 +310,7 @@ More generally, you can get shift and pop operations by unsetting indices 1 and 
 ## Looping
 
 See [single-variable for-loops](reference-dsl-control-structures.md#single-variable-for-loops) and [key-value for-loops](reference-dsl-control-structures.md#key-value-for-loops).
+
+## Array-valued fields in CSV files
+
+See the [flatten/unflatten page](flatten-unflatten.md).

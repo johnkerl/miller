@@ -222,3 +222,7 @@ purple square   8.2430
 ## Looping
 
 See [single-variable for-loops](reference-dsl-control-structures.md#single-variable-for-loops) and [key-value for-loops](reference-dsl-control-structures.md#key-value-for-loops).
+
+## Map-valued fields in CSV files
+
+See the [flatten/unflatten page](flatten-unflatten.md).

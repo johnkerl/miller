@@ -105,7 +105,7 @@ mlr --icsv --opprint --from example.csv put '
 GENMD_EOF
 
 For `put` and `filter` we were able to type out expressions using a programming-language syntax.
-See the [Miller programming language page](programming-language.md) for more information.
+See the [Miller programming language page](miller-programming-language.md) for more information.
 
 ## Multiple input files
 
@@ -254,6 +254,42 @@ How to specify these to Miller:
 * If you use `--icsv` and `--ojson` (note the extra `i` and `o`) then Miller will use CSV for input and JSON for output, etc.  See also [Keystroke Savers](keystroke-savers.md) for even shorter options like `--c2j`.
 
 You can read more about this at the [File Formats](file-formats.md) page.
+
+If all record values are numbers, strings, etc., then converting back and forth between CSV and JSON is
+a matter of specifying input-format and output-format flags:
+
+GENMD_RUN_COMMAND
+mlr --json cat example.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --ocsv cat example.json
+GENMD_EOF
+
+However, if JSON data has map-valued or array-valued fields, Miller gives you choices on how to
+convert these to CSV columns. For example, here's some JSON data with map-valued fields:
+
+GENMD_RUN_COMMAND
+cat data/server-log.json
+GENMD_EOF
+
+We can convert this to CSV, or other tabular formats:
+
+GENMD_RUN_COMMAND
+mlr --ijson --ocsv cat data/server-log.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --oxtab cat data/server-log.json
+GENMD_EOF
+
+These transformations are reversible:
+
+GENMD_RUN_COMMAND
+mlr --ijson --oxtab cat data/server-log.json | mlr --ixtab --ojson cat
+GENMD_EOF
+
+See the [flatten/unflatten page](flatten-unflatten.md) for more information.
 
 ## Choices for printing to files
 
