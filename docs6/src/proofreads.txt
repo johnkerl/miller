@@ -1,16 +1,14 @@
 TOP:
 
-! precedence of "." operator: mlr -n put -v 'a.b+c.d'
-
-c spaceship operator for sorts -- ?
-C sort for maps and arrays; latter by key or value; w/
-  sorta , sortaf -- <=> or callback
-  sortmk, sortmkv, sortmkf, sortmvf, sortmpf -- by keys, by values, by UDF on k, v, pair?
-
-! precedence of "." operator: mlr -n put -v 'a.b+c.d'
-  o doc page -- separate maybe ??
-  i x.a . x.b -- needs (x.a) . (x.b)
-  e update op-prec table w/ why
+C sort for maps and arrays:
+  o impl sortaf and sortmf
+  o doc sorta, sortmk, sortaf, sortmf 
+  o get call-UDF-by-name (no 1st-class for now, too much work -- so sortaf(a, "f") not sortaf(a, f))
+  o flags for sorta/sortmk: f/n: lex/numerical, r: reverse, c: case-fold
+    - 8 funcptrs: lex/num, up/down, case-fold/not
+  o impl case-fold for sort *verb* as well
+    -> 'new in miller6'
+  o maximum variadic arity printed in table/olh/etc
 
 c array+string slice UTs
 ! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2

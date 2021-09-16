@@ -39,6 +39,7 @@ type BuiltinFunctionInfo struct {
 	help                   string
 	hasMultipleArities     bool
 	minimumVariadicArity   int
+	maximumVariadicArity   int // 0 means no max
 	zaryFunc               types.ZaryFunc
 	unaryFunc              types.UnaryFunc
 	contextualUnaryFunc    types.ContextualUnaryFunc    // asserting_{typename}
@@ -1523,6 +1524,24 @@ See also arrayify.`,
 		binaryFunc: types.MlrvalUnflatten,
 	},
 
+	{
+		name:                 "sorta",
+		class:                FUNC_CLASS_COLLECTIONS,
+		help:                 "Returns a copy of an array, sorted ascending. Coming soon: other sort options.",
+		variadicFunc:         types.MlrvalSortA,
+		minimumVariadicArity: 1,
+		maximumVariadicArity: 2,
+	},
+
+	{
+		name:                 "sortmk",
+		class:                FUNC_CLASS_COLLECTIONS,
+		help:                 "Returns a copy of a map, sorted ascending by map key. Coming soon: other sort options.",
+		variadicFunc:         types.MlrvalSortMK,
+		minimumVariadicArity: 1,
+		maximumVariadicArity: 2,
+	},
+
 	// ----------------------------------------------------------------
 	// FUNC_CLASS_SYSTEM
 
@@ -1784,7 +1803,11 @@ func describeNargs(info *BuiltinFunctionInfo) string {
 			return "3"
 		}
 		if info.variadicFunc != nil {
-			return "variadic"
+			if info.maximumVariadicArity != 0 {
+				return fmt.Sprintf("%d-%d", info.minimumVariadicArity, info.maximumVariadicArity)
+			} else {
+				return "variadic"
+			}
 		}
 	}
 	lib.InternalCodingErrorIf(true)

@@ -503,6 +503,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 	evaluables := make([]IEvaluable, len(astNode.Children))
 
 	callsiteArity := len(astNode.Children)
+
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
 		return nil, errors.New(
 			fmt.Sprintf(
@@ -512,6 +513,19 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 				callsiteArity,
 			),
 		)
+	}
+
+	if builtinFunctionInfo.maximumVariadicArity != 0 {
+		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
+			return nil, errors.New(
+				fmt.Sprintf(
+					"Miller: function %s takes maximum argument count %d; got %d.\n",
+					builtinFunctionInfo.name,
+					builtinFunctionInfo.maximumVariadicArity,
+					callsiteArity,
+				),
+			)
+		}
 	}
 
 	var err error = nil
