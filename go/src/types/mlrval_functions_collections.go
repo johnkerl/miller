@@ -2,6 +2,7 @@ package types
 
 import (
 	"bytes"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -778,4 +779,79 @@ func MlrvalJSONStringifyBinary(input1, input2 *Mlrval) *Mlrval {
 	} else {
 		return MlrvalPointerFromString(string(outputBytes))
 	}
+}
+
+// ----------------------------------------------------------------
+// TODO: under construction/consideration
+
+// f,n,r as in the sort verb; c for case -- ? if so, do this for the sort verb too --?
+// f/n: lex/numerical
+// r: reverse
+// c: case-fold
+//
+// funcptrs:
+// lex up
+// lex down
+// lex up, case-fold
+// lex down, case-fold
+// num up
+// num down
+// num up, case-fold
+// num down, case-fold
+
+// optional 2nd arg is string
+// runes -> map
+// if c in there else if, etc.
+
+// Already guaranteed we are called with one argument or two.
+func MlrvalSortA(inputs []*Mlrval) *Mlrval {
+	input1 := inputs[0]
+	if input1.GetArray() == nil { // not an array
+		return input1
+	}
+
+	output := input1.Copy()
+
+	// xxx temp
+	// xxx split out in-place helper for SortMK to also use
+	if len(inputs) == 1 {
+		sort.Slice(output.arrayval, func(i, j int) bool {
+			return MlrvalLessThanAsBool(&output.arrayval[i], &output.arrayval[j])
+		})
+	} else {
+		sort.Slice(output.arrayval, func(i, j int) bool {
+			return MlrvalGreaterThanAsBool(&output.arrayval[i], &output.arrayval[j])
+		})
+	}
+	return output
+}
+
+// ----------------------------------------------------------------
+// TODO: under construction/consideration
+
+// Already guaranteed we are called with one argument or two.
+func MlrvalSortMK(inputs []*Mlrval) *Mlrval {
+	input1 := inputs[0]
+	inmap := input1.GetMap()
+	if inmap == nil { // not a map
+		return input1
+	}
+
+	n := inmap.FieldCount
+	keys := make([]string, n)
+	i := 0
+	for pe := inmap.Head; pe != nil; pe = pe.Next {
+		keys[i] = pe.Key
+		i++
+	}
+
+	sort.Strings(keys)
+
+	outmap := NewMlrmap()
+	for i := 0; i < n; i++ {
+		key := keys[i]
+		outmap.PutCopy(key, inmap.Get(key))
+	}
+
+	return MlrvalPointerFromMapReferenced(outmap)
 }

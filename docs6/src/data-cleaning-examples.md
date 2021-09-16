@@ -89,4 +89,6 @@ A third way is to abort the process on first instance of bad data:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Miller: is_string type-assertion failed at NR=4 FNR=4 FILENAME=data/het-bool.csv
+name,reachable
+barney,false
 </pre>

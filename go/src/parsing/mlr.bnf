@@ -1363,6 +1363,7 @@ EqneTerm
   | EqneTerm "!=~" CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | EqneTerm "=="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | EqneTerm "!="  CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | EqneTerm "<=>" CmpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | CmpTerm
 ;
 
@@ -1401,18 +1402,22 @@ AddsubdotTerm
   | AddsubdotTerm "-"  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | AddsubdotTerm ".+" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
   | AddsubdotTerm ".-" MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | AddsubdotTerm "."  MuldivTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeDotOperator) >>
   | MuldivTerm
 ;
 
 MuldivTerm
-  : MuldivTerm "*"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "/"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "//"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "%"   UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm ".*"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm "./"  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
-  | MuldivTerm ".//" UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  : MuldivTerm "*"   DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "/"   DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "//"  DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "%"   DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".*"  DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm "./"  DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | MuldivTerm ".//" DotTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeOperator) >>
+  | DotTerm
+;
+
+DotTerm
+  : DotTerm "."  UnaryOpTerm << dsl.NewASTNodeBinary($1, $0, $2, dsl.NodeTypeDotOperator) >>
   | UnaryOpTerm
 ;
 

@@ -23,3 +23,6 @@ make
 
 cd ../docs6
 ./regen.sh
+
+echo
+echo DONE
