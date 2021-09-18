@@ -13,7 +13,7 @@ import (
 // "--csv". (The sole exception is the sort verb's -nf/-nr which are handled
 // specially there.)
 //
-// Secondly, we split "--foo=bar" into "--foo" and "bar".
+// Additionally, we split "--foo=bar" into "--foo" and "bar".
 func Getoptify(inargs []string) []string {
 	expandRegex := regexp.MustCompile("^-[a-zA-Z0-9]+$")
 	splitRegex := regexp.MustCompile("^--[^=]+=.+$")

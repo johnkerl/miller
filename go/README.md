@@ -209,6 +209,19 @@ nil through the reader/transformer/writer sequence.
 
 See [./regtest/README.md](./regtest/README.md).
 
+## Godoc
+
+As of September 2021, `godoc` support is minimal: package-level synopses exist;
+most `func`/`const`/etc content lacks `godoc`-style comments.
+
+To view doc material, you can:
+
+* `go get golang.org/x/tools/cmd/godoc`
+* `cd go`
+* `godoc -http=:6060 -goroot .`
+* Browse to `http://localhost:6060`
+* Note: control-C an restart the server, then reload in the browser, to pick up edits to source files
+
 ## Source-code indexing
 
 Please see https://sourcegraph.com/github.com/johnkerl/miller

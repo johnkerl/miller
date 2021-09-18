@@ -203,11 +203,12 @@ func (rc *BZip2ReadCloser) Close() error {
 }
 
 // ----------------------------------------------------------------
-// Reading past end of files opened with os.Open returns the error which is
-// io.EOF. Reading past close of pipes opened with popen (e.g. Miller's
-// prepipe, where the file isn't 'foo.dat' but rather the process 'gunzip <
-// foo.dat |') returns not io.EOF but an error with 'file already closed'
-// within it. See also
+
+// IsEOF handles the following problem: reading past end of files opened with
+// os.Open returns the error which is io.EOF. Reading past close of pipes
+// opened with popen (e.g.  Miller's prepipe, where the file isn't 'foo.dat'
+// but rather the process 'gunzip < foo.dat |') returns not io.EOF but an error
+// with 'file already closed' within it. See also
 // https://stackoverflow.com/questions/47486128/why-does-io-pipe-continue-to-block-even-when-eof-is-reached
 func IsEOF(err error) bool {
 	if err == nil {
