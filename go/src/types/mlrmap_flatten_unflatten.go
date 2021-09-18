@@ -234,7 +234,7 @@ func unflattenTerminal(input *Mlrval) *Mlrval {
 		return MlrvalPointerFromMapReferenced(NewMlrmap())
 	}
 	if input.printrep == "[]" {
-		return MlrvalPointerFromArrayLiteralReference(make([]Mlrval, 0))
+		return MlrvalPointerFromArrayReference(make([]Mlrval, 0))
 	}
 	return input
 }
