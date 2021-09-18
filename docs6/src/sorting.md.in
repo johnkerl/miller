@@ -39,3 +39,24 @@ docpg: sort-in-row as well as sort-records-at-end.
 * why call-UDF-by-name (no 1st-class for now, too much work -- so sortaf(a, "f") not sortaf(a, f))
 
 also: example for sortaf/sortmf of structs ...
+
+## TBD
+
+```
+mlr --opprint --from s put -q '
+  begin {
+    @records = []
+  }
+  func f(a,b) {
+    return a.x+a.y <=> b.x+b.y
+  }
+
+  @records[NR] = $*;
+  end {
+    @records = sortaf(@records, "f");
+    for (_, record in @records) {
+      emit record;
+    }
+  }
+' then put '$z=$x+$y'
+```
