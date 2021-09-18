@@ -189,9 +189,11 @@ in the order they were encountered in the input record stream.
 
 Options:
 -f  {comma-separated field names}  Lexical ascending
+-r  {comma-separated field names}  Lexical descending
+-c  {comma-separated field names}  Case-folded lexical ascending
+-cr {comma-separated field names}  Case-folded lexical descending
 -n  {comma-separated field names}  Numerical ascending; nulls sort last
 -nf {comma-separated field names}  Same as -n
--r  {comma-separated field names}  Lexical descending
 -nr {comma-separated field names}  Numerical descending; nulls sort first
 -h|--help Show this message.
 

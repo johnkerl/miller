@@ -165,6 +165,7 @@ func getSortXFSpace(
 	sortXFCache[udfName] = entry
 	return entry
 }
+
 // ----------------------------------------------------------------
 
 // SortAF implements the sortaf function, which takes an array as first

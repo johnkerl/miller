@@ -18,9 +18,24 @@ Quick links:
 
 ## TBD
 
-## TBD
+* `sort` verb is the mainstay with doclink.
+* one use of the DSL sort functions is for sorting values on a per-record basis.
+* another is for operating-on-all-records (with link).
+    * TODO: put an example/link there
 
-## TBD
+## Sorting fields within records
+
+xxx verb link
+
+xxx examples
+
+## Sorting records
+
+xxx verb link
+
+xxx example
+
+## TBF
 
 ```
 mlr --from s --ojson put '
@@ -51,7 +66,6 @@ mlr --from s --ojson put '
 
 docpg: sort-in-row as well as sort-records-at-end.
 
-* doc sorta, sortmk, sortaf, sortmf
 * why call-UDF-by-name (no 1st-class for now, too much work -- so sortaf(a, "f") not sortaf(a, f))
 
 also: example for sortaf/sortmf of structs ...

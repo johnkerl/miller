@@ -1,48 +1,36 @@
 TOP:
+! try to godoc a few functions on every commit ... accumulate over time ...
 
 C sort for maps and arrays:
-  o impl sortmf
+  o sorting.md.in -- incl note no recursion into values; left to user.
+  o sortaf/sortmf regtest
   o flags for sorta/sortmk: f/n: lex/numerical, r: reverse, c: case-fold
     - 8 funcptrs: lex/num, up/down, case-fold/not
-  o impl case-fold for sort *verb* as well
-    - -c and -cr
-    - update 'new in miller6'
-
 c array+string slice UTs
-! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
-  - needs UTs as well
-
-C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
-
 ? nidx no output-coloring?
 
-e fix -I + auto-decompress
+C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
+C fix -I + auto-decompress
 
 ? twi-dm re all-contribs: all-contributors.org
-
 * nikos materials -> fold in
-
-c! seps \001 etc !
-  mlrc --iusv --oxtab cat regtest/input/example.usv
-  mlr  --iusv --oxtab cat regtest/input/example.usv
 
 ----------------------------------------------------------------
 * r-strings branch!
 * deduping pass!
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
+! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
+  - needs UTs as well
+
 * regex: more about what is / is not
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
 
 c? mlr -S / -F outside of put/filter -- ?
 
-csv-with-and-without-headers:
-? shorter version for --headerless-csv-output, & doc everywhere -- -H -- ?
-? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
-? cat out nas.csv first
-? ag -> just grep ?
-l Miller handles compliant CSV: include rfc4180 link
-? Regularizing ragged CSV: use regularize verb?!?
+c! seps \001 etc !
+  mlrc --iusv --oxtab cat regtest/input/example.usv
+  mlr  --iusv --oxtab cat regtest/input/example.usv
 
 ----------------------------------------------------------------
 record-heterogeneity:
@@ -56,6 +44,14 @@ l link-to's:
   programming-language.md.in:easy for you to handle non-heterogeneous data
   two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
 ? back out of ref section -- ?
+
+csv-with-and-without-headers:
+? shorter version for --headerless-csv-output, & doc everywhere -- -H -- ?
+? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
+? cat out nas.csv first
+? ag -> just grep ?
+l Miller handles compliant CSV: include rfc4180 link
+? Regularizing ragged CSV: use regularize verb?!?
 
 special-symbols-and-formatting:
 ? check: mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v

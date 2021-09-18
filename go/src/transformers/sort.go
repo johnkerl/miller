@@ -77,9 +77,11 @@ func transformerSortUsage(
 	fmt.Fprintf(o, "\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-f  {comma-separated field names}  Lexical ascending\n")
+	fmt.Fprintf(o, "-r  {comma-separated field names}  Lexical descending\n")
+	fmt.Fprintf(o, "-c  {comma-separated field names}  Case-folded lexical ascending\n")
+	fmt.Fprintf(o, "-cr {comma-separated field names}  Case-folded lexical descending\n")
 	fmt.Fprintf(o, "-n  {comma-separated field names}  Numerical ascending; nulls sort last\n")
 	fmt.Fprintf(o, "-nf {comma-separated field names}  Same as -n\n")
-	fmt.Fprintf(o, "-r  {comma-separated field names}  Lexical descending\n")
 	fmt.Fprintf(o, "-nr {comma-separated field names}  Numerical descending; nulls sort first\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
 	fmt.Fprintf(o, "\n")
@@ -123,6 +125,25 @@ func transformerSortParseCLI(
 			for _, item := range subList {
 				groupByFieldNames = append(groupByFieldNames, item)
 				comparatorFuncs = append(comparatorFuncs, types.LexicalAscendingComparator)
+			}
+
+		} else if opt == "-c" {
+			// See comments over "-n" -- similar hack.
+			if args[argi] == "-r" {
+				// Treat like "-cr"
+				argi++
+				subList := cli.VerbGetStringArrayArgOrDie(verb, "-nr", args, &argi, argc)
+				for _, item := range subList {
+					groupByFieldNames = append(groupByFieldNames, item)
+					comparatorFuncs = append(comparatorFuncs, types.CaseFoldDescendingComparator)
+				}
+			} else {
+
+				subList := cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+				for _, item := range subList {
+					groupByFieldNames = append(groupByFieldNames, item)
+					comparatorFuncs = append(comparatorFuncs, types.CaseFoldAscendingComparator)
+				}
 			}
 
 		} else if opt == "-r" {
