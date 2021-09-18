@@ -72,6 +72,12 @@ type MlrmapEntry struct {
 	Next  *MlrmapEntry
 }
 
+// Only used for sorting, map-to-pairs-array and pairs-array-to-map contexts.
+type MlrmapPair struct {
+	Key   string
+	Value *Mlrval
+}
+
 // ----------------------------------------------------------------
 func NewMlrmapAsRecord() *Mlrmap {
 	return newMlrmapUnhashed()

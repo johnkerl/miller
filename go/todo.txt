@@ -426,16 +426,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 
 * genmds multi-line something something for autogen of repl examples -- ?
 
-* go doc ...
-  o export GOPATH=$(pwd); go doc types.Mlrval
-  o go get golang.org/x/tools/cmd/godoc
-    go get golang.org/x/tools/cmd/vet
-  o brew install go
-    brew upgrade go
-  o https://golang.org/lib/godoc/analysis/help.html
-  o export GOPATH=$(pwd); godoc -http=:6060
-    http://localhost:6060/pkg/miller/
-
 * maybe split Context into varying & non-varying -- separate structs entirely
 
 * idea: records as mlrmap -> mlrval?
@@ -533,7 +523,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
 ----------------------------------------------------------------
 DOC6:
 
-* godoc ...
 * mlrdoc false && 4, true || 4 because of short-circuiting requirement
 * doc: no boolish truthy falsy
 * mlrdoc: there should have always been a >>> and >>>=, and now there are

@@ -129,8 +129,6 @@ If you `mlr csv cat` this, you'll get an error message:
 <pre class="pre-non-highlight-in-pair">
 mlr :  mlr: CSV header/data length mismatch 3 != 2 at filename data/het/ragged.csv row 3.
 
-a,b,c
-1,2,3
 </pre>
 
 There are two kinds of raggedness here. Since CSVs form records by zipping the

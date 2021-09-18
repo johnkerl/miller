@@ -123,24 +123,28 @@ func (root *RootNode) BuildFunctionCallsiteNode(astNode *dsl.ASTNode) (IEvaluabl
 // Most DSL functions are implemented in the types package. But these call UDFs
 // which are here in the dsl/cst package, so they can't be in the types package
 
-// tSortAFSpace is the datatype for the getSortAFSpace cache-manager.
-type tSortAFSpace struct {
+// tSortXFSpace is the datatype for the getSortXFSpace cache-manager.
+type tSortXFSpace struct {
 	udfCallsite *UDFCallsite
 	argsArray   []*types.Mlrval
 }
 
-var sortAFCache map[string]*tSortAFSpace = make(map[string]*tSortAFSpace)
+var sortXFCache map[string]*tSortXFSpace = make(map[string]*tSortXFSpace)
 
-// getSortAFSpace manages a cache for the data needed by sortaf/sortmf.  Those
+// getSortXFSpace manages a cache for the data needed by sortaf/sortmf.  Those
 // functions may be invoked on every record of a big data file, so we try to
 // cache data they need for UDF-callsite setup.
-func getSortAFSpace(udfName string, udfManager *UDFManager) *tSortAFSpace {
-	entry := sortAFCache[udfName]
+func getSortXFSpace(
+	udfName string,
+	udfManager *UDFManager,
+	arity int, // 2 for sortaf, 4 for sortmf
+) *tSortXFSpace {
+	entry := sortXFCache[udfName]
 	if entry != nil {
 		return entry
 	}
 
-	udf, err := udfManager.LookUp(udfName, 2)
+	udf, err := udfManager.LookUp(udfName, arity)
 	if err != nil { // e.g. exists with wrong arity
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -151,14 +155,14 @@ func getSortAFSpace(udfName string, udfManager *UDFManager) *tSortAFSpace {
 	}
 
 	udfCallsite := NewUDFCallsiteForSortF(udf)
-	argsArray := make([]*types.Mlrval, 2)
+	argsArray := make([]*types.Mlrval, arity)
 
-	entry = &tSortAFSpace{
+	entry = &tSortXFSpace{
 		udfCallsite: udfCallsite,
 		argsArray:   argsArray,
 	}
 
-	sortAFCache[udfName] = entry
+	sortXFCache[udfName] = entry
 	return entry
 }
 // ----------------------------------------------------------------
@@ -184,7 +188,7 @@ func SortAF(
 	}
 	udfName := input2.String()
 
-	sortAFSpace := getSortAFSpace(udfName, udfManager)
+	sortAFSpace := getSortXFSpace(udfName, udfManager, 2)
 	udfCallsite := sortAFSpace.udfCallsite
 	argsArray := sortAFSpace.argsArray
 
@@ -211,4 +215,61 @@ func SortAF(
 		return nret < 0
 	})
 	return types.MlrvalPointerFromArrayReference(outputArray)
+}
+
+// ----------------------------------------------------------------
+
+// SortMF implements the sortmf function, which takes a map as first argument
+// and string UDF-name as second argument. It sorts the map using the UDF as
+// the comparator.
+//
+// * Forward sort by key: func f(ak,av,bk,bv) { return ak <=> bk }
+// * Reverse sort by key: func f(ak,av,bk,bv) { return bk <=> ak }
+func SortMF(
+	input1 *types.Mlrval,
+	input2 *types.Mlrval,
+	state *runtime.State,
+	udfManager *UDFManager,
+) *types.Mlrval {
+	inputMap := input1.GetMap()
+	if inputMap == nil { // not a map
+		return input1
+	}
+	if !input2.IsString() {
+		return types.MLRVAL_ERROR
+	}
+
+	pairsArray := inputMap.ToPairsArray()
+
+	udfName := input2.String()
+	sortAFSpace := getSortXFSpace(udfName, udfManager, 4)
+	udfCallsite := sortAFSpace.udfCallsite
+	argsArray := sortAFSpace.argsArray
+
+	sort.Slice(pairsArray, func(i, j int) bool {
+		argsArray[0] = types.MlrvalPointerFromString(pairsArray[i].Key)
+		argsArray[1] = pairsArray[i].Value
+		argsArray[2] = types.MlrvalPointerFromString(pairsArray[j].Key)
+		argsArray[3] = pairsArray[j].Value
+
+		// Call the user's comparator function.
+		mret := udfCallsite.EvaluateWithArguments(state, argsArray)
+		// Unpack the types.Mlrval return value into a number.
+		nret, ok := mret.GetNumericToFloatValue()
+		if !ok {
+			fmt.Fprintf(
+				os.Stderr,
+				"mlr: sortaf: comparator function \"%s\" returned non-number \"%s\".\n",
+				udfName,
+				mret.String(),
+			)
+			os.Exit(1)
+		}
+		lib.InternalCodingErrorIf(!ok)
+		// Go sort-callback conventions: true if a < b, false otherwise.
+		return nret < 0
+	})
+
+	sortedMap := types.MlrmapFromPairsArray(pairsArray)
+	return types.MlrvalPointerFromMapReferenced(sortedMap)
 }
