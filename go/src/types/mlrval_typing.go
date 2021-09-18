@@ -25,7 +25,7 @@ func NewTypeGatedMlrvalName(
 	if !ok {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: couldn't resolve type name \"%s\".", typeName,
+				"mlr: couldn't resolve type name \"%s\".", typeName,
 			),
 		)
 	}
@@ -43,7 +43,7 @@ func (tname *TypeGatedMlrvalName) Check(value *Mlrval) error {
 	} else {
 		return errors.New(
 			fmt.Sprintf(
-				"Miller: couldn't assign variable %s %s from value %s %s\n",
+				"mlr: couldn't assign variable %s %s from value %s %s\n",
 				tname.TypeName, tname.Name, value.GetTypeName(), value.String(),
 			),
 		)

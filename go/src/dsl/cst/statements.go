@@ -66,11 +66,11 @@ func (root *RootNode) BuildStatementNode(
 
 	case dsl.NodeTypeBeginBlock:
 		return nil, errors.New(
-			"Miller: begin blocks may only be declared at top level.",
+			"mlr: begin blocks may only be declared at top level.",
 		)
 	case dsl.NodeTypeEndBlock:
 		return nil, errors.New(
-			"Miller: end blocks may only be declared at top level.",
+			"mlr: end blocks may only be declared at top level.",
 		)
 
 	case dsl.NodeTypeIfChain:
@@ -92,11 +92,11 @@ func (root *RootNode) BuildStatementNode(
 
 	case dsl.NodeTypeFunctionDefinition:
 		return nil, errors.New(
-			"Miller: functions may only be declared at top level.",
+			"mlr: functions may only be declared at top level.",
 		)
 	case dsl.NodeTypeSubroutineDefinition:
 		return nil, errors.New(
-			"Miller: subroutines may only be declared at top level.",
+			"mlr: subroutines may only be declared at top level.",
 		)
 	case dsl.NodeTypeSubroutineCallsite:
 		return root.BuildSubroutineCallsiteNode(astNode)

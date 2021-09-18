@@ -380,7 +380,7 @@ func NewTransformerPut(
 			if len(pair) != 2 {
 				return nil, errors.New(
 					fmt.Sprintf(
-						"Miller: missing \"=\" in preset expression \"%s\".",
+						"mlr: missing \"=\" in preset expression \"%s\".",
 						preset,
 					),
 				)

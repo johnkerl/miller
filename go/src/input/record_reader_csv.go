@@ -148,7 +148,7 @@ func (reader *RecordReaderCSV) processHandle(
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				err := errors.New(
 					fmt.Sprintf(
-						"Miller: CSV header/data length mismatch %d != %d "+
+						"mlr: CSV header/data length mismatch %d != %d "+
 							"at filename %s row %d.\n",
 						nh, nd, filename, rowNumber,
 					),

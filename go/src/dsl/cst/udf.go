@@ -237,7 +237,7 @@ func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF,
 	if udf.signature.arity != callsiteArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"mlr: function %s invoked with %d argument%s; expected %d",
 				functionName,
 				callsiteArity,
 				lib.Plural(callsiteArity),
@@ -306,7 +306,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	if BuiltinFunctionManagerInstance.LookUp(functionName) != nil {
 		return errors.New(
 			fmt.Sprintf(
-				"Miller: function named \"%s\" must not override a built-in function of the same name.",
+				"mlr: function named \"%s\" must not override a built-in function of the same name.",
 				functionName,
 			),
 		)
@@ -316,7 +316,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 		if root.udfManager.ExistsByName(functionName) {
 			return errors.New(
 				fmt.Sprintf(
-					"Miller: function named \"%s\" has already been defined.",
+					"mlr: function named \"%s\" has already been defined.",
 					functionName,
 				),
 			)

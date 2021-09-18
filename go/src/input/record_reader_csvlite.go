@@ -181,7 +181,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				if !reader.readerOptions.AllowRaggedCSVInput && len(headerStrings) != len(fields) {
 					err := errors.New(
 						fmt.Sprintf(
-							"Miller: CSV header/data length mismatch %d != %d "+
+							"mlr: CSV header/data length mismatch %d != %d "+
 								"at filename %s line  %d.\n",
 							len(headerStrings), len(fields), filename, inputLineNumber,
 						),
@@ -293,7 +293,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 				if !reader.readerOptions.AllowRaggedCSVInput && len(headerStrings) != len(fields) {
 					err := errors.New(
 						fmt.Sprintf(
-							"Miller: CSV header/data length mismatch %d != %d "+
+							"mlr: CSV header/data length mismatch %d != %d "+
 								"at filename %s line  %d.\n",
 							len(headerStrings), len(fields), filename, inputLineNumber,
 						),

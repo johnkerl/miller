@@ -196,6 +196,15 @@ func SortAF(
 		mret := udfCallsite.EvaluateWithArguments(state, argsArray)
 		// Unpack the types.Mlrval return value into a number.
 		nret, ok := mret.GetNumericToFloatValue()
+		if !ok {
+			fmt.Fprintf(
+				os.Stderr,
+				"mlr: sortaf: comparator function \"%s\" returned non-number \"%s\".\n",
+				udfName,
+				mret.String(),
+			)
+			os.Exit(1)
+		}
 		lib.InternalCodingErrorIf(!ok)
 		// Go sort-callback conventions: true if a < b, false otherwise.
 		return nret < 0

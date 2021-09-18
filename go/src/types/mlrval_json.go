@@ -307,9 +307,9 @@ func (mv *Mlrval) marshalJSONAux(
 		return mv.marshalJSONMap(jsonFormatting, elementNestingDepth, outputIsStdout)
 		break
 	case MT_DIM: // MT_DIM is one past the last valid type
-		return "", errors.New("Miller: internal coding error detected")
+		return "", errors.New("mlr: internal coding error detected")
 	}
-	return "", errors.New("Miller: iInternal coding error detected")
+	return "", errors.New("mlr: iInternal coding error detected")
 }
 
 // ================================================================
