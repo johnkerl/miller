@@ -72,6 +72,7 @@ var KEYWORD_USAGE_TABLE = []tKeywordUsageEntry{
 }
 
 // ----------------------------------------------------------------
+
 // Pass function_name == NULL to get usage for all keywords.
 func UsageKeywords() {
 	for i, entry := range KEYWORD_USAGE_TABLE {

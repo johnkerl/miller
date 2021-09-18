@@ -86,6 +86,9 @@ func GetLinearRegressionOLS(
 //	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
 
 // ----------------------------------------------------------------
+
+// GetVar is the finalizing function for computing variance from streamed
+// accumulator values.
 func GetVar(
 	nint int,
 	sumx float64,
@@ -126,6 +129,9 @@ func GetVar(
 //   = sumx2 - n mean^2
 
 // ----------------------------------------------------------------
+
+// GetSkewness is the finalizing function for computing skewness from streamed
+// accumulator values.
 func GetSkewness(
 	nint int,
 	sumx float64,

@@ -20,6 +20,7 @@ import (
 )
 
 // ----------------------------------------------------------------
+
 // BinaryFuncWithState is for the sortaf and sortmf functions.  Most function
 // types are in the mlr/src/types packae. This type, though, includes functions
 // which need to access CST state in order to call back to user-defined
@@ -160,8 +161,8 @@ func getSortAFSpace(udfName string, udfManager *UDFManager) *tSortAFSpace {
 	sortAFCache[udfName] = entry
 	return entry
 }
-
 // ----------------------------------------------------------------
+
 // SortAF implements the sortaf function, which takes an array as first
 // argument and string UDF-name as second argument. It sorts the array using
 // the UDF as the comparator.

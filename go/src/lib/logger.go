@@ -7,8 +7,8 @@ import (
 	"runtime"
 )
 
-// Lookalike for C's __FILE__ and __LINE__ printing.
-
+// InternalCodingErrorIf is a lookalike for C's __FILE__ and __LINE__ printing,
+// with exit 1 if the condition is true.
 func InternalCodingErrorIf(condition bool) {
 	if !condition {
 		return
@@ -37,6 +37,8 @@ func InternalCodingErrorIf(condition bool) {
 	os.Exit(1)
 }
 
+// InternalCodingErrorWithMessageIf is a lookalike for C's __FILE__ and
+// __LINE__ printing, with exit 1 if the condition is true.
 func InternalCodingErrorWithMessageIf(condition bool, message string) {
 	if !condition {
 		return
@@ -65,6 +67,9 @@ func InternalCodingErrorWithMessageIf(condition bool, message string) {
 	os.Exit(1)
 }
 
+// InternalCodingErrorPanic is like InternalCodingErrorIf, expect that it
+// panics the process (for stack trace, which is usually not desired), and that
+// it requires the if-test to be at the caller.
 func InternalCodingErrorPanic(message string) {
 	_, fileName, fileLine, ok := runtime.Caller(1)
 	if ok {
