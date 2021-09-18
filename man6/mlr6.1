@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-09-16
+.\"      Date: 2021-09-18
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-09-16" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-09-18" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -221,12 +221,12 @@ is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
 joink joinkv joinv json_parse json_stringify leafcount length log log10 log1p
 logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul
 msub os pow qnorm regextract regextract_or_else round roundm rstrip sec2dhms
-sec2gmt sec2gmtdate sec2hms sgn sha1 sha256 sha512 sin sinh sorta sortmk
-splita splitax splitkv splitkvx splitnv splitnvx sqrt ssub strftime string
-strip strlen strptime sub substr substr0 substr1 system systime systimeint tan
-tanh tolower toupper truncate typeof unflatten uptime urand urand32 urandint
-urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= <=> ==
-=~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
+sec2gmt sec2gmtdate sec2hms sgn sha1 sha256 sha512 sin sinh sorta sortaf
+sortmk splita splitax splitkv splitkvx splitnv splitnvx sqrt ssub strftime
+string strip strlen strptime sub substr substr0 substr1 system systime
+systimeint tan tanh tolower toupper truncate typeof unflatten uptime urand
+urand32 urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ /
+// < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 .fi
 .if n \{\
 .RE
@@ -3435,6 +3435,15 @@ Leaves non-numbers as-is.
 .\}
 .nf
  (class=collections #args=1-2) Returns a copy of an array, sorted ascending. Coming soon: other sort options.
+.fi
+.if n \{\
+.RE
+.SS "sortaf"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument).  Example: 'sortaf([5,2,3,1,4], "f")'.  Forward sort: 'func f(a,b) {return a <=> b}'.  Reverse sort: 'func f(a,b) {return b <=> a}'.  And so on -- you can implement logic you choose. Your function should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively.
 .fi
 .if n \{\
 .RE

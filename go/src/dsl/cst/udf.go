@@ -48,6 +48,10 @@ type UDFCallsite struct {
 	udf           *UDF
 }
 
+// NewUDFCallsite is for the normal UDF callsites outside of sortaf/sortmf,
+// e.g. $z = f($a+$b, $c/2). The argument nodes are evaluables since they need
+// to be computed, e.g. binding the field names a,b,c, evaluating the
+// arithmetic operators, etc.
 func NewUDFCallsite(
 	argumentNodes []IEvaluable,
 	udf *UDF,
@@ -58,6 +62,19 @@ func NewUDFCallsite(
 	}
 }
 
+// NewUDFCallsiteForSortF is for UDF callsites in sortaf/sortmf. Here, the array/map
+// to be sorted has already been evaluated and is an array of *types.Mlrval.
+// The UDF needs to be invoked on pairs of array elements.
+func NewUDFCallsiteForSortF(
+	udf *UDF,
+) *UDFCallsite {
+	return &UDFCallsite{
+		udf: udf,
+	}
+}
+
+// Evaluate is for the normal UDF callsites outside of sortaf/sortmf.
+// See comments above NewUDFCallsite.
 func (site *UDFCallsite) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
@@ -122,6 +139,17 @@ func (site *UDFCallsite) Evaluate(
 			os.Exit(1)
 		}
 	}
+
+	return site.EvaluateWithArguments(state, arguments)
+}
+
+// EvaluateWithArguments is for UDF callsites in sortaf/sortmf, where the
+// arguments are already evaluated. Or, for normal UDF callsites, as a helper
+// function for Evaluate.
+func (site *UDFCallsite) EvaluateWithArguments(
+	state *runtime.State,
+	arguments []*types.Mlrval,
+) *types.Mlrval {
 
 	// Bind the arguments to the parameters
 	state.Stack.PushStackFrameSet()
@@ -209,7 +237,7 @@ func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF,
 	if udf.signature.arity != callsiteArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"mlr: function %s invoked with %d argument%s; expected %d",
 				functionName,
 				callsiteArity,
 				lib.Plural(callsiteArity),
@@ -278,7 +306,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 	if BuiltinFunctionManagerInstance.LookUp(functionName) != nil {
 		return errors.New(
 			fmt.Sprintf(
-				"Miller: function named \"%s\" must not override a built-in function of the same name.",
+				"mlr: function named \"%s\" must not override a built-in function of the same name.",
 				functionName,
 			),
 		)
@@ -288,7 +316,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 		if root.udfManager.ExistsByName(functionName) {
 			return errors.New(
 				fmt.Sprintf(
-					"Miller: function named \"%s\" has already been defined.",
+					"mlr: function named \"%s\" has already been defined.",
 					functionName,
 				),
 			)
