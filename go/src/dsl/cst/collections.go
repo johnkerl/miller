@@ -47,7 +47,7 @@ func (node *ArrayLiteralNode) Evaluate(
 	for i := range node.evaluables {
 		mlrvals[i] = *node.evaluables[i].Evaluate(state)
 	}
-	return types.MlrvalPointerFromArrayLiteralReference(mlrvals)
+	return types.MlrvalPointerFromArrayReference(mlrvals)
 }
 
 // ----------------------------------------------------------------
@@ -203,7 +203,7 @@ func (node *ArraySliceAccessNode) Evaluate(
 	upperZindex, _ := types.UnaliasArrayIndex(&array, upperIndex)
 
 	if lowerZindex > upperZindex {
-		return types.MlrvalPointerFromArrayLiteralReference(make([]types.Mlrval, 0))
+		return types.MlrvalPointerFromArrayReference(make([]types.Mlrval, 0))
 	}
 
 	// Semantics: say x=[1,2,3,4,5]. Then x[3:10] is [3,4,5].
@@ -220,13 +220,13 @@ func (node *ArraySliceAccessNode) Evaluate(
 	if lowerZindex < 0 {
 		lowerZindex = 0
 		if lowerZindex > upperZindex {
-			return types.MlrvalPointerFromArrayLiteralReference(make([]types.Mlrval, 0))
+			return types.MlrvalPointerFromArrayReference(make([]types.Mlrval, 0))
 		}
 	}
 	if upperZindex > n-1 {
 		upperZindex = n - 1
 		if lowerZindex > upperZindex {
-			return types.MlrvalPointerFromArrayLiteralReference(make([]types.Mlrval, 0))
+			return types.MlrvalPointerFromArrayReference(make([]types.Mlrval, 0))
 		}
 	}
 
@@ -242,7 +242,7 @@ func (node *ArraySliceAccessNode) Evaluate(
 		di++
 	}
 
-	return types.MlrvalPointerFromArrayLiteralReference(retval)
+	return types.MlrvalPointerFromArrayReference(retval)
 }
 
 // ================================================================

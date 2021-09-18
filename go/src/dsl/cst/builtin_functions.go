@@ -35,10 +35,12 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 			return root.BuildZaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.unaryFunc != nil {
 			return root.BuildUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
-		} else if builtinFunctionInfo.contextualUnaryFunc != nil {
-			return root.BuildContextualUnaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.unaryFuncWithContext != nil {
+			return root.BuildUnaryFunctionWithContextCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.binaryFunc != nil {
 			return root.BuildBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.binaryFuncWithState != nil {
+			return root.BuildBinaryFunctionWithStateCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.regexCaptureBinaryFunc != nil {
 			return root.BuildRegexCaptureBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.ternaryFunc != nil {
@@ -94,7 +96,7 @@ func (root *RootNode) BuildZaryFunctionCallsiteNode(
 	if callsiteArity != expectedArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"mlr: function %s invoked with %d argument%s; expected %d",
 				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
@@ -129,7 +131,7 @@ func (root *RootNode) BuildUnaryFunctionCallsiteNode(
 	if callsiteArity != expectedArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"mlr: function %s invoked with %d argument%s; expected %d",
 				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
@@ -156,12 +158,12 @@ func (node *UnaryFunctionCallsiteNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
-type ContextualUnaryFunctionCallsiteNode struct {
-	contextualUnaryFunc types.ContextualUnaryFunc
-	evaluable1          IEvaluable
+type UnaryFunctionWithContextCallsiteNode struct {
+	unaryFuncWithContext types.UnaryFuncWithContext
+	evaluable1           IEvaluable
 }
 
-func (root *RootNode) BuildContextualUnaryFunctionCallsiteNode(
+func (root *RootNode) BuildUnaryFunctionWithContextCallsiteNode(
 	astNode *dsl.ASTNode,
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) (IEvaluable, error) {
@@ -170,7 +172,7 @@ func (root *RootNode) BuildContextualUnaryFunctionCallsiteNode(
 	if callsiteArity != expectedArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"mlr: function %s invoked with %d argument%s; expected %d",
 				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
@@ -184,16 +186,16 @@ func (root *RootNode) BuildContextualUnaryFunctionCallsiteNode(
 		return nil, err
 	}
 
-	return &ContextualUnaryFunctionCallsiteNode{
-		contextualUnaryFunc: builtinFunctionInfo.contextualUnaryFunc,
-		evaluable1:          evaluable1,
+	return &UnaryFunctionWithContextCallsiteNode{
+		unaryFuncWithContext: builtinFunctionInfo.unaryFuncWithContext,
+		evaluable1:           evaluable1,
 	}, nil
 }
 
-func (node *ContextualUnaryFunctionCallsiteNode) Evaluate(
+func (node *UnaryFunctionWithContextCallsiteNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return node.contextualUnaryFunc(node.evaluable1.Evaluate(state), state.Context)
+	return node.unaryFuncWithContext(node.evaluable1.Evaluate(state), state.Context)
 }
 
 // ----------------------------------------------------------------
@@ -212,7 +214,7 @@ func (root *RootNode) BuildBinaryFunctionCallsiteNode(
 	if callsiteArity != expectedArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"mlr: function %s invoked with %d argument%s; expected %d",
 				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
@@ -273,6 +275,60 @@ func (node *BinaryFunctionCallsiteNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
+type BinaryFunctionWithStateCallsiteNode struct {
+	binaryFuncWithState BinaryFuncWithState
+	udfManager          *UDFManager
+	evaluable1          IEvaluable
+	evaluable2          IEvaluable
+}
+
+func (root *RootNode) BuildBinaryFunctionWithStateCallsiteNode(
+	astNode *dsl.ASTNode,
+	builtinFunctionInfo *BuiltinFunctionInfo,
+) (IEvaluable, error) {
+	callsiteArity := len(astNode.Children)
+	expectedArity := 2
+	if callsiteArity != expectedArity {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"mlr: function %s invoked with %d argument%s; expected %d",
+				builtinFunctionInfo.name,
+				callsiteArity,
+				lib.Plural(callsiteArity),
+				expectedArity,
+			),
+		)
+	}
+
+	evaluable1, err := root.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+	evaluable2, err := root.BuildEvaluableNode(astNode.Children[1])
+	if err != nil {
+		return nil, err
+	}
+
+	return &BinaryFunctionWithStateCallsiteNode{
+		binaryFuncWithState: builtinFunctionInfo.binaryFuncWithState,
+		udfManager:          root.udfManager,
+		evaluable1:          evaluable1,
+		evaluable2:          evaluable2,
+	}, nil
+}
+
+func (node *BinaryFunctionWithStateCallsiteNode) Evaluate(
+	state *runtime.State,
+) *types.Mlrval {
+	return node.binaryFuncWithState(
+		node.evaluable1.Evaluate(state),
+		node.evaluable2.Evaluate(state),
+		state,
+		node.udfManager,
+	)
+}
+
+// ----------------------------------------------------------------
 // RegexCaptureBinaryFunctionCallsiteNode special-cases the =~ and !=~
 // operators which set the CST State object's captures array for "\1".."\9".
 // This is identical to BinaryFunctionCallsite except that
@@ -319,7 +375,7 @@ func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
 	if callsiteArity != expectedArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"mlr: function %s invoked with %d argument%s; expected %d",
 				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
@@ -373,7 +429,7 @@ func (root *RootNode) BuildDotCallsiteNode(
 	if callsiteArity != expectedArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"mlr: function %s invoked with %d argument%s; expected %d",
 				".",
 				callsiteArity,
 				lib.Plural(callsiteArity),
@@ -440,7 +496,7 @@ func (root *RootNode) BuildTernaryFunctionCallsiteNode(
 	if callsiteArity != expectedArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s invoked with %d argument%s; expected %d",
+				"mlr: function %s invoked with %d argument%s; expected %d",
 				builtinFunctionInfo.name,
 				callsiteArity,
 				lib.Plural(callsiteArity),
@@ -507,7 +563,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
 		return nil, errors.New(
 			fmt.Sprintf(
-				"Miller: function %s takes minimum argument count %d; got %d.\n",
+				"mlr: function %s takes minimum argument count %d; got %d.\n",
 				builtinFunctionInfo.name,
 				builtinFunctionInfo.minimumVariadicArity,
 				callsiteArity,
@@ -519,7 +575,7 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
 			return nil, errors.New(
 				fmt.Sprintf(
-					"Miller: function %s takes maximum argument count %d; got %d.\n",
+					"mlr: function %s takes maximum argument count %d; got %d.\n",
 					builtinFunctionInfo.name,
 					builtinFunctionInfo.maximumVariadicArity,
 					callsiteArity,

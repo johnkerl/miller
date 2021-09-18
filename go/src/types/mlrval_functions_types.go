@@ -213,7 +213,7 @@ func assertingCommon(input1, check *Mlrval, description string, context *Context
 		//exit(1);
 		fmt.Fprintf(
 			os.Stderr,
-			"Miller: %s type-assertion failed at NR=%d FNR=%d FILENAME=%s\n",
+			"mlr: %s type-assertion failed at NR=%d FNR=%d FILENAME=%s\n",
 			description,
 			context.NR,
 			context.FNR,

@@ -55,12 +55,12 @@ func (root *RootNode) BuildAssignableNode(
 
 	case dsl.NodeTypeArrayOrMapPositionalNameAccess:
 		return nil, errors.New(
-			"Miller: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
+			"mlr: '[[...]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
 		)
 		break
 	case dsl.NodeTypeArrayOrMapPositionalValueAccess:
 		return nil, errors.New(
-			"Miller: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
+			"mlr: '[[[...]]]' is allowed on assignment left-hand sides only when immediately preceded by '$'.",
 		)
 		break
 
@@ -326,7 +326,7 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 	} else {
 		return errors.New(
 			fmt.Sprintf(
-				"Miller: positional index for $[[...]] assignment must be integer; got %s.",
+				"mlr: positional index for $[[...]] assignment must be integer; got %s.",
 				lhsFieldIndex.GetTypeName(),
 			),
 		)
@@ -341,7 +341,7 @@ func (node *PositionalFieldNameLvalueNode) AssignIndexed(
 	// TODO: reconsider this if /when we decide to allow string-slice
 	// assignments.
 	return errors.New(
-		"Miller: $[[...]] = ... expressions are not indexable.",
+		"mlr: $[[...]] = ... expressions are not indexable.",
 	)
 }
 
@@ -452,7 +452,7 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 		} else {
 			return errors.New(
 				fmt.Sprintf(
-					"Miller: positional index for $[[[...]]] assignment must be integer; got %s.",
+					"mlr: positional index for $[[[...]]] assignment must be integer; got %s.",
 					lhsFieldIndex.GetTypeName(),
 				),
 			)
@@ -974,7 +974,6 @@ func (root *RootNode) BuildDottedLvalueNode(astNode *dsl.ASTNode) (IAssignable, 
 		if walkerNode.Type == dsl.NodeTypeDotOperator {
 			lib.InternalCodingErrorIf(walkerNode == nil)
 			lib.InternalCodingErrorIf(len(walkerNode.Children) != 2)
-			fmt.Println("HEY")
 			indexEvaluable, err := root.BuildEvaluableNode(walkerNode.Children[1])
 			walkerNode.Children[1].Print()
 			if err != nil {
@@ -1114,7 +1113,7 @@ func (node *EnvironmentVariableLvalueNode) AssignIndexed(
 	indices []*types.Mlrval,
 	state *runtime.State,
 ) error {
-	return errors.New("Miller: ENV[...] cannot be indexed.")
+	return errors.New("mlr: ENV[...] cannot be indexed.")
 }
 
 func (node *EnvironmentVariableLvalueNode) Unassign(
@@ -1138,5 +1137,5 @@ func (node *EnvironmentVariableLvalueNode) UnassignIndexed(
 	state *runtime.State,
 ) {
 	// TODO: needs error return
-	//return errors.New("Miller: ENV[...] cannot be indexed.")
+	//return errors.New("mlr: ENV[...] cannot be indexed.")
 }

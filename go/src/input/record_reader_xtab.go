@@ -157,7 +157,7 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 		// TODO -- incorporate IFS
 		kv := reader.ifsRegex.Split(line, 2)
 		if len(kv) < 1 {
-			return nil, errors.New("Miller: internal coding error in XTAB reader")
+			return nil, errors.New("mlr: internal coding error in XTAB reader")
 		}
 
 		key := kv[0]

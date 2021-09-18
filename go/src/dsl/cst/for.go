@@ -197,7 +197,7 @@ func (node *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 	//	} else {
 	//		return nil, errors.New(
 	//			fmt.Sprintf(
-	//				"Miller: looped-over item is not a map or array; got %s",
+	//				"mlr: looped-over item is not a map or array; got %s",
 	//				indexMlrval.GetTypeName(),
 	//			),
 	//		)
@@ -392,7 +392,7 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 	//	} else {
 	//		return nil, errors.New(
 	//			fmt.Sprintf(
-	//				"Miller: looped-over item is not a map or array; got %s",
+	//				"mlr: looped-over item is not a map or array; got %s",
 	//				indexMlrval.GetTypeName(),
 	//			),
 	//		)
@@ -607,7 +607,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 	//	} else {
 	//		return nil, errors.New(
 	//			fmt.Sprintf(
-	//				"Miller: looped-over item is not a map or array; got %s",
+	//				"mlr: looped-over item is not a map or array; got %s",
 	//				mlrval.GetTypeName(),
 	//			),
 	//		)
@@ -704,7 +704,7 @@ func (node *ForLoopMultivariableNode) executeInner(
 	//	} else {
 	//		return nil, errors.New(
 	//			fmt.Sprintf(
-	//				"Miller: looped-over item is not a map or array; got %s",
+	//				"mlr: looped-over item is not a map or array; got %s",
 	//				mlrval.GetTypeName(),
 	//			),
 	//		)
@@ -809,7 +809,7 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 			for i := 0; i < n-1; i++ {
 				if continuationExpressionASTNode.Children[i].Type != dsl.NodeTypeAssignment {
 					return nil, errors.New(
-						"Miller: the non-final triple-for continutation statements must be assignments.",
+						"mlr: the non-final triple-for continutation statements must be assignments.",
 					)
 				}
 				precontinuationAssignment, err := root.BuildAssignmentNode(
@@ -826,11 +826,11 @@ func (root *RootNode) BuildTripleForLoopNode(astNode *dsl.ASTNode) (*TripleForLo
 		if bareBooleanASTNode.Type != dsl.NodeTypeBareBoolean {
 			if n == 1 {
 				return nil, errors.New(
-					"Miller: the triple-for continutation statement must be a bare boolean.",
+					"mlr: the triple-for continutation statement must be a bare boolean.",
 				)
 			} else {
 				return nil, errors.New(
-					"Miller: the final triple-for continutation statement must be a bare boolean.",
+					"mlr: the final triple-for continutation statement must be a bare boolean.",
 				)
 			}
 		}
@@ -902,7 +902,7 @@ func (node *TripleForLoopNode) Execute(state *runtime.State) (*BlockExitPayload,
 			boolValue, isBool := continuationValue.GetBoolValue()
 			if !isBool {
 				// TODO: propagate line-number context
-				return nil, errors.New("Miller: for-loop continuation did not evaluate to boolean.")
+				return nil, errors.New("mlr: for-loop continuation did not evaluate to boolean.")
 			}
 			if boolValue == false {
 				break

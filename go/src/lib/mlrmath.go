@@ -75,7 +75,7 @@ func Invqnorm(x float64) float64 {
 		}
 		if niter > INVQNORM_MAXITER {
 			fmt.Fprintf(os.Stderr,
-				"Miller: internal coding error: max iterations %d exceeded in invqnorm.\n",
+				"mlr: internal coding error: max iterations %d exceeded in invqnorm.\n",
 				INVQNORM_MAXITER,
 			)
 			os.Exit(1)
