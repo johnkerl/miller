@@ -857,3 +857,28 @@ func (mlrmap *Mlrmap) pop() *MlrmapEntry {
 		return pe
 	}
 }
+
+// ----------------------------------------------------------------
+
+// ToPairsArray is used for sorting maps by key/value/etc, e.g. the sortmf DSL function.
+func (mlrmap *Mlrmap) ToPairsArray() []MlrmapPair {
+	pairsArray := make([]MlrmapPair, mlrmap.FieldCount)
+	i := 0
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
+		pairsArray[i].Key = pe.Key
+		pairsArray[i].Value = pe.Value.Copy()
+		i++
+	}
+
+	return pairsArray
+}
+
+// MlrmapFromPairsArray is used for sorting maps by key/value/etc, e.g. the sortmf DSL function.
+func MlrmapFromPairsArray(pairsArray []MlrmapPair) *Mlrmap {
+	mlrmap := NewMlrmap()
+	for i := range pairsArray {
+		mlrmap.PutCopy(pairsArray[i].Key, pairsArray[i].Value)
+	}
+
+	return mlrmap
+}
