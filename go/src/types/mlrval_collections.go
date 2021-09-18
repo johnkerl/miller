@@ -99,7 +99,7 @@ func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 	if mv.mvtype != MT_ARRAY {
 		fmt.Fprintf(
 			os.Stderr,
-			"Miller: expected array as indexed item in ArrayPut; got %s\n",
+			"mlr: expected array as indexed item in ArrayPut; got %s\n",
 			mv.GetTypeName(),
 		)
 		os.Exit(1)
@@ -109,7 +109,7 @@ func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 		// Silent no-ops are not good UX ...
 		fmt.Fprintf(
 			os.Stderr,
-			"Miller: expected int as index item ArrayPut; got %s\n",
+			"mlr: expected int as index item ArrayPut; got %s\n",
 			mindex.GetTypeName(),
 		)
 		os.Exit(1)
@@ -119,7 +119,7 @@ func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 	if !ok {
 		fmt.Fprintf(
 			os.Stderr,
-			"Miller: array index %d out of bounds %d..%d\n",
+			"mlr: array index %d out of bounds %d..%d\n",
 			mindex.intval, 1, len(mv.arrayval),
 		)
 		os.Exit(1)
@@ -306,7 +306,7 @@ func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 			return putIndexedOnArray(&mv.arrayval, indices, rvalue)
 		} else {
 			return errors.New(
-				"Miller: only maps and arrays are indexable; got " + mv.GetTypeName(),
+				"mlr: only maps and arrays are indexable; got " + mv.GetTypeName(),
 			)
 		}
 	}
@@ -343,7 +343,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	if baseIndex.mvtype != MT_STRING && baseIndex.mvtype != MT_INT {
 		// Base is map, index is invalid type
 		return errors.New(
-			"Miller: map indices must be string or int; got " + baseIndex.GetTypeName(),
+			"mlr: map indices must be string or int; got " + baseIndex.GetTypeName(),
 		)
 	}
 
@@ -388,9 +388,9 @@ func putIndexedOnArray(
 		if inBounds {
 			(*baseArray)[zindex] = *rvalue.Copy()
 		} else if mindex.intval == 0 {
-			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
+			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
 		} else if mindex.intval < 0 {
-			return errors.New("Miller: Cannot use negative indices to auto-lengthen arrays.")
+			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays.")
 		} else {
 			// Array is [a,b,c] with mindices 1,2,3. Length is 3. Zindices are 0,1,2.
 			// Given mindex is 4.
@@ -416,16 +416,16 @@ func putIndexedOnArray(
 				}
 			} else {
 				return errors.New(
-					"Miller: indices must be string or int; got " + nextIndex.GetTypeName(),
+					"mlr: indices must be string or int; got " + nextIndex.GetTypeName(),
 				)
 			}
 
 			return (*baseArray)[zindex].PutIndexed(indices[1:], rvalue)
 
 		} else if mindex.intval == 0 {
-			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
+			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
 		} else if mindex.intval < 0 {
-			return errors.New("Miller: Cannot use negative indices to auto-lengthen arrays.")
+			return errors.New("mlr: Cannot use negative indices to auto-lengthen arrays.")
 		} else {
 			// Already allocated but needs to be longer
 			LengthenMlrvalArray(baseArray, mindex.intval)
@@ -450,7 +450,7 @@ func (mv *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 
 	} else {
 		return errors.New(
-			"Miller: cannot unset index variable which is neither map nor array.",
+			"mlr: cannot unset index variable which is neither map nor array.",
 		)
 	}
 }
@@ -469,7 +469,7 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 			return nil
 		} else {
 			return errors.New(
-				"Miller: map indices must be string or int; got " +
+				"mlr: map indices must be string or int; got " +
 					baseIndex.GetTypeName(),
 			)
 		}
@@ -486,7 +486,7 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	} else {
 		// Base is map, index is invalid type
 		return errors.New(
-			"Miller: map indices must be string or int; got " + baseIndex.GetTypeName(),
+			"mlr: map indices must be string or int; got " + baseIndex.GetTypeName(),
 		)
 	}
 
@@ -519,20 +519,20 @@ func removeIndexedOnArray(
 			rightSlice := (*baseArray)[zindex+1 : len((*baseArray))]
 			*baseArray = append(leftSlice, rightSlice...)
 		} else if mindex.intval == 0 {
-			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
+			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
 		} else {
 			// TODO: improve wording
-			return errors.New("Miller: array index out of bounds for unset.")
+			return errors.New("mlr: array index out of bounds for unset.")
 		}
 	} else {
 		// More indices remain; recurse
 		if inBounds {
 			return (*baseArray)[zindex].RemoveIndexed(indices[1:])
 		} else if mindex.intval == 0 {
-			return errors.New("Miller: zero indices are not supported. Indices are 1-up.")
+			return errors.New("mlr: zero indices are not supported. Indices are 1-up.")
 		} else {
 			// TODO: improve wording
-			return errors.New("Miller: array index out of bounds for unset.")
+			return errors.New("mlr: array index out of bounds for unset.")
 		}
 
 	}

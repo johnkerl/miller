@@ -55,7 +55,7 @@ type UnaryFunc func(input1 *Mlrval) *Mlrval
 
 // The asserting_{type} need access to the context to say things like 'Assertion ... failed
 // at filename {FILENAME} record number {NR}'.
-type ContextualUnaryFunc func(input1 *Mlrval, context *Context) *Mlrval
+type UnaryFuncWithContext func(input1 *Mlrval, context *Context) *Mlrval
 
 // Returns nil, or one-up captures array as array slots 1..9 of 10-element
 // array for "\1".."\9".

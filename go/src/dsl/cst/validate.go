@@ -32,7 +32,7 @@ func ValidateAST(
 	// But filter '' is an error.
 	if ast.RootNode.Children == nil || len(ast.RootNode.Children) == 0 {
 		if dslInstanceType == DSLInstanceTypeFilter {
-			return errors.New("Miller: filter statement must not be empty.")
+			return errors.New("mlr: filter statement must not be empty.")
 		}
 	}
 
@@ -83,7 +83,7 @@ func validateASTAux(
 	if astNode.Type == dsl.NodeTypeFilterStatement {
 		if dslInstanceType == DSLInstanceTypeFilter {
 			return errors.New(
-				"Miller: filter expressions must not also contain the \"filter\" keyword.",
+				"mlr: filter expressions must not also contain the \"filter\" keyword.",
 			)
 		}
 	}
@@ -92,7 +92,7 @@ func validateASTAux(
 	if astNode.Type == dsl.NodeTypeBeginBlock {
 		if !atTopLevel {
 			return errors.New(
-				"Miller: begin blocks can only be at top level.",
+				"mlr: begin blocks can only be at top level.",
 			)
 		}
 		nextLevelInBeginOrEnd = true
@@ -100,7 +100,7 @@ func validateASTAux(
 	if astNode.Type == dsl.NodeTypeEndBlock {
 		if !atTopLevel {
 			return errors.New(
-				"Miller: end blocks can only be at top level.",
+				"mlr: end blocks can only be at top level.",
 			)
 		}
 		nextLevelInBeginOrEnd = true
@@ -108,7 +108,7 @@ func validateASTAux(
 	if astNode.Type == dsl.NodeTypeFunctionDefinition {
 		if !atTopLevel {
 			return errors.New(
-				"Miller: func blocks can only be at top level.",
+				"mlr: func blocks can only be at top level.",
 			)
 		}
 		nextLevelInUDF = true
@@ -116,7 +116,7 @@ func validateASTAux(
 	if astNode.Type == dsl.NodeTypeSubroutineDefinition {
 		if !atTopLevel {
 			return errors.New(
-				"Miller: subr blocks can only be at top level.",
+				"mlr: subr blocks can only be at top level.",
 			)
 		}
 		nextLevelInUDS = true
@@ -140,7 +140,7 @@ func validateASTAux(
 			astNode.Type == dsl.NodeTypeIndirectFieldValue ||
 			astNode.Type == dsl.NodeTypeFullSrec {
 			return errors.New(
-				"Miller: begin/end blocks cannot refer to records via $x, $*, etc.",
+				"mlr: begin/end blocks cannot refer to records via $x, $*, etc.",
 			)
 		}
 	}
@@ -149,7 +149,7 @@ func validateASTAux(
 	if !inLoop {
 		if astNode.Type == dsl.NodeTypeBreak {
 			return errors.New(
-				"Miller: break statements are only valid within for/do/while loops.",
+				"mlr: break statements are only valid within for/do/while loops.",
 			)
 		}
 	}
@@ -157,7 +157,7 @@ func validateASTAux(
 	if !inLoop {
 		if astNode.Type == dsl.NodeTypeContinue {
 			return errors.New(
-				"Miller: break statements are only valid within for/do/while loops.",
+				"mlr: break statements are only valid within for/do/while loops.",
 			)
 		}
 	}
@@ -175,7 +175,7 @@ func validateASTAux(
 	if !inUDF && !inUDS {
 		if astNode.Type == dsl.NodeTypeReturn {
 			return errors.New(
-				"Miller: return statements are only valid within func/subr blocks.",
+				"mlr: return statements are only valid within func/subr blocks.",
 			)
 		}
 	}
@@ -185,14 +185,14 @@ func validateASTAux(
 		if inUDF {
 			if len(astNode.Children) != 1 {
 				return errors.New(
-					"Miller: return statements in func blocks must return a value.",
+					"mlr: return statements in func blocks must return a value.",
 				)
 			}
 		}
 		if inUDS {
 			if len(astNode.Children) != 0 {
 				return errors.New(
-					"Miller: return statements in subr blocks must not return a value.",
+					"mlr: return statements in subr blocks must not return a value.",
 				)
 			}
 		}
@@ -204,7 +204,7 @@ func validateASTAux(
 		if !ok {
 			return errors.New(
 				fmt.Sprintf(
-					"Miller: %s is not valid on the left-hand side of an assignment.",
+					"mlr: %s is not valid on the left-hand side of an assignment.",
 					astNode.Type,
 				),
 			)
@@ -217,7 +217,7 @@ func validateASTAux(
 		if !ok {
 			return errors.New(
 				fmt.Sprintf(
-					"Miller: %s is not valid for unset statement.",
+					"mlr: %s is not valid for unset statement.",
 					astNode.Type,
 				),
 			)

@@ -719,7 +719,7 @@ func MlrvalArrayify(input1 *Mlrval) *Mlrval {
 				arrayval[i] = *pe.Value.Copy()
 				i++
 			}
-			return MlrvalPointerFromArrayLiteralReference(arrayval)
+			return MlrvalPointerFromArrayReference(arrayval)
 
 		} else {
 			return input1

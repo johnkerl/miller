@@ -302,7 +302,7 @@ func (root *RootNode) resolveFunctionCallsites() error {
 		}
 		if udf == nil {
 			return errors.New(
-				"Miller: function name not found: " + functionName,
+				"mlr: function name not found: " + functionName,
 			)
 		}
 
@@ -326,7 +326,7 @@ func (root *RootNode) resolveSubroutineCallsites() error {
 		}
 		if uds == nil {
 			return errors.New(
-				"Miller: subroutine name not found: " + subroutineName,
+				"mlr: subroutine name not found: " + subroutineName,
 			)
 		}
 

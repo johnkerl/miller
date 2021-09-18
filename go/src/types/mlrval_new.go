@@ -202,7 +202,7 @@ func MlrvalTryPointerFromIntString(input string) *Mlrval {
 // ----------------------------------------------------------------
 // Does not copy the data. We can make a SetFromArrayLiteralCopy if needed
 // using values.CopyMlrvalArray().
-func MlrvalPointerFromArrayLiteralReference(input []Mlrval) *Mlrval {
+func MlrvalPointerFromArrayReference(input []Mlrval) *Mlrval {
 	var mv Mlrval
 	mv.mvtype = MT_ARRAY
 	mv.printrepValid = false
@@ -509,7 +509,7 @@ func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
 		return &empty, nil
 	} else {
 		return nil, errors.New(
-			"Miller: indices must be string or int; got " + GetTypeName(mvtype),
+			"mlr: indices must be string or int; got " + GetTypeName(mvtype),
 		)
 	}
 }

@@ -54,7 +54,7 @@ func (node *WhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, err
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.
-			return nil, errors.New("Miller: conditional expression did not evaluate to boolean.")
+			return nil, errors.New("mlr: conditional expression did not evaluate to boolean.")
 		}
 		if boolValue != true {
 			break
@@ -144,7 +144,7 @@ func (node *DoWhileLoopNode) Execute(state *runtime.State) (*BlockExitPayload, e
 		boolValue, isBool := condition.GetBoolValue()
 		if !isBool {
 			// TODO: line-number/token info for the DSL expression.
-			return nil, errors.New("Miller: conditional expression did not evaluate to boolean.")
+			return nil, errors.New("mlr: conditional expression did not evaluate to boolean.")
 		}
 		if boolValue == false {
 			break
