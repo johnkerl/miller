@@ -1523,10 +1523,19 @@ See also arrayify.`,
 		{
 			name:  "sortaf",
 			class: FUNC_CLASS_COLLECTIONS,
-			help:  "Sorts an array (1st argument) using a comparator function you specify by name (2nd argument).  Example: 'sortaf([5,2,3,1,4], \"f\")'.  Forward sort: 'func f(a,b) {return a <=> b}'.  Reverse sort: 'func f(a,b) {return b <=> a}'.  And so on -- you can implement logic you choose. Your function should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively.",
+			help:  "Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], \"f\")'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.",
 			// Not in the types package since it uses UDFs which are in the dsl/cst
 			// package, which would make a circular reference.
 			binaryFuncWithState: SortAF,
+		},
+
+		{
+			name:  "sortmf",
+			class: FUNC_CLASS_COLLECTIONS,
+			help:  "Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({\"c\":1,\"b\":3,\"a\":1}, \"f\")'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.",
+			// Not in the types package since it uses UDFs which are in the dsl/cst
+			// package, which would make a circular reference.
+			binaryFuncWithState: SortMF,
 		},
 
 		// ----------------------------------------------------------------

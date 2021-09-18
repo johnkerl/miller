@@ -194,11 +194,11 @@ FUNCTION LIST
        logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul
        msub os pow qnorm regextract regextract_or_else round roundm rstrip sec2dhms
        sec2gmt sec2gmtdate sec2hms sgn sha1 sha256 sha512 sin sinh sorta sortaf
-       sortmk splita splitax splitkv splitkvx splitnv splitnvx sqrt ssub strftime
-       string strip strlen strptime sub substr substr0 substr1 system systime
-       systimeint tan tanh tolower toupper truncate typeof unflatten uptime urand
-       urand32 urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ /
-       // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       sortmf sortmk splita splitax splitkv splitkvx splitnv splitnvx sqrt ssub
+       strftime string strip strlen strptime sub substr substr0 substr1 system
+       systime systimeint tan tanh tolower toupper truncate typeof unflatten uptime
+       urand urand32 urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .-
+       ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
 
 COMMENTS-IN-DATA FLAGS
        Miller lets you put comments in your data, such as
@@ -2199,7 +2199,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=collections #args=1-2) Returns a copy of an array, sorted ascending. Coming soon: other sort options.
 
    sortaf
-        (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument).  Example: 'sortaf([5,2,3,1,4], "f")'.  Forward sort: 'func f(a,b) {return a &lt;=&gt; b}'.  Reverse sort: 'func f(a,b) {return b &lt;=&gt; a}'.  And so on -- you can implement logic you choose. Your function should return a number &lt;0, ==0, &gt;0 as a&lt;b, a==b, or a&gt;b respectively.
+        (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number &lt;0, ==0, &gt;0 as a&lt;b, a==b, or a&gt;b respectively. Example: 'sortaf([5,2,3,1,4], "f")'. Forward sort: 'func f(a,b) {return a &lt;=&gt; b}'. Reverse sort: 'func f(a,b) {return b &lt;=&gt; a}'. And so on -- you can implement logic you choose.
+
+   sortmf
+        (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number &lt;0, ==0, &gt;0 as a&lt;b, a==b, or a&gt;b respectively. Example: 'sortaf({"c":1,"b":3,"a":1}, "f")'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak &lt;=&gt; bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk &lt;=&gt; ak}'. And so on -- you can implement logic you choose.
 
    sortmk
         (class=collections #args=1-2) Returns a copy of a map, sorted ascending by map key. Coming soon: other sort options.
