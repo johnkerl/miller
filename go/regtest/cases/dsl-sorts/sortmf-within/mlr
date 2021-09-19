@@ -1,0 +1,24 @@
+func f1(ak, av, bk, bv) {
+  return ak <=> bk
+}
+func f2(ak, av, bk, bv) {
+  return bk <=> ak
+}
+func f3(ak, av, bk, bv) {
+  return av <=> bv
+}
+func f4(ak, av, bk, bv) {
+  return bv <=> av
+}
+end {
+  x = {
+    "c":1,
+    "a":3,
+    "b":2,
+  };
+
+  print sortmf(x, "f1");
+  print sortmf(x, "f2");
+  print sortmf(x, "f3");
+  print sortmf(x, "f4");
+}

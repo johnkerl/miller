@@ -143,7 +143,7 @@ This also works on the left-hand sides of assignment statements:
 
 A few caveats:
 
-* This is why `.` has higher precedece then `+` in the table above -- in Miller 5 and below, where `.` was only used for concatenation, it had the same precedence as `+`. So you can now do this:
+* This is why `.` has higher precedece than `+` in the table above -- in Miller 5 and below, where `.` was only used for concatenation, it had the same precedence as `+`. So you can now do this:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --json --from data/server-log.json put -q '</b>
@@ -167,7 +167,7 @@ A few caveats:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --json --from data/server-log.json put -q '</b>
-<b>  print ($req.method) . (" -- ") . ($req.path)</b>
+<b>  print ($req.method) . " -- " . ($req.path)</b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">

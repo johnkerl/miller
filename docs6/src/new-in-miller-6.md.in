@@ -105,6 +105,8 @@ absent-empty-coalesce operator [`???`](reference-dsl-builtin-functions.md#absent
 
 * Sorting functions [`sorta`](reference-dsl-builtin-functions.md#sorta), [`sortaf`](reference-dsl-builtin-functions.md#sortaf), [`sortmk`](reference-dsl-builtin-functions.md#sortmk), and [`sortmf`](reference-dsl-builtin-functions.md#sortmf).  See the [sorting page](sorting.md) for more information.
 
+* The dot operator is not new, but it has a new role: in addition to its existing use for string-concatenation like `"a"."b" = "ab"`, you can now also use it for keying maps. For example, `$req.headers.host` is the same as `$req["headers"]["host"]`. See the [dot-operator reference](reference-dsl-operators.md#the-double-purpose-dot-operator) for more information.
+
 ## Improved command-line parsing
 
 Miller 6 has getoptish command-line parsing ([pull request 467](https://github.com/johnkerl/miller/pull/467)):

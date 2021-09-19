@@ -1,0 +1,8 @@
+$default  = sortmk($map);
+$reverse  = sortmk($map,  "r");
+$numup    = sortmk($map,  "n");
+$numdown  = sortmk($map,  "nr");
+$lexup    = sortmk($map,  "f");
+$lexdown  = sortmk($map,  "fr");
+$foldup   = sortmk($map,  "c");
+$folddown = sortmk($map,  "cr");

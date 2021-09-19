@@ -3,18 +3,6 @@
   - particular focus on -----$ etc
 ? godoc -> publish at jko -- ? in kitchen-sink builder -- ?
 
-new-in-miller-6:
-e struct-dot notation
-
-C sort for maps and arrays:
-  o new-func code-neatens
-  o sorta/sortmk regtest, x all 6 cfnr flags
-  o sortaf/sortmf regtest
-    x various tests from doc ...
-    - sortaf: fwd, rev, even_then_odd
-    - sortmf: cab/132 fwdk, revk, fwdv, revv, nested-map
-  o comment on https://github.com/johnkerl/miller/issues/389
-
 c array+string slice UTs
 ? nidx no output-coloring?
 
@@ -23,8 +11,6 @@ C fix -I + auto-decompress
 
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
-
-! line-breaking in verb vs flag vs keyword OLH string-literals ... manual `...\n...` vs parafmt
 
 ----------------------------------------------------------------
 * r-strings branch!

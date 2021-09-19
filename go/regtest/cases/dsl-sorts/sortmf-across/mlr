@@ -1,0 +1,14 @@
+# Sort descending numeric on the index field
+func f(ak, av, bk, bv) {
+  return bv.index <=> av.index
+}
+begin {
+  @records = {};  # Define as a map
+}
+@records[NR] = $*; # Accumulate
+end {
+  @records = sortmf(@records, "f");
+  for (_, record in @records) {
+    emit record;
+  }
+}
