@@ -2,9 +2,10 @@
 
 $us = File.basename $0
 
-require 'getoptlong'
 require 'fileutils'
+require 'getoptlong'
 require 'json'
+require 'open3'
 
 # ----------------------------------------------------------------
 # This is used to run live code for Miller Sphinx docs.
@@ -157,21 +158,25 @@ end
 # The command can be multi-line
 def run_command(cmd_lines, output_handle)
   cmd = cmd_lines.join("\n")
-  cmd_output = `#{cmd} 2>&1`
-  status = $?.to_i
+  # Avoid non-deterministic mingling of stdout and stderr which happens with backticks and 2>&1
+  stdout, stderr, status = Open3.capture3(cmd)
+  status = status.to_i
   if status != 0
-    raise "\"#{cmd}\" exited with non-zero code #{status}.\nOutput: #{cmd_output}"
+    raise "\"#{cmd}\" exited with non-zero code #{status}.\nStderr:: #{stderr}"
   end
+  combined = stdout + stderr
   # chomp and split so "a\nb\nc\n" splits to ["a", "b", "c"]
-  write_card(cmd_lines, cmd_output.chomp.split(/\n/, -1), output_handle)
+  write_card(cmd_lines, combined.chomp.split(/\n/, -1), output_handle)
 end
 
 # ----------------------------------------------------------------
 def run_command_tolerating_error(cmd_lines, output_handle)
   cmd = cmd_lines.join("\n")
-  cmd_output = `#{cmd} 2>&1`
+  # Avoid non-deterministic mingling of stdout and stderr which happens with backticks and 2>&1
+  stdout, stderr, status = Open3.capture3(cmd)
+  combined = stdout + stderr
   # chomp and split so "a\nb\nc\n" splits to ["a", "b", "c"]
-  write_card(cmd_lines, cmd_output.chomp.split(/\n/, -1), output_handle)
+  write_card(cmd_lines, combined.chomp.split(/\n/, -1), output_handle)
 end
 
 # ----------------------------------------------------------------
@@ -192,12 +197,14 @@ end
 
 # ----------------------------------------------------------------
 def run_content_generator(cmd, output_handle)
-  cmd_output = `#{cmd} 2>&1`
-  status = $?.to_i
+  # Avoid non-deterministic mingling of stdout and stderr which happens with backticks and 2>&1
+  stdout, stderr, status = Open3.capture3(cmd)
+  status = status.to_i
   if status != 0
     raise "\"#{cmd}\" exited with non-zero code #{status}."
   end
-  output_handle.puts(cmd_output)
+  combined = stdout + stderr
+  output_handle.puts(combined)
 end
 
 # ----------------------------------------------------------------

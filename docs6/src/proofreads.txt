@@ -29,6 +29,8 @@ c! seps \001 etc !
   mlrc --iusv --oxtab cat regtest/input/example.usv
   mlr  --iusv --oxtab cat regtest/input/example.usv
 
+o check for determinism regtest/cases/verb-join-prepipe/0003/cmd
+
 ----------------------------------------------------------------
 
 record-heterogeneity:

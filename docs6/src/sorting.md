@@ -436,9 +436,15 @@ indexing](reference-dsl-operators.md#the-double-purpose-dot-operator))
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint --from example.csv put -q '</b>
-<b>  # Sort descending numeric on the index field</b>
+<b>  # Sort primarily ascending on the shape field, then secondarily</b>
+<b>  # descending numeric on the index field.</b>
 <b>  func f(a, b) {</b>
-<b>    return b.index <=> a.index;</b>
+<b>    cmp1 = a.shape <=> b.shape;</b>
+<b>    if (cmp1 != 0) {</b>
+<b>      return cmp1</b>
+<b>    } else {</b>
+<b>      return b.index <=> a.index;</b>
+<b>    }</b>
 <b>  }</b>
 <b>  begin {</b>
 <b>    @records = [];  # Define as an array, else auto-create will make a map</b>
@@ -454,15 +460,15 @@ indexing](reference-dsl-operators.md#the-double-purpose-dot-operator))
 </pre>
 <pre class="pre-non-highlight-in-pair">
 color  shape    flag  k  index quantity rate
-purple square   false 10 91    72.3735  8.2430
 yellow circle   true  9  87    63.5058  8.3350
 yellow circle   true  8  73    63.9785  4.2370
-purple triangle false 7  65    80.1405  5.8240
-red    square   false 6  64    77.1991  9.5310
-purple triangle false 5  51    81.2290  8.5910
-red    square   false 4  48    77.5542  7.4670
 red    circle   true  3  16    13.8103  2.9010
+purple square   false 10 91    72.3735  8.2430
+red    square   false 6  64    77.1991  9.5310
+red    square   false 4  48    77.5542  7.4670
 red    square   true  2  15    79.2778  0.0130
+purple triangle false 7  65    80.1405  5.8240
+purple triangle false 5  51    81.2290  8.5910
 yellow triangle true  1  11    43.6498  9.8870
 </pre>
 

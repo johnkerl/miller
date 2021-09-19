@@ -74,12 +74,12 @@ Or perhaps to flag badly formatted data outside the output stream:
 <b>' data/het-bool.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Malformed at NR=4
 name   reachable
 barney false
 betty  true
 fred   true
 wilma  1
+Malformed at NR=4
 </pre>
 
 A third way is to abort the process on first instance of bad data:

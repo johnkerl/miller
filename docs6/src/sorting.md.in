@@ -242,9 +242,15 @@ indexing](reference-dsl-operators.md#the-double-purpose-dot-operator))
 
 GENMD_RUN_COMMAND
 mlr --icsv --opprint --from example.csv put -q '
-  # Sort descending numeric on the index field
+  # Sort primarily ascending on the shape field, then secondarily
+  # descending numeric on the index field.
   func f(a, b) {
-    return b.index <=> a.index;
+    cmp1 = a.shape <=> b.shape;
+    if (cmp1 != 0) {
+      return cmp1
+    } else {
+      return b.index <=> a.index;
+    }
   }
   begin {
     @records = [];  # Define as an array, else auto-create will make a map
