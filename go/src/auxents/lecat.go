@@ -9,7 +9,7 @@ import (
 
 // ================================================================
 func lecatUsage(verbName string, o *os.File, exitCode int) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {zero or more file names}\n", mlrExeName(), verbName)
+	fmt.Fprintf(o, "Usage: mlr %s [options] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Simply echoes input, but flags CR characters in red and LF characters in green.\n")
 	fmt.Fprintf(o, "If zero file names are supplied, standard input is read.\n")
 	fmt.Fprintf(o, "Options:\n")
@@ -34,8 +34,8 @@ func lecatMain(args []string) int {
 				doColor = false
 				args = args[1:]
 			} else {
-				fmt.Fprintf(os.Stderr, "%s %s: unrecognized option \"%s\".\n",
-					mlrExeName(), verb, args[0],
+				fmt.Fprintf(os.Stderr, "mlr %s: unrecognized option \"%s\".\n",
+					verb, args[0],
 				)
 				os.Exit(1)
 			}

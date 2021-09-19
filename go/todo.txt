@@ -6,13 +6,10 @@ TOP OF LIST:
 ! doc6 proofreads.txt
 * 'explicit r' issue 297: code, UT, doc
 
-* shell-commands.html; while-read
-
 * repifs * "\001" et al. *
 * I/O redirects * fmtnum * localtime * stats1 -r/--fr *
 * --nr-progress-mod * mlr -k * json comment-handling *
-* cli-audits * doc6 * survey * check issues * regtest pendings *
-* survey followups/discussion-post *
+* doc6 * check issues * regtest pendings *
 
 d pre-release:
   o explicit punchdown list
@@ -34,16 +31,6 @@ docs:
 * single cheatsheet page -- put out RFH?
   https://twitter.com/icymi_py/status/1426622817785765898/photo/1
 
-* note somewhere (maybe 'what's new in miller6' and/or to-be-written survey review):
-  o miller was first of all a tool for myself, and anyone else who might find it useful
-  o since then it's been driven by feature requests -- people have great ideas and they get built
-  o a key finding of the survey, though -- as well as various social-media references to miller --
-    is "deserves to be better-known", "how have I not heard of this tool?", etc.
-    So for Miller6, while several new features and improvements have been added
-    by request at the code level, an equally strong effort has been put into
-    human factors such as usability, improved documentation, improved on-line
-    help, lower barrier to entry for developers, etc.
-
 * abbrevations: https://squidfunk.github.io/mkdocs-material/reference/abbreviations/#configuration
   admonitions:  https://squidfunk.github.io/mkdocs-material/reference/admonitions/#usage
   content tabs: https://squidfunk.github.io/mkdocs-material/reference/content-tabs/#usage
@@ -59,30 +46,16 @@ DOC6
 * colored-shapes.dkvp -> csv; also mkdat2
 * data/small -> csv throughout. and/or just use example.csv
 
-* shell-commands.html
-  while-read example issue
-
-* number-formatting page
-
 * doc notes about --jknquotein & --jvquoteall. make sure they're ignore-accepted in the CLIP.
 
 * file-formats:
   o NIDX link to headerless CSV
-  o JSON re-write re arrays & key-concat -- needs its own section
-  o format ordering: pick one for sphinx, manpage, olh
   o autodetect: tbd
-  o file-formats.rst.in & olh: dkvp not first anymore
-  o file-formats: colon -> dot
 
 * stats1 --fr
   o cookbook2.rst.in
 
 * list at end of todo.txt
-
-* pending:
-  o separator options -- olh also
-  o number formatting -- olh also
-  o double quoting -- olh also
 
 ! readthedocs -- find out what's necessary to get per-version history
 ----------------------------------------------------------------
@@ -94,58 +67,8 @@ DOC6
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
 
-* defer json comment-handling
-
-* json-triple-quote -- what can be done here?
-* -l/-L?
-
-w survey
-  o summary to GHD thread
-  o note go-port status ...
-  o RFHs
-  o gradual implements ...
-  o point to reworked&backported community page ...
-  o head -n1 / tail -n1 -- special-case? but not head -n10 since getopts to head -n -1 -0 ...
-  o --from=foo => split (at getopt-level) to --from foo
-
 ----------------------------------------------------------------
 BLOCKERS
-
-* backcompat fail https://github.com/johnkerl/miller/discussions/640
-  μεταμόρφωσις: mapselect(splitnvx(host,"-"),1,2)
-  (error)
-  μεταμόρφωσις: mapselect(splitnvx(host,"-"),"1","2")
-  {
-    "1": "ab",
-    "2": "cd"
-  }
-
-* UTs for r"a" . r"b" and so on and so on
-
-* document precedence issue:
-! probably remove this feature !
-
-  μεταμόρφωσις: z = [{"x":3}, {"x":4}]
-  μεταμόρφωσις: z[1].x
-  3
-  μεταμόρφωσις: z[2].x
-  4
-  μεταμόρφωσις: z[1]["x"] + z[2]["x"]
-  7
-  μεταμόρφωσις: z[1].x + z[2].x
-  (absent)
-  μεταμόρφωσις: (z[1].x) + (z[2].x)
-  7
-
-! repifs
-! seps "\001" etc
-
-! repifs
-! seps "\001" etc
-
-* finish stats1 -r
-
-* what about -I mixed with .gzin -- ?
 
 * regtest:
   o convert regtest/cases-pending-windows
@@ -154,8 +77,6 @@ BLOCKERS
 * smarter head-stop etc https://github.com/johnkerl/miller/issues/291
   o done-reading back-channels in stream.go
     https://gobyexample.com/non-blocking-channel-operations
-
-* JSON comment-handling
 
 * localtime functions
 
@@ -196,6 +117,8 @@ BLOCKERS
 
 ================================================================
 NON-BLOCKERS
+
+* json-triple-quote -- what can be done here?
 
 * godoc neatens at func/const/etc level
 
@@ -283,7 +206,6 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
 
 * UT per se for lrec ops
 
-* "Miller: " prefixes on all errors.New
 * libify errors.New callsites for DSL/CST
 * record-readers are fully in-channel/loop; record-writers are multi with in-channel/loop being
   done by ChannelWriter, which is very small. opportunity to refactor.
@@ -300,8 +222,6 @@ MAYBES
 * repl as verb -- ?  'put --repl' maybe
 
 * json-triple-quote -- what can be done here?
-
-? windows ./mlr hack
 
 * non-blocker: _ variable feature?
 

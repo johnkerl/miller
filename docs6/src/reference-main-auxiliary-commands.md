@@ -31,7 +31,7 @@ Available subcommands:
   help
   regtest
   repl
-For more information, please invoke mlr {subcommand} --help.
+For more information, please invoke mlrt {subcommand} --help.
 </pre>
 
 <pre class="pre-highlight-in-pair">

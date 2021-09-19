@@ -14,7 +14,8 @@ import (
 	"mlr/src/auxents/repl"
 )
 
-// ----------------------------------------------------------------
+// tAuxMain is a function-pointer type for the entrypoint handler for a given auxent,
+// such as 'help' or 'regtest'.
 type tAuxMain func(args []string) int
 
 type tAuxLookupEntry struct {
@@ -22,8 +23,9 @@ type tAuxLookupEntry struct {
 	main tAuxMain
 }
 
-// We get a Golang "initialization loop" if this is defined statically. So, we
-// use a "package init" function.
+// _AUX_LOOKUP_TABLE is the lookup table for auxents. We get a Golang
+// "initialization loop" if this is defined statically. So, we use a "package
+// init" function.
 var _AUX_LOOKUP_TABLE = []tAuxLookupEntry{}
 
 func init() {
@@ -39,19 +41,9 @@ func init() {
 	}
 }
 
-// ----------------------------------------------------------------
-func mlrExeName() string {
-	// TODO:
-	// This is ideal, so if someone has a 'mlr.debug' or somesuch, the messages will reflect that:
-
-	// return path.Base(os.Args[0])
-
-	// ... however it makes automated regression-testing hard, cross-platform. For example,
-	// 'mlr' vs 'C:\something\something\mlr.exe'.
-	return "mlr"
-}
-
-// ================================================================
+// Dispatch is called from Miller main. Here we indicate if argv[1] is handled
+// by us, or not. If so, we handle it and exit, not returning control to Miller
+// main.
 func Dispatch(args []string) {
 	if len(args) < 2 {
 		return
@@ -64,32 +56,29 @@ func Dispatch(args []string) {
 		}
 	}
 
-	// Else, return control to mlr.go for the rest of Miller.
+	// Else, return control to main for the rest of Miller.
 }
 
-// ================================================================
+// auxListUsage shows the available auxents.
 func auxListUsage(verbName string, o *os.File, exitCode int) {
-	fmt.Fprintf(o, "Usage: %s %s [options]\n", mlrExeName(), verbName)
+	fmt.Fprintf(o, "Usage: mlr %s [options]\n", verbName)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h or --help: print this message\n")
 	os.Exit(exitCode)
 }
 
+// auxListMain is the handler for 'mlr aux-list'.
 func auxListMain(args []string) int {
 	ShowAuxEntries(os.Stdout)
 	return 0
 }
 
-// This symbol is exported for 'mlr --help'.
+// ShowAuxEntries is a symbol is exported for 'mlr --help'.
 func ShowAuxEntries(o *os.File) {
 	fmt.Fprintf(o, "Available subcommands:\n")
 	for _, entry := range _AUX_LOOKUP_TABLE {
 		fmt.Fprintf(o, "  %s\n", entry.name)
 	}
 
-	fmt.Fprintf(
-		o,
-		"For more information, please invoke %s {subcommand} --help.\n",
-		mlrExeName(),
-	)
+	fmt.Fprintf(o, "For more information, please invoke mlrt {subcommand} --help.\n")
 }
