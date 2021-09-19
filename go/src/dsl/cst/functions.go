@@ -165,14 +165,14 @@ func getSortXFSpace(
 	sortXFCache[udfName] = entry
 	return entry
 }
+
 // ----------------------------------------------------------------
 
 // SortAF implements the sortaf function, which takes an array as first
 // argument and string UDF-name as second argument. It sorts the array using
 // the UDF as the comparator.
-//
-// * Forward sort: func f(a,b) { return a <=> b }
-// * Reverse sort: func f(a,b) { return b <=> a }
+// Example forward sort: func f(a,b) { return a <=> b }.
+// Example reverse sort: func f(a,b) { return b <=> a }.
 func SortAF(
 	input1 *types.Mlrval,
 	input2 *types.Mlrval,
@@ -222,9 +222,8 @@ func SortAF(
 // SortMF implements the sortmf function, which takes a map as first argument
 // and string UDF-name as second argument. It sorts the map using the UDF as
 // the comparator.
-//
-// * Forward sort by key: func f(ak,av,bk,bv) { return ak <=> bk }
-// * Reverse sort by key: func f(ak,av,bk,bv) { return bk <=> ak }
+// Example forward sort by key: func f(ak,av,bk,bv) { return ak <=> bk }
+// Example reverse sort by value: func f(ak,av,bk,bv) { return bv <=> av }
 func SortMF(
 	input1 *types.Mlrval,
 	input2 *types.Mlrval,

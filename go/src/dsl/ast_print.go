@@ -10,7 +10,7 @@ import (
 )
 
 // ================================================================
-// Indent-style multiline print.
+// Print is indent-style multiline print.
 // Example, given parse of '$y = 2 * $x + 1':
 //
 // * statement block
@@ -26,7 +26,7 @@ func (ast *AST) Print() {
 	ast.RootNode.Print()
 }
 
-// Parenthesized-expression print.
+// PrintParex is parenthesized-expression print.
 // Example, given parse of '$y = 2 * $x + 1':
 //
 // (statement-block
@@ -43,7 +43,7 @@ func (ast *AST) PrintParex() {
 	ast.RootNode.PrintParex()
 }
 
-// Parenthesized-expression print, all on one line.
+// PrintParexOneLine is parenthesized-expression print, all on one line.
 // Example, given parse of '$y = 2 * $x + 1':
 //
 // (statement-block (= $y (+ (* 2 $x) 1)))
@@ -53,12 +53,14 @@ func (ast *AST) PrintParexOneLine() {
 }
 
 // ================================================================
-// Indent-style multiline print.
+
+// Print is indent-style multiline print.
 func (node *ASTNode) Print() {
-	node.PrintAux(0)
+	node.printAux(0)
 }
 
-func (node *ASTNode) PrintAux(depth int) {
+// printAux is a recursion-helper for Print.
+func (node *ASTNode) printAux(depth int) {
 	// Indent
 	for i := 0; i < depth; i++ {
 		fmt.Print("    ")
@@ -75,19 +77,20 @@ func (node *ASTNode) PrintAux(depth int) {
 	// Children, indented one level further
 	if node.Children != nil {
 		for _, child := range node.Children {
-			child.PrintAux(depth + 1)
+			child.printAux(depth + 1)
 		}
 	}
 }
 
 // ----------------------------------------------------------------
-// Parenthesized-expression print.
 
+// PrintParex is parenthesized-expression print.
 func (node *ASTNode) PrintParex() {
-	node.PrintParexAux(0)
+	node.printParexAux(0)
 }
 
-func (node *ASTNode) PrintParexAux(depth int) {
+// printParexAux is a recursion-helper for PrintParex.
+func (node *ASTNode) printParexAux(depth int) {
 	if node.IsLeaf() {
 		for i := 0; i < depth; i++ {
 			fmt.Print("    ")
@@ -118,7 +121,7 @@ func (node *ASTNode) PrintParexAux(depth int) {
 
 		// Children on their own lines
 		for _, child := range node.Children {
-			child.PrintParexAux(depth + 1)
+			child.printParexAux(depth + 1)
 		}
 
 		// Closing parenthesis on last line
@@ -130,14 +133,15 @@ func (node *ASTNode) PrintParexAux(depth int) {
 }
 
 // ----------------------------------------------------------------
-// Parenthesized-expression print, all on one line.
 
+// PrintParexOneLine is parenthesized-expression print, all on one line.
 func (node *ASTNode) PrintParexOneLine() {
-	node.PrintParexOneLineAux()
+	node.printParexOneLineAux()
 	fmt.Println()
 }
 
-func (node *ASTNode) PrintParexOneLineAux() {
+// printParexOneLineAux is a recursion-helper for PrintParexOneLine.
+func (node *ASTNode) printParexOneLineAux() {
 	if node.IsLeaf() {
 		fmt.Print(node.Text())
 	} else {
@@ -145,17 +149,20 @@ func (node *ASTNode) PrintParexOneLineAux() {
 		fmt.Print(node.Text())
 		for _, child := range node.Children {
 			fmt.Print(" ")
-			child.PrintParexOneLineAux()
+			child.printParexOneLineAux()
 		}
 		fmt.Print(")")
 	}
 }
 
 // ----------------------------------------------------------------
+
+// IsLeaf determines if an AST node is a leaf node.
 func (node *ASTNode) IsLeaf() bool {
 	return node.Children == nil || len(node.Children) == 0
 }
 
+// ChildrenAreAllLeaves determines if an AST node's children are all leaf nodes.
 func (node *ASTNode) ChildrenAreAllLeaves() bool {
 	for _, child := range node.Children {
 		if !child.IsLeaf() {
@@ -166,10 +173,11 @@ func (node *ASTNode) ChildrenAreAllLeaves() bool {
 }
 
 // ----------------------------------------------------------------
-// Some nodes have non-nil tokens; other, nil. And token-types can have spaces
-// in them. In this method we use custom mappings to always get a
-// whitespace-free representation of the content of a single AST node.
 
+// Text makes a human-readable, whitespace-free name for an AST node. Some
+// nodes have non-nil tokens; other, nil. And token-types can have spaces in
+// them. In this method we use custom mappings to always get a whitespace-free
+// representation of the content of a single AST node.
 func (node *ASTNode) Text() string {
 	tokenText := ""
 	if node.Token != nil {

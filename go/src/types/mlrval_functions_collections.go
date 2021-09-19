@@ -591,7 +591,7 @@ func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 // ----------------------------------------------------------------
 func MlrvalGetKeys(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_MAP {
-		// TODO: make a ReferenceFrom with commenbs
+		// TODO: make a ReferenceFrom with comments
 		output := NewSizedMlrvalArray(input1.mapval.FieldCount)
 		i := 0
 		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
@@ -781,55 +781,116 @@ func MlrvalJSONStringifyBinary(input1, input2 *Mlrval) *Mlrval {
 	}
 }
 
+// ================================================================
+// Helpers for MlrvalSortA and MlrvalSortMK
+
+type tSortType int
+
+const (
+	sortTypeLexical   tSortType = 1
+	sortTypeCaseFold            = 2
+	sortTypeNumerical           = 3
+)
+
+// decodeSortFlags maps strings like "cr" in the second argument to sorta/sortmk
+// into sortType=sortTypeCaseFold, reverse=true.
+func decodeSortFlags(flags string) (tSortType, bool) {
+	var sortType tSortType = sortTypeNumerical
+	reverse := false
+	for _, c := range flags {
+		switch c {
+		case 'n':
+			sortType = sortTypeNumerical
+		case 'f':
+			sortType = sortTypeLexical
+		case 'c':
+			sortType = sortTypeCaseFold
+		case 'r':
+			reverse = true
+		}
+	}
+	return sortType, reverse
+}
+
 // ----------------------------------------------------------------
-// TODO: under construction/consideration
 
-// f,n,r as in the sort verb; c for case -- ? if so, do this for the sort verb too --?
-// f/n: lex/numerical
-// r: reverse
-// c: case-fold
-//
-// funcptrs:
-// lex up
-// lex down
-// lex up, case-fold
-// lex down, case-fold
-// num up
-// num down
-// num up, case-fold
-// num down, case-fold
-
-// optional 2nd arg is string
-// runes -> map
-// if c in there else if, etc.
-
-// Already guaranteed we are called with one argument or two.
+// MlrvalSortA implements the sorta function. Min/max arity constraints in the
+// function lookup table already guarantee that we are called with one argument or two.
+// The second, if present, is flags for sort type and direction.
 func MlrvalSortA(inputs []*Mlrval) *Mlrval {
 	input1 := inputs[0]
 	if input1.GetArray() == nil { // not an array
 		return input1
 	}
 
+	// Copy the input array
 	output := input1.Copy()
 
-	// xxx temp
-	// xxx split out in-place helper for SortMK to also use
-	if len(inputs) == 1 {
-		sort.Slice(output.arrayval, func(i, j int) bool {
-			return MlrvalLessThanAsBool(&output.arrayval[i], &output.arrayval[j])
-		})
-	} else {
-		sort.Slice(output.arrayval, func(i, j int) bool {
-			return MlrvalGreaterThanAsBool(&output.arrayval[i], &output.arrayval[j])
-		})
+	// Get sort-flags, if provided
+	var sortType tSortType = sortTypeNumerical
+	var reverse bool = false
+	if len(inputs) == 2 {
+		if inputs[1].mvtype != MT_STRING {
+			return MLRVAL_ERROR
+		}
+		sortType, reverse = decodeSortFlags(inputs[1].printrep)
 	}
+
+	// Do the sort
+	switch sortType {
+	case sortTypeNumerical:
+		mlrvalSortANumerical(output.arrayval, reverse)
+	case sortTypeLexical:
+		mlrvalSortALexical(output.arrayval, reverse)
+	case sortTypeCaseFold:
+		mlrvalSortACaseFold(output.arrayval, reverse)
+	}
+
 	return output
 }
 
-// ----------------------------------------------------------------
-// TODO: under construction/consideration
+func mlrvalSortANumerical(array []Mlrval, reverse bool) {
+	if !reverse {
+		sort.Slice(array, func(i, j int) bool {
+			return MlrvalLessThanAsBool(&array[i], &array[j])
+		})
+	} else {
+		sort.Slice(array, func(i, j int) bool {
+			return MlrvalGreaterThanAsBool(&array[i], &array[j])
+		})
+	}
+}
 
-// Already guaranteed we are called with one argument or two.
+func mlrvalSortALexical(array []Mlrval, reverse bool) {
+	if !reverse {
+		sort.Slice(array, func(i, j int) bool {
+			return array[i].String() < array[j].String()
+		})
+	} else {
+		sort.Slice(array, func(i, j int) bool {
+			return array[i].String() > array[j].String()
+		})
+	}
+}
+
+func mlrvalSortACaseFold(array []Mlrval, reverse bool) {
+	if !reverse {
+		sort.Slice(array, func(i, j int) bool {
+			return strings.ToLower(array[i].String()) < strings.ToLower(array[j].String())
+		})
+	} else {
+		sort.Slice(array, func(i, j int) bool {
+			return strings.ToLower(array[i].String()) > strings.ToLower(array[j].String())
+		})
+	}
+}
+
+// ----------------------------------------------------------------
+
+// MlrvalSortMK implements the sortmk function. Min/max arity constraints in
+// the function lookup table already guarantee that we are called with one
+// argument or two.  The second, if present, is flags for sort type and
+// direction.
 func MlrvalSortMK(inputs []*Mlrval) *Mlrval {
 	input1 := inputs[0]
 	inmap := input1.GetMap()
@@ -837,6 +898,8 @@ func MlrvalSortMK(inputs []*Mlrval) *Mlrval {
 		return input1
 	}
 
+	// Copy the keys to an array for sorting.
+	// TODO: make a helper function and share with MlrvalGetKeys
 	n := inmap.FieldCount
 	keys := make([]string, n)
 	i := 0
@@ -845,8 +908,27 @@ func MlrvalSortMK(inputs []*Mlrval) *Mlrval {
 		i++
 	}
 
-	sort.Strings(keys)
+	// Get sort-flags, if provided
+	var sortType tSortType = sortTypeNumerical
+	var reverse bool = false
+	if len(inputs) == 2 {
+		if inputs[1].mvtype != MT_STRING {
+			return MLRVAL_ERROR
+		}
+		sortType, reverse = decodeSortFlags(inputs[1].printrep)
+	}
 
+	// Do the key-sort
+	switch sortType {
+	case sortTypeNumerical:
+		mlrvalSortMKNumerical(keys, reverse)
+	case sortTypeLexical:
+		mlrvalSortMKLexical(keys, reverse)
+	case sortTypeCaseFold:
+		mlrvalSortMKCaseFold(keys, reverse)
+	}
+
+	// Make a new map with keys in the new sort order.
 	outmap := NewMlrmap()
 	for i := 0; i < n; i++ {
 		key := keys[i]
@@ -854,4 +936,53 @@ func MlrvalSortMK(inputs []*Mlrval) *Mlrval {
 	}
 
 	return MlrvalPointerFromMapReferenced(outmap)
+}
+
+func mlrvalSortMKNumerical(array []string, reverse bool) {
+	if !reverse {
+		sort.Slice(array, func(i, j int) bool {
+			na, erra := strconv.ParseFloat(array[i], 64)
+			nb, errb := strconv.ParseFloat(array[j], 64)
+			if erra == nil && errb == nil {
+				return na < nb
+			} else {
+				return array[i] < array[j]
+			}
+		})
+	} else {
+		sort.Slice(array, func(i, j int) bool {
+			na, erra := strconv.ParseFloat(array[i], 64)
+			nb, errb := strconv.ParseFloat(array[j], 64)
+			if erra == nil && errb == nil {
+				return na > nb
+			} else {
+				return array[i] > array[j]
+			}
+		})
+	}
+}
+
+func mlrvalSortMKLexical(array []string, reverse bool) {
+	if !reverse {
+		// Or sort.Strings(keys)
+		sort.Slice(array, func(i, j int) bool {
+			return array[i] < array[j]
+		})
+	} else {
+		sort.Slice(array, func(i, j int) bool {
+			return array[i] > array[j]
+		})
+	}
+}
+
+func mlrvalSortMKCaseFold(array []string, reverse bool) {
+	if !reverse {
+		sort.Slice(array, func(i, j int) bool {
+			return strings.ToLower(array[i]) < strings.ToLower(array[j])
+		})
+	} else {
+		sort.Slice(array, func(i, j int) bool {
+			return strings.ToLower(array[i]) > strings.ToLower(array[j])
+		})
+	}
 }

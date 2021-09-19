@@ -229,10 +229,13 @@ func HelpMain(args []string) int {
 func MainUsage(o *os.File) {
 	fmt.Fprintf(o,
 		`Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
-If zero file names are provided, standard input is read. Example:
+
+If zero file names are provided, standard input is read, e.g.
   mlr --csv sort -f shape example.csv
+
 Output of one verb may be chained as input to another using "then", e.g.
   mlr --csv stats1 -a min,mean,max -f quantity then sort -f color example.csv
+
 Please see 'mlr help topics' for more information.
 `)
 	fmt.Fprintf(o, "Please also see %s\n", lib.DOC_URL)

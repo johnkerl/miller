@@ -290,6 +290,8 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
 * address all manner of xxx and TODO comments
 * empty csv ... reminder ...
 
+* functions as first-class objects; then sortaf/sortmf take f not "f"
+
 ================================================================
 MAYBES
 

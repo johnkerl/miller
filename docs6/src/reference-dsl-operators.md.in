@@ -77,7 +77,7 @@ GENMD_EOF
 
 A few caveats:
 
-* This is why `.` has higher precedece then `+` in the table above -- in Miller 5 and below, where `.` was only used for concatenation, it had the same precedence as `+`. So you can now do this:
+* This is why `.` has higher precedece than `+` in the table above -- in Miller 5 and below, where `.` was only used for concatenation, it had the same precedence as `+`. So you can now do this:
 
 GENMD_RUN_COMMAND
 mlr --json --from data/server-log.json put -q '
@@ -95,6 +95,6 @@ GENMD_EOF
 
 GENMD_RUN_COMMAND
 mlr --json --from data/server-log.json put -q '
-  print ($req.method) . (" -- ") . ($req.path)
+  print ($req.method) . " -- " . ($req.path)
 '
 GENMD_EOF

@@ -68,6 +68,7 @@ nav:
     - "Number formatting": "reference-main-number-formatting.md"
     - "Separators": "reference-main-separators.md"
     - "Flatten/unflatten: converting between JSON and tabular formats": "flatten-unflatten.md"
+    - "Sorting": "sorting.md"
     - "Streaming processing, and memory usage": "streaming-and-memory.md"
     - "Compressed data": "reference-main-compressed-data.md"
     - "CPU/multicore usage": "cpu.md"

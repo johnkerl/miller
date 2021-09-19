@@ -94,16 +94,17 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	return regex
 }
 
-// For initial CST state at the start of executing the DSL expression for the
-// current record.  Even if '$x =~ "(..)_(...)" set "\1" and "\2" on the
-// previous record, at start of processing for the current record we need to
-// start with a clean slate.
+// MakeEmptyRegexCaptures is for initial CST state at the start of executing
+// the DSL expression for the current record.  Even if '$x =~ "(..)_(...)" set
+// "\1" and "\2" on the previous record, at start of processing for the current
+// record we need to start with a clean slate.
 func MakeEmptyRegexCaptures() []string {
 	return nil
 }
 
-// Used by the CST builder to see if string-literal is like "foo bar" or "foo \1 bar" --
-// in the latter case it needs to retain the compiled offsets-matrix information.
+// RegexReplacementHasCaptures is used by the CST builder to see if
+// string-literal is like "foo bar" or "foo \1 bar" -- in the latter case it
+// needs to retain the compiled offsets-matrix information.
 func RegexReplacementHasCaptures(
 	replacement string,
 ) (

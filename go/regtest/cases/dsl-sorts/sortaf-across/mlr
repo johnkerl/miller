@@ -1,0 +1,14 @@
+# Sort descending numeric on the index field
+func f(a, b) {
+  return b.index <=> a.index;
+}
+begin {
+  @records = [];  # Define as an array, else auto-create will make a map
+}
+@records[NR] = $*; # Accumulate
+end {
+  @records = sortaf(@records, "f");
+  for (record in @records) {
+    emit record;
+  }
+}

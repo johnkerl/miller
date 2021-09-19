@@ -1,50 +1,36 @@
-TOP:
-
-C sort for maps and arrays:
-  o impl sortmf
-  o flags for sorta/sortmk: f/n: lex/numerical, r: reverse, c: case-fold
-    - 8 funcptrs: lex/num, up/down, case-fold/not
-  o impl case-fold for sort *verb* as well
-    - -c and -cr
-    - update 'new in miller6'
+----------------------------------------------------------------
+! try to godoc a few functions on every commit ... accumulate over time ...
+  - particular focus on -----$ etc
+? godoc -> publish at jko -- ? in kitchen-sink builder -- ?
 
 c array+string slice UTs
-! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
-  - needs UTs as well
-
-C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
-
 ? nidx no output-coloring?
 
-e fix -I + auto-decompress
+C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
+C fix -I + auto-decompress
 
 ? twi-dm re all-contribs: all-contributors.org
-
 * nikos materials -> fold in
-
-c! seps \001 etc !
-  mlrc --iusv --oxtab cat regtest/input/example.usv
-  mlr  --iusv --oxtab cat regtest/input/example.usv
 
 ----------------------------------------------------------------
 * r-strings branch!
 * deduping pass!
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
+! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
+  - needs UTs as well
+
 * regex: more about what is / is not
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
 
 c? mlr -S / -F outside of put/filter -- ?
 
-csv-with-and-without-headers:
-? shorter version for --headerless-csv-output, & doc everywhere -- -H -- ?
-? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
-? cat out nas.csv first
-? ag -> just grep ?
-l Miller handles compliant CSV: include rfc4180 link
-? Regularizing ragged CSV: use regularize verb?!?
+c! seps \001 etc !
+  mlrc --iusv --oxtab cat regtest/input/example.usv
+  mlr  --iusv --oxtab cat regtest/input/example.usv
 
 ----------------------------------------------------------------
+
 record-heterogeneity:
 ? --allow-ragged-csv-input: link to new flags page once it's written
 l link-to's:
@@ -56,6 +42,14 @@ l link-to's:
   programming-language.md.in:easy for you to handle non-heterogeneous data
   two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
 ? back out of ref section -- ?
+
+csv-with-and-without-headers:
+? shorter version for --headerless-csv-output, & doc everywhere -- -H -- ?
+? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
+? cat out nas.csv first
+? ag -> just grep ?
+l Miller handles compliant CSV: include rfc4180 link
+? Regularizing ragged CSV: use regularize verb?!?
 
 special-symbols-and-formatting:
 ? check: mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
@@ -119,3 +113,209 @@ E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (d
 
 separators:
 E write up which file formats support which flags (TODO comments)
+
+================================================================
+godoc checklist:
+
+12   ./src/platform/shellrun_notwindows.go
+17   ./src/platform/getargs_notwindows.go
+20   ./src/input/record_reader.go
+26   ./src/input/record_reader_factory.go
+28   ./src/output/record_writer_factory.go
+41   ./src/output/record_writer_nidx.go
+42   ./src/lib/rand.go
+42   ./src/lib/time.go
+43   ./src/lib/unbackslash_test.go
+48   ./src/output/record_writer_dkvp.go
+49   ./src/runtime/state.go
+51   ./src/output/channel_writer.go
+51   ./src/platform/shellrun_windows.go
+54   ./src/auxents/repl/ast.go
+59   ./src/auxents/repl/types.go
+64   ./src/cli/mlrcli_util.go
+65   ./src/output/record_writer_xtab.go
+66   ./src/climain/mlrcli.go
+69   ./src/auxents/repl/prompt.go
+71   ./src/lib/paragraph.go
+72   ./src/cli/verb_utils.go
+79   ./src/cli/flatten_unflatten.go
+79   ./src/output/record_writer_markdown.go
+86   ./src/stream/stream.go
+88   ./src/output/record_writer_csv.go
+88   ./src/output/record_writer_csvlite.go
+89   ./src/lib/readfiles.go
+91   ./src/auxents/lecat.go
+95   ./src/auxents/auxents.go
+95   ./src/auxents/unhex.go
+95   ./src/lib/logger.go
+96   ./src/lib/halfpipe.go
+98   ./src/auxents/repl/dsl.go
+104  ./src/auxents/regtest/invoker.go
+108  ./src/output/record_writer_json.go
+119  ./src/auxents/regtest/entry.go
+127  ./src/climain/mlrcli_mlrrc.go
+128  ./src/dsl/ast_types.go
+128  ./src/input/record_reader_nidx.go
+134  ./src/input/record_reader_dkvp.go
+139  ./src/input/record_reader_json.go
+140  ./src/platform/getargs_windows.go
+148  ./src/entrypoint/entrypoint.go
+149  ./src/auxents/termcvt.go
+153  ./src/lib/ordered-map.go
+157  ./src/auxents/hex.go
+158  ./src/lib/unbackslash.go
+161  ./src/lib/util.go
+174  ./src/input/record_reader_xtab.go
+176  ./src/auxents/repl/entry.go
+190  ./src/lib/regex_test.go
+202  ./src/cli/option_types.go
+208  ./src/climain/mlrcli_parse.go
+223  ./src/lib/file-readers.go
+243  ./src/auxents/repl/session.go
+256  ./src/input/record_reader_csv.go
+278  ./src/lib/stats.go
+280  ./src/dsl/ast_build.go
+320  ./src/dsl/ast_print.go
+331  ./src/output/record_writer_pprint.go
+356  ./src/input/record_reader_csvlite.go
+393  ./src/output/file-output-handlers.go
+430  ./src/lib/mlrmath.go
+493  ./src/cli/flag_types.go
+509  ./src/runtime/stack.go
+571  ./src/colorizer/colorizer.go
+610  ./src/auxents/help/entry.go
+820  ./src/auxents/regtest/regtester.go
+1006 ./src/auxents/repl/verbs.go
+2583 ./src/cli/option_parse.go
+
+21  ./src/types/mlrval_functions_math.go
+45  ./src/types/mlrval_functions_system.go
+58  ./src/types/mlrmap_print.go
+61  ./src/types/mlrval_function_hashing.go
+72  ./src/types/mlrval_functions_random.go
+100 ./src/types/mlrval_output.go
+105 ./src/types/mlrval_typing.go
+132 ./src/types/mlrmap.go
+134 ./src/types/mlrval_functions_test.go
+150 ./src/types/mlrval_functions_stats.go
+157 ./src/types/mlrval.go
+161 ./src/types/mlrval_functions_regex.go
+170 ./src/types/mlrmap_json.go
+178 ./src/types/context.go
+179 ./src/types/mlrval_format.go
+184 ./src/types/mlrval_functions_sort.go
+187 ./src/types/mlrval_functions_base.go
+201 ./src/types/mlrval_functions_mathlib.go
+217 ./src/types/mlrval_functions_bits.go
+240 ./src/types/mlrmap_flatten_unflatten.go
+283 ./src/types/mlrval_functions_types.go
+289 ./src/types/mlrval_accessors.go
+299 ./src/types/mlrval_format_test.go
+347 ./src/types/mlrval_functions_strings.go
+464 ./src/types/mlrval_functions_booleans.go
+515 ./src/types/mlrval_new.go
+517 ./src/types/mlrval_functions_time.go
+531 ./src/types/mlrval_json.go
+656 ./src/types/mlrval_collections.go
+857 ./src/types/mlrval_functions_collections.go
+883 ./src/types/mlrmap_accessors.go
+912 ./src/types/mlrval_functions_arithmetic.go
+
+28  ./src/transformers/utils/join-bucket.go
+40  ./src/transformers/aaa_record_transformer.go
+79  ./src/transformers/aaa_chain_transformer.go
+90  ./src/transformers/check.go
+90  ./src/transformers/nothing.go
+94  ./src/transformers/utils/top-keeper.go
+98  ./src/transformers/tac.go
+105 ./src/transformers/skip-trivial-records.go
+111 ./src/transformers/fill-empty.go
+112 ./src/transformers/regularize.go
+116 ./src/transformers/sec2gmtdate.go
+117 ./src/transformers/aaa_transformer_table.go
+117 ./src/transformers/group-like.go
+118 ./src/transformers/altkv.go
+124 ./src/transformers/remove-empty-columns.go
+128 ./src/transformers/label.go
+130 ./src/transformers/sort-within-records.go
+137 ./src/transformers/group-by.go
+146 ./src/transformers/shuffle.go
+148 ./src/transformers/template.go
+151 ./src/transformers/tail.go
+155 ./src/transformers/json-parse.go
+156 ./src/transformers/count-similar.go
+160 ./src/transformers/grep.go
+165 ./src/transformers/decimate.go
+165 ./src/transformers/unflatten.go
+166 ./src/transformers/flatten.go
+166 ./src/transformers/sec2gmt.go
+171 ./src/transformers/bootstrap.go
+174 ./src/transformers/json-stringify.go
+179 ./src/transformers/head.go
+181 ./src/transformers/gap.go
+186 ./src/transformers/sample.go
+189 ./src/transformers/clean-whitespace.go
+190 ./src/transformers/tee.go
+193 ./src/transformers/format-values.go
+199 ./src/transformers/cat.go
+199 ./src/transformers/unsparsify.go
+201 ./src/transformers/repeat.go
+212 ./src/transformers/seqgen.go
+220 ./src/transformers/fill-down.go
+234 ./src/transformers/count.go
+243 ./src/transformers/rename.go
+270 ./src/transformers/cut.go
+279 ./src/transformers/most-or-least-frequent.go
+280 ./src/transformers/fraction.go
+281 ./src/transformers/top.go
+305 ./src/transformers/utils/percentile-keeper.go
+312 ./src/transformers/reorder.go
+331 ./src/transformers/having-fields.go
+338 ./src/transformers/bar.go
+368 ./src/transformers/histogram.go
+384 ./src/transformers/sort.go
+395 ./src/transformers/stats1.go
+432 ./src/transformers/reshape.go
+469 ./src/transformers/stats2.go
+511 ./src/transformers/put-or-filter.go
+537 ./src/transformers/merge-fields.go
+570 ./src/transformers/uniq.go
+574 ./src/transformers/nest.go
+603 ./src/transformers/step.go
+604 ./src/transformers/join.go
+667 ./src/transformers/utils/join-bucket-keeper.go
+682 ./src/transformers/utils/stats1-accumulators.go
+688 ./src/transformers/utils/stats2-accumulators.go
+
+32   ./src/dsl/cst/signature.go
+48   ./src/dsl/cst/env.go
+73   ./src/dsl/cst/cond.go
+78   ./src/dsl/cst/subroutines.go
+89   ./src/dsl/cst/filter.go
+90   ./src/dsl/cst/block-exit.go
+112  ./src/dsl/cst/assignments.go
+118  ./src/dsl/cst/statements.go
+123  ./src/dsl/cst/types.go
+135  ./src/dsl/cst/blocks.go
+146  ./src/dsl/cst/if.go
+154  ./src/dsl/cst/while.go
+169  ./src/dsl/cst/evaluable.go
+177  ./src/dsl/cst/tee.go
+213  ./src/dsl/cst/emitf.go
+222  ./src/dsl/cst/warn.go
+230  ./src/dsl/cst/dump.go
+276  ./src/dsl/cst/functions.go
+300  ./src/dsl/cst/uds.go
+353  ./src/dsl/cst/validate.go
+376  ./src/dsl/cst/print.go
+382  ./src/dsl/cst/udf.go
+425  ./src/dsl/cst/root.go
+552  ./src/dsl/cst/collections.go
+578  ./src/dsl/cst/keyword_usage.go
+684  ./src/dsl/cst/leaves.go
+826  ./src/dsl/cst/builtin_functions.go
+942  ./src/dsl/cst/for.go
+1006 ./src/dsl/cst/emit_emitp.go
+1141 ./src/dsl/cst/lvalues.go
+1846 ./src/dsl/cst/builtin_function_manager.go
+

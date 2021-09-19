@@ -1,0 +1,27 @@
+# Same as sorta($values)
+func forward(a,b) {
+  return a <=> b
+}
+
+# Same as sorta($values, "r")
+func reverse(a,b) {
+  return b <=> a
+}
+
+# Custom sort
+func even_then_odd(a,b) {
+  ax = a % 2;
+  bx = b % 2;
+  if (ax == bx) {
+    return a <=> b
+  } elif (bx == 1) {
+    return -1
+  } else {
+    return 1
+  }
+}
+
+split_values = splita($values, ";");
+$forward = sortaf(split_values, "forward");
+$reverse = sortaf(split_values, "reverse");
+$even_then_odd = sortaf(split_values, "even_then_odd");

@@ -239,8 +239,7 @@ pow  (class=arithmetic #args=2) Exponentiation. Same as **, but as a function.
 <a id=bitwise-not />
 ### ~
 <pre class="pre-non-highlight-non-pair">
-~  (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
-regex-match operator: try '$y = ~$x'.
+~  (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the regex-match operator: try '$y = ~$x'.
 </pre>
 
 ## Boolean functions
@@ -380,11 +379,7 @@ depth  (class=collections #args=1) Prints maximum depth of map/array. Scalars ha
 
 ### flatten
 <pre class="pre-non-highlight-non-pair">
-flatten  (class=collections #args=3) Flattens multi-level maps to single-level ones. Examples:
-flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
-flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
-Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
-Useful for nested JSON-like structures for non-JSON file formats like CSV.
+flatten  (class=collections #args=3) Flattens multi-level maps to single-level ones. Examples: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.  flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.  Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).  Useful for nested JSON-like structures for non-JSON file formats like CSV.
 </pre>
 
 
@@ -402,9 +397,7 @@ get_values  (class=collections #args=1) Returns array of keys of map or array --
 
 ### haskey
 <pre class="pre-non-highlight-non-pair">
-haskey  (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
-'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
-Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
+haskey  (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.  Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
 </pre>
 
 
@@ -416,15 +409,13 @@ json_parse  (class=collections #args=1) Converts value from JSON-formatted strin
 
 ### json_stringify
 <pre class="pre-non-highlight-non-pair">
-json_stringify  (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
-With optional second boolean argument set to true, produces multiline output.
+json_stringify  (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line.  With optional second boolean argument set to true, produces multiline output.
 </pre>
 
 
 ### leafcount
 <pre class="pre-non-highlight-non-pair">
-leafcount  (class=collections #args=1) Counts total number of terminal values in map/array. For single-level
-map/array, same as length.
+leafcount  (class=collections #args=1) Counts total number of terminal values in map/array. For single-level map/array, same as length.
 </pre>
 
 
@@ -436,35 +427,25 @@ length  (class=collections #args=1) Counts number of top-level entries in array/
 
 ### mapdiff
 <pre class="pre-non-highlight-non-pair">
-mapdiff  (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
-With 2 or more, returns copy of arg 1 with all keys from any of remaining
-argument maps removed.
+mapdiff  (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.  With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
 </pre>
 
 
 ### mapexcept
 <pre class="pre-non-highlight-non-pair">
-mapexcept  (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
-Remaining arguments can be strings or arrays of string.
-E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
-and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
+mapexcept  (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset.  Remaining arguments can be strings or arrays of string.  E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}' and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
 </pre>
 
 
 ### mapselect
 <pre class="pre-non-highlight-non-pair">
-mapselect  (class=collections #args=variadic) Returns a map with only keys from remaining arguments set.
-Remaining arguments can be strings or arrays of string.
-E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
-and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
+mapselect  (class=collections #args=variadic) Returns a map with only keys from remaining arguments set.  Remaining arguments can be strings or arrays of string.  E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}' and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
 </pre>
 
 
 ### mapsum
 <pre class="pre-non-highlight-non-pair">
-mapsum  (class=collections #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with
-key-value pairs from all arguments. Rightmost collisions win, e.g.
-'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
+mapsum  (class=collections #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g.  'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 </pre>
 
 
@@ -494,10 +475,7 @@ sortmk  (class=collections #args=1-2) Returns a copy of a map, sorted ascending 
 
 ### unflatten
 <pre class="pre-non-highlight-non-pair">
-unflatten  (class=collections #args=2) Reverses flatten. Example:
-unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
-Useful for nested JSON-like structures for non-JSON file formats like CSV.
-See also arrayify.
+unflatten  (class=collections #args=2) Reverses flatten. Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.  Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
 </pre>
 
 ## Conversion functions
@@ -517,8 +495,7 @@ float  (class=conversion #args=1) Convert int/float/bool/string to float.
 
 ### fmtnum
 <pre class="pre-non-highlight-non-pair">
-fmtnum  (class=conversion #args=2) Convert int/float/bool to string using
-printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
+fmtnum  (class=conversion #args=2) Convert int/float/bool to string using printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
 </pre>
 
 
@@ -536,69 +513,55 @@ int  (class=conversion #args=1) Convert int/float/bool/string to int.
 
 ### joink
 <pre class="pre-non-highlight-non-pair">
-joink  (class=conversion #args=2) Makes string from map/array keys. Examples:
-joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
-joink([1,2,3], ",") = "1,2,3".
+joink  (class=conversion #args=2) Makes string from map/array keys. Examples: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c" joink([1,2,3], ",") = "1,2,3".
 </pre>
 
 
 ### joinkv
 <pre class="pre-non-highlight-non-pair">
-joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs. Examples:
-joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
-joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs. Examples: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5" joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 </pre>
 
 
 ### joinv
 <pre class="pre-non-highlight-non-pair">
-joinv  (class=conversion #args=2) Makes string from map/array values.
-joinv([3,4,5], ",") = "3,4,5"
-joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
+joinv  (class=conversion #args=2) Makes string from map/array values.  joinv([3,4,5], ",") = "3,4,5" joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 </pre>
 
 
 ### splita
 <pre class="pre-non-highlight-non-pair">
-splita  (class=conversion #args=2) Splits string into array with type inference. Example:
-splita("3,4,5", ",") = [3,4,5]
+splita  (class=conversion #args=2) Splits string into array with type inference. Example: splita("3,4,5", ",") = [3,4,5]
 </pre>
 
 
 ### splitax
 <pre class="pre-non-highlight-non-pair">
-splitax  (class=conversion #args=2) Splits string into array without type inference. Example:
-splita("3,4,5", ",") = ["3","4","5"]
+splitax  (class=conversion #args=2) Splits string into array without type inference. Example: splita("3,4,5", ",") = ["3","4","5"]
 </pre>
 
 
 ### splitkv
 <pre class="pre-non-highlight-non-pair">
-splitkv  (class=conversion #args=3) Splits string by separators into map with type inference. Example:
-splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
+splitkv  (class=conversion #args=3) Splits string by separators into map with type inference. Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 </pre>
 
 
 ### splitkvx
 <pre class="pre-non-highlight-non-pair">
-splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and
-values are strings). Example:
-splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
+splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings). Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 </pre>
 
 
 ### splitnv
 <pre class="pre-non-highlight-non-pair">
-splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example:
-splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
+splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 </pre>
 
 
 ### splitnvx
 <pre class="pre-non-highlight-non-pair">
-splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type
-inference (values are strings). Example:
-splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
+splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings). Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 </pre>
 
 
@@ -740,8 +703,7 @@ floor  (class=math #args=1) Floor: nearest integer at or below.
 
 ### invqnorm
 <pre class="pre-non-highlight-non-pair">
-invqnorm  (class=math #args=1) Inverse of normal cumulative distribution function.
-Note that invqorm(urand()) is normally distributed.
+invqnorm  (class=math #args=1) Inverse of normal cumulative distribution function.  Note that invqorm(urand()) is normally distributed.
 </pre>
 
 
@@ -765,8 +727,7 @@ log1p  (class=math #args=1) log(1-x).
 
 ### logifit
 <pre class="pre-non-highlight-non-pair">
-logifit  (class=math #args=3)  Given m and b from logistic regression, compute fit:
-$yhat=logifit($x,$m,$b).
+logifit  (class=math #args=3)  Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).
 </pre>
 
 
@@ -796,8 +757,7 @@ round  (class=math #args=1) Round to nearest integer.
 
 ### roundm
 <pre class="pre-non-highlight-non-pair">
-roundm  (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is
-the same as round($x/$m)*$m.
+roundm  (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is the same as round($x/$m)*$m.
 </pre>
 
 
@@ -839,8 +799,7 @@ tanh  (class=math #args=1) Hyperbolic tangent.
 
 ### urand
 <pre class="pre-non-highlight-non-pair">
-urand  (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
-Int-valued example: '$n=floor(20+urand()*11)'.
+urand  (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.  Int-valued example: '$n=floor(20+urand()*11)'.
 </pre>
 
 
@@ -938,23 +897,19 @@ sub  (class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace o
 
 ### substr
 <pre class="pre-non-highlight-non-pair">
-substr  (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
-with all array and string indices, but, this is a backward-compatibility issue with Miller 5
-and below. Arrays are new in Miller 6; the substr function is older.
+substr  (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up with all array and string indices, but, this is a backward-compatibility issue with Miller 5 and below. Arrays are new in Miller 6; the substr function is older.
 </pre>
 
 
 ### substr0
 <pre class="pre-non-highlight-non-pair">
-substr0  (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
-inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.
+substr0  (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.
 </pre>
 
 
 ### substr1
 <pre class="pre-non-highlight-non-pair">
-substr1  (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
-inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.
+substr1  (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.
 </pre>
 
 
@@ -1061,18 +1016,13 @@ sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = 
 
 ### sec2gmt
 <pre class="pre-non-highlight-non-pair">
-sec2gmt  (class=time #args=1,2) Formats seconds since epoch (integer part)
-as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-Leaves non-numbers as-is. With second integer argument n, includes n decimal places
-for the seconds part
+sec2gmt  (class=time #args=1,2) Formats seconds since epoch (integer part) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
 </pre>
 
 
 ### sec2gmtdate
 <pre class="pre-non-highlight-non-pair">
-sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part)
-as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
-Leaves non-numbers as-is.
+sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is.
 </pre>
 
 
@@ -1084,22 +1034,13 @@ sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:
 
 ### strftime
 <pre class="pre-non-highlight-non-pair">
-strftime  (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.
-	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
-	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
-	Format strings are as in the C library (please see "man strftime" on your system),
-	with the Miller-specific addition of "%1S" through "%9S" which format the seconds
-	with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
-	See also strftime_local.
+strftime  (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
 </pre>
 
 
 ### strptime
 <pre class="pre-non-highlight-non-pair">
-strptime  (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch,
-	e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
-	and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
-	See also strptime_local.
+strptime  (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000, and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.  See also strptime_local.
 </pre>
 
 
@@ -1125,134 +1066,115 @@ uptime  (class=time #args=0) help string will go here
 
 ### asserting_absent
 <pre class="pre-non-highlight-non-pair">
-asserting_absent  (class=typing #args=1) Aborts with an error if is_absent on the argument returns false,
-else returns its argument.
+asserting_absent  (class=typing #args=1) Aborts with an error if is_absent on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_array
 <pre class="pre-non-highlight-non-pair">
-asserting_array  (class=typing #args=1) Aborts with an error if is_array on the argument returns false,
-else returns its argument.
+asserting_array  (class=typing #args=1) Aborts with an error if is_array on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_bool
 <pre class="pre-non-highlight-non-pair">
-asserting_bool  (class=typing #args=1) Aborts with an error if is_bool on the argument returns false,
-else returns its argument.
+asserting_bool  (class=typing #args=1) Aborts with an error if is_bool on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_boolean
 <pre class="pre-non-highlight-non-pair">
-asserting_boolean  (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false,
-else returns its argument.
+asserting_boolean  (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_empty
 <pre class="pre-non-highlight-non-pair">
-asserting_empty  (class=typing #args=1) Aborts with an error if is_empty on the argument returns false,
-else returns its argument.
+asserting_empty  (class=typing #args=1) Aborts with an error if is_empty on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_empty_map
 <pre class="pre-non-highlight-non-pair">
-asserting_empty_map  (class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false,
-else returns its argument.
+asserting_empty_map  (class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_error
 <pre class="pre-non-highlight-non-pair">
-asserting_error  (class=typing #args=1) Aborts with an error if is_error on the argument returns false,
-else returns its argument.
+asserting_error  (class=typing #args=1) Aborts with an error if is_error on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_float
 <pre class="pre-non-highlight-non-pair">
-asserting_float  (class=typing #args=1) Aborts with an error if is_float on the argument returns false,
-else returns its argument.
+asserting_float  (class=typing #args=1) Aborts with an error if is_float on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_int
 <pre class="pre-non-highlight-non-pair">
-asserting_int  (class=typing #args=1) Aborts with an error if is_int on the argument returns false,
-else returns its argument.
+asserting_int  (class=typing #args=1) Aborts with an error if is_int on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_map
 <pre class="pre-non-highlight-non-pair">
-asserting_map  (class=typing #args=1) Aborts with an error if is_map on the argument returns false,
-else returns its argument.
+asserting_map  (class=typing #args=1) Aborts with an error if is_map on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_nonempty_map
 <pre class="pre-non-highlight-non-pair">
-asserting_nonempty_map  (class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false,
-else returns its argument.
+asserting_nonempty_map  (class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_not_array
 <pre class="pre-non-highlight-non-pair">
-asserting_not_array  (class=typing #args=1) Aborts with an error if is_not_array on the argument returns false,
-else returns its argument.
+asserting_not_array  (class=typing #args=1) Aborts with an error if is_not_array on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_not_empty
 <pre class="pre-non-highlight-non-pair">
-asserting_not_empty  (class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false,
-else returns its argument.
+asserting_not_empty  (class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_not_map
 <pre class="pre-non-highlight-non-pair">
-asserting_not_map  (class=typing #args=1) Aborts with an error if is_not_map on the argument returns false,
-else returns its argument.
+asserting_not_map  (class=typing #args=1) Aborts with an error if is_not_map on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_not_null
 <pre class="pre-non-highlight-non-pair">
-asserting_not_null  (class=typing #args=1) Aborts with an error if is_not_null on the argument returns false,
-else returns its argument.
+asserting_not_null  (class=typing #args=1) Aborts with an error if is_not_null on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_null
 <pre class="pre-non-highlight-non-pair">
-asserting_null  (class=typing #args=1) Aborts with an error if is_null on the argument returns false,
-else returns its argument.
+asserting_null  (class=typing #args=1) Aborts with an error if is_null on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_numeric
 <pre class="pre-non-highlight-non-pair">
-asserting_numeric  (class=typing #args=1) Aborts with an error if is_numeric on the argument returns false,
-else returns its argument.
+asserting_numeric  (class=typing #args=1) Aborts with an error if is_numeric on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_present
 <pre class="pre-non-highlight-non-pair">
-asserting_present  (class=typing #args=1) Aborts with an error if is_present on the argument returns false,
-else returns its argument.
+asserting_present  (class=typing #args=1) Aborts with an error if is_present on the argument returns false, else returns its argument.
 </pre>
 
 
 ### asserting_string
 <pre class="pre-non-highlight-non-pair">
-asserting_string  (class=typing #args=1) Aborts with an error if is_string on the argument returns false,
-else returns its argument.
+asserting_string  (class=typing #args=1) Aborts with an error if is_string on the argument returns false, else returns its argument.
 </pre>
 
 

@@ -1,0 +1,39 @@
+{
+  "a": 6,
+  "b": 5,
+  "c": 4,
+  "default": [4, 5, 6],
+  "reverse": [6, 5, 4],
+  "numup": [4, 5, 6],
+  "numdown": [6, 5, 4],
+  "lexup": [4, 5, 6],
+  "lexdown": [6, 5, 4],
+  "foldup": [4, 5, 6],
+  "folddown": [6, 5, 4]
+}
+{
+  "a": 2,
+  "b": 10,
+  "c": 1,
+  "default": [1, 2, 10],
+  "reverse": [10, 2, 1],
+  "numup": [1, 2, 10],
+  "numdown": [10, 2, 1],
+  "lexup": [1, 10, 2],
+  "lexdown": [2, 10, 1],
+  "foldup": [1, 10, 2],
+  "folddown": [2, 10, 1]
+}
+{
+  "a": "apple",
+  "b": "Ball",
+  "c": "cat",
+  "default": ["Ball", "apple", "cat"],
+  "reverse": ["cat", "apple", "Ball"],
+  "numup": ["Ball", "apple", "cat"],
+  "numdown": ["cat", "apple", "Ball"],
+  "lexup": ["Ball", "apple", "cat"],
+  "lexdown": ["cat", "apple", "Ball"],
+  "foldup": ["apple", "Ball", "cat"],
+  "folddown": ["cat", "Ball", "apple"]
+}

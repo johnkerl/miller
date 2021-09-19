@@ -4,7 +4,12 @@
 
 package types
 
-// Lexical sort: just stringify everything.
+import (
+	"strings"
+)
+
+// LexicalAscendingComparator is for lexical sort: it stringifies
+// everything.
 func LexicalAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 	sa := input1.String()
 	sb := input2.String()
@@ -16,8 +21,37 @@ func LexicalAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 		return 0
 	}
 }
+
+// LexicalDescendingComparator is for reverse-lexical sort: it stringifies
+// everything.
 func LexicalDescendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 	return LexicalAscendingComparator(input2, input1)
+}
+
+// CaseFoldAscendingComparator is for case-folded lexical sort: it stringifies
+// everything.
+func CaseFoldAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
+	sa := input1.String()
+	sb := input2.String()
+	if input1.mvtype == MT_STRING {
+		sa = strings.ToLower(sa)
+	}
+	if input2.mvtype == MT_STRING {
+		sb = strings.ToLower(sb)
+	}
+	if sa < sb {
+		return -1
+	} else if sa > sb {
+		return 1
+	} else {
+		return 0
+	}
+}
+
+// CaseFoldDescendingComparator is for case-folded lexical sort: it stringifies
+// everything.
+func CaseFoldDescendingComparator(input1 *Mlrval, input2 *Mlrval) int {
+	return CaseFoldAscendingComparator(input2, input1)
 }
 
 // ----------------------------------------------------------------
@@ -122,7 +156,8 @@ func bbcmp(input1, input2 *Mlrval) int {
 // * numeric compares on numbers
 // * false < true
 
-var num_cmp_dispositions = [MT_DIM][MT_DIM]ComparatorFunc{
+// typed_cmp_dispositions is the disposition matrix for numerical sorting of Mlrvals.
+var typed_cmp_typedpositions = [MT_DIM][MT_DIM]ComparatorFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT    FLOAT  BOOL   ARRAY  MAP
 	/*ERROR  */ {_zero, _neg1, _neg1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
 	/*ABSENT */ {_pos1, _zero, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
@@ -136,9 +171,14 @@ var num_cmp_dispositions = [MT_DIM][MT_DIM]ComparatorFunc{
 	/*MAP    */ {_zero, _zero, _neg1, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
 }
 
+// NumericAscendingComparator is for "numerical" sort: it uses Mlrval sorting
+// rules by type, including numeric sort for numeric types.
 func NumericAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
-	return num_cmp_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	return typed_cmp_typedpositions[input1.mvtype][input2.mvtype](input1, input2)
 }
+
+// NumericDescendingComparator is for "numerical" sort: it uses Mlrval sorting
+// rules by type, including numeric sort for numeric types.
 func NumericDescendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 	return NumericAscendingComparator(input2, input1)
 }

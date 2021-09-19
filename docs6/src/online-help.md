@@ -27,10 +27,13 @@ The front door is `mlr --help` or its synonym `mlr -h`. This leads you to `mlr h
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr [flags] {verb} [verb-dependent options ...] {zero or more file names}
-If zero file names are provided, standard input is read. Example:
+
+If zero file names are provided, standard input is read, e.g.
   mlr --csv sort -f shape example.csv
+
 Output of one verb may be chained as input to another using "then", e.g.
   mlr --csv stats1 -a min,mean,max -f quantity then sort -f color example.csv
+
 Please see 'mlr help topics' for more information.
 Please also see https://johnkerl.org/miller6
 </pre>
@@ -189,9 +192,11 @@ in the order they were encountered in the input record stream.
 
 Options:
 -f  {comma-separated field names}  Lexical ascending
+-r  {comma-separated field names}  Lexical descending
+-c  {comma-separated field names}  Case-folded lexical ascending
+-cr {comma-separated field names}  Case-folded lexical descending
 -n  {comma-separated field names}  Numerical ascending; nulls sort last
 -nf {comma-separated field names}  Same as -n
--r  {comma-separated field names}  Lexical descending
 -nr {comma-separated field names}  Numerical descending; nulls sort first
 -h|--help Show this message.
 
@@ -232,8 +237,7 @@ No exact match for "split". Inexact matches:
 <b>mlr help function splita</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-splita  (class=conversion #args=2) Splits string into array with type inference. Example:
-splita("3,4,5", ",") = [3,4,5]
+splita  (class=conversion #args=2) Splits string into array with type inference. Example: splita("3,4,5", ",") = [3,4,5]
 </pre>
 
 Etc.

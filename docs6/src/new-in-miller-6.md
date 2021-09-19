@@ -115,6 +115,10 @@ For example (see [https://github.com/johnkerl/miller/issues/178](https://github.
 
 Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single-step through your data-file record, express arbitrary statements to converse with the data, etc.
 
+## Case-folded sorting options
+
+The [sort](reference-verbs.md#sort) verb now accepts `-c` and `-cr` options for case-folded ascending/descending sort, respetively.
+
 ## New DSL functions / operators
 
 * String-hashing functions [md5](reference-dsl-builtin-functions.md#md5), [sha1](reference-dsl-builtin-functions.md#sha1), [sha256](reference-dsl-builtin-functions.md#sha256), and [sha512](reference-dsl-builtin-functions.md#sha512).
@@ -125,6 +129,10 @@ Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single
 
 * Absent-coalesce operator [`??`](reference-dsl-builtin-functions.md#absent-coalesce) along with `??=`;
 absent-empty-coalesce operator [`???`](reference-dsl-builtin-functions.md#absent-empty-coalesce) along with `???=`.
+
+* Sorting functions [`sorta`](reference-dsl-builtin-functions.md#sorta), [`sortaf`](reference-dsl-builtin-functions.md#sortaf), [`sortmk`](reference-dsl-builtin-functions.md#sortmk), and [`sortmf`](reference-dsl-builtin-functions.md#sortmf).  See the [sorting page](sorting.md) for more information.
+
+* The dot operator is not new, but it has a new role: in addition to its existing use for string-concatenation like `"a"."b" = "ab"`, you can now also use it for keying maps. For example, `$req.headers.host` is the same as `$req["headers"]["host"]`. See the [dot-operator reference](reference-dsl-operators.md#the-double-purpose-dot-operator) for more information.
 
 ## Improved command-line parsing
 

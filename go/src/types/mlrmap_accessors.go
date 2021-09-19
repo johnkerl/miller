@@ -7,7 +7,7 @@ import (
 	"mlr/src/lib"
 )
 
-// ----------------------------------------------------------------
+// IsEmpty determines if an map is empty.
 func (mlrmap *Mlrmap) IsEmpty() bool {
 	return mlrmap.Head == nil
 }
@@ -17,8 +17,7 @@ func (mlrmap *Mlrmap) Has(key string) bool {
 	return mlrmap.findEntry(key) != nil
 }
 
-// ----------------------------------------------------------------
-// Copies the key and value (deep-copying in case the value is array/map).
+// PutCpoy copies the key and value (deep-copying in case the value is array/map).
 // This is safe for DSL use. See also PutReference.
 func (mlrmap *Mlrmap) PutCopy(key string, value *Mlrval) {
 	pe := mlrmap.findEntry(key)
@@ -42,10 +41,10 @@ func (mlrmap *Mlrmap) PutCopy(key string, value *Mlrval) {
 	}
 }
 
-// Copies the key but not the value. This is not safe for DSL use, where we
-// could create undesired references between different objects.  Only intended
-// to be used at callsites which allocate a mlrval solely for the purpose of
-// putting into a map, e.g. input-record readers.
+// PutReference copies the key but not the value. This is not safe for DSL use,
+// where we could create undesired references between different objects.  Only
+// intended to be used at callsites which allocate a mlrval solely for the
+// purpose of putting into a map, e.g. input-record readers.
 func (mlrmap *Mlrmap) PutReference(key string, value *Mlrval) {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
