@@ -160,7 +160,7 @@ def run_command(cmd_lines, output_handle)
   cmd_output = `#{cmd} 2>&1`
   status = $?.to_i
   if status != 0
-    raise "\"#{cmd}\" exited with non-zero code #{status}."
+    raise "\"#{cmd}\" exited with non-zero code #{status}.\nOutput: #{cmd_output}"
   end
   # chomp and split so "a\nb\nc\n" splits to ["a", "b", "c"]
   write_card(cmd_lines, cmd_output.chomp.split(/\n/, -1), output_handle)

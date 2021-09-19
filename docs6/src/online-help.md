@@ -234,8 +234,7 @@ No exact match for "split". Inexact matches:
 <b>mlr help function splita</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-splita  (class=conversion #args=2) Splits string into array with type inference. Example:
-splita("3,4,5", ",") = [3,4,5]
+splita  (class=conversion #args=2) Splits string into array with type inference. Example: splita("3,4,5", ",") = [3,4,5]
 </pre>
 
 Etc.

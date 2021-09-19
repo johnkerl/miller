@@ -114,7 +114,7 @@ usage](streaming-and-memory.md), this doesn't keep all records in memory, only
 the count and sum variables. You can use this on very large files without
 running out of memory.
 
-## Retain records in a map
+## Retaining records in a map
 
 The second option is to retain entire records in a [map](reference-main-maps.md), then loop over them in an `end` block.
 
@@ -183,7 +183,7 @@ The downside to this, of course, is that this retains all records (plus data-str
     # do something with the output
 </pre>
 
-## Retain records in an array
+## Retaining records in an array
 
 The third option is to retain records in an [array](reference-main-arrays.md), then loop over them in an `end` block.
 
@@ -353,7 +353,7 @@ at the end you're guaranteed to loop over records in the same order you read
 them. Also note that when you index a Miller map with an integer key, this
 works, but the [key is stringified](reference-main-maps.md).
 
-## Retain partial records in map or array
+## Retaining partial records in map or array
 
 If all you need is one or a few attributes out of a record, you don't need to
 retain full records. You can retain a map, or array, of just the fields you're
@@ -390,6 +390,10 @@ interested in:
 }
 </pre>
 
+## Sorting
+
+Please see the [sorting page](sorting.md).
+
 ## For more information
 
-For more information please see the page on [two-pass algorithms](two-pass-algorithms.md).
+Please see the page on [two-pass algorithms](two-pass-algorithms.md).

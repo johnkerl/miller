@@ -1,3 +1,4 @@
+// Package main is the entry point for Miller.
 package main
 
 import (
@@ -11,7 +12,7 @@ import (
 	"mlr/src/entrypoint"
 )
 
-// ----------------------------------------------------------------
+// main is the entry point for Miller.
 func main() {
 
 	// Respect env $GOMAXPROCS, if provided, else set default.

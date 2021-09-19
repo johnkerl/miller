@@ -158,10 +158,9 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:  "~",
-			class: FUNC_CLASS_ARITHMETIC,
-			help: `Bitwise NOT. Beware '$y=~$x' since =~ is the
-regex-match operator: try '$y = ~$x'.`,
+			name:      "~",
+			class:     FUNC_CLASS_ARITHMETIC,
+			help:      `Bitwise NOT. Beware '$y=~$x' since =~ is the regex-match operator: try '$y = ~$x'.`,
 			unaryFunc: types.MlrvalBitwiseNOT,
 		},
 
@@ -453,25 +452,21 @@ regex-match operator: try '$y = ~$x'.`,
 		},
 
 		{
-			name:  "substr0",
-			class: FUNC_CLASS_STRING,
-			help: `substr0(s,m,n) gives substring of s from 0-up position m to n
-inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.`,
+			name:        "substr0",
+			class:       FUNC_CLASS_STRING,
+			help:        `substr0(s,m,n) gives substring of s from 0-up position m to n inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.`,
 			ternaryFunc: types.MlrvalSubstr0Up,
 		},
 		{
-			name:  "substr1",
-			class: FUNC_CLASS_STRING,
-			help: `substr1(s,m,n) gives substring of s from 1-up position m to n
-inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.`,
+			name:        "substr1",
+			class:       FUNC_CLASS_STRING,
+			help:        `substr1(s,m,n) gives substring of s from 1-up position m to n inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.`,
 			ternaryFunc: types.MlrvalSubstr1Up,
 		},
 		{
-			name:  "substr",
-			class: FUNC_CLASS_STRING,
-			help: `substr is an alias for substr0. See also substr1. Miller is generally 1-up
-with all array and string indices, but, this is a backward-compatibility issue with Miller 5
-and below. Arrays are new in Miller 6; the substr function is older.`,
+			name:        "substr",
+			class:       FUNC_CLASS_STRING,
+			help:        `substr is an alias for substr0. See also substr1. Miller is generally 1-up with all array and string indices, but, this is a backward-compatibility issue with Miller 5 and below. Arrays are new in Miller 6; the substr function is older.`,
 			ternaryFunc: types.MlrvalSubstr0Up,
 		},
 
@@ -647,10 +642,9 @@ and below. Arrays are new in Miller 6; the substr function is older.`,
 		},
 
 		{
-			name:  "invqnorm",
-			class: FUNC_CLASS_MATH,
-			help: `Inverse of normal cumulative distribution function.
-Note that invqorm(urand()) is normally distributed.`,
+			name:      "invqnorm",
+			class:     FUNC_CLASS_MATH,
+			help:      `Inverse of normal cumulative distribution function.  Note that invqorm(urand()) is normally distributed.`,
 			unaryFunc: types.MlrvalInvqnorm,
 		},
 
@@ -676,10 +670,9 @@ Note that invqorm(urand()) is normally distributed.`,
 		},
 
 		{
-			name:  "logifit",
-			class: FUNC_CLASS_MATH,
-			help: ` Given m and b from logistic regression, compute fit:
-$yhat=logifit($x,$m,$b).`,
+			name:        "logifit",
+			class:       FUNC_CLASS_MATH,
+			help:        ` Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).`,
 			ternaryFunc: types.MlrvalLogifit,
 		},
 
@@ -754,18 +747,16 @@ $yhat=logifit($x,$m,$b).`,
 		},
 
 		{
-			name:  "roundm",
-			class: FUNC_CLASS_MATH,
-			help: `Round to nearest multiple of m: roundm($x,$m) is
-the same as round($x/$m)*$m.`,
+			name:       "roundm",
+			class:      FUNC_CLASS_MATH,
+			help:       `Round to nearest multiple of m: roundm($x,$m) is the same as round($x/$m)*$m.`,
 			binaryFunc: types.MlrvalRoundm,
 		},
 
 		{
-			name:  "urand",
-			class: FUNC_CLASS_MATH,
-			help: `Floating-point numbers uniformly distributed on the unit interval.
-Int-valued example: '$n=floor(20+urand()*11)'.`,
+			name:     "urand",
+			class:    FUNC_CLASS_MATH,
+			help:     `Floating-point numbers uniformly distributed on the unit interval.  Int-valued example: '$n=floor(20+urand()*11)'.`,
 			zaryFunc: types.MlrvalUrand,
 		},
 
@@ -801,23 +792,18 @@ Int-valued example: '$n=floor(20+urand()*11)'.`,
 		},
 
 		{
-			name:  "sec2gmt",
-			class: FUNC_CLASS_TIME,
-			help: `Formats seconds since epoch (integer part)
-as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-Leaves non-numbers as-is. With second integer argument n, includes n decimal places
-for the seconds part`,
+			name:               "sec2gmt",
+			class:              FUNC_CLASS_TIME,
+			help:               `Formats seconds since epoch (integer part) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part`,
 			unaryFunc:          types.MlrvalSec2GMTUnary,
 			binaryFunc:         types.MlrvalSec2GMTBinary,
 			hasMultipleArities: true,
 		},
 
 		{
-			name:  "sec2gmtdate",
-			class: FUNC_CLASS_TIME,
-			help: `Formats seconds since epoch (integer part)
-as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
-Leaves non-numbers as-is.`,
+			name:      "sec2gmtdate",
+			class:     FUNC_CLASS_TIME,
+			help:      `Formats seconds since epoch (integer part) as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is.`,
 			unaryFunc: types.MlrvalSec2GMTDate,
 		},
 
@@ -843,25 +829,16 @@ Leaves non-numbers as-is.`,
 		},
 
 		{
-			name:  "strftime",
-			class: FUNC_CLASS_TIME,
-			help: ` Formats seconds since the epoch as timestamp, e.g.
-	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
-	strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
-	Format strings are as in the C library (please see "man strftime" on your system),
-	with the Miller-specific addition of "%1S" through "%9S" which format the seconds
-	with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
-	See also strftime_local.`,
+			name:       "strftime",
+			class:      FUNC_CLASS_TIME,
+			help:       ` Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.`,
 			binaryFunc: types.MlrvalStrftime,
 		},
 
 		{
-			name:  "strptime",
-			class: FUNC_CLASS_TIME,
-			help: `strptime: Parses timestamp as floating-point seconds since the epoch,
-	e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
-	and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
-	See also strptime_local.`,
+			name:       "strptime",
+			class:      FUNC_CLASS_TIME,
+			help:       `strptime: Parses timestamp as floating-point seconds since the epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000, and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.  See also strptime_local.`,
 			binaryFunc: types.MlrvalStrptime,
 		},
 
@@ -1079,154 +1056,135 @@ Leaves non-numbers as-is.`,
 		},
 
 		{
-			name:  "asserting_absent",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_absent on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_absent",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_absent on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingAbsent,
 		},
 
 		{
-			name:  "asserting_array",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_array on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_array",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_array on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingArray,
 		},
 
 		{
-			name:  "asserting_bool",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_bool on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_bool",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_bool on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingBool,
 		},
 
 		{
-			name:  "asserting_boolean",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_boolean on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_boolean",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_boolean on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingBoolean,
 		},
 
 		{
-			name:  "asserting_error",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_error on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_error",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_error on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingError,
 		},
 
 		{
-			name:  "asserting_empty",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_empty on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_empty",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_empty on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingEmpty,
 		},
 
 		{
-			name:  "asserting_empty_map",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_empty_map on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_empty_map",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_empty_map on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingEmptyMap,
 		},
 
 		{
-			name:  "asserting_float",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_float on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_float",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_float on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingFloat,
 		},
 
 		{
-			name:  "asserting_int",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_int on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_int",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_int on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingInt,
 		},
 
 		{
-			name:  "asserting_map",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_map on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_map",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_map on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingMap,
 		},
 
 		{
-			name:  "asserting_nonempty_map",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_nonempty_map on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_nonempty_map",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_nonempty_map on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingNonEmptyMap,
 		},
 
 		{
-			name:  "asserting_not_empty",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_not_empty on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_not_empty",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_not_empty on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingNotEmpty,
 		},
 
 		{
-			name:  "asserting_not_map",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_not_map on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_not_map",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_not_map on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingNotMap,
 		},
 
 		{
-			name:  "asserting_not_array",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_not_array on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_not_array",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_not_array on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingNotArray,
 		},
 
 		{
-			name:  "asserting_not_null",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_not_null on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_not_null",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_not_null on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingNotNull,
 		},
 
 		{
-			name:  "asserting_null",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_null on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_null",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_null on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingNull,
 		},
 
 		{
-			name:  "asserting_numeric",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_numeric on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_numeric",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_numeric on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingNumeric,
 		},
 
 		{
-			name:  "asserting_present",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_present on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_present",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_present on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingPresent,
 		},
 
 		{
-			name:  "asserting_string",
-			class: FUNC_CLASS_TYPING,
-			help: `Aborts with an error if is_string on the argument returns false,
-else returns its argument.`,
+			name:                 "asserting_string",
+			class:                FUNC_CLASS_TYPING,
+			help:                 `Aborts with an error if is_string on the argument returns false, else returns its argument.`,
 			unaryFuncWithContext: types.MlrvalAssertingString,
 		},
 
@@ -1255,10 +1213,9 @@ else returns its argument.`,
 		},
 
 		{
-			name:  "fmtnum",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Convert int/float/bool to string using
-printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.`,
+			name:       "fmtnum",
+			class:      FUNC_CLASS_CONVERSION,
+			help:       `Convert int/float/bool to string using printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.`,
 			binaryFunc: types.MlrvalFmtNum,
 		},
 
@@ -1277,79 +1234,65 @@ printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.`,
 		},
 
 		{
-			name:  "joink",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Makes string from map/array keys. Examples:
-joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
-joink([1,2,3], ",") = "1,2,3".`,
+			name:       "joink",
+			class:      FUNC_CLASS_CONVERSION,
+			help:       `Makes string from map/array keys. Examples: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c" joink([1,2,3], ",") = "1,2,3".`,
 			binaryFunc: types.MlrvalJoinK,
 		},
 
 		{
-			name:  "joinv",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Makes string from map/array values.
-joinv([3,4,5], ",") = "3,4,5"
-joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"`,
+			name:       "joinv",
+			class:      FUNC_CLASS_CONVERSION,
+			help:       `Makes string from map/array values.  joinv([3,4,5], ",") = "3,4,5" joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"`,
 			binaryFunc: types.MlrvalJoinV,
 		},
 
 		{
-			name:  "joinkv",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Makes string from map/array key-value pairs. Examples:
-joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
-joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"`,
+			name:        "joinkv",
+			class:       FUNC_CLASS_CONVERSION,
+			help:        `Makes string from map/array key-value pairs. Examples: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5" joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"`,
 			ternaryFunc: types.MlrvalJoinKV,
 		},
 
 		{
-			name:  "splita",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Splits string into array with type inference. Example:
-splita("3,4,5", ",") = [3,4,5]`,
+			name:       "splita",
+			class:      FUNC_CLASS_CONVERSION,
+			help:       `Splits string into array with type inference. Example: splita("3,4,5", ",") = [3,4,5]`,
 			binaryFunc: types.MlrvalSplitA,
 		},
 
 		{
-			name:  "splitax",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Splits string into array without type inference. Example:
-splita("3,4,5", ",") = ["3","4","5"]`,
+			name:       "splitax",
+			class:      FUNC_CLASS_CONVERSION,
+			help:       `Splits string into array without type inference. Example: splita("3,4,5", ",") = ["3","4","5"]`,
 			binaryFunc: types.MlrvalSplitAX,
 		},
 
 		{
-			name:  "splitkv",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Splits string by separators into map with type inference. Example:
-splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}`,
+			name:        "splitkv",
+			class:       FUNC_CLASS_CONVERSION,
+			help:        `Splits string by separators into map with type inference. Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}`,
 			ternaryFunc: types.MlrvalSplitKV,
 		},
 
 		{
-			name:  "splitkvx",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Splits string by separators into map without type inference (keys and
-values are strings). Example:
-splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
+			name:        "splitkvx",
+			class:       FUNC_CLASS_CONVERSION,
+			help:        `Splits string by separators into map without type inference (keys and values are strings). Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
 			ternaryFunc: types.MlrvalSplitKVX,
 		},
 
 		{
-			name:  "splitnv",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Splits string by separator into integer-indexed map with type inference. Example:
-splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}`,
+			name:       "splitnv",
+			class:      FUNC_CLASS_CONVERSION,
+			help:       `Splits string by separator into integer-indexed map with type inference. Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}`,
 			binaryFunc: types.MlrvalSplitNV,
 		},
 
 		{
-			name:  "splitnvx",
-			class: FUNC_CLASS_CONVERSION,
-			help: `Splits string by separator into integer-indexed map without type
-inference (values are strings). Example:
-splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
+			name:       "splitnvx",
+			class:      FUNC_CLASS_CONVERSION,
+			help:       `Splits string by separator into integer-indexed map without type inference (values are strings). Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 			binaryFunc: types.MlrvalSplitNVX,
 		},
 
@@ -1386,13 +1329,9 @@ splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 		},
 
 		{
-			name:  "flatten",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `Flattens multi-level maps to single-level ones. Examples:
-flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
-flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
-Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
-Useful for nested JSON-like structures for non-JSON file formats like CSV.`,
+			name:               "flatten",
+			class:              FUNC_CLASS_COLLECTIONS,
+			help:               `Flattens multi-level maps to single-level ones. Examples: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.  flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.  Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).  Useful for nested JSON-like structures for non-JSON file formats like CSV.`,
 			binaryFunc:         types.MlrvalFlattenBinary,
 			ternaryFunc:        types.MlrvalFlatten,
 			hasMultipleArities: true,
@@ -1413,11 +1352,9 @@ Useful for nested JSON-like structures for non-JSON file formats like CSV.`,
 		},
 
 		{
-			name:  "haskey",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
-'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
-Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.`,
+			name:       "haskey",
+			class:      FUNC_CLASS_COLLECTIONS,
+			help:       `True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.  Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.`,
 			binaryFunc: types.MlrvalHasKey,
 		},
 
@@ -1428,20 +1365,18 @@ Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller
 			unaryFunc: types.MlrvalJSONParse,
 		},
 		{
-			name:  "json_stringify",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `Converts value to JSON-formatted string. Default output is single-line.
-With optional second boolean argument set to true, produces multiline output.`,
+			name:               "json_stringify",
+			class:              FUNC_CLASS_COLLECTIONS,
+			help:               `Converts value to JSON-formatted string. Default output is single-line.  With optional second boolean argument set to true, produces multiline output.`,
 			unaryFunc:          types.MlrvalJSONStringifyUnary,
 			binaryFunc:         types.MlrvalJSONStringifyBinary,
 			hasMultipleArities: true,
 		},
 
 		{
-			name:  "leafcount",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `Counts total number of terminal values in map/array. For single-level
-map/array, same as length.`,
+			name:      "leafcount",
+			class:     FUNC_CLASS_COLLECTIONS,
+			help:      `Counts total number of terminal values in map/array. For single-level map/array, same as length.`,
 			unaryFunc: types.MlrvalLeafCount,
 		},
 
@@ -1453,52 +1388,39 @@ map/array, same as length.`,
 		},
 
 		{
-			name:  "mapdiff",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `With 0 args, returns empty map. With 1 arg, returns copy of arg.
-With 2 or more, returns copy of arg 1 with all keys from any of remaining
-argument maps removed.`,
+			name:         "mapdiff",
+			class:        FUNC_CLASS_COLLECTIONS,
+			help:         `With 0 args, returns empty map. With 1 arg, returns copy of arg.  With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.`,
 			variadicFunc: types.MlrvalMapDiff,
 		},
 
 		{
-			name:  "mapexcept",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `Returns a map with keys from remaining arguments, if any, unset.
-Remaining arguments can be strings or arrays of string.
-E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
-and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
+			name:                 "mapexcept",
+			class:                FUNC_CLASS_COLLECTIONS,
+			help:                 `Returns a map with keys from remaining arguments, if any, unset.  Remaining arguments can be strings or arrays of string.  E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}' and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
 			variadicFunc:         types.MlrvalMapExcept,
 			minimumVariadicArity: 1,
 		},
 
 		{
-			name:  "mapselect",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `Returns a map with only keys from remaining arguments set.
-Remaining arguments can be strings or arrays of string.
-E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
-and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
+			name:                 "mapselect",
+			class:                FUNC_CLASS_COLLECTIONS,
+			help:                 `Returns a map with only keys from remaining arguments set.  Remaining arguments can be strings or arrays of string.  E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}' and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
 			variadicFunc:         types.MlrvalMapSelect,
 			minimumVariadicArity: 1,
 		},
 
 		{
-			name:  "mapsum",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `With 0 args, returns empty map. With >= 1 arg, returns a map with
-key-value pairs from all arguments. Rightmost collisions win, e.g.
-'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.`,
+			name:         "mapsum",
+			class:        FUNC_CLASS_COLLECTIONS,
+			help:         `With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g.  'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.`,
 			variadicFunc: types.MlrvalMapSum,
 		},
 
 		{
-			name:  "unflatten",
-			class: FUNC_CLASS_COLLECTIONS,
-			help: `Reverses flatten. Example:
-unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
-Useful for nested JSON-like structures for non-JSON file formats like CSV.
-See also arrayify.`,
+			name:       "unflatten",
+			class:      FUNC_CLASS_COLLECTIONS,
+			help:       `Reverses flatten. Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.  Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.`,
 			binaryFunc: types.MlrvalUnflatten,
 		},
 

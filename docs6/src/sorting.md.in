@@ -1,34 +1,211 @@
 # Sorting
 
-## TBD
+Miller gives you three ways to sort your data:
 
-* `sort` verb is the mainstay with doclink.
-* one use of the DSL sort functions is for sorting values on a per-record basis.
-* another is for operating-on-all-records (with link).
-    * TODO: put an example/link there
+* The [`sort`](reference-verbs.md#sort) verb lets you sort records (rows) by various fields (columns).
+* The [`sort-within-records`](reference-verbs.md#sort-within-records) verb lets you sort fields within records.
+* The [`sorta`](reference-dsl-builtin-functions.md#sorta), [`sortmk`](reference-dsl-builtin-functions.md#sortmk), [`sortaf`](reference-dsl-builtin-functions.md#sortaf), and [`sortmf`](reference-dsl-builtin-functions.md#sortmf) DSL functions give you more customizable options for sorting data either within fields, or, across records.
 
-## Sorting fields within records
+## Sorting records: the sort verb
 
-xxx verb link
+The `sort` verb (see [its documentation](reference-verbs.md#sort) for more
+information) reorders entire records within the data stream. You can sort
+lexically (with or without case-folding) or numerically, ascending or
+descending; and you can sort primary by one column, then secondarily by
+another, etc.
 
-xxx examples
+Input data:
 
-## Sorting records
+GENMD_RUN_COMMAND
+mlr --c2p cat example.csv
+GENMD_EOF
 
-xxx verb link
+Sorted numerically ascending by rate:
 
-xxx example
+GENMD_RUN_COMMAND
+mlr --c2p sort -n rate example.csv
+GENMD_EOF
 
-## TBF
+Sorted lexically ascending by color; then, within each color, numerically descending by quantity:
 
-```
-mlr --from s --ojson put '
+GENMD_RUN_COMMAND
+mlr --c2p sort -f color -nr quantity example.csv
+GENMD_EOF
+
+## Sorting fields within records: the sort-within-records verb
+
+The `sort-within-records` verb (see [its
+documentation](reference-verbs.md#sort-within-records) for more information)
+leaves records in their original order in the data stream, but reorders fields
+within each record. A typical use-case is for given all records the same column-ordering,
+in particular for converting JSON to CSV (or other tabular formats):
+
+GENMD_RUN_COMMAND
+cat data/sort-within-records.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --opprint cat data/sort-within-records.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --ijson --opprint sort-within-records data/sort-within-records.json
+GENMD_EOF
+
+## Simple sorting of arrays: the sorta function
+
+Using the [`sorta`](reference-dsl-builtin-functions.md#sorta) function, you can
+get a copy of an array, sorted by its values -- optionally, with reversed
+order, and/or lexical/case-folded sorting. The first argument is an array to be
+sorted. The optional second argument is a string containing any of the
+characters `n` for numeric (the default anyway), `f` for lexical, or `c` for
+case-folded lexical, and `r` for reverse.  Note that `sorta` does not modify
+its argument; it returns a sorted copy.
+
+Also note that all the flags to `sorta` allow you to operate on arrays which
+contain strings, floats, and booleans; if you need to sort an array whose
+values are themselves maps or arrays, you'll need `sortaf` as described further
+down in this page.
+
+GENMD_RUN_COMMAND
+cat data/sorta-example.csv
+GENMD_EOF
+
+Default sort is numerical ascending:
+
+GENMD_RUN_COMMAND
+mlr --c2p --from data/sorta-example.csv put '
+  $values = splita($values, ";");
+  $values = sorta($values);        # default flags
+  $values = joinv($values, ";");
+'
+GENMD_EOF
+
+Use the `"r"` flag for reverse, which is numerical descending:
+
+GENMD_RUN_COMMAND
+mlr --c2p --from data/sorta-example.csv put '
+  $values = splita($values, ";");
+  $values = sorta($values, "r");   # 'r' flag for reverse sort
+  $values = joinv($values, ";");
+'
+GENMD_EOF
+
+Use the `"f"` flag for lexical ascending sort (and `"fr"` would lexical descending):
+
+GENMD_RUN_COMMAND
+mlr --c2p --from data/sorta-example.csv put '
+  $values = splita($values, ";");
+  $values = sorta($values, "f");   # 'f' flag for lexical sort
+  $values = joinv($values, ";");
+'
+GENMD_EOF
+
+Without and with case-folding:
+
+GENMD_RUN_COMMAND
+cat data/sorta-example-text.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from data/sorta-example-text.csv put '
+  $values = splita($values, ";");
+  if (NR == 1) {
+    $values = sorta($values, "f"); # 'f' flag for (non-folded) lexical sort
+  } else {
+    $values = sorta($values, "c"); # 'c' flag for case-folded lexical sort
+  }
+  $values = joinv($values, ";");
+'
+GENMD_EOF
+
+## Simple sorting of maps within records: the sortmk function
+
+Using the [`sortmk`](reference-dsl-builtin-functions.md#sortmk) function, you
+can sort a map by its keys -- using the same flags as for `sorta` for
+lexical/case-folded sorting and/or reverse.
+
+Since `sortmk` only gives you options for sorting a map by its keys, if you
+want to sort a map by its values you'll need `sortmf` as described further down
+in this page.
+
+Also note that, unlike the `sort-within-record` verb with its `-r` flag,
+`sortmk` doesn't recurse into submaps and sort those.
+
+GENMD_RUN_COMMAND
+cat data/server-log.json
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --json --from data/server-log.json put '
+  $req = sortmk($req);      # Ascending here
+  $res = sortmk($res, "r"); # Descending here
+'
+GENMD_EOF
+
+## Simple sorting of maps across records using the sortmk function
+
+As discussed in the page on
+[operating on all records](operating-on-all-records.md), while Miller is normally
+[streaming](streaming-and-memory.md) (we operate on one record at a time), we
+can accumulate records in an array-valued or map-valued
+[out-of-stream variable](reference-dsl-variables.md#out-of-stream-variables),
+then operate on that record-list in an `end` block. This includes the possibility
+of accumulating records in a map, then sorting the map.
+
+Using the `f` flag we're sorting the map keys (1-up NR) lexically, so we
+have 1, then 10, then 2:
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint --from example.csv put -q '
+  begin {
+    @records = {};  # Define as a map
+  }
+  $nr = NR;
+  @records[NR] = $*; # Accumulate
+  end {
+    @records = sortmk(@records, "f");
+    for (_, record in @records) {
+      emit record;
+    }
+  }
+'
+GENMD_EOF
+
+## Custom sorting of arrays within records: the sortaf function
+
+Using the [`sortaf`](reference-dsl-builtin-functions.md#sortaf) function, you
+can sort an array by its values, using another function (which you specify --
+see the [page on user-defined functions](reference-dsl-user-defined-functions.md))
+for comparing elements.
+
+* Your function must take two arguments, which will range over various pairs of values in your array;
+* It must return a number which is negative, zero, or positive depending on whether you want the first argument to sort less than, equal to, or greater than the second, respectively.
+
+For example, let's use the following input data. Instead of having an array, it
+has some semicolon-delimited data in a field which we can split and sort:
+
+GENMD_RUN_COMMAND
+cat data/sortaf-example.csv
+GENMD_EOF
+
+In the following example we sort data in several ways -- the first two just
+recaptiulate (for reference) what `sorta` already does; the third is novel:
+
+GENMD_RUN_COMMAND
+mlr --icsv --ojson --from data/sortaf-example.csv put '
+
+  # Same as sorta($values)
   func forward(a,b) {
     return a <=> b
   }
+
+  # Same as sorta($values, "r")
   func reverse(a,b) {
     return b <=> a
   }
+
+  # Custom sort
   func even_then_odd(a,b) {
     ax = a % 2;
     bx = b % 2;
@@ -40,53 +217,72 @@ mlr --from s --ojson put '
       return 1
     }
   }
-  $aa = sortaf([5,2,4,1,3], "forward");
-  $bb = sortaf([5,2,4,1,3], "reverse");
-  $cc = sortaf([$a, $b],  "forward");
-  $dd = sortaf([$a, $b],  "reverse");
-  $ee = sortaf([7, 0, 4, 2, 1, 9, 3, 8, 6, 5], "even_then_odd")
+
+  split_values = splita($values, ";");
+  $forward = sortaf(split_values, "forward");
+  $reverse = sortaf(split_values, "reverse");
+  $even_then_odd = sortaf(split_values, "even_then_odd");
 '
-```
+GENMD_EOF
 
-docpg: sort-in-row as well as sort-records-at-end.
+## Custom sorting of arrays across records using the sortaf function
 
-* why call-UDF-by-name (no 1st-class for now, too much work -- so sortaf(a, "f") not sortaf(a, f))
+As noted above, we can use the
+[operating-on-all-records](operating-on-all-records.md) paradigm
+to accumulate records in an array-valued or map-valued
+[out-of-stream variable](reference-dsl-variables.md#out-of-stream-variables),
+then operate on that record-list in an `end` block. This includes the possibility
+of accumulating records in an array, then sorting the array.
 
-also: example for sortaf/sortmf of structs ...
+Note that here the array elements are maps, so the `a` and `b` arguments to our
+functions are maps -- and we have to access the `index` field using either
+`a["index"]` and `b["index"]`, or (using the [dot operator for
+indexing](reference-dsl-operators.md#the-double-purpose-dot-operator))
+`a.index` and `b.index`.
 
-## TBD
-
-```
-mlr --opprint --from s put -q '
+GENMD_RUN_COMMAND
+mlr --icsv --opprint --from example.csv put -q '
+  # Sort descending numeric on the index field
+  func f(a, b) {
+    return b.index <=> a.index;
+  }
   begin {
-    @records = []
+    @records = [];  # Define as an array, else auto-create will make a map
   }
-  func f(a,b) {
-    return a.x+a.y <=> b.x+b.y
-  }
-
-  @records[NR] = $*;
+  @records[NR] = $*; # Accumulate
   end {
     @records = sortaf(@records, "f");
-    for (_, record in @records) {
+    for (record in @records) {
       emit record;
     }
   }
-' then put '$z=$x+$y'
-```
+'
+GENMD_EOF
 
-```
+## Custom sorting of maps within records: the sortmf function
+
+Using the [`sortmf`](reference-dsl-builtin-functions.md#sortmf) function, you
+can sort a map using a function which you specify (see the [page on
+user-defined functions](reference-dsl-user-defined-functions.md)) for comparing
+keys and/or values.
+
+* Your function must take four arguments, which will range over various pairs of key-value pairs in your map;
+* It must return a number which is negative, zero, or positive depending on whether you want the first argument to sort less than, equal to, or greater than the second, respectively.
+
+For example, we can sort ascending or descending by map key or map value:
+
+GENMD_RUN_COMMAND
 mlr -n put -q '
-  func f1(ak,av,bk,bv) {
+  func f1(ak, av, bk, bv) {
     return ak <=> bk
   }
-  func f2(ak,av,bk,bv) {
+  func f2(ak, av, bk, bv) {
     return bk <=> ak
   }
-  func f3(ak,av,bk,bv) {
+  func f3(ak, av, bk, bv) {
     return av <=> bv
   }
-  func f4(ak,av,bk,bv) {
+  func f4(ak, av, bk, bv) {
     return bv <=> av
   }
   end {
@@ -95,7 +291,6 @@ mlr -n put -q '
       "a":3,
       "b":2,
     };
-    dump x;
 
     print sortmf(x, "f1");
     print sortmf(x, "f2");
@@ -103,4 +298,40 @@ mlr -n put -q '
     print sortmf(x, "f4");
   }
 '
-```
+GENMD_EOF
+
+## Custom sorting of maps across records using the sortmf function
+
+We can modify our above example just a bit, where we accumulate records in a map rather than
+an array. Here the map keys will be `NR` values `"1"`, `"2"`, etc.
+
+Why would we do this? When we're operating across all records and keeping all
+of them -- densely -- accumulating them in an array is fine. If we're only
+taking a subset -- sparsely -- and we want to retain the original `NR` as keys,
+using a map is handy, since we don't need continguous keys.
+
+GENMD_RUN_COMMAND
+mlr --icsv --opprint --from example.csv put -q '
+  # Sort descending numeric on the index field
+  func f(ak, av, bk, bv) {
+    return bv.index <=> av.index
+  }
+  begin {
+    @records = {};  # Define as a map
+  }
+  @records[NR] = $*; # Accumulate
+  end {
+    @records = sortmf(@records, "f");
+    for (_, record in @records) {
+      emit record;
+    }
+  }
+'
+GENMD_EOF
+
+## A note on function names for sortaf and sortmf
+
+In many programming languages, we'd have not `sorta(myarray, "myfunc")` but
+rather `sorta(myarray, myfunc)`. In these languages, functions are _first-class
+objects_ and can be assigned to variables. In Miller (as of September 2021)
+they are not -- although that is a laudable goal for someday.

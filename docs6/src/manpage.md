@@ -1801,80 +1801,61 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) Inverse hyperbolic sine.
 
    asserting_absent
-        (class=typing #args=1) Aborts with an error if is_absent on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_absent on the argument returns false, else returns its argument.
 
    asserting_array
-        (class=typing #args=1) Aborts with an error if is_array on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_array on the argument returns false, else returns its argument.
 
    asserting_bool
-        (class=typing #args=1) Aborts with an error if is_bool on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_bool on the argument returns false, else returns its argument.
 
    asserting_boolean
-        (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_boolean on the argument returns false, else returns its argument.
 
    asserting_empty
-        (class=typing #args=1) Aborts with an error if is_empty on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_empty on the argument returns false, else returns its argument.
 
    asserting_empty_map
-        (class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_empty_map on the argument returns false, else returns its argument.
 
    asserting_error
-        (class=typing #args=1) Aborts with an error if is_error on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_error on the argument returns false, else returns its argument.
 
    asserting_float
-        (class=typing #args=1) Aborts with an error if is_float on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_float on the argument returns false, else returns its argument.
 
    asserting_int
-        (class=typing #args=1) Aborts with an error if is_int on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_int on the argument returns false, else returns its argument.
 
    asserting_map
-        (class=typing #args=1) Aborts with an error if is_map on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_map on the argument returns false, else returns its argument.
 
    asserting_nonempty_map
-        (class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_nonempty_map on the argument returns false, else returns its argument.
 
    asserting_not_array
-        (class=typing #args=1) Aborts with an error if is_not_array on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_not_array on the argument returns false, else returns its argument.
 
    asserting_not_empty
-        (class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_not_empty on the argument returns false, else returns its argument.
 
    asserting_not_map
-        (class=typing #args=1) Aborts with an error if is_not_map on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_not_map on the argument returns false, else returns its argument.
 
    asserting_not_null
-        (class=typing #args=1) Aborts with an error if is_not_null on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_not_null on the argument returns false, else returns its argument.
 
    asserting_null
-        (class=typing #args=1) Aborts with an error if is_null on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_null on the argument returns false, else returns its argument.
 
    asserting_numeric
-        (class=typing #args=1) Aborts with an error if is_numeric on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_numeric on the argument returns false, else returns its argument.
 
    asserting_present
-        (class=typing #args=1) Aborts with an error if is_present on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_present on the argument returns false, else returns its argument.
 
    asserting_string
-        (class=typing #args=1) Aborts with an error if is_string on the argument returns false,
-       else returns its argument.
+        (class=typing #args=1) Aborts with an error if is_string on the argument returns false, else returns its argument.
 
    atan
         (class=math #args=1) One-argument arctangent.
@@ -1934,11 +1915,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) e**x - 1.
 
    flatten
-        (class=collections #args=3) Flattens multi-level maps to single-level ones. Examples:
-       flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
-       flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
-       Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
-       Useful for nested JSON-like structures for non-JSON file formats like CSV.
+        (class=collections #args=3) Flattens multi-level maps to single-level ones. Examples: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.  flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.  Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).  Useful for nested JSON-like structures for non-JSON file formats like CSV.
 
    float
         (class=conversion #args=1) Convert int/float/bool/string to float.
@@ -1947,8 +1924,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) Floor: nearest integer at or below.
 
    fmtnum
-        (class=conversion #args=2) Convert int/float/bool to string using
-       printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
+        (class=conversion #args=2) Convert int/float/bool to string using printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
 
    fsec2dhms
         (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
@@ -1969,9 +1945,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
 
    haskey
-        (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
-       'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.
-       Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
+        (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.  Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
 
    hexfmt
         (class=conversion #args=1) Convert int to hex string, e.g. 255 to "0xff".
@@ -1989,8 +1963,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=conversion #args=1) Convert int/float/bool/string to int.
 
    invqnorm
-        (class=math #args=1) Inverse of normal cumulative distribution function.
-       Note that invqorm(urand()) is normally distributed.
+        (class=math #args=1) Inverse of normal cumulative distribution function.  Note that invqorm(urand()) is normally distributed.
 
    is_absent
         (class=typing #args=1) False if field is present in input, true otherwise
@@ -2050,30 +2023,22 @@ FUNCTIONS FOR FILTER/PUT
         (class=typing #args=1) True if field is present with string (including empty-string) value
 
    joink
-        (class=conversion #args=2) Makes string from map/array keys. Examples:
-       joink({"a":3,"b":4,"c":5}, ",") = "a,b,c"
-       joink([1,2,3], ",") = "1,2,3".
+        (class=conversion #args=2) Makes string from map/array keys. Examples: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c" joink([1,2,3], ",") = "1,2,3".
 
    joinkv
-        (class=conversion #args=3) Makes string from map/array key-value pairs. Examples:
-       joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
-       joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+        (class=conversion #args=3) Makes string from map/array key-value pairs. Examples: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5" joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 
    joinv
-        (class=conversion #args=2) Makes string from map/array values.
-       joinv([3,4,5], ",") = "3,4,5"
-       joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
+        (class=conversion #args=2) Makes string from map/array values.  joinv([3,4,5], ",") = "3,4,5" joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 
    json_parse
         (class=collections #args=1) Converts value from JSON-formatted string.
 
    json_stringify
-        (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line.
-       With optional second boolean argument set to true, produces multiline output.
+        (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line.  With optional second boolean argument set to true, produces multiline output.
 
    leafcount
-        (class=collections #args=1) Counts total number of terminal values in map/array. For single-level
-       map/array, same as length.
+        (class=collections #args=1) Counts total number of terminal values in map/array. For single-level map/array, same as length.
 
    length
         (class=collections #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
@@ -2088,8 +2053,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) log(1-x).
 
    logifit
-        (class=math #args=3)  Given m and b from logistic regression, compute fit:
-       $yhat=logifit($x,$m,$b).
+        (class=math #args=3)  Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).
 
    lstrip
         (class=string #args=1) Strip leading whitespace from string.
@@ -2098,26 +2062,16 @@ FUNCTIONS FOR FILTER/PUT
         (class=arithmetic #args=3) a + b mod m (integers)
 
    mapdiff
-        (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.
-       With 2 or more, returns copy of arg 1 with all keys from any of remaining
-       argument maps removed.
+        (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.  With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
 
    mapexcept
-        (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset.
-       Remaining arguments can be strings or arrays of string.
-       E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
-       and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
+        (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset.  Remaining arguments can be strings or arrays of string.  E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}' and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
 
    mapselect
-        (class=collections #args=variadic) Returns a map with only keys from remaining arguments set.
-       Remaining arguments can be strings or arrays of string.
-       E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'
-       and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
+        (class=collections #args=variadic) Returns a map with only keys from remaining arguments set.  Remaining arguments can be strings or arrays of string.  E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}' and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
 
    mapsum
-        (class=collections #args=variadic) With 0 args, returns empty map. With &gt;= 1 arg, returns a map with
-       key-value pairs from all arguments. Rightmost collisions win, e.g.
-       'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
+        (class=collections #args=variadic) With 0 args, returns empty map. With &gt;= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g.  'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 
    max
         (class=math #args=variadic) Max of n numbers; null loses.
@@ -2156,8 +2110,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) Round to nearest integer.
 
    roundm
-        (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is
-       the same as round($x/$m)*$m.
+        (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is the same as round($x/$m)*$m.
 
    rstrip
         (class=string #args=1) Strip trailing whitespace from string.
@@ -2166,15 +2119,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
 
    sec2gmt
-        (class=time #args=1,2) Formats seconds since epoch (integer part)
-       as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-       Leaves non-numbers as-is. With second integer argument n, includes n decimal places
-       for the seconds part
+        (class=time #args=1,2) Formats seconds since epoch (integer part) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
 
    sec2gmtdate
-        (class=time #args=1) Formats seconds since epoch (integer part)
-       as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
-       Leaves non-numbers as-is.
+        (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is.
 
    sec2hms
         (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
@@ -2210,30 +2158,22 @@ FUNCTIONS FOR FILTER/PUT
         (class=collections #args=1-2) Returns a copy of a map, sorted ascending by map key. Coming soon: other sort options.
 
    splita
-        (class=conversion #args=2) Splits string into array with type inference. Example:
-       splita("3,4,5", ",") = [3,4,5]
+        (class=conversion #args=2) Splits string into array with type inference. Example: splita("3,4,5", ",") = [3,4,5]
 
    splitax
-        (class=conversion #args=2) Splits string into array without type inference. Example:
-       splita("3,4,5", ",") = ["3","4","5"]
+        (class=conversion #args=2) Splits string into array without type inference. Example: splita("3,4,5", ",") = ["3","4","5"]
 
    splitkv
-        (class=conversion #args=3) Splits string by separators into map with type inference. Example:
-       splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
+        (class=conversion #args=3) Splits string by separators into map with type inference. Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 
    splitkvx
-        (class=conversion #args=3) Splits string by separators into map without type inference (keys and
-       values are strings). Example:
-       splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
+        (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings). Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 
    splitnv
-        (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example:
-       splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
+        (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 
    splitnvx
-        (class=conversion #args=2) Splits string by separator into integer-indexed map without type
-       inference (values are strings). Example:
-       splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
+        (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings). Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 
    sqrt
         (class=math #args=1) Square root.
@@ -2242,13 +2182,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=string #args=3) Like sub but does no regexing. No characters are special.
 
    strftime
-        (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.
-            strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
-            strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
-            Format strings are as in the C library (please see "man strftime" on your system),
-            with the Miller-specific addition of "%1S" through "%9S" which format the seconds
-            with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
-            See also strftime_local.
+        (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
 
    string
         (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
@@ -2260,26 +2194,19 @@ FUNCTIONS FOR FILTER/PUT
         (class=string #args=1) String length.
 
    strptime
-        (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch,
-            e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
-            and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
-            See also strptime_local.
+        (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000, and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.  See also strptime_local.
 
    sub
         (class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace once).
 
    substr
-        (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up
-       with all array and string indices, but, this is a backward-compatibility issue with Miller 5
-       and below. Arrays are new in Miller 6; the substr function is older.
+        (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up with all array and string indices, but, this is a backward-compatibility issue with Miller 5 and below. Arrays are new in Miller 6; the substr function is older.
 
    substr0
-        (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n
-       inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.
+        (class=string #args=3) substr0(s,m,n) gives substring of s from 0-up position m to n inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.
 
    substr1
-        (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n
-       inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.
+        (class=string #args=3) substr1(s,m,n) gives substring of s from 1-up position m to n inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.
 
    system
         (class=system #args=1) Run command string, yielding its stdout minus final carriage return.
@@ -2309,17 +2236,13 @@ FUNCTIONS FOR FILTER/PUT
         (class=typing #args=1) Convert argument to type of argument (e.g. "str"). For debug.
 
    unflatten
-        (class=collections #args=2) Reverses flatten. Example:
-       unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
-       Useful for nested JSON-like structures for non-JSON file formats like CSV.
-       See also arrayify.
+        (class=collections #args=2) Reverses flatten. Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.  Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
 
    uptime
         (class=time #args=0) help string will go here
 
    urand
-        (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
-       Int-valued example: '$n=floor(20+urand()*11)'.
+        (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.  Int-valued example: '$n=floor(20+urand()*11)'.
 
    urand32
         (class=math #args=0) Integer uniformly distributed 0 and 2**32-1 inclusive.
@@ -2436,8 +2359,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=boolean #args=2) Logical OR.
 
    ~
-        (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the
-       regex-match operator: try '$y = ~$x'.
+        (class=arithmetic #args=1) Bitwise NOT. Beware '$y=~$x' since =~ is the regex-match operator: try '$y = ~$x'.
 
 KEYWORDS FOR PUT AND FILTER
    all
@@ -2814,5 +2736,5 @@ SEE ALSO
 
 
 
-                                  2021-09-18                         MILLER(1)
+                                  2021-09-19                         MILLER(1)
 </pre>

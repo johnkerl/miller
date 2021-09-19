@@ -18,6 +18,7 @@ for name in $names; do
   fi
   # The filename is used for link-generation; file contents
   # are read from standard input.
-  ./genmd-filter $name.md.in < $name.md.in > $name.md
+  ./genmd-filter $name.md.in < $name.md.in > /tmp/$name.md.tmp
+  mv /tmp/$name.md.tmp $name.md
   chmod 400 $name.md
 done
