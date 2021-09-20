@@ -24,6 +24,7 @@ import (
 	"compress/bzip2"
 	"compress/gzip"
 	"compress/zlib"
+	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -219,5 +220,73 @@ func IsEOF(err error) bool {
 		return true
 	} else {
 		return false
+	}
+}
+
+// ----------------------------------------------------------------
+// Functions for in-place mode
+
+// IsUpdateableInPlace tells if we can use the input with mlr -I: not for URLs,
+// and not for prepipe commands (which we don't presume to know how to invert
+// for output).
+func IsUpdateableInPlace(
+	filename string,
+	prepipe string,
+) error {
+	if strings.HasPrefix(filename, "http://") ||
+		strings.HasPrefix(filename, "https://") ||
+		strings.HasPrefix(filename, "file://") {
+		return errors.New("http://, https://, and file:// URLs are not updateable in place.")
+	}
+	if prepipe != "" {
+		return errors.New("input with --prepipe or --prepipex is not updateable in place.")
+	}
+	return nil
+}
+
+// FindInputEncoding determines the input encoding (compression), whether from
+// a flag like --gzin, or from filename suffix like ".gz".  If the user did
+// --gzin on the command line, TFileInputEncoding will be
+// FileInputEncodingGzip.  If they didn't, but the filename ends in ".gz", then
+// we auto-infer FileInputEncodingGzip.  Either way, this function tells if we
+// will be using in-process decompression within the file-format-specific
+// record reader.
+func FindInputEncoding(
+	filename string,
+	inputFileInputEncoding TFileInputEncoding,
+) TFileInputEncoding {
+	if inputFileInputEncoding != FileInputEncodingDefault {
+		return inputFileInputEncoding
+	}
+	if strings.HasSuffix(filename, ".bz2") {
+		return FileInputEncodingBzip2
+	}
+	if strings.HasSuffix(filename, ".gz") {
+		return FileInputEncodingGzip
+	}
+	if strings.HasSuffix(filename, ".z") {
+		return FileInputEncodingZlib
+	}
+	return FileInputEncodingDefault
+}
+
+// WrapOutputHandle wraps a file-write handle with a decompressor.  The first
+// return value is the wrapped handle. The second is true if the returned
+// handle needs to be closed separately from the original.  The third is for
+// in-process compression we can't undo: namely, as of September 2021 the gzip
+// and zlib libraries support write-closers, but the bzip2 library does not.
+func WrapOutputHandle(
+	fileWriteHandle io.WriteCloser,
+	inputFileEncoding TFileInputEncoding,
+) (io.WriteCloser, bool, error) {
+	switch inputFileEncoding {
+	case FileInputEncodingBzip2:
+		return fileWriteHandle, false, errors.New("bzip2 is not currently supported for in-place mode.")
+	case FileInputEncodingGzip:
+		return gzip.NewWriter(fileWriteHandle), true, nil
+	case FileInputEncodingZlib:
+		return zlib.NewWriter(fileWriteHandle), true, nil
+	default:
+		return fileWriteHandle, false, nil
 	}
 }

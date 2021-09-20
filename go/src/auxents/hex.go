@@ -28,7 +28,7 @@ import (
 
 // ----------------------------------------------------------------
 func hexUsage(verbName string, o *os.File, exitCode int) {
-	fmt.Fprintf(o, "Usage: %s %s [options] {zero or more file names}\n", mlrExeName(), verbName)
+	fmt.Fprintf(o, "Usage: mlr %s [options] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Simple hex-dump.\n")
 	fmt.Fprintf(o, "If zero file names are supplied, standard input is read.\n")
 	fmt.Fprintf(o, "Options:\n")

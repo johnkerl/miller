@@ -2,18 +2,26 @@
 ! try to godoc a few functions on every commit ... accumulate over time ...
   - particular focus on -----$ etc
 ? godoc -> publish at jko -- ? in kitchen-sink builder -- ?
+  godoc -http=:6060 -goroot .
+  cd ~/tmp/bar
+  wget -p -k http://localhost:6060/pkg
+  mv localhost:6060 miller6
+  file:///Users/kerl/tmp/bar/miller6/pkg
+
+! http reader -- new-in-miller-6
+
+? twi-dm re all-contribs: all-contributors.org
+* nikos materials -> fold in
 
 c array+string slice UTs
 ? nidx no output-coloring?
 
 C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
-C fix -I + auto-decompress
 
-? twi-dm re all-contribs: all-contributors.org
-* nikos materials -> fold in
+* r-strings branch!
+C stats1 --fr
 
 ----------------------------------------------------------------
-* r-strings branch!
 * deduping pass!
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
 
@@ -30,6 +38,7 @@ c! seps \001 etc !
   mlr  --iusv --oxtab cat regtest/input/example.usv
 
 o check for determinism regtest/cases/verb-join-prepipe/0003/cmd
+* UT for https://github.com/johnkerl/miller/issues/653
 
 ----------------------------------------------------------------
 

@@ -3,6 +3,7 @@ package stream
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 
 	"mlr/src/cli"
@@ -33,7 +34,7 @@ func Stream(
 	fileNames []string,
 	options cli.TOptions,
 	recordTransformers []transformers.IRecordTransformer,
-	outputStream *os.File,
+	outputStream io.WriteCloser,
 	outputIsStdout bool,
 ) error {
 

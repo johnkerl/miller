@@ -23,6 +23,12 @@ By default, Miller output goes to the screen (or you can redirect a file using `
 Since this replaces your data with modified data, it's often a good idea to back up your original files somewhere
 first, to protect against keystroking errors.
 
-TODO: fix the combination of `-I` and compressed input.
+Situations in which the input can't be updated in place:
+
+* If the input file is a URL of the form `http://...`, `https://...`, or `file://...`.
+* If a [`--prepipe` or `--prepipex` flag](reference-main-compressed-data.md#external-decompressors-on-input) is being used.
+* If [in-place compression](reference-main-compressed-data.md) is being used and the format is BZIP2. For technical reasons, this can't be recompressed in place. (GZIP and ZLIB, however, are recompressable in place).
+
+Additional note: `gzip` supports various compression levels, from 1 to 9. If you do `mlr -I ... yourfile.gz` then Miller will produce compressed output using GZIP, but, it makes no attempt to determine, or mimic, the original compression level of the input.
 
 Please see [Choices for printing to files](10min.md#choices-for-printing-to-files) for examples.

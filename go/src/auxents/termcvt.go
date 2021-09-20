@@ -10,7 +10,7 @@ import (
 
 // ================================================================
 func termcvtUsage(verbName string, o *os.File, exitCode int) {
-	fmt.Fprintf(o, "Usage: %s %s [option] {zero or more file names}\n", mlrExeName(), verbName)
+	fmt.Fprintf(o, "Usage: mlr %s [option] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Option (exactly one is required):\n")
 	fmt.Fprintf(o, "--cr2crlf\n")
 	fmt.Fprintf(o, "--lf2crlf\n")

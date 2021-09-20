@@ -61,6 +61,28 @@ exceptions.  See [Miller on Windows](miller-on-windows.md) for more information.
 
 Binaries are reliably available using GitHub Actions: see also [Installation](installation.md).
 
+## Support for reading web URLs
+
+You can read input with prefixes `https://`, `http://`, and `file://`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv sort -f shape \</b>
+<b>  https://raw.githubusercontent.com/johnkerl/miller/main/docs6/src/gz-example.csv.gz</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+red,circle,true,3,16,13.8103,2.9010
+yellow,circle,true,8,73,63.9785,4.2370
+yellow,circle,true,9,87,63.5058,8.3350
+red,square,true,2,15,79.2778,0.0130
+red,square,false,4,48,77.5542,7.4670
+red,square,false,6,64,77.1991,9.5310
+purple,square,false,10,91,72.3735,8.2430
+yellow,triangle,true,1,11,43.6498,9.8870
+purple,triangle,false,5,51,81.2290,8.5910
+purple,triangle,false,7,65,80.1405,5.8240
+</pre>
+
 ## In-process support for compressed input
 
 In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly for `.z` and `.bz2` files.  Please see the page on [Compressed data](reference-main-compressed-data.md) for more information.

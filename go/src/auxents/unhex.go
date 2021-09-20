@@ -11,7 +11,7 @@ import (
 
 // ================================================================
 func unhexUsage(verbName string, o *os.File, exitCode int) {
-	fmt.Fprintf(o, "Usage: %s %s [option] {zero or more file names}\n", mlrExeName(), verbName)
+	fmt.Fprintf(o, "Usage: mlr %s [option] {zero or more file names}\n", verbName)
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-h or --help: print this message\n")
 	fmt.Fprintf(o, "Zero file names means read from standard input.\n")

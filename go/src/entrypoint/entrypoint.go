@@ -11,12 +11,11 @@ import (
 	"os"
 	"path"
 
-	"mlr/src/platform"
-
 	"mlr/src/auxents"
 	"mlr/src/cli"
 	"mlr/src/climain"
 	"mlr/src/lib"
+	"mlr/src/platform"
 	"mlr/src/stream"
 	"mlr/src/transformers"
 )
@@ -110,38 +109,76 @@ func processInPlace(
 		// reader, mappers, and writer individually for each file name.  This
 		// way CSV headers appear in each file, head -n 10 puts 10 rows for
 		// each output file, and so on.
-
-		containingDirectory := path.Dir(fileName)
-		// Names like ./mlr-in-place-2148227797 and ./mlr-in-place-1792078347,
-		// as revealed by printing handle.Name().
-		handle, err := ioutil.TempFile(containingDirectory, "mlr-in-place-")
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
-			os.Exit(1)
-		}
-		tempFileName := handle.Name()
-
 		options, recordTransformers, err := climain.ParseCommandLine(os.Args)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 			os.Exit(1)
 		}
 
-		err = stream.Stream([]string{fileName}, options, recordTransformers, handle, false)
+		// We can't in-place update http://, https://, etc. Also, anything with
+		// --prepipe or --prepipex, we won't try to guess how to invert that
+		// command to produce re-compressed output.
+		err = lib.IsUpdateableInPlace(fileName, options.ReaderOptions.Prepipe)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
+		containingDirectory := path.Dir(fileName)
+		// Names like ./mlr-in-place-2148227797 and ./mlr-in-place-1792078347,
+		// as revealed by printing handle.Name().
+		handle, err := ioutil.TempFile(containingDirectory, "mlr-in-place-")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+			os.Exit(1)
+		}
+		tempFileName := handle.Name()
+
+		// If the input file is compressed and we'll be doing in-process
+		// decompression as we read the input file, try to do in-process
+		// compression as we write the output.
+		inputFileEncoding := lib.FindInputEncoding(fileName, options.ReaderOptions.FileInputEncoding)
+
+		// Get a handle with, perhaps, a recompression wrapper around it.
+		wrappedHandle, isNew, err := lib.WrapOutputHandle(handle, inputFileEncoding)
+		if err != nil {
+			os.Remove(tempFileName)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+			os.Exit(1)
+		}
+
+		// Run the Miller processing stream from the input file to the temp-output file.
+		err = stream.Stream([]string{fileName}, options, recordTransformers, wrappedHandle, false)
+		if err != nil {
+			os.Remove(tempFileName)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+			os.Exit(1)
+		}
+
+		// Close the recompressor handle, if any recompression is being applied.
+		if isNew {
+			err = wrappedHandle.Close()
+			if err != nil {
+				os.Remove(tempFileName)
+				fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
+				os.Exit(1)
+			}
+		}
+
+		// Close the handle to the output file. This may force final writes, so
+		// it must be error-checked.
 		err = handle.Close()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
+			os.Remove(tempFileName)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 
+		// Rename the temp-output file on top of the input file.
 		err = os.Rename(tempFileName, fileName)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", "mlr", err)
+			os.Remove(tempFileName)
+			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)
 			os.Exit(1)
 		}
 	}
