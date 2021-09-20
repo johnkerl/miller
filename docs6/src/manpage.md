@@ -676,7 +676,7 @@ AUXILIARY COMMANDS
          help
          regtest
          repl
-       For more information, please invoke mlrt {subcommand} --help.
+       For more information, please invoke mlr {subcommand} --help.
 
 MLRRC
        You can set up personal defaults via a $HOME/.mlrrc and/or ./.mlrrc.

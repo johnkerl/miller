@@ -214,6 +214,17 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
 
 * functions as first-class objects; then sortaf/sortmf take f not "f"
 
+* godoc notes:
+  o dev mode:
+    godoc -http=:6060 -goroot .
+  o publish:
+    godoc -http=:6060 -goroot .
+    cd ~/tmp/bar
+    wget -p -k http://localhost:6060/pkg
+    mv localhost:6060 miller6
+    file:///Users/kerl/tmp/bar/miller6/pkg
+    maybe publish to ISP space
+
 ================================================================
 MAYBES
 

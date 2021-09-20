@@ -5,7 +5,6 @@ import (
 	"io"
 
 	"mlr/src/cli"
-	"mlr/src/colorizer"
 	"mlr/src/types"
 )
 
@@ -31,7 +30,7 @@ func (writer *RecordWriterNIDX) Write(
 
 	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
+		buffer.WriteString(pe.Value.String())
 		if pe.Next != nil {
 			buffer.WriteString(writer.writerOptions.OFS)
 		}
