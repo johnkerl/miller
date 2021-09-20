@@ -8,6 +8,8 @@
   mv localhost:6060 miller6
   file:///Users/kerl/tmp/bar/miller6/pkg
 
+! http reader -- new-in-miller-6
+
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
@@ -15,14 +17,9 @@ c array+string slice UTs
 ? nidx no output-coloring?
 
 C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
-C fix -I + auto-decompress
-  o disallow -I with --prepipe, verbosely
-  o output-writer decoration:
-    src/cli/option_parse.go:			name: "--gzin",
-    src/cli/option_parse.go:				options.ReaderOptions.FileInputEncoding = lib.FileInputEncodingGzip
-    ...
 
 * r-strings branch!
+C stats1 --fr
 
 ----------------------------------------------------------------
 * deduping pass!

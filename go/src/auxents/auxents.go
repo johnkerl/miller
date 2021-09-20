@@ -80,5 +80,5 @@ func ShowAuxEntries(o *os.File) {
 		fmt.Fprintf(o, "  %s\n", entry.name)
 	}
 
-	fmt.Fprintf(o, "For more information, please invoke mlrt {subcommand} --help.\n")
+	fmt.Fprintf(o, "For more information, please invoke mlr {subcommand} --help.\n")
 }
