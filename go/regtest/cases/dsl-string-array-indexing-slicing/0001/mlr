@@ -1,0 +1,6 @@
+end {
+  x = [10, 20, 30, 40, 50];
+  print x[1];
+  print x[5];
+  print x[6]; # absent
+}

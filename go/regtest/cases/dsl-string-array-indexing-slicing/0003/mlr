@@ -1,0 +1,7 @@
+end {
+  x = "abcde";
+  print x[1];
+  print x[-1];
+  print x[1:2];
+  print x[-2:-1];
+}

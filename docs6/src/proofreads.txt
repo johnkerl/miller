@@ -4,8 +4,6 @@
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-c array+string slice UTs
-
 C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
 
 * r-strings branch!
