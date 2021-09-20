@@ -5,6 +5,7 @@
 * nikos materials -> fold in
 
 C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
+  - make table at seps.md.in, ffmt down vs XS across
 
 * r-strings branch!
 C stats1 --fr
@@ -28,16 +29,17 @@ o check for determinism regtest/cases/verb-join-prepipe/0003/cmd
 ----------------------------------------------------------------
 
 record-heterogeneity:
-? --allow-ragged-csv-input: link to new flags page once it's written
 l link-to's:
-  shapes-of-data.md: instead, use the following
-  csv-with-and-without-headers.md.in:## Regularizing ragged CSV
-  misc-examples.md.in:Then, join on the key field(s), and use unsparsify to zero-fill counters
-  questions-about-joins.md.in:To fix this, we can use **unsparsify**:
-  two-pass-algorithms.md.in:There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify)
-  programming-language.md.in:easy for you to handle non-heterogeneous data
-  two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
-? back out of ref section -- ?
+  - shapes-of-data.md: instead, use the following
+  - csv-with-and-without-headers.md.in:## Regularizing ragged CSV
+  - misc-examples.md.in:Then, join on the key field(s), and use unsparsify to zero-fill counters
+  - questions-about-joins.md.in:To fix this, we can use **unsparsify**:
+  - two-pass-algorithms.md.in:There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify)
+  - programming-language.md.in:easy for you to handle non-heterogeneous data
+  - two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
+
+reference-dsl-operators:
+e pre-table to actual markdown table
 
 csv-with-and-without-headers:
 ? shorter version for --headerless-csv-output, & doc everywhere -- -H -- ?

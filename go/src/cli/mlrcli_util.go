@@ -18,25 +18,9 @@ func CheckArgCount(args []string, argi int, argc int, n int) {
 }
 
 // ----------------------------------------------------------------
-var SEPARATOR_NAMES_TO_VALUES = map[string]string{
-	"colon":     ":",
-	"comma":     ",",
-	"cr":        "\r",
-	"crcr":      "\r\r",
-	"crlf":      "\r\n",
-	"crlfcrlf":  "\r\n\r\n",
-	"equals":    "=",
-	"lf":        "\n",
-	"lflf":      "\n\n",
-	"newline":   "\n",
-	"pipe":      "|",
-	"semicolon": ";",
-	"slash":     "/",
-	"space":     " ",
-	"tab":       "\t",
-}
+// TODO: give symbolic name to all the RHSes
 
-var SEPARATOR_NAMES_TO_VALUES_FOR_ONLINE_HELP = map[string]string{
+var SEPARATOR_NAMES_TO_VALUES = map[string]string{
 	"colon":     ":",
 	"comma":     ",",
 	"cr":        "\\r",
@@ -52,6 +36,17 @@ var SEPARATOR_NAMES_TO_VALUES_FOR_ONLINE_HELP = map[string]string{
 	"slash":     "/",
 	"space":     " ",
 	"tab":       "\\t",
+
+	"ascii_null": "\\x01",
+	"ascii_soh":  "\\x02",
+	"ascii_stx":  "\\x03",
+	"ascii_etx":  "\\x04",
+
+	"ascii_esc":  "\\x1b",
+	"ascii_fs":   "\\x1c",
+	"ascii_gs":   "\\x1d",
+	"ascii_rs":   "\\x1e",
+	"ascii_us":   "\\x1f",
 }
 
 func SeparatorFromArg(name string) string {

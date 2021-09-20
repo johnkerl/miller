@@ -115,22 +115,22 @@ GENMD_EOF
 
 ## Which separators apply to which file formats
 
-* CSV/TSV/ASV/USV/etc.:
-    * Record separator is newline (Linux/BSDs/MacOS) or carriage-return-newline (Windows); programmable in Miller 5 and below; TODO to support for the Miller 6 release.
-    * If field separator is tab, we have TSV; see more examples (ASV, USV, etc.) at in the [CSV section](file-formats.md#csvtsvasvusvetc).
-    * No pair separator.
+TODO:
+
+* If CSV field separator is tab, we have TSV; see more examples (ASV, USV, etc.) at in the [CSV section](file-formats.md#csvtsvasvusvetc).
 * JSON: ignores all separator flags from the command line.
-* PPRINT
-    * Record separator is newline (Linux/BSDs/MacOS) or carriage-return-newline (Windows); programmable in Miller 5 and below; TODO to support for the Miller 6 release.
-    * TODO: write up
-    * TODO: write up
-* Markdown tabular: ignores all separator flags from the command line.
-* XTAB
-    * TODO: write up
-    * TODO: write up
-    * TODO: write up
-* DKVP: lets you specify record, field, and pair separators.
-* NIDX
-    * TODO: write up
-    * TODO: write up
-    * No pair separator.
+
+|            | **RS**  | **FS**  | **PS**   |
+|------------|---------|---------|----------|
+| **CSV**    | Default `\n` *   | Default `,`    | None     |
+| **TSV**    | Default `\n` *  |  Default `\t`   | None     |
+| **JSON**   | N/A; records are between `{` and `}` | `,` but  not alterable    | `:` but not alterable |
+| **DKVP**   | Default `\n`    | Default `,`    | Default `=` |
+| **NIDX**   | Default `\n`    | Default space    | None     |
+| **XTAB**   | `\n\n` **    | `\n` *    | Space with repeats  |
+| **PPRINT** | Default `\n` *    | Space with repeats    | None     |
+| **Markdown** | `\n` * but not alterable    | One or more spaces then `|` then one or more spaces    | None     |
+
+\* or `\r\n` on Windows
+
+\*\* or `\r\n\r\n` on Windows
