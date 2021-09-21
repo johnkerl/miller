@@ -50,14 +50,11 @@ import (
 // Data types used within the flags table.
 
 // FlagParser is a function which takes a flag such as `--foo`.
-//
 // * It should assume that a flag.Owns method has already been invoked to be
 //   sure that this function is indeed the right one to call for `--foo`.
-//
 // * The FlagParser function is responsible for advancing *pargi by 1 (if
 //   `--foo`) or 2 (if `--foo bar`), checking to see if argc is long enough in
 //   the latter case, and mutating the options struct.
-//
 // * Successful handling of the flag is indicated by this function making a
 //   non-zero increment of *pargi.
 type FlagParser func(
@@ -68,6 +65,7 @@ type FlagParser func(
 )
 
 // ----------------------------------------------------------------
+
 // FlagTable holds all the flags for Miller, organized into sections.
 type FlagTable struct {
 	sections []*FlagSection

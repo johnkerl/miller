@@ -33,23 +33,20 @@ import (
 
 // ----------------------------------------------------------------
 type RecordReaderCSVLite struct {
-	readerOptions     *cli.TReaderOptions
-	emptyStringMlrval types.Mlrval
+	readerOptions *cli.TReaderOptions
 }
 
 // ----------------------------------------------------------------
 func NewRecordReaderCSVLite(readerOptions *cli.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
-		readerOptions:     readerOptions,
-		emptyStringMlrval: types.MlrvalFromString(""),
+		readerOptions: readerOptions,
 	}
 }
 
 // ----------------------------------------------------------------
 func NewRecordReaderPPRINT(readerOptions *cli.TReaderOptions) *RecordReaderCSVLite {
 	return &RecordReaderCSVLite{
-		readerOptions:     readerOptions,
-		emptyStringMlrval: types.MlrvalFromString(""),
+		readerOptions: readerOptions,
 	}
 }
 
@@ -170,7 +167,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				continue
 			}
 
-			fields := lib.SplitString(line, reader.readerOptions.IFS)
+			fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
 			if reader.readerOptions.AllowRepeatIFS {
 				fields = reader.stripEmpties(fields)
 			}
@@ -216,7 +213,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 					if nh > nd {
 						// if header longer than data: use "" values
 						for i = nd; i < nh; i++ {
-							record.PutCopy(headerStrings[i], &reader.emptyStringMlrval)
+							record.PutCopy(headerStrings[i], types.MLRVAL_VOID)
 						}
 					}
 				}
@@ -279,7 +276,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 				continue
 			}
 
-			fields := lib.SplitString(line, reader.readerOptions.IFS)
+			fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
 			if reader.readerOptions.AllowRepeatIFS {
 				fields = reader.stripEmpties(fields)
 			}
@@ -327,7 +324,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 				if nh > nd {
 					// if header longer than data: use "" values
 					for i = nd; i < nh; i++ {
-						record.PutCopy(headerStrings[i], &reader.emptyStringMlrval)
+						record.PutCopy(headerStrings[i], types.MLRVAL_VOID)
 					}
 				}
 			}

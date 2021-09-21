@@ -12,7 +12,8 @@ import (
 	"mlr/src/version"
 )
 
-// ----------------------------------------------------------------
+// ParseCommandLine is the entrypoint for handling the Miller command line:
+// flags, verbs and their flags, and input file name(s).
 func ParseCommandLine(args []string) (
 	options cli.TOptions,
 	recordTransformers []transformers.IRecordTransformer,
@@ -60,8 +61,8 @@ func ParseCommandLine(args []string) (
 		}
 	}
 
-	cli.ApplyReaderOptionDefaults(&options.ReaderOptions)
-	cli.ApplyWriterOptionDefaults(&options.WriterOptions)
+	cli.FinalizeReaderOptions(&options.ReaderOptions)
+	cli.FinalizeWriterOptions(&options.WriterOptions)
 
 	// Set an optional global formatter for floating-point values
 	if options.WriterOptions.FPOFMT != "" {
@@ -120,10 +121,9 @@ func ParseCommandLine(args []string) (
 	return options, recordTransformers, nil
 }
 
-// ----------------------------------------------------------------
-// Returns a list of transformers, from the starting point in args given by *pargi.
-// Bumps *pargi to point to remaining post-transformer-setup args, i.e. filenames.
-
+// parseTransformers returns a list of transformers, from the starting point in
+// args given by *pargi.  Bumps *pargi to point to remaining
+// post-transformer-setup args, i.e. filenames.
 func parseTransformers(
 	args []string,
 	pargi *int,

@@ -138,8 +138,9 @@ keys from the header line together with the values from each data line, the
 second record has a missing value for key `c` (which ought to be fillable),
 while the third record has a value `10` with no key for it.
 
-Using the `--allow-ragged-csv-input` option we can fill values in too-short
-rows, and provide a key (column number starting with 1) for too-long rows:
+Using the [`--allow-ragged-csv-input` flag](reference-main-flag-list.md#csv-only-flags)
+we can fill values in too-short rows, and provide a key (column number starting
+with 1) for too-long rows:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --allow-ragged-csv-input cat data/het/ragged.csv</b>

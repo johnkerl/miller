@@ -94,6 +94,17 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	return regex
 }
 
+// In Go as in all languages I'm aware of with a string-split, "a,b,c" splits
+// on "," to ["a", "b", "c" and "a" splits to ["a"], both of which are fine --
+// but "" splits to [""] when I wish it were []. This function does the latter.
+func RegexSplitString(regex *regexp.Regexp, input string, n int) []string {
+	if input == "" {
+		return make([]string, 0)
+	} else {
+		return regex.Split(input, n)
+	}
+}
+
 // MakeEmptyRegexCaptures is for initial CST state at the start of executing
 // the DSL expression for the current record.  Even if '$x =~ "(..)_(...)" set
 // "\1" and "\2" on the previous record, at start of processing for the current

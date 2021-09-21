@@ -46,7 +46,7 @@ func (writer *RecordWriterXTAB) Write(
 	if writer.onFirst {
 		writer.onFirst = false
 	} else {
-		buffer.WriteString("\n")
+		buffer.WriteString("\n") // TODO: ORS
 	}
 
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
@@ -56,10 +56,10 @@ func (writer *RecordWriterXTAB) Write(
 		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 		buffer.WriteString(" ")
 		for i := 0; i < padLength; i++ {
-			buffer.WriteString(" ")
+			buffer.WriteString(writer.writerOptions.OPS)
 		}
 		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
-		buffer.WriteString("\n")
+		buffer.WriteString("\n") // TODO: ORS
 	}
 	ostream.Write(buffer.Bytes())
 }

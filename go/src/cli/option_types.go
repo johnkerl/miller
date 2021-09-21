@@ -7,6 +7,8 @@
 package cli
 
 import (
+	"regexp"
+
 	"mlr/src/lib"
 )
 
@@ -36,6 +38,8 @@ type TReaderOptions struct {
 	IRS             string
 	AllowRepeatIFS  bool
 	AllowRepeatIPS  bool
+	IFSRegex        *regexp.Regexp
+	IPSRegex        *regexp.Regexp
 
 	// If unspecified on the command line, these take input-format-dependent
 	// defaults.  E.g. default FS is comma for DKVP but space for NIDX;

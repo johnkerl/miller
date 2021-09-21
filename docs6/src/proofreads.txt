@@ -4,7 +4,13 @@
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
+c force CSV IFS single-char at CLIP? or CSV setup? IFS1?
+C need multi-IRS reader for ASV & explicit CRLF (if supported); also need no-traiing-lf handling
+
+? look at:
+  regtest/cases-pending-go-port/dsl-output-redirects/0071/cmd
+  regtest/cases-pending-go-port/dsl-redirects/0004/cmd wtf no diff?
+  regtest/cases-pending-go-port/dsl-redirects/0010/cmd jvstack ?
 
 * r-strings branch!
 C stats1 --fr
@@ -19,6 +25,8 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
 
 c! seps \001 etc !
+  mlrc --iasv --oxtab cat regtest/input/example.asv
+  mlr  --iasv --oxtab cat regtest/input/example.asv
   mlrc --iusv --oxtab cat regtest/input/example.usv
   mlr  --iusv --oxtab cat regtest/input/example.usv
 
@@ -26,18 +34,22 @@ o check for determinism regtest/cases/verb-join-prepipe/0003/cmd
 * UT for https://github.com/johnkerl/miller/issues/653
 
 ----------------------------------------------------------------
+headerless CSV: separate page
+e nidx, --implicit-csv-header, --headerless-csv-output; surver miller/issues ...
+e make a --headerless-csv-input alias
 
 record-heterogeneity:
-? --allow-ragged-csv-input: link to new flags page once it's written
 l link-to's:
-  shapes-of-data.md: instead, use the following
-  csv-with-and-without-headers.md.in:## Regularizing ragged CSV
-  misc-examples.md.in:Then, join on the key field(s), and use unsparsify to zero-fill counters
-  questions-about-joins.md.in:To fix this, we can use **unsparsify**:
-  two-pass-algorithms.md.in:There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify)
-  programming-language.md.in:easy for you to handle non-heterogeneous data
-  two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
-? back out of ref section -- ?
+  - shapes-of-data.md: instead, use the following
+  - csv-with-and-without-headers.md.in:## Regularizing ragged CSV
+  - misc-examples.md.in:Then, join on the key field(s), and use unsparsify to zero-fill counters
+  - questions-about-joins.md.in:To fix this, we can use **unsparsify**:
+  - two-pass-algorithms.md.in:There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unsparsify)
+  - programming-language.md.in:easy for you to handle non-heterogeneous data
+  - two-pass-algorithms.md.in:Suppose you have some heterogeneous data like this:
+
+reference-dsl-operators:
+e pre-table to actual markdown table
 
 csv-with-and-without-headers:
 ? shorter version for --headerless-csv-output, & doc everywhere -- -H -- ?

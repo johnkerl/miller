@@ -144,8 +144,8 @@ func ReplMain(args []string) int {
 		}
 	}
 
-	cli.ApplyReaderOptionDefaults(&options.ReaderOptions)
-	cli.ApplyWriterOptionDefaults(&options.WriterOptions)
+	cli.FinalizeReaderOptions(&options.ReaderOptions)
+	cli.FinalizeWriterOptions(&options.WriterOptions)
 
 	// --auto-flatten is on by default. But if input and output formats are both JSON,
 	// then we don't need to actually do anything. See also mlrcli_parse.go.

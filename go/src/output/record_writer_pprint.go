@@ -67,7 +67,7 @@ func (writer *RecordWriterPPRINT) Write(
 				)
 				if nonEmpty {
 					// Print a newline
-					ostream.Write([]byte("\n"))
+					ostream.Write([]byte(writer.writerOptions.ORS))
 				}
 				// Start a new batch
 				writer.batch = list.New()
@@ -166,13 +166,13 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 						buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
 					} else {
 						buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-						buffer.WriteString("\n") // TODO: ORS
+						buffer.WriteString(writer.writerOptions.ORS)
 					}
 				} else {
 					formatted := fmt.Sprintf("%*s ", maxWidths[pe.Key], pe.Key)
 					buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
 					if pe.Next == nil {
-						buffer.WriteString("\n") // TODO: ORS
+						buffer.WriteString(writer.writerOptions.ORS)
 					}
 				}
 
@@ -194,13 +194,13 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 					buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
 				} else {
 					buffer.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
-					buffer.WriteString("\n") // TODO: ORS
+					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			} else {
 				formatted := fmt.Sprintf("%*s ", maxWidths[pe.Key], s)
 				buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
 				if pe.Next == nil {
-					buffer.WriteString("\n") // TODO: ORS
+					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			}
 		}
@@ -257,7 +257,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 					buffer.WriteString(horizontalMiddle)
 				} else {
 					buffer.WriteString(horizontalEnd)
-					buffer.WriteString("\n") // TOOD: ORS
+					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			}
 
@@ -274,7 +274,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 					buffer.WriteString(verticalMiddle)
 				} else {
 					buffer.WriteString(verticalEnd)
-					buffer.WriteString("\n") // TOOD: ORS
+					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			}
 
@@ -285,7 +285,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 					buffer.WriteString(horizontalMiddle)
 				} else {
 					buffer.WriteString(horizontalEnd)
-					buffer.WriteString("\n") // TOOD: ORS
+					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			}
 
@@ -309,7 +309,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 				buffer.WriteString(fmt.Sprint(verticalMiddle))
 			} else {
 				buffer.WriteString(verticalEnd)
-				buffer.WriteString("\n") // TOOD: ORS
+				buffer.WriteString(writer.writerOptions.ORS)
 			}
 		}
 
@@ -321,7 +321,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 					buffer.WriteString(horizontalMiddle)
 				} else {
 					buffer.WriteString(horizontalEnd)
-					buffer.WriteString("\n") // TOOD: ORS
+					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			}
 		}

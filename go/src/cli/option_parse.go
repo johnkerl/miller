@@ -15,79 +15,13 @@ import (
 	"mlr/src/lib"
 )
 
-const ASV_FS = "\x1f"
-const ASV_RS = "\x1e"
-const USV_FS = "\xe2\x90\x9f"
-const USV_RS = "\xe2\x90\x9e"
-
-const ASV_FS_FOR_HELP = "0x1f"
-const ASV_RS_FOR_HELP = "0x1e"
-const USV_FS_FOR_HELP = "U+241F (UTF-8 0xe2909f)"
-const USV_RS_FOR_HELP = "U+241E (UTF-8 0xe2909e)"
-const DEFAULT_JSON_FLATTEN_SEPARATOR = "."
-
-// ----------------------------------------------------------------
-// TODO: move these to their own file
-
-// E.g. if IFS isn't specified, it's space for NIDX and comma for DKVP, etc.
-
-var defaultFSes = map[string]string{
-	// "gen" : // TODO
-	"csv":      ",",
-	"csvlite":  ",",
-	"dkvp":     ",",
-	"json":     "N/A", // not honored; not parameterizable in JSON format
-	"nidx":     " ",
-	"markdown": " ",
-	"pprint":   " ",
-	"xtab":     "\n", // todo: windows-dependent ...
-}
-
-var defaultPSes = map[string]string{
-	"csv":      "N/A",
-	"csvlite":  "N/A",
-	"dkvp":     "=",
-	"json":     "N/A", // not honored; not parameterizable in JSON format
-	"markdown": "N/A",
-	"nidx":     "N/A",
-	"pprint":   "N/A",
-	"xtab":     " ", // todo: windows-dependent ...
-}
-
-var defaultRSes = map[string]string{
-	"csv":      "\n",
-	"csvlite":  "\n",
-	"dkvp":     "\n",
-	"json":     "N/A", // not honored; not parameterizable in JSON format
-	"markdown": "\n",
-	"nidx":     "\n",
-	"pprint":   "\n",
-	"xtab":     "\n\n", // todo: maybe jettison the idea of this being alterable
-}
-
-var defaultAllowRepeatIFSes = map[string]bool{
-	"csv":      false,
-	"csvlite":  false,
-	"dkvp":     false,
-	"json":     false,
-	"markdown": false,
-	"nidx":     false,
-	"pprint":   true,
-	"xtab":     false,
-}
-
-var defaultAllowRepeatIPSes = map[string]bool{
-	"csv":      false,
-	"csvlite":  false,
-	"dkvp":     false,
-	"json":     false,
-	"markdown": false,
-	"nidx":     false,
-	"pprint":   false,
-	"xtab":     true,
-}
-
-func ApplyReaderOptionDefaults(readerOptions *TReaderOptions) {
+// FinalizeReaderOptions does a few things. One is if a file format was
+// specified but one or more separators were not, a defaut specific to that
+// file format is applied. The second is computing regexes for IPS and IFS, and
+// unbackslashing IRS.  This is because the '\n' at the command line which is
+// Go "\\n" (a backslash and an n) needs to become the single newline
+// character, and likewise for "\t", etc.
+func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 	if !readerOptions.IFSWasSpecified {
 		readerOptions.IFS = defaultFSes[readerOptions.InputFileFormat]
 	}
@@ -98,14 +32,37 @@ func ApplyReaderOptionDefaults(readerOptions *TReaderOptions) {
 		readerOptions.IRS = defaultRSes[readerOptions.InputFileFormat]
 	}
 	if !readerOptions.AllowRepeatIFSWasSpecified {
-		readerOptions.AllowRepeatIFS = defaultAllowRepeatIFSes[readerOptions.InputFileFormat]
+		// Special case for Miller 6 upgrade -- now that we have regexing for mixes of tabs
+		// and spaces, that should now be the default for NIDX. But *only* for NIDX format,
+		// and if IFS wasn't specified.
+		if readerOptions.InputFileFormat == "nidx" && !readerOptions.IFSWasSpecified {
+			readerOptions.IFS = WHITESPACE
+		} else {
+			readerOptions.AllowRepeatIFS = defaultAllowRepeatIFSes[readerOptions.InputFileFormat]
+		}
 	}
 	if !readerOptions.AllowRepeatIPSWasSpecified {
 		readerOptions.AllowRepeatIPS = defaultAllowRepeatIPSes[readerOptions.InputFileFormat]
 	}
+
+	if readerOptions.AllowRepeatIFS {
+		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IFS + ")+")
+	} else {
+		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(readerOptions.IFS)
+	}
+	if readerOptions.AllowRepeatIPS {
+		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IPS + ")+")
+	} else {
+		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie(readerOptions.IPS)
+	}
+
+	readerOptions.IRS = lib.UnbackslashStringLiteral(readerOptions.IRS)
 }
 
-func ApplyWriterOptionDefaults(writerOptions *TWriterOptions) {
+// FinalizeWriterOptions unbackslashes OPS, OFS, and ORS.  This is because
+// because the '\n' at the command line which is Go "\\n" (a backslash and an
+// n) needs to become the single newline character., and likewise for "\t", etc.
+func FinalizeWriterOptions(writerOptions *TWriterOptions) {
 	if !writerOptions.OFSWasSpecified {
 		writerOptions.OFS = defaultFSes[writerOptions.OutputFileFormat]
 	}
@@ -115,6 +72,10 @@ func ApplyWriterOptionDefaults(writerOptions *TWriterOptions) {
 	if !writerOptions.ORSWasSpecified {
 		writerOptions.ORS = defaultRSes[writerOptions.OutputFileFormat]
 	}
+
+	writerOptions.OFS = lib.UnbackslashStringLiteral(writerOptions.OFS)
+	writerOptions.OPS = lib.UnbackslashStringLiteral(writerOptions.OPS)
+	writerOptions.ORS = lib.UnbackslashStringLiteral(writerOptions.ORS)
 }
 
 // ================================================================
@@ -211,11 +172,11 @@ Notes about all other separators:
 	fmt.Println()
 
 	// Go doesn't preserve insertion order in its arrays so here we are inlining a sort.
-	aliases := lib.GetArrayKeysSorted(SEPARATOR_NAMES_TO_VALUES_FOR_ONLINE_HELP)
+	aliases := lib.GetArrayKeysSorted(SEPARATOR_NAMES_TO_VALUES)
 	for _, alias := range aliases {
 		// Really absurd level of indent needed to get fixed-with font in mkdocs here,
 		// I don't know why. Usually it only takes 4, not 10.
-		fmt.Printf("          %-10s = \"%s\"\n", alias, SEPARATOR_NAMES_TO_VALUES_FOR_ONLINE_HELP[alias])
+		fmt.Printf("          %-10s = \"%s\"\n", alias, SEPARATOR_NAMES_TO_VALUES[alias])
 	}
 	fmt.Println()
 
@@ -240,6 +201,16 @@ Notes about all other separators:
 			defaultRS = "N/A"
 		}
 		fmt.Printf("        %-8s %-6s %-6s %-s\n", format, defaultFS, defaultPS, defaultRS)
+	}
+}
+
+func ListSeparatorAliasesForOnlineHelp() {
+	// Go doesn't preserve insertion order in its arrays so here we are inlining a sort.
+	aliases := lib.GetArrayKeysSorted(SEPARATOR_NAMES_TO_VALUES)
+	for _, alias := range aliases {
+		// Really absurd level of indent needed to get fixed-with font in mkdocs here,
+		// I don't know why. Usually it only takes 4, not 10.
+		fmt.Printf("%-10s = \"%s\"\n", alias, SEPARATOR_NAMES_TO_VALUES[alias])
 	}
 }
 

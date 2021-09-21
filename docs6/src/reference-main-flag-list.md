@@ -489,6 +489,17 @@ Notes about all other separators:
   - C-style escape sequences, e.g. `--rs '\r\n' --fs '\t'`.
   - To avoid backslashing, you can use any of the following names:
 
+          ascii_esc  = "\x1b"
+          ascii_etx  = "\x04"
+          ascii_fs   = "\x1c"
+          ascii_gs   = "\x1d"
+          ascii_null = "\x01"
+          ascii_rs   = "\x1e"
+          ascii_soh  = "\x02"
+          ascii_stx  = "\x03"
+          ascii_us   = "\x1f"
+          asv_fs     = "\x1f"
+          asv_rs     = "\x1e"
           colon      = ":"
           comma      = ","
           cr         = "\r"
@@ -503,7 +514,12 @@ Notes about all other separators:
           semicolon  = ";"
           slash      = "/"
           space      = " "
+          spaces     = "( )+"
           tab        = "\t"
+          tabs       = "(\t)+"
+          usv_fs     = "\xe2\x90\x9f"
+          usv_rs     = "\xe2\x90\x9e"
+          whitespace = "([ \t])+"
 
 * Default separators by format:
 

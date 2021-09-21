@@ -5,7 +5,6 @@ import (
 	"container/list"
 	"errors"
 	"io"
-	"regexp"
 	"strings"
 
 	"mlr/src/cli"
@@ -15,21 +14,13 @@ import (
 
 type RecordReaderXTAB struct {
 	readerOptions *cli.TReaderOptions
-	ifsRegex      *regexp.Regexp
 	// TODO: parameterize IRS
-
-	// TODO: port from C
-	// 	int    allow_repeat_ips;
-	// 	int    do_auto_line_term;
-	// 	int    at_eof;
 }
 
 // ----------------------------------------------------------------
 func NewRecordReaderXTAB(readerOptions *cli.TReaderOptions) *RecordReaderXTAB {
 	return &RecordReaderXTAB{
 		readerOptions: readerOptions,
-		// TODO: incorporate IFS
-		ifsRegex: regexp.MustCompile("\\s+"),
 	}
 }
 
@@ -154,8 +145,7 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 	for entry := lines.Front(); entry != nil; entry = entry.Next() {
 		line := entry.Value.(string)
 
-		// TODO -- incorporate IFS
-		kv := reader.ifsRegex.Split(line, 2)
+		kv := lib.RegexSplitString(reader.readerOptions.IPSRegex, line, 2)
 		if len(kv) < 1 {
 			return nil, errors.New("mlr: internal coding error in XTAB reader")
 		}

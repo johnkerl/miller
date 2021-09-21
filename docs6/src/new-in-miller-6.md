@@ -61,6 +61,10 @@ exceptions.  See [Miller on Windows](miller-on-windows.md) for more information.
 
 Binaries are reliably available using GitHub Actions: see also [Installation](installation.md).
 
+## In-process support for compressed input
+
+In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly for `.z` and `.bz2` files.  Please see the page on [Compressed data](reference-main-compressed-data.md) for more information.
+
 ## Support for reading web URLs
 
 You can read input with prefixes `https://`, `http://`, and `file://`:
@@ -82,10 +86,6 @@ yellow,triangle,true,1,11,43.6498,9.8870
 purple,triangle,false,5,51,81.2290,8.5910
 purple,triangle,false,7,65,80.1405,5.8240
 </pre>
-
-## In-process support for compressed input
-
-In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, if your files end in `.gz` you don't even need to do that -- Miller will autodetect by file extension and automatically uncompress `mlr --csv cat foo.csv.gz`. Similarly for `.z` and `.bz2` files.  Please see the page on [Compressed data](reference-main-compressed-data.md) for more information.
 
 ## Output colorization
 
@@ -136,6 +136,15 @@ For example (see [https://github.com/johnkerl/miller/issues/178](https://github.
 ## REPL
 
 Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single-step through your data-file record, express arbitrary statements to converse with the data, etc.
+
+## Regex support for IFS and IPS
+
+You can now split fields on whitespace when whitespace is a mix of tabs and
+spaces.  As well, you can use regular expressions for the input field-separator
+and the input pair-separator.  Please see the section on
+[multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
+
+In particular, for NIDX format, the default IFS now allows splitting on one or more of space or tab.
 
 ## Case-folded sorting options
 

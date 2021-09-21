@@ -1,0 +1,1 @@
+mlr --from ${CASEDIR}/input --n2j cat
