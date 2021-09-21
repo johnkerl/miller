@@ -50,14 +50,23 @@ part of the JSON specification.
 
 ## Input and output separators
 
-Miller lets you use the same separators for input and output, or, to change
-them between input and output, if you wish to transform your data in that way.
+Miller lets you use the same separators for input and output (e.g. CSV input,
+CSV output), or, to change them between input and output (e.g. CSV input, JSON
+output), if you wish to transform your data in that way.
 
 Miller uses the names `IRS` and `ORS` for the input and output record
 separators, `IFS` and `OFS` for the input and output field separators, and
 `IPS` and `OPS` for input and output pair separators.
 
 For example:
+
+<pre class="pre-highlight-in-pair">
+<b>cat data/a.dkvp</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a=1,b=2,c=3
+a=4,b=5,c=6
+</pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --ifs , --ofs ';' --ips = --ops : cut -o -f c,a,b data/a.dkvp</b>
@@ -72,6 +81,14 @@ between input and output, you can use `--rs`, `--fs`, and `--ps`. Setting `--fs
 :` is the same as setting `--ifs : --ofs :`, but with fewer keystrokes.
 
 <pre class="pre-highlight-in-pair">
+<b>cat data/modsep.dkvp</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+a:1;b:2;c:3
+a:4;b:5;c:6
+</pre>
+
+<pre class="pre-highlight-in-pair">
 <b>mlr --fs ';' --ps : cut -o -f c,a,b data/modsep.dkvp</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
@@ -79,7 +96,7 @@ c:3;a:1;b:2
 c:6;a:4;b:5
 </pre>
 
-## Multi-character separators
+## Multi-character and regular-expression separators
 
 The separators default to single characters, but can be multiple characters if you like:
 
@@ -91,16 +108,17 @@ c:=3;;;a:=1;;;b:=2
 c:=6;;;a:=4;;;b:=5
 </pre>
 
-While the separators can be multiple characters, [regular
-expressions](reference-main-regular-expressions.md) (which Miller supports in
-many ways) are not (as of mid-2021) supported by Miller. So, in the above
-example, you can say the field-separator is one semicolon, or three, but two or
-four won't be recognized using `--ifs ';;;'`.
+As of September 2021:
 
-To fill this need, in the absence of full regular-expression support, Miller
-has a `--repifs` option for input. This means, for example, using `--ifs
-' ' --repifs` you can have the field separator be one _or more_ spaces. (Mixes
-of spaces and tabs, however, won't be recognized as a separator.)
+* `IFS` and `IPS` can be regular expressions.
+* `IRS` must be a single character (nominally `\n`).
+* `OFS`, `OPS`, and `ORS` can be multi-character.
+
+Since `IFS` and `IPS` can be regular expressions, if your data has field
+separators which are one or more consecutive spaces, you can use `--ifs '(
+)+'`. But that gets a little tedious, so Miller has the `--repifs` and
+`--repips` flags you can use if you like.  This wraps the `IFS` or `IPS`, say
+`X`, as `(X)+`.
 
 The `--repifs` flag means that multiple successive occurrences of the field
 separator count as one.  For example, in CSV data we often signify nulls by
@@ -120,37 +138,70 @@ see   by    the dawn's
 early light what so
 </pre>
 
-(TODO: FIXME)
-
 <pre class="pre-highlight-in-pair">
 <b>mlr --ifs ' ' --repifs --inidx --oxtab cat  data/extra-spaces.txt</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 1 oh
-2 
-3 
-4 
-5 say
-6 
-7 
-8 can
-9 you
+2 say
+3 can
+4 you
 
 1 see
-2 
-3 
-4 by
-5 
-6 
-7 
-8 the
-9 dawn's
+2 by
+3 the
+4 dawn's
 
 1 early
 2 light
 3 what
 4 so
 </pre>
+
+## Aliases
+
+Many things we'd like to write as separators need to be escaped from the shell
+-- e.g. `--ifs ';'` or `--ofs '|'`, and so on. You can use the following if you like:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr help list-separator-aliases</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+ascii_esc  = "\x1b"
+ascii_etx  = "\x04"
+ascii_fs   = "\x1c"
+ascii_gs   = "\x1d"
+ascii_null = "\x01"
+ascii_rs   = "\x1e"
+ascii_soh  = "\x02"
+ascii_stx  = "\x03"
+ascii_us   = "\x1f"
+asv_fs     = "\x1f"
+asv_rs     = "\x1e"
+colon      = ":"
+comma      = ","
+cr         = "\r"
+crcr       = "\r\r"
+crlf       = "\r\n"
+crlfcrlf   = "\r\n\r\n"
+equals     = "="
+lf         = "\n"
+lflf       = "\n\n"
+newline    = "\n"
+pipe       = "|"
+semicolon  = ";"
+slash      = "/"
+space      = " "
+spaces     = "( )+"
+tab        = "\t"
+tabs       = "(\t)+"
+usv_fs     = "\xe2\x90\x9f"
+usv_rs     = "\xe2\x90\x9e"
+whitespace = "([ \t])+"
+</pre>
+
+Note that `spaces`, `tabs`, and `whitespace` already are regexes so you
+shouldn't use `--repifs` with them.
 
 ## Command-line flags
 
@@ -162,15 +213,13 @@ Given the above, we now have seen the following flags:
 --ps --ips --ops
 </pre>
 
-Also note that you can use names for certain characters: e.g. `--fs space` is
-the same as `--fs ' '`.  A full list is: `colon`, `comma`, `equals`, `newline`,
-`pipe`, `semicolon`, `slash`, `space`, `tab`.
+See also the [separator-flags section](reference-main-flag-list.md#separator-flags).
 
 ## DSL built-in variables
 
 Miller exposes for you read-only [built-in variables](reference-dsl-variables.md#built-in-variables) with
 names `IRS`, `ORS`, `IFS`, `OFS`, `IPS`, and `OPS`. Unlike in AWK, you can't set these in begin-blocks --
-their values indicate what you set at the command line -- so their use is limited.
+their values indicate what you specified at the command line -- so their use is limited.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --ifs , --ofs ';' --ips = --ops : --from data/a.dkvp put '$d = ">>>" . IFS . "|||" . OFS . "<<<"'</b>
@@ -182,21 +231,22 @@ a:4;b:5;c:6;d:>>>,|||;<<<
 
 ## Which separators apply to which file formats
 
-TODO:
+Notes:
 
 * If CSV field separator is tab, we have TSV; see more examples (ASV, USV, etc.) at in the [CSV section](file-formats.md#csvtsvasvusvetc).
 * JSON: ignores all separator flags from the command line.
+* Headerless CSV overlaps quite a bit with NIDX format using comma for IFS. See also the page on [CSV with and without headers](csv-with-and-without-headers.md).
 
 |            | **RS**  | **FS**  | **PS**   |
 |------------|---------|---------|----------|
-| **CSV**    | Default `\n` *   | Default `,`    | None     |
-| **TSV**    | Default `\n` *  |  Default `\t`   | None     |
-| **JSON**   | N/A; records are between `{` and `}` | `,` but  not alterable    | `:` but not alterable |
-| **DKVP**   | Default `\n`    | Default `,`    | Default `=` |
-| **NIDX**   | Default `\n`    | Default space    | None     |
-| **XTAB**   | `\n\n` **    | `\n` *    | Space with repeats  |
-| **PPRINT** | Default `\n` *    | Space with repeats    | None     |
-| **Markdown** | `\n` * but not alterable    | One or more spaces then `|` then one or more spaces    | None     |
+| [**CSV and CSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *   | Default `,`    | None     |
+| [**TSV**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *  |  Default `\t`   | None     |
+| [**JSON**](file-formats.md#json)   | N/A; records are between `{` and `}` | `,` but  not alterable    | `:` but not alterable |
+| [**DKVP**](file-formats.md#dkvp-key-value-pairs)   | Default `\n`    | Default `,`    | Default `=` |
+| [**NIDX**](file-formats.md#nidx-index-numbered-toolkit-style)   | Default `\n`    | Default space    | None     |
+| [**XTAB**](file-formats.md#xtab-vertical-tabular)   | `\n\n` **    | `\n` *    | Space with repeats  |
+| [**PPRINT**](file-formats.md#pprint-pretty-printed-tabular) | Default `\n` *    | Space with repeats    | None     |
+| [**Markdown**](file-formats.md#markdown-tabular) | `\n` * but not alterable    | One or more spaces then `|` then one or more spaces; not alterable | None     |
 
 \* or `\r\n` on Windows
 

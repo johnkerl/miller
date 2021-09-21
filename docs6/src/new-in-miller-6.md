@@ -137,6 +137,15 @@ For example (see [https://github.com/johnkerl/miller/issues/178](https://github.
 
 Miller now has a read-evaluate-print-loop ([REPL](repl.md)) where you can single-step through your data-file record, express arbitrary statements to converse with the data, etc.
 
+## Regex support for IFS and IPS
+
+You can now split fields on whitespace when whitespace is a mix of tabs and
+spaces.  As well, you can use regular expressions for the input field-separator
+and the input pair-separator.  Please see the section on
+[multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
+
+In particular, for NIDX format, the default IFS now allows splitting on one or more of space or tab.
+
 ## Case-folded sorting options
 
 The [sort](reference-verbs.md#sort) verb now accepts `-c` and `-cr` options for case-folded ascending/descending sort, respetively.

@@ -12,7 +12,6 @@ import (
 )
 
 type RecordReaderNIDX struct {
-	// TODO: use the parameterization for readerOptions.IFS/readerOptions.IPS
 	readerOptions *cli.TReaderOptions
 }
 
@@ -100,7 +99,7 @@ func (reader *RecordReaderNIDX) processHandle(
 		line = strings.TrimRight(line, "\n")
 		line = strings.TrimRight(line, "\r")
 
-		record := recordFromNIDXLine(line, reader.readerOptions.IFS)
+		record := reader.recordFromNIDXLine(line)
 
 		context.UpdateForInputRecord()
 		inputChannel <- types.NewRecordAndContext(
@@ -111,12 +110,11 @@ func (reader *RecordReaderNIDX) processHandle(
 }
 
 // ----------------------------------------------------------------
-func recordFromNIDXLine(
+func (reader *RecordReaderNIDX) recordFromNIDXLine(
 	line string,
-	ifs string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	values := lib.SplitString(line, ifs) // TODO: repifs ...
+	values := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
 	var i int = 0
 	for _, value := range values {
 		i++

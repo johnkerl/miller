@@ -4,8 +4,13 @@
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-C! repifs !! https://pkg.go.dev/regexp#Regexp.Split 2-for-1 -- get regexp as well ?
-  - make table at seps.md.in, ffmt down vs XS across
+c force CSV IFS single-char at CLIP? or CSV setup? IFS1?
+C need multi-IRS reader for ASV & explicit CRLF (if supported); also need no-traiing-lf handling
+
+? look at:
+  regtest/cases-pending-go-port/dsl-output-redirects/0071/cmd
+  regtest/cases-pending-go-port/dsl-redirects/0004/cmd wtf no diff?
+  regtest/cases-pending-go-port/dsl-redirects/0010/cmd jvstack ?
 
 * r-strings branch!
 C stats1 --fr
@@ -20,6 +25,8 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
 
 c! seps \001 etc !
+  mlrc --iasv --oxtab cat regtest/input/example.asv
+  mlr  --iasv --oxtab cat regtest/input/example.asv
   mlrc --iusv --oxtab cat regtest/input/example.usv
   mlr  --iusv --oxtab cat regtest/input/example.usv
 
@@ -27,6 +34,9 @@ o check for determinism regtest/cases/verb-join-prepipe/0003/cmd
 * UT for https://github.com/johnkerl/miller/issues/653
 
 ----------------------------------------------------------------
+headerless CSV: separate page
+e nidx, --implicit-csv-header, --headerless-csv-output; surver miller/issues ...
+e make a --headerless-csv-input alias
 
 record-heterogeneity:
 l link-to's:

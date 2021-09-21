@@ -219,7 +219,7 @@ func transformerJoinParseCLI(
 		}
 	}
 
-	cli.ApplyReaderOptionDefaults(&opts.joinFlagOptions.ReaderOptions)
+	cli.FinalizeReaderOptions(&opts.joinFlagOptions.ReaderOptions)
 
 	if opts.leftFileName == "" {
 		fmt.Fprintf(os.Stderr, "%s %s: need left file name\n", "mlr", verb)

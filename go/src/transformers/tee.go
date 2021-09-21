@@ -98,7 +98,7 @@ func transformerTeeParseCLI(
 		}
 	}
 
-	cli.ApplyWriterOptionDefaults(&localOptions.WriterOptions)
+	cli.FinalizeWriterOptions(&localOptions.WriterOptions)
 
 	// Get the filename/command from the command line, after the flags
 	if argi >= argc {

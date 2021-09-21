@@ -71,6 +71,7 @@ func init() {
 				name: "Flags",
 				handlerInfos: []tHandlerInfo{
 					{name: "flags", zaryHandlerFunc: showFlagHelp},
+					{name: "list-separator-aliases", zaryHandlerFunc: listSeparatorAliases},
 					// Per-section entries will be computed and installed below
 				},
 			},
@@ -290,6 +291,10 @@ func listTopics() {
 // ----------------------------------------------------------------
 func showFlagHelp() {
 	cli.FLAG_TABLE.ShowHelp()
+}
+
+func listSeparatorAliases() {
+	cli.ListSeparatorAliasesForOnlineHelp()
 }
 
 // ----------------------------------------------------------------

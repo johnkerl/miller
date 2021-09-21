@@ -11,13 +11,10 @@ import (
 	"mlr/src/cli"
 )
 
-// ----------------------------------------------------------------
-// * If $MLRRC is set, use it and only it.
-// * Otherwise try first $HOME/.mlrrc and then ./.mlrrc but let them
-//   stack: e.g. $HOME/.mlrrc is lots of settings and maybe in one
-//   subdir you want to override just a setting or two.
-
-// TODO: move to separate file?
+// loadMlrrcOrDie rule: If $MLRRC is set, use it and only it.  Otherwise try
+// first $HOME/.mlrrc and then ./.mlrrc but let them stack: e.g. $HOME/.mlrrc
+// is lots of settings and maybe in one subdir you want to override just a
+// setting or two.
 func loadMlrrcOrDie(
 	options *cli.TOptions,
 ) {
@@ -41,6 +38,7 @@ func loadMlrrcOrDie(
 	tryLoadMlrrc(options, "./.mlrrc")
 }
 
+// tryLoadMlrrc is a helper function for loadMlrrcOrDie.
 func tryLoadMlrrc(
 	options *cli.TOptions,
 	path string,
@@ -85,6 +83,7 @@ func tryLoadMlrrc(
 	return true
 }
 
+// handleMlrrcLine is a helper function for loadMlrrcOrDie.
 func handleMlrrcLine(
 	options *cli.TOptions,
 	line string,

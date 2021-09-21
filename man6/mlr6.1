@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-09-20
+.\"      Date: 2021-09-21
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-09-20" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-09-21" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -145,6 +145,7 @@ Essentials:
   mlr help file-formats
 Flags:
   mlr help flags
+  mlr help list-separator-aliases
   mlr help comments-in-data-flags
   mlr help compressed-data-flags
   mlr help csv-only-flags
@@ -748,6 +749,17 @@ Notes about all other separators:
   - C-style escape sequences, e.g. `--rs '\er\en' --fs '\et'`.
   - To avoid backslashing, you can use any of the following names:
 
+          ascii_esc  = "\ex1b"
+          ascii_etx  = "\ex04"
+          ascii_fs   = "\ex1c"
+          ascii_gs   = "\ex1d"
+          ascii_null = "\ex01"
+          ascii_rs   = "\ex1e"
+          ascii_soh  = "\ex02"
+          ascii_stx  = "\ex03"
+          ascii_us   = "\ex1f"
+          asv_fs     = "\ex1f"
+          asv_rs     = "\ex1e"
           colon      = ":"
           comma      = ","
           cr         = "\er"
@@ -762,7 +774,12 @@ Notes about all other separators:
           semicolon  = ";"
           slash      = "/"
           space      = " "
+          spaces     = "( )+"
           tab        = "\et"
+          tabs       = "(\et)+"
+          usv_fs     = "\exe2\ex90\ex9f"
+          usv_rs     = "\exe2\ex90\ex9e"
+          whitespace = "([ \et])+"
 
 * Default separators by format:
 

@@ -12,6 +12,7 @@ import (
 
 type RecordWriterMarkdown struct {
 	writerOptions *cli.TWriterOptions
+	ors           string
 
 	numHeaderLinesOutput int
 	lastJoinedHeader     string

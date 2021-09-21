@@ -49,6 +49,7 @@ Essentials:
   mlr help file-formats
 Flags:
   mlr help flags
+  mlr help list-separator-aliases
   mlr help comments-in-data-flags
   mlr help compressed-data-flags
   mlr help csv-only-flags
@@ -102,6 +103,7 @@ Essentials:
   mlr help file-formats
 Flags:
   mlr help flags
+  mlr help list-separator-aliases
   mlr help comments-in-data-flags
   mlr help compressed-data-flags
   mlr help csv-only-flags
