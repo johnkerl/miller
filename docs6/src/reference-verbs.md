@@ -183,55 +183,54 @@ The canonical use for bootstrap sampling is to put error bars on statistical qua
     which would needlessly complicate git diff -->
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp</b>
+<b>mlr --c2p stats1 -a mean,count -f u -g color data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  u_mean   u_count
-yellow 0.497129 1413
-red    0.492560 4641
-purple 0.494005 1142
-green  0.504861 1109
-blue   0.517717 1470
-orange 0.490532 303
+color  u_mean              u_count
+yellow 0.4971291160651098  1413
+red    0.49255964641241273 4641
+purple 0.49400496322241666 1142
+green  0.5048610595130744  1109
+blue   0.5177171537414964  1470
+orange 0.49053241584158375 303
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp</b>
+<b>mlr --c2p bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  u_mean   u_count
-yellow 0.500651 1380
-purple 0.501556 1111
-green  0.503272 1068
-red    0.493895 4702
-blue   0.512529 1496
-orange 0.521030 321
+color  u_mean              u_count
+red    0.49183858109559747 4655
+yellow 0.487271566995769   1418
+green  0.5018994641860465  1075
+orange 0.5005396620689654  290
+blue   0.5309761257817928  1439
+purple 0.4917481873438798  1201
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp</b>
+<b>color  u_mean              u_count</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  u_mean   u_count
-yellow 0.498046 1485
-blue   0.513576 1417
-red    0.492870 4595
-orange 0.507697 307
-green  0.496803 1075
-purple 0.486337 1199
+yellow 0.4809714157857651  1419
+blue   0.5057790647530039  1498
+red    0.49114305508382283 4593
+purple 0.49652395202020194 1188
+green  0.5011425433212993  1108
+orange 0.48935696323529426 272
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp</b>
+<b>mlr --c2p bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color  u_mean   u_count
-blue   0.522921 1447
-red    0.490717 4617
-yellow 0.496450 1419
-purple 0.496523 1192
-green  0.507569 1111
-orange 0.468014 292
+color  u_mean              u_count
+red    0.49934473217726466 4671
+purple 0.4934976176735793  1109
+blue   0.5097866573146287  1497
+yellow 0.4987188126740959  1436
+orange 0.4802164827586204  290
+green  0.5129018241860459  1075
 </pre>
 
 ## cat
@@ -1847,7 +1846,7 @@ See also "mlr most-frequent".
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5</b>
+<b>mlr --c2p --from data/colored-shapes.csv least-frequent -f shape -n 5</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    count
@@ -1857,7 +1856,7 @@ square   4115
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5</b>
+<b>mlr --c2p --from data/colored-shapes.csv least-frequent -f shape,color -n 5</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    color  count
@@ -1869,7 +1868,7 @@ circle   purple 289
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -o someothername</b>
+<b>mlr --c2p --from data/colored-shapes.csv least-frequent -f shape,color -n 5 -o someothername</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    color  someothername
@@ -1881,7 +1880,7 @@ circle   purple 289
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b</b>
+<b>mlr --c2p --from data/colored-shapes.csv least-frequent -f shape,color -n 5 -b</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    color
@@ -1997,7 +1996,7 @@ See also "mlr least-frequent".
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5</b>
+<b>mlr --c2p --from data/colored-shapes.csv most-frequent -f shape -n 5</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    count
@@ -2007,7 +2006,7 @@ circle   2591
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5</b>
+<b>mlr --c2p --from data/colored-shapes.csv  most-frequent -f shape,color -n 5</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    color  count
@@ -2019,7 +2018,7 @@ square   blue   589
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -o someothername</b>
+<b>mlr --c2p --from data/colored-shapes.csv  most-frequent -f shape,color -n 5 -o someothername</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    color  someothername
@@ -2031,7 +2030,7 @@ square   blue   589
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b</b>
+<b>mlr --c2p --from data/colored-shapes.csv  most-frequent -f shape,color -n 5 -b</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    color
@@ -3010,9 +3009,9 @@ zee 0.5042419022900586 0.5029967546798116
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint stats1 -a p50,p99 -f u,v -g color \</b>
+<b>mlr --c2p stats1 -a p50,p99 -f u,v -g color \</b>
 <b>  then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' \</b>
-<b>  data/colored-shapes.dkvp</b>
+<b>  data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 color  u_p50    u_p99    v_p50    v_p99    ur                 vr
@@ -3025,7 +3024,7 @@ orange 0.483548 0.993635 0.480913 0.989102 2.054883899840347  2.056717119312641
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp</b>
+<b>mlr --c2p count-distinct -f shape then sort -nr count data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    count
@@ -3035,7 +3034,7 @@ circle   2591
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp</b>
+<b>mlr --c2p stats1 -a mode -f color -g shape data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 shape    color_mode
@@ -3417,7 +3416,7 @@ Options:
 Prints the last *n* records in the input stream, optionally by category.
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint tail -n 4 data/colored-shapes.dkvp</b>
+<b>mlr --c2p tail -n 4 data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 color  shape    flag i      u        v        w        x
@@ -3428,7 +3427,7 @@ yellow circle   1    499974 0.764951 0.252842 0.499699 5.013810
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp</b>
+<b>mlr --c2p tail -n 1 -g shape data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 color  shape    flag i      u        v        w        x
@@ -3576,38 +3575,39 @@ Options:
 There are two main ways to use `mlr uniq`: the first way is with `-g` to specify group-by columns.
 
 <pre class="pre-highlight-in-pair">
-<b>wc -l data/colored-shapes.dkvp</b>
+<b>wc -l data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-   10078 data/colored-shapes.dkvp
+   10079 data/colored-shapes.csv
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr uniq -g color,shape data/colored-shapes.dkvp</b>
+<b>mlr --csv uniq -g color,shape data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-color=yellow,shape=triangle
-color=red,shape=square
-color=red,shape=circle
-color=purple,shape=triangle
-color=yellow,shape=circle
-color=purple,shape=square
-color=yellow,shape=square
-color=red,shape=triangle
-color=green,shape=triangle
-color=green,shape=square
-color=blue,shape=circle
-color=blue,shape=triangle
-color=purple,shape=circle
-color=blue,shape=square
-color=green,shape=circle
-color=orange,shape=triangle
-color=orange,shape=square
-color=orange,shape=circle
+color,shape
+yellow,triangle
+red,square
+red,circle
+purple,triangle
+yellow,circle
+purple,square
+yellow,square
+red,triangle
+green,triangle
+green,square
+blue,circle
+blue,triangle
+purple,circle
+blue,square
+green,circle
+orange,triangle
+orange,square
+orange,circle
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp</b>
+<b>mlr --c2p uniq -g color,shape -c then sort -f color,shape data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 color  shape    count
@@ -3632,9 +3632,9 @@ yellow triangle 468
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint uniq -g color,shape -c -o someothername \</b>
+<b>mlr --c2p uniq -g color,shape -c -o someothername \</b>
 <b>  then sort -nr someothername \</b>
-<b>  data/colored-shapes.dkvp</b>
+<b>  data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 color  shape    someothername
@@ -3659,7 +3659,7 @@ orange circle   68
 </pre>
 
 <pre class="pre-highlight-in-pair">
-<b>mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp</b>
+<b>mlr --c2p uniq -n -g color,shape data/colored-shapes.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 count
