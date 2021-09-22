@@ -1869,8 +1869,9 @@ var CSVOnlyFlagSection = FlagSection{
 		},
 
 		{
-			name: "--implicit-csv-header",
-			help: "Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.",
+			name:     "--implicit-csv-header",
+			altNames: []string{"--hi"},
+			help:     "Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.UseImplicitCSVHeader = true
 				*pargi += 1
@@ -1878,8 +1879,9 @@ var CSVOnlyFlagSection = FlagSection{
 		},
 
 		{
-			name: "--headerless-csv-output",
-			help: "Print only CSV data lines; do not print CSV header lines.",
+			name:     "--headerless-csv-output",
+			altNames: []string{"--ho"},
+			help:     "Print only CSV data lines; do not print CSV header lines.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.HeaderlessCSVOutput = true
 				*pargi += 1

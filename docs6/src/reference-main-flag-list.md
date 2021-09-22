@@ -128,9 +128,9 @@ These are flags which are applicable to CSV format.
 
 * `--allow-ragged-csv-input or --ragged
 `: If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.
-* `--headerless-csv-output
+* `--headerless-csv-output or --ho
 `: Print only CSV data lines; do not print CSV header lines.
-* `--implicit-csv-header
+* `--implicit-csv-header or --hi
 `: Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.
 * `--no-implicit-csv-header
 `: Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.
