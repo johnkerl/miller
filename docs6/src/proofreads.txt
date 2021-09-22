@@ -17,34 +17,17 @@ C stats1 --fr
 
 ----------------------------------------------------------------
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
-
 ! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
   - needs UTs as well
-
 * regex: more about what is / is not
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
-
 * UT for https://github.com/johnkerl/miller/issues/653
 
 ----------------------------------------------------------------
-csv-with-and-without-headers:
-? Headerless CSV with duplicate field values -> typo-fix -- duplicate keys actually -- ?!?
-? cat out nas.csv first
-? ag -> just grep ?
-l Miller handles compliant CSV: include rfc4180 link
-? Regularizing ragged CSV: use regularize verb?!?
-
-special-symbols-and-formatting:
-? How to escape '?' in regexes? -> still true? link to torbiak297?
-
-dates-and-times:
-? Caveat: localtime-handling in timezones with DST is still a work in progress -- fixed by torbiak?
-
-shell-commands:
-e while-read example from issues
-
-statistics-examples:
-C 2nd card no output b/c stats1 --fr
+? special-symbols-and-formatting: How to escape '?' in regexes? -> still true? link to torbiak297?
+? dates-and-times: Caveat: localtime-handling in timezones with DST is still a work in progress -- fixed by torbiak?
+e shell-commands: while-read example from issues
+C statistics-examples: 2nd card no output b/c stats1 --fr
 
 reference-main-null-data:
 ? more variants of is_... ?
@@ -65,8 +48,7 @@ E C-style triple-for loops: loop to NR -> NO!!!
 ? or if a same-name variable is present in outer scope then it is modified. -> check that and make sure there is a UT
 l Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in awk, where they'd default to 0 either way) <-> xlink to other page
 
-reference-dsl-user-defined-functions:
-E User-defined subroutines -> non-factorial example -- maybe some useful aggregator
+E reference-dsl-user-defined-functions: User-defined subroutines -> non-factorial example -- maybe some useful aggregator
 
 ================================================================
 godoc checklist:

@@ -19,6 +19,10 @@ install: top
 installhome: top
 	mkdir -p $(INSTALLHOME)
 	cp mlr6.1 $(INSTALLHOME)/mlr6.1
+# This is an out-of-tree operation so do it only if the user is using out-of-tree manpage setup
+# (e.g. their $MANPATH as $HOME/man as a component).
+maybeinstallhome: top
+	if [ -d $(INSTALLHOME) ]; then cp mlr6.1 $(INSTALLHOME)/mlr6.1; else echo No $(INSTALLHOME) -- skipping ; fi
 
 .always:
 	true

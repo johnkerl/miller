@@ -19,7 +19,7 @@ gofmt -s -w $(find . -name \*.go | grep -v src/parsing)
 ./build
 
 cd ../man6
-make
+make maybeinstallhome
 
 cd ../docs6
 ./regen.sh
