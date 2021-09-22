@@ -296,9 +296,11 @@ CSV-ONLY FLAGS
                                 fill remaining keys with empty string. If a data line
                                 has more fields than the header line, use integer
                                 field labels as in the implicit-header case.
-       --headerless-csv-output  Print only CSV data lines; do not print CSV header
+       --headerless-csv-output or --ho
+                                Print only CSV data lines; do not print CSV header
                                 lines.
-       --implicit-csv-header    Use 1,2,3,... as field labels, rather than from line
+       --implicit-csv-header or --hi
+                                Use 1,2,3,... as field labels, rather than from line
                                 1 of input files. Tip: combine with `label` to
                                 recreate missing headers.
        --no-implicit-csv-header Opposite of `--implicit-csv-header`. This is the
@@ -458,10 +460,10 @@ MISCELLANEOUS FLAGS
                                 what you might hope but `--mfrom *.csv --` does.
        --mload {filenames}      Like `--load` but works with more than one filename,
                                 e.g. `--mload *.mlr --`.
-       --ofmt {format}          E.g. %.18f, %.0f, %9.6e. Please use sprintf-style
-                                codes for floating-point nummbers. If not specified,
-                                default formatting is used. See also the `fmtnum`
-                                function and the `format-values` verb.
+       --ofmt {format}          E.g. `%.18f`, `%.0f`, `%9.6e`. Please use
+                                sprintf-style codes for floating-point nummbers. If
+                                not specified, default formatting is used. See also
+                                the `fmtnum` function and the `format-values` verb.
        --seed {n}               with `n` of the form `12345678` or `0xcafefeed`. For
                                 `put`/`filter` `urand`, `urandint`, and `urand32`.
        -I                       Process files in-place. For each file name on the
@@ -2758,5 +2760,5 @@ SEE ALSO
 
 
 
-                                  2021-09-21                         MILLER(1)
+                                  2021-09-22                         MILLER(1)
 </pre>
