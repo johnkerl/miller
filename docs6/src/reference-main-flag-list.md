@@ -324,7 +324,7 @@ These are flags which don't fit into any other category.
 * `--mload {filenames}
 `: Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.
 * `--ofmt {format}
-`: E.g. %.18f, %.0f, %9.6e. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
+`: E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
 * `--seed {n}
 `: with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.
 * `-I

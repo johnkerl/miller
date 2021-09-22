@@ -16,8 +16,17 @@ C need multi-IRS reader for USV & explicit CRLF (if supported); also need no-tra
 * r-strings branch!
 C stats1 --fr
 
-reference-dsl-operators:
-e pre-table to actual markdown table
+reference-dsl-output-statements:
+E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using dump), whereas Miller output records are lists of single-level key-value pairs -> link to flatten page
+  - old: You can emit any map-valued expression, including `$*`, map-valued
+    out-of-stream variables, the entire out-of-stream-variable collection `@*`,
+    map-valued local variables, map literals, or map-valued function return
+    values.
+  - new: mlr: lashed-emit node types must be local variables, field names, or oosvars; got map literal.
+  c ?make FunctionCallsite an Emittable? does this work in the BNF?
+? mlr --oxtab put -q --flatsep / '
+  o 2 examples not 3?
+  o why not '--flatsep /' respected?
 
 ----------------------------------------------------------------
 e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
@@ -28,7 +37,6 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
 * regex: more about what is / is not
   https://github.com/johnkerl/miller/issues/77#issuecomment-538553828
 
-o check for determinism regtest/cases/verb-join-prepipe/0003/cmd
 * UT for https://github.com/johnkerl/miller/issues/653
 
 ----------------------------------------------------------------
@@ -50,7 +58,6 @@ l Miller handles compliant CSV: include rfc4180 link
 ? Regularizing ragged CSV: use regularize verb?!?
 
 special-symbols-and-formatting:
-? check: mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
 ? How to escape '?' in regexes? -> still true? link to torbiak297?
 
 dates-and-times:
@@ -64,12 +71,6 @@ C 2nd card no output b/c stats1 --fr
 
 two-pass-algorithms:
 l link to "new" verbs x everywhere possible
-e section-renames for consistency
-x this (or wherever ...) maybe get rid of some of the too-many examples. pick some survivors; x the rest.
-
-reference-verbs:
-E data/colored-shapes.dkvp (this page & throughout) a CSV file ...
-* ... I ONLY READ UP TO CUT & PAUSED ...
 
 reference-main-null-data:
 ? more variants of is_... ?
@@ -93,21 +94,6 @@ l Since uninitialized out-of-stream variables default to 0 for addition/substrac
 reference-dsl-user-defined-functions:
 E User-defined subroutines -> non-factorial example -- maybe some useful aggregator
 l link to --load and --mload
-
-reference-dsl-builtin-functions:
-! ... need to proofread entire list ...
-
-reference-dsl-output-statements:
-E Keep in mind that out-of-stream variables are a nested, multi-level hashmap (directly viewable as JSON using dump), whereas Miller output records are lists of single-level key-value pairs -> link to flatten page
-  - old: You can emit any map-valued expression, including `$*`, map-valued
-    out-of-stream variables, the entire out-of-stream-variable collection `@*`,
-    map-valued local variables, map literals, or map-valued function return
-    values.
-  - new: mlr: lashed-emit node types must be local variables, field names, or oosvars; got map literal.
-  c ?make FunctionCallsite an Emittable? does this work in the BNF?
-? mlr --oxtab put -q --flatsep / '
-  o 2 examples not 3?
-  o why not '--flatsep /' respected?
 
 ================================================================
 godoc checklist:

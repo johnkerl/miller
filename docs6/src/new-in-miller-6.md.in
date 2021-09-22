@@ -35,8 +35,10 @@ JSON support is improved:
 * Direct support for arrays means that you can now use Miller to process more JSON files.
 * Streamable JSON parsing: Miller's internal record-processing pipeline starts as soon as the first record is read (which was already the case for other file formats). This means that, unless records are wrapped with outermost `[...]`, Miller now handles JSON in `tail -f` contexts like it does for other file formats.
 * Flatten/unflatten -- conversion of JSON nested data structures (arrays and/or maps in record values) to/from non-JSON formats is a powerful new feature, discussed in the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
+* Since types are better handled now, the workaround flags `--jvquoteall` and `--jknquoteint` no longer have meaning -- although they're accepted as no-ops at the command line for backward compatibility.
+* Multi-line JSON is now the default. Use `--no-jvstack` for Miller-5 style, which required `--jvstack` to get multiline output.
 
-See the [Arrays reference](reference-main-arrays.md) for more information.
+See also the [Arrays reference](reference-main-arrays.md) for more information.
 
 ## Improved Windows experience
 
@@ -131,7 +133,7 @@ Miller 6 has getoptish command-line parsing ([pull request 467](https://github.c
 
 * `-xyz` expands automatically to `-x -y -z`, so (for example) `mlr cut -of shape,flag` is the same as `mlr cut -o -f shape,flag`.
 * `--foo=bar` expands automatically to  `--foo bar`, so (for example) `mlr --ifs=comma` is the same as `mlr --ifs comma`.
-* `--mfrom`, `--load`, `--mload` as described on the [keystroke-savers page](keystroke-savers.md).
+* `--mfrom`, `--load`, `--mload` as described in the [flags reference](reference-main-flag-list.md#miscellaneous-flags).
 
 ## Improved error messages for DSL parsing
 
