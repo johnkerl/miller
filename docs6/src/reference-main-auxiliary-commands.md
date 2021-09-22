@@ -16,7 +16,7 @@ Quick links:
 </div>
 # Auxiliary commands
 
-There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables, but instead they're delivered within the main Miller executable for convenience.
+There are a few nearly-standalone programs which have a little to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables, but instead they're delivered within the main Miller executable for convenience.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr aux-list</b>
@@ -139,3 +139,5 @@ purple,456.78
 green,678.12
 orange,123.45
 </pre>
+
+Additionally, [`mlr help`](online-help.md), [`mlr repl`](repl.md), and [`mlr regtest`](https://github.com/johnkerl/miller/blob/main/go/regtest/README.md) are implemented here.

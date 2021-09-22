@@ -139,6 +139,8 @@ id,code,color
 
 Thanks to @aborruso for the tip!
 
+See also the [record-heterogeneity page](record-heterogeneity.md).
+
 ## Doing multiple joins
 
 Suppose we have the following data:

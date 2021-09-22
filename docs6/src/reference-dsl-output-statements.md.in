@@ -224,15 +224,15 @@ Use **--flatsep** to specify the character which joins multilevel
 keys for `emitp` (it defaults to a colon):
 
 GENMD_RUN_COMMAND
-mlr put -q --flatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+mlr --flatsep / put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr put -q --flatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+mlr --flatsep / put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --oxtab put -q --flatsep / '
+mlr --flatsep / --oxtab put -q '
   @sum[$a][$b] += $x;
   end { emitp @sum }
 ' data/small

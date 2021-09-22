@@ -255,7 +255,7 @@ green  purple 5 0.203577
 
 ## Feature-counting
 
-Suppose you have some heterogeneous data like this:
+Suppose you have some [heterogeneous data](record-heterogeneity.md) like this:
 
 <pre class="pre-non-highlight-non-pair">
 { "qoh": 29874, "rate": 1.68, "latency": 0.02 }

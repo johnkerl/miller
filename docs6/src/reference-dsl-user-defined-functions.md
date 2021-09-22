@@ -119,10 +119,28 @@ Properties of user-defined subroutines:
 
 * See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.
 
-# Differences between functions and subroutines
+## Differences between functions and subroutines
 
 Subroutines cannot return values, and they are invoked by the keyword `call`.
 
 In hindsight, subroutines needn't have been invented. If `foo` is a function
 then you can write `foo(1,2,3)` while ignoring its return value, and that plays
 the role of subroutine quite well.
+
+## Loading a library of functions
+
+If you have a file with UDFs you use frequently, say `my-udfs.mlr`, you can use
+`--load` or `--mload` to define them for your Miller scripts. For example, in
+your shell, 
+
+<pre class="pre-highlight-non-pair">
+<b>alias mlr='mlr --load ~/my-functions.mlr'</b>
+</pre>
+
+or
+
+<pre class="pre-highlight-non-pair">
+<b>alias mlr='mlr --load /u/miller-udfs/'</b>
+</pre>
+
+See the [miscellaneous-flags page](reference-main-flag-list.md#miscellaneous-flags) for more information.

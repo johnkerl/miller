@@ -227,6 +227,8 @@ blue   6838           6944          106
 purple 12             0             (error)
 </pre>
 
+See also the [record-heterogeneity page](record-heterogeneity.md).
+
 ## Memoization with out-of-stream variables
 
 The recursive function for the Fibonacci sequence is famous for its computational complexity.  Namely, using f(0)=1, f(1)=1, f(n)=f(n-1)+f(n-2) for n>=2, the evaluation tree branches left as well as right at each non-trivial level, resulting in millions or more paths to the root 0/1 nodes for larger n. This program

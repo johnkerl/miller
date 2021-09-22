@@ -764,6 +764,10 @@ Stands for _tab-separated values_.
 A popular [file format](file-formats.md#csvtsvasvusvetc) for tabular data
 (tab-separated values) supported by Miller.
 
+## UDF
+
+A [user-defined function](reference-dsl-user-defined-functions.md) in the [Miller programming language](miller-programming-language.md).
+
 ## unflatten
 
 To undo the [flatten](#flatten) operation, restoring map-valued and/or

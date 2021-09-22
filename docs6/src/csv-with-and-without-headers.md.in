@@ -82,3 +82,5 @@ mlr --from data/ragged.csv --fs comma --nidx put '
   }
 '
 GENMD_EOF
+
+See also the [record-heterogeneity page](record-heterogeneity.md).

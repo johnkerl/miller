@@ -131,7 +131,7 @@ GENMD_EOF
 
 ## Feature-counting
 
-Suppose you have some heterogeneous data like this:
+Suppose you have some [heterogeneous data](record-heterogeneity.md) like this:
 
 GENMD_INCLUDE_ESCAPED(data/features.json)
 

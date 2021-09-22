@@ -166,3 +166,5 @@ a,b,c
 4,5
 6,7,8,9
 </pre>
+
+See also the [record-heterogeneity page](record-heterogeneity.md).
