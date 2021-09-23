@@ -33,10 +33,15 @@ reference-main-regular-expressions:
 d separate escaping for "\t" etc in arg-2/regex position -- "\t"."\t" example as well ...
 
 reference-dsl-control-structures:
-e while (NR < 10) will never terminate as NR is only incremented between records -> and each expression is invoked once per record so once for NR=1, once for NR=2, etc.
+e while (NR < 10) will never terminate as NR is only incremented between
+  records -> and each expression is invoked once per record so once for NR=1,
+  once for NR=2, etc.
 E C-style triple-for loops: loop to NR -> NO!!!
 ? or if a same-name variable is present in outer scope then it is modified. -> check that and make sure there is a UT
-l Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in awk, where they'd default to 0 either way) <-> xlink to other page
+l Since uninitialized out-of-stream variables default to 0 for
+  addition/substraction and 1 for multiplication when they appear on expression
+  right-hand sides (not quite as in awk, where they'd default to 0 either way)
+  <-> xlink to other page
 
 ================================================================
 godoc checklist:

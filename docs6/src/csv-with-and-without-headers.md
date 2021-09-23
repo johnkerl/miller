@@ -180,7 +180,7 @@ Another solution is to use [NIDX format](file-formats.md#nidx-index-numbered-too
 </pre>
 
 Either way, since there is no explicit header, fields are named `1` through `9`. We can use the
-[label verb](reference-verbs.md.#label) to apply more meaningful namees:
+[label verb](reference-verbs.md#label) to apply more meaningful namees:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv --hi cat then label xsn,ysn,x,y,t,a,e29,e31,e32 data/nas.csv</b>
