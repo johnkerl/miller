@@ -18,6 +18,8 @@ Quick links:
 
 One of Miller's key features is its support for **heterogeneous** data.  For example, take `mlr sort`: if you try to sort on field `hostname` when not all records in the data stream *have* a field named `hostname`, it is not an error (although you could pre-filter the data stream using `mlr having-fields --at-least hostname then sort ...`).  Rather, records lacking one or more sort keys are simply output contiguously by `mlr sort`.
 
+## The three types
+
 Miller has three kinds of null data:
 
 * **Empty (key present, value empty)**: a field name is present in a record (or in an out-of-stream variable) with empty value: e.g. `x=,y=2` in the data input stream, or assignment `$x=""` or `@x=""` in `mlr put`.
@@ -26,9 +28,34 @@ Miller has three kinds of null data:
 
 * **JSON null**: The main purpose of this is to support reading the `null` type in JSON files. The [Miller programming language](miller-programming-language.md) has a `null` keyword as well, so you can also write the null type using `$x = null`. Addtionally, though, when you write past the end of an array, leaving gaps -- e.g. writing `a[12]` when the array `a` has length 10 -- JSON-null is used to fill the gaps. See also the [arrays page](reference-main-arrays.md#auto-extend-and-null-gaps).
 
-You can test these programatically using the functions `is_empty`/`is_not_empty`, `is_absent`/`is_present`, and `is_null`/`is_not_null`. For the last pair, note that null means either empty or absent.
+You can test these programatically using the functions `is_empty`/`is_not_empty`, `is_absent`/`is_present`, and `is_null`/`is_not_null`. For the last pair, note that null means either empty or absent. Here is a full list of such functions:
 
-Rules for null-handling:
+<pre class="pre-highlight-in-pair">
+<b>mlr -f | grep is_</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+is_absent
+is_array
+is_bool
+is_boolean
+is_empty
+is_empty_map
+is_error
+is_float
+is_int
+is_map
+is_nonempty_map
+is_not_array
+is_not_empty
+is_not_map
+is_not_null
+is_null
+is_numeric
+is_present
+is_string
+</pre>
+
+## Rules for null-handling
 
 * Records with one or more empty sort-field values sort after records with all sort-field values present:
 
@@ -125,6 +152,8 @@ The reasoning is as follows:
 
 * The penalty for the absent feature is that misspelled variables can be hard to find: e.g. in `mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'` the accumulator is spelt `@sumx` in the begin-block but `@sum` in the end-block, where since it is absent, `@sum*2` evaluates to 2. See also the section on [DSL errors and transparency](reference-dsl-errors.md).
 
+## Absent-test functions
+
 Since absent plus absent is absent (and likewise for other operators), accumulations such as `@sum += $x` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with `is_present`:
 
 <pre class="pre-highlight-in-pair">
@@ -159,6 +188,8 @@ resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320
 record_count=150,resource=/path/to/second/file,loadmillis=0
 resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970
 </pre>
+
+## Arithmetic rules
 
 If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
 

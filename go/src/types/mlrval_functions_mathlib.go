@@ -14,6 +14,9 @@ import (
 func math_unary_f_i(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval {
 	return MlrvalPointerFromFloat64(f(float64(input1.intval)))
 }
+func math_unary_i_i(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval {
+	return MlrvalPointerFromInt(int(f(float64(input1.intval))))
+}
 func math_unary_f_f(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval {
 	return MlrvalPointerFromFloat64(f(input1.floatval))
 }
@@ -32,7 +35,6 @@ var mudispo = [MT_DIM]mathLibUnaryFuncWrapper{
 	/*MAP    */ _math_unary_absn1,
 }
 
-func MlrvalAbs(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Abs) }
 func MlrvalAcos(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Acos) }
 func MlrvalAcosh(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Acosh) }
 func MlrvalAsin(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Asin) }
@@ -40,26 +42,43 @@ func MlrvalAsinh(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](inpu
 func MlrvalAtan(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Atan) }
 func MlrvalAtanh(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Atanh) }
 func MlrvalCbrt(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Cbrt) }
-func MlrvalCeil(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Ceil) }
 func MlrvalCos(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Cos) }
 func MlrvalCosh(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Cosh) }
 func MlrvalErf(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Erf) }
 func MlrvalErfc(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Erfc) }
 func MlrvalExp(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Exp) }
 func MlrvalExpm1(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Expm1) }
-func MlrvalFloor(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Floor) }
 func MlrvalInvqnorm(input1 *Mlrval) *Mlrval { return mudispo[input1.mvtype](input1, lib.Invqnorm) }
 func MlrvalLog(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Log) }
 func MlrvalLog10(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Log10) }
 func MlrvalLog1p(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Log1p) }
 func MlrvalQnorm(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, lib.Qnorm) }
-func MlrvalRound(input1 *Mlrval) *Mlrval    { return mudispo[input1.mvtype](input1, math.Round) }
-func MlrvalSgn(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, lib.Sgn) }
 func MlrvalSin(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Sin) }
 func MlrvalSinh(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Sinh) }
 func MlrvalSqrt(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Sqrt) }
 func MlrvalTan(input1 *Mlrval) *Mlrval      { return mudispo[input1.mvtype](input1, math.Tan) }
 func MlrvalTanh(input1 *Mlrval) *Mlrval     { return mudispo[input1.mvtype](input1, math.Tanh) }
+
+// Disposition vector for unary mathlib functions which are int-preserving
+var imudispo = [MT_DIM]mathLibUnaryFuncWrapper{
+	/*ERROR  */ _math_unary_erro1,
+	/*ABSENT */ _math_unary_absn1,
+	/*NULL   */ _math_unary_null1,
+	/*VOID   */ _math_unary_void1,
+	/*STRING */ _math_unary_erro1,
+	/*INT    */ math_unary_i_i,
+	/*FLOAT  */ math_unary_f_f,
+	/*BOOL   */ _math_unary_erro1,
+	/*ARRAY  */ _math_unary_absn1,
+	/*MAP    */ _math_unary_absn1,
+}
+
+// Int-preserving
+func MlrvalAbs(input1 *Mlrval) *Mlrval   { return imudispo[input1.mvtype](input1, math.Abs) }   // xxx
+func MlrvalCeil(input1 *Mlrval) *Mlrval  { return imudispo[input1.mvtype](input1, math.Ceil) }  // xxx
+func MlrvalFloor(input1 *Mlrval) *Mlrval { return imudispo[input1.mvtype](input1, math.Floor) } // xxx
+func MlrvalRound(input1 *Mlrval) *Mlrval { return imudispo[input1.mvtype](input1, math.Round) } // xxx
+func MlrvalSgn(input1 *Mlrval) *Mlrval   { return imudispo[input1.mvtype](input1, lib.Sgn) }    // xxx
 
 // ================================================================
 // Exponentiation: DSL operator '**'.  See also
@@ -141,7 +160,7 @@ func mlr_roundm(x, m float64) float64 {
 }
 
 func roundm_f_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(mlr_roundm(float64(input1.intval), float64(input2.intval)))
+	return MlrvalPointerFromInt(int(mlr_roundm(float64(input1.intval), float64(input2.intval))))
 }
 func roundm_f_if(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromFloat64(mlr_roundm(float64(input1.intval), input2.floatval))

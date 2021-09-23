@@ -1870,7 +1870,7 @@ var CSVOnlyFlagSection = FlagSection{
 
 		{
 			name:     "--implicit-csv-header",
-			altNames: []string{"--hi"},
+			altNames: []string{"--headerless-csv-input", "--hi"},
 			help:     "Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.UseImplicitCSVHeader = true
