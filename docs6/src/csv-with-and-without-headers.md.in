@@ -78,7 +78,7 @@ mlr --inidx --ifs comma --ocsv cat data/nas.csv
 GENMD_EOF
 
 Either way, since there is no explicit header, fields are named `1` through `9`. We can use the
-[label verb](reference-verbs.md.#label) to apply more meaningful namees:
+[label verb](reference-verbs.md#label) to apply more meaningful namees:
 
 GENMD_RUN_COMMAND
 mlr --csv --hi cat then label xsn,ysn,x,y,t,a,e29,e31,e32 data/nas.csv

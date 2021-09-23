@@ -9,7 +9,7 @@ TOP OF LIST:
 * repifs * multi-char IRS * no-LF last-line issue *
 * I/O redirects * fmtnum * localtime * stats1 -r/--fr *
 * --nr-progress-mod * mlr -k * json comment-handling *
-* doc6 * check issues * regtest pendings *
+* doc6 * check issues * regtest pendings * headstop *
 
 d pre-release:
   o explicit punchdown list
@@ -66,6 +66,8 @@ BLOCKERS
   o convert regtest/cases-pending-windows
   o convert regtest/cases-pending-go-port
 
+* USV / multi-char IRS
+
 * smarter head-stop etc https://github.com/johnkerl/miller/issues/291
   o done-reading back-channels in stream.go
     https://gobyexample.com/non-blocking-channel-operations
@@ -92,21 +94,15 @@ BLOCKERS
 
 * stats1: actualize -S and -F -- ?
 
-* port all I/O formats:
-  o TSV/ASV reader
-  o XTAB reader
-  o TSV/ASV writer
-  o markdown writer
-
 * more I/O:
   !!! golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
     detection -- needs an input-stream delegator -- ?
-  o --allow-ragged-csv-input|--ragged
-  o non-lite DKVP reader/writer
   o comment-filtering-composed io.Reader
 
 ================================================================
 NON-BLOCKERS
+
+* non-lite DKVP reader/writer
 
 * more of:
   o colored-shapes.dkvp -> csv; also mkdat2

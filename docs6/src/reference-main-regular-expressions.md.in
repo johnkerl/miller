@@ -1,6 +1,6 @@
 # Regular expressions
 
-Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
+Miller lets you use regular expressions (of the [types accepted by Go](https://pkg.go.dev/regexp)) in the following contexts:
 
 * In `mlr filter` with `=~` or `!=~`, e.g. `mlr filter '$url =~ "http.*com"'`
 
