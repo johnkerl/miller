@@ -1136,6 +1136,9 @@ Typedecl
 
   | var
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
+  | func
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 ;
 
 // ----------------------------------------------------------------
@@ -2201,6 +2204,43 @@ NamedFunctionDefinition
       $7, // {...}
       $6, // return type
       dsl.NodeTypeNamedFunctionDefinition,
+    );
+  >>
+
+;
+
+UnnamedFunctionDefinition
+
+  // Without return-type annotation
+  : func
+    "("
+    FuncOrSubrParameterList
+    ")"
+    StatementBlockInBraces
+  <<
+    dsl.NewASTNodeBinary(
+      $1,
+      $3, // parameter list
+      $5, // { ... }
+      dsl.NodeTypeUnnamedFunctionDefinition,
+    );
+  >>
+
+  // With return-type annotation
+  | func
+    "("
+    FuncOrSubrParameterList
+    ")"
+    ":"
+    Typedecl
+    StatementBlockInBraces
+  <<
+    dsl.NewASTNodeTernary(
+      $1,
+      $3, // parameter list
+      $7, // {...}
+      $6, // return type
+      dsl.NodeTypeUnnamedFunctionDefinition,
     );
   >>
 
