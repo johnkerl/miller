@@ -301,6 +301,8 @@ func (node *ASTNode) Text() string {
 
 	case NodeTypeNamedFunctionDefinition:
 		return "named-func"
+	case NodeTypeUnnamedFunctionDefinition:
+		return "unnamed-func"
 	case NodeTypeSubroutineDefinition:
 		return "subr"
 	case NodeTypeParameterList:

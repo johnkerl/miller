@@ -17,6 +17,50 @@ d pre-release:
   o gha download steps clearer
 
 ----------------------------------------------------------------
+* fcf
+  k dispo mxes
+  k dispo vecs
+  k FuncDef -> NamedFuncDef krepl
+   decl words @ bnf & go
+  o funclits @ bnf
+  o ...
+
+* syntaxes:
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  DONE
+    func udf(a,b) { return a <=> b }
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  LHS
+    f = udf
+    var f = udf
+
+  BNF + LNS
+    func f = udf
+    func f = g
+
+  BNF
+    func f = func(a,b) { return a <=> b }
+
+  BNF ... not 1st prio ...
+    func f = (func(){ return udf})()
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  CST-ONLY -- ?
+    y = sorta(x, "udf") -- DONE
+    y = sorta(x, udf)
+    y = sorta(x, f)
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  DONE
+    c = udf(a,b)
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  RHS SOMETHING
+    c = f(a,b)
+
+----------------------------------------------------------------
 implicit r:
 * double-check end of reference-main-data-types.md.in
 

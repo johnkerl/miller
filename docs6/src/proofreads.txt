@@ -1,14 +1,6 @@
 ----------------------------------------------------------------
 ! try to godoc a few functions on every commit ... accumulate over time ...
 
-* fcf
-  o dispo mxes
-  o dispo vecs
-  o FuncDef -> NamedFuncDef krepl
-  o decl words @ bnf & go
-  o funclits @ bnf
-  o ...
-
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
