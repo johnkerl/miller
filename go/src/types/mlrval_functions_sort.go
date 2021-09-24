@@ -5,6 +5,8 @@
 package types
 
 import (
+	"fmt"
+	"os"
 	"strings"
 )
 
@@ -146,6 +148,12 @@ func bbcmp(input1, input2 *Mlrval) int {
 	}
 }
 
+func _xcmp(input1, input2 *Mlrval) int {
+	fmt.Fprintf(os.Stderr, "mlr: functions cannot be sorted.\n")
+	os.Exit(1)
+	return 0
+}
+
 // ----------------------------------------------------------------
 // Sort rules (same for min, max, and comparator):
 // * NUMERICS < BOOL < STRINGS < ERROR < NULL < ABSENT
@@ -158,17 +166,18 @@ func bbcmp(input1, input2 *Mlrval) int {
 
 // typed_cmp_dispositions is the disposition matrix for numerical sorting of Mlrvals.
 var typed_cmp_typedpositions = [MT_DIM][MT_DIM]ComparatorFunc{
-	//       .  ERROR   ABSENT NULL   VOID   STRING INT    FLOAT  BOOL   ARRAY  MAP
-	/*ERROR  */ {_zero, _neg1, _neg1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
-	/*ABSENT */ {_pos1, _zero, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero},
-	/*NULL   */ {_pos1, _neg1, _zero, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1},
-	/*VOID   */ {_neg1, _neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero},
-	/*STRING */ {_neg1, _neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero},
-	/*INT    */ {_neg1, _neg1, _neg1, _neg1, _neg1, iicmp, ifcmp, _neg1, _zero, _zero},
-	/*FLOAT  */ {_neg1, _neg1, _neg1, _neg1, _neg1, ficmp, ffcmp, _neg1, _zero, _zero},
-	/*BOOL   */ {_neg1, _neg1, _neg1, _neg1, _neg1, _pos1, _pos1, bbcmp, _zero, _zero},
-	/*ARRAY  */ {_zero, _zero, _neg1, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
-	/*MAP    */ {_zero, _zero, _neg1, _zero, _zero, _zero, _zero, _zero, _zero, _zero},
+	//       .  ERROR   ABSENT NULL   VOID   STRING INT    FLOAT  BOOL   ARRAY  MAP     FUNC
+	/*ERROR  */ {_zero, _neg1, _neg1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero, _xcmp},
+	/*ABSENT */ {_pos1, _zero, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _zero, _zero, _xcmp},
+	/*NULL   */ {_pos1, _neg1, _zero, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _pos1, _xcmp},
+	/*VOID   */ {_neg1, _neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero, _xcmp},
+	/*STRING */ {_neg1, _neg1, _neg1, _scmp, _scmp, _pos1, _pos1, _pos1, _zero, _zero, _xcmp},
+	/*INT    */ {_neg1, _neg1, _neg1, _neg1, _neg1, iicmp, ifcmp, _neg1, _zero, _zero, _xcmp},
+	/*FLOAT  */ {_neg1, _neg1, _neg1, _neg1, _neg1, ficmp, ffcmp, _neg1, _zero, _zero, _xcmp},
+	/*BOOL   */ {_neg1, _neg1, _neg1, _neg1, _neg1, _pos1, _pos1, bbcmp, _zero, _zero, _xcmp},
+	/*ARRAY  */ {_zero, _zero, _neg1, _zero, _zero, _zero, _zero, _zero, _zero, _zero, _xcmp},
+	/*MAP    */ {_zero, _zero, _neg1, _zero, _zero, _zero, _zero, _zero, _zero, _zero, _xcmp},
+	/*FUNC    */ {_xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp, _xcmp},
 }
 
 // NumericAscendingComparator is for "numerical" sort: it uses Mlrval sorting

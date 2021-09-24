@@ -44,6 +44,9 @@ type Mlrval struct {
 	boolval       bool
 	arrayval      []Mlrval
 	mapval        *Mlrmap
+	// These are first-class-function literals. Stored here as interface{}
+	// to avoid a package-dependency cycle with the dsl/cst package.
+	funcval interface{}
 }
 
 // Enumeration for mlrval types
@@ -93,12 +96,14 @@ const (
 
 	MT_MAP = 9
 
+	MT_FUNC = 10
+
 	// Not a type -- this is a dimension for disposition vectors and
 	// disposition matrices. For example, when we want to add two mlrvals,
 	// instead of if/elsing or switching on the types of both operands, we
 	// instead jump directly to a type-specific function in a matrix of
 	// function pointers which is MT_DIM x MT_DIM.
-	MT_DIM = 10
+	MT_DIM = 11
 )
 
 var TYPE_NAMES = [MT_DIM]string{
