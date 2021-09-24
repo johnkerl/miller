@@ -105,7 +105,7 @@ func validateASTAux(
 		}
 		nextLevelInBeginOrEnd = true
 	}
-	if astNode.Type == dsl.NodeTypeFunctionDefinition {
+	if astNode.Type == dsl.NodeTypeNamedFunctionDefinition {
 		if !atTopLevel {
 			return errors.New(
 				"mlr: func blocks can only be at top level.",

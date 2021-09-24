@@ -227,7 +227,7 @@ func (root *RootNode) buildMainPass(ast *dsl.AST, isReplImmediate bool) error {
 
 	for _, astChild := range astChildren {
 
-		if astChild.Type == dsl.NodeTypeFunctionDefinition {
+		if astChild.Type == dsl.NodeTypeNamedFunctionDefinition {
 			err := root.BuildAndInstallUDF(astChild)
 			if err != nil {
 				return err

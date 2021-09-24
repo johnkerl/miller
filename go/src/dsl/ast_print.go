@@ -299,8 +299,8 @@ func (node *ASTNode) Text() string {
 	case NodeTypeContinue:
 		return tokenText
 
-	case NodeTypeFunctionDefinition:
-		return "func"
+	case NodeTypeNamedFunctionDefinition:
+		return "named-func"
 	case NodeTypeSubroutineDefinition:
 		return "subr"
 	case NodeTypeParameterList:

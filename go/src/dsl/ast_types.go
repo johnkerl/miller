@@ -114,12 +114,12 @@ const (
 	NodeTypeBreak                = "break"
 	NodeTypeContinue             = "continue"
 
-	NodeTypeFunctionDefinition   = "function definition"
-	NodeTypeSubroutineDefinition = "subroutine definition"
-	NodeTypeParameterList        = "parameter list"
-	NodeTypeParameter            = "parameter"
-	NodeTypeParameterName        = "parameter name"
-	NodeTypeReturn               = "return"
+	NodeTypeNamedFunctionDefinition = "function definition"
+	NodeTypeSubroutineDefinition    = "subroutine definition"
+	NodeTypeParameterList           = "parameter list"
+	NodeTypeParameter               = "parameter"
+	NodeTypeParameterName           = "parameter name"
+	NodeTypeReturn                  = "return"
 
 	// A special token which causes a panic when evaluated.  This is for
 	// testing that AND/OR short-circuiting is implemented correctly: output =

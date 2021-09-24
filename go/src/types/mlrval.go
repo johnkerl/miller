@@ -132,6 +132,7 @@ const MT_TYPE_MASK_ARRAY = 1 << MT_ARRAY
 const MT_TYPE_MASK_MAP = 1 << MT_MAP
 const MT_TYPE_MASK_VAR = (1 << MT_VOID) | (1 << MT_STRING) | (1 << MT_INT) |
 	(1 << MT_FLOAT) | (1 << MT_BOOL) | (1 << MT_ARRAY) | (1 << MT_MAP)
+const MT_TYPE_MASK_FUNC = 1 << MT_FUNC
 
 // Not exposed in userspace
 const MT_TYPE_MASK_ANY = (1 << MT_ERROR) | (1 << MT_ABSENT) | MT_TYPE_MASK_VAR
@@ -146,6 +147,7 @@ var typeNameToMaskMap = map[string]int{
 	"arr":   MT_TYPE_MASK_ARRAY,
 	"map":   MT_TYPE_MASK_MAP,
 	"any":   MT_TYPE_MASK_ANY,
+	"fun":   MT_TYPE_MASK_FUNC,
 }
 
 func TypeNameToMask(typeName string) (mask int, present bool) {

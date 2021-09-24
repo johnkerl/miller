@@ -3698,7 +3698,7 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `BracefulStatement : FunctionDefinition	<<  >>`,
+		String: `BracefulStatement : NamedFunctionDefinition	<<  >>`,
 		Id:         "BracefulStatement",
 		NTType:     78,
 		Index:      277,
@@ -4138,13 +4138,13 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(
+		String: `NamedFunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" StatementBlockInBraces	<< dsl.NewASTNodeBinary(
       X[1],
       X[3], // parameter list
       X[5], // { ... }
-      dsl.NodeTypeFunctionDefinition,
+      dsl.NodeTypeNamedFunctionDefinition,
     ); >>`,
-		Id:         "FunctionDefinition",
+		Id:         "NamedFunctionDefinition",
 		NTType:     101,
 		Index:      314,
 		NumSymbols: 6,
@@ -4153,19 +4153,19 @@ var productionsTable = ProdTab{
 				X[1],
 				X[3], // parameter list
 				X[5], // { ... }
-				dsl.NodeTypeFunctionDefinition,
+				dsl.NodeTypeNamedFunctionDefinition,
 			)
 		},
 	},
 	ProdTabEntry{
-		String: `FunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNodeTernary(
+		String: `NamedFunctionDefinition : func non_sigil_name "(" FuncOrSubrParameterList ")" ":" Typedecl StatementBlockInBraces	<< dsl.NewASTNodeTernary(
       X[1],
       X[3], // parameter list
       X[7], // {...}
       X[6], // return type
-      dsl.NodeTypeFunctionDefinition,
+      dsl.NodeTypeNamedFunctionDefinition,
     ); >>`,
-		Id:         "FunctionDefinition",
+		Id:         "NamedFunctionDefinition",
 		NTType:     101,
 		Index:      315,
 		NumSymbols: 8,
@@ -4175,7 +4175,7 @@ var productionsTable = ProdTab{
 				X[3], // parameter list
 				X[7], // {...}
 				X[6], // return type
-				dsl.NodeTypeFunctionDefinition,
+				dsl.NodeTypeNamedFunctionDefinition,
 			)
 		},
 	},

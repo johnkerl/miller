@@ -90,7 +90,7 @@ func (root *RootNode) BuildStatementNode(
 	case dsl.NodeTypeTripleForLoop:
 		return root.BuildTripleForLoopNode(astNode)
 
-	case dsl.NodeTypeFunctionDefinition:
+	case dsl.NodeTypeNamedFunctionDefinition:
 		return nil, errors.New(
 			"mlr: functions may only be declared at top level.",
 		)

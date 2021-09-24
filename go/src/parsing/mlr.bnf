@@ -1925,7 +1925,7 @@ BracefulStatement
   | IfChain
   | WhileLoop
   | ForLoop
-  | FunctionDefinition
+  | NamedFunctionDefinition
   | SubroutineDefinition
 ;
 
@@ -2167,7 +2167,7 @@ ContinueStatement
 // ================================================================
 // FUNCTION AND SUBROUTINE DEFINITIONS
 
-FunctionDefinition
+NamedFunctionDefinition
 
   // Without return-type annotation
   : func
@@ -2181,7 +2181,7 @@ FunctionDefinition
       $1,
       $3, // parameter list
       $5, // { ... }
-      dsl.NodeTypeFunctionDefinition,
+      dsl.NodeTypeNamedFunctionDefinition,
     );
   >>
 
@@ -2200,7 +2200,7 @@ FunctionDefinition
       $3, // parameter list
       $7, // {...}
       $6, // return type
-      dsl.NodeTypeFunctionDefinition,
+      dsl.NodeTypeNamedFunctionDefinition,
     );
   >>
 

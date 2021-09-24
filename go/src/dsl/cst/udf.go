@@ -273,7 +273,7 @@ func (manager *UDFManager) ExistsByName(name string) bool {
 //
 // AST:
 // * StatementBlock
-//     * FunctionDefinition "f"
+//     * NamedFunctionDefinition "f"
 //         * ParameterList
 //             * Parameter
 //                 * ParameterName "x"
@@ -297,7 +297,7 @@ func (manager *UDFManager) ExistsByName(name string) bool {
 //             * DirectFieldValue "x"
 
 func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFunctionDefinition)
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeNamedFunctionDefinition)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
