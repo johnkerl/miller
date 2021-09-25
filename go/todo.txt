@@ -17,6 +17,8 @@ d pre-release:
   o gha download steps clearer
 
 ----------------------------------------------------------------
+? build-dsl -v by default -- ? with -q option for not -- ?
+
 * fcf
   k dispo mxes
   k dispo vecs
@@ -59,6 +61,11 @@ d pre-release:
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   RHS SOMETHING
     c = f(a,b)
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  kw olh for func and funct both
+  webdocs re funct typedecl
+  thorough webdoc combing for FCFs & funct ... :)
 
 ----------------------------------------------------------------
 implicit r:

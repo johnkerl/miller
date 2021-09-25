@@ -6,5 +6,5 @@ Expected one of:
   ~ string_literal regex_case_insensitive int_literal float_literal boolean_literal
   null_literal const_M_PI const_M_E panic [ ctx_IPS ctx_IFS ctx_IRS ctx_OPS
   ctx_OFS ctx_ORS ctx_FLATSEP ctx_NF ctx_NR ctx_FNR ctx_FILENAME ctx_FILENUM
-  env
+  env func
 

@@ -13,9 +13,11 @@
 
 set -euo pipefail
 
-verbose="false"
+verbose="true"
 if [ $# -eq 1 ]; then
   if [ "$1" == "-v" ]; then
+    verbose="true"
+  elif [ "$1" == "-q" ]; then
     verbose="true"
   fi
 fi
