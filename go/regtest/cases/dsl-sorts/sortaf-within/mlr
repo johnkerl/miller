@@ -22,6 +22,6 @@ func even_then_odd(a,b) {
 }
 
 split_values = splita($values, ";");
-$forward = sortaf(split_values, "forward");
-$reverse = sortaf(split_values, "reverse");
-$even_then_odd = sortaf(split_values, "even_then_odd");
+$forward = sortaf(split_values, forward);
+$reverse = sortaf(split_values, reverse);
+$even_then_odd = sortaf(split_values, even_then_odd);

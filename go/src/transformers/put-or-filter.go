@@ -285,7 +285,7 @@ func transformerPutOrFilterParseCLI(
 		options,
 	)
 	if err != nil {
-		// Error message already printed out
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
@@ -321,50 +321,42 @@ func NewTransformerPut(
 
 	cstRootNode := cst.NewEmptyRoot(&options.WriterOptions, dslInstanceType)
 
-	for _, dslString := range dslStrings {
-		astRootNode, err := BuildASTFromStringWithMessage(dslString)
-		if err != nil {
-			// Error message already printed out
-			return nil, err
-		}
+	err := cstRootNode.Build(
+		dslStrings,
+		dslInstanceType,
+		false, // isReplImmediate
+		doWarnings,
+		warningsAreFatal,
 
-		if echoDSLString {
-			fmt.Println("DSL EXPRESSION:")
-			fmt.Println(dslString)
-			fmt.Println()
-		}
-		if printASTAsTree {
-			fmt.Println("AST:")
-			astRootNode.Print()
-			fmt.Println()
-		}
-		if printASTMultiLine {
-			astRootNode.PrintParex()
-			fmt.Println()
-		}
-		if printASTSingleLine {
-			astRootNode.PrintParexOneLine()
-			fmt.Println()
-		}
-		if exitAfterParse {
-			os.Exit(0)
-		}
+		func(dslString string, astNode *dsl.AST) {
 
-		err = cstRootNode.IngestAST(
-			astRootNode,
-			false, // isReplImmediate
-			doWarnings,
-			warningsAreFatal,
-		)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			return nil, err
-		}
+			if echoDSLString {
+				fmt.Println("DSL EXPRESSION:")
+				fmt.Println(dslString)
+				fmt.Println()
+			}
+			if printASTAsTree {
+				fmt.Println("AST:")
+				astNode.Print()
+				fmt.Println()
+			}
+			if printASTMultiLine {
+				astNode.PrintParex()
+				fmt.Println()
+			}
+			if printASTSingleLine {
+				astNode.PrintParexOneLine()
+				fmt.Println()
+			}
+
+		},
+	)
+
+	if exitAfterParse {
+		os.Exit(0)
 	}
 
-	err := cstRootNode.Resolve()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
 		return nil, err
 	}
 

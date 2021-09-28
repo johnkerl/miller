@@ -300,9 +300,9 @@ func (node *ASTNode) Text() string {
 		return tokenText
 
 	case NodeTypeNamedFunctionDefinition:
-		return "named-func"
+		return "named-udf"
 	case NodeTypeUnnamedFunctionDefinition:
-		return "unnamed-func"
+		return "unnamed-udf"
 	case NodeTypeSubroutineDefinition:
 		return "subr"
 	case NodeTypeParameterList:

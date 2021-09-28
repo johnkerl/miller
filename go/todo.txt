@@ -17,55 +17,49 @@ d pre-release:
   o gha download steps clearer
 
 ----------------------------------------------------------------
-? build-dsl -v by default -- ? with -q option for not -- ?
-
-* fcf
-  k dispo mxes
-  k dispo vecs
-  k FuncDef -> NamedFuncDef krepl
-   decl words @ bnf & go
-  o funclits @ bnf
-  o ...
-
-* syntaxes:
-
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  DONE
-    func udf(a,b) { return a <=> b }
+FCFs/HOFs
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   LHS
-    f = udf
-    var f = udf
+  o f = udf
+  o var f = udf
 
   BNF + LNS
-    func f = udf
-    func f = g
+  o func f = udf
+  o func f = g
 
   BNF
-    func f = func(a,b) { return a <=> b }
+  o func f = func(a,b) { return a <=> b }
 
   BNF ... not 1st prio ...
-    func f = (func(){ return udf})()
-
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  CST-ONLY -- ?
-    y = sorta(x, "udf") -- DONE
-    y = sorta(x, udf)
-    y = sorta(x, f)
-
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  DONE
-    c = udf(a,b)
+  o func f = (func(){ return udf})()
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   RHS SOMETHING
-    c = f(a,b)
+  o c = f(a,b)
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  kw olh for func and funct both
-  webdocs re funct typedecl
-  thorough webdoc combing for FCFs & funct ... :)
+  DOC
+  o kw olh for func and funct both
+  o webdocs re funct typedecl
+  o thorough webdoc combing for FCFs & funct ... :)
+  o explicitly mention HOFs -- at the moment, just sortaf, sortmf, & any UDHOFs ...
+    - maybe keep, apply, fold, reduce etc functions at some point ...
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  SOON
+  o IIFEs: 'func f = (func(){ return udf})()'
+  o BIFs in non-sigil context (UDFs already are)
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  NEATEN
+  o Unnamed -> Literal; Named -> same as before -- ?
+    - 'y = sortaf(x, udf)' with 'func udf(a,b) {return b<=>a}', or f=udf, *requires* name-leak
+       of all UDFs into localvar reads ... single-node RHS, ternaries, function calls, etc ...
+
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  SOMEDAY
+  o non-top-level func defs -- inherting locals -- ?
 
 ----------------------------------------------------------------
 implicit r:

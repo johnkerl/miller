@@ -44,8 +44,9 @@ type Mlrval struct {
 	boolval       bool
 	arrayval      []Mlrval
 	mapval        *Mlrmap
-	// These are first-class-function literals. Stored here as interface{}
-	// to avoid a package-dependency cycle with the dsl/cst package.
+	// These are first-class-function literals. Stored here as interface{} to
+	// avoid what would otherwise be a package-dependency cycle with the
+	// mlr/src/dsl/cst package.
 	funcval interface{}
 }
 
@@ -117,6 +118,7 @@ var TYPE_NAMES = [MT_DIM]string{
 	"bool",
 	"array",
 	"map",
+	"funct",
 }
 
 // ----------------------------------------------------------------
@@ -130,13 +132,19 @@ const MT_TYPE_MASK_NUM = (1 << MT_INT) | (1 << MT_FLOAT)
 const MT_TYPE_MASK_BOOL = 1 << MT_BOOL
 const MT_TYPE_MASK_ARRAY = 1 << MT_ARRAY
 const MT_TYPE_MASK_MAP = 1 << MT_MAP
-const MT_TYPE_MASK_VAR = (1 << MT_VOID) | (1 << MT_STRING) | (1 << MT_INT) |
-	(1 << MT_FLOAT) | (1 << MT_BOOL) | (1 << MT_ARRAY) | (1 << MT_MAP)
+const MT_TYPE_MASK_VAR = (1 << MT_VOID) |
+	(1 << MT_STRING) |
+	(1 << MT_INT) |
+	(1 << MT_FLOAT) |
+	(1 << MT_BOOL) |
+	(1 << MT_ARRAY) |
+	(1 << MT_MAP)
 const MT_TYPE_MASK_FUNC = 1 << MT_FUNC
 
 // Not exposed in userspace
-const MT_TYPE_MASK_ANY = (1 << MT_ERROR) | (1 << MT_ABSENT) | MT_TYPE_MASK_VAR
+const MT_TYPE_MASK_ANY = (1 << MT_ERROR) | (1 << MT_ABSENT) | MT_TYPE_MASK_VAR | MT_TYPE_MASK_FUNC
 
+// TODO: const these throughout
 var typeNameToMaskMap = map[string]int{
 	"var":   MT_TYPE_MASK_VAR,
 	"str":   MT_TYPE_MASK_STRING,
@@ -147,7 +155,7 @@ var typeNameToMaskMap = map[string]int{
 	"arr":   MT_TYPE_MASK_ARRAY,
 	"map":   MT_TYPE_MASK_MAP,
 	"any":   MT_TYPE_MASK_ANY,
-	"fun":   MT_TYPE_MASK_FUNC,
+	"funct": MT_TYPE_MASK_FUNC,
 }
 
 func TypeNameToMask(typeName string) (mask int, present bool) {

@@ -2172,6 +2172,7 @@ ContinueStatement
 // ================================================================
 // FUNCTION AND SUBROUTINE DEFINITIONS
 
+// Example: 'func f(a, b) { return b - a }'
 NamedFunctionDefinition
 
   // Without return-type annotation
@@ -2211,6 +2212,7 @@ NamedFunctionDefinition
 
 ;
 
+// Example: RHS of 'f = func (a, b) { return b - a }'
 UnnamedFunctionDefinition
 
   // Without return-type annotation

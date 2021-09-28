@@ -188,24 +188,44 @@ func (node *FullOosvarRvalueNode) Evaluate(
 }
 
 // ----------------------------------------------------------------
+// TODO: rename this node-type.
+// RHSes can be:
+// * Local variables, like `x` in `x = 3`
+// * Named user-defined functions, like `f` in `func f(a,b) { return b - a }`
+// * Unnamed user-defined functions bound to local variables, like `f` in `f = func (a,b) { return b - a }`
+// * Not yet but TODO: built-in functions like `f` in `f = sinh`.
+
 type LocalVariableNode struct {
 	stackVariable *runtime.StackVariable
+	udfManager    *UDFManager
 }
 
 func (root *RootNode) BuildLocalVariableNode(variableName string) *LocalVariableNode {
 	return &LocalVariableNode{
 		stackVariable: runtime.NewStackVariable(variableName),
+		udfManager:    root.udfManager,
 	}
 }
 func (node *LocalVariableNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
 	value := state.Stack.Get(node.stackVariable)
-	if value == nil {
-		return types.MLRVAL_ABSENT
-	} else {
+	if value != nil {
 		return value
 	}
+
+	functionName := node.stackVariable.GetName()
+
+	udf := node.udfManager.LookUpDisregardingArity(functionName)
+	if udf != nil {
+		return types.MlrvalPointerFromFunction(udf, functionName)
+	}
+
+	// TODO: allow built-in functions as well. Needs some API-merging as a
+	// prerequisite since UDFs and BIFs are managed in quite different
+	// structures.
+
+	return types.MLRVAL_ABSENT
 }
 
 // ----------------------------------------------------------------

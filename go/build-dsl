@@ -9,6 +9,11 @@
 # changes for example.
 #
 # Resulting auto-generated .go files should then be checked into source control.
+#
+# With verbose, *.txt files are created with information about LR1 conflicts
+# etc.  Please don't commit them.
+#
+# As of mid-2021 this takes easily 5-10 minutes to run.
 # ================================================================
 
 set -euo pipefail
