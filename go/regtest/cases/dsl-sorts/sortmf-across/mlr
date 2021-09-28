@@ -1,5 +1,5 @@
 # Sort descending numeric on the index field
-func f(ak, av, bk, bv) {
+func cmp(ak, av, bk, bv) {
   return bv.index <=> av.index
 }
 begin {
@@ -7,7 +7,7 @@ begin {
 }
 @records[NR] = $*; # Accumulate
 end {
-  @records = sortmf(@records, "f");
+  @records = sortmf(@records, cmp);
   for (_, record in @records) {
     emit record;
   }

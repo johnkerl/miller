@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"strings"
 
+	"mlr/src/dsl"
+	"mlr/src/dsl/cst"
 	"mlr/src/types"
 )
 
@@ -43,33 +45,33 @@ func (repl *Repl) handleDSLStringAux(
 		return nil
 	}
 
-	astRootNode, err := repl.BuildASTFromStringWithMessage(dslString)
+	repl.cstRootNode.ResetForREPL()
+
+	err := repl.cstRootNode.Build(
+		[]string{dslString},
+		cst.DSLInstanceTypeREPL,
+		isReplImmediate,
+		doWarnings,
+		false, // warningsAreFatal
+		func(dslString string, astNode *dsl.AST) {
+			if repl.astPrintMode == ASTPrintParex {
+				astNode.PrintParex()
+			} else if repl.astPrintMode == ASTPrintParexOneLine {
+				astNode.PrintParexOneLine()
+			} else if repl.astPrintMode == ASTPrintIndent {
+				astNode.Print()
+			}
+		},
+	)
 	if err != nil {
-		// Error message already printed out
 		return err
 	}
-
-	repl.cstRootNode.ResetForREPL()
 
 	// For load-from-file / non-immediate multi-line, each statement not in
 	// begin/end, and not a user-defined function/subroutine, is recorded in
 	// the "main block" to be executed later when the user asks to do so. For
 	// single-line/interactive mode, begin/end statements and UDF/UDS are
 	// recorded, but any other statements are executed immediately.
-	err = repl.cstRootNode.IngestAST(
-		astRootNode,
-		isReplImmediate,
-		doWarnings,
-		false, // warningsAreFatal
-	)
-	if err != nil {
-		return err
-	}
-
-	err = repl.cstRootNode.Resolve()
-	if err != nil {
-		return err
-	}
 
 	if isReplImmediate {
 		outrec, err := repl.cstRootNode.ExecuteREPLImmediate(repl.runtimeState)

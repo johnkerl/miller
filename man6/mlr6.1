@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-09-23
+.\"      Date: 2021-09-28
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-09-23" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-09-28" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3415,7 +3415,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], "f")'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.
+ (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], f)'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.
 .fi
 .if n \{\
 .RE
@@ -3424,7 +3424,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({"c":1,"b":3,"a":1}, "f")'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.
+ (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({"c":1,"b":3,"a":1}, f)'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.
 .fi
 .if n \{\
 .RE

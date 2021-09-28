@@ -45,7 +45,16 @@ func NewUnresolvedUDF(
 // ----------------------------------------------------------------
 type UDFCallsite struct {
 	argumentNodes []IEvaluable
-	udf           *UDF
+
+	// Non-nil if name was resolved at CST-build time, including named UDFs
+	// mutually-recursively calling each other. Nil if the function is in
+	// a local variable, like 'f = func(a,b) { return a*b }; z = f(x,y)'.
+	udf *UDF
+
+	// Used if the function is in a local variable.
+	stackVariable *runtime.StackVariable
+	functionName  string
+	arity         int
 }
 
 // NewUDFCallsite is for the normal UDF callsites outside of sortaf/sortmf,
@@ -56,16 +65,22 @@ func NewUDFCallsite(
 	argumentNodes []IEvaluable,
 	udf *UDF,
 ) *UDFCallsite {
+	functionName := udf.signature.funcOrSubrName
+	arity := udf.signature.arity
 	return &UDFCallsite{
 		argumentNodes: argumentNodes,
 		udf:           udf,
+		stackVariable: runtime.NewStackVariable(functionName),
+		functionName:  functionName,
+		arity:         arity,
 	}
 }
 
-// NewUDFCallsiteForSortF is for UDF callsites in sortaf/sortmf. Here, the array/map
-// to be sorted has already been evaluated and is an array of *types.Mlrval.
-// The UDF needs to be invoked on pairs of array elements.
-func NewUDFCallsiteForSortF(
+// NewUDFCallsiteForHigherOrderFunction is for UDF callsites such as
+// sortaf/sortmf.  Here, the array/map to be sorted has already been evaluated
+// and is an array of *types.Mlrval.  The UDF needs to be invoked on pairs of
+// array elements.
+func NewUDFCallsiteForHigherOrderFunction(
 	udf *UDF,
 ) *UDFCallsite {
 	return &UDFCallsite{
@@ -73,14 +88,42 @@ func NewUDFCallsiteForSortF(
 	}
 }
 
+func (site *UDFCallsite) findUDF(state *runtime.State) *UDF {
+	if site.udf != nil {
+		// Name already resolved at CST-build time
+		return site.udf
+	}
+
+	// Try stack variable, e.g. the "f" in '$z = f($x, $y)', and supposing
+	// there was 'f = func(a, b) { return a*b }' in scope.
+	v := state.Stack.Get(site.stackVariable)
+	if v == nil { // Nothing in scope on the stack with that name
+		return nil
+	}
+
+	iudf := v.GetFunction()
+	if iudf == nil { // Something in scope on the stack with that name, but it's not a function
+		return nil
+	}
+
+	// func-type mlrvals have only interface{} as value, to avoid what would
+	// otherwise be a cyclic package dependency. Here, we deference it.
+	return iudf.(*UDF)
+}
+
 // Evaluate is for the normal UDF callsites outside of sortaf/sortmf.
 // See comments above NewUDFCallsite.
 func (site *UDFCallsite) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
+
+	udf := site.findUDF(state)
+	if udf == nil {
+		fmt.Fprintln(os.Stderr, "mlr: function name not found: "+site.functionName)
+		os.Exit(1)
+	}
+	lib.InternalCodingErrorIf(udf.functionBody == nil)
 	lib.InternalCodingErrorIf(site.argumentNodes == nil)
-	lib.InternalCodingErrorIf(site.udf == nil)
-	lib.InternalCodingErrorIf(site.udf.functionBody == nil)
 
 	// Evaluate and pair up the callsite arguments with our parameters,
 	// positionally.
@@ -126,13 +169,13 @@ func (site *UDFCallsite) Evaluate(
 	// we push a new frameset and DefineTypedAtScope using the callee's frameset.
 
 	// Evaluate the arguments
-	numArguments := len(site.udf.signature.typeGatedParameterNames)
+	numArguments := len(udf.signature.typeGatedParameterNames)
 	arguments := make([]*types.Mlrval, numArguments)
 
-	for i := range site.udf.signature.typeGatedParameterNames {
+	for i := range udf.signature.typeGatedParameterNames {
 		arguments[i] = site.argumentNodes[i].Evaluate(state)
 
-		err := site.udf.signature.typeGatedParameterNames[i].Check(arguments[i])
+		err := udf.signature.typeGatedParameterNames[i].Check(arguments[i])
 		if err != nil {
 			// TODO: put error-return in the Evaluate API
 			fmt.Fprint(os.Stderr, err)
@@ -140,7 +183,7 @@ func (site *UDFCallsite) Evaluate(
 		}
 	}
 
-	return site.EvaluateWithArguments(state, arguments)
+	return site.EvaluateWithArguments(state, udf, arguments)
 }
 
 // EvaluateWithArguments is for UDF callsites in sortaf/sortmf, where the
@@ -148,6 +191,7 @@ func (site *UDFCallsite) Evaluate(
 // function for Evaluate.
 func (site *UDFCallsite) EvaluateWithArguments(
 	state *runtime.State,
+	udf *UDF,
 	arguments []*types.Mlrval,
 ) *types.Mlrval {
 
@@ -157,8 +201,8 @@ func (site *UDFCallsite) EvaluateWithArguments(
 
 	for i := range arguments {
 		err := state.Stack.DefineTypedAtScope(
-			runtime.NewStackVariable(site.udf.signature.typeGatedParameterNames[i].Name),
-			site.udf.signature.typeGatedParameterNames[i].TypeName,
+			runtime.NewStackVariable(udf.signature.typeGatedParameterNames[i].Name),
+			udf.signature.typeGatedParameterNames[i].TypeName,
 			arguments[i],
 		)
 		// TODO: put error-return in the Evaluate API
@@ -169,13 +213,13 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	}
 
 	// Execute the function body.
-	blockExitPayload, err := site.udf.functionBody.Execute(state)
+	blockExitPayload, err := udf.functionBody.Execute(state)
 
 	// TODO: rethink error-propagation here: blockExitPayload.blockReturnValue
 	// being MT_ERROR should be mapped to MT_ERROR here (nominally,
 	// data-dependent). But error-return could be something not data-dependent.
 	if err != nil {
-		err = site.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ERROR)
+		err = udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ERROR)
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
@@ -185,7 +229,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 
 	// Fell off end of function with no return
 	if blockExitPayload == nil {
-		err = site.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
+		err = udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
@@ -197,7 +241,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	// continue not in a loop, or return-void, both of which should have been
 	// reported as syntax errors during the parsing pass.
 	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
-		err = site.udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
+		err = udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
@@ -209,7 +253,7 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	// their UDF but we lost the return value.
 	lib.InternalCodingErrorIf(blockExitPayload.blockReturnValue == nil)
 
-	err = site.udf.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
+	err = udf.signature.typeGatedReturnValue.Check(blockExitPayload.blockReturnValue)
 	if err != nil {
 		// TODO: put error-return in the Evaluate API
 		fmt.Fprint(os.Stderr, err)
@@ -219,16 +263,29 @@ func (site *UDFCallsite) EvaluateWithArguments(
 }
 
 // ----------------------------------------------------------------
+
+// UDFManager tracks named UDFs like 'func f(a, b) { return b - a }'
 type UDFManager struct {
 	functions map[string]*UDF
 }
 
+// NewUDFManager creates an empty UDFManager.
 func NewUDFManager() *UDFManager {
 	return &UDFManager{
 		functions: make(map[string]*UDF),
 	}
 }
 
+func (manager *UDFManager) Install(udf *UDF) {
+	manager.functions[udf.signature.funcOrSubrName] = udf
+}
+
+func (manager *UDFManager) ExistsByName(name string) bool {
+	_, ok := manager.functions[name]
+	return ok
+}
+
+// LookUp is for callsites invoking UDFs whose names are known at CST-build time.
 func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF, error) {
 	udf := manager.functions[functionName]
 	if udf == nil {
@@ -248,13 +305,10 @@ func (manager *UDFManager) LookUp(functionName string, callsiteArity int) (*UDF,
 	return udf, nil
 }
 
-func (manager *UDFManager) Install(udf *UDF) {
-	manager.functions[udf.signature.funcOrSubrName] = udf
-}
-
-func (manager *UDFManager) ExistsByName(name string) bool {
-	_, ok := manager.functions[name]
-	return ok
+// LookUpDisregardingArity is used for evaluating right-hand sides of 'f = udf'
+// where f will be a local variable of type funct and udf is an existing UDF.
+func (manager *UDFManager) LookUpDisregardingArity(functionName string) *UDF {
+	return manager.functions[functionName] // nil if not found
 }
 
 // ----------------------------------------------------------------
@@ -273,7 +327,7 @@ func (manager *UDFManager) ExistsByName(name string) bool {
 //
 // AST:
 // * StatementBlock
-//     * FunctionDefinition "f"
+//     * NamedFunctionDefinition "f"
 //         * ParameterList
 //             * Parameter
 //                 * ParameterName "x"
@@ -296,8 +350,9 @@ func (manager *UDFManager) ExistsByName(name string) bool {
 //         * FunctionCallsite "f"
 //             * DirectFieldValue "x"
 
+// BuildAndInstallUDF is for named UDFs, like `func f(a, b) { return b - a}'.
 func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
-	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeFunctionDefinition)
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeNamedFunctionDefinition)
 	lib.InternalCodingErrorIf(astNode.Children == nil)
 	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
@@ -322,6 +377,65 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 			)
 		}
 	}
+
+	udf, err := root.BuildUDF(astNode, functionName)
+	if err != nil {
+		return err
+	}
+
+	root.udfManager.Install(udf)
+
+	return nil
+}
+
+// ================================================================
+
+var namelessFunctionCounter int = 0
+
+// genFunctionLiteralName provides a UUID for function-literal nodes like `func (a, b) { return b - a }'.
+// Even nameless function literals need some sort of name for caching purposes.
+func genFunctionLiteralName() string {
+	namelessFunctionCounter++
+	return fmt.Sprintf("function-literal-%06d", namelessFunctionCounter)
+}
+
+// ----------------------------------------------------------------
+
+// UnnamedUDFNode holds function literals like 'func (a, b) { return b - a }'.
+type UnnamedUDFNode struct {
+	udfAsMlrval *types.Mlrval
+}
+
+func (root *RootNode) BuildUnnamedUDFNode(astNode *dsl.ASTNode) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeUnnamedFunctionDefinition)
+
+	udf, err := root.BuildUDF(astNode, "")
+	if err != nil {
+		return nil, err
+	}
+
+	udfAsMlrval := types.MlrvalPointerFromFunction(udf, genFunctionLiteralName())
+
+	return &UnnamedUDFNode{
+		udfAsMlrval: udfAsMlrval,
+	}, nil
+}
+
+func (node *UnnamedUDFNode) Evaluate(state *runtime.State) *types.Mlrval {
+	return node.udfAsMlrval
+}
+
+// ================================================================
+
+// BuildUDF is for named UDFs, like `func f(a, b) { return b - a}', or,
+// unnamed UDFs like `func (a, b) { return b - a }'.
+func (root *RootNode) BuildUDF(astNode *dsl.ASTNode, functionName string) (*UDF, error) {
+	lib.InternalCodingErrorIf(
+		(astNode.Type != dsl.NodeTypeNamedFunctionDefinition) &&
+			(astNode.Type != dsl.NodeTypeUnnamedFunctionDefinition))
+
+	lib.InternalCodingErrorIf(astNode.Children == nil)
+	lib.InternalCodingErrorIf(len(astNode.Children) != 2 && len(astNode.Children) != 3)
 
 	parameterListASTNode := astNode.Children[0]
 	functionBodyASTNode := astNode.Children[1]
@@ -361,7 +475,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 			typeName,
 		)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		typeGatedParameterNames[i] = typeGatedParameterName
@@ -371,12 +485,8 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 
 	functionBody, err := root.BuildStatementBlockNode(functionBodyASTNode)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	udf := NewUDF(signature, functionBody)
-
-	root.udfManager.Install(udf)
-
-	return nil
+	return NewUDF(signature, functionBody), nil
 }

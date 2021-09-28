@@ -17,8 +17,8 @@ end {
     "b":2,
   };
 
-  print sortmf(x, "f1");
-  print sortmf(x, "f2");
-  print sortmf(x, "f3");
-  print sortmf(x, "f4");
+  print sortmf(x, f1);
+  print sortmf(x, f2);
+  print sortmf(x, f3);
+  print sortmf(x, f4);
 }

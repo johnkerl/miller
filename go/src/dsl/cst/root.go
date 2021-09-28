@@ -10,15 +10,21 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"mlr/src/cli"
 	"mlr/src/dsl"
 	"mlr/src/output"
+	"mlr/src/parsing/lexer"
+	"mlr/src/parsing/parser"
 	"mlr/src/runtime"
 	"mlr/src/types"
 )
 
-// ----------------------------------------------------------------
+// NewEmptyRoot sets up an empty CST, before ingesting any DSL strings.  For
+// mlr put and mlr filter, CSTs are constructed, then ASTs are ingested from
+// DSL strings. For the REPL, a CST is constructed once, then an AST is
+// ingested on every line of input from the REPL.
 func NewEmptyRoot(
 	recordWriterOptions *cli.TWriterOptions,
 	dslInstanceType DSLInstanceType, // mlr put, mlr filter, or mlr repl
@@ -48,6 +54,86 @@ func (root *RootNode) WithRedefinableUDFUDS() *RootNode {
 }
 
 // ----------------------------------------------------------------
+
+// ASTBuildVisitorFunc is a callback, used by RootNode's Build method, which
+// CST-builder callsites can use to visit parse-to-AST result of multi-string
+// DSL inputs. Nominal use: mlr put -v, mlr put -d, etc.
+type ASTBuildVisitorFunc func(dslString string, astNode *dsl.AST)
+
+// Used by DSL -> AST -> CST callsites including mlr put, mlr filter, and mlr
+// repl. The RootNode must be separately instantiated (e.g. NewEmptyRoot())
+// since the CST is partially reset on every line of input from the REPL
+// prompt.
+func (root *RootNode) Build(
+	dslStrings []string,
+	dslInstanceType DSLInstanceType,
+	isReplImmediate bool,
+	doWarnings bool,
+	warningsAreFatal bool,
+	astBuildVisitorFunc ASTBuildVisitorFunc,
+) error {
+
+	for _, dslString := range dslStrings {
+		astRootNode, err := buildASTFromStringWithMessage(dslString)
+		if err != nil {
+			// Error message already printed out
+			return err
+		}
+
+		// E.g. mlr put -v -- let it print out what it needs to.
+		if astBuildVisitorFunc != nil {
+			astBuildVisitorFunc(dslString, astRootNode)
+		}
+
+		err = root.IngestAST(
+			astRootNode,
+			isReplImmediate,
+			doWarnings,
+			warningsAreFatal,
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	err := root.Resolve()
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
+func buildASTFromStringWithMessage(dslString string) (*dsl.AST, error) {
+	astRootNode, err := buildASTFromString(dslString)
+	if err != nil {
+		// Leave this out until we get better control over the error-messaging.
+		// At present it's overly parser-internal, and confusing. :(
+		fmt.Fprintln(os.Stderr, "mlr: cannot parse DSL expression.")
+		return nil, err
+	} else {
+		return astRootNode, nil
+	}
+}
+
+func buildASTFromString(dslString string) (*dsl.AST, error) {
+	// For non-Windows, already stripped by the shell; helpful here for Windows.
+	if strings.HasPrefix(dslString, "'") && strings.HasSuffix(dslString, "'") {
+		dslString = dslString[1 : len(dslString)-1]
+	}
+
+	theLexer := lexer.NewLexer([]byte(dslString))
+	theParser := parser.NewParser()
+	interfaceAST, err := theParser.Parse(theLexer)
+	if err != nil {
+		return nil, err
+	}
+	astRootNode := interfaceAST.(*dsl.AST)
+	return astRootNode, nil
+}
+
+// ----------------------------------------------------------------
+
 // If the user has multiple put -f / put -e pieces, we can AST-parse each
 // separately and build them. However we cannot resolve UDF/UDS references
 // until after they're all ingested -- e.g. first piece calls a function which
@@ -227,7 +313,7 @@ func (root *RootNode) buildMainPass(ast *dsl.AST, isReplImmediate bool) error {
 
 	for _, astChild := range astChildren {
 
-		if astChild.Type == dsl.NodeTypeFunctionDefinition {
+		if astChild.Type == dsl.NodeTypeNamedFunctionDefinition {
 			err := root.BuildAndInstallUDF(astChild)
 			if err != nil {
 				return err
@@ -301,9 +387,9 @@ func (root *RootNode) resolveFunctionCallsites() error {
 			return err
 		}
 		if udf == nil {
-			return errors.New(
-				"mlr: function name not found: " + functionName,
-			)
+			// Unresolvable at CST-build time but perhaps a local variable. For example,
+			// the UDF callsite '$z = f($x, $y)', and supposing
+			// there will be 'f = func(a, b) { return a*b }' in scope at runtime.
 		}
 
 		unresolvedFunctionCallsite.udf = udf
@@ -368,7 +454,6 @@ func (root *RootNode) ProcessEndOfStream() {
 	}
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) ExecuteBeginBlocks(state *runtime.State) error {
 	for _, beginBlock := range root.beginBlocks {
 		_, err := beginBlock.Execute(state)
@@ -379,13 +464,11 @@ func (root *RootNode) ExecuteBeginBlocks(state *runtime.State) error {
 	return nil
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) ExecuteMainBlock(state *runtime.State) (outrec *types.Mlrmap, err error) {
 	_, err = root.mainBlock.Execute(state)
 	return state.Inrec, err
 }
 
-// ----------------------------------------------------------------
 func (root *RootNode) ExecuteEndBlocks(state *runtime.State) error {
 	for _, endBlock := range root.endBlocks {
 		_, err := endBlock.Execute(state)

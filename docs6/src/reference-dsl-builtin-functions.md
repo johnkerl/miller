@@ -457,13 +457,13 @@ sorta  (class=collections #args=1-2) Returns a copy of an array, sorted ascendin
 
 ### sortaf
 <pre class="pre-non-highlight-non-pair">
-sortaf  (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], "f")'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.
+sortaf  (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], f)'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.
 </pre>
 
 
 ### sortmf
 <pre class="pre-non-highlight-non-pair">
-sortmf  (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({"c":1,"b":3,"a":1}, "f")'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.
+sortmf  (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({"c":1,"b":3,"a":1}, f)'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.
 </pre>
 
 

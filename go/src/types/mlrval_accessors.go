@@ -111,6 +111,10 @@ func (mv *Mlrval) IsArrayOrMap() bool {
 	return mv.mvtype == MT_ARRAY || mv.mvtype == MT_MAP
 }
 
+func (mv *Mlrval) IsFunction() bool {
+	return mv.mvtype == MT_FUNC
+}
+
 // ----------------------------------------------------------------
 func (mv *Mlrval) GetIntValue() (intValue int, isInt bool) {
 	if mv.mvtype == MT_INT {
@@ -182,6 +186,14 @@ func (mv *Mlrval) GetArrayLength() (int, bool) {
 func (mv *Mlrval) GetMap() *Mlrmap {
 	if mv.mvtype == MT_MAP {
 		return mv.mapval
+	} else {
+		return nil
+	}
+}
+
+func (mv *Mlrval) GetFunction() interface{} {
+	if mv.mvtype == MT_FUNC {
+		return mv.funcval
 	} else {
 		return nil
 	}

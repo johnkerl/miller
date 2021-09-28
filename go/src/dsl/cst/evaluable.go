@@ -75,6 +75,9 @@ func (root *RootNode) BuildEvaluableNode(astNode *dsl.ASTNode) (IEvaluable, erro
 	case dsl.NodeTypeDotOperator:
 		return root.BuildDotCallsiteNode(astNode)
 
+	// Function literals like 'func (a,b) { return b - a }'
+	case dsl.NodeTypeUnnamedFunctionDefinition:
+		return root.BuildUnnamedUDFNode(astNode)
 	}
 
 	return nil, errors.New(

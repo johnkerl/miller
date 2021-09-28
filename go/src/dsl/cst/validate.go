@@ -96,38 +96,35 @@ func validateASTAux(
 			)
 		}
 		nextLevelInBeginOrEnd = true
-	}
-	if astNode.Type == dsl.NodeTypeEndBlock {
+	} else if astNode.Type == dsl.NodeTypeEndBlock {
 		if !atTopLevel {
 			return errors.New(
 				"mlr: end blocks can only be at top level.",
 			)
 		}
 		nextLevelInBeginOrEnd = true
-	}
-	if astNode.Type == dsl.NodeTypeFunctionDefinition {
+	} else if astNode.Type == dsl.NodeTypeNamedFunctionDefinition {
 		if !atTopLevel {
 			return errors.New(
 				"mlr: func blocks can only be at top level.",
 			)
 		}
 		nextLevelInUDF = true
-	}
-	if astNode.Type == dsl.NodeTypeSubroutineDefinition {
+	} else if astNode.Type == dsl.NodeTypeUnnamedFunctionDefinition {
+		nextLevelInUDF = true
+	} else if astNode.Type == dsl.NodeTypeSubroutineDefinition {
 		if !atTopLevel {
 			return errors.New(
 				"mlr: subr blocks can only be at top level.",
 			)
 		}
 		nextLevelInUDS = true
-	}
-	if astNode.Type == dsl.NodeTypeForLoopTwoVariable {
+	} else if astNode.Type == dsl.NodeTypeForLoopTwoVariable {
 		err := validateForLoopTwoVariableUniqueNames(astNode)
 		if err != nil {
 			return err
 		}
-	}
-	if astNode.Type == dsl.NodeTypeForLoopMultivariable {
+	} else if astNode.Type == dsl.NodeTypeForLoopMultivariable {
 		err := validateForLoopMultivariableUniqueNames(astNode)
 		if err != nil {
 			return err

@@ -404,9 +404,9 @@ recaptiulate (for reference) what `sorta` already does; the third is novel:
 <b>  }</b>
 <b></b>
 <b>  split_values = splita($values, ";");</b>
-<b>  $forward = sortaf(split_values, "forward");</b>
-<b>  $reverse = sortaf(split_values, "reverse");</b>
-<b>  $even_then_odd = sortaf(split_values, "even_then_odd");</b>
+<b>  $forward = sortaf(split_values, forward);</b>
+<b>  $reverse = sortaf(split_values, reverse);</b>
+<b>  $even_then_odd = sortaf(split_values, even_then_odd);</b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
@@ -438,7 +438,7 @@ indexing](reference-dsl-operators.md#the-double-purpose-dot-operator))
 <b>mlr --icsv --opprint --from example.csv put -q '</b>
 <b>  # Sort primarily ascending on the shape field, then secondarily</b>
 <b>  # descending numeric on the index field.</b>
-<b>  func f(a, b) {</b>
+<b>  func cmp(a, b) {</b>
 <b>    cmp1 = a.shape <=> b.shape;</b>
 <b>    if (cmp1 != 0) {</b>
 <b>      return cmp1</b>
@@ -451,7 +451,7 @@ indexing](reference-dsl-operators.md#the-double-purpose-dot-operator))
 <b>  }</b>
 <b>  @records[NR] = $*; # Accumulate</b>
 <b>  end {</b>
-<b>    @records = sortaf(@records, "f");</b>
+<b>    @records = sortaf(@records, cmp);</b>
 <b>    for (record in @records) {</b>
 <b>      emit record;</b>
 <b>    }</b>
@@ -505,10 +505,10 @@ For example, we can sort ascending or descending by map key or map value:
 <b>      "b":2,</b>
 <b>    };</b>
 <b></b>
-<b>    print sortmf(x, "f1");</b>
-<b>    print sortmf(x, "f2");</b>
-<b>    print sortmf(x, "f3");</b>
-<b>    print sortmf(x, "f4");</b>
+<b>    print sortmf(x, f1);</b>
+<b>    print sortmf(x, f2);</b>
+<b>    print sortmf(x, f3);</b>
+<b>    print sortmf(x, f4);</b>
 <b>  }</b>
 <b>'</b>
 </pre>
@@ -548,7 +548,7 @@ using a map is handy, since we don't need continguous keys.
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --opprint --from example.csv put -q '</b>
 <b>  # Sort descending numeric on the index field</b>
-<b>  func f(ak, av, bk, bv) {</b>
+<b>  func cmp(ak, av, bk, bv) {</b>
 <b>    return bv.index <=> av.index</b>
 <b>  }</b>
 <b>  begin {</b>
@@ -556,7 +556,7 @@ using a map is handy, since we don't need continguous keys.
 <b>  }</b>
 <b>  @records[NR] = $*; # Accumulate</b>
 <b>  end {</b>
-<b>    @records = sortmf(@records, "f");</b>
+<b>    @records = sortmf(@records, cmp);</b>
 <b>    for (_, record in @records) {</b>
 <b>      emit record;</b>
 <b>    }</b>
@@ -576,10 +576,3 @@ red    circle   true  3  16    13.8103  2.9010
 red    square   true  2  15    79.2778  0.0130
 yellow triangle true  1  11    43.6498  9.8870
 </pre>
-
-## A note on function names for sortaf and sortmf
-
-In many programming languages, we'd have not `sorta(myarray, "myfunc")` but
-rather `sorta(myarray, myfunc)`. In these languages, functions are _first-class
-objects_ and can be assigned to variables. In Miller (as of September 2021)
-they are not -- although that is a laudable goal for someday.

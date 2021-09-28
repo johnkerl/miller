@@ -62,6 +62,10 @@ func NewStackVariable(name string) *StackVariable {
 	}
 }
 
+func (sv *StackVariable) GetName() string {
+	return sv.name
+}
+
 // ================================================================
 // STACK METHODS
 

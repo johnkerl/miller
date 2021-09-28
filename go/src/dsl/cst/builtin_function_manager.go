@@ -1445,7 +1445,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "sortaf",
 			class: FUNC_CLASS_COLLECTIONS,
-			help:  "Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], \"f\")'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.",
+			help:  "Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], f)'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.",
 			// Not in the types package since it uses UDFs which are in the dsl/cst
 			// package, which would make a circular reference.
 			binaryFuncWithState: SortAF,
@@ -1454,7 +1454,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "sortmf",
 			class: FUNC_CLASS_COLLECTIONS,
-			help:  "Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({\"c\":1,\"b\":3,\"a\":1}, \"f\")'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.",
+			help:  "Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({\"c\":1,\"b\":3,\"a\":1}, f)'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.",
 			// Not in the types package since it uses UDFs which are in the dsl/cst
 			// package, which would make a circular reference.
 			binaryFuncWithState: SortMF,
@@ -1562,6 +1562,7 @@ func hashifyLookupTable(lookupTable *[]BuiltinFunctionInfo) map[string]*BuiltinF
 }
 
 // ----------------------------------------------------------------
+
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionClasses() {
 	classesList := manager.getBuiltinFunctionClasses()
 	for _, class := range classesList {
@@ -1584,6 +1585,7 @@ func (manager *BuiltinFunctionManager) getBuiltinFunctionClasses() []string {
 }
 
 // ----------------------------------------------------------------
+
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string) {
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		if string(builtinFunctionInfo.class) == class {
@@ -1592,14 +1594,12 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionsInClass(class string)
 	}
 }
 
-// ----------------------------------------------------------------
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesVertically() {
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		fmt.Println(builtinFunctionInfo.name)
 	}
 }
 
-// ----------------------------------------------------------------
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph() {
 	functionNames := make([]string, len(*manager.lookupTable))
 	for i, builtinFunctionInfo := range *manager.lookupTable {
@@ -1608,7 +1608,6 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionNamesAsParagraph() {
 	lib.PrintWordsAsParagraph(functionNames)
 }
 
-// ----------------------------------------------------------------
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionsAsTable() {
 	fmt.Printf("%-30s %-12s %s\n", "Name", "Class", "Args")
 	for _, builtinFunctionInfo := range *manager.lookupTable {
@@ -1636,7 +1635,6 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
 	}
 }
 
-// ----------------------------------------------------------------
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
 	classesList := manager.getBuiltinFunctionClasses()
 
