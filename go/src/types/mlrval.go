@@ -44,6 +44,10 @@ type Mlrval struct {
 	boolval       bool
 	arrayval      []Mlrval
 	mapval        *Mlrmap
+	// These are first-class-function literals. Stored here as interface{} to
+	// avoid what would otherwise be a package-dependency cycle with the
+	// mlr/src/dsl/cst package.
+	funcval interface{}
 }
 
 // Enumeration for mlrval types
@@ -93,12 +97,14 @@ const (
 
 	MT_MAP = 9
 
+	MT_FUNC = 10
+
 	// Not a type -- this is a dimension for disposition vectors and
 	// disposition matrices. For example, when we want to add two mlrvals,
 	// instead of if/elsing or switching on the types of both operands, we
 	// instead jump directly to a type-specific function in a matrix of
 	// function pointers which is MT_DIM x MT_DIM.
-	MT_DIM = 10
+	MT_DIM = 11
 )
 
 var TYPE_NAMES = [MT_DIM]string{
@@ -112,6 +118,7 @@ var TYPE_NAMES = [MT_DIM]string{
 	"bool",
 	"array",
 	"map",
+	"funct",
 }
 
 // ----------------------------------------------------------------
@@ -125,12 +132,19 @@ const MT_TYPE_MASK_NUM = (1 << MT_INT) | (1 << MT_FLOAT)
 const MT_TYPE_MASK_BOOL = 1 << MT_BOOL
 const MT_TYPE_MASK_ARRAY = 1 << MT_ARRAY
 const MT_TYPE_MASK_MAP = 1 << MT_MAP
-const MT_TYPE_MASK_VAR = (1 << MT_VOID) | (1 << MT_STRING) | (1 << MT_INT) |
-	(1 << MT_FLOAT) | (1 << MT_BOOL) | (1 << MT_ARRAY) | (1 << MT_MAP)
+const MT_TYPE_MASK_VAR = (1 << MT_VOID) |
+	(1 << MT_STRING) |
+	(1 << MT_INT) |
+	(1 << MT_FLOAT) |
+	(1 << MT_BOOL) |
+	(1 << MT_ARRAY) |
+	(1 << MT_MAP)
+const MT_TYPE_MASK_FUNC = 1 << MT_FUNC
 
 // Not exposed in userspace
-const MT_TYPE_MASK_ANY = (1 << MT_ERROR) | (1 << MT_ABSENT) | MT_TYPE_MASK_VAR
+const MT_TYPE_MASK_ANY = (1 << MT_ERROR) | (1 << MT_ABSENT) | MT_TYPE_MASK_VAR | MT_TYPE_MASK_FUNC
 
+// TODO: const these throughout
 var typeNameToMaskMap = map[string]int{
 	"var":   MT_TYPE_MASK_VAR,
 	"str":   MT_TYPE_MASK_STRING,
@@ -141,6 +155,7 @@ var typeNameToMaskMap = map[string]int{
 	"arr":   MT_TYPE_MASK_ARRAY,
 	"map":   MT_TYPE_MASK_MAP,
 	"any":   MT_TYPE_MASK_ANY,
+	"funct": MT_TYPE_MASK_FUNC,
 }
 
 func TypeNameToMask(typeName string) (mask int, present bool) {

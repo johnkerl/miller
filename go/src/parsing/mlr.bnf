@@ -203,6 +203,7 @@ map   : 'm' 'a' 'p' ;
 num   : 'n' 'u' 'm' ;
 str   : 's' 't' 'r' ;
 var   : 'v' 'a' 'r' ;
+funct    : 'f' 'u' 'n' 'c' 't';
 
 unset    : 'u' 'n' 's' 'e' 't' ;
 
@@ -1136,6 +1137,9 @@ Typedecl
 
   | var
     << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
+
+  | funct
+    << dsl.NewASTNode($0, dsl.NodeTypeTypedecl) >>
 ;
 
 // ----------------------------------------------------------------
@@ -1467,6 +1471,7 @@ MlrvalOrFunction
   | OosvarValue
   | FullOosvar
   | LocalVariable
+  | UnnamedFunctionDefinition
 ;
 
 // ----------------------------------------------------------------
@@ -1925,7 +1930,7 @@ BracefulStatement
   | IfChain
   | WhileLoop
   | ForLoop
-  | FunctionDefinition
+  | NamedFunctionDefinition
   | SubroutineDefinition
 ;
 
@@ -2167,7 +2172,8 @@ ContinueStatement
 // ================================================================
 // FUNCTION AND SUBROUTINE DEFINITIONS
 
-FunctionDefinition
+// Example: 'func f(a, b) { return b - a }'
+NamedFunctionDefinition
 
   // Without return-type annotation
   : func
@@ -2181,7 +2187,7 @@ FunctionDefinition
       $1,
       $3, // parameter list
       $5, // { ... }
-      dsl.NodeTypeFunctionDefinition,
+      dsl.NodeTypeNamedFunctionDefinition,
     );
   >>
 
@@ -2200,7 +2206,45 @@ FunctionDefinition
       $3, // parameter list
       $7, // {...}
       $6, // return type
-      dsl.NodeTypeFunctionDefinition,
+      dsl.NodeTypeNamedFunctionDefinition,
+    );
+  >>
+
+;
+
+// Example: RHS of 'f = func (a, b) { return b - a }'
+UnnamedFunctionDefinition
+
+  // Without return-type annotation
+  : func
+    "("
+    FuncOrSubrParameterList
+    ")"
+    StatementBlockInBraces
+  <<
+    dsl.NewASTNodeBinary(
+      $0,
+      $2, // parameter list
+      $4, // { ... }
+      dsl.NodeTypeUnnamedFunctionDefinition,
+    );
+  >>
+
+  // With return-type annotation
+  | func
+    "("
+    FuncOrSubrParameterList
+    ")"
+    ":"
+    Typedecl
+    StatementBlockInBraces
+  <<
+    dsl.NewASTNodeTernary(
+      $0,
+      $2, // parameter list
+      $6, // {...}
+      $5, // return type
+      dsl.NodeTypeUnnamedFunctionDefinition,
     );
   >>
 

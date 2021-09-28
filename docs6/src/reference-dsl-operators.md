@@ -24,27 +24,27 @@ Operators are listed on the [DSL built-in functions page](reference-dsl-builtin-
 
 Operators are listed in order of decreasing precedence, highest first.
 
-| Operators     |        Associativity |
-|---------------|----------------------|
-| `()`                     | left to right |
-| `**`                     | right to left |
-| `!` `~` unary`+` unary`-` `&`    | right to left |
-| binary`*` `/` `//` `%`         | left to right |
-| `.`                      | left to right |
-| binary`+` binary`-`        | left to right |
-| `<<` `>>` `>>>`              | left to right |
-| `&`                      | left to right |
-| `^`                      | left to right |
-| `|`                      | left to right |
-| `<` `<=` `>` `>=`              | left to right |
-| `==` `!=` `=~` `!=~` `<=>`       | left to right |
-| `???`                    | left to right |
-| `??`                     | left to right |
-| `&&`                     | left to right |
-| `^^`                     | left to right |
-| `||`                     | left to right |
-| `? :`                    | right to left |
-| `=`                      | N/A for Miller (there is no $a=$b=$c) |
+| Operators                     | Associativity |
+|-------------------------------|---------------|
+| `()` `{}` `[]`                | left to right |
+| `**`                          | right to left |
+| `!` `~` unary`+` unary`-` `&` | right to left |
+| binary`*` `/` `//` `%`        | left to right |
+| `.`                           | left to right |
+| binary`+` binary`-`           | left to right |
+| `<<` `>>` `>>>`               | left to right |
+| `&`                           | left to right |
+| `^`                           | left to right |
+| `|`                           | left to right |
+| `<` `<=` `>` `>=`             | left to right |
+| `==` `!=` `=~` `!=~` `<=>`    | left to right |
+| `???`                         | left to right |
+| `??`                          | left to right |
+| `&&`                          | left to right |
+| `^^`                          | left to right |
+| `||`                          | left to right |
+| `? :`                         | right to left |
+| `=`                           |  N/A for Miller (there is no $a=$b=$c) |
 
 ## Operator and function semantics
 

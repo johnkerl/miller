@@ -125,7 +125,7 @@ func warnOnASTAux(
 		// Reset for this part of the treewalk.
 		variableNamesWrittenTo = make(map[string]bool)
 
-	} else if astNode.Type == dsl.NodeTypeFunctionDefinition {
+	} else if astNode.Type == dsl.NodeTypeNamedFunctionDefinition {
 		// Locals are confined to begin/end blocks and func/subr blocks.  Reset
 		// for this part of the treewalk, except mark the parameters as
 		// defined.
@@ -202,7 +202,7 @@ func noteParametersForWarnings(
 	variableNamesWrittenTo := make(map[string]bool)
 
 	lib.InternalCodingErrorIf(
-		astNode.Type != dsl.NodeTypeFunctionDefinition &&
+		astNode.Type != dsl.NodeTypeNamedFunctionDefinition &&
 			astNode.Type != dsl.NodeTypeSubroutineDefinition)
 	lib.InternalCodingErrorIf(len(astNode.Children) < 1)
 	parameterListNode := astNode.Children[0]

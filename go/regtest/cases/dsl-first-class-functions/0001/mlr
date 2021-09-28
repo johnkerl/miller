@@ -1,0 +1,4 @@
+end {
+  f = func (a,b) { return a * b };
+  print f(3, 4);
+}

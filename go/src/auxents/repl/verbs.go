@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"mlr/src/colorizer"
+	"mlr/src/dsl"
 	"mlr/src/dsl/cst"
 	"mlr/src/lib"
 	"mlr/src/types"
@@ -421,25 +422,26 @@ func handleSkipOrProcessN(repl *Repl, n int, processingNotSkipping bool) {
 }
 
 func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkipping bool) {
-	astRootNode, err := repl.BuildASTFromStringWithMessage(dslString)
-	if err != nil {
-		// Error message already printed out
-		return
-	}
 
-	err = repl.cstRootNode.IngestAST(
-		astRootNode,
-		true, /*isReplImmediate*/
+	err := repl.cstRootNode.Build(
+		[]string{dslString},
+		cst.DSLInstanceTypeREPL,
+		true, // isReplImmediate
 		repl.doWarnings,
 		false, // warningsAreFatal
+		func(dslString string, astNode *dsl.AST) {
+			if repl.astPrintMode == ASTPrintParex {
+				astNode.PrintParex()
+			} else if repl.astPrintMode == ASTPrintParexOneLine {
+				astNode.PrintParexOneLine()
+			} else if repl.astPrintMode == ASTPrintIndent {
+				astNode.Print()
+			}
+		},
 	)
 	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	err = repl.cstRootNode.Resolve()
-	if err != nil {
-		fmt.Println(err)
+		// Error message already printed out
+		//TODO: check this
 		return
 	}
 

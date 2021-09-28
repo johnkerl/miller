@@ -45,6 +45,7 @@ var to_int_dispositions = [MT_DIM]UnaryFunc{
 	/*BOOL   */ bool_to_int,
 	/*ARRAY  */ _erro1,
 	/*MAP    */ _erro1,
+	/*FUNC   */ _erro1,
 }
 
 func MlrvalToInt(input1 *Mlrval) *Mlrval {
@@ -84,6 +85,7 @@ var to_float_dispositions = [MT_DIM]UnaryFunc{
 	/*BOOL   */ bool_to_float,
 	/*ARRAY  */ _erro1,
 	/*MAP    */ _erro1,
+	/*FUNC   */ _erro1,
 }
 
 func MlrvalToFloat(input1 *Mlrval) *Mlrval {
@@ -119,6 +121,7 @@ var to_boolean_dispositions = [MT_DIM]UnaryFunc{
 	/*BOOL   */ _1u___,
 	/*ARRAY  */ _erro1,
 	/*MAP    */ _erro1,
+	/*FUNC   */ _erro1,
 }
 
 func MlrvalToBoolean(input1 *Mlrval) *Mlrval {

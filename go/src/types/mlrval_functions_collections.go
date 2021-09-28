@@ -77,6 +77,7 @@ func init() {
 		/*BOOL   */ depth_from_scalar,
 		/*ARRAY  */ depth_from_array,
 		/*MAP    */ depth_from_map,
+		/*FUNC   */ _erro1,
 	}
 }
 
@@ -142,6 +143,7 @@ var leafcount_dispositions = [MT_DIM]UnaryFunc{
 	/*BOOL   */ leafcount_from_scalar,
 	/*ARRAY  */ leafcount_from_array,
 	/*MAP    */ leafcount_from_map,
+	/*FUNC   */ _erro1,
 }
 
 func MlrvalLeafCount(input1 *Mlrval) *Mlrval {

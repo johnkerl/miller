@@ -219,9 +219,9 @@ mlr --icsv --ojson --from data/sortaf-example.csv put '
   }
 
   split_values = splita($values, ";");
-  $forward = sortaf(split_values, "forward");
-  $reverse = sortaf(split_values, "reverse");
-  $even_then_odd = sortaf(split_values, "even_then_odd");
+  $forward = sortaf(split_values, forward);
+  $reverse = sortaf(split_values, reverse);
+  $even_then_odd = sortaf(split_values, even_then_odd);
 '
 GENMD_EOF
 
@@ -244,7 +244,7 @@ GENMD_RUN_COMMAND
 mlr --icsv --opprint --from example.csv put -q '
   # Sort primarily ascending on the shape field, then secondarily
   # descending numeric on the index field.
-  func f(a, b) {
+  func cmp(a, b) {
     cmp1 = a.shape <=> b.shape;
     if (cmp1 != 0) {
       return cmp1
@@ -257,7 +257,7 @@ mlr --icsv --opprint --from example.csv put -q '
   }
   @records[NR] = $*; # Accumulate
   end {
-    @records = sortaf(@records, "f");
+    @records = sortaf(@records, cmp);
     for (record in @records) {
       emit record;
     }
@@ -298,10 +298,10 @@ mlr -n put -q '
       "b":2,
     };
 
-    print sortmf(x, "f1");
-    print sortmf(x, "f2");
-    print sortmf(x, "f3");
-    print sortmf(x, "f4");
+    print sortmf(x, f1);
+    print sortmf(x, f2);
+    print sortmf(x, f3);
+    print sortmf(x, f4);
   }
 '
 GENMD_EOF
@@ -319,7 +319,7 @@ using a map is handy, since we don't need continguous keys.
 GENMD_RUN_COMMAND
 mlr --icsv --opprint --from example.csv put -q '
   # Sort descending numeric on the index field
-  func f(ak, av, bk, bv) {
+  func cmp(ak, av, bk, bv) {
     return bv.index <=> av.index
   }
   begin {
@@ -327,17 +327,10 @@ mlr --icsv --opprint --from example.csv put -q '
   }
   @records[NR] = $*; # Accumulate
   end {
-    @records = sortmf(@records, "f");
+    @records = sortmf(@records, cmp);
     for (_, record in @records) {
       emit record;
     }
   }
 '
 GENMD_EOF
-
-## A note on function names for sortaf and sortmf
-
-In many programming languages, we'd have not `sorta(myarray, "myfunc")` but
-rather `sorta(myarray, myfunc)`. In these languages, functions are _first-class
-objects_ and can be assigned to variables. In Miller (as of September 2021)
-they are not -- although that is a laudable goal for someday.
