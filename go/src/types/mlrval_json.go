@@ -309,7 +309,7 @@ func (mv *Mlrval) marshalJSONAux(
 	case MT_DIM: // MT_DIM is one past the last valid type
 		return "", errors.New("mlr: internal coding error detected")
 	}
-	return "", errors.New("mlr: iInternal coding error detected")
+	return "", errors.New("mlr: Internal coding error detected")
 }
 
 // ================================================================

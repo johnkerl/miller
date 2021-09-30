@@ -1,0 +1,35 @@
+Original:
+{
+  "cubit": 823,
+  "dale": 13,
+  "apple": 199,
+  "ember": 191,
+  "bottle": 107
+}
+
+Squared values:
+{
+  "cubit": 677329,
+  "dale": 169,
+  "apple": 39601,
+  "ember": 36481,
+  "bottle": 11449
+}
+
+Cubed values, sorted by key:
+{
+  "apple": 7880599,
+  "bottle": 1225043,
+  "cubit": 557441767,
+  "dale": 2197,
+  "ember": 6967871
+}
+
+Same, with upcased keys:
+{
+  "APPLE": 7880599,
+  "BOTTLE": 1225043,
+  "CUBIT": 557441767,
+  "DALE": 2197,
+  "EMBER": 6967871
+}

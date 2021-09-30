@@ -159,6 +159,14 @@ func (mv *Mlrval) AssertNumeric() {
 	_ = mv.GetNumericToFloatValueOrDie()
 }
 
+func (mv *Mlrval) GetString() (stringValue string, isString bool) {
+	if mv.mvtype == MT_STRING || mv.mvtype == MT_VOID {
+		return mv.printrep, true
+	} else {
+		return "", false
+	}
+}
+
 func (mv *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
 	if mv.mvtype == MT_BOOL {
 		return mv.boolval, true
@@ -235,7 +243,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 	if mv.mvtype == MT_MAP {
 		// Without this, the for-loop below is zero-pass and fields with "{}"
 		// values would disappear entirely in a JSON-to-CSV conversion.
-		if mv.mapval.FieldCount == 0 {
+		if mv.mapval.IsEmpty() {
 			if prefix != "" {
 				retval.PutCopy(prefix, MlrvalPointerFromString("{}"))
 			}

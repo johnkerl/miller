@@ -45,6 +45,10 @@ func newOrderedMapEntry(key *string, value interface{}) *orderedMapEntry {
 }
 
 // ----------------------------------------------------------------
+func (omap *OrderedMap) IsEmpty() bool {
+	return omap.FieldCount == 0
+}
+
 func (omap *OrderedMap) Has(key string) bool {
 	return omap.findEntry(&key) != nil
 }

@@ -155,7 +155,7 @@ func MlrvalIsEmpty(input1 *Mlrval) *Mlrval {
 	}
 }
 func MlrvalIsEmptyMap(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_MAP && input1.mapval.FieldCount == 0)
+	return MlrvalPointerFromBool(input1.mvtype == MT_MAP && input1.mapval.IsEmpty())
 }
 func MlrvalIsFloat(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_FLOAT)

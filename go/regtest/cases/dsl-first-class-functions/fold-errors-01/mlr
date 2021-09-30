@@ -1,0 +1,3 @@
+end {
+  print fold("not array or map", func (k,v) { return v % 10 >= 5});
+}

@@ -1,0 +1,13 @@
+end {
+  my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
+  print "Original:";
+  print my_map;
+
+  print;
+  print "Keys with an 'o' in them:";
+  print select(my_map, func (k,v) { return k =~ "o"});
+
+  print;
+  print "Values with last digit >= 5:";
+  print select(my_map, func (k,v) { return v % 10 >= 5});
+}

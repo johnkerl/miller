@@ -320,7 +320,7 @@ func (acc *Stats1ModeAccumulator) Ingest(value *types.Mlrval) {
 	}
 }
 func (acc *Stats1ModeAccumulator) Emit() *types.Mlrval {
-	if acc.countsByValue.FieldCount == 0 {
+	if acc.countsByValue.IsEmpty() {
 		return types.MLRVAL_ERROR
 	}
 	maxValue := ""
@@ -361,7 +361,7 @@ func (acc *Stats1AntimodeAccumulator) Ingest(value *types.Mlrval) {
 	}
 }
 func (acc *Stats1AntimodeAccumulator) Emit() *types.Mlrval {
-	if acc.countsByValue.FieldCount == 0 {
+	if acc.countsByValue.IsEmpty() {
 		return types.MLRVAL_ERROR
 	}
 	minValue := ""

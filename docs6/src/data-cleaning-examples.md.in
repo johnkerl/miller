@@ -32,6 +32,6 @@ GENMD_EOF
 
 A third way is to abort the process on first instance of bad data:
 
-GENMD_RUN_COMMAND_TOLERATING_ERROR
+GENMD_RUN_COMMAND_STDERR_ONLY
 mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv
 GENMD_EOF

@@ -1,0 +1,4 @@
+mlr: reduce: accumulator value must be a single-element map; got "{
+  "x": 7,
+  "y": 8
+}".

@@ -1,0 +1,17 @@
+end {
+  my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
+  print "Original:";
+  print my_map;
+
+  print;
+  print "Sum of values with reduce:";
+  print reduce(my_map, func (acck,accv,ek,ev) { return {"sum": accv + ev} });
+
+  print;
+  print "Sum of values with fold and 0 initial value:";
+  print fold(my_map, func (acck,accv,ek,ev) { return {"sum": accv + ev} }, {"sum": 0});
+
+  print;
+  print "Sum of values with fold and 1000000 initial value:";
+  print fold(my_map, func (acck,accv,ek,ev) { return {"sum": accv + ev} }, {"sum": 1000000});
+}
