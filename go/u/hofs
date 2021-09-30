@@ -7,35 +7,37 @@ mlr -n put '
 
     print;
     print "---------------------------------------------------------------- SELECT ARRAY";
-    print select(my_array, func (e) { return e % 2 == 0});
-    print select(my_array, func (e) { return e % 2 == 1});
+    print select(my_array, func (int e): bool { return e % 2 == 0});
+    print select(my_array, func (int e): bool { return e % 2 == 1});
 
     print;
     print "---------------------------------------------------------------- APPLY ARRAY";
-    print apply(my_array, func(e) { return e**2 });
-    print apply(my_array, func(e) { return e**3 });
-    print sort(apply(my_array, func(e) { return e**3 }));
+    print apply(my_array, func(int e): int { return e**2 });
+    print apply(my_array, func(int e): int { return e**3 });
+    print sort(apply(my_array, func(int e):int { return e**3 }));
 
     print;
     print "---------------------------------------------------------------- REDUCE ARRAY";
-    print reduce(my_array, func (acc,e) { return acc });
-    print reduce(my_array, func (acc,e) { return e });
-    print reduce(my_array, func (acc,e) { return acc+e });
-    print reduce(my_array, func (acc,e) { return acc*e });
-    print reduce(my_array, func (acc,e) { return acc. "," . e });
+    print reduce(my_array, func (int acc, int e): int { return acc });
+    print reduce(my_array, func (int acc, int e): int { return e });
+    print reduce(my_array, func (int acc, int e): int { return acc+e });
+    print reduce(my_array, func (int acc, int e): int { return acc*e });
+    print reduce(my_array, func (var acc, int e): str { return acc. "," . e });
 
     print;
     print "---------------------------------------------------------------- FOLD ARRAY";
-    print fold(my_array, func (acc,e) { return acc }, 1000000);
-    print fold(my_array, func (acc,e) { return e }, 1000000);
-    print fold(my_array, func (acc,e) { return acc+e }, 1000000);
-    print fold(my_array, func (acc,e) { return acc*e }, 1000000);
-    print fold(my_array, func (acc,e) { return acc . "," . e }, "prefix");
+    print fold(my_array, func (int acc, int e): int { return acc }, 1000000);
+    print fold(my_array, func (int acc, int e): int { return e }, 1000000);
+    print fold(my_array, func (int acc, int e): int { return acc+e }, 1000000);
+    print fold(my_array, func (int acc, int e): int { return acc*e }, 1000000);
+    print fold(my_array, func (str acc, int e): str { return acc . "," . e }, "prefix");
 
     print;
     print "---------------------------------------------------------------- SORT ARRAY";
     print sort(my_array);
-    print sort(my_array, func(a,b) { return b-a});
+    print sort(my_array, func(int a, int b): num { return b-a});
+    funct f = func(int a, int b): num { return b-a };
+    print sort(my_array, f);
 
     print;
     print "================================================================ MAP";
