@@ -1,0 +1,19 @@
+Original:
+{
+  "cubit": 823,
+  "dale": 13,
+  "apple": 199,
+  "ember": 191,
+  "bottle": 107
+}
+
+Keys with an 'o' in them:
+{
+  "bottle": 107
+}
+
+Values with last digit >= 5:
+{
+  "apple": 199,
+  "bottle": 107
+}

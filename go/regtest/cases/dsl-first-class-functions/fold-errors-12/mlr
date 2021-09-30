@@ -1,0 +1,3 @@
+end {
+  print fold([1,2,3], func (acc,e) { }, 9);
+}

@@ -89,6 +89,7 @@ nav:
     - "DSL operators": "reference-dsl-operators.md"
     - "DSL built-in functions": "reference-dsl-builtin-functions.md"
     - "DSL user-defined functions": "reference-dsl-user-defined-functions.md"
+    - "DSL higher-order functions": "reference-dsl-higher-order-functions.md"
     - "DSL filter statements": "reference-dsl-filter-statements.md"
     - "DSL output statements": "reference-dsl-output-statements.md"
     - "DSL unset statements": "reference-dsl-unset-statements.md"

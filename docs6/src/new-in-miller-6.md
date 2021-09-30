@@ -154,18 +154,18 @@ The [sort](reference-verbs.md#sort) verb now accepts `-c` and `-cr` options for 
 
 ## New DSL functions / operators
 
+* Higher-order functions [`select`](reference-dsl-builtin-functions.md#select), [`apply`](reference-dsl-builtin-functions.md#apply), [`reduce`](reference-dsl-builtin-functions.md#reduce), [`fold`](reference-dsl-builtin-functions.md#fold), and [`sort`](reference-dsl-builtin-functions.md#sort).  See the [sorting page](sorting.md) and the [higher-order-functions page](reference-dsl-higher-order-functions.md) for more information.
+
+* Absent-coalesce operator [`??`](reference-dsl-builtin-functions.md#absent-coalesce) along with `??=`;
+absent-empty-coalesce operator [`???`](reference-dsl-builtin-functions.md#absent-empty-coalesce) along with `???=`.
+
+* The dot operator is not new, but it has a new role: in addition to its existing use for string-concatenation like `"a"."b" = "ab"`, you can now also use it for keying maps. For example, `$req.headers.host` is the same as `$req["headers"]["host"]`. See the [dot-operator reference](reference-dsl-operators.md#the-double-purpose-dot-operator) for more information.
+
 * String-hashing functions [md5](reference-dsl-builtin-functions.md#md5), [sha1](reference-dsl-builtin-functions.md#sha1), [sha256](reference-dsl-builtin-functions.md#sha256), and [sha512](reference-dsl-builtin-functions.md#sha512).
 
 * Platform-property functions [hostname](reference-dsl-builtin-functions.md#hostname), [os](reference-dsl-builtin-functions.md#os), and [version](reference-dsl-builtin-functions.md#version).
 
 * Unsigned right-shift [`>>>`](reference-dsl-builtin-functions.md#ursh) along with `>>>=`.
-
-* Absent-coalesce operator [`??`](reference-dsl-builtin-functions.md#absent-coalesce) along with `??=`;
-absent-empty-coalesce operator [`???`](reference-dsl-builtin-functions.md#absent-empty-coalesce) along with `???=`.
-
-* Sorting functions [`sorta`](reference-dsl-builtin-functions.md#sorta), [`sortaf`](reference-dsl-builtin-functions.md#sortaf), [`sortmk`](reference-dsl-builtin-functions.md#sortmk), and [`sortmf`](reference-dsl-builtin-functions.md#sortmf).  See the [sorting page](sorting.md) for more information.
-
-* The dot operator is not new, but it has a new role: in addition to its existing use for string-concatenation like `"a"."b" = "ab"`, you can now also use it for keying maps. For example, `$req.headers.host` is the same as `$req["headers"]["host"]`. See the [dot-operator reference](reference-dsl-operators.md#the-double-purpose-dot-operator) for more information.
 
 ## Improved command-line parsing
 

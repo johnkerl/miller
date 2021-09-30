@@ -1,0 +1,38 @@
+Original:
+{
+  "cubit": 823,
+  "dale": 13,
+  "apple": 199,
+  "ember": 191,
+  "bottle": 107
+}
+
+First:
+{
+  "cubit": 823
+}
+
+Last:
+{
+  "bottle": 107
+}
+
+Concatenate keys and values:
+{
+  "cubit,dale,apple,ember,bottle": "823,13,199,191,107"
+}
+
+Sum of values:
+{
+  "sum": 1333
+}
+
+Product of values:
+{
+  "product": 43512437137
+}
+
+String-join of values:
+{
+  "joined": "823,13,199,191,107"
+}

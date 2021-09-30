@@ -20,39 +20,37 @@ d pre-release:
 FCFs/HOFs
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  LHS
-  o f = udf
-  o var f = udf
-
-  BNF + LNS
-  o func f = udf
-  o func f = g
-
-  BNF
-  o func f = func(a,b) { return a <=> b }
-
-  BNF ... not 1st prio ...
-  o func f = (func(){ return udf})()
-
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  RHS SOMETHING
-  o c = f(a,b)
+  NEXT
+  o mlrval_json -- get file/line in internal-coding-error detected
+  ! funct tests
+  o who.txt
+  o wactct
+  ! UT much for typedecl cases
+  o a strength of these anons is access to side-data -- what story other than $x and @x?
+    - maybe reuse frameset for anons?
+  ? how to get apply w/ modded keys -- for example, upcased keys?
+    - maybe have it return {k: v} ?
+  ! make sure absent-semantics are respected in all HOFs
+    - update hofs.md.in
+  o hofs.md.in section on typedecls ...
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   DOC
+  ! HOFs docpage
+    - fold: separate IV; reduce: array[1]
+  o w/o funct: show
+    mlr: select: selector function returned non-boolean "(absent)".
   o kw olh for func and funct both
   o webdocs re funct typedecl
   o thorough webdoc combing for FCFs & funct ... :)
-  o explicitly mention HOFs -- at the moment, just sortaf, sortmf, & any UDHOFs ...
-    - maybe keep, apply, fold, reduce etc functions at some point ...
 
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  SOON
-  o IIFEs: 'func f = (func(){ return udf})()'
-  o BIFs in non-sigil context (UDFs already are)
+  o not-yets:
+    - IIFEs: 'func f = (func(){ return udf})()'
+    - BIFs in non-sigil context (UDFs already are)
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   NEATEN
+  o more RT for funct
   o Unnamed -> Literal; Named -> same as before -- ?
     - 'y = sortaf(x, udf)' with 'func udf(a,b) {return b<=>a}', or f=udf, *requires* name-leak
        of all UDFs into localvar reads ... single-node RHS, ternaries, function calls, etc ...
@@ -146,6 +144,9 @@ BLOCKERS
 
 ================================================================
 NON-BLOCKERS
+
+* IIFEs: 'func f = (func(){ return udf})()'
+* BIFs in non-sigil context (UDFs already are)
 
 * non-lite DKVP reader/writer
 

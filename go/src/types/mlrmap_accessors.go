@@ -881,3 +881,20 @@ func MlrmapFromPairsArray(pairsArray []MlrmapPair) *Mlrmap {
 
 	return mlrmap
 }
+
+// ----------------------------------------------------------------
+
+// GetFirstPair returns the first key-value pair as its own map.  If the map is
+// empty (i.e. there is no first pair) it returns nil.
+func (mlrmap *Mlrmap) GetFirstPair() *Mlrmap {
+	if mlrmap.Head == nil {
+		return nil
+	}
+	pair := NewMlrmap()
+	pair.PutCopy(mlrmap.Head.Key, mlrmap.Head.Value)
+	return pair
+}
+
+func (mlrmap *Mlrmap) IsSinglePair() bool {
+	return mlrmap.FieldCount == 1
+}

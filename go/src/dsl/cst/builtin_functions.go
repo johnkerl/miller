@@ -45,8 +45,12 @@ func (root *RootNode) BuildBuiltinFunctionCallsiteNode(
 			return root.BuildRegexCaptureBinaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.ternaryFunc != nil {
 			return root.BuildTernaryFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.ternaryFuncWithState != nil {
+			return root.BuildTernaryFunctionWithStateCallsiteNode(astNode, builtinFunctionInfo)
 		} else if builtinFunctionInfo.variadicFunc != nil {
 			return root.BuildVariadicFunctionCallsiteNode(astNode, builtinFunctionInfo)
+		} else if builtinFunctionInfo.variadicFuncWithState != nil {
+			return root.BuildVariadicFunctionWithStateCallsiteNode(astNode, builtinFunctionInfo)
 		} else {
 			return nil, errors.New(
 				"CST BuildFunctionCallsiteNode: builtin function not implemented yet: " +
@@ -277,7 +281,6 @@ func (node *BinaryFunctionCallsiteNode) Evaluate(
 // ----------------------------------------------------------------
 type BinaryFunctionWithStateCallsiteNode struct {
 	binaryFuncWithState BinaryFuncWithState
-	udfManager          *UDFManager
 	evaluable1          IEvaluable
 	evaluable2          IEvaluable
 }
@@ -311,7 +314,6 @@ func (root *RootNode) BuildBinaryFunctionWithStateCallsiteNode(
 
 	return &BinaryFunctionWithStateCallsiteNode{
 		binaryFuncWithState: builtinFunctionInfo.binaryFuncWithState,
-		udfManager:          root.udfManager,
 		evaluable1:          evaluable1,
 		evaluable2:          evaluable2,
 	}, nil
@@ -324,7 +326,64 @@ func (node *BinaryFunctionWithStateCallsiteNode) Evaluate(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),
 		state,
-		node.udfManager,
+	)
+}
+
+// ----------------------------------------------------------------
+type TernaryFunctionWithStateCallsiteNode struct {
+	ternaryFuncWithState TernaryFuncWithState
+	evaluable1           IEvaluable
+	evaluable2           IEvaluable
+	evaluable3           IEvaluable
+}
+
+func (root *RootNode) BuildTernaryFunctionWithStateCallsiteNode(
+	astNode *dsl.ASTNode,
+	builtinFunctionInfo *BuiltinFunctionInfo,
+) (IEvaluable, error) {
+	callsiteArity := len(astNode.Children)
+	expectedArity := 3
+	if callsiteArity != expectedArity {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"mlr: function %s invoked with %d argument%s; expected %d",
+				builtinFunctionInfo.name,
+				callsiteArity,
+				lib.Plural(callsiteArity),
+				expectedArity,
+			),
+		)
+	}
+
+	evaluable1, err := root.BuildEvaluableNode(astNode.Children[0])
+	if err != nil {
+		return nil, err
+	}
+	evaluable2, err := root.BuildEvaluableNode(astNode.Children[1])
+	if err != nil {
+		return nil, err
+	}
+	evaluable3, err := root.BuildEvaluableNode(astNode.Children[2])
+	if err != nil {
+		return nil, err
+	}
+
+	return &TernaryFunctionWithStateCallsiteNode{
+		ternaryFuncWithState: builtinFunctionInfo.ternaryFuncWithState,
+		evaluable1:           evaluable1,
+		evaluable2:           evaluable2,
+		evaluable3:           evaluable3,
+	}, nil
+}
+
+func (node *TernaryFunctionWithStateCallsiteNode) Evaluate(
+	state *runtime.State,
+) *types.Mlrval {
+	return node.ternaryFuncWithState(
+		node.evaluable1.Evaluate(state),
+		node.evaluable2.Evaluate(state),
+		node.evaluable3.Evaluate(state),
+		state,
 	)
 }
 
@@ -605,6 +664,68 @@ func (node *VariadicFunctionCallsiteNode) Evaluate(
 		args[i] = node.evaluables[i].Evaluate(state)
 	}
 	return node.variadicFunc(args)
+}
+
+// ----------------------------------------------------------------
+type VariadicFunctionWithStateCallsiteNode struct {
+	variadicFuncWithState VariadicFuncWithState
+	evaluables            []IEvaluable
+}
+
+func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
+	astNode *dsl.ASTNode,
+	builtinFunctionInfo *BuiltinFunctionInfo,
+) (IEvaluable, error) {
+	lib.InternalCodingErrorIf(astNode.Children == nil)
+	evaluables := make([]IEvaluable, len(astNode.Children))
+
+	callsiteArity := len(astNode.Children)
+
+	if callsiteArity < builtinFunctionInfo.minimumVariadicArity {
+		return nil, errors.New(
+			fmt.Sprintf(
+				"mlr: function %s takes minimum argument count %d; got %d.\n",
+				builtinFunctionInfo.name,
+				builtinFunctionInfo.minimumVariadicArity,
+				callsiteArity,
+			),
+		)
+	}
+
+	if builtinFunctionInfo.maximumVariadicArity != 0 {
+		if callsiteArity > builtinFunctionInfo.maximumVariadicArity {
+			return nil, errors.New(
+				fmt.Sprintf(
+					"mlr: function %s takes maximum argument count %d; got %d.\n",
+					builtinFunctionInfo.name,
+					builtinFunctionInfo.maximumVariadicArity,
+					callsiteArity,
+				),
+			)
+		}
+	}
+
+	var err error = nil
+	for i, astChildNode := range astNode.Children {
+		evaluables[i], err = root.BuildEvaluableNode(astChildNode)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return &VariadicFunctionWithStateCallsiteNode{
+		variadicFuncWithState: builtinFunctionInfo.variadicFuncWithState,
+		evaluables:            evaluables,
+	}, nil
+}
+
+func (node *VariadicFunctionWithStateCallsiteNode) Evaluate(
+	state *runtime.State,
+) *types.Mlrval {
+	args := make([]*types.Mlrval, len(node.evaluables))
+	for i := range node.evaluables {
+		args[i] = node.evaluables[i].Evaluate(state)
+	}
+	return node.variadicFuncWithState(args, state)
 }
 
 // ================================================================

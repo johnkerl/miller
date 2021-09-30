@@ -7,6 +7,8 @@
 c force CSV IFS single-char at CLIP? or CSV setup? IFS1?
 C need multi-IRS reader for USV & explicit CRLF (if supported); also need no-traiing-lf handling
 
+e precedence for `:` in slicing syntax
+
 ? look at:
   regtest/cases-pending-go-port/dsl-output-redirects/0071/cmd
   regtest/cases-pending-go-port/dsl-redirects/0004/cmd wtf no diff?

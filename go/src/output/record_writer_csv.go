@@ -43,7 +43,7 @@ func (writer *RecordWriterCSV) Write(
 		writer.csvWriter.Comma = rune(writer.writerOptions.OFS[0]) // xxx temp
 	}
 
-	if outrec.FieldCount == 0 {
+	if outrec.IsEmpty() {
 		if !writer.justWroteEmptyLine {
 			ostream.Write([]byte("\n"))
 		}
