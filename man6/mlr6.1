@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-09-28
+.\"      Date: 2021-09-30
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-09-28" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-09-30" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -210,27 +210,27 @@ uniq unsparsify
 .RS 0
 .\}
 .nf
-abs acos acosh append arrayify asin asinh asserting_absent asserting_array
-asserting_bool asserting_boolean asserting_empty asserting_empty_map
-asserting_error asserting_float asserting_int asserting_map
-asserting_nonempty_map asserting_not_array asserting_not_empty
+abs acos acosh append apply arrayify asin asinh asserting_absent
+asserting_array asserting_bool asserting_boolean asserting_empty
+asserting_empty_map asserting_error asserting_float asserting_int
+asserting_map asserting_nonempty_map asserting_not_array asserting_not_empty
 asserting_not_map asserting_not_null asserting_null asserting_numeric
 asserting_present asserting_string atan atan2 atanh bitcount boolean
 capitalize cbrt ceil clean_whitespace collapse_whitespace cos cosh depth
-dhms2fsec dhms2sec erf erfc exp expm1 flatten float floor fmtnum fsec2dhms
-fsec2hms get_keys get_values gmt2sec gsub haskey hexfmt hms2fsec hms2sec
-hostname int invqnorm is_absent is_array is_bool is_boolean is_empty
+dhms2fsec dhms2sec erf erfc exp expm1 flatten float floor fmtnum fold
+fsec2dhms fsec2hms get_keys get_values gmt2sec gsub haskey hexfmt hms2fsec
+hms2sec hostname int invqnorm is_absent is_array is_bool is_boolean is_empty
 is_empty_map is_error is_float is_int is_map is_nonempty_map is_not_array
 is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
 joink joinkv joinv json_parse json_stringify leafcount length log log10 log1p
 logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul
-msub os pow qnorm regextract regextract_or_else round roundm rstrip sec2dhms
-sec2gmt sec2gmtdate sec2hms sgn sha1 sha256 sha512 sin sinh sorta sortaf
-sortmf sortmk splita splitax splitkv splitkvx splitnv splitnvx sqrt ssub
-strftime string strip strlen strptime sub substr substr0 substr1 system
-systime systimeint tan tanh tolower toupper truncate typeof unflatten uptime
-urand urand32 urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .-
-\&./ / // < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
+msub os pow qnorm reduce regextract regextract_or_else round roundm rstrip
+sec2dhms sec2gmt sec2gmtdate sec2hms select sgn sha1 sha256 sha512 sin sinh
+sort splita splitax splitkv splitkvx splitnv splitnvx sqrt ssub strftime
+string strip strlen strptime sub substr substr0 substr1 system systime
+systimeint tan tanh tolower toupper truncate typeof unflatten uptime urand
+urand32 urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ /
+// < << <= <=> == =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 .fi
 .if n \{\
 .RE
@@ -2338,6 +2338,17 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .fi
 .if n \{\
 .RE
+.SS "apply"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
+Array example: apply([1,2,3,4,5], func(e) { return e ** 3}) returns [1, 8, 27, 64, 125].
+Map example: apply({"a":1, "b":3, "c":5}, func(k,v) { return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
+.fi
+.if n \{\
+.RE
 .SS "arrayify"
 .if n \{\
 .RS 0
@@ -2713,7 +2724,10 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=collections #args=3) Flattens multi-level maps to single-level ones. Examples: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.  flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.  Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).  Useful for nested JSON-like structures for non-JSON file formats like CSV.
+ (class=collections #args=3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.
+Example: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+Example: flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
 .fi
 .if n \{\
 .RE
@@ -2741,6 +2755,17 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .\}
 .nf
  (class=conversion #args=2) Convert int/float/bool to string using printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
+.fi
+.if n \{\
+.RE
+.SS "fold"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
+Array example: fold([1,2,3,4,5], func(acc,e) { return acc + e**3 }, 10000) returns 10225.
+Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
 .fi
 .if n \{\
 .RE
@@ -3037,7 +3062,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Makes string from map/array keys. Examples: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c" joink([1,2,3], ",") = "1,2,3".
+ (class=conversion #args=2) Makes string from map/array keys.
+Example: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".
+Example: joink([1,2,3], ",") = "1,2,3".
 .fi
 .if n \{\
 .RE
@@ -3046,7 +3073,9 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=conversion #args=3) Makes string from map/array key-value pairs. Examples: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5" joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+ (class=conversion #args=3) Makes string from map/array key-value pairs.
+Example: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
+Example: joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 .fi
 .if n \{\
 .RE
@@ -3266,6 +3295,17 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .fi
 .if n \{\
 .RE
+.SS "reduce"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element, and return the accumulated element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.
+Array example: reduce([1,2,3,4,5], func(acc,e) { return acc + e**3 }) returns 225.
+Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.
+.fi
+.if n \{\
+.RE
 .SS "regextract"
 .if n \{\
 .RS 0
@@ -3347,6 +3387,17 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .fi
 .if n \{\
 .RE
+.SS "select"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+Array example: select([1,2,3,4,5], func(e) { return e >= 3}) returns [3, 4, 5].
+Map example: select({"a":1, "b":3, "c":5}, func(k,v) { return v >= 3}) returns {"b":3, "c": 5}.
+.fi
+.if n \{\
+.RE
 .SS "sgn"
 .if n \{\
 .RS 0
@@ -3401,39 +3452,14 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .fi
 .if n \{\
 .RE
-.SS "sorta"
+.SS "sort"
 .if n \{\
 .RS 0
 .\}
 .nf
- (class=collections #args=1-2) Returns a copy of an array, sorted ascending. Coming soon: other sort options.
-.fi
-.if n \{\
-.RE
-.SS "sortaf"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], f)'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.
-.fi
-.if n \{\
-.RE
-.SS "sortmf"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({"c":1,"b":3,"a":1}, f)'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.
-.fi
-.if n \{\
-.RE
-.SS "sortmk"
-.if n \{\
-.RS 0
-.\}
-.nf
- (class=collections #args=1-2) Returns a copy of a map, sorted ascending by map key. Coming soon: other sort options.
+ (class=higher-order-functions #args=1-2) Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by map keys. If the second argument is a string, it can contain any of "f" for lexical (default "n" for natural/numeric), "), "c" for case-folded lexical, and "r" for reversed/descending sort. If the second argument is a function, then for arrays it should take two arguments a and b, returning < 0, 0, or > 0 as a < b, a == b, or a > b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning < 0, 0, or > 0, using a and b's keys and values.
+Array example: sort([5,2,3,1,4], func(a,b) { return b <=> a}) returns [5,4,3,2,1].
+Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) { return bv <=> av}) returns {"a":3,"c":2,"b":1}.
 .fi
 .if n \{\
 .RE
@@ -3442,7 +3468,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Splits string into array with type inference. Example: splita("3,4,5", ",") = [3,4,5]
+ (class=conversion #args=2) Splits string into array with type inference.
+Example: splita("3,4,5", ",") = [3,4,5]
 .fi
 .if n \{\
 .RE
@@ -3451,7 +3478,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Splits string into array without type inference. Example: splita("3,4,5", ",") = ["3","4","5"]
+ (class=conversion #args=2) Splits string into array without type inference.
+Example: splita("3,4,5", ",") = ["3","4","5"]
 .fi
 .if n \{\
 .RE
@@ -3460,7 +3488,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=conversion #args=3) Splits string by separators into map with type inference. Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
+ (class=conversion #args=3) Splits string by separators into map with type inference.
+Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 .fi
 .if n \{\
 .RE
@@ -3469,7 +3498,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings). Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
+ (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings).
+Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 .fi
 .if n \{\
 .RE
@@ -3478,7 +3508,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
+ (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference.
+Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 .fi
 .if n \{\
 .RE
@@ -3487,7 +3518,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings). Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
+ (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings).
+Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 .fi
 .if n \{\
 .RE
@@ -3676,7 +3708,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=collections #args=2) Reverses flatten. Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.  Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
+ (class=collections #args=2) Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
+Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
 .fi
 .if n \{\
 .RE
@@ -3694,7 +3727,8 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.  Int-valued example: '$n=floor(20+urand()*11)'.
+ (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
+Int-valued example: '$n=floor(20+urand()*11)'.
 .fi
 .if n \{\
 .RE

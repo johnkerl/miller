@@ -69,9 +69,10 @@ is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
 
 * [**Arithmetic functions**](#arithmetic-functions):  [bitcount](#bitcount),  [madd](#madd),  [mexp](#mexp),  [mmul](#mmul),  [msub](#msub),  [pow](#pow),  [%](#percent),  [&](#bitwise-and),  [\*](#times),  [\**](#exponentiation),  [\+](#plus),  [\-](#minus),  [\.\*](#dot-times),  [\.\+](#dot-plus),  [\.\-](#dot-minus),  [\./](#dot-slash),  [/](#slash),  [//](#slash-slash),  [<<](#lsh),  [>>](#srsh),  [>>>](#ursh),  [^](#bitwise-xor),  [\|](#bitwise-or),  [~](#bitwise-not).
 * [**Boolean functions**](#boolean-functions):  [\!](#exclamation-point),  [\!=](#exclamation-point-equals),  [!=~](#regnotmatch),  [&&](#logical-and),  [<](#less-than),  [<=](#less-than-or-equals),  [<=>](#<=>),  [==](#double-equals),  [=~](#regmatch),  [>](#greater-than),  [>=](#greater-than-or-equals),  [?:](#question-mark-colon),  [??](#absent-coalesce),  [???](#absent-empty-coalesce),  [^^](#logical-xor),  [\|\|](#logical-or).
-* [**Collections functions**](#collections-functions):  [append](#append),  [arrayify](#arrayify),  [depth](#depth),  [flatten](#flatten),  [get_keys](#get_keys),  [get_values](#get_values),  [haskey](#haskey),  [json_parse](#json_parse),  [json_stringify](#json_stringify),  [leafcount](#leafcount),  [length](#length),  [mapdiff](#mapdiff),  [mapexcept](#mapexcept),  [mapselect](#mapselect),  [mapsum](#mapsum),  [sorta](#sorta),  [sortaf](#sortaf),  [sortmf](#sortmf),  [sortmk](#sortmk),  [unflatten](#unflatten).
+* [**Collections functions**](#collections-functions):  [append](#append),  [arrayify](#arrayify),  [depth](#depth),  [flatten](#flatten),  [get_keys](#get_keys),  [get_values](#get_values),  [haskey](#haskey),  [json_parse](#json_parse),  [json_stringify](#json_stringify),  [leafcount](#leafcount),  [length](#length),  [mapdiff](#mapdiff),  [mapexcept](#mapexcept),  [mapselect](#mapselect),  [mapsum](#mapsum),  [unflatten](#unflatten).
 * [**Conversion functions**](#conversion-functions):  [boolean](#boolean),  [float](#float),  [fmtnum](#fmtnum),  [hexfmt](#hexfmt),  [int](#int),  [joink](#joink),  [joinkv](#joinkv),  [joinv](#joinv),  [splita](#splita),  [splitax](#splitax),  [splitkv](#splitkv),  [splitkvx](#splitkvx),  [splitnv](#splitnv),  [splitnvx](#splitnvx),  [string](#string).
 * [**Hashing functions**](#hashing-functions):  [md5](#md5),  [sha1](#sha1),  [sha256](#sha256),  [sha512](#sha512).
+* [**Higher-order-functions functions**](#higher-order-functions-functions):  [apply](#apply),  [fold](#fold),  [reduce](#reduce),  [select](#select),  [sort](#sort).
 * [**Math functions**](#math-functions):  [abs](#abs),  [acos](#acos),  [acosh](#acosh),  [asin](#asin),  [asinh](#asinh),  [atan](#atan),  [atan2](#atan2),  [atanh](#atanh),  [cbrt](#cbrt),  [ceil](#ceil),  [cos](#cos),  [cosh](#cosh),  [erf](#erf),  [erfc](#erfc),  [exp](#exp),  [expm1](#expm1),  [floor](#floor),  [invqnorm](#invqnorm),  [log](#log),  [log10](#log10),  [log1p](#log1p),  [logifit](#logifit),  [max](#max),  [min](#min),  [qnorm](#qnorm),  [round](#round),  [roundm](#roundm),  [sgn](#sgn),  [sin](#sin),  [sinh](#sinh),  [sqrt](#sqrt),  [tan](#tan),  [tanh](#tanh),  [urand](#urand),  [urand32](#urand32),  [urandint](#urandint),  [urandrange](#urandrange).
 * [**String functions**](#string-functions):  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [gsub](#gsub),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [\.](#dot).
 * [**System functions**](#system-functions):  [hostname](#hostname),  [os](#os),  [system](#system),  [version](#version).
@@ -379,7 +380,10 @@ depth  (class=collections #args=1) Prints maximum depth of map/array. Scalars ha
 
 ### flatten
 <pre class="pre-non-highlight-non-pair">
-flatten  (class=collections #args=3) Flattens multi-level maps to single-level ones. Examples: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.  flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.  Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).  Useful for nested JSON-like structures for non-JSON file formats like CSV.
+flatten  (class=collections #args=3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.
+Example: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+Example: flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
 </pre>
 
 
@@ -449,33 +453,10 @@ mapsum  (class=collections #args=variadic) With 0 args, returns empty map. With 
 </pre>
 
 
-### sorta
-<pre class="pre-non-highlight-non-pair">
-sorta  (class=collections #args=1-2) Returns a copy of an array, sorted ascending. Coming soon: other sort options.
-</pre>
-
-
-### sortaf
-<pre class="pre-non-highlight-non-pair">
-sortaf  (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], f)'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.
-</pre>
-
-
-### sortmf
-<pre class="pre-non-highlight-non-pair">
-sortmf  (class=collections #args=2) Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({"c":1,"b":3,"a":1}, f)'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.
-</pre>
-
-
-### sortmk
-<pre class="pre-non-highlight-non-pair">
-sortmk  (class=collections #args=1-2) Returns a copy of a map, sorted ascending by map key. Coming soon: other sort options.
-</pre>
-
-
 ### unflatten
 <pre class="pre-non-highlight-non-pair">
-unflatten  (class=collections #args=2) Reverses flatten. Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.  Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
+unflatten  (class=collections #args=2) Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
+Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
 </pre>
 
 ## Conversion functions
@@ -513,13 +494,17 @@ int  (class=conversion #args=1) Convert int/float/bool/string to int.
 
 ### joink
 <pre class="pre-non-highlight-non-pair">
-joink  (class=conversion #args=2) Makes string from map/array keys. Examples: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c" joink([1,2,3], ",") = "1,2,3".
+joink  (class=conversion #args=2) Makes string from map/array keys.
+Example: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".
+Example: joink([1,2,3], ",") = "1,2,3".
 </pre>
 
 
 ### joinkv
 <pre class="pre-non-highlight-non-pair">
-joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs. Examples: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5" joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs.
+Example: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
+Example: joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 </pre>
 
 
@@ -531,37 +516,43 @@ joinv  (class=conversion #args=2) Makes string from map/array values.  joinv([3,
 
 ### splita
 <pre class="pre-non-highlight-non-pair">
-splita  (class=conversion #args=2) Splits string into array with type inference. Example: splita("3,4,5", ",") = [3,4,5]
+splita  (class=conversion #args=2) Splits string into array with type inference.
+Example: splita("3,4,5", ",") = [3,4,5]
 </pre>
 
 
 ### splitax
 <pre class="pre-non-highlight-non-pair">
-splitax  (class=conversion #args=2) Splits string into array without type inference. Example: splita("3,4,5", ",") = ["3","4","5"]
+splitax  (class=conversion #args=2) Splits string into array without type inference.
+Example: splita("3,4,5", ",") = ["3","4","5"]
 </pre>
 
 
 ### splitkv
 <pre class="pre-non-highlight-non-pair">
-splitkv  (class=conversion #args=3) Splits string by separators into map with type inference. Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
+splitkv  (class=conversion #args=3) Splits string by separators into map with type inference.
+Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 </pre>
 
 
 ### splitkvx
 <pre class="pre-non-highlight-non-pair">
-splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings). Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
+splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings).
+Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 </pre>
 
 
 ### splitnv
 <pre class="pre-non-highlight-non-pair">
-splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference. Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
+splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference.
+Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 </pre>
 
 
 ### splitnvx
 <pre class="pre-non-highlight-non-pair">
-splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings). Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
+splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings).
+Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 </pre>
 
 
@@ -594,6 +585,48 @@ sha256  (class=hashing #args=1) SHA256 hash.
 ### sha512
 <pre class="pre-non-highlight-non-pair">
 sha512  (class=hashing #args=1) SHA512 hash.
+</pre>
+
+## Higher-order-functions functions
+
+
+### apply
+<pre class="pre-non-highlight-non-pair">
+apply  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
+Array example: apply([1,2,3,4,5], func(e) { return e ** 3}) returns [1, 8, 27, 64, 125].
+Map example: apply({"a":1, "b":3, "c":5}, func(k,v) { return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
+</pre>
+
+
+### fold
+<pre class="pre-non-highlight-non-pair">
+fold  (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
+Array example: fold([1,2,3,4,5], func(acc,e) { return acc + e**3 }, 10000) returns 10225.
+Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
+</pre>
+
+
+### reduce
+<pre class="pre-non-highlight-non-pair">
+reduce  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element, and return the accumulated element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.
+Array example: reduce([1,2,3,4,5], func(acc,e) { return acc + e**3 }) returns 225.
+Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.
+</pre>
+
+
+### select
+<pre class="pre-non-highlight-non-pair">
+select  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+Array example: select([1,2,3,4,5], func(e) { return e >= 3}) returns [3, 4, 5].
+Map example: select({"a":1, "b":3, "c":5}, func(k,v) { return v >= 3}) returns {"b":3, "c": 5}.
+</pre>
+
+
+### sort
+<pre class="pre-non-highlight-non-pair">
+sort  (class=higher-order-functions #args=1-2) Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by map keys. If the second argument is a string, it can contain any of "f" for lexical (default "n" for natural/numeric), "), "c" for case-folded lexical, and "r" for reversed/descending sort. If the second argument is a function, then for arrays it should take two arguments a and b, returning < 0, 0, or > 0 as a < b, a == b, or a > b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning < 0, 0, or > 0, using a and b's keys and values.
+Array example: sort([5,2,3,1,4], func(a,b) { return b <=> a}) returns [5,4,3,2,1].
+Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) { return bv <=> av}) returns {"a":3,"c":2,"b":1}.
 </pre>
 
 ## Math functions
@@ -799,7 +832,8 @@ tanh  (class=math #args=1) Hyperbolic tangent.
 
 ### urand
 <pre class="pre-non-highlight-non-pair">
-urand  (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.  Int-valued example: '$n=floor(20+urand()*11)'.
+urand  (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
+Int-valued example: '$n=floor(20+urand()*11)'.
 </pre>
 
 

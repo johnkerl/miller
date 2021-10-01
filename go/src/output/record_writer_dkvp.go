@@ -29,7 +29,7 @@ func (writer *RecordWriterDKVP) Write(
 		return
 	}
 
-	if outrec.FieldCount == 0 {
+	if outrec.IsEmpty() {
 		ostream.Write([]byte(writer.writerOptions.ORS))
 		return
 	}

@@ -1,0 +1,26 @@
+end {
+  my_array = [2, 9, 10, 3, 1, 4, 5, 8, 7, 6];
+
+  print "Original:";
+  print my_array;
+
+  print;
+  print "First:";
+  print reduce(my_array, func (acc,e) { return acc });
+
+  print;
+  print "Last:";
+  print reduce(my_array, func (acc,e) { return e });
+
+  print;
+  print "Sum:";
+  print reduce(my_array, func (acc,e) { return acc + e });
+
+  print;
+  print "Product:";
+  print reduce(my_array, func (acc,e) { return acc * e });
+
+  print;
+  print "Concatenation:";
+  print reduce(my_array, func (acc,e) { return acc. "," . e });
+}

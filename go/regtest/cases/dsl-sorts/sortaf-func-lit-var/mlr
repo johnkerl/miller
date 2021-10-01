@@ -7,7 +7,7 @@ end {
   cmp = func (a, b) {
     return b.index <=> a.index;
   };
-  @records = sortaf(@records, cmp);
+  @records = sort(@records, cmp);
   for (record in @records) {
     emit record;
   }

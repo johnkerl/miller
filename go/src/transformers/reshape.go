@@ -300,7 +300,7 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 			inrec.Remove(pe.Key)
 		}
 
-		if pairs.FieldCount == 0 {
+		if pairs.IsEmpty() {
 			outputChannel <- inrecAndContext
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
@@ -340,7 +340,7 @@ func (tr *TransformerReshape) wideToLongRegex(
 			inrec.Remove(pe.Key)
 		}
 
-		if pairs.FieldCount == 0 {
+		if pairs.IsEmpty() {
 			outputChannel <- inrecAndContext
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {

@@ -4,7 +4,7 @@ Miller gives you three ways to sort your data:
 
 * The [`sort`](reference-verbs.md#sort) verb lets you sort records (rows) by various fields (columns).
 * The [`sort-within-records`](reference-verbs.md#sort-within-records) verb lets you sort fields within records.
-* The [`sorta`](reference-dsl-builtin-functions.md#sorta), [`sortmk`](reference-dsl-builtin-functions.md#sortmk), [`sortaf`](reference-dsl-builtin-functions.md#sortaf), and [`sortmf`](reference-dsl-builtin-functions.md#sortmf) DSL functions give you more customizable options for sorting data either within fields, or, across records.
+* The [`sort`](reference-dsl-builtin-functions.md#sort) DSL function gives you more customizable options for sorting data either within fields or across records. (See also the [higher-order-functions page](reference-dsl-higher-order-functions.md) for related information.)
 
 ## Sorting records: the sort verb
 
@@ -52,20 +52,100 @@ GENMD_RUN_COMMAND
 mlr --ijson --opprint sort-within-records data/sort-within-records.json
 GENMD_EOF
 
-## Simple sorting of arrays: the sorta function
+## The sort function by example
 
-Using the [`sorta`](reference-dsl-builtin-functions.md#sorta) function, you can
+* It returns a sorted copy of an input array or map.
+* Without second argument, uses a natural ordering.
+* With second which is string, takes sorting flags from it: `"f"` for lexical or `"c"` for case-folded lexical, and/or `"r"` for reverse/descending.
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    # Sort array with natural ordering
+    print sort([5,2,3,1,4]);
+  }
+'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    # Sort array with reverse-natural ordering
+    print sort([5,2,3,1,4], "r");
+  }
+'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    # Sort array with custom function: natural ordering
+    print sort([5,2,3,1,4], func(a,b) { return a <=> b});
+  }
+'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    # Sort array with custom function: reverse-natural ordering
+    print sort([5,2,3,1,4], func(a,b) { return b <=> a});
+  }
+'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    # Sort map with natural ordering on keys
+    print sort({"c":2, "a": 3, "b": 1});
+  }
+'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    # Sort map with reverse-natural ordering on keys
+    print sort({"c":2, "a": 3, "b": 1}, "r");
+  }
+'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    # Sort map with custom function: natural ordering on values
+    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return av <=> bv});
+  }
+'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr -n put '
+  end {
+    # Sort map with custom function: reverse-natural ordering on values
+    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return bv <=> av});
+  }
+'
+GENMD_EOF
+
+In the rest of this page we'll look more closely at these variants.
+
+## Simple sorting of arrays
+
+Using the [`sort`](reference-dsl-builtin-functions.md#sort) function, you can
 get a copy of an array, sorted by its values -- optionally, with reversed
 order, and/or lexical/case-folded sorting. The first argument is an array to be
 sorted. The optional second argument is a string containing any of the
 characters `n` for numeric (the default anyway), `f` for lexical, or `c` for
-case-folded lexical, and `r` for reverse.  Note that `sorta` does not modify
+case-folded lexical, and `r` for reverse.  Note that `sort` does not modify
 its argument; it returns a sorted copy.
 
-Also note that all the flags to `sorta` allow you to operate on arrays which
+Also note that all the flags to `sort` allow you to operate on arrays which
 contain strings, floats, and booleans; if you need to sort an array whose
-values are themselves maps or arrays, you'll need `sortaf` as described further
-down in this page.
+values are themselves maps or arrays, you'll need `sort` with function argument
+as described further down in this page.
 
 GENMD_RUN_COMMAND
 cat data/sorta-example.csv
@@ -76,7 +156,7 @@ Default sort is numerical ascending:
 GENMD_RUN_COMMAND
 mlr --c2p --from data/sorta-example.csv put '
   $values = splita($values, ";");
-  $values = sorta($values);        # default flags
+  $values = sort($values);        # default flags
   $values = joinv($values, ";");
 '
 GENMD_EOF
@@ -86,7 +166,7 @@ Use the `"r"` flag for reverse, which is numerical descending:
 GENMD_RUN_COMMAND
 mlr --c2p --from data/sorta-example.csv put '
   $values = splita($values, ";");
-  $values = sorta($values, "r");   # 'r' flag for reverse sort
+  $values = sort($values, "r");   # 'r' flag for reverse sort
   $values = joinv($values, ";");
 '
 GENMD_EOF
@@ -96,7 +176,7 @@ Use the `"f"` flag for lexical ascending sort (and `"fr"` would lexical descendi
 GENMD_RUN_COMMAND
 mlr --c2p --from data/sorta-example.csv put '
   $values = splita($values, ";");
-  $values = sorta($values, "f");   # 'f' flag for lexical sort
+  $values = sort($values, "f");   # 'f' flag for lexical sort
   $values = joinv($values, ";");
 '
 GENMD_EOF
@@ -111,26 +191,25 @@ GENMD_RUN_COMMAND
 mlr --c2p --from data/sorta-example-text.csv put '
   $values = splita($values, ";");
   if (NR == 1) {
-    $values = sorta($values, "f"); # 'f' flag for (non-folded) lexical sort
+    $values = sort($values, "f"); # 'f' flag for (non-folded) lexical sort
   } else {
-    $values = sorta($values, "c"); # 'c' flag for case-folded lexical sort
+    $values = sort($values, "c"); # 'c' flag for case-folded lexical sort
   }
   $values = joinv($values, ";");
 '
 GENMD_EOF
 
-## Simple sorting of maps within records: the sortmk function
+## Simple sorting of maps within records
 
-Using the [`sortmk`](reference-dsl-builtin-functions.md#sortmk) function, you
-can sort a map by its keys -- using the same flags as for `sorta` for
-lexical/case-folded sorting and/or reverse.
+Using the [`sort`](reference-dsl-builtin-functions.md#sort) function, you
+can sort a map by its keys.
 
-Since `sortmk` only gives you options for sorting a map by its keys, if you
-want to sort a map by its values you'll need `sortmf` as described further down
-in this page.
+Since `sort` only gives you options for sorting a map by its keys, if you want
+to sort a map by its values you'll need `sort` with function argument as
+described further down in this page.
 
 Also note that, unlike the `sort-within-record` verb with its `-r` flag,
-`sortmk` doesn't recurse into submaps and sort those.
+`sort` doesn't recurse into submaps and sort those.
 
 GENMD_RUN_COMMAND
 cat data/server-log.json
@@ -138,12 +217,12 @@ GENMD_EOF
 
 GENMD_RUN_COMMAND
 mlr --json --from data/server-log.json put '
-  $req = sortmk($req);      # Ascending here
-  $res = sortmk($res, "r"); # Descending here
+  $req = sort($req);      # Ascending here
+  $res = sort($res, "r"); # Descending here
 '
 GENMD_EOF
 
-## Simple sorting of maps across records using the sortmk function
+## Simple sorting of maps across records
 
 As discussed in the page on
 [operating on all records](operating-on-all-records.md), while Miller is normally
@@ -164,7 +243,7 @@ mlr --icsv --opprint --from example.csv put -q '
   $nr = NR;
   @records[NR] = $*; # Accumulate
   end {
-    @records = sortmk(@records, "f");
+    @records = sort(@records, "f");
     for (_, record in @records) {
       emit record;
     }
@@ -172,9 +251,9 @@ mlr --icsv --opprint --from example.csv put -q '
 '
 GENMD_EOF
 
-## Custom sorting of arrays within records: the sortaf function
+## Custom sorting of arrays within records
 
-Using the [`sortaf`](reference-dsl-builtin-functions.md#sortaf) function, you
+Using the [`sort`](reference-dsl-builtin-functions.md#sort) function, you
 can sort an array by its values, using another function (which you specify --
 see the [page on user-defined functions](reference-dsl-user-defined-functions.md))
 for comparing elements.
@@ -190,17 +269,17 @@ cat data/sortaf-example.csv
 GENMD_EOF
 
 In the following example we sort data in several ways -- the first two just
-recaptiulate (for reference) what `sorta` already does; the third is novel:
+recaptiulate (for reference) what `sort` with default flags already does; the third is novel:
 
 GENMD_RUN_COMMAND
 mlr --icsv --ojson --from data/sortaf-example.csv put '
 
-  # Same as sorta($values)
+  # Same as sort($values)
   func forward(a,b) {
     return a <=> b
   }
 
-  # Same as sorta($values, "r")
+  # Same as sort($values, "r")
   func reverse(a,b) {
     return b <=> a
   }
@@ -219,13 +298,13 @@ mlr --icsv --ojson --from data/sortaf-example.csv put '
   }
 
   split_values = splita($values, ";");
-  $forward = sortaf(split_values, forward);
-  $reverse = sortaf(split_values, reverse);
-  $even_then_odd = sortaf(split_values, even_then_odd);
+  $forward = sort(split_values, forward);
+  $reverse = sort(split_values, reverse);
+  $even_then_odd = sort(split_values, even_then_odd);
 '
 GENMD_EOF
 
-## Custom sorting of arrays across records using the sortaf function
+## Custom sorting of arrays across records
 
 As noted above, we can use the
 [operating-on-all-records](operating-on-all-records.md) paradigm
@@ -257,7 +336,7 @@ mlr --icsv --opprint --from example.csv put -q '
   }
   @records[NR] = $*; # Accumulate
   end {
-    @records = sortaf(@records, cmp);
+    @records = sort(@records, cmp);
     for (record in @records) {
       emit record;
     }
@@ -265,9 +344,9 @@ mlr --icsv --opprint --from example.csv put -q '
 '
 GENMD_EOF
 
-## Custom sorting of maps within records: the sortmf function
+## Custom sorting of maps within records
 
-Using the [`sortmf`](reference-dsl-builtin-functions.md#sortmf) function, you
+Using the [`sort`](reference-dsl-builtin-functions.md#sort) function, you
 can sort a map using a function which you specify (see the [page on
 user-defined functions](reference-dsl-user-defined-functions.md)) for comparing
 keys and/or values.
@@ -298,15 +377,15 @@ mlr -n put -q '
       "b":2,
     };
 
-    print sortmf(x, f1);
-    print sortmf(x, f2);
-    print sortmf(x, f3);
-    print sortmf(x, f4);
+    print sort(x, f1);
+    print sort(x, f2);
+    print sort(x, f3);
+    print sort(x, f4);
   }
 '
 GENMD_EOF
 
-## Custom sorting of maps across records using the sortmf function
+## Custom sorting of maps across records
 
 We can modify our above example just a bit, where we accumulate records in a map rather than
 an array. Here the map keys will be `NR` values `"1"`, `"2"`, etc.
@@ -327,7 +406,7 @@ mlr --icsv --opprint --from example.csv put -q '
   }
   @records[NR] = $*; # Accumulate
   end {
-    @records = sortmf(@records, cmp);
+    @records = sort(@records, cmp);
     for (_, record in @records) {
       emit record;
     }

@@ -4233,10 +4233,10 @@ var productionsTable = ProdTab{
 		NumSymbols: 7,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return dsl.NewASTNodeTernary(
-				X[1],
-				X[3], // parameter list
-				X[7], // {...}
-				X[6], // return type
+				X[0],
+				X[2], // parameter list
+				X[6], // {...}
+				X[5], // return type
 				dsl.NodeTypeUnnamedFunctionDefinition,
 			)
 		},

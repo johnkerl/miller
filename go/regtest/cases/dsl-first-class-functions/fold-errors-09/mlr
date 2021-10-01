@@ -1,0 +1,3 @@
+end {
+  print fold({}, func () { return true}, {"x":7});
+}

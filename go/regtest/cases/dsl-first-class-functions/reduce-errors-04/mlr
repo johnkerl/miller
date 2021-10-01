@@ -1,0 +1,3 @@
+end {
+  print reduce([], 2, 3, 4)
+}

@@ -4,7 +4,7 @@ begin {
 }
 @records[NR] = $*; # Accumulate
 end {
-  @records = sortaf(@records, func (a, b) {
+  @records = sort(@records, func (a, b) {
     return b.index <=> a.index;
   });
   for (record in @records) {

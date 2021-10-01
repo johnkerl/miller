@@ -7,7 +7,7 @@ begin {
 }
 @records[NR] = $*; # Accumulate
 end {
-  @records = sortaf(@records, cmp);
+  @records = sort(@records, cmp);
   for (record in @records) {
     emit record;
   }

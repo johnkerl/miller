@@ -20,7 +20,7 @@ Miller gives you three ways to sort your data:
 
 * The [`sort`](reference-verbs.md#sort) verb lets you sort records (rows) by various fields (columns).
 * The [`sort-within-records`](reference-verbs.md#sort-within-records) verb lets you sort fields within records.
-* The [`sorta`](reference-dsl-builtin-functions.md#sorta), [`sortmk`](reference-dsl-builtin-functions.md#sortmk), [`sortaf`](reference-dsl-builtin-functions.md#sortaf), and [`sortmf`](reference-dsl-builtin-functions.md#sortmf) DSL functions give you more customizable options for sorting data either within fields, or, across records.
+* The [`sort`](reference-dsl-builtin-functions.md#sort) DSL function gives you more customizable options for sorting data either within fields or across records. (See also the [higher-order-functions page](reference-dsl-higher-order-functions.md) for related information.)
 
 ## Sorting records: the sort verb
 
@@ -140,20 +140,140 @@ a b c
 9 8 7
 </pre>
 
-## Simple sorting of arrays: the sorta function
+## The sort function by example
 
-Using the [`sorta`](reference-dsl-builtin-functions.md#sorta) function, you can
+* It returns a sorted copy of an input array or map.
+* Without second argument, uses a natural ordering.
+* With second which is string, takes sorting flags from it: `"f"` for lexical or `"c"` for case-folded lexical, and/or `"r"` for reverse/descending.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    # Sort array with natural ordering</b>
+<b>    print sort([5,2,3,1,4]);</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[1, 2, 3, 4, 5]
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    # Sort array with reverse-natural ordering</b>
+<b>    print sort([5,2,3,1,4], "r");</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[5, 4, 3, 2, 1]
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    # Sort array with custom function: natural ordering</b>
+<b>    print sort([5,2,3,1,4], func(a,b) { return a <=> b});</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[1, 2, 3, 4, 5]
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    # Sort array with custom function: reverse-natural ordering</b>
+<b>    print sort([5,2,3,1,4], func(a,b) { return b <=> a});</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+[5, 4, 3, 2, 1]
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    # Sort map with natural ordering on keys</b>
+<b>    print sort({"c":2, "a": 3, "b": 1});</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "a": 3,
+  "b": 1,
+  "c": 2
+}
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    # Sort map with reverse-natural ordering on keys</b>
+<b>    print sort({"c":2, "a": 3, "b": 1}, "r");</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "c": 2,
+  "b": 1,
+  "a": 3
+}
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    # Sort map with custom function: natural ordering on values</b>
+<b>    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return av <=> bv});</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "b": 1,
+  "c": 2,
+  "a": 3
+}
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put '</b>
+<b>  end {</b>
+<b>    # Sort map with custom function: reverse-natural ordering on values</b>
+<b>    print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return bv <=> av});</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "a": 3,
+  "c": 2,
+  "b": 1
+}
+</pre>
+
+In the rest of this page we'll look more closely at these variants.
+
+## Simple sorting of arrays
+
+Using the [`sort`](reference-dsl-builtin-functions.md#sort) function, you can
 get a copy of an array, sorted by its values -- optionally, with reversed
 order, and/or lexical/case-folded sorting. The first argument is an array to be
 sorted. The optional second argument is a string containing any of the
 characters `n` for numeric (the default anyway), `f` for lexical, or `c` for
-case-folded lexical, and `r` for reverse.  Note that `sorta` does not modify
+case-folded lexical, and `r` for reverse.  Note that `sort` does not modify
 its argument; it returns a sorted copy.
 
-Also note that all the flags to `sorta` allow you to operate on arrays which
+Also note that all the flags to `sort` allow you to operate on arrays which
 contain strings, floats, and booleans; if you need to sort an array whose
-values are themselves maps or arrays, you'll need `sortaf` as described further
-down in this page.
+values are themselves maps or arrays, you'll need `sort` with function argument
+as described further down in this page.
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/sorta-example.csv</b>
@@ -170,7 +290,7 @@ Default sort is numerical ascending:
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from data/sorta-example.csv put '</b>
 <b>  $values = splita($values, ";");</b>
-<b>  $values = sorta($values);        # default flags</b>
+<b>  $values = sort($values);        # default flags</b>
 <b>  $values = joinv($values, ";");</b>
 <b>'</b>
 </pre>
@@ -186,7 +306,7 @@ Use the `"r"` flag for reverse, which is numerical descending:
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from data/sorta-example.csv put '</b>
 <b>  $values = splita($values, ";");</b>
-<b>  $values = sorta($values, "r");   # 'r' flag for reverse sort</b>
+<b>  $values = sort($values, "r");   # 'r' flag for reverse sort</b>
 <b>  $values = joinv($values, ";");</b>
 <b>'</b>
 </pre>
@@ -202,7 +322,7 @@ Use the `"f"` flag for lexical ascending sort (and `"fr"` would lexical descendi
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from data/sorta-example.csv put '</b>
 <b>  $values = splita($values, ";");</b>
-<b>  $values = sorta($values, "f");   # 'f' flag for lexical sort</b>
+<b>  $values = sort($values, "f");   # 'f' flag for lexical sort</b>
 <b>  $values = joinv($values, ";");</b>
 <b>'</b>
 </pre>
@@ -228,9 +348,9 @@ alpha,cat;bat;Australia;Bavaria;apple;Colombia
 <b>mlr --c2p --from data/sorta-example-text.csv put '</b>
 <b>  $values = splita($values, ";");</b>
 <b>  if (NR == 1) {</b>
-<b>    $values = sorta($values, "f"); # 'f' flag for (non-folded) lexical sort</b>
+<b>    $values = sort($values, "f"); # 'f' flag for (non-folded) lexical sort</b>
 <b>  } else {</b>
-<b>    $values = sorta($values, "c"); # 'c' flag for case-folded lexical sort</b>
+<b>    $values = sort($values, "c"); # 'c' flag for case-folded lexical sort</b>
 <b>  }</b>
 <b>  $values = joinv($values, ";");</b>
 <b>'</b>
@@ -241,18 +361,17 @@ alpha Australia;Bavaria;Colombia;apple;bat;cat
 alpha apple;Australia;bat;Bavaria;cat;Colombia
 </pre>
 
-## Simple sorting of maps within records: the sortmk function
+## Simple sorting of maps within records
 
-Using the [`sortmk`](reference-dsl-builtin-functions.md#sortmk) function, you
-can sort a map by its keys -- using the same flags as for `sorta` for
-lexical/case-folded sorting and/or reverse.
+Using the [`sort`](reference-dsl-builtin-functions.md#sort) function, you
+can sort a map by its keys.
 
-Since `sortmk` only gives you options for sorting a map by its keys, if you
-want to sort a map by its values you'll need `sortmf` as described further down
-in this page.
+Since `sort` only gives you options for sorting a map by its keys, if you want
+to sort a map by its values you'll need `sort` with function argument as
+described further down in this page.
 
 Also note that, unlike the `sort-within-record` verb with its `-r` flag,
-`sortmk` doesn't recurse into submaps and sort those.
+`sort` doesn't recurse into submaps and sort those.
 
 <pre class="pre-highlight-in-pair">
 <b>cat data/server-log.json</b>
@@ -283,8 +402,8 @@ Also note that, unlike the `sort-within-record` verb with its `-r` flag,
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --json --from data/server-log.json put '</b>
-<b>  $req = sortmk($req);      # Ascending here</b>
-<b>  $res = sortmk($res, "r"); # Descending here</b>
+<b>  $req = sort($req);      # Ascending here</b>
+<b>  $res = sort($res, "r"); # Descending here</b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
@@ -311,7 +430,7 @@ Also note that, unlike the `sort-within-record` verb with its `-r` flag,
 }
 </pre>
 
-## Simple sorting of maps across records using the sortmk function
+## Simple sorting of maps across records
 
 As discussed in the page on
 [operating on all records](operating-on-all-records.md), while Miller is normally
@@ -332,7 +451,7 @@ have 1, then 10, then 2:
 <b>  $nr = NR;</b>
 <b>  @records[NR] = $*; # Accumulate</b>
 <b>  end {</b>
-<b>    @records = sortmk(@records, "f");</b>
+<b>    @records = sort(@records, "f");</b>
 <b>    for (_, record in @records) {</b>
 <b>      emit record;</b>
 <b>    }</b>
@@ -353,9 +472,9 @@ yellow circle   true  8  73    63.9785  4.2370 8
 yellow circle   true  9  87    63.5058  8.3350 9
 </pre>
 
-## Custom sorting of arrays within records: the sortaf function
+## Custom sorting of arrays within records
 
-Using the [`sortaf`](reference-dsl-builtin-functions.md#sortaf) function, you
+Using the [`sort`](reference-dsl-builtin-functions.md#sort) function, you
 can sort an array by its values, using another function (which you specify --
 see the [page on user-defined functions](reference-dsl-user-defined-functions.md))
 for comparing elements.
@@ -375,17 +494,17 @@ alpha,5;2;8;6;1;4;9;10;3;7
 </pre>
 
 In the following example we sort data in several ways -- the first two just
-recaptiulate (for reference) what `sorta` already does; the third is novel:
+recaptiulate (for reference) what `sort` with default flags already does; the third is novel:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --icsv --ojson --from data/sortaf-example.csv put '</b>
 <b></b>
-<b>  # Same as sorta($values)</b>
+<b>  # Same as sort($values)</b>
 <b>  func forward(a,b) {</b>
 <b>    return a <=> b</b>
 <b>  }</b>
 <b></b>
-<b>  # Same as sorta($values, "r")</b>
+<b>  # Same as sort($values, "r")</b>
 <b>  func reverse(a,b) {</b>
 <b>    return b <=> a</b>
 <b>  }</b>
@@ -404,9 +523,9 @@ recaptiulate (for reference) what `sorta` already does; the third is novel:
 <b>  }</b>
 <b></b>
 <b>  split_values = splita($values, ";");</b>
-<b>  $forward = sortaf(split_values, forward);</b>
-<b>  $reverse = sortaf(split_values, reverse);</b>
-<b>  $even_then_odd = sortaf(split_values, even_then_odd);</b>
+<b>  $forward = sort(split_values, forward);</b>
+<b>  $reverse = sort(split_values, reverse);</b>
+<b>  $even_then_odd = sort(split_values, even_then_odd);</b>
 <b>'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
@@ -419,7 +538,7 @@ recaptiulate (for reference) what `sorta` already does; the third is novel:
 }
 </pre>
 
-## Custom sorting of arrays across records using the sortaf function
+## Custom sorting of arrays across records
 
 As noted above, we can use the
 [operating-on-all-records](operating-on-all-records.md) paradigm
@@ -451,7 +570,7 @@ indexing](reference-dsl-operators.md#the-double-purpose-dot-operator))
 <b>  }</b>
 <b>  @records[NR] = $*; # Accumulate</b>
 <b>  end {</b>
-<b>    @records = sortaf(@records, cmp);</b>
+<b>    @records = sort(@records, cmp);</b>
 <b>    for (record in @records) {</b>
 <b>      emit record;</b>
 <b>    }</b>
@@ -472,9 +591,9 @@ purple triangle false 5  51    81.2290  8.5910
 yellow triangle true  1  11    43.6498  9.8870
 </pre>
 
-## Custom sorting of maps within records: the sortmf function
+## Custom sorting of maps within records
 
-Using the [`sortmf`](reference-dsl-builtin-functions.md#sortmf) function, you
+Using the [`sort`](reference-dsl-builtin-functions.md#sort) function, you
 can sort a map using a function which you specify (see the [page on
 user-defined functions](reference-dsl-user-defined-functions.md)) for comparing
 keys and/or values.
@@ -505,10 +624,10 @@ For example, we can sort ascending or descending by map key or map value:
 <b>      "b":2,</b>
 <b>    };</b>
 <b></b>
-<b>    print sortmf(x, f1);</b>
-<b>    print sortmf(x, f2);</b>
-<b>    print sortmf(x, f3);</b>
-<b>    print sortmf(x, f4);</b>
+<b>    print sort(x, f1);</b>
+<b>    print sort(x, f2);</b>
+<b>    print sort(x, f3);</b>
+<b>    print sort(x, f4);</b>
 <b>  }</b>
 <b>'</b>
 </pre>
@@ -535,7 +654,7 @@ For example, we can sort ascending or descending by map key or map value:
 }
 </pre>
 
-## Custom sorting of maps across records using the sortmf function
+## Custom sorting of maps across records
 
 We can modify our above example just a bit, where we accumulate records in a map rather than
 an array. Here the map keys will be `NR` values `"1"`, `"2"`, etc.
@@ -556,7 +675,7 @@ using a map is handy, since we don't need continguous keys.
 <b>  }</b>
 <b>  @records[NR] = $*; # Accumulate</b>
 <b>  end {</b>
-<b>    @records = sortmf(@records, cmp);</b>
+<b>    @records = sort(@records, cmp);</b>
 <b>    for (_, record in @records) {</b>
 <b>      emit record;</b>
 <b>    }</b>

@@ -1,0 +1,23 @@
+Original:
+{
+  "cubit": 823,
+  "dale": 13,
+  "apple": 199,
+  "ember": 191,
+  "bottle": 107
+}
+
+Sum of values with reduce:
+{
+  "sum": 1333
+}
+
+Sum of values with fold and 0 initial value:
+{
+  "sum": 1333
+}
+
+Sum of values with fold and 1000000 initial value:
+{
+  "sum": 1001333
+}

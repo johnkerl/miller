@@ -342,6 +342,13 @@ and the [Miller CSV section](file-formats.md#csvtsvasvusvetc).
 Referring to data where all records have the same keys, in the same order.  See the
 [record-heterogeneity page](record-heterogeneity.md#homogeneousrectangular-data).
 
+## higher-order function
+
+A function which takes another function as an argument, such as
+[`select`](reference-dsl-builtin-functions.md#select) or
+[`apply`](reference-dsl-builtin-functions.md#apply). See the [page on
+higher-order functions](reference-dsl-higher-order-functions.md).
+
 ## if
 
 A [keyword](#keyword)  which is used to indicate the start of an [if-statement](reference-dsl-control-structures.md)

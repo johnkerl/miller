@@ -1,0 +1,3 @@
+end {
+  print fold({}, "not a function", {"x":7})
+}

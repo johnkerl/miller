@@ -37,7 +37,7 @@ func (writer *RecordWriterCSVLite) Write(
 		return
 	}
 
-	if outrec.FieldCount == 0 {
+	if outrec.IsEmpty() {
 		if !writer.justWroteEmptyLine {
 			ostream.Write([]byte(writer.writerOptions.ORS))
 		}

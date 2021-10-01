@@ -28,6 +28,7 @@ const (
 	FUNC_CLASS_CONVERSION                 = "conversion"
 	FUNC_CLASS_TYPING                     = "typing"
 	FUNC_CLASS_COLLECTIONS                = "collections"
+	FUNC_CLASS_HOFS                       = "higher-order-functions"
 	FUNC_CLASS_SYSTEM                     = "system"
 	FUNC_CLASS_TIME                       = "time"
 )
@@ -37,17 +38,20 @@ type BuiltinFunctionInfo struct {
 	name                   string
 	class                  TFunctionClass
 	help                   string
+	examples               []string
 	hasMultipleArities     bool
 	minimumVariadicArity   int
 	maximumVariadicArity   int // 0 means no max
 	zaryFunc               types.ZaryFunc
 	unaryFunc              types.UnaryFunc
-	unaryFuncWithContext   types.UnaryFuncWithContext   // asserting_{typename}
-	regexCaptureBinaryFunc types.RegexCaptureBinaryFunc // =~ and !=~
-	binaryFuncWithState    BinaryFuncWithState          // sortaf and sortmf
 	binaryFunc             types.BinaryFunc
 	ternaryFunc            types.TernaryFunc
 	variadicFunc           types.VariadicFunc
+	unaryFuncWithContext   types.UnaryFuncWithContext   // asserting_{typename}
+	regexCaptureBinaryFunc types.RegexCaptureBinaryFunc // =~ and !=~
+	binaryFuncWithState    BinaryFuncWithState          // select, apply, reduce
+	ternaryFuncWithState   TernaryFuncWithState         // fold
+	variadicFuncWithState  VariadicFuncWithState        // sort
 }
 
 // ================================================================
@@ -754,9 +758,12 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:     "urand",
-			class:    FUNC_CLASS_MATH,
-			help:     `Floating-point numbers uniformly distributed on the unit interval.  Int-valued example: '$n=floor(20+urand()*11)'.`,
+			name:  "urand",
+			class: FUNC_CLASS_MATH,
+			help:  `Floating-point numbers uniformly distributed on the unit interval.`,
+			examples: []string{
+				"Int-valued example: '$n=floor(20+urand()*11)'.",
+			},
 			zaryFunc: types.MlrvalUrand,
 		},
 
@@ -1234,9 +1241,13 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:       "joink",
-			class:      FUNC_CLASS_CONVERSION,
-			help:       `Makes string from map/array keys. Examples: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c" joink([1,2,3], ",") = "1,2,3".`,
+			name:  "joink",
+			class: FUNC_CLASS_CONVERSION,
+			help:  `Makes string from map/array keys.`,
+			examples: []string{
+				`Example: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".`,
+				`Example: joink([1,2,3], ",") = "1,2,3".`,
+			},
 			binaryFunc: types.MlrvalJoinK,
 		},
 
@@ -1248,51 +1259,73 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:        "joinkv",
-			class:       FUNC_CLASS_CONVERSION,
-			help:        `Makes string from map/array key-value pairs. Examples: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5" joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"`,
+			name:  "joinkv",
+			class: FUNC_CLASS_CONVERSION,
+			help:  `Makes string from map/array key-value pairs.`,
+			examples: []string{
+				`Example: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"`,
+				`Example: joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"`,
+			},
 			ternaryFunc: types.MlrvalJoinKV,
 		},
 
 		{
-			name:       "splita",
-			class:      FUNC_CLASS_CONVERSION,
-			help:       `Splits string into array with type inference. Example: splita("3,4,5", ",") = [3,4,5]`,
+			name:  "splita",
+			class: FUNC_CLASS_CONVERSION,
+			help:  `Splits string into array with type inference.`,
+			examples: []string{
+				`Example: splita("3,4,5", ",") = [3,4,5]`,
+			},
 			binaryFunc: types.MlrvalSplitA,
 		},
 
 		{
-			name:       "splitax",
-			class:      FUNC_CLASS_CONVERSION,
-			help:       `Splits string into array without type inference. Example: splita("3,4,5", ",") = ["3","4","5"]`,
+			name:  "splitax",
+			class: FUNC_CLASS_CONVERSION,
+			help:  `Splits string into array without type inference.`,
+			examples: []string{
+				`Example: splita("3,4,5", ",") = ["3","4","5"]`,
+			},
 			binaryFunc: types.MlrvalSplitAX,
 		},
 
 		{
-			name:        "splitkv",
-			class:       FUNC_CLASS_CONVERSION,
-			help:        `Splits string by separators into map with type inference. Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}`,
+			name:  "splitkv",
+			class: FUNC_CLASS_CONVERSION,
+			help:  `Splits string by separators into map with type inference.`,
+			examples: []string{
+				`Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}`,
+			},
 			ternaryFunc: types.MlrvalSplitKV,
 		},
 
 		{
-			name:        "splitkvx",
-			class:       FUNC_CLASS_CONVERSION,
-			help:        `Splits string by separators into map without type inference (keys and values are strings). Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
+			name:  "splitkvx",
+			class: FUNC_CLASS_CONVERSION,
+			help:  `Splits string by separators into map without type inference (keys and values are strings).`,
+			examples: []string{
+				`Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
+			},
 			ternaryFunc: types.MlrvalSplitKVX,
 		},
 
 		{
-			name:       "splitnv",
-			class:      FUNC_CLASS_CONVERSION,
-			help:       `Splits string by separator into integer-indexed map with type inference. Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}`,
+			name:  "splitnv",
+			class: FUNC_CLASS_CONVERSION,
+			help:  `Splits string by separator into integer-indexed map with type inference.`,
+			examples: []string{
+				`Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}`,
+			},
 			binaryFunc: types.MlrvalSplitNV,
 		},
 
 		{
-			name:       "splitnvx",
-			class:      FUNC_CLASS_CONVERSION,
-			help:       `Splits string by separator into integer-indexed map without type inference (values are strings). Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
+			name:  "splitnvx",
+			class: FUNC_CLASS_CONVERSION,
+			help:  `Splits string by separator into integer-indexed map without type inference (values are strings).`,
+			examples: []string{
+				`Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
+			},
 			binaryFunc: types.MlrvalSplitNVX,
 		},
 
@@ -1329,9 +1362,14 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:               "flatten",
-			class:              FUNC_CLASS_COLLECTIONS,
-			help:               `Flattens multi-level maps to single-level ones. Examples: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.  flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.  Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).  Useful for nested JSON-like structures for non-JSON file formats like CSV.`,
+			name:  "flatten",
+			class: FUNC_CLASS_COLLECTIONS,
+			help:  `Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.`,
+			examples: []string{
+				`Example: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.`,
+				`Example: flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.`,
+				`Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).`,
+			},
 			binaryFunc:         types.MlrvalFlattenBinary,
 			ternaryFunc:        types.MlrvalFlatten,
 			hasMultipleArities: true,
@@ -1418,46 +1456,75 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:       "unflatten",
-			class:      FUNC_CLASS_COLLECTIONS,
-			help:       `Reverses flatten. Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.  Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.`,
+			name:  "unflatten",
+			class: FUNC_CLASS_COLLECTIONS,
+			help:  `Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.`,
+			examples: []string{
+				`Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.`,
+			},
 			binaryFunc: types.MlrvalUnflatten,
 		},
 
+		// ----------------------------------------------------------------
+		// FUNC_CLASS_HOFS
+
+		// Note: most UDFs are in the types package, but these use UDFs which are in the dsl/cst.
+
 		{
-			name:                 "sorta",
-			class:                FUNC_CLASS_COLLECTIONS,
-			help:                 "Returns a copy of an array, sorted ascending. Coming soon: other sort options.",
-			variadicFunc:         types.MlrvalSortA,
-			minimumVariadicArity: 1,
-			maximumVariadicArity: 2,
+			name:  "select",
+			class: FUNC_CLASS_HOFS,
+			help:  "Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.",
+			examples: []string{
+				`Array example: select([1,2,3,4,5], func(e) { return e >= 3}) returns [3, 4, 5].`,
+				`Map example: select({"a":1, "b":3, "c":5}, func(k,v) { return v >= 3}) returns {"b":3, "c": 5}.`,
+			},
+			binaryFuncWithState: SelectHOF,
 		},
 
 		{
-			name:                 "sortmk",
-			class:                FUNC_CLASS_COLLECTIONS,
-			help:                 "Returns a copy of a map, sorted ascending by map key. Coming soon: other sort options.",
-			variadicFunc:         types.MlrvalSortMK,
-			minimumVariadicArity: 1,
-			maximumVariadicArity: 2,
+			name:  "apply",
+			class: FUNC_CLASS_HOFS,
+			help:  "Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).",
+			examples: []string{
+				`Array example: apply([1,2,3,4,5], func(e) { return e ** 3}) returns [1, 8, 27, 64, 125].`,
+				`Map example: apply({"a":1, "b":3, "c":5}, func(k,v) { return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",`,
+			},
+			binaryFuncWithState: ApplyHOF,
 		},
 
 		{
-			name:  "sortaf",
-			class: FUNC_CLASS_COLLECTIONS,
-			help:  "Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take two arguments, returning a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf([5,2,3,1,4], f)'. Forward sort: 'func f(a,b) {return a <=> b}'. Reverse sort: 'func f(a,b) {return b <=> a}'. And so on -- you can implement logic you choose.",
-			// Not in the types package since it uses UDFs which are in the dsl/cst
-			// package, which would make a circular reference.
-			binaryFuncWithState: SortAF,
+			name:  "reduce",
+			class: FUNC_CLASS_HOFS,
+			help:  "Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element, and return the accumulated element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.",
+			examples: []string{
+				`Array example: reduce([1,2,3,4,5], func(acc,e) { return acc + e**3 }) returns 225.`,
+				`Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.`,
+			},
+			binaryFuncWithState: ReduceHOF,
 		},
 
 		{
-			name:  "sortmf",
-			class: FUNC_CLASS_COLLECTIONS,
-			help:  "Sorts an array (1st argument) using a comparator function you specify by name (2nd argument). The function is a comparator: it should take four arguments, for one keyk, one value, other key, other value. It should return a number <0, ==0, >0 as a<b, a==b, or a>b respectively. Example: 'sortaf({\"c\":1,\"b\":3,\"a\":1}, f)'. Forward sort by key: 'func f(ak,av,bk,bv) {return ak <=> bk}'. Reverse sort by key: 'func f(ak,av,bk,bv) {return bk <=> ak}'. And so on -- you can implement logic you choose.",
-			// Not in the types package since it uses UDFs which are in the dsl/cst
-			// package, which would make a circular reference.
-			binaryFuncWithState: SortMF,
+			name:  "fold",
+			class: FUNC_CLASS_HOFS,
+			help:  "Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.",
+			examples: []string{
+				`Array example: fold([1,2,3,4,5], func(acc,e) { return acc + e**3 }, 10000) returns 10225.`,
+				`Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.`,
+			},
+			ternaryFuncWithState: FoldHOF,
+		},
+
+		{
+			name:  "sort",
+			class: FUNC_CLASS_HOFS,
+			help:  "Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by map keys. If the second argument is a string, it can contain any of \"f\" for lexical (default \"n\" for natural/numeric), \"), \"c\" for case-folded lexical, and \"r\" for reversed/descending sort. If the second argument is a function, then for arrays it should take two arguments a and b, returning < 0, 0, or > 0 as a < b, a == b, or a > b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning < 0, 0, or > 0, using a and b's keys and values.",
+			examples: []string{
+				`Array example: sort([5,2,3,1,4], func(a,b) { return b <=> a}) returns [5,4,3,2,1].`,
+				`Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) { return bv <=> av}) returns {"a":3,"c":2,"b":1}.`,
+			},
+			variadicFuncWithState: SortHOF,
+			minimumVariadicArity:  1,
+			maximumVariadicArity:  2,
 		},
 
 		// ----------------------------------------------------------------
@@ -1625,13 +1692,7 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsages() {
 		if i > 0 {
 			fmt.Println()
 		}
-		lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
-		fmt.Print(colorizer.MaybeColorizeHelp(builtinFunctionInfo.name, true))
-		fmt.Printf("  (class=%s #args=%s) %s\n",
-			builtinFunctionInfo.class,
-			describeNargs(&builtinFunctionInfo),
-			builtinFunctionInfo.help,
-		)
+		manager.showSingleUsage(&builtinFunctionInfo)
 	}
 }
 
@@ -1646,14 +1707,7 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
 			if string(builtinFunctionInfo.class) != class {
 				continue
 			}
-			lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
-			fmt.Print(colorizer.MaybeColorizeHelp(builtinFunctionInfo.name, true))
-			fmt.Printf("  (class=%s #args=%s) %s\n",
-				builtinFunctionInfo.class,
-				describeNargs(&builtinFunctionInfo),
-				builtinFunctionInfo.help,
-			)
-			fmt.Println()
+			manager.showSingleUsage(&builtinFunctionInfo)
 		}
 	}
 }
@@ -1677,13 +1731,23 @@ func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName 
 func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
 	builtinFunctionInfo *BuiltinFunctionInfo,
 ) {
+	manager.showSingleUsage(builtinFunctionInfo)
+}
+
+func (manager *BuiltinFunctionManager) showSingleUsage(
+	builtinFunctionInfo *BuiltinFunctionInfo,
+) {
 	lib.InternalCodingErrorIf(builtinFunctionInfo.help == "")
-	fmt.Printf("%-s  (class=%s #args=%s) %s\n",
+
+	fmt.Printf("%s  (class=%s #args=%s) %s\n",
 		colorizer.MaybeColorizeHelp(builtinFunctionInfo.name, true),
 		builtinFunctionInfo.class,
 		describeNargs(builtinFunctionInfo),
 		builtinFunctionInfo.help,
 	)
+	for _, example := range builtinFunctionInfo.examples {
+		fmt.Println(example)
+	}
 }
 
 func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageApproximate(
@@ -1748,7 +1812,10 @@ func describeNargs(info *BuiltinFunctionInfo) string {
 		if info.ternaryFunc != nil {
 			return "3"
 		}
-		if info.variadicFunc != nil {
+		if info.ternaryFuncWithState != nil {
+			return "3"
+		}
+		if info.variadicFunc != nil || info.variadicFuncWithState != nil {
 			if info.maximumVariadicArity != 0 {
 				return fmt.Sprintf("%d-%d", info.minimumVariadicArity, info.maximumVariadicArity)
 			} else {
