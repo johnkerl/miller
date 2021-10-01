@@ -20,15 +20,24 @@ d pre-release:
 FCFs/HOFs
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  NEXT
-  o mlrval_json -- get file/line in internal-coding-error detected
-  ! funct tests & UT
-  o hofs.md.in section on typedecls ...
+  BTW
+  o some multi-alphabet examples :)
+  o where-are-we lib func :)
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  DOC
+  NEXT
+  o who-calls-me helper
+  o stackframeset:
+    - RT
+  o funct:
+    - hofs.md.in section on typedecls ...
+    - hof tests & RT
+  o glossary natural ordering
+    - separate webdoc section ... somewhere ...
+    - hofs.md.in link
   o kw olh for func and funct both
-  o webdocs re funct typedecl
+  o mlrval_json -- get file/line in internal-coding-error detected
+  o ': absent' fret typedecl -- ?
 
 ----------------------------------------------------------------
 implicit r:

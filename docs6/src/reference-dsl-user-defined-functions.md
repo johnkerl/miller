@@ -144,3 +144,100 @@ or
 </pre>
 
 See the [miscellaneous-flags page](reference-main-flag-list.md#miscellaneous-flags) for more information.
+
+## Function literals
+
+You can define unmnamed functions and assign the to variables, or pass them to functions.
+
+See also the [page on higher-order functions](reference-dsl-higher-order-functions.md)
+for more information on
+[`select`](reference-dsl-builtin-functions.md#select),
+[`apply`](reference-dsl-builtin-functions.md#apply),
+[`reduce`](reference-dsl-builtin-functions.md#reduce),
+[`fold`](reference-dsl-builtin-functions.md#fold), and sort.
+[`sort`](reference-dsl-builtin-functions.md#sort),
+
+For example:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv put '</b>
+<b>  f = func(s, t) {</b>
+<b>    return s . ":" . t;</b>
+<b>  };</b>
+<b>  $z = f($color, $shape);</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   z
+yellow triangle true  1  11    43.6498  9.8870 yellow:triangle
+red    square   true  2  15    79.2778  0.0130 red:square
+red    circle   true  3  16    13.8103  2.9010 red:circle
+red    square   false 4  48    77.5542  7.4670 red:square
+purple triangle false 5  51    81.2290  8.5910 purple:triangle
+red    square   false 6  64    77.1991  9.5310 red:square
+purple triangle false 7  65    80.1405  5.8240 purple:triangle
+yellow circle   true  8  73    63.9785  4.2370 yellow:circle
+yellow circle   true  9  87    63.5058  8.3350 yellow:circle
+purple square   false 10 91    72.3735  8.2430 purple:square
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv put '</b>
+<b>  a = func(s, t) {</b>
+<b>    return s . ":" . t . " above";</b>
+<b>  };</b>
+<b>  b = func(s, t) {</b>
+<b>    return s . ":" . t . " below";</b>
+<b>  };</b>
+<b>  f = $index >= 50 ? a : b;</b>
+<b>  $z = f($color, $shape);</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   z
+yellow triangle true  1  11    43.6498  9.8870 yellow:triangle below
+red    square   true  2  15    79.2778  0.0130 red:square below
+red    circle   true  3  16    13.8103  2.9010 red:circle below
+red    square   false 4  48    77.5542  7.4670 red:square below
+purple triangle false 5  51    81.2290  8.5910 purple:triangle above
+red    square   false 6  64    77.1991  9.5310 red:square above
+purple triangle false 7  65    80.1405  5.8240 purple:triangle above
+yellow circle   true  8  73    63.9785  4.2370 yellow:circle above
+yellow circle   true  9  87    63.5058  8.3350 yellow:circle above
+purple square   false 10 91    72.3735  8.2430 purple:square above
+</pre>
+
+Unlike named functions, function literals (also known as unnamed functions)
+have access to local variables defined in their enclosing scope:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv put '</b>
+<b>  f = func(s, t, i) {</b>
+<b>    if (i >= cap) {</b>
+<b>      return s . ":" . t . " above";</b>
+<b>    } else {</b>
+<b>      return s . ":" . t . " below";</b>
+<b>    }</b>
+<b>  };</b>
+<b>  cap = 10;</b>
+<b>  $z = f($color, $shape, $index);</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   z
+yellow triangle true  1  11    43.6498  9.8870 yellow:triangle above
+red    square   true  2  15    79.2778  0.0130 red:square above
+red    circle   true  3  16    13.8103  2.9010 red:circle above
+red    square   false 4  48    77.5542  7.4670 red:square above
+purple triangle false 5  51    81.2290  8.5910 purple:triangle above
+red    square   false 6  64    77.1991  9.5310 red:square above
+purple triangle false 7  65    80.1405  5.8240 purple:triangle above
+yellow circle   true  8  73    63.9785  4.2370 yellow:circle above
+yellow circle   true  9  87    63.5058  8.3350 yellow:circle above
+purple square   false 10 91    72.3735  8.2430 purple:square above
+</pre>
+
+Notes:
+
+* semi after
+* scope walk w/ example
