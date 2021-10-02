@@ -26,6 +26,7 @@ func (reader *RecordReaderDKVP) Read(
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
@@ -37,7 +38,7 @@ func (reader *RecordReaderDKVP) Read(
 			if err != nil {
 				errorChannel <- err
 			}
-			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel, downstreamDoneChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
@@ -49,7 +50,7 @@ func (reader *RecordReaderDKVP) Read(
 				if err != nil {
 					errorChannel <- err
 				} else {
-					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, errorChannel, downstreamDoneChannel)
 					handle.Close()
 				}
 			}
@@ -64,12 +65,21 @@ func (reader *RecordReaderDKVP) processHandle(
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
 
 	lineReader := bufio.NewReader(handle)
 	eof := false
 	for !eof {
+
+		select {
+		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			break
+		default:
+			break
+		}
+
 		line, err := lineReader.ReadString('\n') // TODO: auto-detect
 		if lib.IsEOF(err) {
 			err = nil

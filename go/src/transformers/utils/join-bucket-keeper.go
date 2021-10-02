@@ -185,10 +185,11 @@ func NewJoinBucketKeeper(
 	// Set up channels for the record-reader
 	inputChannel := make(chan *types.RecordAndContext, 10)
 	errorChannel := make(chan error, 1)
+	downstreamDoneChannel := make(chan bool, 1)
 
 	// Start the record-reader in its own goroutine.
 	leftFileNameArray := [1]string{leftFileName}
-	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, errorChannel)
+	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, errorChannel, downstreamDoneChannel)
 
 	keeper := &JoinBucketKeeper{
 		recordReader:     recordReader,

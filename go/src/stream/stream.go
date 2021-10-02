@@ -64,10 +64,17 @@ func Stream(
 	errorChannel := make(chan error, 1)
 	doneWritingChannel := make(chan bool, 1)
 
+	// For mlr head, so a transformer can communicate it will disregard all
+	// further input.  It writes this back upstream, and that is passed back to
+	// the record-reader which then stops reading input. This is necessary to
+	// get quick response from, for example, mlr head -n 10 on input files with
+	// millions or billions of records.
+	downstreamDoneChannel := make(chan bool, 1)
+
 	// Start the reader, transformer, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
 
-	go recordReader.Read(fileNames, *initialContext, inputChannel, errorChannel)
+	go recordReader.Read(fileNames, *initialContext, inputChannel, errorChannel, downstreamDoneChannel)
 	go transformers.ChainTransformer(inputChannel, recordTransformers, outputChannel)
 	go output.ChannelWriter(outputChannel, recordWriter, doneWritingChannel, outputStream, outputIsStdout)
 

@@ -195,12 +195,14 @@ func (repl *Repl) openFiles(filenames []string) {
 
 	repl.inputChannel = make(chan *types.RecordAndContext, 10)
 	repl.errorChannel = make(chan error, 1)
+	repl.downstreamDoneChannel = make(chan bool, 1)
 
 	go repl.recordReader.Read(
 		filenames,
 		*repl.runtimeState.Context,
 		repl.inputChannel,
 		repl.errorChannel,
+		repl.downstreamDoneChannel,
 	)
 }
 
