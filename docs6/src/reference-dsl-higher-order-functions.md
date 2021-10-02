@@ -612,6 +612,77 @@ Descending by value:
 
 Please see the [sorting page](sorting.md) for more examples.
 
+## Combined examples
+
+Using a paradigm from the [page on operating on all
+records](operating-on-all-records.md), we can retain a column from the input
+data as an array, then apply some higher-order functions to it:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate
+yellow triangle true  1  11    43.6498  9.8870
+red    square   true  2  15    79.2778  0.0130
+red    circle   true  3  16    13.8103  2.9010
+red    square   false 4  48    77.5542  7.4670
+purple triangle false 5  51    81.2290  8.5910
+red    square   false 6  64    77.1991  9.5310
+purple triangle false 7  65    80.1405  5.8240
+yellow circle   true  8  73    63.9785  4.2370
+yellow circle   true  9  87    63.5058  8.3350
+purple square   false 10 91    72.3735  8.2430
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv put -q '</b>
+<b>  begin {</b>
+<b>    @indexes = [] # So auto-extend will make an array, not a map</b>
+<b>  }</b>
+<b>  @indexes[NR] = $index;</b>
+<b>  end {</b>
+<b></b>
+<b>    print "Original:";</b>
+<b>    print @indexes;</b>
+<b></b>
+<b>    print;</b>
+<b>    print "Sorted:";</b>
+<b>    print sort(@indexes, "r");</b>
+<b></b>
+<b>    print;</b>
+<b>    print "Sorted, then cubed:";</b>
+<b>    print apply(</b>
+<b>      sort(@indexes, "r"),</b>
+<b>      func(e) { return e**3 },</b>
+<b>    );</b>
+<b></b>
+<b>    print;</b>
+<b>    print "Sorted, then cubed, then summed:";</b>
+<b>    print reduce(</b>
+<b>      apply(</b>
+<b>        sort(@indexes, "r"),</b>
+<b>        func(e) { return e**3 },</b>
+<b>      ),</b>
+<b>      func(acc, e) { return acc + e },</b>
+<b>    )</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Original:
+[11, 15, 16, 48, 51, 64, 65, 73, 87, 91]
+
+Sorted:
+[91, 87, 73, 65, 64, 51, 48, 16, 15, 11]
+
+Sorted, then cubed:
+[753571, 658503, 389017, 274625, 262144, 132651, 110592, 4096, 3375, 1331]
+
+Sorted, then cubed, then summed:
+2589905
+</pre>
+
 ## Caveats
 
 ### Remember return

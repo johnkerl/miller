@@ -207,8 +207,11 @@ yellow circle   true  9  87    63.5058  8.3350 yellow:circle above
 purple square   false 10 91    72.3735  8.2430 purple:square above
 </pre>
 
+Note that you need a semicolon after the closing curly brace of the function literal.
+
 Unlike named functions, function literals (also known as unnamed functions)
-have access to local variables defined in their enclosing scope:
+have access to local variables defined in their enclosing scope. That's
+so you can do things like this:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --c2p --from example.csv put '</b>
@@ -237,7 +240,4 @@ yellow circle   true  9  87    63.5058  8.3350 yellow:circle above
 purple square   false 10 91    72.3735  8.2430 purple:square above
 </pre>
 
-Notes:
-
-* semi after
-* scope walk w/ example
+See the [page on higher-order functions](reference-dsl-higher-order-functions.md) for more.

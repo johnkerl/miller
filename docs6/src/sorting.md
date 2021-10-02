@@ -143,7 +143,7 @@ a b c
 ## The sort function by example
 
 * It returns a sorted copy of an input array or map.
-* Without second argument, uses a natural ordering.
+* Without second argument, uses the natural ordering.
 * With second which is string, takes sorting flags from it: `"f"` for lexical or `"c"` for case-folded lexical, and/or `"r"` for reverse/descending.
 
 <pre class="pre-highlight-in-pair">

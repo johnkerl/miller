@@ -183,7 +183,7 @@ func (site *UDFCallsite) Evaluate(
 		fmt.Fprintf(
 			os.Stderr,
 			"mlr: function \"%s\" invoked with argument count %d; expected %d.\n",
-				udf.signature.funcOrSubrName, numArguments, numParameters,)
+			udf.signature.funcOrSubrName, numArguments, numParameters)
 		os.Exit(1)
 	}
 
@@ -191,9 +191,6 @@ func (site *UDFCallsite) Evaluate(
 
 	for i := range udf.signature.typeGatedParameterNames {
 		arguments[i] = site.argumentNodes[i].Evaluate(state)
-		fmt.Printf("i=%d fnm=\"%s\" pnm=%#v, arg=%s\n",
-			i, udf.signature.funcOrSubrName,
-			udf.signature.typeGatedParameterNames[i], arguments[i].String())
 
 		err := udf.signature.typeGatedParameterNames[i].Check(arguments[i])
 		if err != nil {
@@ -226,9 +223,15 @@ func (site *UDFCallsite) EvaluateWithArguments(
 		defer state.Stack.PopStackFrameSet()
 	}
 
+	cacheable := !udf.isFunctionLiteral
+
 	for i := range arguments {
+		// TODO: comment
 		err := state.Stack.DefineTypedAtScope(
-			runtime.NewStackVariable(udf.signature.typeGatedParameterNames[i].Name),
+			runtime.NewStackVariableAux(
+				udf.signature.typeGatedParameterNames[i].Name,
+				cacheable,
+			),
 			udf.signature.typeGatedParameterNames[i].TypeName,
 			arguments[i],
 		)

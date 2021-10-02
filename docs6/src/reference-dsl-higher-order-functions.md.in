@@ -340,6 +340,51 @@ GENMD_EOF
 
 Please see the [sorting page](sorting.md) for more examples.
 
+## Combined examples
+
+Using a paradigm from the [page on operating on all
+records](operating-on-all-records.md), we can retain a column from the input
+data as an array, then apply some higher-order functions to it:
+
+GENMD_RUN_COMMAND
+mlr --c2p cat example.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put -q '
+  begin {
+    @indexes = [] # So auto-extend will make an array, not a map
+  }
+  @indexes[NR] = $index;
+  end {
+
+    print "Original:";
+    print @indexes;
+
+    print;
+    print "Sorted:";
+    print sort(@indexes, "r");
+
+    print;
+    print "Sorted, then cubed:";
+    print apply(
+      sort(@indexes, "r"),
+      func(e) { return e**3 },
+    );
+
+    print;
+    print "Sorted, then cubed, then summed:";
+    print reduce(
+      apply(
+        sort(@indexes, "r"),
+        func(e) { return e**3 },
+      ),
+      func(acc, e) { return acc + e },
+    )
+  }
+'
+GENMD_EOF
+
 ## Caveats
 
 ### Remember return
