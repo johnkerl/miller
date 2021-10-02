@@ -62,14 +62,14 @@ func Stream(
 	// etc) or when the record-writer has written all its output. We use
 	// channels to communicate both of these conditions.
 	errorChannel := make(chan error, 1)
-	doneChannel := make(chan bool, 1)
+	doneWritingChannel := make(chan bool, 1)
 
 	// Start the reader, transformer, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
 
 	go recordReader.Read(fileNames, *initialContext, inputChannel, errorChannel)
 	go transformers.ChainTransformer(inputChannel, recordTransformers, outputChannel)
-	go output.ChannelWriter(outputChannel, recordWriter, doneChannel, outputStream, outputIsStdout)
+	go output.ChannelWriter(outputChannel, recordWriter, doneWritingChannel, outputStream, outputIsStdout)
 
 	done := false
 	for !done {
@@ -77,7 +77,7 @@ func Stream(
 		case err := <-errorChannel:
 			fmt.Fprintln(os.Stderr, "mlr", ": ", err)
 			os.Exit(1)
-		case _ = <-doneChannel:
+		case _ = <-doneWritingChannel:
 			done = true
 			break
 		}
