@@ -396,4 +396,5 @@ Please see the [sorting page](sorting.md).
 
 ## For more information
 
-Please see the page on [two-pass algorithms](two-pass-algorithms.md).
+Please see the page on [two-pass algorithms](two-pass-algorithms.md); see also
+the page on [higher-order functions](reference-dsl-higher-order-functions.md).

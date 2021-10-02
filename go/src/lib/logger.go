@@ -93,3 +93,14 @@ func InternalCodingErrorPanic(message string) {
 	}
 	os.Exit(1)
 }
+
+// WhereAreWe shows a stack trace from the current callsite.
+func WhereAreWe() {
+	for i := 0; i < 20; i++ {
+		_, fileName, fileLine, ok := runtime.Caller(i)
+		if !ok {
+			break
+		}
+		fmt.Printf("  %s %d\n", fileName, fileLine)
+	}
+}

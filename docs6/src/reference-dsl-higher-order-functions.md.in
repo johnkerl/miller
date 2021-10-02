@@ -136,13 +136,13 @@ The [`reduce`](reference-dsl-builtin-functions.md#reduce) function takes a map
 or array as its first argument and a function as second argument. It accumulates entries into a final
 output -- for example, sum or product.
 
-For arrays, the function should take two
-arguments, for accumulated value and array element; for maps, it should take
-three, for accumulated value, map-element key, and map-element value. In either
-case it should return the updated accumulator.
+For arrays, the function should take two arguments, for accumulated value and
+array element; for maps, it should take four, for accumulated key and value
+and map-element key and value. In either case it should return the updated
+accumulator.
 
 The start value for the accumulator is the first element for arrays, or the
-first element's value (not key) for maps.
+first element's key-value pair for maps.
 
 GENMD_RUN_COMMAND
 mlr -n put '
@@ -153,23 +153,23 @@ mlr -n put '
     print my_array;
 
     print;
-    print "First:";
+    print "First element:";
     print reduce(my_array, func (acc,e) { return acc });
 
     print;
-    print "Last:";
+    print "Last element:";
     print reduce(my_array, func (acc,e) { return e });
 
     print;
-    print "Sum:";
+    print "Sum of values:";
     print reduce(my_array, func (acc,e) { return acc + e });
 
     print;
-    print "Product:";
+    print "Product of values:";
     print reduce(my_array, func (acc,e) { return acc * e });
 
     print;
-    print "Concatenation:";
+    print "Concatenation of values:";
     print reduce(my_array, func (acc,e) { return acc. "," . e });
   }
 '
@@ -183,11 +183,11 @@ mlr -n put '
     print my_map;
 
     print;
-    print "First:";
+    print "First key-value pair:";
     print reduce(my_map, func (acck,accv,ek,ev) { return {acck: accv}});
 
     print;
-    print "Last:";
+    print "Last key-value pair:";
     print reduce(my_map, func (acck,accv,ek,ev) { return {ek: ev}});
 
     print;
@@ -247,8 +247,12 @@ mlr -n put '
     print my_map;
 
     print;
-    print "Sum of values with reduce:";
-    print reduce(my_map, func (acck,accv,ek,ev) { return {"sum": accv + ev} });
+    print "First key-value pair -- note this is the starting accumulator:";
+    print fold(my_map, func (acck,accv,ek,ev) { return {acck: accv}}, {"start": 999});
+
+    print;
+    print "Last key-value pair:";
+    print fold(my_map, func (acck,accv,ek,ev) { return {ek: ev}}, {"start": 999});
 
     print;
     print "Sum of values with fold and 0 initial value:";
@@ -266,7 +270,7 @@ GENMD_EOF
 The [`sort`](reference-dsl-builtin-functions.md#sort) function takes a map or
 array as its first argument, and it can take a function as second argument.
 Unlike the other higher-order functions, the second argument can be omitted
-when a natual ordering is desired -- ordered by array element for arrays, or by
+when the natural ordering is desired -- ordered by array element for arrays, or by
 key for maps.
 
 As a second option, character flags such as `r` for reverse or `c` for
@@ -335,6 +339,51 @@ mlr -n put '
 GENMD_EOF
 
 Please see the [sorting page](sorting.md) for more examples.
+
+## Combined examples
+
+Using a paradigm from the [page on operating on all
+records](operating-on-all-records.md), we can retain a column from the input
+data as an array, then apply some higher-order functions to it:
+
+GENMD_RUN_COMMAND
+mlr --c2p cat example.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put -q '
+  begin {
+    @indexes = [] # So auto-extend will make an array, not a map
+  }
+  @indexes[NR] = $index;
+  end {
+
+    print "Original:";
+    print @indexes;
+
+    print;
+    print "Sorted:";
+    print sort(@indexes, "r");
+
+    print;
+    print "Sorted, then cubed:";
+    print apply(
+      sort(@indexes, "r"),
+      func(e) { return e**3 },
+    );
+
+    print;
+    print "Sorted, then cubed, then summed:";
+    print reduce(
+      apply(
+        sort(@indexes, "r"),
+        func(e) { return e**3 },
+      ),
+      func(acc, e) { return acc + e },
+    )
+  }
+'
+GENMD_EOF
 
 ## Caveats
 

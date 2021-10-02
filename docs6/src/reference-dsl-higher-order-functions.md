@@ -234,13 +234,13 @@ The [`reduce`](reference-dsl-builtin-functions.md#reduce) function takes a map
 or array as its first argument and a function as second argument. It accumulates entries into a final
 output -- for example, sum or product.
 
-For arrays, the function should take two
-arguments, for accumulated value and array element; for maps, it should take
-three, for accumulated value, map-element key, and map-element value. In either
-case it should return the updated accumulator.
+For arrays, the function should take two arguments, for accumulated value and
+array element; for maps, it should take four, for accumulated key and value
+and map-element key and value. In either case it should return the updated
+accumulator.
 
 The start value for the accumulator is the first element for arrays, or the
-first element's value (not key) for maps.
+first element's key-value pair for maps.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put '</b>
@@ -251,23 +251,23 @@ first element's value (not key) for maps.
 <b>    print my_array;</b>
 <b></b>
 <b>    print;</b>
-<b>    print "First:";</b>
+<b>    print "First element:";</b>
 <b>    print reduce(my_array, func (acc,e) { return acc });</b>
 <b></b>
 <b>    print;</b>
-<b>    print "Last:";</b>
+<b>    print "Last element:";</b>
 <b>    print reduce(my_array, func (acc,e) { return e });</b>
 <b></b>
 <b>    print;</b>
-<b>    print "Sum:";</b>
+<b>    print "Sum of values:";</b>
 <b>    print reduce(my_array, func (acc,e) { return acc + e });</b>
 <b></b>
 <b>    print;</b>
-<b>    print "Product:";</b>
+<b>    print "Product of values:";</b>
 <b>    print reduce(my_array, func (acc,e) { return acc * e });</b>
 <b></b>
 <b>    print;</b>
-<b>    print "Concatenation:";</b>
+<b>    print "Concatenation of values:";</b>
 <b>    print reduce(my_array, func (acc,e) { return acc. "," . e });</b>
 <b>  }</b>
 <b>'</b>
@@ -276,19 +276,19 @@ first element's value (not key) for maps.
 Original:
 [2, 9, 10, 3, 1, 4, 5, 8, 7, 6]
 
-First:
+First element:
 2
 
-Last:
+Last element:
 6
 
-Sum:
+Sum of values:
 55
 
-Product:
+Product of values:
 3628800
 
-Concatenation:
+Concatenation of values:
 2,9,10,3,1,4,5,8,7,6
 </pre>
 
@@ -300,11 +300,11 @@ Concatenation:
 <b>    print my_map;</b>
 <b></b>
 <b>    print;</b>
-<b>    print "First:";</b>
+<b>    print "First key-value pair:";</b>
 <b>    print reduce(my_map, func (acck,accv,ek,ev) { return {acck: accv}});</b>
 <b></b>
 <b>    print;</b>
-<b>    print "Last:";</b>
+<b>    print "Last key-value pair:";</b>
 <b>    print reduce(my_map, func (acck,accv,ek,ev) { return {ek: ev}});</b>
 <b></b>
 <b>    print;</b>
@@ -335,12 +335,12 @@ Original:
   "bottle": 107
 }
 
-First:
+First key-value pair:
 {
   "cubit": 823
 }
 
-Last:
+Last key-value pair:
 {
   "bottle": 107
 }
@@ -417,8 +417,12 @@ Sum with fold and 1000000 initial value:
 <b>    print my_map;</b>
 <b></b>
 <b>    print;</b>
-<b>    print "Sum of values with reduce:";</b>
-<b>    print reduce(my_map, func (acck,accv,ek,ev) { return {"sum": accv + ev} });</b>
+<b>    print "First key-value pair -- note this is the starting accumulator:";</b>
+<b>    print fold(my_map, func (acck,accv,ek,ev) { return {acck: accv}}, {"start": 999});</b>
+<b></b>
+<b>    print;</b>
+<b>    print "Last key-value pair:";</b>
+<b>    print fold(my_map, func (acck,accv,ek,ev) { return {ek: ev}}, {"start": 999});</b>
 <b></b>
 <b>    print;</b>
 <b>    print "Sum of values with fold and 0 initial value:";</b>
@@ -440,9 +444,14 @@ Original:
   "bottle": 107
 }
 
-Sum of values with reduce:
+First key-value pair -- note this is the starting accumulator:
 {
-  "sum": 1333
+  "start": 999
+}
+
+Last key-value pair:
+{
+  "bottle": 107
 }
 
 Sum of values with fold and 0 initial value:
@@ -461,7 +470,7 @@ Sum of values with fold and 1000000 initial value:
 The [`sort`](reference-dsl-builtin-functions.md#sort) function takes a map or
 array as its first argument, and it can take a function as second argument.
 Unlike the other higher-order functions, the second argument can be omitted
-when a natual ordering is desired -- ordered by array element for arrays, or by
+when the natural ordering is desired -- ordered by array element for arrays, or by
 key for maps.
 
 As a second option, character flags such as `r` for reverse or `c` for
@@ -602,6 +611,77 @@ Descending by value:
 </pre>
 
 Please see the [sorting page](sorting.md) for more examples.
+
+## Combined examples
+
+Using a paradigm from the [page on operating on all
+records](operating-on-all-records.md), we can retain a column from the input
+data as an array, then apply some higher-order functions to it:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate
+yellow triangle true  1  11    43.6498  9.8870
+red    square   true  2  15    79.2778  0.0130
+red    circle   true  3  16    13.8103  2.9010
+red    square   false 4  48    77.5542  7.4670
+purple triangle false 5  51    81.2290  8.5910
+red    square   false 6  64    77.1991  9.5310
+purple triangle false 7  65    80.1405  5.8240
+yellow circle   true  8  73    63.9785  4.2370
+yellow circle   true  9  87    63.5058  8.3350
+purple square   false 10 91    72.3735  8.2430
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv put -q '</b>
+<b>  begin {</b>
+<b>    @indexes = [] # So auto-extend will make an array, not a map</b>
+<b>  }</b>
+<b>  @indexes[NR] = $index;</b>
+<b>  end {</b>
+<b></b>
+<b>    print "Original:";</b>
+<b>    print @indexes;</b>
+<b></b>
+<b>    print;</b>
+<b>    print "Sorted:";</b>
+<b>    print sort(@indexes, "r");</b>
+<b></b>
+<b>    print;</b>
+<b>    print "Sorted, then cubed:";</b>
+<b>    print apply(</b>
+<b>      sort(@indexes, "r"),</b>
+<b>      func(e) { return e**3 },</b>
+<b>    );</b>
+<b></b>
+<b>    print;</b>
+<b>    print "Sorted, then cubed, then summed:";</b>
+<b>    print reduce(</b>
+<b>      apply(</b>
+<b>        sort(@indexes, "r"),</b>
+<b>        func(e) { return e**3 },</b>
+<b>      ),</b>
+<b>      func(acc, e) { return acc + e },</b>
+<b>    )</b>
+<b>  }</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Original:
+[11, 15, 16, 48, 51, 64, 65, 73, 87, 91]
+
+Sorted:
+[91, 87, 73, 65, 64, 51, 48, 16, 15, 11]
+
+Sorted, then cubed:
+[753571, 658503, 389017, 274625, 262144, 132651, 110592, 4096, 3375, 1331]
+
+Sorted, then cubed, then summed:
+2589905
+</pre>
 
 ## Caveats
 

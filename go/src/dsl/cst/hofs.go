@@ -59,6 +59,7 @@ func getHOFSpace(
 	funcVal *types.Mlrval,
 	arity int,
 	hofName string,
+	arrayOrMap string,
 ) *tHOFSpace {
 	// At this callsite, localvars have been evaluated already -- so for 'y =
 	// sort(x, f)' we have the *value* of f, not that variable name -- the
@@ -82,11 +83,12 @@ func getHOFSpace(
 		if entry.udfCallsite.arity != arity {
 			fmt.Fprintf(
 				os.Stderr,
-				"mlr: %s: comparator function \"%s\" has arity %d; needed %d.\n",
+				"mlr: %s: comparator function \"%s\" has arity %d; needed %d for %s.\n",
 				hofName,
 				udfName,
 				entry.udfCallsite.arity,
 				arity,
+				arrayOrMap,
 			)
 			os.Exit(1)
 		}
@@ -105,11 +107,12 @@ func getHOFSpace(
 	if udf.signature.arity != arity { // Present, but with the wrong arity.
 		fmt.Fprintf(
 			os.Stderr,
-			"mlr: %s: comparator function \"%s\" has arity %d; needed %d.\n",
+			"mlr: %s: comparator function \"%s\" has arity %d; needed %d for %s.\n",
 			hofName,
 			udfName,
 			udf.signature.arity,
 			arity,
+			arrayOrMap,
 		)
 		os.Exit(1)
 	}
@@ -215,7 +218,7 @@ func selectArray(
 	}
 	isFunctionOrDie(input2, "select")
 
-	hofSpace := getHOFSpace(input2, 1, "select")
+	hofSpace := getHOFSpace(input2, 1, "select", "array")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
@@ -251,7 +254,7 @@ func selectMap(
 	}
 	isFunctionOrDie(input2, "select")
 
-	hofSpace := getHOFSpace(input2, 2, "select")
+	hofSpace := getHOFSpace(input2, 2, "select", "map")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
@@ -306,7 +309,7 @@ func applyArray(
 	}
 	isFunctionOrDie(input2, "apply")
 
-	hofSpace := getHOFSpace(input2, 1, "apply")
+	hofSpace := getHOFSpace(input2, 1, "apply", "array")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
@@ -332,7 +335,7 @@ func applyMap(
 	}
 	isFunctionOrDie(input2, "apply")
 
-	hofSpace := getHOFSpace(input2, 2, "apply")
+	hofSpace := getHOFSpace(input2, 2, "apply", "map")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
@@ -376,7 +379,7 @@ func reduceArray(
 	}
 	isFunctionOrDie(input2, "reduce")
 
-	hofSpace := getHOFSpace(input2, 2, "reduce")
+	hofSpace := getHOFSpace(input2, 2, "reduce", "array")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
@@ -406,7 +409,7 @@ func reduceMap(
 	}
 	isFunctionOrDie(input2, "reduce")
 
-	hofSpace := getHOFSpace(input2, 4, "reduce")
+	hofSpace := getHOFSpace(input2, 4, "reduce", "map")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
@@ -457,7 +460,7 @@ func foldArray(
 	}
 	isFunctionOrDie(input2, "fold")
 
-	hofSpace := getHOFSpace(input2, 2, "fold")
+	hofSpace := getHOFSpace(input2, 2, "fold", "array")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
@@ -484,7 +487,7 @@ func foldMap(
 	}
 	isFunctionOrDie(input2, "fold")
 
-	hofSpace := getHOFSpace(input2, 4, "fold")
+	hofSpace := getHOFSpace(input2, 4, "fold", "map")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
@@ -749,7 +752,7 @@ func sortAF(
 		return types.MLRVAL_ERROR
 	}
 
-	hofSpace := getHOFSpace(input2, 2, "sort")
+	hofSpace := getHOFSpace(input2, 2, "sort", "array")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
@@ -794,7 +797,7 @@ func sortMF(
 
 	pairsArray := inputMap.ToPairsArray()
 
-	hofSpace := getHOFSpace(input2, 4, "sort")
+	hofSpace := getHOFSpace(input2, 4, "sort", "map")
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 

@@ -21,14 +21,15 @@ FCFs/HOFs
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   NEXT
-  o mlrval_json -- get file/line in internal-coding-error detected
-  ! funct tests & UT
-  o hofs.md.in section on typedecls ...
-
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  DOC
+  o doc:
+    - section on typedecls
+  o funct: hof tests & RT
+  o glossary natural ordering
+    - separate webdoc section ... somewhere ...
+    - hofs.md.in link
   o kw olh for func and funct both
-  o webdocs re funct typedecl
+
+  o mlrval_json -- get file/line in internal-coding-error detected
 
 ----------------------------------------------------------------
 implicit r:
@@ -115,6 +116,15 @@ BLOCKERS
 
 ================================================================
 NON-BLOCKERS
+
+* unicode _idchar in BNF: so $*["..."] not needed
+  $ mlr --c2p filter '$*["σημαία"] == "αληθινό"' example-gr.csv
+  χρώμα   σχήμα     σημαία  κ δείκτης ποσοτικός ρυθμός
+  κίτρινο τρίγωνο   αληθινό 1 11      43.6498   9.8870
+  κόκκινο τετράγωνο αληθινό 2 15      79.2778   0.0130
+  κόκκινο κύκλος    αληθινό 3 16      13.8103   2.9010
+  κίτρινο κύκλος    αληθινό 8 73      63.9785   4.2370
+  κίτρινο κύκλος    αληθινό 9 87      63.5058   8.3350
 
 * IIFEs: 'func f = (func(){ return udf})()'
 * BIFs in non-sigil context (UDFs already are)
