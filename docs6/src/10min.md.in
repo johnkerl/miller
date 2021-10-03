@@ -191,6 +191,26 @@ mlr --icsv --oxtab --from example.csv \
   stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
 GENMD_EOF
 
+## Unicode and internationalization
+
+While Miller's function names, verb names, online help, etc. are all in English, Miller supports
+UTF-8 data. For example:
+
+GENMD_RUN_COMMAND
+cat παράδειγμα.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p filter '$σχήμα == "κύκλος"' παράδειγμα.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p sort -f σημαία παράδειγμα.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p put '$σχήμα = toupper($σχήμα); $μήκος = strlen($χρώμα)' παράδειγμα.csv
+GENMD_EOF
 
 ## File formats and format conversion
 
