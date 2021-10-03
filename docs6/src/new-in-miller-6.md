@@ -40,6 +40,12 @@ pages have been split up into separate pages. (See also
 Since CSV is overwhelmingly the most popular data format for Miller, it is
 now discussed first, and more examples use CSV.
 
+## Improved internationalization support
+
+You can now write field names, local variables, etc. all in UTF-8, e.g.  `mlr
+--c2p filter '$σχήμα == "κύκλος"' παράδειγμα.csv`. See the
+[internationalization page](internationalization.md) for examples.
+
 ## Improved JSON support, and arrays
 
 Arrays are now supported in Miller's `put`/`filter` programming language, as
