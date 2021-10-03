@@ -197,10 +197,14 @@ func NewTransformerMostOrLeastFrequent(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerMostOrLeastFrequent) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		groupingKey, ok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)

@@ -84,8 +84,11 @@ func NewTransformerTac() (*TransformerTac, error) {
 
 func (tr *TransformerTac) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		tr.recordsAndContexts.PushFront(inrecAndContext)
 	} else {

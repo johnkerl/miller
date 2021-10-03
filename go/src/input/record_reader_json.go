@@ -71,12 +71,17 @@ func (reader *RecordReaderJSON) processHandle(
 	context.UpdateForStartOfFile(filename)
 	decoder := json.NewDecoder(handle)
 
+	eof := false
 	for {
 
 		select {
 		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
 			break
 		default:
+			break
+		}
+		if eof {
 			break
 		}
 

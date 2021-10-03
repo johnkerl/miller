@@ -181,10 +181,14 @@ func NewTransformerFraction(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerFraction) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream { // Not end of stream; pass 1
 		inrec := inrecAndContext.Record
 

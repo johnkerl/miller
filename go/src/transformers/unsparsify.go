@@ -125,25 +125,31 @@ func NewTransformerUnsparsify(
 	}
 
 	if specifiedFieldNames == nil {
-		tr.recordTransformerFunc = tr.mapNonStreaming
+		tr.recordTransformerFunc = tr.transformNonStreaming
 	} else {
-		tr.recordTransformerFunc = tr.mapStreaming
+		tr.recordTransformerFunc = tr.transformStreaming
 	}
 
 	return tr, nil
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerUnsparsify) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
 // ----------------------------------------------------------------
-func (tr *TransformerUnsparsify) mapNonStreaming(
+func (tr *TransformerUnsparsify) transformNonStreaming(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -178,8 +184,10 @@ func (tr *TransformerUnsparsify) mapNonStreaming(
 }
 
 // ----------------------------------------------------------------
-func (tr *TransformerUnsparsify) mapStreaming(
+func (tr *TransformerUnsparsify) transformStreaming(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {

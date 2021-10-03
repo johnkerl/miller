@@ -159,8 +159,30 @@ func NewTransformerTee(
 
 func (tr *TransformerTee) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+
+	// If we receive a downstream-done flag from a transformer downstream from
+	// us, read it to unblock their goroutine but -- unlike most other verbs --
+	// do not forward the flag farther upstream.
+	//
+	// For example, 'mlr cut -f foo then head -n 10' on million-line input:
+	// head can signal it's got 10 records, then write downStreamDone <- true,
+	// then cut and record-reader can stop sending any more data. This makes
+	// the UX response for head on huge files.
+	//
+	// But 'mlr cut -f foo then tee bar.txt then head -n 10' -- one does expect
+	// bar.txt to have all the output from cut.
+	select {
+	case _ = <-inputDownstreamDoneChannel:
+		// Do not write this to the coutputDownstreamDoneChannel, as other transformers do
+		break
+	default:
+		break
+	}
+
 	if !inrecAndContext.EndOfStream {
 		err := tr.fileOutputHandler.WriteRecordAndContext(inrecAndContext)
 		if err != nil {

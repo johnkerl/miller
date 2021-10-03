@@ -1,0 +1,3 @@
+#!/bin/bash
+
+keep-lines-between GENMD_RUN GENMD_EOF | sh

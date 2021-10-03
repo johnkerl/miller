@@ -431,8 +431,11 @@ func BuildASTFromString(dslString string) (*dsl.AST, error) {
 
 func (tr *TransformerPut) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	tr.runtimeState.OutputChannel = outputChannel
 
 	inrec := inrecAndContext.Record

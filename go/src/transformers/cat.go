@@ -137,16 +137,22 @@ func NewTransformerCat(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerCat) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerCat) simpleCat(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	outputChannel <- inrecAndContext
@@ -155,6 +161,8 @@ func (tr *TransformerCat) simpleCat(
 // ----------------------------------------------------------------
 func (tr *TransformerCat) countersUngrouped(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -170,6 +178,8 @@ func (tr *TransformerCat) countersUngrouped(
 // ----------------------------------------------------------------
 func (tr *TransformerCat) countersGrouped(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {

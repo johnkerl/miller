@@ -171,17 +171,23 @@ func NewTransformerCut(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerCut) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
 // ----------------------------------------------------------------
 // mlr cut -f a,b,c
 func (tr *TransformerCut) includeWithInputOrder(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -205,6 +211,8 @@ func (tr *TransformerCut) includeWithInputOrder(
 // mlr cut -o -f a,b,c
 func (tr *TransformerCut) includeWithArgOrder(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -227,6 +235,8 @@ func (tr *TransformerCut) includeWithArgOrder(
 // mlr cut -x -f a,b,c
 func (tr *TransformerCut) exclude(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -243,6 +253,8 @@ func (tr *TransformerCut) exclude(
 // ----------------------------------------------------------------
 func (tr *TransformerCut) processWithRegexes(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {

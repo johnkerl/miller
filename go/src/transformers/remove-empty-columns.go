@@ -85,11 +85,15 @@ func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) 
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
+// ---------------------------------------------------------------
+
 func (tr *TransformerRemoveEmptyColumns) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		tr.recordsAndContexts.PushBack(inrecAndContext)

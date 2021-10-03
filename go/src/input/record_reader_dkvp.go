@@ -75,8 +75,12 @@ func (reader *RecordReaderDKVP) processHandle(
 
 		select {
 		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
 			break
 		default:
+			break
+		}
+		if eof {
 			break
 		}
 

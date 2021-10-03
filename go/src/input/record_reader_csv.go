@@ -84,12 +84,17 @@ func (reader *RecordReaderCSV) processHandle(
 	csvReader := csv.NewReader(handle)
 	csvReader.Comma = rune(reader.readerOptions.IFS[0]) // xxx temp
 
+	eof := false
 	for {
 
 		select {
 		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
 			break
 		default:
+			break
+		}
+		if eof {
 			break
 		}
 

@@ -329,11 +329,15 @@ func NewTransformerJoin(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerJoin) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
 // ----------------------------------------------------------------
@@ -341,6 +345,8 @@ func (tr *TransformerJoin) Transform(
 // matching each right record against those.
 func (tr *TransformerJoin) transformHalfStreaming(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	// This can't be done in the CLI-parser since it requires information which
@@ -391,6 +397,8 @@ func (tr *TransformerJoin) transformHalfStreaming(
 // ----------------------------------------------------------------
 func (tr *TransformerJoin) transformDoublyStreaming(
 	rightRecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	keeper := tr.joinBucketKeeper // keystroke-saver

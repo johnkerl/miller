@@ -145,8 +145,12 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 
 		select {
 		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
 			break
 		default:
+			break
+		}
+		if eof {
 			break
 		}
 
@@ -262,8 +266,12 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 
 		select {
 		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
 			break
 		default:
+			break
+		}
+		if eof {
 			break
 		}
 

@@ -82,8 +82,12 @@ func (reader *RecordReaderXTAB) processHandle(
 
 		select {
 		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
 			break
 		default:
+			break
+		}
+		if eof {
 			break
 		}
 

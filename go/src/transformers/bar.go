@@ -198,11 +198,15 @@ func NewTransformerBar(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerBar) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
 // ----------------------------------------------------------------
@@ -216,6 +220,8 @@ func (tr *TransformerBar) simpleBar(
 // ----------------------------------------------------------------
 func (tr *TransformerBar) processNoAuto(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -250,6 +256,8 @@ func (tr *TransformerBar) processNoAuto(
 // ----------------------------------------------------------------
 func (tr *TransformerBar) processAuto(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {

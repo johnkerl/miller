@@ -291,16 +291,22 @@ func NewTransformerNest(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerNest) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerNest) explodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -337,6 +343,8 @@ func (tr *TransformerNest) explodeValuesAcrossFields(
 // ----------------------------------------------------------------
 func (tr *TransformerNest) explodeValuesAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -364,6 +372,8 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 // ----------------------------------------------------------------
 func (tr *TransformerNest) explodePairsAcrossFields(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -408,6 +418,8 @@ func (tr *TransformerNest) explodePairsAcrossFields(
 // ----------------------------------------------------------------
 func (tr *TransformerNest) explodePairsAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -446,6 +458,8 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 // ----------------------------------------------------------------
 func (tr *TransformerNest) implodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -493,6 +507,8 @@ func (tr *TransformerNest) implodeValuesAcrossFields(
 // ----------------------------------------------------------------
 func (tr *TransformerNest) implodeValueAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {

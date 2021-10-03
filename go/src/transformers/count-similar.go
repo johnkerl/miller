@@ -116,10 +116,14 @@ func NewTransformerCountSimilar(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerCountSimilar) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 

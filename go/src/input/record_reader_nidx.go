@@ -76,8 +76,12 @@ func (reader *RecordReaderNIDX) processHandle(
 
 		select {
 		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
 			break
 		default:
+			break
+		}
+		if eof {
 			break
 		}
 
