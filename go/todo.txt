@@ -23,6 +23,8 @@ d pre-release:
 ----------------------------------------------------------------
 REDIRECTS
 
+regtest/cases-pending-go-port/dsl-redirects/0008/cmd
+
 ----------------------------------------------------------------
 
 BLOCKERS
@@ -135,6 +137,8 @@ NON-BLOCKERS
   https://twitter.com/icymi_py/status/1426622817785765898/photo/1
 
 * mlrval_json -- get file/line in internal-coding-error detected
+
+? $0 as raw-record string -- ? would make mlr grep simpler and more natural ...
 
 * IIFEs: 'func f = (func(){ return udf})()'
 * BIFs in non-sigil context (UDFs already are)
