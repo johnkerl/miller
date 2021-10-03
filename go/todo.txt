@@ -9,7 +9,6 @@ TOP OF LIST:
 * --nr-progress-mod * mlr -k * json comment-handling *
 * doc6 * check issues * regtest pendings *
 * r-strings/implicit-r/297 * CSV BOM *
-* try full unicode _idchar in bnf *
 
 * force CSV IFS single-char at CLIP? or CSV setup? IFS1?
 * need multi-IRS reader for USV & explicit CRLF (if supported); also need no-traiing-lf handling
@@ -20,9 +19,6 @@ d pre-release:
   o explicit punchdown list
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
-
-----------------------------------------------------------------
-UNICODE FIELD NAMES
 
 ----------------------------------------------------------------
 REDIRECTS
@@ -140,15 +136,6 @@ NON-BLOCKERS
 
 * mlrval_json -- get file/line in internal-coding-error detected
 
-* unicode _idchar in BNF: so $*["..."] not needed
-  $ mlr --c2p filter '$*["σημαία"] == "αληθινό"' example-gr.csv
-  χρώμα   σχήμα     σημαία  κ δείκτης ποσοτικός ρυθμός
-  κίτρινο τρίγωνο   αληθινό 1 11      43.6498   9.8870
-  κόκκινο τετράγωνο αληθινό 2 15      79.2778   0.0130
-  κόκκινο κύκλος    αληθινό 3 16      13.8103   2.9010
-  κίτρινο κύκλος    αληθινό 8 73      63.9785   4.2370
-  κίτρινο κύκλος    αληθινό 9 87      63.5058   8.3350
-
 * IIFEs: 'func f = (func(){ return udf})()'
 * BIFs in non-sigil context (UDFs already are)
 * non-top-level func defs
@@ -215,7 +202,6 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
 
 * UDF nexts:
   o more functions (see below)
-  !! strlen for UTF-8; wat
   o strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
   o DSL sort function https://github.com/johnkerl/miller/issues/77#issuecomment-321916921
 
@@ -352,7 +338,6 @@ TBF:
 * good example of wording for why/when to make a breaking release:
   https://webpack.js.org/blog/2020-10-10-webpack-5-release/
 * unset, unassign, remove -- too many different names. also assign/put ... maybe stick w/ 2?
-* make truncate() UTF8-friendly
 * huge commenting pass
 * profile mlr sort
 * go exe 17MB, wut. try to discover. (gocc presumably but verify.)
