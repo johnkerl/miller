@@ -182,15 +182,37 @@ func NewTransformerSeqgen(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerSeqgen) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	counter := tr.start
 	context := types.NewContext(nil)
 	context.UpdateForStartOfFile("seqgen")
 
+	keepGoing := true
 	for {
+
+		// See ChainTransformer. If a downstream transformer is discarding all
+		// further input -- e.g. head -n 10 -- and if no interverning
+		// transformer is interested either, then we should break out of our
+		// for loop.  This way 'mlr seqgen --stop 1000000000 then head -n 10'
+		// finishes quickly.
+		select {
+		case b := <-inputDownstreamDoneChannel:
+			outputDownstreamDoneChannel <- b
+			keepGoing = false
+			break
+		default:
+			break
+		}
+		if !keepGoing {
+			break
+		}
+
 		tr.mdone = tr.doneComparator(counter, tr.stop)
 		done, _ := tr.mdone.GetBoolValue()
 		if done {

@@ -318,11 +318,15 @@ func NewTransformerUniq(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerUniq) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
 // ----------------------------------------------------------------
@@ -330,6 +334,8 @@ func (tr *TransformerUniq) Transform(
 // non-streaming, with output at end of stream.
 func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -364,6 +370,8 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 // of stream.
 func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -389,6 +397,8 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 // Print each unique record only once (on first occurrence).
 func (tr *TransformerUniq) transformUniqifyEntireRecords(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -409,6 +419,8 @@ func (tr *TransformerUniq) transformUniqifyEntireRecords(
 // ----------------------------------------------------------------
 func (tr *TransformerUniq) transformUnlashed(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -462,6 +474,8 @@ func (tr *TransformerUniq) transformUnlashed(
 // ----------------------------------------------------------------
 func (tr *TransformerUniq) transformNumDistinctOnly(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -492,6 +506,8 @@ func (tr *TransformerUniq) transformNumDistinctOnly(
 // ----------------------------------------------------------------
 func (tr *TransformerUniq) transformWithCounts(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -535,6 +551,8 @@ func (tr *TransformerUniq) transformWithCounts(
 // ----------------------------------------------------------------
 func (tr *TransformerUniq) transformWithoutCounts(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {

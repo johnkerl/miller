@@ -100,10 +100,14 @@ func NewTransformerBootstrap(nout int) (*TransformerBootstrap, error) {
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerBootstrap) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
 	if !inrecAndContext.EndOfStream {
 		tr.recordsAndContexts.PushBack(inrecAndContext)

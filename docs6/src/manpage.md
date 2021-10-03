@@ -1087,6 +1087,7 @@ VERBS
    head
        Usage: mlr head [options]
        Passes through the first n records, optionally by category.
+       Without -g, ceases consuming more input (i.e. is fast) when n records have been read.
        Options:
        -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
        -n {n} Head-count to print. Default 10.
@@ -2788,5 +2789,5 @@ SEE ALSO
 
 
 
-                                  2021-10-02                         MILLER(1)
+                                  2021-10-03                         MILLER(1)
 </pre>

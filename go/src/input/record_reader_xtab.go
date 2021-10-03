@@ -30,6 +30,7 @@ func (reader *RecordReaderXTAB) Read(
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
@@ -41,7 +42,7 @@ func (reader *RecordReaderXTAB) Read(
 			if err != nil {
 				errorChannel <- err
 			}
-			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel, downstreamDoneChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
@@ -53,7 +54,7 @@ func (reader *RecordReaderXTAB) Read(
 				if err != nil {
 					errorChannel <- err
 				} else {
-					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, errorChannel, downstreamDoneChannel)
 					handle.Close()
 				}
 			}
@@ -68,6 +69,7 @@ func (reader *RecordReaderXTAB) processHandle(
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
 
@@ -77,6 +79,18 @@ func (reader *RecordReaderXTAB) processHandle(
 
 	eof := false
 	for !eof {
+
+		select {
+		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
+			break
+		default:
+			break
+		}
+		if eof {
+			break
+		}
+
 		//line, err := lineReader.ReadString(reader.readerOptions.IRS[0]) // xxx temp
 		line, err := lineReader.ReadString('\n')
 		if lib.IsEOF(err) {

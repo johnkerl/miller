@@ -329,11 +329,15 @@ func NewTransformerJoin(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerJoin) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
 // ----------------------------------------------------------------
@@ -341,6 +345,8 @@ func (tr *TransformerJoin) Transform(
 // matching each right record against those.
 func (tr *TransformerJoin) transformHalfStreaming(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	// This can't be done in the CLI-parser since it requires information which
@@ -391,6 +397,8 @@ func (tr *TransformerJoin) transformHalfStreaming(
 // ----------------------------------------------------------------
 func (tr *TransformerJoin) transformDoublyStreaming(
 	rightRecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	keeper := tr.joinBucketKeeper // keystroke-saver
@@ -462,11 +470,12 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	// Set up channels for the record-reader.
 	inputChannel := make(chan *types.RecordAndContext, 10)
 	errorChannel := make(chan error, 1)
+	downstreamDoneChannel := make(chan bool, 1)
 
 	// Start the record reader.
 	// TODO: prepipe
 	leftFileNameArray := [1]string{tr.opts.leftFileName}
-	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, errorChannel)
+	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, errorChannel, downstreamDoneChannel)
 
 	// Ingest parsed records and bucket them by their join-field values.  E.g.
 	// if the join-field is "id" then put all records with id=1 in one bucket,

@@ -16,5 +16,6 @@ type IRecordReader interface {
 		initialContext types.Context,
 		inputChannel chan<- *types.RecordAndContext,
 		errorChannel chan error,
+		downstreamDoneChannel <-chan bool, // for mlr head
 	)
 }

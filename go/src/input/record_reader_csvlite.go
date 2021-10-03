@@ -56,6 +56,7 @@ func (reader *RecordReaderCSVLite) Read(
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
@@ -74,6 +75,7 @@ func (reader *RecordReaderCSVLite) Read(
 					&context,
 					inputChannel,
 					errorChannel,
+					downstreamDoneChannel,
 				)
 			} else {
 				reader.processHandleExplicitCSVHeader(
@@ -82,6 +84,7 @@ func (reader *RecordReaderCSVLite) Read(
 					&context,
 					inputChannel,
 					errorChannel,
+					downstreamDoneChannel,
 				)
 			}
 		} else {
@@ -102,6 +105,7 @@ func (reader *RecordReaderCSVLite) Read(
 							&context,
 							inputChannel,
 							errorChannel,
+							downstreamDoneChannel,
 						)
 					} else {
 						reader.processHandleExplicitCSVHeader(
@@ -110,6 +114,7 @@ func (reader *RecordReaderCSVLite) Read(
 							&context,
 							inputChannel,
 							errorChannel,
+							downstreamDoneChannel,
 						)
 					}
 					handle.Close()
@@ -127,6 +132,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	var inputLineNumber int = 0
 	var headerStrings []string = nil
@@ -136,6 +142,18 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	lineReader := bufio.NewReader(handle)
 	eof := false
 	for !eof {
+
+		select {
+		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
+			break
+		default:
+			break
+		}
+		if eof {
+			break
+		}
+
 		line, err := lineReader.ReadString(reader.readerOptions.IRS[0]) // xxx temp
 		if lib.IsEOF(err) {
 			err = nil
@@ -235,6 +253,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	var inputLineNumber int = 0
 	var headerStrings []string = nil
@@ -244,6 +263,18 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	lineReader := bufio.NewReader(handle)
 	eof := false
 	for !eof {
+
+		select {
+		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
+			break
+		default:
+			break
+		}
+		if eof {
+			break
+		}
+
 		line, err := lineReader.ReadString(reader.readerOptions.IRS[0]) // xxx temp
 		if lib.IsEOF(err) {
 			err = nil

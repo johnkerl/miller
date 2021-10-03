@@ -26,17 +26,12 @@ func transformerHeadUsage(
 ) {
 	fmt.Fprintf(o, "Usage: %s %s [options]\n", "mlr", verbNameHead)
 	fmt.Fprintf(o, "Passes through the first n records, optionally by category.\n")
+	fmt.Fprintf(o, "Without -g, ceases consuming more input (i.e. is fast) when n records have been read.\n")
 
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.\n")
 	fmt.Fprintf(o, "-n {n} Head-count to print. Default 10.\n")
 	fmt.Fprintf(o, "-h|--help Show this message.\n")
-
-	// TODO: work on this, keeping in mind https://github.com/johnkerl/miller/issues/291
-	//	fmt.Fprint(o,
-	//		`Without -g, ceases consuming more input (i.e. is fast) when n records
-	//have been read.
-	//`)
 
 	if doExit {
 		os.Exit(exitCode)
@@ -102,6 +97,9 @@ type TransformerHead struct {
 	recordTransformerFunc RecordTransformerFunc
 	unkeyedRecordCount    int
 	keyedRecordCounts     map[string]int
+
+	// See ChainTransformer
+	wroteDownstreamDone bool
 }
 
 func NewTransformerHead(
@@ -110,46 +108,60 @@ func NewTransformerHead(
 ) (*TransformerHead, error) {
 
 	tr := &TransformerHead{
-		headCount:         headCount,
-		groupByFieldNames: groupByFieldNames,
-
-		unkeyedRecordCount: 0,
-		keyedRecordCounts:  make(map[string]int),
+		headCount:           headCount,
+		groupByFieldNames:   groupByFieldNames,
+		unkeyedRecordCount:  0,
+		keyedRecordCounts:   make(map[string]int),
+		wroteDownstreamDone: false,
 	}
 
 	if groupByFieldNames == nil {
-		tr.recordTransformerFunc = tr.mapUnkeyed
+		tr.recordTransformerFunc = tr.transformUnkeyed
 	} else {
-		tr.recordTransformerFunc = tr.mapKeyed
+		tr.recordTransformerFunc = tr.transformKeyed
 	}
 
 	return tr, nil
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerHead) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
-func (tr *TransformerHead) mapUnkeyed(
+func (tr *TransformerHead) transformUnkeyed(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		tr.unkeyedRecordCount++
 		if tr.unkeyedRecordCount <= tr.headCount {
 			outputChannel <- inrecAndContext
+		} else if !tr.wroteDownstreamDone {
+			// Signify to data producers upstream that we'll ignore further
+			// data, so as far as we're concerned they can stop sending it. See
+			// ChainTransformer.
+			outputDownstreamDoneChannel <- true
+			tr.wroteDownstreamDone = true
 		}
 	} else {
 		outputChannel <- inrecAndContext
 	}
 }
 
-func (tr *TransformerHead) mapKeyed(
+func (tr *TransformerHead) transformKeyed(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {

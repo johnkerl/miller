@@ -121,16 +121,22 @@ func NewTransformerCleanWhitespace(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerCleanWhitespace) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -154,6 +160,8 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 // ----------------------------------------------------------------
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -176,6 +184,8 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 // ----------------------------------------------------------------
 func (tr *TransformerCleanWhitespace) cleanWhitespaceInValues(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {

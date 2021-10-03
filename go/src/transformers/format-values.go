@@ -159,10 +159,14 @@ func NewTransformerFormatValues(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerFormatValues) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if inrecAndContext.EndOfStream {
 		outputChannel <- inrecAndContext // emit end-of-stream marker
 		return

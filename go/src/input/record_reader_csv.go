@@ -34,6 +34,7 @@ func (reader *RecordReaderCSV) Read(
 	context types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	if filenames != nil { // nil for mlr -n
 		if len(filenames) == 0 { // read from stdin
@@ -45,7 +46,7 @@ func (reader *RecordReaderCSV) Read(
 			if err != nil {
 				errorChannel <- err
 			}
-			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel)
+			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel, downstreamDoneChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
@@ -57,7 +58,7 @@ func (reader *RecordReaderCSV) Read(
 				if err != nil {
 					errorChannel <- err
 				} else {
-					reader.processHandle(handle, filename, &context, inputChannel, errorChannel)
+					reader.processHandle(handle, filename, &context, inputChannel, errorChannel, downstreamDoneChannel)
 					handle.Close()
 				}
 			}
@@ -73,6 +74,7 @@ func (reader *RecordReaderCSV) processHandle(
 	context *types.Context,
 	inputChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
 	needHeader := !reader.readerOptions.UseImplicitCSVHeader
@@ -82,7 +84,20 @@ func (reader *RecordReaderCSV) processHandle(
 	csvReader := csv.NewReader(handle)
 	csvReader.Comma = rune(reader.readerOptions.IFS[0]) // xxx temp
 
+	eof := false
 	for {
+
+		select {
+		case _ = <-downstreamDoneChannel: // e.g. mlr head
+			eof = true
+			break
+		default:
+			break
+		}
+		if eof {
+			break
+		}
+
 		if needHeader {
 			// TODO: make this a helper function
 			csvRecord, err := csvReader.Read()

@@ -1424,6 +1424,7 @@ resource=/some/other/path,loadsec=0.97,ok=false
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr head [options]
 Passes through the first n records, optionally by category.
+Without -g, ceases consuming more input (i.e. is fast) when n records have been read.
 Options:
 -g {a,b,c} Optional group-by-field names for head counts, e.g. a,b,c.
 -n {n} Head-count to print. Default 10.

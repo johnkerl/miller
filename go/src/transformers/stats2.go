@@ -261,10 +261,14 @@ func NewTransformerStats2(
 // ================================================================
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerStats2) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 
 		tr.ingest(inrecAndContext)

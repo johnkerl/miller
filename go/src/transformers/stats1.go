@@ -264,10 +264,14 @@ func NewTransformerStats1(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerStats1) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		tr.handleInputRecord(inrecAndContext, outputChannel)
 	} else {
