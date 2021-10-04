@@ -96,10 +96,14 @@ func NewTransformerSec2GMTDate(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerSec2GMTDate) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		for _, fieldName := range tr.fieldNameList {

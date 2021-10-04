@@ -1,1 +1,1 @@
-mlr termcvt --cr2lf   < regtest/input/line-ending-cr.bin
+mlr termcvt --cr2lf < regtest/input/line-ending-cr.bin

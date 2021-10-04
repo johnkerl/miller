@@ -90,10 +90,14 @@ func NewTransformerFillEmpty(fillString string) (*TransformerFillEmpty, error) {
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerFillEmpty) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 

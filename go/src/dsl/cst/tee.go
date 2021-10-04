@@ -77,7 +77,7 @@ func (root *RootNode) BuildTeeStatementNode(astNode *dsl.ASTNode) (IExecutable, 
 	redirectorNode := astNode.Children[1]
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Expresosin to be teed, which is $*.
+	// Expression to be teed, which is $*.
 
 	lib.InternalCodingErrorIf(expressionNode.Type != dsl.NodeTypeFullSrec)
 	expressionEvaluable := root.BuildFullSrecRvalueNode()

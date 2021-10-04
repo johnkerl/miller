@@ -41,24 +41,21 @@ import (
 // keeps stack-offset information in it that is private to us.
 type StackVariable struct {
 	name string
-
 	// Type like "int" or "num" or "var" is stored in the stack itself.  A
 	// StackVariable can appear in the CST (concrete syntax tree) on either the
 	// left-hand side or right-hande side of an assignment -- in the latter
 	// case the callsite won't know the type until the value is read off the
 	// stack.
-
-	// TODO: comment
-	frameSetOffset int
-	offsetInFrame  int
 }
 
-// TODO: be sure to invalidate slot 0 for struct uninit
 func NewStackVariable(name string) *StackVariable {
+	return NewStackVariableAux(name, true)
+}
+
+// TODO: comment re function literals
+func NewStackVariableAux(name string, cacheable bool) *StackVariable {
 	return &StackVariable{
-		name:           name,
-		frameSetOffset: -1,
-		offsetInFrame:  -1,
+		name: name,
 	}
 }
 
@@ -229,28 +226,12 @@ func (frameset *StackFrameSet) dump() {
 func (frameset *StackFrameSet) get(
 	stackVariable *StackVariable,
 ) *types.Mlrval {
-	// TODO: comment
-	fso := stackVariable.frameSetOffset
-	oif := stackVariable.offsetInFrame
-	if fso >= 0 && fso < len(frameset.stackFrames) && oif >= 0 && oif < len(frameset.stackFrames[fso].vars) {
-		return frameset.stackFrames[fso].vars[oif].GetValue()
-	} else {
-		return frameset.getUncached(stackVariable)
-	}
-}
-
-// Returns nil on no-such
-func (frameset *StackFrameSet) getUncached(
-	stackVariable *StackVariable,
-) *types.Mlrval {
 	// Scope-walk
 	numStackFrames := len(frameset.stackFrames)
 	for offset := numStackFrames - 1; offset >= 0; offset-- {
 		stackFrame := frameset.stackFrames[offset]
 		mlrval := stackFrame.get(stackVariable)
 		if mlrval != nil {
-			// TODO: comment
-			stackVariable.frameSetOffset = offset
 			return mlrval
 		}
 	}
@@ -265,7 +246,6 @@ func (frameset *StackFrameSet) defineTypedAtScope(
 ) error {
 	offset := len(frameset.stackFrames) - 1
 	// TODO: comment
-	stackVariable.frameSetOffset = offset
 	return frameset.stackFrames[offset].defineTyped(
 		stackVariable, typeName, mlrval,
 	)
@@ -277,8 +257,6 @@ func (frameset *StackFrameSet) setAtScope(
 	mlrval *types.Mlrval,
 ) error {
 	offset := len(frameset.stackFrames) - 1
-	// TODO: comment
-	stackVariable.frameSetOffset = offset
 	return frameset.stackFrames[offset].set(stackVariable, mlrval)
 }
 
@@ -287,27 +265,11 @@ func (frameset *StackFrameSet) set(
 	stackVariable *StackVariable,
 	mlrval *types.Mlrval,
 ) error {
-	fso := stackVariable.frameSetOffset
-	oif := stackVariable.offsetInFrame
-	if fso >= 0 && fso < len(frameset.stackFrames) && oif >= 0 && oif < len(frameset.stackFrames[fso].vars) {
-		return frameset.stackFrames[fso].vars[oif].Assign(mlrval.Copy())
-	} else {
-		return frameset.setUncached(stackVariable, mlrval)
-	}
-}
-
-// See Stack.Set comments above
-func (frameset *StackFrameSet) setUncached(
-	stackVariable *StackVariable,
-	mlrval *types.Mlrval,
-) error {
 	// Scope-walk
 	numStackFrames := len(frameset.stackFrames)
 	for offset := numStackFrames - 1; offset >= 0; offset-- {
 		stackFrame := frameset.stackFrames[offset]
 		if stackFrame.has(stackVariable) {
-			// TODO: comment
-			stackVariable.frameSetOffset = offset
 			return stackFrame.set(stackVariable, mlrval)
 		}
 	}
@@ -325,14 +287,10 @@ func (frameset *StackFrameSet) setIndexed(
 	for offset := numStackFrames - 1; offset >= 0; offset-- {
 		stackFrame := frameset.stackFrames[offset]
 		if stackFrame.has(stackVariable) {
-			// TODO: comment
-			stackVariable.frameSetOffset = offset
 			return stackFrame.setIndexed(stackVariable, indices, mlrval)
 		}
 	}
-	// TODO: comment
 	offset := numStackFrames - 1
-	stackVariable.frameSetOffset = offset
 	return frameset.stackFrames[offset].setIndexed(stackVariable, indices, mlrval)
 }
 
@@ -398,8 +356,6 @@ func (frame *StackFrame) get(
 ) *types.Mlrval {
 	offset, ok := frame.namesToOffsets[stackVariable.name]
 	if ok {
-		// TODO: comment
-		stackVariable.offsetInFrame = offset
 		return frame.vars[offset].GetValue()
 	} else {
 		return nil
@@ -427,8 +383,6 @@ func (frame *StackFrame) set(
 		frame.vars = append(frame.vars, slot)
 		offsetInFrame := len(frame.vars) - 1
 		frame.namesToOffsets[stackVariable.name] = offsetInFrame
-		// TODO: comment
-		stackVariable.offsetInFrame = offsetInFrame
 		return nil
 	} else {
 		return frame.vars[offset].Assign(mlrval)
@@ -450,8 +404,6 @@ func (frame *StackFrame) defineTyped(
 		frame.vars = append(frame.vars, slot)
 		offsetInFrame := len(frame.vars) - 1
 		frame.namesToOffsets[stackVariable.name] = offsetInFrame
-		// TODO: comment
-		stackVariable.offsetInFrame = offsetInFrame
 		return nil
 	} else {
 		return errors.New(

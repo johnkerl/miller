@@ -92,14 +92,26 @@ func IntMin2(a, b int) int {
 	}
 }
 
-// Tries decimal, hex, octal, and binary.
+// TryIntFromString tries decimal, hex, octal, and binary.
 func TryIntFromString(input string) (int, bool) {
-	ival, err := strconv.ParseInt(input, 0 /* check all*/, 64)
-	if err == nil {
-		return int(ival), true
-	} else {
-		return 0, false
+	// Following twos-complement formatting familiar from all manners of
+	// languages, including C which was Miller's original implementation
+	// language, we want to allow 0x00....00 through 0x7f....ff as positive
+	// 64-bit integers and 0x80....00 through 0xff....ff as negative ones. Go's
+	// signed-int parsing explicitly doesn't allow that, but we don't want Go
+	// semantics to dictate Miller semantics.  So, we try signed-int parsing
+	// for 0x00....00 through 0x7f....ff, as well as positive or negative
+	// decimal. Failing that, we try unsigned-int parsing for 0x80....00
+	// through 0xff....ff.
+	i64, ierr := strconv.ParseInt(input, 0 /* check all*/, 64)
+	if ierr == nil {
+		return int(i64), true
 	}
+	u64, uerr := strconv.ParseUint(input, 0 /* check all*/, 64)
+	if uerr == nil {
+		return int(u64), true
+	}
+	return 0, false
 }
 
 func TryFloat64FromString(input string) (float64, bool) {

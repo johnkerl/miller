@@ -1,1 +1,1 @@
-mlr head -n 2        regtest/input/abixy-het
+mlr head -n 2 regtest/input/abixy-het

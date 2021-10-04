@@ -108,3 +108,61 @@ alias mlr='mlr --load /u/miller-udfs/'
 GENMD_EOF
 
 See the [miscellaneous-flags page](reference-main-flag-list.md#miscellaneous-flags) for more information.
+
+## Function literals
+
+You can define unmnamed functions and assign the to variables, or pass them to functions.
+
+See also the [page on higher-order functions](reference-dsl-higher-order-functions.md)
+for more information on
+[`select`](reference-dsl-builtin-functions.md#select),
+[`apply`](reference-dsl-builtin-functions.md#apply),
+[`reduce`](reference-dsl-builtin-functions.md#reduce),
+[`fold`](reference-dsl-builtin-functions.md#fold), and sort.
+[`sort`](reference-dsl-builtin-functions.md#sort),
+
+For example:
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put '
+  f = func(s, t) {
+    return s . ":" . t;
+  };
+  $z = f($color, $shape);
+'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put '
+  a = func(s, t) {
+    return s . ":" . t . " above";
+  };
+  b = func(s, t) {
+    return s . ":" . t . " below";
+  };
+  f = $index >= 50 ? a : b;
+  $z = f($color, $shape);
+'
+GENMD_EOF
+
+Note that you need a semicolon after the closing curly brace of the function literal.
+
+Unlike named functions, function literals (also known as unnamed functions)
+have access to local variables defined in their enclosing scope. That's
+so you can do things like this:
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put '
+  f = func(s, t, i) {
+    if (i >= cap) {
+      return s . ":" . t . " above";
+    } else {
+      return s . ":" . t . " below";
+    }
+  };
+  cap = 10;
+  $z = f($color, $shape, $index);
+'
+GENMD_EOF
+
+See the [page on higher-order functions](reference-dsl-higher-order-functions.md) for more.

@@ -1,1 +1,1 @@
-mlr uniq -a -c        regtest/input/repeats.dkvp
+mlr uniq -a -c regtest/input/repeats.dkvp

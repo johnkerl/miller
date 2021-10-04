@@ -119,24 +119,30 @@ func NewTransformerGap(
 	}
 
 	if groupByFieldNames == nil {
-		tr.recordTransformerFunc = tr.mapUnkeyed
+		tr.recordTransformerFunc = tr.transformUnkeyed
 	} else {
-		tr.recordTransformerFunc = tr.mapKeyed
+		tr.recordTransformerFunc = tr.transformKeyed
 	}
 
 	return tr, nil
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerGap) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
-	tr.recordTransformerFunc(inrecAndContext, outputChannel)
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
+	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
 }
 
-func (tr *TransformerGap) mapUnkeyed(
+func (tr *TransformerGap) transformUnkeyed(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
@@ -153,8 +159,10 @@ func (tr *TransformerGap) mapUnkeyed(
 	}
 }
 
-func (tr *TransformerGap) mapKeyed(
+func (tr *TransformerGap) transformKeyed(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {

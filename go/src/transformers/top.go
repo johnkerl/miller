@@ -161,10 +161,14 @@ func NewTransformerTop(
 }
 
 // ----------------------------------------------------------------
+
 func (tr *TransformerTop) Transform(
 	inrecAndContext *types.RecordAndContext,
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
+	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		tr.ingest(inrecAndContext)
 	} else {

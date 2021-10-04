@@ -19,15 +19,20 @@ import (
 type UDF struct {
 	signature    *Signature
 	functionBody *StatementBlockNode
+	// Function literals can access locals in their enclosing scope; named
+	// functions cannot.
+	isFunctionLiteral bool
 }
 
 func NewUDF(
 	signature *Signature,
 	functionBody *StatementBlockNode,
+	isFunctionLiteral bool,
 ) *UDF {
 	return &UDF{
-		signature:    signature,
-		functionBody: functionBody,
+		signature:         signature,
+		functionBody:      functionBody,
+		isFunctionLiteral: isFunctionLiteral,
 	}
 }
 
@@ -38,7 +43,7 @@ func NewUnresolvedUDF(
 	callsiteArity int,
 ) *UDF {
 	signature := NewSignature(functionName, callsiteArity, nil, nil)
-	udf := NewUDF(signature, nil)
+	udf := NewUDF(signature, nil, false)
 	return udf
 }
 
@@ -98,6 +103,8 @@ func (site *UDFCallsite) findUDF(state *runtime.State) *UDF {
 	// there was 'f = func(a, b) { return a*b }' in scope.
 	v := state.Stack.Get(site.stackVariable)
 	if v == nil { // Nothing in scope on the stack with that name
+		// StackVariable
+		state.Stack.Dump()
 		return nil
 	}
 
@@ -169,7 +176,17 @@ func (site *UDFCallsite) Evaluate(
 	// we push a new frameset and DefineTypedAtScope using the callee's frameset.
 
 	// Evaluate the arguments
-	numArguments := len(udf.signature.typeGatedParameterNames)
+	numArguments := len(site.argumentNodes)
+	numParameters := len(udf.signature.typeGatedParameterNames)
+
+	if numArguments != numParameters {
+		fmt.Fprintf(
+			os.Stderr,
+			"mlr: function \"%s\" invoked with argument count %d; expected %d.\n",
+			udf.signature.funcOrSubrName, numArguments, numParameters)
+		os.Exit(1)
+	}
+
 	arguments := make([]*types.Mlrval, numArguments)
 
 	for i := range udf.signature.typeGatedParameterNames {
@@ -195,13 +212,26 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	arguments []*types.Mlrval,
 ) *types.Mlrval {
 
-	// Bind the arguments to the parameters
-	state.Stack.PushStackFrameSet()
-	defer state.Stack.PopStackFrameSet()
+	// Bind the arguments to the parameters.  Function literals can access
+	// locals in their enclosing scope; named functions cannot. Hence stack
+	// frame (scope-walkable) vs stack frame set (not scope-walkable).
+	if udf.isFunctionLiteral {
+		state.Stack.PushStackFrame()
+		defer state.Stack.PopStackFrame()
+	} else {
+		state.Stack.PushStackFrameSet()
+		defer state.Stack.PopStackFrameSet()
+	}
+
+	cacheable := !udf.isFunctionLiteral
 
 	for i := range arguments {
+		// TODO: comment
 		err := state.Stack.DefineTypedAtScope(
-			runtime.NewStackVariable(udf.signature.typeGatedParameterNames[i].Name),
+			runtime.NewStackVariableAux(
+				udf.signature.typeGatedParameterNames[i].Name,
+				cacheable,
+			),
 			udf.signature.typeGatedParameterNames[i].TypeName,
 			arguments[i],
 		)
@@ -378,7 +408,7 @@ func (root *RootNode) BuildAndInstallUDF(astNode *dsl.ASTNode) error {
 		}
 	}
 
-	udf, err := root.BuildUDF(astNode, functionName)
+	udf, err := root.BuildUDF(astNode, functionName, false)
 	if err != nil {
 		return err
 	}
@@ -409,12 +439,14 @@ type UnnamedUDFNode struct {
 func (root *RootNode) BuildUnnamedUDFNode(astNode *dsl.ASTNode) (IEvaluable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeUnnamedFunctionDefinition)
 
-	udf, err := root.BuildUDF(astNode, "")
+	name := genFunctionLiteralName()
+
+	udf, err := root.BuildUDF(astNode, name, true)
 	if err != nil {
 		return nil, err
 	}
 
-	udfAsMlrval := types.MlrvalPointerFromFunction(udf, genFunctionLiteralName())
+	udfAsMlrval := types.MlrvalPointerFromFunction(udf, name)
 
 	return &UnnamedUDFNode{
 		udfAsMlrval: udfAsMlrval,
@@ -429,7 +461,11 @@ func (node *UnnamedUDFNode) Evaluate(state *runtime.State) *types.Mlrval {
 
 // BuildUDF is for named UDFs, like `func f(a, b) { return b - a}', or,
 // unnamed UDFs like `func (a, b) { return b - a }'.
-func (root *RootNode) BuildUDF(astNode *dsl.ASTNode, functionName string) (*UDF, error) {
+func (root *RootNode) BuildUDF(
+	astNode *dsl.ASTNode,
+	functionName string,
+	isFunctionLiteral bool,
+) (*UDF, error) {
 	lib.InternalCodingErrorIf(
 		(astNode.Type != dsl.NodeTypeNamedFunctionDefinition) &&
 			(astNode.Type != dsl.NodeTypeUnnamedFunctionDefinition))
@@ -488,5 +524,5 @@ func (root *RootNode) BuildUDF(astNode *dsl.ASTNode, functionName string) (*UDF,
 		return nil, err
 	}
 
-	return NewUDF(signature, functionBody), nil
+	return NewUDF(signature, functionBody, isFunctionLiteral), nil
 }

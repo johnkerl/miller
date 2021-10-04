@@ -1,1 +1,1 @@
-mlr -n put    'y = $x'
+mlr -n put 'y = $x'

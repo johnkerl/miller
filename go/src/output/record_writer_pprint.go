@@ -157,7 +157,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 		outrec := e.Value.(*types.Mlrmap)
 
 		// Print header line
-		if onFirst {
+		if onFirst && !writer.writerOptions.HeaderlessCSVOutput {
 			var buffer bytes.Buffer // faster than fmt.Print() separately
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				if !writer.writerOptions.RightAlignedPprintOutput {
@@ -169,9 +169,11 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 						buffer.WriteString(writer.writerOptions.ORS)
 					}
 				} else {
-					formatted := fmt.Sprintf("%*s ", maxWidths[pe.Key], pe.Key)
+					formatted := fmt.Sprintf("%*s", maxWidths[pe.Key], pe.Key)
 					buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
-					if pe.Next == nil {
+					if pe.Next != nil {
+						buffer.WriteString(" ")
+					} else {
 						buffer.WriteString(writer.writerOptions.ORS)
 					}
 				}
@@ -197,9 +199,11 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			} else {
-				formatted := fmt.Sprintf("%*s ", maxWidths[pe.Key], s)
+				formatted := fmt.Sprintf("%*s", maxWidths[pe.Key], s)
 				buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
-				if pe.Next == nil {
+				if pe.Next != nil {
+					buffer.WriteString(" ")
+				} else {
 					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			}
@@ -247,7 +251,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 		outrec := e.Value.(*types.Mlrmap)
 
 		// Print header line
-		if onFirst {
+		if onFirst && !writer.writerOptions.HeaderlessCSVOutput {
 			var buffer bytes.Buffer // faster than fmt.Print() separately
 
 			buffer.WriteString(horizontalStart)
