@@ -1,1 +1,1 @@
-mlr --ocsv    cat regtest/input/het.dkvp
+mlr --ocsv cat regtest/input/het.dkvp

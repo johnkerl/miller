@@ -1,1 +1,1 @@
-mlr --opprint put -f ${CASEDIR}/mlr   regtest/input/gsub.dat
+mlr --opprint put -f ${CASEDIR}/mlr regtest/input/gsub.dat

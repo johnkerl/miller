@@ -1,1 +1,1 @@
-mlr put -f ${CASEDIR}/mlr  regtest/input/short-circuit.dkvp
+mlr put -f ${CASEDIR}/mlr regtest/input/short-circuit.dkvp

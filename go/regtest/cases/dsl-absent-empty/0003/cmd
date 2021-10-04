@@ -1,1 +1,1 @@
-mlr put    '$nonesuch = @nonesuch' regtest/input/abixy
+mlr put '$nonesuch = @nonesuch' regtest/input/abixy

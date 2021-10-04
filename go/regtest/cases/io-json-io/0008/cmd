@@ -1,1 +1,1 @@
-mlr --ojson                         --jquoteall   cat regtest/input/json-output-options.dkvp
+mlr --ojson --jquoteall cat regtest/input/json-output-options.dkvp

@@ -1,1 +1,1 @@
-mlr --c2d cat  regtest/input/abixy.csv
+mlr --c2d cat regtest/input/abixy.csv

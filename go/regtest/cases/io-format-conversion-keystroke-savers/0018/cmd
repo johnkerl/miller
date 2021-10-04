@@ -1,1 +1,1 @@
-mlr --t2p cat  regtest/input/abixy.tsv
+mlr --t2p cat regtest/input/abixy.tsv

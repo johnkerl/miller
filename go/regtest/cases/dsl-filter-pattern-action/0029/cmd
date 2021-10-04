@@ -1,1 +1,1 @@
-mlr --oxtab cat                       regtest/input/subtab.dkvp
+mlr --oxtab cat regtest/input/subtab.dkvp

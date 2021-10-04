@@ -1,1 +1,1 @@
-mlr -n put -v 'for (k, v          in @*) {}'
+mlr -n put -v 'for (k, v in @*) {}'
