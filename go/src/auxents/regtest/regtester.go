@@ -337,7 +337,16 @@ func (regtester *RegTester) executeSingleCmdFile(
 		return false
 	}
 
-	slash := string(filepath.Separator) // Or backslash on Windows ... although modern Windows versions handle slashes fine.
+	// Using backslash on Windows works generally well. However, there are
+	// annoying issues with making all regression-test cases relocatable using
+	// the ${CASEDIR} substitution. This itself works fine in `cmd` files but
+	// for those (relatively few) cases which need casedir access in the `mlr`
+	// files -- namely for redirected emit/emitp/tee/dump within `mlr put` --
+	// the substitution becomes unwieldy.
+
+	//slash := "/"
+	slash := string(filepath.Separator)
+
 	mlrFileName := caseDir + slash + MlrName
 	envFileName := caseDir + slash + EnvName
 	preCopyFileName := caseDir + slash + PreCopyName
@@ -576,7 +585,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 			}
 
 			if verbosityLevel >= 3 {
-				fmt.Println(RunDiffCommand(actualStdout, expectedStdout))
+				fmt.Println(RunDiffCommand(expectedStdout, actualStdout))
 			}
 			passed = false
 		}
@@ -591,7 +600,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 				)
 			}
 			if verbosityLevel >= 3 {
-				fmt.Println(RunDiffCommand(actualStderr, expectedStderr))
+				fmt.Println(RunDiffCommand(expectedStderr, actualStderr))
 			}
 			passed = false
 		}
@@ -625,6 +634,9 @@ func (regtester *RegTester) executeSingleCmdFile(
 						"%s: %s does not match %s\n",
 						cmdFilePath, expectedFileName, actualFileName,
 					)
+				}
+				if verbosityLevel >= 3 {
+					fmt.Println(RunDiffCommand(expectedFileName, actualFileName))
 				}
 				// TODO: if verbosityLevel >= 3, print the contents of both files
 				passed = false

@@ -1,0 +1,9 @@
+CASEDIR=regtest/cases/dsl-redirects/0066
+a={
+  "1": "pan",
+  "2": "eks"
+}
+b={
+  "1": "pan",
+  "2": "pan"
+}

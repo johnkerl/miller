@@ -1,0 +1,3 @@
+CASEDIR=regtest/cases/dsl-redirects/0114
+1=pan,2=eks,3=wye,4=eks
+1=pan,2=pan,3=wye,4=wye

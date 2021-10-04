@@ -131,7 +131,9 @@ func (reader *RecordReaderDKVP) recordFromDKVPLine(
 	for i, pair := range pairs {
 		kv := lib.RegexSplitString(reader.readerOptions.IPSRegex, pair, 2)
 		// TODO check length 0. also, check input is empty since "".split() -> [""] not []
-		if len(kv) == 1 {
+		if len(kv) == 0 {
+			// Ignore. This is expected when splitting with repeated IFS.
+		} else if len(kv) == 1 {
 			// E.g the pair has no equals sign: "a" rather than "a=1" or
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
