@@ -295,7 +295,7 @@ func (regtester *RegTester) hasCaseSubdirectories(
 
 	for i := range entries {
 		entry := &entries[i]
-		path := dirName + "/" + (*entry).Name()
+		path := dirName + string(filepath.Separator) + (*entry).Name()
 		if regtester.isCaseDirectory(path) {
 			return true
 		}
@@ -327,7 +327,24 @@ func (regtester *RegTester) executeSingleCmdFile(
 	// Various support files use syntax ${CASEDIR} within them so they're
 	// relocatable, but we need to expand those in order to execute the test
 	// case.
+
+	// Using backslash on Windows works well in *almost* all cases. However,
+	// there are annoying issues with making all regression-test cases
+	// relocatable using the ${CASEDIR} substitution. This is fine in `cmd`
+	// files, but for those (relatively few) cases which need casedir access
+	// within the `mlr` files -- namely for redirected emit/emitp/tee/dump
+	// within `mlr put` -- the substitution becomes unwieldy. So, here we
+	// simply use forward slashes, trusting in all modern Windows systems to
+	// handle this for regression-test cases. (Note: this is only for
+	// regression testing which is nominally done by a developer, or in GitHub
+	// Actions for Continuous Integration. End users using Miller don't
+	// typically touch this part, and Miller in general -- outside here --
+	// doesn't rewrite backslashes to slashes on Windows.)
+
 	caseDir := filepath.Dir(cmdFilePath)
+	caseDir = strings.ReplaceAll(caseDir, "\\", "/")
+	// Not slash := string(filepath.Separator)
+	slash := "/"
 
 	cmd, err := regtester.loadFile(cmdFilePath, caseDir)
 	if err != nil {
@@ -336,16 +353,6 @@ func (regtester *RegTester) executeSingleCmdFile(
 		}
 		return false
 	}
-
-	// Using backslash on Windows works generally well. However, there are
-	// annoying issues with making all regression-test cases relocatable using
-	// the ${CASEDIR} substitution. This itself works fine in `cmd` files but
-	// for those (relatively few) cases which need casedir access in the `mlr`
-	// files -- namely for redirected emit/emitp/tee/dump within `mlr put` --
-	// the substitution becomes unwieldy.
-
-	//slash := "/"
-	slash := string(filepath.Separator)
 
 	mlrFileName := caseDir + slash + MlrName
 	envFileName := caseDir + slash + EnvName

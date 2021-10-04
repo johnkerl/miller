@@ -29,77 +29,77 @@ regtest/cases-pending-go-port/dsl-redirects/0008/cmd
 LOOK AT
 
 (error)
-regtest/cases-pending-go-port/int64-io/0005
-regtest/cases-pending-go-port/int64-io/0006
-regtest/cases-pending-go-port/int64-io/0007
-regtest/cases-pending-go-port/int64-io/0037
-regtest/cases-pending-go-port/int64-io/0041
-regtest/cases-pending-go-port/int64-io/0042
-regtest/cases-pending-go-port/int64-io/0043
+mlr regtest regtest/cases-pending-go-port/int64-io/0005
+mlr regtest regtest/cases-pending-go-port/int64-io/0006
+mlr regtest regtest/cases-pending-go-port/int64-io/0007
+mlr regtest regtest/cases-pending-go-port/int64-io/0037
+mlr regtest regtest/cases-pending-go-port/int64-io/0041
+mlr regtest regtest/cases-pending-go-port/int64-io/0042
+mlr regtest regtest/cases-pending-go-port/int64-io/0043
 
 line-end
-regtest/cases-pending-go-port/io-implicit-header-csv-input/0001
-regtest/cases-pending-go-port/io-implicit-header-csv-input/0002
-regtest/cases-pending-go-port/io-implicit-header-csv-input/0003
-regtest/cases-pending-go-port/io-implicit-header-csv-input/0004
+mlr regtest regtest/cases-pending-go-port/io-implicit-header-csv-input/0001
+mlr regtest regtest/cases-pending-go-port/io-implicit-header-csv-input/0002
+mlr regtest regtest/cases-pending-go-port/io-implicit-header-csv-input/0003
+mlr regtest regtest/cases-pending-go-port/io-implicit-header-csv-input/0004
 
 --quote-all
-regtest/cases-pending-go-port/io-rfc-csv/0013
+mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0013
 
 --quote-original
-regtest/cases-pending-go-port/io-rfc-csv/0014
+mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0014
 
 usv
-regtest/cases-pending-go-port/io-rfc-csv/0016
+mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0016
 
 panic
-regtest/cases-pending-go-port/io-space-padding/0001
+mlr regtest regtest/cases-pending-go-port/io-space-padding/0001
 
 ?
-regtest/cases-pending-go-port/io-utf8-alignment/0006
-regtest/cases-pending-go-port/io-utf8-alignment/0008
+mlr regtest regtest/cases-pending-go-port/io-utf8-alignment/0006
+mlr regtest regtest/cases-pending-go-port/io-utf8-alignment/0008
 
 bom
-regtest/cases-pending-go-port/io-utf8-bom/0001
+mlr regtest regtest/cases-pending-go-port/io-utf8-bom/0001
 
 ?
-regtest/cases-pending-go-port/mix-null-field-input/0006
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0006
 
 absents
-regtest/cases-pending-go-port/mix-null-field-input/0007
-regtest/cases-pending-go-port/mix-null-field-input/0010
-regtest/cases-pending-go-port/mix-null-field-input/0011
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0007
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0010
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0011
 
 void/err
-regtest/cases-pending-go-port/mix-null-field-input/0012
-regtest/cases-pending-go-port/mix-null-field-input/0013
-regtest/cases-pending-go-port/mix-null-field-input/0014
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0012
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0013
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0014
 
 ?
-regtest/cases-pending-go-port/mix-null-field-input/0023
-regtest/cases-pending-go-port/mix-null-field-input/0024
-regtest/cases-pending-go-port/mix-null-field-input/0027
-regtest/cases-pending-go-port/mix-null-field-input/0028
-regtest/cases-pending-go-port/mix-null-field-input/0039
-regtest/cases-pending-go-port/mix-null-field-input/0040
-regtest/cases-pending-go-port/mix-null-field-input/0041
-regtest/cases-pending-go-port/mix-null-field-input/0042
-regtest/cases-pending-go-port/mix-null-field-input/0043
-regtest/cases-pending-go-port/mix-null-field-input/0045
-regtest/cases-pending-go-port/mix-null-field-input/0046
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0023
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0024
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0027
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0028
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0039
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0040
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0041
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0042
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0043
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0045
+mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0046
 
 fmtstr
-regtest/cases-pending-go-port/verb-format-values/0003
-regtest/cases-pending-go-port/verb-format-values/0004
+mlr regtest regtest/cases-pending-go-port/verb-format-values/0003
+mlr regtest regtest/cases-pending-go-port/verb-format-values/0004
 
 race
-regtest/cases-pending-go-port/verb-head-early-out
+mlr regtest regtest/cases-pending-go-port/verb-head-early-out
 
 label order
-regtest/cases-pending-go-port/verb-label/0010
+mlr regtest regtest/cases-pending-go-port/verb-label/0010
 
 stats1 --fr
-regtest/cases-pending-go-port/verb-stats1-regexed-field-names/0002
+mlr regtest regtest/cases-pending-go-port/verb-stats1-regexed-field-names/0002
 
 ----------------------------------------------------------------
 
