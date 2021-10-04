@@ -295,7 +295,7 @@ func (regtester *RegTester) hasCaseSubdirectories(
 
 	for i := range entries {
 		entry := &entries[i]
-		path := dirName + "/" + (*entry).Name()
+		path := dirName + string(filepath.Separator) + (*entry).Name()
 		if regtester.isCaseDirectory(path) {
 			return true
 		}
@@ -327,7 +327,24 @@ func (regtester *RegTester) executeSingleCmdFile(
 	// Various support files use syntax ${CASEDIR} within them so they're
 	// relocatable, but we need to expand those in order to execute the test
 	// case.
+
+	// Using backslash on Windows works well in *almost* all cases. However,
+	// there are annoying issues with making all regression-test cases
+	// relocatable using the ${CASEDIR} substitution. This is fine in `cmd`
+	// files, but for those (relatively few) cases which need casedir access
+	// within the `mlr` files -- namely for redirected emit/emitp/tee/dump
+	// within `mlr put` -- the substitution becomes unwieldy. So, here we
+	// simply use forward slashes, trusting in all modern Windows systems to
+	// handle this for regression-test cases. (Note: this is only for
+	// regression testing which is nominally done by a developer, or in GitHub
+	// Actions for Continuous Integration. End users using Miller don't
+	// typically touch this part, and Miller in general -- outside here --
+	// doesn't rewrite backslashes to slashes on Windows.)
+
 	caseDir := filepath.Dir(cmdFilePath)
+	caseDir = strings.ReplaceAll(caseDir, "\\", "/")
+	// Not slash := string(filepath.Separator)
+	slash := "/"
 
 	cmd, err := regtester.loadFile(cmdFilePath, caseDir)
 	if err != nil {
@@ -337,7 +354,6 @@ func (regtester *RegTester) executeSingleCmdFile(
 		return false
 	}
 
-	slash := string(filepath.Separator) // Or backslash on Windows ... although modern Windows versions handle slashes fine.
 	mlrFileName := caseDir + slash + MlrName
 	envFileName := caseDir + slash + EnvName
 	preCopyFileName := caseDir + slash + PreCopyName
@@ -576,7 +592,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 			}
 
 			if verbosityLevel >= 3 {
-				fmt.Println(RunDiffCommand(actualStdout, expectedStdout))
+				fmt.Println(RunDiffCommand(expectedStdout, actualStdout))
 			}
 			passed = false
 		}
@@ -591,7 +607,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 				)
 			}
 			if verbosityLevel >= 3 {
-				fmt.Println(RunDiffCommand(actualStderr, expectedStderr))
+				fmt.Println(RunDiffCommand(expectedStderr, actualStderr))
 			}
 			passed = false
 		}
@@ -625,6 +641,9 @@ func (regtester *RegTester) executeSingleCmdFile(
 						"%s: %s does not match %s\n",
 						cmdFilePath, expectedFileName, actualFileName,
 					)
+				}
+				if verbosityLevel >= 3 {
+					fmt.Println(RunDiffCommand(expectedFileName, actualFileName))
 				}
 				// TODO: if verbosityLevel >= 3, print the contents of both files
 				passed = false
