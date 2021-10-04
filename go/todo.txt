@@ -9,6 +9,7 @@ TOP OF LIST:
 * --nr-progress-mod * mlr -k * json comment-handling *
 * doc6 * check issues * regtest pendings *
 * r-strings/implicit-r/297 * CSV BOM *
+* check greek xlat *
 
 * force CSV IFS single-char at CLIP? or CSV setup? IFS1?
 * need multi-IRS reader for USV & explicit CRLF (if supported); also need no-traiing-lf handling
@@ -25,17 +26,15 @@ REDIRECTS
 
 regtest/cases-pending-go-port/dsl-redirects/0008/cmd
 
+! no-remove-after option ...
+
+new-in-miller-6: missings:
+* dump syntax -- ?
+* emittable constraints -- ?
+* --auto -- ?
+
 ----------------------------------------------------------------
 LOOK AT
-
-(error)
-mlr regtest regtest/cases-pending-go-port/int64-io/0005
-mlr regtest regtest/cases-pending-go-port/int64-io/0006
-mlr regtest regtest/cases-pending-go-port/int64-io/0007
-mlr regtest regtest/cases-pending-go-port/int64-io/0037
-mlr regtest regtest/cases-pending-go-port/int64-io/0041
-mlr regtest regtest/cases-pending-go-port/int64-io/0042
-mlr regtest regtest/cases-pending-go-port/int64-io/0043
 
 line-end
 mlr regtest regtest/cases-pending-go-port/io-implicit-header-csv-input/0001
@@ -52,30 +51,20 @@ mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0014
 usv
 mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0016
 
-panic
-mlr regtest regtest/cases-pending-go-port/io-space-padding/0001
-
-?
-mlr regtest regtest/cases-pending-go-port/io-utf8-alignment/0006
+--xvright not recognized
 mlr regtest regtest/cases-pending-go-port/io-utf8-alignment/0008
 
 bom
 mlr regtest regtest/cases-pending-go-port/io-utf8-bom/0001
 
-?
+absents/void/err
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0006
-
-absents
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0007
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0010
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0011
-
-void/err
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0012
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0013
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0014
-
-?
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0023
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0024
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0027

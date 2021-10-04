@@ -1,1 +1,1 @@
-mlr uniq    -f a   regtest/input/abixy-het
+mlr uniq -f a regtest/input/abixy-het

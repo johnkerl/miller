@@ -1,1 +1,1 @@
-mlr --fs  auto --xtab cat regtest/input/line-term-crlf.xtab
+mlr --fs auto --xtab cat regtest/input/line-term-crlf.xtab

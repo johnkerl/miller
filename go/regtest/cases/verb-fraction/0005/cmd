@@ -1,1 +1,1 @@
-mlr --oxtab fraction -f x,y -g a   -p    regtest/input/abixy-het
+mlr --oxtab fraction -f x,y -g a -p regtest/input/abixy-het

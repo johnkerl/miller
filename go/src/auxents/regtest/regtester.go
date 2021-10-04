@@ -592,7 +592,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 			}
 
 			if verbosityLevel >= 3 {
-				fmt.Println(RunDiffCommand(expectedStdout, actualStdout))
+				fmt.Println(RunDiffCommandOnStrings(expectedStdout, actualStdout))
 			}
 			passed = false
 		}
@@ -607,7 +607,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 				)
 			}
 			if verbosityLevel >= 3 {
-				fmt.Println(RunDiffCommand(expectedStderr, actualStderr))
+				fmt.Println(RunDiffCommandOnStrings(expectedStderr, actualStderr))
 			}
 			passed = false
 		}
@@ -643,7 +643,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 					)
 				}
 				if verbosityLevel >= 3 {
-					fmt.Println(RunDiffCommand(expectedFileName, actualFileName))
+					fmt.Println(RunDiffCommandOnFilenames(expectedFileName, actualFileName))
 				}
 				// TODO: if verbosityLevel >= 3, print the contents of both files
 				passed = false

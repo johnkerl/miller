@@ -1,1 +1,1 @@
-mlr --n2p cat  regtest/input/abixy.nidx
+mlr --n2p cat regtest/input/abixy.nidx

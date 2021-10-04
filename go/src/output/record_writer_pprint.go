@@ -169,9 +169,11 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 						buffer.WriteString(writer.writerOptions.ORS)
 					}
 				} else {
-					formatted := fmt.Sprintf("%*s ", maxWidths[pe.Key], pe.Key)
+					formatted := fmt.Sprintf("%*s", maxWidths[pe.Key], pe.Key)
 					buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
-					if pe.Next == nil {
+					if pe.Next != nil {
+						buffer.WriteString(" ")
+					} else {
 						buffer.WriteString(writer.writerOptions.ORS)
 					}
 				}
@@ -197,9 +199,11 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			} else {
-				formatted := fmt.Sprintf("%*s ", maxWidths[pe.Key], s)
+				formatted := fmt.Sprintf("%*s", maxWidths[pe.Key], s)
 				buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
-				if pe.Next == nil {
+				if pe.Next != nil {
+					buffer.WriteString(" ")
+				} else {
 					buffer.WriteString(writer.writerOptions.ORS)
 				}
 			}

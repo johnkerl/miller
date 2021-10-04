@@ -1,1 +1,1 @@
-mlr --inidx --ifs space --opprint         cat regtest/input/utf8-align.nidx
+mlr --inidx --ifs space --opprint cat regtest/input/utf8-align.nidx

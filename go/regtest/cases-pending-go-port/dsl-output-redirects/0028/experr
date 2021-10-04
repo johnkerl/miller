@@ -1,2 +1,0 @@
-mlr DSL: syntax error at ","
-mlr put: syntax error on DSL parse of '@x=1; dump > "regtest/cases-pending-go-port/dsl-output-redirects/0028/foo.dat", @x'
