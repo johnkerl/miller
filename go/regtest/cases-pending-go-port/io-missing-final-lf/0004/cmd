@@ -1,1 +1,1 @@
-mlr --pprint  cat regtest/input/truncated.pprint
+mlr --pprint cat regtest/input/truncated.pprint

@@ -1,1 +1,1 @@
-mlr --j2p cat  regtest/input/abixy.json
+mlr --j2p cat regtest/input/abixy.json

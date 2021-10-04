@@ -1,5 +1,5 @@
 DSL EXPRESSION:
-for ((k1,k2),    v in @*) {}
+for ((k1,k2), v in @*) {}
 
 AST:
 * statement block

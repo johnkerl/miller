@@ -1,1 +1,1 @@
-mlr -n put    'y =  1'
+mlr -n put 'y = 1'

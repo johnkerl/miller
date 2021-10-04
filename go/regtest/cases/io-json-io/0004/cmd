@@ -1,1 +1,1 @@
-mlr --ojson                                       cat regtest/input/json-output-options.dkvp
+mlr --ojson cat regtest/input/json-output-options.dkvp
