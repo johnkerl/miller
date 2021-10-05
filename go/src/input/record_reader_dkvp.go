@@ -69,12 +69,15 @@ func (reader *RecordReaderDKVP) processHandle(
 ) {
 	context.UpdateForStartOfFile(filename)
 
-	lineReader := bufio.NewReader(handle)
-	eof := false
-	for !eof {
+	scanner := bufio.NewScanner(handle)
+	for scanner.Scan() {
 
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
+		eof := false
 		select {
-		case _ = <-downstreamDoneChannel: // e.g. mlr head
+		case _ = <-downstreamDoneChannel:
 			eof = true
 			break
 		default:
@@ -84,21 +87,14 @@ func (reader *RecordReaderDKVP) processHandle(
 			break
 		}
 
-		line, err := lineReader.ReadString('\n') // TODO: auto-detect
-		if lib.IsEOF(err) {
-			err = nil
-			eof = true
-			break
-		}
-		if err != nil {
-			errorChannel <- err
-			break
-		}
+		// xxx what of lib.IsEOF
+		// xxx what of errchan
+		line := scanner.Text()
 
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				inputChannel <- types.NewOutputString(line, context)
+				inputChannel <- types.NewOutputString(line+"\n", context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
@@ -107,10 +103,10 @@ func (reader *RecordReaderDKVP) processHandle(
 		}
 
 		// This is how to do a chomp:
-		line = strings.TrimRight(line, "\n")
+		//line = strings.TrimRight(line, "\n")
 
 		// xxx temp pending autodetect, and pending more windows-port work
-		line = strings.TrimRight(line, "\r")
+		//line = strings.TrimRight(line, "\r")
 
 		record := reader.recordFromDKVPLine(line)
 		context.UpdateForInputRecord()
