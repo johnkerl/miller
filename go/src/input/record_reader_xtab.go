@@ -73,15 +73,18 @@ func (reader *RecordReaderXTAB) processHandle(
 ) {
 	context.UpdateForStartOfFile(filename)
 
-	lineReader := bufio.NewReader(handle)
+	scanner := bufio.NewScanner(handle)
 
 	linesForRecord := list.New()
 
 	eof := false
 	for !eof {
 
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
 		select {
-		case _ = <-downstreamDoneChannel: // e.g. mlr head
+		case _ = <-downstreamDoneChannel:
 			eof = true
 			break
 		default:
@@ -91,11 +94,7 @@ func (reader *RecordReaderXTAB) processHandle(
 			break
 		}
 
-		//line, err := lineReader.ReadString(reader.readerOptions.IRS[0]) // xxx temp
-		line, err := lineReader.ReadString('\n')
-		if lib.IsEOF(err) {
-			err = nil
-			eof = true
+		if !scanner.Scan() {
 
 			if linesForRecord.Len() > 0 {
 				record, err := reader.recordFromXTABLines(linesForRecord)
@@ -107,30 +106,23 @@ func (reader *RecordReaderXTAB) processHandle(
 				inputChannel <- types.NewRecordAndContext(record, context)
 				linesForRecord = list.New()
 			}
-			continue
-		}
 
-		if err != nil {
-			errorChannel <- err
 			break
 		}
+
+		// TODO: IRS
+		line := scanner.Text()
 
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				inputChannel <- types.NewOutputString(line, context)
+				inputChannel <- types.NewOutputString(line+"\n", context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
 			}
 			// else comments are data
 		}
-
-		// xxx temp pending autodetect, and pending more windows-port work
-		// This is how to do a chomp:
-		line = strings.TrimRight(line, "\n")
-		line = strings.TrimRight(line, "\r")
-		//line = strings.TrimRight(line, reader.readerOptions.IRS)
 
 		if line != "" {
 			linesForRecord.PushBack(line)
