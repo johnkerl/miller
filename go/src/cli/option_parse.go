@@ -15,13 +15,20 @@ import (
 	"mlr/src/lib"
 )
 
-// FinalizeReaderOptions does a few things. One is if a file format was
-// specified but one or more separators were not, a defaut specific to that
-// file format is applied. The second is computing regexes for IPS and IFS, and
-// unbackslashing IRS.  This is because the '\n' at the command line which is
-// Go "\\n" (a backslash and an n) needs to become the single newline
-// character, and likewise for "\t", etc.
+// FinalizeReaderOptions does a few things.
+// * If a file format was specified but one or more separators were not, a
+//   default specific to that file format is applied.
+// * Computing regexes for IPS and IFS, and unbackslashing IRS.  This is
+//   because the '\n' at the command line which is Go "\\n" (a backslash and an
+//   n) needs to become the single newline character, and likewise for "\t", etc.
+// * IFS/IPS can have escapes like "\x1f" which aren't valid regex literals
+//   so we unhex them. For example, from "\x1f" -- the four bytes '\', 'x', '1', 'f'
+//   -- to the single byte with hex code 0x1f.
 func FinalizeReaderOptions(readerOptions *TReaderOptions) {
+
+	readerOptions.IFS = lib.UnhexStringLiteral(readerOptions.IFS)
+	readerOptions.IPS = lib.UnhexStringLiteral(readerOptions.IPS)
+
 	if !readerOptions.IFSWasSpecified {
 		readerOptions.IFS = defaultFSes[readerOptions.InputFileFormat]
 	}
@@ -251,8 +258,13 @@ var SeparatorFlagSection = FlagSection{
 			help: "Specify RS for input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
-				options.ReaderOptions.IRS = SeparatorFromArg(args[*pargi+1])
-				options.ReaderOptions.IRSWasSpecified = true
+				// Backward compatibility with Miller <= 5. Auto-inference of
+				// LF vs CR/LF line endings is handled within Go libraries so
+				// we needn't do anything ourselves.
+				if args[*pargi+1] != "auto" {
+					options.ReaderOptions.IRS = SeparatorFromArg(args[*pargi+1])
+					options.ReaderOptions.IRSWasSpecified = true
+				}
 				*pargi += 2
 			},
 		},
@@ -273,8 +285,13 @@ var SeparatorFlagSection = FlagSection{
 			help: "Specify RS for output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
-				options.WriterOptions.ORS = SeparatorFromArg(args[*pargi+1])
-				options.WriterOptions.ORSWasSpecified = true
+				// Backward compatibility with Miller <= 5. Auto-inference of
+				// LF vs CR/LF line endings is handled within Go libraries so
+				// we needn't do anything ourselves.
+				if args[*pargi+1] != "auto" {
+					options.WriterOptions.ORS = SeparatorFromArg(args[*pargi+1])
+					options.WriterOptions.ORSWasSpecified = true
+				}
 				*pargi += 2
 			},
 		},
@@ -309,10 +326,15 @@ var SeparatorFlagSection = FlagSection{
 			help: "Specify RS for input and output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
-				options.ReaderOptions.IRS = SeparatorFromArg(args[*pargi+1])
-				options.WriterOptions.ORS = SeparatorFromArg(args[*pargi+1])
-				options.ReaderOptions.IRSWasSpecified = true
-				options.WriterOptions.ORSWasSpecified = true
+				// Backward compatibility with Miller <= 5. Auto-inference of
+				// LF vs CR/LF line endings is handled within Go libraries so
+				// we needn't do anything ourselves.
+				if args[*pargi+1] != "auto" {
+					options.ReaderOptions.IRS = SeparatorFromArg(args[*pargi+1])
+					options.WriterOptions.ORS = SeparatorFromArg(args[*pargi+1])
+					options.ReaderOptions.IRSWasSpecified = true
+					options.WriterOptions.ORSWasSpecified = true
+				}
 				*pargi += 2
 			},
 		},
@@ -1065,9 +1087,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.WriterOptions.OFS = "\t"
 				options.ReaderOptions.IRSWasSpecified = true
 				options.WriterOptions.OFSWasSpecified = true
@@ -1083,7 +1103,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				options.ReaderOptions.IRSWasSpecified = true
 				*pargi += 1
@@ -1097,7 +1116,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.WriterOptions.OFS = " "
 				options.ReaderOptions.IRSWasSpecified = true
@@ -1113,7 +1131,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.ReaderOptions.IRSWasSpecified = true
 				*pargi += 1
@@ -1127,7 +1144,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.ReaderOptions.IRSWasSpecified = true
 				*pargi += 1
@@ -1141,7 +1157,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
 				options.ReaderOptions.IRSWasSpecified = true
@@ -1156,7 +1171,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				options.ReaderOptions.IRSWasSpecified = true
 				*pargi += 1
@@ -1170,7 +1184,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			suppressFlagEnumeration: true,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				options.ReaderOptions.IRSWasSpecified = true
 				*pargi += 1
@@ -1186,9 +1199,7 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.ReaderOptions.IFSWasSpecified = true
 				options.ReaderOptions.IRSWasSpecified = true
 				options.WriterOptions.ORSWasSpecified = true
@@ -1204,7 +1215,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "dkvp"
 				options.ReaderOptions.IFSWasSpecified = true
 				options.ReaderOptions.IRSWasSpecified = true
@@ -1220,7 +1230,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "nidx"
 				options.WriterOptions.OFS = " "
 				options.ReaderOptions.IFSWasSpecified = true
@@ -1238,7 +1247,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "json"
 				options.ReaderOptions.IFSWasSpecified = true
 				options.ReaderOptions.IRSWasSpecified = true
@@ -1254,7 +1262,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.ReaderOptions.IFSWasSpecified = true
 				options.ReaderOptions.IRSWasSpecified = true
@@ -1270,7 +1277,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "pprint"
 				options.WriterOptions.BarredPprintOutput = true
 				options.ReaderOptions.IFSWasSpecified = true
@@ -1287,7 +1293,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "xtab"
 				options.ReaderOptions.IFSWasSpecified = true
 				options.ReaderOptions.IRSWasSpecified = true
@@ -1303,7 +1308,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csv"
 				options.ReaderOptions.IFS = "\t"
-				options.ReaderOptions.IRS = "auto"
 				options.WriterOptions.OutputFileFormat = "markdown"
 				options.ReaderOptions.IFSWasSpecified = true
 				options.ReaderOptions.IRSWasSpecified = true
@@ -1320,7 +1324,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				*pargi += 1
 			},
 		},
@@ -1333,7 +1336,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "dkvp"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.WriterOptions.OFS = "\t"
 				options.WriterOptions.OFSWasSpecified = true
 				options.WriterOptions.ORSWasSpecified = true
@@ -1425,7 +1427,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.WriterOptions.ORSWasSpecified = true
 				*pargi += 1
 			},
@@ -1439,7 +1440,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "nidx"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.WriterOptions.OFS = "\t"
 				options.WriterOptions.OFSWasSpecified = true
 				options.WriterOptions.ORSWasSpecified = true
@@ -1529,7 +1529,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.WriterOptions.ORSWasSpecified = true
 				*pargi += 1
 			},
@@ -1543,7 +1542,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "json"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.WriterOptions.OFS = "\t"
 				options.WriterOptions.OFSWasSpecified = true
 				options.WriterOptions.ORSWasSpecified = true
@@ -1634,7 +1632,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.ReaderOptions.IFSWasSpecified = true
 				options.WriterOptions.ORSWasSpecified = true
 				*pargi += 1
@@ -1650,7 +1647,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 				options.ReaderOptions.InputFileFormat = "pprint"
 				options.ReaderOptions.IFS = " "
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.WriterOptions.OFS = "\t"
 				options.ReaderOptions.IFSWasSpecified = true
 				options.WriterOptions.OFSWasSpecified = true
@@ -1738,7 +1734,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.WriterOptions.ORSWasSpecified = true
 				*pargi += 1
 			},
@@ -1752,7 +1747,6 @@ var FormatConversionKeystrokeSaverFlagSection = FlagSection{
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "xtab"
 				options.WriterOptions.OutputFileFormat = "csv"
-				options.WriterOptions.ORS = "auto"
 				options.WriterOptions.OFS = "\t"
 				options.WriterOptions.OFSWasSpecified = true
 				options.WriterOptions.ORSWasSpecified = true

@@ -4,7 +4,6 @@ TOP OF LIST:
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-* repifs * multi-char IRS * no-LF last-line issue *
 * I/O redirects * fmtnum * localtime * stats1 -r/--fr *
 * --nr-progress-mod * mlr -k * json comment-handling *
 * doc6 * check issues * regtest pendings *
@@ -12,7 +11,6 @@ TOP OF LIST:
 * check greek xlat *
 
 * force CSV IFS single-char at CLIP? or CSV setup? IFS1?
-* need multi-IRS reader for USV & explicit CRLF (if supported); also need no-traiing-lf handling
 
 * implicit r: double-check end of reference-main-data-types.md.in
 
@@ -20,6 +18,12 @@ d pre-release:
   o explicit punchdown list
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
+
+----------------------------------------------------------------
+MULTICHAR IRS / AUTO
+
+* skip auto in the CLIP
+* document in nim6.in
 
 ----------------------------------------------------------------
 REDIRECTS
@@ -36,20 +40,11 @@ new-in-miller-6: missings:
 ----------------------------------------------------------------
 LOOK AT
 
-line-end
-mlr regtest regtest/cases-pending-go-port/io-implicit-header-csv-input/0001
-mlr regtest regtest/cases-pending-go-port/io-implicit-header-csv-input/0002
-mlr regtest regtest/cases-pending-go-port/io-implicit-header-csv-input/0003
-mlr regtest regtest/cases-pending-go-port/io-implicit-header-csv-input/0004
-
 --quote-all
 mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0013
 
 --quote-original
 mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0014
-
-usv
-mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0016
 
 --xvright not recognized
 mlr regtest regtest/cases-pending-go-port/io-utf8-alignment/0008
@@ -97,8 +92,6 @@ BLOCKERS
 * regtest:
   o convert regtest/cases-pending-windows
   o convert regtest/cases-pending-go-port
-
-* USV / multi-char IRS
 
 * localtime functions
 

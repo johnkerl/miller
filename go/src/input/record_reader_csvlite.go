@@ -19,7 +19,6 @@ package input
 //            3,4,5,6               3,4,5
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"io"
@@ -139,7 +138,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 
 	context.UpdateForStartOfFile(filename)
 
-	scanner := bufio.NewScanner(handle)
+	scanner := NewLineScanner(handle, reader.readerOptions.IRS)
 	for scanner.Scan() {
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
@@ -180,6 +179,9 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 		}
 
 		fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+		////fmt.Printf("<<%v>>\n", line)
+		////fmt.Printf("<<%v>>\n", reader.readerOptions.IFS)
+		////fields := lib.SplitString(line, lib.UnbackslashStringLiteral(reader.readerOptions.IFS))
 		if reader.readerOptions.AllowRepeatIFS {
 			fields = reader.stripEmpties(fields)
 		}
@@ -254,7 +256,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 
 	context.UpdateForStartOfFile(filename)
 
-	scanner := bufio.NewScanner(handle)
+	scanner := NewLineScanner(handle, reader.readerOptions.IRS)
 	for scanner.Scan() {
 
 		// See if downstream processors will be ignoring further data (e.g. mlr

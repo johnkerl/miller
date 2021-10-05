@@ -75,6 +75,40 @@ func UnbackslashStringLiteral(input string) string {
 	return buffer.String()
 }
 
+// UnhexStringLiteral is like UnbackslashStringLiteral but only unhexes things
+// like "\x1f". This is for IFS and IPS setup; see the cli package.
+func UnhexStringLiteral(input string) string {
+	var buffer bytes.Buffer
+
+	n := len(input)
+
+	for i := 0; i < n; /* increment in loop */ {
+		if input[i] != '\\' {
+			buffer.WriteByte(input[i])
+			i++
+			continue
+		}
+
+		if i == n-1 {
+			buffer.WriteByte(input[i])
+			i++
+			continue
+		}
+
+		next := input[i+1]
+		if ok, code := isBackslashHex(input[i:]); ok {
+			buffer.WriteByte(byte(code))
+			i += 4
+		} else {
+			buffer.WriteByte('\\')
+			buffer.WriteByte(next)
+			i += 2
+		}
+	}
+
+	return buffer.String()
+}
+
 // If the string starts with backslash followed by three octal digits, convert
 // the next 3 characters from octal. E.g. "\123" becomes 83 (in decimal).
 func isBackslashOctal(input string) (bool, int) {

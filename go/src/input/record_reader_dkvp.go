@@ -1,7 +1,6 @@
 package input
 
 import (
-	"bufio"
 	"io"
 	"strconv"
 	"strings"
@@ -69,7 +68,7 @@ func (reader *RecordReaderDKVP) processHandle(
 ) {
 	context.UpdateForStartOfFile(filename)
 
-	scanner := bufio.NewScanner(handle)
+	scanner := NewLineScanner(handle, reader.readerOptions.IRS)
 	for scanner.Scan() {
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
