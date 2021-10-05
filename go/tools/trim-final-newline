@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+if ARGV.length == 0
+  $stderr.puts "Usage: #{$0} {one or more filenames"
+  $stderr.puts "Writes the files in place, with final newline removed."
+  exit 1
+end
+
+ARGV.each do |filename|
+  contents = File.read(filename)
+  File.write(filename, contents.chomp)
+end
