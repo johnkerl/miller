@@ -1,7 +1,6 @@
 package input
 
 import (
-	"bufio"
 	"container/list"
 	"errors"
 	"io"
@@ -14,7 +13,7 @@ import (
 
 type RecordReaderXTAB struct {
 	readerOptions *cli.TReaderOptions
-	// TODO: parameterize IRS
+	// TODO: parameterize IRS vs IFS correctly (XTAB is different)
 }
 
 // ----------------------------------------------------------------
@@ -73,7 +72,9 @@ func (reader *RecordReaderXTAB) processHandle(
 ) {
 	context.UpdateForStartOfFile(filename)
 
-	scanner := bufio.NewScanner(handle)
+	// TODO: parameterize IRS vs IFS correctly (XTAB is different)
+	//scanner := NewLineScanner(handle, "\n\n")
+	scanner := NewLineScanner(handle, "\n")
 
 	linesForRecord := list.New()
 
@@ -110,7 +111,6 @@ func (reader *RecordReaderXTAB) processHandle(
 			break
 		}
 
-		// TODO: IRS
 		line := scanner.Text()
 
 		// Check for comments-in-data feature
