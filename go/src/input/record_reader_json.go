@@ -74,8 +74,11 @@ func (reader *RecordReaderJSON) processHandle(
 	eof := false
 	for {
 
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
 		select {
-		case _ = <-downstreamDoneChannel: // e.g. mlr head
+		case _ = <-downstreamDoneChannel:
 			eof = true
 			break
 		default:

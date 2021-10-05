@@ -19,7 +19,6 @@ package input
 //            3,4,5,6               3,4,5
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"io"
@@ -139,12 +138,15 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 
 	context.UpdateForStartOfFile(filename)
 
-	lineReader := bufio.NewReader(handle)
-	eof := false
-	for !eof {
+	scanner := NewLineScanner(handle, reader.readerOptions.IRS)
+	for scanner.Scan() {
 
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
+		eof := false
 		select {
-		case _ = <-downstreamDoneChannel: // e.g. mlr head
+		case _ = <-downstreamDoneChannel:
 			eof = true
 			break
 		default:
@@ -154,181 +156,49 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			break
 		}
 
-		line, err := lineReader.ReadString(reader.readerOptions.IRS[0]) // xxx temp
-		if lib.IsEOF(err) {
-			err = nil
-			eof = true
-		} else if err != nil {
-			errorChannel <- err
-		} else {
-			inputLineNumber++
+		// xxx temp need IRS
+		line := scanner.Text()
 
-			// Check for comments-in-data feature
-			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-				if reader.readerOptions.CommentHandling == cli.PassComments {
-					inputChannel <- types.NewOutputString(line, context)
-					continue
-				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
-					continue
-				}
-				// else comments are data
-			}
+		inputLineNumber++
 
-			// This is how to do a chomp:
-			line = strings.TrimRight(line, reader.readerOptions.IRS)
-			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r")
-
-			if line == "" {
-				// Reset to new schema
-				headerStrings = nil
+		// Check for comments-in-data feature
+		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+			if reader.readerOptions.CommentHandling == cli.PassComments {
+				inputChannel <- types.NewOutputString(line+"\n", context)
+				continue
+			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
 			}
+			// else comments are data
+		}
 
-			fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
-			if reader.readerOptions.AllowRepeatIFS {
-				fields = reader.stripEmpties(fields)
-			}
-			if headerStrings == nil {
-				headerStrings = fields
-				// Get data lines on subsequent loop iterations
-			} else {
-				if !reader.readerOptions.AllowRaggedCSVInput && len(headerStrings) != len(fields) {
-					err := errors.New(
-						fmt.Sprintf(
-							"mlr: CSV header/data length mismatch %d != %d "+
-								"at filename %s line  %d.\n",
-							len(headerStrings), len(fields), filename, inputLineNumber,
-						),
-					)
-					errorChannel <- err
-					return
-				}
+		if line == "" {
+			// Reset to new schema
+			headerStrings = nil
+			continue
+		}
 
-				record := types.NewMlrmap()
-				if !reader.readerOptions.AllowRaggedCSVInput {
-					for i, field := range fields {
-						value := types.MlrvalPointerFromInferredTypeForDataFiles(field)
-						record.PutCopy(headerStrings[i], value)
-					}
-				} else {
-					nh := len(headerStrings)
-					nd := len(fields)
-					n := lib.IntMin2(nh, nd)
-					var i int
-					for i = 0; i < n; i++ {
-						value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
-						record.PutCopy(headerStrings[i], value)
-					}
-					if nh < nd {
-						// if header shorter than data: use 1-up itoa keys
-						for i = nh; i < nd; i++ {
-							key := strconv.Itoa(i + 1)
-							value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
-							record.PutCopy(key, value)
-						}
-					}
-					if nh > nd {
-						// if header longer than data: use "" values
-						for i = nd; i < nh; i++ {
-							record.PutCopy(headerStrings[i], types.MLRVAL_VOID)
-						}
-					}
-				}
-
-				context.UpdateForInputRecord()
-				inputChannel <- types.NewRecordAndContext(
-					record,
-					context,
+		fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+		////fmt.Printf("<<%v>>\n", line)
+		////fmt.Printf("<<%v>>\n", reader.readerOptions.IFS)
+		////fields := lib.SplitString(line, lib.UnbackslashStringLiteral(reader.readerOptions.IFS))
+		if reader.readerOptions.AllowRepeatIFS {
+			fields = reader.stripEmpties(fields)
+		}
+		if headerStrings == nil {
+			headerStrings = fields
+			// Get data lines on subsequent loop iterations
+		} else {
+			if !reader.readerOptions.AllowRaggedCSVInput && len(headerStrings) != len(fields) {
+				err := errors.New(
+					fmt.Sprintf(
+						"mlr: CSV header/data length mismatch %d != %d "+
+							"at filename %s line  %d.\n",
+						len(headerStrings), len(fields), filename, inputLineNumber,
+					),
 				)
-			}
-		}
-	}
-}
-
-// ----------------------------------------------------------------
-func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
-	handle io.Reader,
-	filename string,
-	context *types.Context,
-	inputChannel chan<- *types.RecordAndContext,
-	errorChannel chan error,
-	downstreamDoneChannel <-chan bool, // for mlr head
-) {
-	var inputLineNumber int = 0
-	var headerStrings []string = nil
-
-	context.UpdateForStartOfFile(filename)
-
-	lineReader := bufio.NewReader(handle)
-	eof := false
-	for !eof {
-
-		select {
-		case _ = <-downstreamDoneChannel: // e.g. mlr head
-			eof = true
-			break
-		default:
-			break
-		}
-		if eof {
-			break
-		}
-
-		line, err := lineReader.ReadString(reader.readerOptions.IRS[0]) // xxx temp
-		if lib.IsEOF(err) {
-			err = nil
-			eof = true
-		} else if err != nil {
-			errorChannel <- err
-		} else {
-			inputLineNumber++
-
-			// Check for comments-in-data feature
-			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-				if reader.readerOptions.CommentHandling == cli.PassComments {
-					inputChannel <- types.NewOutputString(line, context)
-					continue
-				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
-					continue
-				}
-				// else comments are data
-			}
-
-			// This is how to do a chomp:
-			line = strings.TrimRight(line, reader.readerOptions.IRS)
-
-			// xxx temp pending autodetect, and pending more windows-port work
-			line = strings.TrimRight(line, "\r")
-
-			if line == "" {
-				// Reset to new schema
-				headerStrings = nil
-				continue
-			}
-
-			fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
-			if reader.readerOptions.AllowRepeatIFS {
-				fields = reader.stripEmpties(fields)
-			}
-			if headerStrings == nil {
-				n := len(fields)
-				headerStrings = make([]string, n)
-				for i := 0; i < n; i++ {
-					headerStrings[i] = strconv.Itoa(i + 1)
-				}
-			} else {
-				if !reader.readerOptions.AllowRaggedCSVInput && len(headerStrings) != len(fields) {
-					err := errors.New(
-						fmt.Sprintf(
-							"mlr: CSV header/data length mismatch %d != %d "+
-								"at filename %s line  %d.\n",
-							len(headerStrings), len(fields), filename, inputLineNumber,
-						),
-					)
-					errorChannel <- err
-					return
-				}
+				errorChannel <- err
+				return
 			}
 
 			record := types.NewMlrmap()
@@ -348,9 +218,11 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
-					key := strconv.Itoa(i + 1)
-					value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
-					record.PutCopy(key, value)
+					for i = nh; i < nd; i++ {
+						key := strconv.Itoa(i + 1)
+						value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
+						record.PutCopy(key, value)
+					}
 				}
 				if nh > nd {
 					// if header longer than data: use "" values
@@ -365,8 +237,132 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 				record,
 				context,
 			)
-
 		}
+
+	}
+}
+
+// ----------------------------------------------------------------
+func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
+	handle io.Reader,
+	filename string,
+	context *types.Context,
+	inputChannel chan<- *types.RecordAndContext,
+	errorChannel chan error,
+	downstreamDoneChannel <-chan bool, // for mlr head
+) {
+	var inputLineNumber int = 0
+	var headerStrings []string = nil
+
+	context.UpdateForStartOfFile(filename)
+
+	scanner := NewLineScanner(handle, reader.readerOptions.IRS)
+	for scanner.Scan() {
+
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
+
+		// TODO: extract a helper function
+		eof := false
+		select {
+		case _ = <-downstreamDoneChannel:
+			eof = true
+			break
+		default:
+			break
+		}
+		if eof {
+			break
+		}
+
+		// TODO: IRS
+		line := scanner.Text()
+
+		inputLineNumber++
+
+		// Check for comments-in-data feature
+		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+			if reader.readerOptions.CommentHandling == cli.PassComments {
+				inputChannel <- types.NewOutputString(line+"\n", context)
+				continue
+			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+				continue
+			}
+			// else comments are data
+		}
+
+		// This is how to do a chomp:
+		line = strings.TrimRight(line, reader.readerOptions.IRS)
+
+		// xxx temp pending autodetect, and pending more windows-port work
+		line = strings.TrimRight(line, "\r")
+
+		if line == "" {
+			// Reset to new schema
+			headerStrings = nil
+			continue
+		}
+
+		fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+		if reader.readerOptions.AllowRepeatIFS {
+			fields = reader.stripEmpties(fields)
+		}
+		if headerStrings == nil {
+			n := len(fields)
+			headerStrings = make([]string, n)
+			for i := 0; i < n; i++ {
+				headerStrings[i] = strconv.Itoa(i + 1)
+			}
+		} else {
+			if !reader.readerOptions.AllowRaggedCSVInput && len(headerStrings) != len(fields) {
+				err := errors.New(
+					fmt.Sprintf(
+						"mlr: CSV header/data length mismatch %d != %d "+
+							"at filename %s line  %d.\n",
+						len(headerStrings), len(fields), filename, inputLineNumber,
+					),
+				)
+				errorChannel <- err
+				return
+			}
+		}
+
+		record := types.NewMlrmap()
+		if !reader.readerOptions.AllowRaggedCSVInput {
+			for i, field := range fields {
+				value := types.MlrvalPointerFromInferredTypeForDataFiles(field)
+				record.PutCopy(headerStrings[i], value)
+			}
+		} else {
+			nh := len(headerStrings)
+			nd := len(fields)
+			n := lib.IntMin2(nh, nd)
+			var i int
+			for i = 0; i < n; i++ {
+				value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
+				record.PutCopy(headerStrings[i], value)
+			}
+			if nh < nd {
+				// if header shorter than data: use 1-up itoa keys
+				key := strconv.Itoa(i + 1)
+				value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
+				record.PutCopy(key, value)
+			}
+			if nh > nd {
+				// if header longer than data: use "" values
+				for i = nd; i < nh; i++ {
+					record.PutCopy(headerStrings[i], types.MLRVAL_VOID)
+				}
+			}
+		}
+
+		context.UpdateForInputRecord()
+		inputChannel <- types.NewRecordAndContext(
+			record,
+			context,
+		)
+
 	}
 }
 
