@@ -106,14 +106,12 @@ func MlrvalStringMatchesRegexp(input1, input2 *Mlrval) (retval *Mlrval, captures
 	if !input2.IsLegit() {
 		return input2, nil
 	}
-	if !input1.IsStringOrVoid() {
-		return MLRVAL_ERROR, nil
-	}
+	input1string := input1.String()
 	if !input2.IsStringOrVoid() {
 		return MLRVAL_ERROR, nil
 	}
 
-	boolOutput, captures := lib.RegexMatches(input1.printrep, input2.printrep)
+	boolOutput, captures := lib.RegexMatches(input1string, input2.printrep)
 	return MlrvalPointerFromBool(boolOutput), captures
 }
 
