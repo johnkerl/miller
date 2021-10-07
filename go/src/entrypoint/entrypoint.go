@@ -64,7 +64,7 @@ func processToStdout(
 	options cli.TOptions,
 	recordTransformers []transformers.IRecordTransformer,
 ) {
-	err := stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
+	err := stream.Stream(options.FileNames, &options, recordTransformers, os.Stdout, true)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
 		os.Exit(1)
@@ -148,7 +148,7 @@ func processInPlace(
 		}
 
 		// Run the Miller processing stream from the input file to the temp-output file.
-		err = stream.Stream([]string{fileName}, options, recordTransformers, wrappedHandle, false)
+		err = stream.Stream([]string{fileName}, &options, recordTransformers, wrappedHandle, false)
 		if err != nil {
 			os.Remove(tempFileName)
 			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)

@@ -5,7 +5,7 @@ TOP OF LIST:
 * nikos materials -> fold in
 
 * I/O redirects * fmtnum * localtime * stats1 -r/--fr *
-* --nr-progress-mod * mlr -k * json comment-handling *
+* mlr -k * json comment-handling *
 * doc6 * check issues * regtest pendings *
 * r-strings/implicit-r/297 * CSV BOM *
 * check greek xlat *

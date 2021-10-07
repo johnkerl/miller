@@ -2502,28 +2502,24 @@ var MiscFlagSection = FlagSection{
 			},
 		},
 
-		//		name: "--nr-progress-mod",
-		//		arg: {m}",
-		//      help: `With m a positive integer: print filename and record
-		//                                count to os.Stderr every m input records.`,
-		//			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//				CheckArgCount(args, *pargi, argc, 2);
-		//				if (sscanf(args[*pargi+1], "%lld", &options.nr_progress_mod) != 1) {
-		//					fmt.Fprintf(os.Stderr,
-		//						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-		//						"mlr", args[*pargi+1]);
-		//					mainUsageShort()
-		//					os.Exit(1);
-		//				}
-		//				if (options.nr_progress_mod <= 0) {
-		//					fmt.Fprintf(os.Stderr,
-		//						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-		//						"mlr", args[*pargi+1]);
-		//					mainUsageShort()
-		//					os.Exit(1);
-		//				}
-		//				*pargi += 2;
-		// },
+		{
+			name: "--nr-progress-mod",
+			arg:  "{m}",
+			help: "With m a positive integer: print filename and record count to os.Stderr every m input records.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				nrProgressMod, ok := lib.TryIntFromString(args[*pargi+1])
+				if !ok || nrProgressMod <= 0 {
+					fmt.Fprintf(os.Stderr,
+						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+
+						"mlr", args[*pargi+1])
+					os.Exit(1)
+				}
+				options.NRProgressMod = nrProgressMod
+				*pargi += 2
+			},
+		},
 
 		{
 			name: "--seed",
