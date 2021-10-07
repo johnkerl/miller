@@ -37,7 +37,7 @@ func Stream(
 	// fileNames argument is separate from options.FileNames for in-place mode,
 	// which sends along only one file name per call to Stream():
 	fileNames []string,
-	options cli.TOptions,
+	options *cli.TOptions,
 	recordTransformers []transformers.IRecordTransformer,
 	outputStream io.WriteCloser,
 	outputIsStdout bool,
@@ -45,7 +45,7 @@ func Stream(
 
 	// Since Go is concurrent, the context struct needs to be duplicated and
 	// passed through the channels along with each record.
-	initialContext := types.NewContext(&options)
+	initialContext := types.NewContext(options)
 
 	// Instantiate the record-reader
 	recordReader := input.Create(&options.ReaderOptions)
@@ -80,7 +80,8 @@ func Stream(
 	// error or end-of-processing happens.
 
 	go recordReader.Read(fileNames, *initialContext, inputChannel, errorChannel, readerDownstreamDoneChannel)
-	go transformers.ChainTransformer(inputChannel, readerDownstreamDoneChannel, recordTransformers, outputChannel)
+	go transformers.ChainTransformer(inputChannel, readerDownstreamDoneChannel, recordTransformers, outputChannel,
+		options)
 	go output.ChannelWriter(outputChannel, recordWriter, doneWritingChannel, outputStream, outputIsStdout)
 
 	done := false
