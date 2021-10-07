@@ -4,15 +4,20 @@ TOP OF LIST:
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-* I/O redirects * fmtnum * localtime * stats1 -r/--fr *
-* mlr -k * json comment-handling *
-* doc6 * check issues * regtest pendings *
-* r-strings/implicit-r/297 * CSV BOM *
-* check greek xlat *
+* CSV BOM
+* stats1 -r/--fr
+* fmtnum
+* localtime
+* JSON comment-handling
 
-* force CSV IFS single-char at CLIP? or CSV setup? IFS1?
+* r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
-* implicit r: double-check end of reference-main-data-types.md.in
+* I/O redirects
+* mlr -k
+* regtest pendings
+
+* doc6
+* check issues
 
 d pre-release:
   o explicit punchdown list
@@ -20,10 +25,11 @@ d pre-release:
   o gha download steps clearer
 
 ----------------------------------------------------------------
-MULTICHAR IRS / AUTO
+SEPARATORS ETC
 
-* skip auto in the CLIP
-* document in nim6.in
+* force CSV IFS single-char at CLIP? or CSV setup? IFS1?
+* document re auto in nim6.in
+* xtab ifs/irs
 
 ----------------------------------------------------------------
 REDIRECTS
@@ -76,7 +82,7 @@ fmtstr
 mlr regtest regtest/cases-pending-go-port/verb-format-values/0003
 mlr regtest regtest/cases-pending-go-port/verb-format-values/0004
 
-race
+race condition
 mlr regtest regtest/cases-pending-go-port/verb-head-early-out
 
 label order
@@ -116,9 +122,8 @@ BLOCKERS
 * stats1: actualize -S and -F -- ?
 
 * more I/O:
-  !!! golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
+  ? golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
     detection -- needs an input-stream delegator -- ?
-  o comment-filtering-composed io.Reader
 
 ----------------------------------------------------------------
 DOC6
