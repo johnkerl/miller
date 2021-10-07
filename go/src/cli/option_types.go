@@ -142,22 +142,11 @@ type TOptions struct {
 	// .mlrrc. Use-case is someone has DSL functions they always want to be
 	// defined.
 	//
-	// TODO: risk of CVE?!? :( -- exclude from .mlrrc & only maybe suggest
-	// people use an alias -- ?
-	// TODO: comment re if-dir then load all *.mlr
+	// Risk of CVE if this is in .mlrrc so --load and --mload are explicitly
+	// denied in the .mlrrc reader.
 	DSLPreloadFileNames []string
 
-	// These are used to construct the transformer list. In particular, for in-place mode
-	// they're reconstructed for each file.  We make copies since each pass through a
-	// CLI-parser operates destructively, principally by running strtok over
-	// comma-delimited field-name lists.
-	//
-	//	char**  original_argv;
-	//	char**  non_in_place_argv;
-	//	int     argc;
-	//	int     transformer_argb;
-	//
-	//	nr_progress_mod int64u;
+	NRProgressMod int
 	DoInPlace bool // mlr -I
 	NoInput   bool // mlr -n
 
