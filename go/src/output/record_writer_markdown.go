@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"strings"
 
 	"mlr/src/cli"
 	"mlr/src/colorizer"
@@ -71,7 +72,8 @@ func (writer *RecordWriterMarkdown) Write(
 	buffer.WriteString("|")
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(" ")
-		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
+		value := strings.ReplaceAll(pe.Value.String(), "|", "\\|")
+		buffer.WriteString(colorizer.MaybeColorizeValue(value, outputIsStdout))
 		buffer.WriteString(" |")
 	}
 	buffer.WriteString(writer.writerOptions.ORS)
