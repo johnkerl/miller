@@ -104,7 +104,6 @@ func (site *UDFCallsite) findUDF(state *runtime.State) *UDF {
 	v := state.Stack.Get(site.stackVariable)
 	if v == nil { // Nothing in scope on the stack with that name
 		// StackVariable
-		state.Stack.Dump()
 		return nil
 	}
 

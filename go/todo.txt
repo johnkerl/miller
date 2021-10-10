@@ -16,8 +16,10 @@ TOP OF LIST:
 * mlr -k
 * regtest pendings
 
-* doc6
+*a doc6
 * check issues
+
+* meta: nf,nr,keys?
 
 d pre-release:
   o explicit punchdown list
