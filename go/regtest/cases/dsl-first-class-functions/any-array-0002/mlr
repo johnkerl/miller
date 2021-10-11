@@ -1,0 +1,1 @@
+any([3,4,5,6], func(e) {return $i == e})

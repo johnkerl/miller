@@ -39,8 +39,6 @@ d pre-release:
 * see also 422
 
 * any, every HOFs
-  o code-check: 'argument function' needs to abend
-  o RT for any/every
   o more stream-based RT for existing HOFs
   o OLH
   o webdoc

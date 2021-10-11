@@ -1,0 +1,7 @@
+end {
+  my_array = [2, 9, 10, 3, 1, 4, 5, 8, 7, 6];
+  print my_array;
+  print any(my_array, func (e) { return e >  0 });
+  print any(my_array, func (e) { return e >  5 });
+  print any(my_array, func (e) { return e > 10 });
+}
