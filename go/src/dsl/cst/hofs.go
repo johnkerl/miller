@@ -1,6 +1,6 @@
 // ================================================================
 // Support for higher-order functions in Miller: select, apply, fold, reduce,
-// and sort.
+// sort, any, and every.
 // ================================================================
 
 package cst
@@ -75,15 +75,17 @@ func getHOFSpace(
 	// "function-literal-000052".
 	udfName := funcVal.String()
 
+	cacheKey := udfName + ":" + hofName + ":" + arrayOrMap
+
 	// Cache hit, but check arity. Example: someone makes a correct-arity
 	// callback for arrays, then re-uses it for maps where the arity needs to
 	// be different. E.g.  apply([...], f(e) {...}) vs apply({...}, f(k,v) {...})
-	entry := hofCache[udfName]
+	entry := hofCache[cacheKey]
 	if entry != nil {
 		if entry.udfCallsite.arity != arity {
 			fmt.Fprintf(
 				os.Stderr,
-				"mlr: %s: comparator function \"%s\" has arity %d; needed %d for %s.\n",
+				"mlr: %s: argument function \"%s\" has arity %d; needed %d for %s.\n",
 				hofName,
 				udfName,
 				entry.udfCallsite.arity,
@@ -99,7 +101,7 @@ func getHOFSpace(
 	var udf *UDF = nil
 	iUDF := funcVal.GetFunction()
 	if iUDF == nil { // E.g. does not exist at all
-		fmt.Fprintf(os.Stderr, "mlr: %s: comparator function \"%s\" not found.\n", hofName, udfName)
+		fmt.Fprintf(os.Stderr, "mlr: %s: argument function \"%s\" not found.\n", hofName, udfName)
 		os.Exit(1)
 	}
 	udf = iUDF.(*UDF)
@@ -107,7 +109,7 @@ func getHOFSpace(
 	if udf.signature.arity != arity { // Present, but with the wrong arity.
 		fmt.Fprintf(
 			os.Stderr,
-			"mlr: %s: comparator function \"%s\" has arity %d; needed %d for %s.\n",
+			"mlr: %s: argument function \"%s\" has arity %d; needed %d for %s.\n",
 			hofName,
 			udfName,
 			udf.signature.arity,
@@ -117,14 +119,14 @@ func getHOFSpace(
 		os.Exit(1)
 	}
 
-	udfCallsite := NewUDFCallsiteForHigherOrderFunction(udf)
+	udfCallsite := NewUDFCallsiteForHigherOrderFunction(udf, arity)
 	argsArray := make([]*types.Mlrval, arity)
 	entry = &tHOFSpace{
 		udfCallsite: udfCallsite,
 		argsArray:   argsArray,
 	}
 	// Remember for subsequent cache hit.
-	hofCache[udfName] = entry
+	hofCache[cacheKey] = entry
 	return entry
 }
 
@@ -827,4 +829,188 @@ func sortMF(
 
 	sortedMap := types.MlrmapFromPairsArray(pairsArray)
 	return types.MlrvalPointerFromMapReferenced(sortedMap)
+}
+
+// ================================================================
+// ANY HOF
+
+func AnyHOF(
+	input1 *types.Mlrval,
+	input2 *types.Mlrval,
+	state *runtime.State,
+) *types.Mlrval {
+	if input1.IsArray() {
+		return anyArray(input1, input2, state)
+	} else if input1.IsMap() {
+		return anyMap(input1, input2, state)
+	} else {
+		return types.MLRVAL_ERROR
+	}
+}
+
+func anyArray(
+	input1 *types.Mlrval,
+	input2 *types.Mlrval,
+	state *runtime.State,
+) *types.Mlrval {
+	inputArray := input1.GetArray()
+	if inputArray == nil { // not an array
+		return types.MLRVAL_ERROR
+	}
+	isFunctionOrDie(input2, "any")
+
+	hofSpace := getHOFSpace(input2, 1, "any", "array")
+	udfCallsite := hofSpace.udfCallsite
+	argsArray := hofSpace.argsArray
+
+	boolAny := false
+	for i := range inputArray {
+		argsArray[0] = &inputArray[i]
+		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
+		bret, ok := mret.GetBoolValue()
+		if !ok {
+			fmt.Fprintf(
+				os.Stderr,
+				"mlr: any: anyor function returned non-boolean \"%s\".\n",
+				mret.String(),
+			)
+			os.Exit(1)
+		}
+		if bret {
+			boolAny = true
+			break
+		}
+	}
+	return types.MlrvalPointerFromBool(boolAny)
+}
+
+func anyMap(
+	input1 *types.Mlrval,
+	input2 *types.Mlrval,
+	state *runtime.State,
+) *types.Mlrval {
+	inputMap := input1.GetMap()
+	if inputMap == nil { // not a map
+		return types.MLRVAL_ERROR
+	}
+	isFunctionOrDie(input2, "any")
+
+	hofSpace := getHOFSpace(input2, 2, "any", "map")
+	udfCallsite := hofSpace.udfCallsite
+	argsArray := hofSpace.argsArray
+
+	boolAny := false
+
+	for pe := inputMap.Head; pe != nil; pe = pe.Next {
+		argsArray[0] = types.MlrvalPointerFromString(pe.Key)
+		argsArray[1] = pe.Value
+		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
+		bret, ok := mret.GetBoolValue()
+		if !ok {
+			fmt.Fprintf(
+				os.Stderr,
+				"mlr: any: anyor function returned non-boolean \"%s\".\n",
+				mret.String(),
+			)
+			os.Exit(1)
+		}
+		if bret {
+			boolAny = true
+			break
+		}
+	}
+
+	return types.MlrvalPointerFromBool(boolAny)
+}
+
+// ================================================================
+// EVERY HOF
+
+func EveryHOF(
+	input1 *types.Mlrval,
+	input2 *types.Mlrval,
+	state *runtime.State,
+) *types.Mlrval {
+	if input1.IsArray() {
+		return everyArray(input1, input2, state)
+	} else if input1.IsMap() {
+		return everyMap(input1, input2, state)
+	} else {
+		return types.MLRVAL_ERROR
+	}
+}
+
+func everyArray(
+	input1 *types.Mlrval,
+	input2 *types.Mlrval,
+	state *runtime.State,
+) *types.Mlrval {
+	inputArray := input1.GetArray()
+	if inputArray == nil { // not an array
+		return types.MLRVAL_ERROR
+	}
+	isFunctionOrDie(input2, "every")
+
+	hofSpace := getHOFSpace(input2, 1, "every", "array")
+	udfCallsite := hofSpace.udfCallsite
+	argsArray := hofSpace.argsArray
+
+	boolEvery := true
+	for i := range inputArray {
+		argsArray[0] = &inputArray[i]
+		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
+		bret, ok := mret.GetBoolValue()
+		if !ok {
+			fmt.Fprintf(
+				os.Stderr,
+				"mlr: every: everyor function returned non-boolean \"%s\".\n",
+				mret.String(),
+			)
+			os.Exit(1)
+		}
+		if !bret {
+			boolEvery = false
+			break
+		}
+	}
+	return types.MlrvalPointerFromBool(boolEvery)
+}
+
+func everyMap(
+	input1 *types.Mlrval,
+	input2 *types.Mlrval,
+	state *runtime.State,
+) *types.Mlrval {
+	inputMap := input1.GetMap()
+	if inputMap == nil { // not a map
+		return types.MLRVAL_ERROR
+	}
+	isFunctionOrDie(input2, "every")
+
+	hofSpace := getHOFSpace(input2, 2, "every", "map")
+	udfCallsite := hofSpace.udfCallsite
+	argsArray := hofSpace.argsArray
+
+	boolEvery := true
+
+	for pe := inputMap.Head; pe != nil; pe = pe.Next {
+		argsArray[0] = types.MlrvalPointerFromString(pe.Key)
+		argsArray[1] = pe.Value
+		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
+		bret, ok := mret.GetBoolValue()
+		if !ok {
+			fmt.Fprintf(
+				os.Stderr,
+				"mlr: every: everyor function returned non-boolean \"%s\".\n",
+				mret.String(),
+			)
+			os.Exit(1)
+		}
+		if !bret {
+			boolEvery = false
+			break
+		}
+	}
+
+	return types.MlrvalPointerFromBool(boolEvery)
 }

@@ -87,9 +87,11 @@ func NewUDFCallsite(
 // array elements.
 func NewUDFCallsiteForHigherOrderFunction(
 	udf *UDF,
+	arity int,
 ) *UDFCallsite {
 	return &UDFCallsite{
-		udf: udf,
+		udf:   udf,
+		arity: arity,
 	}
 }
 

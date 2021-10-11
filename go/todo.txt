@@ -10,6 +10,9 @@ TOP OF LIST:
 * localtime
 * JSON comment-handling
 
+* transpose
+* print w/ #{...}; defer variadic printf
+
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
 * I/O redirects
@@ -29,6 +32,55 @@ d pre-release:
   o explicit punchdown list
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
+
+----------------------------------------------------------------
+372/for
+
+* see also 422
+
+* any, every HOFs
+  o code-check: 'argument function' needs to abend
+  o RT for any/every
+  o more stream-based RT for existing HOFs
+  o OLH
+  o webdoc
+  o filter-docs
+  ! put/filter verbs need more than only autogen from OLH ...
+    - maybe adjacent to https://johnkerl.org/miller6/reference-dsl-syntax
+    - maybe extend https://johnkerl.org/miller6/reference-dsl-syntax
+
+* mlr filter -h more examples; more clarity on bare-boolean
+  o simple one-line examples
+  o multi-line examples
+
+
+* w.t.:
+
+x=[1,2,3,4,5]
+any(x, func(e) { return e > 3})
+any(x, func(e) { return e > 30})
+every(x, func(e) { return e > 30})
+every(x, func(e) { return e > 3})
+every(x, func(e) { return e > 0})
+
+μεταμόρφωσις: any([1,2,3,4,5], func(e) { return e > 3})
+true
+
+mlr --csv --from $mlds/example.csv filter 'any([1,2,3,4,5], func(e) { return e > 3})'
+mlr --csv --from $mlds/example.csv put '$z=any([1,2,3,4,5], func(e) { return e > 3})'
+mlr --csv --from $mlds/example.csv put '$z=any([1,2,3,4,5], func(e) { return e > 3})'
+mlr --csv --from $mlds/example.csv put '$z=select([1,2,3,4,5], func(e) { return e > 3})'
+
+----------------------------------------------------------------
+398
+
+kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr --prepipe "pigz -d" count -g a then sort -nr count then head
+^C.8MiB 0:00:12 [3.21MiB/s] [===========>                                                              ] 17% ETA 0:00:55
+
+kerl@joker-mbp.local[go]$ ^C
+kerl@joker-mbp.local[go]$ ^C
+kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr count -g a then sort -nr count then head
+218MiB 0:00:09 [23.1MiB/s] [========================================================================>] 100%
 
 ----------------------------------------------------------------
 META

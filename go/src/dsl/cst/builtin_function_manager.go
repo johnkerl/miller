@@ -1527,6 +1527,28 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			maximumVariadicArity:  2,
 		},
 
+		{
+			name:  "any",
+			class: FUNC_CLASS_HOFS,
+			help:  "TODO",
+			examples: []string{
+				`Array example: TODO`,
+				`Map example: TODO`,
+			},
+			binaryFuncWithState: AnyHOF,
+		},
+
+		{
+			name:  "every",
+			class: FUNC_CLASS_HOFS,
+			help:  "TODO",
+			examples: []string{
+				`Array example: TODO`,
+				`Map example: TODO`,
+			},
+			binaryFuncWithState: EveryHOF,
+		},
+
 		// ----------------------------------------------------------------
 		// FUNC_CLASS_SYSTEM
 
