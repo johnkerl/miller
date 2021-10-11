@@ -94,8 +94,6 @@ type TWriterOptions struct {
 	JSONOutputMultiline       bool // Not using miller/types enum to avoid package cycle
 	//	json_quote_int_keys bool;
 	//	json_quote_non_string_values bool;
-	//	output_json_flatten_separator string;
-	//	oosvar_flatten_separator string;
 	//
 	//	quoting_t oquoting;
 
@@ -147,8 +145,8 @@ type TOptions struct {
 	DSLPreloadFileNames []string
 
 	NRProgressMod int
-	DoInPlace bool // mlr -I
-	NoInput   bool // mlr -n
+	DoInPlace     bool // mlr -I
+	NoInput       bool // mlr -n
 
 	HaveRandSeed bool
 	RandSeed     int
