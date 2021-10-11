@@ -13,10 +13,14 @@ TOP OF LIST:
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
 * I/O redirects
+  o emit needs flatten ... why is this not happening?
+  o regtest/cases-pending-go-port/dsl-redirects/0078
+  o flatten function OLH needs to say what the args are. unflatten too?
+  o cat out all out.* act/exp
 * mlr -k
 * regtest pendings
 
-*a doc6
+*  doc6
 * check issues
 
 * meta: nf,nr,keys?
@@ -25,6 +29,11 @@ d pre-release:
   o explicit punchdown list
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
+
+----------------------------------------------------------------
+META
+
+nr, nf, keys
 
 ----------------------------------------------------------------
 SEPARATORS ETC

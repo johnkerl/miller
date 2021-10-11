@@ -89,6 +89,11 @@ type EmitXStatementNode struct {
 	// For code-reuse between executors.
 	isEmitP  bool
 	isLashed bool
+
+	// TODO: comment
+	// root writerOptions AutoFlatten FLATSEP
+	autoFlatten bool
+	flatsep     string
 }
 
 func (root *RootNode) BuildEmitStatementNode(astNode *dsl.ASTNode) (IExecutable, error) {
@@ -130,8 +135,10 @@ func (root *RootNode) buildEmitXStatementNode(
 	redirectorNode := astNode.Children[2]
 
 	retval := &EmitXStatementNode{
-		isEmitP:  isEmitP,
-		isLashed: false, // will be determined below
+		isEmitP:     isEmitP,
+		isLashed:    false, // will be determined below
+		autoFlatten: root.recordWriterOptions.AutoFlatten,
+		flatsep:     root.recordWriterOptions.FLATSEP,
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -999,6 +1006,12 @@ func (node *EmitXStatementNode) emitRecordToFileOrPipe(
 	}
 	outputFileName := redirectorTarget.String()
 
+	//fmt.Println("PRE")
+	//outrec.Dump()
+	//fmt.Println("POST")
+	if node.autoFlatten {
+		outrec.Flatten(node.flatsep)
+	}
 	return node.outputHandlerManager.WriteRecordAndContext(
 		types.NewRecordAndContext(outrec, state.Context),
 		outputFileName,

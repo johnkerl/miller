@@ -1,11 +1,3 @@
 CASEDIR=regtest/cases/dsl-redirects/0066
-a={
-  "1": "pan",
-  "2": "eks",
-  "3": "wye"
-}
-b={
-  "1": "pan",
-  "2": "pan",
-  "3": "wye"
-}
+a:1=pan,a:2=eks,a:3=wye
+b:1=pan,b:2=pan,b:3=wye
