@@ -1,1 +1,1 @@
-tee >> "${CASEDIR}/out.".$a, $*
+tee >> @CASEDIR."/out.".$a, $*
