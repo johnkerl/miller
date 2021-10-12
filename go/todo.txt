@@ -34,11 +34,6 @@ d pre-release:
   o gha download steps clearer
 
 ----------------------------------------------------------------
-372/for
-
-* see also 422
-
-----------------------------------------------------------------
 398
 
 kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr --prepipe "pigz -d" count -g a then sort -nr count then head
@@ -53,6 +48,7 @@ kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr count -g a then sort -nr count
 META
 
 nr, nf, keys
+transpose ...
 
 also: -colname syntax ... -x colname maybe into more verbs ...
 
