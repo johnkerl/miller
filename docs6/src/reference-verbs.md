@@ -914,10 +914,10 @@ a,b,c
 <b>mlr filter --help</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Usage: mlr put [options] {DSL expression}
+Usage: mlr filter [options] {DSL expression}
 Options:
--f {file name} File containing a DSL expression. If the filename is a directory,
-   all *.mlr files in that directory are loaded.
+-f {file name} File containing a DSL expression (see examples below). If the filename
+   is a directory, all *.mlr files in that directory are loaded.
 
 -e {expression} You can use this after -f to add an expression. Example use
    case: define functions/subroutines in a file you specify with -f, then call
@@ -966,6 +966,37 @@ Parser-info options:
 
 -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
    only want to look at parser information.
+
+Records will pass the filter depending on the last bare-boolean statement in
+the DSL expression. That can be the result of <, ==, >, etc., the return value of a function call
+which returns boolean, etc.
+
+Examples:
+  mlr --csv --from example.csv filter '$color == "red"'
+  mlr --csv --from example.csv filter '$color == "red" && flag == true'
+More example filter expressions:
+  First record in each file:
+    'FNR == 1'
+  Subsampling:
+    'urand() < 0.001'
+  Compound booleans:
+    '$color != "blue" && $value > 4.2'
+    '($x < 0.5 && $y < 0.5) || ($x > 0.5 && $y > 0.5)'
+  Regexes with case-insensitive flag
+    '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
+  Assignments, then bare-boolean filter statement:
+    '$ab = $a+$b; $cd = $c+$d; $ab != $cd'
+  Bare-boolean filter statement within a conditional:
+    'if (NR < 100) {
+      $x > 0.3;
+    } else {
+      $x > 0.002;
+    }
+    '
+  Using 'any' higher-order function to see if $index is 10, 20, or 30:
+    'any([10,20,30], func(e) {return $index == e})'
+
+See also https://johnkerl.org/miller6/reference-dsl for more context.
 </pre>
 
 ### Features which filter shares with put
@@ -2120,8 +2151,8 @@ Options:
 <pre class="pre-non-highlight-in-pair">
 Usage: mlr put [options] {DSL expression}
 Options:
--f {file name} File containing a DSL expression. If the filename is a directory,
-   all *.mlr files in that directory are loaded.
+-f {file name} File containing a DSL expression (see examples below). If the filename
+   is a directory, all *.mlr files in that directory are loaded.
 
 -e {expression} You can use this after -f to add an expression. Example use
    case: define functions/subroutines in a file you specify with -f, then call
@@ -2170,6 +2201,32 @@ Parser-info options:
 
 -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
    only want to look at parser information.
+
+Examples:
+  mlr --from example.csv put '$qr = $quantity * $rate'
+More example put expressions:
+  If-statements:
+    'if ($flag == true) { $quantity *= 10}'
+    'if ($x > 0.0 { $y=log10($x); $z=sqrt($y) } else {$y = 0.0; $z = 0.0}'
+  Newly created fields can be read after being written:
+    '$new_field = $index**2; $qn = $quantity * $new_field'
+  Regex-replacement:
+    '$name = sub($name, "http.*com"i, "")'
+  Regex-capture:
+    'if ($a =~ "([a-z]+)_([0-9]+)) { $b = "left_\1"; $c = "right_\2" }'
+  Built-in variables:
+    '$filename = FILENAME'
+  Aggregations (use mlr put -q):
+    '@sum += $x; end {emit @sum}'
+    '@sum[$shape] += $quantity; end {emit @sum, "shape"}'
+    '@sum[$shape][$color] += $x; end {emit @sum, "shape", "color"}'
+    '
+      @min = min(@min,$x);
+      @max=max(@max,$x);
+      end{emitf @min, @max}
+    '
+
+See also https://johnkerl.org/miller6/reference-dsl for more context.
 </pre>
 
 ### Features which put shares with filter

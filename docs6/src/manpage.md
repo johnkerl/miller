@@ -184,14 +184,14 @@ VERB LIST
        uniq unsparsify
 
 FUNCTION LIST
-       abs acos acosh append apply arrayify asin asinh asserting_absent
+       abs acos acosh any append apply arrayify asin asinh asserting_absent
        asserting_array asserting_bool asserting_boolean asserting_empty
        asserting_empty_map asserting_error asserting_float asserting_int
        asserting_map asserting_nonempty_map asserting_not_array asserting_not_empty
        asserting_not_map asserting_not_null asserting_null asserting_numeric
        asserting_present asserting_string atan atan2 atanh bitcount boolean
        capitalize cbrt ceil clean_whitespace collapse_whitespace cos cosh depth
-       dhms2fsec dhms2sec erf erfc exp expm1 flatten float floor fmtnum fold
+       dhms2fsec dhms2sec erf erfc every exp expm1 flatten float floor fmtnum fold
        fsec2dhms fsec2hms get_keys get_values gmt2sec gsub haskey hexfmt hms2fsec
        hms2sec hostname int invqnorm is_absent is_array is_bool is_boolean is_empty
        is_empty_map is_error is_float is_int is_map is_nonempty_map is_not_array
@@ -460,6 +460,8 @@ MISCELLANEOUS FLAGS
                                 what you might hope but `--mfrom *.csv --` does.
        --mload {filenames}      Like `--load` but works with more than one filename,
                                 e.g. `--mload *.mlr --`.
+       --nr-progress-mod {m}    With m a positive integer: print filename and record
+                                count to os.Stderr every m input records.
        --ofmt {format}          E.g. `%.18f`, `%.0f`, `%9.6e`. Please use
                                 sprintf-style codes for floating-point nummbers. If
                                 not specified, default formatting is used. See also
@@ -912,10 +914,10 @@ VERBS
        -v {string} Fill-value: defaults to "N/A"
 
    filter
-       Usage: mlr put [options] {DSL expression}
+       Usage: mlr filter [options] {DSL expression}
        Options:
-       -f {file name} File containing a DSL expression. If the filename is a directory,
-          all *.mlr files in that directory are loaded.
+       -f {file name} File containing a DSL expression (see examples below). If the filename
+          is a directory, all *.mlr files in that directory are loaded.
 
        -e {expression} You can use this after -f to add an expression. Example use
           case: define functions/subroutines in a file you specify with -f, then call
@@ -964,6 +966,37 @@ VERBS
 
        -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
           only want to look at parser information.
+
+       Records will pass the filter depending on the last bare-boolean statement in
+       the DSL expression. That can be the result of &lt;, ==, &gt;, etc., the return value of a function call
+       which returns boolean, etc.
+
+       Examples:
+         mlr --csv --from example.csv filter '$color == "red"'
+         mlr --csv --from example.csv filter '$color == "red" && flag == true'
+       More example filter expressions:
+         First record in each file:
+           'FNR == 1'
+         Subsampling:
+           'urand() &lt; 0.001'
+         Compound booleans:
+           '$color != "blue" && $value &gt; 4.2'
+           '($x &lt; 0.5 && $y &lt; 0.5) || ($x &gt; 0.5 && $y &gt; 0.5)'
+         Regexes with case-insensitive flag
+           '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
+         Assignments, then bare-boolean filter statement:
+           '$ab = $a+$b; $cd = $c+$d; $ab != $cd'
+         Bare-boolean filter statement within a conditional:
+           'if (NR &lt; 100) {
+             $x &gt; 0.3;
+           } else {
+             $x &gt; 0.002;
+           }
+           '
+         Using 'any' higher-order function to see if $index is 10, 20, or 30:
+           'any([10,20,30], func(e) {return $index == e})'
+
+       See also https://johnkerl.org/miller6/reference-dsl for more context.
 
    flatten
        Usage: mlr flatten [options]
@@ -1306,8 +1339,8 @@ VERBS
    put
        Usage: mlr put [options] {DSL expression}
        Options:
-       -f {file name} File containing a DSL expression. If the filename is a directory,
-          all *.mlr files in that directory are loaded.
+       -f {file name} File containing a DSL expression (see examples below). If the filename
+          is a directory, all *.mlr files in that directory are loaded.
 
        -e {expression} You can use this after -f to add an expression. Example use
           case: define functions/subroutines in a file you specify with -f, then call
@@ -1356,6 +1389,32 @@ VERBS
 
        -X Exit after parsing but before stream-processing. Useful with -v/-d/-D, if you
           only want to look at parser information.
+
+       Examples:
+         mlr --from example.csv put '$qr = $quantity * $rate'
+       More example put expressions:
+         If-statements:
+           'if ($flag == true) { $quantity *= 10}'
+           'if ($x &gt; 0.0 { $y=log10($x); $z=sqrt($y) } else {$y = 0.0; $z = 0.0}'
+         Newly created fields can be read after being written:
+           '$new_field = $index**2; $qn = $quantity * $new_field'
+         Regex-replacement:
+           '$name = sub($name, "http.*com"i, "")'
+         Regex-capture:
+           'if ($a =~ "([a-z]+)_([0-9]+)) { $b = "left_\1"; $c = "right_\2" }'
+         Built-in variables:
+           '$filename = FILENAME'
+         Aggregations (use mlr put -q):
+           '@sum += $x; end {emit @sum}'
+           '@sum[$shape] += $quantity; end {emit @sum, "shape"}'
+           '@sum[$shape][$color] += $x; end {emit @sum, "shape", "color"}'
+           '
+             @min = min(@min,$x);
+             @max=max(@max,$x);
+             end{emitf @min, @max}
+           '
+
+       See also https://johnkerl.org/miller6/reference-dsl for more context.
 
    regularize
        Usage: mlr regularize [options]
@@ -1812,13 +1871,18 @@ FUNCTIONS FOR FILTER/PUT
    acosh
         (class=math #args=1) Inverse hyperbolic cosine.
 
+   any
+        (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+       Array example: any([10,20,30], func(e) {return $index == e})
+       Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
+
    append
         (class=collections #args=2) Appends second argument to end of first argument, which must be an array.
 
    apply
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
-       Array example: apply([1,2,3,4,5], func(e) { return e ** 3}) returns [1, 8, 27, 64, 125].
-       Map example: apply({"a":1, "b":3, "c":5}, func(k,v) { return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
+       Array example: apply([1,2,3,4,5], func(e) {return e ** 3}) returns [1, 8, 27, 64, 125].
+       Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
 
    arrayify
         (class=collections #args=1) Walks through a nested map/array, converting any map with consecutive keys
@@ -1938,6 +2002,11 @@ FUNCTIONS FOR FILTER/PUT
    erfc
         (class=math #args=1) Complementary error function.
 
+   every
+        (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+       Array example: every(["a", "b", "c"], func(e) {return $[e] &gt;= 0})
+       Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
+
    exp
         (class=math #args=1) Exponential function e**x.
 
@@ -1961,8 +2030,8 @@ FUNCTIONS FOR FILTER/PUT
 
    fold
         (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
-       Array example: fold([1,2,3,4,5], func(acc,e) { return acc + e**3 }, 10000) returns 10225.
-       Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
+       Array example: fold([1,2,3,4,5], func(acc,e) {return acc + e**3}, 10000) returns 10225.
+       Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
 
    fsec2dhms
         (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
@@ -2144,8 +2213,8 @@ FUNCTIONS FOR FILTER/PUT
 
    reduce
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element, and return the accumulated element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.
-       Array example: reduce([1,2,3,4,5], func(acc,e) { return acc + e**3 }) returns 225.
-       Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.
+       Array example: reduce([1,2,3,4,5], func(acc,e) {return acc + e**3}) returns 225.
+       Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.
 
    regextract
         (class=string #args=2) Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
@@ -2176,8 +2245,8 @@ FUNCTIONS FOR FILTER/PUT
 
    select
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
-       Array example: select([1,2,3,4,5], func(e) { return e &gt;= 3}) returns [3, 4, 5].
-       Map example: select({"a":1, "b":3, "c":5}, func(k,v) { return v &gt;= 3}) returns {"b":3, "c": 5}.
+       Array example: select([1,2,3,4,5], func(e) {return e &gt;= 3}) returns [3, 4, 5].
+       Map example: select({"a":1, "b":3, "c":5}, func(k,v) {return v &gt;= 3}) returns {"b":3, "c": 5}.
 
    sgn
         (class=math #args=1)  +1, 0, -1 for positive, zero, negative input respectively.
@@ -2199,8 +2268,8 @@ FUNCTIONS FOR FILTER/PUT
 
    sort
         (class=higher-order-functions #args=1-2) Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by map keys. If the second argument is a string, it can contain any of "f" for lexical (default "n" for natural/numeric), "), "c" for case-folded lexical, and "r" for reversed/descending sort. If the second argument is a function, then for arrays it should take two arguments a and b, returning &lt; 0, 0, or &gt; 0 as a &lt; b, a == b, or a &gt; b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning &lt; 0, 0, or &gt; 0, using a and b's keys and values.
-       Array example: sort([5,2,3,1,4], func(a,b) { return b &lt;=&gt; a}) returns [5,4,3,2,1].
-       Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) { return bv &lt;=&gt; av}) returns {"a":3,"c":2,"b":1}.
+       Array example: sort([5,2,3,1,4], func(a,b) {return b &lt;=&gt; a}) returns [5,4,3,2,1].
+       Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv &lt;=&gt; av}) returns {"a":3,"c":2,"b":1}.
 
    splita
         (class=conversion #args=2) Splits string into array with type inference.
@@ -2789,5 +2858,5 @@ SEE ALSO
 
 
 
-                                  2021-10-05                         MILLER(1)
+                                  2021-10-12                         MILLER(1)
 </pre>

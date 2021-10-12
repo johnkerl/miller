@@ -1475,8 +1475,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_HOFS,
 			help:  "Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.",
 			examples: []string{
-				`Array example: select([1,2,3,4,5], func(e) { return e >= 3}) returns [3, 4, 5].`,
-				`Map example: select({"a":1, "b":3, "c":5}, func(k,v) { return v >= 3}) returns {"b":3, "c": 5}.`,
+				`Array example: select([1,2,3,4,5], func(e) {return e >= 3}) returns [3, 4, 5].`,
+				`Map example: select({"a":1, "b":3, "c":5}, func(k,v) {return v >= 3}) returns {"b":3, "c": 5}.`,
 			},
 			binaryFuncWithState: SelectHOF,
 		},
@@ -1486,8 +1486,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_HOFS,
 			help:  "Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).",
 			examples: []string{
-				`Array example: apply([1,2,3,4,5], func(e) { return e ** 3}) returns [1, 8, 27, 64, 125].`,
-				`Map example: apply({"a":1, "b":3, "c":5}, func(k,v) { return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",`,
+				`Array example: apply([1,2,3,4,5], func(e) {return e ** 3}) returns [1, 8, 27, 64, 125].`,
+				`Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",`,
 			},
 			binaryFuncWithState: ApplyHOF,
 		},
@@ -1497,8 +1497,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_HOFS,
 			help:  "Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element, and return the accumulated element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.",
 			examples: []string{
-				`Array example: reduce([1,2,3,4,5], func(acc,e) { return acc + e**3 }) returns 225.`,
-				`Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.`,
+				`Array example: reduce([1,2,3,4,5], func(acc,e) {return acc + e**3}) returns 225.`,
+				`Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.`,
 			},
 			binaryFuncWithState: ReduceHOF,
 		},
@@ -1508,8 +1508,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_HOFS,
 			help:  "Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.",
 			examples: []string{
-				`Array example: fold([1,2,3,4,5], func(acc,e) { return acc + e**3 }, 10000) returns 10225.`,
-				`Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.`,
+				`Array example: fold([1,2,3,4,5], func(acc,e) {return acc + e**3}, 10000) returns 10225.`,
+				`Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.`,
 			},
 			ternaryFuncWithState: FoldHOF,
 		},
@@ -1519,12 +1519,34 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_HOFS,
 			help:  "Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by map keys. If the second argument is a string, it can contain any of \"f\" for lexical (default \"n\" for natural/numeric), \"), \"c\" for case-folded lexical, and \"r\" for reversed/descending sort. If the second argument is a function, then for arrays it should take two arguments a and b, returning < 0, 0, or > 0 as a < b, a == b, or a > b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning < 0, 0, or > 0, using a and b's keys and values.",
 			examples: []string{
-				`Array example: sort([5,2,3,1,4], func(a,b) { return b <=> a}) returns [5,4,3,2,1].`,
-				`Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) { return bv <=> av}) returns {"a":3,"c":2,"b":1}.`,
+				`Array example: sort([5,2,3,1,4], func(a,b) {return b <=> a}) returns [5,4,3,2,1].`,
+				`Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv <=> av}) returns {"a":3,"c":2,"b":1}.`,
 			},
 			variadicFuncWithState: SortHOF,
 			minimumVariadicArity:  1,
 			maximumVariadicArity:  2,
+		},
+
+		{
+			name:  "any",
+			class: FUNC_CLASS_HOFS,
+			help:  "Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.",
+			examples: []string{
+				`Array example: any([10,20,30], func(e) {return $index == e})`,
+				`Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})`,
+			},
+			binaryFuncWithState: AnyHOF,
+		},
+
+		{
+			name:  "every",
+			class: FUNC_CLASS_HOFS,
+			help:  "Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.",
+			examples: []string{
+				`Array example: every(["a", "b", "c"], func(e) {return $[e] >= 0})`,
+				`Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})`,
+			},
+			binaryFuncWithState: EveryHOF,
 		},
 
 		// ----------------------------------------------------------------
