@@ -10,6 +10,9 @@ TOP OF LIST:
 * localtime
 * JSON comment-handling
 
+* transpose
+* print w/ #{...}; defer variadic printf
+
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
 * I/O redirects
@@ -31,9 +34,27 @@ d pre-release:
   o gha download steps clearer
 
 ----------------------------------------------------------------
+372/for
+
+* see also 422
+
+----------------------------------------------------------------
+398
+
+kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr --prepipe "pigz -d" count -g a then sort -nr count then head
+^C.8MiB 0:00:12 [3.21MiB/s] [===========>                                                              ] 17% ETA 0:00:55
+
+kerl@joker-mbp.local[go]$ ^C
+kerl@joker-mbp.local[go]$ ^C
+kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr count -g a then sort -nr count then head
+218MiB 0:00:09 [23.1MiB/s] [========================================================================>] 100%
+
+----------------------------------------------------------------
 META
 
 nr, nf, keys
+
+also: -colname syntax ... -x colname maybe into more verbs ...
 
 ----------------------------------------------------------------
 SEPARATORS ETC

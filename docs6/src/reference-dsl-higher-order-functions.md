@@ -23,7 +23,9 @@ As of [Miller 6](new-in-miller-6.md) you can use
 [`apply`](reference-dsl-builtin-functions.md#apply),
 [`reduce`](reference-dsl-builtin-functions.md#reduce),
 [`fold`](reference-dsl-builtin-functions.md#fold), and
-[`sort`](reference-dsl-builtin-functions.md#sort) to express flexible,
+[`sort`](reference-dsl-builtin-functions.md#sort), and
+[`any`](reference-dsl-builtin-functions.md#any), and
+[`every`](reference-dsl-builtin-functions.md#every) to express flexible,
 intuitive operations on arrays and maps, as an alternative to things which
 would otherwise require for-loops.
 
@@ -611,6 +613,93 @@ Descending by value:
 </pre>
 
 Please see the [sorting page](sorting.md) for more examples.
+
+## any and every
+
+This is a way to do a logical OR/AND, respectively, of several boolean expressions, without the explicit `||`/`&&` and without a `for`-loop. This is a keystroke-saving convenience.
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p cat example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate
+yellow triangle true  1  11    43.6498  9.8870
+red    square   true  2  15    79.2778  0.0130
+red    circle   true  3  16    13.8103  2.9010
+red    square   false 4  48    77.5542  7.4670
+purple triangle false 5  51    81.2290  8.5910
+red    square   false 6  64    77.1991  9.5310
+purple triangle false 7  65    80.1405  5.8240
+yellow circle   true  8  73    63.9785  4.2370
+yellow circle   true  9  87    63.5058  8.3350
+purple square   false 10 91    72.3735  8.2430
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv filter 'any({"color":"red","shape":"square"}, func(k,v) {return $[k] == v})'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape  flag  k  index quantity rate
+red    square true  2  15    79.2778  0.0130
+red    circle true  3  16    13.8103  2.9010
+red    square false 4  48    77.5542  7.4670
+red    square false 6  64    77.1991  9.5310
+purple square false 10 91    72.3735  8.2430
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv filter 'every({"color":"red","shape":"square"}, func(k,v) {return $[k] == v})'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color shape  flag  k index quantity rate
+red   square true  2 15    79.2778  0.0130
+red   square false 4 48    77.5542  7.4670
+red   square false 6 64    77.1991  9.5310
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv put '$is_red_square = every({"color":"red","shape":"square"}, func(k,v) {return $[k] == v})'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k  index quantity rate   is_red_square
+yellow triangle true  1  11    43.6498  9.8870 false
+red    square   true  2  15    79.2778  0.0130 true
+red    circle   true  3  16    13.8103  2.9010 false
+red    square   false 4  48    77.5542  7.4670 true
+purple triangle false 5  51    81.2290  8.5910 false
+red    square   false 6  64    77.1991  9.5310 true
+purple triangle false 7  65    80.1405  5.8240 false
+yellow circle   true  8  73    63.9785  4.2370 false
+yellow circle   true  9  87    63.5058  8.3350 false
+purple square   false 10 91    72.3735  8.2430 false
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv filter 'any([16,51,61,64], func(e) {return $index == e})'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k index quantity rate
+red    circle   true  3 16    13.8103  2.9010
+purple triangle false 5 51    81.2290  8.5910
+red    square   false 6 64    77.1991  9.5310
+</pre>
+
+This last example could also be done using a map:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p --from example.csv filter '</b>
+<b>  begin {</b>
+<b>    @indices = {16:true, 51:true, 61:true, 64:true};</b>
+<b>  }</b>
+<b>  @indices[$index] == true;</b>
+<b>'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color  shape    flag  k index quantity rate
+red    circle   true  3 16    13.8103  2.9010
+purple triangle false 5 51    81.2290  8.5910
+red    square   false 6 64    77.1991  9.5310
+</pre>
 
 ## Combined examples
 

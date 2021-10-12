@@ -1,1 +1,1 @@
-mlr: sort: comparator function "function-literal-000001" has arity 5; needed 4 for map.
+mlr: sort: argument function "function-literal-000001" has arity 5; needed 4 for map.

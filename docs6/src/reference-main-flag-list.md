@@ -323,6 +323,8 @@ These are flags which don't fit into any other category.
 `: Use this to specify one of more input files before the verb(s), rather than after. May be used more than once.  The list of filename must end with `--`. This is useful for example since `--from *.csv` doesn't do what you might hope but `--mfrom *.csv --` does.
 * `--mload {filenames}
 `: Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.
+* `--nr-progress-mod {m}
+`: With m a positive integer: print filename and record count to os.Stderr every m input records.
 * `--ofmt {format}
 `: E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
 * `--seed {n}

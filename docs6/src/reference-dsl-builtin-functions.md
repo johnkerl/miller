@@ -72,7 +72,7 @@ is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
 * [**Collections functions**](#collections-functions):  [append](#append),  [arrayify](#arrayify),  [depth](#depth),  [flatten](#flatten),  [get_keys](#get_keys),  [get_values](#get_values),  [haskey](#haskey),  [json_parse](#json_parse),  [json_stringify](#json_stringify),  [leafcount](#leafcount),  [length](#length),  [mapdiff](#mapdiff),  [mapexcept](#mapexcept),  [mapselect](#mapselect),  [mapsum](#mapsum),  [unflatten](#unflatten).
 * [**Conversion functions**](#conversion-functions):  [boolean](#boolean),  [float](#float),  [fmtnum](#fmtnum),  [hexfmt](#hexfmt),  [int](#int),  [joink](#joink),  [joinkv](#joinkv),  [joinv](#joinv),  [splita](#splita),  [splitax](#splitax),  [splitkv](#splitkv),  [splitkvx](#splitkvx),  [splitnv](#splitnv),  [splitnvx](#splitnvx),  [string](#string).
 * [**Hashing functions**](#hashing-functions):  [md5](#md5),  [sha1](#sha1),  [sha256](#sha256),  [sha512](#sha512).
-* [**Higher-order-functions functions**](#higher-order-functions-functions):  [apply](#apply),  [fold](#fold),  [reduce](#reduce),  [select](#select),  [sort](#sort).
+* [**Higher-order-functions functions**](#higher-order-functions-functions):  [any](#any),  [apply](#apply),  [every](#every),  [fold](#fold),  [reduce](#reduce),  [select](#select),  [sort](#sort).
 * [**Math functions**](#math-functions):  [abs](#abs),  [acos](#acos),  [acosh](#acosh),  [asin](#asin),  [asinh](#asinh),  [atan](#atan),  [atan2](#atan2),  [atanh](#atanh),  [cbrt](#cbrt),  [ceil](#ceil),  [cos](#cos),  [cosh](#cosh),  [erf](#erf),  [erfc](#erfc),  [exp](#exp),  [expm1](#expm1),  [floor](#floor),  [invqnorm](#invqnorm),  [log](#log),  [log10](#log10),  [log1p](#log1p),  [logifit](#logifit),  [max](#max),  [min](#min),  [qnorm](#qnorm),  [round](#round),  [roundm](#roundm),  [sgn](#sgn),  [sin](#sin),  [sinh](#sinh),  [sqrt](#sqrt),  [tan](#tan),  [tanh](#tanh),  [urand](#urand),  [urand32](#urand32),  [urandint](#urandint),  [urandrange](#urandrange).
 * [**String functions**](#string-functions):  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [gsub](#gsub),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [\.](#dot).
 * [**System functions**](#system-functions):  [hostname](#hostname),  [os](#os),  [system](#system),  [version](#version).
@@ -590,43 +590,59 @@ sha512  (class=hashing #args=1) SHA512 hash.
 ## Higher-order-functions functions
 
 
+### any
+<pre class="pre-non-highlight-non-pair">
+any  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+Array example: any([10,20,30], func(e) {return $index == e})
+Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
+</pre>
+
+
 ### apply
 <pre class="pre-non-highlight-non-pair">
 apply  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
-Array example: apply([1,2,3,4,5], func(e) { return e ** 3}) returns [1, 8, 27, 64, 125].
-Map example: apply({"a":1, "b":3, "c":5}, func(k,v) { return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
+Array example: apply([1,2,3,4,5], func(e) {return e ** 3}) returns [1, 8, 27, 64, 125].
+Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
+</pre>
+
+
+### every
+<pre class="pre-non-highlight-non-pair">
+every  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+Array example: every(["a", "b", "c"], func(e) {return $[e] >= 0})
+Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 </pre>
 
 
 ### fold
 <pre class="pre-non-highlight-non-pair">
 fold  (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
-Array example: fold([1,2,3,4,5], func(acc,e) { return acc + e**3 }, 10000) returns 10225.
-Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
+Array example: fold([1,2,3,4,5], func(acc,e) {return acc + e**3}, 10000) returns 10225.
+Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
 </pre>
 
 
 ### reduce
 <pre class="pre-non-highlight-non-pair">
 reduce  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element, and return the accumulated element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.
-Array example: reduce([1,2,3,4,5], func(acc,e) { return acc + e**3 }) returns 225.
-Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) { return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.
+Array example: reduce([1,2,3,4,5], func(acc,e) {return acc + e**3}) returns 225.
+Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.
 </pre>
 
 
 ### select
 <pre class="pre-non-highlight-non-pair">
 select  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
-Array example: select([1,2,3,4,5], func(e) { return e >= 3}) returns [3, 4, 5].
-Map example: select({"a":1, "b":3, "c":5}, func(k,v) { return v >= 3}) returns {"b":3, "c": 5}.
+Array example: select([1,2,3,4,5], func(e) {return e >= 3}) returns [3, 4, 5].
+Map example: select({"a":1, "b":3, "c":5}, func(k,v) {return v >= 3}) returns {"b":3, "c": 5}.
 </pre>
 
 
 ### sort
 <pre class="pre-non-highlight-non-pair">
 sort  (class=higher-order-functions #args=1-2) Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by map keys. If the second argument is a string, it can contain any of "f" for lexical (default "n" for natural/numeric), "), "c" for case-folded lexical, and "r" for reversed/descending sort. If the second argument is a function, then for arrays it should take two arguments a and b, returning < 0, 0, or > 0 as a < b, a == b, or a > b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning < 0, 0, or > 0, using a and b's keys and values.
-Array example: sort([5,2,3,1,4], func(a,b) { return b <=> a}) returns [5,4,3,2,1].
-Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) { return bv <=> av}) returns {"a":3,"c":2,"b":1}.
+Array example: sort([5,2,3,1,4], func(a,b) {return b <=> a}) returns [5,4,3,2,1].
+Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv <=> av}) returns {"a":3,"c":2,"b":1}.
 </pre>
 
 ## Math functions
