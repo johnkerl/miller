@@ -1,1 +1,1 @@
-@x=1; dump > "${CASEDIR}/foo.dat"
+@x=1; dump > @CASEDIR."/foo.dat", @x

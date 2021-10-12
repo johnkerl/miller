@@ -1,1 +1,1 @@
-@x=1; emitp > "${CASEDIR}/foo.dat", @x
+@x=1; emitp > @CASEDIR."/foo.dat", @x
