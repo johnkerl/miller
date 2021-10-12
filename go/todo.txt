@@ -38,37 +38,6 @@ d pre-release:
 
 * see also 422
 
-* any, every HOFs
-  o more stream-based RT for existing HOFs
-  o OLH
-  o webdoc
-  o filter-docs
-  ! put/filter verbs need more than only autogen from OLH ...
-    - maybe adjacent to https://johnkerl.org/miller6/reference-dsl-syntax
-    - maybe extend https://johnkerl.org/miller6/reference-dsl-syntax
-
-* mlr filter -h more examples; more clarity on bare-boolean
-  o simple one-line examples
-  o multi-line examples
-
-
-* w.t.:
-
-x=[1,2,3,4,5]
-any(x, func(e) { return e > 3})
-any(x, func(e) { return e > 30})
-every(x, func(e) { return e > 30})
-every(x, func(e) { return e > 3})
-every(x, func(e) { return e > 0})
-
-μεταμόρφωσις: any([1,2,3,4,5], func(e) { return e > 3})
-true
-
-mlr --csv --from $mlds/example.csv filter 'any([1,2,3,4,5], func(e) { return e > 3})'
-mlr --csv --from $mlds/example.csv put '$z=any([1,2,3,4,5], func(e) { return e > 3})'
-mlr --csv --from $mlds/example.csv put '$z=any([1,2,3,4,5], func(e) { return e > 3})'
-mlr --csv --from $mlds/example.csv put '$z=select([1,2,3,4,5], func(e) { return e > 3})'
-
 ----------------------------------------------------------------
 398
 
@@ -84,6 +53,8 @@ kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr count -g a then sort -nr count
 META
 
 nr, nf, keys
+
+also: -colname syntax ... -x colname maybe into more verbs ...
 
 ----------------------------------------------------------------
 SEPARATORS ETC

@@ -80,7 +80,6 @@ def make_func_details
       display_name, link_name = name_to_display_name_and_link_name(function_name)
       foo.append " [#{display_name}]("+"#"+"#{link_name})"
     end
-    #puts "    * #{foo.join(',')}"
     puts "* [**#{class_display_name}**](#{class_link_name}): #{foo.join(', ')}."
 
   end
