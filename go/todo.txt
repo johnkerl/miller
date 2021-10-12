@@ -4,15 +4,29 @@ TOP OF LIST:
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-* I/O redirects * fmtnum * localtime * stats1 -r/--fr *
-* --nr-progress-mod * mlr -k * json comment-handling *
-* doc6 * check issues * regtest pendings *
-* r-strings/implicit-r/297 * CSV BOM *
-* check greek xlat *
+* CSV BOM
+* stats1 -r/--fr
+* fmtnum
+* localtime
+* JSON comment-handling
 
-* force CSV IFS single-char at CLIP? or CSV setup? IFS1?
+* transpose
+* print w/ #{...}; defer variadic printf
 
-* implicit r: double-check end of reference-main-data-types.md.in
+* r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
+
+* I/O redirects
+  o emit needs flatten ... why is this not happening?
+  o regtest/cases-pending-go-port/dsl-redirects/0078
+  o flatten function OLH needs to say what the args are. unflatten too?
+  o cat out all out.* act/exp
+* mlr -k
+* regtest pendings
+
+*  doc6
+* check issues
+
+* meta: nf,nr,keys?
 
 d pre-release:
   o explicit punchdown list
@@ -20,10 +34,30 @@ d pre-release:
   o gha download steps clearer
 
 ----------------------------------------------------------------
-MULTICHAR IRS / AUTO
+398
 
-* skip auto in the CLIP
-* document in nim6.in
+kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr --prepipe "pigz -d" count -g a then sort -nr count then head
+^C.8MiB 0:00:12 [3.21MiB/s] [===========>                                                              ] 17% ETA 0:00:55
+
+kerl@joker-mbp.local[go]$ ^C
+kerl@joker-mbp.local[go]$ ^C
+kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr count -g a then sort -nr count then head
+218MiB 0:00:09 [23.1MiB/s] [========================================================================>] 100%
+
+----------------------------------------------------------------
+META
+
+nr, nf, keys
+transpose ...
+
+also: -colname syntax ... -x colname maybe into more verbs ...
+
+----------------------------------------------------------------
+SEPARATORS ETC
+
+* force CSV IFS single-char at CLIP? or CSV setup? IFS1?
+* document re auto in nim6.in
+* xtab ifs/irs
 
 ----------------------------------------------------------------
 REDIRECTS
@@ -76,7 +110,7 @@ fmtstr
 mlr regtest regtest/cases-pending-go-port/verb-format-values/0003
 mlr regtest regtest/cases-pending-go-port/verb-format-values/0004
 
-race
+race condition
 mlr regtest regtest/cases-pending-go-port/verb-head-early-out
 
 label order
@@ -116,9 +150,8 @@ BLOCKERS
 * stats1: actualize -S and -F -- ?
 
 * more I/O:
-  !!! golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
+  ? golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
     detection -- needs an input-stream delegator -- ?
-  o comment-filtering-composed io.Reader
 
 ----------------------------------------------------------------
 DOC6

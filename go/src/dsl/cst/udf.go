@@ -87,9 +87,11 @@ func NewUDFCallsite(
 // array elements.
 func NewUDFCallsiteForHigherOrderFunction(
 	udf *UDF,
+	arity int,
 ) *UDFCallsite {
 	return &UDFCallsite{
-		udf: udf,
+		udf:   udf,
+		arity: arity,
 	}
 }
 
@@ -104,7 +106,6 @@ func (site *UDFCallsite) findUDF(state *runtime.State) *UDF {
 	v := state.Stack.Get(site.stackVariable)
 	if v == nil { // Nothing in scope on the stack with that name
 		// StackVariable
-		state.Stack.Dump()
 		return nil
 	}
 

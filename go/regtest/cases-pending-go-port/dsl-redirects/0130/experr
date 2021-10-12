@@ -1,6 +1,0 @@
-mlr: cannot parse DSL expression.
-Parse error on token "(" at line 1 columnn 41.
-Please check for missing semicolon.
-Expected one of:
-  $ ; ,
-

@@ -1,1 +1,0 @@
-emit > @CASEDIR."/out.".$a.$b, mapexcept($*, "a", "b")

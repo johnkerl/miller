@@ -1,1 +1,1 @@
-@v=$*; dump > "${CASEDIR}/out.".$a
+@v=$*; dump > @CASEDIR."/out.".$a, @v

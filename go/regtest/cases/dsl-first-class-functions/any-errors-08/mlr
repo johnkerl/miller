@@ -1,0 +1,3 @@
+end {
+  print any([], func (a,b,c) { return true});
+}

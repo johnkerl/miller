@@ -7,7 +7,9 @@ As of [Miller 6](new-in-miller-6.md) you can use
 [`apply`](reference-dsl-builtin-functions.md#apply),
 [`reduce`](reference-dsl-builtin-functions.md#reduce),
 [`fold`](reference-dsl-builtin-functions.md#fold), and
-[`sort`](reference-dsl-builtin-functions.md#sort) to express flexible,
+[`sort`](reference-dsl-builtin-functions.md#sort), and
+[`any`](reference-dsl-builtin-functions.md#any), and
+[`every`](reference-dsl-builtin-functions.md#every) to express flexible,
 intuitive operations on arrays and maps, as an alternative to things which
 would otherwise require for-loops.
 
@@ -339,6 +341,41 @@ mlr -n put '
 GENMD_EOF
 
 Please see the [sorting page](sorting.md) for more examples.
+
+## any and every
+
+This is a way to do a logical OR/AND, respectively, of several boolean expressions, without the explicit `||`/`&&` and without a `for`-loop. This is a keystroke-saving convenience.
+
+GENMD_RUN_COMMAND
+mlr --c2p cat example.csv
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv filter 'any({"color":"red","shape":"square"}, func(k,v) {return $[k] == v})'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv filter 'every({"color":"red","shape":"square"}, func(k,v) {return $[k] == v})'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv put '$is_red_square = every({"color":"red","shape":"square"}, func(k,v) {return $[k] == v})'
+GENMD_EOF
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv filter 'any([16,51,61,64], func(e) {return $index == e})'
+GENMD_EOF
+
+This last example could also be done using a map:
+
+GENMD_RUN_COMMAND
+mlr --c2p --from example.csv filter '
+  begin {
+    @indices = {16:true, 51:true, 61:true, 64:true};
+  }
+  @indices[$index] == true;
+'
+GENMD_EOF
 
 ## Combined examples
 

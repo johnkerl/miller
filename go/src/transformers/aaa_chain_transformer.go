@@ -1,7 +1,10 @@
 package transformers
 
 import (
+	"fmt"
+	"mlr/src/cli"
 	"mlr/src/types"
+	"os"
 )
 
 // ================================================================
@@ -143,6 +146,7 @@ func ChainTransformer(
 	readerDownstreamDoneChannel chan<- bool, // for mlr head -- see also stream.go
 	recordTransformers []IRecordTransformer, // not *recordTransformer since this is an interface
 	writerOutputRecordChannel chan<- *types.RecordAndContext,
+	options *cli.TOptions,
 ) {
 	i := 0
 	n := len(recordTransformers)
@@ -186,6 +190,7 @@ func ChainTransformer(
 			orchan,
 			idchan,
 			odchan,
+			options,
 		)
 	}
 }
@@ -197,10 +202,24 @@ func runSingleTransformer(
 	outputRecordChannel chan<- *types.RecordAndContext,
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
+	options *cli.TOptions,
 ) {
 
 	for {
 		recordAndContext := <-inputRecordChannel
+
+		// --nr-progress-mod
+		// TODO: function-pointer this away to reduce instruction count in the
+		// normal case which it isn't used at all. No need to test if {static thing} != 0
+		// on every record.
+		if options.NRProgressMod != 0 {
+			if isFirst && recordAndContext.Record != nil {
+				context := &recordAndContext.Context
+				if context.NR%options.NRProgressMod == 0 {
+					fmt.Fprintf(os.Stderr, "NR=%d FNR=%d FILENAME=%s\n", context.NR, context.FNR, context.FILENAME)
+				}
+			}
+		}
 
 		// Three things can come through:
 		//
@@ -223,7 +242,6 @@ func runSingleTransformer(
 				outputDownstreamDoneChannel,
 				outputRecordChannel,
 			)
-			// TODO: nr progress mod
 		} else {
 			outputRecordChannel <- recordAndContext
 		}
