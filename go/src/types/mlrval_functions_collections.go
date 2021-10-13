@@ -423,7 +423,7 @@ func MlrvalJoinKV(input1, input2, input3 *Mlrval) *Mlrval {
 // ================================================================
 // splitkv("a=3,b=4,c=5", "=", ",") -> {"a":3,"b":4,"c":5}
 func MlrvalSplitKV(input1, input2, input3 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
+	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
 	if input2.mvtype != MT_STRING {
@@ -458,7 +458,7 @@ func MlrvalSplitKV(input1, input2, input3 *Mlrval) *Mlrval {
 // ----------------------------------------------------------------
 // splitkvx("a=3,b=4,c=5", "=", ",") -> {"a":"3","b":"4","c":"5"}
 func MlrvalSplitKVX(input1, input2, input3 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
+	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
 	if input2.mvtype != MT_STRING {
@@ -494,7 +494,7 @@ func MlrvalSplitKVX(input1, input2, input3 *Mlrval) *Mlrval {
 // ----------------------------------------------------------------
 // splitnv("a,b,c", ",") -> {"1":"a","2":"b","3":"c"}
 func MlrvalSplitNV(input1, input2 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
+	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
 	if input2.mvtype != MT_STRING {
@@ -516,7 +516,7 @@ func MlrvalSplitNV(input1, input2 *Mlrval) *Mlrval {
 // ----------------------------------------------------------------
 // splitnvx("3,4,5", ",") -> {"1":"3","2":"4","3":"5"}
 func MlrvalSplitNVX(input1, input2 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
+	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
 	if input2.mvtype != MT_STRING {
@@ -538,10 +538,10 @@ func MlrvalSplitNVX(input1, input2 *Mlrval) *Mlrval {
 // ----------------------------------------------------------------
 // splita("3,4,5", ",") -> [3,4,5]
 func MlrvalSplitA(input1, input2 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
+	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
-	if input2.mvtype != MT_STRING {
+	if !input2.IsString() {
 		return MLRVAL_ERROR
 	}
 	fieldSeparator := input2.printrep
@@ -562,7 +562,7 @@ func MlrvalSplitA(input1, input2 *Mlrval) *Mlrval {
 // MlrvalSplitAX splits a string to an array, without type-inference:
 // e.g. splitax("3,4,5", ",") -> ["3","4","5"]
 func MlrvalSplitAX(input1, input2 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
+	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
 	if input2.mvtype != MT_STRING {

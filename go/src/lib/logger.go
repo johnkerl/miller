@@ -96,7 +96,8 @@ func InternalCodingErrorPanic(message string) {
 
 // WhereAreWe shows a stack trace from the current callsite.
 func WhereAreWe() {
-	for i := 0; i < 20; i++ {
+	// Start at 1, not 0, since this function itself is not of interest.
+	for i := 1; i < 20; i++ {
 		_, fileName, fileLine, ok := runtime.Caller(i)
 		if !ok {
 			break

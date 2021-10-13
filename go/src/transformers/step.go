@@ -368,6 +368,11 @@ func (stepper *tStepperDelta) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
+	if valueFieldValue.IsEmpty() {
+		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
+		return
+	}
+
 	delta := types.MlrvalPointerFromInt(0)
 	if stepper.previous != nil {
 		delta = types.MlrvalBinaryMinus(valueFieldValue, stepper.previous)
@@ -375,9 +380,6 @@ func (stepper *tStepperDelta) process(
 	inrec.PutCopy(stepper.outputFieldName, delta)
 
 	stepper.previous = valueFieldValue.Copy()
-
-	// TODO: from C impl: if input is empty:
-	// lrec_put(prec, stepper.output_field_name, "", NO_FREE);
 }
 
 // ================================================================
@@ -462,6 +464,11 @@ func (stepper *tStepperRatio) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
+	if valueFieldValue.IsEmpty() {
+		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
+		return
+	}
+
 	ratio := types.MlrvalPointerFromInt(1)
 	if stepper.previous != nil {
 		ratio = types.MlrvalDivide(valueFieldValue, stepper.previous)
@@ -492,8 +499,12 @@ func (stepper *tStepperRsum) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	stepper.rsum = types.MlrvalBinaryPlus(valueFieldValue, stepper.rsum)
-	inrec.PutCopy(stepper.outputFieldName, stepper.rsum)
+	if valueFieldValue.IsEmpty() {
+		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
+	} else {
+		stepper.rsum = types.MlrvalBinaryPlus(valueFieldValue, stepper.rsum)
+		inrec.PutCopy(stepper.outputFieldName, stepper.rsum)
+	}
 }
 
 // ================================================================
@@ -519,8 +530,12 @@ func (stepper *tStepperCounter) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	stepper.counter = types.MlrvalBinaryPlus(stepper.counter, stepper.one)
-	inrec.PutCopy(stepper.outputFieldName, stepper.counter)
+	if valueFieldValue.IsEmpty() {
+		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
+	} else {
+		stepper.counter = types.MlrvalBinaryPlus(stepper.counter, stepper.one)
+		inrec.PutCopy(stepper.outputFieldName, stepper.counter)
+	}
 }
 
 // ----------------------------------------------------------------
