@@ -22,6 +22,7 @@ TOP OF LIST:
   o cat out all out.* act/exp
 * mlr -k
 * regtest pendings
+  o webdocs re /..../i regex options @ CLIP for windows
 
 *  doc6
 * check issues
@@ -224,6 +225,9 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
 ================================================================
 NON-BLOCKERS
 
+* non-streaming DSL-enabled cut
+  https://github.com/johnkerl/miller/discussions/613
+
 * single cheatsheet page -- put out RFH?
   https://twitter.com/icymi_py/status/1426622817785765898/photo/1
 
@@ -337,6 +341,7 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
 * functions as first-class objects; then sortaf/sortmf take f not "f"
 
 * godoc notes:
+  o go get golang.org/x/tools/cmd/godoc
   o dev mode:
     godoc -http=:6060 -goroot .
   o publish:
@@ -617,6 +622,25 @@ DOC6:
 
 ? * would LOVE to have small prev-page/next-page links at the *top* not bottom ...
   https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
+
+* go test single files:
+  $ go test src/types/mlrval_functions_test.go $(ls src/types/*.go | grep -v test)
+  ok   command-line-arguments 0.100s
+  $ lsr \*test\*.go
+  ./regression_test.go
+  ./src/types/mlrval_functions_test.go
+  ./src/types/mlrval_format_test.go
+  ./src/auxents/regtest/regtester.go
+  ./src/lib/regex_test.go
+  ./src/lib/unbackslash_test.go
+  $ go test src/types/mlrval_functions_test.go $(ls src/types/*.go|grep -v test)
+  ok   command-line-arguments 0.097s
+  $ go test src/types/mlrval_format_test.go $(ls src/types/*.go|grep -v test)
+  ok   command-line-arguments 0.093s
+  $ go test src/lib/regex_test.go src/lib/regex.go
+  ok   command-line-arguments 0.083s
+  $ go test src/lib/unbackslash_test.go src/lib/unbackslash.go
+  ok   command-line-arguments 0.081s
 
 ================================================================
 godoc checklist:
