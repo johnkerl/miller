@@ -312,9 +312,6 @@ func (tr *TransformerStats1) handleInputRecord(
 		if valueFieldValue == nil {
 			continue
 		}
-		if valueFieldValue.IsVoid() {
-			continue
-		}
 		level3 := level2.(*lib.OrderedMap).Get(valueFieldName)
 		if level3 == nil {
 			level3 = lib.NewOrderedMap()
@@ -330,6 +327,12 @@ func (tr *TransformerStats1) handleInputRecord(
 					tr.doInterpolatedPercentiles,
 				)
 				level3.(*lib.OrderedMap).Put(accumulatorName, namedAccumulator)
+			}
+			if valueFieldValue.IsVoid() {
+				// The accumulator has been initialized with default values;
+				// continue here. (If we were to continue outside of this loop
+				// we would be failing to construct the accumulator.)
+				continue
 			}
 			namedAccumulator.(*utils.Stats1NamedAccumulator).Ingest(valueFieldValue)
 		}

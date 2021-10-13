@@ -631,7 +631,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 			pair := pe.Value.(stringPair)
 			expectedFileName := pair.first
 			actualFileName := pair.second
-			ok, err := regtester.compareFiles(expectedFileName, actualFileName, caseDir)
+			ok, expectedContents, actualContents, err := regtester.compareFiles(expectedFileName, actualFileName, caseDir)
 			if err != nil {
 				fmt.Printf("%s: %v\n", cmdFilePath, err)
 				passed = false
@@ -643,9 +643,17 @@ func (regtester *RegTester) executeSingleCmdFile(
 					)
 				}
 				if verbosityLevel >= 3 {
+					fmt.Println()
+					fmt.Printf("%s:\n", expectedFileName)
+					fmt.Print(expectedContents)
+
+					fmt.Println()
+					fmt.Printf("%s:\n", actualFileName)
+					fmt.Print(actualContents)
+
+					fmt.Println()
 					fmt.Println(RunDiffCommandOnFilenames(expectedFileName, actualFileName))
 				}
-				// TODO: if verbosityLevel >= 3, print the contents of both files
 				passed = false
 			} else {
 				if verbosityLevel >= 2 {
@@ -743,20 +751,20 @@ func (regtester *RegTester) compareFiles(
 	expectedFileName string,
 	actualFileName string,
 	caseDir string,
-) (bool, error) {
+) (bool, string, string, error) {
 	expectedContents, err := regtester.loadFile(expectedFileName, caseDir)
 	if err != nil {
-		return false, err
+		return false, "", "", err
 	}
 	actualContents, err := regtester.loadFile(actualFileName, caseDir)
 	if err != nil {
-		return false, err
+		return false, "", "", err
 	}
 	// TODO: maybe rethink later with autoterm
 	expectedContents = strings.ReplaceAll(expectedContents, "\r\n", "\n")
 	actualContents = strings.ReplaceAll(actualContents, "\r\n", "\n")
 
-	return expectedContents == actualContents, nil
+	return expectedContents == actualContents, expectedContents, actualContents, nil
 }
 
 // ----------------------------------------------------------------

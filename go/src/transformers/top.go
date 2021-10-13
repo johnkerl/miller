@@ -204,10 +204,9 @@ func (tr *TransformerTop) ingest(
 	for i := range tr.valueFieldNames {
 		valueFieldName := tr.valueFieldNames[i]
 		valueFieldValue := valueFieldValues[i]
-		if valueFieldValue.IsVoid() {
-			// Key present with null value
-			continue
-		}
+		//if valueFieldValue.IsVoid() { // Key present with empty value
+		//continue
+		//}
 
 		iTopKeeper := secondLevel.Get(valueFieldName)
 		var topKeeper *utils.TopKeeper
