@@ -28,15 +28,6 @@ A note on Continuous Integration:
 * I hope to retain backward compatibility at the command-line level as much as possible.
 * In the meantime I will still keep fixing bugs, doing some features, etc. in C on Miller 5.x -- in the near term, support for Miller's C implementation continues as before.
 
-# Port-completion criteria
-
-* `mlr regtest regtest/cases*` completes -- either completing/fixing the C/Go source-code discrepancies, or accepting the changes as backward incomptabilities
-* Double-checking all Miller issues ever, in case I fixed/implemented something but didn't have regtest coverage
-* All `TODO`/`xxx` comments in Go, BNF source code, and case-files are resolved
-* Release notes including Go-only features, and C/Go backward-incompatibilities
-* Docs updated at https://miller.readthedocs.io/ (source-controlled at [../docs](../docs/))
-* Equivalent of `./configure`, whatever that turns out to be
-
 # Trying out the Go port
 
 * Caveat: *lots* of things present in the C implementation are currently missing in the Go implementation. So if something doesn't work, it's almost certainly because it doesn't work *yet*.

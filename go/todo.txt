@@ -15,11 +15,6 @@ TOP OF LIST:
 
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
-* I/O redirects
-  o emit needs flatten ... why is this not happening?
-  o regtest/cases-pending-go-port/dsl-redirects/0078
-  o flatten function OLH needs to say what the args are. unflatten too?
-  o cat out all out.* act/exp
 * mlr -k
 * regtest pendings
   o webdocs re /..../i regex options @ CLIP for windows
@@ -29,8 +24,28 @@ TOP OF LIST:
 
 * meta: nf,nr,keys?
 
+* punchdown list:
+  o $cpw
+    - 3 regex-at-CLI cases -- repro @ akns
+  o $cpg
+    - smarter autoflatten if emit-to is json & main isn't
+    - mapexcept ...
+    - repifs left/right trim
+    - --xvright
+    - xtab crlf & non-std irs generally ...
+    - pprint ofs -- ?
+    - merge-field voids
+    - csv bom
+    - json comments
+    - crlf ...
+    - fmtnum
+    - localtime
+    - stats1 -r/--fr
+  o TODO in *.go & *.mi
+  o release notes per se
+  o ./configure whatever equivalent
+
 d pre-release:
-  o explicit punchdown list
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
 
