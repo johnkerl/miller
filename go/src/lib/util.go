@@ -177,3 +177,13 @@ func CopyStringArray(input []string) []string {
 	copy(output, input)
 	return output
 }
+
+func StripEmpties(input []string) []string {
+	output := make([]string, 0, len(input))
+	for _, e := range input {
+		if e != "" {
+			output = append(output, e)
+		}
+	}
+	return output
+}

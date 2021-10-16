@@ -29,9 +29,9 @@ TOP OF LIST:
   o $cpg
     - smarter autoflatten if emit-to is json & main isn't
     - mapexcept ...
-    - repifs left/right trim
     - xtab crlf & non-std irs generally ...
     - pprint ofs -- ?
+    - xtab ors -- ?
     - merge-field voids
     - csv bom
     - json comments

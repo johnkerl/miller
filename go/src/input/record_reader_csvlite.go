@@ -179,11 +179,8 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 		}
 
 		fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
-		////fmt.Printf("<<%v>>\n", line)
-		////fmt.Printf("<<%v>>\n", reader.readerOptions.IFS)
-		////fields := lib.SplitString(line, lib.UnbackslashStringLiteral(reader.readerOptions.IFS))
 		if reader.readerOptions.AllowRepeatIFS {
-			fields = reader.stripEmpties(fields)
+			fields = lib.StripEmpties(fields) // left/right trim
 		}
 		if headerStrings == nil {
 			headerStrings = fields
@@ -306,7 +303,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 
 		fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
 		if reader.readerOptions.AllowRepeatIFS {
-			fields = reader.stripEmpties(fields)
+			fields = lib.StripEmpties(fields) // left/right trim
 		}
 		if headerStrings == nil {
 			n := len(fields)
@@ -364,17 +361,4 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 		)
 
 	}
-}
-
-// ----------------------------------------------------------------
-// For CSV, we have "a,,c" -> ["a", "", "c"]. But for PPRINT, "a  b" -> ["a", "b"].
-// One way to do this is split on single spaces, then strip empty-string slots.
-func (reader *RecordReaderCSVLite) stripEmpties(input []string) []string {
-	output := make([]string, 0, len(input))
-	for _, e := range input {
-		if e != "" {
-			output = append(output, e)
-		}
-	}
-	return output
 }

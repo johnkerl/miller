@@ -675,6 +675,15 @@ func (mlrmap *Mlrmap) Label(newNames []string) {
 		if pe == nil {
 			break
 		}
+		// Example:
+		// * Input record has keys a,b,i,x,y
+		// * Requested labeling is d,x,f
+		// * The first three records a,b,i should be renamed to d,x,f
+		// * The old x needs to disappear (for key-uniqueness)
+		// * The y field is carried through
+		if other.Has(pe.Key) {
+			continue
+		}
 		other.PutReference(pe.Key, pe.Value)
 	}
 
