@@ -80,7 +80,7 @@ func ParseCommandLine(args []string) (
 		options.NoInput = true // e.g. then-chain begins with seqgen
 	}
 
-	if cli.DecideFinalFlatten(&options) {
+	if cli.DecideFinalFlatten(&options.WriterOptions) {
 		// E.g. '{"req": {"method": "GET", "path": "/api/check"}}' becomes
 		// req.method=GET,req.path=/api/check.
 		transformer, err := transformers.NewTransformerFlatten(options.WriterOptions.FLATSEP, nil)

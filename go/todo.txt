@@ -27,17 +27,16 @@ TOP OF LIST:
   o $cpw
     - 3 regex-at-CLI cases -- repro @ akns
   o $cpg
-    - smarter autoflatten if emit-to is json & main isn't
     - mapexcept ...
     - xtab crlf & non-std irs generally ...
     - pprint ofs -- ?
     - xtab ors -- ?
     - merge-field voids
-    - csv bom
+    ! csv bom
     - json comments
     - crlf ...
-    - fmtnum
-    - localtime
+    ! fmtnum
+    ! localtime
   o TODO in *.go & *.mi
   o release notes per se
   o ./configure whatever equivalent
