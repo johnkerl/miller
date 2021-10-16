@@ -33,7 +33,7 @@ x_iqr 0.5015156280035271
 
 For wildcarded field names, first compute p25 and p75, then loop over field names with `p25` in them:
 
-<pre class="pre-highlight-non-pair">
+<pre class="pre-highlight-in-pair">
 <b>mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \</b>
 <b>    then put 'for (k,v in $*) {</b>
 <b>      if (k =~ "(.*)_p25") {</b>
@@ -41,6 +41,17 @@ For wildcarded field names, first compute p25 and p75, then loop over field name
 <b>      }</b>
 <b>    }' \</b>
 <b>    data/medium </b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+i_p25 2501
+i_p75 7501
+x_p25 0.24667037823231752
+x_p75 0.7481860062358446
+y_p25 0.25213670524015686
+y_p75 0.7640028449996572
+i_iqr 5000
+x_iqr 0.5015156280035271
+y_iqr 0.5118661397595003
 </pre>
 
 ## Computing weighted means

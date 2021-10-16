@@ -171,3 +171,9 @@ func WriteTempFileOrDie(contents string) string {
 	}
 	return handle.Name()
 }
+
+func CopyStringArray(input []string) []string {
+	output := make([]string, len(input))
+	copy(output, input)
+	return output
+}
