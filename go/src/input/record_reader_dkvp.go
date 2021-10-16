@@ -101,12 +101,6 @@ func (reader *RecordReaderDKVP) processHandle(
 			// else comments are data
 		}
 
-		// This is how to do a chomp:
-		//line = strings.TrimRight(line, "\n")
-
-		// xxx temp pending autodetect, and pending more windows-port work
-		//line = strings.TrimRight(line, "\r")
-
 		record := reader.recordFromDKVPLine(line)
 		context.UpdateForInputRecord()
 		inputChannel <- types.NewRecordAndContext(
