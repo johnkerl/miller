@@ -161,7 +161,7 @@ func (context *Context) Copy() *Context {
 
 func (context *Context) GetStatusString() string {
 
-	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
+	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for speed increase
 	buffer.WriteString("FILENAME=\"")
 	buffer.WriteString(context.FILENAME)
 

@@ -52,7 +52,7 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 	ostream io.WriteCloser,
 	outputIsStdout bool,
 ) {
-	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
+	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for ~5x speed increase
 
 	if outrec != nil { // Not end of record stream
 		if writer.onFirst {

@@ -431,7 +431,7 @@ var PPRINTOnlyFlagSection = FlagSection{
 			name: "--right",
 			help: "Right-justifies all fields for PPRINT output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.WriterOptions.RightAlignedPprintOutput = true
+				options.WriterOptions.RightAlignedPPRINTOutput = true
 				*pargi += 1
 			},
 		},
@@ -2366,13 +2366,14 @@ var FlattenUnflattenFlagSection = FlagSection{
 			},
 		},
 
-		//{
-		//	name: "--xvright",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.right_justify_xtab_value = true
-		//		*pargi += 1
-		//	},
-		//},
+		{
+			name: "--xvright",
+			help: "Right-justify values for XTAB format.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.WriterOptions.RightAlignedXTABOutput = true
+				*pargi += 1
+			},
+		},
 
 		//{
 		//	name: "--vflatsep",
