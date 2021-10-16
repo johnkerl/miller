@@ -1668,15 +1668,26 @@ VERBS
          min      Compute minimum values of specified fields
          max      Compute maximum values of specified fields
 
-       -f {a,b,c}   Value-field names on which to compute statistics
-       -g {d,e,f}   Optional group-by-field names
+       -f {a,b,c}     Value-field names on which to compute statistics
+       --fr {regex}   Regex for value-field names on which to compute statistics
+                      (compute statistics on values in all field names matching regex
+       --fx {regex}   Inverted regex for value-field names on which to compute statistics
+                      (compute statistics on values in all field names not matching regex)
 
-       -i           Use interpolated percentiles, like R's type=7; default like type=1.\n");
-                    Not sensical for string-valued fields.\n");
-       -s           Print iterative stats. Useful in tail -f contexts (in which
-                    case please avoid pprint-format output since end of input
-                    stream will never be seen).
-       -h|--help    Show this message.
+       -g {d,e,f}     Optional group-by-field names
+       --gr {regex}   Regex for optional group-by-field names
+                      (group by values in field names matching regex)
+       --gx {regex}   Inverted regex for optional group-by-field names
+                      (group by values in field names not matching regex)
+
+       --grfx {regex} Shorthand for --gr {regex} --fx {that same regex}
+
+       -i             Use interpolated percentiles, like R's type=7; default like type=1.
+                      Not sensical for string-valued fields.\n");
+       -s             Print iterative stats. Useful in tail -f contexts (in which
+                      case please avoid pprint-format output since end of input
+                      stream will never be seen).
+       -h|--help      Show this message.
        [TODO: more]
        Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
         mlr stats1
@@ -2858,5 +2869,5 @@ SEE ALSO
 
 
 
-                                  2021-10-12                         MILLER(1)
+                                  2021-10-16                         MILLER(1)
 </pre>

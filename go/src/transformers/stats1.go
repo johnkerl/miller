@@ -614,8 +614,6 @@ func (tr *TransformerStats1) emitIntoOutputRecord(
 	outrec *types.Mlrmap,
 ) {
 
-	// TODO: yuck
-	// pairing up a ragged map with an array, risks all manner of ish on heterogeneous data
 	for pa := tr.groupByFieldNamesForOutput.Head; pa != nil; pa = pa.Next {
 		groupByFieldName := pa.Key
 		iValue := groupByFieldValues.Get(groupByFieldName)

@@ -5,7 +5,6 @@ TOP OF LIST:
 * nikos materials -> fold in
 
 * CSV BOM
-* stats1 -r/--fr
 * fmtnum
 * localtime
 * JSON comment-handling
@@ -40,7 +39,6 @@ TOP OF LIST:
     - crlf ...
     - fmtnum
     - localtime
-    - stats1 -r/--fr
   o TODO in *.go & *.mi
   o release notes per se
   o ./configure whatever equivalent
