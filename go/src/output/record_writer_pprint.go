@@ -160,7 +160,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 		if onFirst && !writer.writerOptions.HeaderlessCSVOutput {
 			var buffer bytes.Buffer // faster than fmt.Print() separately
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				if !writer.writerOptions.RightAlignedPprintOutput {
+				if !writer.writerOptions.RightAlignedPPRINTOutput {
 					if pe.Next != nil {
 						formatted := fmt.Sprintf("%-*s ", maxWidths[pe.Key], pe.Key)
 						buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
@@ -190,7 +190,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 			if s == "" {
 				s = "-"
 			}
-			if !writer.writerOptions.RightAlignedPprintOutput {
+			if !writer.writerOptions.RightAlignedPPRINTOutput {
 				if pe.Next != nil {
 					formatted := fmt.Sprintf("%-*s ", maxWidths[pe.Key], s)
 					buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
@@ -267,7 +267,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 
 			buffer.WriteString(verticalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				if !writer.writerOptions.RightAlignedPprintOutput {
+				if !writer.writerOptions.RightAlignedPPRINTOutput {
 					formatted := fmt.Sprintf("%-*s", maxWidths[pe.Key], pe.Key)
 					buffer.WriteString(colorizer.MaybeColorizeKey(formatted, outputIsStdout))
 				} else {
@@ -302,7 +302,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 		buffer.WriteString(verticalStart)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
-			if !writer.writerOptions.RightAlignedPprintOutput {
+			if !writer.writerOptions.RightAlignedPPRINTOutput {
 				formatted := fmt.Sprintf("%-*s", maxWidths[pe.Key], s)
 				buffer.WriteString(colorizer.MaybeColorizeValue(formatted, outputIsStdout))
 			} else {

@@ -30,7 +30,6 @@ TOP OF LIST:
     - smarter autoflatten if emit-to is json & main isn't
     - mapexcept ...
     - repifs left/right trim
-    - --xvright
     - xtab crlf & non-std irs generally ...
     - pprint ofs -- ?
     - merge-field voids
@@ -93,9 +92,6 @@ mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0013
 
 --quote-original
 mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0014
-
---xvright not recognized
-mlr regtest regtest/cases-pending-go-port/io-utf8-alignment/0008
 
 bom
 mlr regtest regtest/cases-pending-go-port/io-utf8-bom/0001

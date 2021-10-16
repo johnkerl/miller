@@ -2,6 +2,7 @@ package output
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"unicode/utf8"
 
@@ -40,7 +41,22 @@ func (writer *RecordWriterXTAB) Write(
 		}
 	}
 
-	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
+	if writer.writerOptions.RightAlignedXTABOutput {
+		writer.writeWithRightAlignedValues(outrec, ostream, outputIsStdout, maxKeyLength)
+	} else {
+		writer.writeWithLeftAlignedValues(outrec, ostream, outputIsStdout, maxKeyLength)
+	}
+
+}
+
+func (writer *RecordWriterXTAB) writeWithLeftAlignedValues(
+	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
+	outputIsStdout bool,
+	maxKeyLength int,
+) {
+
+	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for ~5x speed increase
 
 	// Put a blank line between records, but not before the first or after the last
 	if writer.onFirst {
@@ -51,15 +67,66 @@ func (writer *RecordWriterXTAB) Write(
 
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		keyLength := utf8.RuneCountInString(pe.Key)
-		padLength := maxKeyLength - keyLength
+		keyPadLength := maxKeyLength - keyLength
 
 		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 		buffer.WriteString(" ")
-		for i := 0; i < padLength; i++ {
+		for i := 0; i < keyPadLength; i++ {
 			buffer.WriteString(writer.writerOptions.OPS)
 		}
 		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
 		buffer.WriteString("\n") // TODO: ORS
 	}
 	ostream.Write(buffer.Bytes())
+
+}
+
+func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
+	outrec *types.Mlrmap,
+	ostream io.WriteCloser,
+	outputIsStdout bool,
+	maxKeyLength int,
+) {
+
+	values := make([]string, outrec.FieldCount)
+
+	maxValueLength := 0
+	i := 0
+	for pe := outrec.Head; pe != nil; pe = pe.Next {
+		value := pe.Value.String()
+		values[i] = value
+		valueLength := utf8.RuneCountInString(value)
+		if valueLength > maxValueLength {
+			maxValueLength = valueLength
+		}
+		i++
+	}
+
+	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for ~5x speed increase
+
+	// Put a blank line between records, but not before the first or after the last
+	if writer.onFirst {
+		writer.onFirst = false
+	} else {
+		buffer.WriteString("\n") // TODO: ORS
+	}
+
+	i = 0
+	for pe := outrec.Head; pe != nil; pe = pe.Next {
+		keyLength := utf8.RuneCountInString(pe.Key)
+		keyPadLength := maxKeyLength - keyLength
+
+		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+		buffer.WriteString(" ")
+		for i := 0; i < keyPadLength; i++ {
+			buffer.WriteString(writer.writerOptions.OPS)
+		}
+		paddedValue := fmt.Sprintf("%*s", maxValueLength, values[i])
+		buffer.WriteString(colorizer.MaybeColorizeValue(paddedValue, outputIsStdout))
+		buffer.WriteString("\n") // TODO: ORS
+
+		i++
+	}
+	ostream.Write(buffer.Bytes())
+
 }
