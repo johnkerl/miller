@@ -54,9 +54,9 @@ package cli
 //   o There is a --no-auto-unflatten for those who want it.
 // ================================================================
 
-func DecideFinalFlatten(options *TOptions) bool {
-	ofmt := options.WriterOptions.OutputFileFormat
-	if options.WriterOptions.AutoFlatten {
+func DecideFinalFlatten(writerOptions *TWriterOptions) bool {
+	ofmt := writerOptions.OutputFileFormat
+	if writerOptions.AutoFlatten {
 		if ofmt != "json" {
 			return true
 		}
