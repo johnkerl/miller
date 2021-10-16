@@ -1,9 +1,11 @@
 package transformers
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"mlr/src/cli"
@@ -39,15 +41,26 @@ Options:
 `)
 	utils.ListStats1Accumulators(o)
 	fmt.Fprint(o, `
--f {a,b,c}   Value-field names on which to compute statistics
--g {d,e,f}   Optional group-by-field names
+-f {a,b,c}     Value-field names on which to compute statistics
+--fr {regex}   Regex for value-field names on which to compute statistics
+               (compute statistics on values in all field names matching regex
+--fx {regex}   Inverted regex for value-field names on which to compute statistics
+               (compute statistics on values in all field names not matching regex)
 
--i           Use interpolated percentiles, like R's type=7; default like type=1.\n");
-             Not sensical for string-valued fields.\n");
--s           Print iterative stats. Useful in tail -f contexts (in which
-             case please avoid pprint-format output since end of input
-             stream will never be seen).
--h|--help    Show this message.
+-g {d,e,f}     Optional group-by-field names
+--gr {regex}   Regex for optional group-by-field names
+               (group by values in field names matching regex)
+--gx {regex}   Inverted regex for optional group-by-field names
+               (group by values in field names not matching regex)
+
+--grfx {regex} Shorthand for --gr {regex} --fx {that same regex}
+
+-i             Use interpolated percentiles, like R's type=7; default like type=1.
+               Not sensical for string-valued fields.\n");
+-s             Print iterative stats. Useful in tail -f contexts (in which
+               case please avoid pprint-format output since end of input
+               stream will never be seen).
+-h|--help      Show this message.
 [TODO: more]
 `)
 
@@ -96,6 +109,12 @@ func transformerStats1ParseCLI(
 	accumulatorNameList := make([]string, 0)
 	valueFieldNameList := make([]string, 0)
 	groupByFieldNameList := make([]string, 0)
+
+	doRegexValueFieldNames := false
+	doRegexGroupByFieldNames := false
+	invertRegexValueFieldNames := false
+	invertRegexGroupByFieldNames := false
+
 	doInterpolatedPercentiles := false
 	doIterativeStats := false
 
@@ -115,12 +134,31 @@ func transformerStats1ParseCLI(
 		} else if opt == "-f" {
 			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
 
-		} else if opt == "--fr" {
-			// TODO: port field-name regexing from C to Go
-			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
-
 		} else if opt == "-g" {
 			groupByFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+
+		} else if opt == "--fr" {
+			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doRegexValueFieldNames = true
+
+		} else if opt == "--fx" {
+			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doRegexValueFieldNames = true
+			invertRegexValueFieldNames = true
+		} else if opt == "--gr" {
+			groupByFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doRegexGroupByFieldNames = true
+		} else if opt == "--gx" {
+			groupByFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			doRegexGroupByFieldNames = true
+			invertRegexGroupByFieldNames = true
+
+		} else if opt == "--grfx" {
+			doRegexValueFieldNames = true
+			doRegexGroupByFieldNames = true
+			invertRegexValueFieldNames = true
+			valueFieldNameList = cli.VerbGetStringArrayArgOrDie(verb, opt, args, &argi, argc)
+			groupByFieldNameList = lib.CopyStringArray(valueFieldNameList)
 
 		} else if opt == "-i" {
 			doInterpolatedPercentiles = true
@@ -155,6 +193,12 @@ func transformerStats1ParseCLI(
 		accumulatorNameList,
 		valueFieldNameList,
 		groupByFieldNameList,
+
+		doRegexValueFieldNames,
+		doRegexGroupByFieldNames,
+		invertRegexValueFieldNames,
+		invertRegexGroupByFieldNames,
+
 		doInterpolatedPercentiles,
 		doIterativeStats,
 	)
@@ -170,9 +214,25 @@ func transformerStats1ParseCLI(
 // ----------------------------------------------------------------
 type TransformerStats1 struct {
 	// Input:
-	accumulatorNameList       []string
-	valueFieldNameList        []string
-	groupByFieldNameList      []string
+	accumulatorNameList  []string
+	valueFieldNameList   []string
+	groupByFieldNameList []string
+
+	// If the group-by field names are non-regexed, these are just the names in
+	// the groupByFieldNameList. If the group-by field names are regexed, this
+	// is the union of all the group-by field names encountered in the input,
+	// over all records.
+	groupByFieldNamesForOutput *lib.OrderedMap
+
+	valueFieldRegexes   []*regexp.Regexp
+	groupByFieldRegexes []*regexp.Regexp
+
+	doRegexValueFieldNames   bool
+	doRegexGroupByFieldNames bool
+
+	invertRegexValueFieldNames   bool
+	invertRegexGroupByFieldNames bool
+
 	doInterpolatedPercentiles bool
 	doIterativeStats          bool
 
@@ -186,7 +246,8 @@ type TransformerStats1 struct {
 	// except we need maps that preserve insertion order.
 	namedAccumulators *lib.OrderedMap
 
-	groupingKeysToGroupByFieldValues map[string][]*types.Mlrval
+	// map[string]OrderedMap[string]*types.Mlrval
+	groupingKeysToGroupByFieldValues map[string]*lib.OrderedMap
 }
 
 // Given: accumulate count,sum on values x,y group by a,b.
@@ -236,6 +297,12 @@ func NewTransformerStats1(
 	accumulatorNameList []string,
 	valueFieldNameList []string,
 	groupByFieldNameList []string,
+
+	doRegexValueFieldNames bool,
+	doRegexGroupByFieldNames bool,
+	invertRegexValueFieldNames bool,
+	invertRegexGroupByFieldNames bool,
+
 	doInterpolatedPercentiles bool,
 	doIterativeStats bool,
 ) (*TransformerStats1, error) {
@@ -251,20 +318,40 @@ func NewTransformerStats1(
 	}
 
 	tr := &TransformerStats1{
-		accumulatorNameList:              accumulatorNameList,
-		valueFieldNameList:               valueFieldNameList,
-		groupByFieldNameList:             groupByFieldNameList,
+		accumulatorNameList:        accumulatorNameList,
+		valueFieldNameList:         valueFieldNameList,
+		groupByFieldNameList:       groupByFieldNameList,
+		groupByFieldNamesForOutput: lib.NewOrderedMap(),
+
+		doRegexValueFieldNames:       doRegexValueFieldNames,
+		doRegexGroupByFieldNames:     doRegexGroupByFieldNames,
+		invertRegexValueFieldNames:   invertRegexValueFieldNames,
+		invertRegexGroupByFieldNames: invertRegexGroupByFieldNames,
+
 		doInterpolatedPercentiles:        doInterpolatedPercentiles,
 		doIterativeStats:                 doIterativeStats,
 		accumulatorFactory:               utils.NewStats1AccumulatorFactory(),
 		namedAccumulators:                lib.NewOrderedMap(),
-		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
+		groupingKeysToGroupByFieldValues: make(map[string]*lib.OrderedMap),
 	}
+
+	if doRegexGroupByFieldNames {
+		tr.groupByFieldRegexes = lib.CompileMillerRegexesOrDie(groupByFieldNameList)
+	} else {
+		for _, groupByFieldName := range groupByFieldNameList {
+			tr.groupByFieldNamesForOutput.Put(groupByFieldName, true)
+		}
+	}
+
+	if doRegexValueFieldNames {
+		tr.valueFieldRegexes = lib.CompileMillerRegexesOrDie(valueFieldNameList)
+	}
+
 	return tr, nil
 }
 
-// ----------------------------------------------------------------
-
+// Transform is the function executed for every input record, as well as for
+// the end-of-stream marker.
 func (tr *TransformerStats1) Transform(
 	inrecAndContext *types.RecordAndContext,
 	inputDownstreamDoneChannel <-chan bool,
@@ -279,21 +366,22 @@ func (tr *TransformerStats1) Transform(
 	}
 }
 
-// ----------------------------------------------------------------
 func (tr *TransformerStats1) handleInputRecord(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	inrec := inrecAndContext.Record
 
-	// TODO: make a function-pointer variant for non-iterative which doesn't get the
-	// unnecessary groupByFieldValues.
-
 	// E.g. if grouping by "a" and "b", and the current record has a=circle, b=blue,
 	// then groupingKey is the string "circle,blue".
-	groupingKey, groupByFieldValues, ok := inrec.GetSelectedValuesAndJoined(
-		tr.groupByFieldNameList,
-	)
+	var groupingKey string
+	var groupByFieldValues *lib.OrderedMap // OrderedMap[string]*types.Mlrval
+	var ok bool
+	if tr.doRegexGroupByFieldNames {
+		groupingKey, groupByFieldValues, ok = tr.getGroupByFieldNamesWithRegexes(inrec)
+	} else {
+		groupingKey, groupByFieldValues, ok = tr.getGroupByFieldNamesWithoutRegexes(inrec)
+	}
 	if !ok {
 		return
 	}
@@ -303,19 +391,101 @@ func (tr *TransformerStats1) handleInputRecord(
 		level2 = lib.NewOrderedMap()
 		tr.namedAccumulators.Put(groupingKey, level2)
 		// E.g. if grouping by "color" and "shape", and the current record has
-		// color=blue, shape=circle, then groupByFieldValues is the array
-		// ["blue", "circle"].
+		// color=blue, shape=circle, then groupByFieldValues is the map
+		// {"color": "blue", "shape": "circle"}.
 		tr.groupingKeysToGroupByFieldValues[groupingKey] = groupByFieldValues
 	}
+
+	if tr.doRegexValueFieldNames {
+		tr.ingestWithValueFieldRegexes(inrec, groupingKey, level2.(*lib.OrderedMap))
+	} else {
+		tr.ingestWithoutValueFieldRegexes(inrec, groupingKey, level2.(*lib.OrderedMap))
+	}
+
+	if tr.doIterativeStats {
+		tr.emitIntoOutputRecord(
+			inrecAndContext.Record,
+			groupByFieldValues,
+			level2.(*lib.OrderedMap),
+			inrec,
+		)
+		outputChannel <- inrecAndContext
+	}
+}
+
+// E.g. if grouping by "a" and "b", and the current record has a=circle,
+// b=blue, then groupingKey is the string "circle,blue".  For grouping without
+// regexed group-by field names, the group-by field names/values are the same
+// on every record.
+func (tr *TransformerStats1) getGroupByFieldNamesWithoutRegexes(
+	inrec *types.Mlrmap,
+) (
+	groupingKey string,
+	groupByFieldValues *lib.OrderedMap, // OrderedMap[string]*types.Mlrval,
+	ok bool,
+) {
+	var groupByFieldValuesArray []*types.Mlrval
+	groupingKey, groupByFieldValuesArray, ok = inrec.GetSelectedValuesAndJoined(tr.groupByFieldNameList)
+	if !ok {
+		return groupingKey, nil, false
+	}
+	groupByFieldValues = lib.NewOrderedMap()
+	for i, groupByFieldValue := range groupByFieldValuesArray {
+		groupByFieldValues.Put(tr.groupByFieldNameList[i], groupByFieldValue)
+	}
+	return groupingKey, groupByFieldValues, ok
+}
+
+// E.g. if grouping by "a" and "b", and the current record has a=circle,
+// b=blue, then groupingKey is the string "circle,blue".  For grouping with
+// regexed group-by field names, the group-by field names/values may or may not
+// be the same on every record.
+func (tr *TransformerStats1) getGroupByFieldNamesWithRegexes(
+	inrec *types.Mlrmap,
+) (
+	groupingKey string,
+	groupByFieldValues *lib.OrderedMap, // OrderedMap[string]*types.Mlrval,
+	ok bool,
+) {
+
+	var buffer bytes.Buffer
+	groupByFieldValues = lib.NewOrderedMap()
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		groupByFieldName := pe.Key
+		if !tr.matchGroupByFieldName(groupByFieldName) {
+			continue
+		}
+
+		// Remember the union of all encountered group-by field names
+		// for output at the end of the record stream.
+		tr.groupByFieldNamesForOutput.Put(groupByFieldName, true)
+
+		groupByFieldValue := pe.Value.Copy()
+		if !groupByFieldValues.IsEmpty() {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString(groupByFieldValue.String())
+		groupByFieldValues.Put(groupByFieldName, groupByFieldValue)
+	}
+	groupingKey = buffer.String()
+
+	return groupingKey, groupByFieldValues, true
+}
+
+func (tr *TransformerStats1) ingestWithoutValueFieldRegexes(
+	inrec *types.Mlrmap,
+	groupingKey string,
+	level2 *lib.OrderedMap,
+) {
 	for _, valueFieldName := range tr.valueFieldNameList {
 		valueFieldValue := inrec.Get(valueFieldName)
 		if valueFieldValue == nil {
 			continue
 		}
-		level3 := level2.(*lib.OrderedMap).Get(valueFieldName)
+		level3 := level2.Get(valueFieldName)
 		if level3 == nil {
 			level3 = lib.NewOrderedMap()
-			level2.(*lib.OrderedMap).Put(valueFieldName, level3)
+			level2.Put(valueFieldName, level3)
 		}
 		for _, accumulatorName := range tr.accumulatorNameList {
 			namedAccumulator := level3.(*lib.OrderedMap).Get(accumulatorName)
@@ -337,19 +507,77 @@ func (tr *TransformerStats1) handleInputRecord(
 			namedAccumulator.(*utils.Stats1NamedAccumulator).Ingest(valueFieldValue)
 		}
 	}
+}
 
-	if tr.doIterativeStats {
-		tr.emitIntoOutputRecord(
-			inrecAndContext.Record,
-			groupByFieldValues,
-			level2.(*lib.OrderedMap),
-			inrec,
-		)
-		outputChannel <- inrecAndContext
+func (tr *TransformerStats1) ingestWithValueFieldRegexes(
+	inrec *types.Mlrmap,
+	groupingKey string,
+	level2 *lib.OrderedMap,
+) {
+	for pe := inrec.Head; pe != nil; pe = pe.Next {
+		valueFieldName := pe.Key
+
+		if !tr.matchValueFieldName(valueFieldName) {
+			continue
+		}
+
+		valueFieldValue := inrec.Get(valueFieldName)
+		if valueFieldValue == nil {
+			continue
+		}
+		level3 := level2.Get(valueFieldName)
+		if level3 == nil {
+			level3 = lib.NewOrderedMap()
+			level2.Put(valueFieldName, level3)
+		}
+		for _, accumulatorName := range tr.accumulatorNameList {
+			namedAccumulator := level3.(*lib.OrderedMap).Get(accumulatorName)
+			if namedAccumulator == nil {
+				namedAccumulator = tr.accumulatorFactory.MakeNamedAccumulator(
+					accumulatorName,
+					groupingKey,
+					valueFieldName,
+					tr.doInterpolatedPercentiles,
+				)
+				level3.(*lib.OrderedMap).Put(accumulatorName, namedAccumulator)
+			}
+			if valueFieldValue.IsVoid() {
+				// The accumulator has been initialized with default values;
+				// continue here. (If we were to continue outside of this loop
+				// we would be failing to construct the accumulator.)
+				continue
+			}
+			namedAccumulator.(*utils.Stats1NamedAccumulator).Ingest(valueFieldValue)
+		}
 	}
 }
 
-// ----------------------------------------------------------------
+func (tr *TransformerStats1) matchGroupByFieldName(
+	groupByFieldName string,
+) bool {
+	matches := false
+	for _, groupByFieldRegex := range tr.groupByFieldRegexes {
+		if groupByFieldRegex.MatchString(groupByFieldName) {
+			matches = true
+			break
+		}
+	}
+	return matches != tr.invertRegexGroupByFieldNames
+}
+
+func (tr *TransformerStats1) matchValueFieldName(
+	valueFieldName string,
+) bool {
+	matches := false
+	for _, valueFieldRegex := range tr.valueFieldRegexes {
+		if valueFieldRegex.MatchString(valueFieldName) {
+			matches = true
+			break
+		}
+	}
+	return matches != tr.invertRegexValueFieldNames
+}
+
 func (tr *TransformerStats1) handleEndOfRecordStream(
 	inrecAndContext *types.RecordAndContext,
 	outputChannel chan<- *types.RecordAndContext,
@@ -379,16 +607,21 @@ func (tr *TransformerStats1) handleEndOfRecordStream(
 	outputChannel <- inrecAndContext // end-of-stream marker
 }
 
-// ----------------------------------------------------------------
-// TODO: comment
 func (tr *TransformerStats1) emitIntoOutputRecord(
 	inrec *types.Mlrmap,
-	groupByFieldValues []*types.Mlrval,
+	groupByFieldValues *lib.OrderedMap, // OrderedMap[string]*types.Mlrval,
 	level2accumulators *lib.OrderedMap,
 	outrec *types.Mlrmap,
 ) {
-	for i, groupByFieldName := range tr.groupByFieldNameList {
-		outrec.PutCopy(groupByFieldName, groupByFieldValues[i])
+
+	// TODO: yuck
+	// pairing up a ragged map with an array, risks all manner of ish on heterogeneous data
+	for pa := tr.groupByFieldNamesForOutput.Head; pa != nil; pa = pa.Next {
+		groupByFieldName := pa.Key
+		iValue := groupByFieldValues.Get(groupByFieldName)
+		if iValue != nil {
+			outrec.PutCopy(groupByFieldName, iValue.(*types.Mlrval))
+		}
 	}
 
 	for pb := level2accumulators.Head; pb != nil; pb = pb.Next {

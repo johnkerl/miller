@@ -96,6 +96,17 @@ func CompileMillerRegexOrDie(regexString string) *regexp.Regexp {
 	return regex
 }
 
+// CompileMillerRegexesOrDie is a convenenience looper over CompileMillerRegexOrDie.
+func CompileMillerRegexesOrDie(regexStrings []string) []*regexp.Regexp {
+	regexes := make([]*regexp.Regexp, len(regexStrings))
+
+	for i, regexString := range regexStrings {
+		regexes[i] = CompileMillerRegexOrDie(regexString)
+	}
+
+	return regexes
+}
+
 // In Go as in all languages I'm aware of with a string-split, "a,b,c" splits
 // on "," to ["a", "b", "c" and "a" splits to ["a"], both of which are fine --
 // but "" splits to [""] when I wish it were []. This function does the latter.

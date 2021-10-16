@@ -132,9 +132,6 @@ mlr regtest regtest/cases-pending-go-port/verb-head-early-out
 label order
 mlr regtest regtest/cases-pending-go-port/verb-label/0010
 
-stats1 --fr
-mlr regtest regtest/cases-pending-go-port/verb-stats1-regexed-field-names/0002
-
 ----------------------------------------------------------------
 
 BLOCKERS
@@ -220,10 +217,6 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
 * file-formats:
   o NIDX link to headerless CSV
   o autodetect: tbd
-
-* stats1 --fr
-  o cookbook2.rst.in
-  - statistics-examples.md.in
 
 * list at end of todo.txt
 
