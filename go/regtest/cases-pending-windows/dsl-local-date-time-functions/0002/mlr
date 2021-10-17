@@ -1,0 +1,4 @@
+$b  = localtime2sec($a);
+$c  = sec2localtime($b);
+$d  = sec2localdate($b);
+$tz = ENV["TZ"];
