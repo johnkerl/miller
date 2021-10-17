@@ -196,15 +196,16 @@ FUNCTION LIST
        hms2sec hostname int invqnorm is_absent is_array is_bool is_boolean is_empty
        is_empty_map is_error is_float is_int is_map is_nonempty_map is_not_array
        is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
-       joink joinkv joinv json_parse json_stringify leafcount length log log10 log1p
-       logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul
-       msub os pow qnorm reduce regextract regextract_or_else round roundm rstrip
-       sec2dhms sec2gmt sec2gmtdate sec2hms select sgn sha1 sha256 sha512 sin sinh
-       sort splita splitax splitkv splitkvx splitnv splitnvx sqrt ssub strftime
-       string strip strlen strptime sub substr substr0 substr1 system systime
-       systimeint tan tanh tolower toupper truncate typeof unflatten uptime urand
-       urand32 urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ /
-       // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       joink joinkv joinv json_parse json_stringify leafcount length localtime2sec
+       log log10 log1p logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5
+       mexp min mmul msub os pow qnorm reduce regextract regextract_or_else round
+       roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
+       select sgn sha1 sha256 sha512 sin sinh sort splita splitax splitkv splitkvx
+       splitnv splitnvx sqrt ssub strftime strftime_local string strip strlen
+       strptime strptime_local sub substr substr0 substr1 system systime systimeint
+       tan tanh tolower toupper truncate typeof unflatten uptime urand urand32
+       urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt;
+       &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
 
 COMMENTS-IN-DATA FLAGS
        Miller lets you put comments in your data, such as
@@ -2166,6 +2167,9 @@ FUNCTIONS FOR FILTER/PUT
    length
         (class=collections #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
 
+   localtime2sec
+        (class=time #args=1) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable.
+
    log
         (class=math #args=1) Natural (base-e) logarithm.
 
@@ -2176,7 +2180,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) log(1-x).
 
    logifit
-        (class=math #args=3)  Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).
+        (class=math #args=3) Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).
 
    lstrip
         (class=string #args=1) Strip leading whitespace from string.
@@ -2255,13 +2259,19 @@ FUNCTIONS FOR FILTER/PUT
    sec2hms
         (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
 
+   sec2localdate
+        (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is. Consults $TZ environment variable.
+
+   sec2localtime
+        (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+
    select
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
        Array example: select([1,2,3,4,5], func(e) {return e &gt;= 3}) returns [3, 4, 5].
        Map example: select({"a":1, "b":3, "c":5}, func(k,v) {return v &gt;= 3}) returns {"b":3, "c": 5}.
 
    sgn
-        (class=math #args=1)  +1, 0, -1 for positive, zero, negative input respectively.
+        (class=math #args=1) +1, 0, -1 for positive, zero, negative input respectively.
 
    sha1
         (class=hashing #args=1) SHA1 hash.
@@ -2314,7 +2324,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=string #args=3) Like sub but does no regexing. No characters are special.
 
    strftime
-        (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
+        (class=time #args=2) Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
+
+   strftime_local
+        (class=time #args=2) Like strftime but consults the $TZ environment variable to get local time zone.
 
    string
         (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
@@ -2327,6 +2340,9 @@ FUNCTIONS FOR FILTER/PUT
 
    strptime
         (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000, and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.  See also strptime_local.
+
+   strptime_local
+        (class=time #args=2) Like stpftime but consults the $TZ environment variable to get local time zone.
 
    sub
         (class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace once).
@@ -2870,5 +2886,5 @@ SEE ALSO
 
 
 
-                                  2021-10-16                         MILLER(1)
+                                  2021-10-17                         MILLER(1)
 </pre>

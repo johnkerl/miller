@@ -7,6 +7,13 @@ import (
 )
 
 func Sec2GMT(epochSeconds float64, numDecimalPlaces int) string {
+	return sec2GMTOrLocalTime(epochSeconds, numDecimalPlaces, false)
+}
+func Sec2LocalTime(epochSeconds float64, numDecimalPlaces int) string {
+	return sec2GMTOrLocalTime(epochSeconds, numDecimalPlaces, true)
+}
+
+func sec2GMTOrLocalTime(epochSeconds float64, numDecimalPlaces int, doLocal bool) string {
 	if numDecimalPlaces > 9 {
 		numDecimalPlaces = 9
 	}
@@ -14,7 +21,12 @@ func Sec2GMT(epochSeconds float64, numDecimalPlaces int) string {
 	intPart := int64(epochSeconds)
 	fractionalPart := epochSeconds - float64(intPart)
 	decimalPart := int64(fractionalPart * math.Pow(10.0, float64(numDecimalPlaces)))
-	t := time.Unix(intPart, 0).UTC()
+	t := time.Unix(intPart, 0)
+	if doLocal {
+		t = t.Local()
+	} else {
+		t = t.UTC()
+	}
 
 	YYYY := t.Year()
 	MM := int(t.Month())
@@ -34,9 +46,21 @@ func Sec2GMT(epochSeconds float64, numDecimalPlaces int) string {
 	}
 }
 
-func EpochSecondsToTime(epochSeconds float64) time.Time {
+func EpochSecondsToGMT(epochSeconds float64) time.Time {
+	return epochSecondsToGMTOrLocalTime(epochSeconds, false)
+}
+
+func EpochSecondsToLocalTime(epochSeconds float64) time.Time {
+	return epochSecondsToGMTOrLocalTime(epochSeconds, true)
+}
+
+func epochSecondsToGMTOrLocalTime(epochSeconds float64, doLocal bool) time.Time {
 	intPart := int64(epochSeconds)
 	fractionalPart := epochSeconds - float64(intPart)
 	decimalPart := int64(fractionalPart * 1e9)
-	return time.Unix(intPart, decimalPart).UTC()
+	if doLocal {
+		return time.Unix(intPart, decimalPart).Local()
+	} else {
+		return time.Unix(intPart, decimalPart).UTC()
+	}
 }
