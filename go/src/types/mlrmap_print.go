@@ -16,7 +16,7 @@ func (mlrmap *Mlrmap) Fprint(file *os.File) {
 }
 
 func (mlrmap *Mlrmap) ToDKVPString() string {
-	var buffer bytes.Buffer // 5x faster than fmt.Print() separately
+	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for ~5x speed increase
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		buffer.WriteString(pe.Key)
 		buffer.WriteString("=")

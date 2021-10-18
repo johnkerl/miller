@@ -86,7 +86,8 @@ type TWriterOptions struct {
 
 	HeaderlessCSVOutput      bool
 	BarredPprintOutput       bool
-	RightAlignedPprintOutput bool
+	RightAlignedPPRINTOutput bool
+	RightAlignedXTABOutput   bool
 
 	//	right_justify_xtab_value bool;
 	//	right_align_pprint bool;

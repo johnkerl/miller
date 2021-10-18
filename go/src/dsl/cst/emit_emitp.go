@@ -42,6 +42,7 @@ import (
 	"errors"
 	"fmt"
 
+	"mlr/src/cli"
 	"mlr/src/dsl"
 	"mlr/src/lib"
 	"mlr/src/output"
@@ -137,7 +138,7 @@ func (root *RootNode) buildEmitXStatementNode(
 	retval := &EmitXStatementNode{
 		isEmitP:     isEmitP,
 		isLashed:    false, // will be determined below
-		autoFlatten: root.recordWriterOptions.AutoFlatten,
+		autoFlatten: cli.DecideFinalFlatten(root.recordWriterOptions),
 		flatsep:     root.recordWriterOptions.FLATSEP,
 	}
 

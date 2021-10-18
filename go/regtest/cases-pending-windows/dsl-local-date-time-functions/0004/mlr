@@ -1,0 +1,3 @@
+$b  = strptime_local($a, "%Y-%m-%d %H:%M:%S");
+$c  = strftime_local($b, "%Y-%m-%d %H:%M:%S");
+$tz = ENV["TZ"];
