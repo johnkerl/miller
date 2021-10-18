@@ -27,16 +27,18 @@ TOP OF LIST:
   o $cpw
     - 3 regex-at-CLI cases -- repro @ akns
   o $cpg
+    ! csv bom
+
+    ! fmtnum
+
     - mapexcept ...
     - xtab crlf & non-std irs generally ...
     - pprint ofs -- ?
     - xtab ors -- ?
     - merge-field voids
-    ! csv bom
     - json comments
     - crlf ...
-    ! fmtnum
-    ! localtime
+
   o TODO in *.go & *.mi
   o release notes per se
   o ./configure whatever equivalent
@@ -44,6 +46,18 @@ TOP OF LIST:
 d pre-release:
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
+
+----------------------------------------------------------------
+LOCALTIME
+
+* more olh about no-T-no-Z format for localtime
+
+* windows debug
+
+* https://github.com/johnkerl/miller/issues/331
+  https://github.com/johnkerl/miller/issues/332
+  https://github.com/johnkerl/miller/issues/359
+  https://github.com/johnkerl/miller/issues/477
 
 ----------------------------------------------------------------
 398
@@ -287,7 +301,7 @@ d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00n
 * also: write up how git status after test should show any missed extra-outs
 
 * help-refactor:
-  o audit for DEFAULT_FOOs @ 
+  o audit for DEFAULT_FOOs @
   o audit for '-z {zzz}'
   o audit for consistent usage style
 

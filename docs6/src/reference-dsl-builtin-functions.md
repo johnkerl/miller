@@ -76,7 +76,7 @@ is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
 * [**Math functions**](#math-functions):  [abs](#abs),  [acos](#acos),  [acosh](#acosh),  [asin](#asin),  [asinh](#asinh),  [atan](#atan),  [atan2](#atan2),  [atanh](#atanh),  [cbrt](#cbrt),  [ceil](#ceil),  [cos](#cos),  [cosh](#cosh),  [erf](#erf),  [erfc](#erfc),  [exp](#exp),  [expm1](#expm1),  [floor](#floor),  [invqnorm](#invqnorm),  [log](#log),  [log10](#log10),  [log1p](#log1p),  [logifit](#logifit),  [max](#max),  [min](#min),  [qnorm](#qnorm),  [round](#round),  [roundm](#roundm),  [sgn](#sgn),  [sin](#sin),  [sinh](#sinh),  [sqrt](#sqrt),  [tan](#tan),  [tanh](#tanh),  [urand](#urand),  [urand32](#urand32),  [urandint](#urandint),  [urandrange](#urandrange).
 * [**String functions**](#string-functions):  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [gsub](#gsub),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [\.](#dot).
 * [**System functions**](#system-functions):  [hostname](#hostname),  [os](#os),  [system](#system),  [version](#version).
-* [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [strftime](#strftime),  [strptime](#strptime),  [systime](#systime),  [systimeint](#systimeint),  [uptime](#uptime).
+* [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [localtime2sec](#localtime2sec),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [sec2localdate](#sec2localdate),  [sec2localtime](#sec2localtime),  [strftime](#strftime),  [strftime_local](#strftime_local),  [strptime](#strptime),  [strptime_local](#strptime_local),  [systime](#systime),  [systimeint](#systimeint),  [uptime](#uptime).
 * [**Typing functions**](#typing-functions):  [asserting_absent](#asserting_absent),  [asserting_array](#asserting_array),  [asserting_bool](#asserting_bool),  [asserting_boolean](#asserting_boolean),  [asserting_empty](#asserting_empty),  [asserting_empty_map](#asserting_empty_map),  [asserting_error](#asserting_error),  [asserting_float](#asserting_float),  [asserting_int](#asserting_int),  [asserting_map](#asserting_map),  [asserting_nonempty_map](#asserting_nonempty_map),  [asserting_not_array](#asserting_not_array),  [asserting_not_empty](#asserting_not_empty),  [asserting_not_map](#asserting_not_map),  [asserting_not_null](#asserting_not_null),  [asserting_null](#asserting_null),  [asserting_numeric](#asserting_numeric),  [asserting_present](#asserting_present),  [asserting_string](#asserting_string),  [is_absent](#is_absent),  [is_array](#is_array),  [is_bool](#is_bool),  [is_boolean](#is_boolean),  [is_empty](#is_empty),  [is_empty_map](#is_empty_map),  [is_error](#is_error),  [is_float](#is_float),  [is_int](#is_int),  [is_map](#is_map),  [is_nonempty_map](#is_nonempty_map),  [is_not_array](#is_not_array),  [is_not_empty](#is_not_empty),  [is_not_map](#is_not_map),  [is_not_null](#is_not_null),  [is_null](#is_null),  [is_numeric](#is_numeric),  [is_present](#is_present),  [is_string](#is_string),  [typeof](#typeof).
 
 ## Arithmetic functions
@@ -776,7 +776,7 @@ log1p  (class=math #args=1) log(1-x).
 
 ### logifit
 <pre class="pre-non-highlight-non-pair">
-logifit  (class=math #args=3)  Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).
+logifit  (class=math #args=3) Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).
 </pre>
 
 
@@ -812,7 +812,7 @@ roundm  (class=math #args=2) Round to nearest multiple of m: roundm($x,$m) is th
 
 ### sgn
 <pre class="pre-non-highlight-non-pair">
-sgn  (class=math #args=1)  +1, 0, -1 for positive, zero, negative input respectively.
+sgn  (class=math #args=1) +1, 0, -1 for positive, zero, negative input respectively.
 </pre>
 
 
@@ -1058,6 +1058,12 @@ hms2sec  (class=time #args=1) Recovers integer seconds as in hms2sec("01:23:20")
 </pre>
 
 
+### localtime2sec
+<pre class="pre-non-highlight-non-pair">
+localtime2sec  (class=time #args=1) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable.
+</pre>
+
+
 ### sec2dhms
 <pre class="pre-non-highlight-non-pair">
 sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
@@ -1082,15 +1088,39 @@ sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:
 </pre>
 
 
+### sec2localdate
+<pre class="pre-non-highlight-non-pair">
+sec2localdate  (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is. Consults $TZ environment variable.
+</pre>
+
+
+### sec2localtime
+<pre class="pre-non-highlight-non-pair">
+sec2localtime  (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+</pre>
+
+
 ### strftime
 <pre class="pre-non-highlight-non-pair">
-strftime  (class=time #args=2)  Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
+strftime  (class=time #args=2) Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
+</pre>
+
+
+### strftime_local
+<pre class="pre-non-highlight-non-pair">
+strftime_local  (class=time #args=2) Like strftime but consults the $TZ environment variable to get local time zone.
 </pre>
 
 
 ### strptime
 <pre class="pre-non-highlight-non-pair">
 strptime  (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000, and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.  See also strptime_local.
+</pre>
+
+
+### strptime_local
+<pre class="pre-non-highlight-non-pair">
+strptime_local  (class=time #args=2) Like stpftime but consults the $TZ environment variable to get local time zone.
 </pre>
 
 

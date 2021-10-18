@@ -676,7 +676,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:        "logifit",
 			class:       FUNC_CLASS_MATH,
-			help:        ` Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).`,
+			help:        `Given m and b from logistic regression, compute fit: $yhat=logifit($x,$m,$b).`,
 			ternaryFunc: types.MlrvalLogifit,
 		},
 
@@ -711,7 +711,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:      "sgn",
 			class:     FUNC_CLASS_MATH,
-			help:      ` +1, 0, -1 for positive, zero, negative input respectively.`,
+			help:      `+1, 0, -1 for positive, zero, negative input respectively.`,
 			unaryFunc: types.MlrvalSgn,
 		},
 
@@ -799,6 +799,13 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
+			name:      "localtime2sec",
+			class:     FUNC_CLASS_TIME,
+			help:      `Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable.`,
+			unaryFunc: types.MlrvalLocalTime2Sec,
+		},
+
+		{
 			name:               "sec2gmt",
 			class:              FUNC_CLASS_TIME,
 			help:               `Formats seconds since epoch (integer part) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part`,
@@ -808,10 +815,26 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
+			name:               "sec2localtime",
+			class:              FUNC_CLASS_TIME,
+			help:               `Formats seconds since epoch (integer part) as local timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part`,
+			unaryFunc:          types.MlrvalSec2LocalTimeUnary,
+			binaryFunc:         types.MlrvalSec2LocalTimeBinary,
+			hasMultipleArities: true,
+		},
+
+		{
 			name:      "sec2gmtdate",
 			class:     FUNC_CLASS_TIME,
 			help:      `Formats seconds since epoch (integer part) as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is.`,
 			unaryFunc: types.MlrvalSec2GMTDate,
+		},
+
+		{
+			name:      "sec2localdate",
+			class:     FUNC_CLASS_TIME,
+			help:      `Formats seconds since epoch (integer part) as local timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is. Consults $TZ environment variable.`,
+			unaryFunc: types.MlrvalSec2LocalDate,
 		},
 
 		{
@@ -838,7 +861,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:       "strftime",
 			class:      FUNC_CLASS_TIME,
-			help:       ` Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.`,
+			help:       `Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.`,
 			binaryFunc: types.MlrvalStrftime,
 		},
 
@@ -849,11 +872,19 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			binaryFunc: types.MlrvalStrptime,
 		},
 
-		// TODO:
+		{
+			name:       "strftime_local",
+			class:      FUNC_CLASS_TIME,
+			help:       `Like strftime but consults the $TZ environment variable to get local time zone.`,
+			binaryFunc: types.MlrvalStrftimeLocal,
+		},
 
-		// strftime_local (class=time #args=2): Like strftime but consults the $TZ environment variable to get local time zone.
-
-		// strptime_local (class=time #args=2): Like strptime, but consults $TZ environment variable to find and use local timezone.
+		{
+			name:       "strptime_local",
+			class:      FUNC_CLASS_TIME,
+			help:       `Like stpftime but consults the $TZ environment variable to get local time zone.`,
+			binaryFunc: types.MlrvalStrptimeLocal,
+		},
 
 		{
 			name:      "dhms2fsec",
@@ -910,21 +941,6 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			help:      `Formats integer seconds as in sec2hms(5000) = "01:23:20"`,
 			unaryFunc: types.MlrvalSec2HMS,
 		},
-
-		// localtime2sec (class=time #args=1): Parses local timestamp as integer seconds since
-		// the epoch. Consults $TZ environment variable.
-
-		// sec2localtime (class=time #args=1): Formats seconds since epoch (integer part)
-		// as local timestamp, e.g. sec2localtime(1440768801.7) = "2015-08-28T13:33:21Z".
-		// Consults $TZ environment variable. Leaves non-numbers as-is.
-		//
-		// sec2localtime (class=time #args=2): Formats seconds since epoch as local timestamp with n
-		// decimal places for seconds, e.g. sec2localtime(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
-		// Consults $TZ environment variable. Leaves non-numbers as-is.
-		//
-		// sec2localdate (class=time #args=1): Formats seconds since epoch (integer part)
-		// as local timestamp with year-month-date, e.g. sec2localdate(1440768801.7) = "2015-08-28".
-		// Consults $TZ environment variable. Leaves non-numbers as-is.
 
 		// ----------------------------------------------------------------
 		// FUNC_CLASS_TYPING

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/lestrrat-go/strftime"
-	"github.com/pbnjay/strptime"
+	"mlr/github/pbnjay/strptime"
 
 	"mlr/src/lib"
 )
@@ -16,6 +16,7 @@ import (
 const ISO8601_TIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 var ptr_ISO8601_TIME_FORMAT = MlrvalPointerFromString("%Y-%m-%dT%H:%M:%SZ")
+var ptr_ISO8601_LOCAL_TIME_FORMAT = MlrvalPointerFromString("%Y-%m-%d %H:%M:%S") // xxx temp
 
 // ================================================================
 func MlrvalSystime() *Mlrval {
@@ -39,6 +40,7 @@ func MlrvalUptime() *Mlrval {
 }
 
 // ================================================================
+
 func MlrvalSec2GMTUnary(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_FLOAT {
 		return MlrvalPointerFromString(lib.Sec2GMT(input1.floatval, 0))
@@ -49,7 +51,16 @@ func MlrvalSec2GMTUnary(input1 *Mlrval) *Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
+func MlrvalSec2LocalTimeUnary(input1 *Mlrval) *Mlrval {
+	if input1.mvtype == MT_FLOAT {
+		return MlrvalPointerFromString(lib.Sec2LocalTime(input1.floatval, 0))
+	} else if input1.mvtype == MT_INT {
+		return MlrvalPointerFromString(lib.Sec2LocalTime(float64(input1.intval), 0))
+	} else {
+		return input1
+	}
+}
+
 func MlrvalSec2GMTBinary(input1, input2 *Mlrval) *Mlrval {
 	if input2.mvtype != MT_INT {
 		return MLRVAL_ERROR
@@ -62,10 +73,29 @@ func MlrvalSec2GMTBinary(input1, input2 *Mlrval) *Mlrval {
 	}
 }
 
-// ----------------------------------------------------------------
+func MlrvalSec2LocalTimeBinary(input1, input2 *Mlrval) *Mlrval {
+	if input2.mvtype != MT_INT {
+		return MLRVAL_ERROR
+	} else if input1.mvtype == MT_FLOAT {
+		return MlrvalPointerFromString(lib.Sec2LocalTime(input1.floatval, int(input2.intval)))
+	} else if input1.mvtype == MT_INT {
+		return MlrvalPointerFromString(lib.Sec2LocalTime(float64(input1.intval), int(input2.intval)))
+	} else {
+		return input1
+	}
+}
+
 func MlrvalSec2GMTDate(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_INT || input1.mvtype == MT_FLOAT {
 		return MlrvalStrftime(input1, MlrvalPointerFromString("%Y-%m-%d"))
+	} else {
+		return input1
+	}
+}
+
+func MlrvalSec2LocalDate(input1 *Mlrval) *Mlrval {
+	if input1.mvtype == MT_INT || input1.mvtype == MT_FLOAT {
+		return MlrvalStrftimeLocal(input1, MlrvalPointerFromString("%Y-%m-%d"))
 	} else {
 		return input1
 	}
@@ -78,6 +108,14 @@ func MlrvalSec2GMTDate(input1 *Mlrval) *Mlrval {
 var extensionRegex = regexp.MustCompile("([1-9])S")
 
 func MlrvalStrftime(input1, input2 *Mlrval) *Mlrval {
+	return mlrvalStrftimeGMTOrLocal(input1, input2, false)
+}
+
+func MlrvalStrftimeLocal(input1, input2 *Mlrval) *Mlrval {
+	return mlrvalStrftimeGMTOrLocal(input1, input2, true)
+}
+
+func mlrvalStrftimeGMTOrLocal(input1, input2 *Mlrval, doLocal bool) *Mlrval {
 	if input1.mvtype == MT_VOID {
 		return input1
 	}
@@ -90,7 +128,12 @@ func MlrvalStrftime(input1, input2 *Mlrval) *Mlrval {
 	}
 
 	// Convert argument1 from float seconds since the epoch to a Go time.
-	inputTime := lib.EpochSecondsToTime(epochSeconds)
+	var inputTime time.Time
+	if doLocal {
+		inputTime = lib.EpochSecondsToLocalTime(epochSeconds)
+	} else {
+		inputTime = lib.EpochSecondsToGMT(epochSeconds)
+	}
 
 	// Convert argument 2 to a strftime format string.
 	//
@@ -192,10 +235,33 @@ func MlrvalStrptime(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromFloat64(float64(t.UnixNano()) / 1.0e9)
 }
 
+func MlrvalStrptimeLocal(input1, input2 *Mlrval) *Mlrval {
+	if input1.mvtype != MT_STRING {
+		return MLRVAL_ERROR
+	}
+	if input2.mvtype != MT_STRING {
+		return MLRVAL_ERROR
+	}
+	timeString := input1.printrep
+	formatString := input2.printrep
+
+	t, err := strptime.ParseTZ(timeString, formatString)
+	if err != nil {
+		fmt.Printf("err %#v\n", err)
+		return MLRVAL_ERROR
+	}
+
+	return MlrvalPointerFromFloat64(float64(t.UnixNano()) / 1.0e9)
+}
+
 // ================================================================
 // Argument 1 is formatted date string like "2021-03-04T02:59:50Z".
 func MlrvalGMT2Sec(input1 *Mlrval) *Mlrval {
 	return MlrvalStrptime(input1, ptr_ISO8601_TIME_FORMAT)
+}
+
+func MlrvalLocalTime2Sec(input1 *Mlrval) *Mlrval {
+	return MlrvalStrptimeLocal(input1, ptr_ISO8601_LOCAL_TIME_FORMAT)
 }
 
 // ================================================================
