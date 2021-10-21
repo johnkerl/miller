@@ -6,6 +6,7 @@ TOP OF LIST:
 
 * tzargs
 * help-string line-break & then lf2sp at runtime w/ caveats
+  - more help-examples -> split out
 
 * CSV BOM
 * fmtnum

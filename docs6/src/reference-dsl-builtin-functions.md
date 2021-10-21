@@ -367,8 +367,7 @@ append  (class=collections #args=2) Appends second argument to end of first argu
 
 ### arrayify
 <pre class="pre-non-highlight-non-pair">
-arrayify  (class=collections #args=1) Walks through a nested map/array, converting any map with consecutive keys
-"1", "2", ... into an array. Useful to wrap the output of unflatten.
+arrayify  (class=collections #args=1) Walks through a nested map/array, converting any map with consecutive keys "1", "2", ... into an array. Useful to wrap the output of unflatten.
 </pre>
 
 
@@ -402,7 +401,7 @@ get_values  (class=collections #args=1) Returns array of keys of map or array --
 
 ### haskey
 <pre class="pre-non-highlight-non-pair">
-haskey  (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.  Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
+haskey  (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds. Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
 </pre>
 
 
@@ -414,7 +413,7 @@ json_parse  (class=collections #args=1) Converts value from JSON-formatted strin
 
 ### json_stringify
 <pre class="pre-non-highlight-non-pair">
-json_stringify  (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line.  With optional second boolean argument set to true, produces multiline output.
+json_stringify  (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line. With optional second boolean argument set to true, produces multiline output.
 </pre>
 
 
@@ -432,31 +431,31 @@ length  (class=collections #args=1) Counts number of top-level entries in array/
 
 ### mapdiff
 <pre class="pre-non-highlight-non-pair">
-mapdiff  (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.  With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
+mapdiff  (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
 </pre>
 
 
 ### mapexcept
 <pre class="pre-non-highlight-non-pair">
-mapexcept  (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset.  Remaining arguments can be strings or arrays of string.  E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}' and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
+mapexcept  (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset. Remaining arguments can be strings or arrays of string. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}' and 'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
 </pre>
 
 
 ### mapselect
 <pre class="pre-non-highlight-non-pair">
-mapselect  (class=collections #args=variadic) Returns a map with only keys from remaining arguments set.  Remaining arguments can be strings or arrays of string.  E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}' and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
+mapselect  (class=collections #args=variadic) Returns a map with only keys from remaining arguments set. Remaining arguments can be strings or arrays of string. E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}' and 'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
 </pre>
 
 
 ### mapsum
 <pre class="pre-non-highlight-non-pair">
-mapsum  (class=collections #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g.  'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
+mapsum  (class=collections #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 </pre>
 
 
 ### unflatten
 <pre class="pre-non-highlight-non-pair">
-unflatten  (class=collections #args=2) Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
+unflatten  (class=collections #args=2) Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV. See also arrayify.
 Example:
 unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
 </pre>
@@ -514,7 +513,10 @@ joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 
 ### joinv
 <pre class="pre-non-highlight-non-pair">
-joinv  (class=conversion #args=2) Makes string from map/array values.  joinv([3,4,5], ",") = "3,4,5" joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
+joinv  (class=conversion #args=2) Makes string from map/array values.
+Examples:
+joinv([3,4,5], ",") = "3,4,5"
+joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 </pre>
 
 
@@ -602,7 +604,7 @@ sha512  (class=hashing #args=1) SHA512 hash.
 
 ### any
 <pre class="pre-non-highlight-non-pair">
-any  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+any  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
 Examples:
 Array example: any([10,20,30], func(e) {return $index == e})
 Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
@@ -611,7 +613,7 @@ Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 
 ### apply
 <pre class="pre-non-highlight-non-pair">
-apply  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
+apply  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map. For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
 Examples:
 Array example: apply([1,2,3,4,5], func(e) {return e ** 3}) returns [1, 8, 27, 64, 125].
 Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
@@ -620,7 +622,7 @@ Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}
 
 ### every
 <pre class="pre-non-highlight-non-pair">
-every  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+every  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
 Examples:
 Array example: every(["a", "b", "c"], func(e) {return $[e] >= 0})
 Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
@@ -769,7 +771,7 @@ floor  (class=math #args=1) Floor: nearest integer at or below.
 
 ### invqnorm
 <pre class="pre-non-highlight-non-pair">
-invqnorm  (class=math #args=1) Inverse of normal cumulative distribution function.  Note that invqorm(urand()) is normally distributed.
+invqnorm  (class=math #args=1) Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed.
 </pre>
 
 
@@ -1120,7 +1122,7 @@ sec2gmt(1234567890.123456, 6) = "2009-02-13T23:31:30.123456Z"
 
 ### sec2gmtdate
 <pre class="pre-non-highlight-non-pair">
-sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date.  Leaves non-numbers as-is.
+sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date. Leaves non-numbers as-is.
 Example:
 sec2gmtdate(1440768801.7) = "2015-08-28".
 </pre>
@@ -1134,7 +1136,7 @@ sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:
 
 ### sec2localdate
 <pre class="pre-non-highlight-non-pair">
-sec2localdate  (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date.  Leaves non-numbers as-is. Consults $TZ environment variable.
+sec2localdate  (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date. Leaves non-numbers as-is. Consults $TZ environment variable.
 Example:
 sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"
 </pre>
@@ -1142,7 +1144,7 @@ sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"
 
 ### sec2localtime
 <pre class="pre-non-highlight-non-pair">
-sec2localtime  (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp.  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+sec2localtime  (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp. Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
 Examples:
 sec2localtime(1234567890)           = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
 sec2localtime(1234567890.123456)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"

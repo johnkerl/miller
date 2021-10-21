@@ -9,6 +9,7 @@ package cst
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -37,6 +38,10 @@ const (
 type BuiltinFunctionInfo struct {
 	name                   string
 	class                  TFunctionClass
+	// For source-code storage, these have newlines in them. For any presentation to the user, they must be
+	// formatted using the JoinHelp() method which joins newlines. This is crucial for rendering of
+	// help-strings for manual page, webdocs, etc wherein we must let the user's resizing of the terminal
+	// window or browser determine -- at their choosing -- where lines wrap.
 	help                   string
 	examples               []string
 	hasMultipleArities     bool
@@ -456,21 +461,25 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:        "substr0",
-			class:       FUNC_CLASS_STRING,
-			help:        `substr0(s,m,n) gives substring of s from 0-up position m to n inclusive. Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.`,
+			name:  "substr0",
+			class: FUNC_CLASS_STRING,
+			help: `substr0(s,m,n) gives substring of s from 0-up position m to n inclusive.
+Negative indices -len .. -1 alias to 0 .. len-1. See also substr and substr1.`,
 			ternaryFunc: types.MlrvalSubstr0Up,
 		},
 		{
-			name:        "substr1",
-			class:       FUNC_CLASS_STRING,
-			help:        `substr1(s,m,n) gives substring of s from 1-up position m to n inclusive. Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.`,
+			name:  "substr1",
+			class: FUNC_CLASS_STRING,
+			help: `substr1(s,m,n) gives substring of s from 1-up position m to n inclusive.
+Negative indices -len .. -1 alias to 1 .. len. See also substr and substr0.`,
 			ternaryFunc: types.MlrvalSubstr1Up,
 		},
 		{
-			name:        "substr",
-			class:       FUNC_CLASS_STRING,
-			help:        `substr is an alias for substr0. See also substr1. Miller is generally 1-up with all array and string indices, but, this is a backward-compatibility issue with Miller 5 and below. Arrays are new in Miller 6; the substr function is older.`,
+			name:  "substr",
+			class: FUNC_CLASS_STRING,
+			help: `substr is an alias for substr0. See also substr1. Miller is generally 1-up with all
+array and string indices, but, this is a backward-compatibility issue with Miller 5 and below.
+Arrays are new in Miller 6; the substr function is older.`,
 			ternaryFunc: types.MlrvalSubstr0Up,
 		},
 
@@ -646,9 +655,10 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:      "invqnorm",
-			class:     FUNC_CLASS_MATH,
-			help:      `Inverse of normal cumulative distribution function.  Note that invqorm(urand()) is normally distributed.`,
+			name:  "invqnorm",
+			class: FUNC_CLASS_MATH,
+			help: `Inverse of normal cumulative distribution function.  Note that invqorm(urand())
+is normally distributed.`,
 			unaryFunc: types.MlrvalInvqnorm,
 		},
 
@@ -814,7 +824,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "sec2gmt",
 			class: FUNC_CLASS_TIME,
-			help:  `Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.`,
+			help: `Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer
+argument n, includes n decimal places for the seconds part.`,
 			examples: []string{
 				`sec2gmt(1234567890)           = "2009-02-13T23:31:30Z"`,
 				`sec2gmt(1234567890.123456)    = "2009-02-13T23:31:30Z"`,
@@ -828,7 +839,9 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "sec2localtime",
 			class: FUNC_CLASS_TIME,
-			help:  `Formats seconds since epoch (integer part) as local timestamp.  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part`,
+			help: `Formats seconds since epoch (integer part) as local timestamp.  Consults $TZ
+environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for
+the seconds part`,
 			examples: []string{
 				`sec2localtime(1234567890)           = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"`,
 				`sec2localtime(1234567890.123456)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"`,
@@ -842,7 +855,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "sec2gmtdate",
 			class: FUNC_CLASS_TIME,
-			help:  `Formats seconds since epoch (integer part) as GMT timestamp with year-month-date.  Leaves non-numbers as-is.`,
+			help: `Formats seconds since epoch (integer part) as GMT timestamp with year-month-date.
+Leaves non-numbers as-is.`,
 			examples: []string{
 				`sec2gmtdate(1440768801.7) = "2015-08-28".`,
 			},
@@ -852,7 +866,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "sec2localdate",
 			class: FUNC_CLASS_TIME,
-			help:  `Formats seconds since epoch (integer part) as local timestamp with year-month-date.  Leaves non-numbers as-is. Consults $TZ environment variable.`,
+			help: `Formats seconds since epoch (integer part) as local timestamp with year-month-date.
+Leaves non-numbers as-is. Consults $TZ environment variable.`,
 			examples: []string{
 				`sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"`,
 			},
@@ -882,7 +897,10 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "strftime",
 			class: FUNC_CLASS_TIME,
-			help:  `Formats seconds since the epoch as timestamp. Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.`,
+			help: `Formats seconds since the epoch as timestamp. Format strings are as in the C library
+(please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which
+format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also
+strftime_local.`,
 			examples: []string{
 				`strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"`,
 				`strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"`,
@@ -1300,9 +1318,10 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:       "fmtnum",
-			class:      FUNC_CLASS_CONVERSION,
-			help:       `Convert int/float/bool to string using printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.`,
+			name:  "fmtnum",
+			class: FUNC_CLASS_CONVERSION,
+			help: `Convert int/float/bool to string using printf-style format string, e.g.
+'$s = fmtnum($n, "%06lld")'.`,
 			binaryFunc: types.MlrvalFmtNum,
 		},
 
@@ -1332,9 +1351,13 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:       "joinv",
-			class:      FUNC_CLASS_CONVERSION,
-			help:       `Makes string from map/array values.  joinv([3,4,5], ",") = "3,4,5" joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"`,
+			name:  "joinv",
+			class: FUNC_CLASS_CONVERSION,
+			help:  `Makes string from map/array values.`,
+			examples: []string{
+				`joinv([3,4,5], ",") = "3,4,5"`,
+				`joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"`,
+			},
 			binaryFunc: types.MlrvalJoinV,
 		},
 
@@ -1444,7 +1467,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "flatten",
 			class: FUNC_CLASS_COLLECTIONS,
-			help:  `Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.`,
+			help: `Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures
+for non-JSON file formats like CSV.`,
 			examples: []string{
 				`flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.`,
 				`flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.`,
@@ -1470,9 +1494,11 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:       "haskey",
-			class:      FUNC_CLASS_COLLECTIONS,
-			help:       `True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.  Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.`,
+			name:  "haskey",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)',
+or true/false if array index is in bounds / out of bounds.  Error if 1st argument is not a map or array. Note
+-n..-1 alias to 1..n in Miller arrays.`,
 			binaryFunc: types.MlrvalHasKey,
 		},
 
@@ -1483,9 +1509,10 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			unaryFunc: types.MlrvalJSONParse,
 		},
 		{
-			name:               "json_stringify",
-			class:              FUNC_CLASS_COLLECTIONS,
-			help:               `Converts value to JSON-formatted string. Default output is single-line.  With optional second boolean argument set to true, produces multiline output.`,
+			name:  "json_stringify",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `Converts value to JSON-formatted string. Default output is single-line.
+With optional second boolean argument set to true, produces multiline output.`,
 			unaryFunc:          types.MlrvalJSONStringifyUnary,
 			binaryFunc:         types.MlrvalJSONStringifyBinary,
 			hasMultipleArities: true,
@@ -1506,39 +1533,46 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		},
 
 		{
-			name:         "mapdiff",
-			class:        FUNC_CLASS_COLLECTIONS,
-			help:         `With 0 args, returns empty map. With 1 arg, returns copy of arg.  With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.`,
+			name:  "mapdiff",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `With 0 args, returns empty map. With 1 arg, returns copy of arg.  With 2 or more,
+returns copy of arg 1 with all keys from any of remaining argument maps removed.`,
 			variadicFunc: types.MlrvalMapDiff,
 		},
 
 		{
-			name:                 "mapexcept",
-			class:                FUNC_CLASS_COLLECTIONS,
-			help:                 `Returns a map with keys from remaining arguments, if any, unset.  Remaining arguments can be strings or arrays of string.  E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}' and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
+			name:  "mapexcept",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `Returns a map with keys from remaining arguments, if any, unset.
+Remaining arguments can be strings or arrays of string.  E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'
+and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.`,
 			variadicFunc:         types.MlrvalMapExcept,
 			minimumVariadicArity: 1,
 		},
 
 		{
-			name:                 "mapselect",
-			class:                FUNC_CLASS_COLLECTIONS,
-			help:                 `Returns a map with only keys from remaining arguments set.  Remaining arguments can be strings or arrays of string.  E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}' and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
+			name:  "mapselect",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `Returns a map with only keys from remaining arguments set.
+Remaining arguments can be strings or arrays of string.  E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is
+'{1:2,5:6}' and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.`,
 			variadicFunc:         types.MlrvalMapSelect,
 			minimumVariadicArity: 1,
 		},
 
 		{
-			name:         "mapsum",
-			class:        FUNC_CLASS_COLLECTIONS,
-			help:         `With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g.  'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.`,
+			name:  "mapsum",
+			class: FUNC_CLASS_COLLECTIONS,
+			help: `With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs
+from all arguments. Rightmost collisions win, e.g.  'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.`,
 			variadicFunc: types.MlrvalMapSum,
 		},
 
 		{
 			name:  "unflatten",
 			class: FUNC_CLASS_COLLECTIONS,
-			help:  `Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.`,
+			help: `Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.
+See also arrayify.`,
 			examples: []string{
 				`unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.`,
 			},
@@ -1553,7 +1587,10 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "select",
 			class: FUNC_CLASS_HOFS,
-			help:  "Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.",
+			help: `Given a map or array as first argument and a function as second argument, includes each
+input element in the output if the function returns true. For arrays, the function should take one argument,
+for array element; for maps, it should take two, for map-element key and value. In either case it should
+return a boolean.`,
 			examples: []string{
 				`Array example: select([1,2,3,4,5], func(e) {return e >= 3}) returns [3, 4, 5].`,
 				`Map example: select({"a":1, "b":3, "c":5}, func(k,v) {return v >= 3}) returns {"b":3, "c": 5}.`,
@@ -1564,7 +1601,10 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "apply",
 			class: FUNC_CLASS_HOFS,
-			help:  "Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).",
+			help: `Given a map or array as first argument and a function as second argument, applies the
+function to each element of the array/map.  For arrays, the function should take one argument, for array
+element; it should return a new element. For maps, it should take two arguments, for map-element key and
+value; it should return a new key-value pair (i.e. a single-entry map).`,
 			examples: []string{
 				`Array example: apply([1,2,3,4,5], func(e) {return e ** 3}) returns [1, 8, 27, 64, 125].`,
 				`Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",`,
@@ -1575,7 +1615,12 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "reduce",
 			class: FUNC_CLASS_HOFS,
-			help:  "Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element, and return the accumulated element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.",
+			help: `Given a map or array as first argument and a function as second argument, accumulates entries
+into a final output -- for example, sum or product. For arrays, the function should take two arguments, for
+accumulated value and array element, and return the accumulated element. For maps, it should take four
+arguments, for accumulated key and value, and map-element key and value; it should return the updated
+accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the
+first element for arrays, or the first element's key-value pair for maps.`,
 			examples: []string{
 				`Array example: reduce([1,2,3,4,5], func(acc,e) {return acc + e**3}) returns 225.`,
 				`Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.`,
@@ -1586,7 +1631,11 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "fold",
 			class: FUNC_CLASS_HOFS,
-			help:  "Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.",
+			help: `Given a map or array as first argument and a function as second argument, accumulates
+entries into a final output -- for example, sum or product. For arrays, the function should take two
+arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated
+key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair
+(i.e. a single-entry map). The start value for the accumulator is taken from the third argument.`,
 			examples: []string{
 				`Array example: fold([1,2,3,4,5], func(acc,e) {return acc + e**3}, 10000) returns 10225.`,
 				`Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.`,
@@ -1597,7 +1646,13 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "sort",
 			class: FUNC_CLASS_HOFS,
-			help:  "Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by map keys. If the second argument is a string, it can contain any of \"f\" for lexical (default \"n\" for natural/numeric), \"), \"c\" for case-folded lexical, and \"r\" for reversed/descending sort. If the second argument is a function, then for arrays it should take two arguments a and b, returning < 0, 0, or > 0 as a < b, a == b, or a > b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning < 0, 0, or > 0, using a and b's keys and values.",
+			help: `Given a map or array as first argument and string flags or function as optional second argument,
+returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by
+map keys.  If the second argument is a string, it can contain any of "f" for lexical (default "n" for
+natural/numeric), "), "c" for case-folded lexical, and "r" for reversed/descending sort. If the second
+argument is a function, then for arrays it should take two arguments a and b, returning < 0, 0, or > 0 as a <
+b, a == b, or a > b respectively; for maps the function should take four arguments ak, av, bk, and bv, again
+returning < 0, 0, or > 0, using a and b's keys and values.`,
 			examples: []string{
 				`Array example: sort([5,2,3,1,4], func(a,b) {return b <=> a}) returns [5,4,3,2,1].`,
 				`Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv <=> av}) returns {"a":3,"c":2,"b":1}.`,
@@ -1610,7 +1665,10 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "any",
 			class: FUNC_CLASS_HOFS,
-			help:  "Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.",
+			help: `Given a map or array as first argument and a function as second argument, yields a boolean true
+if the argument function returns true for any array/map element, false otherwise.  For arrays, the function
+should take one argument, for array element; for maps, it should take two, for map-element key and value. In
+either case it should return a boolean.`,
 			examples: []string{
 				`Array example: any([10,20,30], func(e) {return $index == e})`,
 				`Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})`,
@@ -1621,7 +1679,10 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:  "every",
 			class: FUNC_CLASS_HOFS,
-			help:  "Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.",
+			help: `Given a map or array as first argument and a function as second argument, yields a boolean true
+if the argument function returns true for every array/map element, false otherwise.  For arrays, the function
+should take one argument, for array element; for maps, it should take two, for map-element key and value. In
+either case it should return a boolean.`,
 			examples: []string{
 				`Array example: every(["a", "b", "c"], func(e) {return $[e] >= 0})`,
 				`Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})`,
@@ -1845,7 +1906,8 @@ func (manager *BuiltinFunctionManager) showSingleUsage(
 		colorizer.MaybeColorizeHelp(builtinFunctionInfo.name, true),
 		builtinFunctionInfo.class,
 		describeNargs(builtinFunctionInfo),
-		builtinFunctionInfo.help,
+		// builtinFunctionInfo.help, // xxx
+		builtinFunctionInfo.JoinHelp(),
 	)
 	if len(builtinFunctionInfo.examples) == 1 {
 		fmt.Println("Example:")
@@ -1933,6 +1995,18 @@ func describeNargs(info *BuiltinFunctionInfo) string {
 	}
 	lib.InternalCodingErrorIf(true)
 	return "(error)" // solely to appease the Go compiler; not reached
+}
+
+var multiSpaceRegex = regexp.MustCompile(`\s+`)
+
+// JoinHelp must be used to format any function help-strings for output. for
+// source-code storage, these have newlines in them. For any presentation to
+// the user, they must be formatted using the JoinHelp() method which joins
+// newlines. This is crucial for rendering of help-strings for manual page,
+// webdocs, etc wherein we must let the user's resizing of the terminal window
+// or browser determine -- at their choosing -- where lines wrap.
+func (info *BuiltinFunctionInfo) JoinHelp() string {
+	return multiSpaceRegex.ReplaceAllString(strings.ReplaceAll(info.help, "\n", " "), " ")
 }
 
 // ================================================================
