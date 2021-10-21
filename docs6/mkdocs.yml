@@ -93,6 +93,7 @@ nav:
     - "DSL filter statements": "reference-dsl-filter-statements.md"
     - "DSL output statements": "reference-dsl-output-statements.md"
     - "DSL unset statements": "reference-dsl-unset-statements.md"
+    - "DSL datetime/timezone functions": "reference-dsl-time.md"
     - "DSL errors and transparency": "reference-dsl-errors.md"
     - "Differences from other programming languages": "reference-dsl-differences.md"
     - "A note on the complexity of Miller's expression language": "reference-dsl-complexity.md"
