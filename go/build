@@ -16,6 +16,8 @@ if [ "$do_wips" = "false" ]; then
   set -euo pipefail
 fi
 
+export TZ=""
+
 echo ================================================================
 echo BUILD
 go build

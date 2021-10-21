@@ -1,0 +1,10 @@
+end {
+
+  print "---------------------------------------------------------------- TIMEZONE";
+  print "TZ is", ENV["TZ"];
+
+  print "---------------------------------------------------------------- GMT2LOCALTIME / LOCALTIME2GMT";
+  print gmt2localtime("1970-01-01T00:00:00Z");
+  print localtime2gmt("1970-01-01 00:00:00");
+
+}

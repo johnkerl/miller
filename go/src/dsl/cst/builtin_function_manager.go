@@ -395,7 +395,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:        "gsub",
 			class:       FUNC_CLASS_STRING,
-			help:        `Example: '$name=gsub($name, "old", "new")' (replace all).`,
+			help:        `'$name=gsub($name, "old", "new")' (replace all).`,
 			ternaryFunc: types.MlrvalGsub,
 		},
 
@@ -409,14 +409,14 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:       "regextract",
 			class:      FUNC_CLASS_STRING,
-			help:       `Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'`,
+			help:       `'$name=regextract($name, "[A-Z]{3}[0-9]{2}")'`,
 			binaryFunc: types.MlrvalRegextract,
 		},
 
 		{
 			name:        "regextract_or_else",
 			class:       FUNC_CLASS_STRING,
-			help:        `Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'`,
+			help:        `'$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'`,
 			ternaryFunc: types.MlrvalRegextractOrElse,
 		},
 
@@ -451,7 +451,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		{
 			name:        "sub",
 			class:       FUNC_CLASS_STRING,
-			help:        `Example: '$name=sub($name, "old", "new")' (replace once).`,
+			help:        `'$name=sub($name, "old", "new")' (replace once).`,
 			ternaryFunc: types.MlrvalSub,
 		},
 
@@ -792,97 +792,140 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 		// FUNC_CLASS_TIME
 
 		{
-			name:      "gmt2sec",
-			class:     FUNC_CLASS_TIME,
-			help:      `Parses GMT timestamp as integer seconds since the epoch.`,
+			name:  "gmt2sec",
+			class: FUNC_CLASS_TIME,
+			help:  `Parses GMT timestamp as integer seconds since the epoch.`,
+			examples: []string{
+				`gmt2sec("2001-02-03T04:05:06Z") = 981173106`,
+			},
 			unaryFunc: types.MlrvalGMT2Sec,
 		},
 
 		{
-			name:      "localtime2sec",
-			class:     FUNC_CLASS_TIME,
-			help:      `Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable.`,
+			name:  "localtime2sec",
+			class: FUNC_CLASS_TIME,
+			help:  `Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable.`,
+			examples: []string{
+				`localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"`,
+			},
 			unaryFunc: types.MlrvalLocalTime2Sec,
 		},
 
 		{
-			name:               "sec2gmt",
-			class:              FUNC_CLASS_TIME,
-			help:               `Formats seconds since epoch (integer part) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part`,
+			name:  "sec2gmt",
+			class: FUNC_CLASS_TIME,
+			help:  `Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.`,
+			examples: []string{
+				`sec2gmt(1234567890)           = "2009-02-13T23:31:30Z"`,
+				`sec2gmt(1234567890.123456)    = "2009-02-13T23:31:30Z"`,
+				`sec2gmt(1234567890.123456, 6) = "2009-02-13T23:31:30.123456Z"`,
+			},
 			unaryFunc:          types.MlrvalSec2GMTUnary,
 			binaryFunc:         types.MlrvalSec2GMTBinary,
 			hasMultipleArities: true,
 		},
 
 		{
-			name:               "sec2localtime",
-			class:              FUNC_CLASS_TIME,
-			help:               `Formats seconds since epoch (integer part) as local timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part`,
+			name:  "sec2localtime",
+			class: FUNC_CLASS_TIME,
+			help:  `Formats seconds since epoch (integer part) as local timestamp.  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part`,
+			examples: []string{
+				`sec2localtime(1234567890)           = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"`,
+				`sec2localtime(1234567890.123456)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"`,
+				`sec2localtime(1234567890.123456, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"`,
+			},
 			unaryFunc:          types.MlrvalSec2LocalTimeUnary,
 			binaryFunc:         types.MlrvalSec2LocalTimeBinary,
 			hasMultipleArities: true,
 		},
 
 		{
-			name:      "sec2gmtdate",
-			class:     FUNC_CLASS_TIME,
-			help:      `Formats seconds since epoch (integer part) as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is.`,
+			name:  "sec2gmtdate",
+			class: FUNC_CLASS_TIME,
+			help:  `Formats seconds since epoch (integer part) as GMT timestamp with year-month-date.  Leaves non-numbers as-is.`,
+			examples: []string{
+				`sec2gmtdate(1440768801.7) = "2015-08-28".`,
+			},
 			unaryFunc: types.MlrvalSec2GMTDate,
 		},
 
 		{
-			name:      "sec2localdate",
-			class:     FUNC_CLASS_TIME,
-			help:      `Formats seconds since epoch (integer part) as local timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is. Consults $TZ environment variable.`,
+			name:  "sec2localdate",
+			class: FUNC_CLASS_TIME,
+			help:  `Formats seconds since epoch (integer part) as local timestamp with year-month-date.  Leaves non-numbers as-is. Consults $TZ environment variable.`,
+			examples: []string{
+				`sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"`,
+			},
 			unaryFunc: types.MlrvalSec2LocalDate,
 		},
 
 		{
-			name:     "systime",
-			class:    FUNC_CLASS_TIME,
-			help:     "help string will go here",
-			zaryFunc: types.MlrvalSystime,
+			name:  "localtime2gmt",
+			class: FUNC_CLASS_TIME,
+			help:  `Convert from a local-time string to a GMT-time string, consulting $TZ`,
+			examples: []string{
+				`localtime2gmt("2000-01-01 00:00:00") = "1999-12-31T22:00:00Z" with TZ="Asia/Istanbul"`,
+			},
+			unaryFunc: types.MlrvalLocalTime2GMT,
 		},
 
 		{
-			name:     "systimeint",
-			class:    FUNC_CLASS_TIME,
-			help:     "help string will go here",
-			zaryFunc: types.MlrvalSystimeInt,
+			name:  "gmt2localtime",
+			class: FUNC_CLASS_TIME,
+			help:  `Convert from a GMT-time string to a local-time string, consulting $TZ`,
+			examples: []string{
+				`gmt2localtime("1999-12-31T22:00:00Z") = "2000-01-01 00:00:00" with TZ="Asia/Istanbul"`,
+			},
+			unaryFunc: types.MlrvalGMT2LocalTime,
 		},
 
 		{
-			name:     "uptime",
-			class:    FUNC_CLASS_TIME,
-			help:     "help string will go here",
-			zaryFunc: types.MlrvalUptime,
-		},
-
-		{
-			name:       "strftime",
-			class:      FUNC_CLASS_TIME,
-			help:       `Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.`,
+			name:  "strftime",
+			class: FUNC_CLASS_TIME,
+			help:  `Formats seconds since the epoch as timestamp. Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.`,
+			examples: []string{
+				`strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"`,
+				`strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"`,
+			},
 			binaryFunc: types.MlrvalStrftime,
 		},
 
 		{
-			name:       "strptime",
-			class:      FUNC_CLASS_TIME,
-			help:       `strptime: Parses timestamp as floating-point seconds since the epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000, and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.  See also strptime_local.`,
+			name:  "strptime",
+			class: FUNC_CLASS_TIME,
+			help:  `strptime: Parses timestamp as floating-point seconds since the epoch. See also strptime_local.`,
+			examples: []string{
+				`strptime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.000000`,
+				`strptime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.345000`,
+				`strptime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400`,
+				`strptime("1970-01-01 00:00:00 EET",   "%Y-%m-%d %H:%M:%S %Z") = -7200`,
+			},
+
 			binaryFunc: types.MlrvalStrptime,
 		},
 
 		{
-			name:       "strftime_local",
-			class:      FUNC_CLASS_TIME,
-			help:       `Like strftime but consults the $TZ environment variable to get local time zone.`,
+			name:  "strftime_local",
+			class: FUNC_CLASS_TIME,
+			help:  `Like strftime but consults the $TZ environment variable to get local time zone.`,
+			examples: []string{
+				`strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%S %z")  = "2015-08-28 16:33:21 +0300" with TZ="Asia/Istanbul"`,
+				`strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z") = "2015-08-28 16:33:21.700 +0300" with TZ="Asia/Istanbul"`,
+			},
 			binaryFunc: types.MlrvalStrftimeLocal,
 		},
 
 		{
-			name:       "strptime_local",
-			class:      FUNC_CLASS_TIME,
-			help:       `Like stpftime but consults the $TZ environment variable to get local time zone.`,
+			name:  "strptime_local",
+			class: FUNC_CLASS_TIME,
+			help:  `Like stpftime but consults the $TZ environment variable to get local time zone.`,
+			examples: []string{
+				`strptime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001     with TZ="Asia/Istanbul"`,
+				`strptime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001.345 with TZ="Asia/Istanbul"`,
+				`strptime_local("2015-08-28 13:33:21",    "%Y-%m-%d %H:%M:%S")   = 1440758001     with TZ="Asia/Istanbul"`,
+				// TODO: fix parse error on decimal part
+				//`strptime_local("2015-08-28 13:33:21.345","%Y-%m-%d %H:%M:%S") = 1440758001.345`,
+			},
 			binaryFunc: types.MlrvalStrptimeLocal,
 		},
 
@@ -940,6 +983,27 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class:     FUNC_CLASS_TIME,
 			help:      `Formats integer seconds as in sec2hms(5000) = "01:23:20"`,
 			unaryFunc: types.MlrvalSec2HMS,
+		},
+
+		{
+			name:     "systime",
+			class:    FUNC_CLASS_TIME,
+			help:     "help string will go here",
+			zaryFunc: types.MlrvalSystime,
+		},
+
+		{
+			name:     "systimeint",
+			class:    FUNC_CLASS_TIME,
+			help:     "help string will go here",
+			zaryFunc: types.MlrvalSystimeInt,
+		},
+
+		{
+			name:     "uptime",
+			class:    FUNC_CLASS_TIME,
+			help:     "help string will go here",
+			zaryFunc: types.MlrvalUptime,
 		},
 
 		// ----------------------------------------------------------------
@@ -1261,8 +1325,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_CONVERSION,
 			help:  `Makes string from map/array keys.`,
 			examples: []string{
-				`Example: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".`,
-				`Example: joink([1,2,3], ",") = "1,2,3".`,
+				`joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".`,
+				`joink([1,2,3], ",") = "1,2,3".`,
 			},
 			binaryFunc: types.MlrvalJoinK,
 		},
@@ -1279,8 +1343,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_CONVERSION,
 			help:  `Makes string from map/array key-value pairs.`,
 			examples: []string{
-				`Example: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"`,
-				`Example: joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"`,
+				`joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"`,
+				`joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"`,
 			},
 			ternaryFunc: types.MlrvalJoinKV,
 		},
@@ -1290,7 +1354,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_CONVERSION,
 			help:  `Splits string into array with type inference.`,
 			examples: []string{
-				`Example: splita("3,4,5", ",") = [3,4,5]`,
+				`splita("3,4,5", ",") = [3,4,5]`,
 			},
 			binaryFunc: types.MlrvalSplitA,
 		},
@@ -1300,7 +1364,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_CONVERSION,
 			help:  `Splits string into array without type inference.`,
 			examples: []string{
-				`Example: splita("3,4,5", ",") = ["3","4","5"]`,
+				`splita("3,4,5", ",") = ["3","4","5"]`,
 			},
 			binaryFunc: types.MlrvalSplitAX,
 		},
@@ -1310,7 +1374,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_CONVERSION,
 			help:  `Splits string by separators into map with type inference.`,
 			examples: []string{
-				`Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}`,
+				`splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}`,
 			},
 			ternaryFunc: types.MlrvalSplitKV,
 		},
@@ -1320,7 +1384,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_CONVERSION,
 			help:  `Splits string by separators into map without type inference (keys and values are strings).`,
 			examples: []string{
-				`Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
+				`splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}`,
 			},
 			ternaryFunc: types.MlrvalSplitKVX,
 		},
@@ -1330,7 +1394,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_CONVERSION,
 			help:  `Splits string by separator into integer-indexed map with type inference.`,
 			examples: []string{
-				`Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}`,
+				`splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}`,
 			},
 			binaryFunc: types.MlrvalSplitNV,
 		},
@@ -1340,7 +1404,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_CONVERSION,
 			help:  `Splits string by separator into integer-indexed map without type inference (values are strings).`,
 			examples: []string{
-				`Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
+				`splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}`,
 			},
 			binaryFunc: types.MlrvalSplitNVX,
 		},
@@ -1382,8 +1446,8 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_COLLECTIONS,
 			help:  `Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.`,
 			examples: []string{
-				`Example: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.`,
-				`Example: flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.`,
+				`flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.`,
+				`flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.`,
 				`Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).`,
 			},
 			binaryFunc:         types.MlrvalFlattenBinary,
@@ -1476,7 +1540,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			class: FUNC_CLASS_COLLECTIONS,
 			help:  `Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.`,
 			examples: []string{
-				`Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.`,
+				`unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.`,
 			},
 			binaryFunc: types.MlrvalUnflatten,
 		},
@@ -1783,6 +1847,12 @@ func (manager *BuiltinFunctionManager) showSingleUsage(
 		describeNargs(builtinFunctionInfo),
 		builtinFunctionInfo.help,
 	)
+	if len(builtinFunctionInfo.examples) == 1 {
+		fmt.Println("Example:")
+	}
+	if len(builtinFunctionInfo.examples) > 1 {
+		fmt.Println("Examples:")
+	}
 	for _, example := range builtinFunctionInfo.examples {
 		fmt.Println(example)
 	}

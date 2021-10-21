@@ -1,0 +1,11 @@
+end {
+
+  print "---------------------------------------------------------------- TIMEZONE";
+  print "TZ is", ENV["TZ"];
+
+  print "---------------------------------------------------------------- SEC2LOCALDATE";
+  print sec2localdate(0);
+  print sec2localdate(0.123456);
+  print sec2localdate(-0.123456);
+
+}

@@ -61,6 +61,9 @@ func ParseCommandLine(args []string) (
 		}
 	}
 
+	// Check now to avoid confusing timezone-library behavior later on
+	lib.SetTZFromEnv()
+
 	cli.FinalizeReaderOptions(&options.ReaderOptions)
 	cli.FinalizeWriterOptions(&options.WriterOptions)
 

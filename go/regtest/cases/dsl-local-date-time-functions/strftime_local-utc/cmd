@@ -1,0 +1,1 @@
+mlr --tz UTC -n put -f regtest/input/strftime_local-tz.mlr

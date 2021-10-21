@@ -18,10 +18,17 @@ TOP OF LIST:
 * regtest pendings
   o webdocs re /..../i regex options @ CLIP for windows
 
-*  doc6
+* doc6
 * check issues
 
 * meta: nf,nr,keys?
+
+* authoritative regex docs accompanied by thorough UT
+  o expand existing regex webdoc
+* authoritative time/localtime/tz docs accompanied by thorough UT
+  o needs separate webdoc
+
+* CASEDIR cmd -> mlr via env not oosvar
 
 * punchdown list:
   o $cpw
@@ -31,12 +38,14 @@ TOP OF LIST:
 
     ! fmtnum
 
+    - merge-field voids
+
+    - json comments
+
     - mapexcept ...
     - xtab crlf & non-std irs generally ...
     - pprint ofs -- ?
     - xtab ors -- ?
-    - merge-field voids
-    - json comments
     - crlf ...
 
   o TODO in *.go & *.mi
@@ -50,14 +59,59 @@ d pre-release:
 ----------------------------------------------------------------
 LOCALTIME
 
-* more olh about no-T-no-Z format for localtime
+! make optional tz args !
+  -> separate PR
+  sec2localtime  2nd
+  sec2localdate  3rd ... w/ int 0 @ 2nd ... :(
+  localtime2sec  2nd
+  strptime_local 3rd
+  strftime_local 3rd
+  gmt2localtime  2nd
+  localtime2gmt  2nd
 
-* windows debug
+* .6S bugfix -- separate PR -- ?
 
-* https://github.com/johnkerl/miller/issues/331
-  https://github.com/johnkerl/miller/issues/332
-  https://github.com/johnkerl/miller/issues/359
-  https://github.com/johnkerl/miller/issues/477
+* new webdoc separate PR
+  - incl https://github.com/johnkerl/miller/issues/331
+
+* ENV["TZ"] update:
+  o --tz is a setenv & is treated the same. also ENV["TZ"]
+  o no explicit tz arg @ dsl functions, sorry ...
+  o now maybe simplify the RTs ...
+  o at very least, at a multi-tz case
+  o sec2gmt       sec2localtime
+    sec2gmtdate   sec2localdate
+    strftime      strftime_local
+  o gmt2sec       localtime2sec
+    strptime      strptime_local
+  o gmt2localtime localtime2gmt
+  o note in new webdoc
+    mlr> sec2localtime(0)
+    "1969-12-31 19:00:00"
+    mlr> ENV["TZ"]=""
+    mlr> sec2localtime(0)
+    "1970-01-01 00:00:00"
+    mlr> ENV["TZ"]="GMT"
+    mlr> sec2localtime(0)
+    "1970-01-01 00:00:00"
+    mlr> ENV["TZ"]="Asia/Istanbul"
+    mlr> sec2localtime(0)
+    "1970-01-01 02:00:00"
+    mlr> ENV["TZ"]="America/Sao_Paulo"
+    mlr> sec2localtime(0)
+    "1969-12-31 21:00:00"
+  o ref:
+    https://www.gnu.org/software/libc/manual/html_node/TZ-Variable.html
+    http://www.iana.org/time-zones
+    https://en.wikipedia.org/wiki/Tz_database
+    https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
+* https://github.com/johnkerl/miller/issues/332
+  o localtime2gmt and gmt2localtime
+    --tz
+    k maybe health-check with `location, err := time.LoadLocation("America/Los_Angeles")` -- ?
+    ? make this this applies to all datetimes that don't include a time zone
+    ? also make sure that, absent this, all zoneless datatimes are interpreted in that timezone
 
 ----------------------------------------------------------------
 398
@@ -142,6 +196,8 @@ mlr regtest regtest/cases-pending-go-port/verb-label/0010
 ----------------------------------------------------------------
 
 BLOCKERS
+
+? BIFs as FCFs?
 
 * regtest:
   o convert regtest/cases-pending-windows
