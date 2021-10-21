@@ -1104,7 +1104,12 @@ func (node *EnvironmentVariableLvalueNode) Assign(
 		)
 	}
 
-	os.Setenv(name.String(), rvalue.String())
+	sname := name.String()
+	svalue := rvalue.String()
+	os.Setenv(sname, svalue)
+	if sname == "TZ" {
+		lib.SetTZFromEnv() // affects the time library; notify it
+	}
 	return nil
 }
 

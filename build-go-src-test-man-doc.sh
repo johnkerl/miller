@@ -12,6 +12,8 @@
 #   turn *.md.in into *.md (live code samples), using mlr from the $PATH
 #   turn *.md into docs6/site HTML and CSS files
 
+export TZ=""
+
 set -euo pipefail
 
 cd go

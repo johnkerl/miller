@@ -101,6 +101,22 @@ func MlrvalSec2LocalDate(input1 *Mlrval) *Mlrval {
 	}
 }
 
+// TODO: unary vs binary ...
+func MlrvalLocalTime2GMT(input1 *Mlrval) *Mlrval {
+	if !input1.IsString() {
+		return MLRVAL_ERROR
+	}
+	return MlrvalSec2GMTUnary(MlrvalLocalTime2Sec(input1))
+}
+
+// TODO: unary vs binary ...
+func MlrvalGMT2LocalTime(input1 *Mlrval) *Mlrval {
+	if !input1.IsString() {
+		return MLRVAL_ERROR
+	}
+	return MlrvalSec2LocalTimeUnary(MlrvalGMT2Sec(input1))
+}
+
 // ================================================================
 // Argument 1 is int/float seconds since the epoch.
 // Argument 2 is format string like "%Y-%m-%d %H:%M:%S".
@@ -247,7 +263,6 @@ func MlrvalStrptimeLocal(input1, input2 *Mlrval) *Mlrval {
 
 	t, err := strptime.ParseTZ(timeString, formatString)
 	if err != nil {
-		fmt.Printf("err %#v\n", err)
 		return MLRVAL_ERROR
 	}
 

@@ -1,0 +1,17 @@
+end {
+
+  print "---------------------------------------------------------------- TIMEZONE";
+  print "TZ is", ENV["TZ"];
+
+  print "---------------------------------------------------------------- STRFTIME";
+  print strftime(0.123456, "%Y-%m-%dT%H:%M:%SZ");
+  print strftime(0.0,      "%Y-%m-%d %H:%M:%S");
+  print strftime(0.0,      "%Y-%m-%d %H:%M:%3S");
+  print strftime(0.0,      "%Y-%m-%d %H:%M:%S %Z");
+  print strftime(0.0,      "%Y-%m-%d %H:%M:%S %z");
+  print strftime(0.123456, "%Y-%m-%d %H:%M:%S %Z");
+  print strftime(0.123456, "%Y-%m-%d %H:%M:%S %z");
+  print strftime(0.0,      "%Y-%m-%d %H:%M:%S %Z");
+  print strftime(0.0,      "%Y-%m-%d %H:%M:%S %z");
+
+}
