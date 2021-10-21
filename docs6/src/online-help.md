@@ -240,7 +240,8 @@ No exact match for "split". Inexact matches:
 </pre>
 <pre class="pre-non-highlight-in-pair">
 splita  (class=conversion #args=2) Splits string into array with type inference.
-Example: splita("3,4,5", ",") = [3,4,5]
+Example:
+splita("3,4,5", ",") = [3,4,5]
 </pre>
 
 Etc.

@@ -78,7 +78,8 @@ func transformerLabelParseCLI(
 	)
 	if err != nil {
 		fmt.Fprint(os.Stderr, err)
-		return nil
+		os.Exit(1)
+		// TODO: return nil to caller and have it exit, maybe
 	}
 
 	*pargi = argi
