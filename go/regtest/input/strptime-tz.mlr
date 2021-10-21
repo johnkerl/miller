@@ -1,0 +1,14 @@
+end {
+
+  print "---------------------------------------------------------------- TIMEZONE";
+  print "TZ is", ENV["TZ"];
+
+  print "---------------------------------------------------------------- STRPTIME";
+  print strptime("1970-01-01T00:00:00Z",          "%Y-%m-%dT%H:%M:%SZ");
+  print strptime("1970-01-01T00:00:00.345Z",      "%Y-%m-%dT%H:%M:%SZ");
+  print strptime("1970-01-01T00:00:00.345 UTC",   "%Y-%m-%dT%H:%M:%S %Z");
+  print strptime("1970-01-01T00:00:00.345 EST",   "%Y-%m-%dT%H:%M:%S %Z");
+  print strptime("1970-01-01T00:00:00.345 -0400", "%Y-%m-%dT%H:%M:%S %z");
+  print strptime("1970-01-01T00:00:00.345 +0400", "%Y-%m-%dT%H:%M:%S %z");
+
+}

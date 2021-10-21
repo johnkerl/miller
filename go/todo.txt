@@ -18,10 +18,17 @@ TOP OF LIST:
 * regtest pendings
   o webdocs re /..../i regex options @ CLIP for windows
 
-*  doc6
+* doc6
 * check issues
 
 * meta: nf,nr,keys?
+
+* authoritative regex docs accompanied by thorough UT
+  o expand existing regex webdoc
+* authoritative time/localtime/tz docs accompanied by thorough UT
+  o needs separate webdoc
+
+* CASEDIR cmd -> mlr via env not oosvar
 
 * punchdown list:
   o $cpw
@@ -31,12 +38,14 @@ TOP OF LIST:
 
     ! fmtnum
 
+    - merge-field voids
+
+    - json comments
+
     - mapexcept ...
     - xtab crlf & non-std irs generally ...
     - pprint ofs -- ?
     - xtab ors -- ?
-    - merge-field voids
-    - json comments
     - crlf ...
 
   o TODO in *.go & *.mi
@@ -47,17 +56,22 @@ d pre-release:
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
 
+* wut h1 spacing before/after ...
+
 ----------------------------------------------------------------
 LOCALTIME
 
-* more olh about no-T-no-Z format for localtime
+! make optional tz args !
+  -> separate PR
+  sec2localtime  2nd
+  sec2localdate  3rd ... w/ int 0 @ 2nd ... :(
+  localtime2sec  2nd
+  strptime_local 3rd
+  strftime_local 3rd
+  gmt2localtime  2nd
+  localtime2gmt  2nd
 
-* windows debug
-
-* https://github.com/johnkerl/miller/issues/331
-  https://github.com/johnkerl/miller/issues/332
-  https://github.com/johnkerl/miller/issues/359
-  https://github.com/johnkerl/miller/issues/477
+* .6S bugfix -- separate PR -- ?
 
 ----------------------------------------------------------------
 398
@@ -142,6 +156,8 @@ mlr regtest regtest/cases-pending-go-port/verb-label/0010
 ----------------------------------------------------------------
 
 BLOCKERS
+
+? BIFs as FCFs?
 
 * regtest:
   o convert regtest/cases-pending-windows

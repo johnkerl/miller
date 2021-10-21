@@ -23,6 +23,7 @@ Miller's types are:
 * Scalars:
     * **string**: such as `"abcdefg"`, supporting concatenation, one-up indexing and slicing, and [library functions](reference-dsl-builtin-functions.md#string-functions). See the pages on [strings](reference-main-strings.md) and [regular expressions](reference-main-regular-expressions.md).
     * **float** and **int**: such as `1.2` and `3`: double-precision and 64-bit signed, respectively. See the section on [arithmetic operators and math-related library functions](reference-dsl-builtin-functions.md#math-functions) as well as the [Arithmetic](reference-main-arithmetic.md) page.
+    * dates/times are not a separate data type; Miller uses ints for [seconds since the epoch](https://en.wikipedia.org/wiki/Unix_time) and strings for formatted date/times. See the [DSL datetime/timezone functions page](reference-dsl-time.md) for more information.
     * **boolean**: literals `true` and `false`; results of `==`, `<`, `>`, etc. See the section on [boolean operators](reference-dsl-builtin-functions.md#boolean-functions).
 * Collections:
     * **map**: such as `{"a":1,"b":[2,3,4]}`, supporting key-indexing, preservation of insertion order, [library functions](reference-dsl-builtin-functions.md#collections-functions), etc. See the [Maps](reference-main-maps.md) page.

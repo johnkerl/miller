@@ -76,7 +76,7 @@ is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
 * [**Math functions**](#math-functions):  [abs](#abs),  [acos](#acos),  [acosh](#acosh),  [asin](#asin),  [asinh](#asinh),  [atan](#atan),  [atan2](#atan2),  [atanh](#atanh),  [cbrt](#cbrt),  [ceil](#ceil),  [cos](#cos),  [cosh](#cosh),  [erf](#erf),  [erfc](#erfc),  [exp](#exp),  [expm1](#expm1),  [floor](#floor),  [invqnorm](#invqnorm),  [log](#log),  [log10](#log10),  [log1p](#log1p),  [logifit](#logifit),  [max](#max),  [min](#min),  [qnorm](#qnorm),  [round](#round),  [roundm](#roundm),  [sgn](#sgn),  [sin](#sin),  [sinh](#sinh),  [sqrt](#sqrt),  [tan](#tan),  [tanh](#tanh),  [urand](#urand),  [urand32](#urand32),  [urandint](#urandint),  [urandrange](#urandrange).
 * [**String functions**](#string-functions):  [capitalize](#capitalize),  [clean_whitespace](#clean_whitespace),  [collapse_whitespace](#collapse_whitespace),  [gsub](#gsub),  [lstrip](#lstrip),  [regextract](#regextract),  [regextract_or_else](#regextract_or_else),  [rstrip](#rstrip),  [ssub](#ssub),  [strip](#strip),  [strlen](#strlen),  [sub](#sub),  [substr](#substr),  [substr0](#substr0),  [substr1](#substr1),  [tolower](#tolower),  [toupper](#toupper),  [truncate](#truncate),  [\.](#dot).
 * [**System functions**](#system-functions):  [hostname](#hostname),  [os](#os),  [system](#system),  [version](#version).
-* [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [localtime2sec](#localtime2sec),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [sec2localdate](#sec2localdate),  [sec2localtime](#sec2localtime),  [strftime](#strftime),  [strftime_local](#strftime_local),  [strptime](#strptime),  [strptime_local](#strptime_local),  [systime](#systime),  [systimeint](#systimeint),  [uptime](#uptime).
+* [**Time functions**](#time-functions):  [dhms2fsec](#dhms2fsec),  [dhms2sec](#dhms2sec),  [fsec2dhms](#fsec2dhms),  [fsec2hms](#fsec2hms),  [gmt2localtime](#gmt2localtime),  [gmt2sec](#gmt2sec),  [hms2fsec](#hms2fsec),  [hms2sec](#hms2sec),  [localtime2gmt](#localtime2gmt),  [localtime2sec](#localtime2sec),  [sec2dhms](#sec2dhms),  [sec2gmt](#sec2gmt),  [sec2gmtdate](#sec2gmtdate),  [sec2hms](#sec2hms),  [sec2localdate](#sec2localdate),  [sec2localtime](#sec2localtime),  [strftime](#strftime),  [strftime_local](#strftime_local),  [strptime](#strptime),  [strptime_local](#strptime_local),  [systime](#systime),  [systimeint](#systimeint),  [uptime](#uptime).
 * [**Typing functions**](#typing-functions):  [asserting_absent](#asserting_absent),  [asserting_array](#asserting_array),  [asserting_bool](#asserting_bool),  [asserting_boolean](#asserting_boolean),  [asserting_empty](#asserting_empty),  [asserting_empty_map](#asserting_empty_map),  [asserting_error](#asserting_error),  [asserting_float](#asserting_float),  [asserting_int](#asserting_int),  [asserting_map](#asserting_map),  [asserting_nonempty_map](#asserting_nonempty_map),  [asserting_not_array](#asserting_not_array),  [asserting_not_empty](#asserting_not_empty),  [asserting_not_map](#asserting_not_map),  [asserting_not_null](#asserting_not_null),  [asserting_null](#asserting_null),  [asserting_numeric](#asserting_numeric),  [asserting_present](#asserting_present),  [asserting_string](#asserting_string),  [is_absent](#is_absent),  [is_array](#is_array),  [is_bool](#is_bool),  [is_boolean](#is_boolean),  [is_empty](#is_empty),  [is_empty_map](#is_empty_map),  [is_error](#is_error),  [is_float](#is_float),  [is_int](#is_int),  [is_map](#is_map),  [is_nonempty_map](#is_nonempty_map),  [is_not_array](#is_not_array),  [is_not_empty](#is_not_empty),  [is_not_map](#is_not_map),  [is_not_null](#is_not_null),  [is_null](#is_null),  [is_numeric](#is_numeric),  [is_present](#is_present),  [is_string](#is_string),  [typeof](#typeof).
 
 ## Arithmetic functions
@@ -381,8 +381,9 @@ depth  (class=collections #args=1) Prints maximum depth of map/array. Scalars ha
 ### flatten
 <pre class="pre-non-highlight-non-pair">
 flatten  (class=collections #args=3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.
-Example: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
-Example: flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+Examples:
+flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
 Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
 </pre>
 
@@ -456,7 +457,8 @@ mapsum  (class=collections #args=variadic) With 0 args, returns empty map. With 
 ### unflatten
 <pre class="pre-non-highlight-non-pair">
 unflatten  (class=collections #args=2) Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
-Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
+Example:
+unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
 </pre>
 
 ## Conversion functions
@@ -495,16 +497,18 @@ int  (class=conversion #args=1) Convert int/float/bool/string to int.
 ### joink
 <pre class="pre-non-highlight-non-pair">
 joink  (class=conversion #args=2) Makes string from map/array keys.
-Example: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".
-Example: joink([1,2,3], ",") = "1,2,3".
+Examples:
+joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".
+joink([1,2,3], ",") = "1,2,3".
 </pre>
 
 
 ### joinkv
 <pre class="pre-non-highlight-non-pair">
 joinkv  (class=conversion #args=3) Makes string from map/array key-value pairs.
-Example: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
-Example: joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+Examples:
+joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
+joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 </pre>
 
 
@@ -517,42 +521,48 @@ joinv  (class=conversion #args=2) Makes string from map/array values.  joinv([3,
 ### splita
 <pre class="pre-non-highlight-non-pair">
 splita  (class=conversion #args=2) Splits string into array with type inference.
-Example: splita("3,4,5", ",") = [3,4,5]
+Example:
+splita("3,4,5", ",") = [3,4,5]
 </pre>
 
 
 ### splitax
 <pre class="pre-non-highlight-non-pair">
 splitax  (class=conversion #args=2) Splits string into array without type inference.
-Example: splita("3,4,5", ",") = ["3","4","5"]
+Example:
+splita("3,4,5", ",") = ["3","4","5"]
 </pre>
 
 
 ### splitkv
 <pre class="pre-non-highlight-non-pair">
 splitkv  (class=conversion #args=3) Splits string by separators into map with type inference.
-Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
+Example:
+splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 </pre>
 
 
 ### splitkvx
 <pre class="pre-non-highlight-non-pair">
 splitkvx  (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings).
-Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
+Example:
+splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 </pre>
 
 
 ### splitnv
 <pre class="pre-non-highlight-non-pair">
 splitnv  (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference.
-Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
+Example:
+splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 </pre>
 
 
 ### splitnvx
 <pre class="pre-non-highlight-non-pair">
 splitnvx  (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings).
-Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
+Example:
+splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 </pre>
 
 
@@ -593,6 +603,7 @@ sha512  (class=hashing #args=1) SHA512 hash.
 ### any
 <pre class="pre-non-highlight-non-pair">
 any  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+Examples:
 Array example: any([10,20,30], func(e) {return $index == e})
 Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 </pre>
@@ -601,6 +612,7 @@ Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 ### apply
 <pre class="pre-non-highlight-non-pair">
 apply  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
+Examples:
 Array example: apply([1,2,3,4,5], func(e) {return e ** 3}) returns [1, 8, 27, 64, 125].
 Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
 </pre>
@@ -609,6 +621,7 @@ Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}
 ### every
 <pre class="pre-non-highlight-non-pair">
 every  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+Examples:
 Array example: every(["a", "b", "c"], func(e) {return $[e] >= 0})
 Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 </pre>
@@ -617,6 +630,7 @@ Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 ### fold
 <pre class="pre-non-highlight-non-pair">
 fold  (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
+Examples:
 Array example: fold([1,2,3,4,5], func(acc,e) {return acc + e**3}, 10000) returns 10225.
 Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
 </pre>
@@ -625,6 +639,7 @@ Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": 
 ### reduce
 <pre class="pre-non-highlight-non-pair">
 reduce  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element, and return the accumulated element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.
+Examples:
 Array example: reduce([1,2,3,4,5], func(acc,e) {return acc + e**3}) returns 225.
 Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.
 </pre>
@@ -633,6 +648,7 @@ Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum_
 ### select
 <pre class="pre-non-highlight-non-pair">
 select  (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+Examples:
 Array example: select([1,2,3,4,5], func(e) {return e >= 3}) returns [3, 4, 5].
 Map example: select({"a":1, "b":3, "c":5}, func(k,v) {return v >= 3}) returns {"b":3, "c": 5}.
 </pre>
@@ -641,6 +657,7 @@ Map example: select({"a":1, "b":3, "c":5}, func(k,v) {return v >= 3}) returns {"
 ### sort
 <pre class="pre-non-highlight-non-pair">
 sort  (class=higher-order-functions #args=1-2) Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by map keys. If the second argument is a string, it can contain any of "f" for lexical (default "n" for natural/numeric), "), "c" for case-folded lexical, and "r" for reversed/descending sort. If the second argument is a function, then for arrays it should take two arguments a and b, returning < 0, 0, or > 0 as a < b, a == b, or a > b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning < 0, 0, or > 0, using a and b's keys and values.
+Examples:
 Array example: sort([5,2,3,1,4], func(a,b) {return b <=> a}) returns [5,4,3,2,1].
 Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv <=> av}) returns {"a":3,"c":2,"b":1}.
 </pre>
@@ -849,6 +866,7 @@ tanh  (class=math #args=1) Hyperbolic tangent.
 ### urand
 <pre class="pre-non-highlight-non-pair">
 urand  (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
+Example:
 Int-valued example: '$n=floor(20+urand()*11)'.
 </pre>
 
@@ -893,7 +911,7 @@ collapse_whitespace  (class=string #args=1) Strip repeated whitespace from strin
 
 ### gsub
 <pre class="pre-non-highlight-non-pair">
-gsub  (class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
+gsub  (class=string #args=3) '$name=gsub($name, "old", "new")' (replace all).
 </pre>
 
 
@@ -905,13 +923,13 @@ lstrip  (class=string #args=1) Strip leading whitespace from string.
 
 ### regextract
 <pre class="pre-non-highlight-non-pair">
-regextract  (class=string #args=2) Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
+regextract  (class=string #args=2) '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
 </pre>
 
 
 ### regextract_or_else
 <pre class="pre-non-highlight-non-pair">
-regextract_or_else  (class=string #args=3) Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
+regextract_or_else  (class=string #args=3) '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
 </pre>
 
 
@@ -941,7 +959,7 @@ strlen  (class=string #args=1) String length.
 
 ### sub
 <pre class="pre-non-highlight-non-pair">
-sub  (class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace once).
+sub  (class=string #args=3) '$name=sub($name, "old", "new")' (replace once).
 </pre>
 
 
@@ -1040,9 +1058,19 @@ fsec2hms  (class=time #args=1) Formats floating-point seconds as in fsec2hms(500
 </pre>
 
 
+### gmt2localtime
+<pre class="pre-non-highlight-non-pair">
+gmt2localtime  (class=time #args=1) Convert from a GMT-time string to a local-time string, consulting $TZ
+Example:
+gmt2localtime("1999-12-31T22:00:00Z") = "2000-01-01 00:00:00" with TZ="Asia/Istanbul"
+</pre>
+
+
 ### gmt2sec
 <pre class="pre-non-highlight-non-pair">
 gmt2sec  (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
+Example:
+gmt2sec("2001-02-03T04:05:06Z") = 981173106
 </pre>
 
 
@@ -1058,9 +1086,19 @@ hms2sec  (class=time #args=1) Recovers integer seconds as in hms2sec("01:23:20")
 </pre>
 
 
+### localtime2gmt
+<pre class="pre-non-highlight-non-pair">
+localtime2gmt  (class=time #args=1) Convert from a local-time string to a GMT-time string, consulting $TZ
+Example:
+localtime2gmt("2000-01-01 00:00:00") = "1999-12-31T22:00:00Z" with TZ="Asia/Istanbul"
+</pre>
+
+
 ### localtime2sec
 <pre class="pre-non-highlight-non-pair">
 localtime2sec  (class=time #args=1) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable.
+Example:
+localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"
 </pre>
 
 
@@ -1072,13 +1110,19 @@ sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = 
 
 ### sec2gmt
 <pre class="pre-non-highlight-non-pair">
-sec2gmt  (class=time #args=1,2) Formats seconds since epoch (integer part) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+sec2gmt  (class=time #args=1,2) Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
+Examples:
+sec2gmt(1234567890)           = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456)    = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456, 6) = "2009-02-13T23:31:30.123456Z"
 </pre>
 
 
 ### sec2gmtdate
 <pre class="pre-non-highlight-non-pair">
-sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is.
+sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date.  Leaves non-numbers as-is.
+Example:
+sec2gmtdate(1440768801.7) = "2015-08-28".
 </pre>
 
 
@@ -1090,37 +1134,58 @@ sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:
 
 ### sec2localdate
 <pre class="pre-non-highlight-non-pair">
-sec2localdate  (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is. Consults $TZ environment variable.
+sec2localdate  (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date.  Leaves non-numbers as-is. Consults $TZ environment variable.
+Example:
+sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"
 </pre>
 
 
 ### sec2localtime
 <pre class="pre-non-highlight-non-pair">
-sec2localtime  (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+sec2localtime  (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp.  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+Examples:
+sec2localtime(1234567890)           = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+sec2localtime(1234567890.123456)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+sec2localtime(1234567890.123456, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"
 </pre>
 
 
 ### strftime
 <pre class="pre-non-highlight-non-pair">
-strftime  (class=time #args=2) Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
+strftime  (class=time #args=2) Formats seconds since the epoch as timestamp. Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
+Examples:
+strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"
+strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"
 </pre>
 
 
 ### strftime_local
 <pre class="pre-non-highlight-non-pair">
 strftime_local  (class=time #args=2) Like strftime but consults the $TZ environment variable to get local time zone.
+Examples:
+strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%S %z")  = "2015-08-28 16:33:21 +0300" with TZ="Asia/Istanbul"
+strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z") = "2015-08-28 16:33:21.700 +0300" with TZ="Asia/Istanbul"
 </pre>
 
 
 ### strptime
 <pre class="pre-non-highlight-non-pair">
-strptime  (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000, and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.  See also strptime_local.
+strptime  (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch. See also strptime_local.
+Examples:
+strptime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.000000
+strptime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.345000
+strptime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400
+strptime("1970-01-01 00:00:00 EET",   "%Y-%m-%d %H:%M:%S %Z") = -7200
 </pre>
 
 
 ### strptime_local
 <pre class="pre-non-highlight-non-pair">
 strptime_local  (class=time #args=2) Like stpftime but consults the $TZ environment variable to get local time zone.
+Examples:
+strptime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001     with TZ="Asia/Istanbul"
+strptime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001.345 with TZ="Asia/Istanbul"
+strptime_local("2015-08-28 13:33:21",    "%Y-%m-%d %H:%M:%S")   = 1440758001     with TZ="Asia/Istanbul"
 </pre>
 
 

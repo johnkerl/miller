@@ -192,20 +192,21 @@ FUNCTION LIST
        asserting_present asserting_string atan atan2 atanh bitcount boolean
        capitalize cbrt ceil clean_whitespace collapse_whitespace cos cosh depth
        dhms2fsec dhms2sec erf erfc every exp expm1 flatten float floor fmtnum fold
-       fsec2dhms fsec2hms get_keys get_values gmt2sec gsub haskey hexfmt hms2fsec
-       hms2sec hostname int invqnorm is_absent is_array is_bool is_boolean is_empty
-       is_empty_map is_error is_float is_int is_map is_nonempty_map is_not_array
-       is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
-       joink joinkv joinv json_parse json_stringify leafcount length localtime2sec
-       log log10 log1p logifit lstrip madd mapdiff mapexcept mapselect mapsum max md5
-       mexp min mmul msub os pow qnorm reduce regextract regextract_or_else round
-       roundm rstrip sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
-       select sgn sha1 sha256 sha512 sin sinh sort splita splitax splitkv splitkvx
-       splitnv splitnvx sqrt ssub strftime strftime_local string strip strlen
-       strptime strptime_local sub substr substr0 substr1 system systime systimeint
-       tan tanh tolower toupper truncate typeof unflatten uptime urand urand32
-       urandint urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt;
-       &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ?? ??? ^ ^^ | || ~
+       fsec2dhms fsec2hms get_keys get_values gmt2localtime gmt2sec gsub haskey
+       hexfmt hms2fsec hms2sec hostname int invqnorm is_absent is_array is_bool
+       is_boolean is_empty is_empty_map is_error is_float is_int is_map
+       is_nonempty_map is_not_array is_not_empty is_not_map is_not_null is_null
+       is_numeric is_present is_string joink joinkv joinv json_parse json_stringify
+       leafcount length localtime2gmt localtime2sec log log10 log1p logifit lstrip
+       madd mapdiff mapexcept mapselect mapsum max md5 mexp min mmul msub os pow
+       qnorm reduce regextract regextract_or_else round roundm rstrip sec2dhms
+       sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime select sgn sha1 sha256
+       sha512 sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt
+       ssub strftime strftime_local string strip strlen strptime strptime_local sub
+       substr substr0 substr1 system systime systimeint tan tanh tolower toupper
+       truncate typeof unflatten uptime urand urand32 urandint urandrange version !
+       != !=~ % & && * ** + - . .* .+ .- ./ / // &lt; &lt;&lt; &lt;= &lt;=&gt; == =~ &gt; &gt;= &gt;&gt; &gt;&gt;&gt; ?: ??
+       ??? ^ ^^ | || ~
 
 COMMENTS-IN-DATA FLAGS
        Miller lets you put comments in your data, such as
@@ -470,6 +471,8 @@ MISCELLANEOUS FLAGS
                                 the `fmtnum` function and the `format-values` verb.
        --seed {n}               with `n` of the form `12345678` or `0xcafefeed`. For
                                 `put`/`filter` `urand`, `urandint`, and `urand32`.
+       --tz {timezone}          Specify timezone, overriding `$TZ` environment
+                                variable (if any).
        -I                       Process files in-place. For each file name on the
                                 command line, output is written to a temp file in the
                                 same directory, which is then renamed over the
@@ -1886,6 +1889,7 @@ FUNCTIONS FOR FILTER/PUT
 
    any
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+       Examples:
        Array example: any([10,20,30], func(e) {return $index == e})
        Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 
@@ -1894,6 +1898,7 @@ FUNCTIONS FOR FILTER/PUT
 
    apply
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
+       Examples:
        Array example: apply([1,2,3,4,5], func(e) {return e ** 3}) returns [1, 8, 27, 64, 125].
        Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
 
@@ -2017,6 +2022,7 @@ FUNCTIONS FOR FILTER/PUT
 
    every
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+       Examples:
        Array example: every(["a", "b", "c"], func(e) {return $[e] &gt;= 0})
        Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 
@@ -2028,8 +2034,9 @@ FUNCTIONS FOR FILTER/PUT
 
    flatten
         (class=collections #args=3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.
-       Example: flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
-       Example: flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+       Examples:
+       flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+       flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
        Two-argument version: flatten($*, ".") is the same as flatten("", ".", $*).
 
    float
@@ -2043,6 +2050,7 @@ FUNCTIONS FOR FILTER/PUT
 
    fold
         (class=higher-order-functions #args=3) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is taken from the third argument.
+       Examples:
        Array example: fold([1,2,3,4,5], func(acc,e) {return acc + e**3}, 10000) returns 10225.
        Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": accv+ev**2}}, {"sum":10000}) returns 10035.
 
@@ -2058,11 +2066,18 @@ FUNCTIONS FOR FILTER/PUT
    get_values
         (class=collections #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
 
+   gmt2localtime
+        (class=time #args=1) Convert from a GMT-time string to a local-time string, consulting $TZ
+       Example:
+       gmt2localtime("1999-12-31T22:00:00Z") = "2000-01-01 00:00:00" with TZ="Asia/Istanbul"
+
    gmt2sec
         (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
+       Example:
+       gmt2sec("2001-02-03T04:05:06Z") = 981173106
 
    gsub
-        (class=string #args=3) Example: '$name=gsub($name, "old", "new")' (replace all).
+        (class=string #args=3) '$name=gsub($name, "old", "new")' (replace all).
 
    haskey
         (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.  Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
@@ -2144,13 +2159,15 @@ FUNCTIONS FOR FILTER/PUT
 
    joink
         (class=conversion #args=2) Makes string from map/array keys.
-       Example: joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".
-       Example: joink([1,2,3], ",") = "1,2,3".
+       Examples:
+       joink({"a":3,"b":4,"c":5}, ",") = "a,b,c".
+       joink([1,2,3], ",") = "1,2,3".
 
    joinkv
         (class=conversion #args=3) Makes string from map/array key-value pairs.
-       Example: joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
-       Example: joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
+       Examples:
+       joinkv([3,4,5], "=", ",") = "1=3,2=4,3=5"
+       joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 
    joinv
         (class=conversion #args=2) Makes string from map/array values.  joinv([3,4,5], ",") = "3,4,5" joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
@@ -2167,8 +2184,15 @@ FUNCTIONS FOR FILTER/PUT
    length
         (class=collections #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
 
+   localtime2gmt
+        (class=time #args=1) Convert from a local-time string to a GMT-time string, consulting $TZ
+       Example:
+       localtime2gmt("2000-01-01 00:00:00") = "1999-12-31T22:00:00Z" with TZ="Asia/Istanbul"
+
    localtime2sec
         (class=time #args=1) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable.
+       Example:
+       localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"
 
    log
         (class=math #args=1) Natural (base-e) logarithm.
@@ -2229,14 +2253,15 @@ FUNCTIONS FOR FILTER/PUT
 
    reduce
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, accumulates entries into a final output -- for example, sum or product. For arrays, the function should take two arguments, for accumulated value and array element, and return the accumulated element. For maps, it should take four arguments, for accumulated key and value, and map-element key and value; it should return the updated accumulator as a new key-value pair (i.e. a single-entry map). The start value for the accumulator is the first element for arrays, or the first element's key-value pair for maps.
+       Examples:
        Array example: reduce([1,2,3,4,5], func(acc,e) {return acc + e**3}) returns 225.
        Map example: reduce({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum_of_squares": accv + ev**2}}) returns {"sum_of_squares": 35}.
 
    regextract
-        (class=string #args=2) Example: '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
+        (class=string #args=2) '$name=regextract($name, "[A-Z]{3}[0-9]{2}")'
 
    regextract_or_else
-        (class=string #args=3) Example: '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
+        (class=string #args=3) '$name=regextract_or_else($name, "[A-Z]{3}[0-9]{2}", "default")'
 
    round
         (class=math #args=1) Round to nearest integer.
@@ -2251,22 +2276,35 @@ FUNCTIONS FOR FILTER/PUT
         (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
 
    sec2gmt
-        (class=time #args=1,2) Formats seconds since epoch (integer part) as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+        (class=time #args=1,2) Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
+       Examples:
+       sec2gmt(1234567890)           = "2009-02-13T23:31:30Z"
+       sec2gmt(1234567890.123456)    = "2009-02-13T23:31:30Z"
+       sec2gmt(1234567890.123456, 6) = "2009-02-13T23:31:30.123456Z"
 
    sec2gmtdate
-        (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is.
+        (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date.  Leaves non-numbers as-is.
+       Example:
+       sec2gmtdate(1440768801.7) = "2015-08-28".
 
    sec2hms
         (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
 
    sec2localdate
-        (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".  Leaves non-numbers as-is. Consults $TZ environment variable.
+        (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date.  Leaves non-numbers as-is. Consults $TZ environment variable.
+       Example:
+       sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"
 
    sec2localtime
-        (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+        (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp.  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+       Examples:
+       sec2localtime(1234567890)           = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+       sec2localtime(1234567890.123456)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+       sec2localtime(1234567890.123456, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"
 
    select
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+       Examples:
        Array example: select([1,2,3,4,5], func(e) {return e &gt;= 3}) returns [3, 4, 5].
        Map example: select({"a":1, "b":3, "c":5}, func(k,v) {return v &gt;= 3}) returns {"b":3, "c": 5}.
 
@@ -2290,32 +2328,39 @@ FUNCTIONS FOR FILTER/PUT
 
    sort
         (class=higher-order-functions #args=1-2) Given a map or array as first argument and string flags or function as optional second argument, returns a sorted copy of the input. With one argument, sorts array elements naturally, and maps naturally by map keys. If the second argument is a string, it can contain any of "f" for lexical (default "n" for natural/numeric), "), "c" for case-folded lexical, and "r" for reversed/descending sort. If the second argument is a function, then for arrays it should take two arguments a and b, returning &lt; 0, 0, or &gt; 0 as a &lt; b, a == b, or a &gt; b respectively; for maps the function should take four arguments ak, av, bk, and bv, again returning &lt; 0, 0, or &gt; 0, using a and b's keys and values.
+       Examples:
        Array example: sort([5,2,3,1,4], func(a,b) {return b &lt;=&gt; a}) returns [5,4,3,2,1].
        Map example: sort({"c":2,"a":3,"b":1}, func(ak,av,bk,bv) {return bv &lt;=&gt; av}) returns {"a":3,"c":2,"b":1}.
 
    splita
         (class=conversion #args=2) Splits string into array with type inference.
-       Example: splita("3,4,5", ",") = [3,4,5]
+       Example:
+       splita("3,4,5", ",") = [3,4,5]
 
    splitax
         (class=conversion #args=2) Splits string into array without type inference.
-       Example: splita("3,4,5", ",") = ["3","4","5"]
+       Example:
+       splita("3,4,5", ",") = ["3","4","5"]
 
    splitkv
         (class=conversion #args=3) Splits string by separators into map with type inference.
-       Example: splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
+       Example:
+       splitkv("a=3,b=4,c=5", "=", ",") = {"a":3,"b":4,"c":5}
 
    splitkvx
         (class=conversion #args=3) Splits string by separators into map without type inference (keys and values are strings).
-       Example: splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
+       Example:
+       splitkvx("a=3,b=4,c=5", "=", ",") = {"a":"3","b":"4","c":"5"}
 
    splitnv
         (class=conversion #args=2) Splits string by separator into integer-indexed map with type inference.
-       Example: splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
+       Example:
+       splitnv("a,b,c", ",") = {"1":"a","2":"b","3":"c"}
 
    splitnvx
         (class=conversion #args=2) Splits string by separator into integer-indexed map without type inference (values are strings).
-       Example: splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
+       Example:
+       splitnvx("3,4,5", ",") = {"1":"3","2":"4","3":"5"}
 
    sqrt
         (class=math #args=1) Square root.
@@ -2324,10 +2369,16 @@ FUNCTIONS FOR FILTER/PUT
         (class=string #args=3) Like sub but does no regexing. No characters are special.
 
    strftime
-        (class=time #args=2) Formats seconds since the epoch as timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".  Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
+        (class=time #args=2) Formats seconds since the epoch as timestamp. Format strings are as in the C library (please see "man strftime" on your system), with the Miller-specific addition of "%1S" through "%9S" which format the seconds with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.) See also strftime_local.
+       Examples:
+       strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ")  = "2015-08-28T13:33:21Z"
+       strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"
 
    strftime_local
         (class=time #args=2) Like strftime but consults the $TZ environment variable to get local time zone.
+       Examples:
+       strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%S %z")  = "2015-08-28 16:33:21 +0300" with TZ="Asia/Istanbul"
+       strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z") = "2015-08-28 16:33:21.700 +0300" with TZ="Asia/Istanbul"
 
    string
         (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
@@ -2339,13 +2390,22 @@ FUNCTIONS FOR FILTER/PUT
         (class=string #args=1) String length.
 
    strptime
-        (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch, e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000, and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.  See also strptime_local.
+        (class=time #args=2) strptime: Parses timestamp as floating-point seconds since the epoch. See also strptime_local.
+       Examples:
+       strptime("2015-08-28T13:33:21Z",      "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.000000
+       strptime("2015-08-28T13:33:21.345Z",  "%Y-%m-%dT%H:%M:%SZ")   = 1440768801.345000
+       strptime("1970-01-01 00:00:00 -0400", "%Y-%m-%d %H:%M:%S %z") = 14400
+       strptime("1970-01-01 00:00:00 EET",   "%Y-%m-%d %H:%M:%S %Z") = -7200
 
    strptime_local
         (class=time #args=2) Like stpftime but consults the $TZ environment variable to get local time zone.
+       Examples:
+       strptime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001     with TZ="Asia/Istanbul"
+       strptime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001.345 with TZ="Asia/Istanbul"
+       strptime_local("2015-08-28 13:33:21",    "%Y-%m-%d %H:%M:%S")   = 1440758001     with TZ="Asia/Istanbul"
 
    sub
-        (class=string #args=3) Example: '$name=sub($name, "old", "new")' (replace once).
+        (class=string #args=3) '$name=sub($name, "old", "new")' (replace once).
 
    substr
         (class=string #args=3) substr is an alias for substr0. See also substr1. Miller is generally 1-up with all array and string indices, but, this is a backward-compatibility issue with Miller 5 and below. Arrays are new in Miller 6; the substr function is older.
@@ -2385,13 +2445,15 @@ FUNCTIONS FOR FILTER/PUT
 
    unflatten
         (class=collections #args=2) Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
-       Example: unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
+       Example:
+       unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
 
    uptime
         (class=time #args=0) help string will go here
 
    urand
         (class=math #args=0) Floating-point numbers uniformly distributed on the unit interval.
+       Example:
        Int-valued example: '$n=floor(20+urand()*11)'.
 
    urand32
@@ -2886,5 +2948,5 @@ SEE ALSO
 
 
 
-                                  2021-10-17                         MILLER(1)
+                                  2021-10-21                         MILLER(1)
 </pre>

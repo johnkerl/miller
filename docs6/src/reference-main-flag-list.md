@@ -331,6 +331,8 @@ These are flags which don't fit into any other category.
 `: E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
 * `--seed {n}
 `: with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.
+* `--tz {timezone}
+`: Specify timezone, overriding `$TZ` environment variable (if any).
 * `-I
 `: Process files in-place. For each file name on the command line, output is written to a temp file in the same directory, which is then renamed over the original. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file, statistics are only over each file's own records; and so on.
 * `-n

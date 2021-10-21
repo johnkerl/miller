@@ -2504,6 +2504,17 @@ var MiscFlagSection = FlagSection{
 		},
 
 		{
+			name: "--tz",
+			arg:  "{timezone}",
+			help: "Specify timezone, overriding `$TZ` environment variable (if any).",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				os.Setenv("TZ", args[*pargi+1])
+				*pargi += 2
+			},
+		},
+
+		{
 			name: "--nr-progress-mod",
 			arg:  "{m}",
 			help: "With m a positive integer: print filename and record count to os.Stderr every m input records.",
