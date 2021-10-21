@@ -56,6 +56,8 @@ d pre-release:
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
 
+* wut h1 spacing before/after ...
+
 ----------------------------------------------------------------
 LOCALTIME
 
@@ -74,44 +76,9 @@ LOCALTIME
 * new webdoc separate PR
   - incl https://github.com/johnkerl/miller/issues/331
 
-* ENV["TZ"] update:
-  o --tz is a setenv & is treated the same. also ENV["TZ"]
-  o no explicit tz arg @ dsl functions, sorry ...
-  o now maybe simplify the RTs ...
-  o at very least, at a multi-tz case
-  o sec2gmt       sec2localtime
-    sec2gmtdate   sec2localdate
-    strftime      strftime_local
-  o gmt2sec       localtime2sec
-    strptime      strptime_local
-  o gmt2localtime localtime2gmt
-  o note in new webdoc
-    mlr> sec2localtime(0)
-    "1969-12-31 19:00:00"
-    mlr> ENV["TZ"]=""
-    mlr> sec2localtime(0)
-    "1970-01-01 00:00:00"
-    mlr> ENV["TZ"]="GMT"
-    mlr> sec2localtime(0)
-    "1970-01-01 00:00:00"
-    mlr> ENV["TZ"]="Asia/Istanbul"
-    mlr> sec2localtime(0)
-    "1970-01-01 02:00:00"
-    mlr> ENV["TZ"]="America/Sao_Paulo"
-    mlr> sec2localtime(0)
-    "1969-12-31 21:00:00"
-  o ref:
-    https://www.gnu.org/software/libc/manual/html_node/TZ-Variable.html
-    http://www.iana.org/time-zones
-    https://en.wikipedia.org/wiki/Tz_database
-    https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-
 * https://github.com/johnkerl/miller/issues/332
   o localtime2gmt and gmt2localtime
     --tz
-    k maybe health-check with `location, err := time.LoadLocation("America/Los_Angeles")` -- ?
-    ? make this this applies to all datetimes that don't include a time zone
-    ? also make sure that, absent this, all zoneless datatimes are interpreted in that timezone
 
 ----------------------------------------------------------------
 398
