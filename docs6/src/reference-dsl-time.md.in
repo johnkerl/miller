@@ -6,7 +6,7 @@ date/times. In this page we take a look at what some of the various options are
 for processing datetimes andd timezones in your data.
 
 See also the [section on time-related
-functions](reference-dsl-builtin-functions/index.html#time-functions) for
+functions](reference-dsl-builtin-functions.md#time-functions) for
 information auto-generated from Miller's online-help strings.
 
 # Epoch seconds

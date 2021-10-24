@@ -36,8 +36,8 @@ const (
 
 // ================================================================
 type BuiltinFunctionInfo struct {
-	name                   string
-	class                  TFunctionClass
+	name  string
+	class TFunctionClass
 	// For source-code storage, these have newlines in them. For any presentation to the user, they must be
 	// formatted using the JoinHelp() method which joins newlines. This is crucial for rendering of
 	// help-strings for manual page, webdocs, etc wherein we must let the user's resizing of the terminal
@@ -842,6 +842,7 @@ argument n, includes n decimal places for the seconds part.`,
 			help: `Formats seconds since epoch (integer part) as local timestamp.  Consults $TZ
 environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for
 the seconds part`,
+			// TODO: 3rd-arg help
 			examples: []string{
 				`sec2localtime(1234567890)           = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"`,
 				`sec2localtime(1234567890.123456)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"`,
@@ -849,6 +850,7 @@ the seconds part`,
 			},
 			unaryFunc:          types.MlrvalSec2LocalTimeUnary,
 			binaryFunc:         types.MlrvalSec2LocalTimeBinary,
+			ternaryFunc:        types.MlrvalSec2LocalTimeTernary,
 			hasMultipleArities: true,
 		},
 
@@ -872,6 +874,8 @@ Leaves non-numbers as-is. Consults $TZ environment variable.`,
 				`sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"`,
 			},
 			unaryFunc: types.MlrvalSec2LocalDate,
+			// TODO
+			// binaryFunc: types.MlrvalSec2LocalDate,
 		},
 
 		{
@@ -1876,15 +1880,21 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
 }
 
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string) {
-	if !manager.TryListBuiltinFunctionUsage(functionName) {
+	// xxx remove bool-arg code smell
+	if !manager.TryListBuiltinFunctionUsage(functionName, true) {
 		fmt.Fprintf(os.Stderr, "Function \"%s\" not found.\n", functionName)
 	}
 }
 
-func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(functionName string) bool {
+func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(
+	functionName string,
+	showApproximate bool,
+) bool {
 	builtinFunctionInfo := manager.LookUp(functionName)
 	if builtinFunctionInfo == nil {
-		manager.listBuiltinFunctionUsageApproximate(functionName)
+		if showApproximate {
+			manager.listBuiltinFunctionUsageApproximate(functionName)
+		}
 		return false
 	}
 	manager.listBuiltinFunctionUsageExact(builtinFunctionInfo)

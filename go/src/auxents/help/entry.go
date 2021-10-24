@@ -220,9 +220,12 @@ func HelpMain(args []string) int {
 		}
 	}
 
-	// "mlr help something" where we do not recognize the something
-	listTopics()
+	if helpBySearch(name) {
+		return 0
+	}
 
+	// "mlr help something" where we do not recognize the something
+	fmt.Printf("No help found for \"%s\" -- please try 'mlr help topics'.\n", name)
 	return 0
 }
 
@@ -584,7 +587,43 @@ func usageFunctionsByClass() {
 }
 
 func helpForFunction(arg string) {
-	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg)
+	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, true)
+}
+
+// TODO: comment
+// xxx polymorphic looker-upper: try:
+// o flag
+// o verb
+// o function
+// o keyword
+// xxx note 'mlr help sort' finds verb before DSL function w/ same name ...
+// xxx 'mlr help verb sort' vs 'mlr help function sort'
+func helpBySearch(thing string) bool {
+
+	if cli.FLAG_TABLE.ShowHelpForFlag(thing) {
+		return true
+	}
+
+	// verb
+	transformerSetup := transformers.LookUp(thing)
+	if transformerSetup != nil {
+		transformerSetup.UsageFunc(os.Stdout, true, 0)
+		return true
+	}
+
+	// function
+	// to do: parameterize inexact-match printing ...
+	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(thing, false) {
+		return true
+	}
+
+	// keyword
+	if cst.TryUsageForKeyword(thing) {
+		return true
+	}
+
+	// not found
+	return false
 }
 
 // ----------------------------------------------------------------

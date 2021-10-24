@@ -22,7 +22,7 @@ date/times. In this page we take a look at what some of the various options are
 for processing datetimes andd timezones in your data.
 
 See also the [section on time-related
-functions](reference-dsl-builtin-functions/index.html#time-functions) for
+functions](reference-dsl-builtin-functions.md#time-functions) for
 information auto-generated from Miller's online-help strings.
 
 # Epoch seconds
@@ -143,14 +143,14 @@ mlr: unknown time zone This/Is/A/Typo
 <b>mlr -n put 'end { print sec2localtime(0) }'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-1970-01-01 02:00:00
+1970-01-01T00:00:00Z
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --tz America/Sao_Paulo -n put 'end { print sec2localtime(0) }'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-1969-12-31 21:00:00
+1970-01-01T00:00:00Z
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -167,11 +167,11 @@ mlr: unknown time zone This/Is/A/Typo
 <b>}'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-1970-01-01 02:00:00
+1970-01-01T00:00:00Z
 1970-01-01
 946775045
 
-1969-12-31 21:00:00
+1970-01-01T00:00:00Z
 1969-12-31
 946789445
 </pre>
@@ -190,7 +190,7 @@ We also have the
 <b>}'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-1970-01-01 02:00:00
+1970-01-01T00:00:00Z
 1969-12-31T22:00:00Z
 </pre>
 
