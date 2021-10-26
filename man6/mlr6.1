@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-10-21
+.\"      Date: 2021-10-26
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-10-21" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-10-26" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -186,6 +186,11 @@ Shorthands:
   mlr -F = mlr help usage-functions
   mlr -k = mlr help list-keywords
   mlr -K = mlr help usage-keywords
+Lastly, 'mlr help ...' will search for your text '...' using the sources of
+\(cqmlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.
+For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a
+verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'
+to disambiguate.
 .fi
 .if n \{\
 .RE
@@ -2410,7 +2415,7 @@ being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 .RS 0
 .\}
 .nf
- (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+ (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for any array/map element, false otherwise. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
 Examples:
 Array example: any([10,20,30], func(e) {return $index == e})
 Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
@@ -2431,7 +2436,7 @@ Map example: any({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 .RS 0
 .\}
 .nf
- (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map.  For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
+ (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, applies the function to each element of the array/map. For arrays, the function should take one argument, for array element; it should return a new element. For maps, it should take two arguments, for map-element key and value; it should return a new key-value pair (i.e. a single-entry map).
 Examples:
 Array example: apply([1,2,3,4,5], func(e) {return e ** 3}) returns [1, 8, 27, 64, 125].
 Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}}) returns {"A": 1, "B":9, "C": 25}",
@@ -2443,8 +2448,7 @@ Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}
 .RS 0
 .\}
 .nf
- (class=collections #args=1) Walks through a nested map/array, converting any map with consecutive keys
-"1", "2", ... into an array. Useful to wrap the output of unflatten.
+ (class=collections #args=1) Walks through a nested map/array, converting any map with consecutive keys "1", "2", ... into an array. Useful to wrap the output of unflatten.
 .fi
 .if n \{\
 .RE
@@ -2795,7 +2799,7 @@ Map example: apply({"a":1, "b":3, "c":5}, func(k,v) {return {toupper(k): v ** 2}
 .RS 0
 .\}
 .nf
- (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise.  For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
+ (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, yields a boolean true if the argument function returns true for every array/map element, false otherwise. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
 Examples:
 Array example: every(["a", "b", "c"], func(e) {return $[e] >= 0})
 Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
@@ -2825,7 +2829,7 @@ Map example: every({"a": "foo", "b": "bar"}, func(k,v) {return $[k] == v})
 .RS 0
 .\}
 .nf
- (class=collections #args=3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.
+ (class=collections #args=2,3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.
 Examples:
 flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
 flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
@@ -2913,9 +2917,10 @@ Map example: fold({"a":1, "b":3, "c": 5}, func(acck,accv,ek,ev) {return {"sum": 
 .RS 0
 .\}
 .nf
- (class=time #args=1) Convert from a GMT-time string to a local-time string, consulting $TZ
-Example:
+ (class=time #args=1,2) Convert from a GMT-time string to a local-time string. Consulting $TZ unless second argument is supplied.
+Examples:
 gmt2localtime("1999-12-31T22:00:00Z") = "2000-01-01 00:00:00" with TZ="Asia/Istanbul"
+gmt2localtime("1999-12-31T22:00:00Z", "Asia/Istanbul") = "2000-01-01 00:00:00"
 .fi
 .if n \{\
 .RE
@@ -2944,7 +2949,7 @@ gmt2sec("2001-02-03T04:05:06Z") = 981173106
 .RS 0
 .\}
 .nf
- (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds.  Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
+ (class=collections #args=2) True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)', or true/false if array index is in bounds / out of bounds. Error if 1st argument is not a map or array. Note -n..-1 alias to 1..n in Miller arrays.
 .fi
 .if n \{\
 .RE
@@ -2998,7 +3003,7 @@ gmt2sec("2001-02-03T04:05:06Z") = 981173106
 .RS 0
 .\}
 .nf
- (class=math #args=1) Inverse of normal cumulative distribution function.  Note that invqorm(urand()) is normally distributed.
+ (class=math #args=1) Inverse of normal cumulative distribution function. Note that invqorm(urand()) is normally distributed.
 .fi
 .if n \{\
 .RE
@@ -3202,7 +3207,10 @@ joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 .RS 0
 .\}
 .nf
- (class=conversion #args=2) Makes string from map/array values.  joinv([3,4,5], ",") = "3,4,5" joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
+ (class=conversion #args=2) Makes string from map/array values.
+Examples:
+joinv([3,4,5], ",") = "3,4,5"
+joinv({"a":3,"b":4,"c":5}, ",") = "3,4,5"
 .fi
 .if n \{\
 .RE
@@ -3220,7 +3228,7 @@ joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 .RS 0
 .\}
 .nf
- (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line.  With optional second boolean argument set to true, produces multiline output.
+ (class=collections #args=1,2) Converts value to JSON-formatted string. Default output is single-line. With optional second boolean argument set to true, produces multiline output.
 .fi
 .if n \{\
 .RE
@@ -3247,9 +3255,10 @@ joinkv({"a":3,"b":4,"c":5}, "=", ",") = "a=3,b=4,c=5"
 .RS 0
 .\}
 .nf
- (class=time #args=1) Convert from a local-time string to a GMT-time string, consulting $TZ
-Example:
+ (class=time #args=1,2) Convert from a local-time string to a GMT-time string. Consults $TZ unless second argument is supplied.
+Examples:
 localtime2gmt("2000-01-01 00:00:00") = "1999-12-31T22:00:00Z" with TZ="Asia/Istanbul"
+localtime2gmt("2000-01-01 00:00:00", "Asia/Istanbul") = "1999-12-31T22:00:00Z"
 .fi
 .if n \{\
 .RE
@@ -3258,9 +3267,10 @@ localtime2gmt("2000-01-01 00:00:00") = "1999-12-31T22:00:00Z" with TZ="Asia/Ista
 .RS 0
 .\}
 .nf
- (class=time #args=1) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable.
-Example:
+ (class=time #args=1,2) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable, unless second argument is supplied.
+Examples:
 localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"
+localtime2sec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906"
 .fi
 .if n \{\
 .RE
@@ -3323,7 +3333,7 @@ localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"
 .RS 0
 .\}
 .nf
- (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg.  With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
+ (class=collections #args=variadic) With 0 args, returns empty map. With 1 arg, returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
 .fi
 .if n \{\
 .RE
@@ -3332,7 +3342,7 @@ localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"
 .RS 0
 .\}
 .nf
- (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset.  Remaining arguments can be strings or arrays of string.  E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}' and  'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
+ (class=collections #args=variadic) Returns a map with keys from remaining arguments, if any, unset. Remaining arguments can be strings or arrays of string. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}' and 'mapexcept({1:2,3:4,5:6}, [1, 5, 7])' is '{3:4}'.
 .fi
 .if n \{\
 .RE
@@ -3341,7 +3351,7 @@ localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"
 .RS 0
 .\}
 .nf
- (class=collections #args=variadic) Returns a map with only keys from remaining arguments set.  Remaining arguments can be strings or arrays of string.  E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}' and  'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
+ (class=collections #args=variadic) Returns a map with only keys from remaining arguments set. Remaining arguments can be strings or arrays of string. E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}' and 'mapselect({1:2,3:4,5:6}, [1, 5, 7])' is '{1:2,5:6}'.
 .fi
 .if n \{\
 .RE
@@ -3350,7 +3360,7 @@ localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"
 .RS 0
 .\}
 .nf
- (class=collections #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g.  'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
+ (class=collections #args=variadic) With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 .fi
 .if n \{\
 .RE
@@ -3519,7 +3529,7 @@ sec2gmt(1234567890.123456, 6) = "2009-02-13T23:31:30.123456Z"
 .RS 0
 .\}
 .nf
- (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date.  Leaves non-numbers as-is.
+ (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date. Leaves non-numbers as-is.
 Example:
 sec2gmtdate(1440768801.7) = "2015-08-28".
 .fi
@@ -3539,9 +3549,10 @@ sec2gmtdate(1440768801.7) = "2015-08-28".
 .RS 0
 .\}
 .nf
- (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date.  Leaves non-numbers as-is. Consults $TZ environment variable.
-Example:
+ (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp with year-month-date. Leaves non-numbers as-is. Consults $TZ environment variable unless second argument is supplied.
+Examples:
 sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"
+sec2localdate(1440768801.7, "Asia/Istanbul") = "2015-08-28"
 .fi
 .if n \{\
 .RE
@@ -3550,11 +3561,12 @@ sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"
 .RS 0
 .\}
 .nf
- (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp.  Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+ (class=time #args=1,2,3) Formats seconds since epoch (integer part) as local timestamp. Consults $TZ environment variable unless third argument is supplied. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
 Examples:
 sec2localtime(1234567890)           = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
 sec2localtime(1234567890.123456)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
 sec2localtime(1234567890.123456, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"
+sec2localtime(1234567890.123456, 6, "Asia/Istanbul") = "2009-02-14 01:31:30.123456"
 .fi
 .if n \{\
 .RE
@@ -3737,10 +3749,11 @@ strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"
 .RS 0
 .\}
 .nf
- (class=time #args=2) Like strftime but consults the $TZ environment variable to get local time zone.
+ (class=time #args=2,3) Like strftime but consults the $TZ environment variable to get local time zone.
 Examples:
 strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%S %z")  = "2015-08-28 16:33:21 +0300" with TZ="Asia/Istanbul"
 strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z") = "2015-08-28 16:33:21.700 +0300" with TZ="Asia/Istanbul"
+strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.700 +0300"
 .fi
 .if n \{\
 .RE
@@ -3790,11 +3803,12 @@ strptime("1970-01-01 00:00:00 EET",   "%Y-%m-%d %H:%M:%S %Z") = -7200
 .RS 0
 .\}
 .nf
- (class=time #args=2) Like stpftime but consults the $TZ environment variable to get local time zone.
+ (class=time #args=2,3) Like stpftime but consults the $TZ environment variable to get local time zone.
 Examples:
 strptime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001     with TZ="Asia/Istanbul"
 strptime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001.345 with TZ="Asia/Istanbul"
-strptime_local("2015-08-28 13:33:21",    "%Y-%m-%d %H:%M:%S")   = 1440758001     with TZ="Asia/Istanbul"
+strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S")  = 1440758001     with TZ="Asia/Istanbul"
+strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") = 1440758001
 .fi
 .if n \{\
 .RE
@@ -3920,7 +3934,7 @@ strptime_local("2015-08-28 13:33:21",    "%Y-%m-%d %H:%M:%S")   = 1440758001    
 .RS 0
 .\}
 .nf
- (class=collections #args=2) Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV.  See also arrayify.
+ (class=collections #args=2) Reverses flatten. Useful for nested JSON-like structures for non-JSON file formats like CSV. See also arrayify.
 Example:
 unflatten({"a.b.c" : 4}, ".") is {"a": "b": { "c": 4 }}.
 .fi

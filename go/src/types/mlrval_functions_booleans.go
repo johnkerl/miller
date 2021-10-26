@@ -242,7 +242,7 @@ func eq_b_aa(input1, input2 *Mlrval) *Mlrval {
 
 	// Same-length arrays: return false if any slot is not equal, else true.
 	for i := range a {
-		eq := MlrvalEquals(&a[i], &b[i])
+		eq := BIF_equals(&a[i], &b[i])
 		lib.InternalCodingErrorIf(eq.mvtype != MT_BOOL)
 		if eq.boolval == false {
 			return MLRVAL_FALSE
@@ -375,25 +375,25 @@ var cmp_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalEquals(input1, input2 *Mlrval) *Mlrval {
+func BIF_equals(input1, input2 *Mlrval) *Mlrval {
 	return eq_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
-func MlrvalNotEquals(input1, input2 *Mlrval) *Mlrval {
+func BIF_not_equals(input1, input2 *Mlrval) *Mlrval {
 	return ne_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
-func MlrvalGreaterThan(input1, input2 *Mlrval) *Mlrval {
+func BIF_greater_than(input1, input2 *Mlrval) *Mlrval {
 	return gt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
-func MlrvalGreaterThanOrEquals(input1, input2 *Mlrval) *Mlrval {
+func BIF_greater_than_or_equals(input1, input2 *Mlrval) *Mlrval {
 	return ge_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
-func MlrvalLessThan(input1, input2 *Mlrval) *Mlrval {
+func BIF_less_than(input1, input2 *Mlrval) *Mlrval {
 	return lt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
-func MlrvalLessThanOrEquals(input1, input2 *Mlrval) *Mlrval {
+func BIF_less_than_or_equals(input1, input2 *Mlrval) *Mlrval {
 	return le_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
-func MlrvalCmp(input1, input2 *Mlrval) *Mlrval {
+func BIF_cmp(input1, input2 *Mlrval) *Mlrval {
 	return cmp_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -462,7 +462,7 @@ func MlrvalLogicalOR(input1, input2 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalLogicalXOR(input1, input2 *Mlrval) *Mlrval {
+func BIF_logicalxor(input1, input2 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
 		return MlrvalPointerFromBool(input1.boolval != input2.boolval)
 	} else {

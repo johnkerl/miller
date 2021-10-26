@@ -22,7 +22,7 @@ date/times. In this page we take a look at what some of the various options are
 for processing datetimes andd timezones in your data.
 
 See also the [section on time-related
-functions](reference-dsl-builtin-functions/index.html#time-functions) for
+functions](reference-dsl-builtin-functions.md#time-functions) for
 information auto-generated from Miller's online-help strings.
 
 # Epoch seconds
@@ -33,7 +33,7 @@ UTC. This representation has several advantages, and is quite common in the
 computing world.
 
 Since this is a [number](reference-main-arithmetic.md) in Miller -- 64-bit
-signed integer or double-precision floating-point -- this can represent dates
+signed integer or double-precision floating-point -- it can represent dates
 billions of years into the past or future without worry of overflow.  (There is
 no [year-2038 problem](https://en.wikipedia.org/wiki/Year_2038_problem) here.)
 Being numbers, epoch-seconds are easy to store in databases, communicate over
@@ -42,10 +42,10 @@ they're independent of timezone or daylight-savings time.
 
 One minus is that, being just numbers, they're not particularly human-readable
 -- hence the to-string and from-string functions described below.  Another
-caveat (not really a minus) is that _epoch milliseconds_ are common in some
-contexts, particulary JavaScript. If you every see a timestamp for the year
-49,000-something -- probablhy someone is treating epoch-milliseconds as
-epoch-seconds.
+caveat (not really a minus) is that _epoch milliseconds_, rather than epoch
+seconds, are common in some contexts, particulary JavaScript. If you ever
+(anywhere) see a timestamp for the year 49,000-something -- probably someone is
+treating epoch-milliseconds as epoch-seconds.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr -n put 'end {</b>
@@ -125,11 +125,12 @@ We have the
 
 You can specify the timezone using any of the following:
 
-* An environment variable, e.g. `export TZ=Asia/Istanbul` at your system prompt (`set TZ=Asia/Istanbul` in Windows)
-* Using the `--tz` flag. This sets the `TZ` environment variable, but only internally to the `mlr` process
+* An environment variable, e.g. `export TZ=Asia/Istanbul` at your system prompt (`set TZ=Asia/Istanbul` in Windows).
+* Using the `--tz` flag. This sets the `TZ` environment variable, but only internally to the `mlr` process.
 * Within a DSL expression, you can assign to `ENV["TZ"]`.
+* By supplying an additional argument to any of the functions with `local` in their names.
 
-Regardless, if you specifiy an invalid timezone, you'll be clearly notified:
+Regardless, if you specify an invalid timezone, you'll be clearly notified:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --from example.csv --tz This/Is/A/Typo cat</b>
@@ -176,6 +177,27 @@ mlr: unknown time zone This/Is/A/Typo
 946789445
 </pre>
 
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put 'end {</b>
+<b>  print sec2localtime(0, 0, "Asia/Istanbul");</b>
+<b>  print sec2localdate(0, "Asia/Istanbul");</b>
+<b>  print localtime2sec("2000-01-02 03:04:05", "Asia/Istanbul");</b>
+<b>  print;</b>
+<b>  print sec2localtime(0, 0, "America/Sao_Paulo");</b>
+<b>  print sec2localdate(0, "America/Sao_Paulo");</b>
+<b>  print localtime2sec("2000-01-02 03:04:05", "America/Sao_Paulo");</b>
+<b>}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1970-01-01 02:00:00
+1970-01-01
+946775045
+
+1969-12-31 21:00:00
+1969-12-31
+946789445
+</pre>
+
 Note that for local times, Miller omits the `T` and the `Z` you see in GMT times.
 
 We also have the 
@@ -191,6 +213,21 @@ We also have the
 </pre>
 <pre class="pre-non-highlight-in-pair">
 1970-01-01 02:00:00
+1969-12-31T22:00:00Z
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put 'end {</b>
+<b>  print gmt2localtime("1970-01-01T00:00:00Z", "America/Sao_Paulo");</b>
+<b>  print gmt2localtime("1970-01-01T00:00:00Z", "Asia/Istanbul");</b>
+<b>  print localtime2gmt("1970-01-01 00:00:00",  "America/Sao_Paulo");</b>
+<b>  print localtime2gmt("1970-01-01 00:00:00",  "Asia/Istanbul");</b>
+<b>}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1969-12-31 21:00:00
+1970-01-01 02:00:00
+1970-01-01T03:00:00Z
 1969-12-31T22:00:00Z
 </pre>
 
@@ -251,6 +288,31 @@ We also have
 <b>  print strftime_local(0, "%Y-%m-%d %H:%M:%S %z");</b>
 <b>  print strftime_local(0, "%A, %B %e, %Y");</b>
 <b>  print strptime_local("2020-03-01 00:00:00", "%Y-%m-%d %H:%M:%S");</b>
+<b>}'</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+1969-12-31 14:00:00 AHST
+1969-12-31 14:00:00 -1000
+Wednesday, December 31, 1969
+1583053200
+
+1970-01-01 08:00:00 HKT
+1970-01-01 08:00:00 +0800
+Thursday, January  1, 1970
+1582992000
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr -n put 'end {</b>
+<b>  print strftime_local(0, "%Y-%m-%d %H:%M:%S %Z", "America/Anchorage");</b>
+<b>  print strftime_local(0, "%Y-%m-%d %H:%M:%S %z", "America/Anchorage");</b>
+<b>  print strftime_local(0, "%A, %B %e, %Y",        "America/Anchorage");</b>
+<b>  print strptime_local("2020-03-01 00:00:00", "%Y-%m-%d %H:%M:%S", "America/Anchorage");</b>
+<b>  print;</b>
+<b>  print strftime_local(0, "%Y-%m-%d %H:%M:%S %Z", "Asia/Hong_Kong");</b>
+<b>  print strftime_local(0, "%Y-%m-%d %H:%M:%S %z", "Asia/Hong_Kong");</b>
+<b>  print strftime_local(0, "%A, %B %e, %Y",        "Asia/Hong_Kong");</b>
+<b>  print strptime_local("2020-03-01 00:00:00", "%Y-%m-%d %H:%M:%S", "Asia/Hong_Kong");</b>
 <b>}'</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">

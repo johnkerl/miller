@@ -25,13 +25,20 @@ func SetTZFromEnv() {
 }
 
 func Sec2GMT(epochSeconds float64, numDecimalPlaces int) string {
-	return sec2GMTOrLocalTime(epochSeconds, numDecimalPlaces, false)
+	return sec2Time(epochSeconds, numDecimalPlaces, false, nil)
 }
 func Sec2LocalTime(epochSeconds float64, numDecimalPlaces int) string {
-	return sec2GMTOrLocalTime(epochSeconds, numDecimalPlaces, true)
+	return sec2Time(epochSeconds, numDecimalPlaces, true, nil)
 }
 
-func sec2GMTOrLocalTime(epochSeconds float64, numDecimalPlaces int, doLocal bool) string {
+func Sec2LocationTime(epochSeconds float64, numDecimalPlaces int, location *time.Location) string {
+	return sec2Time(epochSeconds, numDecimalPlaces, true, location)
+}
+
+// sec2Time is for DSL functions sec2gmt and sec2localtime. If doLocal is
+// false, use UTC.  Else if location is nil, use $TZ environment variable. Else
+// use the specified location.
+func sec2Time(epochSeconds float64, numDecimalPlaces int, doLocal bool, location *time.Location) string {
 	if numDecimalPlaces > 9 {
 		numDecimalPlaces = 9
 	}
@@ -46,10 +53,11 @@ func sec2GMTOrLocalTime(epochSeconds float64, numDecimalPlaces int, doLocal bool
 
 	t := time.Unix(intPart, 0)
 	if doLocal {
-		// Note: the Go time package doesn't do Getenv("TZ") on every call.
-		// Rather, it stashes the first call. This means we can't change $TZ
-		// mid-process for testing purposes.
-		t = t.Local()
+		if location != nil {
+			t = t.In(location)
+		} else {
+			t = t.Local()
+		}
 	} else {
 		t = t.UTC()
 	}
@@ -85,19 +93,27 @@ func sec2GMTOrLocalTime(epochSeconds float64, numDecimalPlaces int, doLocal bool
 }
 
 func EpochSecondsToGMT(epochSeconds float64) time.Time {
-	return epochSecondsToGMTOrLocalTime(epochSeconds, false)
+	return epochSecondsToTime(epochSeconds, false, nil)
 }
 
 func EpochSecondsToLocalTime(epochSeconds float64) time.Time {
-	return epochSecondsToGMTOrLocalTime(epochSeconds, true)
+	return epochSecondsToTime(epochSeconds, true, nil)
 }
 
-func epochSecondsToGMTOrLocalTime(epochSeconds float64, doLocal bool) time.Time {
+func EpochSecondsToLocationTime(epochSeconds float64, location *time.Location) time.Time {
+	return epochSecondsToTime(epochSeconds, true, location)
+}
+
+func epochSecondsToTime(epochSeconds float64, doLocal bool, location *time.Location) time.Time {
 	intPart := int64(epochSeconds)
 	fractionalPart := epochSeconds - float64(intPart)
 	decimalPart := int64(fractionalPart * 1e9)
 	if doLocal {
-		return time.Unix(intPart, decimalPart).Local()
+		if location == nil {
+			return time.Unix(intPart, decimalPart).Local()
+		} else {
+			return time.Unix(intPart, decimalPart).In(location)
+		}
 	} else {
 		return time.Unix(intPart, decimalPart).UTC()
 	}

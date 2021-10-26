@@ -220,9 +220,12 @@ func HelpMain(args []string) int {
 		}
 	}
 
-	// "mlr help something" where we do not recognize the something
-	listTopics()
+	if helpBySearch(name) {
+		return 0
+	}
 
+	// "mlr help something" where we do not recognize the something
+	fmt.Printf("No help found for \"%s\" -- please try 'mlr help topics'.\n", name)
 	return 0
 }
 
@@ -286,6 +289,11 @@ func listTopics() {
 	for _, info := range shorthandLookupTable.shorthandInfos {
 		fmt.Printf("  mlr %s = mlr help %s\n", info.shorthand, info.longhand)
 	}
+	fmt.Printf("Lastly, 'mlr help ...' will search for your text '...' using the sources of\n")
+	fmt.Printf("'mlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.\n")
+	fmt.Printf("For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a\n")
+	fmt.Printf("verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'\n")
+	fmt.Printf("to disambiguate.\n")
 }
 
 // ----------------------------------------------------------------
@@ -453,7 +461,7 @@ func helpTypeArithmeticInfo() {
 			} else if i == -1 {
 				fmt.Printf(" %-10s", "------")
 			} else {
-				sum := types.MlrvalBinaryPlus(mlrvals[i], mlrvals[j])
+				sum := types.BIF_plus_binary(mlrvals[i], mlrvals[j])
 				fmt.Printf(" %-10s", sum.String())
 			}
 		}
@@ -584,7 +592,44 @@ func usageFunctionsByClass() {
 }
 
 func helpForFunction(arg string) {
-	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg)
+	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, true)
+}
+
+// TODO: comment
+// xxx polymorphic looker-upper: try:
+// o flag
+// o verb
+// o function
+// o keyword
+// xxx note 'mlr help sort' finds verb before DSL function w/ same name ...
+// xxx 'mlr help verb sort' vs 'mlr help function sort'
+func helpBySearch(thing string) bool {
+
+	// flag
+	if cli.FLAG_TABLE.ShowHelpForFlag(thing) {
+		return true
+	}
+
+	// verb
+	transformerSetup := transformers.LookUp(thing)
+	if transformerSetup != nil {
+		transformerSetup.UsageFunc(os.Stdout, true, 0)
+		return true
+	}
+
+	// function
+	// to do: parameterize inexact-match printing ...
+	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(thing, false) {
+		return true
+	}
+
+	// keyword
+	if cst.TryUsageForKeyword(thing) {
+		return true
+	}
+
+	// not found
+	return false
 }
 
 // ----------------------------------------------------------------
