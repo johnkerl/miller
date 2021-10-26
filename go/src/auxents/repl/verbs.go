@@ -872,7 +872,7 @@ func handleHelpSingle(repl *Repl, arg string) {
 		return
 	}
 
-	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg) {
+	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, true) {
 		return
 	}
 

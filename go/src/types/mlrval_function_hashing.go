@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-func MlrvalMD5(input1 *Mlrval) *Mlrval {
+func BIF_md5(input1 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	} else {
@@ -21,7 +21,7 @@ func MlrvalMD5(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalSHA1(input1 *Mlrval) *Mlrval {
+func BIF_sha1(input1 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	} else {
@@ -34,7 +34,7 @@ func MlrvalSHA1(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalSHA256(input1 *Mlrval) *Mlrval {
+func BIF_sha256(input1 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	} else {
@@ -47,7 +47,7 @@ func MlrvalSHA256(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalSHA512(input1 *Mlrval) *Mlrval {
+func BIF_sha512(input1 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	} else {

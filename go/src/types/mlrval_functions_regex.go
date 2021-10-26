@@ -6,9 +6,9 @@ import (
 	"mlr/src/lib"
 )
 
-// MlrvalSsub implements the ssub function -- no-frills string-replace, no
+// BIF_ssub implements the ssub function -- no-frills string-replace, no
 // regexes, no escape sequences.
-func MlrvalSsub(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_ssub(input1, input2, input3 *Mlrval) *Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -32,14 +32,14 @@ func MlrvalSsub(input1, input2, input3 *Mlrval) *Mlrval {
 	)
 }
 
-// MlrvalSub implements the sub function, with support for regexes and regex captures
+// BIF_sub implements the sub function, with support for regexes and regex captures
 // of the form "\1" .. "\9".
 //
 // TODO: make a variant which allows compiling the regexp once and reusing it
 // on each record. Likewise for other regex-using functions in this file.  But
 // first, do a profiling run to see how much time would be saved, and if this
 // precomputing+caching would be worthwhile.
-func MlrvalSub(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_sub(input1, input2, input3 *Mlrval) *Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -67,9 +67,9 @@ func MlrvalSub(input1, input2, input3 *Mlrval) *Mlrval {
 	return MlrvalPointerFromString(stringOutput)
 }
 
-// MlrvalGsub implements the gsub function, with support for regexes and regex captures
+// BIF_gsub implements the gsub function, with support for regexes and regex captures
 // of the form "\1" .. "\9".
-func MlrvalGsub(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_gsub(input1, input2, input3 *Mlrval) *Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -97,9 +97,9 @@ func MlrvalGsub(input1, input2, input3 *Mlrval) *Mlrval {
 	return MlrvalPointerFromString(stringOutput)
 }
 
-// MlrvalStringMatchesRegexp implements the =~ operator, with support for
+// BIF_string_matches_regexp implements the =~ operator, with support for
 // setting regex-captures for later expressions to access using "\1" .. "\9".
-func MlrvalStringMatchesRegexp(input1, input2 *Mlrval) (retval *Mlrval, captures []string) {
+func BIF_string_matches_regexp(input1, input2 *Mlrval) (retval *Mlrval, captures []string) {
 	if !input1.IsLegit() {
 		return input1, nil
 	}
@@ -115,9 +115,9 @@ func MlrvalStringMatchesRegexp(input1, input2 *Mlrval) (retval *Mlrval, captures
 	return MlrvalPointerFromBool(boolOutput), captures
 }
 
-// MlrvalStringMatchesRegexp implements the !=~ operator.
-func MlrvalStringDoesNotMatchRegexp(input1, input2 *Mlrval) (retval *Mlrval, captures []string) {
-	output, captures := MlrvalStringMatchesRegexp(input1, input2)
+// BIF_string_matches_regexp implements the !=~ operator.
+func BIF_string_does_not_match_regexp(input1, input2 *Mlrval) (retval *Mlrval, captures []string) {
+	output, captures := BIF_string_matches_regexp(input1, input2)
 	if output.mvtype == MT_BOOL {
 		return MlrvalPointerFromBool(!output.boolval), captures
 	} else {
@@ -126,7 +126,7 @@ func MlrvalStringDoesNotMatchRegexp(input1, input2 *Mlrval) (retval *Mlrval, cap
 	}
 }
 
-func MlrvalRegextract(input1, input2 *Mlrval) *Mlrval {
+func BIF_regextract(input1, input2 *Mlrval) *Mlrval {
 	if !input1.IsString() {
 		return MLRVAL_ERROR
 	}
@@ -142,7 +142,7 @@ func MlrvalRegextract(input1, input2 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalRegextractOrElse(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_regextract_or_else(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input1.IsString() {
 		return MLRVAL_ERROR
 	}

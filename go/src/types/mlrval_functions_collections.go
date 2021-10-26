@@ -10,7 +10,7 @@ import (
 
 // ================================================================
 // Map/array count. Scalars (including strings) have length 1.
-func MlrvalLength(input1 *Mlrval) *Mlrval {
+func BIF_length(input1 *Mlrval) *Mlrval {
 	switch input1.mvtype {
 	case MT_ERROR:
 		return MlrvalPointerFromInt(0)
@@ -32,7 +32,7 @@ func MlrvalLength(input1 *Mlrval) *Mlrval {
 func depth_from_array(input1 *Mlrval) *Mlrval {
 	maxChildDepth := 0
 	for _, child := range input1.arrayval {
-		childDepth := MlrvalDepth(&child)
+		childDepth := BIF_depth(&child)
 		lib.InternalCodingErrorIf(childDepth.mvtype != MT_INT)
 		iChildDepth := int(childDepth.intval)
 		if iChildDepth > maxChildDepth {
@@ -46,7 +46,7 @@ func depth_from_map(input1 *Mlrval) *Mlrval {
 	maxChildDepth := 0
 	for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
-		childDepth := MlrvalDepth(child)
+		childDepth := BIF_depth(child)
 		lib.InternalCodingErrorIf(childDepth.mvtype != MT_INT)
 		iChildDepth := int(childDepth.intval)
 		if iChildDepth > maxChildDepth {
@@ -80,7 +80,7 @@ func init() {
 	}
 }
 
-func MlrvalDepth(input1 *Mlrval) *Mlrval {
+func BIF_depth(input1 *Mlrval) *Mlrval {
 	return depth_dispositions[input1.mvtype](input1)
 }
 
@@ -89,7 +89,7 @@ func leafcount_from_array(input1 *Mlrval) *Mlrval {
 	sumChildLeafCount := 0
 	for _, child := range input1.arrayval {
 		// Golang initialization loop if we do this :(
-		// childLeafCount := MlrvalLeafCount(&child)
+		// childLeafCount := BIF_leafcount(&child)
 
 		childLeafCount := MlrvalPointerFromInt(1)
 		if child.mvtype == MT_ARRAY {
@@ -111,7 +111,7 @@ func leafcount_from_map(input1 *Mlrval) *Mlrval {
 		child := pe.Value
 
 		// Golang initialization loop if we do this :(
-		// childLeafCount := MlrvalLeafCount(child)
+		// childLeafCount := BIF_leafcount(child)
 
 		childLeafCount := MlrvalPointerFromInt(1)
 		if child.mvtype == MT_ARRAY {
@@ -145,7 +145,7 @@ var leafcount_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func MlrvalLeafCount(input1 *Mlrval) *Mlrval {
+func BIF_leafcount(input1 *Mlrval) *Mlrval {
 	return leafcount_dispositions[input1.mvtype](input1)
 }
 
@@ -169,7 +169,7 @@ func has_key_in_map(input1, input2 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalHasKey(input1, input2 *Mlrval) *Mlrval {
+func BIF_haskey(input1, input2 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_ARRAY {
 		return has_key_in_array(input1, input2)
 	} else if input1.mvtype == MT_MAP {
@@ -180,7 +180,7 @@ func MlrvalHasKey(input1, input2 *Mlrval) *Mlrval {
 }
 
 // ================================================================
-func MlrvalMapSelect(mlrvals []*Mlrval) *Mlrval {
+func BIF_mapselect(mlrvals []*Mlrval) *Mlrval {
 	if len(mlrvals) < 1 {
 		return MLRVAL_ERROR
 	}
@@ -221,7 +221,7 @@ func MlrvalMapSelect(mlrvals []*Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalMapExcept(mlrvals []*Mlrval) *Mlrval {
+func BIF_mapexcept(mlrvals []*Mlrval) *Mlrval {
 	if len(mlrvals) < 1 {
 		return MLRVAL_ERROR
 	}
@@ -252,7 +252,7 @@ func MlrvalMapExcept(mlrvals []*Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalMapSum(mlrvals []*Mlrval) *Mlrval {
+func BIF_mapsum(mlrvals []*Mlrval) *Mlrval {
 	if len(mlrvals) == 0 {
 		return MlrvalPointerFromEmptyMap()
 	}
@@ -278,7 +278,7 @@ func MlrvalMapSum(mlrvals []*Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalMapDiff(mlrvals []*Mlrval) *Mlrval {
+func BIF_mapdiff(mlrvals []*Mlrval) *Mlrval {
 	if len(mlrvals) == 0 {
 		return MlrvalPointerFromEmptyMap()
 	}
@@ -306,7 +306,7 @@ func MlrvalMapDiff(mlrvals []*Mlrval) *Mlrval {
 // ================================================================
 // joink([1,2,3], ",") -> "1,2,3"
 // joink({"a":3,"b":4,"c":5}, ",") -> "a,b,c"
-func MlrvalJoinK(input1, input2 *Mlrval) *Mlrval {
+func BIF_joink(input1, input2 *Mlrval) *Mlrval {
 	if input2.mvtype != MT_STRING {
 		return MLRVAL_ERROR
 	}
@@ -342,7 +342,7 @@ func MlrvalJoinK(input1, input2 *Mlrval) *Mlrval {
 // ----------------------------------------------------------------
 // joinv([3,4,5], ",") -> "3,4,5"
 // joinv({"a":3,"b":4,"c":5}, ",") -> "3,4,5"
-func MlrvalJoinV(input1, input2 *Mlrval) *Mlrval {
+func BIF_joinv(input1, input2 *Mlrval) *Mlrval {
 	if input2.mvtype != MT_STRING {
 		return MLRVAL_ERROR
 	}
@@ -378,7 +378,7 @@ func MlrvalJoinV(input1, input2 *Mlrval) *Mlrval {
 // ----------------------------------------------------------------
 // joinkv([3,4,5], "=", ",") -> "1=3,2=4,3=5"
 // joinkv({"a":3,"b":4,"c":5}, "=", ",") -> "a=3,b=4,c=5"
-func MlrvalJoinKV(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_joinkv(input1, input2, input3 *Mlrval) *Mlrval {
 	if input2.mvtype != MT_STRING {
 		return MLRVAL_ERROR
 	}
@@ -422,7 +422,7 @@ func MlrvalJoinKV(input1, input2, input3 *Mlrval) *Mlrval {
 
 // ================================================================
 // splitkv("a=3,b=4,c=5", "=", ",") -> {"a":3,"b":4,"c":5}
-func MlrvalSplitKV(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_splitkv(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
@@ -457,7 +457,7 @@ func MlrvalSplitKV(input1, input2, input3 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 // splitkvx("a=3,b=4,c=5", "=", ",") -> {"a":"3","b":"4","c":"5"}
-func MlrvalSplitKVX(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_splitkvx(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
@@ -493,7 +493,7 @@ func MlrvalSplitKVX(input1, input2, input3 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 // splitnv("a,b,c", ",") -> {"1":"a","2":"b","3":"c"}
-func MlrvalSplitNV(input1, input2 *Mlrval) *Mlrval {
+func BIF_splitnv(input1, input2 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
@@ -515,7 +515,7 @@ func MlrvalSplitNV(input1, input2 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 // splitnvx("3,4,5", ",") -> {"1":"3","2":"4","3":"5"}
-func MlrvalSplitNVX(input1, input2 *Mlrval) *Mlrval {
+func BIF_splitnvx(input1, input2 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
@@ -537,7 +537,7 @@ func MlrvalSplitNVX(input1, input2 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 // splita("3,4,5", ",") -> [3,4,5]
-func MlrvalSplitA(input1, input2 *Mlrval) *Mlrval {
+func BIF_splita(input1, input2 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
@@ -559,9 +559,9 @@ func MlrvalSplitA(input1, input2 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-// MlrvalSplitAX splits a string to an array, without type-inference:
+// BIF_splitax splits a string to an array, without type-inference:
 // e.g. splitax("3,4,5", ",") -> ["3","4","5"]
-func MlrvalSplitAX(input1, input2 *Mlrval) *Mlrval {
+func BIF_splitax(input1, input2 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
@@ -574,8 +574,8 @@ func MlrvalSplitAX(input1, input2 *Mlrval) *Mlrval {
 	return mlrvalSplitAXHelper(input, fieldSeparator)
 }
 
-// mlrvalSplitAXHelper is Split out for the benefit of MlrvalSplitAX and
-// MlrvalUnflatten.
+// mlrvalSplitAXHelper is Split out for the benefit of BIF_splitax and
+// BIF_unflatten.
 func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 	fields := lib.SplitString(input, separator)
 
@@ -590,7 +590,7 @@ func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalGetKeys(input1 *Mlrval) *Mlrval {
+func BIF_get_keys(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_MAP {
 		// TODO: make a ReferenceFrom with comments
 		output := NewSizedMlrvalArray(input1.mapval.FieldCount)
@@ -614,7 +614,7 @@ func MlrvalGetKeys(input1 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalGetValues(input1 *Mlrval) *Mlrval {
+func BIF_get_values(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_MAP {
 		// TODO: make a ReferenceFrom with commenbs
 		output := NewSizedMlrvalArray(input1.mapval.FieldCount)
@@ -638,7 +638,7 @@ func MlrvalGetValues(input1 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalAppend(input1, input2 *Mlrval) *Mlrval {
+func BIF_append(input1, input2 *Mlrval) *Mlrval {
 	if input1.mvtype != MT_ARRAY {
 		return MLRVAL_ERROR
 	}
@@ -654,7 +654,7 @@ func MlrvalAppend(input1, input2 *Mlrval) *Mlrval {
 // Third argument is map or array.
 // flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
 // flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
-func MlrvalFlatten(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_flatten(input1, input2, input3 *Mlrval) *Mlrval {
 	if input3.mvtype == MT_MAP || input3.mvtype == MT_ARRAY {
 		if input1.mvtype != MT_STRING && input1.mvtype != MT_VOID {
 			return MLRVAL_ERROR
@@ -673,15 +673,15 @@ func MlrvalFlatten(input1, input2, input3 *Mlrval) *Mlrval {
 }
 
 // flatten($*, ".") is the same as flatten("", ".", $*)
-func MlrvalFlattenBinary(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFlatten(MLRVAL_VOID, input2, input1)
+func BIF_flatten_binary(input1, input2 *Mlrval) *Mlrval {
+	return BIF_flatten(MLRVAL_VOID, input2, input1)
 }
 
 // ----------------------------------------------------------------
 // First argument is a map.
 // Second argument is a delimiter string.
 // unflatten({"a.b.c", ".") is {"a": { "b": { "c": 4}}}.
-func MlrvalUnflatten(input1, input2 *Mlrval) *Mlrval {
+func BIF_unflatten(input1, input2 *Mlrval) *Mlrval {
 	if input2.mvtype != MT_STRING {
 		return MLRVAL_ERROR
 	}
@@ -696,7 +696,7 @@ func MlrvalUnflatten(input1, input2 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 // Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
-func MlrvalArrayify(input1 *Mlrval) *Mlrval {
+func BIF_arrayify(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_MAP {
 		if input1.mapval.IsEmpty() {
 			return input1
@@ -710,7 +710,7 @@ func MlrvalArrayify(input1 *Mlrval) *Mlrval {
 			if pe.Key != sval {
 				convertible = false
 			}
-			pe.Value = MlrvalArrayify(pe.Value)
+			pe.Value = BIF_arrayify(pe.Value)
 		}
 
 		if convertible {
@@ -730,7 +730,7 @@ func MlrvalArrayify(input1 *Mlrval) *Mlrval {
 		// TODO: comment (or rethink) that this modifies its inputs!!
 		output := input1.Copy()
 		for i := range input1.arrayval {
-			output.arrayval[i] = *MlrvalArrayify(&output.arrayval[i])
+			output.arrayval[i] = *BIF_arrayify(&output.arrayval[i])
 		}
 		return output
 
@@ -740,7 +740,7 @@ func MlrvalArrayify(input1 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalJSONParse(input1 *Mlrval) *Mlrval {
+func BIF_json_parse(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_VOID {
 		return input1
 	} else if input1.mvtype != MT_STRING {
@@ -755,7 +755,7 @@ func MlrvalJSONParse(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalJSONStringifyUnary(input1 *Mlrval) *Mlrval {
+func BIF_json_stringify_unary(input1 *Mlrval) *Mlrval {
 	outputBytes, err := input1.MarshalJSON(JSON_SINGLE_LINE, false)
 	if err != nil {
 		return MLRVAL_ERROR
@@ -764,7 +764,7 @@ func MlrvalJSONStringifyUnary(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalJSONStringifyBinary(input1, input2 *Mlrval) *Mlrval {
+func BIF_json_stringify_binary(input1, input2 *Mlrval) *Mlrval {
 	var jsonFormatting TJSONFormatting = JSON_SINGLE_LINE
 	useMultiline, ok := input2.GetBoolValue()
 	if !ok {

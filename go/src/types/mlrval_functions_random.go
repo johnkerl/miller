@@ -6,13 +6,13 @@ import (
 	"mlr/src/lib"
 )
 
-func MlrvalUrand() *Mlrval {
+func BIF_urand() *Mlrval {
 	return MlrvalPointerFromFloat64(
 		lib.RandFloat64(),
 	)
 }
 
-func MlrvalUrand32() *Mlrval {
+func BIF_urand32() *Mlrval {
 	return MlrvalPointerFromInt(
 		int(
 			lib.RandUint32(),
@@ -21,7 +21,7 @@ func MlrvalUrand32() *Mlrval {
 }
 
 // TODO: use a disposition matrix
-func MlrvalUrandInt(input1, input2 *Mlrval) *Mlrval {
+func BIF_urandint(input1, input2 *Mlrval) *Mlrval {
 	if !input1.IsLegit() {
 		return input1
 	}
@@ -51,7 +51,7 @@ func MlrvalUrandInt(input1, input2 *Mlrval) *Mlrval {
 	return MlrvalPointerFromInt(u)
 }
 
-func MlrvalUrandRange(input1, input2 *Mlrval) *Mlrval {
+func BIF_urandrange(input1, input2 *Mlrval) *Mlrval {
 	if !input1.IsLegit() {
 		return input1
 	}

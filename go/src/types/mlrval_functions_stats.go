@@ -50,7 +50,7 @@ func MlrvalGetStddev(mn, msum, msum2 *Mlrval) *Mlrval {
 	if mvar.IsVoid() {
 		return mvar
 	}
-	return MlrvalSqrt(mvar)
+	return BIF_sqrt(mvar)
 }
 
 // ----------------------------------------------------------------
@@ -59,7 +59,7 @@ func MlrvalGetMeanEB(mn, msum, msum2 *Mlrval) *Mlrval {
 	if mvar.IsVoid() {
 		return mvar
 	}
-	return MlrvalSqrt(MlrvalDivide(mvar, mn))
+	return BIF_sqrt(BIF_divide(mvar, mn))
 }
 
 // ----------------------------------------------------------------

@@ -30,6 +30,8 @@ TOP OF LIST:
 
 * CASEDIR cmd -> mlr via env not oosvar
 
+* consider expanding '(error)' to have more useful error-text
+
 * punchdown list:
   o $cpw
     - 3 regex-at-CLI cases -- repro @ akns
@@ -61,17 +63,11 @@ d pre-release:
 ----------------------------------------------------------------
 LOCALTIME
 
-! make optional tz args !
-  -> separate PR
-  sec2localtime  2nd
-  sec2localdate  3rd ... w/ int 0 @ 2nd ... :(
-  localtime2sec  2nd
-  strptime_local 3rd
-  strftime_local 3rd
-  gmt2localtime  2nd
-  localtime2gmt  2nd
+? strp w/ fractional -- ?
 
 * .6S bugfix -- separate PR -- ?
+
+* sysdate, sysdate_local; datediff ...
 
 ----------------------------------------------------------------
 398

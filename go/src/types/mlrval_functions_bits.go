@@ -21,7 +21,7 @@ var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func MlrvalBitwiseNOT(input1 *Mlrval) *Mlrval {
+func BIF_bitwise_not(input1 *Mlrval) *Mlrval {
 	return bitwise_not_dispositions[input1.mvtype](input1)
 }
 
@@ -61,7 +61,7 @@ var bitcount_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func MlrvalBitCount(input1 *Mlrval) *Mlrval {
+func BIF_bitcount(input1 *Mlrval) *Mlrval {
 	return bitcount_dispositions[input1.mvtype](input1)
 }
 
@@ -87,7 +87,7 @@ var bitwise_and_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalBitwiseAND(input1, input2 *Mlrval) *Mlrval {
+func BIF_bitwise_and(input1, input2 *Mlrval) *Mlrval {
 	return bitwise_and_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -113,7 +113,7 @@ var bitwise_or_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalBitwiseOR(input1, input2 *Mlrval) *Mlrval {
+func BIF_bitwise_or(input1, input2 *Mlrval) *Mlrval {
 	return bitwise_or_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -139,7 +139,7 @@ var bitwise_xor_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalBitwiseXOR(input1, input2 *Mlrval) *Mlrval {
+func BIF_bitwise_xor(input1, input2 *Mlrval) *Mlrval {
 	return bitwise_xor_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -165,7 +165,7 @@ var left_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalLeftShift(input1, input2 *Mlrval) *Mlrval {
+func BIF_left_shift(input1, input2 *Mlrval) *Mlrval {
 	return left_shift_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -191,7 +191,7 @@ var signed_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalSignedRightShift(input1, input2 *Mlrval) *Mlrval {
+func BIF_signed_right_shift(input1, input2 *Mlrval) *Mlrval {
 	return signed_right_shift_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -220,6 +220,6 @@ var unsigned_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalUnsignedRightShift(input1, input2 *Mlrval) *Mlrval {
+func BIF_unsigned_right_shift(input1, input2 *Mlrval) *Mlrval {
 	return unsigned_right_shift_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }

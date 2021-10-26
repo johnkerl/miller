@@ -10,15 +10,15 @@ import (
 	"mlr/src/version"
 )
 
-func MlrvalVersion() *Mlrval {
+func BIF_version() *Mlrval {
 	return MlrvalPointerFromString(version.STRING)
 }
 
-func MlrvalOS() *Mlrval {
+func BIF_os() *Mlrval {
 	return MlrvalPointerFromString(runtime.GOOS)
 }
 
-func MlrvalHostname() *Mlrval {
+func BIF_hostname() *Mlrval {
 	hostname, err := os.Hostname()
 	if err != nil {
 		return MLRVAL_ERROR
@@ -27,7 +27,7 @@ func MlrvalHostname() *Mlrval {
 	}
 }
 
-func MlrvalSystem(input1 *Mlrval) *Mlrval {
+func BIF_system(input1 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}

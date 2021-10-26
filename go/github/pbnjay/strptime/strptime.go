@@ -62,24 +62,30 @@ import (
 // If a unsupported format specifier is provided, it will be ignored and matching
 // text will be skipped. To receive errors for unsupported formats, use ParseStrict or call Check.
 func Parse(value, format string) (time.Time, error) {
-	return strptime(value, format, true)
+	return strptime_tz(value, format, true, false, nil)
 }
 
-// ParseTZ is like Parse except it consults the $TZ environment variable.
+// ParseLocal is like Parse except it consults the $TZ environment variable.
 // This is for Miller.
-func ParseTZ(value, format string) (time.Time, error) {
-	return strptime_tz(value, format, true)
+func ParseLocal(value, format string) (time.Time, error) {
+	return strptime_tz(value, format, true, true, nil)
+}
+
+// ParseLocation is like Parse except it uses the specified location (timezone).
+// This is for Miller.
+func ParseLocation(value, format string, location *time.Location) (time.Time, error) {
+	return strptime_tz(value, format, true, true, location)
 }
 
 // ParseStrict returns ErrFormatUnsupported for unsupported formats strings, but is otherwise
 // identical to Parse.
 func ParseStrict(value, format string) (time.Time, error) {
-	return strptime(value, format, false)
+	return strptime_tz(value, format, false, false, nil)
 }
 
 // MustParse is a wrapper for Parse which panics on any error.
 func MustParse(value, format string) time.Time {
-	t, err := strptime(value, format, true)
+	t, err := strptime_tz(value, format, true, false, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -103,15 +109,7 @@ func Check(format string) error {
 	return nil
 }
 
-func strptime(value, format string, ignoreUnsupported bool) (time.Time, error) {
-	return strptime_maybe_tz(value, format, ignoreUnsupported, false)
-}
-
-func strptime_tz(value, format string, ignoreUnsupported bool) (time.Time, error) {
-	return strptime_maybe_tz(value, format, ignoreUnsupported, true)
-}
-
-func strptime_maybe_tz(value, format string, ignoreUnsupported bool, useTZ bool) (time.Time, error) {
+func strptime_tz(value, format string, ignoreUnsupported bool, useTZ bool, location *time.Location) (time.Time, error) {
 	parseStr := ""
 	parseFmt := ""
 	vi := 0
@@ -193,15 +191,19 @@ func strptime_maybe_tz(value, format string, ignoreUnsupported bool, useTZ bool)
 	}
 
 	if useTZ {
-		tz := os.Getenv("TZ")
-		if tz == "" {
-			return time.Parse(parseFmt, parseStr)
-		} else {
-			location, err := time.LoadLocation(tz)
-			if err != nil {
-				return time.Time{}, err
-			}
+		if location != nil {
 			return time.ParseInLocation(parseFmt, parseStr, location)
+		} else {
+			tz := os.Getenv("TZ")
+			if tz == "" {
+				return time.Parse(parseFmt, parseStr)
+			} else {
+				location, err := time.LoadLocation(tz)
+				if err != nil {
+					return time.Time{}, err
+				}
+				return time.ParseInLocation(parseFmt, parseStr, location)
+			}
 		}
 	} else {
 		return time.Parse(parseFmt, parseStr)

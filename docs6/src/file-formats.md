@@ -546,54 +546,7 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 <b>mlr help format-conversion</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Type 'mlr help {topic}' for any of the following:
-Essentials:
-  mlr help topics
-  mlr help basic-examples
-  mlr help file-formats
-Flags:
-  mlr help flags
-  mlr help list-separator-aliases
-  mlr help comments-in-data-flags
-  mlr help compressed-data-flags
-  mlr help csv-only-flags
-  mlr help file-format-flags
-  mlr help flatten-unflatten-flags
-  mlr help format-conversion-keystroke-saver-flags
-  mlr help json-only-flags
-  mlr help legacy-flags
-  mlr help miscellaneous-flags
-  mlr help output-colorization-flags
-  mlr help pprint-only-flags
-  mlr help separator-flags
-Verbs:
-  mlr help list-verbs
-  mlr help usage-verbs
-  mlr help verb
-Functions:
-  mlr help list-functions
-  mlr help list-function-classes
-  mlr help list-functions-in-class
-  mlr help usage-functions
-  mlr help usage-functions-by-class
-  mlr help function
-Keywords:
-  mlr help list-keywords
-  mlr help usage-keywords
-  mlr help keyword
-Other:
-  mlr help auxents
-  mlr help mlrrc
-  mlr help output-colorization
-  mlr help type-arithmetic-info
-Shorthands:
-  mlr -g = mlr help flags
-  mlr -l = mlr help list-verbs
-  mlr -L = mlr help usage-verbs
-  mlr -f = mlr help list-functions
-  mlr -F = mlr help usage-functions
-  mlr -k = mlr help list-keywords
-  mlr -K = mlr help usage-keywords
+No help found for "format-conversion" -- please try 'mlr help topics'.
 </pre>
 
 <!---
@@ -622,54 +575,7 @@ You can include comments within your data files, and either have them ignored, o
 <b>mlr help comments-in-data</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-Type 'mlr help {topic}' for any of the following:
-Essentials:
-  mlr help topics
-  mlr help basic-examples
-  mlr help file-formats
-Flags:
-  mlr help flags
-  mlr help list-separator-aliases
-  mlr help comments-in-data-flags
-  mlr help compressed-data-flags
-  mlr help csv-only-flags
-  mlr help file-format-flags
-  mlr help flatten-unflatten-flags
-  mlr help format-conversion-keystroke-saver-flags
-  mlr help json-only-flags
-  mlr help legacy-flags
-  mlr help miscellaneous-flags
-  mlr help output-colorization-flags
-  mlr help pprint-only-flags
-  mlr help separator-flags
-Verbs:
-  mlr help list-verbs
-  mlr help usage-verbs
-  mlr help verb
-Functions:
-  mlr help list-functions
-  mlr help list-function-classes
-  mlr help list-functions-in-class
-  mlr help usage-functions
-  mlr help usage-functions-by-class
-  mlr help function
-Keywords:
-  mlr help list-keywords
-  mlr help usage-keywords
-  mlr help keyword
-Other:
-  mlr help auxents
-  mlr help mlrrc
-  mlr help output-colorization
-  mlr help type-arithmetic-info
-Shorthands:
-  mlr -g = mlr help flags
-  mlr -l = mlr help list-verbs
-  mlr -L = mlr help usage-verbs
-  mlr -f = mlr help list-functions
-  mlr -F = mlr help usage-functions
-  mlr -k = mlr help list-keywords
-  mlr -K = mlr help usage-keywords
+No help found for "comments-in-data" -- please try 'mlr help topics'.
 </pre>
 
 Examples:
