@@ -1,17 +1,6 @@
 ================================================================
 TOP OF LIST:
 
-----------------------------------------------------------------
-* tzargs
-* help-string line-break & then lf2sp at runtime w/ caveats
-  - more help-examples -> split out
-  - fixme: sec2localtime  (class=time #args=3)
-* dt/tz page etc to nim6
-* polymorphic `mlr help foo`
-  o flag, verb, function, keyword
-* consider expanding '(error)' to have more useful error-text
-----------------------------------------------------------------
-
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
@@ -40,6 +29,8 @@ TOP OF LIST:
   o needs separate webdoc
 
 * CASEDIR cmd -> mlr via env not oosvar
+
+* consider expanding '(error)' to have more useful error-text
 
 * punchdown list:
   o $cpw
