@@ -22,6 +22,5 @@ mlr --c2p sort -f σημαία παράδειγμα.csv
 GENMD_EOF
 
 GENMD_RUN_COMMAND
-mlr --c2p put '$σχήμα = toupper($σχήμα); $μήκος = strlen($χρώμα)' παράδειγμα.csv
+mlr --c2p put '$форма = toupper($форма); $длина = strlen($цвет)' пример.csv
 GENMD_EOF
-

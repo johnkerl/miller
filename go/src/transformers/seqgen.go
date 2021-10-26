@@ -190,7 +190,7 @@ func (tr *TransformerSeqgen) Transform(
 	outputChannel chan<- *types.RecordAndContext,
 ) {
 	counter := tr.start
-	context := types.NewContext(nil)
+	context := types.NewNilContext()
 	context.UpdateForStartOfFile("seqgen")
 
 	keepGoing := true

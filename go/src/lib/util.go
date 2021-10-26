@@ -114,6 +114,50 @@ func TryIntFromString(input string) (int, bool) {
 	return 0, false
 }
 
+// TryIntFromStringNoOctal tries decimal, hex, and binary.  Decimal has no
+// prefix and is most natural; hex and binary have `0x` and `0b` prefixes.
+// Octal, though, has leading `0` only and people often don't want this
+// inferred, e.g.  for U.S. ZIP (postal) codes which start with a leading 0.
+func TryIntFromStringNoOctal(input string) (int, bool) {
+	// Following twos-complement formatting familiar from all manners of
+	// languages, including C which was Miller's original implementation
+	// language, we want to allow 0x00....00 through 0x7f....ff as positive
+	// 64-bit integers and 0x80....00 through 0xff....ff as negative ones. Go's
+	// signed-int parsing explicitly doesn't allow that, but we don't want Go
+	// semantics to dictate Miller semantics.  So, we try signed-int parsing
+	// for 0x00....00 through 0x7f....ff, as well as positive or negative
+	// decimal. Failing that, we try unsigned-int parsing for 0x80....00
+	// through 0xff....ff.
+
+	i64, ok := tryIntFromStringBase(input, 10)
+	if ok {
+		return i64, ok
+	}
+	i64, ok = tryIntFromStringBase(input, 16)
+	if ok {
+		return i64, ok
+	}
+	i64, ok = tryIntFromStringBase(input, 2)
+	if ok {
+		return i64, ok
+	}
+
+	return 0, false
+}
+
+// TODO: comment
+func tryIntFromStringBase(input string, base int) (int, bool) {
+	i64, ierr := strconv.ParseInt(input, base, 64)
+	if ierr == nil {
+		return int(i64), true
+	}
+	u64, uerr := strconv.ParseUint(input, base, 64)
+	if uerr == nil {
+		return int(u64), true
+	}
+	return 0, false
+}
+
 func TryFloat64FromString(input string) (float64, bool) {
 	fval, err := strconv.ParseFloat(input, 64)
 	if err == nil {

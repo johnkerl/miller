@@ -4,11 +4,13 @@ TOP OF LIST:
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
+! m6 BIs @ nim6 !
 * CSV BOM
 * fmtnum
 * localtime
 * JSON comment-handling
-* global -S/-F; also octal-infer-suppress ... -O maybe -- ?
+* global -S/-F/-O -- with env var
+  - TryIntFromString
 
 * transpose
 * print w/ #{...}; defer variadic printf
@@ -65,6 +67,18 @@ d pre-release:
   o gha download steps clearer
 
 * wut h1 spacing before/after ...
+
+----------------------------------------------------------------
+-S/-F/-O
+
+* global
+* with env var
+* -O:
+  * TryIntFromString w/ octal/binary suppress
+* -F:
+  * skip TryIntFromString
+* -S:
+  * skip TryIntFromString and TryFloat64FromString
 
 ----------------------------------------------------------------
 LOCALTIME

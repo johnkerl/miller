@@ -134,7 +134,26 @@ var downcasedFloatNamesToNotInfer = map[string]bool{
 // data files (except JSON, which is typed -- "true" and true are distinct).
 // Mostly the same as MlrvalPointerFromInferredType, except it doesn't
 // auto-infer true/false to bool; don't auto-infer NaN/Inf to float; etc.
+
+type inferrerFunc func(input string) *Mlrval
+
+var inferrer inferrerFunc = inferNormally
+
+func SetInferrerNoOctal() {
+	inferrer = inferWithOctalSuppress
+}
+func SetInferrerIntAsFloat() {
+	inferrer = inferWithIntAsFloat
+}
+func SetInferrerStringOnly() {
+	inferrer = inferStringOnly
+}
+
 func MlrvalPointerFromInferredTypeForDataFiles(input string) *Mlrval {
+	return inferrer(input)
+}
+
+func inferNormally(input string) *Mlrval {
 	if input == "" {
 		return MLRVAL_VOID
 	}
@@ -149,6 +168,43 @@ func MlrvalPointerFromInferredTypeForDataFiles(input string) *Mlrval {
 		if fok {
 			return MlrvalPointerFromFloat64String(input)
 		}
+	}
+
+	return MlrvalPointerFromString(input)
+}
+
+func inferWithOctalSuppress(input string) *Mlrval {
+	if input == "" {
+		return MLRVAL_VOID
+	}
+
+	_, iok := lib.TryIntFromStringNoOctal(input)
+	if iok {
+		return MlrvalPointerFromIntString(input)
+	}
+
+	if downcasedFloatNamesToNotInfer[strings.ToLower(input)] == false {
+		_, fok := lib.TryFloat64FromString(input)
+		if fok {
+			return MlrvalPointerFromFloat64String(input)
+		}
+	}
+
+	return MlrvalPointerFromString(input)
+}
+
+func inferWithIntAsFloat(input string) *Mlrval {
+	output := inferNormally(input)
+	if output.mvtype == MT_INT {
+		return MlrvalPointerFromFloat64(float64(output.intval))
+	} else {
+		return output
+	}
+}
+
+func inferStringOnly(input string) *Mlrval {
+	if input == "" {
+		return MLRVAL_VOID
 	}
 
 	return MlrvalPointerFromString(input)

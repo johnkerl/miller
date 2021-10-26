@@ -13,6 +13,7 @@ import (
 
 	"mlr/src/colorizer"
 	"mlr/src/lib"
+	"mlr/src/types"
 )
 
 // FinalizeReaderOptions does a few things.
@@ -2552,6 +2553,33 @@ var MiscFlagSection = FlagSection{
 					os.Exit(1)
 				}
 				*pargi += 2
+			},
+		},
+
+		{
+			name: "-S",
+			help: "TODO",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				types.SetInferrerStringOnly()
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--FF",
+			help: "TODO",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				types.SetInferrerIntAsFloat()
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "-O",
+			help: "TODO",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				types.SetInferrerNoOctal()
+				*pargi += 1
 			},
 		},
 	},
