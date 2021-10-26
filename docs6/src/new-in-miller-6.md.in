@@ -30,6 +30,11 @@ You can now write field names, local variables, etc. all in UTF-8, e.g.  `mlr
 --c2p filter '$σχήμα == "κύκλος"' παράδειγμα.csv`. See the
 [internationalization page](internationalization.md) for examples.
 
+## Improved datetime/timezone support
+
+Including support for specifying timezone via function arguments, as an alternative to
+the `TZ` environment variable. Please see [DSL datetime/timezone functions](reference-dsl-time.md).
+
 ## Improved JSON support, and arrays
 
 Arrays are now supported in Miller's `put`/`filter` programming language, as
