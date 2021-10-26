@@ -172,6 +172,11 @@ HELP OPTIONS
          mlr -F = mlr help usage-functions
          mlr -k = mlr help list-keywords
          mlr -K = mlr help usage-keywords
+       Lastly, 'mlr help ...' will search for your text '...' using the sources of
+       'mlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.
+       For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a
+       verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'
+       to disambiguate.
 
 VERB LIST
        altkv bar bootstrap cat check clean-whitespace count-distinct count
@@ -2032,7 +2037,7 @@ FUNCTIONS FOR FILTER/PUT
         (class=math #args=1) e**x - 1.
 
    flatten
-        (class=collections #args=3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.
+        (class=collections #args=2,3) Flattens multi-level maps to single-level ones. Useful for nested JSON-like structures for non-JSON file formats like CSV.
        Examples:
        flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
        flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
@@ -2066,9 +2071,10 @@ FUNCTIONS FOR FILTER/PUT
         (class=collections #args=1) Returns array of keys of map or array -- in the latter case, returns a copy of the array
 
    gmt2localtime
-        (class=time #args=1) Convert from a GMT-time string to a local-time string, consulting $TZ
-       Example:
+        (class=time #args=1,2) Convert from a GMT-time string to a local-time string. Consulting $TZ unless second argument is supplied.
+       Examples:
        gmt2localtime("1999-12-31T22:00:00Z") = "2000-01-01 00:00:00" with TZ="Asia/Istanbul"
+       gmt2localtime("1999-12-31T22:00:00Z", "Asia/Istanbul") = "2000-01-01 00:00:00"
 
    gmt2sec
         (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
@@ -2187,14 +2193,16 @@ FUNCTIONS FOR FILTER/PUT
         (class=collections #args=1) Counts number of top-level entries in array/map. Scalars have length 1.
 
    localtime2gmt
-        (class=time #args=1) Convert from a local-time string to a GMT-time string, consulting $TZ
-       Example:
+        (class=time #args=1,2) Convert from a local-time string to a GMT-time string. Consults $TZ unless second argument is supplied.
+       Examples:
        localtime2gmt("2000-01-01 00:00:00") = "1999-12-31T22:00:00Z" with TZ="Asia/Istanbul"
+       localtime2gmt("2000-01-01 00:00:00", "Asia/Istanbul") = "1999-12-31T22:00:00Z"
 
    localtime2sec
-        (class=time #args=1) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable.
-       Example:
+        (class=time #args=1,2) Parses local timestamp as integer seconds since the epoch. Consults $TZ environment variable, unless second argument is supplied.
+       Examples:
        localtime2sec("2001-02-03 04:05:06") = 981165906 with TZ="Asia/Istanbul"
+       localtime2sec("2001-02-03 04:05:06", "Asia/Istanbul") = 981165906"
 
    log
         (class=math #args=1) Natural (base-e) logarithm.
@@ -2293,16 +2301,18 @@ FUNCTIONS FOR FILTER/PUT
         (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
 
    sec2localdate
-        (class=time #args=1) Formats seconds since epoch (integer part) as local timestamp with year-month-date. Leaves non-numbers as-is. Consults $TZ environment variable.
-       Example:
+        (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp with year-month-date. Leaves non-numbers as-is. Consults $TZ environment variable unless second argument is supplied.
+       Examples:
        sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"
+       sec2localdate(1440768801.7, "Asia/Istanbul") = "2015-08-28"
 
    sec2localtime
-        (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp. Consults $TZ environment variable. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+        (class=time #args=1,2,3) Formats seconds since epoch (integer part) as local timestamp. Consults $TZ environment variable unless third argument is supplied. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
        Examples:
        sec2localtime(1234567890)           = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
        sec2localtime(1234567890.123456)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
        sec2localtime(1234567890.123456, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"
+       sec2localtime(1234567890.123456, 6, "Asia/Istanbul") = "2009-02-14 01:31:30.123456"
 
    select
         (class=higher-order-functions #args=2) Given a map or array as first argument and a function as second argument, includes each input element in the output if the function returns true. For arrays, the function should take one argument, for array element; for maps, it should take two, for map-element key and value. In either case it should return a boolean.
@@ -2377,10 +2387,11 @@ FUNCTIONS FOR FILTER/PUT
        strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z"
 
    strftime_local
-        (class=time #args=2) Like strftime but consults the $TZ environment variable to get local time zone.
+        (class=time #args=2,3) Like strftime but consults the $TZ environment variable to get local time zone.
        Examples:
        strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%S %z")  = "2015-08-28 16:33:21 +0300" with TZ="Asia/Istanbul"
        strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z") = "2015-08-28 16:33:21.700 +0300" with TZ="Asia/Istanbul"
+       strftime_local(1440768801.7, "%Y-%m-%d %H:%M:%3S %z", "Asia/Istanbul") = "2015-08-28 16:33:21.700 +0300"
 
    string
         (class=conversion #args=1) Convert int/float/bool/string/array/map to string.
@@ -2400,11 +2411,12 @@ FUNCTIONS FOR FILTER/PUT
        strptime("1970-01-01 00:00:00 EET",   "%Y-%m-%d %H:%M:%S %Z") = -7200
 
    strptime_local
-        (class=time #args=2) Like stpftime but consults the $TZ environment variable to get local time zone.
+        (class=time #args=2,3) Like stpftime but consults the $TZ environment variable to get local time zone.
        Examples:
        strptime_local("2015-08-28T13:33:21Z",    "%Y-%m-%dT%H:%M:%SZ") = 1440758001     with TZ="Asia/Istanbul"
        strptime_local("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440758001.345 with TZ="Asia/Istanbul"
-       strptime_local("2015-08-28 13:33:21",    "%Y-%m-%d %H:%M:%S")   = 1440758001     with TZ="Asia/Istanbul"
+       strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S")  = 1440758001     with TZ="Asia/Istanbul"
+       strptime_local("2015-08-28 13:33:21",     "%Y-%m-%d %H:%M:%S", "Asia/Istanbul") = 1440758001
 
    sub
         (class=string #args=3) '$name=sub($name, "old", "new")' (replace once).
@@ -2950,5 +2962,5 @@ SEE ALSO
 
 
 
-                                  2021-10-21                         MILLER(1)
+                                  2021-10-26                         MILLER(1)
 </pre>

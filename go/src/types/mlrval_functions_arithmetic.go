@@ -21,7 +21,7 @@ var upos_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func MlrvalUnaryPlus(input1 *Mlrval) *Mlrval {
+func BIF_plus_unary(input1 *Mlrval) *Mlrval {
 	return upos_dispositions[input1.mvtype](input1)
 }
 
@@ -50,14 +50,14 @@ var uneg_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func MlrvalUnaryMinus(input1 *Mlrval) *Mlrval {
+func BIF_minus_unary(input1 *Mlrval) *Mlrval {
 	return uneg_dispositions[input1.mvtype](input1)
 }
 
 // ================================================================
 // Logical NOT operator
 
-func MlrvalLogicalNOT(input1 *Mlrval) *Mlrval {
+func BIF_logicalnot(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_BOOL {
 		return MlrvalPointerFromBool(!input1.boolval)
 	} else {
@@ -119,7 +119,7 @@ var plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalBinaryPlus(input1, input2 *Mlrval) *Mlrval {
+func BIF_plus_binary(input1, input2 *Mlrval) *Mlrval {
 	return plus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -177,7 +177,7 @@ var minus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalBinaryMinus(input1, input2 *Mlrval) *Mlrval {
+func BIF_minus_binary(input1, input2 *Mlrval) *Mlrval {
 	return minus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -251,7 +251,7 @@ var times_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalTimes(input1, input2 *Mlrval) *Mlrval {
+func BIF_times(input1, input2 *Mlrval) *Mlrval {
 	return times_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -322,7 +322,7 @@ var divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalDivide(input1, input2 *Mlrval) *Mlrval {
+func BIF_divide(input1, input2 *Mlrval) *Mlrval {
 	return divide_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -383,7 +383,7 @@ var int_divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalIntDivide(input1, input2 *Mlrval) *Mlrval {
+func BIF_int_divide(input1, input2 *Mlrval) *Mlrval {
 	return int_divide_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -419,7 +419,7 @@ var dot_plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalDotPlus(input1, input2 *Mlrval) *Mlrval {
+func BIF_dot_plus(input1, input2 *Mlrval) *Mlrval {
 	return dot_plus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -455,7 +455,7 @@ var dotminus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalDotMinus(input1, input2 *Mlrval) *Mlrval {
+func BIF_dot_minus(input1, input2 *Mlrval) *Mlrval {
 	return dotminus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -491,7 +491,7 @@ var dottimes_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalDotTimes(input1, input2 *Mlrval) *Mlrval {
+func BIF_dot_times(input1, input2 *Mlrval) *Mlrval {
 	return dottimes_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -527,7 +527,7 @@ var dotdivide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalDotDivide(input1, input2 *Mlrval) *Mlrval {
+func BIF_dot_divide(input1, input2 *Mlrval) *Mlrval {
 	return dotdivide_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -652,7 +652,7 @@ var modulus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalModulus(input1, input2 *Mlrval) *Mlrval {
+func BIF_modulus(input1, input2 *Mlrval) *Mlrval {
 	return modulus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -724,19 +724,19 @@ func imodop(input1, input2, input3 *Mlrval, iop i_iii_func) *Mlrval {
 	return MlrvalPointerFromInt(iop(input1.intval, input2.intval, input3.intval))
 }
 
-func MlrvalModAdd(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_mod_add(input1, input2, input3 *Mlrval) *Mlrval {
 	return imodop(input1, input2, input3, imodadd)
 }
 
-func MlrvalModSub(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_mod_sub(input1, input2, input3 *Mlrval) *Mlrval {
 	return imodop(input1, input2, input3, imodsub)
 }
 
-func MlrvalModMul(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_mod_mul(input1, input2, input3 *Mlrval) *Mlrval {
 	return imodop(input1, input2, input3, imodmul)
 }
 
-func MlrvalModExp(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_mod_exp(input1, input2, input3 *Mlrval) *Mlrval {
 	// Pre-check for negative exponent
 	if input2.mvtype == MT_INT && input2.intval < 0 {
 		return MLRVAL_ERROR
@@ -828,7 +828,7 @@ func MlrvalBinaryMin(input1, input2 *Mlrval) *Mlrval {
 	return (min_dispositions[input1.mvtype][input2.mvtype])(input1, input2)
 }
 
-func MlrvalVariadicMin(mlrvals []*Mlrval) *Mlrval {
+func BIF_min_variadic(mlrvals []*Mlrval) *Mlrval {
 	if len(mlrvals) == 0 {
 		return MLRVAL_VOID
 	} else {
@@ -912,7 +912,7 @@ func MlrvalBinaryMax(input1, input2 *Mlrval) *Mlrval {
 	return (max_dispositions[input1.mvtype][input2.mvtype])(input1, input2)
 }
 
-func MlrvalVariadicMax(mlrvals []*Mlrval) *Mlrval {
+func BIF_max_variadic(mlrvals []*Mlrval) *Mlrval {
 	if len(mlrvals) == 0 {
 		return MLRVAL_VOID
 	} else {

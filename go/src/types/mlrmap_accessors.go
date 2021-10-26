@@ -365,7 +365,7 @@ func (mlrmap *Mlrmap) Contains(other *Mlrmap) bool {
 		}
 		thisval := mlrmap.Get(pe.Key)
 		thatval := pe.Value
-		meq := MlrvalEquals(thisval, thatval)
+		meq := BIF_equals(thisval, thatval)
 		eq, ok := meq.GetBoolValue()
 		lib.InternalCodingErrorIf(!ok)
 		if !eq {

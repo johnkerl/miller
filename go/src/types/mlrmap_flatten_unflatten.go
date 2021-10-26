@@ -157,7 +157,7 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 	for baseIndex := range affectedBaseIndices {
 		oldValue := other.Get(baseIndex)
 		lib.InternalCodingErrorIf(oldValue == nil)
-		newValue := MlrvalArrayify(oldValue)
+		newValue := BIF_arrayify(oldValue)
 		other.PutReference(baseIndex, newValue)
 	}
 
@@ -211,7 +211,7 @@ func (mlrmap *Mlrmap) CopyUnflattenFields(
 	for baseIndex := range affectedBaseIndices {
 		oldValue := other.Get(baseIndex)
 		lib.InternalCodingErrorIf(oldValue == nil)
-		newValue := MlrvalArrayify(oldValue)
+		newValue := BIF_arrayify(oldValue)
 		other.PutReference(baseIndex, newValue)
 	}
 

@@ -531,7 +531,7 @@ func (node *DotCallsiteNode) Evaluate(
 	} else {
 		// Case 2: string concatenation
 		value2 := node.evaluable2.Evaluate(state)
-		return types.MlrvalDot(
+		return types.BIF_dot(
 			value1,
 			value2,
 		)

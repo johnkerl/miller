@@ -8,7 +8,7 @@ import (
 )
 
 // ================================================================
-func MlrvalTypeof(input1 *Mlrval) *Mlrval {
+func BIF_typeof(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromString(input1.GetTypeName())
 }
 
@@ -48,7 +48,7 @@ var to_int_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func MlrvalToInt(input1 *Mlrval) *Mlrval {
+func BIF_int(input1 *Mlrval) *Mlrval {
 	return to_int_dispositions[input1.mvtype](input1)
 }
 
@@ -88,7 +88,7 @@ var to_float_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func MlrvalToFloat(input1 *Mlrval) *Mlrval {
+func BIF_float(input1 *Mlrval) *Mlrval {
 	return to_float_dispositions[input1.mvtype](input1)
 }
 
@@ -124,24 +124,24 @@ var to_boolean_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func MlrvalToBoolean(input1 *Mlrval) *Mlrval {
+func BIF_boolean(input1 *Mlrval) *Mlrval {
 	return to_boolean_dispositions[input1.mvtype](input1)
 }
 
 // ----------------------------------------------------------------
-func MlrvalIsAbsent(input1 *Mlrval) *Mlrval {
+func BIF_is_absent(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_ABSENT)
 }
-func MlrvalIsError(input1 *Mlrval) *Mlrval {
+func BIF_is_error(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_ERROR)
 }
-func MlrvalIsBool(input1 *Mlrval) *Mlrval {
+func BIF_is_bool(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_BOOL)
 }
-func MlrvalIsBoolean(input1 *Mlrval) *Mlrval {
+func BIF_is_boolean(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_BOOL)
 }
-func MlrvalIsEmpty(input1 *Mlrval) *Mlrval {
+func BIF_is_empty(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_VOID {
 		return MLRVAL_TRUE
 	} else if input1.mvtype == MT_STRING {
@@ -154,25 +154,25 @@ func MlrvalIsEmpty(input1 *Mlrval) *Mlrval {
 		return MLRVAL_FALSE
 	}
 }
-func MlrvalIsEmptyMap(input1 *Mlrval) *Mlrval {
+func BIF_is_emptymap(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_MAP && input1.mapval.IsEmpty())
 }
-func MlrvalIsFloat(input1 *Mlrval) *Mlrval {
+func BIF_is_float(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_FLOAT)
 }
-func MlrvalIsInt(input1 *Mlrval) *Mlrval {
+func BIF_is_int(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_INT)
 }
-func MlrvalIsMap(input1 *Mlrval) *Mlrval {
+func BIF_is_map(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_MAP)
 }
-func MlrvalIsArray(input1 *Mlrval) *Mlrval {
+func BIF_is_array(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_ARRAY)
 }
-func MlrvalIsNonEmptyMap(input1 *Mlrval) *Mlrval {
+func BIF_is_nonemptymap(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_MAP && input1.mapval.FieldCount != 0)
 }
-func MlrvalIsNotEmpty(input1 *Mlrval) *Mlrval {
+func BIF_is_notempty(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_VOID {
 		return MLRVAL_FALSE
 	} else if input1.mvtype == MT_STRING {
@@ -185,25 +185,25 @@ func MlrvalIsNotEmpty(input1 *Mlrval) *Mlrval {
 		return MLRVAL_TRUE
 	}
 }
-func MlrvalIsNotMap(input1 *Mlrval) *Mlrval {
+func BIF_is_notmap(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype != MT_MAP)
 }
-func MlrvalIsNotArray(input1 *Mlrval) *Mlrval {
+func BIF_is_notarray(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype != MT_ARRAY)
 }
-func MlrvalIsNotNull(input1 *Mlrval) *Mlrval {
+func BIF_is_notnull(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype != MT_ABSENT && input1.mvtype != MT_VOID)
 }
-func MlrvalIsNull(input1 *Mlrval) *Mlrval {
+func BIF_is_null(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_ABSENT || input1.mvtype == MT_VOID)
 }
-func MlrvalIsNumeric(input1 *Mlrval) *Mlrval {
+func BIF_is_numeric(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_INT || input1.mvtype == MT_FLOAT)
 }
-func MlrvalIsPresent(input1 *Mlrval) *Mlrval {
+func BIF_is_present(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype != MT_ABSENT)
 }
-func MlrvalIsString(input1 *Mlrval) *Mlrval {
+func BIF_is_string(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromBool(input1.mvtype == MT_STRING || input1.mvtype == MT_VOID)
 }
 
@@ -227,60 +227,60 @@ func assertingCommon(input1, check *Mlrval, description string, context *Context
 	return input1
 }
 
-func MlrvalAssertingAbsent(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsAbsent(input1), "is_absent", context)
+func BIF_asserting_absent(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_absent(input1), "is_absent", context)
 }
-func MlrvalAssertingError(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsError(input1), "is_error", context)
+func BIF_asserting_error(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_error(input1), "is_error", context)
 }
-func MlrvalAssertingBool(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsBool(input1), "is_bool", context)
+func BIF_asserting_bool(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_bool(input1), "is_bool", context)
 }
-func MlrvalAssertingBoolean(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsBoolean(input1), "is_boolean", context)
+func BIF_asserting_boolean(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_boolean(input1), "is_boolean", context)
 }
-func MlrvalAssertingEmpty(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsEmpty(input1), "is_empty", context)
+func BIF_asserting_empty(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_empty(input1), "is_empty", context)
 }
-func MlrvalAssertingEmptyMap(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsEmptyMap(input1), "is_empty_map", context)
+func BIF_asserting_emptyMap(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_emptymap(input1), "is_empty_map", context)
 }
-func MlrvalAssertingFloat(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsFloat(input1), "is_float", context)
+func BIF_asserting_float(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_float(input1), "is_float", context)
 }
-func MlrvalAssertingInt(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsInt(input1), "is_int", context)
+func BIF_asserting_int(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_int(input1), "is_int", context)
 }
-func MlrvalAssertingMap(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsMap(input1), "is_map", context)
+func BIF_asserting_map(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_map(input1), "is_map", context)
 }
-func MlrvalAssertingArray(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsArray(input1), "is_array", context)
+func BIF_asserting_array(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_array(input1), "is_array", context)
 }
-func MlrvalAssertingNonEmptyMap(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsNonEmptyMap(input1), "is_non_empty_map", context)
+func BIF_asserting_nonempty_map(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_nonemptymap(input1), "is_non_empty_map", context)
 }
-func MlrvalAssertingNotEmpty(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsNotEmpty(input1), "is_not_empty", context)
+func BIF_asserting_not_empty(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_notempty(input1), "is_not_empty", context)
 }
-func MlrvalAssertingNotMap(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsNotMap(input1), "is_not_map", context)
+func BIF_asserting_not_map(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_notmap(input1), "is_not_map", context)
 }
-func MlrvalAssertingNotArray(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsNotArray(input1), "is_not_array", context)
+func BIF_asserting_not_array(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_notarray(input1), "is_not_array", context)
 }
-func MlrvalAssertingNotNull(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsNotNull(input1), "is_not_null", context)
+func BIF_asserting_not_null(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_notnull(input1), "is_not_null", context)
 }
-func MlrvalAssertingNull(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsNull(input1), "is_null", context)
+func BIF_asserting_null(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_null(input1), "is_null", context)
 }
-func MlrvalAssertingNumeric(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsNumeric(input1), "is_numeric", context)
+func BIF_asserting_numeric(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_numeric(input1), "is_numeric", context)
 }
-func MlrvalAssertingPresent(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsPresent(input1), "is_present", context)
+func BIF_asserting_present(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_present(input1), "is_present", context)
 }
-func MlrvalAssertingString(input1 *Mlrval, context *Context) *Mlrval {
-	return assertingCommon(input1, MlrvalIsString(input1), "is_string", context)
+func BIF_asserting_string(input1 *Mlrval, context *Context) *Mlrval {
+	return assertingCommon(input1, BIF_is_string(input1), "is_string", context)
 }

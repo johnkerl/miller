@@ -659,7 +659,7 @@ func sortMK(
 	}
 
 	// Copy the keys to an array for sorting.
-	// TODO: make a helper function and share with MlrvalGetKeys
+	// TODO: make a helper function and share with BIF_get_keys
 	n := inmap.FieldCount
 	keys := make([]string, n)
 	i := 0

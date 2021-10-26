@@ -289,6 +289,11 @@ func listTopics() {
 	for _, info := range shorthandLookupTable.shorthandInfos {
 		fmt.Printf("  mlr %s = mlr help %s\n", info.shorthand, info.longhand)
 	}
+	fmt.Printf("Lastly, 'mlr help ...' will search for your text '...' using the sources of\n")
+	fmt.Printf("'mlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.\n")
+	fmt.Printf("For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a\n")
+	fmt.Printf("verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'\n")
+	fmt.Printf("to disambiguate.\n")
 }
 
 // ----------------------------------------------------------------
@@ -456,7 +461,7 @@ func helpTypeArithmeticInfo() {
 			} else if i == -1 {
 				fmt.Printf(" %-10s", "------")
 			} else {
-				sum := types.MlrvalBinaryPlus(mlrvals[i], mlrvals[j])
+				sum := types.BIF_plus_binary(mlrvals[i], mlrvals[j])
 				fmt.Printf(" %-10s", sum.String())
 			}
 		}
@@ -600,6 +605,7 @@ func helpForFunction(arg string) {
 // xxx 'mlr help verb sort' vs 'mlr help function sort'
 func helpBySearch(thing string) bool {
 
+	// flag
 	if cli.FLAG_TABLE.ShowHelpForFlag(thing) {
 		return true
 	}

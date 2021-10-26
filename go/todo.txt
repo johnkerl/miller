@@ -70,32 +70,9 @@ d pre-release:
 * wut h1 spacing before/after ...
 
 ----------------------------------------------------------------
-HELP
-
-* mlr help X
-  k code
-  o olh / webdoc
-    - incl 'mlr help verb sec2gmt` vs `mlr help function sec2gmt'
-
-----------------------------------------------------------------
 LOCALTIME
 
-? MlrvalFoo -> BIF_foo -- ?
-
 ? strp w/ fractional -- ?
-
-! make optional tz args !
-  -> separate PR
-  -> librarify strf side as well as strp side
-  sec2localtime  k 2nd
-  sec2localdate  d 3rd ... w/ int 0 @ 2nd ... :(
-  localtime2sec  . 2nd
-  strptime_local . 3rd
-  strftime_local . 3rd
-  gmt2localtime  . 2nd
-  localtime2gmt  . 2nd
-
-*  fix olh re nargs
 
 * .6S bugfix -- separate PR -- ?
 

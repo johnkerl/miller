@@ -93,19 +93,27 @@ func sec2Time(epochSeconds float64, numDecimalPlaces int, doLocal bool, location
 }
 
 func EpochSecondsToGMT(epochSeconds float64) time.Time {
-	return epochSecondsToGMTOrLocalTime(epochSeconds, false)
+	return epochSecondsToTime(epochSeconds, false, nil)
 }
 
 func EpochSecondsToLocalTime(epochSeconds float64) time.Time {
-	return epochSecondsToGMTOrLocalTime(epochSeconds, true)
+	return epochSecondsToTime(epochSeconds, true, nil)
 }
 
-func epochSecondsToGMTOrLocalTime(epochSeconds float64, doLocal bool) time.Time {
+func EpochSecondsToLocationTime(epochSeconds float64, location *time.Location) time.Time {
+	return epochSecondsToTime(epochSeconds, true, location)
+}
+
+func epochSecondsToTime(epochSeconds float64, doLocal bool, location *time.Location) time.Time {
 	intPart := int64(epochSeconds)
 	fractionalPart := epochSeconds - float64(intPart)
 	decimalPart := int64(fractionalPart * 1e9)
 	if doLocal {
-		return time.Unix(intPart, decimalPart).Local()
+		if location == nil {
+			return time.Unix(intPart, decimalPart).Local()
+		} else {
+			return time.Unix(intPart, decimalPart).In(location)
+		}
 	} else {
 		return time.Unix(intPart, decimalPart).UTC()
 	}

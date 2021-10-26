@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func MlrvalDHMS2Sec(input1 *Mlrval) *Mlrval {
+func BIF_dhms2sec(input1 *Mlrval) *Mlrval {
 	if input1.mvtype != MT_STRING {
 		return MLRVAL_ERROR
 	}
@@ -54,7 +54,7 @@ func MlrvalDHMS2Sec(input1 *Mlrval) *Mlrval {
 	return MLRVAL_ERROR
 }
 
-func MlrvalDHMS2FSec(input1 *Mlrval) *Mlrval {
+func BIF_dhms2fsec(input1 *Mlrval) *Mlrval {
 	if input1.mvtype != MT_STRING {
 		return MLRVAL_ERROR
 	}
@@ -104,7 +104,7 @@ func MlrvalDHMS2FSec(input1 *Mlrval) *Mlrval {
 	return MLRVAL_ERROR
 }
 
-func MlrvalHMS2Sec(input1 *Mlrval) *Mlrval {
+func BIF_hms2sec(input1 *Mlrval) *Mlrval {
 	if input1.mvtype != MT_STRING {
 		return MLRVAL_ERROR
 	}
@@ -128,7 +128,7 @@ func MlrvalHMS2Sec(input1 *Mlrval) *Mlrval {
 	return MLRVAL_ERROR
 }
 
-func MlrvalHMS2FSec(input1 *Mlrval) *Mlrval {
+func BIF_hms2fsec(input1 *Mlrval) *Mlrval {
 	if input1.mvtype != MT_STRING {
 		return MLRVAL_ERROR
 	}
@@ -151,7 +151,7 @@ func MlrvalHMS2FSec(input1 *Mlrval) *Mlrval {
 	return MLRVAL_ERROR
 }
 
-func MlrvalSec2DHMS(input1 *Mlrval) *Mlrval {
+func BIF_sec2dhms(input1 *Mlrval) *Mlrval {
 	isec, ok := input1.GetIntValue()
 	if !ok {
 		return MLRVAL_ERROR
@@ -181,7 +181,7 @@ func MlrvalSec2DHMS(input1 *Mlrval) *Mlrval {
 	return MLRVAL_ERROR
 }
 
-func MlrvalSec2HMS(input1 *Mlrval) *Mlrval {
+func BIF_sec2hms(input1 *Mlrval) *Mlrval {
 	isec, ok := input1.GetIntValue()
 	if !ok {
 		return MLRVAL_ERROR
@@ -204,7 +204,7 @@ func MlrvalSec2HMS(input1 *Mlrval) *Mlrval {
 	return MLRVAL_ERROR
 }
 
-func MlrvalFSec2DHMS(input1 *Mlrval) *Mlrval {
+func BIF_fsec2dhms(input1 *Mlrval) *Mlrval {
 	fsec, ok := input1.GetNumericToFloatValue()
 	if !ok {
 		return MLRVAL_ERROR
@@ -254,7 +254,7 @@ func MlrvalFSec2DHMS(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalFSec2HMS(input1 *Mlrval) *Mlrval {
+func BIF_fsec2hms(input1 *Mlrval) *Mlrval {
 	fsec, ok := input1.GetNumericToFloatValue()
 	if !ok {
 		return MLRVAL_ERROR

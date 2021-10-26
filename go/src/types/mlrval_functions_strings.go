@@ -10,7 +10,7 @@ import (
 )
 
 // ================================================================
-func MlrvalStrlen(input1 *Mlrval) *Mlrval {
+func BIF_strlen(input1 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	} else {
@@ -19,7 +19,7 @@ func MlrvalStrlen(input1 *Mlrval) *Mlrval {
 }
 
 // ================================================================
-func MlrvalToString(input1 *Mlrval) *Mlrval {
+func BIF_string(input1 *Mlrval) *Mlrval {
 	return MlrvalPointerFromString(input1.String())
 }
 
@@ -56,7 +56,7 @@ var dot_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalDot(input1, input2 *Mlrval) *Mlrval {
+func BIF_dot(input1, input2 *Mlrval) *Mlrval {
 	return dot_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }
 
@@ -64,7 +64,7 @@ func MlrvalDot(input1, input2 *Mlrval) *Mlrval {
 // substr1(s,m,n) gives substring of s from 1-up position m to n inclusive.
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
-func MlrvalSubstr1Up(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_substr_1_up(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
@@ -110,7 +110,7 @@ func MlrvalSubstr1Up(input1, input2, input3 *Mlrval) *Mlrval {
 // substr0(s,m,n) gives substring of s from 0-up position m to n inclusive.
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
-func MlrvalSubstr0Up(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_substr_0_up(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input1.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
@@ -161,7 +161,7 @@ func MlrvalSubstr0Up(input1, input2, input3 *Mlrval) *Mlrval {
 }
 
 // ================================================================
-func MlrvalTruncate(input1, input2 *Mlrval) *Mlrval {
+func BIF_truncate(input1, input2 *Mlrval) *Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -190,7 +190,7 @@ func MlrvalTruncate(input1, input2 *Mlrval) *Mlrval {
 }
 
 // ================================================================
-func MlrvalLStrip(input1 *Mlrval) *Mlrval {
+func BIF_lstrip(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_STRING {
 		return MlrvalPointerFromString(strings.TrimLeft(input1.printrep, " \t"))
 	} else {
@@ -198,7 +198,7 @@ func MlrvalLStrip(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalRStrip(input1 *Mlrval) *Mlrval {
+func BIF_rstrip(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_STRING {
 		return MlrvalPointerFromString(strings.TrimRight(input1.printrep, " \t"))
 	} else {
@@ -206,7 +206,7 @@ func MlrvalRStrip(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalStrip(input1 *Mlrval) *Mlrval {
+func BIF_strip(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_STRING {
 		return MlrvalPointerFromString(strings.Trim(input1.printrep, " \t"))
 	} else {
@@ -215,7 +215,7 @@ func MlrvalStrip(input1 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalCollapseWhitespace(input1 *Mlrval) *Mlrval {
+func BIF_collapse_whitespace(input1 *Mlrval) *Mlrval {
 	return MlrvalCollapseWhitespaceRegexp(input1, WhitespaceRegexp())
 }
 
@@ -232,7 +232,7 @@ func WhitespaceRegexp() *regexp.Regexp {
 }
 
 // ================================================================
-func MlrvalToUpper(input1 *Mlrval) *Mlrval {
+func BIF_toupper(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_STRING {
 		return MlrvalPointerFromString(strings.ToUpper(input1.printrep))
 	} else if input1.mvtype == MT_VOID {
@@ -242,7 +242,7 @@ func MlrvalToUpper(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalToLower(input1 *Mlrval) *Mlrval {
+func BIF_tolower(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_STRING {
 		return MlrvalPointerFromString(strings.ToLower(input1.printrep))
 	} else if input1.mvtype == MT_VOID {
@@ -252,7 +252,7 @@ func MlrvalToLower(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func MlrvalCapitalize(input1 *Mlrval) *Mlrval {
+func BIF_capitalize(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_STRING {
 		if input1.printrep == "" {
 			return input1
@@ -270,8 +270,8 @@ func MlrvalCapitalize(input1 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalCleanWhitespace(input1 *Mlrval) *Mlrval {
-	return MlrvalStrip(
+func BIF_clean_whitespace(input1 *Mlrval) *Mlrval {
+	return BIF_strip(
 		MlrvalCollapseWhitespaceRegexp(
 			input1, WhitespaceRegexp(),
 		),
@@ -279,7 +279,7 @@ func MlrvalCleanWhitespace(input1 *Mlrval) *Mlrval {
 }
 
 // ================================================================
-func MlrvalHexfmt(input1 *Mlrval) *Mlrval {
+func BIF_hexfmt(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_INT {
 		return MlrvalPointerFromString("0x" + strconv.FormatUint(uint64(input1.intval), 16))
 	} else {
@@ -344,6 +344,6 @@ var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalFmtNum(input1, input2 *Mlrval) *Mlrval {
+func BIF_fmtnum(input1, input2 *Mlrval) *Mlrval {
 	return fmtnum_dispositions[input1.mvtype][input2.mvtype](input1, input2)
 }

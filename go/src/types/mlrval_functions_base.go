@@ -153,7 +153,7 @@ func _2___(input1, input2 *Mlrval) *Mlrval {
 
 // Return negative second argument (binary)
 func _n2__(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalUnaryMinus(input2)
+	return BIF_minus_unary(input2)
 }
 
 // Return first argument, as string (binary)
