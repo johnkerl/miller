@@ -327,7 +327,7 @@ func (tr *TransformerNest) explodeValuesAcrossFields(
 		i := 1
 		for _, piece := range pieces {
 			key := tr.fieldName + "_" + strconv.Itoa(i)
-			value := types.MlrvalPointerFromString(piece)
+			value := types.MlrvalFromString(piece)
 			recordEntry = inrec.PutReferenceAfter(recordEntry, key, value)
 			i++
 		}
@@ -360,7 +360,7 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 		pieces := strings.Split(svalue, tr.nestedFS)
 		for _, piece := range pieces {
 			outrec := inrec.Copy()
-			outrec.PutReference(tr.fieldName, types.MlrvalPointerFromString(piece))
+			outrec.PutReference(tr.fieldName, types.MlrvalFromString(piece))
 			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 		}
 
@@ -396,13 +396,13 @@ func (tr *TransformerNest) explodePairsAcrossFields(
 				recordEntry = inrec.PutReferenceAfter(
 					recordEntry,
 					pair[0],
-					types.MlrvalPointerFromString(pair[1]),
+					types.MlrvalFromString(pair[1]),
 				)
 			} else { // there is not a pair
 				recordEntry = inrec.PutReferenceAfter(
 					recordEntry,
 					tr.fieldName,
-					types.MlrvalPointerFromString(piece),
+					types.MlrvalFromString(piece),
 				)
 			}
 		}
@@ -441,9 +441,9 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 			// name, in which case replace its value.
 			pair := strings.SplitN(piece, tr.nestedPS, 2)
 			if len(pair) == 2 { // there is a pair
-				outrec.PutReferenceAfter(originalEntry, pair[0], types.MlrvalPointerFromString(pair[1]))
+				outrec.PutReferenceAfter(originalEntry, pair[0], types.MlrvalFromString(pair[1]))
 			} else { // there is not a pair
-				outrec.PutReferenceAfter(originalEntry, tr.fieldName, types.MlrvalPointerFromString(piece))
+				outrec.PutReferenceAfter(originalEntry, tr.fieldName, types.MlrvalFromString(piece))
 			}
 
 			outrec.Unlink(originalEntry)
@@ -489,7 +489,7 @@ func (tr *TransformerNest) implodeValuesAcrossFields(
 		}
 
 		if fieldCount > 0 {
-			newValue := types.MlrvalPointerFromString(buffer.String())
+			newValue := types.MlrvalFromString(buffer.String())
 			if previousEntry == nil { // No record before the unlinked one, i.e. list-head.
 				inrec.PrependReference(tr.fieldName, newValue)
 			} else {
@@ -568,7 +568,7 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 				}
 
 				// tr.fieldName was already present so we'll overwrite it in-place here.
-				outrec.PutReference(tr.fieldName, types.MlrvalPointerFromString(buffer.String()))
+				outrec.PutReference(tr.fieldName, types.MlrvalFromString(buffer.String()))
 				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 			}
 		}

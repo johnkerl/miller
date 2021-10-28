@@ -122,9 +122,9 @@ func NewTransformerSeqgen(
 	stopString string,
 	stepString string,
 ) (*TransformerSeqgen, error) {
-	start := types.MlrvalPointerFromInferredType(startString)
-	stop := types.MlrvalPointerFromInferredType(stopString)
-	step := types.MlrvalPointerFromInferredType(stepString)
+	start := types.MlrvalFromInferredType(startString)
+	stop := types.MlrvalFromInferredType(stopString)
+	step := types.MlrvalFromInferredType(stepString)
 	var doneComparator types.BinaryFunc = nil
 
 	fstart, startIsNumeric := start.GetNumericToFloatValue()

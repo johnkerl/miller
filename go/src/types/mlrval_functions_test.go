@@ -40,16 +40,16 @@ func TestComparators(t *testing.T) {
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Within-type lexical comparisons
-	if LexicalAscendingComparator(&i10, &i2) != -1 {
+	if LexicalAscendingComparator(i10, i2) != -1 {
 		t.Fatal()
 	}
-	if LexicalAscendingComparator(&bfalse, &bfalse) != 0 {
+	if LexicalAscendingComparator(bfalse, bfalse) != 0 {
 		t.Fatal()
 	}
-	if LexicalAscendingComparator(&bfalse, &btrue) != -1 {
+	if LexicalAscendingComparator(bfalse, btrue) != -1 {
 		t.Fatal()
 	}
-	if LexicalAscendingComparator(&sabc, &sdef) != -1 {
+	if LexicalAscendingComparator(sabc, sdef) != -1 {
 		t.Fatal()
 	}
 	if LexicalAscendingComparator(&e, &e) != 0 {
@@ -61,17 +61,17 @@ func TestComparators(t *testing.T) {
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Within-type numeric comparisons
-	if NumericAscendingComparator(&i10, &i2) != 1 {
+	if NumericAscendingComparator(i10, i2) != 1 {
 		t.Fatal()
 	}
-	if NumericAscendingComparator(&sabc, &sabc) != 0 {
+	if NumericAscendingComparator(sabc, sabc) != 0 {
 		t.Fatal()
 	}
-	if NumericAscendingComparator(&sabc, &sdef) != -1 {
+	if NumericAscendingComparator(sabc, sdef) != -1 {
 		t.Fatal()
 	}
 
-	if NumericAscendingComparator(&btrue, &bfalse) != 1 {
+	if NumericAscendingComparator(btrue, bfalse) != 1 {
 		t.Fatal()
 	}
 
@@ -85,46 +85,46 @@ func TestComparators(t *testing.T) {
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Across-type lexical comparisons
 
-	if LexicalAscendingComparator(&i10, &btrue) != -1 { // "10" < "true"
+	if LexicalAscendingComparator(i10, btrue) != -1 { // "10" < "true"
 		t.Fatal()
 	}
-	if LexicalAscendingComparator(&i10, &sabc) != -1 { // "10" < "abc"
+	if LexicalAscendingComparator(i10, sabc) != -1 { // "10" < "abc"
 		t.Fatal()
 	}
-	if LexicalAscendingComparator(&i10, &e) != 1 { // "10" > "(error)"
+	if LexicalAscendingComparator(i10, &e) != 1 { // "10" > "(error)"
 		t.Fatal()
 	}
 
-	if LexicalAscendingComparator(&bfalse, &sabc) != 1 { // "false" > "abc"
+	if LexicalAscendingComparator(bfalse, sabc) != 1 { // "false" > "abc"
 		t.Fatal()
 	}
-	if LexicalAscendingComparator(&bfalse, &e) != 1 { // "false" > "(error)"
+	if LexicalAscendingComparator(bfalse, &e) != 1 { // "false" > "(error)"
 		t.Fatal()
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Across-type numeric comparisons
 
-	if NumericAscendingComparator(&i10, &btrue) != -1 {
+	if NumericAscendingComparator(i10, btrue) != -1 {
 		t.Fatal()
 	}
-	if NumericAscendingComparator(&i10, &sabc) != -1 {
+	if NumericAscendingComparator(i10, sabc) != -1 {
 		t.Fatal()
 	}
-	if NumericAscendingComparator(&i10, &e) != -1 {
+	if NumericAscendingComparator(i10, &e) != -1 {
 		t.Fatal()
 	}
-	if NumericAscendingComparator(&i10, &a) != -1 {
+	if NumericAscendingComparator(i10, &a) != -1 {
 		t.Fatal()
 	}
 
-	if NumericAscendingComparator(&bfalse, &sabc) != -1 {
+	if NumericAscendingComparator(bfalse, sabc) != -1 {
 		t.Fatal()
 	}
-	if NumericAscendingComparator(&bfalse, &e) != -1 {
+	if NumericAscendingComparator(bfalse, &e) != -1 {
 		t.Fatal()
 	}
-	if NumericAscendingComparator(&bfalse, &a) != -1 {
+	if NumericAscendingComparator(bfalse, &a) != -1 {
 		t.Fatal()
 	}
 

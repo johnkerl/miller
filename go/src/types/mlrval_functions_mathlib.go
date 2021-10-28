@@ -12,13 +12,13 @@ import (
 
 // ----------------------------------------------------------------
 func math_unary_f_i(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval {
-	return MlrvalPointerFromFloat64(f(float64(input1.intval)))
+	return MlrvalFromFloat64(f(float64(input1.intval)))
 }
 func math_unary_i_i(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval {
-	return MlrvalPointerFromInt(int(f(float64(input1.intval))))
+	return MlrvalFromInt(int(f(float64(input1.intval))))
 }
 func math_unary_f_f(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval {
-	return MlrvalPointerFromFloat64(f(input1.floatval))
+	return MlrvalFromFloat64(f(input1.floatval))
 }
 
 // Disposition vector for unary mathlib functions
@@ -91,19 +91,19 @@ func pow_f_ii(input1, input2 *Mlrval) *Mlrval {
 	ioutput := int(foutput)
 	// Int raised to int power should be float if it can be (i.e. unless overflow)
 	if float64(ioutput) == foutput {
-		return MlrvalPointerFromInt(ioutput)
+		return MlrvalFromInt(ioutput)
 	} else {
-		return MlrvalPointerFromFloat64(foutput)
+		return MlrvalFromFloat64(foutput)
 	}
 }
 func pow_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Pow(float64(input1.intval), input2.floatval))
+	return MlrvalFromFloat64(math.Pow(float64(input1.intval), input2.floatval))
 }
 func pow_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Pow(input1.floatval, float64(input2.intval)))
+	return MlrvalFromFloat64(math.Pow(input1.floatval, float64(input2.intval)))
 }
 func pow_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Pow(input1.floatval, input2.floatval))
+	return MlrvalFromFloat64(math.Pow(input1.floatval, input2.floatval))
 }
 
 var pow_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -127,16 +127,16 @@ func BIF_pow(input1, input2 *Mlrval) *Mlrval {
 
 // ================================================================
 func atan2_f_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Atan2(float64(input1.intval), float64(input2.intval)))
+	return MlrvalFromFloat64(math.Atan2(float64(input1.intval), float64(input2.intval)))
 }
 func atan2_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Atan2(float64(input1.intval), input2.floatval))
+	return MlrvalFromFloat64(math.Atan2(float64(input1.intval), input2.floatval))
 }
 func atan2_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Atan2(input1.floatval, float64(input2.intval)))
+	return MlrvalFromFloat64(math.Atan2(input1.floatval, float64(input2.intval)))
 }
 func atan2_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Atan2(input1.floatval, input2.floatval))
+	return MlrvalFromFloat64(math.Atan2(input1.floatval, input2.floatval))
 }
 
 var atan2_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -164,16 +164,16 @@ func mlr_roundm(x, m float64) float64 {
 }
 
 func roundm_f_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(int(mlr_roundm(float64(input1.intval), float64(input2.intval))))
+	return MlrvalFromInt(int(mlr_roundm(float64(input1.intval), float64(input2.intval))))
 }
 func roundm_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(mlr_roundm(float64(input1.intval), input2.floatval))
+	return MlrvalFromFloat64(mlr_roundm(float64(input1.intval), input2.floatval))
 }
 func roundm_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(mlr_roundm(input1.floatval, float64(input2.intval)))
+	return MlrvalFromFloat64(mlr_roundm(input1.floatval, float64(input2.intval)))
 }
 func roundm_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(mlr_roundm(input1.floatval, input2.floatval))
+	return MlrvalFromFloat64(mlr_roundm(input1.floatval, input2.floatval))
 }
 
 var roundm_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -221,5 +221,5 @@ func BIF_logifit(input1, input2, input3 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 
-	return MlrvalPointerFromFloat64(1.0 / (1.0 + math.Exp(-m*x-b)))
+	return MlrvalFromFloat64(1.0 / (1.0 + math.Exp(-m*x-b)))
 }

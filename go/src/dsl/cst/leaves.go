@@ -149,7 +149,7 @@ func (node *FullSrecRvalueNode) Evaluate(
 	if state.Inrec == nil {
 		return types.MLRVAL_ABSENT
 	} else {
-		return types.MlrvalPointerFromMap(state.Inrec)
+		return types.MlrvalFromMap(state.Inrec)
 	}
 }
 
@@ -184,7 +184,7 @@ func (root *RootNode) BuildFullOosvarRvalueNode() *FullOosvarRvalueNode {
 func (node *FullOosvarRvalueNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromMap(state.Oosvars)
+	return types.MlrvalFromMap(state.Oosvars)
 }
 
 // ----------------------------------------------------------------
@@ -218,7 +218,7 @@ func (node *LocalVariableNode) Evaluate(
 
 	udf := node.udfManager.LookUpDisregardingArity(functionName)
 	if udf != nil {
-		return types.MlrvalPointerFromFunction(udf, functionName)
+		return types.MlrvalFromFunction(udf, functionName)
 	}
 
 	// TODO: allow built-in functions as well. Needs some API-merging as a
@@ -237,7 +237,7 @@ func (node *LocalVariableNode) Evaluate(
 // regex literals differently from those for non-regex string literals.
 
 type RegexLiteralNode struct {
-	literal types.Mlrval
+	literal *types.Mlrval
 }
 
 func (root *RootNode) BuildRegexLiteralNode(literal string) IEvaluable {
@@ -249,14 +249,14 @@ func (root *RootNode) BuildRegexLiteralNode(literal string) IEvaluable {
 func (node *RegexLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return &node.literal
+	return node.literal
 }
 
 // ----------------------------------------------------------------
 // StringLiteralNode is for any string literal that doesn't have any "\0" ..
 // "\9" in it.
 type StringLiteralNode struct {
-	literal types.Mlrval
+	literal *types.Mlrval
 }
 
 // RegexCaptureReplacementNode is for any string literal that has any "\0" ..
@@ -301,7 +301,7 @@ func (root *RootNode) BuildStringLiteralNode(literal string) IEvaluable {
 func (node *StringLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return &node.literal
+	return node.literal
 }
 
 // As noted above, in things like
@@ -317,7 +317,7 @@ func (node *StringLiteralNode) Evaluate(
 func (node *RegexCaptureReplacementNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(
+	return types.MlrvalFromString(
 		lib.InterpolateCaptures(
 			node.replacementString,
 			node.replacementCaptureMatrix,
@@ -333,7 +333,7 @@ type IntLiteralNode struct {
 
 func (root *RootNode) BuildIntLiteralNode(literal string) *IntLiteralNode {
 	return &IntLiteralNode{
-		literal: types.MlrvalPointerFromIntString(literal),
+		literal: types.MlrvalFromIntString(literal),
 	}
 }
 func (node *IntLiteralNode) Evaluate(
@@ -349,7 +349,7 @@ type FloatLiteralNode struct {
 
 func (root *RootNode) BuildFloatLiteralNode(literal string) *FloatLiteralNode {
 	return &FloatLiteralNode{
-		literal: types.MlrvalPointerFromFloat64String(literal),
+		literal: types.MlrvalFromFloat64String(literal),
 	}
 }
 func (node *FloatLiteralNode) Evaluate(
@@ -360,7 +360,7 @@ func (node *FloatLiteralNode) Evaluate(
 
 // ----------------------------------------------------------------
 type BoolLiteralNode struct {
-	literal types.Mlrval
+	literal *types.Mlrval
 }
 
 func (root *RootNode) BuildBoolLiteralNode(literal string) *BoolLiteralNode {
@@ -371,7 +371,7 @@ func (root *RootNode) BuildBoolLiteralNode(literal string) *BoolLiteralNode {
 func (node *BoolLiteralNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return &node.literal
+	return node.literal
 }
 
 // ----------------------------------------------------------------
@@ -454,7 +454,7 @@ func (root *RootNode) BuildFILENAMENode() *FILENAMENode {
 func (node *FILENAMENode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(state.Context.FILENAME)
+	return types.MlrvalFromString(state.Context.FILENAME)
 }
 
 // ----------------------------------------------------------------
@@ -467,7 +467,7 @@ func (root *RootNode) BuildFILENUMNode() *FILENUMNode {
 func (node *FILENUMNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromInt(state.Context.FILENUM)
+	return types.MlrvalFromInt(state.Context.FILENUM)
 }
 
 // ----------------------------------------------------------------
@@ -480,7 +480,7 @@ func (root *RootNode) BuildNFNode() *NFNode {
 func (node *NFNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromInt(state.Inrec.FieldCount)
+	return types.MlrvalFromInt(state.Inrec.FieldCount)
 }
 
 // ----------------------------------------------------------------
@@ -493,7 +493,7 @@ func (root *RootNode) BuildNRNode() *NRNode {
 func (node *NRNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromInt(state.Context.NR)
+	return types.MlrvalFromInt(state.Context.NR)
 }
 
 // ----------------------------------------------------------------
@@ -506,7 +506,7 @@ func (root *RootNode) BuildFNRNode() *FNRNode {
 func (node *FNRNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromInt(state.Context.FNR)
+	return types.MlrvalFromInt(state.Context.FNR)
 }
 
 // ----------------------------------------------------------------
@@ -519,7 +519,7 @@ func (root *RootNode) BuildIRSNode() *IRSNode {
 func (node *IRSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(state.Context.IRS)
+	return types.MlrvalFromString(state.Context.IRS)
 }
 
 // ----------------------------------------------------------------
@@ -532,7 +532,7 @@ func (root *RootNode) BuildIFSNode() *IFSNode {
 func (node *IFSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(state.Context.IFS)
+	return types.MlrvalFromString(state.Context.IFS)
 }
 
 // ----------------------------------------------------------------
@@ -545,7 +545,7 @@ func (root *RootNode) BuildIPSNode() *IPSNode {
 func (node *IPSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(state.Context.IPS)
+	return types.MlrvalFromString(state.Context.IPS)
 }
 
 // ----------------------------------------------------------------
@@ -558,7 +558,7 @@ func (root *RootNode) BuildORSNode() *ORSNode {
 func (node *ORSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(state.Context.ORS)
+	return types.MlrvalFromString(state.Context.ORS)
 }
 
 // ----------------------------------------------------------------
@@ -571,7 +571,7 @@ func (root *RootNode) BuildOFSNode() *OFSNode {
 func (node *OFSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(state.Context.OFS)
+	return types.MlrvalFromString(state.Context.OFS)
 }
 
 // ----------------------------------------------------------------
@@ -584,7 +584,7 @@ func (root *RootNode) BuildOPSNode() *OPSNode {
 func (node *OPSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(state.Context.OPS)
+	return types.MlrvalFromString(state.Context.OPS)
 }
 
 // ----------------------------------------------------------------
@@ -597,7 +597,7 @@ func (root *RootNode) BuildFLATSEPNode() *FLATSEPNode {
 func (node *FLATSEPNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString(state.Context.FLATSEP)
+	return types.MlrvalFromString(state.Context.FLATSEP)
 }
 
 // ================================================================
@@ -631,7 +631,7 @@ func (root *RootNode) BuildMathPINode() *MathPINode {
 func (node *MathPINode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromFloat64(math.Pi)
+	return types.MlrvalFromFloat64(math.Pi)
 }
 
 // ----------------------------------------------------------------
@@ -644,7 +644,7 @@ func (root *RootNode) BuildMathENode() *MathENode {
 func (node *MathENode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromFloat64(math.E)
+	return types.MlrvalFromFloat64(math.E)
 }
 
 // ================================================================
@@ -662,7 +662,7 @@ func (root *RootNode) BuildArraySliceEmptyLowerIndexNode(
 func (node *LiteralOneNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromInt(1)
+	return types.MlrvalFromInt(1)
 }
 
 // ================================================================
@@ -682,7 +682,7 @@ func (root *RootNode) BuildArraySliceEmptyUpperIndexNode(
 func (node *LiteralEmptyStringNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalPointerFromString("")
+	return types.MlrvalFromString("")
 }
 
 // ----------------------------------------------------------------

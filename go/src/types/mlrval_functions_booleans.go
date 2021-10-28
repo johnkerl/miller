@@ -44,190 +44,190 @@ func float_cmp(a, b float64) int {
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep == input2.printrep)
+	return MlrvalFromBool(input1.printrep == input2.printrep)
 }
 func ne_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep != input2.printrep)
+	return MlrvalFromBool(input1.printrep != input2.printrep)
 }
 func gt_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep > input2.printrep)
+	return MlrvalFromBool(input1.printrep > input2.printrep)
 }
 func ge_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep >= input2.printrep)
+	return MlrvalFromBool(input1.printrep >= input2.printrep)
 }
 func lt_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep < input2.printrep)
+	return MlrvalFromBool(input1.printrep < input2.printrep)
 }
 func le_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep <= input2.printrep)
+	return MlrvalFromBool(input1.printrep <= input2.printrep)
 }
 func cmp_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(string_cmp(input1.printrep, input2.printrep))
+	return MlrvalFromInt(string_cmp(input1.printrep, input2.printrep))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.String() == input2.printrep)
+	return MlrvalFromBool(input1.String() == input2.printrep)
 }
 func ne_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.String() != input2.printrep)
+	return MlrvalFromBool(input1.String() != input2.printrep)
 }
 func gt_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.String() > input2.printrep)
+	return MlrvalFromBool(input1.String() > input2.printrep)
 }
 func ge_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.String() >= input2.printrep)
+	return MlrvalFromBool(input1.String() >= input2.printrep)
 }
 func lt_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.String() < input2.printrep)
+	return MlrvalFromBool(input1.String() < input2.printrep)
 }
 func le_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.String() <= input2.printrep)
+	return MlrvalFromBool(input1.String() <= input2.printrep)
 }
 func cmp_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(string_cmp(input1.String(), input2.printrep))
+	return MlrvalFromInt(string_cmp(input1.String(), input2.printrep))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep == input2.String())
+	return MlrvalFromBool(input1.printrep == input2.String())
 }
 func ne_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep != input2.String())
+	return MlrvalFromBool(input1.printrep != input2.String())
 }
 func gt_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep > input2.String())
+	return MlrvalFromBool(input1.printrep > input2.String())
 }
 func ge_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep >= input2.String())
+	return MlrvalFromBool(input1.printrep >= input2.String())
 }
 func lt_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep < input2.String())
+	return MlrvalFromBool(input1.printrep < input2.String())
 }
 func le_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.printrep <= input2.String())
+	return MlrvalFromBool(input1.printrep <= input2.String())
 }
 func cmp_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(string_cmp(input1.printrep, input2.String()))
+	return MlrvalFromInt(string_cmp(input1.printrep, input2.String()))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.intval == input2.intval)
+	return MlrvalFromBool(input1.intval == input2.intval)
 }
 func ne_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.intval != input2.intval)
+	return MlrvalFromBool(input1.intval != input2.intval)
 }
 func gt_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.intval > input2.intval)
+	return MlrvalFromBool(input1.intval > input2.intval)
 }
 func ge_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.intval >= input2.intval)
+	return MlrvalFromBool(input1.intval >= input2.intval)
 }
 func lt_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.intval < input2.intval)
+	return MlrvalFromBool(input1.intval < input2.intval)
 }
 func le_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.intval <= input2.intval)
+	return MlrvalFromBool(input1.intval <= input2.intval)
 }
 func cmp_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(int_cmp(input1.intval, input2.intval))
+	return MlrvalFromInt(int_cmp(input1.intval, input2.intval))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(float64(input1.intval) == input2.floatval)
+	return MlrvalFromBool(float64(input1.intval) == input2.floatval)
 }
 func ne_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(float64(input1.intval) != input2.floatval)
+	return MlrvalFromBool(float64(input1.intval) != input2.floatval)
 }
 func gt_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(float64(input1.intval) > input2.floatval)
+	return MlrvalFromBool(float64(input1.intval) > input2.floatval)
 }
 func ge_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(float64(input1.intval) >= input2.floatval)
+	return MlrvalFromBool(float64(input1.intval) >= input2.floatval)
 }
 func lt_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(float64(input1.intval) < input2.floatval)
+	return MlrvalFromBool(float64(input1.intval) < input2.floatval)
 }
 func le_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(float64(input1.intval) <= input2.floatval)
+	return MlrvalFromBool(float64(input1.intval) <= input2.floatval)
 }
 func cmp_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(float_cmp(float64(input1.intval), input2.floatval))
+	return MlrvalFromInt(float_cmp(float64(input1.intval), input2.floatval))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval == float64(input2.intval))
+	return MlrvalFromBool(input1.floatval == float64(input2.intval))
 }
 func ne_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval != float64(input2.intval))
+	return MlrvalFromBool(input1.floatval != float64(input2.intval))
 }
 func gt_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval > float64(input2.intval))
+	return MlrvalFromBool(input1.floatval > float64(input2.intval))
 }
 func ge_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval >= float64(input2.intval))
+	return MlrvalFromBool(input1.floatval >= float64(input2.intval))
 }
 func lt_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval < float64(input2.intval))
+	return MlrvalFromBool(input1.floatval < float64(input2.intval))
 }
 func le_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval <= float64(input2.intval))
+	return MlrvalFromBool(input1.floatval <= float64(input2.intval))
 }
 func cmp_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(float_cmp(input1.floatval, float64(input2.intval)))
+	return MlrvalFromInt(float_cmp(input1.floatval, float64(input2.intval)))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval == input2.floatval)
+	return MlrvalFromBool(input1.floatval == input2.floatval)
 }
 func ne_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval != input2.floatval)
+	return MlrvalFromBool(input1.floatval != input2.floatval)
 }
 func gt_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval > input2.floatval)
+	return MlrvalFromBool(input1.floatval > input2.floatval)
 }
 func ge_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval >= input2.floatval)
+	return MlrvalFromBool(input1.floatval >= input2.floatval)
 }
 func lt_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval < input2.floatval)
+	return MlrvalFromBool(input1.floatval < input2.floatval)
 }
 func le_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval <= input2.floatval)
+	return MlrvalFromBool(input1.floatval <= input2.floatval)
 }
 func cmp_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(float_cmp(input1.floatval, input2.floatval))
+	return MlrvalFromInt(float_cmp(input1.floatval, input2.floatval))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.boolval == input2.boolval)
+	return MlrvalFromBool(input1.boolval == input2.boolval)
 }
 func ne_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.boolval != input2.boolval)
+	return MlrvalFromBool(input1.boolval != input2.boolval)
 }
 
 // We could say ordering on bool is error, but, Miller allows
 // sorting on bool so it should allow ordering on bool.
 
 func gt_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(lib.BoolToInt(input1.boolval) > lib.BoolToInt(input2.boolval))
+	return MlrvalFromBool(lib.BoolToInt(input1.boolval) > lib.BoolToInt(input2.boolval))
 }
 func ge_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(lib.BoolToInt(input1.boolval) >= lib.BoolToInt(input2.boolval))
+	return MlrvalFromBool(lib.BoolToInt(input1.boolval) >= lib.BoolToInt(input2.boolval))
 }
 func lt_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(lib.BoolToInt(input1.boolval) < lib.BoolToInt(input2.boolval))
+	return MlrvalFromBool(lib.BoolToInt(input1.boolval) < lib.BoolToInt(input2.boolval))
 }
 func le_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(lib.BoolToInt(input1.boolval) <= lib.BoolToInt(input2.boolval))
+	return MlrvalFromBool(lib.BoolToInt(input1.boolval) <= lib.BoolToInt(input2.boolval))
 }
 func cmp_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(int_cmp(lib.BoolToInt(input1.boolval), lib.BoolToInt(input2.boolval)))
+	return MlrvalFromInt(int_cmp(lib.BoolToInt(input1.boolval), lib.BoolToInt(input2.boolval)))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -253,15 +253,15 @@ func eq_b_aa(input1, input2 *Mlrval) *Mlrval {
 }
 func ne_b_aa(input1, input2 *Mlrval) *Mlrval {
 	output := eq_b_aa(input1, input2)
-	return MlrvalPointerFromBool(!output.boolval)
+	return MlrvalFromBool(!output.boolval)
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_mm(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mapval.Equals(input2.mapval))
+	return MlrvalFromBool(input1.mapval.Equals(input2.mapval))
 }
 func ne_b_mm(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(!input1.mapval.Equals(input2.mapval))
+	return MlrvalFromBool(!input1.mapval.Equals(input2.mapval))
 }
 
 // We get a Golang "initialization loop" due to recursive depth computation
@@ -448,7 +448,7 @@ func MlrvalEqualsAsBool(input1, input2 *Mlrval) bool {
 // ----------------------------------------------------------------
 func MlrvalLogicalAND(input1, input2 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
-		return MlrvalPointerFromBool(input1.boolval && input2.boolval)
+		return MlrvalFromBool(input1.boolval && input2.boolval)
 	} else {
 		return MLRVAL_ERROR
 	}
@@ -456,7 +456,7 @@ func MlrvalLogicalAND(input1, input2 *Mlrval) *Mlrval {
 
 func MlrvalLogicalOR(input1, input2 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
-		return MlrvalPointerFromBool(input1.boolval || input2.boolval)
+		return MlrvalFromBool(input1.boolval || input2.boolval)
 	} else {
 		return MLRVAL_ERROR
 	}
@@ -464,7 +464,7 @@ func MlrvalLogicalOR(input1, input2 *Mlrval) *Mlrval {
 
 func BIF_logicalxor(input1, input2 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
-		return MlrvalPointerFromBool(input1.boolval != input2.boolval)
+		return MlrvalFromBool(input1.boolval != input2.boolval)
 	} else {
 		return MLRVAL_ERROR
 	}

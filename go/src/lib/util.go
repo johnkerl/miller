@@ -92,6 +92,8 @@ func IntMin2(a, b int) int {
 	}
 }
 
+// TODO: split out to separate file
+
 // TryIntFromString tries decimal, hex, octal, and binary.
 func TryIntFromString(input string) (int, bool) {
 	// Following twos-complement formatting familiar from all manners of

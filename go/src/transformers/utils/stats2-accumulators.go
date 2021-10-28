@@ -186,10 +186,10 @@ func (acc *Stats2LinRegOLSAccumulator) Populate(
 
 		m, b := lib.GetLinearRegressionOLS(acc.count, acc.sumx, acc.sumx2, acc.sumxy, acc.sumy)
 
-		outrec.PutReference(acc.mOutputFieldName, types.MlrvalPointerFromFloat64(m))
-		outrec.PutReference(acc.bOutputFieldName, types.MlrvalPointerFromFloat64(b))
+		outrec.PutReference(acc.mOutputFieldName, types.MlrvalFromFloat64(m))
+		outrec.PutReference(acc.bOutputFieldName, types.MlrvalFromFloat64(b))
 	}
-	outrec.PutReference(acc.nOutputFieldName, types.MlrvalPointerFromInt(acc.count))
+	outrec.PutReference(acc.nOutputFieldName, types.MlrvalFromInt(acc.count))
 }
 
 func (acc *Stats2LinRegOLSAccumulator) Fit(
@@ -212,7 +212,7 @@ func (acc *Stats2LinRegOLSAccumulator) Fit(
 		outrec.PutCopy(acc.fitOutputFieldName, types.MLRVAL_VOID)
 	} else {
 		yfit := acc.m*x + acc.b
-		outrec.PutReference(acc.fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
+		outrec.PutReference(acc.fitOutputFieldName, types.MlrvalFromFloat64(yfit))
 	}
 }
 
@@ -270,10 +270,10 @@ func (acc *Stats2LogiRegAccumulator) Populate(
 		outrec.PutCopy(acc.bOutputFieldName, types.MLRVAL_VOID)
 	} else {
 		m, b := lib.LogisticRegression(acc.xs, acc.ys)
-		outrec.PutCopy(acc.mOutputFieldName, types.MlrvalPointerFromFloat64(m))
-		outrec.PutCopy(acc.bOutputFieldName, types.MlrvalPointerFromFloat64(b))
+		outrec.PutCopy(acc.mOutputFieldName, types.MlrvalFromFloat64(m))
+		outrec.PutCopy(acc.bOutputFieldName, types.MlrvalFromFloat64(b))
 	}
-	outrec.PutReference(acc.nOutputFieldName, types.MlrvalPointerFromInt(len(acc.xs)))
+	outrec.PutReference(acc.nOutputFieldName, types.MlrvalFromInt(len(acc.xs)))
 }
 
 func (acc *Stats2LogiRegAccumulator) Fit(
@@ -296,7 +296,7 @@ func (acc *Stats2LogiRegAccumulator) Fit(
 		outrec.PutCopy(acc.fitOutputFieldName, types.MLRVAL_VOID)
 	} else {
 		yfit := 1.0 / (1.0 + math.Exp(-acc.m*x-acc.b))
-		outrec.PutReference(acc.fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
+		outrec.PutReference(acc.fitOutputFieldName, types.MlrvalFromFloat64(yfit))
 	}
 }
 
@@ -363,7 +363,7 @@ func (acc *Stats2R2Accumulator) Populate(
 		numerator = numerator * numerator
 		denominator := (n*sumx2 - sumx*sumx) * (n*sumy2 - sumy*sumy)
 		output := numerator / denominator
-		outrec.PutReference(acc.r2OutputFieldName, types.MlrvalPointerFromFloat64(output))
+		outrec.PutReference(acc.r2OutputFieldName, types.MlrvalFromFloat64(output))
 	}
 }
 
@@ -510,10 +510,10 @@ func (acc *Stats2CorrCovAccumulator) Populate(
 				acc.sumy2,
 				acc.sumxy,
 			)
-			outrec.PutReference(key00, types.MlrvalPointerFromFloat64(Q[0][0]))
-			outrec.PutReference(key01, types.MlrvalPointerFromFloat64(Q[0][1]))
-			outrec.PutReference(key10, types.MlrvalPointerFromFloat64(Q[1][0]))
-			outrec.PutReference(key11, types.MlrvalPointerFromFloat64(Q[1][1]))
+			outrec.PutReference(key00, types.MlrvalFromFloat64(Q[0][0]))
+			outrec.PutReference(key01, types.MlrvalFromFloat64(Q[0][1]))
+			outrec.PutReference(key10, types.MlrvalFromFloat64(Q[1][0]))
+			outrec.PutReference(key11, types.MlrvalFromFloat64(Q[1][1]))
 		}
 
 	} else if acc.doWhich == DO_LINREG_PCA {
@@ -560,18 +560,18 @@ func (acc *Stats2CorrCovAccumulator) Populate(
 			y_mean := acc.sumy / float64(acc.count)
 			m, b, q := lib.GetLinearRegressionPCA(l1, l2, v1, v2, x_mean, y_mean)
 
-			outrec.PutReference(keym, types.MlrvalPointerFromFloat64(m))
-			outrec.PutReference(keyb, types.MlrvalPointerFromFloat64(b))
-			outrec.PutReference(keyn, types.MlrvalPointerFromInt(acc.count))
-			outrec.PutReference(keyq, types.MlrvalPointerFromFloat64(q))
+			outrec.PutReference(keym, types.MlrvalFromFloat64(m))
+			outrec.PutReference(keyb, types.MlrvalFromFloat64(b))
+			outrec.PutReference(keyn, types.MlrvalFromInt(acc.count))
+			outrec.PutReference(keyq, types.MlrvalFromFloat64(q))
 
 			if acc.doVerbose {
-				outrec.PutReference(keyl1, types.MlrvalPointerFromFloat64(l1))
-				outrec.PutReference(keyl2, types.MlrvalPointerFromFloat64(l2))
-				outrec.PutReference(keyv11, types.MlrvalPointerFromFloat64(v1[0]))
-				outrec.PutReference(keyv12, types.MlrvalPointerFromFloat64(v1[1]))
-				outrec.PutReference(keyv21, types.MlrvalPointerFromFloat64(v2[0]))
-				outrec.PutReference(keyv22, types.MlrvalPointerFromFloat64(v2[1]))
+				outrec.PutReference(keyl1, types.MlrvalFromFloat64(l1))
+				outrec.PutReference(keyl2, types.MlrvalFromFloat64(l2))
+				outrec.PutReference(keyv11, types.MlrvalFromFloat64(v1[0]))
+				outrec.PutReference(keyv12, types.MlrvalFromFloat64(v1[1]))
+				outrec.PutReference(keyv21, types.MlrvalFromFloat64(v2[0]))
+				outrec.PutReference(keyv22, types.MlrvalFromFloat64(v2[1]))
 			}
 		}
 	} else {
@@ -588,7 +588,7 @@ func (acc *Stats2CorrCovAccumulator) Populate(
 				sigmay := math.Sqrt(lib.GetVar(acc.count, acc.sumy, acc.sumy2))
 				output = output / sigmax / sigmay
 			}
-			outrec.PutReference(key, types.MlrvalPointerFromFloat64(output))
+			outrec.PutReference(key, types.MlrvalFromFloat64(output))
 		}
 	}
 }
@@ -622,7 +622,7 @@ func (acc *Stats2CorrCovAccumulator) Fit(
 		outrec.PutCopy(acc.pca_fitOutputFieldName, types.MLRVAL_VOID)
 	} else {
 		yfit := acc.m*x + acc.b
-		outrec.PutCopy(acc.pca_fitOutputFieldName, types.MlrvalPointerFromFloat64(yfit))
+		outrec.PutCopy(acc.pca_fitOutputFieldName, types.MlrvalFromFloat64(yfit))
 	}
 }
 

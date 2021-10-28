@@ -71,6 +71,9 @@ d pre-release:
 ----------------------------------------------------------------
 -S/-F/-O
 
+* 1st neaten mlrval_new.go et al.
+* rm all non-mv-ptr ctors; then consider rename ...
+
 * global
 * with env var
 * -O:

@@ -149,7 +149,7 @@ func (tr *TransformerCountSimilar) Transform(
 			mgroupSize := types.MlrvalFromInt(int(groupSize))
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				recordAndContext := inner.Value.(*types.RecordAndContext)
-				recordAndContext.Record.PutCopy(tr.counterFieldName, &mgroupSize)
+				recordAndContext.Record.PutCopy(tr.counterFieldName, mgroupSize)
 
 				outputChannel <- recordAndContext
 			}

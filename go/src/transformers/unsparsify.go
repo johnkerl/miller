@@ -102,7 +102,7 @@ func transformerUnsparsifyParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerUnsparsify struct {
-	fillerMlrval          types.Mlrval
+	fillerMlrval          *types.Mlrval
 	recordsAndContexts    *list.List
 	fieldNamesSeen        *lib.OrderedMap
 	recordTransformerFunc RecordTransformerFunc
@@ -170,7 +170,7 @@ func (tr *TransformerUnsparsify) transformNonStreaming(
 			for pe := tr.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
 				fieldName := pe.Key
 				if !outrec.Has(fieldName) {
-					newrec.PutCopy(fieldName, &tr.fillerMlrval)
+					newrec.PutCopy(fieldName, tr.fillerMlrval)
 				} else {
 					newrec.PutReference(fieldName, outrec.Get(fieldName))
 				}
@@ -195,7 +195,7 @@ func (tr *TransformerUnsparsify) transformStreaming(
 
 		for pe := tr.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
 			if !inrec.Has(pe.Key) {
-				inrec.PutCopy(pe.Key, &tr.fillerMlrval)
+				inrec.PutCopy(pe.Key, tr.fillerMlrval)
 			}
 		}
 

@@ -13,19 +13,19 @@ import (
 func BIF_length(input1 *Mlrval) *Mlrval {
 	switch input1.mvtype {
 	case MT_ERROR:
-		return MlrvalPointerFromInt(0)
+		return MlrvalFromInt(0)
 		break
 	case MT_ABSENT:
-		return MlrvalPointerFromInt(0)
+		return MlrvalFromInt(0)
 		break
 	case MT_ARRAY:
-		return MlrvalPointerFromInt(int(len(input1.arrayval)))
+		return MlrvalFromInt(int(len(input1.arrayval)))
 		break
 	case MT_MAP:
-		return MlrvalPointerFromInt(int(input1.mapval.FieldCount))
+		return MlrvalFromInt(int(input1.mapval.FieldCount))
 		break
 	}
-	return MlrvalPointerFromInt(1)
+	return MlrvalFromInt(1)
 }
 
 // ================================================================
@@ -39,7 +39,7 @@ func depth_from_array(input1 *Mlrval) *Mlrval {
 			maxChildDepth = iChildDepth
 		}
 	}
-	return MlrvalPointerFromInt(int(1 + maxChildDepth))
+	return MlrvalFromInt(int(1 + maxChildDepth))
 }
 
 func depth_from_map(input1 *Mlrval) *Mlrval {
@@ -53,11 +53,11 @@ func depth_from_map(input1 *Mlrval) *Mlrval {
 			maxChildDepth = iChildDepth
 		}
 	}
-	return MlrvalPointerFromInt(int(1 + maxChildDepth))
+	return MlrvalFromInt(int(1 + maxChildDepth))
 }
 
 func depth_from_scalar(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(0)
+	return MlrvalFromInt(0)
 }
 
 // We get a Golang "initialization loop" due to recursive depth computation
@@ -91,7 +91,7 @@ func leafcount_from_array(input1 *Mlrval) *Mlrval {
 		// Golang initialization loop if we do this :(
 		// childLeafCount := BIF_leafcount(&child)
 
-		childLeafCount := MlrvalPointerFromInt(1)
+		childLeafCount := MlrvalFromInt(1)
 		if child.mvtype == MT_ARRAY {
 			childLeafCount = leafcount_from_array(&child)
 		} else if child.mvtype == MT_MAP {
@@ -102,7 +102,7 @@ func leafcount_from_array(input1 *Mlrval) *Mlrval {
 		iChildLeafCount := int(childLeafCount.intval)
 		sumChildLeafCount += iChildLeafCount
 	}
-	return MlrvalPointerFromInt(int(sumChildLeafCount))
+	return MlrvalFromInt(int(sumChildLeafCount))
 }
 
 func leafcount_from_map(input1 *Mlrval) *Mlrval {
@@ -113,7 +113,7 @@ func leafcount_from_map(input1 *Mlrval) *Mlrval {
 		// Golang initialization loop if we do this :(
 		// childLeafCount := BIF_leafcount(child)
 
-		childLeafCount := MlrvalPointerFromInt(1)
+		childLeafCount := MlrvalFromInt(1)
 		if child.mvtype == MT_ARRAY {
 			childLeafCount = leafcount_from_array(child)
 		} else if child.mvtype == MT_MAP {
@@ -124,11 +124,11 @@ func leafcount_from_map(input1 *Mlrval) *Mlrval {
 		iChildLeafCount := int(childLeafCount.intval)
 		sumChildLeafCount += iChildLeafCount
 	}
-	return MlrvalPointerFromInt(int(sumChildLeafCount))
+	return MlrvalFromInt(int(sumChildLeafCount))
 }
 
 func leafcount_from_scalar(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(1)
+	return MlrvalFromInt(1)
 }
 
 var leafcount_dispositions = [MT_DIM]UnaryFunc{
@@ -158,12 +158,12 @@ func has_key_in_array(input1, input2 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 	_, ok := UnaliasArrayIndex(&input1.arrayval, input2.intval)
-	return MlrvalPointerFromBool(ok)
+	return MlrvalFromBool(ok)
 }
 
 func has_key_in_map(input1, input2 *Mlrval) *Mlrval {
 	if input2.mvtype == MT_STRING || input2.mvtype == MT_INT {
-		return MlrvalPointerFromBool(input1.mapval.Has(input2.String()))
+		return MlrvalFromBool(input1.mapval.Has(input2.String()))
 	} else {
 		return MLRVAL_ERROR
 	}
@@ -217,7 +217,7 @@ func BIF_mapselect(mlrvals []*Mlrval) *Mlrval {
 		}
 	}
 
-	return MlrvalPointerFromMap(newMap)
+	return MlrvalFromMap(newMap)
 }
 
 // ----------------------------------------------------------------
@@ -248,13 +248,13 @@ func BIF_mapexcept(mlrvals []*Mlrval) *Mlrval {
 		}
 	}
 
-	return MlrvalPointerFromMap(newMap)
+	return MlrvalFromMap(newMap)
 }
 
 // ----------------------------------------------------------------
 func BIF_mapsum(mlrvals []*Mlrval) *Mlrval {
 	if len(mlrvals) == 0 {
-		return MlrvalPointerFromEmptyMap()
+		return MlrvalFromEmptyMap()
 	}
 	if len(mlrvals) == 1 {
 		return mlrvals[0]
@@ -274,13 +274,13 @@ func BIF_mapsum(mlrvals []*Mlrval) *Mlrval {
 		}
 	}
 
-	return MlrvalPointerFromMap(newMap)
+	return MlrvalFromMap(newMap)
 }
 
 // ----------------------------------------------------------------
 func BIF_mapdiff(mlrvals []*Mlrval) *Mlrval {
 	if len(mlrvals) == 0 {
-		return MlrvalPointerFromEmptyMap()
+		return MlrvalFromEmptyMap()
 	}
 	if len(mlrvals) == 1 {
 		return mlrvals[0]
@@ -300,7 +300,7 @@ func BIF_mapdiff(mlrvals []*Mlrval) *Mlrval {
 		}
 	}
 
-	return MlrvalPointerFromMap(newMap)
+	return MlrvalFromMap(newMap)
 }
 
 // ================================================================
@@ -321,7 +321,7 @@ func BIF_joink(input1, input2 *Mlrval) *Mlrval {
 			}
 		}
 
-		return MlrvalPointerFromString(buffer.String())
+		return MlrvalFromString(buffer.String())
 	} else if input1.mvtype == MT_ARRAY {
 		var buffer bytes.Buffer
 
@@ -333,7 +333,7 @@ func BIF_joink(input1, input2 *Mlrval) *Mlrval {
 			buffer.WriteString(strconv.Itoa(i + 1))
 		}
 
-		return MlrvalPointerFromString(buffer.String())
+		return MlrvalFromString(buffer.String())
 	} else {
 		return MLRVAL_ERROR
 	}
@@ -358,7 +358,7 @@ func BIF_joinv(input1, input2 *Mlrval) *Mlrval {
 			}
 		}
 
-		return MlrvalPointerFromString(buffer.String())
+		return MlrvalFromString(buffer.String())
 	} else if input1.mvtype == MT_ARRAY {
 		var buffer bytes.Buffer
 
@@ -369,7 +369,7 @@ func BIF_joinv(input1, input2 *Mlrval) *Mlrval {
 			buffer.WriteString(element.String())
 		}
 
-		return MlrvalPointerFromString(buffer.String())
+		return MlrvalFromString(buffer.String())
 	} else {
 		return MLRVAL_ERROR
 	}
@@ -400,7 +400,7 @@ func BIF_joinkv(input1, input2, input3 *Mlrval) *Mlrval {
 			}
 		}
 
-		return MlrvalPointerFromString(buffer.String())
+		return MlrvalFromString(buffer.String())
 	} else if input1.mvtype == MT_ARRAY {
 		var buffer bytes.Buffer
 
@@ -414,7 +414,7 @@ func BIF_joinkv(input1, input2, input3 *Mlrval) *Mlrval {
 			buffer.WriteString(element.String())
 		}
 
-		return MlrvalPointerFromString(buffer.String())
+		return MlrvalFromString(buffer.String())
 	} else {
 		return MLRVAL_ERROR
 	}
@@ -435,18 +435,18 @@ func BIF_splitkv(input1, input2, input3 *Mlrval) *Mlrval {
 	}
 	fieldSeparator := input3.printrep
 
-	output := MlrvalPointerFromEmptyMap()
+	output := MlrvalFromEmptyMap()
 
 	fields := lib.SplitString(input1.printrep, fieldSeparator)
 	for i, field := range fields {
 		pair := strings.SplitN(field, pairSeparator, 2)
 		if len(pair) == 1 {
 			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
-			value := MlrvalPointerFromInferredType(pair[0])
+			value := MlrvalFromInferredType(pair[0])
 			output.mapval.PutReference(key, value)
 		} else if len(pair) == 2 {
 			key := pair[0]
-			value := MlrvalPointerFromInferredType(pair[1])
+			value := MlrvalFromInferredType(pair[1])
 			output.mapval.PutReference(key, value)
 		} else {
 			lib.InternalCodingErrorIf(true)
@@ -470,7 +470,7 @@ func BIF_splitkvx(input1, input2, input3 *Mlrval) *Mlrval {
 	}
 	fieldSeparator := input3.printrep
 
-	output := MlrvalPointerFromEmptyMap()
+	output := MlrvalFromEmptyMap()
 
 	fields := lib.SplitString(input1.printrep, fieldSeparator)
 	for i, field := range fields {
@@ -478,11 +478,11 @@ func BIF_splitkvx(input1, input2, input3 *Mlrval) *Mlrval {
 		if len(pair) == 1 {
 			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			value := MlrvalFromString(pair[0])
-			output.mapval.PutReference(key, &value)
+			output.mapval.PutReference(key, value)
 		} else if len(pair) == 2 {
 			key := pair[0]
 			value := MlrvalFromString(pair[1])
-			output.mapval.PutReference(key, &value)
+			output.mapval.PutReference(key, value)
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
@@ -501,12 +501,12 @@ func BIF_splitnv(input1, input2 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 
-	output := MlrvalPointerFromEmptyMap()
+	output := MlrvalFromEmptyMap()
 
 	fields := lib.SplitString(input1.printrep, input2.printrep)
 	for i, field := range fields {
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
-		value := MlrvalPointerFromInferredType(field)
+		value := MlrvalFromInferredType(field)
 		output.mapval.PutReference(key, value)
 	}
 
@@ -523,13 +523,13 @@ func BIF_splitnvx(input1, input2 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 
-	output := MlrvalPointerFromEmptyMap()
+	output := MlrvalFromEmptyMap()
 
 	fields := lib.SplitString(input1.printrep, input2.printrep)
 	for i, field := range fields {
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 		value := MlrvalFromString(field)
-		output.mapval.PutReference(key, &value)
+		output.mapval.PutReference(key, value)
 	}
 
 	return output
@@ -551,7 +551,7 @@ func BIF_splita(input1, input2 *Mlrval) *Mlrval {
 	output := NewSizedMlrvalArray(int(len(fields)))
 
 	for i, field := range fields {
-		value := MlrvalPointerFromInferredType(field)
+		value := MlrvalFromInferredType(field)
 		output.arrayval[i] = *value
 	}
 
@@ -582,8 +582,7 @@ func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 	output := NewSizedMlrvalArray(int(len(fields)))
 
 	for i, field := range fields {
-		value := MlrvalFromString(field)
-		output.arrayval[i] = value
+		output.arrayval[i] = *MlrvalFromString(field)
 	}
 
 	return output
@@ -596,7 +595,7 @@ func BIF_get_keys(input1 *Mlrval) *Mlrval {
 		output := NewSizedMlrvalArray(input1.mapval.FieldCount)
 		i := 0
 		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
-			output.arrayval[i] = MlrvalFromString(pe.Key)
+			output.arrayval[i] = *MlrvalFromString(pe.Key)
 			i++
 		}
 		return output
@@ -604,7 +603,7 @@ func BIF_get_keys(input1 *Mlrval) *Mlrval {
 	} else if input1.mvtype == MT_ARRAY {
 		output := NewSizedMlrvalArray(int(len(input1.arrayval)))
 		for i := range input1.arrayval {
-			output.arrayval[i] = MlrvalFromInt(int(i + 1)) // Miller user-space indices are 1-up
+			output.arrayval[i] = *MlrvalFromInt(int(i + 1)) // Miller user-space indices are 1-up
 		}
 		return output
 
@@ -691,7 +690,7 @@ func BIF_unflatten(input1, input2 *Mlrval) *Mlrval {
 	oldmap := input1.mapval
 	separator := input2.printrep
 	newmap := oldmap.CopyUnflattened(separator)
-	return MlrvalPointerFromMapReferenced(newmap)
+	return MlrvalFromMapReferenced(newmap)
 }
 
 // ----------------------------------------------------------------
@@ -720,7 +719,7 @@ func BIF_arrayify(input1 *Mlrval) *Mlrval {
 				arrayval[i] = *pe.Value.Copy()
 				i++
 			}
-			return MlrvalPointerFromArrayReference(arrayval)
+			return MlrvalFromArrayReference(arrayval)
 
 		} else {
 			return input1
@@ -746,12 +745,12 @@ func BIF_json_parse(input1 *Mlrval) *Mlrval {
 	} else if input1.mvtype != MT_STRING {
 		return MLRVAL_ERROR
 	} else {
-		output := MlrvalPointerFromPending()
+		output := MlrvalFromPending()
 		err := output.UnmarshalJSON([]byte(input1.printrep))
 		if err != nil {
 			return MLRVAL_ERROR
 		}
-		return output
+		return &output
 	}
 }
 
@@ -760,7 +759,7 @@ func BIF_json_stringify_unary(input1 *Mlrval) *Mlrval {
 	if err != nil {
 		return MLRVAL_ERROR
 	} else {
-		return MlrvalPointerFromString(string(outputBytes))
+		return MlrvalFromString(string(outputBytes))
 	}
 }
 
@@ -778,6 +777,6 @@ func BIF_json_stringify_binary(input1, input2 *Mlrval) *Mlrval {
 	if err != nil {
 		return MLRVAL_ERROR
 	} else {
-		return MlrvalPointerFromString(string(outputBytes))
+		return MlrvalFromString(string(outputBytes))
 	}
 }

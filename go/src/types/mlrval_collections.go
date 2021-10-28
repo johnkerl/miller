@@ -299,7 +299,7 @@ func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	} else {
 		baseIndex := indices[0]
 		if baseIndex.mvtype == MT_STRING {
-			*mv = MlrvalEmptyMap()
+			*mv = *MlrvalFromEmptyMap()
 			return putIndexedOnMap(mv.mapval, indices, rvalue)
 		} else if baseIndex.mvtype == MT_INT {
 			*mv = MlrvalEmptyArray()
@@ -408,7 +408,7 @@ func putIndexedOnArray(
 			// Overwrite what's in this slot if it's the wrong type
 			if nextIndex.mvtype == MT_STRING {
 				if (*baseArray)[zindex].mvtype != MT_MAP {
-					(*baseArray)[zindex] = MlrvalEmptyMap()
+					(*baseArray)[zindex] = *MlrvalFromEmptyMap()
 				}
 			} else if nextIndex.mvtype == MT_INT {
 				if (*baseArray)[zindex].mvtype != MT_ARRAY {

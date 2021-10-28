@@ -242,7 +242,7 @@ func selectArray(
 			outputArray = append(outputArray, *inputArray[i].Copy())
 		}
 	}
-	return types.MlrvalPointerFromArrayReference(outputArray)
+	return types.MlrvalFromArrayReference(outputArray)
 }
 
 func selectMap(
@@ -263,7 +263,7 @@ func selectMap(
 	outputMap := types.NewMlrmap()
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = types.MlrvalPointerFromString(pe.Key)
+		argsArray[0] = types.MlrvalFromString(pe.Key)
 		argsArray[1] = pe.Value
 		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
 		bret, ok := mret.GetBoolValue()
@@ -280,7 +280,7 @@ func selectMap(
 		}
 	}
 
-	return types.MlrvalPointerFromMap(outputMap)
+	return types.MlrvalFromMap(outputMap)
 }
 
 // ================================================================
@@ -323,7 +323,7 @@ func applyArray(
 		isNonAbsentOrDie(&retval, "apply")
 		outputArray[i] = retval
 	}
-	return types.MlrvalPointerFromArrayReference(outputArray)
+	return types.MlrvalFromArrayReference(outputArray)
 }
 
 func applyMap(
@@ -344,13 +344,13 @@ func applyMap(
 	outputMap := types.NewMlrmap()
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = types.MlrvalPointerFromString(pe.Key)
+		argsArray[0] = types.MlrvalFromString(pe.Key)
 		argsArray[1] = pe.Value
 		retval := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
 		kvPair := getKVPairForCallbackOrDie(retval, "apply")
 		outputMap.PutReference(kvPair.Head.Key, kvPair.Head.Value)
 	}
-	return types.MlrvalPointerFromMap(outputMap)
+	return types.MlrvalFromMap(outputMap)
 }
 
 // ================================================================
@@ -421,15 +421,15 @@ func reduceMap(
 	}
 
 	for pe := inputMap.Head.Next; pe != nil; pe = pe.Next {
-		argsArray[0] = types.MlrvalPointerFromString(accumulator.Head.Key)
+		argsArray[0] = types.MlrvalFromString(accumulator.Head.Key)
 		argsArray[1] = accumulator.Head.Value
-		argsArray[2] = types.MlrvalPointerFromString(pe.Key)
+		argsArray[2] = types.MlrvalFromString(pe.Key)
 		argsArray[3] = pe.Value.Copy()
 		retval := (udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray))
 		kvPair := getKVPairForCallbackOrDie(retval, "reduce")
 		accumulator = kvPair
 	}
-	return types.MlrvalPointerFromMap(accumulator)
+	return types.MlrvalFromMap(accumulator)
 }
 
 // ================================================================
@@ -500,15 +500,15 @@ func foldMap(
 	accumulator := getKVPairForAccumulatorOrDie(input3, "reduce").Copy()
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = types.MlrvalPointerFromString(accumulator.Head.Key)
+		argsArray[0] = types.MlrvalFromString(accumulator.Head.Key)
 		argsArray[1] = accumulator.Head.Value
-		argsArray[2] = types.MlrvalPointerFromString(pe.Key)
+		argsArray[2] = types.MlrvalFromString(pe.Key)
 		argsArray[3] = pe.Value.Copy()
 		retval := (udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray))
 		kvPair := getKVPairForCallbackOrDie(retval, "reduce")
 		accumulator = kvPair
 	}
-	return types.MlrvalPointerFromMap(accumulator)
+	return types.MlrvalFromMap(accumulator)
 }
 
 // ================================================================
@@ -688,7 +688,7 @@ func sortMK(
 		outmap.PutCopy(key, inmap.Get(key))
 	}
 
-	return types.MlrvalPointerFromMapReferenced(outmap)
+	return types.MlrvalFromMapReferenced(outmap)
 }
 
 func sortMKNumerical(array []string, reverse bool) {
@@ -780,7 +780,7 @@ func sortAF(
 		// Go sort-callback conventions: true if a < b, false otherwise.
 		return nret < 0
 	})
-	return types.MlrvalPointerFromArrayReference(outputArray)
+	return types.MlrvalFromArrayReference(outputArray)
 }
 
 // sortAF implements sort on arrays with callback UDF.
@@ -804,9 +804,9 @@ func sortMF(
 	argsArray := hofSpace.argsArray
 
 	sort.Slice(pairsArray, func(i, j int) bool {
-		argsArray[0] = types.MlrvalPointerFromString(pairsArray[i].Key)
+		argsArray[0] = types.MlrvalFromString(pairsArray[i].Key)
 		argsArray[1] = pairsArray[i].Value
-		argsArray[2] = types.MlrvalPointerFromString(pairsArray[j].Key)
+		argsArray[2] = types.MlrvalFromString(pairsArray[j].Key)
 		argsArray[3] = pairsArray[j].Value
 
 		// Call the user's comparator function.
@@ -828,7 +828,7 @@ func sortMF(
 	})
 
 	sortedMap := types.MlrmapFromPairsArray(pairsArray)
-	return types.MlrvalPointerFromMapReferenced(sortedMap)
+	return types.MlrvalFromMapReferenced(sortedMap)
 }
 
 // ================================================================
@@ -881,7 +881,7 @@ func anyArray(
 			break
 		}
 	}
-	return types.MlrvalPointerFromBool(boolAny)
+	return types.MlrvalFromBool(boolAny)
 }
 
 func anyMap(
@@ -902,7 +902,7 @@ func anyMap(
 	boolAny := false
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = types.MlrvalPointerFromString(pe.Key)
+		argsArray[0] = types.MlrvalFromString(pe.Key)
 		argsArray[1] = pe.Value
 		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
 		bret, ok := mret.GetBoolValue()
@@ -920,7 +920,7 @@ func anyMap(
 		}
 	}
 
-	return types.MlrvalPointerFromBool(boolAny)
+	return types.MlrvalFromBool(boolAny)
 }
 
 // ================================================================
@@ -973,7 +973,7 @@ func everyArray(
 			break
 		}
 	}
-	return types.MlrvalPointerFromBool(boolEvery)
+	return types.MlrvalFromBool(boolEvery)
 }
 
 func everyMap(
@@ -994,7 +994,7 @@ func everyMap(
 	boolEvery := true
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = types.MlrvalPointerFromString(pe.Key)
+		argsArray[0] = types.MlrvalFromString(pe.Key)
 		argsArray[1] = pe.Value
 		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
 		bret, ok := mret.GetBoolValue()
@@ -1012,5 +1012,5 @@ func everyMap(
 		}
 	}
 
-	return types.MlrvalPointerFromBool(boolEvery)
+	return types.MlrvalFromBool(boolEvery)
 }

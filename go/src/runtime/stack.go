@@ -426,9 +426,9 @@ func (frame *StackFrame) setIndexed(
 		lib.InternalCodingErrorIf(len(indices) < 1)
 		leadingIndex := indices[0]
 		if leadingIndex.IsString() || leadingIndex.IsInt() {
-			newval := types.MlrvalEmptyMap()
+			newval := types.MlrvalFromEmptyMap()
 			newval.PutIndexed(indices, mlrval)
-			return frame.set(stackVariable, &newval)
+			return frame.set(stackVariable, newval)
 		} else {
 			return errors.New(
 				fmt.Sprintf(

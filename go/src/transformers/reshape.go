@@ -311,7 +311,7 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
-				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalPointerFromString(pf.Key))
+				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalFromString(pf.Key))
 				outrec.PutReference(tr.outputValueFieldName, pf.Value)
 				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 			}
@@ -353,7 +353,7 @@ func (tr *TransformerReshape) wideToLongRegex(
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
-				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalPointerFromString(pf.Key))
+				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalFromString(pf.Key))
 				outrec.PutReference(tr.outputValueFieldName, pf.Value)
 				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 			}

@@ -4,7 +4,7 @@ package types
 // Bitwise NOT
 
 func bitwise_not_i_i(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(^input1.intval)
+	return MlrvalFromInt(^input1.intval)
 }
 
 var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
@@ -44,7 +44,7 @@ func bitcount_i_i(input1 *Mlrval) *Mlrval {
 	a = (a & _m08) + ((a >> 8) & _m08)
 	a = (a & _m16) + ((a >> 16) & _m16)
 	a = (a & _m32) + ((a >> 32) & _m32)
-	return MlrvalPointerFromInt(int(a))
+	return MlrvalFromInt(int(a))
 }
 
 var bitcount_dispositions = [MT_DIM]UnaryFunc{
@@ -69,7 +69,7 @@ func BIF_bitcount(input1 *Mlrval) *Mlrval {
 // Bitwise AND
 
 func bitwise_and_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(input1.intval & input2.intval)
+	return MlrvalFromInt(input1.intval & input2.intval)
 }
 
 var bitwise_and_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -95,7 +95,7 @@ func BIF_bitwise_and(input1, input2 *Mlrval) *Mlrval {
 // Bitwise OR
 
 func bitwise_or_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(input1.intval | input2.intval)
+	return MlrvalFromInt(input1.intval | input2.intval)
 }
 
 var bitwise_or_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -121,7 +121,7 @@ func BIF_bitwise_or(input1, input2 *Mlrval) *Mlrval {
 // Bitwise XOR
 
 func bitwise_xor_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(input1.intval ^ input2.intval)
+	return MlrvalFromInt(input1.intval ^ input2.intval)
 }
 
 var bitwise_xor_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -147,7 +147,7 @@ func BIF_bitwise_xor(input1, input2 *Mlrval) *Mlrval {
 // Left shift
 
 func lsh_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(input1.intval << uint64(input2.intval))
+	return MlrvalFromInt(input1.intval << uint64(input2.intval))
 }
 
 var left_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -173,7 +173,7 @@ func BIF_left_shift(input1, input2 *Mlrval) *Mlrval {
 // Signed right shift
 
 func srsh_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(input1.intval >> uint64(input2.intval))
+	return MlrvalFromInt(input1.intval >> uint64(input2.intval))
 }
 
 var signed_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -202,7 +202,7 @@ func ursh_i_ii(input1, input2 *Mlrval) *Mlrval {
 	var ua uint64 = uint64(input1.intval)
 	var ub uint64 = uint64(input2.intval)
 	var uc = ua >> ub
-	return MlrvalPointerFromInt(int(uc))
+	return MlrvalFromInt(int(uc))
 }
 
 var unsigned_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{

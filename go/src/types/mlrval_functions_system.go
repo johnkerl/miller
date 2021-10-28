@@ -11,11 +11,11 @@ import (
 )
 
 func BIF_version() *Mlrval {
-	return MlrvalPointerFromString(version.STRING)
+	return MlrvalFromString(version.STRING)
 }
 
 func BIF_os() *Mlrval {
-	return MlrvalPointerFromString(runtime.GOOS)
+	return MlrvalFromString(runtime.GOOS)
 }
 
 func BIF_hostname() *Mlrval {
@@ -23,7 +23,7 @@ func BIF_hostname() *Mlrval {
 	if err != nil {
 		return MLRVAL_ERROR
 	} else {
-		return MlrvalPointerFromString(hostname)
+		return MlrvalFromString(hostname)
 	}
 }
 
@@ -41,5 +41,5 @@ func BIF_system(input1 *Mlrval) *Mlrval {
 	}
 	outputString := strings.TrimRight(string(outputBytes), "\n")
 
-	return MlrvalPointerFromString(outputString)
+	return MlrvalFromString(outputString)
 }

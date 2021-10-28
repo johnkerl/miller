@@ -373,7 +373,7 @@ func (stepper *tStepperDelta) process(
 		return
 	}
 
-	delta := types.MlrvalPointerFromInt(0)
+	delta := types.MlrvalFromInt(0)
 	if stepper.previous != nil {
 		delta = types.BIF_minus_binary(valueFieldValue, stepper.previous)
 	}
@@ -434,7 +434,7 @@ func (stepper *tStepperFromFirst) process(
 	valueFieldValue *types.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	fromFirst := types.MlrvalPointerFromInt(0)
+	fromFirst := types.MlrvalFromInt(0)
 	if stepper.first == nil {
 		stepper.first = valueFieldValue.Copy()
 	} else {
@@ -469,7 +469,7 @@ func (stepper *tStepperRatio) process(
 		return
 	}
 
-	ratio := types.MlrvalPointerFromInt(1)
+	ratio := types.MlrvalFromInt(1)
 	if stepper.previous != nil {
 		ratio = types.BIF_divide(valueFieldValue, stepper.previous)
 	}
@@ -490,7 +490,7 @@ func stepperRsumAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperRsum{
-		rsum:            types.MlrvalPointerFromInt(0),
+		rsum:            types.MlrvalFromInt(0),
 		outputFieldName: inputFieldName + "_rsum",
 	}
 }
@@ -520,8 +520,8 @@ func stepperCounterAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperCounter{
-		counter:         types.MlrvalPointerFromInt(0),
-		one:             types.MlrvalPointerFromInt(1),
+		counter:         types.MlrvalFromInt(0),
+		one:             types.MlrvalFromInt(1),
 		outputFieldName: inputFieldName + "_counter",
 	}
 }
@@ -543,8 +543,8 @@ func (stepper *tStepperCounter) process(
 
 // ================================================================
 type tStepperEWMA struct {
-	alphas           []types.Mlrval
-	oneMinusAlphas   []types.Mlrval
+	alphas           []*types.Mlrval
+	oneMinusAlphas   []*types.Mlrval
 	prevs            []*types.Mlrval
 	outputFieldNames []string
 	havePrevs        bool
@@ -560,8 +560,8 @@ func stepperEWMAAlloc(
 	// len(ewmaSuffixes) in the CLI parser.
 	n := len(stringAlphas)
 
-	alphas := make([]types.Mlrval, n)
-	oneMinusAlphas := make([]types.Mlrval, n)
+	alphas := make([]*types.Mlrval, n)
+	oneMinusAlphas := make([]*types.Mlrval, n)
 	prevs := make([]*types.Mlrval, n)
 	outputFieldNames := make([]string, n)
 
@@ -584,7 +584,7 @@ func stepperEWMAAlloc(
 		}
 		alphas[i] = types.MlrvalFromFloat64(dalpha)
 		oneMinusAlphas[i] = types.MlrvalFromFloat64(1.0 - dalpha)
-		prevs[i] = types.MlrvalPointerFromFloat64(0.0)
+		prevs[i] = types.MlrvalFromFloat64(0.0)
 		outputFieldNames[i] = inputFieldName + "_ewma_" + suffix
 	}
 
@@ -611,8 +611,8 @@ func (stepper *tStepperEWMA) process(
 		for i := range stepper.alphas {
 			curr := valueFieldValue.Copy()
 			// xxx pending pointer-output refactor
-			product1 := types.BIF_times(curr, &stepper.alphas[i])
-			product2 := types.BIF_times(stepper.prevs[i], &stepper.oneMinusAlphas[i])
+			product1 := types.BIF_times(curr, stepper.alphas[i])
+			product2 := types.BIF_times(stepper.prevs[i], stepper.oneMinusAlphas[i])
 			next := types.BIF_plus_binary(product1, product2)
 			inrec.PutCopy(stepper.outputFieldNames[i], next)
 			stepper.prevs[i] = next
