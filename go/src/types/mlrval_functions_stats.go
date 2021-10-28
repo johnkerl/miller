@@ -41,7 +41,7 @@ func MlrvalGetVar(mn, msum, msum2 *Mlrval) *Mlrval {
 		numerator = 0.0
 	}
 	denominator := float64(n - 1)
-	return MlrvalPointerFromFloat64(numerator / denominator)
+	return MlrvalFromFloat64(numerator / denominator)
 }
 
 // ----------------------------------------------------------------
@@ -105,7 +105,7 @@ func MlrvalGetSkewness(mn, msum, msum2, msum3 *Mlrval) *Mlrval {
 	numerator = numerator / fn
 	denominator := (sum2 - fn*mean*mean) / (fn - 1.0)
 	denominator = math.Pow(denominator, 1.5)
-	return MlrvalPointerFromFloat64(numerator / denominator)
+	return MlrvalFromFloat64(numerator / denominator)
 }
 
 // Unbiased:
@@ -145,6 +145,6 @@ func MlrvalGetKurtosis(mn, msum, msum2, msum3, msum4 *Mlrval) *Mlrval {
 	numerator = numerator / fn
 	denominator := (sum2 - fn*mean*mean) / fn
 	denominator = denominator * denominator
-	return MlrvalPointerFromFloat64(numerator/denominator - 3.0)
+	return MlrvalFromFloat64(numerator/denominator - 3.0)
 
 }

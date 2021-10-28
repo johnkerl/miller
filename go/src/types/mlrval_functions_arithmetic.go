@@ -29,11 +29,11 @@ func BIF_plus_unary(input1 *Mlrval) *Mlrval {
 // Unary minus operator
 
 func uneg_i_i(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(-input1.intval)
+	return MlrvalFromInt(-input1.intval)
 }
 
 func uneg_f_f(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(-input1.floatval)
+	return MlrvalFromFloat64(-input1.floatval)
 }
 
 var uneg_dispositions = [MT_DIM]UnaryFunc{
@@ -59,7 +59,7 @@ func BIF_minus_unary(input1 *Mlrval) *Mlrval {
 
 func BIF_logicalnot(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_BOOL {
-		return MlrvalPointerFromBool(!input1.boolval)
+		return MlrvalFromBool(!input1.boolval)
 	} else {
 		return MLRVAL_ERROR
 	}
@@ -88,20 +88,20 @@ func plus_n_ii(input1, input2 *Mlrval) *Mlrval {
 	}
 
 	if overflowed {
-		return MlrvalPointerFromFloat64(float64(a) + float64(b))
+		return MlrvalFromFloat64(float64(a) + float64(b))
 	} else {
-		return MlrvalPointerFromInt(c)
+		return MlrvalFromInt(c)
 	}
 }
 
 func plus_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(float64(input1.intval) + input2.floatval)
+	return MlrvalFromFloat64(float64(input1.intval) + input2.floatval)
 }
 func plus_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval + float64(input2.intval))
+	return MlrvalFromFloat64(input1.floatval + float64(input2.intval))
 }
 func plus_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval + input2.floatval)
+	return MlrvalFromFloat64(input1.floatval + input2.floatval)
 }
 
 var plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -146,20 +146,20 @@ func minus_n_ii(input1, input2 *Mlrval) *Mlrval {
 	}
 
 	if overflowed {
-		return MlrvalPointerFromFloat64(float64(a) - float64(b))
+		return MlrvalFromFloat64(float64(a) - float64(b))
 	} else {
-		return MlrvalPointerFromInt(c)
+		return MlrvalFromInt(c)
 	}
 }
 
 func minus_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(float64(input1.intval) - input2.floatval)
+	return MlrvalFromFloat64(float64(input1.intval) - input2.floatval)
 }
 func minus_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval - float64(input2.intval))
+	return MlrvalFromFloat64(input1.floatval - float64(input2.intval))
 }
 func minus_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval - input2.floatval)
+	return MlrvalFromFloat64(input1.floatval - input2.floatval)
 }
 
 var minus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -220,20 +220,20 @@ func times_n_ii(input1, input2 *Mlrval) *Mlrval {
 	c := float64(a) * float64(b)
 
 	if math.Abs(c) > 9223372036854774784.0 {
-		return MlrvalPointerFromFloat64(c)
+		return MlrvalFromFloat64(c)
 	} else {
-		return MlrvalPointerFromInt(a * b)
+		return MlrvalFromInt(a * b)
 	}
 }
 
 func times_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(float64(input1.intval) * input2.floatval)
+	return MlrvalFromFloat64(float64(input1.intval) * input2.floatval)
 }
 func times_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval * float64(input2.intval))
+	return MlrvalFromFloat64(input1.floatval * float64(input2.intval))
 }
 func times_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval * input2.floatval)
+	return MlrvalFromFloat64(input1.floatval * input2.floatval)
 }
 
 var times_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -278,33 +278,33 @@ func divide_n_ii(input1, input2 *Mlrval) *Mlrval {
 
 	if b == 0 {
 		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
-		return MlrvalPointerFromFloat64(float64(a) / float64(b))
+		return MlrvalFromFloat64(float64(a) / float64(b))
 	}
 
 	// Pythonic division, not C division.
 	if a%b == 0 {
-		return MlrvalPointerFromInt(a / b)
+		return MlrvalFromInt(a / b)
 	} else {
-		return MlrvalPointerFromFloat64(float64(a) / float64(b))
+		return MlrvalFromFloat64(float64(a) / float64(b))
 	}
 
 	c := float64(a) * float64(b)
 
 	if math.Abs(c) > 9223372036854774784.0 {
-		return MlrvalPointerFromFloat64(c)
+		return MlrvalFromFloat64(c)
 	} else {
-		return MlrvalPointerFromInt(a * b)
+		return MlrvalFromInt(a * b)
 	}
 }
 
 func divide_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(float64(input1.intval) / input2.floatval)
+	return MlrvalFromFloat64(float64(input1.intval) / input2.floatval)
 }
 func divide_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval / float64(input2.intval))
+	return MlrvalFromFloat64(input1.floatval / float64(input2.intval))
 }
 func divide_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval / input2.floatval)
+	return MlrvalFromFloat64(input1.floatval / input2.floatval)
 }
 
 var divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -336,7 +336,7 @@ func int_divide_n_ii(input1, input2 *Mlrval) *Mlrval {
 
 	if b == 0 {
 		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
-		return MlrvalPointerFromFloat64(float64(a) / float64(b))
+		return MlrvalFromFloat64(float64(a) / float64(b))
 	}
 
 	// Pythonic division, not C division.
@@ -355,17 +355,17 @@ func int_divide_n_ii(input1, input2 *Mlrval) *Mlrval {
 			}
 		}
 	}
-	return MlrvalPointerFromInt(q)
+	return MlrvalFromInt(q)
 }
 
 func int_divide_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Floor(float64(input1.intval) / input2.floatval))
+	return MlrvalFromFloat64(math.Floor(float64(input1.intval) / input2.floatval))
 }
 func int_divide_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Floor(input1.floatval / float64(input2.intval)))
+	return MlrvalFromFloat64(math.Floor(input1.floatval / float64(input2.intval)))
 }
 func int_divide_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Floor(input1.floatval / input2.floatval))
+	return MlrvalFromFloat64(math.Floor(input1.floatval / input2.floatval))
 }
 
 var int_divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -392,16 +392,16 @@ func BIF_int_divide(input1, input2 *Mlrval) *Mlrval {
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func dotplus_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(input1.intval + input2.intval)
+	return MlrvalFromInt(input1.intval + input2.intval)
 }
 func dotplus_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(float64(input1.intval) + input2.floatval)
+	return MlrvalFromFloat64(float64(input1.intval) + input2.floatval)
 }
 func dotplus_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval + float64(input2.intval))
+	return MlrvalFromFloat64(input1.floatval + float64(input2.intval))
 }
 func dotplus_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval + input2.floatval)
+	return MlrvalFromFloat64(input1.floatval + input2.floatval)
 }
 
 var dot_plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -428,16 +428,16 @@ func BIF_dot_plus(input1, input2 *Mlrval) *Mlrval {
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func dotminus_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(input1.intval - input2.intval)
+	return MlrvalFromInt(input1.intval - input2.intval)
 }
 func dotminus_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(float64(input1.intval) - input2.floatval)
+	return MlrvalFromFloat64(float64(input1.intval) - input2.floatval)
 }
 func dotminus_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval - float64(input2.intval))
+	return MlrvalFromFloat64(input1.floatval - float64(input2.intval))
 }
 func dotminus_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval - input2.floatval)
+	return MlrvalFromFloat64(input1.floatval - input2.floatval)
 }
 
 var dotminus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -464,16 +464,16 @@ func BIF_dot_minus(input1, input2 *Mlrval) *Mlrval {
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func dottimes_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(input1.intval * input2.intval)
+	return MlrvalFromInt(input1.intval * input2.intval)
 }
 func dottimes_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(float64(input1.intval) * input2.floatval)
+	return MlrvalFromFloat64(float64(input1.intval) * input2.floatval)
 }
 func dottimes_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval * float64(input2.intval))
+	return MlrvalFromFloat64(input1.floatval * float64(input2.intval))
 }
 func dottimes_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval * input2.floatval)
+	return MlrvalFromFloat64(input1.floatval * input2.floatval)
 }
 
 var dottimes_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -500,16 +500,16 @@ func BIF_dot_times(input1, input2 *Mlrval) *Mlrval {
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
 func dotdivide_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(input1.intval / input2.intval)
+	return MlrvalFromInt(input1.intval / input2.intval)
 }
 func dotdivide_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(float64(input1.intval) / input2.floatval)
+	return MlrvalFromFloat64(float64(input1.intval) / input2.floatval)
 }
 func dotdivide_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval / float64(input2.intval))
+	return MlrvalFromFloat64(input1.floatval / float64(input2.intval))
 }
 func dotdivide_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(input1.floatval / input2.floatval)
+	return MlrvalFromFloat64(input1.floatval / input2.floatval)
 }
 
 var dotdivide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -541,7 +541,7 @@ func dotidivide_i_ii(input1, input2 *Mlrval) *Mlrval {
 
 	if b == 0 {
 		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
-		return MlrvalPointerFromFloat64(float64(a) / float64(b))
+		return MlrvalFromFloat64(float64(a) / float64(b))
 	}
 
 	// Pythonic division, not C division.
@@ -560,17 +560,17 @@ func dotidivide_i_ii(input1, input2 *Mlrval) *Mlrval {
 			}
 		}
 	}
-	return MlrvalPointerFromInt(q)
+	return MlrvalFromInt(q)
 }
 
 func dotidivide_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Floor(float64(input1.intval) / input2.floatval))
+	return MlrvalFromFloat64(math.Floor(float64(input1.intval) / input2.floatval))
 }
 func dotidivide_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Floor(input1.floatval / float64(input2.intval)))
+	return MlrvalFromFloat64(math.Floor(input1.floatval / float64(input2.intval)))
 }
 func dotidivide_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(math.Floor(input1.floatval / input2.floatval))
+	return MlrvalFromFloat64(math.Floor(input1.floatval / input2.floatval))
 }
 
 var dotidivide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -601,7 +601,7 @@ func modulus_i_ii(input1, input2 *Mlrval) *Mlrval {
 
 	if b == 0 {
 		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
-		return MlrvalPointerFromFloat64(float64(a) / float64(b))
+		return MlrvalFromFloat64(float64(a) / float64(b))
 	}
 
 	// Pythonic division, not C division.
@@ -616,25 +616,25 @@ func modulus_i_ii(input1, input2 *Mlrval) *Mlrval {
 		}
 	}
 
-	return MlrvalPointerFromInt(m)
+	return MlrvalFromInt(m)
 }
 
 func modulus_f_fi(input1, input2 *Mlrval) *Mlrval {
 	a := input1.floatval
 	b := float64(input2.intval)
-	return MlrvalPointerFromFloat64(a - b*math.Floor(a/b))
+	return MlrvalFromFloat64(a - b*math.Floor(a/b))
 }
 
 func modulus_f_if(input1, input2 *Mlrval) *Mlrval {
 	a := float64(input1.intval)
 	b := input2.floatval
-	return MlrvalPointerFromFloat64(a - b*math.Floor(a/b))
+	return MlrvalFromFloat64(a - b*math.Floor(a/b))
 }
 
 func modulus_f_ff(input1, input2 *Mlrval) *Mlrval {
 	a := input1.floatval
 	b := input2.floatval
-	return MlrvalPointerFromFloat64(a - b*math.Floor(a/b))
+	return MlrvalFromFloat64(a - b*math.Floor(a/b))
 }
 
 var modulus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
@@ -721,7 +721,7 @@ func imodop(input1, input2, input3 *Mlrval, iop i_iii_func) *Mlrval {
 		return MLRVAL_ERROR
 	}
 
-	return MlrvalPointerFromInt(iop(input1.intval, input2.intval, input3.intval))
+	return MlrvalFromInt(iop(input1.intval, input2.intval, input3.intval))
 }
 
 func BIF_mod_add(input1, input2, input3 *Mlrval) *Mlrval {
@@ -762,19 +762,19 @@ func BIF_mod_exp(input1, input2, input3 *Mlrval) *Mlrval {
 func min_f_ff(input1, input2 *Mlrval) *Mlrval {
 	var a float64 = input1.floatval
 	var b float64 = input2.floatval
-	return MlrvalPointerFromFloat64(math.Min(a, b))
+	return MlrvalFromFloat64(math.Min(a, b))
 }
 
 func min_f_fi(input1, input2 *Mlrval) *Mlrval {
 	var a float64 = input1.floatval
 	var b float64 = float64(input2.intval)
-	return MlrvalPointerFromFloat64(math.Min(a, b))
+	return MlrvalFromFloat64(math.Min(a, b))
 }
 
 func min_f_if(input1, input2 *Mlrval) *Mlrval {
 	var a float64 = float64(input1.intval)
 	var b float64 = input2.floatval
-	return MlrvalPointerFromFloat64(math.Min(a, b))
+	return MlrvalFromFloat64(math.Min(a, b))
 }
 
 func min_i_ii(input1, input2 *Mlrval) *Mlrval {
@@ -846,19 +846,19 @@ func BIF_min_variadic(mlrvals []*Mlrval) *Mlrval {
 func max_f_ff(input1, input2 *Mlrval) *Mlrval {
 	var a float64 = input1.floatval
 	var b float64 = input2.floatval
-	return MlrvalPointerFromFloat64(math.Max(a, b))
+	return MlrvalFromFloat64(math.Max(a, b))
 }
 
 func max_f_fi(input1, input2 *Mlrval) *Mlrval {
 	var a float64 = input1.floatval
 	var b float64 = float64(input2.intval)
-	return MlrvalPointerFromFloat64(math.Max(a, b))
+	return MlrvalFromFloat64(math.Max(a, b))
 }
 
 func max_f_if(input1, input2 *Mlrval) *Mlrval {
 	var a float64 = float64(input1.intval)
 	var b float64 = input2.floatval
-	return MlrvalPointerFromFloat64(math.Max(a, b))
+	return MlrvalFromFloat64(math.Max(a, b))
 }
 
 func max_i_ii(input1, input2 *Mlrval) *Mlrval {

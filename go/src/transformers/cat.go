@@ -169,8 +169,7 @@ func (tr *TransformerCat) countersUngrouped(
 		inrec := inrecAndContext.Record
 		tr.counter++
 		key := tr.counterFieldName
-		value := types.MlrvalFromInt(tr.counter)
-		inrec.PrependCopy(key, &value)
+		inrec.PrependCopy(key, types.MlrvalFromInt(tr.counter))
 	}
 	outputChannel <- inrecAndContext
 }
@@ -202,8 +201,7 @@ func (tr *TransformerCat) countersGrouped(
 		}
 
 		key := tr.counterFieldName
-		value := types.MlrvalFromInt(counter)
-		inrec.PrependCopy(key, &value)
+		inrec.PrependCopy(key, types.MlrvalFromInt(counter))
 	}
 	outputChannel <- inrecAndContext
 }

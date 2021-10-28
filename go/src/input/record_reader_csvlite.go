@@ -201,7 +201,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			record := types.NewMlrmap()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
-					value := types.MlrvalPointerFromInferredTypeForDataFiles(field)
+					value := types.MlrvalFromInferredTypeForDataFiles(field)
 					record.PutCopy(headerStrings[i], value)
 				}
 			} else {
@@ -210,14 +210,14 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				n := lib.IntMin2(nh, nd)
 				var i int
 				for i = 0; i < n; i++ {
-					value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
+					value := types.MlrvalFromInferredTypeForDataFiles(fields[i])
 					record.PutCopy(headerStrings[i], value)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					for i = nh; i < nd; i++ {
 						key := strconv.Itoa(i + 1)
-						value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
+						value := types.MlrvalFromInferredTypeForDataFiles(fields[i])
 						record.PutCopy(key, value)
 					}
 				}
@@ -328,7 +328,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 		record := types.NewMlrmap()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
-				value := types.MlrvalPointerFromInferredTypeForDataFiles(field)
+				value := types.MlrvalFromInferredTypeForDataFiles(field)
 				record.PutCopy(headerStrings[i], value)
 			}
 		} else {
@@ -337,13 +337,13 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			n := lib.IntMin2(nh, nd)
 			var i int
 			for i = 0; i < n; i++ {
-				value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
+				value := types.MlrvalFromInferredTypeForDataFiles(fields[i])
 				record.PutCopy(headerStrings[i], value)
 			}
 			if nh < nd {
 				// if header shorter than data: use 1-up itoa keys
 				key := strconv.Itoa(i + 1)
-				value := types.MlrvalPointerFromInferredTypeForDataFiles(fields[i])
+				value := types.MlrvalFromInferredTypeForDataFiles(fields[i])
 				record.PutCopy(key, value)
 			}
 			if nh > nd {

@@ -150,14 +150,14 @@ func NewTransformerFraction(
 	var multiplier *types.Mlrval
 	var outputFieldNameSuffix string
 	if doPercents {
-		multiplier = types.MlrvalPointerFromInt(100)
+		multiplier = types.MlrvalFromInt(100)
 		if doCumu {
 			outputFieldNameSuffix = "_cumulative_percent"
 		} else {
 			outputFieldNameSuffix = "_percent"
 		}
 	} else {
-		multiplier = types.MlrvalPointerFromInt(1)
+		multiplier = types.MlrvalFromInt(1)
 		if doCumu {
 			outputFieldNameSuffix = "_cumulative_fraction"
 		} else {
@@ -165,7 +165,7 @@ func NewTransformerFraction(
 		}
 	}
 
-	zero := types.MlrvalPointerFromInt(0)
+	zero := types.MlrvalFromInt(0)
 
 	return &TransformerFraction{
 		fractionFieldNames:    fractionFieldNames,

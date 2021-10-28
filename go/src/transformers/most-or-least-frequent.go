@@ -273,7 +273,7 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 			}
 
 			if tr.showCounts {
-				outrec.PutReference(tr.outputFieldName, types.MlrvalPointerFromInt(sortPairs[i].count))
+				outrec.PutReference(tr.outputFieldName, types.MlrvalFromInt(sortPairs[i].count))
 			}
 			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 		}

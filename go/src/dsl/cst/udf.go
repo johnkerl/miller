@@ -447,7 +447,7 @@ func (root *RootNode) BuildUnnamedUDFNode(astNode *dsl.ASTNode) (IEvaluable, err
 		return nil, err
 	}
 
-	udfAsMlrval := types.MlrvalPointerFromFunction(udf, name)
+	udfAsMlrval := types.MlrvalFromFunction(udf, name)
 
 	return &UnnamedUDFNode{
 		udfAsMlrval: udfAsMlrval,

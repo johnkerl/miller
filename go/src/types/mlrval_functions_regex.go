@@ -27,7 +27,7 @@ func BIF_ssub(input1, input2, input3 *Mlrval) *Mlrval {
 	if !input3.IsStringOrVoid() {
 		return MLRVAL_ERROR
 	}
-	return MlrvalPointerFromString(
+	return MlrvalFromString(
 		strings.Replace(input1.printrep, input2.printrep, input3.printrep, 1),
 	)
 }
@@ -64,7 +64,7 @@ func BIF_sub(input1, input2, input3 *Mlrval) *Mlrval {
 	replacement := input3.printrep
 
 	stringOutput := lib.RegexSub(input, sregex, replacement)
-	return MlrvalPointerFromString(stringOutput)
+	return MlrvalFromString(stringOutput)
 }
 
 // BIF_gsub implements the gsub function, with support for regexes and regex captures
@@ -94,7 +94,7 @@ func BIF_gsub(input1, input2, input3 *Mlrval) *Mlrval {
 	replacement := input3.printrep
 
 	stringOutput := lib.RegexGsub(input, sregex, replacement)
-	return MlrvalPointerFromString(stringOutput)
+	return MlrvalFromString(stringOutput)
 }
 
 // BIF_string_matches_regexp implements the =~ operator, with support for
@@ -112,14 +112,14 @@ func BIF_string_matches_regexp(input1, input2 *Mlrval) (retval *Mlrval, captures
 	}
 
 	boolOutput, captures := lib.RegexMatches(input1string, input2.printrep)
-	return MlrvalPointerFromBool(boolOutput), captures
+	return MlrvalFromBool(boolOutput), captures
 }
 
 // BIF_string_matches_regexp implements the !=~ operator.
 func BIF_string_does_not_match_regexp(input1, input2 *Mlrval) (retval *Mlrval, captures []string) {
 	output, captures := BIF_string_matches_regexp(input1, input2)
 	if output.mvtype == MT_BOOL {
-		return MlrvalPointerFromBool(!output.boolval), captures
+		return MlrvalFromBool(!output.boolval), captures
 	} else {
 		// else leave it as error, absent, etc.
 		return output, captures
@@ -136,7 +136,7 @@ func BIF_regextract(input1, input2 *Mlrval) *Mlrval {
 	regex := lib.CompileMillerRegexOrDie(input2.printrep)
 	match := regex.FindStringIndex(input1.printrep)
 	if match != nil {
-		return MlrvalPointerFromString(input1.printrep[match[0]:match[1]])
+		return MlrvalFromString(input1.printrep[match[0]:match[1]])
 	} else {
 		return MLRVAL_ABSENT
 	}
@@ -152,7 +152,7 @@ func BIF_regextract_or_else(input1, input2, input3 *Mlrval) *Mlrval {
 	regex := lib.CompileMillerRegexOrDie(input2.printrep)
 	match := regex.FindStringIndex(input1.printrep)
 	if match != nil {
-		return MlrvalPointerFromString(input1.printrep[match[0]:match[1]])
+		return MlrvalFromString(input1.printrep[match[0]:match[1]])
 	} else {
 		return input3
 	}

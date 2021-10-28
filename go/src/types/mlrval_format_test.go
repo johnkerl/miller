@@ -18,7 +18,7 @@ import (
 
 func TestFormatterToString(t *testing.T) {
 
-	mv := MlrvalPointerFromString("hello")
+	mv := MlrvalFromString("hello")
 	formatter := newMlrvalFormatterToString("%s")
 	fmv := formatter.Format(mv)
 	if !fmv.IsString() {
@@ -58,7 +58,7 @@ func TestFormatterToString(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalPointerFromInt(10)
+	mv = MlrvalFromInt(10)
 	formatter = newMlrvalFormatterToString("%s")
 	fmv = formatter.Format(mv)
 	if !fmv.IsString() {
@@ -68,7 +68,7 @@ func TestFormatterToString(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalPointerFromString("hello")
+	mv = MlrvalFromString("hello")
 	formatter = newMlrvalFormatterToString("[[%s]]")
 	fmv = formatter.Format(mv)
 	if !fmv.IsString() {
@@ -82,7 +82,7 @@ func TestFormatterToString(t *testing.T) {
 
 func TestFormatterToInt(t *testing.T) {
 
-	mv := MlrvalPointerFromString("hello")
+	mv := MlrvalFromString("hello")
 	formatter := newMlrvalFormatterToInt("%d")
 	fmv := formatter.Format(mv)
 	if !fmv.IsString() {
@@ -122,7 +122,7 @@ func TestFormatterToInt(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalPointerFromInt(10)
+	mv = MlrvalFromInt(10)
 	formatter = newMlrvalFormatterToInt("%d")
 	fmv = formatter.Format(mv)
 	if !fmv.IsInt() {
@@ -132,7 +132,7 @@ func TestFormatterToInt(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalPointerFromInt(10)
+	mv = MlrvalFromInt(10)
 	formatter = newMlrvalFormatterToInt("[[0x%x]]")
 	fmv = formatter.Format(mv)
 	if !fmv.IsString() {
@@ -142,7 +142,7 @@ func TestFormatterToInt(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalPointerFromFloat64(10.1)
+	mv = MlrvalFromFloat64(10.1)
 	formatter = newMlrvalFormatterToInt("%d")
 	fmv = formatter.Format(mv)
 	if !fmv.IsInt() {
@@ -156,7 +156,7 @@ func TestFormatterToInt(t *testing.T) {
 
 func TestFormatterToFloat(t *testing.T) {
 
-	mv := MlrvalPointerFromString("hello")
+	mv := MlrvalFromString("hello")
 	formatter := newMlrvalFormatterToFloat("%.4f")
 	fmv := formatter.Format(mv)
 	if !fmv.IsString() {
@@ -196,7 +196,7 @@ func TestFormatterToFloat(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalPointerFromFloat64(10)
+	mv = MlrvalFromFloat64(10)
 	formatter = newMlrvalFormatterToFloat("%.4f")
 	fmv = formatter.Format(mv)
 	if !fmv.IsFloat() {
@@ -206,7 +206,7 @@ func TestFormatterToFloat(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalPointerFromFloat64(10.1)
+	mv = MlrvalFromFloat64(10.1)
 	formatter = newMlrvalFormatterToFloat("%.4f")
 	fmv = formatter.Format(mv)
 	if !fmv.IsFloat() {
@@ -219,7 +219,7 @@ func TestFormatterToFloat(t *testing.T) {
 
 func TestFormatter(t *testing.T) {
 
-	mv := MlrvalPointerFromString("hello")
+	mv := MlrvalFromString("hello")
 	formatter, err := GetMlrvalFormatter("%d")
 	if err != nil {
 		t.Fatal()
@@ -271,7 +271,7 @@ func TestFormatter(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalPointerFromFloat64(10.123)
+	mv = MlrvalFromFloat64(10.123)
 	formatter, err = GetMlrvalFormatter("%d")
 	if err != nil {
 		t.Fatal()
@@ -284,7 +284,7 @@ func TestFormatter(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalPointerFromFloat64(10.1)
+	mv = MlrvalFromFloat64(10.1)
 	formatter, err = GetMlrvalFormatter("%d")
 	if err != nil {
 		t.Fatal()

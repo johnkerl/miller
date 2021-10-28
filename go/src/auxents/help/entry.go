@@ -439,8 +439,8 @@ func helpOutputColorization() {
 // ----------------------------------------------------------------
 func helpTypeArithmeticInfo() {
 	mlrvals := []*types.Mlrval{
-		types.MlrvalPointerFromInt(1),
-		types.MlrvalPointerFromFloat64(2.5),
+		types.MlrvalFromInt(1),
+		types.MlrvalFromFloat64(2.5),
 		types.MLRVAL_ABSENT,
 		types.MLRVAL_ERROR,
 	}

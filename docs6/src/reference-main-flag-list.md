@@ -319,6 +319,12 @@ These are flags which don't fit into any other category.
 
 * `--from {filename}
 `: Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.
+* `--infer-int-as-float or -A
+`: Cast all integers in data files to floats.
+* `--infer-no-octal or -O
+`: Treat numbers like 0123 in data files as string "0123", not octal for decimal 83 etc.
+* `--infer-none or -S
+`: Don't treat values like 123 or 456.7 in data files as int/float; leave them as strings.
 * `--load {filename}
 `: Load DSL script file for all put/filter operations on the command line.  If the name following `--load` is a directory, load all `*.mlr` files in that directory. This is just like `put -f` and `filter -f` except it's up-front on the command line, so you can do something like `alias mlr='mlr --load ~/myscripts'` if you like.
 * `--mfrom {filenames}

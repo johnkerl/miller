@@ -166,7 +166,7 @@ func newMlrvalFormatterToString(goFormatString string) IMlrvalFormatter {
 }
 
 func (formatter *mlrvalFormatterToString) Format(mlrval *Mlrval) *Mlrval {
-	return MlrvalPointerFromString(
+	return MlrvalFromString(
 		fmt.Sprintf(
 			formatter.goFormatString,
 			mlrval.String(),

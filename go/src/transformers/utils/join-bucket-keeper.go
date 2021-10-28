@@ -179,7 +179,7 @@ func NewJoinBucketKeeper(
 	// Set the initial context for the left-file.  Since Go is concurrent, the
 	// context struct needs to be duplicated and passed through the channels
 	// along with each record.
-	initialContext := types.NewContext(nil)
+	initialContext := types.NewNilContext()
 	initialContext.UpdateForStartOfFile(leftFileName)
 
 	// Set up channels for the record-reader

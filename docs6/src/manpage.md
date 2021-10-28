@@ -454,6 +454,12 @@ MISCELLANEOUS FLAGS
                                 rather than after. May be used more than once.
                                 Example: `mlr --from a.dat --from b.dat cat` is the
                                 same as `mlr cat a.dat b.dat`.
+       --infer-int-as-float or -A
+                                Cast all integers in data files to floats.
+       --infer-no-octal or -O   Treat numbers like 0123 in data files as string
+                                "0123", not octal for decimal 83 etc.
+       --infer-none or -S       Don't treat values like 123 or 456.7 in data files as
+                                int/float; leave them as strings.
        --load {filename}        Load DSL script file for all put/filter operations on
                                 the command line. If the name following `--load` is a
                                 directory, load all `*.mlr` files in that directory.
@@ -2962,5 +2968,5 @@ SEE ALSO
 
 
 
-                                  2021-10-26                         MILLER(1)
+                                  2021-10-28                         MILLER(1)
 </pre>
