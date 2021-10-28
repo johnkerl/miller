@@ -333,7 +333,7 @@ type IntLiteralNode struct {
 
 func (root *RootNode) BuildIntLiteralNode(literal string) *IntLiteralNode {
 	return &IntLiteralNode{
-		literal: types.MlrvalFromIntString(literal),
+		literal: types.MlrvalFromPrevalidatedIntString(literal),
 	}
 }
 func (node *IntLiteralNode) Evaluate(
@@ -349,7 +349,7 @@ type FloatLiteralNode struct {
 
 func (root *RootNode) BuildFloatLiteralNode(literal string) *FloatLiteralNode {
 	return &FloatLiteralNode{
-		literal: types.MlrvalFromFloat64String(literal),
+		literal: types.MlrvalFromPrevalidatedFloat64String(literal),
 	}
 }
 func (node *FloatLiteralNode) Evaluate(
