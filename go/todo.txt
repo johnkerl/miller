@@ -71,17 +71,7 @@ d pre-release:
 ----------------------------------------------------------------
 -S/-F/-O
 
-* 1st neaten mlrval_new.go et al.
-* rm all non-mv-ptr ctors; then consider rename ...
-
-* global
-* with env var
-* -O:
-  * TryIntFromString w/ octal/binary suppress
-* -F:
-  * skip TryIntFromString
-* -S:
-  * skip TryIntFromString and TryFloat64FromString
+* nim6 doc
 
 ----------------------------------------------------------------
 LOCALTIME

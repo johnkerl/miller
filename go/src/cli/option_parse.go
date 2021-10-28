@@ -2557,8 +2557,9 @@ var MiscFlagSection = FlagSection{
 		},
 
 		{
-			name: "-S",
-			help: "TODO",
+			name:     "--infer-none",
+			altNames: []string{"-S"},
+			help:     `Don't treat values like 123 or 456.7 in data files as int/float; leave them as strings.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				types.SetInferrerStringOnly()
 				*pargi += 1
@@ -2566,8 +2567,9 @@ var MiscFlagSection = FlagSection{
 		},
 
 		{
-			name: "--FF",
-			help: "TODO",
+			name:     "--infer-int-as-float",
+			altNames: []string{"-A"},
+			help:     `Cast all integers in data files to floats.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				types.SetInferrerIntAsFloat()
 				*pargi += 1
@@ -2575,8 +2577,9 @@ var MiscFlagSection = FlagSection{
 		},
 
 		{
-			name: "-O",
-			help: "TODO",
+			name:     "--infer-no-octal",
+			altNames: []string{"-O"},
+			help:     `Treat numbers like 0123 in data files as string "0123", not octal for decimal 83 etc.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				types.SetInferrerNoOctal()
 				*pargi += 1
