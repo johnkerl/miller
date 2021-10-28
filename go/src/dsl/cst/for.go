@@ -128,7 +128,7 @@ func (node *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(node.indexVariable, &mapkey)
+			err := state.Stack.SetAtScope(node.indexVariable, mapkey)
 			if err != nil {
 				return nil, err
 			}
@@ -313,7 +313,7 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(node.keyIndexVariable, &mapkey)
+			err := state.Stack.SetAtScope(node.keyIndexVariable, mapkey)
 			if err != nil {
 				return nil, err
 			}
@@ -354,7 +354,7 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			err := state.Stack.SetAtScope(node.keyIndexVariable, &mindex)
+			err := state.Stack.SetAtScope(node.keyIndexVariable, mindex)
 			if err != nil {
 				return nil, err
 			}
@@ -539,7 +539,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(keyIndexVariables[0], &mapkey)
+			err := state.Stack.SetAtScope(keyIndexVariables[0], mapkey)
 			if err != nil {
 				return nil, err
 			}
@@ -572,7 +572,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			err := state.Stack.SetAtScope(keyIndexVariables[0], &mindex)
+			err := state.Stack.SetAtScope(keyIndexVariables[0], mindex)
 			if err != nil {
 				return nil, err
 			}
@@ -627,7 +627,7 @@ func (node *ForLoopMultivariableNode) executeInner(
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := types.MlrvalFromString(pe.Key)
 
-			err := state.Stack.SetAtScope(keyIndexVariable, &mapkey)
+			err := state.Stack.SetAtScope(keyIndexVariable, mapkey)
 			if err != nil {
 				return nil, err
 			}
@@ -665,7 +665,7 @@ func (node *ForLoopMultivariableNode) executeInner(
 		for zindex, element := range arrayval {
 			mindex := types.MlrvalFromInt(int(zindex + 1))
 
-			err := state.Stack.SetAtScope(keyIndexVariable, &mindex)
+			err := state.Stack.SetAtScope(keyIndexVariable, mindex)
 			if err != nil {
 				return nil, err
 			}

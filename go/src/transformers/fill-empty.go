@@ -84,7 +84,7 @@ type TransformerFillEmpty struct {
 
 func NewTransformerFillEmpty(fillString string) (*TransformerFillEmpty, error) {
 	tr := &TransformerFillEmpty{
-		fillValue: types.MlrvalPointerFromString(fillString),
+		fillValue: types.MlrvalFromString(fillString),
 	}
 	return tr, nil
 }

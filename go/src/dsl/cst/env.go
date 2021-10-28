@@ -44,5 +44,5 @@ func (node *EnvironmentVariableNode) Evaluate(
 		return types.MLRVAL_ERROR
 	}
 
-	return types.MlrvalPointerFromString(os.Getenv(name.String()))
+	return types.MlrvalFromString(os.Getenv(name.String()))
 }

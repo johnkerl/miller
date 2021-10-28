@@ -97,7 +97,7 @@ func _absn1(input1 *Mlrval) *Mlrval {
 
 // Return zero (unary)
 func _zero1(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(0)
+	return MlrvalFromInt(0)
 }
 
 // Return null (unary)
@@ -138,7 +138,7 @@ func _void(input1, input2 *Mlrval) *Mlrval {
 
 // Return 0 (binary)
 func _zero2(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(0)
+	return MlrvalFromInt(0)
 }
 
 // Return first argument (binary)
@@ -158,22 +158,22 @@ func _n2__(input1, input2 *Mlrval) *Mlrval {
 
 // Return first argument, as string (binary)
 func _s1__(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromString(input1.String())
+	return MlrvalFromString(input1.String())
 }
 
 // Return second argument, as string (binary)
 func _s2__(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromString(input2.String())
+	return MlrvalFromString(input2.String())
 }
 
 // Return integer zero (binary)
 func _i0__(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(0)
+	return MlrvalFromInt(0)
 }
 
 // Return float zero (binary)
 func _f0__(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(0)
+	return MlrvalFromFloat64(0)
 }
 
 // Return boolean true (binary)

@@ -9,24 +9,16 @@ TOP OF LIST:
 * localtime
 * JSON comment-handling
 
-* transpose
-* print w/ #{...}; defer variadic printf
-
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
-* mlr -k
 * regtest pendings
   o webdocs re /..../i regex options @ CLIP for windows
 
 * doc6
 * check issues
 
-* meta: nf,nr,keys?
-
 * authoritative regex docs accompanied by thorough UT
   o expand existing regex webdoc
-* authoritative time/localtime/tz docs accompanied by thorough UT
-  o needs separate webdoc
 
 * CASEDIR cmd -> mlr via env not oosvar
 
@@ -54,6 +46,10 @@ TOP OF LIST:
   o release notes per se
   o ./configure whatever equivalent
 
+* new-in-miller-6: missings:
+  o dump syntax -- ?
+  o emittable constraints -- ?
+
 d pre-release:
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
@@ -68,17 +64,6 @@ LOCALTIME
 * .6S bugfix -- separate PR -- ?
 
 * sysdate, sysdate_local; datediff ...
-
-----------------------------------------------------------------
-398
-
-kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr --prepipe "pigz -d" count -g a then sort -nr count then head
-^C.8MiB 0:00:12 [3.21MiB/s] [===========>                                                              ] 17% ETA 0:00:55
-
-kerl@joker-mbp.local[go]$ ^C
-kerl@joker-mbp.local[go]$ ^C
-kerl@joker-mbp.local[go]$ pv ~/tmp/zhuge.gz | mlr count -g a then sort -nr count then head
-218MiB 0:00:09 [23.1MiB/s] [========================================================================>] 100%
 
 ----------------------------------------------------------------
 META
@@ -96,18 +81,6 @@ SEPARATORS ETC
 * xtab ifs/irs
 
 ----------------------------------------------------------------
-REDIRECTS
-
-regtest/cases-pending-go-port/dsl-redirects/0008/cmd
-
-! no-remove-after option ...
-
-new-in-miller-6: missings:
-* dump syntax -- ?
-* emittable constraints -- ?
-* --auto -- ?
-
-----------------------------------------------------------------
 LOOK AT
 
 --quote-all
@@ -120,24 +93,7 @@ bom
 mlr regtest regtest/cases-pending-go-port/io-utf8-bom/0001
 
 absents/void/err
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0006
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0007
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0010
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0011
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0012
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0013
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0014
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0023
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0024
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0027
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0028
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0039
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0040
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0041
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0042
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0043
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0045
-mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0046
 
 fmtstr
 mlr regtest regtest/cases-pending-go-port/verb-format-values/0003
@@ -145,9 +101,6 @@ mlr regtest regtest/cases-pending-go-port/verb-format-values/0004
 
 race condition
 mlr regtest regtest/cases-pending-go-port/verb-head-early-out
-
-label order
-mlr regtest regtest/cases-pending-go-port/verb-label/0010
 
 ----------------------------------------------------------------
 
@@ -166,10 +119,6 @@ BLOCKERS
   * verb sec2gmtdate
     - leaves non-numbers as-is -- ?
     - check sec2gmt as well -- ?
-  * functions:
-    sec2dhms sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime
-    sec2localtime dhms2fsec dhms2sec fsec2dhms fsec2hms hms2fsec hms2sec
-    localtime2sec gmt2sec strftime strftime_local strptime strptime_local
   ! strptime:
     strptime("1970-01-01T00:00:00.Z", "%Y-%m-%dT%H:%M:%SZ")
     (error)
@@ -251,6 +200,11 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
 
 ================================================================
 NON-BLOCKERS
+
+* mlr -k
+* transpose
+* print w/ #{...}; defer variadic printf
+* meta: nf,nr,keys?
 
 * non-streaming DSL-enabled cut
   https://github.com/johnkerl/miller/discussions/613

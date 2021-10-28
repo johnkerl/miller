@@ -16,15 +16,13 @@ import (
 
 // ----------------------------------------------------------------
 type RecordReaderCSV struct {
-	readerOptions     *cli.TReaderOptions
-	emptyStringMlrval types.Mlrval
+	readerOptions *cli.TReaderOptions
 }
 
 // ----------------------------------------------------------------
 func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) *RecordReaderCSV {
 	return &RecordReaderCSV{
-		readerOptions:     readerOptions,
-		emptyStringMlrval: types.MlrvalFromString(""),
+		readerOptions: readerOptions,
 	}
 }
 
@@ -158,7 +156,7 @@ func (reader *RecordReaderCSV) processHandle(
 		if nh == nd {
 			for i := 0; i < nh; i++ {
 				key := header[i]
-				value := types.MlrvalPointerFromInferredTypeForDataFiles(csvRecord[i])
+				value := types.MlrvalFromInferredTypeForDataFiles(csvRecord[i])
 				record.PutReference(key, value)
 			}
 
@@ -178,19 +176,19 @@ func (reader *RecordReaderCSV) processHandle(
 				n := lib.IntMin2(nh, nd)
 				for i = 0; i < n; i++ {
 					key := header[i]
-					value := types.MlrvalPointerFromInferredTypeForDataFiles(csvRecord[i])
+					value := types.MlrvalFromInferredTypeForDataFiles(csvRecord[i])
 					record.PutReference(key, value)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					key := strconv.Itoa(i + 1)
-					value := types.MlrvalPointerFromInferredTypeForDataFiles(csvRecord[i])
+					value := types.MlrvalFromInferredTypeForDataFiles(csvRecord[i])
 					record.PutCopy(key, value)
 				}
 				if nh > nd {
 					// if header longer than data: use "" values
 					for i = nd; i < nh; i++ {
-						record.PutCopy(header[i], &reader.emptyStringMlrval)
+						record.PutCopy(header[i], types.MLRVAL_VOID)
 					}
 				}
 			}

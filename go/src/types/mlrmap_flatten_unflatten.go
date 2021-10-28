@@ -231,10 +231,10 @@ func unflattenTerminal(input *Mlrval) *Mlrval {
 		return input
 	}
 	if input.printrep == "{}" {
-		return MlrvalPointerFromMapReferenced(NewMlrmap())
+		return MlrvalFromMapReferenced(NewMlrmap())
 	}
 	if input.printrep == "[]" {
-		return MlrvalPointerFromArrayReference(make([]Mlrval, 0))
+		return MlrvalFromArrayReference(make([]Mlrval, 0))
 	}
 	return input
 }

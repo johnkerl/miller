@@ -141,18 +141,17 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 		sval, ok := startToken.(string)
 		if ok {
 			mlrval := MlrvalFromString(sval)
-			return &mlrval, false, nil
+			return mlrval, false, nil
 		}
 
 		bval, ok := startToken.(bool)
 		if ok {
-			mlrval := MlrvalFromBool(bval)
-			return &mlrval, false, nil
+			return MlrvalFromBool(bval), false, nil
 		}
 
 		nval, ok := startToken.(json.Number)
 		if ok {
-			mlrval := MlrvalPointerFromInferredType(nval.String())
+			mlrval := MlrvalFromInferredType(nval.String())
 			return mlrval, false, nil
 		}
 
@@ -196,7 +195,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			}
 
 		} else {
-			mlrval = MlrvalEmptyMap()
+			mlrval = *MlrvalFromEmptyMap()
 
 			for decoder.More() {
 				key, eof, err := MlrvalDecodeFromJSON(decoder)

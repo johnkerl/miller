@@ -246,7 +246,7 @@ func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int, p float64) 
 	} else {
 		// array[iindex] + frac * (array[iindex+1] - array[iindex])
 		// TODO: just do this in float64.
-		frac := types.MlrvalPointerFromFloat64(findex - float64(iindex))
+		frac := types.MlrvalFromFloat64(findex - float64(iindex))
 		diff := types.BIF_minus_binary(array[iindex+1], array[iindex])
 		prod := types.BIF_times(frac, diff)
 		return *types.BIF_plus_binary(array[iindex], prod)

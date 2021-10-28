@@ -355,7 +355,7 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 		for pe := tr.uniqifiedRecords.Head; pe != nil; pe = pe.Next {
 			outrecAndContext := pe.Value.(*types.RecordAndContext)
 			icount := tr.uniqifiedRecordCounts.Get(pe.Key)
-			mcount := types.MlrvalPointerFromInt(icount.(int))
+			mcount := types.MlrvalFromInt(icount.(int))
 			outrecAndContext.Record.PrependReference(tr.outputFieldName, mcount)
 			outputChannel <- outrecAndContext
 		}
@@ -385,7 +385,7 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 		outrec := types.NewMlrmapAsRecord()
 		outrec.PutReference(
 			tr.outputFieldName,
-			types.MlrvalPointerFromInt(tr.uniqifiedRecordCounts.FieldCount),
+			types.MlrvalFromInt(tr.uniqifiedRecordCounts.FieldCount),
 		)
 		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 
@@ -457,12 +457,12 @@ func (tr *TransformerUniq) transformUnlashed(
 			for pf := countsForFieldName.Head; pf != nil; pf = pf.Next {
 				fieldValueString := pf.Key
 				outrec := types.NewMlrmapAsRecord()
-				outrec.PutReference("field", types.MlrvalPointerFromString(fieldName))
+				outrec.PutReference("field", types.MlrvalFromString(fieldName))
 				outrec.PutCopy(
 					"value",
 					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Get(fieldValueString).(*types.Mlrval),
 				)
-				outrec.PutReference("count", types.MlrvalPointerFromInt(pf.Value.(int)))
+				outrec.PutReference("count", types.MlrvalFromInt(pf.Value.(int)))
 				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 			}
 		}
@@ -495,7 +495,7 @@ func (tr *TransformerUniq) transformNumDistinctOnly(
 		outrec := types.NewMlrmapAsRecord()
 		outrec.PutReference(
 			"count",
-			types.MlrvalPointerFromInt(tr.countsByGroup.FieldCount),
+			types.MlrvalFromInt(tr.countsByGroup.FieldCount),
 		)
 		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
 
@@ -538,7 +538,7 @@ func (tr *TransformerUniq) transformWithCounts(
 			if tr.showCounts {
 				outrec.PutReference(
 					tr.outputFieldName,
-					types.MlrvalPointerFromInt(pa.Value.(int)),
+					types.MlrvalFromInt(pa.Value.(int)),
 				)
 			}
 			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)

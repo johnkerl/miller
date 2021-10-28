@@ -7,13 +7,13 @@ import (
 )
 
 func BIF_urand() *Mlrval {
-	return MlrvalPointerFromFloat64(
+	return MlrvalFromFloat64(
 		lib.RandFloat64(),
 	)
 }
 
 func BIF_urand32() *Mlrval {
-	return MlrvalPointerFromInt(
+	return MlrvalFromInt(
 		int(
 			lib.RandUint32(),
 		),
@@ -48,7 +48,7 @@ func BIF_urandint(input1, input2 *Mlrval) *Mlrval {
 		hi = a + 1
 	}
 	u := int(math.Floor(float64(lo) + float64((hi-lo))*lib.RandFloat64()))
-	return MlrvalPointerFromInt(u)
+	return MlrvalFromInt(u)
 }
 
 func BIF_urandrange(input1, input2 *Mlrval) *Mlrval {
@@ -66,7 +66,7 @@ func BIF_urandrange(input1, input2 *Mlrval) *Mlrval {
 	if !bok {
 		return MLRVAL_ERROR
 	}
-	return MlrvalPointerFromFloat64(
+	return MlrvalFromFloat64(
 		a + (b-a)*lib.RandFloat64(),
 	)
 }

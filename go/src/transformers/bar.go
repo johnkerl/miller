@@ -243,8 +243,7 @@ func (tr *TransformerBar) processNoAuto(
 			if idx > tr.width {
 				idx = tr.width
 			}
-			value := types.MlrvalFromString(tr.bars[idx])
-			inrec.PutReference(fieldName, &value)
+			inrec.PutReference(fieldName, types.MlrvalFromString(tr.bars[idx]))
 		}
 
 		outputChannel <- inrecAndContext
@@ -332,8 +331,7 @@ func (tr *TransformerBar) processAuto(
 			buffer.WriteString("[")
 			buffer.WriteString(shi)
 			buffer.WriteString("]")
-			value := types.MlrvalFromString(buffer.String())
-			record.PutReference(fieldName, &value)
+			record.PutReference(fieldName, types.MlrvalFromString(buffer.String()))
 		}
 	}
 

@@ -3,8 +3,6 @@ package types
 import (
 	"bytes"
 	"strconv"
-
-	"mlr/src/cli"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as
@@ -101,7 +99,19 @@ type Context struct {
 	FLATSEP string
 }
 
-func NewContext(options *cli.TOptions) *Context {
+// TODO: comment: Remember command-line values to pass along to CST evaluators.
+// The options struct-pointer can be nil when invoked by non-DSL verbs such as
+// join or seqgen.
+func NewContext(
+	IPS string,
+	IFS string,
+	IRS string,
+
+	OPS string,
+	OFS string,
+	ORS string,
+	FLATSEP string,
+) *Context {
 	context := &Context{
 		FILENAME: "(stdin)",
 		FILENUM:  0,
@@ -119,23 +129,41 @@ func NewContext(options *cli.TOptions) *Context {
 		FLATSEP: ".",
 	}
 
-	// Remember command-line values to pass along to CST evaluators.  The
-	// options struct-pointer can be nil when invoked by non-DSL verbs such as
-	// join or seqgen.
-	//
 	// TODO: FILENAME/FILENUM/NR/FNR should be in one struct, and the rest in
 	// another. The former vary per record; the latter are command-line-driven
 	// and do not vary per record. All they have in common is they are
 	// awk-like context-variables.
-	if options != nil {
-		context.IPS = options.ReaderOptions.IPS
-		context.IFS = options.ReaderOptions.IFS
-		context.IRS = options.ReaderOptions.IRS
+	context.IPS = IPS
+	context.IFS = IFS
+	context.IRS = IRS
 
-		context.OPS = options.WriterOptions.OPS
-		context.OFS = options.WriterOptions.OFS
-		context.ORS = options.WriterOptions.ORS
-		context.FLATSEP = options.WriterOptions.FLATSEP
+	context.OPS = OPS
+	context.OFS = OFS
+	context.ORS = ORS
+	context.FLATSEP = FLATSEP
+
+	return context
+}
+
+// TODO: comment: Remember command-line values to pass along to CST evaluators.
+// The options struct-pointer can be nil when invoked by non-DSL verbs such as
+// join or seqgen.
+func NewNilContext() *Context { // TODO: rename
+	context := &Context{
+		FILENAME: "(stdin)",
+		FILENUM:  0,
+
+		NR:  0,
+		FNR: 0,
+
+		IPS: "=",
+		IFS: ",",
+		IRS: "\n",
+
+		OPS:     "=",
+		OFS:     ",",
+		ORS:     "\n",
+		FLATSEP: ".",
 	}
 
 	return context

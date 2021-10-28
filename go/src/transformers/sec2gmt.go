@@ -158,7 +158,7 @@ func (tr *TransformerSec2GMT) Transform(
 						floatval/tr.preDivide,
 						tr.numDecimalPlaces,
 					))
-					inrec.PutReference(fieldName, &newValue)
+					inrec.PutReference(fieldName, newValue)
 				}
 			}
 		}

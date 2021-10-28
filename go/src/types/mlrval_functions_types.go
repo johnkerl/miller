@@ -9,28 +9,28 @@ import (
 
 // ================================================================
 func BIF_typeof(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromString(input1.GetTypeName())
+	return MlrvalFromString(input1.GetTypeName())
 }
 
 // ----------------------------------------------------------------
 func string_to_int(input1 *Mlrval) *Mlrval {
 	i, ok := lib.TryIntFromString(input1.printrep)
 	if ok {
-		return MlrvalPointerFromInt(i)
+		return MlrvalFromInt(i)
 	} else {
 		return MLRVAL_ERROR
 	}
 }
 
 func float_to_int(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromInt(int(input1.floatval))
+	return MlrvalFromInt(int(input1.floatval))
 }
 
 func bool_to_int(input1 *Mlrval) *Mlrval {
 	if input1.boolval == true {
-		return MlrvalPointerFromInt(1)
+		return MlrvalFromInt(1)
 	} else {
-		return MlrvalPointerFromInt(0)
+		return MlrvalFromInt(0)
 	}
 }
 
@@ -56,21 +56,21 @@ func BIF_int(input1 *Mlrval) *Mlrval {
 func string_to_float(input1 *Mlrval) *Mlrval {
 	f, ok := lib.TryFloat64FromString(input1.printrep)
 	if ok {
-		return MlrvalPointerFromFloat64(f)
+		return MlrvalFromFloat64(f)
 	} else {
 		return MLRVAL_ERROR
 	}
 }
 
 func int_to_float(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromFloat64(float64(input1.intval))
+	return MlrvalFromFloat64(float64(input1.intval))
 }
 
 func bool_to_float(input1 *Mlrval) *Mlrval {
 	if input1.boolval == true {
-		return MlrvalPointerFromFloat64(1.0)
+		return MlrvalFromFloat64(1.0)
 	} else {
-		return MlrvalPointerFromFloat64(0.0)
+		return MlrvalFromFloat64(0.0)
 	}
 }
 
@@ -96,18 +96,18 @@ func BIF_float(input1 *Mlrval) *Mlrval {
 func string_to_boolean(input1 *Mlrval) *Mlrval {
 	b, ok := lib.TryBoolFromBoolString(input1.printrep)
 	if ok {
-		return MlrvalPointerFromBool(b)
+		return MlrvalFromBool(b)
 	} else {
 		return MLRVAL_ERROR
 	}
 }
 
 func int_to_bool(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.intval != 0)
+	return MlrvalFromBool(input1.intval != 0)
 }
 
 func float_to_bool(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.floatval != 0.0)
+	return MlrvalFromBool(input1.floatval != 0.0)
 }
 
 var to_boolean_dispositions = [MT_DIM]UnaryFunc{
@@ -130,16 +130,16 @@ func BIF_boolean(input1 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 func BIF_is_absent(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_ABSENT)
+	return MlrvalFromBool(input1.mvtype == MT_ABSENT)
 }
 func BIF_is_error(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_ERROR)
+	return MlrvalFromBool(input1.mvtype == MT_ERROR)
 }
 func BIF_is_bool(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_BOOL)
+	return MlrvalFromBool(input1.mvtype == MT_BOOL)
 }
 func BIF_is_boolean(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_BOOL)
+	return MlrvalFromBool(input1.mvtype == MT_BOOL)
 }
 func BIF_is_empty(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_VOID {
@@ -155,22 +155,22 @@ func BIF_is_empty(input1 *Mlrval) *Mlrval {
 	}
 }
 func BIF_is_emptymap(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_MAP && input1.mapval.IsEmpty())
+	return MlrvalFromBool(input1.mvtype == MT_MAP && input1.mapval.IsEmpty())
 }
 func BIF_is_float(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_FLOAT)
+	return MlrvalFromBool(input1.mvtype == MT_FLOAT)
 }
 func BIF_is_int(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_INT)
+	return MlrvalFromBool(input1.mvtype == MT_INT)
 }
 func BIF_is_map(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_MAP)
+	return MlrvalFromBool(input1.mvtype == MT_MAP)
 }
 func BIF_is_array(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_ARRAY)
+	return MlrvalFromBool(input1.mvtype == MT_ARRAY)
 }
 func BIF_is_nonemptymap(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_MAP && input1.mapval.FieldCount != 0)
+	return MlrvalFromBool(input1.mvtype == MT_MAP && input1.mapval.FieldCount != 0)
 }
 func BIF_is_notempty(input1 *Mlrval) *Mlrval {
 	if input1.mvtype == MT_VOID {
@@ -186,25 +186,25 @@ func BIF_is_notempty(input1 *Mlrval) *Mlrval {
 	}
 }
 func BIF_is_notmap(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype != MT_MAP)
+	return MlrvalFromBool(input1.mvtype != MT_MAP)
 }
 func BIF_is_notarray(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype != MT_ARRAY)
+	return MlrvalFromBool(input1.mvtype != MT_ARRAY)
 }
 func BIF_is_notnull(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype != MT_ABSENT && input1.mvtype != MT_VOID)
+	return MlrvalFromBool(input1.mvtype != MT_ABSENT && input1.mvtype != MT_VOID)
 }
 func BIF_is_null(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_ABSENT || input1.mvtype == MT_VOID)
+	return MlrvalFromBool(input1.mvtype == MT_ABSENT || input1.mvtype == MT_VOID)
 }
 func BIF_is_numeric(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_INT || input1.mvtype == MT_FLOAT)
+	return MlrvalFromBool(input1.mvtype == MT_INT || input1.mvtype == MT_FLOAT)
 }
 func BIF_is_present(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype != MT_ABSENT)
+	return MlrvalFromBool(input1.mvtype != MT_ABSENT)
 }
 func BIF_is_string(input1 *Mlrval) *Mlrval {
-	return MlrvalPointerFromBool(input1.mvtype == MT_STRING || input1.mvtype == MT_VOID)
+	return MlrvalFromBool(input1.mvtype == MT_STRING || input1.mvtype == MT_VOID)
 }
 
 // ----------------------------------------------------------------
