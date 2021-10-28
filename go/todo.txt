@@ -4,32 +4,21 @@ TOP OF LIST:
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-! m6 BIs @ nim6 !
 * CSV BOM
 * fmtnum
 * localtime
 * JSON comment-handling
-* global -S/-F/-O -- with env var
-  - TryIntFromString
-
-* transpose
-* print w/ #{...}; defer variadic printf
 
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
-* mlr -k
 * regtest pendings
   o webdocs re /..../i regex options @ CLIP for windows
 
 * doc6
 * check issues
 
-* meta: nf,nr,keys?
-
 * authoritative regex docs accompanied by thorough UT
   o expand existing regex webdoc
-* authoritative time/localtime/tz docs accompanied by thorough UT
-  o needs separate webdoc
 
 * CASEDIR cmd -> mlr via env not oosvar
 
@@ -60,18 +49,12 @@ TOP OF LIST:
 * new-in-miller-6: missings:
   o dump syntax -- ?
   o emittable constraints -- ?
-  o --auto -- ?
 
 d pre-release:
   o draft release w/ m6 binaries YYYYMMDD -- ?
   o gha download steps clearer
 
 * wut h1 spacing before/after ...
-
-----------------------------------------------------------------
--S/-F/-O
-
-* nim6 doc
 
 ----------------------------------------------------------------
 LOCALTIME
@@ -217,6 +200,11 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
 
 ================================================================
 NON-BLOCKERS
+
+* mlr -k
+* transpose
+* print w/ #{...}; defer variadic printf
+* meta: nf,nr,keys?
 
 * non-streaming DSL-enabled cut
   https://github.com/johnkerl/miller/discussions/613

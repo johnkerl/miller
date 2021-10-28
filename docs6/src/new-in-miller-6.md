@@ -199,3 +199,16 @@ Parse error on token ">" at line 63 columnn 7.
 
 * Miller has been ported from C to Go. Developer notes: [https://github.com/johnkerl/miller/blob/main/go/README.md](https://github.com/johnkerl/miller/blob/main/go/README.md).
 * Regression testing has been completely reworked, including regression-testing now running fully on Windows (alongside Linux and Mac) [on each GitHub commit](https://github.com/johnkerl/miller/actions).
+
+## Changes from Miller 5
+
+* Line endings: The `--auto` flag is now ignored. Before, if a file had CR/LF (Windows-style) line endings on input (on any platform), it would have the same on output; likewise, LF (Unix-style) line endings. Now, files with CR/LF or LF line endings are processed on any platform, but the output line-ending is for the platform. E.g. reading CR/LF files on Linux will now produce LF output.
+* JSON formatting:
+    * `--jvstack` and `--jsonx` (multi-line JSON output) is now the default for JSON; use `--no-jvstack` to suppress it.
+    * `--jknquoteint` and `jquoteall` are ignored; they were workarounds for the (now much-improved) tyoe-inference and type-tracking in Miller 6.
+    * `--json-fatal-arrays-on-input`, `--json-map-arrays-on-input`, and `--json-skip-arrays-on-input` are ignored; Miller 6 now supports arrays fully.
+    * See also `mlr help legacy-flags` or the [legacy-flags reference](reference-main-flag-list.md#legacy-flags).
+* Type-inference:
+    * The `-S` and `-F` flags to `mlr put` and `mlr filter` are ignored, since type-inference is no longer done in `mlr put` and `mlr filter`, but rather, when records are first read. You can use `mlr -S` and `mlr -A`, respectively, instead to control type-inference within the record-readers.
+    * Similarly, use `mlr -O` to force octal-looking strings to remain strings like `"0123"`, not ints like `0123` which is 83 in decimal.
+    * See also the [miscellaneous-flags reference](reference-main-flag-list.md#miscellaneous-flags).
