@@ -63,73 +63,73 @@ they only produce output at the end of the record stream.
 These don't retain any state from one record to the next.
 They are memory-friendly, and they don't wait for end of input to produce their output.
 
-* [altkv](#altkv)
-* [bar](#bar) -- if not auto-mode
-* [cat](#cat)
-* [check](#check)
-* [clean-whitespace](#clean-whitespace)
-* [cut](#cut)
-* [decimate](#decimate)
-* [fill-down](#fill-down)
-* [fill-empty](#fill-empty)
-* [flatten](#flatten)
-* [format-values](#format-values)
-* [gap](#gap)
-* [grep](#grep)
-* [having-fields](#having-fields)
-* [head](#head)
-* [json-parse](#json-parse)
-* [json-stringify](#json-stringify)
-* [label](#label)
-* [merge-fields](#merge-fields)
-* [nest](#nest) -- if not `implode-values-across-records`
-* [nothing](#nothing)
-* [regularize](#regularize)
-* [rename](#rename)
-* [reorder](#reorder)
-* [repeat](#repeat)
-* [reshape](#reshape) -- if not long-to-wide
-* [sec2gmt](#sec2gmt)
-* [sec2gmtdate](#sec2gmtdate)
-* [seqgen](#seqgen)
-* [skip-trivial-records](#skip-trivial-records)
-* [sort-within-records](#sort-within-records)
-* [step](#step)
-* [tee](#tee)
-* [template](#template)
-* [unflatten](#unflatten)
-* [unsparsify](#unsparsify) if invoked with `-f`
+* [altkv](reference-verbs.md#altkv)
+* [bar](reference-verbs.md#bar) -- if not auto-mode
+* [cat](reference-verbs.md#cat)
+* [check](reference-verbs.md#check)
+* [clean-whitespace](reference-verbs.md#clean-whitespace)
+* [cut](reference-verbs.md#cut)
+* [decimate](reference-verbs.md#decimate)
+* [fill-down](reference-verbs.md#fill-down)
+* [fill-empty](reference-verbs.md#fill-empty)
+* [flatten](reference-verbs.md#flatten)
+* [format-values](reference-verbs.md#format-values)
+* [gap](reference-verbs.md#gap)
+* [grep](reference-verbs.md#grep)
+* [having-fields](reference-verbs.md#having-fields)
+* [head](reference-verbs.md#head)
+* [json-parse](reference-verbs.md#json-parse)
+* [json-stringify](reference-verbs.md#json-stringify)
+* [label](reference-verbs.md#label)
+* [merge-fields](reference-verbs.md#merge-fields)
+* [nest](reference-verbs.md#nest) -- if not `implode-values-across-records`
+* [nothing](reference-verbs.md#nothing)
+* [regularize](reference-verbs.md#regularize)
+* [rename](reference-verbs.md#rename)
+* [reorder](reference-verbs.md#reorder)
+* [repeat](reference-verbs.md#repeat)
+* [reshape](reference-verbs.md#reshape) -- if not long-to-wide
+* [sec2gmt](reference-verbs.md#sec2gmt)
+* [sec2gmtdate](reference-verbs.md#sec2gmtdate)
+* [seqgen](reference-verbs.md#seqgen)
+* [skip-trivial-records](reference-verbs.md#skip-trivial-records)
+* [sort-within-records](reference-verbs.md#sort-within-records)
+* [step](reference-verbs.md#step)
+* [tee](reference-verbs.md#tee)
+* [template](reference-verbs.md#template)
+* [unflatten](reference-verbs.md#unflatten)
+* [unsparsify](reference-verbs.md#unsparsify) if invoked with `-f`
 
 ## Non-streaming, retaining all records
 
 These retain all records from one record to the next.
 They are memory-unfriendly, and they wait for end of input to produce their output.
 
-* [bar](#bar) -- if auto-mode
-* [bootstrap](#bootstrap)
-* [count-similar](#count-similar)
-* [fraction](#fraction)
-* [group-by](#group-by)
-* [group-like](#group-like)
-* [least-frequent](#least-frequent)
-* [most-frequent](#most-frequent)
-* [nest](#nest) -- if `implode-values-across-records`
-* [remove-empty-columns](#remove-empty-columns)
-* [reshape](#reshape) -- if long-to-wide
-* [sample](#sample)
-* [shuffle](#shuffle)
-* [sort](#sort)
-* [tac](#tac)
-* [uniq](#uniq) -- if `mlr uniq -a -c`
-* [unsparsify](#unsparsify) if invoked without `-f`
+* [bar](reference-verbs.md#bar) -- if auto-mode
+* [bootstrap](reference-verbs.md#bootstrap)
+* [count-similar](reference-verbs.md#count-similar)
+* [fraction](reference-verbs.md#fraction)
+* [group-by](reference-verbs.md#group-by)
+* [group-like](reference-verbs.md#group-like)
+* [least-frequent](reference-verbs.md#least-frequent)
+* [most-frequent](reference-verbs.md#most-frequent)
+* [nest](reference-verbs.md#nest) -- if `implode-values-across-records`
+* [remove-empty-columns](reference-verbs.md#remove-empty-columns)
+* [reshape](reference-verbs.md#reshape) -- if long-to-wide
+* [sample](reference-verbs.md#sample)
+* [shuffle](reference-verbs.md#shuffle)
+* [sort](reference-verbs.md#sort)
+* [tac](reference-verbs.md#tac)
+* [uniq](reference-verbs.md#uniq) -- if `mlr uniq -a -c`
+* [unsparsify](reference-verbs.md#unsparsify) if invoked without `-f`
 
 ## Non-streaming, retaining some records
 
 These retain a bounded number of records from one record to the next.
 They are memory-friendly, but they wait for end of input to produce their output.
 
-* [tail](#tail)
-* [top](#top)
+* [tail](reference-verbs.md#tail)
+* [top](reference-verbs.md#top)
 
 ## Non-streaming, retaining some state
 
@@ -138,12 +138,12 @@ they were to retain all records in memory.  They are variably memory-friendly
 -- depending on how many distinct values for the group-by keys exist in the
 input data -- and they wait for end of input to produce their output.
 
-* [count-distinct](#count-distinct)
-* [count](#count)
-* [histogram](#histogram)
-* [stats1](#stats1) -- except `mlr stats1 -s` for incremental stats before end of stream
-* [stats2](#stats2)
-* [uniq](#uniq) -- if not `mlr uniq -a -c`
+* [count-distinct](reference-verbs.md#count-distinct)
+* [count](reference-verbs.md#count)
+* [histogram](reference-verbs.md#histogram)
+* [stats1](reference-verbs.md#stats1) -- except `mlr stats1 -s` for incremental stats before end of stream
+* [stats2](reference-verbs.md#stats2)
+* [uniq](reference-verbs.md#uniq) -- if not `mlr uniq -a -c`
 
 ## Variable
 
@@ -154,8 +154,8 @@ these will be memory-unfriendly; otherwhise they are memory-friendly.
 
 Most simple operations such as `mlr put '$z = $x + $y'` are fully streaming.
 
-* [filter](#filter)
-* [put](#put)
+* [filter](reference-verbs.md#filter)
+* [put](reference-verbs.md#put)
 
 ## Half-streaming
 
