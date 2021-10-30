@@ -6,7 +6,6 @@ TOP OF LIST:
 
 * CSV BOM
 * fmtnum
-* localtime
 * JSON comment-handling
 
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
@@ -186,8 +185,6 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
   o NIDX link to headerless CSV
   o autodetect: tbd
 
-* list at end of todo.txt
-
 ! readthedocs -- find out what's necessary to get per-version history
 ----------------------------------------------------------------
 
@@ -200,6 +197,8 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
 
 ================================================================
 NON-BLOCKERS
+
+* separate -S/-A/-O inference page w/ examples of whywhens
 
 * mlr -k
 * transpose
