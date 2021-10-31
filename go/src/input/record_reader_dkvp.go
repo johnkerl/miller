@@ -86,8 +86,6 @@ func (reader *RecordReaderDKVP) processHandle(
 			break
 		}
 
-		// xxx what of lib.IsEOF
-		// xxx what of errchan
 		line := scanner.Text()
 
 		// Check for comments-in-data feature

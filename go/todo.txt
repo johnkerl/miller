@@ -4,12 +4,15 @@ TOP OF LIST:
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-* JSON comment-handling
-
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
 * regtest pendings
   o webdocs re /..../i regex options @ CLIP for windows
+
+* better help-searching:
+  ? mlr -f foo ?
+  ? mlr -F foo ?
+  mlr help w approx incl flags?
 
 * doc6
 * check issues
@@ -26,8 +29,6 @@ TOP OF LIST:
     - 3 regex-at-CLI cases -- repro @ akns
   o $cpg
     - merge-field voids
-
-    - json comments
 
     - mapexcept ...
     - xtab crlf & non-std irs generally ...
