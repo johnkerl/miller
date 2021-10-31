@@ -4,7 +4,6 @@ TOP OF LIST:
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-* CSV BOM
 * JSON comment-handling
 
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
@@ -26,8 +25,6 @@ TOP OF LIST:
   o $cpw
     - 3 regex-at-CLI cases -- repro @ akns
   o $cpg
-    ! csv bom
-
     - merge-field voids
 
     - json comments
@@ -85,15 +82,8 @@ mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0013
 --quote-original
 mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0014
 
-bom
-mlr regtest regtest/cases-pending-go-port/io-utf8-bom/0001
-
 absents/void/err
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0014
-
-fmtstr
-mlr regtest regtest/cases-pending-go-port/verb-format-values/0003
-mlr regtest regtest/cases-pending-go-port/verb-format-values/0004
 
 race condition
 mlr regtest regtest/cases-pending-go-port/verb-head-early-out
