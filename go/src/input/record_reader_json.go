@@ -1,9 +1,11 @@
 package input
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"io"
+	"strings"
 
 	"encoding/json"
 
@@ -69,6 +71,10 @@ func (reader *RecordReaderJSON) processHandle(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
+
+	if reader.readerOptions.CommentHandling != cli.CommentsAreData {
+		handle = NewJSONCommentEnabledReader(handle, reader.readerOptions, inputChannel)
+	}
 	decoder := json.NewDecoder(handle)
 
 	eof := false
@@ -154,4 +160,105 @@ func (reader *RecordReaderJSON) processHandle(
 			return
 		}
 	}
+}
+
+// ================================================================
+// JSON comment-stripping
+//
+// Miller lets users (on an opt-in basis) have comments in their data files,
+// for all formats including JSON. Comments are only honored at start of line.
+// Users can have them be printed to stdout straightaway, or simply discarded.
+//
+// For most file formats Miller is doing line-based I/O and can deal with
+// comment lines easily and simply. But for JSON, the Go library needs an
+// io.Reader object which we implement here.
+//
+// This could be done by peeking into the return value from the underlying
+// io.Reader, detecting comment-line starts and line-endings within the byte
+// array that io.Reader deals with. That's an appealing plan of action, but it
+// gets messy if the comment-string is multi-character since then a comment
+// string could be split between successive calls to Read() on the underlying
+// handle.
+//
+// Instead we use a line-oriented scanner to do line-splitting for us.
+
+// JSONCommentEnabledReader implements io.Reader to strip comment lines
+// off of CSV data.
+type JSONCommentEnabledReader struct {
+	lineScanner   *bufio.Scanner
+	readerOptions *cli.TReaderOptions
+	context       *types.Context // Needed for channelized stdout-printing logic
+	inputChannel  chan<- *types.RecordAndContext
+
+	// In case a line was ingested which was longer than the read-buffer passed
+	// to us, in which case we need to split up that line and return it over
+	// the course of two or more calls.
+	lineBytes []byte
+}
+
+func NewJSONCommentEnabledReader(
+	underlying io.Reader,
+	readerOptions *cli.TReaderOptions,
+	inputChannel chan<- *types.RecordAndContext,
+) *JSONCommentEnabledReader {
+	return &JSONCommentEnabledReader{
+		lineScanner:   bufio.NewScanner(underlying),
+		readerOptions: readerOptions,
+		context:       types.NewNilContext(),
+		inputChannel:  inputChannel,
+
+		lineBytes: nil,
+	}
+}
+
+func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
+	if bsr.lineBytes != nil {
+		return bsr.populateFromLine(p), nil
+	}
+
+	// Loop until we can get a non-comment line to pass on, or end of file.
+	for {
+		// EOF
+		if !bsr.lineScanner.Scan() {
+			return 0, io.EOF
+		}
+		line := bsr.lineScanner.Text()
+
+		// Non-comment line
+		if !strings.HasPrefix(line, bsr.readerOptions.CommentString) {
+			bsr.lineBytes = []byte(line)
+			return bsr.populateFromLine(p), nil
+		}
+
+		// Comment line
+		if bsr.readerOptions.CommentHandling == cli.PassComments {
+			// Insert the string into the record-output stream, so that goroutine can
+			// print it, resulting in deterministic output-ordering.
+			bsr.inputChannel <- types.NewOutputString(line+"\n", bsr.context)
+		}
+	}
+}
+
+// populateFromLine is a helper for Read. It takes a full line from the
+// bufio.Scanner, and writes as much as it can to the caller's p-buffer.  If
+// the entirety is written, the line is marked as done so a subsequent call to
+// Read will retrieve the next line from the input file. Otherwise, as much as
+// possible is transferred, and the rest is marked for transfer on a subsequent
+// call.
+func (bsr *JSONCommentEnabledReader) populateFromLine(p []byte) int {
+	numBytesWritten := 0
+	if len(bsr.lineBytes) < len(p) {
+		for i := 0; i < len(bsr.lineBytes); i++ {
+			p[i] = bsr.lineBytes[i]
+		}
+		numBytesWritten = len(bsr.lineBytes)
+		bsr.lineBytes = nil
+	} else {
+		for i := 0; i < len(p); i++ {
+			p[i] = bsr.lineBytes[i]
+		}
+		numBytesWritten = len(p)
+		bsr.lineBytes = bsr.lineBytes[len(p):]
+	}
+	return numBytesWritten
 }
