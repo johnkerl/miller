@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -52,6 +53,8 @@ func GetMlrvalFormatter(
 	// Cache miss
 	formatter, err := newMlrvalFormatter(userLevelFormatString)
 	if err != nil {
+		// TODO: temp exit
+		fmt.Printf("mlr: %v\n", err)
 		return nil, err
 	}
 
@@ -65,36 +68,63 @@ type IMlrvalFormatter interface {
 	FormatFloat(floatValue float64) string // for --ofmt
 }
 
+// People can pass in things like "X%sX" unfortunately :(
 func newMlrvalFormatter(
 	userLevelFormatString string,
 ) (IMlrvalFormatter, error) {
-	// TODO: very temporary. Pending full parse.
-	// Including but not limited to "%08lld" -> "%08d" C-impl back-compat etc.
-	if strings.HasSuffix(userLevelFormatString, "d") {
-		return newMlrvalFormatterToInt(userLevelFormatString), nil
+	numPercents := strings.Count(userLevelFormatString, "%")
+	if numPercents < 1 {
+		return nil, errors.New(
+			fmt.Sprintf("unhandled format string \"%s\": no leading \"%%\"", userLevelFormatString),
+		)
 	}
-	if strings.HasSuffix(userLevelFormatString, "x") {
-		return newMlrvalFormatterToInt(userLevelFormatString), nil
-	}
-
-	if strings.HasSuffix(userLevelFormatString, "f") {
-		return newMlrvalFormatterToFloat(userLevelFormatString), nil
-	}
-	if strings.HasSuffix(userLevelFormatString, "e") {
-		return newMlrvalFormatterToFloat(userLevelFormatString), nil
-	}
-	if strings.HasSuffix(userLevelFormatString, "g") {
-		return newMlrvalFormatterToFloat(userLevelFormatString), nil
+	if numPercents > 1 {
+		return nil, errors.New(
+			fmt.Sprintf("unhandled format string \"%s\": needs no \"%%\" after the first", userLevelFormatString),
+		)
 	}
 
-	if strings.HasSuffix(userLevelFormatString, "s") {
-		return newMlrvalFormatterToString(userLevelFormatString), nil
+	// TODO: perhaps a full format-string parser. At present, there's nothing to stop people
+	// from doing silly things like "%lllld".
+	goFormatString := userLevelFormatString
+	goFormatString = strings.ReplaceAll(goFormatString, "lld", "d")
+	goFormatString = strings.ReplaceAll(goFormatString, "llx", "x")
+	goFormatString = strings.ReplaceAll(goFormatString, "ld", "d")
+	goFormatString = strings.ReplaceAll(goFormatString, "lx", "x")
+	goFormatString = strings.ReplaceAll(goFormatString, "lf", "f")
+	goFormatString = strings.ReplaceAll(goFormatString, "le", "e")
+	goFormatString = strings.ReplaceAll(goFormatString, "lg", "g")
+
+	// MIller 5 and below required C format strings compatible with 64-bit ints
+	// and double-precision floats: e.g. "%08lld" and "%9.6lf". For Miller 6,
+	// We must still accept these for backward compatibility.
+	if strings.HasSuffix(goFormatString, "d") {
+		return newMlrvalFormatterToInt(goFormatString), nil
+	}
+	if strings.HasSuffix(goFormatString, "x") {
+		return newMlrvalFormatterToInt(goFormatString), nil
 	}
 
-	// TODO: finish porting
-	// return nil, errors.New("TBD") // TODO
-	return newMlrvalFormatterToString(userLevelFormatString), nil
+	if strings.HasSuffix(goFormatString, "f") {
+		return newMlrvalFormatterToFloat(goFormatString), nil
+	}
+	if strings.HasSuffix(goFormatString, "e") {
+		return newMlrvalFormatterToFloat(goFormatString), nil
+	}
+	if strings.HasSuffix(goFormatString, "g") {
+		return newMlrvalFormatterToFloat(goFormatString), nil
+	}
+
+	if strings.HasSuffix(goFormatString, "s") {
+		return newMlrvalFormatterToString(goFormatString), nil
+	}
+
+	// TODO:
+	// return nil, errors.New(fmt.Sprintf("unhandled format string \"%s\"", userLevelFormatString))
+	return newMlrvalFormatterToString(goFormatString), nil
 }
+
+//func regularizeFormat
 
 // ----------------------------------------------------------------
 type mlrvalFormatterToFloat struct {

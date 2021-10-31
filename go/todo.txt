@@ -5,7 +5,6 @@ TOP OF LIST:
 * nikos materials -> fold in
 
 * CSV BOM
-* fmtnum
 * JSON comment-handling
 
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
@@ -28,8 +27,6 @@ TOP OF LIST:
     - 3 regex-at-CLI cases -- repro @ akns
   o $cpg
     ! csv bom
-
-    ! fmtnum
 
     - merge-field voids
 
@@ -205,6 +202,8 @@ NON-BLOCKERS
 * print w/ #{...}; defer variadic printf
 * meta: nf,nr,keys?
 
+* mlr -f {arg}, mlr -F {arg}, etc
+
 * non-streaming DSL-enabled cut
   https://github.com/johnkerl/miller/discussions/613
 
@@ -222,6 +221,8 @@ NON-BLOCKERS
 * non-lite DKVP reader/writer
 
 * precedence for `:` in slicing syntax
+
+* full format-string parser for corner cases like "X%08lldX"
 
 * more of:
   o colored-shapes.dkvp -> csv; also mkdat2
@@ -435,7 +436,6 @@ i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older
   o if keep, need careful MT_VOID at from-string constructor -- ? or not ?
   o comment clearly regardless
 * bitwise_and_dispositions et al should not have _absn for collections -- _erro instead
-* fmtnum: auto-replace %l_, %ll_ -> no l/ll for backwards compatibility, and comment accordingly
 * ast-parex separate mlr auxents entrypoint?
 * port u/window*.mlr from mlrc to mlrgo (actually, fix mlrgo of course)
 * line/column caret at parse-error messages -- would require some GOCC refactoring
