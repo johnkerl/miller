@@ -346,10 +346,15 @@ var SeparatorFlagSection = FlagSection{
 			help: "Specify FS for input and output.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
-				options.ReaderOptions.IFS = SeparatorFromArg(args[*pargi+1])
-				options.WriterOptions.OFS = SeparatorFromArg(args[*pargi+1])
-				options.ReaderOptions.IFSWasSpecified = true
-				options.WriterOptions.OFSWasSpecified = true
+				// Backward compatibility with Miller <= 5. Auto-inference of
+				// LF vs CR/LF line endings is handled within Go libraries so
+				// we needn't do anything ourselves.
+				if args[*pargi+1] != "auto" {
+					options.ReaderOptions.IFS = SeparatorFromArg(args[*pargi+1])
+					options.WriterOptions.OFS = SeparatorFromArg(args[*pargi+1])
+					options.ReaderOptions.IFSWasSpecified = true
+					options.WriterOptions.OFSWasSpecified = true
+				}
 				*pargi += 2
 			},
 		},

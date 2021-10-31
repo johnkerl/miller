@@ -62,7 +62,7 @@ func (writer *RecordWriterXTAB) writeWithLeftAlignedValues(
 	if writer.onFirst {
 		writer.onFirst = false
 	} else {
-		buffer.WriteString("\n") // TODO: ORS
+		buffer.WriteString(writer.writerOptions.OFS)
 	}
 
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
@@ -75,7 +75,7 @@ func (writer *RecordWriterXTAB) writeWithLeftAlignedValues(
 			buffer.WriteString(writer.writerOptions.OPS)
 		}
 		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
-		buffer.WriteString("\n") // TODO: ORS
+		buffer.WriteString(writer.writerOptions.OFS)
 	}
 	ostream.Write(buffer.Bytes())
 
@@ -108,7 +108,7 @@ func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 	if writer.onFirst {
 		writer.onFirst = false
 	} else {
-		buffer.WriteString("\n") // TODO: ORS
+		buffer.WriteString(writer.writerOptions.OFS)
 	}
 
 	i = 0
@@ -123,7 +123,7 @@ func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 		}
 		paddedValue := fmt.Sprintf("%*s", maxValueLength, values[i])
 		buffer.WriteString(colorizer.MaybeColorizeValue(paddedValue, outputIsStdout))
-		buffer.WriteString("\n") // TODO: ORS
+		buffer.WriteString(writer.writerOptions.OFS)
 
 		i++
 	}
