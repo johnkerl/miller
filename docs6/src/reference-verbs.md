@@ -1083,24 +1083,24 @@ wye pan 5.000000 0.573288 0.863624
 <b>mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a     b     i                   x                      y
-XpanX XpanX %!l(int=00000001)lx %!l(float64=0.346791)e %!l(float64=0.726802)e
-XeksX XpanX %!l(int=00000002)lx %!l(float64=0.758679)e %!l(float64=0.522151)e
-XwyeX XwyeX %!l(int=00000003)lx %!l(float64=0.204603)e %!l(float64=0.338318)e
-XeksX XwyeX %!l(int=00000004)lx %!l(float64=0.381399)e %!l(float64=0.134188)e
-XwyeX XpanX %!l(int=00000005)lx %!l(float64=0.573288)e %!l(float64=0.863624)e
+a     b     i        x            y
+XpanX XpanX 00000001 3.467910e-01 7.268020e-01
+XeksX XpanX 00000002 7.586790e-01 5.221510e-01
+XwyeX XwyeX 00000003 2.046030e-01 3.383180e-01
+XeksX XwyeX 00000004 3.813990e-01 1.341880e-01
+XwyeX XpanX 00000005 5.732880e-01 8.636240e-01
 </pre>
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-a     b     i               x                      y
-XpanX XpanX %!l(float64=1)e %!l(float64=0.346791)e %!l(float64=0.726802)e
-XeksX XpanX %!l(float64=2)e %!l(float64=0.758679)e %!l(float64=0.522151)e
-XwyeX XwyeX %!l(float64=3)e %!l(float64=0.204603)e %!l(float64=0.338318)e
-XeksX XwyeX %!l(float64=4)e %!l(float64=0.381399)e %!l(float64=0.134188)e
-XwyeX XpanX %!l(float64=5)e %!l(float64=0.573288)e %!l(float64=0.863624)e
+a     b     i            x            y
+XpanX XpanX 1.000000e+00 3.467910e-01 7.268020e-01
+XeksX XpanX 2.000000e+00 7.586790e-01 5.221510e-01
+XwyeX XwyeX 3.000000e+00 2.046030e-01 3.383180e-01
+XeksX XwyeX 4.000000e+00 3.813990e-01 1.341880e-01
+XwyeX XpanX 5.000000e+00 5.732880e-01 8.636240e-01
 </pre>
 
 ## fraction
