@@ -477,7 +477,7 @@ float  (class=conversion #args=1) Convert int/float/bool/string to float.
 
 ### fmtnum
 <pre class="pre-non-highlight-non-pair">
-fmtnum  (class=conversion #args=2) Convert int/float/bool to string using printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
+fmtnum  (class=conversion #args=2) Convert int/float/bool to string using printf-style format string, e.g. '$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'.
 </pre>
 
 

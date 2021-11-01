@@ -236,6 +236,7 @@ Notes:
 * If CSV field separator is tab, we have TSV; see more examples (ASV, USV, etc.) at in the [CSV section](file-formats.md#csvtsvasvusvetc).
 * JSON: ignores all separator flags from the command line.
 * Headerless CSV overlaps quite a bit with NIDX format using comma for IFS. See also the page on [CSV with and without headers](csv-with-and-without-headers.md).
+* For XTAB, the record separator is a repetition of the field separator. For example, if one record has `x=1,y=2` and the next has `x=3,y=4`, and OFS is newline, then output lines are `x 1`, then `y 2`, then an extra newline, then `x 3`, then `y 4`. This means: to customize XTAB, set `OFS` rather than `ORS`.
 
 |            | **RS**  | **FS**  | **PS**   |
 |------------|---------|---------|----------|

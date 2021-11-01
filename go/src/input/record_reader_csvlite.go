@@ -156,10 +156,16 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			break
 		}
 
-		// xxx temp need IRS
 		line := scanner.Text()
 
 		inputLineNumber++
+
+		// Strip CSV BOM
+		if inputLineNumber == 1 {
+			if strings.HasPrefix(line, CSV_BOM) {
+				line = strings.Replace(line, CSV_BOM, "", 1)
+			}
+		}
 
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {

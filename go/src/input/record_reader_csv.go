@@ -79,7 +79,7 @@ func (reader *RecordReaderCSV) processHandle(
 	var header []string = nil
 	var rowNumber int = 0
 
-	csvReader := csv.NewReader(handle)
+	csvReader := csv.NewReader(NewBOMStrippingReader(handle))
 	csvReader.Comma = rune(reader.readerOptions.IFS[0]) // xxx temp
 
 	eof := false
@@ -252,6 +252,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 // As noted above: wraps a bytes.Buffer, whose Write method has pointer
 // receiver, in a struct with non-pointer receiver so that it implements
 // io.Writer.
+
 type WorkaroundBuffer struct {
 	pbuffer *bytes.Buffer
 }
@@ -269,4 +270,67 @@ func (wb WorkaroundBuffer) Write(p []byte) (n int, err error) {
 
 func (wb WorkaroundBuffer) String() string {
 	return wb.pbuffer.String()
+}
+
+// ----------------------------------------------------------------
+// BOM-stripping
+//
+// Some CSVs start with a "byte-order mark" which is the 3-byte sequene
+// \xef\xbb\xbf".  Any file with such contents trips up csv.Reader:
+//
+// * If a header line is not double-quoted then we can simply look at the first
+//   record returned by csv.Reader and strip away the first three bytes if they
+//   are the BOM.
+//
+// * But if a header line is double-quoted then csv.Reader will complain that
+//   the header line has RFC-incompliant double-quoting (it would want the BOM
+//   to be *inside* the double quotes).
+//
+// So we must wrap the io.Reader which is passed to csv.Reader. This
+// BOMStrippingReader class does precisely that.
+
+// BOMStrippingReader implements io.Reader to strip leading byte-order-mark
+// characters off of CSV data.
+type BOMStrippingReader struct {
+	underlying io.Reader
+	pastBOM    bool
+}
+
+func NewBOMStrippingReader(underlying io.Reader) *BOMStrippingReader {
+	return &BOMStrippingReader{
+		underlying: underlying,
+		pastBOM:    false,
+	}
+}
+
+func (bsr *BOMStrippingReader) Read(p []byte) (n int, err error) {
+	if bsr.pastBOM {
+		return bsr.underlying.Read(p)
+	}
+	bsr.pastBOM = true
+
+	// Return error conditions right away.
+	n, err = bsr.underlying.Read(p)
+	if err != nil {
+		return n, err
+	}
+
+	// Either this is a small file (maybe a zero-length file, which happens) or
+	// it's a big file but we were invoked with a tiny buffer size of 1 or 2.
+	// The latter case would be a bit messy to handle; but also we consider it
+	// negligibly likely (we expect buffer lengths on the order of kilobytes).
+	if n < 3 {
+		return n, err
+	}
+
+	// If the BOM is present, slip the contents of the buffer down by three.
+	if p[0] == CSV_BOM[0] && p[1] == CSV_BOM[1] && p[2] == CSV_BOM[2] {
+		for i := 0; i < n-3; i++ {
+			p[i] = p[i+3]
+		}
+		return n - 3, nil
+	}
+
+	// No BOM found (normal case).
+	return n, err
 }

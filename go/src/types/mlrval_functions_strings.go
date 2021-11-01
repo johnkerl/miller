@@ -330,7 +330,7 @@ func fmtnum_bs(input1, input2 *Mlrval) *Mlrval {
 }
 
 var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
-	//       .  ERROR   ABSENT NULL   VOID   STRING     INT    FLOAT  BOOL   ARRAY  MAP     FUNC
+	//       .  ERROR   ABSENT NULL   VOID   STRING     INT    FLOAT  BOOL   ARRAY  MAP    FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _erro, _erro, _erro, _erro},
 	/*NULL   */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
@@ -341,7 +341,7 @@ var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*BOOL   */ {_erro, _absn, _erro, _erro, fmtnum_bs, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ARRAY  */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*MAP    */ {_erro, _absn, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
-	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
+	/*FUNC   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
 func BIF_fmtnum(input1, input2 *Mlrval) *Mlrval {

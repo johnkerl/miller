@@ -4,15 +4,15 @@ TOP OF LIST:
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-* CSV BOM
-* fmtnum
-* localtime
-* JSON comment-handling
-
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
 * regtest pendings
   o webdocs re /..../i regex options @ CLIP for windows
+
+* better help-searching:
+  ? mlr -f foo ?
+  ? mlr -F foo ?
+  mlr help w approx incl flags?
 
 * doc6
 * check issues
@@ -28,13 +28,7 @@ TOP OF LIST:
   o $cpw
     - 3 regex-at-CLI cases -- repro @ akns
   o $cpg
-    ! csv bom
-
-    ! fmtnum
-
     - merge-field voids
-
-    - json comments
 
     - mapexcept ...
     - xtab crlf & non-std irs generally ...
@@ -89,15 +83,8 @@ mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0013
 --quote-original
 mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0014
 
-bom
-mlr regtest regtest/cases-pending-go-port/io-utf8-bom/0001
-
 absents/void/err
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0014
-
-fmtstr
-mlr regtest regtest/cases-pending-go-port/verb-format-values/0003
-mlr regtest regtest/cases-pending-go-port/verb-format-values/0004
 
 race condition
 mlr regtest regtest/cases-pending-go-port/verb-head-early-out
@@ -186,8 +173,6 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
   o NIDX link to headerless CSV
   o autodetect: tbd
 
-* list at end of todo.txt
-
 ! readthedocs -- find out what's necessary to get per-version history
 ----------------------------------------------------------------
 
@@ -201,10 +186,14 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
 ================================================================
 NON-BLOCKERS
 
+* separate -S/-A/-O inference page w/ examples of whywhens
+
 * mlr -k
 * transpose
 * print w/ #{...}; defer variadic printf
 * meta: nf,nr,keys?
+
+* mlr -f {arg}, mlr -F {arg}, etc
 
 * non-streaming DSL-enabled cut
   https://github.com/johnkerl/miller/discussions/613
@@ -223,6 +212,8 @@ NON-BLOCKERS
 * non-lite DKVP reader/writer
 
 * precedence for `:` in slicing syntax
+
+* full format-string parser for corner cases like "X%08lldX"
 
 * more of:
   o colored-shapes.dkvp -> csv; also mkdat2
@@ -436,7 +427,6 @@ i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older
   o if keep, need careful MT_VOID at from-string constructor -- ? or not ?
   o comment clearly regardless
 * bitwise_and_dispositions et al should not have _absn for collections -- _erro instead
-* fmtnum: auto-replace %l_, %ll_ -> no l/ll for backwards compatibility, and comment accordingly
 * ast-parex separate mlr auxents entrypoint?
 * port u/window*.mlr from mlrc to mlrgo (actually, fix mlrgo of course)
 * line/column caret at parse-error messages -- would require some GOCC refactoring

@@ -1351,7 +1351,7 @@ strftime_local.`,
 			name:  "fmtnum",
 			class: FUNC_CLASS_CONVERSION,
 			help: `Convert int/float/bool to string using printf-style format string, e.g.
-'$s = fmtnum($n, "%06lld")'.`,
+'$s = fmtnum($n, "%08d")' or '$t = fmtnum($n, "%.6e")'.`,
 			binaryFunc: types.BIF_fmtnum,
 		},
 
