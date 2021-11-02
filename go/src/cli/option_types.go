@@ -12,15 +12,6 @@ import (
 	"mlr/src/lib"
 )
 
-// ----------------------------------------------------------------
-//typedef struct _generator_opts_t {
-//	char* field_name;
-//	// xxx to do: convert to mv_t
-//	long long start;
-//	long long stop;
-//	long long step;
-//} generator_opts_t;
-
 type TCommentHandling int
 
 const (
@@ -30,7 +21,18 @@ const (
 )
 const DEFAULT_COMMENT_STRING = "#"
 
-// ----------------------------------------------------------------
+const DEFAULT_GEN_FIELD_NAME = "i"
+const DEFAULT_GEN_START_AS_STRING = "1"
+const DEFAULT_GEN_STEP_AS_STRING = "1"
+const DEFAULT_GEN_STOP_AS_STRING = "100"
+
+type TGeneratorOptions struct {
+	FieldName     string
+	StartAsString string
+	StepAsString  string
+	StopAsString  string
+}
+
 type TReaderOptions struct {
 	InputFileFormat string
 	IFS             string
@@ -56,8 +58,8 @@ type TReaderOptions struct {
 	CommentHandling TCommentHandling
 	CommentString   string
 
-	//	// Fake internal-data-generator 'reader'
-	//	generator_opts_t generator_opts;
+	// Fake internal-data-generator 'reader'
+	GeneratorOptions TGeneratorOptions
 
 	// For out-of-process handling of compressed data, via popen
 	Prepipe string
@@ -173,6 +175,12 @@ func DefaultReaderOptions() TReaderOptions {
 		IPS:               "=",
 		CommentHandling:   CommentsAreData,
 		FileInputEncoding: lib.FileInputEncodingDefault,
+		GeneratorOptions: TGeneratorOptions{
+			FieldName:     DEFAULT_GEN_FIELD_NAME,
+			StartAsString: DEFAULT_GEN_START_AS_STRING,
+			StepAsString:  DEFAULT_GEN_STEP_AS_STRING,
+			StopAsString:  DEFAULT_GEN_STOP_AS_STRING,
+		},
 	}
 }
 

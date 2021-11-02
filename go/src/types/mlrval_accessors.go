@@ -155,6 +155,12 @@ func (mv *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {
 	return floatValue
 }
 
+func (mv *Mlrval) GetNumericNegativeorDie() bool {
+	floatValue, ok := mv.GetNumericToFloatValue()
+	lib.InternalCodingErrorIf(!ok)
+	return floatValue < 0.0
+}
+
 func (mv *Mlrval) AssertNumeric() {
 	_ = mv.GetNumericToFloatValueOrDie()
 }

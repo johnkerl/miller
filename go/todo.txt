@@ -36,7 +36,6 @@ TOP OF LIST:
     - xtab ors -- ?
     - crlf ...
 
-  o --igen --gen-start --gen-stop --gen-step
   o TODO in *.go & *.mi
   o release notes per se
   o ./configure whatever equivalent
@@ -50,6 +49,9 @@ d pre-release:
   o gha download steps clearer
 
 * wut h1 spacing before/after ...
+
+* pv: 'mlr --prepipex pv --gzin tail -n 10 ~/tmp/zhuge.gz' needs --gzin & --prepipex both
+  o plus corresponding docwork
 
 ----------------------------------------------------------------
 LOCALTIME
@@ -89,8 +91,6 @@ mlr regtest regtest/cases-pending-go-port/verb-head-early-out
 BLOCKERS
 
 ? BIFs as FCFs?
-
-* --igen --gen-start --gen-stop --gen-step
 
 * regtest:
   o convert regtest/cases-pending-windows
