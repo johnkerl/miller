@@ -532,6 +532,38 @@ var LegacyFlagSection = FlagSection{
 			help:   "Miller now supports arrays as of version 6.",
 			parser: NoOpParse1,
 		},
+
+		{
+			name:   "--vflatsep",
+			help:   "Ignored as of version 6. This functionality is subsumed into JSON formatting.",
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--quote-all",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
+		{
+			name:   "--quote-none",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
+		{
+			name:   "--quote-minimal",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
+		{
+			name:   "--quote-numeric",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
+		{
+			name:   "--quote-original",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
 	},
 }
 
@@ -1897,60 +1929,6 @@ var CSVOnlyFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
-
-		//{
-		//	name: "--quote-all",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_ALL
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--quote-none",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_NONE
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--quote-minimal",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_MINIMAL
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--quote-numeric",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_NUMERIC
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--quote-original",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_ORIGINAL
-		//		*pargi += 1
-		//	},
-		//},
-
-		//func helpDoubleQuoting() {
-		//    fmt.Printf("THIS IS STILL WIP FOR MILLER 6\n")
-		//    fmt.Println(
-		//        `--quote-all        Wrap all fields in double quotes
-		//--quote-none       Do not wrap any fields in double quotes, even if they have
-		//                   OFS or ORS in them
-		//--quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
-		//                   in them (default)
-		//--quote-numeric    Wrap fields in double quotes only if they have numbers
-		//                   in them
-		//--quote-original   Wrap fields in double quotes if and only if they were
-		//                   quoted on input. This isn't sticky for computed fields:
-		//                   e.g. if fields a and b were quoted on input and you do
-		//                   "put '$c = $a . $b'" then field c won't inherit a or b's
-		//                   was-quoted-on-input flag.`)
-		//}
-
 	},
 }
 
@@ -2380,15 +2358,6 @@ var FlattenUnflattenFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
-
-		//{
-		//	name: "--vflatsep",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		CheckArgCount(args, *pargi, argc, 2)
-		//		// No-op pass-through for backward compatibility with Miller 5
-		//		*pargi += 2
-		// },
-		//},
 
 		{
 			name: "--no-auto-flatten",
