@@ -20,6 +20,8 @@ func Create(readerOptions *cli.TReaderOptions) IRecordReader {
 		return NewRecordReaderPPRINT(readerOptions)
 	case "xtab":
 		return NewRecordReaderXTAB(readerOptions)
+	case "gen":
+		return NewPseudoReaderGen(readerOptions)
 	default:
 		return nil
 	}

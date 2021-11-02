@@ -714,49 +714,55 @@ var FileFormatFlagSection = FlagSection{
 			},
 		},
 
-		//{
-		//	name: "--igen",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.ReaderOptions.InputFileFormat = "gen"
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--gen-start",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.ReaderOptions.InputFileFormat = "gen"
-		//		CheckArgCount(args, *pargi, argc, 2)
-		//		if sscanf(args[*pargi+1], "%lld", &options.ReaderOptions.generator_opts.start) != 1 {
-		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
-		//				"mlr", args[*pargi+1])
-		//		}
-		//		*pargi += 2
-		//	},
-		//},
-		//{
-		//	name: "--gen-stop",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.ReaderOptions.InputFileFormat = "gen"
-		//		CheckArgCount(args, *pargi, argc, 2)
-		//		if sscanf(args[*pargi+1], "%lld", &options.ReaderOptions.generator_opts.stop) != 1 {
-		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
-		//				"mlr", args[*pargi+1])
-		//		}
-		//		*pargi += 2
-		//	},
-		//},
-		//{
-		//	name: "--gen-step",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.ReaderOptions.InputFileFormat = "gen"
-		//		CheckArgCount(args, *pargi, argc, 2)
-		//		if sscanf(args[*pargi+1], "%lld", &options.ReaderOptions.generator_opts.step) != 1 {
-		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
-		//				"mlr", args[*pargi+1])
-		//		}
-		//		*pargi += 2
-		//	},
-		//},
+		{
+			name: "--igen",
+			help: `Ignore input files and instead generate sequential numeric input using --gen-field-name,
+--gen-start, --gen-step, and --gen-stop values. See also the seqgen verb, which is more useful/intuitive.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--gen-field-name",
+			help: `Specify field name for --igen. Defaults to "` + DEFAULT_GEN_FIELD_NAME + `".`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.GeneratorOptions.FieldName = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+		{
+			name: "--gen-start",
+			help: "Specify start value for --igen. Defaults to " + DEFAULT_GEN_START_AS_STRING + ".",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.GeneratorOptions.StartAsString = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+		{
+			name: "--gen-step",
+			help: "Specify step value for --igen. Defaults to " + DEFAULT_GEN_STEP_AS_STRING + ".",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.GeneratorOptions.StepAsString = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+		{
+			name: "--gen-stop",
+			help: "Specify stop value for --igen. Defaults to " + DEFAULT_GEN_STOP_AS_STRING + ".",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.GeneratorOptions.StopAsString = args[*pargi+1]
+				*pargi += 2
+			},
+		},
 
 		{
 			name: "-o",
