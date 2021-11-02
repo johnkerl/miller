@@ -413,7 +413,7 @@ StatementBlockInBraces
 ;
 
 // ================================================================
-// ASSIGMENT STATEMENTS
+// ASSIGNMENT STATEMENTS
 
 BracelessStatement
   : Assignment

@@ -336,10 +336,18 @@ FILE-FORMAT FLAGS
        --csv or -c              Use CSV format for input and output data.
        --csvlite                Use CSV-lite format for input and output data.
        --dkvp                   Use DKVP format for input and output data.
+       --gen-field-name         Specify field name for --igen. Defaults to "i".
+       --gen-start              Specify start value for --igen. Defaults to 1.
+       --gen-step               Specify step value for --igen. Defaults to 1.
+       --gen-stop               Specify stop value for --igen. Defaults to 100.
        --iasv or --iasvlite     Use ASV format for input data.
        --icsv                   Use CSV format for input data.
        --icsvlite               Use CSV-lite format for input data.
        --idkvp                  Use DKVP format for input data.
+       --igen                   Ignore input files and instead generate sequential
+                                numeric input using --gen-field-name, --gen-start,
+                                --gen-step, and --gen-stop values. See also the
+                                seqgen verb, which is more useful/intuitive.
        --ijson                  Use JSON format for input data.
        --inidx                  Use NIDX format for input data.
        --io {format name}       Use format name for input and output data. For
@@ -447,6 +455,18 @@ LEGACY FLAGS
        --no-mmap                Miller no longer uses memory-mapping to access data
                                 files.
        --ojsonx                 The `--jvstack` flag is now default true in Miller 6.
+       --quote-all              Ignored as of version 6. Types are inferred/retained
+                                through the processing flow now.
+       --quote-minimal          Ignored as of version 6. Types are inferred/retained
+                                through the processing flow now.
+       --quote-none             Ignored as of version 6. Types are inferred/retained
+                                through the processing flow now.
+       --quote-numeric          Ignored as of version 6. Types are inferred/retained
+                                through the processing flow now.
+       --quote-original         Ignored as of version 6. Types are inferred/retained
+                                through the processing flow now.
+       --vflatsep               Ignored as of version 6. This functionality is
+                                subsumed into JSON formatting.
 
 MISCELLANEOUS FLAGS
        These are flags which don't fit into any other category.
@@ -2968,5 +2988,5 @@ SEE ALSO
 
 
 
-                                  2021-10-31                         MILLER(1)
+                                  2021-11-02                         MILLER(1)
 </pre>

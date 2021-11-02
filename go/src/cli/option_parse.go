@@ -532,6 +532,38 @@ var LegacyFlagSection = FlagSection{
 			help:   "Miller now supports arrays as of version 6.",
 			parser: NoOpParse1,
 		},
+
+		{
+			name:   "--vflatsep",
+			help:   "Ignored as of version 6. This functionality is subsumed into JSON formatting.",
+			parser: NoOpParse1,
+		},
+
+		{
+			name:   "--quote-all",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
+		{
+			name:   "--quote-none",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
+		{
+			name:   "--quote-minimal",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
+		{
+			name:   "--quote-numeric",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
+		{
+			name:   "--quote-original",
+			help:   "Ignored as of version 6. Types are inferred/retained through the processing flow now.",
+			parser: NoOpParse1,
+		},
 	},
 }
 
@@ -682,49 +714,55 @@ var FileFormatFlagSection = FlagSection{
 			},
 		},
 
-		//{
-		//	name: "--igen",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.ReaderOptions.InputFileFormat = "gen"
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--gen-start",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.ReaderOptions.InputFileFormat = "gen"
-		//		CheckArgCount(args, *pargi, argc, 2)
-		//		if sscanf(args[*pargi+1], "%lld", &options.ReaderOptions.generator_opts.start) != 1 {
-		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
-		//				"mlr", args[*pargi+1])
-		//		}
-		//		*pargi += 2
-		//	},
-		//},
-		//{
-		//	name: "--gen-stop",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.ReaderOptions.InputFileFormat = "gen"
-		//		CheckArgCount(args, *pargi, argc, 2)
-		//		if sscanf(args[*pargi+1], "%lld", &options.ReaderOptions.generator_opts.stop) != 1 {
-		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
-		//				"mlr", args[*pargi+1])
-		//		}
-		//		*pargi += 2
-		//	},
-		//},
-		//{
-		//	name: "--gen-step",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.ReaderOptions.InputFileFormat = "gen"
-		//		CheckArgCount(args, *pargi, argc, 2)
-		//		if sscanf(args[*pargi+1], "%lld", &options.ReaderOptions.generator_opts.step) != 1 {
-		//			fmt.Fprintf(os.Stderr, "%s: could not scan \"%s\".\n",
-		//				"mlr", args[*pargi+1])
-		//		}
-		//		*pargi += 2
-		//	},
-		//},
+		{
+			name: "--igen",
+			help: `Ignore input files and instead generate sequential numeric input using --gen-field-name,
+--gen-start, --gen-step, and --gen-stop values. See also the seqgen verb, which is more useful/intuitive.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				*pargi += 1
+			},
+		},
+		{
+			name: "--gen-field-name",
+			help: `Specify field name for --igen. Defaults to "` + DEFAULT_GEN_FIELD_NAME + `".`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.GeneratorOptions.FieldName = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+		{
+			name: "--gen-start",
+			help: "Specify start value for --igen. Defaults to " + DEFAULT_GEN_START_AS_STRING + ".",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.GeneratorOptions.StartAsString = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+		{
+			name: "--gen-step",
+			help: "Specify step value for --igen. Defaults to " + DEFAULT_GEN_STEP_AS_STRING + ".",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.GeneratorOptions.StepAsString = args[*pargi+1]
+				*pargi += 2
+			},
+		},
+		{
+			name: "--gen-stop",
+			help: "Specify stop value for --igen. Defaults to " + DEFAULT_GEN_STOP_AS_STRING + ".",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.InputFileFormat = "gen"
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.GeneratorOptions.StopAsString = args[*pargi+1]
+				*pargi += 2
+			},
+		},
 
 		{
 			name: "-o",
@@ -1897,60 +1935,6 @@ var CSVOnlyFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
-
-		//{
-		//	name: "--quote-all",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_ALL
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--quote-none",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_NONE
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--quote-minimal",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_MINIMAL
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--quote-numeric",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_NUMERIC
-		//		*pargi += 1
-		//	},
-		//},
-		//{
-		//	name: "--quote-original",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		options.WriterOptions.oquoting = QUOTE_ORIGINAL
-		//		*pargi += 1
-		//	},
-		//},
-
-		//func helpDoubleQuoting() {
-		//    fmt.Printf("THIS IS STILL WIP FOR MILLER 6\n")
-		//    fmt.Println(
-		//        `--quote-all        Wrap all fields in double quotes
-		//--quote-none       Do not wrap any fields in double quotes, even if they have
-		//                   OFS or ORS in them
-		//--quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
-		//                   in them (default)
-		//--quote-numeric    Wrap fields in double quotes only if they have numbers
-		//                   in them
-		//--quote-original   Wrap fields in double quotes if and only if they were
-		//                   quoted on input. This isn't sticky for computed fields:
-		//                   e.g. if fields a and b were quoted on input and you do
-		//                   "put '$c = $a . $b'" then field c won't inherit a or b's
-		//                   was-quoted-on-input flag.`)
-		//}
-
 	},
 }
 
@@ -2380,15 +2364,6 @@ var FlattenUnflattenFlagSection = FlagSection{
 				*pargi += 1
 			},
 		},
-
-		//{
-		//	name: "--vflatsep",
-		//	parser: func(args []string, argc int, pargi *int, options *TOptions) {
-		//		CheckArgCount(args, *pargi, argc, 2)
-		//		// No-op pass-through for backward compatibility with Miller 5
-		//		*pargi += 2
-		// },
-		//},
 
 		{
 			name: "--no-auto-flatten",

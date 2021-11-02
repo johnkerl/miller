@@ -151,7 +151,7 @@ static int new_value(
 
 			case JSON_INTEGER:
 				if (! (pvalue->u.integer.sval = (json_char *) json_alloc
-					(pstate, (pvalue->u.integer.length + 1) * sizeof (json_char), 1)) )
+					(pstate, (pvalue->u.integer.length + 5) * sizeof (json_char), 1)) )
 				{
 					return 0;
 				}
