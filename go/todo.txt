@@ -36,6 +36,7 @@ TOP OF LIST:
     - xtab ors -- ?
     - crlf ...
 
+  o fmtnum "%3d%%" -- ?
   o TODO in *.go & *.mi
   o release notes per se
   o ./configure whatever equivalent
@@ -52,6 +53,8 @@ d pre-release:
 
 * pv: 'mlr --prepipex pv --gzin tail -n 10 ~/tmp/zhuge.gz' needs --gzin & --prepipex both
   o plus corresponding docwork
+
+i go tool nm -size mlr | sort -nrk 2
 
 ----------------------------------------------------------------
 LOCALTIME
