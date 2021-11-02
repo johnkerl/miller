@@ -36,6 +36,7 @@ TOP OF LIST:
     - xtab ors -- ?
     - crlf ...
 
+  o --igen --gen-start --gen-stop --gen-step
   o TODO in *.go & *.mi
   o release notes per se
   o ./configure whatever equivalent
@@ -77,12 +78,6 @@ SEPARATORS ETC
 ----------------------------------------------------------------
 LOOK AT
 
---quote-all
-mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0013
-
---quote-original
-mlr regtest regtest/cases-pending-go-port/io-rfc-csv/0014
-
 absents/void/err
 mlr regtest regtest/cases-pending-go-port/mix-null-field-input/0014
 
@@ -94,6 +89,8 @@ mlr regtest regtest/cases-pending-go-port/verb-head-early-out
 BLOCKERS
 
 ? BIFs as FCFs?
+
+* --igen --gen-start --gen-stop --gen-step
 
 * regtest:
   o convert regtest/cases-pending-windows

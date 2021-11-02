@@ -310,6 +310,18 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 `: Miller no longer uses memory-mapping to access data files.
 * `--ojsonx
 `: The `--jvstack` flag is now default true in Miller 6.
+* `--quote-all
+`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--quote-minimal
+`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--quote-none
+`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--quote-numeric
+`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--quote-original
+`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--vflatsep
+`: Ignored as of version 6. This functionality is subsumed into JSON formatting.
 
 ## Miscellaneous flags
 
