@@ -160,6 +160,14 @@ are overridden in all cases by setting output format to `format2`.
 `: Use CSV-lite format for input and output data.
 * `--dkvp
 `: Use DKVP format for input and output data.
+* `--gen-field-name
+`: Specify field name for --igen. Defaults to "i".
+* `--gen-start
+`: Specify start value for --igen. Defaults to 1.
+* `--gen-step
+`: Specify step value for --igen. Defaults to 1.
+* `--gen-stop
+`: Specify stop value for --igen. Defaults to 100.
 * `--iasv or --iasvlite
 `: Use ASV format for input data.
 * `--icsv
@@ -168,6 +176,8 @@ are overridden in all cases by setting output format to `format2`.
 `: Use CSV-lite format for input data.
 * `--idkvp
 `: Use DKVP format for input data.
+* `--igen
+`: Ignore input files and instead generate sequential numeric input using --gen-field-name, --gen-start, --gen-step, and --gen-stop values. See also the seqgen verb, which is more useful/intuitive.
 * `--ijson
 `: Use JSON format for input data.
 * `--inidx
