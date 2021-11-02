@@ -99,8 +99,6 @@ BLOCKERS
   o convert regtest/cases-pending-windows
   o convert regtest/cases-pending-go-port
 
-* localtime functions
-
 * strptime w/ ...00.Z -> error
 * strptime/strftime experiments ...
   * verb sec2gmtdate
@@ -114,12 +112,6 @@ BLOCKERS
   NUMERICS < BOOL < VOID < STRING
 
 * 'string or int' -> 'string, int, or array thereof' throughout
-
-* stats1: actualize -S and -F -- ?
-
-* more I/O:
-  ? golang encoding/csv ignores blank lines -- i need those for csvlite schema-change
-    detection -- needs an input-stream delegator -- ?
 
 ----------------------------------------------------------------
 DOC6
@@ -174,7 +166,9 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
   o autodetect: tbd
 
 ! readthedocs -- find out what's necessary to get per-version history
-----------------------------------------------------------------
+
+================================================================
+NON-BLOCKERS
 
 * mlr -k
   o c,go
@@ -183,8 +177,14 @@ e fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & updat
   o check JSON-parser x 2 -- is there really a 'restart'?
     - infinite-loop avoidance for sure
 
-================================================================
-NON-BLOCKERS
+* -S/-A/-O page with examples -- ?
+
+* sysdate & sysdate_local
+
+* broadly rethink os.Exit, especially as affecting mlr repl
+
+* mlr stdlib -- ? how to deliver?
+* some support for UDF help-strings -- ?
 
 * separate -S/-A/-O inference page w/ examples of whywhens
 
