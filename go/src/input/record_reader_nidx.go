@@ -116,7 +116,13 @@ func (reader *RecordReaderNIDX) recordFromNIDXLine(
 	line string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	values := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+
+	var values []string
+	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
+		values = lib.SplitString(line, reader.readerOptions.IFS)
+	} else {
+		values = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+	}
 
 	if reader.readerOptions.AllowRepeatIFS {
 		values = lib.StripEmpties(values) // left/right trim

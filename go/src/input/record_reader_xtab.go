@@ -151,7 +151,12 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 	for entry := lines.Front(); entry != nil; entry = entry.Next() {
 		line := entry.Value.(string)
 
-		kv := lib.RegexSplitString(reader.readerOptions.IPSRegex, line, 2)
+		var kv []string
+		if reader.readerOptions.IPSRegex == nil { // e.g. --no-ips-regex
+			kv = strings.SplitN(line, reader.readerOptions.IPS, 2)
+		} else {
+			kv = lib.RegexSplitString(reader.readerOptions.IPSRegex, line, 2)
+		}
 		if len(kv) < 1 {
 			return nil, errors.New("mlr: internal coding error in XTAB reader")
 		}

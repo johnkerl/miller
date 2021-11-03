@@ -184,7 +184,13 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			continue
 		}
 
-		fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+		var fields []string
+		if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
+			fields = lib.SplitString(line, reader.readerOptions.IFS)
+		} else {
+			fields = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+		}
+
 		if reader.readerOptions.AllowRepeatIFS {
 			fields = lib.StripEmpties(fields) // left/right trim
 		}
@@ -307,7 +313,13 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			continue
 		}
 
-		fields := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+		var fields []string
+		if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
+			fields = lib.SplitString(line, reader.readerOptions.IFS)
+		} else {
+			fields = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+		}
+
 		if reader.readerOptions.AllowRepeatIFS {
 			fields = lib.StripEmpties(fields) // left/right trim
 		}

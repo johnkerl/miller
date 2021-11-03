@@ -113,10 +113,22 @@ func (reader *RecordReaderDKVP) recordFromDKVPLine(
 	line string,
 ) *types.Mlrmap {
 	record := types.NewMlrmap()
-	pairs := lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+
+	var pairs []string
+	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
+		pairs = lib.SplitString(line, reader.readerOptions.IFS)
+	} else {
+		pairs = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+	}
 
 	for i, pair := range pairs {
-		kv := lib.RegexSplitString(reader.readerOptions.IPSRegex, pair, 2)
+		var kv []string
+		if reader.readerOptions.IPSRegex == nil { // e.g. --no-ips-regex
+			kv = strings.SplitN(line, reader.readerOptions.IPS, 2)
+		} else {
+			kv = lib.RegexSplitString(reader.readerOptions.IPSRegex, pair, 2)
+		}
+
 		// TODO check length 0. also, check input is empty since "".split() -> [""] not []
 		if len(kv) == 0 {
 			// Ignore. This is expected when splitting with repeated IFS.

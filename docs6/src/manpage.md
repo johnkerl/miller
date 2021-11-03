@@ -715,6 +715,10 @@ SEPARATOR FLAGS
        --ifs {string}           Specify FS for input.
        --ips {string}           Specify PS for input.
        --irs {string}           Specify RS for input.
+       --no-ifs-regex           Don't treat IFS value as a regular expression. Useful
+                                if your IFS is ".".
+       --no-ips-regex           Don't treat IPS value as a regular expression. Useful
+                                if your IPS is ".".
        --ofs {string}           Specify FS for output.
        --ops {string}           Specify PS for output.
        --ors {string}           Specify RS for output.
@@ -2988,5 +2992,5 @@ SEE ALSO
 
 
 
-                                  2021-11-02                         MILLER(1)
+                                  2021-11-03                         MILLER(1)
 </pre>
