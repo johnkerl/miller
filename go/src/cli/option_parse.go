@@ -53,12 +53,17 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 		readerOptions.AllowRepeatIPS = defaultAllowRepeatIPSes[readerOptions.InputFileFormat]
 	}
 
-	if readerOptions.AllowRepeatIFS {
+	if readerOptions.SuppressIFSRegexing {
+		readerOptions.IFSRegex = nil
+	} else if readerOptions.AllowRepeatIFS {
 		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IFS + ")+")
 	} else {
 		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(readerOptions.IFS)
 	}
-	if readerOptions.AllowRepeatIPS {
+
+	if readerOptions.SuppressIPSRegexing {
+		readerOptions.IPSRegex = nil
+	} else if readerOptions.AllowRepeatIPS {
 		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IPS + ")+")
 	} else {
 		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie(readerOptions.IPS)
@@ -370,6 +375,24 @@ var SeparatorFlagSection = FlagSection{
 				options.ReaderOptions.IPSWasSpecified = true
 				options.WriterOptions.OPSWasSpecified = true
 				*pargi += 2
+			},
+		},
+
+		{
+			name: "--no-ifs-regex",
+			help: `Don't treat IFS value as a regular expression. Useful if your IFS is ".".`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.SuppressIFSRegexing = true
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--no-ips-regex",
+			help: `Don't treat IPS value as a regular expression. Useful if your IPS is ".".`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.ReaderOptions.SuppressIPSRegexing = true
+				*pargi += 1
 			},
 		},
 	},
@@ -932,7 +955,7 @@ var FileFormatFlagSection = FlagSection{
 			help: "Use CSV-lite format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
-				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.OutputFileFormat = "csvlite"
 				*pargi += 1
 			},
 		},

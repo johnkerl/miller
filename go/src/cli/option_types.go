@@ -34,14 +34,16 @@ type TGeneratorOptions struct {
 }
 
 type TReaderOptions struct {
-	InputFileFormat string
-	IFS             string
-	IPS             string
-	IRS             string
-	AllowRepeatIFS  bool
-	AllowRepeatIPS  bool
-	IFSRegex        *regexp.Regexp
-	IPSRegex        *regexp.Regexp
+	InputFileFormat     string
+	IFS                 string
+	IPS                 string
+	IRS                 string
+	AllowRepeatIFS      bool
+	AllowRepeatIPS      bool
+	IFSRegex            *regexp.Regexp
+	IPSRegex            *regexp.Regexp
+	SuppressIFSRegexing bool // e.g. if they want to do '--ifs .' since '.' is a regex metacharacter
+	SuppressIPSRegexing bool // e.g. if they want to do '--ips .' since '.' is a regex metacharacter
 
 	// If unspecified on the command line, these take input-format-dependent
 	// defaults.  E.g. default FS is comma for DKVP but space for NIDX;

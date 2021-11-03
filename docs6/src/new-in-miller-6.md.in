@@ -163,6 +163,7 @@ GENMD_EOF
 ## Changes from Miller 5
 
 * Line endings: The `--auto` flag is now ignored. Before, if a file had CR/LF (Windows-style) line endings on input (on any platform), it would have the same on output; likewise, LF (Unix-style) line endings. Now, files with CR/LF or LF line endings are processed on any platform, but the output line-ending is for the platform. E.g. reading CR/LF files on Linux will now produce LF output.
+* Since IFS and IPS can be regular expressions now, if your `IFS` or `IPS` is a `.` (which is a regular-expression metacharacter) you can either use `--ifs '\.'` or `--ifs . --no-ifs-regex` (and similarly for `IPS`).  Please see the section on [multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
 * JSON formatting:
     * `--jvstack` and `--jsonx` (multi-line JSON output) is now the default for JSON; use `--no-jvstack` to suppress it.
     * `--jknquoteint` and `jquoteall` are ignored; they were workarounds for the (now much-improved) tyoe-inference and type-tracking in Miller 6.

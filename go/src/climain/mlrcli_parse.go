@@ -49,7 +49,6 @@ func ParseCommandLine(args []string) (
 			// like 'mlr -h' and 'mlr -F'.
 			os.Exit(0)
 
-			// TODO
 		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, &options) {
 			// handled
 
