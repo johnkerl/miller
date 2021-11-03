@@ -955,7 +955,7 @@ var FileFormatFlagSection = FlagSection{
 			help: "Use CSV-lite format for input and output data.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.InputFileFormat = "csvlite"
-				options.WriterOptions.OutputFileFormat = "csv"
+				options.WriterOptions.OutputFileFormat = "csvlite"
 				*pargi += 1
 			},
 		},
