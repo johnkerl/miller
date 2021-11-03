@@ -1,6 +1,10 @@
 ================================================================
 TOP OF LIST:
 
+----------------------------------------------------------------
+!!! reorg this file first !!!
+----------------------------------------------------------------
+
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
@@ -22,6 +26,7 @@ TOP OF LIST:
 * consider expanding '(error)' to have more useful error-text
 
 * punchdown list:
+  o nim6 disclaimer: these are all nitty so you can probably disregard & just keep going
   o separators page 'IRS must be a single character (nominally \n).' -> not true anymore
   o histogram nbins required: make it more clear
     - maybe default nbins
