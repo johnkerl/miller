@@ -111,7 +111,7 @@ c:=6;;;a:=4;;;b:=5
 As of September 2021:
 
 * `IFS` and `IPS` can be regular expressions.
-* `IRS` must be a single character (nominally `\n`).
+* `IRS` can be multi-character (except for file formats which don't allow parameterization -- see below)
 * `OFS`, `OPS`, and `ORS` can be multi-character.
 
 Since `IFS` and `IPS` can be regular expressions, if your data has field

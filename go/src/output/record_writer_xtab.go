@@ -11,14 +11,32 @@ import (
 	"mlr/src/types"
 )
 
+// ----------------------------------------------------------------
+// Note: If OPS is single-character then we can do alignment of the form
+//
+//   ab  123
+//   def 4567
+//
+// On the other hand, if it's multi-character, we won't be able to align
+// neatly in all cases. Yet we do allow multi-character OPS, just without
+// repetition: if someone wants to use OPS ": " and format data as
+//
+//   ab: 123
+//   def: 4567
+//
+// then they can do that.
+// ----------------------------------------------------------------
+
 type RecordWriterXTAB struct {
 	writerOptions *cli.TWriterOptions
+	opslen        int
 	onFirst       bool
 }
 
 func NewRecordWriterXTAB(writerOptions *cli.TWriterOptions) *RecordWriterXTAB {
 	return &RecordWriterXTAB{
 		writerOptions: writerOptions,
+		opslen:        utf8.RuneCountInString(writerOptions.OPS),
 		onFirst:       true,
 	}
 }
@@ -70,10 +88,16 @@ func (writer *RecordWriterXTAB) writeWithLeftAlignedValues(
 		keyPadLength := maxKeyLength - keyLength
 
 		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-		buffer.WriteString(" ")
-		for i := 0; i < keyPadLength; i++ {
+
+		if writer.opslen == 1 {
+			buffer.WriteString(writer.writerOptions.OPS) // always at least once
+			for i := 0; i < keyPadLength; i += writer.opslen {
+				buffer.WriteString(writer.writerOptions.OPS)
+			}
+		} else {
 			buffer.WriteString(writer.writerOptions.OPS)
 		}
+
 		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
 		buffer.WriteString(writer.writerOptions.OFS)
 	}
@@ -117,10 +141,16 @@ func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 		keyPadLength := maxKeyLength - keyLength
 
 		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-		buffer.WriteString(" ")
-		for i := 0; i < keyPadLength; i++ {
+
+		if writer.opslen == 1 {
+			buffer.WriteString(writer.writerOptions.OPS) // always at least once
+			for i := 0; i < keyPadLength; i += writer.opslen {
+				buffer.WriteString(writer.writerOptions.OPS)
+			}
+		} else {
 			buffer.WriteString(writer.writerOptions.OPS)
 		}
+
 		paddedValue := fmt.Sprintf("%*s", maxValueLength, values[i])
 		buffer.WriteString(colorizer.MaybeColorizeValue(paddedValue, outputIsStdout))
 		buffer.WriteString(writer.writerOptions.OFS)
@@ -128,5 +158,4 @@ func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 		i++
 	}
 	ostream.Write(buffer.Bytes())
-
 }

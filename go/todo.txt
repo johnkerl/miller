@@ -22,14 +22,18 @@ TOP OF LIST:
 * consider expanding '(error)' to have more useful error-text
 
 * punchdown list:
+  o separators page 'IRS must be a single character (nominally \n).' -> not true anymore
   o $cpg
     - merge-field voids
 
+    - csv force ifslen==1
+    - csv force irs == "\n"
+    - csv force ors == "\n"
+
+    - check all formats for when/when not multi-char (or any non-LF) IRS
+
     - mapexcept ...
     - xtab crlf & non-std irs generally ...
-    - pprint ofs -- ?
-    - xtab ors -- ?
-    - crlf ...
 
   o fmtnum "%3d%%" -- ?
   o TODO in *.go & *.mi
