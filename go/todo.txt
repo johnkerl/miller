@@ -23,6 +23,9 @@ TOP OF LIST:
 
 * punchdown list:
   o separators page 'IRS must be a single character (nominally \n).' -> not true anymore
+  o histogram nbins required: make it more clear
+    - maybe default nbins
+
   o $cpg
     - merge-field voids
 

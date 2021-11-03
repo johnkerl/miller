@@ -19,7 +19,6 @@ type RecordWriterCSVLite struct {
 }
 
 func NewRecordWriterCSVLite(writerOptions *cli.TWriterOptions) *RecordWriterCSVLite {
-
 	return &RecordWriterCSVLite{
 		writerOptions:      writerOptions,
 		lastJoinedHeader:   nil,
