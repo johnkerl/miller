@@ -6,9 +6,6 @@ TOP OF LIST:
 
 * r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
 
-* regtest pendings
-  o webdocs re /..../i regex options @ CLIP for windows
-
 * better help-searching:
   ? mlr -f foo ?
   ? mlr -F foo ?
@@ -25,8 +22,6 @@ TOP OF LIST:
 * consider expanding '(error)' to have more useful error-text
 
 * punchdown list:
-  o $cpw
-    - 3 regex-at-CLI cases -- repro @ akns
   o $cpg
     - merge-field voids
 
@@ -96,7 +91,6 @@ BLOCKERS
 ? BIFs as FCFs?
 
 * regtest:
-  o convert regtest/cases-pending-windows
   o convert regtest/cases-pending-go-port
 
 * strptime w/ ...00.Z -> error
@@ -253,7 +247,6 @@ NON-BLOCKERS
 
 * clean up TODO/xxx in src/platform
 * mlr regtest doc -- focus on either go/regtest or go/src/auxents/regtest, one linking to the other
-d type up a note somewhere in the regtest tree that all the .mlrs and the -f 00nn.mlr are for windows regtest
 
 * also: write up how git status after test should show any missed extra-outs
 
@@ -539,9 +532,6 @@ i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
   begin{@x=1} func f(x) { dump; print "hello"; tee  > ENV["outdir"]."/udf-x", $* } $o=f($i)
 
 * zlib: n.b. brew install pigz, then pigz -z
-* find a way to legitimize regtest/cases-non-windows for GHA
-  - prepipe
-  - system function
 
 * regex-capture follow-on: https://github.com/johnkerl/miller/issues/388 is much cleaner
   o keep current syntax for backward compatibility

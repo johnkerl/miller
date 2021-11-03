@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"mlr/src/colorizer"
@@ -317,6 +318,16 @@ func (regtester *RegTester) executeSingleCmdFile(
 	cmdFilePath string,
 	verbosityLevel int,
 ) bool {
+	if strings.Contains(cmdFilePath, "non-windows") {
+		// These are tests which cannot pass on Windows. Please see the README.md file
+		// within regtest/cases/... for details.
+		if runtime.GOOS == "windows" && os.Getenv("MSYSTEM") != "" {
+			if verbosityLevel >= 1 {
+				fmt.Printf("%s %s\n", colorizer.MaybeColorizePass("skip", true), cmdFilePath)
+			}
+		}
+		return true
+	}
 
 	if verbosityLevel >= 2 {
 		fmt.Printf("%s begin %s\n", MinorSeparator, cmdFilePath)
