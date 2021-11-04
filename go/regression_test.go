@@ -21,16 +21,24 @@ func TestRegression(t *testing.T) {
 	// verbosityLevel = 3 for all cases is probably too much output to be
 	// useful.
 	//
+	// Also note our regtest framework supports four verbosity levels, 'mlr
+	// regtest' (0) through 'mlr regtest -vvv' (3), while 'go test' has only
+	// 'go test' and 'go test -v'. Our regtest framework also has 'mlr regtest
+	// -s 20' which means *re-run* up to 20 failing tests (after having failed
+	// once with verbosityLevel = 0) as if those had been invoked with
+	// verbosityLevel = 3.
+	//
 	// What we do is:
-	// * go test:    verbosityLevel = 0
-	// * go test -v: firstNFailsToShow = 20 which *re-runs* up to 20 failing
-	//               tests (after having failed once with verbosityLevel = 0)
-	//               with verbosityLevel = 3 on the re-run.
+	// * go test:    like 'mlr regtest'
+	// * go test -v: like 'mlr regtest -s 20'
 	//
 	// This is (I hope) sufficient flexibility for use in GitHub Actions
-	// continuous-integration jobs. If more detail is needed then one may
-	// run 'mlr regtest -v', 'mlr regtest -vv', 'mlr regtest -vvv' instead
-	// of going through 'go test'.
+	// continuous-integration jobs. If more detail is needed then one may:
+	//
+	// * For CI debugging: simply edit the below parameters verbosityLevel
+	//   and firstNFailsToShow and re-push to GitHub.
+	// * For interactive debug: run 'mlr regtest -v', 'mlr regtest -vv', 'mlr
+	//   regtest -vvv' instead of going through 'go test'.
 	firstNFailsToShow := 0
 	if testing.Verbose() {
 		firstNFailsToShow = 20
