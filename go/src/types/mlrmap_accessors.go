@@ -132,7 +132,7 @@ func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 		return nil
 	} else {
 		return errors.New(
-			"mlr: record/map indices must be string or int; got " + key.GetTypeName(),
+			"mlr: record/map indices must be string, int, or array thereof; got " + key.GetTypeName(),
 		)
 	}
 }
@@ -263,7 +263,7 @@ func (mlrmap *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 		return mlrmap.Get(index.String()), nil
 	} else {
 		return nil, errors.New(
-			"Record/map indices must be string or int; got " + index.GetTypeName(),
+			"Record/map indices must be string, int, or array thereof; got " + index.GetTypeName(),
 		)
 	}
 }
