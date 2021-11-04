@@ -18,5 +18,5 @@ check:
 install: build
 	cp mlr $(INSTALLDIR)
 
+# Go does its own dependency management, outside of make.
 .PHONY: build
-

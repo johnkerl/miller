@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"os"
 	"testing"
 
 	"mlr/src/auxents/regtest"
@@ -33,6 +35,15 @@ func TestRegression(t *testing.T) {
 	if testing.Verbose() {
 		firstNFailsToShow = 20
 	}
+
+	// Let the tests find ./mlr
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "mlr: could not find current working directory.")
+		os.Exit(1)
+	}
+	path := os.Getenv("PATH")
+	os.Setenv("PATH", cwd + ":" + path)
 
 	regtester := regtest.NewRegTester(
 		"mlr", // exeName
