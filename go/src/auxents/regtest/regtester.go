@@ -1,5 +1,56 @@
 // ================================================================
-// TOOO: comment
+// Logic for executing regression tests via 'mlr regtest'.
+//
+// Why: Basically we're re-implementing a shell, or at least some basic
+// elements of one. In a previous version of Miller, regression-testing was
+// done with a Bash script -- not much more than an expected-output file and a
+// diff check at the end. However, as of Miller 6 we now have full support for
+// Windows and we want to run a continuous-integration job (via GitHub Actions
+// as of late 2021) on every commit, for Linux, Mac, and Windows. Given the
+// lack of bash for the latter, we have the following Go logic instead.
+//
+// Directory structure: This uses ./regtest/cases/ (by default) as test-data
+// storage.  Arbitrary subdirectory structure can be used.  Directory trees
+// must end in a 'case directory' containing the following:
+//
+// * A 'cmd' file with a Miller shell command in it.
+// * Also 'expout' and 'experr' for expected stdout/stdout from the command.
+// * Optionally, a 'mlr' script if the test uses one.
+// * Optionally, an 'env' file with environment variables to be set before the
+//   case and unset after.
+// * Optionally a case-local 'input' file; many cases use shared/common data
+//   in regtest/input/.
+// * The cmd file can refer to '${CASEDIR}' which is expanded at runtime to
+//   the case directory path, so cases can refer to their 'input' and 'mlr'
+//   files.
+//
+// Example:
+//
+// $ ls regtest/cases/dsl-redirects/0109/*
+// regtest/cases/dsl-redirects/0109/cmd
+// regtest/cases/dsl-redirects/0109/experr
+// regtest/cases/dsl-redirects/0109/expout
+// regtest/cases/dsl-redirects/0109/mlr
+//
+// $ cat regtest/cases/dsl-redirects//0109/cmd
+// mlr head -n 4 then put -q -f ${CASEDIR}/mlr regtest/input/abixy
+//
+// $ cat regtest/cases/dsl-redirects//0109/experr
+// NR=1,a=pan,b=pan
+// NR=1,a=pan,b=pan
+// NR=2,a=eks,b=pan
+// NR=1,a=pan,b=pan
+// NR=2,a=eks,b=pan
+// NR=3,a=wye,b=wye
+// NR=1,a=pan,b=pan
+// NR=2,a=eks,b=pan
+// NR=3,a=wye,b=wye
+// NR=4,a=eks,b=wye
+//
+// $ cat regtest/cases/dsl-redirects//0109/expout
+//
+// $cat regtest/cases/dsl-redirects//0109/mlr
+//  @a[NR]=$a; @b[NR]=$b; emit > stderr, (@a, @b), "NR"
 // ================================================================
 
 package regtest
@@ -34,8 +85,7 @@ const MinorSeparator = "--------------------------------------------------------
 
 // Don't unset MLR_PASS_COLOR or MLR_FAIL_COLOR -- if people want to change the
 // output-coloring used by this regression-tester, we should let them. We
-// should only unset environment variables which can cause functional tests to
-// fail.
+// should only unset environment variables which can cause tests to fail.
 var envVarsToUnset = []string{
 	"MLRRC",
 	"MLR_KEY_COLOR",
@@ -430,6 +480,10 @@ func (regtester *RegTester) executeSingleCmdFile(
 		}
 		os.Setenv(key, value)
 	}
+	// This is so 'mlr' files can find the case-directory if they need it --
+	// typically, for redirected emit/dump/etc statements where we want
+	// the redirected-to files to be written into the case-directory.
+	os.Setenv("CASEDIR", caseDir)
 
 	// Copy any files requested by the test. (Most don't; some do, e.g. those
 	// which test the write-in-place logic of mlr -I.)
@@ -462,6 +516,7 @@ func (regtester *RegTester) executeSingleCmdFile(
 		}
 		os.Setenv(key, "")
 	}
+	os.Setenv("CASEDIR", "")
 
 	// The .postcmp needn't exist (most test cases don't have one) in which case
 	// the returned map will be empty.

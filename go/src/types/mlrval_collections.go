@@ -343,7 +343,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	if baseIndex.mvtype != MT_STRING && baseIndex.mvtype != MT_INT {
 		// Base is map, index is invalid type
 		return errors.New(
-			"mlr: map indices must be string or int; got " + baseIndex.GetTypeName(),
+			"mlr: map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
 		)
 	}
 
@@ -416,7 +416,7 @@ func putIndexedOnArray(
 				}
 			} else {
 				return errors.New(
-					"mlr: indices must be string or int; got " + nextIndex.GetTypeName(),
+					"mlr: indices must be string, int, or array thereof; got " + nextIndex.GetTypeName(),
 				)
 			}
 
@@ -469,7 +469,7 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 			return nil
 		} else {
 			return errors.New(
-				"mlr: map indices must be string or int; got " +
+				"mlr: map indices must be string, int, or array thereof; got " +
 					baseIndex.GetTypeName(),
 			)
 		}
@@ -486,7 +486,7 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	} else {
 		// Base is map, index is invalid type
 		return errors.New(
-			"mlr: map indices must be string or int; got " + baseIndex.GetTypeName(),
+			"mlr: map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
 		)
 	}
 

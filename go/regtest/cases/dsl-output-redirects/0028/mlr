@@ -1,2 +1,2 @@
 @x=1;
-dump > @CASEDIR."/foo.dat", @x;
+dump > ENV["CASEDIR"]."/foo.dat", @x;

@@ -1,1 +1,1 @@
-@a=$a; @b=$b; emitf >> @CASEDIR."/out.".$a.$b, @a, @b
+@a=$a; @b=$b; emitf >> ENV["CASEDIR"]."/out.".$a.$b, @a, @b

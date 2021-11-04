@@ -1,1 +1,1 @@
-@x=1; printn > @CASEDIR."/foo.dat"
+@x=1; printn > ENV["CASEDIR"]."/foo.dat"

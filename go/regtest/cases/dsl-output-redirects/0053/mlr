@@ -1,1 +1,1 @@
-@x={"a":1}; @y={"a":2}; emit > @CASEDIR."/foo.dat", (@x, @y), "a"
+@x={"a":1}; @y={"a":2}; emit > ENV["CASEDIR"]."/foo.dat", (@x, @y), "a"
