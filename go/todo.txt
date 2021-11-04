@@ -5,7 +5,6 @@ PUNCHDOWN LIST
 * nikos materials -> fold in
 
 * $cpg
-  o merge-field voids
   o mapexcept ...
   o fmtnum "%3d%%" -- ?
 

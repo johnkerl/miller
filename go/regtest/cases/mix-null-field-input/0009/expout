@@ -1,6 +1,34 @@
-a          b
-y_sum      12
+a          r
+y_sum      2
 y_min      2
-y_max      6
+y_max      2
 y_antimode 2
 y_mode     2
+
+a          s
+y_sum      4
+y_min      4
+y_max      4
+y_antimode 4
+y_mode     4
+
+a          t
+y_sum      0
+y_min      
+y_max      
+y_antimode 
+y_mode     
+
+a          u
+y_sum      6
+y_min      6
+y_max      6
+y_antimode 6
+y_mode     6
+
+a          v
+y_sum      0
+y_min      
+y_max      
+y_antimode 
+y_mode     
