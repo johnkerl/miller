@@ -18,7 +18,6 @@ package repl
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -46,14 +45,14 @@ func NewRepl(
 	options *cli.TOptions,
 ) (*Repl, error) {
 
-	recordReader := input.Create(&options.ReaderOptions)
-	if recordReader == nil {
-		return nil, errors.New("Input format not found: " + options.ReaderOptions.InputFileFormat)
+	recordReader, err := input.Create(&options.ReaderOptions)
+	if err != nil {
+		return nil, err
 	}
 
-	recordWriter := output.Create(&options.WriterOptions)
-	if recordWriter == nil {
-		return nil, errors.New("Output format not found: " + options.WriterOptions.OutputFileFormat)
+	recordWriter, err := output.Create(&options.WriterOptions)
+	if err != nil {
+		return nil, err
 	}
 	outputStream := os.Stdout
 

@@ -14,10 +14,10 @@ type RecordReaderNIDX struct {
 	readerOptions *cli.TReaderOptions
 }
 
-func NewRecordReaderNIDX(readerOptions *cli.TReaderOptions) *RecordReaderNIDX {
+func NewRecordReaderNIDX(readerOptions *cli.TReaderOptions) (*RecordReaderNIDX, error) {
 	return &RecordReaderNIDX{
 		readerOptions: readerOptions,
-	}
+	}, nil
 }
 
 func (reader *RecordReaderNIDX) Read(

@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-
-ARGV.each do |arg|
-  File.write(arg, File.open(arg).read.strip)
-end

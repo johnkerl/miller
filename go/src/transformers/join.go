@@ -2,7 +2,6 @@ package transformers
 
 import (
 	"container/list"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -451,12 +450,9 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	readerOpts := &tr.opts.joinFlagOptions.ReaderOptions
 
 	// Instantiate the record-reader
-	recordReader := input.Create(readerOpts)
+	recordReader, err := input.Create(readerOpts)
 	if recordReader == nil {
-		fmt.Fprintln(
-			os.Stderr,
-			errors.New("Input format not found: "+readerOpts.InputFileFormat),
-		)
+		fmt.Fprintf(os.Stderr, "mlr join: %v\n", err)
 		os.Exit(1)
 	}
 

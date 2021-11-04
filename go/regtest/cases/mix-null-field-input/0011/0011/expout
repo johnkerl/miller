@@ -1,14 +1,82 @@
-a          b
-x_sum      9
+a          r
+x_sum      1
 x_min      1
-x_max      5
+x_max      1
 x_antimode 1
 x_mode     1
-y_sum      12
+y_sum      2
 y_min      2
-y_max      6
+y_max      2
 y_antimode 2
 y_mode     2
+z_sum      0
+z_min      
+z_max      
+z_antimode 
+z_mode     
+
+a          s
+x_sum      3
+x_min      3
+x_max      3
+x_antimode 3
+x_mode     3
+y_sum      4
+y_min      4
+y_max      4
+y_antimode 4
+y_mode     4
+z_sum      0
+z_min      
+z_max      
+z_antimode 
+z_mode     
+
+a          t
+x_sum      5
+x_min      5
+x_max      5
+x_antimode 5
+x_mode     5
+y_sum      0
+y_min      
+y_max      
+y_antimode 
+y_mode     
+z_sum      0
+z_min      
+z_max      
+z_antimode 
+z_mode     
+
+a          u
+x_sum      0
+x_min      
+x_max      
+x_antimode 
+x_mode     
+y_sum      6
+y_min      6
+y_max      6
+y_antimode 6
+y_mode     6
+z_sum      0
+z_min      
+z_max      
+z_antimode 
+z_mode     
+
+a          v
+x_sum      0
+x_min      
+x_max      
+x_antimode 
+x_mode     
+y_sum      0
+y_min      
+y_max      
+y_antimode 
+y_mode     
 z_sum      0
 z_min      
 z_max      

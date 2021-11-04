@@ -2,6 +2,7 @@ package output
 
 import (
 	"encoding/csv"
+	"errors"
 	"io"
 	"strings"
 
@@ -19,13 +20,16 @@ type RecordWriterCSV struct {
 	justWroteEmptyLine bool
 }
 
-func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) *RecordWriterCSV {
+func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, error) {
+	if writerOptions.ORS != "\n" {
+		return nil, errors.New("CSV ORS can only be newline")
+	}
 	return &RecordWriterCSV{
 		writerOptions:      writerOptions,
 		csvWriter:          nil, // will be set on first Write() wherein we have the ostream
 		lastJoinedHeader:   nil,
 		justWroteEmptyLine: false,
-	}
+	}, nil
 }
 
 func (writer *RecordWriterCSV) Write(

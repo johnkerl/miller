@@ -36,17 +36,17 @@ type RecordReaderCSVLite struct {
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderCSVLite(readerOptions *cli.TReaderOptions) *RecordReaderCSVLite {
+func NewRecordReaderCSVLite(readerOptions *cli.TReaderOptions) (*RecordReaderCSVLite, error) {
 	return &RecordReaderCSVLite{
 		readerOptions: readerOptions,
-	}
+	}, nil
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderPPRINT(readerOptions *cli.TReaderOptions) *RecordReaderCSVLite {
+func NewRecordReaderPPRINT(readerOptions *cli.TReaderOptions) (*RecordReaderCSVLite, error) {
 	return &RecordReaderCSVLite{
 		readerOptions: readerOptions,
-	}
+	}, nil
 }
 
 // ----------------------------------------------------------------

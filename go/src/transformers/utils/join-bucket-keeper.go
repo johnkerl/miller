@@ -165,14 +165,9 @@ func NewJoinBucketKeeper(
 ) *JoinBucketKeeper {
 
 	// Instantiate the record-reader
-	recordReader := input.Create(joinReaderOptions)
-	if recordReader == nil {
-		fmt.Fprintf(
-			os.Stderr,
-			"%s join: Input format %s not found.\n",
-			"mlr",
-			joinReaderOptions.InputFileFormat,
-		)
+	recordReader, err := input.Create(joinReaderOptions)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "mlr join: %v", err)
 		os.Exit(1)
 	}
 

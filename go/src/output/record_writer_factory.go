@@ -1,10 +1,13 @@
 package output
 
 import (
+	"errors"
+	"fmt"
+
 	"mlr/src/cli"
 )
 
-func Create(writerOptions *cli.TWriterOptions) IRecordWriter {
+func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {
 	switch writerOptions.OutputFileFormat {
 	case "csv":
 		return NewRecordWriterCSV(writerOptions)
@@ -23,6 +26,6 @@ func Create(writerOptions *cli.TWriterOptions) IRecordWriter {
 	case "xtab":
 		return NewRecordWriterXTAB(writerOptions)
 	default:
-		return nil
+		return nil, errors.New(fmt.Sprintf("output file format \"%s\" not found", writerOptions.OutputFileFormat))
 	}
 }

@@ -345,11 +345,9 @@ func (handler *FileOutputHandler) setUpRecordWriter() error {
 		return nil
 	}
 
-	recordWriter := Create(handler.recordWriterOptions)
-	if recordWriter == nil {
-		return errors.New(
-			"Output format not found: " + handler.recordWriterOptions.OutputFileFormat,
-		)
+	recordWriter, err := Create(handler.recordWriterOptions)
+	if err != nil {
+		return err
 	}
 	handler.recordWriter = recordWriter
 

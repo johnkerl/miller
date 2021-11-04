@@ -21,7 +21,7 @@ type RecordWriterJSON struct {
 }
 
 // ----------------------------------------------------------------
-func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) *RecordWriterJSON {
+func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, error) {
 	var jsonFormatting types.TJSONFormatting = types.JSON_SINGLE_LINE
 	if writerOptions.JSONOutputMultiline {
 		jsonFormatting = types.JSON_MULTILINE
@@ -30,7 +30,7 @@ func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) *RecordWriterJSON {
 		writerOptions:  writerOptions,
 		jsonFormatting: jsonFormatting,
 		onFirst:        true,
-	}
+	}, nil
 }
 
 // ----------------------------------------------------------------

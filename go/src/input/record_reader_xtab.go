@@ -13,14 +13,14 @@ import (
 
 type RecordReaderXTAB struct {
 	readerOptions *cli.TReaderOptions
-	// TODO: parameterize IRS vs IFS correctly (XTAB is different)
+	// Note: XTAB uses two consecutive IFS in place of an IRS; IRS is ignored
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderXTAB(readerOptions *cli.TReaderOptions) *RecordReaderXTAB {
+func NewRecordReaderXTAB(readerOptions *cli.TReaderOptions) (*RecordReaderXTAB, error) {
 	return &RecordReaderXTAB{
 		readerOptions: readerOptions,
-	}
+	}, nil
 }
 
 // ----------------------------------------------------------------
@@ -72,9 +72,7 @@ func (reader *RecordReaderXTAB) processHandle(
 ) {
 	context.UpdateForStartOfFile(filename)
 
-	// TODO: parameterize IRS vs IFS correctly (XTAB is different)
-	//scanner := NewLineScanner(handle, "\n\n")
-	scanner := NewLineScanner(handle, "\n")
+	scanner := NewLineScanner(handle, reader.readerOptions.IFS)
 
 	linesForRecord := list.New()
 
@@ -116,7 +114,7 @@ func (reader *RecordReaderXTAB) processHandle(
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				inputChannel <- types.NewOutputString(line+"\n", context)
+				inputChannel <- types.NewOutputString(line+reader.readerOptions.IFS, context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue

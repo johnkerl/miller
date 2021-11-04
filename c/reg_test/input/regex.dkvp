@@ -1,7 +1,0 @@
-x=abc,y=def
-x=ABC,y=DEF
-x=abcd,y=ghi
-x=ABCD,y=GHI
-x=abcde,y=ghi
-x=ABCDE,y=GHI
-x=ABCDE,y="GHI"

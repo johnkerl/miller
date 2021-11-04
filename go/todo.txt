@@ -1,21 +1,10 @@
 ================================================================
 PUNCHDOWN LIST
 
+* ./configure equivalent
+
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
-
-* $cpg
-  o merge-field voids
-  o mapexcept ...
-  o fmtnum "%3d%%" -- ?
-
-* separators:
-  o xtab crlf & non-std irs generally ...
-  o check all formats for when/when not multi-char (or any non-LF) IRS
-  o csv force ifslen==1
-  o csv force irs == "\n"
-  o csv force ors == "\n"
-  o xtab ifs/irs
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
@@ -42,9 +31,9 @@ PUNCHDOWN LIST
 * olh
   o kw olh for func and funct both
   o better help-searching:
-    ? mlr -f foo ?
-    ? mlr -F foo ?
-    ? mlr help w approx incl flags?
+    ? mlr help search foo -- including flag-search
+    ? mlr -f foo
+    ? mlr -F foo == mlr help function foo
 
 * pre-release:
   o draft release w/ m6 binaries YYYYMMDD -- ?
@@ -60,7 +49,6 @@ PUNCHDOWN LIST
   o new-in-miller-6: missings:
     - dump syntax -- ?
     - emittable constraints -- ?
-  o strings: single-quote & backtick have no meaning in the miller dsl (diffs w/r/t other langs)
   o wut h1 spacing before/after ...
   o document re auto in nim6.in
   o shell-commands: while-read example from issues
@@ -89,7 +77,11 @@ PUNCHDOWN LIST
 ================================================================
 NON-BLOCKERS
 
+* mapexcept et al.
+
 * file-formats: NIDX link to headerless CSV
+
+* fmtnum(98, "%3d%%") -- ? workaround: fmtnum(98, "%3d") . "%"
 
 * link to SE table ...
   https://github.com/johnkerl/miller/discussions/609#discussioncomment-1115715

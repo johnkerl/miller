@@ -14,10 +14,10 @@ type RecordWriterNIDX struct {
 	ors           string
 }
 
-func NewRecordWriterNIDX(writerOptions *cli.TWriterOptions) *RecordWriterNIDX {
+func NewRecordWriterNIDX(writerOptions *cli.TWriterOptions) (*RecordWriterNIDX, error) {
 	return &RecordWriterNIDX{
 		writerOptions: writerOptions,
-	}
+	}, nil
 }
 
 func (writer *RecordWriterNIDX) Write(

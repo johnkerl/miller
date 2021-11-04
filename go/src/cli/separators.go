@@ -78,7 +78,6 @@ var SEPARATOR_NAMES_TO_VALUES = map[string]string{
 // E.g. if IFS isn't specified, it's space for NIDX and comma for DKVP, etc.
 
 var defaultFSes = map[string]string{
-	// "gen" : // TODO
 	"csv":      ",",
 	"csvlite":  ",",
 	"dkvp":     ",",
