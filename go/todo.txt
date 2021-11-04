@@ -2,6 +2,9 @@
 PUNCHDOWN LIST
 
 * ./configure equivalent
+  o make:
+    - windoc note 'choco install make'
+    - (works in GH CI due to their toolchain)
 
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
