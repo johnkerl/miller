@@ -51,7 +51,7 @@ func TestRegression(t *testing.T) {
 		os.Exit(1)
 	}
 	path := os.Getenv("PATH")
-	os.Setenv("PATH", cwd + ":" + path)
+	os.Setenv("PATH", cwd+":"+path)
 
 	regtester := regtest.NewRegTester(
 		"mlr", // exeName

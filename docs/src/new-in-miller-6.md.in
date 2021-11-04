@@ -68,7 +68,7 @@ You can read input with prefixes `https://`, `http://`, and `file://`:
 
 GENMD_RUN_COMMAND
 mlr --csv sort -f shape \
-  https://raw.githubusercontent.com/johnkerl/miller/main/docs6/src/gz-example.csv.gz
+  https://raw.githubusercontent.com/johnkerl/miller/main/docs/src/gz-example.csv.gz
 GENMD_EOF
 
 ## Output colorization

@@ -84,7 +84,7 @@ You can read input with prefixes `https://`, `http://`, and `file://`:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv sort -f shape \</b>
-<b>  https://raw.githubusercontent.com/johnkerl/miller/main/docs6/src/gz-example.csv.gz</b>
+<b>  https://raw.githubusercontent.com/johnkerl/miller/main/docs/src/gz-example.csv.gz</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
 color,shape,flag,k,index,quantity,rate
