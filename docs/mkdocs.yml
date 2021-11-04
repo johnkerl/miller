@@ -8,7 +8,7 @@ theme:
     code: Lato Mono
 repo_url: https://github.com/johnkerl/miller
 repo_name: miller
-edit_uri: edit/master/main/docs6/src
+edit_uri: edit/master/main/docs/src
 docs_dir: './src'
 extra_css: ['extra.css']
 extra_javascript:
