@@ -1,6 +1,8 @@
 ================================================================
 PUNCHDOWN LIST
 
+* ./configure equivalent
+
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
