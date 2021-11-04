@@ -109,7 +109,7 @@ type Flag struct {
 	//   take markdown.
 	// * After changing flags you can run `sh build-go-src-test-man-doc.sh`
 	//   followed by `git diff` to see how the output looks. See also
-	//   the README.md files in the docs6 and man6 directories for how
+	//   the README.md files in the docs and man directories for how
 	//   to look at the autogenned docs pre-commit.
 	help string
 

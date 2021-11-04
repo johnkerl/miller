@@ -23,7 +23,7 @@ def main
   ])
 
   print make_section('SYNOPSIS', [
-`mlr --usage-synopsis`
+`mlr --help`
   ])
 
   print make_section('DESCRIPTION', [
@@ -38,68 +38,36 @@ a special case.) This manpage documents #{`mlr --version`.chomp}."""
   print make_section('EXAMPLES', [
     ""
   ])
+	print make_code_block(`mlr help basic-examples`)
 
-	print make_subsection('COMMAND-LINE SYNTAX', [])
-  print make_code_block(`mlr --usage-examples`)
+	print make_section('FILE FORMATS', [])
+	print make_code_block(`mlr help file-formats`)
 
-	print make_subsection('DATA FORMATS', [])
-	print make_code_block(`mlr --usage-data-format-examples`)
+	print make_section('HELP OPTIONS', [])
+	print make_code_block(`mlr help topics`)
 
-  print make_section('OPTIONS', [
-"""In the following option flags, the version with \"i\" designates the input
-stream, \"o\" the output stream, and the version without prefix sets the option
-for both input and output stream. For example: --irs sets the input record
-separator, --ors the output record separator, and --rs sets both the input and
-output separator to the given value."""
-  ])
+	print make_section('VERB LIST', [])
+	print make_code_block(`mlr help list-verbs-as-paragraph`)
 
-	print make_subsection('HELP OPTIONS', [])
-	print make_code_block(`mlr --usage-help-options`)
+	print make_section('FUNCTION LIST', [])
+	print make_code_block(`mlr help list-functions-as-paragraph`)
 
-	print make_subsection('VERB LIST', [])
-	print make_code_block(`mlr --usage-list-all-verbs`)
+  section_names = `mlr help list-flag-sections`.split("\n")
+  for section_name in section_names
+	  print make_section(section_name.upcase, [""])
+	  print make_code_block(`mlr help show-help-for-section '#{section_name}'`)
+  end
 
-	print make_subsection('FUNCTION LIST', [])
-	print make_code_block(`mlr --usage-functions`)
-
-	print make_subsection('I/O FORMATTING', [])
-	print make_code_block(`mlr --usage-data-format-options`)
-
-	print make_subsection('COMMENTS IN DATA', [])
-	print make_code_block(`mlr --usage-comments-in-data`)
-
-	print make_subsection('FORMAT-CONVERSION KEYSTROKE-SAVERS', [])
-	print make_code_block(`mlr --usage-format-conversion-keystroke-saver-options`)
-
-	print make_subsection('COMPRESSED I/O', [])
-	print make_code_block(`mlr --usage-compressed-data-options`)
-
-	print make_subsection('SEPARATORS', [])
-	print make_code_block(`mlr --usage-separator-options`)
-
-	print make_subsection('CSV-SPECIFIC OPTIONS', [])
-	print make_code_block(`mlr --usage-csv-options`)
-
-	print make_subsection('DOUBLE-QUOTING FOR CSV/CSVLITE OUTPUT', [])
-	print make_code_block(`mlr --usage-double-quoting`)
-
-	print make_subsection('NUMERICAL FORMATTING', [])
-	print make_code_block(`mlr --usage-numerical-formatting`)
-
-	print make_subsection('OTHER OPTIONS', [])
-	print make_code_block(`mlr --usage-other-options`)
-
-	print make_subsection('THEN-CHAINING', [])
-	print make_code_block(`mlr --usage-then-chaining`)
-
-	print make_subsection('AUXILIARY COMMANDS', [])
-	print make_code_block(`mlr --usage-auxents`)
+	print make_section('AUXILIARY COMMANDS', [])
+	print make_code_block(`mlr aux-list`)
 
   print make_section('MLRRC', [])
+  print make_code_block(`mlr help mlrrc`)
 
-  print make_code_block(`mlr --usage-mlrrc`)
+  print make_section('REPL', [])
+  print make_code_block(`mlr repl -h`)
 
-  verbs = `mlr --list-all-verbs-raw`
+  verbs = `mlr help list-verbs`
   print make_section('VERBS', [
     ""
   ])
@@ -109,26 +77,26 @@ output separator to the given value."""
     print make_code_block(`mlr #{verb} -h`)
   end
 
-  functions = `mlr --list-all-functions-raw`
+  functions = `mlr help list-functions`
   print make_section('FUNCTIONS FOR FILTER/PUT', [
     ""
   ])
   functions = functions.strip.split("\n").uniq
   for function in functions
     print make_subsection(function, [])
-    text = `mlr --help-function '#{function}'`
+    text = `mlr help function '#{function}'`
     text = text.sub(function + ' ', '')
     print make_code_block(text)
   end
 
-  keywords = `mlr --list-all-keywords-raw`
+  keywords = `mlr help list-keywords`
   print make_section('KEYWORDS FOR PUT AND FILTER', [
     ""
   ])
   keywords = keywords.strip.split("\n").uniq
   for keyword in keywords
     print make_subsection(keyword, [])
-    text = `mlr --help-keyword '#{keyword}'`
+    text = `mlr help keyword '#{keyword}'`
     print make_code_block(text)
   end
 
@@ -138,7 +106,7 @@ output separator to the given value."""
   ])
   print make_section('SEE ALSO', [
     "awk(1), sed(1), cut(1), join(1), sort(1), RFC 4180: Common Format and MIME Type for " +
-    "Comma-Separated Values (CSV) Files, the miller website http://johnkerl.org/miller/doc"
+    "Comma-Separated Values (CSV) Files, the Miller docsite https://miller.readthedocs.io"
   ])
 end
 
