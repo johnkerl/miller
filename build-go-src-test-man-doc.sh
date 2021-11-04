@@ -6,11 +6,11 @@
 #   go test
 # man:
 #   creates manpage mlr.1 and manpage.txt using mlr from the $PATH
-#   copies the latter to docs6/src
+#   copies the latter to docs/src
 #   also copies it out-of-tree to ~/man/man1, but only if that exists
 # docs: 
 #   turn *.md.in into *.md (live code samples), using mlr from the $PATH
-#   turn *.md into docs6/site HTML and CSS files
+#   turn *.md into docs/site HTML and CSS files
 
 export TZ=""
 

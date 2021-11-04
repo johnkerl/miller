@@ -12,7 +12,7 @@ positionally-indexed.  Then, on the fly, you can add new fields which are
 functions of existing fields, drop fields, sort, aggregate statistically,
 pretty-print, and more.
 
-![cover-art](./docs/coverart/cover-combined.png)
+![cover-art](./docs/src/coverart/cover-combined.png)
 
 * Miller operates on **key-value-pair data** while the familiar
 Unix tools operate on integer-indexed fields: if the natural data structure for
