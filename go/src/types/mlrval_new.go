@@ -193,7 +193,7 @@ func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
 		return empty, nil
 	} else {
 		return nil, errors.New(
-			"mlr: indices must be string or int; got " + GetTypeName(mvtype),
+			"mlr: indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
 		)
 	}
 }

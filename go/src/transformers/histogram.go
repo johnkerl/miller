@@ -12,6 +12,7 @@ import (
 
 // ----------------------------------------------------------------
 const verbNameHistogram = "histogram"
+const histogramDefaultBinCount = 20
 
 var HistogramSetup = TransformerSetup{
 	Verb:         verbNameHistogram,
@@ -32,7 +33,7 @@ func transformerHistogramUsage(
 	fmt.Fprintf(o, "-f {a,b,c}    Value-field names for histogram counts\n")
 	fmt.Fprintf(o, "--lo {lo}     Histogram low value\n")
 	fmt.Fprintf(o, "--hi {hi}     Histogram high value\n")
-	fmt.Fprintf(o, "--nbins {n}   Number of histogram bins\n")
+	fmt.Fprintf(o, "--nbins {n}   Number of histogram bins. Defaults to %d.\n", histogramDefaultBinCount)
 	fmt.Fprintf(o, "--auto        Automatically computes limits, ignoring --lo and --hi.\n")
 	fmt.Fprintf(o, "              Holds all values in memory before producing any output.\n")
 	fmt.Fprintf(o, "-o {prefix}   Prefix for output field name. Default: no prefix.\n")
@@ -58,7 +59,7 @@ func transformerHistogramParseCLI(
 	// Parse local flags
 	var valueFieldNames []string = nil
 	lo := 0.0
-	nbins := 0
+	nbins := histogramDefaultBinCount
 	hi := 0.0
 	doAuto := false
 	outputPrefix := ""
@@ -100,7 +101,7 @@ func transformerHistogramParseCLI(
 		transformerHistogramUsage(os.Stderr, true, 1)
 	}
 
-	if nbins == 0 {
+	if nbins <= 0 {
 		transformerHistogramUsage(os.Stderr, true, 1)
 	}
 

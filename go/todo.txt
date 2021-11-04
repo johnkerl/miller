@@ -6,30 +6,22 @@ PUNCHDOWN LIST
 
 * $cpg
   o merge-field voids
-  o check all formats for when/when not multi-char (or any non-LF) IRS
   o mapexcept ...
-  o xtab crlf & non-std irs generally ...
   o fmtnum "%3d%%" -- ?
-  o release notes per se
-  o ./configure whatever equivalent
 
 * separators:
+  o xtab crlf & non-std irs generally ...
+  o check all formats for when/when not multi-char (or any non-LF) IRS
   o csv force ifslen==1
   o csv force irs == "\n"
   o csv force ors == "\n"
-  o separators page 'IRS must be a single character (nominally \n).' -> not true anymore
   o xtab ifs/irs
-
-* histogram nbins required: make it more clear
-  o maybe default nbins
 
 * RT
   o CASEDIR cmd -> mlr via env not oosvar
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
-
-* 'string or int' -> 'string, int, or array thereof' throughout
 
 * regex
   o authoritative regex docs accompanied by thorough UT
@@ -63,9 +55,9 @@ PUNCHDOWN LIST
   o doc6
   o check issues
   o TODO in *.go & *.mi
-  o nim6 disclaimer: these are all nitty so you can probably disregard & just keep going
-
-! readthedocs -- find out what's necessary to get per-version history
+  o release notes per se
+  o ./configure whatever equivalent
+  o readthedocs -- find out what's necessary to get per-version history
 
 * doc
   o new-in-miller-6: missings:

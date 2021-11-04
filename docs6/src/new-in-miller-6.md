@@ -202,6 +202,8 @@ Parse error on token ">" at line 63 columnn 7.
 
 ## Changes from Miller 5
 
+The following differences are rather technical. If they don't sound familiar to you, not to worry! Most users won't be affected by the (relatively minor) changes between Miller 5 and Miller 6.
+
 * Line endings: The `--auto` flag is now ignored. Before, if a file had CR/LF (Windows-style) line endings on input (on any platform), it would have the same on output; likewise, LF (Unix-style) line endings. Now, files with CR/LF or LF line endings are processed on any platform, but the output line-ending is for the platform. E.g. reading CR/LF files on Linux will now produce LF output.
 * Since IFS and IPS can be regular expressions now, if your `IFS` or `IPS` is a `.` (which is a regular-expression metacharacter) you can either use `--ifs '\.'` or `--ifs . --no-ifs-regex` (and similarly for `IPS`).  Please see the section on [multi-character and regular-expression separators](reference-main-separators.md#multi-character-and-regular-expression-separators).
 * JSON formatting:

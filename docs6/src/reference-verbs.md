@@ -1498,7 +1498,7 @@ Usage: mlr histogram [options]
 -f {a,b,c}    Value-field names for histogram counts
 --lo {lo}     Histogram low value
 --hi {hi}     Histogram high value
---nbins {n}   Number of histogram bins
+--nbins {n}   Number of histogram bins. Defaults to 20.
 --auto        Automatically computes limits, ignoring --lo and --hi.
               Holds all values in memory before producing any output.
 -o {prefix}   Prefix for output field name. Default: no prefix.
