@@ -23,8 +23,8 @@ insertion-ordered hash map.
 including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 (Miller can handle **positionally-indexed data** too!)
 
-In the above image (color added for the illustration) you can see how Miller embraces the common themes
-of key-value-pair data in a variety of data formats.
+In the above image you can see how Miller embraces the common themes of
+key-value-pair data in a variety of data formats.
 
 # Getting started
 
