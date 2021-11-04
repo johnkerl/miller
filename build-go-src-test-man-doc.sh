@@ -4,11 +4,11 @@
 # go:
 #   go build 
 #   go test
-# man6:
+# man:
 #   creates manpage mlr.1 and manpage.txt using mlr from the $PATH
 #   copies the latter to docs6/src
 #   also copies it out-of-tree to ~/man/man1, but only if that exists
-# docs6: 
+# docs: 
 #   turn *.md.in into *.md (live code samples), using mlr from the $PATH
 #   turn *.md into docs6/site HTML and CSS files
 
@@ -21,10 +21,10 @@ go fmt ./...
 gofmt -s -w $(find . -name \*.go | grep -v src/parsing)
 ./build
 
-cd ../man6
+cd ../man
 make maybeinstallhome
 
-cd ../docs6
+cd ../docs
 ./regen.sh
 
 echo

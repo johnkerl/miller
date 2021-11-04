@@ -1,2 +1,0 @@
-#!/bin/bash
-diff -a -I '^mlr ' -I '^cat ' "$@" reg_test/expected/out output-regtest/out 

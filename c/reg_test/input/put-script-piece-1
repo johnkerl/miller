@@ -1,4 +1,0 @@
-subr s(a,b) {
-    $[a] = b;
-    $DID = "YES";
-}
