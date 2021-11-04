@@ -18,12 +18,12 @@ type RecordWriterCSVLite struct {
 	justWroteEmptyLine bool
 }
 
-func NewRecordWriterCSVLite(writerOptions *cli.TWriterOptions) *RecordWriterCSVLite {
+func NewRecordWriterCSVLite(writerOptions *cli.TWriterOptions) (*RecordWriterCSVLite, error) {
 	return &RecordWriterCSVLite{
 		writerOptions:      writerOptions,
 		lastJoinedHeader:   nil,
 		justWroteEmptyLine: false,
-	}
+	}, nil
 }
 
 func (writer *RecordWriterCSVLite) Write(

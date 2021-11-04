@@ -66,7 +66,7 @@ func processToStdout(
 ) {
 	err := stream.Stream(options.FileNames, &options, recordTransformers, os.Stdout, true)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, os.Args[0], ": ", err)
+		fmt.Fprintf(os.Stderr, "mlr: %v.\n", err)
 		os.Exit(1)
 	}
 }

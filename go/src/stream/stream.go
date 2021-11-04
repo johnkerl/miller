@@ -1,7 +1,6 @@
 package stream
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -56,15 +55,15 @@ func Stream(
 	)
 
 	// Instantiate the record-reader
-	recordReader := input.Create(&options.ReaderOptions)
-	if recordReader == nil {
-		return errors.New("Input format not found: " + options.ReaderOptions.InputFileFormat)
+	recordReader, err := input.Create(&options.ReaderOptions)
+	if err != nil {
+		return err
 	}
 
 	// Instantiate the record-writer
-	recordWriter := output.Create(&options.WriterOptions)
-	if recordWriter == nil {
-		return errors.New("Output format not found: " + options.WriterOptions.OutputFileFormat)
+	recordWriter, err := output.Create(&options.WriterOptions)
+	if err != nil {
+		return err
 	}
 
 	// Set up the reader-to-transformer and transformer-to-writer channels.

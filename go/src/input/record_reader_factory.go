@@ -1,10 +1,13 @@
 package input
 
 import (
+	"errors"
+	"fmt"
+
 	"mlr/src/cli"
 )
 
-func Create(readerOptions *cli.TReaderOptions) IRecordReader {
+func Create(readerOptions *cli.TReaderOptions) (IRecordReader, error) {
 	switch readerOptions.InputFileFormat {
 	case "csv":
 		return NewRecordReaderCSV(readerOptions)
@@ -23,6 +26,6 @@ func Create(readerOptions *cli.TReaderOptions) IRecordReader {
 	case "gen":
 		return NewPseudoReaderGen(readerOptions)
 	default:
-		return nil
+		return nil, errors.New(fmt.Sprintf("input file format \"%s\" not found", readerOptions.InputFileFormat))
 	}
 }

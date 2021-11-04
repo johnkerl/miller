@@ -29,16 +29,17 @@ import (
 
 type RecordWriterXTAB struct {
 	writerOptions *cli.TWriterOptions
-	opslen        int
-	onFirst       bool
+	// Note: XTAB uses two consecutive OFS in place of an ORS; ORS is ignored
+	opslen  int
+	onFirst bool
 }
 
-func NewRecordWriterXTAB(writerOptions *cli.TWriterOptions) *RecordWriterXTAB {
+func NewRecordWriterXTAB(writerOptions *cli.TWriterOptions) (*RecordWriterXTAB, error) {
 	return &RecordWriterXTAB{
 		writerOptions: writerOptions,
 		opslen:        utf8.RuneCountInString(writerOptions.OPS),
 		onFirst:       true,
-	}
+	}, nil
 }
 
 func (writer *RecordWriterXTAB) Write(

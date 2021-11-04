@@ -18,10 +18,10 @@ type RecordReaderJSON struct {
 	readerOptions *cli.TReaderOptions
 }
 
-func NewRecordReaderJSON(readerOptions *cli.TReaderOptions) *RecordReaderJSON {
+func NewRecordReaderJSON(readerOptions *cli.TReaderOptions) (*RecordReaderJSON, error) {
 	return &RecordReaderJSON{
 		readerOptions: readerOptions,
-	}
+	}, nil
 }
 
 func (reader *RecordReaderJSON) Read(

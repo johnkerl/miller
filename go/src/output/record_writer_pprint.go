@@ -23,14 +23,14 @@ type RecordWriterPPRINT struct {
 	batch            *list.List
 }
 
-func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) *RecordWriterPPRINT {
+func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) (*RecordWriterPPRINT, error) {
 	return &RecordWriterPPRINT{
 		writerOptions: writerOptions,
 		records:       list.New(),
 
 		lastJoinedHeader: nil,
 		batch:            list.New(),
-	}
+	}, nil
 }
 
 // ----------------------------------------------------------------

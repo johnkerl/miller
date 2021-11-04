@@ -14,10 +14,10 @@ type RecordReaderDKVP struct {
 	readerOptions *cli.TReaderOptions
 }
 
-func NewRecordReaderDKVP(readerOptions *cli.TReaderOptions) *RecordReaderDKVP {
+func NewRecordReaderDKVP(readerOptions *cli.TReaderOptions) (*RecordReaderDKVP, error) {
 	return &RecordReaderDKVP{
 		readerOptions: readerOptions,
-	}
+	}, nil
 }
 
 func (reader *RecordReaderDKVP) Read(
