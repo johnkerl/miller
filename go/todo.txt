@@ -756,4 +756,3 @@ godoc checklist:
 1006 ./src/dsl/cst/emit_emitp.go
 1141 ./src/dsl/cst/lvalues.go
 1846 ./src/dsl/cst/builtin_function_manager.go
-
