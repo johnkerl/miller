@@ -19,13 +19,13 @@ type RecordWriterMarkdown struct {
 	lastJoinedHeader     string
 }
 
-func NewRecordWriterMarkdown(writerOptions *cli.TWriterOptions) *RecordWriterMarkdown {
+func NewRecordWriterMarkdown(writerOptions *cli.TWriterOptions) (*RecordWriterMarkdown, error) {
 	return &RecordWriterMarkdown{
 		writerOptions: writerOptions,
 
 		numHeaderLinesOutput: 0,
 		lastJoinedHeader:     "",
-	}
+	}, nil
 }
 
 // ----------------------------------------------------------------

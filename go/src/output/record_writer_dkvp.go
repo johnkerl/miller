@@ -13,10 +13,10 @@ type RecordWriterDKVP struct {
 	writerOptions *cli.TWriterOptions
 }
 
-func NewRecordWriterDKVP(writerOptions *cli.TWriterOptions) *RecordWriterDKVP {
+func NewRecordWriterDKVP(writerOptions *cli.TWriterOptions) (*RecordWriterDKVP, error) {
 	return &RecordWriterDKVP{
 		writerOptions: writerOptions,
-	}
+	}, nil
 }
 
 func (writer *RecordWriterDKVP) Write(

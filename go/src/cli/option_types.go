@@ -102,7 +102,6 @@ type TWriterOptions struct {
 	//
 	//	quoting_t oquoting;
 
-	// TODO: centralize comments here & mlrcli_parse.go & repl/verbs.go; maybe to a README.md
 	// When we read things like
 	//
 	//   x:a=1,x:b=2

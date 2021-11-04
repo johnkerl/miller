@@ -17,13 +17,21 @@ import (
 // ----------------------------------------------------------------
 type RecordReaderCSV struct {
 	readerOptions *cli.TReaderOptions
+	ifs0          byte // Go's CSV library only lets its 'Comma' be a single character
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) *RecordReaderCSV {
+func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) (*RecordReaderCSV, error) {
+	if readerOptions.IRS != "\n" {
+		return nil, errors.New("CSV IRS can only be newline")
+	}
+	if len(readerOptions.IFS) != 1 {
+		return nil, errors.New("CSV IFS can only be a single character")
+	}
 	return &RecordReaderCSV{
 		readerOptions: readerOptions,
-	}
+		ifs0:          readerOptions.IFS[0],
+	}, nil
 }
 
 // ----------------------------------------------------------------
@@ -80,7 +88,7 @@ func (reader *RecordReaderCSV) processHandle(
 	var rowNumber int = 0
 
 	csvReader := csv.NewReader(NewBOMStrippingReader(handle))
-	csvReader.Comma = rune(reader.readerOptions.IFS[0]) // xxx temp
+	csvReader.Comma = rune(reader.ifs0)
 
 	eof := false
 	for {
@@ -238,7 +246,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 		// struct below which has non-pointer receiver.
 		buffer := NewWorkaroundBuffer()
 		csvWriter := csv.NewWriter(buffer)
-		csvWriter.Comma = rune(reader.readerOptions.IFS[0]) // xxx temp
+		csvWriter.Comma = rune(reader.ifs0)
 		csvWriter.Write(csvRecord)
 		csvWriter.Flush()
 		inputChannel <- types.NewOutputString(buffer.String(), context)

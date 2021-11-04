@@ -98,7 +98,6 @@ var FLAG_TABLE = FlagTable{
 		&SeparatorFlagSection,
 		&FileFormatFlagSection,
 		&FormatConversionKeystrokeSaverFlagSection,
-		// TODO: &HelpFlags, here or in climain?
 		&JSONOnlyFlagSection,
 		&CSVOnlyFlagSection,
 		&PPRINTOnlyFlagSection,
@@ -136,29 +135,11 @@ In brief:
 * You can set separators differently between Miller's input and output --
   hence ` + "`--ifs`" + ` and ` + "`--ofs`" + `, etc.
 
-TODO: auto-detect is still TBD for Miller 6.
-
 Notes about line endings:
 
-* Default line endings (` + "`--irs`" + ` and ` + "`--ors`" + `) are "auto"
-  which means autodetect from the input file format, as long as the input
-  file(s) have lines ending in either LF (also known as linefeed, ` + "`\\n`" +
-		`, ` + "`0x0a`" + `, or Unix-style) or CRLF (also known as
-  carriage-return/linefeed pairs, ` + "`\\r\\n`" + `, ` + "`0x0d 0x0a`" + `, or
-  Windows-style).
-* If both ` + "`irs`" + ` and ` + "`ors`" + ` are ` + "`auto`" + ` (which is
-  the default) then LF input will lead to LF output and CRLF input will lead to
-  CRLF output, regardless of the platform you're running on.
-* The line-ending autodetector triggers on the first line ending detected in
-  the input stream. E.g. if you specify a CRLF-terminated file on the command
-  line followed by an LF-terminated file then autodetected line endings will be
-  CRLF.
-* If you use ` + "`--ors {something else}`" + ` with (default or explicitly
-  specified) ` + "`--irs auto`" + ` then line endings are autodetected on input
-  and set to what you specify on output.
-* If you use ` + "`--irs {something else}`" + ` with (default or explicitly
-  specified) ` + "`--ors auto`" + ` then the output line endings used are LF on
-  Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+* Default line endings (` + "`--irs`" + ` and ` + "`--ors`" + `) are newline
+  which is interpreted to accept carriage-return/newline files (e.g. on Windows)
+  for input, and to produce platform-appropriate line endings on output.
 
 Notes about all other separators:
 
@@ -240,8 +221,13 @@ var SeparatorFlagSection = FlagSection{
 			help: "Specify FS for input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
-				options.ReaderOptions.IFS = SeparatorFromArg(args[*pargi+1])
-				options.ReaderOptions.IFSWasSpecified = true
+				// Backward compatibility with Miller <= 5. Auto-inference of
+				// LF vs CR/LF line endings is handled within Go libraries so
+				// we needn't do anything ourselves.
+				if args[*pargi+1] != "auto" {
+					options.ReaderOptions.IFS = SeparatorFromArg(args[*pargi+1])
+					options.ReaderOptions.IFSWasSpecified = true
+				}
 				*pargi += 2
 			},
 		},

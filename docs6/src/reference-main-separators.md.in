@@ -136,21 +136,22 @@ GENMD_EOF
 Notes:
 
 * If CSV field separator is tab, we have TSV; see more examples (ASV, USV, etc.) at in the [CSV section](file-formats.md#csvtsvasvusvetc).
+* CSV IRS and ORS must be newline, and CSV IFS must be a single character. (CSV-lite does not have these restrictions.)
 * JSON: ignores all separator flags from the command line.
 * Headerless CSV overlaps quite a bit with NIDX format using comma for IFS. See also the page on [CSV with and without headers](csv-with-and-without-headers.md).
 * For XTAB, the record separator is a repetition of the field separator. For example, if one record has `x=1,y=2` and the next has `x=3,y=4`, and OFS is newline, then output lines are `x 1`, then `y 2`, then an extra newline, then `x 3`, then `y 4`. This means: to customize XTAB, set `OFS` rather than `ORS`.
 
 |            | **RS**  | **FS**  | **PS**   |
 |------------|---------|---------|----------|
-| [**CSV and CSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *   | Default `,`    | None     |
-| [**TSV**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *  |  Default `\t`   | None     |
-| [**JSON**](file-formats.md#json)   | N/A; records are between `{` and `}` | `,` but  not alterable    | `:` but not alterable |
+| [**CSV**](file-formats.md#csvtsvasvusvetc)    | Always `\n`; not alterable * | Default `,`; must be single-character    | None     |
+| [**TSV**](file-formats.md#csvtsvasvusvetc)    | Always `\n`; not alterable * |  Default `\t`; must be single-character   | None     |
+| [**CSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *   | Default `,`    | None     |
+| [**TSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *  |  Default `\t`   | None     |
+| [**JSON**](file-formats.md#json)   | N/A; records are between `{` and `}` | Always `,`; not alterable    | Always `:`; not alterable |
 | [**DKVP**](file-formats.md#dkvp-key-value-pairs)   | Default `\n`    | Default `,`    | Default `=` |
 | [**NIDX**](file-formats.md#nidx-index-numbered-toolkit-style)   | Default `\n`    | Default space    | None     |
-| [**XTAB**](file-formats.md#xtab-vertical-tabular)   | `\n\n` **    | `\n` *    | Space with repeats  |
+| [**XTAB**](file-formats.md#xtab-vertical-tabular)   | Not used; records are separated by an extra FS    | `\n` *    | Default: space with repeats  |
 | [**PPRINT**](file-formats.md#pprint-pretty-printed-tabular) | Default `\n` *    | Space with repeats    | None     |
-| [**Markdown**](file-formats.md#markdown-tabular) | `\n` * but not alterable    | One or more spaces then `|` then one or more spaces; not alterable | None     |
+| [**Markdown**](file-formats.md#markdown-tabular) | Always `\n`; not alterable * | One or more spaces, then `|`, then one or more spaces; not alterable | None     |
 
 \* or `\r\n` on Windows
-
-\*\* or `\r\n\r\n` on Windows

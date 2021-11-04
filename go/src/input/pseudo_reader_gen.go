@@ -12,10 +12,10 @@ type PseudoReaderGen struct {
 	readerOptions *cli.TReaderOptions
 }
 
-func NewPseudoReaderGen(readerOptions *cli.TReaderOptions) *PseudoReaderGen {
+func NewPseudoReaderGen(readerOptions *cli.TReaderOptions) (*PseudoReaderGen, error) {
 	return &PseudoReaderGen{
 		readerOptions: readerOptions,
-	}
+	}, nil
 }
 
 func (reader *PseudoReaderGen) Read(

@@ -9,14 +9,6 @@ PUNCHDOWN LIST
   o mapexcept ...
   o fmtnum "%3d%%" -- ?
 
-* separators:
-  o xtab crlf & non-std irs generally ...
-  o check all formats for when/when not multi-char (or any non-LF) IRS
-  o csv force ifslen==1
-  o csv force irs == "\n"
-  o csv force ors == "\n"
-  o xtab ifs/irs
-
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
