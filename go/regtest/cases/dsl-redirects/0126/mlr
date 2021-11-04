@@ -1,1 +1,1 @@
-emit > @CASEDIR."/out.".$a.$b, $*
+emit > ENV["CASEDIR"]."/out.".$a.$b, $*

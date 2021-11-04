@@ -1,1 +1,1 @@
-mlr head -n 4 then put -q --ojson -s CASEDIR=${CASEDIR} -f ${CASEDIR}/mlr regtest/input/abixy
+mlr head -n 4 then put -q --ojson -f ${CASEDIR}/mlr regtest/input/abixy

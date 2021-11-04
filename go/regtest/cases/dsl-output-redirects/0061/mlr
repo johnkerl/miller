@@ -1,1 +1,1 @@
-@x=1; @y=2; emitp > @CASEDIR."/foo.dat", (@x, @y)
+@x=1; @y=2; emitp > ENV["CASEDIR"]."/foo.dat", (@x, @y)

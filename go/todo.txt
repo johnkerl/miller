@@ -17,9 +17,6 @@ PUNCHDOWN LIST
   o csv force ors == "\n"
   o xtab ifs/irs
 
-* RT
-  o CASEDIR cmd -> mlr via env not oosvar
-
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
@@ -63,6 +60,7 @@ PUNCHDOWN LIST
   o new-in-miller-6: missings:
     - dump syntax -- ?
     - emittable constraints -- ?
+  o strings: single-quote & backtick have no meaning in the miller dsl (diffs w/r/t other langs)
   o wut h1 spacing before/after ...
   o document re auto in nim6.in
   o shell-commands: while-read example from issues

@@ -1,1 +1,1 @@
-@v=$*; dump >> @CASEDIR."/out.".$a, @v
+@v=$*; dump >> ENV["CASEDIR"]."/out.".$a, @v
