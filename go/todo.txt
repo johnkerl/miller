@@ -4,10 +4,6 @@ PUNCHDOWN LIST
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
 
-* $cpg
-  o mapexcept ...
-  o fmtnum "%3d%%" -- ?
-
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
   NUMERICS < BOOL < VOID < STRING
 
@@ -79,7 +75,11 @@ PUNCHDOWN LIST
 ================================================================
 NON-BLOCKERS
 
+* mapexcept et al.
+
 * file-formats: NIDX link to headerless CSV
+
+* fmtnum(98, "%3d%%") -- ? workaround: fmtnum(98, "%3d") . "%"
 
 * link to SE table ...
   https://github.com/johnkerl/miller/discussions/609#discussioncomment-1115715

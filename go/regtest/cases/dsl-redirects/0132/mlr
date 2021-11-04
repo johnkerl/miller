@@ -1,0 +1,4 @@
+@a[NR]=$a;
+@b[NR]=$b;
+e = mapexcept($*, "a", "b");
+emit > stdout, e, "NR";
