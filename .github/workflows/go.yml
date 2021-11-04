@@ -26,9 +26,6 @@ jobs:
       run: make build
 
     - name: Test
-      # In the event of needing to debug failures you can modify `./mlr regtest` verbosity
-      # using `-v`, `-vv`, or `-vvv`. Commit changes to this file and re-push to GitHub
-      # and let the GitHub Actions re-run.
       run: make check
 
     - name: PrepareArtifactNonWindows
