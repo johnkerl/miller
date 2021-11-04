@@ -1,15 +1,15 @@
 # TODO: take from ../configure
 INSTALLDIR=/usr/local/bin
 
-build: .always
+build:
 	go build
 
-check: build
+check:
 	go test -v mlr/src/...
 	./mlr regtest -s 5
 
 install: build
 	cp mlr $(INSTALLDIR)
 
-.always:
-	true
+.PHONY: build
+
