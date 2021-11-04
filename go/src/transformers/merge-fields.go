@@ -486,19 +486,8 @@ func (tr *TransformerMergeFields) transformByCollapsing(
 		}
 
 		mvalue := inrec.Get(valueFieldName)
-		if mvalue == nil { // Key present
+		if mvalue == nil { // Key aesent
 			pe = pe.Next
-			continue
-		}
-
-		if mvalue.IsEmpty() { // key present with empty value
-			if !tr.keepInputFields { // We are modifying the record while iterating over it.
-				next := pe.Next
-				inrec.Unlink(pe)
-				pe = next
-			} else {
-				pe = pe.Next
-			}
 			continue
 		}
 
@@ -518,6 +507,20 @@ func (tr *TransformerMergeFields) transformByCollapsing(
 			collapseAccumulators.Put(shortName, namedAccumulators)
 		} else {
 			namedAccumulators = iNamedAccumulators.(*lib.OrderedMap)
+		}
+
+		// The accumulator has been initialized with default values; continue
+		// here. (If we were to continue before namedAccumulators.Put(...) we
+		// would be failing to construct the accumulator.)
+		if mvalue.IsEmpty() { // key present with empty value
+			if !tr.keepInputFields { // We are modifying the record while iterating over it.
+				next := pe.Next
+				inrec.Unlink(pe)
+				pe = next
+			} else {
+				pe = pe.Next
+			}
+			continue
 		}
 
 		for pa := namedAccumulators.Head; pa != nil; pa = pa.Next {

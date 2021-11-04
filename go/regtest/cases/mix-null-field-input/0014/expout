@@ -1,0 +1,6 @@
+a _sum _min _max _antimode _mode
+r 3    1    2    1         1
+s 7    3    4    3         3
+t 5    5    5    5         5
+u 6    6    6    6         6
+v 0    -    -    -         -
