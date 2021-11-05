@@ -3,15 +3,15 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
-<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flags</a>
 &nbsp;
-<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+<a class="quicklink" href="../reference-verbs/index.html">Verbs</a>
 &nbsp;
-<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Functions</a>
 &nbsp;
 <a class="quicklink" href="../glossary/index.html">Glossary</a>
 &nbsp;
-<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+<a class="quicklink" href="../release-docs/index.html">Release docs</a>
 </span>
 </div>
 # Shapes of data

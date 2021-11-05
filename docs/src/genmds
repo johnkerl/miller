@@ -6,7 +6,8 @@ set -euo pipefail
 
 if [ $# -ge 1 ]; then
   names="$@"
-  names=$(echo "$names" | sed 's/\.md\.in//g')
+  names=$(echo "$names" | sed 's/\.md\.in$//g')
+  names=$(echo "$names" | sed 's/\.md$//g')
 else
   names=$(echo *.md.in | sed 's/\.md\.in//g')
 fi

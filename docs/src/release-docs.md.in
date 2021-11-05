@@ -1,17 +1,12 @@
 # Documents for previous releases
 
-_Note: Miller 6 is in pre-release. All readthedocs links are for Miller 5 until
-the release of Miller 6 is finalized._
-
-As of September 2020, for 5.9.1 onward, release-specific docs will be handled automatically by [https://miller.readthedocs.io](https://miller.readthedocs.io) whenever a new release is tagged at [https://github.com/johnkerl/miller/releases](https://github.com/johnkerl/miller/releases).
-
 | Release            | Docs                                                                | Release notes |
 |--------------------|---------------------------------------------------------------------|---------------|
 6.0.0  (pre-release) | [Miller 6 pre-release](https://johnkerl.org/miller6)                | [What's new in Miller 6](https://johnkerl.org/miller6/new-in-miller-6/) |
-5.10.2               |                                                                     |  [Restore mlr manpage to distro file](https://github.com/johnkerl/miller/releases/tag/v5.10.2) |
+5.10.2               | [Miller 5.10.2](https://johnkerl.org/miller-docs-by-release/5.10.2) |  [Restore mlr manpage to distro file](https://github.com/johnkerl/miller/releases/tag/v5.10.2) |
 5.10.1               |                                                                     |  [Bugfixes](https://github.com/johnkerl/miller/releases/tag/v5.10.1) |
-5.10.0               |                                                                     |  [sort-within-records, unsparsify -f, misc updates; Go-port beta](https://github.com/johnkerl/miller/releases/tag/v5.10.0) |
-5.9.1                | [Miller 5.9.1](https://johnkerl.org/miller-docs-by-release/5.10.0/) |  [Security update: disallow --prepipe in .mlrrc](https://github.com/johnkerl/miller/releases/tag/v5.9.1) |
+5.10.0               | [Miller 5.10.0](https://johnkerl.org/miller-docs-by-release/5.10.0) |  [sort-within-records, unsparsify -f, misc updates; Go-port beta](https://github.com/johnkerl/miller/releases/tag/v5.10.0) |
+5.9.1                |                                                                     |  [Security update: disallow --prepipe in .mlrrc](https://github.com/johnkerl/miller/releases/tag/v5.9.1) |
 5.9.0                | [Miller 5.9.0](https://johnkerl.org//miller-docs-by-release/5.9.0/) |  [.mlrrc feature, and fix Windows build](https://github.com/johnkerl/miller/releases/tag/v5.9.0) |
 5.8.0                | [Miller 5.8.0](https://johnkerl.org//miller-docs-by-release/5.8.0/) |  [Better environment-variable support, new 'count' verb, bugfixes](https://github.com/johnkerl/miller/releases/tag/v5.8.0) |
 5.7.0                | [Miller 5.7.0](https://johnkerl.org//miller-docs-by-release/5.7.0/) |  [Ports, bugfixes, and keystroke-savers](https://github.com/johnkerl/miller/releases/tag/v5.7.0) |

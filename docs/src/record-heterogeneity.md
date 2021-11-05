@@ -3,15 +3,15 @@
 <span class="quicklinks">
 Quick links:
 &nbsp;
-<a class="quicklink" href="../reference-main-flag-list/index.html">Flag list</a>
+<a class="quicklink" href="../reference-main-flag-list/index.html">Flags</a>
 &nbsp;
-<a class="quicklink" href="../reference-verbs/index.html">Verb list</a>
+<a class="quicklink" href="../reference-verbs/index.html">Verbs</a>
 &nbsp;
-<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Function list</a>
+<a class="quicklink" href="../reference-dsl-builtin-functions/index.html">Functions</a>
 &nbsp;
 <a class="quicklink" href="../glossary/index.html">Glossary</a>
 &nbsp;
-<a class="quicklink" href="https://github.com/johnkerl/miller" target="_blank">Repository ↗</a>
+<a class="quicklink" href="../release-docs/index.html">Release docs</a>
 </span>
 </div>
 # Record-heterogeneity
@@ -127,6 +127,8 @@ If you `mlr csv cat` this, you'll get an error message:
 <b>mlr --csv cat data/het/ragged.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+a,b,c
+1,2,3
 mlr :  mlr: CSV header/data length mismatch 3 != 2 at filename data/het/ragged.csv row 3.
 
 </pre>
