@@ -4,65 +4,65 @@
 
 These are reminiscent of `awk` syntax.  They can be used to allow assignments to be done only when appropriate -- e.g. for math-function domain restrictions, regex-matching, and so on:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr cat data/put-gating-example-1.dkvp
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$x > 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr cat data/put-gating-example-2.dkvp
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '
   $a =~ "([a-z]+)_([0-9]+)" {
     $b = "left_\1"; $c = "right_\2"
   }' \
   data/put-gating-example-2.dkvp
-GENMD_EOF
+GENMD-EOF
 
 This produces heteregenous output which Miller, of course, has no problems with (see [Record Heterogeneity](record-heterogeneity.md)).  But if you want homogeneous output, the curly braces can be replaced with a semicolon between the expression and the body statements.  This causes `put` to evaluate the boolean expression (along with any side effects, namely, regex-captures `\1`, `\2`, etc.) but doesn't use it as a criterion for whether subsequent assignments should be executed. Instead, subsequent assignments are done unconditionally:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint put '
   $a =~ "([a-z]+)_([0-9]+)";
   $b = "left_\1";
   $c = "right_\2"
 ' data/put-gating-example-2.dkvp
-GENMD_EOF
+GENMD-EOF
 
 Note that pattern-action blocks are just a syntactic variation of if-statements. The following do the same thing:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
   boolean_condition {
     body
   }
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY
+GENMD-CARDIFY
   if (boolean_condition) {
     body
   }
-GENMD_EOF
+GENMD-EOF
 
 ## If-statements
 
 These are again reminiscent of `awk`. Pattern-action blocks are a special case of `if` with no `elif` or `else` blocks, no `if` keyword, and parentheses optional around the boolean expression:
 
-GENMD_SHOW_COMMAND
+GENMD-SHOW-COMMAND
 mlr put 'NR == 4 {$foo = "bar"}'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_SHOW_COMMAND
+GENMD-SHOW-COMMAND
 mlr put 'if (NR == 4) {$foo = "bar"}'
-GENMD_EOF
+GENMD-EOF
 
 Compound statements use `elif` (rather than `elsif` or `else if`):
 
-GENMD_SHOW_COMMAND
+GENMD-SHOW-COMMAND
 mlr put '
   if (NR == 2) {
     ...
@@ -74,22 +74,22 @@ mlr put '
     ...
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## While and do-while loops
 
 Miller's `while` and `do-while` are unsurprising in comparison to various languages, as are `break` and `continue`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo x=1,y=2 | mlr put '
   while (NF < 10) {
     $[NF+1] = ""
   }
   $foo = "bar"
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo x=1,y=2 | mlr put '
   do {
     $[NF+1] = "";
@@ -99,7 +99,7 @@ echo x=1,y=2 | mlr put '
   } while (NF < 10);
   $foo = "bar"
 '
-GENMD_EOF
+GENMD-EOF
 
 A `break` or `continue` within nested conditional blocks or if-statements will,
 of course, propagate to the innermost loop enclosing them, if any. A `break` or
@@ -128,16 +128,16 @@ As with `while` and `do-while`, a `break` or `continue` within nested control st
 
 For [maps](reference-main-maps.md), the single variable is always bound to the *key* of key-value pairs:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small put -q '
   print "NR = ".NR;
   for (e in $*) {
     print "  key:", e, "value:", $[e];
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put -q '
   end {
     o = {"a":1, "b":{"c":3}};
@@ -146,13 +146,13 @@ mlr -n put -q '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Note that the value corresponding to a given key may be gotten as through a **computed field name** using square brackets as in `$[e]` for stream records, or by indexing the looped-over variable using square brackets.
 
 For [arrays](reference-main-arrays.md), the single variable is always bound to the *value* (not the array index):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put -q '
   end {
     o = [10, "20", {}, "four", true];
@@ -161,7 +161,7 @@ mlr -n put -q '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ### Key-value for-loops
 
@@ -171,11 +171,11 @@ variable is the (1-up) array index and the second is the value.
 
 Single-level keys may be gotten at using either `for(k,v)` or `for((k),v)`; multi-level keys may be gotten at using `for((k1,k2,k3),v)` and so on.  The `v` variable will be bound to to a scalar value (non-array/non-map) if the map stops at that level, or to a map-valued or array-valued variable if the map goes deeper. If the map isn't deep enough then the loop body won't be executed.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/for-srec-example.tbl
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --pprint --from data/for-srec-example.tbl put '
   $sum1 = $f1 + $f2 + $f3;
   $sum2 = 0;
@@ -187,17 +187,17 @@ mlr --pprint --from data/for-srec-example.tbl put '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
-GENMD_EOF
+GENMD-EOF
 
 Note that the value of the current field in the for-loop can be gotten either using the bound variable `value`, or through a **computed field name** using square brackets as in `$[key]`.
 
 Important note: to avoid inconsistent looping behavior in case you're setting new fields (and/or unsetting existing ones) while looping over the record, **Miller makes a copy of the record before the loop: loop variables are bound from the copy and all other reads/writes involve the record itself**:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small --opprint put '
   $sum1 = 0;
   $sum2 = 0;
@@ -208,11 +208,11 @@ mlr --from data/small --opprint put '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 It can be confusing to modify the stream record while iterating over a copy of it, so instead you might find it simpler to use a local variable in the loop and only update the stream record after the loop:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small --opprint put '
   sum = 0;
   for (k,v in $*) {
@@ -222,15 +222,15 @@ mlr --from data/small --opprint put '
   }
   $sum = sum
 '
-GENMD_EOF
+GENMD-EOF
 
 You can also start iterating on sub-maps of an out-of-stream or local variable; you can loop over nested keys; you can loop over all out-of-stream variables.  The bound variables are bound to a copy of the sub-map as it was before the loop started.  The sub-map is specified by square-bracketed indices after `in`, and additional deeper indices are bound to loop key-variables. The terminal values are bound to the loop value-variable whenever the keys are not too shallow. The value-variable may refer to a terminal (string, number) or it may be map-valued if the map goes deeper. Example indexing is as follows:
 
-GENMD_INCLUDE_ESCAPED(data/for-oosvar-example-0a.txt)
+GENMD-INCLUDE-ESCAPED(data/for-oosvar-example-0a.txt)
 
 That's confusing in the abstract, so a concrete example is in order. Suppose the out-of-stream variable `@myvar` is populated as follows:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put --jknquoteint -q '
   begin {
     @myvar = {
@@ -241,11 +241,11 @@ mlr -n put --jknquoteint -q '
   }
   end { dump }
 '
-GENMD_EOF
+GENMD-EOF
 
 Then we can get at various values as follows:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put --jknquoteint -q '
   begin {
     @myvar = {
@@ -262,9 +262,9 @@ mlr -n put --jknquoteint -q '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put --jknquoteint -q '
   begin {
     @myvar = {
@@ -282,9 +282,9 @@ mlr -n put --jknquoteint -q '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put --jknquoteint -q '
   begin {
     @myvar = {
@@ -302,13 +302,13 @@ mlr -n put --jknquoteint -q '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ### C-style triple-for loops
 
 These are supported as follows:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small --opprint put '
   num suma = 0;
   for (a = 1; a <= NR; a += 1) {
@@ -316,9 +316,9 @@ mlr --from data/small --opprint put '
   }
   $suma = suma;
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small --opprint put '
   num suma = 0;
   num sumb = 0;
@@ -329,7 +329,7 @@ mlr --from data/small --opprint put '
   $suma = suma;
   $sumb = sumb;
 '
-GENMD_EOF
+GENMD-EOF
 
 Notes:
 
@@ -347,35 +347,35 @@ Notes:
 
 Miller supports an `awk`-like `begin/end` syntax.  The statements in the `begin` block are executed before any input records are read; the statements in the `end` block are executed after the last input record is read.  (If you want to execute some statement at the start of each file, not at the start of the first file as with `begin`, you might use a pattern/action block of the form `FNR == 1 { ... }`.) All statements outside of `begin` or `end` are, of course, executed on every input record. Semicolons separate statements inside or outside of begin/end blocks; semicolons are required between begin/end block bodies and any subsequent statement.  For example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '
   begin { @sum = 0 };
   @x_sum += $x;
   end { emit @x_sum }
 ' ./data/small
-GENMD_EOF
+GENMD-EOF
 
 Since uninitialized out-of-stream variables default to 0 for addition/substraction and 1 for multiplication when they appear on expression right-hand sides (not quite as in `awk`, where they'd default to 0 either way), the above can be written more succinctly as
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '
   @x_sum += $x;
   end { emit @x_sum }
 ' ./data/small
-GENMD_EOF
+GENMD-EOF
 
 The **put -q** option suppresses printing of each output record, with only `emit` statements being output. So to get only summary outputs, you could write
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '
   @x_sum += $x;
   end { emit @x_sum }
 ' ./data/small
-GENMD_EOF
+GENMD-EOF
 
 We can do similarly with multiple out-of-stream variables:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '
   @x_count += 1;
   @x_sum += $x;
@@ -384,13 +384,13 @@ mlr put -q '
     emit @x_sum;
   }
 ' ./data/small
-GENMD_EOF
+GENMD-EOF
 
 This is of course (see also [here](reference-dsl.md#verbs-compared-to-dsl)) not much different than
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr stats1 -a count,sum -f x ./data/small
-GENMD_EOF
+GENMD-EOF
 
 Note that it's a syntax error for begin/end blocks to refer to field names (beginning with `$`), since begin/end blocks execute outside the context of input records.
 

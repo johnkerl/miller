@@ -987,7 +987,7 @@ etc., to control the format of the output if the output is redirected. See also 
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
 
-Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
+Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 
 emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
 output record stream.
@@ -1014,7 +1014,7 @@ etc., to control the format of the output if the output is redirected. See also 
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
 
-Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
+Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 
 emitp: inserts an out-of-stream variable into the output record stream.
 Hashmap indices present in the data but not slotted by emitp arguments are
@@ -1043,7 +1043,7 @@ etc., to control the format of the output if the output is redirected. See also 
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
 
-Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
+Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 
 end: defines a block of statements to be executed after input records
 are ingested. The body statements must be wrapped in curly braces.

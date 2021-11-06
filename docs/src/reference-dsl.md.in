@@ -16,9 +16,9 @@ Here's comparison of verbs and `put`/`filter` DSL expressions:
 
 Example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr stats1 -a sum -f x -g a data/small
-GENMD_EOF
+GENMD-EOF
 
 * Verbs are coded in Go
 * They run a bit faster
@@ -28,9 +28,9 @@ GENMD_EOF
 
 Example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
-GENMD_EOF
+GENMD-EOF
 
 * You get to write your own DSL expressions
 * They run a bit slower
@@ -62,15 +62,15 @@ page on [operating on all records](operating-on-all-records.md).)
 
 To see this in action, let's take a look at the [data/short.csv](./data/short.csv) file:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/short.csv
-GENMD_EOF
+GENMD-EOF
 
 There are three records in this file, with `word=apple`, `word=ball`, and
 `word=cat`, respectively. Let's print something in a `begin` statement, add a
 field in a main statement, and print something else in an `end` statement:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from data/short.csv put '
   begin {
     print "begin";
@@ -80,7 +80,7 @@ mlr --csv --from data/short.csv put '
     print "end";
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 The `print` statements for `begin` and `end` went out before the first record
 was seen and after the last was seen; the field-creation statement `$nr = NR`
@@ -100,21 +100,21 @@ The essential usages of `mlr filter` and `mlr put` are for record-selection and
 record-updating expressions, respectively. For example, given the following
 input data:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/small
-GENMD_EOF
+GENMD-EOF
 
 you might retain only the records whose `a` field has value `eks`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr filter '$a == "eks"' data/small
-GENMD_EOF
+GENMD-EOF
 
 or you might add a new field which is a function of existing fields:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$ab = $a . "_" . $b ' data/small
-GENMD_EOF
+GENMD-EOF
 
 ## Differences between put and filter
 
@@ -128,7 +128,7 @@ The two verbs `mlr filter` and `mlr put` are essentially the same. The only diff
 
 You can define and invoke functions and subroutines to help produce the bare-boolean statement, and record fields may be assigned in the statements before or after the bare-boolean statement. For example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv filter '
   # Bare-boolean filter expression: only records matching this pass through:
   $quantity >= 70;
@@ -139,9 +139,9 @@ mlr --c2p --from example.csv filter '
     $description = "low rate";
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv filter '
   # Bare-boolean filter expression: only records matching this pass through:
   $shape =~ "^(...)(...)$";
@@ -150,7 +150,7 @@ mlr --c2p --from example.csv filter '
   $left = "\1";
   $right = "\2";
 '
-GENMD_EOF
+GENMD-EOF
 
 
 There are more details and more choices, of course, as detailed in the following sections.

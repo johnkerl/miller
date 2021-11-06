@@ -6,7 +6,7 @@ I like to produce SQL-query output with header-column and tab delimiter: this is
 
 For example, using default output formatting in `mysql` we get formatting like Miller's `--opprint --barred`:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mysql --database=mydb -e 'show columns in mytable'
 +------------------+--------------+------+-----+---------+-------+
 | Field            | Type         | Null | Key | Default | Extra |
@@ -17,11 +17,11 @@ mysql --database=mydb -e 'show columns in mytable'
 | assigned_to      | bigint(20)   | YES  |     | NULL    |       |
 | last_update_time | int(11)      | YES  |     | NULL    |       |
 +------------------+--------------+------+-----+---------+-------+
-GENMD_EOF
+GENMD-EOF
 
 Using `mysql`'s `-B` we get TSV output:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --opprint cat
 Field            Type         Null Key Default Extra
 id               bigint(20)   NO  MUL NULL -
@@ -29,11 +29,11 @@ category         varchar(256) NO  -   NULL -
 is_permanent     tinyint(1)   NO  -   NULL -
 assigned_to      bigint(20)   YES -   NULL -
 last_update_time int(11)      YES -   NULL -
-GENMD_EOF
+GENMD-EOF
 
 Since Miller handles TSV output, we can do as much or as little processing as we want in the SQL query, then send the rest on to Miller. This includes outputting as JSON, doing further selects/joins in Miller, doing stats, etc.  etc.:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson --jlistwrap --jvstack cat
 [
   {
@@ -77,13 +77,13 @@ mysql --database=mydb -B -e 'show columns in mytable' | mlr --itsvlite --ojson -
     "Extra": ""
   }
 ]
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mysql --database=mydb -B -e 'select * from mytable' > query.tsv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --from query.tsv --t2p stats1 -a count -f id -g category,assigned_to
 category assigned_to id_count
 special  10000978    207
@@ -93,7 +93,7 @@ standard 10000978    524
 standard 10003924    392
 standard 10009872    108
 ...
-GENMD_EOF
+GENMD-EOF
 
 ## SQL-input examples
 
@@ -101,7 +101,7 @@ One use of NIDX (value-only, no keys) format is for loading up SQL tables.
 
 Create and load SQL table:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 mysql> CREATE TABLE abixy(
   a VARCHAR(32),
   b VARCHAR(32),
@@ -140,11 +140,11 @@ mysql> SELECT * FROM abixy LIMIT 10;
 | hat  | wye  |    9 | 0.03144187646093577 |  0.7495507603507059 |
 | pan  | wye  |   10 |  0.5026260055412137 |  0.9526183602969864 |
 +------+------+------+---------------------+---------------------+
-GENMD_EOF
+GENMD-EOF
 
 Aggregate counts within SQL:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 mysql> SELECT a, b, COUNT(*) AS count FROM abixy GROUP BY a, b ORDER BY COUNT DESC;
 +------+------+-------+
 | a    | b    | count |
@@ -176,11 +176,11 @@ mysql> SELECT a, b, COUNT(*) AS count FROM abixy GROUP BY a, b ORDER BY COUNT DE
 | eks  | zee  |   357 |
 +------+------+-------+
 25 rows in set (0.01 sec)
-GENMD_EOF
+GENMD-EOF
 
 Aggregate counts within Miller:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --opprint uniq -c -g a,b then sort -nr count data/medium
 a   b   count
 zee wye 455
@@ -198,11 +198,11 @@ zee zee 403
 pan wye 395
 hat pan 363
 eks zee 357
-GENMD_EOF
+GENMD-EOF
 
 Pipe SQL output to aggregate counts within Miller:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mysql -D miller -B -e 'select * from abixy' | mlr --itsv --opprint uniq -c -g a,b then sort -nr count
 a   b   count
 zee wye 455
@@ -230,4 +230,4 @@ wye wye 377
 eks pan 371
 hat pan 363
 eks zee 357
-GENMD_EOF
+GENMD-EOF

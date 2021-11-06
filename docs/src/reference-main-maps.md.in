@@ -11,7 +11,7 @@ there are a few differences as noted below.
 
 _Map literals_ are written in curly braces with string keys any [Miller data type](reference-main-data-types.md) (including other maps, or arrays) as values. Also, integers may be given as keys although they'll be stored as strings.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = {"a": 1, "b": {"x": 2, "y": [3,4,5]}, 99: true};
@@ -20,11 +20,11 @@ mlr -n put '
     print x["99"];
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 As with arrays and argument-lists, trailing commas are supported:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = {
@@ -35,20 +35,20 @@ mlr -n put '
     print x;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 The current record, accessible using `$*`, is a map.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from example.csv head -n 2 then put -q '
   dump $*;
   print "Color is", $*["color"];
 '
-GENMD_EOF
+GENMD-EOF
 
 The collection of all [out-of-stream variables](reference-dsl-variables.md#out-of-stream0variables), `@*`, is a map.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from example.csv put -q '
   begin {
     @last_rates = {};
@@ -59,7 +59,7 @@ mlr --csv --from example.csv put -q '
     dump @*;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Also note that several [built-in functions](reference-dsl-builtin-functions.md) operate on maps and/or return maps.
 
@@ -82,7 +82,7 @@ let people do `@records[NR] = $*`.
 Indexing any as-yet-assigned local variable or out-of-stream variable results
 in **auto-create** of that variable as a map variable:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from example.csv put -q '
   # You can do this but you do not need to:
   # begin { @last_rates = {} }
@@ -91,12 +91,12 @@ mlr --csv --from example.csv put -q '
     dump @last_rates;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 *This also means that auto-create results in maps, not arrays, even if keys are integers.*
 If you want to auto-extend an [array](reference-main-arrays.md), initialize it explicitly to `[]`.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from example.csv head -n 4 then put -q '
   begin {
     @my_array = [];
@@ -107,7 +107,7 @@ mlr --csv --from example.csv head -n 4 then put -q '
     dump
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Auto-deepen
 
@@ -116,14 +116,14 @@ without first setting `@m["a"]={}` and `@m["a"]["b"]={}`. The reason for this
 is for doing data aggregations: for example if you want compute keyed sums, you
 can do that with a minimum of keystrokes.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv put -q '
   @quantity_sum[$color][$shape] += $rate;
   end {
     emit @quantity_sum, "color", "shape";
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Looping
 

@@ -4,12 +4,12 @@ The Miller REPL (read-evaluate-print loop) is an interactive counterpart to reco
 
 Miller's REPL isn't a source-level debugger which lets you execute one source-code *statement* at a time -- however, it does let you operate on one *record* at a time. Further, it lets you use "immediate expressions", namely, you can interact with the [Miller programming language](miller-programming-language.md) without having to provide data from an input file.
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr repl
 
 [mlr] 1 + 2
 3
-GENMD_EOF
+GENMD-EOF
 
 ## Using Miller without the REPL
 
@@ -23,10 +23,10 @@ Using `put` and `filter`, you can do the following as we've seen above:
 * Specify statements to be executed on each record -- which are anything outside of `begin`/`end`/`func`/`subr`.
 * Example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from example.csv head -n 2 \
   then put 'begin {print "HELLO"} $qr = $quantity / $rate; end {print "GOODBYE"}'
-GENMD_EOF
+GENMD-EOF
 
 ## Using Miller with the REPL
 
@@ -74,7 +74,7 @@ printed to the terminal, e.g. if you type `1+2`, you will see `3`.
 
 Use the REPL to look at arithmetic:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr repl
 
 [mlr] 6/3
@@ -88,11 +88,11 @@ int
 
 [mlr] typeof(6/5)
 float
-GENMD_EOF
+GENMD-EOF
 
 Read the first record from a small file:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr repl
 
 [mlr] :open foo.dat
@@ -115,11 +115,11 @@ FILENAME="foo.dat",FILENUM=1,NR=1,FNR=1
 
 [mlr] :write
 a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,z=4.381399393871141
-GENMD_EOF
+GENMD-EOF
 
 Skip until deep into a larger file, then inspect a record:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr repl --csv
 
 [mlr] :open data/colored-shapes.csv
@@ -136,7 +136,7 @@ mlr repl --csv
   "w": 0.4799125551304738,
   "x": 6.379888206335166
 }
-GENMD_EOF
+GENMD-EOF
 
 ## History-editing
 

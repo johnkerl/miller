@@ -2,4 +2,4 @@
 
 This is simply a copy of what you should see on running `man mlr` at a command prompt, once Miller is installed on your system.
 
-GENMD_INCLUDE_ESCAPED(manpage.txt)
+GENMD-INCLUDE-ESCAPED(manpage.txt)

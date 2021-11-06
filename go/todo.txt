@@ -1,10 +1,28 @@
 ================================================================
 PUNCHDOWN LIST
 
-* ./configure equivalent
-  o make:
-    - windoc note 'choco install make'
-    - (works in GH CI due to their toolchain)
+* plan:
+  o blockers:
+    - fractional-strptime
+    - cmp-matrices
+    - all-contribs
+    - license triple-checks
+    - ./configure --prefix
+    ? alpha?
+    - csv irs lf/crlf ignores -- ? already is so?
+    - `mlr put` -> coverart
+  o doc / release:
+    - ? auto-cp go/mlr // go/mlr.exe to basedir?
+    - auto-path (../go/mlr) in docs dir ...
+    - brew as first trial -- ?
+      > brew macports chocolatey
+        ubuntu debian fedora gentoo prolinux archlinux
+        netbsd freebsd
+
+* post-release:
+  w installing-miller.md.in
+  w build.md.in developer/release notes
+  ? RTD -> GP -- ?
 
 ? twi-dm re all-contribs: all-contributors.org
 * nikos materials -> fold in
@@ -46,7 +64,6 @@ PUNCHDOWN LIST
   o TODO in *.go & *.mi
   o release notes per se
   o ./configure whatever equivalent
-  o readthedocs -- find out what's necessary to get per-version history
 
 * doc
   o new-in-miller-6: missings:

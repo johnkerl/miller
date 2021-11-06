@@ -19,7 +19,7 @@ SYNOPSIS
        example.csv
 
        Please see 'mlr help topics' for more information.  Please also see
-       https://johnkerl.org/miller6
+       https://miller.readthedocs.io
 
 
 DESCRIPTION
@@ -998,7 +998,7 @@ VERBS
          Using 'any' higher-order function to see if $index is 10, 20, or 30:
            'any([10,20,30], func(e) {return $index == e})'
 
-       See also https://johnkerl.org/miller6/reference-dsl for more context.
+       See also https://miller.readthedocs.io/reference-dsl for more context.
 
    flatten
        Usage: mlr flatten [options]
@@ -1416,7 +1416,7 @@ VERBS
              end{emitf @min, @max}
            '
 
-       See also https://johnkerl.org/miller6/reference-dsl for more context.
+       See also https://miller.readthedocs.io/reference-dsl for more context.
 
    regularize
        Usage: mlr regularize [options]
@@ -2671,7 +2671,7 @@ KEYWORDS FOR PUT AND FILTER
          Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
          Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
 
-       Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
+       Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 
    emitf
        emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
@@ -2699,7 +2699,7 @@ KEYWORDS FOR PUT AND FILTER
          Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
          Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
 
-       Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
+       Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 
    emitp
        emitp: inserts an out-of-stream variable into the output record stream.
@@ -2729,7 +2729,7 @@ KEYWORDS FOR PUT AND FILTER
          Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
          Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
 
-       Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
+       Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 
    end
        end: defines a block of statements to be executed after input records
@@ -2954,4 +2954,4 @@ SEE ALSO
 
 
 
-                                  2021-11-05                         MILLER(1)
+                                  2021-11-06                         MILLER(1)

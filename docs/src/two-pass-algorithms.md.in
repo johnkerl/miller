@@ -16,43 +16,43 @@ multi-pass computations, at the price of retaining all input records in memory.
 
 One of Miller's strengths is its compact notation: for example, given input of the form
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 head -n 5 ./data/medium
-GENMD_EOF
+GENMD-EOF
 
 you can simply do
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab stats1 -a sum -f x ./data/medium
-GENMD_EOF
+GENMD-EOF
 
 or
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint stats1 -a sum -f x -g b ./data/medium
-GENMD_EOF
+GENMD-EOF
 
 rather than the more tedious
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab put -q '
   @x_sum += $x;
   end {
     emit @x_sum
   }
 ' data/medium
-GENMD_EOF
+GENMD-EOF
 
 or
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint put -q '
   @x_sum[$b] += $x;
   end {
     emit @x_sum, "b"
   }
 ' data/medium
-GENMD_EOF
+GENMD-EOF
 
 The former (`mlr stats1` et al.) has the advantages of being easier to type, being less error-prone to type, and running faster.
 
@@ -73,7 +73,7 @@ The following examples compute some things using oosvars which are already compu
 
 For example, mapping numeric values down a column to the percentage between their min and max values is two-pass: on the first pass you find the min and max values, then on the second, map each record's value to a percentage.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small --opprint put -q '
   # These are executed once per record, which is the first pass.
   # The key is to use NR to index an out-of-stream variable to
@@ -90,13 +90,13 @@ mlr --from data/small --opprint put -q '
     emit (@x, @x_pct), "NR"
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Line-number ratios
 
 Similarly, finding the total record count requires first reading through all the data:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint --from data/small put -q '
   @records[NR] = $*;
   end {
@@ -109,45 +109,45 @@ mlr --opprint --from data/small put -q '
     emit @records,"I"
   }
 ' then reorder -f I,N,PCT
-GENMD_EOF
+GENMD-EOF
 
 ## Records having max value
 
 The idea is to retain records having the largest value of `n` in the following data:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --itsv --opprint cat data/maxrows.tsv
-GENMD_EOF
+GENMD-EOF
 
 Of course, the largest value of `n` isn't known until after all data have been read. Using an [out-of-stream variable](reference-dsl-variables.md#out-of-stream-variables) we can [retain all records as they are read](operating-on-all-records.md), then filter them at the end:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/maxrows.mlr
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
-GENMD_EOF
+GENMD-EOF
 
 ## Feature-counting
 
 Suppose you have some [heterogeneous data](record-heterogeneity.md) like this:
 
-GENMD_INCLUDE_ESCAPED(data/features.json)
+GENMD-INCLUDE-ESCAPED(data/features.json)
 
 A reasonable question to ask is, how many occurrences of each field are there? And, what percentage of total row count has each of them? Since the denominator of the percentage is not known until the end, this is a two-pass algorithm:
 
-GENMD_INCLUDE_ESCAPED(data/feature-count.mlr)
+GENMD-INCLUDE-ESCAPED(data/feature-count.mlr)
 
 Then
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json put -q -f data/feature-count.mlr data/features.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json
-GENMD_EOF
+GENMD-EOF
 
 ## Unsparsing
 
@@ -157,35 +157,35 @@ There is a keystroke-saving verb for this: [unsparsify](reference-verbs.md#unspa
 
 For example, suppose you have JSON input like this:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/sparse.json
-GENMD_EOF
+GENMD-EOF
 
 There are field names `a`, `b`, `v`, `u`, `x`, `w` in the data -- but not all in every record.  Since we don't know the names of all the keys until we've read them all, this needs to be a two-pass algorithm. On the first pass, remember all the unique key names and all the records; on the second pass, loop through the records filling in absent values, then producing output. Use `put -q` since we don't want to produce per-record output, only emitting output in the `end` block:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/unsparsify.mlr
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json put -q -f data/unsparsify.mlr data/sparse.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
-GENMD_EOF
+GENMD-EOF
 
 ## Mean without/with oosvars
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint stats1 -a mean -f x data/medium
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint put -q '
   @x_sum += $x;
   @x_count += 1;
@@ -194,15 +194,15 @@ mlr --opprint put -q '
     emit @x_mean
   }
 ' data/medium
-GENMD_EOF
+GENMD-EOF
 
 ## Keyed mean without/with oosvars
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint stats1 -a mean -f x -g a,b data/medium
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint put -q '
   @x_sum[$a][$b] += $x;
   @x_count[$a][$b] += 1;
@@ -213,45 +213,45 @@ mlr --opprint put -q '
     emit @x_mean, "a", "b"
   }
 ' data/medium
-GENMD_EOF
+GENMD-EOF
 
 ## Variance and standard deviation without/with oosvars
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat variance.mlr
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab put -q -f variance.mlr data/medium
-GENMD_EOF
+GENMD-EOF
 
 You can also do this keyed, of course, imitating the keyed-mean example above.
 
 ## Min/max without/with oosvars
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab stats1 -a min,max -f x data/medium
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab put -q '
   @x_min = min(@x_min, $x);
   @x_max = max(@x_max, $x);
   end{emitf @x_min, @x_max}
 ' data/medium
-GENMD_EOF
+GENMD-EOF
 
 ## Keyed min/max without/with oosvars
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint stats1 -a min,max -f x -g a data/medium
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint --from data/medium put -q '
   @min[$a] = min(@min[$a], $x);
   @max[$a] = max(@max[$a], $x);
@@ -259,44 +259,44 @@ mlr --opprint --from data/medium put -q '
     emit (@min, @max), "a";
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Delta without/with oosvars
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint step -a delta -f x data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint put '
   $x_delta = is_present(@last) ? $x - @last : 0;
   @last = $x
 ' data/small
-GENMD_EOF
+GENMD-EOF
 
 ## Keyed delta without/with oosvars
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint step -a delta -f x -g a data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint put '
   $x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0;
   @last[$a]=$x
 ' data/small
-GENMD_EOF
+GENMD-EOF
 
 ## Exponentially weighted moving averages without/with oosvars
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint step -a ewma -d 0.1 -f x data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint put '
   begin{ @a=0.1 };
   $e = NR==1 ? $x : @a * $x + (1 - @a) * @e;
   @e=$e
 ' data/small
-GENMD_EOF
+GENMD-EOF

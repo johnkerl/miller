@@ -6,17 +6,17 @@ Miller has several online help mechanisms built in.
 
 The front door is `mlr --help` or its synonym `mlr -h`. This leads you to `mlr help topics` with its list of specific areas:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --help
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help topics
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help functions
-GENMD_EOF
+GENMD-EOF
 
 Etc.
 
@@ -30,17 +30,17 @@ See `mlr help flags` for a full listing.
 This is a command-line version of the [List of verbs](reference-verbs.md) page.
 Given the name of a verb (from `mlr -l`) you can invoke it with `--help` or `-h` -- or, use `mlr help verb`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr cat --help
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr group-like -h
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help verb sort
-GENMD_EOF
+GENMD-EOF
 
 Etc.
 
@@ -49,17 +49,17 @@ Etc.
 This is a command-line version of the [DSL built-in functions](reference-dsl-builtin-functions.md) page.
 Given the name of a DSL function (from `mlr -f`) you can use `mlr help function` for details:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help function append
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help function split
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help function splita
-GENMD_EOF
+GENMD-EOF
 
 Etc.
 
@@ -68,10 +68,10 @@ Etc.
 You can use `:h` or `:help` inside the [REPL](repl.md):
 
 <!--- TODO: repl-executor genmd function -->
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 $ mlr repl
 Miller v6.0.0-dev REPL for darwin:amd64:go1.16.5
-Pre-release docs for Miller 6: https://johnkerl.org/miller6
+Docs: https://miller.readthedocs.io
 Type ':h' or ':help' for on-line help; ':q' or ':quit' to quit.
 [mlr] :h
 Options:
@@ -85,7 +85,7 @@ Options:
 :help {function name}, e.g. :help sec2gmt
 :help {function name}, e.g. :help sec2gmt
 [mlr]
-GENMD_EOF
+GENMD-EOF
 
 ## Manual page
 

@@ -28,11 +28,11 @@ key-value-pair data in a variety of data formats.
 
 # Getting started
 
+* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min)
 * [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)
 * [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
 * [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
 * [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
-* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html)
 * [Linux Magazine: Process structured text files with Miller](https://www.linux-magazine.com/Issues/2016/187/Miller)
 * [Miller: Command Line CSV File Processing](https://onepointzero.app/posts/miller-command-line-csv-file-processing/)
 
@@ -42,12 +42,6 @@ key-value-pair data in a variety of data formats.
 * [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-
-# Miller 6 pre-release
-
-* Pre-release/WIP docs are at [http://johnkerl.org/miller6](http://johnkerl.org/miller6)
-* [go/README.md](./go/README.md)
-* [Tracking issue](https://github.com/johnkerl/miller/issues/372)
 
 # Installing
 
@@ -81,9 +75,15 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 
 [![Go-port multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
 
-[License: BSD2](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
+# Building from source
 
-[Docs](https://miller.readthedocs.io/en/latest/?badge=latest)
+* `make` and `make check`
+* The Miller executable is `go/mlr` (or `go\mlr.exe` on Windows)
+* For more developer information please see [go/README.md](./go/README.md)
+
+# License
+
+[License: BSD2](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
 
 # Community
 

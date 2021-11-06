@@ -4,66 +4,66 @@
 
 [CSV](file-formats.md) handles this well and by design:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat commas.csv
-GENMD_EOF
+GENMD-EOF
 
 Likewise [JSON](file-formats.md#json):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson cat commas.csv
-GENMD_EOF
+GENMD-EOF
 
 For Miller's [XTAB](file-formats.md#xtab-vertical-tabular) there is no escaping for carriage returns, but commas work fine:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --oxtab cat commas.csv
-GENMD_EOF
+GENMD-EOF
 
 But for [key-value-pairs](file-formats.md#dkvp-key-value-pairs) and [index-numbered](file-formats.md#nidx-index-numbered-toolkit-style) formats, commas are the default field separator. And -- as of Miller 5.4.0 anyway -- there is no CSV-style double-quote-handling like there is for CSV. So commas within the data look like delimiters:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --odkvp cat commas.csv
-GENMD_EOF
+GENMD-EOF
 
 One solution is to use a different delimiter, such as a pipe character:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --odkvp --ofs pipe cat commas.csv
-GENMD_EOF
+GENMD-EOF
 
 To be extra-sure to avoid data/delimiter clashes, you can also use control
 characters as delimiters -- here, control-A:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v
-GENMD_EOF
+GENMD-EOF
 
 ## How can I handle field names with special symbols in them?
 
 Simply surround the field names with curly braces:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
-GENMD_EOF
+GENMD-EOF
 
 ## How can I put single quotes into strings?
 
 This is a little tricky due to the shell's handling of quotes. For simplicity, let's first put an update script into a file:
 
-GENMD_INCLUDE_ESCAPED(data/single-quote-example.mlr)
+GENMD-INCLUDE-ESCAPED(data/single-quote-example.mlr)
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo a=bcd | mlr put -f data/single-quote-example.mlr
-GENMD_EOF
+GENMD-EOF
 
 So: Miller's DSL uses double quotes for strings, and you can put single quotes (or backslash-escaped double-quotes) inside strings, no problem.
 
 Without putting the update expression in a file, it's messier:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
-GENMD_EOF
+GENMD-EOF
 
 The idea is that the outermost single-quotes are to protect the `put` expression from the shell, and the double quotes within them are for Miller. To get a single quote in the middle there, you need to actually put it *outside* the single-quoting for the shell. The pieces are the following, all concatenated together:
 
@@ -79,14 +79,14 @@ The idea is that the outermost single-quotes are to protect the `put` expression
 
 One way is to use square brackets; an alternative is to use simple string-substitution rather than a regular expression.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/question.dat
-GENMD_EOF
-GENMD_RUN_COMMAND
+GENMD-EOF
+GENMD-RUN-COMMAND
 mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat
-GENMD_EOF
-GENMD_RUN_COMMAND
+GENMD-EOF
+GENMD-RUN-COMMAND
 mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat
-GENMD_EOF
+GENMD-EOF
 
 The `ssub` function exists precisely for this reason: so you don't have to escape anything.

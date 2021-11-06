@@ -10,18 +10,18 @@ of the major advantages of Miller 6.
 
 Array literals are written in square brackets braces with integer indices. Array slots can be any [Miller data type](reference-main-data-types.md) (including other arrays, or maps).
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = [ "a", 1, "b", {"x": 2, "y": [3,4,5]}, 99, true];
     print x;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 As with maps and argument-lists, trailing commas are supported:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = [
@@ -32,7 +32,7 @@ mlr -n put '
     print x;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Also note that several [built-in functions](reference-dsl-builtin-functions.md) operate on arrays and/or return arrays.
 
@@ -60,7 +60,7 @@ are already 1-up in Miller, and always have been, mostly inherited from AWK:
 Imitating Python and other languages, you can use negative indices to read backward from the end of the array,
 while positive indices read forward from the start. If an array has length `n` then `-n..-1` are aliases for `1..n`, respectively; 0 is never a valid array index in Miller.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = [10, 20, 30, 40, 50];
@@ -70,7 +70,7 @@ mlr -n put '
     print x[-2:-1];
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Slicing
 
@@ -79,7 +79,7 @@ in a slice can be negatively aliased as described above.  Unlike in Python,
 Miller array-slice indices are inclusive on both sides: `x[3:5]` means `[x[3],
 x[4], x[5]]`.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = [10, 20, 30, 40, 50];
@@ -90,7 +90,7 @@ mlr -n put '
     print x[2:-2];
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Out-of-bounds indexing
 
@@ -98,7 +98,7 @@ Somewhat imitating Python, out-of-bounds index accesses are
 [absent](reference-main-null-data.md), but out-of-bounds slice accesses result
 in trimming the indices, resulting in a short array or even the empty array:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = [10, 20, 30, 40, 50];
@@ -107,9 +107,9 @@ mlr -n put '
     print x[6]; # absent
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = [10, 20, 30, 40, 50];
@@ -118,7 +118,7 @@ mlr -n put '
     print x[10:20];
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Auto-create results in maps
 
@@ -126,7 +126,7 @@ As noted on the [maps page](reference-main-maps.md), indexing any
 as-yet-assigned local variable or out-of-stream variable results in
 **auto-create** of that variable as a map variable:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from example.csv put -q '
   # You can do this but you do not need to:
   # begin { @last_rates = {} }
@@ -135,12 +135,12 @@ mlr --csv --from example.csv put -q '
     dump @last_rates;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 *This also means that auto-create results in maps, not arrays, even if keys are integers.*
 If you want to auto-extend an [array](reference-main-arrays.md), initialize it explicitly to `[]`.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from example.csv head -n 4 then put -q '
   begin {
     @my_array = [];
@@ -151,7 +151,7 @@ mlr --csv --from example.csv head -n 4 then put -q '
     dump
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Auto-extend and null-gaps
 
@@ -170,7 +170,7 @@ However, if an array is written to more than one past its end, [values of type
 JSON-null](reference-main-data-types.md) are used to fill in the gaps. These
 are called **null-gaps**.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     no_gaps = [];
@@ -185,13 +185,13 @@ mlr -n put '
     print gaps;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Unset as shift
 
 Unsetting an array index results in shifting all higher-index elements down by one:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = [ "a", "b", "c", "d", "e"];
@@ -200,11 +200,11 @@ mlr -n put '
     print x;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 More generally, you can get shift and pop operations by unsetting indices 1 and -1:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 $ mlr repl -q
 [mlr] x=[1,2,3,4,5]
 [mlr] unset x[-1]
@@ -222,7 +222,7 @@ $ mlr repl -q
 [mlr] x
 [3, 4, 5]
 [mlr]
-GENMD_EOF
+GENMD-EOF
 
 ## Looping
 

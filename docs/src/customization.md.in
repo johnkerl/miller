@@ -4,29 +4,29 @@
 
 Suppose you always use CSV files. Then instead of always having to type `--csv` as in
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --csv cut -x -f extra mydata.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --csv sort -n id mydata.csv
-GENMD_EOF
+GENMD-EOF
 
 and so on, you can instead put the following into your `$HOME/.mlrrc`:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
     --csv
-GENMD_EOF
+GENMD-EOF
 
 Then you can just type things like
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr cut -x -f extra mydata.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr sort -n id mydata.csv
-GENMD_EOF
+GENMD-EOF
 
 and the `--csv` part will automatically be understood. If you do want to process, say, a JSON file then `mlr --json ...` at the command line will still override the defaults you've placed in your `.mlrrc`.
 
@@ -46,7 +46,7 @@ and the `--csv` part will automatically be understood. If you do want to process
 
 Here is an example `.mlrrc` file:
 
-GENMD_INCLUDE_ESCAPED(sample_mlrrc)
+GENMD-INCLUDE-ESCAPED(sample_mlrrc)
 
 ## Where to put your .mlrrc
 

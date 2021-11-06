@@ -8,69 +8,69 @@ For most of this section we'll use our [example.csv](./example.csv).
 
 `mlr cat` is like system `cat` (or `type` on Windows) -- it passes the data through unmodified:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv cat example.csv
-GENMD_EOF
+GENMD-EOF
 
 But `mlr cat` can also do format conversion -- for example, you can pretty-print in tabular format:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint cat example.csv
-GENMD_EOF
+GENMD-EOF
 
 `mlr head` and `mlr tail` count records rather than lines. Whether you're getting the first few records or the last few, the CSV header is included either way:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv head -n 4 example.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv tail -n 4 example.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson tail -n 2 example.csv
-GENMD_EOF
+GENMD-EOF
 
 You can sort on a single field:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint sort -f shape example.csv
-GENMD_EOF
+GENMD-EOF
 
 Or, you can sort primarily alphabetically on one field, then secondarily numerically descending on another field, and so on:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint sort -f shape -nr index example.csv
-GENMD_EOF
+GENMD-EOF
 
 If there are fields you don't want to see in your data, you can use `cut` to keep only the ones you want, in the same order they appeared in the input data:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint cut -f flag,shape example.csv
-GENMD_EOF
+GENMD-EOF
 
 You can also use `cut -o` to keep specified fields, but in your preferred order:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint cut -o -f flag,shape example.csv
-GENMD_EOF
+GENMD-EOF
 
 You can use `cut -x` to omit fields you don't care about:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint cut -x -f flag,shape example.csv
-GENMD_EOF
+GENMD-EOF
 
 Even though Miller's main selling point is name-indexing, sometimes you really want to refer to a field name by its positional index. Use `$[[3]]` to access the name of field 3 or `$[[[3]]]` to access the value of field 3:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv
-GENMD_EOF
+GENMD-EOF
 
 You can find the full list of verbs at the [Verbs Reference](reference-verbs.md) page.
 
@@ -78,33 +78,33 @@ You can find the full list of verbs at the [Verbs Reference](reference-verbs.md)
 
 You can use `filter` to keep only records you care about:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint filter '$color == "red"' example.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint filter '$color == "red" && $flag == true' example.csv
-GENMD_EOF
+GENMD-EOF
 
 ## Computing new fields
 
 You can use `put` to create new fields which are computed from other fields:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint put '
   $ratio = $quantity / $rate;
   $color_shape = $color . "_" . $shape
 ' example.csv
-GENMD_EOF
+GENMD-EOF
 
 When you create a new field, it can immediately be used in subsequent statements:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv put '
   $y = $index + 1;
   $z = $y**2 + $k;
 '
-GENMD_EOF
+GENMD-EOF
 
 For `put` and `filter` we were able to type out expressions using a programming-language syntax.
 See the [Miller programming language page](miller-programming-language.md) for more information.
@@ -113,50 +113,50 @@ See the [Miller programming language page](miller-programming-language.md) for m
 
 Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files [data/a.csv](data/a.csv) and [data/b.csv](data/b.csv), the system `cat` command will repeat header lines:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/a.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/b.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/a.csv data/b.csv
-GENMD_EOF
+GENMD-EOF
 
 However, `mlr cat` will not:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv cat data/a.csv data/b.csv
-GENMD_EOF
+GENMD-EOF
 
 ## Chaining verbs together
 
 Often we want to chain queries together -- for example, sorting by a field and taking the top few values. We can do this using pipes:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv sort -nr index example.csv | mlr --icsv --opprint head -n 3
-GENMD_EOF
+GENMD-EOF
 
 This works fine -- but Miller also lets you chain verbs together using the word `then`. Think of this as a Miller-internal pipe that lets you use fewer keystrokes:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint sort -nr index then head -n 3 example.csv
-GENMD_EOF
+GENMD-EOF
 
 As another convenience, you can put the filename first using `--from`. When you're interacting with your data at the command line, this makes it easier to up-arrow and append to the previous command:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv sort -nr index then head -n 3
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv \
   sort -nr index \
   then head -n 3 \
   then cut -f shape,quantity
-GENMD_EOF
+GENMD-EOF
 
 ## Sorts and stats
 
@@ -164,55 +164,55 @@ Now suppose you want to sort the data on a given column, *and then* take the top
 
 Here are the records with the top three `index` values:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint sort -nr index then head -n 3 example.csv
-GENMD_EOF
+GENMD-EOF
 
 Lots of Miller commands take a `-g` option for group-by: here, `head -n 1 -g shape` outputs the first record for each distinct value of the `shape` field. This means we're finding the record with highest `index` field for each distinct `shape` field:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
-GENMD_EOF
+GENMD-EOF
 
 Statistics can be computed with or without group-by field(s):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv \
   stats1 -a count,min,mean,max -f quantity -g shape
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv \
   stats1 -a count,min,mean,max -f quantity -g shape,color
-GENMD_EOF
+GENMD-EOF
 
 If your output has a lot of columns, you can use XTAB format to line things up vertically for you instead:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --oxtab --from example.csv \
   stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
-GENMD_EOF
+GENMD-EOF
 
 ## Unicode and internationalization
 
 While Miller's function names, verb names, online help, etc. are all in English, Miller supports
 UTF-8 data. For example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat παράδειγμα.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p filter '$σχήμα == "κύκλος"' παράδειγμα.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p sort -f σημαία παράδειγμα.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p put '$форма = toupper($форма); $длина = strlen($цвет)' пример.csv
-GENMD_EOF
+GENMD-EOF
 
 ## File formats and format conversion
 
@@ -230,22 +230,22 @@ What's a CSV file, really? It's an array of rows, or *records*, each being a lis
 
 For example, if you have:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 shape,flag,index
 circle,1,24
 square,0,36
-GENMD_EOF
+GENMD-EOF
 
 then that's a way of saying:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 shape=circle,flag=1,index=24
 shape=square,flag=0,index=36
-GENMD_EOF
+GENMD-EOF
 
 Other ways to write the same data:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 CSV                   PPRINT
 shape,flag,index      shape  flag index
 circle,1,24           circle 1    24
@@ -266,7 +266,7 @@ JSON                  XTAB
 DKVP
 shape=circle,flag=1,index=24
 shape=square,flag=0,index=36
-GENMD_EOF
+GENMD-EOF
 
 Anything we can do with CSV input data, we can do with any other format input data.  And you can read from one format, do any record-processing, and output to the same format as the input, or to a different output format.
 
@@ -280,36 +280,36 @@ You can read more about this at the [File Formats](file-formats.md) page.
 If all record values are numbers, strings, etc., then converting back and forth between CSV and JSON is
 a matter of specifying input-format and output-format flags:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json cat example.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --ocsv cat example.json
-GENMD_EOF
+GENMD-EOF
 
 However, if JSON data has map-valued or array-valued fields, Miller gives you choices on how to
 convert these to CSV columns. For example, here's some JSON data with map-valued fields:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/server-log.json
-GENMD_EOF
+GENMD-EOF
 
 We can convert this to CSV, or other tabular formats:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --ocsv cat data/server-log.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --oxtab cat data/server-log.json
-GENMD_EOF
+GENMD-EOF
 
 These transformations are reversible:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --oxtab cat data/server-log.json | mlr --ixtab --ojson cat
-GENMD_EOF
+GENMD-EOF
 
 See the [flatten/unflatten page](flatten-unflatten.md) for more information.
 
@@ -319,13 +319,13 @@ Often we want to print output to the screen. Miller does this by default, as we'
 
 Sometimes, though, we want to print output to another file. Just use `> outputfilenamegoeshere` at the end of your command:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --icsv --opprint cat example.csv > newfile.csv
 # Output goes to the new file;
 # nothing is printed to the screen.
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 cat newfile.csv
 color  shape    flag     index quantity rate
 yellow triangle true     11    43.6498  9.8870
@@ -338,15 +338,15 @@ purple triangle false    65    80.1405  5.8240
 yellow circle   true     73    63.9785  4.2370
 yellow circle   true     87    63.5058  8.3350
 purple square   false    91    72.3735  8.2430
-GENMD_EOF
+GENMD-EOF
 
 Other times we just want our files to be **changed in-place**: just use `mlr -I`:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 cp example.csv newfile.txt
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 cat newfile.txt
 color,shape,flag,index,quantity,rate
 yellow,triangle,true,11,43.6498,9.8870
@@ -359,13 +359,13 @@ purple,triangle,false,65,80.1405,5.8240
 yellow,circle,true,73,63.9785,4.2370
 yellow,circle,true,87,63.5058,8.3350
 purple,square,false,91,72.3735,8.2430
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr -I --csv sort -f shape newfile.txt
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 cat newfile.txt
 color,shape,flag,index,quantity,rate
 red,circle,true,16,13.8103,2.9010
@@ -378,30 +378,30 @@ purple,square,false,91,72.3735,8.2430
 yellow,triangle,true,11,43.6498,9.8870
 purple,triangle,false,51,81.2290,8.5910
 purple,triangle,false,65,80.1405,5.8240
-GENMD_EOF
+GENMD-EOF
 
 Also using `mlr -I` you can bulk-operate on lots of files: e.g.:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr -I --csv cut -x -f unwanted_column_name *.csv
-GENMD_EOF
+GENMD-EOF
 
 If you like, you can first copy off your original data somewhere else, before doing in-place operations.
 
 Lastly, using `tee` within `put`, you can split your input data into separate files per one or more field names:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat circle.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat square.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat triangle.csv
-GENMD_EOF
+GENMD-EOF

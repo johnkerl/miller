@@ -9,18 +9,18 @@ Support for internationalization includes:
 * The [toupper](reference-dsl-builtin-functions.md#toupper), [tolower](reference-dsl-builtin-functions.md#tolower), and [capitalize](reference-dsl-builtin-functions.md#capitalize) DSL functions operate within the capabilities of the Go libraries.
 * While Miller's function names, verb names, online help, etc. are all in English, you can write field names, string literals, variable names, etc in UTF-8.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat παράδειγμα.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p filter '$σχήμα == "κύκλος"' παράδειγμα.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p sort -f σημαία παράδειγμα.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p put '$форма = toupper($форма); $длина = strlen($цвет)' пример.csv
-GENMD_EOF
+GENMD-EOF

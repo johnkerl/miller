@@ -105,7 +105,6 @@ nav:
   - 'Misc. reference':
     - "Auxiliary commands": "reference-main-auxiliary-commands.md"
     - "Manual page": "manpage.md"
-    - "Installation": "installation.md"
     - "Building from source": "build.md"
     - "Documents for previous releases": "release-docs.md"
     - "Glossary": "glossary.md"

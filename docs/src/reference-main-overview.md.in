@@ -11,19 +11,19 @@ The outline of an invocation of Miller is:
 
 For example, reading from a file:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint head -n 2 then sort -f shape example.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from example.csv --icsv --opprint head -n 2 then sort -f shape
-GENMD_EOF
+GENMD-EOF
 
 Reading from standard input:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat example.csv | mlr --icsv --opprint head -n 2 then sort -f shape
-GENMD_EOF
+GENMD-EOF
 
 The rest of this reference section gives you full information on each of these parts of the command line.
 
@@ -41,9 +41,9 @@ Here's a comparison of verbs and `put`/`filter` DSL expressions:
 
 Example of using a verb for data processing:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr stats1 -a sum -f x -g a data/small
-GENMD_EOF
+GENMD-EOF
 
 * Verbs are coded in Go
 * They run a bit faster
@@ -53,9 +53,9 @@ GENMD_EOF
 
 Example of doing the same thing using a DSL expression:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
-GENMD_EOF
+GENMD-EOF
 
 * You get to write your own expressions in Miller's programming language
 * They run a bit slower

@@ -1,47 +1,14 @@
-# Quickstart
-
-A TL;DR for anyone wanting to compile and run the Go port of Miller:
+# Quickstart for developers
 
 * `go build` -- produces the `mlr` executable
 * Miller has tens of unit tests and thousands of regression tests:
   * `go test mlr/src/...` runs the unit tests.
-  * `go test` runs the regression tests. This runs the same tests that `mlr regtest` runs by default, but note that (see `mlr regtest -h`) the latter gives you more options.
-  * `./mlr regtest` -- runs `regtest/cases`, which are cases passing on all platforms
-    * `./mlr regtest regtest/cases-pending-go-port` -- needing Go code to be ported from C
-    * `./mlr regtest regtest/cases-pending-windows` -- for Go code already ported from C but needing some work for Windows
+  * `go test` or `mlr regtest` runs the regression tests in `regtest/cases/`. Using `mlr regtest -h` you can see more options available than are exposed by `go test`.
 
-Pre-release/rough-draft docs are at http://johnkerl.org/miller6.
+# Continuous integration
 
-See also the tracking issue (somewhat redundant to this README file) https://github.com/johnkerl/miller/issues/372.
-
-A note on Continuous Integration:
-
-* The C implementation is auto-built for Linux using Travis: see [../.travis.yml](../.travis.yml).
-* The C implementation is also auto-built for Windows using Appveyor: see [../appveyor.yml](../appveyor.yml). However Ifind that it often breaks and I'm bewildered as to how to fix it.
-* See also [../README.md](../README.md).
 * The Go implementation is auto-built using GitHub Actions: see [../.github/workflows/go.yml](../.github/workflows/go.yml). This works splendidly on Linux, MacOS, and Windows.
-
-# Status of the Go port
-
-* This will be a full Go port of [Miller](https://miller.readthedocs.io/). Things are currently rough and iterative and incomplete. I don't have a firm timeline but I suspect it will take a few more months of late-evening/spare-time work.
-* The released Go port will become Miller 6.0. As noted below, this will be a win both at the source-code level, and for users of Miller.
-* I hope to retain backward compatibility at the command-line level as much as possible.
-* In the meantime I will still keep fixing bugs, doing some features, etc. in C on Miller 5.x -- in the near term, support for Miller's C implementation continues as before.
-
-# Trying out the Go port
-
-* Caveat: *lots* of things present in the C implementation are currently missing in the Go implementation. So if something doesn't work, it's almost certainly because it doesn't work *yet*.
-* That said, if anyone is interested in playing around with it and giving early feedback, I'll be happy for it.
-* Building:
-  * Clone the Miller repo
-  * `cd go`
-  * `./build` should create `mlr`. If it doesn't do this on your platform, please [file an issue](https://github.com/johnkerl/miller/issues).
-* Platforms tried so far:
-  * macOS with Go 1.14 and 1.16, Linux Mint with Go 1.10 and 1.16, and Windows 10 with Go 1.16
-* On-line help:
-  * `mlr --help` advertises some things the Go implementation doesn't actually do yet.
-  * `mlr --help-all-verbs` correctly lists verbs which do things in the Go implementation.
-* See also https://github.com/johnkerl/miller/issues/372
+* See also [../README.md](../README.md).
 
 # Benefits of porting to Go
 
@@ -61,10 +28,6 @@ A note on Continuous Integration:
 * In terms of CPU-cycle-count, Go is a bit slower than C (it does more things, like bounds-checking arrays and so on) -- but by leveraging concurrency over a couple processors, I find that it's competitive in terms of wall-time.
 * Go is an up-and-coming language, with good reason -- it's mature, stable, with few of C's weaknesses and many of C's strengths.
 * The source code will be easier to read/maintain/write, by myself and others.
-
-# Things which may change
-
-Please see https://github.com/johnkerl/miller/issues/372.
 
 # Efficiency of the Go port
 

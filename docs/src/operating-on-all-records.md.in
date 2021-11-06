@@ -22,9 +22,9 @@ to retain sums, counters, etc.
 
 For example, let's look at our short data file [data/short.csv](data/short.csv):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/short.csv
-GENMD_EOF
+GENMD-EOF
 
 We can track count and sum using
 [out-of-stream variables](reference-dsl-variables.md#out-of-stream-variables) -- the ones that
@@ -32,7 +32,7 @@ start with the `@` sigil -- then
 [emit](reference-dsl-output-statements.md#emit-statements) them as a new record
 after all the input is read.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/short.csv put '
   begin {
     @count = 0;
@@ -44,12 +44,12 @@ mlr --icsv --ojson --from data/short.csv put '
     emit (@count, @sum);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 And if all we want is the final output and not the input data, we can use `put
 -q` to not pass through the input records:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/short.csv put -q '
   begin {
     @count = 0;
@@ -61,7 +61,7 @@ mlr --icsv --ojson --from data/short.csv put -q '
     emit (@count, @sum);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 As discussed a bit more on the page on [streaming processing and memory
 usage](streaming-and-memory.md), this doesn't keep all records in memory, only
@@ -74,11 +74,11 @@ The second option is to retain entire records in a [map](reference-main-maps.md)
 
 Let's use the same short data file [data/short.csv](data/short.csv):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/short.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/short.csv put -q '
   # map
   begin {
@@ -95,11 +95,11 @@ mlr --icsv --ojson --from data/short.csv put -q '
     emit (count, sum);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 The downside to this, of course, is that this retains all records (plus data-structure overhead) in memory, so you're limited to processing files that fit in your computer's memory. The upside, though, is that you can do random access over the records using things like
 
-GENMD_CARDIFY
+GENMD-CARDIFY
     output = 0;
     for (i = 1; i <= NR; i += 1) {
       for (j = 1; j <= NR; j += 1) {
@@ -109,13 +109,13 @@ GENMD_CARDIFY
       }
     }
     # do something with the output
-GENMD_EOF
+GENMD-EOF
 
 ## Retaining records in an array
 
 The third option is to retain records in an [array](reference-main-arrays.md), then loop over them in an `end` block.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/short.csv put -q '
   # array
   begin {
@@ -132,7 +132,7 @@ mlr --icsv --ojson --from data/short.csv put -q '
     emit (count, sum);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Just as with the retain-as-map approach, the downside is the overhead of
 retaining all records in memory, and the upside is that you get random access
@@ -149,7 +149,7 @@ start with 1, not 0 as discussed in the [Arrays](reference-main-arrays.md)
 page.) This means that if you are only retaining a subset of records then your
 array will have [null-gaps](reference-main-arrays.md) in it:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/short.csv put -q '
   begin {
     @records = [];
@@ -161,11 +161,11 @@ mlr --icsv --ojson --from data/short.csv put -q '
     dump @records;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 You can index `@records` by `@count` rather than `NR` to get a contiguous array:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/short.csv put -q '
   begin {
     @records = [];
@@ -186,11 +186,11 @@ mlr --icsv --ojson --from data/short.csv put -q '
     emit (count, sum);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 If you use a map to retain records, then this is a non-issue: maps can retain whatever values you like:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/short.csv put -q '
   begin {
     @records = {};
@@ -209,7 +209,7 @@ mlr --icsv --ojson --from data/short.csv put -q '
     emit (count, sum);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Do note that Miller [maps](reference-main-maps.md) preserve insertion order, so
 at the end you're guaranteed to loop over records in the same order you read
@@ -222,7 +222,7 @@ If all you need is one or a few attributes out of a record, you don't need to
 retain full records. You can retain a map, or array, of just the fields you're
 interested in:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/short.csv put -q '
   begin {
     @values = {};
@@ -241,7 +241,7 @@ mlr --icsv --ojson --from data/short.csv put -q '
     emit (count, sum);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Sorting
 

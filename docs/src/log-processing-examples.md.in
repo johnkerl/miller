@@ -10,47 +10,47 @@ Writing a program -- in any language whatsoever -- you can have it print out log
 
 Suppose your program has printed something like this [log.txt](./log.txt):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat log.txt
-GENMD_EOF
+GENMD-EOF
 
 Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system `grep` command, or Miller's [having-fields verb](reference-verbs.md#having-fields), or the [is_present DSL function](reference-dsl-builtin-functions.md#is_present), we can pick out the parts we want and analyze them:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 grep op=cache log.txt \
   | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from log.txt --opprint \
   filter 'is_present($batch_size)' \
   then step -a delta -f time,num_filtered \
   then sec2gmt time
-GENMD_EOF
+GENMD-EOF
 
 Alternatively, we can simply group the similar data for a better look:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint group-like log.txt
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint group-like then sec2gmt time log.txt
-GENMD_EOF
+GENMD-EOF
 
 ## Parsing log-file output
 
 This, of course, depends highly on what's in your log files. But, as an example, suppose you have log-file lines such as
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378
-GENMD_EOF
+GENMD-EOF
 
 I prefer to pre-filter with `grep` and/or `sed` to extract the structured text, then hand that to Miller. Example:
 
-GENMD_CARDIFY_HIGHLIGHT_THREE
+GENMD-CARDIFY-HIGHLIGHT-THREE
 grep 'various sorts' *.log \
   | sed 's/.*} //' \
   | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
 ... output here ...
-GENMD_EOF
+GENMD-EOF

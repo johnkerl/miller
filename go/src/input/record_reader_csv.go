@@ -23,7 +23,7 @@ type RecordReaderCSV struct {
 // ----------------------------------------------------------------
 func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) (*RecordReaderCSV, error) {
 	if readerOptions.IRS != "\n" {
-		return nil, errors.New("CSV IRS can only be newline")
+		return nil, errors.New("CSV IRS can only be newline; LF vs CR/LF is autodetected.")
 	}
 	if len(readerOptions.IFS) != 1 {
 		return nil, errors.New("CSV IFS can only be a single character")

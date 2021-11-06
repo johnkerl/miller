@@ -29,53 +29,53 @@ def main
     begin
       content_line = input_handle.readline
 
-      if content_line =~ /^GENMD_RUN_COMMAND$/
+      if content_line =~ /^GENMD-RUN-COMMAND$/
         cmd_lines = read_until_genmd_eof(input_handle)
         run_command(cmd_lines, output_handle)
 
-      elsif content_line =~ /^GENMD_CARDIFY$/
+      elsif content_line =~ /^GENMD-CARDIFY$/
         lines = read_until_genmd_eof(input_handle)
         write_card([], lines, output_handle)
 
-      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_ONE$/
+      elsif content_line =~ /^GENMD-CARDIFY-HIGHLIGHT-ONE$/
         lines = read_until_genmd_eof(input_handle)
         line1 = lines.shift
         write_card([line1], lines, output_handle)
 
-      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_TWO$/
+      elsif content_line =~ /^GENMD-CARDIFY-HIGHLIGHT-TWO$/
         lines = read_until_genmd_eof(input_handle)
         write_card(lines.slice(0,2), lines.slice(2, lines.length), output_handle)
 
-      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_THREE$/
+      elsif content_line =~ /^GENMD-CARDIFY-HIGHLIGHT-THREE$/
         lines = read_until_genmd_eof(input_handle)
         write_card(lines.slice(0,3), lines.slice(3, lines.length), output_handle)
 
-      elsif content_line =~ /^GENMD_CARDIFY_HIGHLIGHT_FOUR$/
+      elsif content_line =~ /^GENMD-CARDIFY-HIGHLIGHT-FOUR$/
         lines = read_until_genmd_eof(input_handle)
         write_card(lines.slice(0,4), lines.slice(4, lines.length), output_handle)
 
-      elsif content_line =~ /^GENMD_RUN_COMMAND_TOLERATING_ERROR$/
+      elsif content_line =~ /^GENMD-RUN-COMMAND-TOLERATING-ERROR$/
         cmd_lines = read_until_genmd_eof(input_handle)
         run_command_tolerating_error(cmd_lines, output_handle)
 
-      elsif content_line =~ /^GENMD_RUN_COMMAND_STDERR_ONLY$/
+      elsif content_line =~ /^GENMD-RUN-COMMAND-STDERR-ONLY$/
         cmd_lines = read_until_genmd_eof(input_handle)
         run_command_stderr_only(cmd_lines, output_handle)
 
-      elsif content_line =~ /^GENMD_SHOW_COMMAND$/
+      elsif content_line =~ /^GENMD-SHOW-COMMAND$/
         cmd_lines = read_until_genmd_eof(input_handle)
         show_command(cmd_lines, output_handle)
 
-      elsif content_line =~ /^GENMD_INCLUDE_ESCAPED\(([^)]+)\)$/
+      elsif content_line =~ /^GENMD-INCLUDE-ESCAPED\(([^)]+)\)$/
         included_file_name = $1
         include_escaped(included_file_name, output_handle)
 
-      elsif content_line =~ /^GENMD_INCLUDE_AND_RUN_ESCAPED\(([^)]+)\)$/
+      elsif content_line =~ /^GENMD-INCLUDE-AND-RUN-ESCAPED\(([^)]+)\)$/
         included_file_name = $1
         cmd_lines = File.readlines(included_file_name).map{|line| line.chomp}
         run_command(cmd_lines, output_handle)
 
-      elsif content_line =~ /^GENMD_RUN_CONTENT_GENERATOR\(([^)]+)\)$/
+      elsif content_line =~ /^GENMD-RUN-CONTENT-GENERATOR\(([^)]+)\)$/
         cmd = $1
         run_content_generator(cmd, output_handle)
 
@@ -147,7 +147,7 @@ def read_until_genmd_eof(input_handle)
     lines = []
     while true
       line = input_handle.readline.chomp
-      if line == 'GENMD_EOF'
+      if line == 'GENMD-EOF'
         break
       end
       lines << line
@@ -155,7 +155,7 @@ def read_until_genmd_eof(input_handle)
     return lines
 
   rescue EOFError
-    $stderr.puts "$0: did not find GENMD_EOF"
+    $stderr.puts "$0: did not find GENMD-EOF"
     exit 1
   end
 end

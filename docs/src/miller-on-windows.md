@@ -24,7 +24,7 @@ Miller was originally developed for Unix-like operating systems including Linux 
 
 MSYS2 is no longer required -- although you can of course still use Miller from within MSYS2 if you prefer. There is now simply a single `mlr.exe`, with no `msys2.dll` alongside anymore.
 
-See [Installation](installation.md) for how to get a copy of `mlr.exe`.
+See [Installation](installing-miller.md) for how to get a copy of `mlr.exe`.
 
 ## Setup
 

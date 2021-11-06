@@ -28,16 +28,16 @@ semicolon where one is needed . The parser tries to remind you about semicolons
 whenever there's a chance a missing semicolon might be involved in a parse
 error.
 
-GENMD_RUN_COMMAND_TOLERATING_ERROR
+GENMD-RUN-COMMAND-TOLERATING-ERROR
 mlr --csv --from example.csv put -q '
   begin {
     @count = 0 # No semicolon required -- before closing curly brace
   }
   $x=1         # No semicolon required -- at end of expression
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND_TOLERATING_ERROR
+GENMD-RUN-COMMAND-TOLERATING-ERROR
 mlr --csv --from example.csv put -q '
   begin {
     @count = 0 # No semicolon required -- before closing curly brace
@@ -45,7 +45,7 @@ mlr --csv --from example.csv put -q '
   $x=1         # Needs a semicolon after it
   $y=2         # No semicolon required -- at end of expression
 '
-GENMD_EOF
+GENMD-EOF
 
 ## elif
 
@@ -56,39 +56,39 @@ Miller has [`elif`](reference-dsl-control-structures.md#if-statements), not `els
 Miller is simple-minded about scoping [local variables](reference-dsl-variables.md#local-variables) to blocks.
 If you have
 
-GENMD_CARDIFY
+GENMD-CARDIFY
   if (something) {
     x = 1
   } else {
     x = 2
   }
-GENMD_EOF
+GENMD-EOF
 
 then there are two `x` variable, each confined only to their enclosing curly
 braces; there is no hoisting out of the `if` and `else` blocks.
 
 A suggestion is
 
-GENMD_CARDIFY
+GENMD-CARDIFY
   var x
   if (something) {
     x = 1
   } else {
     x = 2
   }
-GENMD_EOF
+GENMD-EOF
 
 ## Required curly braces
 
 Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
 
-GENMD_SHOW_COMMAND
+GENMD-SHOW-COMMAND
 mlr ... put 'if ($x == 1) $y = 2' # Syntax error
-GENMD_EOF
+GENMD-EOF
 
-GENMD_SHOW_COMMAND
+GENMD-SHOW-COMMAND
 mlr ... put 'if ($x == 1) { $y = 2 }' # This is OK
-GENMD_EOF
+GENMD-EOF
 
 ## No autoconvert to boolean
 
@@ -105,7 +105,7 @@ As discussed on the [arithmetic page](reference-main-arithmetic.md) the sum, dif
 
 Likewise, while quotient and remainder are generally pythonic, the quotient and exponentiation of two integers is an integer when possible.
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 $ mlr repl -q
 [mlr] 6/2
 3
@@ -124,7 +124,7 @@ int
 
 [mlr] typeof(7**80)
 float
-GENMD_EOF
+GENMD-EOF
 
 ## Print adds spaces around multiple arguments
 
@@ -133,14 +133,14 @@ As seen in the previous example,
 comma-delimited arguments fills in intervening spaces for you. If you want to
 avoid this, use the dot operator for string-concatenation instead.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put -q '
   end {
     print "[", "a", "b", "c", "]";
     print "[" . "a" . "b" . "c" . "]";
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Similarly, a final newline is printed for you; use [`printn`](reference-dsl-output-statements.md#print-statements) to avoid this.
 
@@ -183,11 +183,11 @@ Arrays and strings are indexed starting with 1, not 0. This is discussed in
 detail on the [arrays page](reference-main-arrays.md) and the [strings
 page](reference-main-strings.md).
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from data/short.csv cat
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from data/short.csv put -q '
   @records[NR] = $*;
   end {
@@ -196,7 +196,7 @@ mlr --csv --from data/short.csv put -q '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Also, slices for arrays and strings are _doubly inclusive_: `x[3:5]` gets you
 elements 3, 4, and 5 of the array or string named `x`.

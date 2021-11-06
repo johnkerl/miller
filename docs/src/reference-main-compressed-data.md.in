@@ -8,14 +8,14 @@ more general `--prepipe` option to support other decompression programs.
 
 If your files end in `.gz`, `.bz2`, or `.z` then Miller will autodetect by file extension:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 file gz-example.csv.gz
 gz-example.csv.gz: gzip compressed data, was "gz-example.csv", last modified: Mon Aug 23 02:04:34 2021, from Unix, original size modulo 2^32 429
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv sort -f color gz-example.csv.gz
-GENMD_EOF
+GENMD-EOF
 
 This will decompress the input data on the fly, while leaving the disk file unmodified. This helps you save disk space, at the cost of some additional runtime CPU usage to decompress the data.
 
@@ -23,9 +23,9 @@ This will decompress the input data on the fly, while leaving the disk file unmo
 
 If the filename doesn't in in `.gz`, `.bz2`, or `.z` then you can use the flags `--gzin`, `--bz2in`, or `--zin` to let Miller know:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --csv --gzin sort -f color myfile.bin # myfile.bin has gzip contents
-GENMD_EOF
+GENMD-EOF
 
 ## External decompressors on input
 
@@ -35,9 +35,9 @@ piping the standard output of that program to Miller's standard input.
 
 You can, of course, already do without this for single input files, for example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 gunzip < gz-example.csv.gz | mlr --csv sort -f color
-GENMD_EOF
+GENMD-EOF
 
 The benefit of `--prepipe` is that Miller will run the specified program once per
 file, respecting file boundaries.
@@ -81,27 +81,27 @@ For compressed output:
   file, which is annoying for version control. That can be suppressed by using 'gzip -n' but then that's
   confusing for the reader, who has no need for -n. We handle this by making this code sample non-live.
 --->
-GENMD_CARDIFY_HIGHLIGHT_FOUR
+GENMD-CARDIFY-HIGHLIGHT-FOUR
 mlr --from example.csv --csv put -q '
   filename = $color.".csv.gz";
   tee | "gzip > ".filename, $*
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 file red.csv.gz purple.csv.gz yellow.csv.gz
 red.csv.gz:    gzip compressed data, last modified: Mon Aug 23 02:34:05 2021, from Unix, original size modulo 2^32 185
 purple.csv.gz: gzip compressed data, last modified: Mon Aug 23 02:34:05 2021, from Unix, original size modulo 2^32 164
 yellow.csv.gz: gzip compressed data, last modified: Mon Aug 23 02:34:05 2021, from Unix, original size modulo 2^32 158
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --csv cat yellow.csv.gz
 color,shape,flag,k,index,quantity,rate
 yellow,triangle,true,1,11,43.6498,9.8870
 yellow,circle,true,8,73,63.9785,4.2370
 yellow,circle,true,9,87,63.5058,8.3350
-GENMD_EOF
+GENMD-EOF
 
 * Using the [in-place flag](reference-main-in-place-processing.md) `-I`, the overwritten file will
 be compressed when possible. See the [page on in-place mode](reference-main-in-place-processing.md) for details.

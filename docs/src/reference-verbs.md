@@ -996,7 +996,7 @@ More example filter expressions:
   Using 'any' higher-order function to see if $index is 10, 20, or 30:
     'any([10,20,30], func(e) {return $index == e})'
 
-See also https://johnkerl.org/miller6/reference-dsl for more context.
+See also https://miller.readthedocs.io/reference-dsl for more context.
 </pre>
 
 ### Features which filter shares with put
@@ -2226,7 +2226,7 @@ More example put expressions:
       end{emitf @min, @max}
     '
 
-See also https://johnkerl.org/miller6/reference-dsl for more context.
+See also https://miller.readthedocs.io/reference-dsl for more context.
 </pre>
 
 ### Features which put shares with filter

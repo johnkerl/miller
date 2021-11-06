@@ -28,15 +28,15 @@ The `print` statement is perhaps self-explanatory, but with a few light caveats:
 
 * You can redirect print output to a file:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --from myfile.dat put 'print > "tap.txt", $x'
-GENMD_EOF
+GENMD-EOF
 
 * You can redirect print output to multiple files, split by values present in various records:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --from myfile.dat put 'print > $a.".txt", $x'
-GENMD_EOF
+GENMD-EOF
 
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
@@ -62,34 +62,34 @@ Records produced by a `mlr put` go downstream to the next verb in your `then`-ch
 
 The syntax is, by example:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 mlr --from myfile.dat put 'tee > "tap.dat", $*' then sort -n index
-GENMD_EOF
+GENMD-EOF
 
 First is `tee >`, then the filename expression (which can be an expression such as `"tap.".$a.".dat"`), then a comma, then `$*`. (Nothing else but `$*` is teeable.)
 
 You can also write to a variable file name -- for example, you can split a
 single file into multiple ones on field names:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv cat example.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv cat circle.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv cat square.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv cat triangle.csv
-GENMD_EOF
+GENMD-EOF
 
 See also [Redirected-output statements](reference-dsl-output-statements.md#redirected-output-statements) for examples.
 
@@ -101,33 +101,33 @@ Details:
 
 * The `print` and `dump` keywords produce output immediately to standard output, or to specified file(s) or pipe-to command if present.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help keyword print
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help keyword dump
-GENMD_EOF
+GENMD-EOF
 
 * `mlr put` sends the current record (possibly modified by the `put` expression) to the output record stream. Records are then input to the following verb in a `then`-chain (if any), else printed to standard output (unless `put -q`). The **tee** keyword *additionally* writes the output record to specified file(s) or pipe-to command, or immediately to `stdout`/`stderr`.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help keyword tee
-GENMD_EOF
+GENMD-EOF
 
 * `mlr put`'s `emitf`, `emitp`, and `emit` send out-of-stream variables to the output record stream. These are then input to the following verb in a `then`-chain (if any), else printed to standard output. When redirected with `>`, `>>`, or `|`, they *instead* write the out-of-stream variable(s) to specified file(s) or pipe-to command, or immediately to `stdout`/`stderr`.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help keyword emitf
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help keyword emitp
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help keyword emit
-GENMD_EOF
+GENMD-EOF
 
 ## Emit statements
 
@@ -142,108 +142,108 @@ You can emit any map-valued expression, including `$*`, map-valued out-of-stream
 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For `emitf` these mustn't have indexing using `@name[...]`. Example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '
   @count += 1;
   @x_sum += $x;
   @y_sum += $y;
   end { emitf @count, @x_sum, @y_sum}
 ' data/small
-GENMD_EOF
+GENMD-EOF
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum += $x; end { dump }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum += $x; end { emit @sum }' data/small
-GENMD_EOF
+GENMD-EOF
 
 If it's indexed then use as many names after `emit` as there are indices:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a] += $x; end { dump }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '
   @sum[$a][$b][$i] += $x;
   end { emit @sum, "a", "b", "i" }
 ' data/small
-GENMD_EOF
+GENMD-EOF
 
 Now for **emitp**: if you have as many names following `emit` as there are levels in the out-of-stream variable's map, then `emit` and `emitp` do the same thing. Where they differ is when you don't specify as many names as there are map levels. In this case, Miller needs to flatten multiple map indices down to output-record keys: `emitp` includes full prefixing (hence the `p` in `emitp`) while `emit` takes the deepest map key as the output-record key:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-GENMD_EOF
+GENMD-EOF
 
 Use **--flatsep** to specify the character which joins multilevel
 keys for `emitp` (it defaults to a colon):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --flatsep / put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --flatsep / put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --flatsep / --oxtab put -q '
   @sum[$a][$b] += $x;
   end { emitp @sum }
 ' data/small
-GENMD_EOF
+GENMD-EOF
 
 ## Multi-emit statements
 
 You can emit **multiple map-valued expressions side-by-side** by
 including their names in parentheses:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/medium --opprint put -q '
   @x_count[$a][$b] += 1;
   @x_sum[$a][$b] += $x;
@@ -254,7 +254,7 @@ mlr --from data/medium --opprint put -q '
       emit (@x_sum, @x_count, @x_mean), "a", "b"
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 What this does is walk through the first out-of-stream variable (`@x_sum` in this example) as usual, then for each keylist found (e.g. `pan,wye`), include the values for the remaining out-of-stream variables (here, `@x_count` and `@x_mean`). You should use this when all out-of-stream variables in the emit statement have **the same shape and the same keylists**.
 
@@ -262,27 +262,27 @@ What this does is walk through the first out-of-stream variable (`@x_sum` in thi
 
 Use **emit all** (or `emit @*` which is synonymous) to output all out-of-stream variables. You can use the following idiom to get various accumulators output side-by-side (reminiscent of `mlr stats1`):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small --opprint put -q '
   @v[$a][$b]["sum"] += $x;
   @v[$a][$b]["count"] += 1;
   end{emit @*,"a","b"}
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small --opprint put -q '
   @sum[$a][$b] += $x;
   @count[$a][$b] += 1;
   end{emit @*,"a","b"}
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small --opprint put -q '
   @sum[$a][$b] += $x;
   @count[$a][$b] += 1;
   end{emit (@sum, @count),"a","b"}
 '
-GENMD_EOF
+GENMD-EOF
 

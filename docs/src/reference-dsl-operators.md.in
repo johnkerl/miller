@@ -54,45 +54,45 @@ The main use for the `.` operator is for string concatenation: `"abc" . "def"` i
 
 However, in Miller 6 it has optional use for map traversal. Example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/server-log.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json --from data/server-log.json put -q '
   print $req["headers"]["host"];
   print $req.headers.host;
 '
-GENMD_EOF
+GENMD-EOF
 
 This also works on the left-hand sides of assignment statements:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json --from data/server-log.json put '
   $req.headers.host = "UPDATED";
 '
-GENMD_EOF
+GENMD-EOF
 
 A few caveats:
 
 * This is why `.` has higher precedece than `+` in the table above -- in Miller 5 and below, where `.` was only used for concatenation, it had the same precedence as `+`. So you can now do this:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json --from data/server-log.json put -q '
   print $req.id + $res.status_code
 '
-GENMD_EOF
+GENMD-EOF
 
 * However (awkwardly), if you want to use `.` for map-traversal as well as string-concatenation in the same statement, you'll need to insert parentheses, as the default associativity is left-to-right:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json --from data/server-log.json put -q '
   print $req.method . " -- " . $req.path
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json --from data/server-log.json put -q '
   print ($req.method) . " -- " . ($req.path)
 '
-GENMD_EOF
+GENMD-EOF

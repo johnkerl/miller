@@ -33,7 +33,7 @@ A perhaps helpful analogy: the `select` function is to arrays and maps as the
 
 Array examples:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_array = [2, 9, 10, 3, 1, 4, 5, 8, 7, 6];
@@ -51,11 +51,11 @@ mlr -n put '
     print;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Map examples:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
@@ -71,7 +71,7 @@ mlr -n put '
     print select(my_map, func (k,v) { return v % 10 >= 5});
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## apply
 
@@ -88,7 +88,7 @@ A perhaps helpful analogy: the `apply` function is to arrays and maps as the
 
 Array examples:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_array = [2, 9, 10, 3, 1, 4, 5, 8, 7, 6];
@@ -108,9 +108,9 @@ mlr -n put '
     print sort(apply(my_array, func(e) { return e**3 }));
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
@@ -130,7 +130,7 @@ mlr -n put '
     print sort(apply(my_map, func(k,v) { return {toupper(k): v**3} }));
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## reduce
 
@@ -146,7 +146,7 @@ accumulator.
 The start value for the accumulator is the first element for arrays, or the
 first element's key-value pair for maps.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_array = [2, 9, 10, 3, 1, 4, 5, 8, 7, 6];
@@ -175,9 +175,9 @@ mlr -n put '
     print reduce(my_array, func (acc,e) { return acc. "," . e });
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
@@ -209,7 +209,7 @@ mlr -n put '
     print reduce(my_map, func (acck,accv,ek,ev) { return {"joined": accv . "," . ev }});
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## fold
 
@@ -218,7 +218,7 @@ The [`fold`](reference-dsl-builtin-functions.md#fold) function is the same as
 taken from the first entry of the array/map, you specify it as the third
 argument.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_array = [2, 9, 10, 3, 1, 4, 5, 8, 7, 6];
@@ -239,9 +239,9 @@ mlr -n put '
     print fold(my_array, func (acc,e) { return acc + e }, 1000000);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
@@ -265,7 +265,7 @@ mlr -n put '
     print fold(my_map, func (acck,accv,ek,ev) { return {"sum": accv + ev} }, {"sum": 1000000});
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## sort
 
@@ -288,7 +288,7 @@ values.
 
 Array examples:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_array = [2, 9, 10, 3, 1, 4, 5, 8, 7, 6];
@@ -307,11 +307,11 @@ mlr -n put '
     print sort(my_array, func (a,b) { return b <=> a });
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Map examples:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
@@ -338,7 +338,7 @@ mlr -n put '
     print sort(my_map, func(ak,av,bk,bv) { return bv <=> av });
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Please see the [sorting page](sorting.md) for more examples.
 
@@ -346,36 +346,36 @@ Please see the [sorting page](sorting.md) for more examples.
 
 This is a way to do a logical OR/AND, respectively, of several boolean expressions, without the explicit `||`/`&&` and without a `for`-loop. This is a keystroke-saving convenience.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p cat example.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv filter 'any({"color":"red","shape":"square"}, func(k,v) {return $[k] == v})'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv filter 'every({"color":"red","shape":"square"}, func(k,v) {return $[k] == v})'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put '$is_red_square = every({"color":"red","shape":"square"}, func(k,v) {return $[k] == v})'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv filter 'any([16,51,61,64], func(e) {return $index == e})'
-GENMD_EOF
+GENMD-EOF
 
 This last example could also be done using a map:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv filter '
   begin {
     @indices = {16:true, 51:true, 61:true, 64:true};
   }
   @indices[$index] == true;
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Combined examples
 
@@ -383,11 +383,11 @@ Using a paradigm from the [page on operating on all
 records](operating-on-all-records.md), we can retain a column from the input
 data as an array, then apply some higher-order functions to it:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p cat example.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put -q '
   begin {
     @indexes = [] # So auto-extend will make an array, not a map
@@ -420,7 +420,7 @@ mlr --c2p --from example.csv put -q '
     )
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Caveats
 
@@ -428,21 +428,21 @@ GENMD_EOF
 
 From other languages it's easy to accidentially write
 
-GENMD_RUN_COMMAND_TOLERATING_ERROR
+GENMD-RUN-COMMAND-TOLERATING-ERROR
 mlr -n put 'end { print select([1,2,3,4,5], func (e) { e >= 3 })}'
-GENMD_EOF
+GENMD-EOF
 
 instead of
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put 'end { print select([1,2,3,4,5], func (e) { return e >= 3 })}'
-GENMD_EOF
+GENMD-EOF
 
 ### No IIFEs
 
 As of September 2021, immediately invoked function expressions (IIFEs) are not part of the Miller DSL's grammar. For example, this doesn't work yet:
 
-GENMD_RUN_COMMAND_TOLERATING_ERROR
+GENMD-RUN-COMMAND-TOLERATING-ERROR
 mlr -n put '
   end {
     x = 3;
@@ -450,11 +450,11 @@ mlr -n put '
     print y;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 but this does:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = 3;
@@ -463,7 +463,7 @@ mlr -n put '
     print y;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ### Built-in functions currently unsupported as arguments
 
@@ -474,7 +474,7 @@ be used directly as arguments to higher-order functions.
 
 For example, this doesn't work yet:
 
-GENMD_RUN_COMMAND_TOLERATING_ERROR
+GENMD-RUN-COMMAND-TOLERATING-ERROR
 mlr -n put '
   end {
     notches = [0,1,2,3];
@@ -483,11 +483,11 @@ mlr -n put '
     print cosines;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 but this does:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     notches = [0,1,2,3];
@@ -497,4 +497,4 @@ mlr -n put '
     print cosines;
   }
 '
-GENMD_EOF
+GENMD-EOF

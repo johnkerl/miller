@@ -6,9 +6,9 @@ Additionally, Miller gives you the option of including comments within your data
 
 ## Examples
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help file-formats
-GENMD_EOF
+GENMD-EOF
 
 ## CSV/TSV/ASV/USV/etc.
 
@@ -67,39 +67,39 @@ you.
 
 An **array of single-level objects** is, quite simply, **a table**:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json head -n 2 then cut -f color,shape data/json-example-1.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json head -n 2 then cut -f color,u,v data/json-example-1.json
-GENMD_EOF
+GENMD-EOF
 
 Single-level JSON data goes back and forth between JSON and tabular formats
 in the direct way:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint head -n 2 then cut -f color,u,v data/json-example-1.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint cat data/json-example-1.json
-GENMD_EOF
+GENMD-EOF
 
 ### Nested JSON objects
 
 Additionally, Miller can **tabularize nested objects by concatentating keys**. If your processing has
 input as well as output in JSON format, JSON structure is preserved throughout the processing:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json --jvstack head -n 2 data/json-example-2.json
-GENMD_EOF
+GENMD-EOF
 
 But if the input format is JSON and the output format is not (or vice versa) then key-concatenation applies:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint head -n 4 data/json-example-2.json
-GENMD_EOF
+GENMD-EOF
 
 This is discussed in more detail on the page [Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md).
 
@@ -128,13 +128,13 @@ decode these in Miller.
 
 Miller's pretty-print format is like CSV, but column-aligned.  For example, compare
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ocsv cat data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint cat data/small
-GENMD_EOF
+GENMD-EOF
 
 Note that while Miller is a line-at-a-time processor and retains input lines in memory only where necessary (e.g. for sort), pretty-print output requires it to accumulate all input lines (so that it can compute maximum column widths) before producing any output. This has two consequences: (a) pretty-print output won't work on `tail -f` contexts, where Miller will be waiting for an end-of-file marker which never arrives; (b) pretty-print output for large files is constrained by available machine memory.
 
@@ -142,17 +142,17 @@ See [Record Heterogeneity](record-heterogeneity.md) for how Miller handles chang
 
 For output only (this isn't supported in the input-scanner as of 5.0.0) you can use `--barred` with pprint output format:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint --barred cat data/small
-GENMD_EOF
+GENMD-EOF
 
 ## Markdown tabular
 
 Markdown format looks like this:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --omd cat data/small
-GENMD_EOF
+GENMD-EOF
 
 which renders like this when dropped into various web tools (e.g. github comments):
 
@@ -165,7 +165,7 @@ As of Miller 4.3.0, markdown format is supported only for output, not input.
 This is perhaps most useful for looking a very wide and/or multi-column data which causes line-wraps on the screen (but see also
 [ngrid](https://github.com/twosigma/ngrid/) for an entirely different, very powerful option). Namely:
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 $ grep -v '^#' /etc/passwd | head -n 6 | mlr --nidx --fs : --opprint cat
 1          2 3  4  5                          6               7
 nobody     * -2 -2 Unprivileged User          /var/empty      /usr/bin/false
@@ -174,9 +174,9 @@ daemon     * 1  1  System Services            /var/root       /usr/bin/false
 _uucp      * 4  4  Unix to Unix Copy Protocol /var/spool/uucp /usr/sbin/uucico
 _taskgated * 13 13 Task Gate Daemon           /var/empty      /usr/bin/false
 _networkd  * 24 24 Network Services           /var/networkd   /usr/bin/false
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 $ grep -v '^#' /etc/passwd | head -n 2 | mlr --nidx --fs : --oxtab cat
 1 nobody
 2 *
@@ -193,9 +193,9 @@ $ grep -v '^#' /etc/passwd | head -n 2 | mlr --nidx --fs : --oxtab cat
 5 System Administrator
 6 /var/root
 7 /bin/sh
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY_HIGHLIGHT_THREE
+GENMD-CARDIFY-HIGHLIGHT-THREE
 $ grep -v '^#' /etc/passwd | head -n 2 | \
   mlr --nidx --fs : --ojson --jvstack --jlistwrap \
     label name,password,uid,gid,gecos,home_dir,shell
@@ -219,45 +219,45 @@ $ grep -v '^#' /etc/passwd | head -n 2 | \
   "shell": "/bin/sh"
 }
 ]
-GENMD_EOF
+GENMD-EOF
 
 ## DKVP: Key-value pairs
 
 Miller's default file format is DKVP, for **delimited key-value pairs**. Example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr cat data/small
-GENMD_EOF
+GENMD-EOF
 
 Such data are easy to generate, e.g. in Ruby with
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}"
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')
-GENMD_EOF
+GENMD-EOF
 
 or `print` statements in various languages, e.g.
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 echo "type=3,user=$USER,date=$date\n";
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 logger.log("type=3,user=$USER,date=$date\n");
-GENMD_EOF
+GENMD-EOF
 
 Fields lacking an IPS will have positional index (starting at 1) used as the key, as in NIDX format. For example, `dish=7,egg=8,flint` is parsed as `"dish" => "7", "egg" => "8", "3" => "flint"` and `dish,egg,flint` is parsed as `"1" => "dish", "2" => "egg", "3" => "flint"`.
 
 As discussed in [Record Heterogeneity](record-heterogeneity.md), Miller handles changes of field names within the same data stream. But using DKVP format this is particularly natural. One of my favorite use-cases for Miller is in application/server logs, where I log all sorts of lines such as
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 resource=/path/to/file,loadsec=0.45,ok=true
 record_count=100, resource=/path/to/file
 resource=/some/other/path,loadsec=0.97,ok=false
-GENMD_EOF
+GENMD-EOF
 
 etc. and I just log them as needed. Then later, I can use `grep`, `mlr --opprint group-like`, etc.
 to analyze my logs.
@@ -272,41 +272,41 @@ This recapitulates Unix-toolkit behavior.
 
 Example with index-numbered output:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --onidx --ofs ' ' cat data/small
-GENMD_EOF
+GENMD-EOF
 
 Example with index-numbered input:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/mydata.txt
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt
-GENMD_EOF
+GENMD-EOF
 
 Example with index-numbered input and output:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/mydata.txt
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt
-GENMD_EOF
+GENMD-EOF
 
 ## Data-conversion keystroke-savers
 
 While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, there are also keystroke-savers for this purpose, such as `mlr --c2j cat myfile.csv`.  For a complete list:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help format-conversion
-GENMD_EOF
+GENMD-EOF
 
 <!---
 TODO: probably entirely unsupport this feature in Miller6.
@@ -330,20 +330,20 @@ See also the [separators page](reference-main-separators.md) for more informatio
 
 You can include comments within your data files, and either have them ignored, or passed directly through to the standard output as soon as they are encountered:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help comments-in-data
-GENMD_EOF
+GENMD-EOF
 
 Examples:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/budget.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --skip-comments --icsv --opprint sort -nr quantity data/budget.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --pass-comments --icsv --opprint sort -nr quantity data/budget.csv
-GENMD_EOF
+GENMD-EOF

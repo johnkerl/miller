@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-11-05
+.\"      Date: 2021-11-06
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-11-05" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-11-06" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +38,7 @@ Output of one verb may be chained as input to another using "then", e.g.
   mlr --csv stats1 -a min,mean,max -f quantity then sort -f color example.csv
 
 Please see 'mlr help topics' for more information.
-Please also see https://johnkerl.org/miller6
+Please also see https://miller.readthedocs.io
 
 .SH "DESCRIPTION"
 .sp
@@ -1245,7 +1245,7 @@ More example filter expressions:
   Using 'any' higher-order function to see if $index is 10, 20, or 30:
     'any([10,20,30], func(e) {return $index == e})'
 
-See also https://johnkerl.org/miller6/reference-dsl for more context.
+See also https://miller.readthedocs.io/reference-dsl for more context.
 .fi
 .if n \{\
 .RE
@@ -1783,7 +1783,7 @@ More example put expressions:
       end{emitf @min, @max}
     '
 
-See also https://johnkerl.org/miller6/reference-dsl for more context.
+See also https://miller.readthedocs.io/reference-dsl for more context.
 .fi
 .if n \{\
 .RE
@@ -4488,7 +4488,7 @@ etc., to control the format of the output if the output is redirected. See also 
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
 
-Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
+Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 .fi
 .if n \{\
 .RE
@@ -4522,7 +4522,7 @@ etc., to control the format of the output if the output is redirected. See also 
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
 
-Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
+Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 .fi
 .if n \{\
 .RE
@@ -4558,7 +4558,7 @@ etc., to control the format of the output if the output is redirected. See also 
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
 
-Please see https://johnkerl.org/miller6://johnkerl.org/miller/doc for more information.
+Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 .fi
 .if n \{\
 .RE

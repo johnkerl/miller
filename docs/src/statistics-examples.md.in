@@ -4,15 +4,15 @@
 
 For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab stats1 -f x -a p25,p75 \
     then put '$x_iqr = $x_p75 - $x_p25' \
     data/medium 
-GENMD_EOF
+GENMD-EOF
 
 For wildcarded field names, first compute p25 and p75, then loop over field names with `p25` in them:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \
     then put 'for (k,v in $*) {
       if (k =~ "(.*)_p25") {
@@ -20,13 +20,13 @@ mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \
       }
     }' \
     data/medium 
-GENMD_EOF
+GENMD-EOF
 
 ## Computing weighted means
 
 This might be more elegantly implemented as an option within the `stats1` verb. Meanwhile, it's expressible within the DSL:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/medium put -q '
   # Using the y field for weighting in this example
   weight = $y;
@@ -51,4 +51,4 @@ mlr --from data/medium put -q '
     #emit mean, "a";
     emit (wmean, mean), "a";
   }'
-GENMD_EOF
+GENMD-EOF

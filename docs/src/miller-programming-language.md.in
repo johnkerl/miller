@@ -10,9 +10,9 @@ In the [DSL reference](reference-dsl.md) page we have a complete reference to Mi
 
 Let's keep using the [example.csv](./example.csv) file:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p put '$cost = $quantity * $rate' example.csv
-GENMD_EOF
+GENMD-EOF
 
 When we type that, a few things are happening:
 
@@ -25,26 +25,26 @@ When we type that, a few things are happening:
 
 You can use more than one statement, separating them with semicolons, and optionally putting them on lines of their own:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p put '$cost = $quantity * $rate; $index = $index * 100'  example.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p put '
   $cost = $quantity * $rate;
   $index *= 100
 ' example.csv
-GENMD_EOF
+GENMD-EOF
 
 One of Miller's key features is the ability to express data-transformation right there at the keyboard, interactively. But if you find yourself using expressions repeatedly, you can put everything between the single quotes into a file and refer to that using `put -f`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat dsl-example.mlr
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p put -f dsl-example.mlr example.csv
-GENMD_EOF
+GENMD-EOF
 
 This becomes particularly important on Windows. Quite a bit of effort was put into making Miller on Windows be able to handle the kinds of single-quoted expressions we're showing here, but if you get syntax-error messages on Windows using examples in this documentation, you can put the parts between single quotes into a file and refer to that using `mlr put -f` -- or, use the triple-double-quote trick as described in the [Miller on Windows page](miller-on-windows.md).
 
@@ -56,34 +56,34 @@ Above we also saw that names like `$quantity` are bound to each record in turn.
 
 To make `begin` and `end` statements useful, we need somewhere to put things that persist across the duration of the record stream, and a way to emit them. Miller uses [**out-of-stream variables**](reference-dsl-variables.md#out-of-stream-variables) (or **oosvars** for short) whose names start with an `@` sigil, along with the [`emit`](reference-dsl-output-statements.md#emit-statements) keyword to write them into the output record stream:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
-GENMD_EOF
+GENMD-EOF
 
 If you want the end-block output to be the only output, and not include the records from the input data, you can use `mlr put -q`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2j --from example.csv put -q 'begin { @sum = 0 } @sum += $quantity; end {emit @sum}'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2j --from example.csv put -q '
   begin { @count = 0; @sum = 0 }
   @count += 1;
   @sum += $quantity;
   end {emit (@count, @sum)}
 '
-GENMD_EOF
+GENMD-EOF
 
 We'll see in the documentation for [stats1](reference-verbs.md#stats1) that there's a lower-keystroking way to get counts and sums of things:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2j --from example.csv stats1 -a sum,count -f quantity
-GENMD_EOF
+GENMD-EOF
 
 So, take this sum/count example as an indication of the kinds of things you can do using Miller's programming language.
 
@@ -97,33 +97,33 @@ Also inspired by [AWK](https://en.wikipedia.org/wiki/AWK), the Miller DSL has th
 * `NR` -- starting from 1, counter of how many records processed so far.
 * `FNR` -- similar, but resets to 1 at the start of each file.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat context-example.mlr
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/a.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/b.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p put -f context-example.mlr data/a.csv data/b.csv
-GENMD_EOF
+GENMD-EOF
 
 ## Functions and local variables
 
 You can [define your own functions](reference-dsl-user-defined-functions.md):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat factorial-example.mlr
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put -f factorial-example.mlr -e '$fact = factorial(NR)'
-GENMD_EOF
+GENMD-EOF
 
 Note that here we used the `-f` flag to `put` to load our function
 definition, and also the `-e` flag to add another statement on the command
@@ -135,13 +135,13 @@ future use.)
 
 Suppose you want to only compute sums conditionally -- you can use an `if` statement:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat if-example.mlr
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put -q -f if-example.mlr
-GENMD_EOF
+GENMD-EOF
 
 Miller's else-if is spelled `elif`.
 
@@ -154,17 +154,17 @@ haven't encountered maps and arrays yet in this introduction, but for now it
 suffices to know that `$*` is a special variable holding the current record as
 a map:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat for-example.mlr
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv cat data/a.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from data/a.csv put -qf for-example.mlr
-GENMD_EOF
+GENMD-EOF
 
 Here we used the local variables `k` and `v`. Now we've seen four kinds of variables:
 
@@ -199,10 +199,10 @@ basic idea is:
 
 For example, you can sum up all the `$a` values across records without having to check whether they're present or not:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json cat absent-example.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json put '@sum_of_a += $a; end {emit @sum_of_a}' absent-example.json
-GENMD_EOF
+GENMD-EOF

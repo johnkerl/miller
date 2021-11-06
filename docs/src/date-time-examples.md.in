@@ -4,17 +4,17 @@
 
 Given input like
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat dates.csv
-GENMD_EOF
+GENMD-EOF
 
 we can use [strptime](reference-verbs.md#strptime) to parse the date field into seconds-since-epoch and then do numeric comparisons.  Simply match your input dataset's date-formatting to the [strptime](reference-verbs.md#strptime) format-string.  For example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv filter '
   strptime($date, "%Y-%m-%d") > strptime("2018-03-03", "%Y-%m-%d")
 ' dates.csv
-GENMD_EOF
+GENMD-EOF
 
 Caveat: localtime-handling in timezones with DST is still a work in progress; see [https://github.com/johnkerl/miller/issues/170](https://github.com/johnkerl/miller/issues/170) . See also [https://github.com/johnkerl/miller/issues/208](https://github.com/johnkerl/miller/issues/208) -- thanks @aborruso!
 
@@ -22,40 +22,40 @@ Caveat: localtime-handling in timezones with DST is still a work in progress; se
 
 Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 head -n 10 data/miss-date.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 wc -l data/miss-date.csv
-GENMD_EOF
+GENMD-EOF
 
 Since there are 1372 lines in the data file, some automation is called for. To find the missing dates, you can convert the dates to seconds since the epoch using `strptime`, then compute adjacent differences (the `cat -n` simply inserts record-counters):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/miss-date.csv --icsv \
   cat -n \
   then put '$datestamp = strptime($date, "%Y-%m-%d")' \
   then step -a delta -f datestamp \
 | head
-GENMD_EOF
+GENMD-EOF
 
 Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/miss-date.csv --icsv \
   cat -n \
   then put '$datestamp = strptime($date, "%Y-%m-%d")' \
   then step -a delta -f datestamp \
   then filter '$datestamp_delta != 86400 && $n != 1'
-GENMD_EOF
+GENMD-EOF
 
 Given this, it's now easy to see where the gaps are:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv
-GENMD_EOF
+GENMD-EOF

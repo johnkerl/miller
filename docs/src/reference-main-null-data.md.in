@@ -14,55 +14,55 @@ Miller has three kinds of null data:
 
 You can test these programatically using the functions `is_empty`/`is_not_empty`, `is_absent`/`is_present`, and `is_null`/`is_not_null`. For the last pair, note that null means either empty or absent. Here is a full list of such functions:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -f | grep is_
-GENMD_EOF
+GENMD-EOF
 
 ## Rules for null-handling
 
 * Records with one or more empty sort-field values sort after records with all sort-field values present:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr cat data/sort-null.dat
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr sort -n a data/sort-null.dat
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr sort -nr a data/sort-null.dat
-GENMD_EOF
+GENMD-EOF
 
 * Functions/operators which have one or more *empty* arguments produce empty output: e.g.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo 'x=2,y=3' | mlr put '$a=$x+$y'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo 'x=,y=3' | mlr put '$a=$x+$y'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'
-GENMD_EOF
+GENMD-EOF
 
 with the exception that the `min` and `max` functions are special: if one argument is non-null, it wins:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'
-GENMD_EOF
+GENMD-EOF
 
 * Functions of *absent* variables (e.g. `mlr put '$y = log10($nonesuch)'`) evaluate to absent, and arithmetic/bitwise/boolean operators with both operands being absent evaluate to absent. Arithmetic operators with one absent operand return the other operand. More specifically, absent values act like zero for addition/subtraction, and one for multiplication: Furthermore, **any expression which evaluates to absent is not stored in the left-hand side of an assignment statement**:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo 'x=2,y=3' | mlr put '$a=$u+$v; $b=$u+$y; $c=$x+$y'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo 'x=2,y=3' | mlr put '$a=min($x,$v);$b=max($u,$y);$c=min($u,$v)'
-GENMD_EOF
+GENMD-EOF
 
 * Likewise, for assignment to maps, **absent-valued keys or values result in a skipped assignment**.
 
@@ -80,22 +80,22 @@ The reasoning is as follows:
 
 Since absent plus absent is absent (and likewise for other operators), accumulations such as `@sum += $x` work correctly on heterogenous data, as do within-record formulas if both operands are absent. If one operand is present, you may get behavior you don't desire.  To work around this -- namely, to set an output field only for records which have all the inputs present -- you can use a pattern-action block with `is_present`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr cat data/het.dkvp
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
-GENMD_EOF
+GENMD-EOF
 
 ## Arithmetic rules
 
 If you're interested in a formal description of how empty and absent fields participate in arithmetic, here's a table for plus (other arithmetic/boolean/bitwise operators are similar):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help type-arithmetic-info
-GENMD_EOF
+GENMD-EOF

@@ -2,46 +2,46 @@
 
 There are a few nearly-standalone programs which have a little to do with the rest of Miller, do not participate in record streams, and do not deal with file formats. They might as well be little standalone executables, but instead they're delivered within the main Miller executable for convenience.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr aux-list
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr lecat --help
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr termcvt --help
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr hex --help
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr unhex --help
-GENMD_EOF
+GENMD-EOF
 
 Examples:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo 'Hello, world!' | mlr lecat --mono
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr hex data/budget.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr hex -r data/budget.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
-GENMD_EOF
+GENMD-EOF
 
 Additionally, [`mlr help`](online-help.md), [`mlr repl`](repl.md), and [`mlr regtest`](https://github.com/johnkerl/miller/blob/main/go/regtest/README.md) are implemented here.

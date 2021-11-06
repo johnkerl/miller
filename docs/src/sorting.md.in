@@ -16,21 +16,21 @@ another, etc.
 
 Input data:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p cat example.csv
-GENMD_EOF
+GENMD-EOF
 
 Sorted numerically ascending by rate:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p sort -n rate example.csv
-GENMD_EOF
+GENMD-EOF
 
 Sorted lexically ascending by color; then, within each color, numerically descending by quantity:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p sort -f color -nr quantity example.csv
-GENMD_EOF
+GENMD-EOF
 
 ## Sorting fields within records: the sort-within-records verb
 
@@ -40,17 +40,17 @@ leaves records in their original order in the data stream, but reorders fields
 within each record. A typical use-case is for given all records the same column-ordering,
 in particular for converting JSON to CSV (or other tabular formats):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/sort-within-records.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint cat data/sort-within-records.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint sort-within-records data/sort-within-records.json
-GENMD_EOF
+GENMD-EOF
 
 ## The sort function by example
 
@@ -58,77 +58,77 @@ GENMD_EOF
 * Without second argument, uses the natural ordering.
 * With second which is string, takes sorting flags from it: `"f"` for lexical or `"c"` for case-folded lexical, and/or `"r"` for reverse/descending.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort array with natural ordering
     print sort([5,2,3,1,4]);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort array with reverse-natural ordering
     print sort([5,2,3,1,4], "r");
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort array with custom function: natural ordering
     print sort([5,2,3,1,4], func(a,b) { return a <=> b});
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort array with custom function: reverse-natural ordering
     print sort([5,2,3,1,4], func(a,b) { return b <=> a});
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort map with natural ordering on keys
     print sort({"c":2, "a": 3, "b": 1});
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort map with reverse-natural ordering on keys
     print sort({"c":2, "a": 3, "b": 1}, "r");
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort map with custom function: natural ordering on values
     print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return av <=> bv});
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     # Sort map with custom function: reverse-natural ordering on values
     print sort({"c":2, "a": 3, "b": 1}, func(ak,av,bk,bv){return bv <=> av});
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 In the rest of this page we'll look more closely at these variants.
 
@@ -147,47 +147,47 @@ contain strings, floats, and booleans; if you need to sort an array whose
 values are themselves maps or arrays, you'll need `sort` with function argument
 as described further down in this page.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/sorta-example.csv
-GENMD_EOF
+GENMD-EOF
 
 Default sort is numerical ascending:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from data/sorta-example.csv put '
   $values = splita($values, ";");
   $values = sort($values);        # default flags
   $values = joinv($values, ";");
 '
-GENMD_EOF
+GENMD-EOF
 
 Use the `"r"` flag for reverse, which is numerical descending:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from data/sorta-example.csv put '
   $values = splita($values, ";");
   $values = sort($values, "r");   # 'r' flag for reverse sort
   $values = joinv($values, ";");
 '
-GENMD_EOF
+GENMD-EOF
 
 Use the `"f"` flag for lexical ascending sort (and `"fr"` would lexical descending):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from data/sorta-example.csv put '
   $values = splita($values, ";");
   $values = sort($values, "f");   # 'f' flag for lexical sort
   $values = joinv($values, ";");
 '
-GENMD_EOF
+GENMD-EOF
 
 Without and with case-folding:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/sorta-example-text.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from data/sorta-example-text.csv put '
   $values = splita($values, ";");
   if (NR == 1) {
@@ -197,7 +197,7 @@ mlr --c2p --from data/sorta-example-text.csv put '
   }
   $values = joinv($values, ";");
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Simple sorting of maps within records
 
@@ -211,16 +211,16 @@ described further down in this page.
 Also note that, unlike the `sort-within-record` verb with its `-r` flag,
 `sort` doesn't recurse into submaps and sort those.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/server-log.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --json --from data/server-log.json put '
   $req = sort($req);      # Ascending here
   $res = sort($res, "r"); # Descending here
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Simple sorting of maps across records
 
@@ -235,7 +235,7 @@ of accumulating records in a map, then sorting the map.
 Using the `f` flag we're sorting the map keys (1-up NR) lexically, so we
 have 1, then 10, then 2:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv put -q '
   begin {
     @records = {};  # Define as a map
@@ -249,7 +249,7 @@ mlr --icsv --opprint --from example.csv put -q '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Custom sorting of arrays within records
 
@@ -264,14 +264,14 @@ for comparing elements.
 For example, let's use the following input data. Instead of having an array, it
 has some semicolon-delimited data in a field which we can split and sort:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/sortaf-example.csv
-GENMD_EOF
+GENMD-EOF
 
 In the following example we sort data in several ways -- the first two just
 recaptiulate (for reference) what `sort` with default flags already does; the third is novel:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/sortaf-example.csv put '
 
   # Same as sort($values)
@@ -302,7 +302,7 @@ mlr --icsv --ojson --from data/sortaf-example.csv put '
   $reverse = sort(split_values, reverse);
   $even_then_odd = sort(split_values, even_then_odd);
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Custom sorting of arrays across records
 
@@ -319,7 +319,7 @@ functions are maps -- and we have to access the `index` field using either
 indexing](reference-dsl-operators.md#the-double-purpose-dot-operator))
 `a.index` and `b.index`.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv put -q '
   # Sort primarily ascending on the shape field, then secondarily
   # descending numeric on the index field.
@@ -342,7 +342,7 @@ mlr --icsv --opprint --from example.csv put -q '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Custom sorting of maps within records
 
@@ -356,7 +356,7 @@ keys and/or values.
 
 For example, we can sort ascending or descending by map key or map value:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put -q '
   func f1(ak, av, bk, bv) {
     return ak <=> bk
@@ -383,7 +383,7 @@ mlr -n put -q '
     print sort(x, f4);
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Custom sorting of maps across records
 
@@ -395,7 +395,7 @@ of them -- densely -- accumulating them in an array is fine. If we're only
 taking a subset -- sparsely -- and we want to retain the original `NR` as keys,
 using a map is handy, since we don't need continguous keys.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv put -q '
   # Sort descending numeric on the index field
   func cmp(ak, av, bk, bv) {
@@ -412,4 +412,4 @@ mlr --icsv --opprint --from example.csv put -q '
     }
   }
 '
-GENMD_EOF
+GENMD-EOF

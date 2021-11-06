@@ -14,13 +14,13 @@ For [JSON files](file-formats.md#json), this is easy -- JSON is a nested format 
 can be maps or arrays, which can contain other maps or arrays, and so on, with the nesting
 happily indicated by curly braces:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/map-values.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/map-values-nested.json
-GENMD_EOF
+GENMD-EOF
 
 How can we represent these in CSV files?
 
@@ -44,51 +44,51 @@ default behavior is to spread the map values into multiple keys -- using
 Miller's `flatsep` separator, which defaults to `.` -- to join the original
 record key with map keys:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/map-values.json
-GENMD_EOF
+GENMD-EOF
 
 Flattened to CSV format:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --ocsv cat data/map-values.json
-GENMD_EOF
+GENMD-EOF
 
 Flattened to pretty-print format:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint cat data/map-values.json
-GENMD_EOF
+GENMD-EOF
 
 Using flatten-separator `:` instead of the default `.`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint --flatsep : cat data/map-values.json
-GENMD_EOF
+GENMD-EOF
 
 If the maps are more deeply nested, each level of map keys is joined in:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/map-values-nested.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint cat data/map-values-nested.json
-GENMD_EOF
+GENMD-EOF
 
 **Unflattening** is simply the reverse -- from non-JSON back to JSON:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/map-values.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --ocsv cat data/map-values.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --ocsv cat data/map-values.json | mlr --icsv --ojson cat
-GENMD_EOF
+GENMD-EOF
 
 ## Converting arrays between JSON and non-JSON
 
@@ -96,23 +96,23 @@ If the input data contains arrays, these are also flattened similarly: the
 [1-up array indices](reference-main-arrays.md#1-up-indexing) `1,2,3,...` become string keys
 `"1","2","3",...`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/array-values.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint cat data/array-values.json
-GENMD_EOF
+GENMD-EOF
 
 If the arrays are more deeply nested, each level of arrays keys is joined in:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/array-values-nested.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --opprint cat data/array-values-nested.json
-GENMD_EOF
+GENMD-EOF
 
 In the nested-data examples shown here, nested map values are shown containing
 maps, and nested array values are shown containing arrays -- of course (even
@@ -120,17 +120,17 @@ though not shown here) nested map values can contain arrays, and vice versa.
 
 **Unflattening** arrays is, again, simply the reverse -- from non-JSON back to JSON:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/array-values.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --ocsv cat data/array-values.json
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ijson --ocsv cat data/array-values.json | mlr --icsv --ojson cat
-GENMD_EOF
+GENMD-EOF
 
 ## Auto-inferencing of arrays on unflatten
 
@@ -140,21 +140,21 @@ with keys `"1"`, `"2"`, etc.  -- starting with `"1"`, consecutively, and with
 no gaps -- it turns that back into an array.  This is precisely to undo the
 flatten conversion. However, it may (or may not) be surprising:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/consecutive.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2j cat data/consecutive.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/non-consecutive.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2j cat data/non-consecutive.csv
-GENMD_EOF
+GENMD-EOF
 
 ## Manual control
 
@@ -174,50 +174,50 @@ because
 [map](reference-main-maps.md)-valued/[array](reference-main-arrays.md)-valued
 fields can be produced using [DSL statements](miller-programming-language.md):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/hostnames.csv
-GENMD_EOF
+GENMD-EOF
 
 Using JSON output, we can see that `splita` has produced an array-valued field named `components`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson --from data/hostnames.csv put '$components = splita($host, ".")'
-GENMD_EOF
+GENMD-EOF
 
 Using CSV output, with default auto-flatten, we get `components.1` through `components.4`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from data/hostnames.csv put '$components = splita($host, ".")'
-GENMD_EOF
+GENMD-EOF
 
 Using CSV output, without default auto-flatten, we get a JSON-stringified encoding of the `components` field:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv --from data/hostnames.csv --no-auto-flatten put '$components = splita($host, ".")'
-GENMD_EOF
+GENMD-EOF
 
 Now suppose we ran this
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --oxtab --from data/hostnames.csv --no-auto-flatten put '
   $a = splita($host, ".");
   $b = splita($host, ".");
 '
-GENMD_EOF
+GENMD-EOF
 
 into a file [data/hostnames.xtab](./data/hostnames.xtab):
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/hostnames.xtab
-GENMD_EOF
+GENMD-EOF
 
 This was written with `--no-auto-unflatten` so we need to manually revive the
 array-valued fields, if we choose -- here, we can JSON-parse the `a` field and
 leave `b` JSON-stringified:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ixtab --ojson json-parse -f a data/hostnames.xtab
-GENMD_EOF
+GENMD-EOF
 
 See also the
 [JSON parse and stringify section](reference-main-data-types.md#json-parse-and-stringify) section for

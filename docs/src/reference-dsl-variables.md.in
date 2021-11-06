@@ -20,13 +20,13 @@ If field names have **special characters** such as `.` then you can use braces, 
 
 You may also use a **computed field name** in square brackets, e.g.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo a=3,b=4 | mlr filter '$["x"] < 0.5'
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
-GENMD_EOF
+GENMD-EOF
 
 Notes:
 
@@ -46,39 +46,39 @@ Use `$[[3]]` to access the name of field 3.  More generally, any expression eval
 
 Then using a computed field name, `$[ $[[3]] ]` is the value in the third field. This has the shorter equivalent notation `$[[[3]]]`.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr cat data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$[[3]] = "NEW"' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$[[[3]]] = "NEW"' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$NEW = $[[NR]]' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$NEW = $[[[NR]]]' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$[[[NR]]] = "NEW"' data/small
-GENMD_EOF
+GENMD-EOF
 
 Right-hand side accesses to non-existent fields -- i.e. with index less than 1 or greater than `NF` -- return an absent value. Likewise, left-hand side accesses only refer to fields which already exist. For example, if a field has 5 records then assigning the name or value of the 6th (or 600th) field results in a no-op.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$[[6]] = "NEW"' data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$[[[6]]] = "NEW"' data/small
-GENMD_EOF
+GENMD-EOF
 
 ## Out-of-stream variables
 
@@ -90,21 +90,21 @@ Just as for field names in stream records, if you want to define out-of-stream v
 
 You may use a **computed key** in square brackets, e.g.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
-GENMD_EOF
+GENMD-EOF
 
 Out-of-stream variables are **scoped** to the `put` command in which they appear.  In particular, if you have two or more `put` commands separated by `then`, each put will have its own set of out-of-stream variables:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/a.dkvp
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '@sum += $a; end {emit @sum}' \
   then put 'is_present($a) {$a=10*$a; @sum += $a}; end {emit @sum}' \
   data/a.dkvp
-GENMD_EOF
+GENMD-EOF
 
 Out-of-stream variables' **extent** is from the start to the end of the record stream, i.e. every time the `put` or `filter` statement referring to them is executed.
 
@@ -114,7 +114,7 @@ Out-of-stream variables are **read-write**: you can do `$sum=@sum`, `@sum=$sum`,
 
 Using an index on the `@count` and `@sum` variables, we get the benefit of the `-g` (group-by) option which `mlr stats1` and various other Miller commands have:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put -q '
   @x_count[$a] += 1;
   @x_sum[$a] += $x;
@@ -123,15 +123,15 @@ mlr put -q '
     emit @x_sum, "a";
   }
 ' ./data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr stats1 -a count,sum -f x -g a ./data/small
-GENMD_EOF
+GENMD-EOF
 
 Indices can be arbitrarily deep -- here there are two or more of them:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/medium put -q '
   @x_count[$a][$b] += 1;
   @x_sum[$a][$b] += $x;
@@ -139,13 +139,13 @@ mlr --from data/medium put -q '
     emit (@x_count, @x_sum), "a", "b";
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 The idea is that `stats1`, and other Miller verbs, encapsulate frequently-used patterns with a minimum of keystroking (and run a little faster), whereas using out-of-stream variables you have more flexibility and control in what you do.
 
 Begin/end blocks can be mixed with pattern/action blocks. For example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '
   begin {
     @num_total = 0;
@@ -160,7 +160,7 @@ mlr put '
     emitf @num_total, @num_positive
   }
 ' data/put-gating-example-1.dkvp
-GENMD_EOF
+GENMD-EOF
 
 ## Local variables
 
@@ -168,7 +168,7 @@ Local variables are similar to out-of-stream variables, except that their extent
 
 For example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 # Here I'm using a specified random-number seed so this example always
 # produces the same output for this web document: in everyday practice we
 # would leave off the --seed 12345 part.
@@ -185,7 +185,7 @@ mlr --seed 12345 seqgen --start 1 --stop 10 then put '
   num o = f(10, 20);                      # local to the top-level scope
   $o = o;
 '
-GENMD_EOF
+GENMD-EOF
 
 Things which are completely unsurprising, resembling many other languages:
 
@@ -213,23 +213,23 @@ Things which are perhaps surprising compared to other languages:
 
 The following example demonstrates the scope rules:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/scope-example.mlr
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/scope-example.dat
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr
-GENMD_EOF
+GENMD-EOF
 
 And this example demonstrates the type-declaration rules:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/type-decl-example.mlr
-GENMD_EOF
+GENMD-EOF
 
 ## Map literals
 
@@ -237,7 +237,7 @@ Miller's `put`/`filter` DSL has four kinds of maps. **Stream records** are (sing
 
 For example, the following swaps the input stream's `a` and `i` fields, modifies `y`, and drops the rest:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint put '
   $* = {
     "a": $i,
@@ -245,11 +245,11 @@ mlr --opprint put '
     "y": $y * 10,
   }
 ' data/small
-GENMD_EOF
+GENMD-EOF
 
 Likewise, you can assign map literals to out-of-stream variables or local variables; pass them as arguments to user-defined functions, return them from functions, and so on:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small put '
   func f(map m): map {
     m["x"] *= 200;
@@ -257,11 +257,11 @@ mlr --from data/small put '
   }
   $* = f({"a": $a, "x": $x});
 '
-GENMD_EOF
+GENMD-EOF
 
 Like out-of-stream and local variables, map literals can be multi-level:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --from data/small put -q '
   begin {
     @o = {
@@ -281,7 +281,7 @@ mlr --from data/small put -q '
     dump @o;
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 See also the [Maps page](reference-main-maps.md).
 
@@ -301,13 +301,13 @@ read/write access to environment variables, e.g.  `ENV["HOME"]` or
 
 <!--- TODO: FLATSEP IFLATSEP OFLATSEP --->
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr filter 'FNR == 2' data/small*
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put '$fnr = FNR' data/small*
-GENMD_EOF
+GENMD-EOF
 
 Their values of `NF`, `NR`, `FNR`, `FILENUM`, and `FILENAME` change from one
 record to the next as Miller scans through your input data stream. The
@@ -318,13 +318,13 @@ system environment variables at the time Miller starts. Any changes made to
 
 Their **scope is global**: you can refer to them in any `filter` or `put` statement. Their values are assigned by the input-record reader:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv put '$nr = NR' data/a.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
-GENMD_EOF
+GENMD-EOF
 
 The **extent** is for the duration of the put/filter: in a `begin` statement (which executes before the first input record is consumed) you will find `NR=1` and in an `end` statement (which is executed after the last input record is consumed) you will find `NR` to be the total number of records ingested.
 
@@ -340,13 +340,13 @@ Use of type-checking is entirely up to you: omit it if you want flexibility with
 
 The following `is_...` functions take a value and return a boolean indicating whether the argument is of the indicated type. The `assert_...` functions return their argument if it is of the specified type, and cause a fatal error otherwise:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -f | grep ^is
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -f | grep ^assert
-GENMD_EOF
+GENMD-EOF
 
 See [Data-cleaning Examples](data-cleaning-examples.md) for examples of how to use these.
 
@@ -356,36 +356,36 @@ Local variables can be defined either untyped as in `x = 1`, or typed as in `int
 
 The reason for `num` is that `int` and `float` typedecls are very precise:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 float a = 0;   # Runtime error since 0 is int not float
 int   b = 1.0; # Runtime error since 1.0 is float not int
 num   c = 0;   # OK
 num   d = 1.0; # OK
-GENMD_EOF
+GENMD-EOF
 
 A suggestion is to use `num` for general use when you want numeric content, and use `int` when you genuinely want integer-only values, e.g. in loop indices or map keys (since Miller map keys can only be strings or ints).
 
 The `var` type declaration indicates no type restrictions, e.g. `var x = 1` has the same type restrictions on `x` as `x = 1`. The difference is in intentional shadowing: if you have `x = 1` in outer scope and `x = 2` in inner scope (e.g. within a for-loop or an if-statement) then outer-scope `x` has value 2 after the second assignment.  But if you have `var x = 2` in the inner scope, then you are declaring a variable scoped to the inner block.) For example:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 x = 1;
 if (NR == 4) {
   x = 2; # Refers to outer-scope x: value changes from 1 to 2.
 }
 print x; # Value of x is now two
-GENMD_EOF
+GENMD-EOF
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 x = 1;
 if (NR == 4) {
   var x = 2; # Defines a new inner-scope x with value 2
 }
 print x;     # Value of this x is still 1
-GENMD_EOF
+GENMD-EOF
 
 Likewise function arguments can optionally be typed, with type enforced when the function is called:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 func f(map m, int i) {
   ...
 }
@@ -396,11 +396,11 @@ if (NR == 4) {
   var x = 2; # Defines a new inner-scope x with value 2
 }
 print x;     # Value of this x is still 1
-GENMD_EOF
+GENMD-EOF
 
 Thirdly, function return values can be type-checked at the point of `return` using `:` and a typedecl after the parameter list:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 func f(map m, int i): bool {
   ...
   ...
@@ -419,7 +419,7 @@ func f(map m, int i): bool {
   # So it would also be a runtime error on reaching the end of this function without
   # an explicit return statement.
 }
-GENMD_EOF
+GENMD-EOF
 
 ## Aggregate variable assignments
 
@@ -431,7 +431,7 @@ There are three remaining kinds of variable assignment using out-of-stream varia
 
 Example recursive copy of out-of-stream variables:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint --from data/small put -q '
   @v["sum"] += $x;
   @v["count"] += 1;
@@ -441,35 +441,35 @@ mlr --opprint --from data/small put -q '
     dump
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
-GENMD_EOF
+GENMD-EOF
 
 Example of full stream record assigned to an out-of-stream variable, finding the record for which the `x` field has the largest value in the input stream:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/small
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint put -q '
   is_null(@xmax) || $x > @xmax {@xmax = $x; @recmax = $*};
   end {emit @recmax}
 ' data/small
-GENMD_EOF
+GENMD-EOF
 
 ## Keywords for filter and put
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help list-keywords # you can also use mlr -k
-GENMD_EOF
+GENMD-EOF
 
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help usage-keywords # you can also use mlr -K
-GENMD_EOF
+GENMD-EOF
 

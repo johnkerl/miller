@@ -7,12 +7,12 @@ while true
 		break
 	end
 
-  if line =~ /GENMD_RUN_COMMAND{{.*}}HERE/
-    line.sub!("GENMD_RUN_COMMAND{{", "")
+  if line =~ /GENMD-RUN-COMMAND{{.*}}HERE/
+    line.sub!("GENMD-RUN-COMMAND{{", "")
     line.sub!("}}HERE", "")
-    puts 'GENMD_RUN_COMMAND'
+    puts 'GENMD-RUN-COMMAND'
     puts line
-    puts 'GENMD_EOF'
+    puts 'GENMD-EOF'
   else
     puts line
   end

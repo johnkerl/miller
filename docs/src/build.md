@@ -16,7 +16,7 @@ Quick links:
 </div>
 # Building from source
 
-Please also see [Installation](installation.md) for information about pre-built executables.
+Please also see [Installation](installing-miller.md) for information about pre-built executables.
 
 You will need to first install Go version 1.15 or higher: please see [https://go.dev](https://go.dev).
 
@@ -30,15 +30,18 @@ Two-clause BSD license [https://github.com/johnkerl/miller/blob/master/LICENSE.t
 * `tar zxvf mlr-i.j.k.tar.gz`
 * `cd mlr-i.j.k`
 * `cd go`
-* `./build` creates the `go/mlr` executable and runs regression tests
-* `go build mlr.go` creates the `go/mlr` executable without running regression tests
+* `make` creates the `go/mlr` (or `go\mlr.exe` on Windows) executable
+* `make check` runs tests
+* `make install` installs the `mlr` executable and the `mlr` manpage
+* On Windows, if you don't have `make`, then you can do `choco install make` -- or, alternatively:
+    * `cd go`
+    * `go build` creates `mlr.exe`
+    * `go test -v mlr\src\...` and `go test -v` runs tests
 
 ## From git clone
 
 * `git clone https://github.com/johnkerl/miller`
-* `cd miller/go`
-* `./build` creates the `go/mlr` executable and runs regression tests
-* `go build mlr.go` creates the `go/mlr` executable without running regression tests
+* `make`, `make check`, and `make install` as above
 
 ## In case of problems
 
@@ -66,10 +69,8 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 * Update version found in `mlr --version` and `man mlr`:
 
     * Edit `go/src/version/version.go` from `6.1.0-dev` to `6.2.0`.
-    * `cd ../docs`
-    * `export PATH=../go:$PATH`
-    * `make html`
-    * The ordering is important: the first build creates `mlr`; the second runs `mlr` to create `manpage.txt`; the third includes `manpage.txt` into one of its outputs.
+    * `sh build-go-src-test-man-doc.sh`
+    * The ordering in this script is important: the first build creates `mlr`; the second runs `mlr` to create `manpage.txt`; the third includes `manpage.txt` into one of its outputs.
     * Commit and push.
 
 * Create the release tarball and SRPM:
@@ -88,11 +89,9 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 * Check the release-specific docs:
 
     * Look at [https://miller.readthedocs.io](https://miller.readthedocs.io) for new-version docs, after a few minutes' propagation time. Note this won't work until Miller 6 is released.
-    * ISP-push to [https://johnkerl.org/miller6](https://johnkerl.org/miller6). (Until release: this is a temporary substitute for readthedocs.)
 
 * Notify:
 
-    * Only do these once Miller 6 is released:
     * Submit `brew` pull request; notify any other distros which don't appear to have autoupdated since the previous release (notes below)
     * Similarly for `macports`: [https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile](https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile)
     * Social-media updates.

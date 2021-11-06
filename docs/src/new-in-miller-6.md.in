@@ -56,7 +56,7 @@ See also the [Arrays reference](reference-main-arrays.md) for more information.
 Stronger support for Windows (with or without MSYS2), with a couple of
 exceptions.  See [Miller on Windows](miller-on-windows.md) for more information.
 
-Binaries are reliably available using GitHub Actions: see also [Installation](installation.md).
+Binaries are reliably available using GitHub Actions: see also [Installation](installing-miller.md).
 
 ## In-process support for compressed input
 
@@ -66,10 +66,10 @@ In addition to `--prepipe gunzip`, you can now use the `--gzin` flag. In fact, i
 
 You can read input with prefixes `https://`, `http://`, and `file://`:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv sort -f shape \
   https://raw.githubusercontent.com/johnkerl/miller/main/docs/src/gz-example.csv.gz
-GENMD_EOF
+GENMD-EOF
 
 ## Output colorization
 
@@ -98,13 +98,13 @@ strings throughout the processing chain.
 
 For example (see [https://github.com/johnkerl/miller/issues/178](https://github.com/johnkerl/miller/issues/178)) you can now do
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo '{ "a": "0123" }' | mlr --json cat
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 echo '{ "x": 1.230, "y": 1.230000000 }' | mlr --json cat
-GENMD_EOF
+GENMD-EOF
 
 ## REPL
 
@@ -150,10 +150,10 @@ Miller 6 has getoptish command-line parsing ([pull request 467](https://github.c
 
 For `mlr put` and `mlr filter`, parse-error messages now include location information:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 mlr: cannot parse DSL expression.
 Parse error on token ">" at line 63 columnn 7.
-GENMD_EOF
+GENMD-EOF
 
 ## Developer-specific aspects
 

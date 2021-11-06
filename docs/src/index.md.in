@@ -14,19 +14,19 @@ pretty-print your data horizontally or vertically to make it easier to read.
 
 **Compact verbs vs programming language:** For low-keystroking you can do things like
 
-GENMD_SHOW_COMMAND
+GENMD-SHOW-COMMAND
 mlr --csv sort -f name input.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_SHOW_COMMAND
+GENMD-SHOW-COMMAND
 mlr --json head -n 1 myfile.json
-GENMD_EOF
+GENMD-EOF
 
 The `sort`, `head`, etc are called *verbs*. They're analogs of familiar command-line tools like `sort`, `head`, and so on -- but they're aware of name-indexed, multi-line file formats like CSV, TSV, and JSON. In addition, though, using Miller's `put` verb you can use programming-language statements for expressions like
 
-GENMD_SHOW_COMMAND
+GENMD-SHOW-COMMAND
 mlr --csv put '$rate = $units / $seconds' input.csv
-GENMD_EOF
+GENMD-EOF
 
 which allow you to succintly express your own logic.
 

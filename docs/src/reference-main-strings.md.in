@@ -10,9 +10,9 @@ the single-quotes are consumed by the shell and Miller gets `$b=$a.".suffix"`. (
 
 A basic string operation is the `.` (concatenation) operator:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put '$output = $color . ":" . $shape'
-GENMD_EOF
+GENMD-EOF
 
 Also see the [list of string-related built-in functions](reference-dsl-builtin-functions.md#string-functions).
 
@@ -47,7 +47,7 @@ backward from the end of the string, while positive indices read forward from
 the start. If a string has length `n` then `-n..-1` are aliases for `1..n`,
 respectively; 0 is never a valid string index in Miller.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = "abcde";
@@ -57,7 +57,7 @@ mlr -n put '
     print x[-2:-1];
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Slicing
 
@@ -65,7 +65,7 @@ Miller supports slicing using `[lo:hi]` syntax.  Either or both of the indices
 in a slice can be negatively aliased as described above.  Unlike in Python,
 Miller string-slice indices are inclusive on both sides: `x[3:5]` means `x[3] . x[4] . x[5]`.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = "abcde";
@@ -76,7 +76,7 @@ mlr -n put '
     print x[2:-2];
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Out-of-bounds indexing
 
@@ -84,7 +84,7 @@ Somewhat imitating Python, out-of-bounds index accesses are
 [errors](reference-main-data-types.md), but out-of-bounds slice accesses result
 in trimming the indices, resulting in a short string or even the empty string:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = "abcde";
@@ -93,9 +93,9 @@ mlr -n put '
     print x[6]; # absent
   }
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr -n put '
   end {
     x = "abcde";
@@ -104,7 +104,7 @@ mlr -n put '
     print x[10:20];
   }
 '
-GENMD_EOF
+GENMD-EOF
 
 ## Escape sequences for string literals
 

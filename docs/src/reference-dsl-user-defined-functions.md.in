@@ -6,7 +6,7 @@ As of Miller 5.0.0 you can define your own functions, as well as subroutines.
 
 Here's the obligatory example of a recursive function to compute the factorial function:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint --from data/small put '
     func f(n) {
         if (is_numeric(n)) {
@@ -21,7 +21,7 @@ mlr --opprint --from data/small put '
     $ox = f($x + NR);
     $oi = f($i);
 '
-GENMD_EOF
+GENMD-EOF
 
 Properties of user-defined functions:
 
@@ -45,7 +45,7 @@ Properties of user-defined functions:
 
 Example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --opprint --from data/small put -q '
   begin {
     @call_count = 0;
@@ -63,7 +63,7 @@ mlr --opprint --from data/small put -q '
   print "NR=" . NR;
   call s(NR);
 '
-GENMD_EOF
+GENMD-EOF
 
 Properties of user-defined subroutines:
 
@@ -97,15 +97,15 @@ If you have a file with UDFs you use frequently, say `my-udfs.mlr`, you can use
 `--load` or `--mload` to define them for your Miller scripts. For example, in
 your shell, 
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 alias mlr='mlr --load ~/my-functions.mlr'
-GENMD_EOF
+GENMD-EOF
 
 or
 
-GENMD_CARDIFY_HIGHLIGHT_ONE
+GENMD-CARDIFY-HIGHLIGHT-ONE
 alias mlr='mlr --load /u/miller-udfs/'
-GENMD_EOF
+GENMD-EOF
 
 See the [miscellaneous-flags page](reference-main-flag-list.md#miscellaneous-flags) for more information.
 
@@ -123,16 +123,16 @@ for more information on
 
 For example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put '
   f = func(s, t) {
     return s . ":" . t;
   };
   $z = f($color, $shape);
 '
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put '
   a = func(s, t) {
     return s . ":" . t . " above";
@@ -143,7 +143,7 @@ mlr --c2p --from example.csv put '
   f = $index >= 50 ? a : b;
   $z = f($color, $shape);
 '
-GENMD_EOF
+GENMD-EOF
 
 Note that you need a semicolon after the closing curly brace of the function literal.
 
@@ -151,7 +151,7 @@ Unlike named functions, function literals (also known as unnamed functions)
 have access to local variables defined in their enclosing scope. That's
 so you can do things like this:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --c2p --from example.csv put '
   f = func(s, t, i) {
     if (i >= cap) {
@@ -163,6 +163,6 @@ mlr --c2p --from example.csv put '
   cap = 10;
   $z = f($color, $shape, $index);
 '
-GENMD_EOF
+GENMD-EOF
 
 See the [page on higher-order functions](reference-dsl-higher-order-functions.md) for more.

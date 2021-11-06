@@ -3,12 +3,12 @@
 These are functions in the [Miller programming language](miller-programming-language.md)
 that you can call when you use `mlr put` and `mlr filter`. For example, when you type
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --opprint --from example.csv put '
   $color = toupper($color);
   $shape = gsub($shape, "[aeiou]", "*");
 '
-GENMD_EOF
+GENMD-EOF
 
 the `toupper` and `gsub` bits are _functions_.
 
@@ -35,4 +35,4 @@ say `x+y` so the details for the `+` operator say that its number of arguments
 is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
 `? :` operator shows an argument-count of 3.
 
-GENMD_RUN_CONTENT_GENERATOR(./mk-func-info.rb)
+GENMD-RUN-CONTENT-GENERATOR(./mk-func-info.rb)

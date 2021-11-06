@@ -6,21 +6,21 @@ How does Miller fit within the Unix toolkit (`grep`, `sed`, `awk`, etc.)?
 
 Miller respects CSV headers. If you do `mlr --csv cat *.csv` then the header line is written once:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/a.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/b.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv cat data/a.csv data/b.csv
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --csv sort -nr b data/a.csv data/b.csv
-GENMD_EOF
+GENMD-EOF
 
 Likewise with `mlr sort`, `mlr tac`, and so on.
 

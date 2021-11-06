@@ -2,13 +2,13 @@
 
 Here are flags you can use when invoking Miller.  For example, when you type
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --icsv --ojson head -n 1 example.csv
-GENMD_EOF
+GENMD-EOF
 
 the `--icsv` and `--ojson` bits are _flags_.  See the [Miller command
 structure](reference-main-overview.md) page for context.
 
 Also, at the command line, you can use `mlr -g` for a list much like this one.
 
-GENMD_RUN_CONTENT_GENERATOR(./mk-flag-info.rb)
+GENMD-RUN-CONTENT-GENERATOR(./mk-flag-info.rb)

@@ -6,9 +6,9 @@ Miller has record separators, field separators, and pair separators. For
 example, given the following [DKVP](file-formats.md#dkvp-key-value-pairs)
 records:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/a.dkvp
-GENMD_EOF
+GENMD-EOF
 
 * the **record separator** is newline -- it separates records from one another;
 * the **field separator** is `,` -- it separates fields (key-value pairs) from one another;
@@ -40,33 +40,33 @@ separators, `IFS` and `OFS` for the input and output field separators, and
 
 For example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/a.dkvp
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ifs , --ofs ';' --ips = --ops : cut -o -f c,a,b data/a.dkvp
-GENMD_EOF
+GENMD-EOF
 
 If your data has non-default separators and you don't want to change those
 between input and output, you can use `--rs`, `--fs`, and `--ps`. Setting `--fs
 :` is the same as setting `--ifs : --ofs :`, but with fewer keystrokes.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/modsep.dkvp
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --fs ';' --ps : cut -o -f c,a,b data/modsep.dkvp
-GENMD_EOF
+GENMD-EOF
 
 ## Multi-character and regular-expression separators
 
 The separators default to single characters, but can be multiple characters if you like:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ifs ';' --ips : --ofs ';;;' --ops := cut -o -f c,a,b data/modsep.dkvp
-GENMD_EOF
+GENMD-EOF
 
 As of September 2021:
 
@@ -89,22 +89,22 @@ is internally implemented in terms of `--repifs`.
 
 For example:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 cat data/extra-spaces.txt
-GENMD_EOF
+GENMD-EOF
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ifs ' ' --repifs --inidx --oxtab cat  data/extra-spaces.txt
-GENMD_EOF
+GENMD-EOF
 
 ## Aliases
 
 Many things we'd like to write as separators need to be escaped from the shell
 -- e.g. `--ifs ';'` or `--ofs '|'`, and so on. You can use the following if you like:
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr help list-separator-aliases
-GENMD_EOF
+GENMD-EOF
 
 Note that `spaces`, `tabs`, and `whitespace` already are regexes so you
 shouldn't use `--repifs` with them.
@@ -113,11 +113,11 @@ shouldn't use `--repifs` with them.
 
 Given the above, we now have seen the following flags:
 
-GENMD_CARDIFY
+GENMD-CARDIFY
 --rs --irs --ors
 --fs --ifs --ofs --repifs
 --ps --ips --ops
-GENMD_EOF
+GENMD-EOF
 
 See also the [separator-flags section](reference-main-flag-list.md#separator-flags).
 
@@ -127,9 +127,9 @@ Miller exposes for you read-only [built-in variables](reference-dsl-variables.md
 names `IRS`, `ORS`, `IFS`, `OFS`, `IPS`, and `OPS`. Unlike in AWK, you can't set these in begin-blocks --
 their values indicate what you specified at the command line -- so their use is limited.
 
-GENMD_RUN_COMMAND
+GENMD-RUN-COMMAND
 mlr --ifs , --ofs ';' --ips = --ops : --from data/a.dkvp put '$d = ">>>" . IFS . "|||" . OFS . "<<<"'
-GENMD_EOF
+GENMD-EOF
 
 ## Which separators apply to which file formats
 

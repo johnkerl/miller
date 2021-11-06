@@ -72,7 +72,7 @@ See also the [Arrays reference](reference-main-arrays.md) for more information.
 Stronger support for Windows (with or without MSYS2), with a couple of
 exceptions.  See [Miller on Windows](miller-on-windows.md) for more information.
 
-Binaries are reliably available using GitHub Actions: see also [Installation](installation.md).
+Binaries are reliably available using GitHub Actions: see also [Installation](installing-miller.md).
 
 ## In-process support for compressed input
 

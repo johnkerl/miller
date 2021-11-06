@@ -35,7 +35,7 @@ Output of one verb may be chained as input to another using "then", e.g.
   mlr --csv stats1 -a min,mean,max -f quantity then sort -f color example.csv
 
 Please see 'mlr help topics' for more information.
-Please also see https://johnkerl.org/miller6
+Please also see https://miller.readthedocs.io
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -214,7 +214,7 @@ You can use `:h` or `:help` inside the [REPL](repl.md):
 </pre>
 <pre class="pre-non-highlight-in-pair">
 Miller v6.0.0-dev REPL for darwin:amd64:go1.16.5
-Pre-release docs for Miller 6: https://johnkerl.org/miller6
+Docs: https://miller.readthedocs.io
 Type ':h' or ':help' for on-line help; ':q' or ':quit' to quit.
 [mlr] :h
 Options:
