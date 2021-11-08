@@ -107,10 +107,10 @@ type Flag struct {
 	// * Any code bits should be marked with backticks. These look OK for
 	//   on-line help / manpage, and render marvelously for webdocs which
 	//   take markdown.
-	// * After changing flags you can run `sh build-go-src-test-man-doc.sh`
-	//   followed by `git diff` to see how the output looks. See also
-	//   the README.md files in the docs and man directories for how
-	//   to look at the autogenned docs pre-commit.
+	// * After changing flags you can run `make precommit` in the Miller
+	//   repo base directory followed by `git diff` to see how the output
+	//   looks. See also the README.md files in the docs and man directories
+	//   for how to look at the autogenned docs pre-commit.
 	help string
 
 	// A function for parsing the command line, as described above.
