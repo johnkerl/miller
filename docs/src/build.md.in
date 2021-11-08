@@ -53,8 +53,8 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 * Update version found in `mlr --version` and `man mlr`:
 
     * Edit `go/src/version/version.go` from `6.1.0-dev` to `6.2.0`.
-    * `sh build-go-src-test-man-doc.sh`
-    * The ordering in this script is important: the first build creates `mlr`; the second runs `mlr` to create `manpage.txt`; the third includes `manpage.txt` into one of its outputs.
+    * Run `make precommit` in the Miller repo base directory
+    * The ordering in this makefile rule is important: the first build creates `mlr`; the second runs `mlr` to create `manpage.txt`; the third includes `manpage.txt` into one of its outputs.
     * Commit and push.
 
 * Create the release tarball and SRPM:

@@ -16,19 +16,16 @@
   * `docs/src` has `*.md.in` files containing markdown as well as directives for auto-generating code samples.
   * A `genmds` script reads `docs/src/*.md.in` and writes `docs/src/*.md`.
   * The `mkdocs build` tools reads `docs/src/*.md` and writes HTML files in `docs/site`.
+  * Running `make` within the `docs` directory handles both of those steps.
 * Quick-editing loop:
   * In one terminal, cd to this directory and leave `mkdocs serve` running.
   * In another terminal, cd to the `src` subdirectory of `docs` and edit `*.md.in`.
-  * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited.
+  * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited, or (simplest) just `make` within the `docs/src` subdirectory.
   * In your browser, visit http://127.0.0.1:8000
-  * This doesn't write HTML in `docs/site`; HTML is served up directly in the browser -- this is nice for previewing interactive edits
+  * This doesn't write HTML in `docs/site`; HTML is served up directly in the browser -- this is nice for previewing interactive edits.
 * For-publish editing loop:
-  * Leave one terminal open as a place you will run `mkdocs build`
-  * In one terminal, cd to the `src` subdirectory of `docs` and edit `*.md.in`.
-  * Generate `src/*.md` from `src/*.md.in`, and then from that generate the `site/*/*.html`:
-    * Run `genmds` to re-create all the `*.md` files, or `genmds foo.md.in` to just re-create the `foo.md.in` file you just edited.
-    * In the first terminal, run `mkdocs build` which will populate the `site` directory.
-    * See also [./regen.sh](./regen.sh) which combines the `genmds` and `mkdocs build` steps.
+  * cd to the `src` subdirectory of `docs` and edit `*.md.in`.
+  * `make -C ..`
   * This does write HTML in `docs/site`.
   * In your browser, visit `file:///your/path/to/miller/docs/site/index.html`
   * Link-checking:

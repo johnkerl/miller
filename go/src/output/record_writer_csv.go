@@ -13,6 +13,7 @@ import (
 
 type RecordWriterCSV struct {
 	writerOptions *cli.TWriterOptions
+	ofs0          byte // Go's CSV library only lets its 'Comma' be a single character
 	csvWriter     *csv.Writer
 	// For reporting schema changes: we print a newline and the new header
 	lastJoinedHeader *string
@@ -21,8 +22,11 @@ type RecordWriterCSV struct {
 }
 
 func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, error) {
+	if len(writerOptions.OFS) != 1 {
+		return nil, errors.New("CSV OFS can only be a single character")
+	}
 	if writerOptions.ORS != "\n" {
-		return nil, errors.New("CSV ORS can only be newline")
+		return nil, errors.New("CSV ORS cannot be altered")
 	}
 	return &RecordWriterCSV{
 		writerOptions:      writerOptions,
