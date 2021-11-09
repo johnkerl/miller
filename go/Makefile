@@ -18,5 +18,8 @@ check:
 install: build
 	cp mlr $(INSTALLDIR)
 
+fmt:
+	go fmt ./...
+
 # Go does its own dependency management, outside of make.
-.PHONY: build
+.PHONY: build fmt

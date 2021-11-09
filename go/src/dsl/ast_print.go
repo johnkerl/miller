@@ -246,7 +246,13 @@ func (node *ASTNode) Text() string {
 		return "bare-boolean"
 	case NodeTypeFilterStatement:
 		return tokenText
+	case NodeTypeEmit1Statement:
+		return tokenText
 	case NodeTypeEmitStatement:
+		return tokenText
+	case NodeTypeEmitPStatement:
+		return tokenText
+	case NodeTypeEmitFStatement:
 		return tokenText
 	case NodeTypeDumpStatement:
 		return tokenText
