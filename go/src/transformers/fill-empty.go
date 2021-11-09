@@ -29,6 +29,7 @@ func transformerFillEmptyUsage(
 	fmt.Fprintf(o, "Fills empty-string fields with specified fill-value.\n")
 	fmt.Fprintf(o, "Options:\n")
 	fmt.Fprintf(o, "-v {string} Fill-value: defaults to \"%s\"\n", defaultFillEmptyString)
+	fmt.Fprintf(o, "-S          Don't infer type -- so '-v 0' would fill string 0 not int 0.\n")
 
 	if doExit {
 		os.Exit(exitCode)
@@ -48,6 +49,7 @@ func transformerFillEmptyParseCLI(
 	argi++
 
 	fillString := defaultFillEmptyString
+	inferType := true
 
 	for argi < argc /* variable increment: 1 or 2 depending on flag */ {
 		opt := args[argi]
@@ -62,12 +64,15 @@ func transformerFillEmptyParseCLI(
 		} else if opt == "-v" {
 			fillString = cli.VerbGetStringArgOrDie(verb, opt, args, &argi, argc)
 
+		} else if opt == "-S" {
+			inferType = false
+
 		} else {
 			transformerFillEmptyUsage(os.Stderr, true, 1)
 		}
 	}
 
-	transformer, err := NewTransformerFillEmpty(fillString)
+	transformer, err := NewTransformerFillEmpty(fillString, inferType)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -82,9 +87,15 @@ type TransformerFillEmpty struct {
 	fillValue *types.Mlrval
 }
 
-func NewTransformerFillEmpty(fillString string) (*TransformerFillEmpty, error) {
-	tr := &TransformerFillEmpty{
-		fillValue: types.MlrvalFromString(fillString),
+func NewTransformerFillEmpty(
+	fillString string,
+	inferType bool,
+) (*TransformerFillEmpty, error) {
+	tr := &TransformerFillEmpty{}
+	if inferType {
+		tr.fillValue = types.MlrvalFromInferredType(fillString)
+	} else {
+		tr.fillValue = types.MlrvalFromString(fillString)
 	}
 	return tr, nil
 }

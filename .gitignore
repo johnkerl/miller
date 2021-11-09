@@ -21,6 +21,8 @@ data/.gitignore
 docs/_build
 docs6/_build
 
+man/man1
+
 miller-*.src.rpm
 mlr.exe
 mlr.linux.x86_64
