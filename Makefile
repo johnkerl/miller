@@ -33,7 +33,7 @@ precommit:
 	echo DONE
 
 # Keystroke-saver
-itso: check build install
+itso: build check install
 
 # Go does its own dependency management, outside of make.
 .PHONY: build precommit
