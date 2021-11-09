@@ -65,6 +65,7 @@ const (
 	NodeTypeFilterStatement = "filter statement"
 
 	NodeTypeTeeStatement     = "tee statement"
+	NodeTypeEmit1Statement   = "emit1 statement"
 	NodeTypeEmitStatement    = "emit statement"
 	NodeTypeEmitPStatement   = "emitp statement"
 	NodeTypeEmitFStatement   = "emitf statement"

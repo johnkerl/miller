@@ -1155,6 +1155,7 @@ Usage: mlr fill-empty [options]
 Fills empty-string fields with specified fill-value.
 Options:
 -v {string} Fill-value: defaults to "N/A"
+-S          Don't infer type -- so '-v 0' would fill string 0 not int 0.
 .fi
 .if n \{\
 .RE
@@ -4332,7 +4333,7 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .RS 0
 .\}
 .nf
-all: used in "emit", "emitp", and "unset" as a synonym for @*
+all: used in "emit1", "emit", "emitp", and "unset" as a synonym for @*
 .fi
 .if n \{\
 .RE
@@ -4452,6 +4453,22 @@ in curly braces.
 .nf
 else: terminates an if/elif/elif chain. The body statements must be wrapped
 in curly braces.
+.fi
+.if n \{\
+.RE
+.SS "emit1"
+.if n \{\
+.RS 0
+.\}
+.nf
+emit1: inserts an out-of-stream variable into the output record stream. Unlike
+the other map variants, side-by-sides, indexing, and redirection are not supported,
+but you can emit any map-valued expression.
+
+  Example: mlr --from f.dat put 'emit1 $*'
+  Example: mlr --from f.dat put 'emit1 mapsum({"id": NR}, $*)'
+
+Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 .fi
 .if n \{\
 .RE

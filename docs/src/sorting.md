@@ -453,7 +453,7 @@ have 1, then 10, then 2:
 <b>  end {</b>
 <b>    @records = sort(@records, "f");</b>
 <b>    for (_, record in @records) {</b>
-<b>      emit record;</b>
+<b>      emit1 record;</b>
 <b>    }</b>
 <b>  }</b>
 <b>'</b>
@@ -572,7 +572,7 @@ indexing](reference-dsl-operators.md#the-double-purpose-dot-operator))
 <b>  end {</b>
 <b>    @records = sort(@records, cmp);</b>
 <b>    for (record in @records) {</b>
-<b>      emit record;</b>
+<b>      emit1 record;</b>
 <b>    }</b>
 <b>  }</b>
 <b>'</b>
@@ -677,7 +677,7 @@ using a map is handy, since we don't need continguous keys.
 <b>  end {</b>
 <b>    @records = sort(@records, cmp);</b>
 <b>    for (_, record in @records) {</b>
-<b>      emit record;</b>
+<b>      emit1 record;</b>
 <b>    }</b>
 <b>  }</b>
 <b>'</b>

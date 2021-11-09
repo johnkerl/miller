@@ -26,7 +26,7 @@ You can **output** variable-values or expressions in **five ways**:
 
 * Use **tee** which formats the current stream record (not just an arbitrary string as with **print**) to a specific file.
 
-* Use **emit**/**emitp**/**emitf** to send out-of-stream variables' current values to the output record stream, e.g.  `@sum += $x; emit @sum` which produces an extra record such as `sum=3.1648382`. These records, just like records from input file(s), participate in downstream [then-chaining](reference-main-then-chaining.md) to other verbs.
+* Use **emit1**/**emit**/**emitp**/**emitf** to send out-of-stream variables' current values to the output record stream, e.g.  `@sum += $x; emit1 @sum` which produces an extra record such as `sum=3.1648382`. These records, just like records from input file(s), participate in downstream [then-chaining](reference-main-then-chaining.md) to other verbs.
 
 For the first two options you are populating the output-records stream which feeds into the next verb in a `then`-chain (if any), or which otherwise is formatted for output using `--o...` flags.
 
@@ -143,7 +143,7 @@ See also [Redirected-output statements](reference-dsl-output-statements.md#redir
 
 ## Redirected-output statements
 
-The **print**, **dump** **tee**, **emitf**, **emit**, and **emitp** keywords all allow you to redirect output to one or more files or pipe-to commands. The filenames/commands are strings which can be constructed using record-dependent values, so you can do things like splitting a table into multiple files, one for each account ID, and so on.
+The **print**, **dump** **tee**, **emit**, **emitp**, and **emitf** keywords all allow you to redirect output to one or more files or pipe-to commands. The filenames/commands are strings which can be constructed using record-dependent values, so you can do things like splitting a table into multiple files, one for each account ID, and so on.
 
 Details:
 
@@ -318,16 +318,71 @@ etc., to control the format of the output if the output is redirected. See also 
 Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 </pre>
 
-## Emit statements
+## Emit1 and emit/emitp/emitf
 
-There are three variants: `emitf`, `emit`, and `emitp`. Keep in mind that
-out-of-stream variables are a nested, multi-level [map](reference-main-maps.md) (directly viewable as
-JSON using `dump`), while Miller record values are as well during processing --
-but records may be flattened down for output to tabular formats. See the page
-[Flatten/unflatten: JSON vs. tabular formats](flatten-unflatten.md) for more
-information.
+There are four variants: `emit1`, `emitf`, `emit`, and `emitp`. These are used
+to insert new records into the record stream -- or, optionally, redirect them
+to files.
 
-You can emit any map-valued expression, including `$*`, map-valued out-of-stream variables, the entire out-of-stream-variable collection `@*`, map-valued local variables, map literals, or map-valued function return values.
+Keep in mind that out-of-stream variables are a nested, multi-level
+[map](reference-main-maps.md) (directly viewable as JSON using `dump`), while
+Miller record values are as well during processing -- but records may be
+flattened down for output to tabular formats. See the page [Flatten/unflatten:
+JSON vs. tabular formats](flatten-unflatten.md) for more information.
+
+* You can use `emit1` to emit any map-valued expression, including `$*`,
+  map-valued out-of-stream variables, the entire out-of-stream-variable
+  collection `@*`, map-valued local variables, map literals, or map-valued
+  function return values.
+* For `emit`, `emitp`, and `emitf`, you can emit map-valued local variables,
+  map-valued field attributes (with `$`), map-va out-of-stream variables (with
+  `@`), `$*`, `@*`, or map literals (with outermost `{...}`) -- but not arbitrary
+  expressions which evaluate to map (such as function return values).
+
+The reason for this is part historical and part technical. As we'll see below,
+you can do lots of syntactical things with `emit`, `emitp`, and `emitf`,
+including printing them side-by-side, index them, redirect the output to files,
+etc. What this means syntatically is that Miller's parser needs to handle all
+sorts of commas, parentheses, and so on:
+
+<pre class="pre-non-highlight-non-pair">
+  emitf @count, @sum
+  emit @sum, "a", "b"
+  emitp (@count, @sum),"a","b"}
+  # etc
+</pre>
+
+When we try to allow `emitf`/`emit`/`emitp` to handle arbitrary map-valued
+expressions, like `mapexcept($*, mymap)` and so on, this inserts more syntactic
+complexity in terms of commas, parentheses, and so on. The technical term is
+_LR-1 shift-reduce conflicts_, but we can simply think of this in terms of the
+parser not being able to efficiently disambiguate all the punctuational
+opportunities.
+
+So, `emit1` can handle syntactic richness in the one thing being emitted;
+`emitf`, `emit`, and `emitp` can handle syntatic richness in the side-by-side
+placement, indexing, and redirection.
+
+(Mnemonic: If all you want is to insert a new record into the record stream, `emit1` is probably the one you want.)
+
+What this means is that if you want to emit an expression which evaluates to a map, you can do quite simply
+
+<pre class="pre-non-highlight-non-pair">
+  mlr --c2p --from example.csv put -q '
+    emit1 mapsum({"id": NR}, $*)
+  '
+</pre>
+
+And if you want indexing, redirects, etc., just assign to a temporary variable and use one of the other emit variants:
+
+<pre class="pre-non-highlight-non-pair">
+  mlr --c2p --from example.csv put -q '
+    o = mapsum({"id": NR}, $*);
+    emit > stderr, o;
+  '
+</pre>
+
+## Emitf statements
 
 Use **emitf** to output several out-of-stream variables side-by-side in the same output record. For `emitf` these mustn't have indexing using `@name[...]`. Example:
 
@@ -342,6 +397,8 @@ Use **emitf** to output several out-of-stream variables side-by-side in the same
 <pre class="pre-non-highlight-in-pair">
 count=5,x_sum=2.26476,y_sum=2.585083
 </pre>
+
+## Emit statements
 
 Use **emit** to output an out-of-stream variable. If it's non-indexed you'll get a simple key-value pair:
 

@@ -11,6 +11,8 @@ PUNCHDOWN LIST
     ? alpha?
     - csv irs lf/crlf ignores -- ? already is so?
     - `mlr put` -> coverart
+    - 0b1011 olh/webdoc
+
   o doc / release:
     - ? auto-cp go/mlr // go/mlr.exe to basedir?
     - auto-path (../go/mlr) in docs dir ...
@@ -96,8 +98,6 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
-
-* mapexcept et al.
 
 * file-formats: NIDX link to headerless CSV
 
@@ -360,8 +360,6 @@ TBF:
   d other formats: use JSON marshaler for collection types, maybe double-quoted
   o research gocc support
   o maybe a case for hand-roll
-* ICE on scan of 0xffffffffffffffff
-* support 0b0101 et al.? mlrdoc if so
 ? dsl/ast.go -> parsing/ast.go? then, put new-ast ctor -> parsing package
   o if so, update r.mds
 * relnotes: label b,i,x vs x,i,b change

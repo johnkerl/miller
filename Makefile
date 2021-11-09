@@ -32,5 +32,8 @@ precommit:
 	make -C docs
 	echo DONE
 
+# Keystroke-saver
+itso: check build install
+
 # Go does its own dependency management, outside of make.
 .PHONY: build precommit

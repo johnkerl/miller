@@ -209,6 +209,7 @@ unset    : 'u' 'n' 's' 'e' 't' ;
 
 dump     : 'd' 'u' 'm' 'p' ;
 edump    : 'e' 'd' 'u' 'm' 'p' ;
+emit1    : 'e' 'm' 'i' 't' '1' ;
 emit     : 'e' 'm' 'i' 't' ;
 emitp    : 'e' 'm' 'i' 't' 'p' ;
 emitf    : 'e' 'm' 'i' 't' 'f' ;
@@ -430,9 +431,10 @@ BracelessStatement
   | EdumpStatement
 
   | TeeStatement
-  | EmitFStatement
+  | Emit1Statement
   | EmitStatement
   | EmitPStatement
+  | EmitFStatement
 
   // Has braces but does not *end* in braces -- so it requires semicolon after.
   | DoWhileLoop
@@ -746,6 +748,35 @@ EmitFStatement
 ;
 
 // ----------------------------------------------------------------
+// The other emit variants need to take only oosvars, etc. -- not arbitrary
+// expressions which *evaluate* to map. Emit1, by contrast, takes any
+// expression which evaluates to a map. So you can do 'emit1 mapsum({"id":
+// $id}, $some_map_valued_field})'.
+//
+// The reason for this is LR1 shift-reduce conflicts. When I originally
+// implemented emit/emitp, I permitted a lot of options for lashing together
+// multiple oosvars, indexing, redirection, etc. When we try to let emit (not
+// emit1) take arbitrary Rvalue as argument, we get LR1 conflicts since the
+// parse can't disambiguate between all the possibilities for commas and
+// parentheses for emit-lashing and emit-indexing, and all the possibilities
+// for commas and parentheses for the Rvalue expression itself.
+//
+// So, we have emit/emitp which permit grammatical complexity in the
+// lashing/indexing, and emit1 which permits grammatical complexity in the
+// emittable.
+
+Emit1Statement
+  : emit1 Rvalue
+    <<
+      dsl.NewASTNodeUnary(
+        $0, // emit
+        $1, // Emittable
+        dsl.NodeTypeEmit1Statement,
+      )
+    >>
+;
+
+// ----------------------------------------------------------------
 // Examples for emit:
 //   emit @a
 //   emit (@a, @b)
@@ -781,6 +812,7 @@ EmitFStatement
 // as mapdiff, etc. etc.
 
 EmitStatement
+
   : emit EmittableAsList
     <<
       dsl.NewASTNodeTernary(

@@ -27,6 +27,7 @@ var KEYWORD_USAGE_TABLE = []tKeywordUsageEntry{
 	{"edump", edumpKeywordUsage},
 	{"elif", elifKeywordUsage},
 	{"else", elseKeywordUsage},
+	{"emit1", emit1KeywordUsage},
 	{"emit", emitKeywordUsage},
 	{"emitf", emitfKeywordUsage},
 	{"emitp", emitpKeywordUsage},
@@ -120,7 +121,7 @@ func ListKeywordsAsParagraph() {
 // ----------------------------------------------------------------
 func allKeywordUsage() {
 	fmt.Println(
-		`used in "emit", "emitp", and "unset" as a synonym for @*`,
+		`used in "emit1", "emit", "emitp", and "unset" as a synonym for @*`,
 	)
 }
 
@@ -201,6 +202,19 @@ func elseKeywordUsage() {
 	fmt.Println(
 		`terminates an if/elif/elif chain. The body statements must be wrapped
 in curly braces.`)
+}
+
+func emit1KeywordUsage() {
+	fmt.Printf(
+		`inserts an out-of-stream variable into the output record stream. Unlike
+the other map variants, side-by-sides, indexing, and redirection are not supported,
+but you can emit any map-valued expression.
+
+  Example: mlr --from f.dat put 'emit1 $*'
+  Example: mlr --from f.dat put 'emit1 mapsum({"id": NR}, $*)'
+
+Please see %s://johnkerl.org/miller/doc for more information.
+`, lib.DOC_URL)
 }
 
 func emitKeywordUsage() {

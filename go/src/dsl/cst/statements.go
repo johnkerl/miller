@@ -57,10 +57,12 @@ func (root *RootNode) BuildStatementNode(
 
 	case dsl.NodeTypeTeeStatement:
 		return root.BuildTeeStatementNode(astNode)
-	case dsl.NodeTypeEmitFStatement:
-		return root.BuildEmitFStatementNode(astNode)
+	case dsl.NodeTypeEmit1Statement:
+		return root.BuildEmit1StatementNode(astNode)
 	case dsl.NodeTypeEmitStatement:
 		return root.BuildEmitStatementNode(astNode)
+	case dsl.NodeTypeEmitFStatement:
+		return root.BuildEmitFStatementNode(astNode)
 	case dsl.NodeTypeEmitPStatement:
 		return root.BuildEmitPStatementNode(astNode)
 

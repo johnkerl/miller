@@ -245,7 +245,7 @@ mlr --icsv --opprint --from example.csv put -q '
   end {
     @records = sort(@records, "f");
     for (_, record in @records) {
-      emit record;
+      emit1 record;
     }
   }
 '
@@ -338,7 +338,7 @@ mlr --icsv --opprint --from example.csv put -q '
   end {
     @records = sort(@records, cmp);
     for (record in @records) {
-      emit record;
+      emit1 record;
     }
   }
 '
@@ -408,7 +408,7 @@ mlr --icsv --opprint --from example.csv put -q '
   end {
     @records = sort(@records, cmp);
     for (_, record in @records) {
-      emit record;
+      emit1 record;
     }
   }
 '
