@@ -160,6 +160,7 @@ Usage: mlr fill-empty [options]
 Fills empty-string fields with specified fill-value.
 Options:
 -v {string} Fill-value: defaults to "N/A"
+-S          Don't infer type -- so '-v 0' would fill string 0 not int 0.
 
 ================================================================
 filter
