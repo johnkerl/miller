@@ -36,6 +36,9 @@ make install
 %{_mandir}/man1/mlr.1*
 
 %changelog
+* Has not happened yet John Kerl <kerl.john.r@gmail.com> - 6.0.0-1
+- 6.0.0 release
+
 * Tue Mar 23 2021 John Kerl <kerl.john.r@gmail.com> - 5.10.2-1
 - 5.10.2 release
 

@@ -6,6 +6,8 @@ PUNCHDOWN LIST
     - get a link for rmd
     - ./configure experiment
     - miller.spec experiment
+    - distcheck: gtar --transform 's,^./,miller-6.0.0/,' --exclude ./.git -czf /tmp/miller-6.0.0.tgz .
+      > on macos, 'brew install gnu-tar' will install 'gtar'
   o blockers:
     - fractional-strptime
     - cmp-matrices

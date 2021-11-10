@@ -18,7 +18,7 @@ build: .always
 	./mkman.rb | groff -man -Tascii | col -b | expand -8 > manpage.txt
 	cp manpage.txt ../docs/src/
 	echo mkman end
-	mkdir ./man1
+	mkdir -p ./man1
 	cp mlr.1 ./man1
 
 install:
