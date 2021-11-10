@@ -1,6 +1,3 @@
-# TODO: 'cp go/mlr .' or 'copy go\mlr.exe .' with reliable platform detection
-# and no confusing error messages.
-
 build:
 	make -C go build
 	@echo "Miller executable is: ./mlr, or go\mlr.exe on Windows"
@@ -35,5 +32,10 @@ precommit:
 # Keystroke-saver
 itso: build check install
 
+# Please see comments in ./create-release-tarball as well as
+# https://miller.readthedocs.io/en/latest/build/#creating-a-new-release-for-developers
+release_tarball: build check
+	./create-release-tarball
+
 # Go does its own dependency management, outside of make.
-.PHONY: build precommit
+.PHONY: build check install precommit
