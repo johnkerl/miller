@@ -19,7 +19,7 @@ def main
   print make_top
 
   print make_section('NAME', [
-    "miller \\\- like awk, sed, cut, join, and sort for name-indexed data such as CSV and tabular JSON."
+    "Miller \\\-\\\- like awk, sed, cut, join, and sort for name-indexed data such as CSV and tabular JSON."
   ])
 
   print make_section('SYNOPSIS', [
