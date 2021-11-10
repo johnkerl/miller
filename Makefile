@@ -27,7 +27,7 @@ precommit:
 	make -C go check
 	make -C man build
 	make -C docs
-	echo DONE
+	@echo DONE
 
 # Keystroke-saver
 itso: build check install

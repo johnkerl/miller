@@ -21,7 +21,7 @@ build: .always
 	mkdir -p ./man1
 	cp mlr.1 ./man1
 
-install:
+install: build
 	mkdir -p $(INSTALLDIR)
 	cp mlr.1 $(INSTALLDIR)/mlr.1
 
