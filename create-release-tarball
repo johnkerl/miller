@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# ================================================================
+# This script creates a file like "miller-6.0.0.tar.gz".
+#
+# * The developer should run this script to create that .tar.gz file
+#
+# * Then attach it as an asset to a release created at
+#   https://github.com/johnkerl/miller/releases.
+#
+# * Then the 'Source' link in ./miller.spec should already be correct.
+#
+# * Normally this script wouldn't be run directly; rather, from the Makefile's
+#   'make release_tarball' which will first run 'make build' and 'make check'.
+#
+# Please also see
+# https://miller.readthedocs.io/en/latest/build/#creating-a-new-release-for-developers
+#
+# Note that GitHub makes a 'Source code (tar.gz)' which could be used in place
+# of the tarball which this script creates. However, this script makes some
+# effort to remove directories which are not necessary for the install, which
+# reduces tarball size.
+#
+# Testing:
+# * Run this script
+# * Move the miller-i.j.k.tar.gz file off somewhere else, like /tmp
+# * cd to the directory where you put the tarbll
+# * tar zxf miller-i.j.k.tar.gz
+# * cd miller-i.j.k
+# * ./configure --prefix /usr/local
+# * make build check
+# * make build check install # if you prefer
+# ================================================================
+
+set -euo pipefail
+
+# Make sure ./mlr exists so we can ask it for its version string.
+if [ ! -x "./mlr" ]; then
+  echo "$0: ./mlr is not executable. Please check 'make build' first." 1>&2
+  exit 1
+fi
+
+# Find the Miller version string, such as "6.0.0".
+VERSION=$(./mlr --bare-version)
+if [ "$VERSION" == "" ] ; then
+  echo "$0: could not obtain output from './mlr --bare-version'." 1>&2
+  exit 1
+fi
+
+# Try to find a version of tar which supports the --transform flag.
+# Linux tar does; MacOS default tar does not, but 'brew install gnu-tar' will
+# install gtar which does.
+tar=/usr/bin/tar
+if [ -x /usr/local/bin/gtar ]; then
+  tar=/usr/local/bin/gtar
+fi
+if [ ! -x "$tar" ]; then
+  echo "$0: "$tar" is not executable. Please edit this script with the path." 1>&2
+  echo "to a version of tar which supports the --transform flag." 1>&2
+  exit 1
+fi
+
+# Make sure the current directory is writeable, so we can (perhaps) create a
+# more informative error message than tar would.
+if [ ! -w . ]; then
+  echo "$0: the current directory is not writeable; cannot create tarball." 1>&2
+  exit 1
+fi
+TGZ_NAME=miller-${VERSION}.tar.gz
+
+# Create the release tarball.
+echo "Wrtiting $TGZ_NAME ..."
+$tar \
+  --transform 's,^./,miller-'$VERSION'/,'  \
+  --exclude data \
+  --exclude docs \
+  --exclude experiments \
+  --exclude go/todo.txt \
+  --exclude perf \
+  --exclude python \
+  --exclude vim \
+  -czf $TGZ_NAME \
+  ./LICENSE.txt \
+  ./README.md \
+  ./README-RPM.md \
+  ./configure \
+  ./Makefile \
+  ./create-release-tarball \
+  ./go \
+  ./man
+
+echo "Wrote    $TGZ_NAME"

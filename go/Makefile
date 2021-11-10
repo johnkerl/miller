@@ -1,5 +1,5 @@
 # Please edit Makefile.in rather than Makefile, which is overwritten by ../configure.
-PREFIX=/usr
+PREFIX=/usr/local
 INSTALLDIR=$(PREFIX)/bin
 
 # Attempt cp; will fail on Windows but ignore and continue

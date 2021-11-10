@@ -2,18 +2,21 @@
 PUNCHDOWN LIST
 
 * plan:
+  o release prep
+    k ./configure experiment
+    k miller.spec experiment
+    k 'make release_tarball'
+    o update build.mi#dev steps
   o conda etc
-    - get a link for rmd
-    - ./configure experiment
-    - miller.spec experiment
+    - get a conda link for rmd
     - distcheck: gtar --transform 's,^./,miller-6.0.0/,' --exclude ./.git -czf /tmp/miller-6.0.0.tgz .
+      > also exclude: data, docs, experiments, per, python, vim
       > on macos, 'brew install gnu-tar' will install 'gtar'
   o blockers:
     - fractional-strptime
     - cmp-matrices
     - all-contribs
     - license triple-checks
-    - ./configure --prefix
     ? alpha?
     - csv irs lf/crlf ignores -- ? already is so?
     - `mlr put` -> coverart

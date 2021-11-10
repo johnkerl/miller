@@ -41,7 +41,10 @@ func ParseCommandLine(args []string) (
 			cli.CheckArgCount(args, argi, argc, 1)
 			argi += 2
 		} else if args[argi] == "--version" {
-			fmt.Printf("Miller %s\n", version.STRING)
+			fmt.Printf("mlr %s\n", version.STRING)
+			os.Exit(0)
+		} else if args[argi] == "--bare-version" {
+			fmt.Printf("%s\n", version.STRING)
 			os.Exit(0)
 
 		} else if help.ParseTerminalUsage(args[argi]) {

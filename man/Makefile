@@ -4,7 +4,7 @@
 # This should be run after make in the ../c directory but before make in the ../docs directory,
 # since ../go/mlr is used to autogenerate ./manpage.txt which is used in ../docs.
 # See also https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
-PREFIX=/usr
+PREFIX=/usr/local
 INSTALLDIR=$(PREFIX)/share/man/man1
 
 # This is normally done only on a development host. Through CI and
