@@ -1,12 +1,14 @@
 Summary: Name-indexed data processing tool
 Name: miller
-Version: 5.10.2
+Version: 6.0.0
 Release: 1%{?dist}
 License: BSD
 Source: https://github.com/johnkerl/miller/releases/download/%{version}/mlr-%{version}.tar.gz
 URL: https://miller.readthedocs.io
+# gcc for cgo transitive dependency
+BuildRequires: golang
 BuildRequires: gcc
-BuildRequires: flex >= 2.5.35
+BuildRequires: systemd-rpm-macros
 
 %description
 Miller (mlr) allows name-indexed data such as CSV and JSON files to be
@@ -16,17 +18,16 @@ streams data where possible so its memory requirements stay small. It works
 well with pipes and can feed "tail -f".
 
 %prep
-%setup -q -n mlr-%{version}
+%autosetup
 
 %build
-%configure
-%make_build
+make build
 
 %check
 make check
 
 %install
-%make_install
+make install
 
 %files
 %license LICENSE.txt

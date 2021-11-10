@@ -3,7 +3,7 @@
 
 build:
 	make -C go build
-	@echo Miller executable is: go/mlr
+	@echo "Miller executable is: ./mlr, or go\mlr.exe on Windows"
 
 check:
 	make -C go check

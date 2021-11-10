@@ -2,6 +2,10 @@
 PUNCHDOWN LIST
 
 * plan:
+  o conda etc
+    - get a link for rmd
+    - ./configure experiment
+    - miller.spec experiment
   o blockers:
     - fractional-strptime
     - cmp-matrices
