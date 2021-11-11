@@ -17,7 +17,7 @@ check:
 	go test -v
 
 install: build
-	cp mlr $(INSTALLDIR)
+	cp mlr $(DESTDIR)/$(INSTALLDIR)
 	make -C man install
 
 fmt:
