@@ -22,8 +22,8 @@ build: .always
 	cp mlr.1 ./man1
 
 install:
-	mkdir -p $(INSTALLDIR)
-	cp mlr.1 $(INSTALLDIR)/mlr.1
+	mkdir -p $(DESTDIR)/$(INSTALLDIR)
+	cp mlr.1 $(DESTDIR)/$(INSTALLDIR)/mlr.1
 
 
 # ----------------------------------------------------------------
