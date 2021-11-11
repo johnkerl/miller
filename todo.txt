@@ -8,6 +8,10 @@ PUNCHDOWN LIST
     k 'make release_tarball'
     o update build.mi#dev steps
     o man & docs use (export PATH ...) base/mlr
+    o miller/mlr ... try skitt:
+      - cmd/layout -- ?
+      - go install github.com/johnkerl/miller/cmd/mlr
+      - go build {what goes here?}
   o conda etc
     - get a conda link for rmd
     - distcheck: gtar --transform 's,^./,miller-6.0.0/,' --exclude ./.git -czf /tmp/miller-6.0.0.tgz .
