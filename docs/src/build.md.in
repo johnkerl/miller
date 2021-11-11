@@ -46,7 +46,7 @@ This documentation pageset is built using [https://www.mkdocs.org/](MkDocs). Ple
 
 ## Creating a new release: for developers
 
-At present I'm the primary developer so this is just my checklist for making new releases.
+This is my checklist for making new releases.
 
 In this example I am using version 6.1.0 to 6.2.0; of course that will change for subsequent revisions.
 
@@ -58,17 +58,18 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
     * The ordering in this makefile rule is important: the first build creates `mlr`; the second runs `mlr` to create `manpage.txt`; the third includes `manpage.txt` into one of its outputs.
     * Commit and push.
 
-* Create the release tarball and SRPM:
+* Create the release tarball:
 
-    * TBD for the Go port ...
-    * Linux/MacOS/Windows binaries from GitHub Actions ...
-    * Pull back release tarball `mlr-6.2.0.tar.gz` from buildbox, and `mlr.{arch}` binaries from whatever buildboxes.
+    * `make release_tarball`
+    * This creates `miller-6.2.0-dev.tar.gz` which we'll upload to GitHub, the URL of which will be in our `miller.spec`
+    * Get `mlr.{arch}` binaries from latest successful build from [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), or, build them on buildboxes.
+    * Prepare the source RPM following [./README-RPM.md](README-RPM.md).
 
 * Create the Github release tag:
 
     * Don't forget the `v` in `v6.2.0`
     * Write the release notes
-    * Attach the release tarball and binaries. Double-check assets were successfully uploaded.
+    * Attach the release tarball, binaries, and SRPM. Double-check assets were successfully uploaded.
     * Publish the release
 
 * Check the release-specific docs:
