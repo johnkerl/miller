@@ -1,1 +1,0 @@
-mlr put -q --no-fflush -f ${CASEDIR}/mlr regtest/input/abixy

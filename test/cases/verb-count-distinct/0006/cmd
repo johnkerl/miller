@@ -1,0 +1,1 @@
+mlr count-distinct -f a -o foo test/input/small test/input/abixy

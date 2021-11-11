@@ -1,0 +1,1 @@
+mlr --opprint put '$f=asserting_empty_map($x)' test/input/nullvals.dkvp

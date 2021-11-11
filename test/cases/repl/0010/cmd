@@ -1,0 +1,1 @@
+mlr repl -q -s --json test/input/flatten-input-2.json < ./${CASEDIR}/input

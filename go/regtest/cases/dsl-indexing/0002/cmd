@@ -1,1 +1,0 @@
-mlr --from regtest/input/s.dkvp --from regtest/input/t.dkvp --ojson put -f ${CASEDIR}/mlr

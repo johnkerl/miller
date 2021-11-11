@@ -1,0 +1,1 @@
+mlr --opprint put '$f=asserting_map($nosuch)' test/input/nullvals.dkvp

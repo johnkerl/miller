@@ -1,0 +1,1 @@
+mlr --csvlite cat test/input/line-term-crlf.csv

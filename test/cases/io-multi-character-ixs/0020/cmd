@@ -1,0 +1,1 @@
+mlr --opprint cat test/input/double-ps.dkvp

@@ -1,0 +1,1 @@
+mlr merge-fields -k -a p0,min,p29,max,p100,sum,count -r in_,out_ -o bar test/input/merge-fields-abxy.dkvp

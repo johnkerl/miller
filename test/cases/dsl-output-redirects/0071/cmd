@@ -1,0 +1,1 @@
+mlr --from test/input/abixy --ojson put -q --opprint -f ${CASEDIR}/mlr

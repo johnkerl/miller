@@ -1,0 +1,1 @@
+mlr --xtab json-parse -f req then flatten test/input/json-stringify-0008.json

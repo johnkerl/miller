@@ -1,0 +1,1 @@
+mlr --opprint stats2 -a r2 -f x,y,xy,y2 -g a,b test/input/abixy-wide

@@ -1,0 +1,1 @@
+mlr --icsv --opprint fill-down -f a,b,c,d test/input/remove-empty-columns.csv

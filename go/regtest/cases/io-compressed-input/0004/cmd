@@ -1,1 +1,0 @@
-mlr --dkvp --prepipe '.${PATHSEP}mlr cat' cat < regtest/input/abixy

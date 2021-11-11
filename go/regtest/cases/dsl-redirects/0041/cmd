@@ -1,1 +1,0 @@
-mlr --jflatsep : head -n 4 then put -q -o json -f ${CASEDIR}/mlr regtest/input/abixy

@@ -1,0 +1,1 @@
+mlr --xtab put -F '$quot=$ni1/-10 ;$iquot=$ni1//-10 ;$mod=$ni1%-10 ' test/input/mixed-types.xtab

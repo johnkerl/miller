@@ -1,0 +1,1 @@
+mlr --from test/input/s.csv --icsv --opprint remove-empty-columns

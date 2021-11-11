@@ -1,0 +1,1 @@
+mlr --headerless-csv-output --csvlite tac test/input/het.csv

@@ -1,0 +1,1 @@
+mlr --opprint step -a counter,rsum -f y -g a test/input/nullvals.dkvp

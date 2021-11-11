@@ -1,1 +1,0 @@
-mlr --implicit-csv-header --icsv --ifs , --opprint cut -x -f 2 regtest/input/multi-sep.csv-crlf

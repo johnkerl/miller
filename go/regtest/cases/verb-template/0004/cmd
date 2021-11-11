@@ -1,1 +1,0 @@
-mlr --opprint template -f none,at,all regtest/input/abixy

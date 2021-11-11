@@ -1,0 +1,1 @@
+mlr --from test/input/s.dkvp --idkvp --opprint put -v -f ${CASEDIR}/mlr

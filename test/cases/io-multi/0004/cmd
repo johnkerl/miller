@@ -1,0 +1,1 @@
+mlr --ijson --opprint --from test/input/s.json --from test/input/t.json put -f ./${CASEDIR}/mlr

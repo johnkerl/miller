@@ -1,0 +1,1 @@
+mlr --icsvlite --odkvp --ifs space --repifs cat test/input/space-pad.pprint

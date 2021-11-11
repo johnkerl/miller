@@ -1,0 +1,1 @@
+mlr --opprint bar --auto -f x,y -w 10 test/input/abixy

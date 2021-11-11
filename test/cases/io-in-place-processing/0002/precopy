@@ -1,0 +1,2 @@
+test/input/abixy ${CASEDIR}/abixy.temp1
+test/input/abixy ${CASEDIR}/abixy.temp2

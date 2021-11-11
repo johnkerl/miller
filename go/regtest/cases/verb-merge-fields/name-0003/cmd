@@ -1,1 +1,0 @@
-mlr --oxtab head -n 2 then merge-fields -k -a p0,min,p29,max,p100,sum,count -f u,v -o xy regtest/input/abixy

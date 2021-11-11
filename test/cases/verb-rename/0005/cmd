@@ -1,0 +1,1 @@
+mlr --opprint rename i,j,a,b test/input/s.dkvp

@@ -1,0 +1,1 @@
+mlr --csvlite rename -r '^(.a.e)(_.*)?,AA1BB2CC' test/input/date1.csv

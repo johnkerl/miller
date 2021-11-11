@@ -1,0 +1,1 @@
+mlr --nidx --fs comma cat test/input/line-term-crlf.dkvp

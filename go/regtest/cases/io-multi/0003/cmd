@@ -1,1 +1,0 @@
-mlr --inidx --ifs space --opprint --from regtest/input/s.nidx --from regtest/input/t.nidx put -f ./${CASEDIR}/mlr

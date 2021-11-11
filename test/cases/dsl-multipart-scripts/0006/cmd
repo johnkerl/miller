@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/abixy put -f ${CASEDIR}/a.mlr -f test/input/put-script-piece-1 -f test/input/put-script-piece-2 -f test/input/put-script-piece-3 -f ${CASEDIR}/b.mlr

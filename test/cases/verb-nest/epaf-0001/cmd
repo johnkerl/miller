@@ -1,0 +1,1 @@
+mlr nest --explode --pairs --across-fields -f x test/input/nest-explode.dkvp

@@ -1,0 +1,1 @@
+mlr --opprint put '@somesuch=1;$f=asserting_present(@somesuch)' test/input/nullvals.dkvp

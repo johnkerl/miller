@@ -1,0 +1,1 @@
+mlr --opprint template -f x,a,b test/input/abixy

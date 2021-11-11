@@ -1,0 +1,1 @@
+mlr --j2m cat test/input/abixy.json

@@ -1,0 +1,1 @@
+mlr --opprint cat -n -g a,b test/input/s.dkvp

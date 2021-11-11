@@ -1,0 +1,1 @@
+mlr --ijson --oxtab flatten -s . test/input/flatten-input-2.json

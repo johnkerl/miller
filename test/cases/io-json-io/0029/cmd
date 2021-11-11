@@ -1,0 +1,1 @@
+mlr --ijson --oxtab --json-skip-arrays-on-input cat test/input/arrays.json

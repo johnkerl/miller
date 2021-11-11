@@ -1,1 +1,0 @@
-mlr --csv --prepipe '.${PATHSEP}mlr --csv cat' cat regtest/input/rfc-csv/simple.csv-crlf

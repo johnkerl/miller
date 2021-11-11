@@ -36,6 +36,5 @@ else
   fi
 fi
 
-echo "using prefix: $prefix"
-sed "s@PREFIX_TEMPLATE_IS_HERE@$prefix@" go/Makefile.in  > go/Makefile
-sed "s@PREFIX_TEMPLATE_IS_HERE@$prefix@" man/Makefile.in > man/Makefile
+sed -I .prefix-backup 's@^PREFIX.*@PREFIX='$prefix'@' Makefile
+sed -I .prefix-backup 's@^PREFIX.*@PREFIX='$prefix'@' man/Makefile

@@ -1,0 +1,1 @@
+mlr --idkvp --odkvp --ifs space --repifs cat test/input/space-pad.dkvp

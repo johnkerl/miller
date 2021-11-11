@@ -1,0 +1,1 @@
+mlr --opprint stats2 -a logireg -f x,y test/input/logi.dkvp

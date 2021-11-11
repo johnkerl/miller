@@ -1,0 +1,1 @@
+mlr put '@s = @s + $y; emitp @s' test/input/typeof.dkvp
