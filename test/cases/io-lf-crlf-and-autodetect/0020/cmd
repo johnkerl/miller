@@ -1,0 +1,1 @@
+mlr --fs auto --xtab cat test/input/line-term-crlf.xtab

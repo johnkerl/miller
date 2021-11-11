@@ -1,0 +1,1 @@
+mlr -M --ojson cat test/input/abixy

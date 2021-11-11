@@ -1,0 +1,1 @@
+mlr --from test/input/s.dkvp put -q 'print $x,$y'

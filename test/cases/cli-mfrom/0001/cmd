@@ -1,0 +1,1 @@
+mlr --csv --mfrom test/input/s.csv -- cat

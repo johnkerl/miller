@@ -1,0 +1,1 @@
+mlr --opprint put '$f=asserting_not_null($x)' test/input/nullvals.dkvp

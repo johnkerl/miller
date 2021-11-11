@@ -1,0 +1,1 @@
+mlr --ijson --ojson --no-auto-unflatten --from test/input/flatten-input-1.json put -f ${CASEDIR}/mlr

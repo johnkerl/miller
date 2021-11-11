@@ -1,0 +1,1 @@
+mlr --from test/input/abixy put '@o[1][2][3] = 7; for((k1,k2,k3),v in @o[1][2]) {$x+=10;$y+=100}'

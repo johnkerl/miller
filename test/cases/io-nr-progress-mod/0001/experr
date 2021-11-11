@@ -1,0 +1,2 @@
+NR=5 FNR=5 FILENAME=test/input/abixy
+NR=10 FNR=10 FILENAME=test/input/abixy

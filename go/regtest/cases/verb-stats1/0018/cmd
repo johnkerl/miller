@@ -1,1 +1,0 @@
-mlr --oxtab stats1 -a p0,nonesuch,p100 -f x,y -F regtest/input/abixy

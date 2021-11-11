@@ -1,0 +1,1 @@
+mlr --pprint reshape -r '[XZ]' -o item,price test/input/reshape-wide.tbl

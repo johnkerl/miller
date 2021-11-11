@@ -1,0 +1,1 @@
+mlr --opprint put '$nosuch=asserting_not_empty($nosuch)' test/input/nullvals.dkvp

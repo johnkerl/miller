@@ -1,1 +1,0 @@
-mlr --opprint template -f x,a,b regtest/input/abixy

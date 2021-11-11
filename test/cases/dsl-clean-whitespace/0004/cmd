@@ -1,0 +1,1 @@
+mlr --icsv --ojson put '$a = strip($a)' test/input/clean-whitespace.csv

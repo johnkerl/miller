@@ -1,0 +1,1 @@
+mlr put -f ${CASEDIR}/a.mlr then put -f ${CASEDIR}/b.mlr test/input/int-float.dkvp

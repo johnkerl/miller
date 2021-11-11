@@ -1,0 +1,1 @@
+mlr --gzin count -g a < test/input/medium.gz

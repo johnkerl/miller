@@ -1,0 +1,1 @@
+mlr --xtab filter -f ${CASEDIR}/mlr test/input/mixed-types.xtab

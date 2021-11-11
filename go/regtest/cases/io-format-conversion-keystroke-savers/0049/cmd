@@ -1,1 +1,0 @@
-mlr -c cat regtest/input/abixy.csv

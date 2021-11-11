@@ -1,0 +1,1 @@
+mlr --ijson --ocsvlite join -i json -j x -f test/input/multi-format-join-a.json test/input/multi-format-join-b.json

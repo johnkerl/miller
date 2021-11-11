@@ -1,1 +1,0 @@
-mlr repl -q -s --mload u/stdlib/fibo.mlr u/stdlib/factorial.mlr -- < ./${CASEDIR}/input

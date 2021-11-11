@@ -1,0 +1,1 @@
+mlr repl -q -s --xtab test/input/unflatten-input.xtab < ./${CASEDIR}/input

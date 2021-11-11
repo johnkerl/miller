@@ -1,0 +1,1 @@
+mlr --xtab --ips ': ' --ops '@@@@' put -f ${CASEDIR}/mlr test/input/multi-ips.dkvp

@@ -1,1 +1,0 @@
-mlr --from regtest/input/abixy --nr-progress-mod 5 cat

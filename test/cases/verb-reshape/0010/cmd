@@ -1,0 +1,1 @@
+mlr reshape -r '[X-Z]' -o item,price test/input/reshape-wide-ragged.dkvp

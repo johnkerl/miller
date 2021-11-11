@@ -1,0 +1,1 @@
+mlr --json --from test/input/needs-sorting.json sort-within-records -r

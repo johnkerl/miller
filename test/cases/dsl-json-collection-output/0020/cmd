@@ -1,0 +1,1 @@
+mlr --json cat test/input/json-collection-0010.json

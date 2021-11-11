@@ -1,1 +1,0 @@
-mlr --json --from regtest/input/flatten-input-2.json put '$zzzzzzz=$req.nonesuch.host'

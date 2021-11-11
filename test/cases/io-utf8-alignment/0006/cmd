@@ -1,0 +1,1 @@
+mlr --inidx --ifs space --opprint --right cat test/input/utf8-align.nidx

@@ -1,0 +1,1 @@
+mlr unhex < test/input/256.txt > test/input/auxents-hex-unhex/0002.bin

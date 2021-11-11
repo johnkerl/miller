@@ -1,0 +1,1 @@
+mlr --itsv --rs lf --oxtab cat test/input/simple.tsv

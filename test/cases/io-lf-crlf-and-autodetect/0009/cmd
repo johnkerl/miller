@@ -1,0 +1,1 @@
+mlr --irs auto --ors lf --csvlite cat test/input/line-term-lf.csv

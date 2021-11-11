@@ -1,0 +1,1 @@
+mlr --xtab cat test/input/embedded-ips.xtab

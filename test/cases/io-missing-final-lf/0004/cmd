@@ -1,0 +1,1 @@
+mlr --pprint cat test/input/truncated.pprint

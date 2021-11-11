@@ -1,0 +1,1 @@
+mlr --opprint cut -o -f x,a test/input/s.dkvp

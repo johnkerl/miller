@@ -1,0 +1,1 @@
+mlr --from test/input/s.dkvp put 'func f(x): str { return 2*x} $y=f(3)'

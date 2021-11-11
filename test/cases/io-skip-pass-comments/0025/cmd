@@ -1,0 +1,1 @@
+mlr --skip-comments --ixtab --odkvp cat test/input/comments/comments1.xtab

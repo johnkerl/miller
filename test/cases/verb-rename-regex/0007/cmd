@@ -1,0 +1,1 @@
+mlr --csvlite rename -r -g '/e/,EEE' test/input/date1.csv test/input/date2.csv

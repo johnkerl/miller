@@ -1,1 +1,0 @@
-mlr --ofs tab put -f ${CASEDIR}/mlr regtest/input/typeof.dkvp

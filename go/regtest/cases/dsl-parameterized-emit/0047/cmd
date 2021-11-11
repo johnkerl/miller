@@ -1,1 +1,0 @@
-mlr --opprint put -q -f ${CASEDIR}/mlr regtest/input/abixy

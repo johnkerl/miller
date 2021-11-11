@@ -1,0 +1,1 @@
+mlr --from test/input/abixy put -f test/input/test-dsl-stack-allocation.mlr

@@ -1,0 +1,1 @@
+mlr --bz2in count -g a < test/input/medium.bz2

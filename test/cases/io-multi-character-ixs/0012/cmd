@@ -1,0 +1,1 @@
+mlr --xtab --ips '\.' --ops @ cut -x -f b test/input/dots.xtab

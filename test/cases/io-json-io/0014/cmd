@@ -1,0 +1,1 @@
+mlr --ojson --jlistwrap --jvquoteall cat test/input/json-output-options.dkvp

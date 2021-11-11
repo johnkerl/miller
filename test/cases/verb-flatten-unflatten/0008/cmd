@@ -1,0 +1,1 @@
+mlr --ixtab --ojson unflatten test/input/unflatten-input.xtab

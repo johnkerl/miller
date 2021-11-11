@@ -1,0 +1,1 @@
+mlr --opprint put 'foo=asserting_empty($*)' test/input/nullvals.dkvp
