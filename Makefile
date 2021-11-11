@@ -1,13 +1,27 @@
+# Please edit Makefile.in rather than Makefile, which is overwritten by ../configure.
+PREFIX=/usr/local
+INSTALLDIR=$(PREFIX)/bin
+
 build:
-	make -C go build
-	@echo "Miller executable is: ./mlr, or go\mlr.exe on Windows"
+	go build
 
 check:
-	make -C go check
+	# Unit tests (small number)
+	go test -v mlr/internal/pkg/...
+	# Regression tests (large number)
+	#
+	# See ./regression_test.go for information on how to get more details
+	# for debugging.  TL;DR is for CI jobs, we have 'go test -v'; for
+	# interactive use, instead of 'go test -v' simply use 'mlr regtest
+	# -vvv' or 'mlr regtest -s 20'. See also src/auxents/regtest.
+	go test -v
 
-install:
-	make -C go install
+install: build
+	cp mlr $(INSTALLDIR)
 	make -C man install
+
+fmt:
+	go fmt ./...
 
 # For developers before pushing to GitHub.
 #
@@ -22,9 +36,9 @@ install:
 # * note the man/manpage.txt becomes some of the HTML content
 # * turns *.md into docs/site HTML and CSS files
 dev:
-	make -C go fmt
-	make -C go build
-	make -C go check
+	-make fmt
+	make build
+	make check
 	make -C man build
 	make -C docs
 	@echo DONE
@@ -38,4 +52,4 @@ release_tarball: build check
 	./create-release-tarball
 
 # Go does its own dependency management, outside of make.
-.PHONY: build check install precommit
+.PHONY: build check fmt dev

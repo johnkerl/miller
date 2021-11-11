@@ -1,0 +1,1 @@
+mlr --icsvlite --implicit-csv-header --ojson --jvstack cat test/input/implicit.csv

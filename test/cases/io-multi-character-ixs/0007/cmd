@@ -1,0 +1,1 @@
+mlr --oxtab --icsvlite --irs lf --ifs , cut -o -f x/,a/,i/ test/input/multi-sep.csv-crlf

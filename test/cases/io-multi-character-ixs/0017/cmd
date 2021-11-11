@@ -1,0 +1,1 @@
+mlr --oxtab --idkvp --irs lf --ifs /, --ips =: cut -o -f x,a,i test/input/multi-sep.dkvp-crlf

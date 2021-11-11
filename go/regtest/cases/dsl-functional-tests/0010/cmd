@@ -1,1 +1,0 @@
-mlr filter -x -f ${CASEDIR}/mlr regtest/input/abixy

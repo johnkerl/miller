@@ -1,1 +1,0 @@
-mlr head -n 4 then put -q -f ${CASEDIR}/mlr regtest/input/abixy

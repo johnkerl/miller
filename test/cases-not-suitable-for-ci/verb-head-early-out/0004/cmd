@@ -1,0 +1,1 @@
+mlr tac then head -n 2 then put 'end{ print "Final NR is ".NR}' test/input/abixy-wide

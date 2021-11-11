@@ -1,1 +1,0 @@
-mlr --from regtest/input/abixy tee -a ${CASEDIR}/out then nothing

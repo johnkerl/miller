@@ -1,0 +1,1 @@
+mlr --inidx --ifs comma --odkvp cat test/input/null-fields.nidx

@@ -1,0 +1,1 @@
+mlr --skip-comments --ijson --odkvp cat test/input/comments/comments1.json

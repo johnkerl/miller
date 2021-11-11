@@ -1,1 +1,0 @@
-mlr --from regtest/input/abixy-het --opprint put -q -f ${CASEDIR}/mlr

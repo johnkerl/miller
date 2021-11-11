@@ -1,0 +1,1 @@
+mlr --icsv --ojson clean-whitespace -k test/input/clean-whitespace.csv

@@ -1,1 +1,0 @@
-mlr --oxtab head -n 2 then put -q -f ${CASEDIR}/mlr regtest/input/abixy

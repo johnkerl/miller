@@ -1,0 +1,1 @@
+mlr head -n 4 then put -q -o pprint -f ${CASEDIR}/mlr test/input/abixy

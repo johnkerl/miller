@@ -1,1 +1,0 @@
-mlr -A --c2p put -f ${CASEDIR}/mlr regtest/input/infer.csv

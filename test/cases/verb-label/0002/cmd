@@ -1,0 +1,1 @@
+mlr --opprint label A,B,I,X,Y test/input/s.dkvp

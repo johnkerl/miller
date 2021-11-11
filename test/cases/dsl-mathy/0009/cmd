@@ -1,0 +1,1 @@
+mlr --from test/input/ten.dkvp --opprint put -f ${CASEDIR}/mlr

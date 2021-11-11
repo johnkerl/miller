@@ -1,0 +1,1 @@
+mlr --ijson --ocsvlite join -i dkvp -j x -f test/input/multi-format-join-a.dkvp test/input/multi-format-join-b.json

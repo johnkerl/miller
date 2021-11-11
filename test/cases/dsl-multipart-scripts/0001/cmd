@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/abixy put -f test/input/put-script-piece-1

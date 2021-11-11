@@ -1,0 +1,1 @@
+mlr put '$z = $x + $u' test/input/typeof.dkvp

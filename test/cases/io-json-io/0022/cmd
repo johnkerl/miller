@@ -1,0 +1,1 @@
+mlr put -q --jknquoteint 'dump $*' test/input/json-output-options.dkvp

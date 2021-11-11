@@ -1,0 +1,1 @@
+mlr --icsvlite --odkvp join -i json -j x -f test/input/multi-format-join-a.json test/input/multi-format-join-b.csv

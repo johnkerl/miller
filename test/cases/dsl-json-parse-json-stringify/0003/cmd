@@ -1,0 +1,1 @@
+mlr --ijson --ojson --from test/input/flatten-input-2.json put '$req=json_stringify($req, true)'

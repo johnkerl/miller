@@ -1,0 +1,1 @@
+mlr --ijson --oxtab cat test/input/arrays.json

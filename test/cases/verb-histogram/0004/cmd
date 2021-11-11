@@ -1,0 +1,1 @@
+mlr --opprint histogram --nbins 9 --auto -f x,y -o foo_ test/input/ints.dkvp

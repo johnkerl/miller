@@ -1,0 +1,1 @@
+mlr --csv remove-empty-columns test/input/remove-empty-columns.csv

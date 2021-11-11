@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# ================================================================
+# Reads the Miller DSL grammar file and generates Go code.
+#
+# This is not run on every build / commit / etc.
+#
+# It's intended to be run manually by the developer, as needed when mlr.bnf
+# changes for example.
+#
+# Resulting auto-generated .go files should then be checked into source control.
+#
+# With verbose, *.txt files are created with information about LR1 conflicts
+# etc.  Please don't commit them.
+#
+# As of mid-2021 this takes easily 5-10 minutes to run.
+# ================================================================
+
+set -euo pipefail
+
+verbose="true"
+if [ $# -eq 1 ]; then
+  if [ "$1" == "-v" ]; then
+    verbose="true"
+  elif [ "$1" == "-q" ]; then
+    verbose="true"
+  fi
+fi
+
+# Build the bin/gocc executable:
+go get github.com/goccmack/gocc
+#go get github.com/johnkerl/gocc
+bingocc="$HOME/go/bin/gocc"
+if [ ! -x "$bingocc" ]; then
+  exit 1
+fi
+
+rm -f internal/pkg/parsing/*.txt
+if [ "$verbose" = "true" ]; then
+  lr1="internal/pkg/parsing/LR1_conflicts.txt"
+  $bingocc -v -o ./internal/pkg/parsing -p mlr/internal/pkg/parsing internal/pkg/parsing/mlr.bnf || expand -2 $lr1
+else
+  $bingocc -o ./internal/pkg/parsing -p mlr/internal/pkg/parsing internal/pkg/parsing/mlr.bnf
+fi
+
+# Code-gen directories:
+#   internal/pkg/parsing/errors/
+#   internal/pkg/parsing/lexer/
+#   internal/pkg/parsing/parser/
+#   internal/pkg/parsing/token/
+#   internal/pkg/parsing/util/
+
+# Override GOCC codegen with customized error handling
+cp internal/pkg/parsing/errors.go.template internal/pkg/parsing/errors/errors.go
+
+for x in internal/pkg/parsing/*/*.go; do gofmt -w $x; done

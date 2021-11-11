@@ -1,0 +1,1 @@
+mlr --pass-comments --inidx --ifs space --oxtab cat test/input/comments/comments1.nidx

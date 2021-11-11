@@ -1,0 +1,1 @@
+mlr --icsv --allow-ragged-csv-input --ojson --jvstack cat test/input/ragged-short.csv

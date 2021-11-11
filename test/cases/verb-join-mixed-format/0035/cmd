@@ -1,0 +1,1 @@
+mlr --idkvp --odkvp join -i csvlite -j x -f test/input/multi-format-join-a.csv test/input/multi-format-join-b.dkvp

@@ -1,0 +1,1 @@
+mlr --json reshape -i x,y -o item,value test/input/small-non-nested.json

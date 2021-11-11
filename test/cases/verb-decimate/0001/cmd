@@ -1,0 +1,1 @@
+mlr decimate -n 4 test/input/abixy

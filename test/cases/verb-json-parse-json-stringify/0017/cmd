@@ -1,0 +1,1 @@
+mlr --j2x flatten test/input/json-stringify-0001.json

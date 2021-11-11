@@ -1,0 +1,1 @@
+mlr --ojson --jvstack --from test/input/s.dkvp head -n 1

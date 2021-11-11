@@ -1,1 +1,0 @@
-mlr: is_not_null type-assertion failed at NR=3 FNR=3 FILENAME=regtest/input/nullvals.dkvp

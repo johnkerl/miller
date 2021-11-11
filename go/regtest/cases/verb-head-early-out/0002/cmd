@@ -1,1 +1,0 @@
-mlr head -n 2 -g a then put -f ${CASEDIR}/mlr regtest/input/abixy-wide

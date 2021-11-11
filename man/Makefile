@@ -12,7 +12,7 @@ INSTALLDIR=$(PREFIX)/share/man/man1
 # needing only to be copied to its install dir.
 # Copying to man1/mlr1 is so that you can then put the Miller dir in your
 # $MANPATH and do "man mlr".
-build:
+build: .always
 	echo mkman start
 	./mkman.rb > mlr.1
 	./mkman.rb | groff -man -Tascii | col -b | expand -8 > manpage.txt
@@ -27,4 +27,5 @@ install:
 
 
 # ----------------------------------------------------------------
-.PHONY: build install
+.always:
+	true

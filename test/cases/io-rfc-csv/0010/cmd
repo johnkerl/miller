@@ -1,0 +1,1 @@
+mlr --csvlite --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b test/input/rfc-csv/modify-defaults.csv

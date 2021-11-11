@@ -1,0 +1,1 @@
+mlr --dkvp cat test/input/truncated.dkvp

@@ -1,0 +1,1 @@
+mlr join -r r -j l -f test/input/joina.dkvp test/input/joinb.dkvp

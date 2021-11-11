@@ -1,0 +1,1 @@
+mlr --json --from test/input/nulls.json put '$z=$n+$n'
