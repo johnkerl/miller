@@ -70,7 +70,7 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 
     * Edit `go/src/version/version.go` from `6.1.0-dev` to `6.2.0`.
     * Edit version in `docs/mkdocs.yml` from `6.1.0` to `6.2.0`.
-    * Run `make precommit` in the Miller repo base directory
+    * Run `make dev` in the Miller repo base directory
     * The ordering in this makefile rule is important: the first build creates `mlr`; the second runs `mlr` to create `manpage.txt`; the third includes `manpage.txt` into one of its outputs.
     * Commit and push.
 

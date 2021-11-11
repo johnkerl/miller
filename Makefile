@@ -21,7 +21,7 @@ install:
 # * turns *.md.in into *.md (live code samples), using mlr from the $PATH
 # * note the man/manpage.txt becomes some of the HTML content
 # * turns *.md into docs/site HTML and CSS files
-precommit:
+dev:
 	make -C go fmt
 	make -C go build
 	make -C go check
