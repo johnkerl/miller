@@ -10,11 +10,11 @@ import (
 
 	"github.com/mattn/go-isatty"
 
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/dsl/cst"
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/transformers"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/transformers"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ================================================================
@@ -311,7 +311,7 @@ func helpAuxents() {
 They do not participate in any other parts of Miller.
 Please "mlr aux-list" for more information.
 `)
-	// imports mlr/internal/pkg/auxents: import cycle not allowed
+	// imports github.com/johnkerl/miller/internal/pkg/auxents: import cycle not allowed
 	// auxents.ShowAuxEntries(o)
 }
 

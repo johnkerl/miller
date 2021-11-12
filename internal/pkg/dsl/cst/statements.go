@@ -8,7 +8,7 @@ package cst
 import (
 	"errors"
 
-	"mlr/internal/pkg/dsl"
+	"github.com/johnkerl/miller/internal/pkg/dsl"
 )
 
 // ----------------------------------------------------------------

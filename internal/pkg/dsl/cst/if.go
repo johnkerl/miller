@@ -7,10 +7,10 @@ package cst
 import (
 	"errors"
 
-	"mlr/internal/pkg/dsl"
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/runtime"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/dsl"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/runtime"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------

@@ -19,6 +19,8 @@ build:
 	mkdir -p ./man1
 	cp mlr.1 ./man1
 
+# DESTDIR is for package installs; nominally blank when this is run interactively.
+# See also https://www.gnu.org/prep/standards/html_node/DESTDIR.html
 install:
 	mkdir -p $(DESTDIR)/$(INSTALLDIR)
 	cp mlr.1 $(DESTDIR)/$(INSTALLDIR)/mlr.1

@@ -9,9 +9,9 @@ import (
 	"fmt"
 	"os"
 
-	"mlr/internal/pkg/auxents/help"
-	"mlr/internal/pkg/auxents/regtest"
-	"mlr/internal/pkg/auxents/repl"
+	"github.com/johnkerl/miller/internal/pkg/auxents/help"
+	"github.com/johnkerl/miller/internal/pkg/auxents/regtest"
+	"github.com/johnkerl/miller/internal/pkg/auxents/repl"
 )
 
 // tAuxMain is a function-pointer type for the entrypoint handler for a given auxent,

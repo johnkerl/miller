@@ -99,7 +99,7 @@ func RegTestMain(args []string) int {
 			regTestUsage(verbName, os.Stderr, 1)
 		}
 	}
-	paths := args[argi:]
+	casePaths := args[argi:]
 
 	regtester := NewRegTester(
 		exeName,
@@ -109,7 +109,7 @@ func RegTestMain(args []string) int {
 		firstNFailsToShow,
 	)
 
-	ok := regtester.Execute(paths)
+	ok := regtester.Execute(casePaths)
 
 	if !ok {
 		return 1

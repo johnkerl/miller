@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 // For flags with values, e.g. ["-n" "10"], while we're looking at the "-n" this let us see if the "10" slot exists.

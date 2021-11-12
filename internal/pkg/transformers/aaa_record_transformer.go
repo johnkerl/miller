@@ -3,8 +3,8 @@ package transformers
 import (
 	"os"
 
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // IRecordTransformer is the interface satisfied by all transformers, i.e.,

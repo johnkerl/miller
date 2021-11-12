@@ -3,7 +3,7 @@ package output
 import (
 	"io"
 
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // IRecordWriter is the abstract interface for all record-writers.  They are

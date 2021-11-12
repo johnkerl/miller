@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"os"
 
-	"mlr/internal/pkg/dsl"
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/dsl"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 // ----------------------------------------------------------------

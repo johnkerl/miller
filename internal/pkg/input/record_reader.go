@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"io"
 
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 const CSV_BOM = "\xef\xbb\xbf"

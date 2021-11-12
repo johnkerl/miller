@@ -5,10 +5,10 @@ import (
 	"regexp"
 	"time"
 
+	strptime "github.com/johnkerl/miller/internal/pkg/pbnjay-strptime"
 	"github.com/lestrrat-go/strftime"
-	strptime "mlr/internal/pkg/pbnjay-strptime"
 
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 const ISO8601_TIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"

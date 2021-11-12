@@ -1,4 +1,4 @@
-// Package main is the entry point for Miller.
+// This is the entry point for the mlr executable.
 package main
 
 import (
@@ -9,10 +9,9 @@ import (
 	"runtime/pprof"
 	"strconv"
 
-	"mlr/internal/pkg/entrypoint"
+	"github.com/johnkerl/miller/internal/pkg/entrypoint"
 )
 
-// main is the entry point for Miller.
 func main() {
 
 	// Respect env $GOMAXPROCS, if provided, else set default.
@@ -36,7 +35,7 @@ func main() {
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// CPU profiling
 	//
-	// We do this here not in the command-line parser since
+	// We do this here, not in the command-line parser, since
 	// pprof.StopCPUProfile() needs to be called at the very end of everything.
 	// Putting this pprof logic into a go func running in parallel with main,
 	// and properly stopping the profile only when main ends via chan-sync,

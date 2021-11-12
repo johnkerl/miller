@@ -68,7 +68,7 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 
 * Update version found in `mlr --version` and `man mlr`:
 
-    * Edit `go/src/version/version.go` from `6.1.0-dev` to `6.2.0`.
+    * Edit `internal/pkpg/version/version.go` from `6.1.0-dev` to `6.2.0`.
     * Edit version in `docs/mkdocs.yml` from `6.1.0` to `6.2.0`.
     * Run `make dev` in the Miller repo base directory
     * The ordering in this makefile rule is important: the first build creates `mlr`; the second runs `mlr` to create `manpage.txt`; the third includes `manpage.txt` into one of its outputs.
@@ -79,7 +79,7 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
     * `make release_tarball`
     * This creates `miller-6.2.0-dev.tar.gz` which we'll upload to GitHub, the URL of which will be in our `miller.spec`
     * Get `mlr.{arch}` binaries from latest successful build from [https://github.com/johnkerl/miller/actions](https://github.com/johnkerl/miller/actions), or, build them on buildboxes.
-    * Prepare the source RPM following [./README-RPM.md](README-RPM.md).
+    * Prepare the source RPM following `README-RPM.md`.
 
 * Create the Github release tag:
 
@@ -119,7 +119,7 @@ git push -u origin miller-6.1.0
 
 * Afterwork:
 
-    * Edit `go/src/version/version.go` to change version from `6.2.0` to `6.2.0-dev`.
+    * Edit `internal/pkg/version/version.go` to change version from `6.2.0` to `6.2.0-dev`.
     * `cd go`
     * `./build`
     * Commit and push.

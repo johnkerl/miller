@@ -5,11 +5,11 @@ import (
 	"io"
 	"os"
 
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/input"
-	"mlr/internal/pkg/output"
-	"mlr/internal/pkg/transformers"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/input"
+	"github.com/johnkerl/miller/internal/pkg/output"
+	"github.com/johnkerl/miller/internal/pkg/transformers"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as

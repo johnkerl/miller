@@ -27,7 +27,7 @@ import (
 	"path"
 	"strings"
 
-	"mlr/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/cli"
 )
 
 // ================================================================

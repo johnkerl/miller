@@ -5,7 +5,7 @@
 package utils
 
 import (
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------

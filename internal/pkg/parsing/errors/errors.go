@@ -3,9 +3,8 @@
 // over the top of GOCC codegen so that we can customize handling of error
 // messages.
 //
-// Source:       src/parsing/errors.go.template
-// Destination:
-// src/parsing/errors/errors.go
+// Source:      internal/pkg/parsing/errors.go.template
+// Destination: internal/pkg/parsing/errors/errors.go
 // ================================================================
 
 package errors
@@ -14,7 +13,7 @@ import (
 	"fmt"
 	"strings"
 
-	"mlr/internal/pkg/parsing/token"
+	"github.com/johnkerl/miller/internal/pkg/parsing/token"
 )
 
 type ErrorSymbol interface {

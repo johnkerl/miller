@@ -65,11 +65,11 @@ import (
 	"runtime"
 	"strings"
 
-	"mlr/internal/pkg/colorizer"
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/colorizer"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
-const DefaultPath = "./test/cases"
+const DefaultPath = "./cases"
 const CmdName = "cmd"
 const MlrName = "mlr"
 const EnvName = "env"
@@ -153,7 +153,7 @@ func (regtester *RegTester) resetCounts() {
 // for semantics.
 
 func (regtester *RegTester) Execute(
-	paths []string,
+	casePaths []string,
 ) bool {
 
 	// Don't let the current user's settings affect expected results
@@ -163,20 +163,20 @@ func (regtester *RegTester) Execute(
 
 	regtester.resetCounts()
 
-	if len(paths) == 0 {
-		paths = []string{DefaultPath}
+	if len(casePaths) == 0 {
+		casePaths = []string{DefaultPath}
 	}
 
 	if !regtester.plainMode {
 		fmt.Println("REGRESSION TEST:")
-		for _, path := range paths {
+		for _, path := range casePaths {
 			fmt.Printf("  %s\n", path)
 		}
 		fmt.Printf("Using executable: %s\n", regtester.exeName)
 		fmt.Println()
 	}
 
-	for _, path := range paths {
+	for _, path := range casePaths {
 		regtester.executeSinglePath(path)
 	}
 

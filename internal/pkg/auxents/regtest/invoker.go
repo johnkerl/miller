@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/platform"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/platform"
 )
 
 // RunMillerCommand runs a string like 'mlr cat foo.dat', with specified mlr

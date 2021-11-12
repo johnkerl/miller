@@ -6,8 +6,8 @@ import (
 	"runtime"
 	"strings"
 
-	"mlr/internal/pkg/platform"
-	"mlr/internal/pkg/version"
+	"github.com/johnkerl/miller/internal/pkg/platform"
+	"github.com/johnkerl/miller/internal/pkg/version"
 )
 
 func BIF_version() *Mlrval {

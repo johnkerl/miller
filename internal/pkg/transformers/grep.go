@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"strings"
 
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------

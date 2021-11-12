@@ -3,7 +3,7 @@ package types
 import (
 	"strings"
 
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 // BIF_ssub implements the ssub function -- no-frills string-replace, no

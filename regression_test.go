@@ -5,13 +5,13 @@ import (
 	"os"
 	"testing"
 
-	"mlr/internal/pkg/auxents/regtest"
+	"github.com/johnkerl/miller/internal/pkg/auxents/regtest"
 )
 
 // TestRegression is a familiar entry point for regression testing.  Miller
 // regression tests are more flexibly invoked via 'mlr regtest'.  However here
 // is a standard location so people can get at them via 'go test'.  Please see
-// (as of this writing) src/auxents/regtest for the Miller regtest package.
+// (as of this writing) internal/pkg/auxents/regtest for the Miller regtest package.
 func TestRegression(t *testing.T) {
 	// How much detail to show?  There are thousands of cases, organized into a
 	// few hundred top-level directories under ./test/cases.
@@ -53,6 +53,10 @@ func TestRegression(t *testing.T) {
 	path := os.Getenv("PATH")
 	os.Setenv("PATH", cwd+":"+path)
 
+	// With 'go test' invoked from the repo base directory, the cwd for this code will
+	// be the tests/ subdirectory.
+	casePaths := []string{"./test/cases"} // use default
+
 	regtester := regtest.NewRegTester(
 		"mlr", // exeName
 		false, // doPopulate
@@ -61,9 +65,7 @@ func TestRegression(t *testing.T) {
 		firstNFailsToShow,
 	)
 
-	paths := []string{} // use default
-
-	ok := regtester.Execute(paths)
+	ok := regtester.Execute(casePaths)
 	if !ok {
 		t.Fatal()
 	}

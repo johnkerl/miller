@@ -10,8 +10,7 @@ endif
 syn case match
 
 " ----------------------------------------------------------------
-" Goal: map the lexical elements of the Miller DSL grammar
-"   https://github.com/johnkerl/miller/blob/main/go/src/parsing/mlr.bnf
+" Goal: map the lexical elements of the Miller DSL grammar in mlr.bnf
 " to Vim syntax options
 "   http://vimdoc.sourceforge.net/htmldoc/syntax.html
 " ----------------------------------------------------------------

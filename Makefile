@@ -2,19 +2,25 @@ PREFIX=/usr/local
 INSTALLDIR=$(PREFIX)/bin
 
 build:
-	go build
+	go build github.com/johnkerl/miller/cmd/mlr
 
-check:
-	# Unit tests (small number)
-	go test -v mlr/internal/pkg/...
-	# Regression tests (large number)
-	#
-	# See ./regression_test.go for information on how to get more details
-	# for debugging.  TL;DR is for CI jobs, we have 'go test -v'; for
-	# interactive use, instead of 'go test -v' simply use 'mlr regtest
-	# -vvv' or 'mlr regtest -s 20'. See also src/auxents/regtest.
-	go test -v
+check: unit_test regression_test
 
+# Unit tests (small number)
+unit_test:
+	go test github.com/johnkerl/miller/internal/pkg/...
+
+# Regression tests (large number)
+#
+# See ./regression_test.go for information on how to get more details
+# for debugging.  TL;DR is for CI jobs, we have 'go test -v'; for
+# interactive use, instead of 'go test -v' simply use 'mlr regtest
+# -vvv' or 'mlr regtest -s 20'. See also internal/pkg/auxents/regtest.
+regression_test:
+	go test -v regression_test.go
+
+# DESTDIR is for package installs; nominally blank when this is run interactively.
+# See also https://www.gnu.org/prep/standards/html_node/DESTDIR.html
 install: build
 	cp mlr $(DESTDIR)/$(INSTALLDIR)
 	make -C man install
@@ -51,4 +57,4 @@ release_tarball: build check
 	./create-release-tarball
 
 # Go does its own dependency management, outside of make.
-.PHONY: build check fmt dev
+.PHONY: build check unit_test regression_test fmt dev

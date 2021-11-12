@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 // ================================================================

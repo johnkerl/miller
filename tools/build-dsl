@@ -28,8 +28,7 @@ if [ $# -eq 1 ]; then
 fi
 
 # Build the bin/gocc executable:
-go get github.com/goccmack/gocc
-#go get github.com/johnkerl/gocc
+go install github.com/goccmack/gocc
 bingocc="$HOME/go/bin/gocc"
 if [ ! -x "$bingocc" ]; then
   exit 1
