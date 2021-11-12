@@ -75,7 +75,7 @@ $tar \
   --exclude data \
   --exclude docs \
   --exclude experiments \
-  --exclude go/todo.txt \
+  --exclude todo.txt \
   --exclude perf \
   --exclude python \
   --exclude vim \
@@ -86,7 +86,12 @@ $tar \
   ./configure \
   ./Makefile \
   ./create-release-tarball \
-  ./go \
-  ./man
+  ./go.mod \
+  ./go.sum \
+  ./cmd \
+  ./internal \
+  ./regression_test.go \
+  ./man \
+  ./test
 
 echo "Wrote    $TGZ_NAME"
