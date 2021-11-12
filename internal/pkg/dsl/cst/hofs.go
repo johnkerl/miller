@@ -12,12 +12,12 @@ import (
 	"strconv"
 	"strings"
 
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/runtime"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/runtime"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
-// Most function types are in the mlr/internal/pkg/types package. These types, though,
+// Most function types are in the github.com/johnkerl/miller/internal/pkg/types package. These types, though,
 // include functions which need to access CST state in order to call back to
 // user-defined functions.  To avoid a package-cycle dependency, they are
 // defined here.

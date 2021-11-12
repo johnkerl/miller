@@ -9,8 +9,8 @@ import (
 	"errors"
 	"fmt"
 
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/parsing/token"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/parsing/token"
 )
 
 // ----------------------------------------------------------------

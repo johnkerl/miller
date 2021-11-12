@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"mlr/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/cli"
 )
 
 func Create(writerOptions *cli.TWriterOptions) (IRecordWriter, error) {

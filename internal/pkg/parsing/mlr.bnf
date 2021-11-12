@@ -42,7 +42,7 @@
 //   interface{}/error since they are meant for nesting as arguments here
 //   within this file.
 //
-// * Please see src/dsl/ast*.go for more about what the <<...>>
+// * Please see internal/pkg/dsl/ast*.go for more about what the <<...>>
 //   code here is calling.
 // ================================================================
 
@@ -326,7 +326,7 @@ panic : '%' '%' '%' 'p' 'a' 'n' 'i' 'c' '%' '%' '%' ;
 // ================================================================
 
 // Import the AST/ASTNode types and functions
-<< import "mlr/internal/pkg/dsl" >>
+<< import "github.com/johnkerl/miller/internal/pkg/dsl" >>
 
 // ================================================================
 // TOP-LEVEL PRODUCTION RULE FOR THE MILLER DSL

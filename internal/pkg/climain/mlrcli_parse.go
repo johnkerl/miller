@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	"mlr/internal/pkg/auxents/help"
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/transformers"
-	"mlr/internal/pkg/types"
-	"mlr/internal/pkg/version"
+	"github.com/johnkerl/miller/internal/pkg/auxents/help"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/transformers"
+	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/version"
 )
 
 // ParseCommandLine is the entrypoint for handling the Miller command line:

@@ -3,8 +3,8 @@ package cst
 import (
 	"fmt"
 
-	"mlr/internal/pkg/colorizer"
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/colorizer"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 // ----------------------------------------------------------------

@@ -46,7 +46,7 @@ type Mlrval struct {
 	mapval        *Mlrmap
 	// These are first-class-function literals. Stored here as interface{} to
 	// avoid what would otherwise be a package-dependency cycle with the
-	// mlr/internal/pkg/dsl/cst package.
+	// github.com/johnkerl/miller/internal/pkg/dsl/cst package.
 	funcval interface{}
 }
 

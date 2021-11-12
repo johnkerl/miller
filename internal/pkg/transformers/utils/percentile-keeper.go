@@ -9,7 +9,7 @@ import (
 	"math"
 	"sort"
 
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 type PercentileKeeper struct {

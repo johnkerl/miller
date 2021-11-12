@@ -7,12 +7,12 @@ package repl
 import (
 	"os"
 
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/dsl/cst"
-	"mlr/internal/pkg/input"
-	"mlr/internal/pkg/output"
-	"mlr/internal/pkg/runtime"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
+	"github.com/johnkerl/miller/internal/pkg/input"
+	"github.com/johnkerl/miller/internal/pkg/output"
+	"github.com/johnkerl/miller/internal/pkg/runtime"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ================================================================

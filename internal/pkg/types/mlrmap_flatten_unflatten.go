@@ -25,7 +25,7 @@ package types
 import (
 	"strings"
 
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 // ----------------------------------------------------------------

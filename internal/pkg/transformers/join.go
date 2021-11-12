@@ -6,11 +6,11 @@ import (
 	"os"
 	"strings"
 
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/input"
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/transformers/utils"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/input"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/transformers/utils"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------

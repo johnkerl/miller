@@ -2,7 +2,7 @@
 
 package parser
 
-import "mlr/internal/pkg/dsl"
+import "github.com/johnkerl/miller/internal/pkg/dsl"
 
 type (
 	ProdTab      [numProductions]ProdTabEntry

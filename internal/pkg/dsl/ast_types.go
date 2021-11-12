@@ -5,7 +5,7 @@
 package dsl
 
 import (
-	"mlr/internal/pkg/parsing/token"
+	"github.com/johnkerl/miller/internal/pkg/parsing/token"
 )
 
 // ----------------------------------------------------------------

@@ -11,9 +11,9 @@ import (
 	"os"
 	"strings"
 
-	"mlr/internal/pkg/colorizer"
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/colorizer"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // FinalizeReaderOptions does a few things.

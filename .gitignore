@@ -1,41 +1,14 @@
-go/mlr
-go/mlr.exe
-mlr
-mlr.exe
-a.out
-*.dSYM
-catc
-catc0
-catm
-gmon.out
-*.o
-*.pyc
 .sw?
 .*.sw?
 tags
 *~
-mlr-[0-9.]*.tar.*
 push2
 data/.gitignore
 
-docs/_build
-docs6/_build
-
 man/man1
-
-miller-*.src.rpm
-mlr.exe
-mlr.linux.x86_64
-mlr.macosx
 
 data/big.*
 data/nmc?.*
 
-experiments/dsl-parser/one/src
-experiments/dsl-parser/one/main
-experiments/dsl-parser/two/src
-experiments/dsl-parser/two/main
-experiments/cli-parser/cliparse
-experiments/cli-parser/cliparse.exe
-
+docs/src/polyglot-dkvp-io/__pycache__
 docs/site/

@@ -5,7 +5,7 @@
 package types
 
 import (
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

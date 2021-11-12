@@ -8,7 +8,7 @@
 // * go test
 // Or:
 // * cd go
-// * go test mlr/internal/pkg/types/...
+// * go test github.com/johnkerl/miller/internal/pkg/types/...
 
 package types
 

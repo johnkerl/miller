@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 func ChannelWriter(

@@ -14,8 +14,8 @@ import (
 	"errors"
 	"io"
 
-	"mlr/internal/pkg/colorizer"
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/colorizer"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 const MLRVAL_JSON_INDENT_STRING string = "  "

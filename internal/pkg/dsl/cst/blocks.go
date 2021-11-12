@@ -6,9 +6,9 @@
 package cst
 
 import (
-	"mlr/internal/pkg/dsl"
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/runtime"
+	"github.com/johnkerl/miller/internal/pkg/dsl"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/runtime"
 )
 
 // ----------------------------------------------------------------

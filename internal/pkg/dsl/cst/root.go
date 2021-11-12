@@ -12,13 +12,13 @@ import (
 	"os"
 	"strings"
 
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/dsl"
-	"mlr/internal/pkg/output"
-	"mlr/internal/pkg/parsing/lexer"
-	"mlr/internal/pkg/parsing/parser"
-	"mlr/internal/pkg/runtime"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/dsl"
+	"github.com/johnkerl/miller/internal/pkg/output"
+	"github.com/johnkerl/miller/internal/pkg/parsing/lexer"
+	"github.com/johnkerl/miller/internal/pkg/parsing/parser"
+	"github.com/johnkerl/miller/internal/pkg/runtime"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // NewEmptyRoot sets up an empty CST, before ingesting any DSL strings.  For

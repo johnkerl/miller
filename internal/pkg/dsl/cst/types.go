@@ -7,10 +7,10 @@ package cst
 import (
 	"container/list"
 
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/dsl"
-	"mlr/internal/pkg/runtime"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/dsl"
+	"github.com/johnkerl/miller/internal/pkg/runtime"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------

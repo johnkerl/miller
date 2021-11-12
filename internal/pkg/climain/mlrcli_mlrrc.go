@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"mlr/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/cli"
 )
 
 // loadMlrrcOrDie rule: If $MLRRC is set, use it and only it.  Otherwise try

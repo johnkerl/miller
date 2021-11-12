@@ -5,7 +5,7 @@ package lexer
 import (
 	"fmt"
 
-	"mlr/internal/pkg/parsing/token"
+	"github.com/johnkerl/miller/internal/pkg/parsing/token"
 )
 
 type ActionTable [NumStates]ActionRow

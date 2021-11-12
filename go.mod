@@ -1,8 +1,13 @@
-module mlr
-// 'module github.com/johnkerl/miller' would be more standard, but it has the
-// fatal flaw that 'go build' would produce a file named 'miller', not 'mlr' --
-// and this naming goes back many years for Miller with executable named 'mlr',
-// predating the Go port, across many platforms.
+module github.com/johnkerl/miller
+// The repo is 'miller' and the executable is 'mlr', going back many years and
+// predating the Go port.
+//
+// If we had ./mlr.go then 'go build github.com/johnkerl/miller' then the
+// executable would be 'miller' not 'mlr'.
+//
+// So we have cmd/mlr/main.go:
+// * go build   github.com/johnkerl/miller/cmd/mlr
+// * go install github.com/johnkerl/miller/cmd/mlr
 
 go 1.15
 

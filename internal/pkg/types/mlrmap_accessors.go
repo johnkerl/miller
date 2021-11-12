@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"errors"
 
-	"mlr/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 // IsEmpty determines if an map is empty.

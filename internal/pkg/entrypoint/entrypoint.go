@@ -11,13 +11,13 @@ import (
 	"os"
 	"path"
 
-	"mlr/internal/pkg/auxents"
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/climain"
-	"mlr/internal/pkg/lib"
-	"mlr/internal/pkg/platform"
-	"mlr/internal/pkg/stream"
-	"mlr/internal/pkg/transformers"
+	"github.com/johnkerl/miller/internal/pkg/auxents"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/climain"
+	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/platform"
+	"github.com/johnkerl/miller/internal/pkg/stream"
+	"github.com/johnkerl/miller/internal/pkg/transformers"
 )
 
 // ----------------------------------------------------------------

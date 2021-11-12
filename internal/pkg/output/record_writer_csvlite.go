@@ -5,9 +5,9 @@ import (
 	"io"
 	"strings"
 
-	"mlr/internal/pkg/cli"
-	"mlr/internal/pkg/colorizer"
-	"mlr/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/colorizer"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 type RecordWriterCSVLite struct {
