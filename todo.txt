@@ -5,15 +5,14 @@ PUNCHDOWN LIST
   o release prep
     o man & docs use (export PATH ...) base/mlr
     o local phi/mh -> ~/g/j/m; m6 redirect to rtd -- ?
+    o DESTDIR doc ... + https://www.gnu.org/prep/standards/html_node/DESTDIR.html
     o miller/mlr ... try skitt:
       - cmd/layout -- ?
       - go install github.com/johnkerl/miller/cmd/mlr
       - go build {what goes here?}
+    o make an open issue for the maybe-rename -- ?
   o conda etc
     - get a conda link for rmd
-    - distcheck: gtar --transform 's,^./,miller-6.0.0/,' --exclude ./.git -czf /tmp/miller-6.0.0.tgz .
-      > also exclude: data, docs, experiments, per, python, vim
-      > on macos, 'brew install gnu-tar' will install 'gtar'
   o blockers:
     - fractional-strptime
     - cmp-matrices

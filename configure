@@ -28,13 +28,20 @@ else
     esac
     shift
   done
-  # Test for read access, not write access, since people can ./configure, make,
-  # and make check outside of sudo and then make install inside sudo.
-  if [ ! -d "$prefix" ]; then
-    echo "$0: could not find prefix directory \"$prefix\""
-    exit 1
-  fi
+fi
+
+# Test for read access, not write access, since people can ./configure, make,
+# and make check outside of sudo and then make install inside sudo.
+if [ ! -d "$prefix" ]; then
+  echo "$0: could not find prefix directory \"$prefix\""
+  exit 1
 fi
 
 sed -I .prefix-backup 's@^PREFIX.*@PREFIX='$prefix'@' Makefile
+rm Makefile.prefix-backup
+echo Updated Makefile
+
 sed -I .prefix-backup 's@^PREFIX.*@PREFIX='$prefix'@' man/Makefile
+rm man/Makefile.prefix-backup
+echo Updated man/Makefile
+
