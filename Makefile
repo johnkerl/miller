@@ -1,4 +1,3 @@
-# Please edit Makefile.in rather than Makefile, which is overwritten by ../configure.
 PREFIX=/usr/local
 INSTALLDIR=$(PREFIX)/bin
 
@@ -17,11 +16,11 @@ check:
 	go test -v
 
 install: build
-	cp mlr $(INSTALLDIR)
+	cp mlr $(DESTDIR)/$(INSTALLDIR)
 	make -C man install
 
 fmt:
-	go fmt ./...
+	-go fmt ./...
 
 # For developers before pushing to GitHub.
 #
