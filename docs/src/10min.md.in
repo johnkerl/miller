@@ -109,6 +109,28 @@ GENMD-EOF
 For `put` and `filter` we were able to type out expressions using a programming-language syntax.
 See the [Miller programming language page](miller-programming-language.md) for more information.
 
+## Handling field names with spaces
+
+Sometimes our data has field names with spaces, dots, etc in them.
+
+For verbs such as `sort`, `cut`, etc., no special syntax is necessary:
+
+GENMD-RUN-COMMAND
+mlr --csv cat spaces.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p sort -nr 'Total MWh' spaces.csv
+GENMD-EOF
+
+For `put` and `filter` expressions, use `${...}`:
+
+GENMD-RUN-COMMAND
+mlr --c2p put '${Total KWh} = ${Total MWh} * 1000' spaces.csv
+GENMD-EOF
+
+See also the [section on field names](reference-dsl-variables.md/#field-names).
+
 ## Multiple input files
 
 Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files [data/a.csv](data/a.csv) and [data/b.csv](data/b.csv), the system `cat` command will repeat header lines:

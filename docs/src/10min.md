@@ -309,6 +309,49 @@ purple square   false 10 91    72.3735  8.2430 92 8474
 For `put` and `filter` we were able to type out expressions using a programming-language syntax.
 See the [Miller programming language page](miller-programming-language.md) for more information.
 
+## Handling field names with spaces
+
+Sometimes our data has field names with spaces, dots, etc in them.
+
+For verbs such as `sort`, `cut`, etc., no special syntax is necessary:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv cat spaces.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Zone,Total MWh
+14,27.2
+17,39.8
+24,7.4
+30,50.5
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p sort -nr 'Total MWh' spaces.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Zone Total MWh
+30   50.5
+17   39.8
+14   27.2
+24   7.4
+</pre>
+
+For `put` and `filter` expressions, use `${...}`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --c2p put '${Total KWh} = ${Total MWh} * 1000' spaces.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+Zone Total MWh Total KWh
+14   27.2      27200
+17   39.8      39800
+24   7.4       7400
+30   50.5      50500
+</pre>
+
+See also the [section on field names](reference-dsl-variables.md/#field-names).
+
 ## Multiple input files
 
 Miller takes all the files from the command line as an input stream. But it's format-aware, so it doesn't repeat CSV header lines. For example, with input files [data/a.csv](data/a.csv) and [data/b.csv](data/b.csv), the system `cat` command will repeat header lines:
