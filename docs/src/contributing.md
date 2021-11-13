@@ -40,9 +40,9 @@ As of Miller-6's current pre-release status, the best way to test is to either b
 
 Issues: [https://github.com/johnkerl/miller/issues](https://github.com/johnkerl/miller/issues)
 
-Developer notes: [https://github.com/johnkerl/miller/blob/main/go/README.md](https://github.com/johnkerl/miller/blob/main/go/README.md)
+Developer notes: [https://github.com/johnkerl/miller/blob/main/README-go-port.md](https://github.com/johnkerl/miller/blob/main/README-go-port.md)
 
-PRs which pass regression test ([https://github.com/johnkerl/miller/blob/main/go/regtest/README.md](https://github.com/johnkerl/miller/blob/main/go/regtest/README.md)) are always welcome!
+PRs which pass regression test ([https://github.com/johnkerl/miller/blob/main/test/README.md](https://github.com/johnkerl/miller/blob/main/test/README.md)) are always welcome!
 
 ## Build script
 

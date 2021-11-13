@@ -1,7 +1,8 @@
 # Respective MANPATH entries would include /usr/local/share/man or $HOME/man.
-# This should be run after make in the ../c directory but before make in the ../docs directory,
-# since ../go/mlr is used to autogenerate ./manpage.txt which is used in ../docs.
-# See also https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
+# This should be run after make in the base directory but before make in the ../docs directory,
+# since ../mlr is used to autogenerate ./manpage.txt which is used in ../docs.
+# See also ../Makefile and
+# https://miller.readthedocs.io/en/latest/build.html#creating-a-new-release-for-developers
 PREFIX=/usr/local
 INSTALLDIR=$(PREFIX)/share/man/man1
 
@@ -27,5 +28,4 @@ install:
 	mkdir -p $(DESTDIR)/$(INSTALLDIR)
 	cp mlr.1 $(DESTDIR)/$(INSTALLDIR)/mlr.1
 
-# ----------------------------------------------------------------
 .PHONY: build install

@@ -53,10 +53,10 @@ During the coding of Miller, I've been guided by the following:
   * `README.md` files throughout the directory tree are intended to give you a sense of what is where, what to read first and and what doesn't need reading right away, and so on -- so you spend a minimum of time being confused or frustrated.
   * Names of files, variables, functions, etc. should be fully spelled out (e.g. `NewEvaluableLeafNode`), except for a small number of most-used names where a longer name would cause unnecessary line-wraps (e.g. `Mlrval` instead of `MillerValue` since this appears very very often).
   * Code should not be too clever. This includes some reasonable amounts of code duplication from time to time, to keep things inline, rather than lasagna code.
-  * Things should be transparent.  For example, `mlr -n put -v '$y = 3 + 0.1 * $x'` shows you the abstract syntax tree derived from the DSL expression.
-  * Comments should be robust with respect to reasonably anticipated changes. For example, one package should cross-link to another in its comments, but I try to avoid mentioning specific filenames too much in the comments and README files since these may change over time. I make an exception for stable points such as [mlr.go](./mlr.go), [mlr.bnf](./internal/pkg/parsing/mlr.bnf), [stream.go](./internal/pkg/stream/stream.go), etc.
+  * Things should be transparent.  For example, the `-v` in `mlr -n put -v '$y = 3 + 0.1 * $x'` shows you the abstract syntax tree derived from the DSL expression.
+  * Comments should be robust with respect to reasonably anticipated changes. For example, one package should cross-link to another in its comments, but I try to avoid mentioning specific filenames too much in the comments and README files since these may change over time. I make an exception for stable points such as [cmd/mlr/main.go](./cmd/mlr/main.go), [mlr.bnf](./internal/pkg/parsing/mlr.bnf), [stream.go](./internal/pkg/stream/stream.go), etc.
 * *Miller should be pleasant to write.*
-  * It should be quick to answer the question *Did I just break anything?* -- hence the `build` and `reg_test/run` regression scripts.
+  * It should be quick to answer the question *Did I just break anything?* -- hence `mlr regtest` functionality.
   * It should be quick to find out what to do next as you iteratively develop -- see for example [cst/README.md](./internal/pkg/dsl/cst/README.md).
 * *The language should be an asset, not a liability.*
   * One of the reasons I chose Go is that (personally anyway) I find it to be reasonably efficient, well-supported with standard libraries, straightforward, and fun.  I hope you enjoy it as much as I have.
@@ -99,7 +99,7 @@ So, in broad overview, the key packages are:
 
 ### Miller per se
 
-* The main entry point is [mlr.go](./mlr.go); everything else in [internal/pkg](./internal/pkg).
+* The main entry point is [cmd/mlr/main.go](./cmd/mlr/main.go); everything else in [internal/pkg](./internal/pkg).
 * [internal/pkg/entrypoint](./internal/pkg/entrypoint): All the usual contents of `main()` are here, for ease of testing.
 * [internal/pkg/platform](./internal/pkg/platform): Platform-dependent code, which as of early 2021 is the command-line parser. Handling single quotes and double quotes is different on Windows unless particular care is taken, which is what this package does.
 * [internal/pkg/lib](./internal/pkg/lib):

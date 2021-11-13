@@ -14,7 +14,7 @@ Two-clause BSD license [https://github.com/johnkerl/miller/blob/master/LICENSE.t
 * `tar zxvf mlr-i.j.k.tar.gz`
 * `cd mlr-i.j.k`
 * `cd go`
-* `make` creates the `go/mlr` (or `go\mlr.exe` on Windows) executable
+* `make` creates the `./mlr` (or `.\mlr.exe` on Windows) executable
 * `make check` runs tests
 * `make install` installs the `mlr` executable and the `mlr` manpage
 * On Windows, if you don't have `make`, then you can do `choco install make` -- or, alternatively:

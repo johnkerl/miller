@@ -4,6 +4,8 @@ PUNCHDOWN LIST
 * plan:
   o conda issue
   o blockers:
+    - grepr go/ and master and regtest
+    - Rmd link-checker
     - fractional-strptime
     - cmp-matrices
     - all-contribs: twi dm
