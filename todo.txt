@@ -4,8 +4,6 @@ PUNCHDOWN LIST
 * plan:
   o conda issue
   o blockers:
-    - ${...}
-      > need an example with comma in the field name ...
     - fractional-strptime
     - cmp-matrices
     - all-contribs: twi dm
@@ -91,6 +89,7 @@ PUNCHDOWN LIST
 ================================================================
 NON-BLOCKERS
 
+* main-level (verb-level?) flag for "," -> X in verbs -- in case commas in field names
 * golinter
 
 * single UT, hard to invoke w/ new full go.mod path
