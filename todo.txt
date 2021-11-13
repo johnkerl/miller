@@ -3,15 +3,10 @@ PUNCHDOWN LIST
 
 * plan:
   o release prep
-    o man & docs use (export PATH ...) base/mlr
-    o local phi/mh -> ~/g/j/m; m6 redirect to rtd -- ?
-    o DESTDIR doc ... + https://www.gnu.org/prep/standards/html_node/DESTDIR.html
-    o miller/mlr ... try skitt:
-      - cmd/layout -- ?
-      - go install github.com/johnkerl/miller/cmd/mlr
-      - go build {what goes here?}
-    o make an open issue for the maybe-rename -- ?
+    o re-try makes on windows
   o conda etc
+    - open issue
+    - https://anaconda.org/conda-forge/miller !!
     - get a conda link for rmd
   o blockers:
     - fractional-strptime
@@ -22,6 +17,8 @@ PUNCHDOWN LIST
     - csv irs lf/crlf ignores -- ? already is so?
     - `mlr put` -> coverart
     - 0b1011 olh/webdoc
+    - help approx-match even if exact exists (e.g. 'map')
+    - nim6 -c -j
 
   o doc / release:
     - ? auto-cp go/mlr // go/mlr.exe to basedir?
@@ -108,6 +105,8 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* golinter
 
 * single UT, hard to invoke w/ new full go.mod path
   go test $(ls internal/pkg/lib/*.go|grep -v test) internal/pkg/lib/unbackslash_test.go

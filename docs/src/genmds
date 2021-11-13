@@ -12,6 +12,14 @@ else
   names=$(echo *.md.in | sed 's/\.md\.in//g')
 fi
 
+# Live code-generation needs to be using mlr from *this* tree, not from
+# somewhere else in the PATH.
+if [ ! -x ../../mlr ]; then
+  echo "$0: Need ../../mlr to exist: please check 'make build' in ../.." 1>&2
+  exit 1
+fi
+export PATH=../..:$PATH
+
 for name in $names; do
   echo Generating $name.md
   if [ -f $name.md ]; then # Won't exist yet on first run

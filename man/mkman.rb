@@ -16,6 +16,19 @@ def main
   # In case the user running this has a .mlrrc
   ENV['MLRRC'] = '__none__'
 
+  # Live code-generation needs to be using mlr from *this* tree, not from
+  # somewhere else in the PATH.
+  unless File.executable?('../mlr')
+    $stderr.puts "#{$0}: Need ../../mlr to exist: please check 'make build' in ../.."
+    exit 1
+  end
+  `../mlr --version`
+  unless $?.success?
+    $stderr.puts "#{$0}: Need '../../mlr --version' to succeed; please check 'make build' in ../.."
+    exit 1
+  end
+  ENV['PATH'] = '..:' + ENV['PATH']
+
   print make_top
 
   print make_section('NAME', [
