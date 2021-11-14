@@ -39,7 +39,7 @@ key-value-pair data in a variety of data formats.
 # More documentation links
 
 * [**Full documentation**](https://miller.readthedocs.io/)
-* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
+* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/main/LICENSE.txt)
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
@@ -79,12 +79,12 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 # Building from source
 
 * `make` and `make check`
-* The Miller executable is `go/mlr` (or `go\mlr.exe` on Windows)
-* For more developer information please see [go/README.md](./go/README.md)
+* The Miller executable is `./mlr` (or `.\mlr.exe` on Windows)
+* For more developer information please see [README-go-port.md](./README-go-port.md)
 
 # License
 
-[License: BSD2](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
+[License: BSD2](https://github.com/johnkerl/miller/blob/main/LICENSE.txt)
 
 # Community
 

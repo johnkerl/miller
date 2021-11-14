@@ -6,7 +6,7 @@ The vast majority of Miller tests, though -- thousands of cases -- are tested by
 
 ## How to run the regression tests, in brief
 
-*Note: while this `README.md` file is within the `go/regtest/` subdirectory, all paths in this file are written from the perspective of the user being cd'ed into the `go/` directory, i.e. this directory's parent directory.*
+*Note: while this `README.md` file is within the `test/` subdirectory, all paths in this file are written from the perspective of the user being cd'ed into the repository base directory, i.e. this directory's parent directory.*
 
 * `mlr regtest --help`
 

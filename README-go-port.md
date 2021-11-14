@@ -1,17 +1,20 @@
+# Scope
+
+This note is for a developer point of view. For a user point of view, please see [https://miller.readthedocs.io/en/latest/new-in-miller-6](https://miller.readthedocs.io/en/latest/new-in-miller-6).
+
 # Quickstart for developers
 
 See `makefile` in the repo base directory.
 
 # Continuous integration
 
-* The Go implementation is auto-built using GitHub Actions: see [../.github/workflows/go.yml](../.github/workflows/go.yml). This works splendidly on Linux, MacOS, and Windows.
-* See also [../README.md](../README.md).
+The Go implementation is auto-built using GitHub Actions: see [.github/workflows/go.yml](.github/workflows/go.yml). This works splendidly on Linux, MacOS, and Windows.
 
 # Benefits of porting to Go
 
-* The [lack of a streaming (record-by-record) JSON reader](http://johnkerl.org/miller/doc/file-formats.html#JSON_non-streaming) in the C implementation ([issue 99](https://github.com/johnkerl/miller/issues/99)) is immediately solved in the Go implementation.
-* In the C implementation, [arrays were not supported in the DSL](http://johnkerl.org/miller/doc/file-formats.html#Arrays); in the Go implementation they are.
-* [Flattening nested map structures to output records](http://johnkerl.org/miller/doc/file-formats.html#Formatting_JSON_options) was clumsy. Now, Miller will be a JSON-to-JSON processor, if your inputs and outputs are both JSON; JSON input and output will be idiomatic.
+* The lack of a streaming (record-by-record) JSON reader in the C implementation ([issue 99](https://github.com/johnkerl/miller/issues/99)) is immediately solved in the Go implementation.
+* In the C implementation, arrays were not supported in the DSL; in the Go implementation they are.
+* Flattening nested map structures to output records was clumsy. Now, Miller will be a JSON-to-JSON processor, if your inputs and outputs are both JSON; JSON input and output will be idiomatic.
 * The quoted-DKVP feature from [issue 266](https://github.com/johnkerl/miller/issues/266) will be easily addressed.
 * String/number-formatting issues in [issue 211](https://github.com/johnkerl/miller/issues/211), [issue 178](https://github.com/johnkerl/miller/issues/178), [issue 151](https://github.com/johnkerl/miller/issues/151), and [issue 259](https://github.com/johnkerl/miller/issues/259) will be fixed during the Go port.
 * I think some DST/timezone issues such as [issue 359](https://github.com/johnkerl/miller/issues/359) will be easier to fix using the Go datetime library than using the C datetime library
@@ -28,7 +31,7 @@ See `makefile` in the repo base directory.
 
 # Efficiency of the Go port
 
-As I wrote [here](http://johnkerl.org/miller/doc/whyc.html) back in 2015 I couldn't get Rust or Go (or any other language I tried) to do some test-case processing as quickly as C, so I stuck with C.
+As I wrote [here](https://johnkerl.org//miller-docs-by-release/1.0.0/performance.html) back in 2015 I couldn't get Rust or Go (or any other language I tried) to do some test-case processing as quickly as C, so I stuck with C.
 
 Either Go has improved since 2015, or I'm a better Go programmer than I used to be, or both -- but as of 2020 I can get Go-Miller to process data about as quickly as C-Miller.
 
@@ -53,10 +56,10 @@ During the coding of Miller, I've been guided by the following:
   * `README.md` files throughout the directory tree are intended to give you a sense of what is where, what to read first and and what doesn't need reading right away, and so on -- so you spend a minimum of time being confused or frustrated.
   * Names of files, variables, functions, etc. should be fully spelled out (e.g. `NewEvaluableLeafNode`), except for a small number of most-used names where a longer name would cause unnecessary line-wraps (e.g. `Mlrval` instead of `MillerValue` since this appears very very often).
   * Code should not be too clever. This includes some reasonable amounts of code duplication from time to time, to keep things inline, rather than lasagna code.
-  * Things should be transparent.  For example, `mlr -n put -v '$y = 3 + 0.1 * $x'` shows you the abstract syntax tree derived from the DSL expression.
-  * Comments should be robust with respect to reasonably anticipated changes. For example, one package should cross-link to another in its comments, but I try to avoid mentioning specific filenames too much in the comments and README files since these may change over time. I make an exception for stable points such as [mlr.go](./mlr.go), [mlr.bnf](./internal/pkg/parsing/mlr.bnf), [stream.go](./internal/pkg/stream/stream.go), etc.
+  * Things should be transparent.  For example, the `-v` in `mlr -n put -v '$y = 3 + 0.1 * $x'` shows you the abstract syntax tree derived from the DSL expression.
+  * Comments should be robust with respect to reasonably anticipated changes. For example, one package should cross-link to another in its comments, but I try to avoid mentioning specific filenames too much in the comments and README files since these may change over time. I make an exception for stable points such as [cmd/mlr/main.go](./cmd/mlr/main.go), [mlr.bnf](./internal/pkg/parsing/mlr.bnf), [stream.go](./internal/pkg/stream/stream.go), etc.
 * *Miller should be pleasant to write.*
-  * It should be quick to answer the question *Did I just break anything?* -- hence the `build` and `reg_test/run` regression scripts.
+  * It should be quick to answer the question *Did I just break anything?* -- hence `mlr regtest` functionality.
   * It should be quick to find out what to do next as you iteratively develop -- see for example [cst/README.md](./internal/pkg/dsl/cst/README.md).
 * *The language should be an asset, not a liability.*
   * One of the reasons I chose Go is that (personally anyway) I find it to be reasonably efficient, well-supported with standard libraries, straightforward, and fun.  I hope you enjoy it as much as I have.
@@ -78,7 +81,7 @@ So, in broad overview, the key packages are:
 
 * [internal/pkg/stream](./internal/pkg/stream) -- connect input -> transforms -> output via Go channels
 * [internal/pkg/input](./internal/pkg/input) -- read input records
-* [internal/pkg/transforming](./internal/pkg/transforming) -- transform input records to output records
+* [internal/pkg/transformers](./internal/pkg/transformers) -- transform input records to output records
 * [internal/pkg/output](./internal/pkg/output) -- write output records
 * The rest are details to support this.
 
@@ -99,7 +102,7 @@ So, in broad overview, the key packages are:
 
 ### Miller per se
 
-* The main entry point is [mlr.go](./mlr.go); everything else in [internal/pkg](./internal/pkg).
+* The main entry point is [cmd/mlr/main.go](./cmd/mlr/main.go); everything else in [internal/pkg](./internal/pkg).
 * [internal/pkg/entrypoint](./internal/pkg/entrypoint): All the usual contents of `main()` are here, for ease of testing.
 * [internal/pkg/platform](./internal/pkg/platform): Platform-dependent code, which as of early 2021 is the command-line parser. Handling single quotes and double quotes is different on Windows unless particular care is taken, which is what this package does.
 * [internal/pkg/lib](./internal/pkg/lib):
@@ -107,12 +110,11 @@ So, in broad overview, the key packages are:
   * [`Mlrmap`](./internal/pkg/types/mlrmap.go) is the sequence of key-value pairs which represents a Miller record. The key-lookup mechanism is optimized for Miller read/write usage patterns -- please see [mlrmap.go](./internal/pkg/types/mlrmap.go) for more details.
   * [`context`](./internal/pkg/types/context.go) supports AWK-like variables such as `FILENAME`, `NF`, `NR`, and so on.
 * [internal/pkg/cli](./internal/pkg/cli) is the flag-parsing logic for supporting Miller's command-line interface. When you type something like `mlr --icsv --ojson put '$sum = $a + $b' then filter '$sum > 1000' myfile.csv`, it's the CLI parser which makes it possible for Miller to construct a CSV record-reader, a transformer-chain of `put` then `filter`, and a JSON record-writer.
-* [internal/pkg/cliutil](./internal/pkg/cliutil) contains datatypes for the CLI-parser, which was split out to avoid a Go package-import cycle.
+* [internal/pkg/climain](./internal/pkg/climain) contains a layer which invokes `internal/pkg/cli`, which was split out to avoid a Go package-import cycle.
 * [internal/pkg/stream](./internal/pkg/stream) is as above -- it uses Go channels to pipe together file-reads, to record-reading/parsing, to a chain of record-transformers, to record-writing/formatting, to terminal standard output.
 * [internal/pkg/input](./internal/pkg/input) is as above -- one record-reader type per supported input file format, and a factory method.
 * [internal/pkg/output](./internal/pkg/output) is as above -- one record-writer type per supported output file format, and a factory method.
-* [internal/pkg/transforming](./internal/pkg/transforming) contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next.
-* [internal/pkg/transformers](./internal/pkg/transformers) is all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on. I put it here, not in `transforming`, so all files in `transformers` would be of the same type.
+* [internal/pkg/transformers](./internal/pkg/transformers) contains the abstract record-transformer interface datatype, as well as the Go-channel chaining mechanism for piping one transformer into the next. It also contains all the concrete record-transformers such as `cat`, `tac`, `sort`, `put`, and so on.
 * [internal/pkg/parsing](./internal/pkg/parsing) contains a single source file, `mlr.bnf`, which is the lexical/semantic grammar file for the Miller `put`/`filter` DSL using the GOCC framework. All subdirectories of `internal/pkg/parsing/` are autogen code created by GOCC's processing of `mlr.bnf`. If you need to edit `mlr.bnf`, please use [tools/build-dsl](./tools/build-dsl) to autogenerate Go code from it (using the GOCC tool). (This takes several minutes to run.)
 * [internal/pkg/dsl](./internal/pkg/dsl) contains [`ast_types.go`](internal/pkg/dsl/ast_types.go) which is the abstract syntax tree datatype shared between GOCC and Miller. I didn't use a `internal/pkg/dsl/ast` naming convention, although that would have been nice, in order to avoid a Go package-dependency cycle.
 * [internal/pkg/dsl/cst](./internal/pkg/dsl/cst) is the concrete syntax tree, constructed from an AST produced by GOCC. The CST is what is actually executed on every input record when you do things like `$z = $x * 0.3 * $y`. Please see the [internal/pkg/dsl/cst/README.md](./internal/pkg/dsl/cst/README.md) for more information.
@@ -149,17 +151,17 @@ nil through the reader/transformer/writer sequence.
 
 [`Mlrval`](./internal/pkg/types/mlrval.go) is the datatype of record values, as well as expression/variable values in the Miller `put`/`filter` DSL. It includes string/int/float/boolean/void/absent/error types, not unlike PHP's `zval`.
 
-* Miller's `absent` type is like Javascript's `undefined` -- it's for times when there is no such key, as in a DSL expression `$out = $foo` when the input record is `$x=3,y=4` -- there is no `$foo` so `$foo` has `absent` type. Nothing is written to the `$out` field in this case. See also [here](http://johnkerl.org/miller/doc/reference.html#Null_data:_empty_and_absent) for more information.
+* Miller's `absent` type is like Javascript's `undefined` -- it's for times when there is no such key, as in a DSL expression `$out = $foo` when the input record is `$x=3,y=4` -- there is no `$foo` so `$foo` has `absent` type. Nothing is written to the `$out` field in this case. See also [here](https://miller.readthedocs.io/en/latest/reference-main-null-data) for more information.
 * Miller's `void` type is like Javascript's `null` -- it's for times when there is a key with no value, as in `$out = $x` when the input record is `$x=,$y=4`. This is an overlap with `string` type, since a void value looks like an empty string. I've gone back and forth on this (including when I was writing the C implementation) -- whether to retain `void` as a distinct type from empty-string, or not. I ended up keeping it as it made the `Mlrval` logic easier to understand.
-* Miller's `error` type is for things like doing type-uncoerced addition of strings. Data-dependent errors are intended to result in `(error)`-valued output, rather than crashing Miller. See also [here](http://johnkerl.org/miller/doc/reference.html#Data_types) for more information.
+* Miller's `error` type is for things like doing type-uncoerced addition of strings. Data-dependent errors are intended to result in `(error)`-valued output, rather than crashing Miller. See also [here](https://miller.readthedocs.io/en/latest/reference-main-data-types) for more information.
 * Miller's number handling makes auto-overflow from int to float transparent, while preserving the possibility of 64-bit bitwise arithmetic.
   * This is different from JavaScript, which has only double-precision floats and thus no support for 64-bit numbers (note however that there is now [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)).
   * This is also different from C and Go, wherein casts are necessary -- without which int arithmetic overflows.
-  * See also [here](http://johnkerl.org/miller/doc/reference.html#Arithmetic) for the semantics of Miller arithmetic, which the [`Mlrval`](./internal/pkg/types/mlrval.go) class implements.
+  * See also [here](https://miller.readthedocs.io/en/latest/reference-main-arithmetic) for the semantics of Miller arithmetic, which the [`Mlrval`](./internal/pkg/types/mlrval.go) class implements.
  
 ## Software-testing methodology
 
-See [./regtest/README.md](./regtest/README.md).
+See [./test/README.md](./test/README.md).
 
 ## Godoc
 
@@ -172,7 +174,7 @@ To view doc material, you can:
 * `cd go`
 * `godoc -http=:6060 -goroot .`
 * Browse to `http://localhost:6060`
-* Note: control-C an restart the server, then reload in the browser, to pick up edits to source files
+* Note: control-C and restart the server, then reload in the browser, to pick up edits to source files
 
 ## Source-code indexing
 

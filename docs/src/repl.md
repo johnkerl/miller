@@ -27,6 +27,25 @@ Miller's REPL isn't a source-level debugger which lets you execute one source-co
 
 [mlr] 1 + 2
 3
+
+[mlr] apply([1,2,3,4,5], func(e) {return e ** 3})
+[1, 8, 27, 64, 125]
+
+[mlr] :open example.csv
+
+[mlr] :read
+
+[mlr] $*
+{
+  "color": "yellow",
+  "shape": "triangle",
+  "flag": "true",
+  "k": 1,
+  "index": 11,
+  "quantity": 43.6498,
+  "rate": 9.8870
+}
+
 </pre>
 
 ## Using Miller without the REPL

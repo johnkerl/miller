@@ -44,4 +44,4 @@ GENMD-RUN-COMMAND
 mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
 GENMD-EOF
 
-Additionally, [`mlr help`](online-help.md), [`mlr repl`](repl.md), and [`mlr regtest`](https://github.com/johnkerl/miller/blob/main/go/regtest/README.md) are implemented here.
+Additionally, [`mlr help`](online-help.md), [`mlr repl`](repl.md), and [`mlr regtest`](https://github.com/johnkerl/miller/blob/main/test/README.md) are implemented here.
