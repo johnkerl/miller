@@ -19,7 +19,7 @@
 // * Optionally, an 'env' file with environment variables to be set before the
 //   case and unset after.
 // * Optionally a case-local 'input' file; many cases use shared/common data
-//   in regtest/input/.
+//   in test/input/.
 // * The cmd file can refer to '${CASEDIR}' which is expanded at runtime to
 //   the case directory path, so cases can refer to their 'input' and 'mlr'
 //   files.
@@ -33,7 +33,7 @@
 // test/cases/dsl-redirects/0109/mlr
 //
 // $ cat test/cases/dsl-redirects//0109/cmd
-// mlr head -n 4 then put -q -f ${CASEDIR}/mlr regtest/input/abixy
+// mlr head -n 4 then put -q -f ${CASEDIR}/mlr test/input/abixy
 //
 // $ cat test/cases/dsl-redirects//0109/experr
 // NR=1,a=pan,b=pan

@@ -1,1 +1,1 @@
-See [../../../regtest/README.md](../../../regtest/README.md).
+See [../../../test/README.md](../../../test/README.md).

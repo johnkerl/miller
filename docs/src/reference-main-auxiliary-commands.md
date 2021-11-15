@@ -140,4 +140,4 @@ green,678.12
 orange,123.45
 </pre>
 
-Additionally, [`mlr help`](online-help.md), [`mlr repl`](repl.md), and [`mlr regtest`](https://github.com/johnkerl/miller/blob/main/go/regtest/README.md) are implemented here.
+Additionally, [`mlr help`](online-help.md), [`mlr repl`](repl.md), and [`mlr regtest`](https://github.com/johnkerl/miller/blob/main/test/README.md) are implemented here.

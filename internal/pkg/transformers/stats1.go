@@ -37,7 +37,6 @@ Options:
 -a {sum,count,...} Names of accumulators: one or more of:
   median   This is the same as p50
   p10 p25.2 p50 p98 p100 etc.
-  TODO: flags for interpolated percentiles
 `)
 	utils.ListStats1Accumulators(o)
 	fmt.Fprint(o, `
@@ -61,17 +60,16 @@ Options:
                case please avoid pprint-format output since end of input
                stream will never be seen).
 -h|--help      Show this message.
-[TODO: more]
 `)
 
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape\n", "mlr", verbNameStats1)
+		"Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape")
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size\n", "mlr", verbNameStats1)
+		"Example: mlr stats1 -a count,mode -f size")
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode -f size -g shape\n", "mlr", verbNameStats1)
+		"Example: mlr stats1 -a count,mode -f size -g shape")
 	fmt.Fprintln(o,
-		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'\n", "mlr", verbNameStats1)
+		"Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'")
 	fmt.Fprintln(o,
 		`        This computes count and mode statistics on all field names beginning
          with a through h, grouped by all field names starting with k.`)
