@@ -3,6 +3,8 @@ INSTALLDIR=$(PREFIX)/bin
 
 build:
 	go build github.com/johnkerl/miller/cmd/mlr
+mlr:
+	go build github.com/johnkerl/miller/cmd/mlr
 
 check: unit_test regression_test
 
