@@ -156,13 +156,13 @@ struct _lemon_parser_t {
 };
 typedef struct _lemon_parser_t lemon_parser_t;
 
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 #include <stdio.h>
 static FILE *yyTraceFILE   = 0;
 static char *yyTracePrompt = 0;
-#endif /* NDEBUG */
+#endif /* MLR_DSL_NDEBUG */
 
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 /*
 ** Turn parser tracing on by giving a stream to which to write the trace
 ** and a prompt to preface each trace message.  Tracing is turned off
@@ -188,30 +188,30 @@ void ParseTrace(FILE *TraceFILE, char *zTracePrompt) {
 	else if (yyTracePrompt==0)
 		yyTraceFILE = 0;
 }
-#endif /* NDEBUG */
+#endif /* MLR_DSL_NDEBUG */
 
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 /* For tracing shifts, the names of all terminals and nonterminals
 ** are required.  The following table supplies these names */
 static const char *yyTokenName[] = {
 %%
 };
-#endif /* NDEBUG */
+#endif /* MLR_DSL_NDEBUG */
 
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 /* For tracing reduce actions, the names of all rules are required.
 */
 static const char *yyRuleName[] = {
 %%
 };
-#endif /* NDEBUG */
+#endif /* MLR_DSL_NDEBUG */
 
 /*
 ** This function returns the symbolic name associated with a token
 ** value.
 */
 const char *ParseTokenName(int tokenType) {
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 	if (tokenType>0 && tokenType<(sizeof(yyTokenName)/sizeof(yyTokenName[0]))) {
 		return yyTokenName[tokenType];
 	} else {
@@ -278,7 +278,7 @@ static int yy_pop_parser_stack(lemon_parser_t *pParser){
 	yyStackEntry *yytos = &pParser->yystack[pParser->yyidx];
 
 	if (pParser->yyidx<0)  return 0;
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 	if (yyTraceFILE && pParser->yyidx>=0) {
 		fprintf(yyTraceFILE,"%sPopping %s\n", yyTracePrompt, yyTokenName[yytos->major]);
 	}
@@ -340,7 +340,7 @@ static int yy_find_shift_action(
 		int iFallback;            /* Fallback token */
 		if (iLookAhead<sizeof(yyFallback)/sizeof(yyFallback[0])
 					 && (iFallback = yyFallback[iLookAhead])!=0) {
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 			if (yyTraceFILE) {
 				fprintf(yyTraceFILE, "%sFALLBACK %s => %s\n",
 					 yyTracePrompt, yyTokenName[iLookAhead], yyTokenName[iFallback]);
@@ -399,7 +399,7 @@ static void yy_shift(
 	if (pparser->yyidx>=YYSTACKDEPTH) {
 		 ParseARG_FETCH;
 		 pparser->yyidx--;
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 		 if (yyTraceFILE) {
 			 fprintf(yyTraceFILE,"%sStack Overflow!\n",yyTracePrompt);
 		 }
@@ -415,7 +415,7 @@ static void yy_shift(
 	yytos->stateno = yyNewState;
 	yytos->major = yyMajor;
 	yytos->minor = *yypMinor;
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 	if (yyTraceFILE && pparser->yyidx>0) {
 		int i;
 		fprintf(yyTraceFILE,"%sShift %d\n",yyTracePrompt,yyNewState);
@@ -454,13 +454,13 @@ static void yy_reduce(
 	int yysize;                     /* Amount to pop the stack */
 	ParseARG_FETCH;
 	yymsp = &pparser->yystack[pparser->yyidx];
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 	if (yyTraceFILE && yyruleno>=0
 				&& yyruleno<sizeof(yyRuleName)/sizeof(yyRuleName[0])) {
 		fprintf(yyTraceFILE, "%sReduce [%s].\n", yyTracePrompt,
 			yyRuleName[yyruleno]);
 	}
-#endif /* NDEBUG */
+#endif /* MLR_DSL_NDEBUG */
 
 	switch (yyruleno) {
 	/* Beginning here are the reduction cases.  A typical example
@@ -489,7 +489,7 @@ static void yy_reduce(
 */
 static void yy_parse_failed(lemon_parser_t *pparser) {
 	ParseARG_FETCH;
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 	if (yyTraceFILE) {
 		fprintf(yyTraceFILE,"%sFail!\n",yyTracePrompt);
 	}
@@ -521,7 +521,7 @@ static void yy_syntax_error(
 */
 static void yy_accept(lemon_parser_t *pparser) {
 	ParseARG_FETCH;
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 	if (yyTraceFILE) {
 		fprintf(yyTraceFILE,"%sAccept!\n", yyTracePrompt);
 	}
@@ -581,7 +581,7 @@ int lemon_parser_parse_token(
 	yyendofinput = (yymajor==0);
 	ParseARG_STORE;
 
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 	if (yyTraceFILE) {
 		fprintf(yyTraceFILE,"%sInput %s\n", yyTracePrompt, yyTokenName[yymajor]);
 	}
@@ -601,7 +601,7 @@ int lemon_parser_parse_token(
 			yy_reduce(pparser,yyact-YYNSTATE);
 		} else if (yyact == YY_ERROR_ACTION) {
 			int yymx;
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 			if (yyTraceFILE) {
 				fprintf(yyTraceFILE,"%sSyntax Error!\n",yyTracePrompt);
 			}
@@ -632,7 +632,7 @@ int lemon_parser_parse_token(
 			}
 			yymx = pparser->yystack[pparser->yyidx].major;
 			if (yymx==YYERRORSYMBOL || yyerrorhit) {
-#ifndef NDEBUG
+#ifndef MLR_DSL_NDEBUG
 				if (yyTraceFILE) {
 					fprintf(yyTraceFILE,"%sDiscard input token %s\n",
 						 yyTracePrompt, yyTokenName[yymajor]);
