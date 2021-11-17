@@ -172,8 +172,6 @@ lemon: \
 # ----------------------------------------------------------------
 clean:
 	rm -f *.o
-	rm -f mlr_dsl_parse.c mlr_dsl_parse.h mlr_dsl_parse.out
-	rm -f mlr_dsl_lexer.c mlr_dsl_lexer.h
 	rm -f ex0_parse.c ex0_parse.h ex0_parse.out
 	rm -f ex0_lexer.c ex0_lexer.h
 	rm -f ex0
