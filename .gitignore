@@ -48,10 +48,6 @@ gmon.out
 .*.swp
 .*.swo
 c/parsing/lemon
-c/parsing/mlr_dsl_lexer.c
-c/parsing/mlr_dsl_lexer.h
-c/parsing/mlr_dsl_parse.c
-c/parsing/mlr_dsl_parse.h
 c/parsing/mlr_dsl_parse.out
 c/reg_test/output
 c/output/out

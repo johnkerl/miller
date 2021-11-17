@@ -1066,7 +1066,7 @@ Examples:
     For more information, please invoke mlr {subcommand} --help
     
     For more information please see http://johnkerl.org/miller/doc and/or
-    http://github.com/johnkerl/miller. This is Miller version v5.10.1.
+    http://github.com/johnkerl/miller. This is Miller version v5.10.3.
 
 ::
 
