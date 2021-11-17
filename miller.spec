@@ -3,7 +3,7 @@ Name: miller
 Version: 5.10.3
 Release: 1%{?dist}
 License: BSD
-Source: https://github.com/johnkerl/miller/releases/download/%{version}/mlr-%{version}.tar.gz
+Source: https://github.com/johnkerl/miller/releases/download/%{version}/miller-%{version}.tar.gz
 URL: https://miller.readthedocs.io
 BuildRequires: gcc
 BuildRequires: flex >= 2.5.35
