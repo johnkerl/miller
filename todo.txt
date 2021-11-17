@@ -4,6 +4,7 @@ PUNCHDOWN LIST
 * conda issue
 * blockers:
   - keep checking issues
+  - verslink old relnotes
   - fractional-strptime
   - cmp-matrices
   - all-contribs: twi dm
