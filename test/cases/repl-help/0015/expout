@@ -1,0 +1,5 @@
+sec2gmt  (class=time #args=1,2) Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
+Examples:
+sec2gmt(1234567890)           = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456)    = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456, 6) = "2009-02-13T23:31:30.123456Z"

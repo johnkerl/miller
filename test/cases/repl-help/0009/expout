@@ -1,0 +1,5 @@
+No help available for nonesuch. Try ":help find nonesuch" to search for matches
+asin  (class=math #args=1) Inverse trigonometric sine.
+asinh  (class=math #args=1) Inverse hyperbolic sine.
+sin  (class=math #args=1) Trigonometric sine.
+sinh  (class=math #args=1) Hyperbolic sine.

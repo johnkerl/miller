@@ -2,6 +2,7 @@ package cst
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/colorizer"
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -100,6 +101,18 @@ func TryUsageForKeyword(name string) bool {
 		}
 	}
 	return false
+}
+
+func TryUsageForKeywordApproximate(searchString string) bool {
+	foundAny := false
+	for _, entry := range KEYWORD_USAGE_TABLE {
+		if strings.Contains(entry.name, searchString) {
+			fmt.Printf("%s: ", colorizer.MaybeColorizeHelp(entry.name, true))
+			entry.usageFunc()
+			foundAny = true
+		}
+	}
+	return foundAny
 }
 
 // ----------------------------------------------------------------

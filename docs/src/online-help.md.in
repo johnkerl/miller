@@ -14,8 +14,16 @@ GENMD-RUN-COMMAND
 mlr help topics
 GENMD-EOF
 
+If you know the name of the thing you're looking for, use `mlr help`:
+
 GENMD-RUN-COMMAND
-mlr help functions
+mlr help map
+GENMD-EOF
+
+To search by substring, use `mlr help find`:
+
+GENMD-RUN-COMMAND
+mlr help find gmt
 GENMD-EOF
 
 Etc.

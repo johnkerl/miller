@@ -1,0 +1,5 @@
+acos  (class=math #args=1) Inverse trigonometric cosine.
+acosh  (class=math #args=1) Inverse hyperbolic cosine.
+cos  (class=math #args=1) Trigonometric cosine.
+cosh  (class=math #args=1) Hyperbolic cosine.
+No help available for nonesuch. Try ":help find nonesuch" to search for matches
