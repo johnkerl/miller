@@ -19,7 +19,7 @@ import (
 
 // ================================================================
 type tZaryHandlerFunc func()
-type tUnaryHandlerFunc func(arg string)
+type tVarArgHandlerFunc func(args []string)
 
 type tHandlerLookupTable struct {
 	sections []tHandlerInfoSection
@@ -35,9 +35,9 @@ type tHandlerInfoSection struct {
 }
 
 type tHandlerInfo struct {
-	name             string
-	zaryHandlerFunc  tZaryHandlerFunc
-	unaryHandlerFunc tUnaryHandlerFunc
+	name              string
+	zaryHandlerFunc   tZaryHandlerFunc
+	varArgHandlerFunc tVarArgHandlerFunc
 }
 
 type tShorthandTable struct {
@@ -80,7 +80,7 @@ func init() {
 				handlerInfos: []tHandlerInfo{
 					{name: "list-verbs", zaryHandlerFunc: listVerbs},
 					{name: "usage-verbs", zaryHandlerFunc: usageVerbs},
-					{name: "verb", unaryHandlerFunc: helpForVerb},
+					{name: "verb", varArgHandlerFunc: helpForVerb},
 				},
 			},
 			{
@@ -88,10 +88,10 @@ func init() {
 				handlerInfos: []tHandlerInfo{
 					{name: "list-functions", zaryHandlerFunc: listFunctions},
 					{name: "list-function-classes", zaryHandlerFunc: listFunctionClasses},
-					{name: "list-functions-in-class", unaryHandlerFunc: listFunctionsInClass},
+					{name: "list-functions-in-class", varArgHandlerFunc: listFunctionsInClass},
 					{name: "usage-functions", zaryHandlerFunc: usageFunctions},
 					{name: "usage-functions-by-class", zaryHandlerFunc: usageFunctionsByClass},
-					{name: "function", unaryHandlerFunc: helpForFunction},
+					{name: "function", varArgHandlerFunc: helpForFunction},
 				},
 			},
 			{
@@ -99,7 +99,7 @@ func init() {
 				handlerInfos: []tHandlerInfo{
 					{name: "list-keywords", zaryHandlerFunc: listKeywords},
 					{name: "usage-keywords", zaryHandlerFunc: usageKeywords},
-					{name: "keyword", unaryHandlerFunc: helpForKeyword},
+					{name: "keyword", varArgHandlerFunc: helpForKeyword},
 				},
 			},
 			{
@@ -117,16 +117,16 @@ func init() {
 				handlerInfos: []tHandlerInfo{
 					{name: "flag-table-nil-check", zaryHandlerFunc: flagTableNilCheck},
 					{name: "list-flag-sections", zaryHandlerFunc: listFlagSections},
-					{name: "list-flags-for-section", unaryHandlerFunc: listFlagsForSection},
+					{name: "list-flags-for-section", varArgHandlerFunc: listFlagsForSection},
 					{name: "list-functions-as-paragraph", zaryHandlerFunc: listFunctionsAsParagraph},
 					{name: "list-functions-as-table", zaryHandlerFunc: listFunctionsAsTable},
 					{name: "list-keywords-as-paragraph", zaryHandlerFunc: listKeywordsAsParagraph},
 					{name: "list-verbs-as-paragraph", zaryHandlerFunc: listVerbsAsParagraph},
-					{name: "print-info-for-section", unaryHandlerFunc: printInfoForSection},
-					{name: "show-headline-for-flag", unaryHandlerFunc: showHeadlineForFlag},
-					{name: "show-help-for-flag", unaryHandlerFunc: showHelpForFlag},
-					{name: "show-help-for-section", unaryHandlerFunc: showHelpForSection},
-					{name: "show-help-for-section-via-downdash", unaryHandlerFunc: showHelpForSectionViaDowndash},
+					{name: "print-info-for-section", varArgHandlerFunc: printInfoForSection},
+					{name: "show-headline-for-flag", varArgHandlerFunc: showHeadlineForFlag},
+					{name: "show-help-for-flag", varArgHandlerFunc: showHelpForFlag},
+					{name: "show-help-for-section", varArgHandlerFunc: showHelpForSection},
+					{name: "show-help-for-section-via-downdash", varArgHandlerFunc: showHelpForSectionViaDowndash},
 				},
 			},
 		},
@@ -158,7 +158,7 @@ func init() {
 				name: downdashSectionName,
 				// Make a function which passes in "csv-only-flags" etc. to the FLAG_TABLE.
 				zaryHandlerFunc: func() {
-					showHelpForSectionViaDowndash(downdashSectionName)
+					showHelpForSectionViaDowndash([]string{downdashSectionName})
 				},
 			}
 			handlerLookupTable.sections[i].handlerInfos = append(handlerLookupTable.sections[i].handlerInfos, entry)
@@ -193,6 +193,19 @@ func HelpMain(args []string) int {
 		return 0
 	}
 
+	// 'mlr help find x' searches for all things (flags, transformers,
+	// functions, keywords) with an "x" in their name, as a substring.
+	if args[0] == "find" {
+		args = args[1:]
+		if len(args) > 0 {
+			helpByApproximateSearch(args)
+			return 0
+		} else {
+			fmt.Printf("mlr help find: need one or more things to search for.\n")
+			return 1
+		}
+	}
+
 	// "mlr help something" where we recognize the something
 	name := args[0]
 	for _, section := range handlerLookupTable.sections {
@@ -206,26 +219,23 @@ func HelpMain(args []string) int {
 					info.zaryHandlerFunc()
 					return 0
 				}
-				if info.unaryHandlerFunc != nil {
+				if info.varArgHandlerFunc != nil {
 					if len(args) < 2 {
 						fmt.Printf("mlr help %s takes at least one required argument.\n", name)
 						return 0
 					}
-					for _, arg := range args[1:] {
-						info.unaryHandlerFunc(arg)
-					}
+					info.varArgHandlerFunc(args[1:])
 					return 0
 				}
 			}
 		}
 	}
 
-	if helpBySearch(name) {
+	// 'mlr help x' searches for all things (flags, transformers, functions, keywords) named "x".
+	if helpByExactSearch(args) {
 		return 0
 	}
 
-	// "mlr help something" where we do not recognize the something
-	fmt.Printf("No help found for \"%s\" -- please try 'mlr help topics'.\n", name)
 	return 0
 }
 
@@ -289,11 +299,10 @@ func listTopics() {
 	for _, info := range shorthandLookupTable.shorthandInfos {
 		fmt.Printf("  mlr %s = mlr help %s\n", info.shorthand, info.longhand)
 	}
-	fmt.Printf("Lastly, 'mlr help ...' will search for your text '...' using the sources of\n")
+	fmt.Printf("Lastly, 'mlr help ...' will search for your exact text '...' using the sources of\n")
 	fmt.Printf("'mlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.\n")
-	fmt.Printf("For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a\n")
-	fmt.Printf("verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'\n")
-	fmt.Printf("to disambiguate.\n")
+	fmt.Printf("Use 'mlr help find ...' for approximate (substring) matches, e.g. 'mlr help find map'\n")
+	fmt.Printf("for all things with \"map\" in their names.\n")
 }
 
 // ----------------------------------------------------------------
@@ -482,51 +491,63 @@ func listFlagSections() {
 	cli.FLAG_TABLE.ListFlagSections()
 }
 
-func printInfoForSection(sectionName string) {
-	if !cli.FLAG_TABLE.PrintInfoForSection(sectionName) {
-		fmt.Printf(
-			"mlr: flag-section \"%s\" not found. Please use \"mlr help list-flag-sections\" for a list.\n",
-			sectionName)
+func printInfoForSection(sectionNames []string) {
+	for _, sectionName := range sectionNames {
+		if !cli.FLAG_TABLE.PrintInfoForSection(sectionName) {
+			fmt.Printf(
+				"mlr: flag-section \"%s\" not found. Please use \"mlr help list-flag-sections\" for a list.\n",
+				sectionName)
+		}
 	}
 }
 
-func listFlagsForSection(sectionName string) {
-	if !cli.FLAG_TABLE.ListFlagsForSection(sectionName) {
-		fmt.Printf(
-			"mlr: flag-section \"%s\" not found. Please use \"mlr help list-flag-sections\" for a list.\n",
-			sectionName)
+func listFlagsForSection(sectionNames []string) {
+	for _, sectionName := range sectionNames {
+		if !cli.FLAG_TABLE.ListFlagsForSection(sectionName) {
+			fmt.Printf(
+				"mlr: flag-section \"%s\" not found. Please use \"mlr help list-flag-sections\" for a list.\n",
+				sectionName)
+		}
 	}
 }
 
 // For manpage autogen: just produce text
-func showHelpForSection(sectionName string) {
-	if !cli.FLAG_TABLE.ShowHelpForSection(sectionName) {
-		fmt.Printf(
-			"mlr: flag-section \"%s\" not found. Please use \"mlr help list-flag-sections\" for a list.\n",
-			sectionName)
+func showHelpForSection(sectionNames []string) {
+	for _, sectionName := range sectionNames {
+		if !cli.FLAG_TABLE.ShowHelpForSection(sectionName) {
+			fmt.Printf(
+				"mlr: flag-section \"%s\" not found. Please use \"mlr help list-flag-sections\" for a list.\n",
+				sectionName)
+		}
 	}
 }
 
 // For on-the-fly `mlr help foo-bar-flags` where `Foo-bar flags` is the name of
 // a section in the FLAG_TABLE. See the func-init block at the top of this
 // file.
-func showHelpForSectionViaDowndash(downdashSectionName string) {
-	if !cli.FLAG_TABLE.ShowHelpForSectionViaDowndash(downdashSectionName) {
-		fmt.Printf("mlr: flag-section \"%s\" not found.\n", downdashSectionName)
+func showHelpForSectionViaDowndash(downdashSectionNames []string) {
+	for _, downdashSectionName := range downdashSectionNames {
+		if !cli.FLAG_TABLE.ShowHelpForSectionViaDowndash(downdashSectionName) {
+			fmt.Printf("mlr: flag-section \"%s\" not found.\n", downdashSectionName)
+		}
 	}
 }
 
 // For webdocs autogen: we want the headline separately so we can backtick it.
-func showHeadlineForFlag(flagName string) {
-	if !cli.FLAG_TABLE.ShowHeadlineForFlag(flagName) {
-		fmt.Printf("mlr: flag \"%s\" not found..\n", flagName)
+func showHeadlineForFlag(flagNames []string) {
+	for _, flagName := range flagNames {
+		if !cli.FLAG_TABLE.ShowHeadlineForFlag(flagName) {
+			fmt.Printf("mlr: flag \"%s\" not found..\n", flagName)
+		}
 	}
 }
 
 // For webdocs autogen
-func showHelpForFlag(flagName string) {
-	if !cli.FLAG_TABLE.ShowHelpForFlag(flagName) {
-		fmt.Printf("mlr: flag \"%s\" not found..\n", flagName)
+func showHelpForFlag(flagNames []string) {
+	for _, flagName := range flagNames {
+		if !cli.FLAG_TABLE.ShowHelpForFlag(flagName) {
+			fmt.Printf("mlr: flag \"%s\" not found..\n", flagName)
+		}
 	}
 }
 
@@ -543,14 +564,13 @@ func listVerbsAsParagraph() {
 	transformers.ListVerbNamesAsParagraph()
 }
 
-func helpForVerb(arg string) {
-	transformerSetup := transformers.LookUp(arg)
-	if transformerSetup != nil {
-		transformerSetup.UsageFunc(os.Stdout, true, 0)
-	} else {
-		fmt.Printf(
-			"mlr: verb \"%s\" not found. Please use \"mlr help list-verbs\" for a list.\n",
-			arg)
+func helpForVerb(args []string) {
+	for _, arg := range args {
+		if !transformers.ShowHelpForTransformer(arg) {
+			fmt.Printf(
+				"mlr: verb \"%s\" not found. Please use \"mlr help list-verbs\" for a list.\n",
+				arg)
+		}
 	}
 }
 
@@ -571,8 +591,10 @@ func listFunctionClasses() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionClasses()
 }
 
-func listFunctionsInClass(class string) {
-	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsInClass(class)
+func listFunctionsInClass(classes []string) {
+	for _, class := range classes {
+		cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionsInClass(class)
+	}
 }
 
 func listFunctionsAsParagraph() {
@@ -591,45 +613,92 @@ func usageFunctionsByClass() {
 	cst.BuiltinFunctionManagerInstance.ListBuiltinFunctionUsagesByClass()
 }
 
-func helpForFunction(arg string) {
-	cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, true)
+func helpForFunction(args []string) {
+	for _, arg := range args {
+		cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg)
+	}
 }
 
-// TODO: comment
-// xxx polymorphic looker-upper: try:
-// o flag
-// o verb
-// o function
-// o keyword
-// xxx note 'mlr help sort' finds verb before DSL function w/ same name ...
-// xxx 'mlr help verb sort' vs 'mlr help function sort'
-func helpBySearch(thing string) bool {
+func helpByExactSearch(things []string) bool {
+	foundAny := false
+	for _, thing := range things {
+		foundThisOne := helpByExactSearchOne(thing)
+		foundAny = foundAny || foundThisOne
+		if !foundThisOne {
+			fmt.Printf("No help found for \"%s\". Please try 'mlr help find %s' for approximate match.\n", thing, thing)
+			fmt.Printf("See also 'mlr help topics'.\n")
+		}
+	}
+
+	return foundAny
+}
+
+// We need to look various places, e.g. "sec2gmt" is the name of a verb as well
+// as a DSL function.
+func helpByExactSearchOne(thing string) bool {
+	found := false
 
 	// flag
-	if cli.FLAG_TABLE.ShowHelpForFlag(thing) {
-		return true
+	if cli.FLAG_TABLE.ShowHelpForFlagWithName(thing) {
+		found = true
 	}
 
 	// verb
-	transformerSetup := transformers.LookUp(thing)
-	if transformerSetup != nil {
-		transformerSetup.UsageFunc(os.Stdout, true, 0)
-		return true
+	if transformers.ShowHelpForTransformer(thing) {
+		found = true
 	}
 
 	// function
-	// to do: parameterize inexact-match printing ...
-	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(thing, false) {
-		return true
+	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(thing) {
+		found = true
 	}
 
 	// keyword
 	if cst.TryUsageForKeyword(thing) {
-		return true
+		found = true
 	}
 
-	// not found
-	return false
+	return found
+}
+
+func helpByApproximateSearch(things []string) bool {
+	foundAny := false
+	for _, thing := range things {
+		foundThisOne := helpByApproximateSearchOne(thing)
+		foundAny = foundAny || foundThisOne
+	}
+
+	return foundAny
+}
+
+func helpByApproximateSearchOne(thing string) bool {
+	found := false
+
+	// flag
+	if cli.FLAG_TABLE.ShowHelpForFlagApproximateWithName(thing) {
+		found = true
+	}
+
+	// verb
+	if transformers.ShowHelpForTransformerApproximate(thing) {
+		found = true
+	}
+
+	// function
+	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsageApproximate(thing) {
+		found = true
+	}
+
+	// keyword
+	if cst.TryUsageForKeywordApproximate(thing) {
+		found = true
+	}
+
+	if !found {
+		fmt.Printf("No help found for \"%s\". Please try 'mlr help find %s' for approximate match.\n", thing, thing)
+		fmt.Printf("See also 'mlr help topics'.\n")
+	}
+	return found
 }
 
 // ----------------------------------------------------------------
@@ -649,8 +718,10 @@ func usageKeywords() {
 	cst.UsageKeywords()
 }
 
-func helpForKeyword(arg string) {
-	cst.UsageForKeyword(arg)
+func helpForKeyword(args []string) {
+	for _, arg := range args {
+		cst.UsageForKeyword(arg)
+	}
 }
 
 // ----------------------------------------------------------------

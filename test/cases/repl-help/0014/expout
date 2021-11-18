@@ -1,0 +1,22 @@
+fsec2dhms  (class=time #args=1) Formats floating-point seconds as in fsec2dhms(500000.25) = "5d18h53m20.250000s"
+fsec2hms  (class=time #args=1) Formats floating-point seconds as in fsec2hms(5000.25) = "01:23:20.250000"
+sec2dhms  (class=time #args=1) Formats integer seconds as in sec2dhms(500000) = "5d18h53m20s"
+sec2gmt  (class=time #args=1,2) Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
+Examples:
+sec2gmt(1234567890)           = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456)    = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456, 6) = "2009-02-13T23:31:30.123456Z"
+sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date. Leaves non-numbers as-is.
+Example:
+sec2gmtdate(1440768801.7) = "2015-08-28".
+sec2hms  (class=time #args=1) Formats integer seconds as in sec2hms(5000) = "01:23:20"
+sec2localdate  (class=time #args=1,2) Formats seconds since epoch (integer part) as local timestamp with year-month-date. Leaves non-numbers as-is. Consults $TZ environment variable unless second argument is supplied.
+Examples:
+sec2localdate(1440768801.7) = "2015-08-28" with TZ="Asia/Istanbul"
+sec2localdate(1440768801.7, "Asia/Istanbul") = "2015-08-28"
+sec2localtime  (class=time #args=1,2,3) Formats seconds since epoch (integer part) as local timestamp. Consults $TZ environment variable unless third argument is supplied. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part
+Examples:
+sec2localtime(1234567890)           = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+sec2localtime(1234567890.123456)    = "2009-02-14 01:31:30"        with TZ="Asia/Istanbul"
+sec2localtime(1234567890.123456, 6) = "2009-02-14 01:31:30.123456" with TZ="Asia/Istanbul"
+sec2localtime(1234567890.123456, 6, "Asia/Istanbul") = "2009-02-14 01:31:30.123456"
