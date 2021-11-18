@@ -70,6 +70,31 @@ func (repl *Repl) findHandler(verbName string) *handlerInfo {
 	return nil
 }
 
+func (repl *Repl) showUsageForHandler(verbName string) bool {
+	nonDSLHandler := repl.findHandler(verbName)
+	if nonDSLHandler != nil {
+		fmt.Println(colorizer.MaybeColorizeHelp(verbName, true))
+		nonDSLHandler.usageFunc(repl)
+		return true
+	} else {
+		return false
+	}
+}
+
+func (repl *Repl) showUsageForHandlerApproximate(searchString string) bool {
+	foundAny := false
+	for _, entry := range handlerLookupTable {
+		for _, entryVerbName := range entry.verbNames {
+			if strings.Contains(entryVerbName, searchString) {
+				fmt.Println(colorizer.MaybeColorizeHelp(entryVerbName, true))
+				entry.usageFunc(repl)
+				foundAny = true
+			}
+		}
+	}
+	return foundAny
+}
+
 // ----------------------------------------------------------------
 // Handles a single non-DSL statement like ':open foo.dat' or ':help'.
 func (repl *Repl) handleNonDSLLine(trimmedLine string) bool {
@@ -786,7 +811,7 @@ func usageHelp(repl *Repl) {
 	fmt.Println(":help prompt")
 	fmt.Println(":help function-names")
 	fmt.Println(":help function-details")
-	fmt.Println(":help {function name}, e.g. :help sec2gmt")
+	fmt.Println(":help find {substring}, e.g. :help gmt or :help map")
 	fmt.Println(":help {function name}, e.g. :help sec2gmt")
 }
 
@@ -797,11 +822,39 @@ func handleHelp(repl *Repl, args []string) bool {
 		return true
 	}
 
+	if len(args) >= 1 && args[0] == "find" {
+		args = args[1:]
+		for _, arg := range args {
+			handleHelpFindSingle(repl, arg)
+		}
+		return true
+	}
+
 	for _, arg := range args {
 		handleHelpSingle(repl, arg)
 	}
 
 	return true
+}
+
+func handleHelpFindSingle(repl *Repl, arg string) {
+	foundAny := false
+
+	if cst.TryUsageForKeywordApproximate(arg) {
+		foundAny = true
+	}
+
+	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsageApproximate(arg) {
+		foundAny = true
+	}
+
+	if repl.showUsageForHandlerApproximate(arg) {
+		foundAny = true
+	}
+
+	if !foundAny {
+		fmt.Printf("No help available for %s. Try \":help find %s\" to search for matches\n", arg, arg)
+	}
 }
 
 func handleHelpSingle(repl *Repl, arg string) {
@@ -872,13 +925,11 @@ func handleHelpSingle(repl *Repl, arg string) {
 		return
 	}
 
-	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg, true) {
+	if cst.BuiltinFunctionManagerInstance.TryListBuiltinFunctionUsage(arg) {
 		return
 	}
 
-	nonDSLHandler := repl.findHandler(arg)
-	if nonDSLHandler != nil {
-		nonDSLHandler.usageFunc(repl)
+	if repl.showUsageForHandler(arg) {
 		return
 	}
 

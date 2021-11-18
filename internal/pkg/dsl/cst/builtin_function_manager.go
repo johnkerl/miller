@@ -1906,25 +1906,33 @@ func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsagesByClass() {
 }
 
 func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsage(functionName string) {
-	// xxx remove bool-arg code smell
-	if !manager.TryListBuiltinFunctionUsage(functionName, true) {
+	if !manager.TryListBuiltinFunctionUsage(functionName) {
 		fmt.Fprintf(os.Stderr, "Function \"%s\" not found.\n", functionName)
 	}
 }
 
 func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsage(
 	functionName string,
-	showApproximate bool,
 ) bool {
 	builtinFunctionInfo := manager.LookUp(functionName)
 	if builtinFunctionInfo == nil {
-		if showApproximate {
-			manager.listBuiltinFunctionUsageApproximate(functionName)
-		}
 		return false
 	}
 	manager.listBuiltinFunctionUsageExact(builtinFunctionInfo)
 	return true
+}
+
+func (manager *BuiltinFunctionManager) TryListBuiltinFunctionUsageApproximate(
+	searchString string,
+) bool {
+	found := false
+	for _, builtinFunctionInfo := range *manager.lookupTable {
+		if strings.Contains(builtinFunctionInfo.name, searchString) {
+			manager.showSingleUsage(&builtinFunctionInfo)
+			found = true
+		}
+	}
+	return found
 }
 
 func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageExact(
@@ -1955,10 +1963,9 @@ func (manager *BuiltinFunctionManager) showSingleUsage(
 	}
 }
 
-func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageApproximate(
+func (manager *BuiltinFunctionManager) ListBuiltinFunctionUsageApproximate(
 	text string,
-) {
-	fmt.Printf("No exact match for \"%s\". Inexact matches:\n", text)
+) bool {
 	found := false
 	for _, builtinFunctionInfo := range *manager.lookupTable {
 		if strings.Contains(builtinFunctionInfo.name, text) {
@@ -1966,9 +1973,7 @@ func (manager *BuiltinFunctionManager) listBuiltinFunctionUsageApproximate(
 			found = true
 		}
 	}
-	if !found {
-		fmt.Println("None found.")
-	}
+	return found
 }
 
 func describeNargs(info *BuiltinFunctionInfo) string {

@@ -12,11 +12,13 @@ import (
 	"strings"
 )
 
+const defaultPath = "./test/cases"
+
 // ================================================================
 func regTestUsage(verbName string, o *os.File, exitCode int) {
 	exeName := path.Base(os.Args[0])
 	fmt.Fprintf(o, "Usage: %s %s [options] [one or more directories/files]\n", exeName, verbName)
-	fmt.Fprintf(o, "If no directories/files are specified, the directory %s is used by default.\n", DefaultPath)
+	fmt.Fprintf(o, "If no directories/files are specified, the directory %s is used by default.\n", defaultPath)
 	fmt.Fprintf(o, "Recursively walks the directory/ies looking for foo.cmd files having Miller command-lines,\n")
 	fmt.Fprintf(o, "with foo.expout and foo.experr files having expected stdout and stderr, respectively.\n")
 	fmt.Fprintf(o, "If foo.should-fail exists and is a file, the command is expected to exit non-zero back to\n")
@@ -94,6 +96,9 @@ func RegTestMain(args []string) int {
 		}
 	}
 	casePaths := args[argi:]
+	if len(casePaths) == 0 {
+		casePaths = []string{defaultPath}
+	}
 
 	regtester := NewRegTester(
 		exeName,
