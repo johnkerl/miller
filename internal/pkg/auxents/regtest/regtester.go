@@ -69,7 +69,6 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
-const DefaultPath = "./cases"
 const CmdName = "cmd"
 const MlrName = "mlr"
 const EnvName = "env"
@@ -163,9 +162,7 @@ func (regtester *RegTester) Execute(
 
 	regtester.resetCounts()
 
-	if len(casePaths) == 0 {
-		casePaths = []string{DefaultPath}
-	}
+	lib.InternalCodingErrorIf(len(casePaths) == 0)
 
 	if !regtester.plainMode {
 		fmt.Println("REGRESSION TEST:")

@@ -1,0 +1,19 @@
+sec2gmt
+Usage: mlr sec2gmt [options] {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
+more than a keystroke-saver for the sec2gmt function:
+  mlr sec2gmt time1,time2
+is the same as
+  mlr put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'
+Options:
+-1 through -9: format the seconds using 1..9 decimal places, respectively.
+--millis Input numbers are treated as milliseconds since the epoch.
+--micros Input numbers are treated as microseconds since the epoch.
+--nanos  Input numbers are treated as nanoseconds since the epoch.
+-h|--help Show this message.
+sec2gmt  (class=time #args=1,2) Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
+Examples:
+sec2gmt(1234567890)           = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456)    = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456, 6) = "2009-02-13T23:31:30.123456Z"

@@ -90,18 +90,70 @@ Shorthands:
   mlr -F = mlr help usage-functions
   mlr -k = mlr help list-keywords
   mlr -K = mlr help usage-keywords
-Lastly, 'mlr help ...' will search for your text '...' using the sources of
+Lastly, 'mlr help ...' will search for your exact text '...' using the sources of
 'mlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.
-For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a
-verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'
-to disambiguate.
+Use 'mlr help find ...' for approximate (substring) matches, e.g. 'mlr help find map'
+for all things with "map" in their names.
 </pre>
 
+If you know the name of the thing you're looking for, use `mlr help`:
+
 <pre class="pre-highlight-in-pair">
-<b>mlr help functions</b>
+<b>mlr help map</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-No help found for "functions" -- please try 'mlr help topics'.
+map: declares an map-valued local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
+always OK. map b = a is OK or not depending on whether a is a map.
+</pre>
+
+To search by substring, use `mlr help find`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr help find gmt</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+sec2gmtdate
+Usage: ../c/mlr sec2gmtdate {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
+This is nothing more than a keystroke-saver for the sec2gmtdate function:
+  ../c/mlr sec2gmtdate time1,time2
+is the same as
+  ../c/mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+sec2gmt
+Usage: mlr sec2gmt [options] {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
+more than a keystroke-saver for the sec2gmt function:
+  mlr sec2gmt time1,time2
+is the same as
+  mlr put '$time1 = sec2gmt($time1); $time2 = sec2gmt($time2)'
+Options:
+-1 through -9: format the seconds using 1..9 decimal places, respectively.
+--millis Input numbers are treated as milliseconds since the epoch.
+--micros Input numbers are treated as microseconds since the epoch.
+--nanos  Input numbers are treated as nanoseconds since the epoch.
+-h|--help Show this message.
+gmt2localtime  (class=time #args=1,2) Convert from a GMT-time string to a local-time string. Consulting $TZ unless second argument is supplied.
+Examples:
+gmt2localtime("1999-12-31T22:00:00Z") = "2000-01-01 00:00:00" with TZ="Asia/Istanbul"
+gmt2localtime("1999-12-31T22:00:00Z", "Asia/Istanbul") = "2000-01-01 00:00:00"
+gmt2sec  (class=time #args=1) Parses GMT timestamp as integer seconds since the epoch.
+Example:
+gmt2sec("2001-02-03T04:05:06Z") = 981173106
+localtime2gmt  (class=time #args=1,2) Convert from a local-time string to a GMT-time string. Consults $TZ unless second argument is supplied.
+Examples:
+localtime2gmt("2000-01-01 00:00:00") = "1999-12-31T22:00:00Z" with TZ="Asia/Istanbul"
+localtime2gmt("2000-01-01 00:00:00", "Asia/Istanbul") = "1999-12-31T22:00:00Z"
+sec2gmt  (class=time #args=1,2) Formats seconds since epoch as GMT timestamp. Leaves non-numbers as-is. With second integer argument n, includes n decimal places for the seconds part.
+Examples:
+sec2gmt(1234567890)           = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456)    = "2009-02-13T23:31:30Z"
+sec2gmt(1234567890.123456, 6) = "2009-02-13T23:31:30.123456Z"
+sec2gmtdate  (class=time #args=1) Formats seconds since epoch (integer part) as GMT timestamp with year-month-date. Leaves non-numbers as-is.
+Example:
+sec2gmtdate(1440768801.7) = "2015-08-28".
 </pre>
 
 Etc.
@@ -143,6 +195,7 @@ Options:
 <b>mlr help verb sort</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
+sort
 Usage: mlr sort {flags}
 Sorts records primarily by the first specified field, secondarily by the second
 field, and so on.  (Any records not having all specified sort keys will appear
@@ -180,17 +233,8 @@ Given the name of a DSL function (from `mlr -f`) you can use `mlr help function`
 append  (class=collections #args=2) Appends second argument to end of first argument, which must be an array.
 </pre>
 
-<pre class="pre-highlight-in-pair">
+<pre class="pre-highlight-non-pair">
 <b>mlr help function split</b>
-</pre>
-<pre class="pre-non-highlight-in-pair">
-No exact match for "split". Inexact matches:
-  splita
-  splitax
-  splitkv
-  splitkvx
-  splitnv
-  splitnvx
 </pre>
 
 <pre class="pre-highlight-in-pair">

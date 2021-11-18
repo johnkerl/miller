@@ -6,6 +6,7 @@ build:
 mlr:
 	go build github.com/johnkerl/miller/cmd/mlr
 
+# For interactive use, 'mlr regtest' offers more options and transparency.
 check: unit_test regression_test
 
 # Unit tests (small number)

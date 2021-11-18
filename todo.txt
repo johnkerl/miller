@@ -1,7 +1,6 @@
 ================================================================
 PUNCHDOWN LIST
 
-* conda issue
 * blockers:
   - keep checking issues
   - verslink old relnotes
@@ -11,6 +10,7 @@ PUNCHDOWN LIST
   - license triple-checks
   - `mlr put` -> coverart
   - 0b1011 olh/webdoc
+
 * release ordering?
   conda
   brew macports chocolatey
@@ -44,12 +44,7 @@ PUNCHDOWN LIST
       strptime("1970-01-01T00:00:00.Z", "%Y-%m-%dT%H:%M:%SZ")
       (error)
 
-* olh
-  o kw olh for func and funct both
-  o better help-searching:
-    ? mlr help search foo -- including flag-search
-    ? mlr -f foo
-    ? mlr -F foo == mlr help function foo
+* kw olh for func and funct both
 
 * pre-release:
   o check issues

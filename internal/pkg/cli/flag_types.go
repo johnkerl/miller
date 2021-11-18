@@ -258,11 +258,41 @@ func (ft *FlagTable) ShowHeadlineForFlag(flagName string) bool {
 // webdoc usage where the browser does dynamic line-wrapping, as the user
 // resizes the browser window.
 func (ft *FlagTable) ShowHelpForFlag(flagName string) bool {
+	return ft.showHelpForFlagMaybeWithName(flagName, false)
+}
+
+// ShowHelpForFlagWithName prints the flag's name colorized, then flag's
+// help-string all on one line.  This is for on-line help usage.
+func (ft *FlagTable) ShowHelpForFlagWithName(flagName string) bool {
+	return ft.showHelpForFlagMaybeWithName(flagName, true)
+}
+
+// showHelpForFlagMaybeWithName supports ShowHelpForFlag and ShowHelpForFlagWithName.
+// webdoc usage where the browser does dynamic line-wrapping, as the user
+// resizes the browser window.
+func (ft *FlagTable) showHelpForFlagMaybeWithName(flagName string, showName bool) bool {
 	for _, fs := range ft.sections {
 		for _, flag := range fs.flags {
 			if flag.Owns(flagName) {
+				if showName {
+					fmt.Println(colorizer.MaybeColorizeHelp(flagName, true))
+				}
 				fmt.Println(flag.GetHelpOneLine())
 				return true
+			}
+		}
+	}
+	return false
+}
+
+// ShowHelpForFlagApproximateWithName is like ShowHelpForFlagWithName
+// but allows substring matches.  This is for on-line help usage.
+func (ft *FlagTable) ShowHelpForFlagApproximateWithName(searchString string) bool {
+	for _, fs := range ft.sections {
+		for _, flag := range fs.flags {
+			if flag.Matches(searchString) {
+				fmt.Println(colorizer.MaybeColorizeHelp(flag.name, true))
+				fmt.Println(flag.GetHelpOneLine())
 			}
 		}
 	}
@@ -361,14 +391,32 @@ func (fs *FlagSection) NilCheck() {
 // ================================================================
 // Flag methods
 
-// Owns determines whether this object handles a command-line flag such as "--foo".
+// Owns determines whether this object handles a command-line flag such as
+// "--foo".  This is used for command-line parsing, as well as for on-line help
+// with exact match on flag name.
 func (flag *Flag) Owns(input string) bool {
-	if input == flag.name {
+	if flag.name == input {
 		return true
 	}
 	if flag.altNames != nil {
 		for _, name := range flag.altNames {
-			if input == name {
+			if name == input {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// Matches is like Owns but is for substring matching, for on-line help with
+// approximate match on flag name.
+func (flag *Flag) Matches(input string) bool {
+	if strings.Contains(flag.name, input) {
+		return true
+	}
+	if flag.altNames != nil {
+		for _, name := range flag.altNames {
+			if strings.Contains(name, input) {
 				return true
 			}
 		}

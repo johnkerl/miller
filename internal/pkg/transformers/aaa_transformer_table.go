@@ -3,6 +3,7 @@ package transformers
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/colorizer"
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -71,7 +72,28 @@ var TRANSFORMER_LOOKUP_TABLE = []TransformerSetup{
 	UnsparsifySetup,
 }
 
-// ----------------------------------------------------------------
+func ShowHelpForTransformer(verb string) bool {
+	transformerSetup := LookUp(verb)
+	if transformerSetup != nil {
+		fmt.Println(colorizer.MaybeColorizeHelp(transformerSetup.Verb, true))
+		transformerSetup.UsageFunc(os.Stdout, false, 0)
+		return true
+	}
+	return false
+}
+
+func ShowHelpForTransformerApproximate(searchString string) bool {
+	found := false
+	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
+		if strings.Contains(transformerSetup.Verb, searchString) {
+			fmt.Println(colorizer.MaybeColorizeHelp(transformerSetup.Verb, true))
+			transformerSetup.UsageFunc(os.Stdout, false, 0)
+			found = true
+		}
+	}
+	return found
+}
+
 func LookUp(verb string) *TransformerSetup {
 	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
 		if transformerSetup.Verb == verb {
@@ -81,14 +103,12 @@ func LookUp(verb string) *TransformerSetup {
 	return nil
 }
 
-// ----------------------------------------------------------------
 func ListVerbNamesVertically() {
 	for _, transformerSetup := range TRANSFORMER_LOOKUP_TABLE {
 		fmt.Printf("%s\n", transformerSetup.Verb)
 	}
 }
 
-// ----------------------------------------------------------------
 func ListVerbNamesAsParagraph() {
 	verbNames := make([]string, len(TRANSFORMER_LOOKUP_TABLE))
 

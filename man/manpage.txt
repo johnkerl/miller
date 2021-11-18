@@ -151,11 +151,10 @@ HELP OPTIONS
          mlr -F = mlr help usage-functions
          mlr -k = mlr help list-keywords
          mlr -K = mlr help usage-keywords
-       Lastly, 'mlr help ...' will search for your text '...' using the sources of
+       Lastly, 'mlr help ...' will search for your exact text '...' using the sources of
        'mlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.
-       For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a
-       verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'
-       to disambiguate.
+       Use 'mlr help find ...' for approximate (substring) matches, e.g. 'mlr help find map'
+       for all things with "map" in their names.
 
 VERB LIST
        altkv bar bootstrap cat check clean-whitespace count-distinct count

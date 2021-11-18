@@ -1,0 +1,15 @@
+for: defines a for-loop using one of three styles. The body statements must
+be wrapped in curly braces.
+For-loop over stream record:
+
+  Example:  'for (k, v in $*) { ... }'
+
+For-loop over out-of-stream variables:
+
+  Example: 'for (k, v in @counts) { ... }'
+  Example: 'for ((k1, k2), v in @counts) { ... }'
+  Example: 'for ((k1, k2, k3), v in @*) { ... }'
+
+C-style for-loop:
+
+  Example:  'for (var i = 0, var b = 1; i < 10; i += 1, b *= 2) { ... }'
