@@ -25,7 +25,7 @@ func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, er
 	if len(writerOptions.OFS) != 1 {
 		return nil, errors.New("CSV OFS can only be a single character")
 	}
-	if writerOptions.ORS != "\n" {
+	if writerOptions.ORS != "\n" && writerOptions.ORS != "\r\n" {
 		return nil, errors.New("CSV ORS cannot be altered")
 	}
 	return &RecordWriterCSV{

@@ -22,8 +22,8 @@ type RecordReaderCSV struct {
 
 // ----------------------------------------------------------------
 func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) (*RecordReaderCSV, error) {
-	if readerOptions.IRS != "\n" {
-		return nil, errors.New("CSV IRS cannot be altered; LF vs CR/LF is autodetected.")
+	if readerOptions.IRS != "\n" && readerOptions.IRS != "\r\n" {
+		return nil, errors.New("CSV IRS cannot be altered; LF vs CR/LF is autodetected")
 	}
 	if len(readerOptions.IFS) != 1 {
 		return nil, errors.New("CSV IFS can only be a single character")
