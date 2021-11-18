@@ -236,9 +236,6 @@ func HelpMain(args []string) int {
 		return 0
 	}
 
-	// "mlr help something" where we do not recognize the something
-	fmt.Printf("No help found for \"%s\". Please try 'mlr help find %s' for approximate match.\n", name, name)
-	fmt.Printf("See also 'mlr help topics'.\n")
 	return 0
 }
 
@@ -302,11 +299,10 @@ func listTopics() {
 	for _, info := range shorthandLookupTable.shorthandInfos {
 		fmt.Printf("  mlr %s = mlr help %s\n", info.shorthand, info.longhand)
 	}
-	fmt.Printf("Lastly, 'mlr help ...' will search for your text '...' using the sources of\n")
+	fmt.Printf("Lastly, 'mlr help ...' will search for your exact text '...' using the sources of\n")
 	fmt.Printf("'mlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.\n")
-	fmt.Printf("For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a\n")
-	fmt.Printf("verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'\n")
-	fmt.Printf("to disambiguate.\n")
+	fmt.Printf("Use 'mlr help find ...' for approximate (substring) matches, e.g. 'mlr help find map'\n")
+	fmt.Printf("for all things with \"map\" in their names.\n")
 }
 
 // ----------------------------------------------------------------
@@ -628,6 +624,10 @@ func helpByExactSearch(things []string) bool {
 	for _, thing := range things {
 		foundThisOne := helpByExactSearchOne(thing)
 		foundAny = foundAny || foundThisOne
+		if !foundThisOne {
+			fmt.Printf("No help found for \"%s\". Please try 'mlr help find %s' for approximate match.\n", thing, thing)
+			fmt.Printf("See also 'mlr help topics'.\n")
+		}
 	}
 
 	return foundAny

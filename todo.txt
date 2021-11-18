@@ -1,13 +1,6 @@
 ================================================================
 PUNCHDOWN LIST
 
-* help approx-match even if exact exists (e.g. 'map')
-  k red names x all , x mh & mrpl: just UT
-  k 'mlr help foo bar' should work -- just UT
-  k mrpl ':help foo bar' should work -- just UT
-  > be sure 'mlr help' and mrpl ':help' are both clear on discoverability of help-find
-  > approxes @ kw
-
 * blockers:
   - keep checking issues
   - verslink old relnotes
@@ -52,12 +45,7 @@ PUNCHDOWN LIST
       strptime("1970-01-01T00:00:00.Z", "%Y-%m-%dT%H:%M:%SZ")
       (error)
 
-* olh
-  o kw olh for func and funct both
-  o better help-searching:
-    ? mlr help search foo -- including flag-search
-    ? mlr -f foo
-    ? mlr -F foo == mlr help function foo
+* kw olh for func and funct both
 
 * pre-release:
   o check issues

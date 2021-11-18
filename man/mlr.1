@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-11-15
+.\"      Date: 2021-11-18
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-11-15" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-11-18" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -186,11 +186,10 @@ Shorthands:
   mlr -F = mlr help usage-functions
   mlr -k = mlr help list-keywords
   mlr -K = mlr help usage-keywords
-Lastly, 'mlr help ...' will search for your text '...' using the sources of
+Lastly, 'mlr help ...' will search for your exact text '...' using the sources of
 \(cqmlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.
-For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a
-verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'
-to disambiguate.
+Use 'mlr help find ...' for approximate (substring) matches, e.g. 'mlr help find map'
+for all things with "map" in their names.
 .fi
 .if n \{\
 .RE

@@ -1,0 +1,8 @@
+acos  (class=math #args=1) Inverse trigonometric cosine.
+acosh  (class=math #args=1) Inverse hyperbolic cosine.
+cos  (class=math #args=1) Trigonometric cosine.
+cosh  (class=math #args=1) Hyperbolic cosine.
+asin  (class=math #args=1) Inverse trigonometric sine.
+asinh  (class=math #args=1) Inverse hyperbolic sine.
+sin  (class=math #args=1) Trigonometric sine.
+sinh  (class=math #args=1) Hyperbolic sine.

@@ -104,14 +104,15 @@ func TryUsageForKeyword(name string) bool {
 }
 
 func TryUsageForKeywordApproximate(searchString string) bool {
+	foundAny := false
 	for _, entry := range KEYWORD_USAGE_TABLE {
 		if strings.Contains(entry.name, searchString) {
 			fmt.Printf("%s: ", colorizer.MaybeColorizeHelp(entry.name, true))
 			entry.usageFunc()
-			return true
+			foundAny = true
 		}
 	}
-	return false
+	return foundAny
 }
 
 // ----------------------------------------------------------------
