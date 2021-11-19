@@ -9,3 +9,10 @@ genmds: $(FILES)
 %.md: %.md.in
 	@./genmds $<
 
+# Do this to force-build if the *.md.in inputs are unchanged but something else
+# is, e.g. mlr source-code changes as affecting the output of autogen code
+# snippets.
+forcebuild:
+	@./genmds
+
+.PHONY: forcebuild

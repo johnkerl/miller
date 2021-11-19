@@ -876,6 +876,7 @@ Usage: mlr fill-empty [options]
 Fills empty-string fields with specified fill-value.
 Options:
 -v {string} Fill-value: defaults to "N/A"
+-S          Don't infer type -- so '-v 0' would fill string 0 not int 0.
 </pre>
 
 <pre class="pre-highlight-in-pair">
@@ -2981,7 +2982,6 @@ Options:
 -a {sum,count,...} Names of accumulators: one or more of:
   median   This is the same as p50
   p10 p25.2 p50 p98 p100 etc.
-  TODO: flags for interpolated percentiles
   count    Count instances of fields
   mode     Find most-frequently-occurring values for fields; first-found wins tie
   antimode Find least-frequently-occurring values for fields; first-found wins tie
@@ -3015,15 +3015,10 @@ Options:
                case please avoid pprint-format output since end of input
                stream will never be seen).
 -h|--help      Show this message.
-[TODO: more]
 Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
- mlr stats1
 Example: mlr stats1 -a count,mode -f size
- mlr stats1
 Example: mlr stats1 -a count,mode -f size -g shape
- mlr stats1
 Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'
- mlr stats1
         This computes count and mode statistics on all field names beginning
          with a through h, grouped by all field names starting with k.
 

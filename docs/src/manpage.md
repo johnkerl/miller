@@ -24,7 +24,7 @@ MILLER(1)                                                            MILLER(1)
 
 
 NAME
-       miller - like awk, sed, cut, join, and sort for name-indexed data such
+       Miller -- like awk, sed, cut, join, and sort for name-indexed data such
        as CSV and tabular JSON.
 
 SYNOPSIS
@@ -50,7 +50,7 @@ DESCRIPTION
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents Miller v6.0.0-dev.
+       manpage documents mlr 6.0.0-dev.
 
 EXAMPLES
        mlr --icsv --opprint cat example.csv
@@ -172,11 +172,10 @@ HELP OPTIONS
          mlr -F = mlr help usage-functions
          mlr -k = mlr help list-keywords
          mlr -K = mlr help usage-keywords
-       Lastly, 'mlr help ...' will search for your text '...' using the sources of
+       Lastly, 'mlr help ...' will search for your exact text '...' using the sources of
        'mlr help flag', 'mlr help verb', 'mlr help function', and 'mlr help keyword'.
-       For things appearing in more than one place, e.g. 'sec2gmt' which is the name of a
-       verb as well as a function, use `mlr help verb sec2gmt' or `mlr help function sec2gmt'
-       to disambiguate.
+       Use 'mlr help find ...' for approximate (substring) matches, e.g. 'mlr help find map'
+       for all things with "map" in their names.
 
 VERB LIST
        altkv bar bootstrap cat check clean-whitespace count-distinct count
@@ -935,6 +934,7 @@ VERBS
        Fills empty-string fields with specified fill-value.
        Options:
        -v {string} Fill-value: defaults to "N/A"
+       -S          Don't infer type -- so '-v 0' would fill string 0 not int 0.
 
    filter
        Usage: mlr filter [options] {DSL expression}
@@ -1677,7 +1677,6 @@ VERBS
        -a {sum,count,...} Names of accumulators: one or more of:
          median   This is the same as p50
          p10 p25.2 p50 p98 p100 etc.
-         TODO: flags for interpolated percentiles
          count    Count instances of fields
          mode     Find most-frequently-occurring values for fields; first-found wins tie
          antimode Find least-frequently-occurring values for fields; first-found wins tie
@@ -1711,15 +1710,10 @@ VERBS
                       case please avoid pprint-format output since end of input
                       stream will never be seen).
        -h|--help      Show this message.
-       [TODO: more]
        Example: mlr stats1 -a min,p10,p50,p90,max -f value -g size,shape
-        mlr stats1
        Example: mlr stats1 -a count,mode -f size
-        mlr stats1
        Example: mlr stats1 -a count,mode -f size -g shape
-        mlr stats1
        Example: mlr stats1 -a count,mode --fr '^[a-h].*$' -gr '^k.*$'
-        mlr stats1
                This computes count and mode statistics on all field names beginning
                 with a through h, grouped by all field names starting with k.
 
@@ -2602,7 +2596,7 @@ FUNCTIONS FOR FILTER/PUT
 
 KEYWORDS FOR PUT AND FILTER
    all
-       all: used in "emit", "emitp", and "unset" as a synonym for @*
+       all: used in "emit1", "emit", "emitp", and "unset" as a synonym for @*
 
    begin
        begin: defines a block of statements to be executed before input records
@@ -2662,6 +2656,16 @@ KEYWORDS FOR PUT AND FILTER
    else
        else: terminates an if/elif/elif chain. The body statements must be wrapped
        in curly braces.
+
+   emit1
+       emit1: inserts an out-of-stream variable into the output record stream. Unlike
+       the other map variants, side-by-sides, indexing, and redirection are not supported,
+       but you can emit any map-valued expression.
+
+         Example: mlr --from f.dat put 'emit1 $*'
+         Example: mlr --from f.dat put 'emit1 mapsum({"id": NR}, $*)'
+
+       Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 
    emit
        emit: inserts an out-of-stream variable into the output record stream. Hashmap
@@ -2975,5 +2979,5 @@ SEE ALSO
 
 
 
-                                  2021-11-08                         MILLER(1)
+                                  2021-11-19                         MILLER(1)
 </pre>

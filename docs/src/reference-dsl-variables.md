@@ -859,6 +859,7 @@ dump
 edump
 elif
 else
+emit1
 emit
 emitf
 emitp
@@ -908,7 +909,7 @@ ORS
 <b>mlr help usage-keywords # you can also use mlr -K</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-all: used in "emit", "emitp", and "unset" as a synonym for @*
+all: used in "emit1", "emit", "emitp", and "unset" as a synonym for @*
 
 begin: defines a block of statements to be executed before input records
 are ingested. The body statements must be wrapped in curly braces.
@@ -958,6 +959,15 @@ in curly braces.
 
 else: terminates an if/elif/elif chain. The body statements must be wrapped
 in curly braces.
+
+emit1: inserts an out-of-stream variable into the output record stream. Unlike
+the other map variants, side-by-sides, indexing, and redirection are not supported,
+but you can emit any map-valued expression.
+
+  Example: mlr --from f.dat put 'emit1 $*'
+  Example: mlr --from f.dat put 'emit1 mapsum({"id": NR}, $*)'
+
+Please see https://miller.readthedocs.io://johnkerl.org/miller/doc for more information.
 
 emit: inserts an out-of-stream variable into the output record stream. Hashmap
 indices present in the data but not slotted by emit arguments are not output.

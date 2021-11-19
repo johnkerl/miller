@@ -22,7 +22,7 @@ You will need to first install Go version 1.15 or higher: please see [https://go
 
 ## Miller license
 
-Two-clause BSD license [https://github.com/johnkerl/miller/blob/main/LICENSE.txt](https://github.com/johnkerl/miller/blob/main/LICENSE.txt).
+Two-clause BSD license [https://github.com/johnkerl/miller/blob/master/LICENSE.txt](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
 
 ## From release tarball
 
@@ -95,7 +95,7 @@ In this example I am using version 6.1.0 to 6.2.0; of course that will change fo
 * Notify:
 
     * Submit `brew` pull request; notify any other distros which don't appear to have autoupdated since the previous release (notes below)
-    * Similarly for `macports`: [https://github.com/macports/macports-ports/blob/main/textproc/miller/Portfile](https://github.com/macports/macports-ports/blob/main/textproc/miller/Portfile)
+    * Similarly for `macports`: [https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile](https://github.com/macports/macports-ports/blob/master/textproc/miller/Portfile)
     * Social-media updates.
 
 <pre class="pre-non-highlight-non-pair">

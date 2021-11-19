@@ -546,7 +546,8 @@ While you can do format conversion using `mlr --icsv --ojson cat myfile.csv`, th
 <b>mlr help format-conversion</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-No help found for "format-conversion" -- please try 'mlr help topics'.
+No help found for "format-conversion". Please try 'mlr help find format-conversion' for approximate match.
+See also 'mlr help topics'.
 </pre>
 
 <!---
@@ -575,7 +576,8 @@ You can include comments within your data files, and either have them ignored, o
 <b>mlr help comments-in-data</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
-No help found for "comments-in-data" -- please try 'mlr help topics'.
+No help found for "comments-in-data". Please try 'mlr help find comments-in-data' for approximate match.
+See also 'mlr help topics'.
 </pre>
 
 Examples:

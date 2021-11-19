@@ -48,6 +48,7 @@ dev:
 	make build
 	make check
 	make -C man build
+	make -C docs/src forcebuild
 	make -C docs
 	@echo DONE
 

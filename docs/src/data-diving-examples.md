@@ -243,7 +243,7 @@ purple triangle 0    257 0.435535 0.859129 0.812290 5.753095
 red    square   0    322 0.201551 0.953110 0.771991 5.612050
 </pre>
 
-Look at uncategorized stats (using [creach](https://github.com/johnkerl/scripts/blob/main/fundam/creach) for spacing).
+Look at uncategorized stats (using [creach](https://github.com/johnkerl/scripts/blob/master/fundam/creach) for spacing).
 
 Here it looks reasonable that `u` is unit-uniform; something's up with `v` but we can't yet see what:
 
