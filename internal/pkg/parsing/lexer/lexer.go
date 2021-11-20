@@ -3,7 +3,7 @@
 package lexer
 
 import (
-	"io/ioutil"
+	"os" // post-GOCC hand-edit from deprecated io/ioutil
 	"unicode/utf8"
 
 	"github.com/johnkerl/miller/internal/pkg/parsing/token"
@@ -45,7 +45,7 @@ func (s *SourceContext) Source() string {
 }
 
 func NewLexerFile(fpath string) (*Lexer, error) {
-	src, err := ioutil.ReadFile(fpath)
+	src, err := os.ReadFile(fpath)
 	if err != nil {
 		return nil, err
 	}

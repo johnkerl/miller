@@ -773,7 +773,7 @@ func (regtester *RegTester) loadFile(
 	fileName string,
 	caseDir string,
 ) (string, error) {
-	byteContents, err := ioutil.ReadFile(fileName)
+	byteContents, err := os.ReadFile(fileName)
 	if err != nil {
 		return "", err
 	}

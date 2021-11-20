@@ -11,6 +11,39 @@ PUNCHDOWN LIST
   - `mlr put` -> coverart
   - 0b1011 olh/webdoc
 
+* shebang
+  - build-dsl hand-edit / sedder
+    > io/ioutil -> os
+    > ioutil.ReadFile -> os.ReadFile on internal/pkg/parsing/lexer/lexer.go
+    > olh
+    > webdocs
+    > want:
+      - myscript.mlr --c2j input.csv
+    > maybe a refactor?
+      - this is complex so make it clear it's for -s support which is worth having (for uptake/friction-reduction)
+      - cliparser split into segments
+        > mlr
+        > -s interp
+        > identify flag-sequences [-a] [-b foo] etc.
+        > identify verb-sequences [cat -n -g shape] [sort -f color] etc.
+        > then filenames
+      - then apply parsings after split
+        > flags first
+        > then verbs
+      - ambiguity check?
+        > mlr [verb1 -f -g] [--icsv] [verb2 -a -b] [--ojson] [input1.csv input2.csv]
+      - mods:
+        > flag-parsers as-is
+        > verb-parsers take a check-only flag
+      - 1st pass walk the CLI
+        > build up a [][]string for flags and a [][]string for verbs and a []string file data-files
+        > flag-parser modify throwaway opts
+        > verb-parsers with check-only flag (no construct)
+      - 2nd pass
+        > walk the flags [][]string with non-throwaway options
+        > walk the verbs [][]string with check-only == false
+        > ... maybe simply re-order (hoist) flags to front, and do the parse as now -- ?
+
 * release ordering?
   conda
   brew macports chocolatey

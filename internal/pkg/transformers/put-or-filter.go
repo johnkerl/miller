@@ -323,7 +323,8 @@ func transformerPutOrFilterParseCLI(
 	if !haveDSLStringsHere {
 		// Get the DSL string from the command line, after the flags
 		if argi >= argc {
-			transformerPutUsage(os.Stderr, true, 1)
+			fmt.Fprintf(os.Stderr, "mlr %s: -f/-e requires a filename as argument.\n", verb)
+			os.Exit(1)
 		}
 		dslString := args[argi]
 		dslStrings = append(dslStrings, dslString)

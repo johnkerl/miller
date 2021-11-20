@@ -20,6 +20,11 @@ func ParseCommandLine(args []string) (
 	err error,
 ) {
 	options = cli.DefaultOptions()
+
+	// mlr -s scriptfile {data-file names ...} means take the contents of
+	// scriptfile as if it were command-line items.
+	args = maybeInterpolateDashS(args)
+
 	argc := len(args)
 	argi := 1
 

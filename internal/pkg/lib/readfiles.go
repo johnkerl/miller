@@ -33,10 +33,10 @@ func LoadStringsFromFileOrDir(path string, extension string) ([]string, error) {
 	}
 }
 
-// LoadStringFromFile is just a wrapper around ioutil.ReadFile,
+// LoadStringFromFile is just a wrapper around os.ReadFile,
 // with a cast from []byte to string.
 func LoadStringFromFile(filename string) (string, error) {
-	data, err := ioutil.ReadFile(filename)
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		return "", err
 	}
