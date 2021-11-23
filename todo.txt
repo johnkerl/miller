@@ -10,6 +10,7 @@ PUNCHDOWN LIST
   - license triple-checks
   - `mlr put` -> coverart
   - 0b1011 olh/webdoc
+  - rtd links somewhere
 
 * release ordering?
   conda
