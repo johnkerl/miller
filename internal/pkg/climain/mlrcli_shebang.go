@@ -2,6 +2,7 @@ package climain
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -39,7 +40,7 @@ func maybeInterpolateDashS(args []string) []string {
 	remainingArgs := args[3:]
 
 	// Read the bytes in the filename given after -s.
-	byteContents, rerr := os.ReadFile(filename)
+	byteContents, rerr := ioutil.ReadFile(filename)
 	if rerr != nil {
 		fmt.Fprintf(os.Stderr, "mlr: cannot read %s: %v\n", filename, rerr)
 		os.Exit(1)

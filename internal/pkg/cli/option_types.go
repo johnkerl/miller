@@ -157,8 +157,8 @@ type TOptions struct {
 }
 
 // ----------------------------------------------------------------
-func DefaultOptions() TOptions {
-	return TOptions{
+func DefaultOptions() *TOptions {
+	return &TOptions{
 		ReaderOptions: DefaultReaderOptions(),
 		WriterOptions: DefaultWriterOptions(),
 

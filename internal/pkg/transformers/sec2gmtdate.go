@@ -42,6 +42,7 @@ func transformerSec2GMTDateParseCLI(
 	argc int,
 	args []string,
 	_ *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -52,6 +53,9 @@ func transformerSec2GMTDateParseCLI(
 		opt := args[argi]
 		if opt[0] != '-' {
 			break // No more flag options to process
+		}
+		if args[argi] == "--" {
+			break // All transformers must do this so main-flags can follow verb-flags
 		}
 		argi++
 
@@ -69,6 +73,11 @@ func transformerSec2GMTDateParseCLI(
 	fieldNames := args[argi]
 	argi++
 
+	*pargi = argi
+	if !doConstruct { // All transformers must do this for main command-line parsing
+		return nil
+	}
+
 	transformer, err := NewTransformerSec2GMTDate(
 		fieldNames,
 	)
@@ -77,7 +86,6 @@ func transformerSec2GMTDateParseCLI(
 		os.Exit(1)
 	}
 
-	*pargi = argi
 	return transformer
 }
 

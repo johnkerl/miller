@@ -100,6 +100,7 @@ func transformerSortParseCLI(
 	argc int,
 	args []string,
 	_ *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -114,6 +115,9 @@ func transformerSortParseCLI(
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		if args[argi] == "--" {
+			break // All transformers must do this so main-flags can follow verb-flags
 		}
 		argi++
 
@@ -227,6 +231,11 @@ func transformerSortParseCLI(
 		transformerSortUsage(os.Stderr, true, 1)
 	}
 
+	*pargi = argi
+	if !doConstruct { // All transformers must do this for main command-line parsing
+		return nil
+	}
+
 	transformer, err := NewTransformerSort(
 		groupByFieldNames,
 		comparatorFuncs,
@@ -236,7 +245,6 @@ func transformerSortParseCLI(
 		os.Exit(1)
 	}
 
-	*pargi = argi
 	return transformer
 }
 

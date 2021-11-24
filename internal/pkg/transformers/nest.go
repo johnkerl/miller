@@ -97,6 +97,7 @@ func transformerNestParseCLI(
 	argc int,
 	args []string,
 	_ *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -121,6 +122,9 @@ func transformerNestParseCLI(
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		if args[argi] == "--" {
+			break // All transformers must do this so main-flags can follow verb-flags
 		}
 		argi++
 
@@ -196,6 +200,11 @@ func transformerNestParseCLI(
 		transformerNestUsage(os.Stderr, true, 1)
 	}
 
+	*pargi = argi
+	if !doConstruct { // All transformers must do this for main command-line parsing
+		return nil
+	}
+
 	transformer, err := NewTransformerNest(
 		fieldName,
 		nestedFS,
@@ -209,7 +218,6 @@ func transformerNestParseCLI(
 		os.Exit(1)
 	}
 
-	*pargi = argi
 	return transformer
 }
 

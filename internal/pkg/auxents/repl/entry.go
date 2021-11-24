@@ -137,7 +137,7 @@ func ReplMain(args []string) int {
 				argi += 1
 			}
 
-		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, &options) {
+		} else if cli.FLAG_TABLE.Parse(args, argc, &argi, options) {
 
 		} else {
 			replUsage(replName, os.Stderr, 1)
@@ -150,7 +150,7 @@ func ReplMain(args []string) int {
 	// --auto-flatten is on by default. But if input and output formats are both JSON,
 	// then we don't need to actually do anything. See also mlrcli_parse.go.
 	options.WriterOptions.AutoFlatten = cli.DecideFinalFlatten(&options.WriterOptions)
-	options.WriterOptions.AutoUnflatten = cli.DecideFinalUnflatten(&options)
+	options.WriterOptions.AutoUnflatten = cli.DecideFinalUnflatten(options)
 
 	repl, err := NewRepl(
 		exeName,
@@ -159,7 +159,7 @@ func ReplMain(args []string) int {
 		showPrompts,
 		astPrintMode,
 		doWarnings,
-		&options,
+		options,
 	)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
