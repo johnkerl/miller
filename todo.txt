@@ -22,6 +22,16 @@ PUNCHDOWN LIST
   - want:
     > myscript.mlr --c2j input.csv
 
+* shebang
+  - maybe multiple -s -- ? []args would continue growing during parse ...
+  - try mlr -s on windows; maybe consolation for shebang-bash -- ?
+  - doc re where to put --norc
+    > it needn't be first (after -s) anymore
+  - olh
+  - webdocs
+  - want:
+    > myscript.mlr --c2j input.csv
+
 * release ordering?
   conda
   brew macports chocolatey
