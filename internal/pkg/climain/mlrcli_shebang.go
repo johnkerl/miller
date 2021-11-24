@@ -79,6 +79,11 @@ func maybeInterpolateDashS(args []string) []string {
 	for _, argFromFile := range argsFromFile {
 		newArgs = append(newArgs, argFromFile)
 	}
+
+	// So people can have verb-chains in their shebang file and flags like
+	// --icsv --ojson after
+	newArgs = append(newArgs, "--")
+
 	for _, remainingArg := range remainingArgs {
 		newArgs = append(newArgs, remainingArg)
 	}

@@ -9,6 +9,7 @@ PUNCHDOWN LIST
   - all-contribs: twi dm
   - license triple-checks
   - `mlr put` -> coverart
+  - #756 octal
   - 0b1011 olh/webdoc
   - rtd links somewhere
 
