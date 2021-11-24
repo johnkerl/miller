@@ -12,6 +12,16 @@ PUNCHDOWN LIST
   - 0b1011 olh/webdoc
   - rtd links somewhere
 
+* shebang
+  - maybe multiple -s -- ? []args would continue growing during parse ...
+  - try mlr -s on windows; maybe consolation for shebang-bash -- ?
+  - doc re where to put --norc
+    > it needn't be first (after -s) anymore
+  - olh
+  - webdocs
+  - want:
+    > myscript.mlr --c2j input.csv
+
 * release ordering?
   conda
   brew macports chocolatey
@@ -303,6 +313,12 @@ MAYBES
 
 ----------------------------------------------------------------
 DEFER:
+
+* once on go 1.16: get around ioutil.ReadFile depcreation
+  o build-dsl hand-edit / sedder
+  o io/ioutil -> os
+  o ioutil.ReadFile -> os.ReadFile on internal/pkg/parsing/lexer/lexer.go
+
 * parser-fu:
   o iterative LALR grok
 - jackson notes

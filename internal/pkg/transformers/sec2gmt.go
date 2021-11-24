@@ -48,6 +48,7 @@ func transformerSec2GMTParseCLI(
 	argc int,
 	args []string,
 	_ *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -61,6 +62,9 @@ func transformerSec2GMTParseCLI(
 		opt := args[argi]
 		if opt[0] != '-' {
 			break // No more flag options to process
+		}
+		if args[argi] == "--" {
+			break // All transformers must do this so main-flags can follow verb-flags
 		}
 		argi++
 
@@ -104,6 +108,11 @@ func transformerSec2GMTParseCLI(
 	fieldNames := args[argi]
 	argi++
 
+	*pargi = argi
+	if !doConstruct { // All transformers must do this for main command-line parsing
+		return nil
+	}
+
 	transformer, err := NewTransformerSec2GMT(
 		fieldNames,
 		preDivide,
@@ -114,7 +123,6 @@ func transformerSec2GMTParseCLI(
 		os.Exit(1)
 	}
 
-	*pargi = argi
 	return transformer
 }
 

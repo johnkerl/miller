@@ -44,6 +44,7 @@ func transformerJSONParseParseCLI(
 	argc int,
 	args []string,
 	_ *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -58,6 +59,9 @@ func transformerJSONParseParseCLI(
 		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
 		}
+		if args[argi] == "--" {
+			break // All transformers must do this so main-flags can follow verb-flags
+		}
 		argi++
 
 		if opt == "-h" || opt == "--help" {
@@ -71,6 +75,11 @@ func transformerJSONParseParseCLI(
 		}
 	}
 
+	*pargi = argi
+	if !doConstruct { // All transformers must do this for main command-line parsing
+		return nil
+	}
+
 	transformer, err := NewTransformerJSONParse(
 		fieldNames,
 	)
@@ -79,7 +88,6 @@ func transformerJSONParseParseCLI(
 		os.Exit(1)
 	}
 
-	*pargi = argi
 	return transformer
 }
 

@@ -52,8 +52,9 @@ dev:
 	make -C docs
 	@echo DONE
 
-# Keystroke-saver
-itso: build check install
+# Keystroke-savers
+it: build check
+so: install
 
 # Please see comments in ./create-release-tarball as well as
 # https://miller.readthedocs.io/en/latest/build/#creating-a-new-release-for-developers

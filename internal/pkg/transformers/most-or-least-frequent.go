@@ -79,8 +79,9 @@ func transformerMostFrequentParseCLI(
 	argc int,
 	args []string,
 	_ *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
-	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, true, transformerMostFrequentUsage)
+	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, true, transformerMostFrequentUsage, doConstruct)
 }
 
 func transformerLeastFrequentParseCLI(
@@ -88,8 +89,9 @@ func transformerLeastFrequentParseCLI(
 	argc int,
 	args []string,
 	_ *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
-	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, false, transformerLeastFrequentUsage)
+	return transformerMostOrLeastFrequentParseCLI(pargi, argc, args, false, transformerLeastFrequentUsage, doConstruct)
 }
 
 func transformerMostOrLeastFrequentParseCLI(
@@ -98,6 +100,7 @@ func transformerMostOrLeastFrequentParseCLI(
 	args []string,
 	descending bool,
 	usageFunc TransformerUsageFunc,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -115,6 +118,9 @@ func transformerMostOrLeastFrequentParseCLI(
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		if args[argi] == "--" {
+			break // All transformers must do this so main-flags can follow verb-flags
 		}
 		argi++
 
@@ -143,6 +149,11 @@ func transformerMostOrLeastFrequentParseCLI(
 		return nil
 	}
 
+	*pargi = argi
+	if !doConstruct { // All transformers must do this for main command-line parsing
+		return nil
+	}
+
 	transformer, err := NewTransformerMostOrLeastFrequent(
 		groupByFieldNames,
 		maxOutputLength,
@@ -155,7 +166,6 @@ func transformerMostOrLeastFrequentParseCLI(
 		os.Exit(1)
 	}
 
-	*pargi = argi
 	return transformer
 }
 

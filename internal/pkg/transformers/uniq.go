@@ -62,6 +62,7 @@ func transformerCountDistinctParseCLI(
 	argc int,
 	args []string,
 	_ *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -79,6 +80,9 @@ func transformerCountDistinctParseCLI(
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		if args[argi] == "--" {
+			break // All transformers must do this so main-flags can follow verb-flags
 		}
 		argi++
 
@@ -112,6 +116,11 @@ func transformerCountDistinctParseCLI(
 	showCounts := true
 	uniqifyEntireRecords := false
 
+	*pargi = argi
+	if !doConstruct { // All transformers must do this for main command-line parsing
+		return nil
+	}
+
 	transformer, err := NewTransformerUniq(
 		fieldNames,
 		showCounts,
@@ -125,7 +134,6 @@ func transformerCountDistinctParseCLI(
 		os.Exit(1)
 	}
 
-	*pargi = argi
 	return transformer
 }
 
@@ -161,6 +169,7 @@ func transformerUniqParseCLI(
 	argc int,
 	args []string,
 	_ *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -179,6 +188,9 @@ func transformerUniqParseCLI(
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		if args[argi] == "--" {
+			break // All transformers must do this so main-flags can follow verb-flags
 		}
 		argi++
 
@@ -220,6 +232,11 @@ func transformerUniqParseCLI(
 
 	doLashed := true
 
+	*pargi = argi
+	if !doConstruct { // All transformers must do this for main command-line parsing
+		return nil
+	}
+
 	transformer, _ := NewTransformerUniq(
 		fieldNames,
 		showCounts,
@@ -229,7 +246,6 @@ func transformerUniqParseCLI(
 		uniqifyEntireRecords,
 	)
 
-	*pargi = argi
 	return transformer
 }
 

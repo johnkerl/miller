@@ -61,10 +61,10 @@ func Main() {
 // processToStdout is normal processing without mlr -I.
 
 func processToStdout(
-	options cli.TOptions,
+	options *cli.TOptions,
 	recordTransformers []transformers.IRecordTransformer,
 ) {
-	err := stream.Stream(options.FileNames, &options, recordTransformers, os.Stdout, true)
+	err := stream.Stream(options.FileNames, options, recordTransformers, os.Stdout, true)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "mlr: %v.\n", err)
 		os.Exit(1)
@@ -85,7 +85,7 @@ func processToStdout(
 // approach leads to greater code stability.
 
 func processInPlace(
-	originalOptions cli.TOptions,
+	originalOptions *cli.TOptions,
 ) {
 	// This should have been already checked by the CLI parser when validating
 	// the -I flag.
@@ -148,7 +148,7 @@ func processInPlace(
 		}
 
 		// Run the Miller processing stream from the input file to the temp-output file.
-		err = stream.Stream([]string{fileName}, &options, recordTransformers, wrappedHandle, false)
+		err = stream.Stream([]string{fileName}, options, recordTransformers, wrappedHandle, false)
 		if err != nil {
 			os.Remove(tempFileName)
 			fmt.Fprintf(os.Stderr, "mlr: %v\n", err)

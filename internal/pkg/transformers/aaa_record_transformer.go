@@ -37,6 +37,7 @@ type TransformerParseCLIFunc func(
 	argc int,
 	args []string,
 	mainOptions *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer
 
 type TransformerSetup struct {

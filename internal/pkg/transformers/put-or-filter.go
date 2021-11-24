@@ -190,6 +190,7 @@ func transformerPutOrFilterParseCLI(
 	argc int,
 	args []string,
 	mainOptions *cli.TOptions,
+	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
 	// Skip the verb name from the current spot in the mlr command line
@@ -235,6 +236,9 @@ func transformerPutOrFilterParseCLI(
 		opt := args[argi]
 		if !strings.HasPrefix(opt, "-") {
 			break // No more flag options to process
+		}
+		if args[argi] == "--" {
+			break // All transformers must do this so main-flags can follow verb-flags
 		}
 		argi++
 
@@ -323,11 +327,17 @@ func transformerPutOrFilterParseCLI(
 	if !haveDSLStringsHere {
 		// Get the DSL string from the command line, after the flags
 		if argi >= argc {
-			transformerPutUsage(os.Stderr, true, 1)
+			fmt.Fprintf(os.Stderr, "mlr %s: -f/-e requires a filename as argument.\n", verb)
+			os.Exit(1)
 		}
 		dslString := args[argi]
 		dslStrings = append(dslStrings, dslString)
 		argi++
+	}
+
+	*pargi = argi
+	if !doConstruct { // All transformers must do this for main command-line parsing
+		return nil
 	}
 
 	var dslInstanceType cst.DSLInstanceType = cst.DSLInstanceTypePut
@@ -355,7 +365,6 @@ func transformerPutOrFilterParseCLI(
 		os.Exit(1)
 	}
 
-	*pargi = argi
 	return transformer
 }
 
