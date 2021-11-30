@@ -13,6 +13,16 @@ check: unit_test regression_test
 unit_test:
 	go test github.com/johnkerl/miller/internal/pkg/...
 
+# Keystroke-savers
+unbackslash_test:
+	go test $(ls internal/pkg/lib/*.go|grep -v test) internal/pkg/lib/unbackslash_test.go
+mlrval_functions_test:
+	go test internal/pkg/types/mlrval_functions_test.go $(ls internal/pkg/types/*.go | grep -v test)
+mlrval_format_test:
+	go test internal/pkg/types/mlrval_format_test.go $(ls internal/pkg/types/*.go|grep -v test)
+regex_test:
+	go test internal/pkg/lib/regex_test.go internal/pkg/lib/regex.go
+
 # Regression tests (large number)
 #
 # See ./regression_test.go for information on how to get more details
