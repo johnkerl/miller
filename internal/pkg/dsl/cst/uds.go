@@ -10,6 +10,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -106,7 +107,7 @@ func (site *UDSCallsite) Execute(state *runtime.State) (*BlockExitPayload, error
 	// we push a new frameset and DefineTypedAtScope using the callee's frameset.
 
 	// Evaluate the arguments
-	arguments := make([]*types.Mlrval, len(site.uds.signature.typeGatedParameterNames))
+	arguments := make([]*mlrval.Mlrval, len(site.uds.signature.typeGatedParameterNames))
 
 	for i, typeGatedParameterName := range site.uds.signature.typeGatedParameterNames {
 		arguments[i] = site.argumentNodes[i].Evaluate(state)

@@ -11,9 +11,9 @@ import (
 )
 
 func TestIsLegit(t *testing.T) {
-	assert.False(t, MLRVAL_ERROR.IsLegit())
-	assert.False(t, MLRVAL_ABSENT.IsLegit())
-	assert.False(t, MLRVAL_NULL.IsLegit())
+	assert.False(t, ERROR.IsLegit())
+	assert.False(t, ABSENT.IsLegit())
+	assert.False(t, NULL.IsLegit())
 	assert.True(t, FromString("").IsLegit())
 	assert.True(t, FromString("abc").IsLegit())
 	assert.True(t, FromInt(123).IsLegit())
@@ -24,37 +24,37 @@ func TestIsLegit(t *testing.T) {
 }
 
 func TestIsErrorOrAbsent(t *testing.T) {
-	assert.True(t, MLRVAL_ERROR.IsErrorOrAbsent())
-	assert.True(t, MLRVAL_ABSENT.IsErrorOrAbsent())
-	assert.False(t, MLRVAL_NULL.IsErrorOrAbsent())
+	assert.True(t, ERROR.IsErrorOrAbsent())
+	assert.True(t, ABSENT.IsErrorOrAbsent())
+	assert.False(t, NULL.IsErrorOrAbsent())
 	assert.False(t, FromString("").IsErrorOrAbsent())
 }
 
 func TestIsError(t *testing.T) {
-	assert.True(t, MLRVAL_ERROR.IsError())
-	assert.False(t, MLRVAL_ABSENT.IsError())
-	assert.False(t, MLRVAL_NULL.IsError())
+	assert.True(t, ERROR.IsError())
+	assert.False(t, ABSENT.IsError())
+	assert.False(t, NULL.IsError())
 	assert.False(t, FromString("").IsError())
 }
 
 func TestIsAbsent(t *testing.T) {
-	assert.False(t, MLRVAL_ERROR.IsAbsent())
-	assert.True(t, MLRVAL_ABSENT.IsAbsent())
-	assert.False(t, MLRVAL_NULL.IsAbsent())
+	assert.False(t, ERROR.IsAbsent())
+	assert.True(t, ABSENT.IsAbsent())
+	assert.False(t, NULL.IsAbsent())
 	assert.False(t, FromString("").IsAbsent())
 }
 
 func TestIsNull(t *testing.T) {
-	assert.False(t, MLRVAL_ERROR.IsNull())
-	assert.False(t, MLRVAL_ABSENT.IsNull())
-	assert.True(t, MLRVAL_NULL.IsNull())
+	assert.False(t, ERROR.IsNull())
+	assert.False(t, ABSENT.IsNull())
+	assert.True(t, NULL.IsNull())
 	assert.False(t, FromString("").IsNull())
 }
 
 func TestIsVoid(t *testing.T) {
-	assert.False(t, MLRVAL_ERROR.IsVoid())
-	assert.False(t, MLRVAL_ABSENT.IsVoid())
-	assert.False(t, MLRVAL_NULL.IsVoid())
+	assert.False(t, ERROR.IsVoid())
+	assert.False(t, ABSENT.IsVoid())
+	assert.False(t, NULL.IsVoid())
 	assert.True(t, FromString("").IsVoid())
 	assert.True(t, FromDeferredType("").IsVoid())
 	assert.True(t, FromInferredType("").IsVoid())
@@ -63,9 +63,9 @@ func TestIsVoid(t *testing.T) {
 }
 
 func TestIsEmptyString(t *testing.T) {
-	assert.False(t, MLRVAL_ERROR.IsEmptyString())
-	assert.False(t, MLRVAL_ABSENT.IsEmptyString())
-	assert.False(t, MLRVAL_NULL.IsEmptyString())
+	assert.False(t, ERROR.IsEmptyString())
+	assert.False(t, ABSENT.IsEmptyString())
+	assert.False(t, NULL.IsEmptyString())
 	assert.True(t, FromString("").IsEmptyString())
 	assert.True(t, FromDeferredType("").IsEmptyString())
 	assert.True(t, FromInferredType("").IsEmptyString())
@@ -74,9 +74,9 @@ func TestIsEmptyString(t *testing.T) {
 }
 
 func TestIsString(t *testing.T) {
-	assert.False(t, MLRVAL_ERROR.IsString())
-	assert.False(t, MLRVAL_ABSENT.IsString())
-	assert.False(t, MLRVAL_NULL.IsString())
+	assert.False(t, ERROR.IsString())
+	assert.False(t, ABSENT.IsString())
+	assert.False(t, NULL.IsString())
 	assert.False(t, FromString("").IsString())
 	assert.False(t, FromDeferredType("").IsString())
 	assert.False(t, FromInferredType("").IsString())
@@ -85,9 +85,9 @@ func TestIsString(t *testing.T) {
 }
 
 func TestIsStringOrVoid(t *testing.T) {
-	assert.False(t, MLRVAL_ERROR.IsStringOrVoid())
-	assert.False(t, MLRVAL_ABSENT.IsStringOrVoid())
-	assert.False(t, MLRVAL_NULL.IsStringOrVoid())
+	assert.False(t, ERROR.IsStringOrVoid())
+	assert.False(t, ABSENT.IsStringOrVoid())
+	assert.False(t, NULL.IsStringOrVoid())
 	assert.True(t, FromString("").IsStringOrVoid())
 	assert.True(t, FromDeferredType("").IsStringOrVoid())
 	assert.True(t, FromInferredType("").IsStringOrVoid())

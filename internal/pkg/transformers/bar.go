@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -251,7 +252,7 @@ func (tr *TransformerBar) processNoAuto(
 			if idx > tr.width {
 				idx = tr.width
 			}
-			inrec.PutReference(fieldName, types.MlrvalFromString(tr.bars[idx]))
+			inrec.PutReference(fieldName, mlrval.MlrvalFromString(tr.bars[idx]))
 		}
 
 		outputRecordsAndContexts.PushBack(inrecAndContext)
@@ -339,7 +340,7 @@ func (tr *TransformerBar) processAuto(
 			buffer.WriteString("[")
 			buffer.WriteString(shi)
 			buffer.WriteString("]")
-			record.PutReference(fieldName, types.MlrvalFromString(buffer.String()))
+			record.PutReference(fieldName, mlrval.MlrvalFromString(buffer.String()))
 		}
 	}
 

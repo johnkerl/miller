@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/transformers/utils"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -141,7 +142,7 @@ type TransformerTop struct {
 	// Two-level map from grouping key (string of joined-together group-by field values),
 	// to string value-field name, to *utils.TopKeeper
 	groups                           *lib.OrderedMap
-	groupingKeysToGroupByFieldValues map[string][]*types.Mlrval
+	groupingKeysToGroupByFieldValues map[string][]*mlrval.Mlrval
 }
 
 // ----------------------------------------------------------------
@@ -163,7 +164,7 @@ func NewTransformerTop(
 		outputFieldName:   outputFieldName,
 
 		groups:                           lib.NewOrderedMap(),
-		groupingKeysToGroupByFieldValues: make(map[string][]*types.Mlrval),
+		groupingKeysToGroupByFieldValues: make(map[string][]*mlrval.Mlrval),
 	}
 
 	return tr, nil
@@ -273,10 +274,10 @@ func (tr *TransformerTop) emit(
 					topKeeper := pb.Value.(*utils.TopKeeper)
 					key := valueFieldName + "_top"
 					if i < topKeeper.GetSize() {
-						newrec.PutReference(tr.outputFieldName, types.MlrvalFromInt(i+1))
+						newrec.PutReference(tr.outputFieldName, mlrval.MlrvalFromInt(i+1))
 						newrec.PutReference(key, topKeeper.TopValues[i].Copy())
 					} else {
-						newrec.PutReference(tr.outputFieldName, types.MlrvalFromInt(i+1))
+						newrec.PutReference(tr.outputFieldName, mlrval.MlrvalFromInt(i+1))
 						newrec.PutCopy(key, types.MLRVAL_VOID)
 					}
 				}

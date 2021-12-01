@@ -53,7 +53,7 @@
 
 package types
 
-import(
+import (
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 

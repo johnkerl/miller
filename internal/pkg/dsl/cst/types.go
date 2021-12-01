@@ -9,6 +9,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/dsl"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -67,16 +68,16 @@ type Executor func(state *runtime.State) (*BlockExitPayload, error)
 // ================================================================
 // This is for any left-hand side (LHS or Lvalue) of an assignment statement.
 type IAssignable interface {
-	Assign(rvalue *types.Mlrval, state *runtime.State) error
+	Assign(rvalue *mlrval.Mlrval, state *runtime.State) error
 
 	// 'foo = "bar"' or 'foo[3]["abc"] = "bar"'
 	// For non-indexed assignment, which is the normal case, indices can be
 	// zero-length or nil.
-	AssignIndexed(rvalue *types.Mlrval, indices []*types.Mlrval, state *runtime.State) error
+	AssignIndexed(rvalue *mlrval.Mlrval, indices []*mlrval.Mlrval, state *runtime.State) error
 
 	Unassign(state *runtime.State)
 
-	UnassignIndexed(indices []*types.Mlrval, state *runtime.State)
+	UnassignIndexed(indices []*mlrval.Mlrval, state *runtime.State)
 }
 
 // ================================================================
@@ -84,7 +85,7 @@ type IAssignable interface {
 // Also, for computed field names on the left-hand side, like '$a . $b' in mlr
 // put '$[$a . $b]' = $x + $y'.
 type IEvaluable interface {
-	Evaluate(state *runtime.State) *types.Mlrval
+	Evaluate(state *runtime.State) *mlrval.Mlrval
 }
 
 // ================================================================
@@ -119,5 +120,5 @@ type BlockExitPayload struct {
 	blockExitStatus BlockExitStatus
 	// No multiple return yet in the Miller DSL -- if there were, this would be
 	// an array.
-	blockReturnValue *types.Mlrval // TODO: TypeGatedMlrval
+	blockReturnValue *mlrval.Mlrval // TODO: TypeGatedMlrval
 }

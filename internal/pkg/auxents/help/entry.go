@@ -13,6 +13,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/transformers"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -447,9 +448,9 @@ func helpOutputColorization() {
 
 // ----------------------------------------------------------------
 func helpTypeArithmeticInfo() {
-	mlrvals := []*types.Mlrval{
-		types.MlrvalFromInt(1),
-		types.MlrvalFromFloat64(2.5),
+	mlrvals := []*mlrval.Mlrval{
+		mlrval.MlrvalFromInt(1),
+		mlrval.MlrvalFromFloat64(2.5),
 		types.MLRVAL_ABSENT,
 		types.MLRVAL_ERROR,
 	}

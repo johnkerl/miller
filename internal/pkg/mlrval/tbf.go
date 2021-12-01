@@ -25,7 +25,6 @@ package mlrval
 //	}
 //}
 
-
 //func MlrvalFromEmptyMap() *Mlrval {
 //	return &Mlrval{
 //		mvtype:        MT_MAP,
@@ -39,7 +38,7 @@ package mlrval
 //	mv := MlrvalFromEmptyMap()
 //	if mlrmap == nil {
 //		// TODO maybe return 2nd-arg error in the API
-//		return MLRVAL_ERROR
+//		return ERROR
 //	}
 //
 //	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
@@ -54,7 +53,7 @@ package mlrval
 //	mv := MlrvalFromEmptyMap()
 //	if mlrmap == nil {
 //		// xxx maybe return 2nd-arg error in the API
-//		return MLRVAL_ERROR
+//		return ERROR
 //	}
 //
 //	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
@@ -84,7 +83,7 @@ package mlrval
 //	arrayval := make([]Mlrval, length, 2*length)
 //
 //	for i := 0; i < int(length); i++ {
-//		arrayval[i] = *MLRVAL_VOID
+//		arrayval[i] = *VOID
 //	}
 //
 //	return &Mlrval{
@@ -117,7 +116,7 @@ package mlrval
 //		newArray := (*array)[:newLength]
 //		for zindex := len(*array); zindex < newLength; zindex++ {
 //			// TODO: comment why not MT_ABSENT or MT_VOID
-//			newArray[zindex] = *MLRVAL_NULL
+//			newArray[zindex] = *NULL
 //		}
 //		*array = newArray
 //	} else {
@@ -128,7 +127,7 @@ package mlrval
 //		}
 //		for zindex = len(*array); zindex < newLength; zindex++ {
 //			// TODO: comment why not MT_ABSENT or MT_VOID
-//			newArray[zindex] = *MLRVAL_NULL
+//			newArray[zindex] = *NULL
 //		}
 //		*array = newArray
 //	}

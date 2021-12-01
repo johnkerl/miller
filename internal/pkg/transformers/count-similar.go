@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -154,7 +155,7 @@ func (tr *TransformerCountSimilar) Transform(
 			recordListForGroup := outer.Value.(*list.List)
 			// TODO: make 64-bit friendly
 			groupSize := recordListForGroup.Len()
-			mgroupSize := types.MlrvalFromInt(int(groupSize))
+			mgroupSize := mlrval.MlrvalFromInt(int(groupSize))
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				recordAndContext := inner.Value.(*types.RecordAndContext)
 				recordAndContext.Record.PutCopy(tr.counterFieldName, mgroupSize)

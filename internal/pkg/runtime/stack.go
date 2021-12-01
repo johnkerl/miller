@@ -31,6 +31,7 @@ import (
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -114,7 +115,7 @@ func (stack *Stack) PopStackFrame() {
 // Returns nil on no-such
 func (stack *Stack) Get(
 	stackVariable *StackVariable,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	return stack.head.get(stackVariable)
 }
 
@@ -124,7 +125,7 @@ func (stack *Stack) Get(
 func (stack *Stack) DefineTypedAtScope(
 	stackVariable *StackVariable,
 	typeName string,
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	return stack.head.defineTypedAtScope(stackVariable, typeName, mlrval)
 }
@@ -136,7 +137,7 @@ func (stack *Stack) DefineTypedAtScope(
 // E.g. 'for (i = 0; i < 10; i += 1)' uses Set.
 func (stack *Stack) SetAtScope(
 	stackVariable *StackVariable,
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	return stack.head.setAtScope(stackVariable, mlrval)
 }
@@ -150,7 +151,7 @@ func (stack *Stack) SetAtScope(
 // assignment is OK.
 func (stack *Stack) Set(
 	stackVariable *StackVariable,
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	return stack.head.set(stackVariable, mlrval)
 }
@@ -158,8 +159,8 @@ func (stack *Stack) Set(
 // E.g. 'x[1] = 2' where the variable x may or may not have been already set.
 func (stack *Stack) SetIndexed(
 	stackVariable *StackVariable,
-	indices []*types.Mlrval,
-	mlrval *types.Mlrval,
+	indices []*mlrval.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	return stack.head.setIndexed(stackVariable, indices, mlrval)
 }
@@ -174,7 +175,7 @@ func (stack *Stack) Unset(
 // E.g. 'unset x[1]'
 func (stack *Stack) UnsetIndexed(
 	stackVariable *StackVariable,
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 ) {
 	stack.head.unsetIndexed(stackVariable, indices)
 }
@@ -225,7 +226,7 @@ func (frameset *StackFrameSet) dump() {
 // Returns nil on no-such
 func (frameset *StackFrameSet) get(
 	stackVariable *StackVariable,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	// Scope-walk
 	numStackFrames := len(frameset.stackFrames)
 	for offset := numStackFrames - 1; offset >= 0; offset-- {
@@ -242,7 +243,7 @@ func (frameset *StackFrameSet) get(
 func (frameset *StackFrameSet) defineTypedAtScope(
 	stackVariable *StackVariable,
 	typeName string,
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	offset := len(frameset.stackFrames) - 1
 	// TODO: comment
@@ -254,7 +255,7 @@ func (frameset *StackFrameSet) defineTypedAtScope(
 // See Stack.SetAtScope comments above
 func (frameset *StackFrameSet) setAtScope(
 	stackVariable *StackVariable,
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	offset := len(frameset.stackFrames) - 1
 	return frameset.stackFrames[offset].set(stackVariable, mlrval)
@@ -263,7 +264,7 @@ func (frameset *StackFrameSet) setAtScope(
 // See Stack.Set comments above
 func (frameset *StackFrameSet) set(
 	stackVariable *StackVariable,
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	// Scope-walk
 	numStackFrames := len(frameset.stackFrames)
@@ -279,8 +280,8 @@ func (frameset *StackFrameSet) set(
 // See Stack.SetIndexed comments above
 func (frameset *StackFrameSet) setIndexed(
 	stackVariable *StackVariable,
-	indices []*types.Mlrval,
-	mlrval *types.Mlrval,
+	indices []*mlrval.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	// Scope-walk
 	numStackFrames := len(frameset.stackFrames)
@@ -312,7 +313,7 @@ func (frameset *StackFrameSet) unset(
 // See Stack.UnsetIndexed comments above
 func (frameset *StackFrameSet) unsetIndexed(
 	stackVariable *StackVariable,
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 ) {
 	// Scope-walk
 	numStackFrames := len(frameset.stackFrames)
@@ -353,7 +354,7 @@ func newStackFrame() *StackFrame {
 // Returns nil on no such
 func (frame *StackFrame) get(
 	stackVariable *StackVariable,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	offset, ok := frame.namesToOffsets[stackVariable.name]
 	if ok {
 		return frame.vars[offset].GetValue()
@@ -372,7 +373,7 @@ func (frame *StackFrame) has(
 // TODO: audit for honor of error-return at callsites
 func (frame *StackFrame) set(
 	stackVariable *StackVariable,
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	offset, ok := frame.namesToOffsets[stackVariable.name]
 	if !ok {
@@ -393,7 +394,7 @@ func (frame *StackFrame) set(
 func (frame *StackFrame) defineTyped(
 	stackVariable *StackVariable,
 	typeName string,
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	_, ok := frame.namesToOffsets[stackVariable.name]
 	if !ok {
@@ -418,15 +419,15 @@ func (frame *StackFrame) defineTyped(
 // TODO: audit for honor of error-return at callsites
 func (frame *StackFrame) setIndexed(
 	stackVariable *StackVariable,
-	indices []*types.Mlrval,
-	mlrval *types.Mlrval,
+	indices []*mlrval.Mlrval,
+	mlrval *mlrval.Mlrval,
 ) error {
 	value := frame.get(stackVariable)
 	if value == nil {
 		lib.InternalCodingErrorIf(len(indices) < 1)
 		leadingIndex := indices[0]
 		if leadingIndex.IsString() || leadingIndex.IsInt() {
-			newval := types.MlrvalFromEmptyMap()
+			newval := mlrval.MlrvalFromEmptyMap()
 			newval.PutIndexed(indices, mlrval)
 			return frame.set(stackVariable, newval)
 		} else {
@@ -455,7 +456,7 @@ func (frame *StackFrame) unset(
 
 func (frame *StackFrame) unsetIndexed(
 	stackVariable *StackVariable,
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 ) {
 	value := frame.get(stackVariable)
 	if value == nil {

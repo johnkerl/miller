@@ -8,6 +8,7 @@ package cst
 import (
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -42,12 +43,12 @@ func (node *RootNode) BuildArrayLiteralNode(
 
 func (node *ArrayLiteralNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	mlrvals := make([]types.Mlrval, len(node.evaluables))
+) *mlrval.Mlrval {
+	mlrvals := make([]mlrval.Mlrval, len(node.evaluables))
 	for i := range node.evaluables {
 		mlrvals[i] = *node.evaluables[i].Evaluate(state)
 	}
-	return types.MlrvalFromArrayReference(mlrvals)
+	return mlrval.MlrvalFromArrayReference(mlrvals)
 }
 
 // ----------------------------------------------------------------
@@ -82,7 +83,7 @@ func (node *RootNode) BuildArrayOrMapIndexAccessNode(
 
 func (node *CollectionIndexAccessNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	baseMlrval := node.baseEvaluable.Evaluate(state)
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 
@@ -105,7 +106,7 @@ func (node *CollectionIndexAccessNode) Evaluate(
 		if !inBounds {
 			return types.MLRVAL_ERROR
 		}
-		return types.MlrvalFromString(string(runes[zindex]))
+		return mlrval.MlrvalFromString(string(runes[zindex]))
 
 	} else if baseMlrval.IsAbsent() {
 		return types.MLRVAL_ABSENT
@@ -155,7 +156,7 @@ func (node *RootNode) BuildArraySliceAccessNode(
 
 func (node *ArraySliceAccessNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	baseMlrval := node.baseEvaluable.Evaluate(state)
 	lowerIndexMlrval := node.lowerIndexEvaluable.Evaluate(state)
 	upperIndexMlrval := node.upperIndexEvaluable.Evaluate(state)
@@ -203,7 +204,7 @@ func (node *ArraySliceAccessNode) Evaluate(
 	upperZindex, _ := types.UnaliasArrayIndex(&array, upperIndex)
 
 	if lowerZindex > upperZindex {
-		return types.MlrvalFromArrayReference(make([]types.Mlrval, 0))
+		return mlrval.MlrvalFromArrayReference(make([]mlrval.Mlrval, 0))
 	}
 
 	// Semantics: say x=[1,2,3,4,5]. Then x[3:10] is [3,4,5].
@@ -220,13 +221,13 @@ func (node *ArraySliceAccessNode) Evaluate(
 	if lowerZindex < 0 {
 		lowerZindex = 0
 		if lowerZindex > upperZindex {
-			return types.MlrvalFromArrayReference(make([]types.Mlrval, 0))
+			return mlrval.MlrvalFromArrayReference(make([]mlrval.Mlrval, 0))
 		}
 	}
 	if upperZindex > n-1 {
 		upperZindex = n - 1
 		if lowerZindex > upperZindex {
-			return types.MlrvalFromArrayReference(make([]types.Mlrval, 0))
+			return mlrval.MlrvalFromArrayReference(make([]mlrval.Mlrval, 0))
 		}
 	}
 
@@ -234,7 +235,7 @@ func (node *ArraySliceAccessNode) Evaluate(
 	// Miller slices have inclusive lower bound, inclusive upper bound.
 	var m = upperZindex - lowerZindex + 1
 
-	retval := make([]types.Mlrval, m)
+	retval := make([]mlrval.Mlrval, m)
 
 	di := 0
 	for si := lowerZindex; si <= upperZindex; si++ {
@@ -242,7 +243,7 @@ func (node *ArraySliceAccessNode) Evaluate(
 		di++
 	}
 
-	return types.MlrvalFromArrayReference(retval)
+	return mlrval.MlrvalFromArrayReference(retval)
 }
 
 // ================================================================
@@ -273,7 +274,7 @@ func (node *RootNode) BuildPositionalFieldNameNode(
 // TODO: code-dedupe these next four Evaluate methods
 func (node *PositionalFieldNameNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
 		return types.MLRVAL_ABSENT
@@ -289,7 +290,7 @@ func (node *PositionalFieldNameNode) Evaluate(
 		return types.MLRVAL_ABSENT
 	}
 
-	return types.MlrvalFromString(name)
+	return mlrval.MlrvalFromString(name)
 }
 
 // ================================================================
@@ -319,7 +320,7 @@ func (node *RootNode) BuildPositionalFieldValueNode(
 
 func (node *PositionalFieldValueNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 	if indexMlrval.IsAbsent() {
 		return types.MLRVAL_ABSENT
@@ -372,7 +373,7 @@ func (node *RootNode) BuildArrayOrMapPositionalNameAccessNode(
 
 func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	baseMlrval := node.baseEvaluable.Evaluate(state)
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 
@@ -389,7 +390,7 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 		n, _ := baseMlrval.GetArrayLength()
 		zindex, ok := types.UnaliasArrayLengthIndex(int(n), index)
 		if ok {
-			return types.MlrvalFromInt(zindex + 1) // Miller user-space indices are 1-up
+			return mlrval.MlrvalFromInt(zindex + 1) // Miller user-space indices are 1-up
 		} else {
 			return types.MLRVAL_ABSENT
 		}
@@ -399,7 +400,7 @@ func (node *ArrayOrMapPositionalNameAccessNode) Evaluate(
 		if !ok {
 			return types.MLRVAL_ABSENT
 		} else {
-			return types.MlrvalFromString(name)
+			return mlrval.MlrvalFromString(name)
 		}
 
 	} else if baseMlrval.IsAbsent() {
@@ -444,7 +445,7 @@ func (node *RootNode) BuildArrayOrMapPositionalValueAccessNode(
 
 func (node *ArrayOrMapPositionalValueAccessNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	baseMlrval := node.baseEvaluable.Evaluate(state)
 	indexMlrval := node.indexEvaluable.Evaluate(state)
 
@@ -536,8 +537,8 @@ func (node *RootNode) BuildMapLiteralNode(
 
 func (node *MapLiteralNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	output := types.MlrvalFromEmptyMap()
+) *mlrval.Mlrval {
+	output := mlrval.MlrvalFromEmptyMap()
 
 	for i := range node.evaluablePairs {
 		key := node.evaluablePairs[i].Key.Evaluate(state)

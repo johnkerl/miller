@@ -45,6 +45,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/output"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -60,7 +61,7 @@ type tEmitToRedirectFunc func(
 
 type tEmitExecutorFunc func(
 	names []string,
-	values []*types.Mlrval,
+	values []*mlrval.Mlrval,
 	state *runtime.State,
 ) error
 
@@ -299,7 +300,7 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 	if node.topLevelEvaluableMap == nil {
 		// 'emit @a', 'emit (@a, @b)', etc.
 		names := node.topLevelNameList
-		values := make([]*types.Mlrval, len(names))
+		values := make([]*mlrval.Mlrval, len(names))
 		for i, evaluable := range node.topLevelEvaluableList {
 			values[i] = evaluable.Evaluate(state)
 		}
@@ -317,7 +318,7 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 			return nil, nil
 		}
 		names := make([]string, parentMapValue.FieldCount)
-		values := make([]*types.Mlrval, parentMapValue.FieldCount)
+		values := make([]*mlrval.Mlrval, parentMapValue.FieldCount)
 
 		i := 0
 		for pe := parentMapValue.Head; pe != nil; pe = pe.Next {
@@ -362,7 +363,7 @@ func (node *EmitXStatementNode) Execute(state *runtime.State) (*BlockExitPayload
 
 func (node *EmitXStatementNode) executeNonIndexedNonLashedEmit(
 	names []string,
-	values []*types.Mlrval,
+	values []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	for i, value := range values {
@@ -394,7 +395,7 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmit(
 
 			} else { // recurse
 				nextLevelNames := make([]string, 0)
-				nextLevelValues := make([]*types.Mlrval, 0)
+				nextLevelValues := make([]*mlrval.Mlrval, 0)
 				for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
 					nextLevelNames = append(nextLevelNames, pe.Key)
 					nextLevelValues = append(nextLevelValues, pe.Value.Copy())
@@ -409,7 +410,7 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmit(
 
 func (node *EmitXStatementNode) executeNonIndexedNonLashedEmitP(
 	names []string,
-	values []*types.Mlrval,
+	values []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	for i, value := range values {
@@ -433,7 +434,7 @@ func (node *EmitXStatementNode) executeNonIndexedNonLashedEmitP(
 
 func (node *EmitXStatementNode) executeNonIndexedLashedEmit(
 	names []string,
-	values []*types.Mlrval,
+	values []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	lib.InternalCodingErrorIf(len(values) < 1)
@@ -483,7 +484,7 @@ func (node *EmitXStatementNode) executeNonIndexedLashedEmit(
 
 				} else { // recurse
 					nextLevelNames := make([]string, 0)
-					nextLevelValues := make([]*types.Mlrval, 0)
+					nextLevelValues := make([]*mlrval.Mlrval, 0)
 					for pe := value.GetMap().Head; pe != nil; pe = pe.Next {
 						nextLevelNames = append(nextLevelNames, pe.Key)
 						nextLevelValues = append(nextLevelValues, pe.Value.Copy())
@@ -499,7 +500,7 @@ func (node *EmitXStatementNode) executeNonIndexedLashedEmit(
 
 func (node *EmitXStatementNode) executeNonIndexedLashedEmitP(
 	names []string,
-	values []*types.Mlrval,
+	values []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	newrec := types.NewMlrmapAsRecord()
@@ -518,7 +519,7 @@ func (node *EmitXStatementNode) executeNonIndexedLashedEmitP(
 // ----------------------------------------------------------------
 func (node *EmitXStatementNode) executeIndexed(
 	names []string,
-	values []*types.Mlrval,
+	values []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 
@@ -535,7 +536,7 @@ func (node *EmitXStatementNode) executeIndexed(
 	}
 
 	// TODO: libify this
-	indices := make([]*types.Mlrval, len(node.indexEvaluables))
+	indices := make([]*mlrval.Mlrval, len(node.indexEvaluables))
 	for i := range node.indexEvaluables {
 		indices[i] = node.indexEvaluables[i].Evaluate(state)
 		if indices[i].IsAbsent() {
@@ -653,7 +654,7 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
 	templateRecord *types.Mlrmap,
 	names []string,
 	emittableMaps []*types.Mlrmap,
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
@@ -663,7 +664,7 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
 	for i, emittableMap := range emittableMaps {
 		for pe := emittableMap.Head; pe != nil; pe = pe.Next {
 			newrec := templateRecord.Copy()
-			newrec.PutCopy(indexString, types.MlrvalFromString(pe.Key))
+			newrec.PutCopy(indexString, mlrval.MlrvalFromString(pe.Key))
 
 			if len(indices) == 1 {
 				valueAsMap := pe.Value.GetMap()
@@ -799,7 +800,7 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
 	templateRecord *types.Mlrmap,
 	names []string,
 	emittableMaps []*types.Mlrmap,
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
@@ -810,10 +811,10 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
 
 	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
 		newrec := templateRecord.Copy()
-		indexValue := types.MlrvalFromString(pe.Key)
+		indexValue := mlrval.MlrvalFromString(pe.Key)
 		newrec.PutCopy(indexString, indexValue)
 
-		nextLevelValues := make([]*types.Mlrval, len(emittableMaps))
+		nextLevelValues := make([]*mlrval.Mlrval, len(emittableMaps))
 		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
 		for i, emittableMap := range emittableMaps {
 			if emittableMap != nil {
@@ -868,7 +869,7 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(
 	templateRecord *types.Mlrmap,
 	names []string,
 	emittableMaps []*types.Mlrmap,
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
@@ -878,7 +879,7 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(
 	for i, emittableMap := range emittableMaps {
 		for pe := emittableMap.Head; pe != nil; pe = pe.Next {
 			newrec := templateRecord.Copy()
-			newrec.PutCopy(indexString, types.MlrvalFromString(pe.Key))
+			newrec.PutCopy(indexString, mlrval.MlrvalFromString(pe.Key))
 
 			if len(indices) == 1 {
 				newrec.PutCopy(names[i], pe.Value)
@@ -914,7 +915,7 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitPAux(
 	templateRecord *types.Mlrmap,
 	names []string,
 	emittableMaps []*types.Mlrmap,
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
@@ -926,11 +927,11 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitPAux(
 	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
 		newrec := templateRecord.Copy()
 
-		indexValue := types.MlrvalFromString(pe.Key)
+		indexValue := mlrval.MlrvalFromString(pe.Key)
 		newrec.PutCopy(indexString, indexValue)
 		indexValueString := indexValue.String()
 
-		nextLevels := make([]*types.Mlrval, len(emittableMaps))
+		nextLevels := make([]*mlrval.Mlrval, len(emittableMaps))
 		nextLevelMaps := make([]*types.Mlrmap, len(emittableMaps))
 		for i, emittableMap := range emittableMaps {
 			if emittableMap != nil {

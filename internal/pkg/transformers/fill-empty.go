@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -93,7 +94,7 @@ func transformerFillEmptyParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerFillEmpty struct {
-	fillValue *types.Mlrval
+	fillValue *mlrval.Mlrval
 }
 
 func NewTransformerFillEmpty(
@@ -102,9 +103,9 @@ func NewTransformerFillEmpty(
 ) (*TransformerFillEmpty, error) {
 	tr := &TransformerFillEmpty{}
 	if inferType {
-		tr.fillValue = types.MlrvalFromInferredType(fillString)
+		tr.fillValue = mlrval.MlrvalFromInferredType(fillString)
 	} else {
-		tr.fillValue = types.MlrvalFromString(fillString)
+		tr.fillValue = mlrval.MlrvalFromString(fillString)
 	}
 	return tr, nil
 }

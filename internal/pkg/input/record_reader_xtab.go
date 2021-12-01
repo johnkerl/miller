@@ -272,10 +272,10 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 
 		key := kv[0]
 		if len(kv) == 1 {
-			value := types.MLRVAL_VOID
+			value := mlrval.VOID
 			record.PutReference(key, value)
 		} else {
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromDeferredType(kv[1])
 			record.PutReference(key, value)
 		}
 	}

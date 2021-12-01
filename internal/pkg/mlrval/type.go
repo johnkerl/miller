@@ -182,4 +182,3 @@ var typeNameToMaskMap = map[string]int{
 	"any":   MT_TYPE_MASK_ANY,
 	"funct": MT_TYPE_MASK_FUNC,
 }
-

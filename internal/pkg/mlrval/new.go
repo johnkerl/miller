@@ -31,13 +31,13 @@ func FromInferredType(input string) *Mlrval {
 		printrepValid: true,
 	}
 	// TODO: comment re inferBool arg
-    packageLevelInferrer(mv, mv.printrep, true)
+	packageLevelInferrer(mv, mv.printrep, true)
 	return mv
 }
 
 func FromString(input string) *Mlrval {
 	if input == "" {
-		return MLRVAL_VOID
+		return VOID
 	}
 	return &Mlrval{
 		mvtype:        MT_STRING,
@@ -100,17 +100,17 @@ func (mv *Mlrval) SetFromPrevalidatedFloatString(input string, floatval float64)
 
 func FromBool(input bool) *Mlrval {
 	if input == true {
-		return MLRVAL_TRUE
+		return TRUE
 	} else {
-		return MLRVAL_FALSE
+		return FALSE
 	}
 }
 
 func FromBoolString(input string) *Mlrval {
 	if input == "true" {
-		return MLRVAL_TRUE
+		return TRUE
 	} else if input == "false" {
-		return MLRVAL_FALSE
+		return FALSE
 	} else {
 		lib.InternalCodingErrorIf(true)
 		return nil // not reached

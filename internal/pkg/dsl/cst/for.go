@@ -9,6 +9,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -126,7 +127,7 @@ func (node *ForLoopOneVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		state.Stack.PushStackFrame()
 		defer state.Stack.PopStackFrame()
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			mapkey := types.MlrvalFromString(pe.Key)
+			mapkey := mlrval.MlrvalFromString(pe.Key)
 
 			err := state.Stack.SetAtScope(node.indexVariable, mapkey)
 			if err != nil {
@@ -311,7 +312,7 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		state.Stack.PushStackFrame()
 		defer state.Stack.PopStackFrame()
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			mapkey := types.MlrvalFromString(pe.Key)
+			mapkey := mlrval.MlrvalFromString(pe.Key)
 
 			err := state.Stack.SetAtScope(node.keyIndexVariable, mapkey)
 			if err != nil {
@@ -352,7 +353,7 @@ func (node *ForLoopTwoVariableNode) Execute(state *runtime.State) (*BlockExitPay
 		state.Stack.PushStackFrame()
 		defer state.Stack.PopStackFrame()
 		for zindex, element := range arrayval {
-			mindex := types.MlrvalFromInt(int(zindex + 1))
+			mindex := mlrval.MlrvalFromInt(int(zindex + 1))
 
 			err := state.Stack.SetAtScope(node.keyIndexVariable, mindex)
 			if err != nil {
@@ -524,7 +525,7 @@ func (node *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 
 // ----------------------------------------------------------------
 func (node *ForLoopMultivariableNode) executeOuter(
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 	keyIndexVariables []*runtime.StackVariable,
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
@@ -537,7 +538,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 		mapval := mlrval.GetMap()
 
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			mapkey := types.MlrvalFromString(pe.Key)
+			mapkey := mlrval.MlrvalFromString(pe.Key)
 
 			err := state.Stack.SetAtScope(keyIndexVariables[0], mapkey)
 			if err != nil {
@@ -570,7 +571,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 		// Go storage ("zindex") is 0-up.
 
 		for zindex, element := range arrayval {
-			mindex := types.MlrvalFromInt(int(zindex + 1))
+			mindex := mlrval.MlrvalFromInt(int(zindex + 1))
 
 			err := state.Stack.SetAtScope(keyIndexVariables[0], mindex)
 			if err != nil {
@@ -617,7 +618,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 
 // ----------------------------------------------------------------
 func (node *ForLoopMultivariableNode) executeInner(
-	mlrval *types.Mlrval,
+	mlrval *mlrval.Mlrval,
 	keyIndexVariable *runtime.StackVariable,
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
@@ -625,7 +626,7 @@ func (node *ForLoopMultivariableNode) executeInner(
 		mapval := mlrval.GetMap()
 
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
-			mapkey := types.MlrvalFromString(pe.Key)
+			mapkey := mlrval.MlrvalFromString(pe.Key)
 
 			err := state.Stack.SetAtScope(keyIndexVariable, mapkey)
 			if err != nil {
@@ -663,7 +664,7 @@ func (node *ForLoopMultivariableNode) executeInner(
 		// Go storage ("zindex") is 0-up.
 
 		for zindex, element := range arrayval {
-			mindex := types.MlrvalFromInt(int(zindex + 1))
+			mindex := mlrval.MlrvalFromInt(int(zindex + 1))
 
 			err := state.Stack.SetAtScope(keyIndexVariable, mindex)
 			if err != nil {

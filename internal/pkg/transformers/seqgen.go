@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -117,11 +118,11 @@ func transformerSeqgenParseCLI(
 // ----------------------------------------------------------------
 type TransformerSeqgen struct {
 	fieldName      string
-	start          *types.Mlrval
-	stop           *types.Mlrval
-	step           *types.Mlrval
+	start          *mlrval.Mlrval
+	stop           *mlrval.Mlrval
+	step           *mlrval.Mlrval
 	doneComparator types.BinaryFunc
-	mdone          *types.Mlrval
+	mdone          *mlrval.Mlrval
 }
 
 // ----------------------------------------------------------------
@@ -131,9 +132,9 @@ func NewTransformerSeqgen(
 	stopString string,
 	stepString string,
 ) (*TransformerSeqgen, error) {
-	start := types.MlrvalFromInferredType(startString)
-	stop := types.MlrvalFromInferredType(stopString)
-	step := types.MlrvalFromInferredType(stepString)
+	start := mlrval.MlrvalFromInferredType(startString)
+	stop := mlrval.MlrvalFromInferredType(stopString)
+	step := mlrval.MlrvalFromInferredType(stepString)
 	var doneComparator types.BinaryFunc = nil
 
 	fstart, startIsNumeric := start.GetNumericToFloatValue()

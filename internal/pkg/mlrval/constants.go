@@ -6,13 +6,13 @@ package mlrval
 
 // MlrvalFromPending is designed solely for the JSON API, for something
 // intended to be mutated after construction once its type is (later) known.
-// Whereas MLRVAL_ERROR, MLRVAL_ABSENT, etc are all singletons, this one
+// Whereas ERROR, ABSENT, etc are all singletons, this one
 // must be mutable and therefor non-singleton.
 
 func MlrvalFromPending() Mlrval {
 	return Mlrval{
-		mvtype:        MT_PENDING,
-		printrep:      INVALID_PRINTREP,
+		mvtype:   MT_PENDING,
+		printrep: INVALID_PRINTREP,
 	}
 }
 
@@ -21,38 +21,38 @@ func MlrvalFromPending() Mlrval {
 // just using `const` isn't enough) but the gentelpersons' agreement is that
 // the caller should never modify these.
 
-var MLRVAL_ERROR = &Mlrval{
+var ERROR = &Mlrval{
 	mvtype:        MT_ERROR,
 	printrep:      ERROR_PRINTREP,
 	printrepValid: true,
 }
 
-var MLRVAL_ABSENT = &Mlrval{
+var ABSENT = &Mlrval{
 	mvtype:        MT_ABSENT,
-	printrep:     ABSENT_PRINTREP,
+	printrep:      ABSENT_PRINTREP,
 	printrepValid: true,
 }
 
-var MLRVAL_NULL = &Mlrval{
+var NULL = &Mlrval{
 	mvtype:        MT_NULL,
 	printrep:      "null",
 	printrepValid: true,
 }
 
-var MLRVAL_VOID = &Mlrval{
+var VOID = &Mlrval{
 	mvtype:        MT_VOID,
 	printrep:      "",
 	printrepValid: true,
 }
 
-var MLRVAL_TRUE = &Mlrval{
+var TRUE = &Mlrval{
 	mvtype:        MT_BOOL,
 	printrep:      "true",
 	printrepValid: true,
 	boolval:       true,
 }
 
-var MLRVAL_FALSE = &Mlrval{
+var FALSE = &Mlrval{
 	mvtype:        MT_BOOL,
 	printrep:      "false",
 	printrepValid: true,

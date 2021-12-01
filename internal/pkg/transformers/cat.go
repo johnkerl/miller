@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -178,7 +179,7 @@ func (tr *TransformerCat) countersUngrouped(
 		inrec := inrecAndContext.Record
 		tr.counter++
 		key := tr.counterFieldName
-		inrec.PrependCopy(key, types.MlrvalFromInt(tr.counter))
+		inrec.PrependCopy(key, mlrval.MlrvalFromInt(tr.counter))
 	}
 	outputRecordsAndContexts.PushBack(inrecAndContext)
 }
@@ -210,7 +211,7 @@ func (tr *TransformerCat) countersGrouped(
 		}
 
 		key := tr.counterFieldName
-		inrec.PrependCopy(key, types.MlrvalFromInt(counter))
+		inrec.PrependCopy(key, mlrval.MlrvalFromInt(counter))
 	}
 	outputRecordsAndContexts.PushBack(inrecAndContext)
 }

@@ -101,4 +101,3 @@ func (mv *Mlrval) IsArrayOrMap() bool {
 func (mv *Mlrval) IsFunction() bool {
 	return mv.Type() == MT_FUNC
 }
-

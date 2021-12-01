@@ -107,7 +107,7 @@ func (root *RootNode) BuildIndirectFieldValueNode(
 
 func (node *IndirectFieldValueNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval { // TODO: err
+) *mlrval.Mlrval { // TODO: err
 	fieldName := node.fieldNameEvaluable.Evaluate(state)
 	if fieldName.IsAbsent() {
 		return types.MLRVAL_ABSENT
@@ -157,7 +157,7 @@ func (root *RootNode) BuildIndirectOosvarValueNode(
 
 func (node *IndirectOosvarValueNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval { // TODO: err
+) *mlrval.Mlrval { // TODO: err
 	oosvarName := node.oosvarNameEvaluable.Evaluate(state)
 	if oosvarName.IsAbsent() {
 		return types.MLRVAL_ABSENT

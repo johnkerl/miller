@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -172,7 +173,7 @@ func (tr *TransformerCount) countUngrouped(
 		tr.ungroupedCount++
 	} else {
 		newrec := types.NewMlrmapAsRecord()
-		newrec.PutCopy(tr.outputFieldName, types.MlrvalFromInt(tr.ungroupedCount))
+		newrec.PutCopy(tr.outputFieldName, mlrval.MlrvalFromInt(tr.ungroupedCount))
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 
 		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
@@ -210,7 +211,7 @@ func (tr *TransformerCount) countGrouped(
 	} else {
 		if tr.showCountsOnly {
 			newrec := types.NewMlrmapAsRecord()
-			newrec.PutCopy(tr.outputFieldName, types.MlrvalFromInt(tr.groupedCounts.FieldCount))
+			newrec.PutCopy(tr.outputFieldName, mlrval.MlrvalFromInt(tr.groupedCounts.FieldCount))
 
 			outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
 			outputRecordsAndContexts.PushBack(outrecAndContext)
@@ -227,7 +228,7 @@ func (tr *TransformerCount) countGrouped(
 				// * Grouping values for key is ["foo", "bar"]
 				// Here we populate a record with "a=foo,b=bar".
 
-				groupingValuesForKey := tr.groupingValues.Get(groupingKey).([]*types.Mlrval)
+				groupingValuesForKey := tr.groupingValues.Get(groupingKey).([]*mlrval.Mlrval)
 				i := 0
 				for _, groupingValueForKey := range groupingValuesForKey {
 					newrec.PutCopy(tr.groupByFieldNames[i], groupingValueForKey)
@@ -235,7 +236,7 @@ func (tr *TransformerCount) countGrouped(
 				}
 
 				countForGroup := outer.Value.(int)
-				newrec.PutCopy(tr.outputFieldName, types.MlrvalFromInt(countForGroup))
+				newrec.PutCopy(tr.outputFieldName, mlrval.MlrvalFromInt(countForGroup))
 
 				outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
 				outputRecordsAndContexts.PushBack(outrecAndContext)

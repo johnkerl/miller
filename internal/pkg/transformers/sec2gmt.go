@@ -7,6 +7,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -163,7 +164,7 @@ func (tr *TransformerSec2GMT) Transform(
 			if value != nil {
 				floatval, ok := value.GetNumericToFloatValue()
 				if ok {
-					newValue := types.MlrvalFromString(lib.Sec2GMT(
+					newValue := mlrval.MlrvalFromString(lib.Sec2GMT(
 						floatval/tr.preDivide,
 						tr.numDecimalPlaces,
 					))

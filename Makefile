@@ -69,6 +69,12 @@ mlrmap-accessors-test:
 	  internal/pkg/types/mlrmap_accessors.go
 mlrmap-tests: mlrmap-new-test mlrmap-accessors-test
 
+input-dkvp-test:
+	go test internal/pkg/input/record_reader_dkvp_test.go \
+	  internal/pkg/input/record_reader.go \
+	  internal/pkg/input/record_reader_dkvp.go
+input-tests: input-dkvp-test
+
 #mlrval_functions_test:
 #	go test internal/pkg/types/mlrval_functions_test.go $(ls internal/pkg/types/*.go | grep -v test)
 #mlrval_format_test:

@@ -1,9 +1,6 @@
 package types
 
 import (
-	//"bytes"
-	//"errors"
-
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
@@ -77,6 +74,7 @@ func (mlrmap *Mlrmap) PutReference(key string, value *mlrval.Mlrval) {
 //	}
 //}
 
+// PrependReference is the same as PutReference, but puts a new entry first, not last.
 func (mlrmap *Mlrmap) PrependReference(key string, value *mlrval.Mlrval) {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {

@@ -9,6 +9,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/transformers/utils"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -397,7 +398,7 @@ func (tr *TransformerStats2) emit(
 
 		// Add in a=s,b=t fields:
 		groupingKey := pa.Key
-		groupByFieldValues := tr.groupingKeysToGroupByFieldValues.Get(groupingKey).([]*types.Mlrval)
+		groupByFieldValues := tr.groupingKeysToGroupByFieldValues.Get(groupingKey).([]*mlrval.Mlrval)
 		for i, groupByFieldName := range tr.groupByFieldNameList {
 			outrec.PutReference(groupByFieldName, groupByFieldValues[i].Copy())
 		}

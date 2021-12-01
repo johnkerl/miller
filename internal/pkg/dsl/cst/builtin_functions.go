@@ -10,6 +10,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -116,7 +117,7 @@ func (root *RootNode) BuildZaryFunctionCallsiteNode(
 
 func (node *ZaryFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	return node.zaryFunc()
 }
 
@@ -157,7 +158,7 @@ func (root *RootNode) BuildUnaryFunctionCallsiteNode(
 
 func (node *UnaryFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	return node.unaryFunc(node.evaluable1.Evaluate(state))
 }
 
@@ -198,7 +199,7 @@ func (root *RootNode) BuildUnaryFunctionWithContextCallsiteNode(
 
 func (node *UnaryFunctionWithContextCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	return node.unaryFuncWithContext(node.evaluable1.Evaluate(state), state.Context)
 }
 
@@ -271,7 +272,7 @@ func (root *RootNode) BuildBinaryFunctionCallsiteNode(
 
 func (node *BinaryFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	return node.binaryFunc(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),
@@ -321,7 +322,7 @@ func (root *RootNode) BuildBinaryFunctionWithStateCallsiteNode(
 
 func (node *BinaryFunctionWithStateCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	return node.binaryFuncWithState(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),
@@ -378,7 +379,7 @@ func (root *RootNode) BuildTernaryFunctionWithStateCallsiteNode(
 
 func (node *TernaryFunctionWithStateCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	return node.ternaryFuncWithState(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),
@@ -391,9 +392,9 @@ func (node *TernaryFunctionWithStateCallsiteNode) Evaluate(
 // RegexCaptureBinaryFunctionCallsiteNode special-cases the =~ and !=~
 // operators which set the CST State object's captures array for "\1".."\9".
 // This is identical to BinaryFunctionCallsite except that
-// BinaryFunctionCallsite's impl function takes two *types.Mlrval arguments and
-// returns a *types.Mlrval, whereas RegexCaptureBinaryFunctionCallsiteNode's
-// impl function takes two *types.Mlrval arguments but returns *types.Mlrval
+// BinaryFunctionCallsite's impl function takes two *mlrval.Mlrval arguments and
+// returns a *mlrval.Mlrval, whereas RegexCaptureBinaryFunctionCallsiteNode's
+// impl function takes two *mlrval.Mlrval arguments but returns *mlrval.Mlrval
 // along with a []string captures array. The captures are stored in the State
 // object for use in subsequent statements.
 //
@@ -461,7 +462,7 @@ func (root *RootNode) BuildRegexCaptureBinaryFunctionCallsiteNode(
 
 func (node *RegexCaptureBinaryFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	output, captures := node.regexCaptureBinaryFunc(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),
@@ -515,7 +516,7 @@ func (root *RootNode) BuildDotCallsiteNode(
 
 func (node *DotCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	value1 := node.evaluable1.Evaluate(state)
 
 	mapvalue1 := value1.GetMap()
@@ -596,7 +597,7 @@ func (root *RootNode) BuildTernaryFunctionCallsiteNode(
 
 func (node *TernaryFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	return node.ternaryFunc(
 		node.evaluable1.Evaluate(state),
 		node.evaluable2.Evaluate(state),
@@ -658,8 +659,8 @@ func (root *RootNode) BuildVariadicFunctionCallsiteNode(
 
 func (node *VariadicFunctionCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	args := make([]*types.Mlrval, len(node.evaluables))
+) *mlrval.Mlrval {
+	args := make([]*mlrval.Mlrval, len(node.evaluables))
 	for i := range node.evaluables {
 		args[i] = node.evaluables[i].Evaluate(state)
 	}
@@ -720,8 +721,8 @@ func (root *RootNode) BuildVariadicFunctionWithStateCallsiteNode(
 
 func (node *VariadicFunctionWithStateCallsiteNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	args := make([]*types.Mlrval, len(node.evaluables))
+) *mlrval.Mlrval {
+	args := make([]*mlrval.Mlrval, len(node.evaluables))
 	for i := range node.evaluables {
 		args[i] = node.evaluables[i].Evaluate(state)
 	}
@@ -778,7 +779,7 @@ func (root *RootNode) BuildLogicalANDOperatorNode(a, b IEvaluable) *LogicalANDOp
 
 func (node *LogicalANDOperatorNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 	atype := aout.GetType()
 	if !(atype == types.MT_ABSENT || atype == types.MT_BOOL) {
@@ -804,7 +805,7 @@ func (node *LogicalANDOperatorNode) Evaluate(
 		return types.MLRVAL_ABSENT
 	}
 
-	return types.MlrvalLogicalAND(aout, bout)
+	return mlrval.MlrvalLogicalAND(aout, bout)
 }
 
 // ================================================================
@@ -826,7 +827,7 @@ func (root *RootNode) BuildLogicalOROperatorNode(a, b IEvaluable) *LogicalOROper
 // See the disposition-matrix discussion for LogicalANDOperator.
 func (node *LogicalOROperatorNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 	atype := aout.GetType()
 	if !(atype == types.MT_ABSENT || atype == types.MT_BOOL) {
@@ -851,7 +852,7 @@ func (node *LogicalOROperatorNode) Evaluate(
 	if btype == types.MT_ABSENT {
 		return types.MLRVAL_ABSENT
 	}
-	return types.MlrvalLogicalOR(aout, bout)
+	return mlrval.MlrvalLogicalOR(aout, bout)
 }
 
 // ================================================================
@@ -868,7 +869,7 @@ func (root *RootNode) BuildAbsentCoalesceOperatorNode(a, b IEvaluable) *AbsentCo
 // argument is not absent.
 func (node *AbsentCoalesceOperatorNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 	if aout.GetType() != types.MT_ABSENT {
 		return aout
@@ -891,7 +892,7 @@ func (root *RootNode) BuildEmptyCoalesceOperatorNode(a, b IEvaluable) *EmptyCoal
 // argument is not absent.
 func (node *EmptyCoalesceOperatorNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 	atype := aout.GetType()
 	if atype == types.MT_ABSENT || atype == types.MT_VOID || (atype == types.MT_STRING && aout.String() == "") {
@@ -909,7 +910,7 @@ func (root *RootNode) BuildStandardTernaryOperatorNode(a, b, c IEvaluable) *Stan
 }
 func (node *StandardTernaryOperatorNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 
 	boolValue, isBool := aout.GetBoolValue()
@@ -936,12 +937,12 @@ func (node *StandardTernaryOperatorNode) Evaluate(
 // for the function-manager lookup table to indicate the arity of the function,
 // even though at runtime these functions should not get invoked.
 
-func BinaryShortCircuitPlaceholder(input1, input2 *types.Mlrval) *types.Mlrval {
+func BinaryShortCircuitPlaceholder(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
 	return types.MLRVAL_ERROR // not reached
 }
 
-func TernaryShortCircuitPlaceholder(input1, input2, input3 *types.Mlrval) *types.Mlrval {
+func TernaryShortCircuitPlaceholder(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
 	return types.MLRVAL_ERROR // not reached
 }

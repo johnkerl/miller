@@ -245,7 +245,7 @@ func getRecordBatchExplicitCSVHeader(
 			record := types.NewMlrmapAsRecord()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
-					value := types.MlrvalFromInferredTypeForDataFiles(field)
+					value := mlrval.FromDeferredType(field)
 					record.PutCopy(reader.headerStrings[i], value)
 				}
 			} else {
@@ -254,21 +254,21 @@ func getRecordBatchExplicitCSVHeader(
 				n := lib.IntMin2(nh, nd)
 				var i int
 				for i = 0; i < n; i++ {
-					value := types.MlrvalFromInferredTypeForDataFiles(fields[i])
+					value := mlrval.FromDeferredType(fields[i])
 					record.PutCopy(reader.headerStrings[i], value)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					for i = nh; i < nd; i++ {
 						key := strconv.Itoa(i + 1)
-						value := types.MlrvalFromInferredTypeForDataFiles(fields[i])
+						value := mlrval.FromDeferredType(fields[i])
 						record.PutCopy(key, value)
 					}
 				}
 				if nh > nd {
 					// if header longer than data: use "" values
 					for i = nd; i < nh; i++ {
-						record.PutCopy(reader.headerStrings[i], types.MLRVAL_VOID)
+						record.PutCopy(reader.headerStrings[i], mlrval.VOID)
 					}
 				}
 			}
@@ -362,7 +362,7 @@ func getRecordBatchImplicitCSVHeader(
 		record := types.NewMlrmapAsRecord()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
-				value := types.MlrvalFromInferredTypeForDataFiles(field)
+				value := mlrval.FromDeferredType(field)
 				record.PutCopy(reader.headerStrings[i], value)
 			}
 		} else {
@@ -371,19 +371,19 @@ func getRecordBatchImplicitCSVHeader(
 			n := lib.IntMin2(nh, nd)
 			var i int
 			for i = 0; i < n; i++ {
-				value := types.MlrvalFromInferredTypeForDataFiles(fields[i])
+				value := mlrval.FromDeferredType(fields[i])
 				record.PutCopy(reader.headerStrings[i], value)
 			}
 			if nh < nd {
 				// if header shorter than data: use 1-up itoa keys
 				key := strconv.Itoa(i + 1)
-				value := types.MlrvalFromInferredTypeForDataFiles(fields[i])
+				value := mlrval.FromDeferredType(fields[i])
 				record.PutCopy(key, value)
 			}
 			if nh > nd {
 				// if header longer than data: use "" values
 				for i = nd; i < nh; i++ {
-					record.PutCopy(reader.headerStrings[i], types.MLRVAL_VOID)
+					record.PutCopy(reader.headerStrings[i], mlrval.VOID)
 				}
 			}
 		}

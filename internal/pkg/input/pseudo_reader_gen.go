@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -121,8 +122,8 @@ func (reader *PseudoReaderGen) process(
 func (reader *PseudoReaderGen) tryParse(
 	name string,
 	svalue string,
-) (*types.Mlrval, error) {
-	mvalue := types.MlrvalFromInferredType(svalue)
+) (*mlrval.Mlrval, error) {
+	mvalue := mlrval.MlrvalFromInferredType(svalue)
 	if mvalue == nil || !mvalue.IsNumeric() {
 		return nil, errors.New(
 			fmt.Sprintf("mlr: gen: %s \"%s\" is not parseable as number", name, svalue),

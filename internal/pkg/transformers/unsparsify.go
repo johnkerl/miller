@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -110,7 +111,7 @@ func transformerUnsparsifyParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerUnsparsify struct {
-	fillerMlrval          *types.Mlrval
+	fillerMlrval          *mlrval.Mlrval
 	recordsAndContexts    *list.List
 	fieldNamesSeen        *lib.OrderedMap
 	recordTransformerFunc RecordTransformerFunc
@@ -127,7 +128,7 @@ func NewTransformerUnsparsify(
 	}
 
 	tr := &TransformerUnsparsify{
-		fillerMlrval:       types.MlrvalFromString(fillerString),
+		fillerMlrval:       mlrval.MlrvalFromString(fillerString),
 		recordsAndContexts: list.New(),
 		fieldNamesSeen:     fieldNamesSeen,
 	}

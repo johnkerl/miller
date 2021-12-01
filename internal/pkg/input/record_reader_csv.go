@@ -226,7 +226,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 		if nh == nd {
 			for i := 0; i < nh; i++ {
 				key := reader.header[i]
-				value := types.MlrvalFromInferredTypeForDataFiles(csvRecord[i])
+				value := mlrval.FromDeferredType(csvRecord[i])
 				record.PutReference(key, value)
 			}
 
@@ -246,19 +246,19 @@ func (reader *RecordReaderCSV) getRecordBatch(
 				n := lib.IntMin2(nh, nd)
 				for i = 0; i < n; i++ {
 					key := reader.header[i]
-					value := types.MlrvalFromInferredTypeForDataFiles(csvRecord[i])
+					value := mlrval.FromDeferredType(csvRecord[i])
 					record.PutReference(key, value)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					key := strconv.Itoa(i + 1)
-					value := types.MlrvalFromInferredTypeForDataFiles(csvRecord[i])
+					value := mlrval.FromDeferredType(csvRecord[i])
 					record.PutCopy(key, value)
 				}
 				if nh > nd {
 					// if header longer than data: use "" values
 					for i = nd; i < nh; i++ {
-						record.PutCopy(reader.header[i], types.MLRVAL_VOID)
+						record.PutCopy(reader.header[i], mlrval.VOID)
 					}
 				}
 			}

@@ -11,6 +11,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -83,7 +84,7 @@ func NewUDFCallsite(
 
 // NewUDFCallsiteForHigherOrderFunction is for UDF callsites such as
 // sortaf/sortmf.  Here, the array/map to be sorted has already been evaluated
-// and is an array of *types.Mlrval.  The UDF needs to be invoked on pairs of
+// and is an array of *mlrval.Mlrval.  The UDF needs to be invoked on pairs of
 // array elements.
 func NewUDFCallsiteForHigherOrderFunction(
 	udf *UDF,
@@ -123,7 +124,7 @@ func (site *UDFCallsite) findUDF(state *runtime.State) *UDF {
 // See comments above NewUDFCallsite.
 func (site *UDFCallsite) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 
 	udf := site.findUDF(state)
 	if udf == nil {
@@ -188,7 +189,7 @@ func (site *UDFCallsite) Evaluate(
 		os.Exit(1)
 	}
 
-	arguments := make([]*types.Mlrval, numArguments)
+	arguments := make([]*mlrval.Mlrval, numArguments)
 
 	for i := range udf.signature.typeGatedParameterNames {
 		arguments[i] = site.argumentNodes[i].Evaluate(state)
@@ -210,8 +211,8 @@ func (site *UDFCallsite) Evaluate(
 func (site *UDFCallsite) EvaluateWithArguments(
 	state *runtime.State,
 	udf *UDF,
-	arguments []*types.Mlrval,
-) *types.Mlrval {
+	arguments []*mlrval.Mlrval,
+) *mlrval.Mlrval {
 
 	// Bind the arguments to the parameters.  Function literals can access
 	// locals in their enclosing scope; named functions cannot. Hence stack
@@ -434,7 +435,7 @@ func genFunctionLiteralName() string {
 
 // UnnamedUDFNode holds function literals like 'func (a, b) { return b - a }'.
 type UnnamedUDFNode struct {
-	udfAsMlrval *types.Mlrval
+	udfAsMlrval *mlrval.Mlrval
 }
 
 func (root *RootNode) BuildUnnamedUDFNode(astNode *dsl.ASTNode) (IEvaluable, error) {
@@ -447,14 +448,14 @@ func (root *RootNode) BuildUnnamedUDFNode(astNode *dsl.ASTNode) (IEvaluable, err
 		return nil, err
 	}
 
-	udfAsMlrval := types.MlrvalFromFunction(udf, name)
+	udfAsMlrval := mlrval.MlrvalFromFunction(udf, name)
 
 	return &UnnamedUDFNode{
 		udfAsMlrval: udfAsMlrval,
 	}, nil
 }
 
-func (node *UnnamedUDFNode) Evaluate(state *runtime.State) *types.Mlrval {
+func (node *UnnamedUDFNode) Evaluate(state *runtime.State) *mlrval.Mlrval {
 	return node.udfAsMlrval
 }
 

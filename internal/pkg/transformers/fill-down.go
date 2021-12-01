@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -122,7 +123,7 @@ type TransformerFillDown struct {
 	onlyIfAbsent       bool
 
 	// state
-	lastNonNullValues map[string]*types.Mlrval
+	lastNonNullValues map[string]*mlrval.Mlrval
 
 	recordTransformerFunc RecordTransformerFunc
 }
@@ -135,7 +136,7 @@ func NewTransformerFillDown(
 	tr := &TransformerFillDown{
 		fillDownFieldNames: fillDownFieldNames,
 		onlyIfAbsent:       onlyIfAbsent,
-		lastNonNullValues:  make(map[string]*types.Mlrval),
+		lastNonNullValues:  make(map[string]*mlrval.Mlrval),
 	}
 
 	if doAll {

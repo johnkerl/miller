@@ -9,6 +9,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -163,7 +164,7 @@ type TransformerStep struct {
 
 	// STATE
 	// Scratch space used per-record
-	valueFieldValues []types.Mlrval
+	valueFieldValues []mlrval.Mlrval
 	// Map from group-by field names to value-field names to array of
 	// stepper objects.  See the Transform method below for more details.
 	groups map[string]map[string]map[string]tStepper
@@ -316,7 +317,7 @@ type tStepperAllocator func(
 ) tStepper
 
 type tStepper interface {
-	process(valueFieldValue *types.Mlrval, inputRecord *types.Mlrmap)
+	process(valueFieldValue *mlrval.Mlrval, inputRecord *types.Mlrmap)
 }
 
 type tStepperLookup struct {
@@ -358,7 +359,7 @@ func allocateStepper(
 
 // ================================================================
 type tStepperDelta struct {
-	previous        *types.Mlrval
+	previous        *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -374,7 +375,7 @@ func stepperDeltaAlloc(
 }
 
 func (stepper *tStepperDelta) process(
-	valueFieldValue *types.Mlrval,
+	valueFieldValue *mlrval.Mlrval,
 	inrec *types.Mlrmap,
 ) {
 	if valueFieldValue.IsEmpty() {
@@ -382,7 +383,7 @@ func (stepper *tStepperDelta) process(
 		return
 	}
 
-	delta := types.MlrvalFromInt(0)
+	delta := mlrval.MlrvalFromInt(0)
 	if stepper.previous != nil {
 		delta = types.BIF_minus_binary(valueFieldValue, stepper.previous)
 	}
@@ -393,7 +394,7 @@ func (stepper *tStepperDelta) process(
 
 // ================================================================
 type tStepperShift struct {
-	previous        *types.Mlrval
+	previous        *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -409,7 +410,7 @@ func stepperShiftAlloc(
 }
 
 func (stepper *tStepperShift) process(
-	valueFieldValue *types.Mlrval,
+	valueFieldValue *mlrval.Mlrval,
 	inrec *types.Mlrmap,
 ) {
 	if stepper.previous == nil {
@@ -424,7 +425,7 @@ func (stepper *tStepperShift) process(
 
 // ================================================================
 type tStepperFromFirst struct {
-	first           *types.Mlrval
+	first           *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -440,10 +441,10 @@ func stepperFromFirstAlloc(
 }
 
 func (stepper *tStepperFromFirst) process(
-	valueFieldValue *types.Mlrval,
+	valueFieldValue *mlrval.Mlrval,
 	inrec *types.Mlrmap,
 ) {
-	fromFirst := types.MlrvalFromInt(0)
+	fromFirst := mlrval.MlrvalFromInt(0)
 	if stepper.first == nil {
 		stepper.first = valueFieldValue.Copy()
 	} else {
@@ -454,7 +455,7 @@ func (stepper *tStepperFromFirst) process(
 
 // ================================================================
 type tStepperRatio struct {
-	previous        *types.Mlrval
+	previous        *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -470,7 +471,7 @@ func stepperRatioAlloc(
 }
 
 func (stepper *tStepperRatio) process(
-	valueFieldValue *types.Mlrval,
+	valueFieldValue *mlrval.Mlrval,
 	inrec *types.Mlrmap,
 ) {
 	if valueFieldValue.IsEmpty() {
@@ -478,7 +479,7 @@ func (stepper *tStepperRatio) process(
 		return
 	}
 
-	ratio := types.MlrvalFromInt(1)
+	ratio := mlrval.MlrvalFromInt(1)
 	if stepper.previous != nil {
 		ratio = types.BIF_divide(valueFieldValue, stepper.previous)
 	}
@@ -489,7 +490,7 @@ func (stepper *tStepperRatio) process(
 
 // ================================================================
 type tStepperRsum struct {
-	rsum            *types.Mlrval
+	rsum            *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -499,13 +500,13 @@ func stepperRsumAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperRsum{
-		rsum:            types.MlrvalFromInt(0),
+		rsum:            mlrval.MlrvalFromInt(0),
 		outputFieldName: inputFieldName + "_rsum",
 	}
 }
 
 func (stepper *tStepperRsum) process(
-	valueFieldValue *types.Mlrval,
+	valueFieldValue *mlrval.Mlrval,
 	inrec *types.Mlrmap,
 ) {
 	if valueFieldValue.IsEmpty() {
@@ -518,8 +519,8 @@ func (stepper *tStepperRsum) process(
 
 // ================================================================
 type tStepperCounter struct {
-	counter         *types.Mlrval
-	one             *types.Mlrval
+	counter         *mlrval.Mlrval
+	one             *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -529,14 +530,14 @@ func stepperCounterAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperCounter{
-		counter:         types.MlrvalFromInt(0),
-		one:             types.MlrvalFromInt(1),
+		counter:         mlrval.MlrvalFromInt(0),
+		one:             mlrval.MlrvalFromInt(1),
 		outputFieldName: inputFieldName + "_counter",
 	}
 }
 
 func (stepper *tStepperCounter) process(
-	valueFieldValue *types.Mlrval,
+	valueFieldValue *mlrval.Mlrval,
 	inrec *types.Mlrmap,
 ) {
 	if valueFieldValue.IsEmpty() {
@@ -552,9 +553,9 @@ func (stepper *tStepperCounter) process(
 
 // ================================================================
 type tStepperEWMA struct {
-	alphas           []*types.Mlrval
-	oneMinusAlphas   []*types.Mlrval
-	prevs            []*types.Mlrval
+	alphas           []*mlrval.Mlrval
+	oneMinusAlphas   []*mlrval.Mlrval
+	prevs            []*mlrval.Mlrval
 	outputFieldNames []string
 	havePrevs        bool
 }
@@ -569,9 +570,9 @@ func stepperEWMAAlloc(
 	// len(ewmaSuffixes) in the CLI parser.
 	n := len(stringAlphas)
 
-	alphas := make([]*types.Mlrval, n)
-	oneMinusAlphas := make([]*types.Mlrval, n)
-	prevs := make([]*types.Mlrval, n)
+	alphas := make([]*mlrval.Mlrval, n)
+	oneMinusAlphas := make([]*mlrval.Mlrval, n)
+	prevs := make([]*mlrval.Mlrval, n)
 	outputFieldNames := make([]string, n)
 
 	suffixes := stringAlphas
@@ -591,9 +592,9 @@ func stepperEWMAAlloc(
 			)
 			os.Exit(1)
 		}
-		alphas[i] = types.MlrvalFromFloat64(dalpha)
-		oneMinusAlphas[i] = types.MlrvalFromFloat64(1.0 - dalpha)
-		prevs[i] = types.MlrvalFromFloat64(0.0)
+		alphas[i] = mlrval.MlrvalFromFloat64(dalpha)
+		oneMinusAlphas[i] = mlrval.MlrvalFromFloat64(1.0 - dalpha)
+		prevs[i] = mlrval.MlrvalFromFloat64(0.0)
 		outputFieldNames[i] = inputFieldName + "_ewma_" + suffix
 	}
 
@@ -607,7 +608,7 @@ func stepperEWMAAlloc(
 }
 
 func (stepper *tStepperEWMA) process(
-	valueFieldValue *types.Mlrval,
+	valueFieldValue *mlrval.Mlrval,
 	inrec *types.Mlrmap,
 ) {
 	if !stepper.havePrevs {

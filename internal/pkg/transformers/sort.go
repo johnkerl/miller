@@ -50,6 +50,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -298,7 +299,7 @@ func NewTransformerSort(
 // ----------------------------------------------------------------
 type GroupingKeysAndMlrvals struct {
 	groupingKey string
-	mlrvals     []*types.Mlrval
+	mlrvals     []*mlrval.Mlrval
 }
 
 func (tr *TransformerSort) Transform(
@@ -386,7 +387,7 @@ func groupHeadsToArray(groupHeads *lib.OrderedMap) []GroupingKeysAndMlrvals {
 	for entry := groupHeads.Head; entry != nil; entry = entry.Next {
 		retval[i] = GroupingKeysAndMlrvals{
 			groupingKey: entry.Key,
-			mlrvals:     entry.Value.([]*types.Mlrval),
+			mlrvals:     entry.Value.([]*mlrval.Mlrval),
 		}
 		i++
 	}

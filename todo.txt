@@ -98,20 +98,18 @@ PUNCHDOWN LIST
 ----------------------------------------------------------------
 * JIT refactor
   o x 'tens/dozens of UT cases' 
-  ! re-check hashed/unhashed and do so periodically
-    > env-var back door
   m internal/pkg/mlrval
     - UT-driven mlrval defer/infer
     - pkg/mlrval doc.go & README.md
   o internal/pkg/types
-    - UT-driven mlrmap constructor refactor
+    k UT-driven mlrmap constructor refactor
     - UT-driven JSON-parser refactor
   o internal/pkg/input
-    - basic
+    k basic
       mlrval.FromDeferredType
       mlrmap.PutReference(key, value)
 
-    - UT-driven DKVP-from-line
+    k UT-driven DKVP-from-line
     - UT-driven X-from-line: nidx, xtab, csvlite, csv
     - UT-driven JSON-from-line
     - defer channelizers to a separate PR
@@ -142,6 +140,22 @@ PUNCHDOWN LIST
     - internal/pkg/auxents/regtest
     - internal/pkg/auxents
     - internal/pkg/auxents/help
+----------------------------------------------------------------
+
+* perf more
+  o see other branch
+  o nim6 note on perf: baseline/cat; processor/pipelining; 
+  o update https://miller.readthedocs.io/en/latest/cpu/, and/or
+    https://miller.readthedocs.io/en/latest/streaming-and-memory/, and/or
+    make a new page w/ info on per
+  o JIT: maasure
+  o pipelined reader
+  o batched reader separately
+  o buffered output
+  o re-check hashed/unhashed and do so periodically
+    - env-var back door
+    - check with more than just abixy
+
 ----------------------------------------------------------------
 
 * blockers:

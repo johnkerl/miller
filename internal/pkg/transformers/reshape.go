@@ -36,6 +36,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -320,7 +321,7 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
-				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalFromString(pf.Key))
+				outrec.PutReference(tr.outputKeyFieldName, mlrval.MlrvalFromString(pf.Key))
 				outrec.PutReference(tr.outputValueFieldName, pf.Value)
 				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
@@ -362,7 +363,7 @@ func (tr *TransformerReshape) wideToLongRegex(
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
-				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalFromString(pf.Key))
+				outrec.PutReference(tr.outputKeyFieldName, mlrval.MlrvalFromString(pf.Key))
 				outrec.PutReference(tr.outputValueFieldName, pf.Value)
 				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
