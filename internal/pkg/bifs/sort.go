@@ -35,10 +35,10 @@ func LexicalDescendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 func CaseFoldAscendingComparator(input1 *Mlrval, input2 *Mlrval) int {
 	sa := input1.String()
 	sb := input2.String()
-	if input1.mvtype == MT_STRING {
+	if input1.IsString() {
 		sa = strings.ToLower(sa)
 	}
-	if input2.mvtype == MT_STRING {
+	if input2.IsString() {
 		sb = strings.ToLower(sb)
 	}
 	if sa < sb {

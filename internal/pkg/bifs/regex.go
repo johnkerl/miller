@@ -118,7 +118,7 @@ func BIF_string_matches_regexp(input1, input2 *Mlrval) (retval *Mlrval, captures
 // BIF_string_matches_regexp implements the !=~ operator.
 func BIF_string_does_not_match_regexp(input1, input2 *Mlrval) (retval *Mlrval, captures []string) {
 	output, captures := BIF_string_matches_regexp(input1, input2)
-	if output.mvtype == MT_BOOL {
+	if output.IsBool() {
 		return MlrvalFromBool(!output.boolval), captures
 	} else {
 		// else leave it as error, absent, etc.

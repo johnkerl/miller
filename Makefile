@@ -1,6 +1,9 @@
 PREFIX=/usr/local
 INSTALLDIR=$(PREFIX)/bin
 
+# ----------------------------------------------------------------
+# General-use targets
+
 # This must remain the first target in this file, which is what 'make' with no
 # arguments will run.
 build:
@@ -14,19 +17,62 @@ check: unit_test regression_test
 	@echo "by './configure --prefix=/your/install/path' if you wish to install to"
 	@echo "somewhere other than /usr/local/bin -- the default prefix is /usr/local."
 
+# DESTDIR is for package installs; nominally blank when this is run interactively.
+# See also https://www.gnu.org/prep/standards/html_node/DESTDIR.html
+install: build
+	cp mlr $(DESTDIR)/$(INSTALLDIR)
+	make -C man install
+
+# ----------------------------------------------------------------
+# Dev targets
+
 # Unit tests (small number)
-unit_test:
+unit-test ut:
 	go test github.com/johnkerl/miller/internal/pkg/...
 
 # Keystroke-savers
-unbackslash_test:
-	go test $(ls internal/pkg/lib/*.go|grep -v test) internal/pkg/lib/unbackslash_test.go
-mlrval_functions_test:
-	go test internal/pkg/types/mlrval_functions_test.go $(ls internal/pkg/types/*.go | grep -v test)
-mlrval_format_test:
-	go test internal/pkg/types/mlrval_format_test.go $(ls internal/pkg/types/*.go|grep -v test)
-regex_test:
+lib-unbackslash-test:
+	go test internal/pkg/lib/unbackslash_test.go internal/pkg/lib/unbackslash.go
+lib_regex_test:
 	go test internal/pkg/lib/regex_test.go internal/pkg/lib/regex.go
+lib_tests: lib_unbackslash_test lib_regex_test
+
+mlrval-new-test:
+	go test internal/pkg/mlrval/new_test.go \
+	  internal/pkg/mlrval/type.go \
+	  internal/pkg/mlrval/constants.go \
+	  internal/pkg/mlrval/new.go \
+	  internal/pkg/mlrval/infer.go
+mlrval-is-test:
+	go test internal/pkg/mlrval/is_test.go \
+	  internal/pkg/mlrval/type.go \
+	  internal/pkg/mlrval/constants.go \
+	  internal/pkg/mlrval/new.go \
+	  internal/pkg/mlrval/infer.go \
+	  internal/pkg/mlrval/is.go
+mlrval-get-test:
+	go test internal/pkg/mlrval/get_test.go \
+	  internal/pkg/mlrval/type.go \
+	  internal/pkg/mlrval/constants.go \
+	  internal/pkg/mlrval/new.go \
+	  internal/pkg/mlrval/infer.go \
+	  internal/pkg/mlrval/is.go \
+	  internal/pkg/mlrval/get.go
+mlrval-tests: mlrval-new-test mlrval-is-test mlrval-get-test
+
+mlrmap-new-test:
+	go test internal/pkg/types/mlrmap_new_test.go \
+	  internal/pkg/types/mlrmap.go
+mlrmap-accessors-test:
+	go test internal/pkg/types/mlrmap_accessors_test.go \
+	  internal/pkg/types/mlrmap.go \
+	  internal/pkg/types/mlrmap_accessors.go
+mlrmap-tests: mlrmap-new-test mlrmap-accessors-test
+
+#mlrval_functions_test:
+#	go test internal/pkg/types/mlrval_functions_test.go $(ls internal/pkg/types/*.go | grep -v test)
+#mlrval_format_test:
+#	go test internal/pkg/types/mlrval_format_test.go $(ls internal/pkg/types/*.go|grep -v test)
 
 # Regression tests (large number)
 #
@@ -34,14 +80,8 @@ regex_test:
 # for debugging.  TL;DR is for CI jobs, we have 'go test -v'; for
 # interactive use, instead of 'go test -v' simply use 'mlr regtest
 # -vvv' or 'mlr regtest -s 20'. See also internal/pkg/auxents/regtest.
-regression_test:
+regression-test:
 	go test -v regression_test.go
-
-# DESTDIR is for package installs; nominally blank when this is run interactively.
-# See also https://www.gnu.org/prep/standards/html_node/DESTDIR.html
-install: build
-	cp mlr $(DESTDIR)/$(INSTALLDIR)
-	make -C man install
 
 fmt:
 	-go fmt ./...
@@ -90,5 +130,6 @@ mall: mprof5 mprof4 mprof3 mprof2 mprof mlr
 release_tarball: build check
 	./create-release-tarball
 
+# ----------------------------------------------------------------
 # Go does its own dependency management, outside of make.
 .PHONY: build mlr mprof mprof2 mprof3 mprof4 mprof5 check unit_test regression_test fmt dev

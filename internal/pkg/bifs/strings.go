@@ -191,7 +191,7 @@ func BIF_truncate(input1, input2 *Mlrval) *Mlrval {
 
 // ================================================================
 func BIF_lstrip(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_STRING {
+	if input1.IsString() {
 		return MlrvalFromString(strings.TrimLeft(input1.printrep, " \t"))
 	} else {
 		return input1
@@ -199,7 +199,7 @@ func BIF_lstrip(input1 *Mlrval) *Mlrval {
 }
 
 func BIF_rstrip(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_STRING {
+	if input1.IsString() {
 		return MlrvalFromString(strings.TrimRight(input1.printrep, " \t"))
 	} else {
 		return input1
@@ -207,7 +207,7 @@ func BIF_rstrip(input1 *Mlrval) *Mlrval {
 }
 
 func BIF_strip(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_STRING {
+	if input1.IsString() {
 		return MlrvalFromString(strings.Trim(input1.printrep, " \t"))
 	} else {
 		return input1
@@ -220,7 +220,7 @@ func BIF_collapse_whitespace(input1 *Mlrval) *Mlrval {
 }
 
 func MlrvalCollapseWhitespaceRegexp(input1 *Mlrval, whitespaceRegexp *regexp.Regexp) *Mlrval {
-	if input1.mvtype == MT_STRING {
+	if input1.IsString() {
 		return MlrvalFromString(whitespaceRegexp.ReplaceAllString(input1.printrep, " "))
 	} else {
 		return input1
@@ -233,9 +233,9 @@ func WhitespaceRegexp() *regexp.Regexp {
 
 // ================================================================
 func BIF_toupper(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_STRING {
+	if input1.IsString() {
 		return MlrvalFromString(strings.ToUpper(input1.printrep))
-	} else if input1.mvtype == MT_VOID {
+	} else if input1.IsVoid() {
 		return input1
 	} else {
 		return input1
@@ -243,9 +243,9 @@ func BIF_toupper(input1 *Mlrval) *Mlrval {
 }
 
 func BIF_tolower(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_STRING {
+	if input1.IsString() {
 		return MlrvalFromString(strings.ToLower(input1.printrep))
-	} else if input1.mvtype == MT_VOID {
+	} else if input1.IsVoid() {
 		return input1
 	} else {
 		return input1
@@ -253,7 +253,7 @@ func BIF_tolower(input1 *Mlrval) *Mlrval {
 }
 
 func BIF_capitalize(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_STRING {
+	if input1.IsString() {
 		if input1.printrep == "" {
 			return input1
 		} else {
@@ -280,7 +280,7 @@ func BIF_clean_whitespace(input1 *Mlrval) *Mlrval {
 
 // ================================================================
 func BIF_hexfmt(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_INT {
+	if input1.IsInt() {
 		return MlrvalFromString("0x" + strconv.FormatUint(uint64(input1.intval), 16))
 	} else {
 		return input1

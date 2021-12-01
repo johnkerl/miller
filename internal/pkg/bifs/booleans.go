@@ -447,7 +447,7 @@ func MlrvalEqualsAsBool(input1, input2 *Mlrval) bool {
 
 // ----------------------------------------------------------------
 func MlrvalLogicalAND(input1, input2 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
+	if input1.IsBool() && input2.IsBool() {
 		return MlrvalFromBool(input1.boolval && input2.boolval)
 	} else {
 		return MLRVAL_ERROR
@@ -455,7 +455,7 @@ func MlrvalLogicalAND(input1, input2 *Mlrval) *Mlrval {
 }
 
 func MlrvalLogicalOR(input1, input2 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
+	if input1.IsBool() && input2.IsBool() {
 		return MlrvalFromBool(input1.boolval || input2.boolval)
 	} else {
 		return MLRVAL_ERROR
@@ -463,7 +463,7 @@ func MlrvalLogicalOR(input1, input2 *Mlrval) *Mlrval {
 }
 
 func BIF_logicalxor(input1, input2 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_BOOL && input2.mvtype == MT_BOOL {
+	if input1.IsBool() && input2.IsBool() {
 		return MlrvalFromBool(input1.boolval != input2.boolval)
 	} else {
 		return MLRVAL_ERROR

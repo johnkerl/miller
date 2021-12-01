@@ -58,7 +58,7 @@ func BIF_minus_unary(input1 *Mlrval) *Mlrval {
 // Logical NOT operator
 
 func BIF_logicalnot(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_BOOL {
+	if input1.IsBool() {
 		return MlrvalFromBool(!input1.boolval)
 	} else {
 		return MLRVAL_ERROR
@@ -738,7 +738,7 @@ func BIF_mod_mul(input1, input2, input3 *Mlrval) *Mlrval {
 
 func BIF_mod_exp(input1, input2, input3 *Mlrval) *Mlrval {
 	// Pre-check for negative exponent
-	if input2.mvtype == MT_INT && input2.intval < 0 {
+	if input2.IsInt() && input2.intval < 0 {
 		return MLRVAL_ERROR
 	}
 	return imodop(input1, input2, input3, imodexp)

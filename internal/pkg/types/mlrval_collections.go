@@ -79,10 +79,10 @@ import (
 // ================================================================
 // TODO: copy-reduction refactor
 func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
-	if mv.mvtype != MT_ARRAY {
+	if !mv.IsArray() {
 		return *MLRVAL_ERROR
 	}
-	if mindex.mvtype != MT_INT {
+	if !mindex.IsInt() {
 		return *MLRVAL_ERROR
 	}
 	value := arrayGetAliased(&mv.arrayval, mindex.intval)
@@ -96,7 +96,7 @@ func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 // ----------------------------------------------------------------
 // TODO: make this return error so caller can do 'if err == nil { ... }'
 func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
-	if mv.mvtype != MT_ARRAY {
+	if !mv.IsArray() {
 		fmt.Fprintf(
 			os.Stderr,
 			"mlr: expected array as indexed item in ArrayPut; got %s\n",
@@ -104,7 +104,7 @@ func (mv *Mlrval) ArrayPut(mindex *Mlrval, value *Mlrval) {
 		)
 		os.Exit(1)
 	}
-	if mindex.mvtype != MT_INT {
+	if !mindex.IsInt() {
 		// TODO: need to be careful about semantics here.
 		// Silent no-ops are not good UX ...
 		fmt.Fprintf(
@@ -208,7 +208,7 @@ func UnaliasArrayLengthIndex(n int, mindex int) (int, bool) {
 // ----------------------------------------------------------------
 // TODO: thinking about capacity-resizing
 func (mv *Mlrval) ArrayAppend(value *Mlrval) {
-	if mv.mvtype != MT_ARRAY {
+	if !mv.IsArray() {
 		// TODO: need to be careful about semantics here.
 		// Silent no-ops are not good UX ...
 		return
@@ -218,7 +218,7 @@ func (mv *Mlrval) ArrayAppend(value *Mlrval) {
 
 // ================================================================
 func (mv *Mlrval) MapGet(key *Mlrval) Mlrval {
-	if mv.mvtype != MT_MAP {
+	if !mv.IsMap() {
 		return *MLRVAL_ERROR
 	}
 
@@ -236,15 +236,15 @@ func (mv *Mlrval) MapGet(key *Mlrval) Mlrval {
 
 // ----------------------------------------------------------------
 func (mv *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
-	if mv.mvtype != MT_MAP {
+	if !mv.IsMap() {
 		// TODO: need to be careful about semantics here.
 		// Silent no-ops are not good UX ...
 		return
 	}
 
-	if key.mvtype == MT_STRING {
+	if key.IsString() {
 		mv.mapval.PutCopy(key.printrep, value)
-	} else if key.mvtype == MT_INT {
+	} else if key.IsInt() {
 		mv.mapval.PutCopy(key.String(), value)
 	}
 	// TODO: need to be careful about semantics here.
@@ -290,18 +290,18 @@ func (mv *Mlrval) MapPut(key *Mlrval, value *Mlrval) {
 func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
 
-	if mv.mvtype == MT_MAP {
+	if mv.IsMap() {
 		return putIndexedOnMap(mv.mapval, indices, rvalue)
 
-	} else if mv.mvtype == MT_ARRAY {
+	} else if mv.IsArray() {
 		return putIndexedOnArray(&mv.arrayval, indices, rvalue)
 
 	} else {
 		baseIndex := indices[0]
-		if baseIndex.mvtype == MT_STRING {
+		if baseIndex.IsString() {
 			*mv = *MlrvalFromEmptyMap()
 			return putIndexedOnMap(mv.mapval, indices, rvalue)
-		} else if baseIndex.mvtype == MT_INT {
+		} else if baseIndex.IsInt() {
 			*mv = MlrvalEmptyArray()
 			return putIndexedOnArray(&mv.arrayval, indices, rvalue)
 		} else {
@@ -340,7 +340,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 	}
 
 	// If not last index, then recurse.
-	if baseIndex.mvtype != MT_STRING && baseIndex.mvtype != MT_INT {
+	if !baseIndex.IsString() && !baseIndex.IsInt() {
 		// Base is map, index is invalid type
 		return errors.New(
 			"mlr: map indices must be string, int, or array thereof; got " + baseIndex.GetTypeName(),
@@ -374,7 +374,7 @@ func putIndexedOnArray(
 	lib.InternalCodingErrorIf(numIndices < 1)
 	mindex := indices[0]
 
-	if mindex.mvtype != MT_INT {
+	if !mindex.IsInt() {
 		return errors.New(
 			"Array index must be int, but was " +
 				mindex.GetTypeName() +
@@ -406,11 +406,11 @@ func putIndexedOnArray(
 			nextIndex := indices[1]
 
 			// Overwrite what's in this slot if it's the wrong type
-			if nextIndex.mvtype == MT_STRING {
+			if nextIndex.IsString() {
 				if (*baseArray)[zindex].mvtype != MT_MAP {
 					(*baseArray)[zindex] = *MlrvalFromEmptyMap()
 				}
-			} else if nextIndex.mvtype == MT_INT {
+			} else if nextIndex.IsInt() {
 				if (*baseArray)[zindex].mvtype != MT_ARRAY {
 					(*baseArray)[zindex] = MlrvalEmptyArray()
 				}
@@ -442,10 +442,10 @@ func putIndexedOnArray(
 func (mv *Mlrval) RemoveIndexed(indices []*Mlrval) error {
 	lib.InternalCodingErrorIf(len(indices) < 1)
 
-	if mv.mvtype == MT_MAP {
+	if mv.IsMap() {
 		return removeIndexedOnMap(mv.mapval, indices)
 
-	} else if mv.mvtype == MT_ARRAY {
+	} else if mv.IsArray() {
 		return removeIndexedOnArray(&mv.arrayval, indices)
 
 	} else {
@@ -464,7 +464,7 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 
 	// If last index, then unset.
 	if numIndices == 1 {
-		if baseIndex.mvtype == MT_STRING || baseIndex.mvtype == MT_INT {
+		if baseIndex.IsString() || baseIndex.IsInt() {
 			baseMap.Remove(baseIndex.String())
 			return nil
 		} else {
@@ -476,7 +476,7 @@ func removeIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval) error {
 	}
 
 	// If not last index, then recurse.
-	if baseIndex.mvtype == MT_STRING || baseIndex.mvtype == MT_INT {
+	if baseIndex.IsString() || baseIndex.IsInt() {
 		// Base is map, index is string
 		baseValue := baseMap.Get(baseIndex.String())
 		if baseValue != nil {
@@ -503,7 +503,7 @@ func removeIndexedOnArray(
 	lib.InternalCodingErrorIf(numIndices < 1)
 	mindex := indices[0]
 
-	if mindex.mvtype != MT_INT {
+	if !mindex.IsInt() {
 		return errors.New(
 			"Array index must be int, but was " +
 				mindex.GetTypeName() +

@@ -90,7 +90,7 @@ func (mv *Mlrval) setPrintRep() {
 // Must have non-pointer receiver in order to implement the fmt.Stringer
 // interface to make this printable via fmt.Println et al.
 func (mv Mlrval) String() string {
-	if mv.mvtype == MT_FLOAT && mlrvalFloatOutputFormatter != nil {
+	if mv.IsFloat() && mlrvalFloatOutputFormatter != nil {
 		// Use the format string from global --ofmt, if supplied
 		return mlrvalFloatOutputFormatter.FormatFloat(mv.floatval)
 	} else {

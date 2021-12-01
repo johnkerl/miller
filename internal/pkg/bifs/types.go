@@ -130,21 +130,21 @@ func BIF_boolean(input1 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 func BIF_is_absent(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_ABSENT)
+	return MlrvalFromBool(input1.IsAbsent())
 }
 func BIF_is_error(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_ERROR)
+	return MlrvalFromBool(input1.IsError())
 }
 func BIF_is_bool(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_BOOL)
+	return MlrvalFromBool(input1.IsBool())
 }
 func BIF_is_boolean(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_BOOL)
+	return MlrvalFromBool(input1.IsBool())
 }
 func BIF_is_empty(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_VOID {
+	if input1.IsVoid() {
 		return MLRVAL_TRUE
-	} else if input1.mvtype == MT_STRING {
+	} else if input1.IsString() {
 		if input1.printrep == "" {
 			return MLRVAL_TRUE
 		} else {
@@ -155,27 +155,27 @@ func BIF_is_empty(input1 *Mlrval) *Mlrval {
 	}
 }
 func BIF_is_emptymap(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_MAP && input1.mapval.IsEmpty())
+	return MlrvalFromBool(input1.IsMap() && input1.mapval.IsEmpty())
 }
 func BIF_is_float(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_FLOAT)
+	return MlrvalFromBool(input1.IsFloat())
 }
 func BIF_is_int(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_INT)
+	return MlrvalFromBool(input1.IsInt())
 }
 func BIF_is_map(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_MAP)
+	return MlrvalFromBool(input1.IsMap())
 }
 func BIF_is_array(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_ARRAY)
+	return MlrvalFromBool(input1.IsArray())
 }
 func BIF_is_nonemptymap(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_MAP && input1.mapval.FieldCount != 0)
+	return MlrvalFromBool(input1.IsMap() && input1.mapval.FieldCount != 0)
 }
 func BIF_is_notempty(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_VOID {
+	if input1.IsVoid() {
 		return MLRVAL_FALSE
-	} else if input1.mvtype == MT_STRING {
+	} else if input1.IsString() {
 		if input1.printrep == "" {
 			return MLRVAL_FALSE
 		} else {
@@ -195,16 +195,16 @@ func BIF_is_notnull(input1 *Mlrval) *Mlrval {
 	return MlrvalFromBool(input1.mvtype != MT_ABSENT && input1.mvtype != MT_VOID)
 }
 func BIF_is_null(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_ABSENT || input1.mvtype == MT_VOID)
+	return MlrvalFromBool(input1.IsAbsent() || input1.IsVoid())
 }
 func BIF_is_numeric(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_INT || input1.mvtype == MT_FLOAT)
+	return MlrvalFromBool(input1.IsInt() || input1.IsFloat())
 }
 func BIF_is_present(input1 *Mlrval) *Mlrval {
 	return MlrvalFromBool(input1.mvtype != MT_ABSENT)
 }
 func BIF_is_string(input1 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mvtype == MT_STRING || input1.mvtype == MT_VOID)
+	return MlrvalFromBool(input1.IsString() || input1.IsVoid())
 }
 
 // ----------------------------------------------------------------

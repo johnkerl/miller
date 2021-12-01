@@ -92,9 +92,9 @@ func leafcount_from_array(input1 *Mlrval) *Mlrval {
 		// childLeafCount := BIF_leafcount(&child)
 
 		childLeafCount := MlrvalFromInt(1)
-		if child.mvtype == MT_ARRAY {
+		if child.IsArray() {
 			childLeafCount = leafcount_from_array(&child)
-		} else if child.mvtype == MT_MAP {
+		} else if child.IsMap() {
 			childLeafCount = leafcount_from_map(&child)
 		}
 
@@ -114,9 +114,9 @@ func leafcount_from_map(input1 *Mlrval) *Mlrval {
 		// childLeafCount := BIF_leafcount(child)
 
 		childLeafCount := MlrvalFromInt(1)
-		if child.mvtype == MT_ARRAY {
+		if child.IsArray() {
 			childLeafCount = leafcount_from_array(child)
-		} else if child.mvtype == MT_MAP {
+		} else if child.IsMap() {
 			childLeafCount = leafcount_from_map(child)
 		}
 
@@ -151,7 +151,7 @@ func BIF_leafcount(input1 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 func has_key_in_array(input1, input2 *Mlrval) *Mlrval {
-	if input2.mvtype == MT_STRING {
+	if input2.IsString() {
 		return MLRVAL_FALSE
 	}
 	if input2.mvtype != MT_INT {
@@ -162,7 +162,7 @@ func has_key_in_array(input1, input2 *Mlrval) *Mlrval {
 }
 
 func has_key_in_map(input1, input2 *Mlrval) *Mlrval {
-	if input2.mvtype == MT_STRING || input2.mvtype == MT_INT {
+	if input2.IsString() || input2.IsInt() {
 		return MlrvalFromBool(input1.mapval.Has(input2.String()))
 	} else {
 		return MLRVAL_ERROR
@@ -170,9 +170,9 @@ func has_key_in_map(input1, input2 *Mlrval) *Mlrval {
 }
 
 func BIF_haskey(input1, input2 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_ARRAY {
+	if input1.IsArray() {
 		return has_key_in_array(input1, input2)
-	} else if input1.mvtype == MT_MAP {
+	} else if input1.IsMap() {
 		return has_key_in_map(input1, input2)
 	} else {
 		return MLRVAL_ERROR
@@ -192,13 +192,13 @@ func BIF_mapselect(mlrvals []*Mlrval) *Mlrval {
 
 	newKeys := make(map[string]bool)
 	for _, selectArg := range mlrvals[1:] {
-		if selectArg.mvtype == MT_STRING {
+		if selectArg.IsString() {
 			newKeys[selectArg.printrep] = true
-		} else if selectArg.mvtype == MT_INT {
+		} else if selectArg.IsInt() {
 			newKeys[selectArg.String()] = true
-		} else if selectArg.mvtype == MT_ARRAY {
+		} else if selectArg.IsArray() {
 			for _, element := range selectArg.arrayval {
-				if element.mvtype == MT_STRING {
+				if element.IsString() {
 					newKeys[element.printrep] = true
 				} else {
 					return MLRVAL_ERROR
@@ -231,13 +231,13 @@ func BIF_mapexcept(mlrvals []*Mlrval) *Mlrval {
 	newMap := mlrvals[0].mapval.Copy()
 
 	for _, exceptArg := range mlrvals[1:] {
-		if exceptArg.mvtype == MT_STRING {
+		if exceptArg.IsString() {
 			newMap.Remove(exceptArg.printrep)
-		} else if exceptArg.mvtype == MT_INT {
+		} else if exceptArg.IsInt() {
 			newMap.Remove(exceptArg.String())
-		} else if exceptArg.mvtype == MT_ARRAY {
+		} else if exceptArg.IsArray() {
 			for _, element := range exceptArg.arrayval {
-				if element.mvtype == MT_STRING {
+				if element.IsString() {
 					newMap.Remove(element.printrep)
 				} else {
 					return MLRVAL_ERROR
@@ -311,7 +311,7 @@ func BIF_joink(input1, input2 *Mlrval) *Mlrval {
 		return MLRVAL_ERROR
 	}
 	fieldSeparator := input2.printrep
-	if input1.mvtype == MT_MAP {
+	if input1.IsMap() {
 		var buffer bytes.Buffer
 
 		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
@@ -322,7 +322,7 @@ func BIF_joink(input1, input2 *Mlrval) *Mlrval {
 		}
 
 		return MlrvalFromString(buffer.String())
-	} else if input1.mvtype == MT_ARRAY {
+	} else if input1.IsArray() {
 		var buffer bytes.Buffer
 
 		for i := range input1.arrayval {
@@ -348,7 +348,7 @@ func BIF_joinv(input1, input2 *Mlrval) *Mlrval {
 	}
 	fieldSeparator := input2.printrep
 
-	if input1.mvtype == MT_MAP {
+	if input1.IsMap() {
 		var buffer bytes.Buffer
 
 		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
@@ -359,7 +359,7 @@ func BIF_joinv(input1, input2 *Mlrval) *Mlrval {
 		}
 
 		return MlrvalFromString(buffer.String())
-	} else if input1.mvtype == MT_ARRAY {
+	} else if input1.IsArray() {
 		var buffer bytes.Buffer
 
 		for i, element := range input1.arrayval {
@@ -388,7 +388,7 @@ func BIF_joinkv(input1, input2, input3 *Mlrval) *Mlrval {
 	}
 	fieldSeparator := input3.printrep
 
-	if input1.mvtype == MT_MAP {
+	if input1.IsMap() {
 		var buffer bytes.Buffer
 
 		for pe := input1.mapval.Head; pe != nil; pe = pe.Next {
@@ -401,7 +401,7 @@ func BIF_joinkv(input1, input2, input3 *Mlrval) *Mlrval {
 		}
 
 		return MlrvalFromString(buffer.String())
-	} else if input1.mvtype == MT_ARRAY {
+	} else if input1.IsArray() {
 		var buffer bytes.Buffer
 
 		for i, element := range input1.arrayval {
@@ -590,7 +590,7 @@ func mlrvalSplitAXHelper(input string, separator string) *Mlrval {
 
 // ----------------------------------------------------------------
 func BIF_get_keys(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_MAP {
+	if input1.IsMap() {
 		// TODO: make a ReferenceFrom with comments
 		output := NewSizedMlrvalArray(input1.mapval.FieldCount)
 		i := 0
@@ -600,7 +600,7 @@ func BIF_get_keys(input1 *Mlrval) *Mlrval {
 		}
 		return output
 
-	} else if input1.mvtype == MT_ARRAY {
+	} else if input1.IsArray() {
 		output := NewSizedMlrvalArray(int(len(input1.arrayval)))
 		for i := range input1.arrayval {
 			output.arrayval[i] = *MlrvalFromInt(int(i + 1)) // Miller user-space indices are 1-up
@@ -614,7 +614,7 @@ func BIF_get_keys(input1 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 func BIF_get_values(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_MAP {
+	if input1.IsMap() {
 		// TODO: make a ReferenceFrom with commenbs
 		output := NewSizedMlrvalArray(input1.mapval.FieldCount)
 		i := 0
@@ -624,7 +624,7 @@ func BIF_get_values(input1 *Mlrval) *Mlrval {
 		}
 		return output
 
-	} else if input1.mvtype == MT_ARRAY {
+	} else if input1.IsArray() {
 		output := NewSizedMlrvalArray(int(len(input1.arrayval)))
 		for i, value := range input1.arrayval {
 			output.arrayval[i] = *value.Copy()
@@ -654,7 +654,7 @@ func BIF_append(input1, input2 *Mlrval) *Mlrval {
 // flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
 // flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
 func BIF_flatten(input1, input2, input3 *Mlrval) *Mlrval {
-	if input3.mvtype == MT_MAP || input3.mvtype == MT_ARRAY {
+	if input3.IsMap() || input3.IsArray() {
 		if input1.mvtype != MT_STRING && input1.mvtype != MT_VOID {
 			return MLRVAL_ERROR
 		}
@@ -696,7 +696,7 @@ func BIF_unflatten(input1, input2 *Mlrval) *Mlrval {
 // ----------------------------------------------------------------
 // Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
 func BIF_arrayify(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_MAP {
+	if input1.IsMap() {
 		if input1.mapval.IsEmpty() {
 			return input1
 		}
@@ -725,7 +725,7 @@ func BIF_arrayify(input1 *Mlrval) *Mlrval {
 			return input1
 		}
 
-	} else if input1.mvtype == MT_ARRAY {
+	} else if input1.IsArray() {
 		// TODO: comment (or rethink) that this modifies its inputs!!
 		output := input1.Copy()
 		for i := range input1.arrayval {
@@ -740,7 +740,7 @@ func BIF_arrayify(input1 *Mlrval) *Mlrval {
 
 // ----------------------------------------------------------------
 func BIF_json_parse(input1 *Mlrval) *Mlrval {
-	if input1.mvtype == MT_VOID {
+	if input1.IsVoid() {
 		return input1
 	} else if input1.mvtype != MT_STRING {
 		return MLRVAL_ERROR

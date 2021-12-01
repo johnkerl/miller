@@ -53,6 +53,10 @@
 
 package types
 
+import(
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
+)
+
 // For the C port having this off was a noticeable performance improvement (10-15%).
 // For the Go port having it off is a less-noticeable performance improvement (5%).
 // Both these figures are for just doing mlr cat. At the moment I'm leaving this
@@ -78,7 +82,7 @@ type Mlrmap struct {
 
 type MlrmapEntry struct {
 	Key   string
-	Value *Mlrval
+	Value *mlrval.Mlrval
 	Prev  *MlrmapEntry
 	Next  *MlrmapEntry
 }
@@ -86,7 +90,7 @@ type MlrmapEntry struct {
 // Only used for sorting, map-to-pairs-array and pairs-array-to-map contexts.
 type MlrmapPair struct {
 	Key   string
-	Value *Mlrval
+	Value *mlrval.Mlrval
 }
 
 // ----------------------------------------------------------------
@@ -137,7 +141,7 @@ func (mlrmap *Mlrmap) isHashed() bool {
 // ----------------------------------------------------------------
 // Value-copy is up to the caller -- PutReference and PutCopy
 // are in the public Mlrmap API.
-func newMlrmapEntry(key string, value *Mlrval) *MlrmapEntry {
+func newMlrmapEntry(key string, value *mlrval.Mlrval) *MlrmapEntry {
 	return &MlrmapEntry{
 		key,
 		value,

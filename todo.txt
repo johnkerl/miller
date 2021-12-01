@@ -95,6 +95,55 @@ PUNCHDOWN LIST
       > try unconditional batching and hiding *first* to see how much best-case perf to be had
     ? lazy type-infer?? needs careful use of accessor-mutators in place of mv.type etc
 
+----------------------------------------------------------------
+* JIT refactor
+  o x 'tens/dozens of UT cases' 
+  ! re-check hashed/unhashed and do so periodically
+    > env-var back door
+  m internal/pkg/mlrval
+    - UT-driven mlrval defer/infer
+    - pkg/mlrval doc.go & README.md
+  o internal/pkg/types
+    - UT-driven mlrmap constructor refactor
+    - UT-driven JSON-parser refactor
+  o internal/pkg/input
+    - basic
+      mlrval.FromDeferredType
+      mlrmap.PutReference(key, value)
+
+    - UT-driven DKVP-from-line
+    - UT-driven X-from-line: nidx, xtab, csvlite, csv
+    - UT-driven JSON-from-line
+    - defer channelizers to a separate PR
+  o internal/pkg/output
+    - basic
+      mlrval.String()
+    - UT-driven to-line
+  o internal/pkg/bifs
+    - more UT ... final authority is RT though
+
+  ? stick w/ regtest ?
+    - internal/pkg/colorizer
+    - internal/pkg/platform
+    - internal/pkg/runtime
+
+    - internal/pkg/stream
+    - internal/pkg/cli
+    - internal/pkg/climain
+
+    - internal/pkg/transformers/utils
+    - internal/pkg/transformers
+
+    - internal/pkg/parsing
+    - internal/pkg/dsl
+    - internal/pkg/dsl/cst
+
+    - internal/pkg/auxents/repl
+    - internal/pkg/auxents/regtest
+    - internal/pkg/auxents
+    - internal/pkg/auxents/help
+----------------------------------------------------------------
+
 * blockers:
   - keep checking issues
   - verslink old relnotes

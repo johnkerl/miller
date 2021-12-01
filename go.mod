@@ -18,6 +18,7 @@ require (
 	github.com/lestrrat-go/strftime v1.0.4
 	github.com/mattn/go-isatty v0.0.12
 	github.com/pkg/profile v1.6.0 // indirect
+	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/sys v0.0.0-20210326220804-49726bf1d181
 	golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf
 )

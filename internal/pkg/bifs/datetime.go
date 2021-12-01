@@ -194,7 +194,7 @@ func BIF_strftime_local_ternary(input1, input2, input3 *Mlrval) *Mlrval {
 }
 
 func strftimeHelper(input1, input2 *Mlrval, doLocal bool, location *time.Location) *Mlrval {
-	if input1.mvtype == MT_VOID {
+	if input1.IsVoid() {
 		return input1
 	}
 	epochSeconds, ok := input1.GetNumericToFloatValue()

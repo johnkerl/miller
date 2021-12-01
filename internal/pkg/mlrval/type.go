@@ -1,5 +1,5 @@
 // ================================================================
-// The `types.Mlrval` structure includes **string, int, float, boolean, void,
+// The `mlrval.Mlrval` structure includes **string, int, float, boolean, void,
 // absent, and error** types (not unlike PHP's `zval`) as well as
 // type-conversion logic for various operators.
 //
@@ -8,7 +8,50 @@
 // that is a bug. It would be great to be able to somehow lint for this.
 // ================================================================
 
-package types
+// TODO:
+// * why here carefully fenced
+// * why interface for recursive/external items
+// * why optimizing:
+//   o def string-to-type, e.g. 17-column-wide, million-row CSV file,
+//     '$z = $x + $y' kind of thing -- don't need to type-infer
+//     column $a "1234" as int only to write it back non-modified
+//   o defer type-to-string, e.g. '$z = a*b + c*d' w/ a,b,c,d ints,
+//     string-rep not needed -- defer string-formatting until write-out.
+// * Careful fencing: want things to "just work" for as much of the
+//   code as possible.
+//   o Hide x.mvtype as x.Type() and that function can JIT-infer printrep
+//     "1234" and mvtype MT_PENDING to mvtype MT_INT and intval 1234.
+//   o Similarly MT_INT, intval 1235, printrepValid = false, only
+//     on to-string do printrep = "1235" and printrepValid=true.
+// * For all but JSON: everything is string/int/float/bool. Any
+//   array-valued/map-valued are JSON-encoded _as strings_.
+// * For JSON: no defer; everything is explicitly typed as part of
+//   the decode.
+
+// TODO: MERGE
+// An int/float always starts from a string -- be it from record data from
+// a file, or a literal within a DSL expression. The printrep is exactly
+// that string, however the user formatted it, and the intval/floatval is
+// computed from that -- and in sync with it -- at construction time.
+//
+// When a mlrval is computed from one or more others -- e.g. '$z = $x + 4'
+// -- the printrep is not updated. That would be wasted CPU, since the
+// string representation is not needed until when/if the value is printed
+// as output. For computation methods the printrep is neglected and the
+// printrepValid is set to false.
+//
+// In the String() method the printrep is computed from the intval/floatval
+// and printrepValid is set back to true.
+//
+// Note that for MT_STRING, the printrep is always valid since it is the
+// only payload for the mlrval.
+//
+// Thus we (a) keep user-specific input-formatting when possible, for the
+// principle of least surprise; (b) avoid reformatting strings during
+// intermediate arithmetic expressions; (c) resync arithmetic results to
+// string formatting on a just-in-time basis when output is printed.
+
+package mlrval
 
 type Mlrval struct {
 
@@ -16,46 +59,29 @@ type Mlrval struct {
 	// I would call this "type" not "mvtype" but "type" is a keyword in Go.
 	mvtype MVType
 
-	// An int/float always starts from a string -- be it from record data from
-	// a file, or a literal within a DSL expression. The printrep is exactly
-	// that string, however the user formatted it, and the intval/floatval is
-	// computed from that -- and in sync with it -- at construction time.
-	//
-	// When a mlrval is computed from one or more others -- e.g. '$z = $x + 4'
-	// -- the printrep is not updated. That would be wasted CPU, since the
-	// string representation is not needed until when/if the value is printed
-	// as output. For computation methods the printrep is neglected and the
-	// printrepValid is set to false.
-	//
-	// In the String() method the printrep is computed from the intval/floatval
-	// and printrepValid is set back to true.
-	//
-	// Note that for MT_STRING, the printrep is always valid since it is the
-	// only payload for the mlrval.
-	//
-	// Thus we (a) keep user-specific input-formatting when possible, for the
-	// principle of least surprise; (b) avoid reformatting strings during
-	// intermediate arithmetic expressions; (c) resync arithmetic results to
-	// string formatting on a just-in-time basis when output is printed.
 	printrep      string
 	printrepValid bool
 	intval        int
 	floatval      float64
 	boolval       bool
-	arrayval      []Mlrval
-	mapval        *Mlrmap
-	// These are first-class-function literals. Stored here as interface{} to
-	// avoid what would otherwise be a package-dependency cycle with the
-	// github.com/johnkerl/miller/internal/pkg/dsl/cst package.
-	funcval interface{}
+
+	// Interfaced here to avoid package-dependency cycles:
+	arrayval interface{} // []Mlrval
+	mapval   interface{} // *Mlrmap
+	funcval  interface{} // first-class-function literals from internal/pkg/dsl/cst
 }
+
+const INVALID_PRINTREP = "(bug-if-you-see-this)"
+const ERROR_PRINTREP = "(error)"
+const ABSENT_PRINTREP = "(error)"
 
 // Enumeration for mlrval types
 //
-// There are two kinds of null: ABSENT (key not present in a record) and VOID
-// (key present with empty value).  Note void is an acceptable string (empty
-// string) but not an acceptable number. (In Javascript, similarly, there are
-// undefined and null, respectively.)
+// There are three kinds of null: ABSENT (key not present in a record) and VOID
+// (key present with empty value); thirdly NULL for JSON null.  Note void is an
+// acceptable string (empty string) but not an acceptable number. (In
+// JavaScript, similarly, there are undefined and null, respectively --
+// Miller's absent is more like JavaScript's undefined.)
 
 type MVType int
 
@@ -63,7 +89,7 @@ type MVType int
 // matrices. If they are changed, it will break the disposition matrices, or
 // they will all need manual re-indexing.
 const (
-	// Type not yet determined, during JSON decode.
+	// Type not yet determined: during JSON decode or TODO comment.
 	MT_PENDING MVType = -1
 
 	// E.g. error encountered in one eval & it propagates up the AST at
@@ -121,7 +147,6 @@ var TYPE_NAMES = [MT_DIM]string{
 	"funct",
 }
 
-// ----------------------------------------------------------------
 // For typed assignments in the DSL
 
 // TODO: comment more re typedecls
@@ -158,15 +183,3 @@ var typeNameToMaskMap = map[string]int{
 	"funct": MT_TYPE_MASK_FUNC,
 }
 
-func TypeNameToMask(typeName string) (mask int, present bool) {
-	retval := typeNameToMaskMap[typeName]
-	if retval != 0 {
-		return retval, true
-	} else {
-		return 0, false
-	}
-}
-
-func (mv *Mlrval) GetTypeBit() int {
-	return 1 << mv.mvtype
-}
