@@ -1,9 +1,8 @@
 package output
 
 import (
-	"bytes"
+	"bufio"
 	"fmt"
-	"io"
 	"unicode/utf8"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -44,7 +43,7 @@ func NewRecordWriterXTAB(writerOptions *cli.TWriterOptions) (*RecordWriterXTAB, 
 
 func (writer *RecordWriterXTAB) Write(
 	outrec *types.Mlrmap,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 	// End of record stream: nothing special for this output format
@@ -61,54 +60,48 @@ func (writer *RecordWriterXTAB) Write(
 	}
 
 	if writer.writerOptions.RightAlignedXTABOutput {
-		writer.writeWithRightAlignedValues(outrec, ostream, outputIsStdout, maxKeyLength)
+		writer.writeWithRightAlignedValues(outrec, bufferedOutputStream, outputIsStdout, maxKeyLength)
 	} else {
-		writer.writeWithLeftAlignedValues(outrec, ostream, outputIsStdout, maxKeyLength)
+		writer.writeWithLeftAlignedValues(outrec, bufferedOutputStream, outputIsStdout, maxKeyLength)
 	}
-
 }
 
 func (writer *RecordWriterXTAB) writeWithLeftAlignedValues(
 	outrec *types.Mlrmap,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 	maxKeyLength int,
 ) {
-
-	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for ~5x speed increase
-
 	// Put a blank line between records, but not before the first or after the last
 	if writer.onFirst {
 		writer.onFirst = false
 	} else {
-		buffer.WriteString(writer.writerOptions.OFS)
+		bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 	}
 
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
 		keyLength := utf8.RuneCountInString(pe.Key)
 		keyPadLength := maxKeyLength - keyLength
 
-		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+		bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 
 		if writer.opslen == 1 {
-			buffer.WriteString(writer.writerOptions.OPS) // always at least once
+			bufferedOutputStream.WriteString(writer.writerOptions.OPS) // always at least once
 			for i := 0; i < keyPadLength; i += writer.opslen {
-				buffer.WriteString(writer.writerOptions.OPS)
+				bufferedOutputStream.WriteString(writer.writerOptions.OPS)
 			}
 		} else {
-			buffer.WriteString(writer.writerOptions.OPS)
+			bufferedOutputStream.WriteString(writer.writerOptions.OPS)
 		}
 
-		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
-		buffer.WriteString(writer.writerOptions.OFS)
+		bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
+		bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 	}
-	ostream.Write(buffer.Bytes())
-
 }
 
 func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 	outrec *types.Mlrmap,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 	maxKeyLength int,
 ) {
@@ -127,13 +120,11 @@ func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 		i++
 	}
 
-	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for ~5x speed increase
-
 	// Put a blank line between records, but not before the first or after the last
 	if writer.onFirst {
 		writer.onFirst = false
 	} else {
-		buffer.WriteString(writer.writerOptions.OFS)
+		bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 	}
 
 	i = 0
@@ -141,22 +132,21 @@ func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
 		keyLength := utf8.RuneCountInString(pe.Key)
 		keyPadLength := maxKeyLength - keyLength
 
-		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+		bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 
 		if writer.opslen == 1 {
-			buffer.WriteString(writer.writerOptions.OPS) // always at least once
+			bufferedOutputStream.WriteString(writer.writerOptions.OPS) // always at least once
 			for i := 0; i < keyPadLength; i += writer.opslen {
-				buffer.WriteString(writer.writerOptions.OPS)
+				bufferedOutputStream.WriteString(writer.writerOptions.OPS)
 			}
 		} else {
-			buffer.WriteString(writer.writerOptions.OPS)
+			bufferedOutputStream.WriteString(writer.writerOptions.OPS)
 		}
 
 		paddedValue := fmt.Sprintf("%*s", maxValueLength, values[i])
-		buffer.WriteString(colorizer.MaybeColorizeValue(paddedValue, outputIsStdout))
-		buffer.WriteString(writer.writerOptions.OFS)
+		bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(paddedValue, outputIsStdout))
+		bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 
 		i++
 	}
-	ostream.Write(buffer.Bytes())
 }

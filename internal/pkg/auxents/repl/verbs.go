@@ -545,7 +545,8 @@ func skipOrProcessRecord(
 	// Strings to be printed from put/filter DSL print/dump/etc statements.
 	if recordAndContext.Record == nil {
 		if processingNotSkipping {
-			fmt.Fprint(repl.outputStream, recordAndContext.OutputString)
+			repl.bufferedRecordOutputStream.WriteString(recordAndContext.OutputString)
+			repl.bufferedRecordOutputStream.Flush()
 		}
 		return false
 	}
@@ -607,7 +608,8 @@ func writeRecord(repl *Repl, outrec *types.Mlrmap) {
 			outrec.Unflatten(repl.options.WriterOptions.FLATSEP)
 		}
 	}
-	repl.recordWriter.Write(outrec, repl.outputStream, true /*outputIsStdout*/)
+	repl.recordWriter.Write(outrec, repl.bufferedRecordOutputStream, true /*outputIsStdout*/)
+	repl.bufferedRecordOutputStream.Flush()
 }
 
 // ----------------------------------------------------------------
@@ -633,8 +635,8 @@ func usageRedirectWrite(repl *Repl) {
 func handleRedirectWrite(repl *Repl, args []string) bool {
 	args = args[1:] // strip off verb
 	if len(args) == 0 {
-		// TODO: fclose old if not already os.Stdout
-		repl.outputStream = os.Stdout
+		repl.closeBufferedOutputStream()
+		repl.setBufferedOutputStream("(stdout)", os.Stdout)
 		return true
 	}
 
@@ -656,8 +658,8 @@ func handleRedirectWrite(repl *Repl, args []string) bool {
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
 
-	// TODO: fclose old if not already os.Stdout
-	repl.outputStream = handle
+	repl.closeBufferedOutputStream()
+	repl.setBufferedOutputStream(filename, handle)
 
 	return true
 }
@@ -687,8 +689,8 @@ func handleRedirectAppend(repl *Repl, args []string) bool {
 	}
 	fmt.Printf("Redirecting record output to \"%s\"\n", filename)
 
-	// TODO: fclose old if not already os.Stdout
-	repl.outputStream = handle
+	repl.closeBufferedOutputStream()
+	repl.setBufferedOutputStream(filename, handle)
 
 	return true
 }
