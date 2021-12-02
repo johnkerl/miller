@@ -159,7 +159,7 @@ func inferNormally(input string, inferBool bool) *Mlrval {
 
 func inferWithOctalSuppress(input string, inferBool bool) *Mlrval {
 	output := inferNormally(input, inferBool)
-	if output.mvtype != MT_INT {
+	if output.mvtype != MT_INT && output.mvtype != MT_FLOAT {
 		return output
 	}
 
