@@ -13,6 +13,7 @@
 package output
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"io"
@@ -200,9 +201,10 @@ func (manager *MultiOutputHandlerManager) Close() []error {
 
 // ================================================================
 type FileOutputHandler struct {
-	filename  string
-	handle    io.WriteCloser
-	closeable bool
+	filename             string
+	handle               io.WriteCloser
+	bufferedOutputStream *bufio.Writer
+	closeable            bool
 
 	// This will be nil if WriteRecordAndContext has never been called. It's
 	// lazily created on WriteRecord. The record-writer / channel parts are
@@ -221,9 +223,10 @@ func newOutputHandlerCommon(
 	recordWriterOptions *cli.TWriterOptions,
 ) *FileOutputHandler {
 	return &FileOutputHandler{
-		filename:  filename,
-		handle:    handle,
-		closeable: closeable,
+		filename:             filename,
+		handle:               handle,
+		bufferedOutputStream: bufio.NewWriter(handle),
+		closeable:            closeable,
 
 		recordWriterOptions: recordWriterOptions,
 		recordWriter:        nil,
@@ -320,7 +323,7 @@ func newStderrOutputHandler(
 
 // ----------------------------------------------------------------
 func (handler *FileOutputHandler) WriteString(outputString string) error {
-	_, err := handler.handle.Write([]byte(outputString))
+	_, err := handler.bufferedOutputStream.WriteString(outputString)
 	return err
 }
 
@@ -357,8 +360,9 @@ func (handler *FileOutputHandler) setUpRecordWriter() error {
 	go ChannelWriter(
 		handler.recordOutputChannel,
 		handler.recordWriter,
+		handler.recordWriterOptions,
 		handler.recordDoneChannel,
-		handler.handle,
+		handler.bufferedOutputStream,
 		false, // outputIsStdout
 	)
 
@@ -383,6 +387,7 @@ func (handler *FileOutputHandler) Close() error {
 		}
 	}
 
+	handler.bufferedOutputStream.Flush()
 	if handler.closeable {
 		return handler.handle.Close()
 	} else {

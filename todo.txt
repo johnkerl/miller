@@ -1,6 +1,12 @@
 ================================================================
 PUNCHDOWN LIST
 
+* bufwr
+  o TODOs in repl re handle-close
+  o flush in channel writer & get the wopt into there
+    - repl retain filename too
+* perf wup @ rgp.md
+
 * blockers:
   - keep checking issues
   - verslink old relnotes

@@ -1,9 +1,7 @@
 package output
 
 import (
-	"bytes"
-	"fmt"
-	"io"
+	"bufio"
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -31,7 +29,7 @@ func NewRecordWriterMarkdown(writerOptions *cli.TWriterOptions) (*RecordWriterMa
 // ----------------------------------------------------------------
 func (writer *RecordWriterMarkdown) Write(
 	outrec *types.Mlrmap,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 	if outrec == nil { // end of record stream
@@ -43,40 +41,36 @@ func (writer *RecordWriterMarkdown) Write(
 		if currentJoinedHeader != writer.lastJoinedHeader {
 			writer.lastJoinedHeader = ""
 			if writer.numHeaderLinesOutput > 0 {
-				fmt.Fprintf(ostream, writer.writerOptions.ORS)
+				bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 			}
 		}
 	}
 
-	var buffer bytes.Buffer
-
 	if writer.lastJoinedHeader == "" {
-		buffer.WriteString("|")
+		bufferedOutputStream.WriteString("|")
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			buffer.WriteString(" ")
-			buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-			buffer.WriteString(" |")
+			bufferedOutputStream.WriteString(" ")
+			bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+			bufferedOutputStream.WriteString(" |")
 		}
-		buffer.WriteString(writer.writerOptions.ORS)
+		bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 
-		buffer.WriteString("|")
+		bufferedOutputStream.WriteString("|")
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			buffer.WriteString(" --- |")
+			bufferedOutputStream.WriteString(" --- |")
 		}
-		buffer.WriteString(writer.writerOptions.ORS)
+		bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 
 		writer.lastJoinedHeader = currentJoinedHeader
 		writer.numHeaderLinesOutput++
 	}
 
-	buffer.WriteString("|")
+	bufferedOutputStream.WriteString("|")
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		buffer.WriteString(" ")
+		bufferedOutputStream.WriteString(" ")
 		value := strings.ReplaceAll(pe.Value.String(), "|", "\\|")
-		buffer.WriteString(colorizer.MaybeColorizeValue(value, outputIsStdout))
-		buffer.WriteString(" |")
+		bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(value, outputIsStdout))
+		bufferedOutputStream.WriteString(" |")
 	}
-	buffer.WriteString(writer.writerOptions.ORS)
-
-	fmt.Fprint(ostream, buffer.String())
+	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 }

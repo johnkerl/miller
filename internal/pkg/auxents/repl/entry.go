@@ -152,6 +152,9 @@ func ReplMain(args []string) int {
 	options.WriterOptions.AutoFlatten = cli.DecideFinalFlatten(&options.WriterOptions)
 	options.WriterOptions.AutoUnflatten = cli.DecideFinalUnflatten(options)
 
+	recordOutputFileName := "(stdout)"
+	recordOutputStream := os.Stdout
+
 	repl, err := NewRepl(
 		exeName,
 		replName,
@@ -160,6 +163,8 @@ func ReplMain(args []string) int {
 		astPrintMode,
 		doWarnings,
 		options,
+		recordOutputFileName,
+		recordOutputStream,
 	)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -172,5 +177,8 @@ func ReplMain(args []string) int {
 	}
 
 	repl.handleSession(os.Stdin)
+
+	repl.bufferedRecordOutputStream.Flush()
+	repl.closeBufferedOutputStream()
 	return 0
 }

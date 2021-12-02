@@ -1,8 +1,7 @@
 package output
 
 import (
-	"bytes"
-	"io"
+	"bufio"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/colorizer"
@@ -21,7 +20,7 @@ func NewRecordWriterDKVP(writerOptions *cli.TWriterOptions) (*RecordWriterDKVP, 
 
 func (writer *RecordWriterDKVP) Write(
 	outrec *types.Mlrmap,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 	// End of record stream: nothing special for this output format
@@ -30,19 +29,17 @@ func (writer *RecordWriterDKVP) Write(
 	}
 
 	if outrec.IsEmpty() {
-		ostream.Write([]byte(writer.writerOptions.ORS))
+		bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 		return
 	}
 
-	var buffer bytes.Buffer // stdio is non-buffered in Go, so buffer for ~5x speed increase
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-		buffer.WriteString(writer.writerOptions.OPS)
-		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
+		bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+		bufferedOutputStream.WriteString(writer.writerOptions.OPS)
+		bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
 		if pe.Next != nil {
-			buffer.WriteString(writer.writerOptions.OFS)
+			bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 		}
 	}
-	buffer.WriteString(writer.writerOptions.ORS)
-	ostream.Write(buffer.Bytes())
+	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 }

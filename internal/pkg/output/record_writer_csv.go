@@ -1,9 +1,9 @@
 package output
 
 import (
+	"bufio"
 	"encoding/csv"
 	"errors"
-	"io"
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -30,7 +30,7 @@ func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, er
 	}
 	return &RecordWriterCSV{
 		writerOptions:      writerOptions,
-		csvWriter:          nil, // will be set on first Write() wherein we have the ostream
+		csvWriter:          nil, // will be set on first Write() wherein we have the output stream
 		lastJoinedHeader:   nil,
 		justWroteEmptyLine: false,
 	}, nil
@@ -38,7 +38,7 @@ func NewRecordWriterCSV(writerOptions *cli.TWriterOptions) (*RecordWriterCSV, er
 
 func (writer *RecordWriterCSV) Write(
 	outrec *types.Mlrmap,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 	// End of record stream: nothing special for this output format
@@ -47,13 +47,13 @@ func (writer *RecordWriterCSV) Write(
 	}
 
 	if writer.csvWriter == nil {
-		writer.csvWriter = csv.NewWriter(ostream)
+		writer.csvWriter = csv.NewWriter(bufferedOutputStream)
 		writer.csvWriter.Comma = rune(writer.writerOptions.OFS[0]) // xxx temp
 	}
 
 	if outrec.IsEmpty() {
 		if !writer.justWroteEmptyLine {
-			ostream.Write([]byte("\n"))
+			bufferedOutputStream.WriteString("\n")
 		}
 		joinedHeader := ""
 		writer.lastJoinedHeader = &joinedHeader
@@ -66,7 +66,7 @@ func (writer *RecordWriterCSV) Write(
 	if writer.lastJoinedHeader == nil || *writer.lastJoinedHeader != joinedHeader {
 		if writer.lastJoinedHeader != nil {
 			if !writer.justWroteEmptyLine {
-				ostream.Write([]byte("\n"))
+				bufferedOutputStream.WriteString("\n")
 			}
 			writer.justWroteEmptyLine = true
 		}
@@ -91,6 +91,5 @@ func (writer *RecordWriterCSV) Write(
 		i++
 	}
 	writer.csvWriter.Write(fields)
-	writer.csvWriter.Flush()
 	writer.justWroteEmptyLine = false
 }
