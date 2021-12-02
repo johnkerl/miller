@@ -1,8 +1,7 @@
 package output
 
 import (
-	"bytes"
-	"io"
+	"bufio"
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -28,7 +27,7 @@ func NewRecordWriterCSVLite(writerOptions *cli.TWriterOptions) (*RecordWriterCSV
 
 func (writer *RecordWriterCSVLite) Write(
 	outrec *types.Mlrmap,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 	// End of record stream: nothing special for this output format
@@ -38,7 +37,7 @@ func (writer *RecordWriterCSVLite) Write(
 
 	if outrec.IsEmpty() {
 		if !writer.justWroteEmptyLine {
-			ostream.Write([]byte(writer.writerOptions.ORS))
+			bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 		}
 		joinedHeader := ""
 		writer.lastJoinedHeader = &joinedHeader
@@ -51,7 +50,7 @@ func (writer *RecordWriterCSVLite) Write(
 	if writer.lastJoinedHeader == nil || *writer.lastJoinedHeader != joinedHeader {
 		if writer.lastJoinedHeader != nil {
 			if !writer.justWroteEmptyLine {
-				ostream.Write([]byte(writer.writerOptions.ORS))
+				bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 			}
 			writer.justWroteEmptyLine = true
 		}
@@ -60,28 +59,24 @@ func (writer *RecordWriterCSVLite) Write(
 	}
 
 	if needToPrintHeader && !writer.writerOptions.HeaderlessCSVOutput {
-		var buffer bytes.Buffer // faster than fmt.Print() separately
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
-			buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+			bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 
 			if pe.Next != nil {
-				buffer.WriteString(writer.writerOptions.OFS)
+				bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 			}
 		}
 
-		buffer.WriteString(writer.writerOptions.ORS)
-		ostream.Write(buffer.Bytes())
+		bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 	}
 
-	var buffer bytes.Buffer // faster than fmt.Print() separately
 	for pe := outrec.Head; pe != nil; pe = pe.Next {
-		buffer.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
+		bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(pe.Value.String(), outputIsStdout))
 		if pe.Next != nil {
-			buffer.WriteString(writer.writerOptions.OFS)
+			bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 		}
 	}
-	buffer.WriteString(writer.writerOptions.ORS)
-	ostream.Write(buffer.Bytes())
+	bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 
 	writer.justWroteEmptyLine = false
 }

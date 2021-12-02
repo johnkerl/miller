@@ -43,6 +43,8 @@ func NewRepl(
 	astPrintMode ASTPrintMode,
 	doWarnings bool,
 	options *cli.TOptions,
+	recordOutputFileName string,
+	recordOutputStream *os.File,
 ) (*Repl, error) {
 
 	recordReader, err := input.Create(&options.ReaderOptions)
@@ -54,7 +56,6 @@ func NewRepl(
 	if err != nil {
 		return nil, err
 	}
-	outputStream := os.Stdout
 
 	// $* is the empty map {} until/unless the user opens a file and reads records from it.
 	inrec := types.NewMlrmapAsRecord()
@@ -119,12 +120,13 @@ func NewRepl(
 		errorChannel: nil,
 		recordReader: recordReader,
 		recordWriter: recordWriter,
-		outputStream: outputStream,
 
 		runtimeState:                 runtimeState,
 		sysToSignalHandlerChannel:    sysToSignalHandlerChannel,
 		appSignalNotificationChannel: appSignalNotificationChannel,
 	}
+
+	repl.setBufferedOutputStream(recordOutputFileName, recordOutputStream)
 
 	for _, dslString := range dslStrings {
 		err := repl.handleDSLStringBulk(dslString, doWarnings)
@@ -246,5 +248,25 @@ func (repl *Repl) handleMultiLine(
 	}
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
+	}
+}
+
+func (repl *Repl) setBufferedOutputStream(
+	recordOutputFileName string,
+	recordOutputStream *os.File,
+) {
+	repl.recordOutputFileName = recordOutputFileName
+	repl.recordOutputStream = recordOutputStream
+	repl.bufferedRecordOutputStream = bufio.NewWriter(recordOutputStream)
+}
+
+func (repl *Repl) closeBufferedOutputStream() {
+	if repl.recordOutputStream != os.Stdout {
+		err := repl.recordOutputStream.Close()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "mlr repl: error on redirect close of %s: %v\n",
+				repl.recordOutputFileName, err)
+			os.Exit(1)
+		}
 	}
 }

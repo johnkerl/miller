@@ -1,10 +1,9 @@
 package output
 
 import (
-	"bytes"
+	"bufio"
 	"container/list"
 	"fmt"
-	"io"
 	"strings"
 	"unicode/utf8"
 
@@ -36,7 +35,7 @@ func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) (*RecordWriterPPRI
 // ----------------------------------------------------------------
 func (writer *RecordWriterPPRINT) Write(
 	outrec *types.Mlrmap,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 	// Group records by have-same-schema or not. Pretty-print each
@@ -46,7 +45,6 @@ func (writer *RecordWriterPPRINT) Write(
 	// find out max width down each column.
 
 	if outrec != nil { // Not end of record stream
-
 		if writer.lastJoinedHeader == nil {
 			// First output record:
 			// * New batch
@@ -62,12 +60,12 @@ func (writer *RecordWriterPPRINT) Write(
 				nonEmpty := writer.writeHeterogenousList(
 					writer.batch,
 					writer.writerOptions.BarredPprintOutput,
-					ostream,
+					bufferedOutputStream,
 					outputIsStdout,
 				)
 				if nonEmpty {
 					// Print a newline
-					ostream.Write([]byte(writer.writerOptions.ORS))
+					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 				// Start a new batch
 				writer.batch = list.New()
@@ -80,9 +78,9 @@ func (writer *RecordWriterPPRINT) Write(
 		}
 
 	} else { // End of record stream
-
 		if writer.batch.Front() != nil {
-			writer.writeHeterogenousList(writer.batch, writer.writerOptions.BarredPprintOutput, ostream, outputIsStdout)
+			writer.writeHeterogenousList(writer.batch, writer.writerOptions.BarredPprintOutput,
+				bufferedOutputStream, outputIsStdout)
 		}
 	}
 }
@@ -92,7 +90,7 @@ func (writer *RecordWriterPPRINT) Write(
 func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	records *list.List,
 	barred bool,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) bool {
 	maxWidths := make(map[string]int)
@@ -127,9 +125,9 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 			}
 		}
 		if barred {
-			writer.writeHeterogenousListBarred(records, maxWidths, ostream, outputIsStdout)
+			writer.writeHeterogenousListBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
 		} else {
-			writer.writeHeterogenousListNonBarred(records, maxWidths, ostream, outputIsStdout)
+			writer.writeHeterogenousListNonBarred(records, maxWidths, bufferedOutputStream, outputIsStdout)
 		}
 		return true
 	}
@@ -148,7 +146,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 	records *list.List,
 	maxWidths map[string]int,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 
@@ -158,38 +156,35 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 
 		// Print header line
 		if onFirst && !writer.writerOptions.HeaderlessCSVOutput {
-			var buffer bytes.Buffer // faster than fmt.Print() separately
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				if !writer.writerOptions.RightAlignedPPRINTOutput { // left-align
 					if pe.Next != nil {
 						// Header line, left-align, not last column
-						buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-						writer.writePadding(pe.Key, maxWidths[pe.Key], &buffer)
-						buffer.WriteString(writer.writerOptions.OFS)
+						bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+						writer.writePadding(pe.Key, maxWidths[pe.Key], bufferedOutputStream)
+						bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 					} else {
 						// Header line, left-align, last column
-						buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-						buffer.WriteString(writer.writerOptions.ORS)
+						bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+						bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 					}
 				} else { // right-align
-					writer.writePadding(pe.Key, maxWidths[pe.Key], &buffer)
-					buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+					writer.writePadding(pe.Key, maxWidths[pe.Key], bufferedOutputStream)
+					bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 					if pe.Next != nil {
 						// Header line, right-align, not last column
-						buffer.WriteString(writer.writerOptions.OFS)
+						bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 					} else {
 						// Header line, right-align, last column
-						buffer.WriteString(writer.writerOptions.ORS)
+						bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 					}
 				}
 
 			}
-			ostream.Write(buffer.Bytes())
 		}
 		onFirst = false
 
 		// Print data lines
-		var buffer bytes.Buffer // faster than fmt.Print() separately
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
 			if s == "" {
@@ -198,27 +193,30 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 			if !writer.writerOptions.RightAlignedPPRINTOutput { // left-align
 				if pe.Next != nil {
 					// Data line, left-align, not last column
-					buffer.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
-					writer.writePadding(s, maxWidths[pe.Key], &buffer)
-					buffer.WriteString(writer.writerOptions.OFS)
+					bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
+					writer.writePadding(s, maxWidths[pe.Key], bufferedOutputStream)
+					bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 				} else {
 					// Data line, left-align, last column
-					buffer.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
-					buffer.WriteString(writer.writerOptions.ORS)
+					bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
+					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			} else { // right-align
-				writer.writePadding(s, maxWidths[pe.Key], &buffer)
-				buffer.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
+				writer.writePadding(s, maxWidths[pe.Key], bufferedOutputStream)
+				bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
 				if pe.Next != nil {
 					// Data line, right-align, not last column
-					buffer.WriteString(writer.writerOptions.OFS)
+					bufferedOutputStream.WriteString(writer.writerOptions.OFS)
 				} else {
 					// Data line, right-align, last column
-					buffer.WriteString(writer.writerOptions.ORS)
+					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			}
 		}
-		ostream.Write(buffer.Bytes())
+
+		if writer.writerOptions.FlushOnEveryRecord {
+			bufferedOutputStream.Flush()
+		}
 	}
 }
 
@@ -235,13 +233,10 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 // | wye | pan | 5  | 0.5732889198020006   | 0.8636244699032729  |
 // +-----+-----+----+----------------------+---------------------+
 
-// TODO: for better performance, uuse string-buffer as in DKVP for this and all
-// record-writers
-
 func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 	records *list.List,
 	maxWidths map[string]int,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 
@@ -263,97 +258,94 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 
 		// Print header line
 		if onFirst && !writer.writerOptions.HeaderlessCSVOutput {
-			var buffer bytes.Buffer // faster than fmt.Print() separately
-
-			buffer.WriteString(horizontalStart)
+			bufferedOutputStream.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				buffer.WriteString(horizontalBars[pe.Key])
+				bufferedOutputStream.WriteString(horizontalBars[pe.Key])
 				if pe.Next != nil {
-					buffer.WriteString(horizontalMiddle)
+					bufferedOutputStream.WriteString(horizontalMiddle)
 				} else {
-					buffer.WriteString(horizontalEnd)
-					buffer.WriteString(writer.writerOptions.ORS)
+					bufferedOutputStream.WriteString(horizontalEnd)
+					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			}
 
-			buffer.WriteString(verticalStart)
+			bufferedOutputStream.WriteString(verticalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				if !writer.writerOptions.RightAlignedPPRINTOutput { // left-align
-					buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
-					writer.writePadding(pe.Key, maxWidths[pe.Key], &buffer)
+					bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+					writer.writePadding(pe.Key, maxWidths[pe.Key], bufferedOutputStream)
 				} else { // right-align
-					writer.writePadding(pe.Key, maxWidths[pe.Key], &buffer)
-					buffer.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
+					writer.writePadding(pe.Key, maxWidths[pe.Key], bufferedOutputStream)
+					bufferedOutputStream.WriteString(colorizer.MaybeColorizeKey(pe.Key, outputIsStdout))
 				}
 				if pe.Next != nil {
-					buffer.WriteString(verticalMiddle)
+					bufferedOutputStream.WriteString(verticalMiddle)
 				} else {
-					buffer.WriteString(verticalEnd)
-					buffer.WriteString(writer.writerOptions.ORS)
+					bufferedOutputStream.WriteString(verticalEnd)
+					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			}
 
-			buffer.WriteString(horizontalStart)
+			bufferedOutputStream.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				buffer.WriteString(horizontalBars[pe.Key])
+				bufferedOutputStream.WriteString(horizontalBars[pe.Key])
 				if pe.Next != nil {
-					buffer.WriteString(horizontalMiddle)
+					bufferedOutputStream.WriteString(horizontalMiddle)
 				} else {
-					buffer.WriteString(horizontalEnd)
-					buffer.WriteString(writer.writerOptions.ORS)
+					bufferedOutputStream.WriteString(horizontalEnd)
+					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			}
-
-			ostream.Write(buffer.Bytes())
 		}
 		onFirst = false
 
 		// Print data lines
-		var buffer bytes.Buffer // faster than fmt.Print() separately
-		buffer.WriteString(verticalStart)
+		bufferedOutputStream.WriteString(verticalStart)
 		for pe := outrec.Head; pe != nil; pe = pe.Next {
 			s := pe.Value.String()
 			if !writer.writerOptions.RightAlignedPPRINTOutput { // left-align
-				buffer.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
-				writer.writePadding(s, maxWidths[pe.Key], &buffer)
+				bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
+				writer.writePadding(s, maxWidths[pe.Key], bufferedOutputStream)
 			} else { // right-align
-				writer.writePadding(s, maxWidths[pe.Key], &buffer)
-				buffer.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
+				writer.writePadding(s, maxWidths[pe.Key], bufferedOutputStream)
+				bufferedOutputStream.WriteString(colorizer.MaybeColorizeValue(s, outputIsStdout))
 			}
 			if pe.Next != nil {
-				buffer.WriteString(fmt.Sprint(verticalMiddle))
+				bufferedOutputStream.WriteString(fmt.Sprint(verticalMiddle))
 			} else {
-				buffer.WriteString(verticalEnd)
-				buffer.WriteString(writer.writerOptions.ORS)
+				bufferedOutputStream.WriteString(verticalEnd)
+				bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 			}
 		}
 
 		if e.Next() == nil {
-			buffer.WriteString(horizontalStart)
+			bufferedOutputStream.WriteString(horizontalStart)
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
-				buffer.WriteString(horizontalBars[pe.Key])
+				bufferedOutputStream.WriteString(horizontalBars[pe.Key])
 				if pe.Next != nil {
-					buffer.WriteString(horizontalMiddle)
+					bufferedOutputStream.WriteString(horizontalMiddle)
 				} else {
-					buffer.WriteString(horizontalEnd)
-					buffer.WriteString(writer.writerOptions.ORS)
+					bufferedOutputStream.WriteString(horizontalEnd)
+					bufferedOutputStream.WriteString(writer.writerOptions.ORS)
 				}
 			}
 		}
 
-		ostream.Write(buffer.Bytes())
+		if writer.writerOptions.FlushOnEveryRecord {
+			bufferedOutputStream.Flush()
+		}
 	}
 }
 
 func (writer *RecordWriterPPRINT) writePadding(
 	text string,
 	fieldWidth int,
-	buffer *bytes.Buffer,
+	bufferedOutputStream *bufio.Writer,
 ) {
 	textWidth := utf8.RuneCountInString(text)
 	padWidth := fieldWidth - textWidth
 	ofs := writer.writerOptions.OFS
 	for i := 0; i < padWidth; i++ {
-		buffer.WriteString(ofs)
+		bufferedOutputStream.WriteString(ofs)
 	}
 }

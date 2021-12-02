@@ -1,6 +1,12 @@
 ================================================================
 PUNCHDOWN LIST
 
+* bufwr
+  o TODOs in repl re handle-close
+  o flush in channel writer & get the wopt into there
+    - repl retain filename too
+* perf wup @ rgp.md
+
 * blockers:
   - keep checking issues
   - verslink old relnotes
@@ -12,16 +18,6 @@ PUNCHDOWN LIST
   - #756 octal
   - 0b1011 olh/webdoc
   - rtd links somewhere
-
-* shebang
-  - maybe multiple -s -- ? []args would continue growing during parse ...
-  - try mlr -s on windows; maybe consolation for shebang-bash -- ?
-  - doc re where to put --norc
-    > it needn't be first (after -s) anymore
-  - olh
-  - webdocs
-  - want:
-    > myscript.mlr --c2j input.csv
 
 * shebang
   - maybe multiple -s -- ? []args would continue growing during parse ...

@@ -314,8 +314,6 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 `: Type information from JSON input files is now preserved throughout the processing stream.
 * `--mmap
 `: Miller no longer uses memory-mapping to access data files.
-* `--no-fflush
-`: The current implementation of Miller does not use buffered output, so there is no longer anything to suppress here.
 * `--no-mmap
 `: Miller no longer uses memory-mapping to access data files.
 * `--ojsonx
@@ -339,6 +337,8 @@ These are flags which don't fit into any other category.
 
 **Flags:**
 
+* `--fflush
+`: Force buffered output to be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to force frequent updates even when output is to a pipe or file, at a performance cost.
 * `--from {filename}
 `: Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.
 * `--infer-int-as-float or -A
@@ -353,6 +353,8 @@ These are flags which don't fit into any other category.
 `: Use this to specify one of more input files before the verb(s), rather than after. May be used more than once.  The list of filename must end with `--`. This is useful for example since `--from *.csv` doesn't do what you might hope but `--mfrom *.csv --` does.
 * `--mload {filenames}
 `: Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.
+* `--no-fflush
+`: Let buffered output not be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to allow less-frequent updates when output is to the terminal. This is unlikely to be a noticeable performance improvement, since direct-to-screen output for large files has its own overhead.
 * `--nr-progress-mod {m}
 `: With m a positive integer: print filename and record count to os.Stderr every m input records.
 * `--ofmt {format}

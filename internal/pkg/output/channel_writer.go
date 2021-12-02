@@ -1,17 +1,18 @@
 package output
 
 import (
-	"fmt"
-	"io"
+	"bufio"
 
+	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 func ChannelWriter(
 	outputChannel <-chan *types.RecordAndContext,
 	recordWriter IRecordWriter,
+	writerOptions *cli.TWriterOptions,
 	doneChannel chan<- bool,
-	ostream io.WriteCloser,
+	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
 	for {
@@ -30,12 +31,16 @@ func ChannelWriter(
 
 			record := recordAndContext.Record
 			if record != nil {
-				recordWriter.Write(record, ostream, outputIsStdout)
+				recordWriter.Write(record, bufferedOutputStream, outputIsStdout)
 			}
 
 			outputString := recordAndContext.OutputString
 			if outputString != "" {
-				fmt.Print(outputString)
+				bufferedOutputStream.WriteString(outputString)
+			}
+
+			if writerOptions.FlushOnEveryRecord {
+				bufferedOutputStream.Flush()
 			}
 
 		} else {
@@ -43,9 +48,10 @@ func ChannelWriter(
 			// queued up. For example, PPRINT needs to see all same-schema
 			// records before printing any, since it needs to compute max width
 			// down columns.
-			recordWriter.Write(nil, ostream, outputIsStdout)
+			recordWriter.Write(nil, bufferedOutputStream, outputIsStdout)
 			doneChannel <- true
 			break
 		}
+
 	}
 }

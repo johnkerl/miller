@@ -48,11 +48,11 @@ type TReaderOptions struct {
 	// If unspecified on the command line, these take input-format-dependent
 	// defaults.  E.g. default FS is comma for DKVP but space for NIDX;
 	// default AllowRepeatIFS is false for CSV but true for PPRINT.
-	IFSWasSpecified            bool
-	IPSWasSpecified            bool
-	IRSWasSpecified            bool
-	AllowRepeatIFSWasSpecified bool
-	AllowRepeatIPSWasSpecified bool
+	ifsWasSpecified            bool
+	ipsWasSpecified            bool
+	irsWasSpecified            bool
+	allowRepeatIFSWasSpecified bool
+	allowRepeatIPSWasSpecified bool
 
 	UseImplicitCSVHeader bool
 	AllowRaggedCSVInput  bool
@@ -82,25 +82,22 @@ type TWriterOptions struct {
 	OPS              string
 	FLATSEP          string
 
+	FlushOnEveryRecord             bool
+	flushOnEveryRecordWasSpecified bool
+
 	// If unspecified on the command line, these take input-format-dependent
 	// defaults.  E.g. default FS is comma for DKVP but space for NIDX.
-	OFSWasSpecified bool
-	OPSWasSpecified bool
-	ORSWasSpecified bool
+	ofsWasSpecified bool
+	opsWasSpecified bool
+	orsWasSpecified bool
 
 	HeaderlessCSVOutput      bool
 	BarredPprintOutput       bool
 	RightAlignedPPRINTOutput bool
 	RightAlignedXTABOutput   bool
 
-	//	right_justify_xtab_value bool;
-	//	right_align_pprint bool;
 	WrapJSONOutputInOuterList bool
 	JSONOutputMultiline       bool // Not using miller/types enum to avoid package cycle
-	//	json_quote_int_keys bool;
-	//	json_quote_non_string_values bool;
-	//
-	//	quoting_t oquoting;
 
 	// When we read things like
 	//
@@ -156,7 +153,7 @@ type TOptions struct {
 	RandSeed     int
 }
 
-// ----------------------------------------------------------------
+// Not usable until FinalizeReaderOptions and FinalizeWriterOptions are called.
 func DefaultOptions() *TOptions {
 	return &TOptions{
 		ReaderOptions: DefaultReaderOptions(),
@@ -168,9 +165,11 @@ func DefaultOptions() *TOptions {
 	}
 }
 
+// Not usable until FinalizeReaderOptions is called on it.
 func DefaultReaderOptions() TReaderOptions {
 	return TReaderOptions{
-		InputFileFormat:   "dkvp", // xxx constify at top
+		InputFileFormat: "dkvp", // TODO: constify at top, or maybe formats.DKVP in package
+		// FinalizeReaderOptions will compute IFSRegex and IPSRegex.
 		IRS:               "\n",
 		IFS:               ",",
 		IPS:               "=",
@@ -185,13 +184,15 @@ func DefaultReaderOptions() TReaderOptions {
 	}
 }
 
+// Not usable until FinalizeWriterOptions is called on it.
 func DefaultWriterOptions() TWriterOptions {
 	return TWriterOptions{
-		OutputFileFormat: "dkvp",
-		ORS:              "\n",
-		OFS:              ",",
-		OPS:              "=",
-		FLATSEP:          ".",
+		OutputFileFormat:   "dkvp",
+		ORS:                "\n",
+		OFS:                ",",
+		OPS:                "=",
+		FLATSEP:            ".",
+		FlushOnEveryRecord: true,
 
 		HeaderlessCSVOutput:       false,
 		WrapJSONOutputInOuterList: false,

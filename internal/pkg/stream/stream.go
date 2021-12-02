@@ -1,6 +1,7 @@
 package stream
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -85,11 +86,12 @@ func Stream(
 
 	// Start the reader, transformer, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
+	bufferedOutputStream := bufio.NewWriter(outputStream)
 
 	go recordReader.Read(fileNames, *initialContext, inputChannel, errorChannel, readerDownstreamDoneChannel)
 	go transformers.ChainTransformer(inputChannel, readerDownstreamDoneChannel, recordTransformers, outputChannel,
 		options)
-	go output.ChannelWriter(outputChannel, recordWriter, doneWritingChannel, outputStream, outputIsStdout)
+	go output.ChannelWriter(outputChannel, recordWriter, &options.WriterOptions, doneWritingChannel, bufferedOutputStream, outputIsStdout)
 
 	done := false
 	for !done {
@@ -102,6 +104,8 @@ func Stream(
 			break
 		}
 	}
+
+	bufferedOutputStream.Flush()
 
 	return nil
 }
