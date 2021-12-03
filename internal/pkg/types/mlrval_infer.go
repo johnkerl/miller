@@ -5,6 +5,7 @@
 package types
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -157,23 +158,18 @@ func inferNormally(input string, inferBool bool) *Mlrval {
 	return MlrvalFromString(input)
 }
 
+var octalDetector = regexp.MustCompile("^-?0[0-9]+")
+
 func inferWithOctalSuppress(input string, inferBool bool) *Mlrval {
 	output := inferNormally(input, inferBool)
 	if output.mvtype != MT_INT && output.mvtype != MT_FLOAT {
 		return output
 	}
 
-	if input[0] == '0' && len(input) > 1 {
-		c := input[1]
-		if c != 'x' && c != 'X' && c != 'b' && c != 'B' {
-			return MlrvalFromString(input)
-		}
-	}
-	if strings.HasPrefix(input, "-0") && len(input) > 2 {
-		c := input[2]
-		if c != 'x' && c != 'X' && c != 'b' && c != 'B' {
-			return MlrvalFromString(input)
-		}
+	if octalDetector.MatchString(input) {
+		return MlrvalFromString(input)
+	} else {
+		return output
 	}
 
 	return output
