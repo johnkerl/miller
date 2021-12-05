@@ -4,6 +4,10 @@ x       t      y       z
 0123    string (error) (error)
 07      string (error) (error)
 08      string (error) (error)
+0       int    1       0.5
+0.      float  1       0.5
+0.0     float  1       0.5
+0.01    float  1.01    0.51
 0b0100  int    5       4.5
 0x1000  int    4097    4096.5
 -123    int    -122    -122.5
@@ -13,3 +17,7 @@ x       t      y       z
 -0x1000 int    -4095   -4095.5
 -07     string (error) (error)
 -08     string (error) (error)
+-0      int    1       0.5
+-0.     float  1       0.5
+-0.0    float  1       0.5
+-0.01   float  0.99    0.49

@@ -72,4 +72,4 @@ release_tarball: build check
 	./create-release-tarball
 
 # Go does its own dependency management, outside of make.
-.PHONY: build check unit_test regression_test fmt dev
+.PHONY: build mlr check unit_test regression_test fmt dev
