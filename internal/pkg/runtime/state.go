@@ -7,6 +7,7 @@
 package runtime
 
 import (
+	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -21,9 +22,10 @@ type State struct {
 	// For holding "\0".."\9" between where they are set via things like
 	// '$x =~ "(..)_(...)"', and interpolated via things like '$y = "\2:\1"'.
 	RegexCaptures []string
+	Options       *cli.TOptions
 }
 
-func NewEmptyState() *State {
+func NewEmptyState(options *cli.TOptions) *State {
 	oosvars := types.NewMlrmap()
 	return &State{
 		Inrec:            nil,
@@ -36,6 +38,7 @@ func NewEmptyState() *State {
 
 		// See lib.MakeEmptyRegexCaptures for context.
 		RegexCaptures: lib.MakeEmptyRegexCaptures(),
+		Options:       options,
 	}
 }
 

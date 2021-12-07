@@ -88,59 +88,18 @@ type Context struct {
 	// NF int
 	NR  int
 	FNR int
-
-	IPS string
-	IFS string
-	IRS string
-
-	OPS     string
-	OFS     string
-	ORS     string
-	FLATSEP string
 }
 
 // TODO: comment: Remember command-line values to pass along to CST evaluators.
 // The options struct-pointer can be nil when invoked by non-DSL verbs such as
 // join or seqgen.
-func NewContext(
-	IPS string,
-	IFS string,
-	IRS string,
-
-	OPS string,
-	OFS string,
-	ORS string,
-	FLATSEP string,
-) *Context {
+func NewContext() *Context {
 	context := &Context{
 		FILENAME: "(stdin)",
 		FILENUM:  0,
-
-		NR:  0,
-		FNR: 0,
-
-		IPS: "=",
-		IFS: ",",
-		IRS: "\n",
-
-		OPS:     "=",
-		OFS:     ",",
-		ORS:     "\n",
-		FLATSEP: ".",
+		NR:       0,
+		FNR:      0,
 	}
-
-	// TODO: FILENAME/FILENUM/NR/FNR should be in one struct, and the rest in
-	// another. The former vary per record; the latter are command-line-driven
-	// and do not vary per record. All they have in common is they are
-	// awk-like context-variables.
-	context.IPS = IPS
-	context.IFS = IFS
-	context.IRS = IRS
-
-	context.OPS = OPS
-	context.OFS = OFS
-	context.ORS = ORS
-	context.FLATSEP = FLATSEP
 
 	return context
 }
@@ -152,18 +111,8 @@ func NewNilContext() *Context { // TODO: rename
 	context := &Context{
 		FILENAME: "(stdin)",
 		FILENUM:  0,
-
-		NR:  0,
-		FNR: 0,
-
-		IPS: "=",
-		IFS: ",",
-		IRS: "\n",
-
-		OPS:     "=",
-		OFS:     ",",
-		ORS:     "\n",
-		FLATSEP: ".",
+		NR:       0,
+		FNR:      0,
 	}
 
 	return context
