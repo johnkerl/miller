@@ -1,7 +1,6 @@
 ================================================================
 PUNCHDOWN LIST
 
-* perf wup @ rgp.md
 * perf:
   o go tool pprof -http=:8080 cpu.pprof
   x close(chan) as EOS throughout
@@ -69,6 +68,7 @@ PUNCHDOWN LIST
     d how to handle tail -f and repl
       > try unconditional batching and hiding *first* to see how much best-case perf to be had
     ? lazy type-infer?? needs careful use of accessor-mutators in place of mv.type etc
+* note somewhere why NewEndOfStreamMarker instead of channel close -- readers carry final context
 
 * blockers:
   - keep checking issues
