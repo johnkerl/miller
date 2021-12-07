@@ -87,7 +87,6 @@ func (reader *RecordReaderNIDX) processHandle(
 			break
 		}
 
-		// TODO: IRS
 		line := scanner.Text()
 
 		// Check for comments-in-data feature
