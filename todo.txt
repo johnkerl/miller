@@ -1,6 +1,7 @@
 ================================================================
 PUNCHDOWN LIST
 
+* perf wup @ rgp.md
 * perf:
   o go tool pprof -http=:8080 cpu.pprof
   x close(chan) as EOS throughout
