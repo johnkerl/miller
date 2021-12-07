@@ -2,6 +2,73 @@
 PUNCHDOWN LIST
 
 * perf wup @ rgp.md
+* perf:
+  o go tool pprof -http=:8080 cpu.pprof
+  x close(chan) as EOS throughout
+    - note somewhere why NewEndOfStreamMarker instead of channel close -- readers carry final context
+  o notes
+    - https://github.com/golang/go/issues/18237
+    - https://github.com/google/gvisor/issues/1942
+    - https://github.com/golang/go/issues/21827
+    - https://news.ycombinator.com/item?id=19841580
+    - https://news.ycombinator.com/item?id=19839081
+    - https://about.sourcegraph.com/go/gophercon-2019-death-by-three-thousand-timers-streaming-video-on-demand-for-cable-tv/
+    - https://stackoverflow.com/questions/41353508/how-to-determine-which-side-of-go-channel-is-waiting
+      case p <- result:
+      case <-time.After(500 * time.Millisecond):
+      ...
+    - https://github.com/dgryski/go-perfbook
+    - https://dave.cheney.net/high-performance-go-workshop/dotgo-paris.html
+  o find:
+    - perf x platform, input-file format, (output-file format), etc
+    - try select-check & stats-keep -- ?
+    - try select-check & list-build -- ?
+    - make a 2nd/3rd cmd main w/ simple model & tweak that
+      o dkvp-reader factor-out ...
+  o mods:
+    ? outputChannel -> *list.List at each transformer -- ? profile first
+    - un-legacy fflush flag :(
+      > conditional on isatty stdout
+      > new fflushWasSpecified
+      > downcase OFSWasSpecified, HaveRandSeed, et al.
+    - do and maybe keep? record-reader return (raclist, err) & refactor repl accordingly
+      > needs factor for-loop to stateful so maybe not
+    - transfomers w/ reclist: *maybe*, but idchan/odchan too ... invest time after some refactor decions made
+    - fix record/line sequencing regressions
+    - tail -f handling
+      > batch-size 1 on stdin, for repl at least?
+      > adaptive is-blocking detection -- make sure it's not over-sensitive
+  o goals:
+    - keep goroutines -- including per-transformer -- for parallelism
+    - look for flex ideas on how to structure that parallelism
+  o ideas:
+    n different concurrency abstraction?
+    n no-select -- just <- on a single channel?
+      > tried in mprof/main.go: reader & writer both write/read only one channel.
+      > still unacceptable runtime overhead :(
+    K string-buffer still too many write-syscalls: use bufio.Writer
+      w TODO: flush() points
+    d idchan/odchan can maybe be marked in chain-transformers as local array
+      d do other stuff first
+    d replace errchan w/ retval only?
+      d do other stuff first
+    d rac-batching; ensure env-var access
+      k also prototyped for no-transformer case
+      > how to structure this for the transformers?
+      > do that after hiding
+    - mprof split-reader getenv something
+    - hide app-level scan/format under sys-level read/write: also batched
+      easier/line-oriented:
+        record_reader_csvlite.go
+        record_reader_dkvp.go
+        record_reader_nidx.go
+        record_reader_xtab.go
+      harder b/c using encoding APIs:
+        record_reader_csv.go
+        record_reader_json.go
+    d how to handle tail -f and repl
+      > try unconditional batching and hiding *first* to see how much best-case perf to be had
+    ? lazy type-infer?? needs careful use of accessor-mutators in place of mv.type etc
 
 * blockers:
   - keep checking issues
@@ -14,8 +81,16 @@ PUNCHDOWN LIST
   - #756 octal
   - 0b1011 olh/webdoc
   - rtd links somewhere
+  - rd -> dbr
+  - more why-6 notes -- ?
+  - beta-link & hnp
+  -> beta-release page
+  - integrate:
+    > https://www.libhunt.com/r/miller
+    > https://repology.org/project/miller/information
 
 * shebang
+  - olh -s & --norc; --version & --bare-version; --
   - maybe multiple -s -- ? []args would continue growing during parse ...
   - try mlr -s on windows; maybe consolation for shebang-bash -- ?
   - doc re where to put --norc

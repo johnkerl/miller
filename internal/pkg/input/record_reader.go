@@ -19,7 +19,7 @@ type IRecordReader interface {
 	Read(
 		filenames []string,
 		initialContext types.Context,
-		inputChannel chan<- *types.RecordAndContext,
+		readerChannel chan<- *types.RecordAndContext,
 		errorChannel chan error,
 		downstreamDoneChannel <-chan bool, // for mlr head
 	)

@@ -60,8 +60,8 @@ func Stream(
 	}
 
 	// Set up the reader-to-transformer and transformer-to-writer channels.
-	inputChannel := make(chan *types.RecordAndContext, 10)
-	outputChannel := make(chan *types.RecordAndContext, 1)
+	readerChannel := make(chan *types.RecordAndContext, 10)
+	writerChannel := make(chan *types.RecordAndContext, 1)
 
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use
@@ -80,10 +80,11 @@ func Stream(
 	// error or end-of-processing happens.
 	bufferedOutputStream := bufio.NewWriter(outputStream)
 
-	go recordReader.Read(fileNames, *initialContext, inputChannel, errorChannel, readerDownstreamDoneChannel)
-	go transformers.ChainTransformer(inputChannel, readerDownstreamDoneChannel, recordTransformers, outputChannel,
-		options)
-	go output.ChannelWriter(outputChannel, recordWriter, &options.WriterOptions, doneWritingChannel, bufferedOutputStream, outputIsStdout)
+	go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
+	go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
+		writerChannel, options)
+	go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
+		bufferedOutputStream, outputIsStdout)
 
 	done := false
 	for !done {

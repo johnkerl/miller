@@ -46,7 +46,7 @@ type Repl struct {
 
 	options *cli.TOptions
 
-	inputChannel          chan *types.RecordAndContext
+	readerChannel         chan *types.RecordAndContext
 	errorChannel          chan error
 	downstreamDoneChannel chan bool
 	recordReader          input.IRecordReader

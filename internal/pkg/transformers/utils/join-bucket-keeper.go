@@ -123,10 +123,10 @@ import (
 // Data stored in this class
 type JoinBucketKeeper struct {
 	// For streaming through the left-side file
-	recordReader input.IRecordReader
-	context      *types.Context
-	inputChannel <-chan *types.RecordAndContext
-	errorChannel chan error
+	recordReader  input.IRecordReader
+	context       *types.Context
+	readerChannel <-chan *types.RecordAndContext
+	errorChannel  chan error
 	// TODO: merge with leof flag
 	recordReaderDone bool
 
@@ -178,18 +178,18 @@ func NewJoinBucketKeeper(
 	initialContext.UpdateForStartOfFile(leftFileName)
 
 	// Set up channels for the record-reader
-	inputChannel := make(chan *types.RecordAndContext, 10)
+	readerChannel := make(chan *types.RecordAndContext, 10)
 	errorChannel := make(chan error, 1)
 	downstreamDoneChannel := make(chan bool, 1)
 
 	// Start the record-reader in its own goroutine.
 	leftFileNameArray := [1]string{leftFileName}
-	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, errorChannel, downstreamDoneChannel)
+	go recordReader.Read(leftFileNameArray[:], *initialContext, readerChannel, errorChannel, downstreamDoneChannel)
 
 	keeper := &JoinBucketKeeper{
 		recordReader:     recordReader,
 		context:          initialContext,
-		inputChannel:     inputChannel,
+		readerChannel:    readerChannel,
 		errorChannel:     errorChannel,
 		recordReaderDone: false,
 
@@ -570,7 +570,7 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 	case err := <-keeper.errorChannel:
 		fmt.Fprintln(os.Stderr, "mlr", ": ", err)
 		os.Exit(1)
-	case leftrecAndContext := <-keeper.inputChannel:
+	case leftrecAndContext := <-keeper.readerChannel:
 		if leftrecAndContext.EndOfStream { // end-of-stream marker
 			keeper.recordReaderDone = true
 			return nil
