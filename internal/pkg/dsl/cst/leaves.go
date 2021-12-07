@@ -519,7 +519,7 @@ func (root *RootNode) BuildIRSNode() *IRSNode {
 func (node *IRSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalFromString(state.Context.IRS)
+	return types.MlrvalFromString(state.Options.ReaderOptions.IRS)
 }
 
 // ----------------------------------------------------------------
@@ -532,7 +532,7 @@ func (root *RootNode) BuildIFSNode() *IFSNode {
 func (node *IFSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalFromString(state.Context.IFS)
+	return types.MlrvalFromString(state.Options.ReaderOptions.IFS)
 }
 
 // ----------------------------------------------------------------
@@ -545,7 +545,7 @@ func (root *RootNode) BuildIPSNode() *IPSNode {
 func (node *IPSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalFromString(state.Context.IPS)
+	return types.MlrvalFromString(state.Options.ReaderOptions.IPS)
 }
 
 // ----------------------------------------------------------------
@@ -558,7 +558,7 @@ func (root *RootNode) BuildORSNode() *ORSNode {
 func (node *ORSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalFromString(state.Context.ORS)
+	return types.MlrvalFromString(state.Options.WriterOptions.ORS)
 }
 
 // ----------------------------------------------------------------
@@ -571,7 +571,7 @@ func (root *RootNode) BuildOFSNode() *OFSNode {
 func (node *OFSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalFromString(state.Context.OFS)
+	return types.MlrvalFromString(state.Options.WriterOptions.OFS)
 }
 
 // ----------------------------------------------------------------
@@ -584,7 +584,7 @@ func (root *RootNode) BuildOPSNode() *OPSNode {
 func (node *OPSNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalFromString(state.Context.OPS)
+	return types.MlrvalFromString(state.Options.WriterOptions.OPS)
 }
 
 // ----------------------------------------------------------------
@@ -597,7 +597,7 @@ func (root *RootNode) BuildFLATSEPNode() *FLATSEPNode {
 func (node *FLATSEPNode) Evaluate(
 	state *runtime.State,
 ) *types.Mlrval {
-	return types.MlrvalFromString(state.Context.FLATSEP)
+	return types.MlrvalFromString(state.Options.WriterOptions.FLATSEP)
 }
 
 // ================================================================

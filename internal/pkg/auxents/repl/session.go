@@ -60,16 +60,9 @@ func NewRepl(
 	// $* is the empty map {} until/unless the user opens a file and reads records from it.
 	inrec := types.NewMlrmapAsRecord()
 	// NR is 0, etc until/unless the user opens a file and reads records from it.
-	context := types.NewContext(
-		options.ReaderOptions.IPS,
-		options.ReaderOptions.IFS,
-		options.ReaderOptions.IRS,
-		options.WriterOptions.OPS,
-		options.WriterOptions.OFS,
-		options.WriterOptions.ORS,
-		options.WriterOptions.FLATSEP,
-	)
-	runtimeState := runtime.NewEmptyState()
+	context := types.NewContext()
+
+	runtimeState := runtime.NewEmptyState(options)
 	runtimeState.Update(inrec, context)
 	// The filter expression for the main Miller DSL is any non-assignment
 	// statment like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for

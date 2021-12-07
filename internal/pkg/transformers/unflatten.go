@@ -44,7 +44,7 @@ func transformerUnflattenParseCLI(
 	pargi *int,
 	argc int,
 	args []string,
-	_ *cli.TOptions,
+	options *cli.TOptions,
 	doConstruct bool, // false for first pass of CLI-parse, true for second pass
 ) IRecordTransformer {
 
@@ -87,6 +87,7 @@ func transformerUnflattenParseCLI(
 
 	transformer, err := NewTransformerUnflatten(
 		oFlatSep,
+		options,
 		fieldNames,
 	)
 	if err != nil {
@@ -101,6 +102,7 @@ func transformerUnflattenParseCLI(
 type TransformerUnflatten struct {
 	// input
 	oFlatSep     string
+	options      *cli.TOptions
 	fieldNameSet map[string]bool
 
 	// state
@@ -109,6 +111,7 @@ type TransformerUnflatten struct {
 
 func NewTransformerUnflatten(
 	oFlatSep string,
+	options *cli.TOptions,
 	fieldNames []string,
 ) (*TransformerUnflatten, error) {
 	var fieldNameSet map[string]bool = nil
@@ -118,6 +121,7 @@ func NewTransformerUnflatten(
 
 	retval := &TransformerUnflatten{
 		oFlatSep:     oFlatSep,
+		options:      options,
 		fieldNameSet: fieldNameSet,
 	}
 	retval.recordTransformerFunc = retval.unflattenAll
@@ -151,7 +155,7 @@ func (tr *TransformerUnflatten) unflattenAll(
 		inrec := inrecAndContext.Record
 		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
-			oFlatSep = inrecAndContext.Context.FLATSEP
+			oFlatSep = tr.options.WriterOptions.FLATSEP
 		}
 		inrec.Unflatten(oFlatSep)
 		outputChannel <- inrecAndContext
@@ -171,7 +175,7 @@ func (tr *TransformerUnflatten) unflattenSome(
 		inrec := inrecAndContext.Record
 		oFlatSep := tr.oFlatSep
 		if oFlatSep == "" {
-			oFlatSep = inrecAndContext.Context.FLATSEP
+			oFlatSep = tr.options.WriterOptions.FLATSEP
 		}
 		inrec.UnflattenFields(tr.fieldNameSet, oFlatSep)
 		outputChannel <- inrecAndContext
