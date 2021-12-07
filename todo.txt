@@ -70,6 +70,10 @@ PUNCHDOWN LIST
     d how to handle tail -f and repl
       > try unconditional batching and hiding *first* to see how much best-case perf to be had
     ? lazy type-infer?? needs careful use of accessor-mutators in place of mv.type etc
+<<<<<<< HEAD
+=======
+* note somewhere why NewEndOfStreamMarker instead of channel close -- readers carry final context
+>>>>>>> f2e709408 (Rename inputChannel,outputChannel to readerChannel,writerChannel (#772))
 
 * blockers:
   - keep checking issues
