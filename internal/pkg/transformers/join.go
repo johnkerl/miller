@@ -472,14 +472,14 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	initialContext.UpdateForStartOfFile(tr.opts.leftFileName)
 
 	// Set up channels for the record-reader.
-	inputChannel := make(chan *types.RecordAndContext, 10)
+	readerChannel := make(chan *types.RecordAndContext, 10)
 	errorChannel := make(chan error, 1)
 	downstreamDoneChannel := make(chan bool, 1)
 
 	// Start the record reader.
 	// TODO: prepipe
 	leftFileNameArray := [1]string{tr.opts.leftFileName}
-	go recordReader.Read(leftFileNameArray[:], *initialContext, inputChannel, errorChannel, downstreamDoneChannel)
+	go recordReader.Read(leftFileNameArray[:], *initialContext, readerChannel, errorChannel, downstreamDoneChannel)
 
 	// Ingest parsed records and bucket them by their join-field values.  E.g.
 	// if the join-field is "id" then put all records with id=1 in one bucket,
@@ -493,7 +493,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 			fmt.Fprintln(os.Stderr, "mlr", ": ", err)
 			os.Exit(1)
 
-		case leftrecAndContext := <-inputChannel:
+		case leftrecAndContext := <-readerChannel:
 			if leftrecAndContext.EndOfStream {
 				done = true
 				break // breaks the switch, not the for, in Golang

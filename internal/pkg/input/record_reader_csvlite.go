@@ -53,7 +53,7 @@ func NewRecordReaderPPRINT(readerOptions *cli.TReaderOptions) (*RecordReaderCSVL
 func (reader *RecordReaderCSVLite) Read(
 	filenames []string,
 	context types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -72,7 +72,7 @@ func (reader *RecordReaderCSVLite) Read(
 					handle,
 					"(stdin)",
 					&context,
-					inputChannel,
+					readerChannel,
 					errorChannel,
 					downstreamDoneChannel,
 				)
@@ -81,7 +81,7 @@ func (reader *RecordReaderCSVLite) Read(
 					handle,
 					"(stdin)",
 					&context,
-					inputChannel,
+					readerChannel,
 					errorChannel,
 					downstreamDoneChannel,
 				)
@@ -102,7 +102,7 @@ func (reader *RecordReaderCSVLite) Read(
 							handle,
 							filename,
 							&context,
-							inputChannel,
+							readerChannel,
 							errorChannel,
 							downstreamDoneChannel,
 						)
@@ -111,7 +111,7 @@ func (reader *RecordReaderCSVLite) Read(
 							handle,
 							filename,
 							&context,
-							inputChannel,
+							readerChannel,
 							errorChannel,
 							downstreamDoneChannel,
 						)
@@ -121,7 +121,7 @@ func (reader *RecordReaderCSVLite) Read(
 			}
 		}
 	}
-	inputChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 // ----------------------------------------------------------------
@@ -129,7 +129,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -170,7 +170,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				inputChannel <- types.NewOutputString(line+"\n", context)
+				readerChannel <- types.NewOutputString(line+"\n", context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
@@ -242,7 +242,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			}
 
 			context.UpdateForInputRecord()
-			inputChannel <- types.NewRecordAndContext(
+			readerChannel <- types.NewRecordAndContext(
 				record,
 				context,
 			)
@@ -256,7 +256,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -293,7 +293,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				inputChannel <- types.NewOutputString(line+"\n", context)
+				readerChannel <- types.NewOutputString(line+"\n", context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
@@ -373,7 +373,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 		}
 
 		context.UpdateForInputRecord()
-		inputChannel <- types.NewRecordAndContext(
+		readerChannel <- types.NewRecordAndContext(
 			record,
 			context,
 		)

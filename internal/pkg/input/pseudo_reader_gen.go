@@ -21,17 +21,17 @@ func NewPseudoReaderGen(readerOptions *cli.TReaderOptions) (*PseudoReaderGen, er
 func (reader *PseudoReaderGen) Read(
 	filenames []string, // ignored
 	context types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
-	reader.process(&context, inputChannel, errorChannel, downstreamDoneChannel)
-	inputChannel <- types.NewEndOfStreamMarker(&context)
+	reader.process(&context, readerChannel, errorChannel, downstreamDoneChannel)
+	readerChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 func (reader *PseudoReaderGen) process(
 	context *types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -91,7 +91,7 @@ func (reader *PseudoReaderGen) process(
 		record.PutCopy(key, value)
 
 		context.UpdateForInputRecord()
-		inputChannel <- types.NewRecordAndContext(
+		readerChannel <- types.NewRecordAndContext(
 			record,
 			context,
 		)

@@ -218,14 +218,14 @@ func (repl *Repl) openFiles(filenames []string) {
 	// Remember for :reopen
 	repl.options.FileNames = filenames
 
-	repl.inputChannel = make(chan *types.RecordAndContext, 10)
+	repl.readerChannel = make(chan *types.RecordAndContext, 10)
 	repl.errorChannel = make(chan error, 1)
 	repl.downstreamDoneChannel = make(chan bool, 1)
 
 	go repl.recordReader.Read(
 		filenames,
 		*repl.runtimeState.Context,
-		repl.inputChannel,
+		repl.readerChannel,
 		repl.errorChannel,
 		repl.downstreamDoneChannel,
 	)
@@ -265,7 +265,7 @@ func handleRead(repl *Repl, args []string) bool {
 	if len(args) != 0 {
 		return false
 	}
-	if repl.inputChannel == nil {
+	if repl.readerChannel == nil {
 		fmt.Println("No open files")
 		return true
 	}
@@ -274,7 +274,7 @@ func handleRead(repl *Repl, args []string) bool {
 	var err error = nil
 
 	select {
-	case recordAndContext = <-repl.inputChannel:
+	case recordAndContext = <-repl.readerChannel:
 		break
 	case err = <-repl.errorChannel:
 		break
@@ -282,7 +282,7 @@ func handleRead(repl *Repl, args []string) bool {
 
 	if err != nil {
 		fmt.Println(err)
-		repl.inputChannel = nil
+		repl.readerChannel = nil
 		repl.errorChannel = nil
 		return true
 	}
@@ -330,7 +330,7 @@ func usageSkip(repl *Repl) {
 }
 
 func handleSkip(repl *Repl, args []string) bool {
-	if repl.inputChannel == nil {
+	if repl.readerChannel == nil {
 		fmt.Println("No open files")
 		return true
 	}
@@ -379,7 +379,7 @@ func usageProcess(repl *Repl) {
 }
 
 func handleProcess(repl *Repl, args []string) bool {
-	if repl.inputChannel == nil {
+	if repl.readerChannel == nil {
 		fmt.Println("No open files")
 		return true
 	}
@@ -419,7 +419,7 @@ func handleSkipOrProcessN(repl *Repl, n int, processingNotSkipping bool) {
 
 	for i := 1; i <= n; i++ {
 		select {
-		case recordAndContext = <-repl.inputChannel:
+		case recordAndContext = <-repl.readerChannel:
 			break
 		case err = <-repl.errorChannel:
 			break
@@ -429,7 +429,7 @@ func handleSkipOrProcessN(repl *Repl, n int, processingNotSkipping bool) {
 
 		if err != nil {
 			fmt.Println(err)
-			repl.inputChannel = nil
+			repl.readerChannel = nil
 			repl.errorChannel = nil
 			return
 		}
@@ -477,7 +477,7 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 	for {
 		doubleBreak := false
 		select {
-		case recordAndContext = <-repl.inputChannel:
+		case recordAndContext = <-repl.readerChannel:
 			break
 		case err = <-repl.errorChannel:
 			break
@@ -491,7 +491,7 @@ func handleSkipOrProcessUntil(repl *Repl, dslString string, processingNotSkippin
 
 		if err != nil {
 			fmt.Println(err)
-			repl.inputChannel = nil
+			repl.readerChannel = nil
 			repl.errorChannel = nil
 			return
 		}
@@ -537,7 +537,7 @@ func skipOrProcessRecord(
 	// End-of-stream marker
 	if recordAndContext.EndOfStream == true {
 		fmt.Println("End of record stream")
-		repl.inputChannel = nil
+		repl.readerChannel = nil
 		repl.errorChannel = nil
 		return true
 	}

@@ -65,6 +65,7 @@ dev:
 # Keystroke-savers
 it: build check
 so: install
+sure: build check
 
 # Please see comments in ./create-release-tarball as well as
 # https://miller.readthedocs.io/en/latest/build/#creating-a-new-release-for-developers

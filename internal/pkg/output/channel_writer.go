@@ -8,7 +8,7 @@ import (
 )
 
 func ChannelWriter(
-	outputChannel <-chan *types.RecordAndContext,
+	writerChannel <-chan *types.RecordAndContext,
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
 	doneChannel chan<- bool,
@@ -16,7 +16,7 @@ func ChannelWriter(
 	outputIsStdout bool,
 ) {
 	for {
-		recordAndContext := <-outputChannel
+		recordAndContext := <-writerChannel
 
 		// Three things can come through:
 		// * End-of-stream marker

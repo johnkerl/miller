@@ -23,7 +23,7 @@ func NewRecordReaderNIDX(readerOptions *cli.TReaderOptions) (*RecordReaderNIDX, 
 func (reader *RecordReaderNIDX) Read(
 	filenames []string,
 	context types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -37,7 +37,7 @@ func (reader *RecordReaderNIDX) Read(
 			if err != nil {
 				errorChannel <- err
 			}
-			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel, downstreamDoneChannel)
+			reader.processHandle(handle, "(stdin)", &context, readerChannel, errorChannel, downstreamDoneChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
@@ -49,20 +49,20 @@ func (reader *RecordReaderNIDX) Read(
 				if err != nil {
 					errorChannel <- err
 				} else {
-					reader.processHandle(handle, filename, &context, inputChannel, errorChannel, downstreamDoneChannel)
+					reader.processHandle(handle, filename, &context, readerChannel, errorChannel, downstreamDoneChannel)
 					handle.Close()
 				}
 			}
 		}
 	}
-	inputChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 func (reader *RecordReaderNIDX) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -93,7 +93,7 @@ func (reader *RecordReaderNIDX) processHandle(
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				inputChannel <- types.NewOutputString(line+"\n", context)
+				readerChannel <- types.NewOutputString(line+"\n", context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
@@ -104,7 +104,7 @@ func (reader *RecordReaderNIDX) processHandle(
 		record := reader.recordFromNIDXLine(line)
 
 		context.UpdateForInputRecord()
-		inputChannel <- types.NewRecordAndContext(
+		readerChannel <- types.NewRecordAndContext(
 			record,
 			context,
 		)

@@ -38,7 +38,7 @@ func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) (*RecordReaderCSV, er
 func (reader *RecordReaderCSV) Read(
 	filenames []string,
 	context types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -52,7 +52,7 @@ func (reader *RecordReaderCSV) Read(
 			if err != nil {
 				errorChannel <- err
 			}
-			reader.processHandle(handle, "(stdin)", &context, inputChannel, errorChannel, downstreamDoneChannel)
+			reader.processHandle(handle, "(stdin)", &context, readerChannel, errorChannel, downstreamDoneChannel)
 		} else {
 			for _, filename := range filenames {
 				handle, err := lib.OpenFileForRead(
@@ -64,13 +64,13 @@ func (reader *RecordReaderCSV) Read(
 				if err != nil {
 					errorChannel <- err
 				} else {
-					reader.processHandle(handle, filename, &context, inputChannel, errorChannel, downstreamDoneChannel)
+					reader.processHandle(handle, filename, &context, readerChannel, errorChannel, downstreamDoneChannel)
 					handle.Close()
 				}
 			}
 		}
 	}
-	inputChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarker(&context)
 }
 
 // ----------------------------------------------------------------
@@ -78,7 +78,7 @@ func (reader *RecordReaderCSV) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -120,7 +120,7 @@ func (reader *RecordReaderCSV) processHandle(
 				return
 			}
 
-			isData := reader.maybeConsumeComment(csvRecord, context, inputChannel)
+			isData := reader.maybeConsumeComment(csvRecord, context, readerChannel)
 			if !isData {
 				continue
 			}
@@ -143,7 +143,7 @@ func (reader *RecordReaderCSV) processHandle(
 		}
 		rowNumber++
 
-		isData := reader.maybeConsumeComment(csvRecord, context, inputChannel)
+		isData := reader.maybeConsumeComment(csvRecord, context, readerChannel)
 		if !isData {
 			continue
 		}
@@ -204,7 +204,7 @@ func (reader *RecordReaderCSV) processHandle(
 
 		context.UpdateForInputRecord()
 
-		inputChannel <- types.NewRecordAndContext(
+		readerChannel <- types.NewRecordAndContext(
 			record,
 			context,
 		)
@@ -216,7 +216,7 @@ func (reader *RecordReaderCSV) processHandle(
 func (reader *RecordReaderCSV) maybeConsumeComment(
 	csvRecord []string,
 	context *types.Context,
-	inputChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *types.RecordAndContext,
 ) bool {
 	if reader.readerOptions.CommentHandling == cli.CommentsAreData {
 		// Nothing is to be construed as a comment
@@ -249,7 +249,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 		csvWriter.Comma = rune(reader.ifs0)
 		csvWriter.Write(csvRecord)
 		csvWriter.Flush()
-		inputChannel <- types.NewOutputString(buffer.String(), context)
+		readerChannel <- types.NewOutputString(buffer.String(), context)
 	} else /* reader.readerOptions.CommentHandling == cli.SkipComments */ {
 		// discard entirely
 	}

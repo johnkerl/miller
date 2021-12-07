@@ -142,10 +142,10 @@ import (
 // subdivides goroutines for each transformer in the chain, with intermediary
 // channels between them.
 func ChainTransformer(
-	readerInputRecordChannel <-chan *types.RecordAndContext,
+	readerRecordChannel <-chan *types.RecordAndContext,
 	readerDownstreamDoneChannel chan<- bool, // for mlr head -- see also stream.go
 	recordTransformers []IRecordTransformer, // not *recordTransformer since this is an interface
-	writerOutputRecordChannel chan<- *types.RecordAndContext,
+	writerRecordChannel chan<- *types.RecordAndContext,
 	options *cli.TOptions,
 ) {
 	i := 0
@@ -163,10 +163,10 @@ func ChainTransformer(
 
 	for i, recordTransformer := range recordTransformers {
 		// Downstream flow: channel a given transformer reads records from
-		irchan := readerInputRecordChannel
+		irchan := readerRecordChannel
 		// Downstream flow: channel a given transformer writes transformed
 		// records to
-		orchan := writerOutputRecordChannel
+		orchan := writerRecordChannel
 		// Upstream signaling: channel a given transformer reads to see if
 		// downstream transformers are done (e.g. mlr head)
 		idchan := intermediateDownstreamDoneChannels[i]
