@@ -435,7 +435,7 @@ func NewTransformerPut(
 		return nil, err
 	}
 
-	runtimeState := runtime.NewEmptyState()
+	runtimeState := runtime.NewEmptyState(options)
 
 	// E.g.
 	//   mlr put -s sum=0

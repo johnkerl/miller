@@ -324,7 +324,7 @@ func parseCommandLinePassTwo(
 	if cli.DecideFinalFlatten(&options.WriterOptions) {
 		// E.g. '{"req": {"method": "GET", "path": "/api/check"}}' becomes
 		// req.method=GET,req.path=/api/check.
-		transformer, err := transformers.NewTransformerFlatten(options.WriterOptions.FLATSEP, nil)
+		transformer, err := transformers.NewTransformerFlatten(options.WriterOptions.FLATSEP, options, nil)
 		lib.InternalCodingErrorIf(err != nil)
 		lib.InternalCodingErrorIf(transformer == nil)
 		recordTransformers = append(recordTransformers, transformer)
@@ -333,7 +333,7 @@ func parseCommandLinePassTwo(
 	if cli.DecideFinalUnflatten(options) {
 		// E.g.  req.method=GET,req.path=/api/check becomes
 		// '{"req": {"method": "GET", "path": "/api/check"}}'
-		transformer, err := transformers.NewTransformerUnflatten(options.WriterOptions.FLATSEP, nil)
+		transformer, err := transformers.NewTransformerUnflatten(options.WriterOptions.FLATSEP, options, nil)
 		lib.InternalCodingErrorIf(err != nil)
 		lib.InternalCodingErrorIf(transformer == nil)
 		recordTransformers = append(recordTransformers, transformer)

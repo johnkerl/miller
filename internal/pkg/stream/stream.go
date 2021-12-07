@@ -45,15 +45,7 @@ func Stream(
 
 	// Since Go is concurrent, the context struct needs to be duplicated and
 	// passed through the channels along with each record.
-	initialContext := types.NewContext(
-		options.ReaderOptions.IPS,
-		options.ReaderOptions.IFS,
-		options.ReaderOptions.IRS,
-		options.WriterOptions.OPS,
-		options.WriterOptions.OFS,
-		options.WriterOptions.ORS,
-		options.WriterOptions.FLATSEP,
-	)
+	initialContext := types.NewContext()
 
 	// Instantiate the record-reader
 	recordReader, err := input.Create(&options.ReaderOptions)
