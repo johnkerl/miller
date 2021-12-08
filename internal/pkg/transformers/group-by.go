@@ -116,9 +116,9 @@ func NewTransformerGroupBy(
 
 func (tr *TransformerGroupBy) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -141,9 +141,9 @@ func (tr *TransformerGroupBy) Transform(
 		for outer := tr.recordListsByGroup.Head; outer != nil; outer = outer.Next {
 			recordListForGroup := outer.Value.(*list.List)
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
-				outputChannel <- inner.Value.(*types.RecordAndContext)
+				outputRecordsAndContexts.PushBack(inner.Value.(*types.RecordAndContext))
 			}
 		}
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }

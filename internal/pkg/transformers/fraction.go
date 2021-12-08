@@ -192,9 +192,9 @@ func NewTransformerFraction(
 
 func (tr *TransformerFraction) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream { // Not end of stream; pass 1
@@ -285,8 +285,8 @@ func (tr *TransformerFraction) Transform(
 				}
 			}
 
-			outputChannel <- types.NewRecordAndContext(outrec, &endOfStreamContext)
+			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &endOfStreamContext))
 		}
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }

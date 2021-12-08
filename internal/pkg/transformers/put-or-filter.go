@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"errors"
 	"fmt"
 	"os"
@@ -506,12 +507,12 @@ func BuildASTFromString(dslString string) (*dsl.AST, error) {
 
 func (tr *TransformerPut) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.runtimeState.OutputChannel = outputChannel
+	tr.runtimeState.OutputRecordsAndContexts = outputRecordsAndContexts
 
 	inrec := inrecAndContext.Record
 	context := inrecAndContext.Context
@@ -545,10 +546,7 @@ func (tr *TransformerPut) Transform(
 			}
 			wantToEmit := lib.BooleanXOR(filterBool, tr.invertFilter)
 			if wantToEmit {
-				outputChannel <- types.NewRecordAndContext(
-					outrec,
-					&context,
-				)
+				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &context))
 			}
 		}
 
@@ -576,6 +574,6 @@ func (tr *TransformerPut) Transform(
 		// indicator.
 		tr.cstRootNode.ProcessEndOfStream()
 
-		outputChannel <- types.NewEndOfStreamMarker(&context)
+		outputRecordsAndContexts.PushBack(types.NewEndOfStreamMarker(&context))
 	}
 }

@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"regexp"
@@ -148,9 +149,9 @@ func NewTransformerGrep(
 
 func (tr *TransformerGrep) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -159,14 +160,14 @@ func (tr *TransformerGrep) Transform(
 		matches := tr.regexp.Match([]byte(inrecAsString))
 		if tr.invert {
 			if !matches {
-				outputChannel <- inrecAndContext
+				outputRecordsAndContexts.PushBack(inrecAndContext)
 			}
 		} else {
 			if matches {
-				outputChannel <- inrecAndContext
+				outputRecordsAndContexts.PushBack(inrecAndContext)
 			}
 		}
 	} else {
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}
 }

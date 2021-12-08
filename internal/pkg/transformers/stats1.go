@@ -2,6 +2,7 @@ package transformers
 
 import (
 	"bytes"
+	"container/list"
 	"errors"
 	"fmt"
 	"os"
@@ -360,21 +361,21 @@ func NewTransformerStats1(
 // the end-of-stream marker.
 func (tr *TransformerStats1) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
-		tr.handleInputRecord(inrecAndContext, outputChannel)
+		tr.handleInputRecord(inrecAndContext, outputRecordsAndContexts)
 	} else {
-		tr.handleEndOfRecordStream(inrecAndContext, outputChannel)
+		tr.handleEndOfRecordStream(inrecAndContext, outputRecordsAndContexts)
 	}
 }
 
 func (tr *TransformerStats1) handleInputRecord(
 	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	inrec := inrecAndContext.Record
 
@@ -415,7 +416,7 @@ func (tr *TransformerStats1) handleInputRecord(
 			level2.(*lib.OrderedMap),
 			inrec,
 		)
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}
 }
 
@@ -586,10 +587,10 @@ func (tr *TransformerStats1) matchValueFieldName(
 
 func (tr *TransformerStats1) handleEndOfRecordStream(
 	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	if tr.doIterativeStats {
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 		return
 	}
 
@@ -607,10 +608,10 @@ func (tr *TransformerStats1) handleEndOfRecordStream(
 			newrec,
 		)
 
-		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
+		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 	}
 
-	outputChannel <- inrecAndContext // end-of-stream marker
+	outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 }
 
 func (tr *TransformerStats1) emitIntoOutputRecord(

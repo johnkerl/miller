@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"os"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -13,17 +14,17 @@ import (
 type IRecordTransformer interface {
 	Transform(
 		inrecAndContext *types.RecordAndContext,
+		outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 		inputDownstreamDoneChannel <-chan bool,
 		outputDownstreamDoneChannel chan<- bool,
-		outputChannel chan<- *types.RecordAndContext,
 	)
 }
 
 type RecordTransformerFunc func(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 )
 
 type TransformerUsageFunc func(

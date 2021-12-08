@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -172,15 +173,15 @@ func NewTransformerTop(
 
 func (tr *TransformerTop) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		tr.ingest(inrecAndContext)
 	} else {
-		tr.emit(inrecAndContext, outputChannel)
+		tr.emit(inrecAndContext, outputRecordsAndContexts)
 	}
 }
 
@@ -237,7 +238,7 @@ func (tr *TransformerTop) ingest(
 // ----------------------------------------------------------------
 func (tr *TransformerTop) emit(
 	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	for pa := tr.groups.Head; pa != nil; pa = pa.Next {
 		groupingKey := pa.Key
@@ -251,7 +252,7 @@ func (tr *TransformerTop) emit(
 			for pb := secondLevel.Head; pb != nil; pb = pb.Next {
 				topKeeper := pb.Value.(*utils.TopKeeper)
 				for i := 0; i < topKeeper.GetSize(); i++ {
-					outputChannel <- topKeeper.TopRecordsAndContexts[i].Copy()
+					outputRecordsAndContexts.PushBack(topKeeper.TopRecordsAndContexts[i].Copy())
 				}
 			}
 
@@ -280,10 +281,10 @@ func (tr *TransformerTop) emit(
 					}
 				}
 
-				outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
+				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 			}
 		}
 	}
 
-	outputChannel <- inrecAndContext // emit end-of-stream marker
+	outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 }

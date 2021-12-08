@@ -529,7 +529,7 @@ func (keeper *JoinBucketKeeper) markRemainingsAsUnpaired() {
 // ----------------------------------------------------------------
 // TODO: comment
 func (keeper *JoinBucketKeeper) OutputAndReleaseLeftUnpaireds(
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	for {
 		element := keeper.leftUnpaireds.Front()
@@ -537,13 +537,13 @@ func (keeper *JoinBucketKeeper) OutputAndReleaseLeftUnpaireds(
 			break
 		}
 		recordAndContext := element.Value.(*types.RecordAndContext)
-		outputChannel <- recordAndContext
+		outputRecordsAndContexts.PushBack(recordAndContext)
 		keeper.leftUnpaireds.Remove(element)
 	}
 }
 
 func (keeper *JoinBucketKeeper) ReleaseLeftUnpaireds(
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	for {
 		element := keeper.leftUnpaireds.Front()

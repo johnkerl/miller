@@ -97,9 +97,9 @@ func NewTransformerRemoveEmptyColumns() (*TransformerRemoveEmptyColumns, error) 
 
 func (tr *TransformerRemoveEmptyColumns) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -128,9 +128,9 @@ func (tr *TransformerRemoveEmptyColumns) Transform(
 				}
 			}
 
-			outputChannel <- types.NewRecordAndContext(newrec, &outrecAndContext.Context)
+			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &outrecAndContext.Context))
 		}
 
-		outputChannel <- inrecAndContext // Emit the stream-terminating null record
+		outputRecordsAndContexts.PushBack(inrecAndContext) // Emit the stream-terminating null record
 	}
 }

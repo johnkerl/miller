@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -161,39 +162,39 @@ func NewTransformerRepeat(
 
 func (tr *TransformerRepeat) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerRepeat) repeatByCount(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		for i := 0; i < tr.repeatCount; i++ {
-			outputChannel <- types.NewRecordAndContext(
+			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(
 				inrecAndContext.Record.Copy(),
 				&inrecAndContext.Context,
-			)
+			))
 		}
 	} else {
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerRepeat) repeatByFieldName(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		fieldValue := inrecAndContext.Record.Get(tr.repeatCountFieldName)
@@ -205,13 +206,13 @@ func (tr *TransformerRepeat) repeatByFieldName(
 			return
 		}
 		for i := 0; i < int(repeatCount); i++ {
-			outputChannel <- types.NewRecordAndContext(
+			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(
 				inrecAndContext.Record.Copy(),
 				&inrecAndContext.Context,
-			)
+			))
 		}
 
 	} else {
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}
 }

@@ -26,10 +26,20 @@ PUNCHDOWN LIST
     - make a 2nd/3rd cmd main w/ simple model & tweak that
       o dkvp-reader factor-out ...
   o mods:
+    - downstreamDone batchify
+      > head
+        - writes
+      > seqgen
+        - reads and writes
+        - might involve batch-size somehow -- ?
+      > tee
+        - reads
+      > everything else
+        - reads and writes
     ? outputChannel -> *list.List at each transformer -- ? profile first
     ? readerChannel length 1 or 2 ?
-    ? cli option for records per batch
     ? experiment again with hashed/unhashed -- mlr sort etc
+    - checklist channelize all record-reader types
     - do and maybe keep? record-reader return (raclist, err) & refactor repl accordingly
       > needs factor for-loop to stateful so maybe not
     - transformers w/ reclist: *maybe*, but idchan/odchan too ... invest time after some refactor decions made

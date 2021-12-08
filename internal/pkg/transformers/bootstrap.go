@@ -111,9 +111,9 @@ func NewTransformerBootstrap(nout int) (*TransformerBootstrap, error) {
 
 func (tr *TransformerBootstrap) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
@@ -154,7 +154,7 @@ func (tr *TransformerBootstrap) Transform(
 
 	if nout == 0 {
 		// Emit the stream-terminating null record
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 		return
 	}
 
@@ -175,9 +175,9 @@ func (tr *TransformerBootstrap) Transform(
 		index := lib.RandRange(0, nin)
 		recordAndContext := recordArray[index]
 		// Already emitted once; copy
-		outputChannel <- recordAndContext.Copy()
+		outputRecordsAndContexts.PushBack(recordAndContext.Copy())
 	}
 
 	// Emit the stream-terminating null record
-	outputChannel <- inrecAndContext
+	outputRecordsAndContexts.PushBack(inrecAndContext)
 }

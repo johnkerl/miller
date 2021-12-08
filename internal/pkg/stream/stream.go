@@ -64,8 +64,7 @@ func Stream(
 
 	// Set up the reader-to-transformer and transformer-to-writer channels.
 	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
-	tempChannel := make(chan *types.RecordAndContext, 10)
-	writerChannel := make(chan *types.RecordAndContext, 1)
+	writerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
 
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use
@@ -85,9 +84,7 @@ func Stream(
 	bufferedOutputStream := bufio.NewWriter(outputStream)
 
 	go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
-	// TODO: temp for iterative batched-reader refactor
-	go tempReader(readerChannel, tempChannel)
-	go transformers.ChainTransformer(tempChannel, readerDownstreamDoneChannel, recordTransformers,
+	go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
 		writerChannel, options)
 	go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
 		bufferedOutputStream, outputIsStdout)
@@ -107,25 +104,4 @@ func Stream(
 	bufferedOutputStream.Flush()
 
 	return nil
-}
-
-func tempReader(
-	readerChannel <-chan *list.List, // list of *types.RecordAndContext
-	transformerChannel chan<- *types.RecordAndContext,
-) {
-	done := false
-	for !done {
-		racs := <-readerChannel
-
-		for e := racs.Front(); e != nil; e = e.Next() {
-			rac := e.Value.(*types.RecordAndContext)
-			transformerChannel <- rac
-
-			if rac.EndOfStream {
-				done = true
-				break
-			}
-		}
-
-	}
 }

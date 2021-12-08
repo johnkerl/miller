@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -167,9 +168,9 @@ func NewTransformerTee(
 
 func (tr *TransformerTee) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 
 	// If we receive a downstream-done flag from a transformer downstream from
@@ -203,7 +204,7 @@ func (tr *TransformerTee) Transform(
 			os.Exit(1)
 		}
 
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	} else {
 		err := tr.fileOutputHandler.Close()
 		if err != nil {
@@ -215,6 +216,6 @@ func (tr *TransformerTee) Transform(
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}
 }

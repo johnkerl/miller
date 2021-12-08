@@ -28,6 +28,7 @@ package transformers
 // 15 2009-01-05     Z  0.09719105
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"regexp"
@@ -283,20 +284,20 @@ func NewTransformerReshape(
 
 func (tr *TransformerReshape) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerReshape) wideToLongNoRegex(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -315,27 +316,27 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 		}
 
 		if pairs.IsEmpty() {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
 				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalFromString(pf.Key))
 				outrec.PutReference(tr.outputValueFieldName, pf.Value)
-				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
 		}
 
 	} else {
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerReshape) wideToLongRegex(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -357,27 +358,27 @@ func (tr *TransformerReshape) wideToLongRegex(
 		}
 
 		if pairs.IsEmpty() {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
 				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalFromString(pf.Key))
 				outrec.PutReference(tr.outputValueFieldName, pf.Value)
-				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
 		}
 
 	} else {
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerReshape) longToWide(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -385,7 +386,7 @@ func (tr *TransformerReshape) longToWide(
 		splitOutKeyFieldValue := inrec.Get(tr.splitOutKeyFieldName)
 		splitOutValueFieldValue := inrec.Get(tr.splitOutValueFieldName)
 		if splitOutKeyFieldValue == nil || splitOutValueFieldValue == nil {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 			return
 		}
 
@@ -429,11 +430,11 @@ func (tr *TransformerReshape) longToWide(
 					outrec.PutReference(pg.Key, pg.Value)
 				}
 
-				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
 		}
 
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 

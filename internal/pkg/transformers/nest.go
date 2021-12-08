@@ -302,27 +302,27 @@ func NewTransformerNest(
 
 func (tr *TransformerNest) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerNest) explodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 
 		inrec := inrecAndContext.Record
 		originalEntry := inrec.GetEntry(tr.fieldName)
 		if originalEntry == nil {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 			return
 		}
 
@@ -341,25 +341,25 @@ func (tr *TransformerNest) explodeValuesAcrossFields(
 		}
 
 		inrec.Unlink(originalEntry)
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 
 	} else {
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerNest) explodeValuesAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		mvalue := inrec.Get(tr.fieldName)
 		if mvalue == nil {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 			return
 		}
 		svalue := mvalue.String()
@@ -369,27 +369,27 @@ func (tr *TransformerNest) explodeValuesAcrossRecords(
 		for _, piece := range pieces {
 			outrec := inrec.Copy()
 			outrec.PutReference(tr.fieldName, types.MlrvalFromString(piece))
-			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 		}
 
 	} else {
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerNest) explodePairsAcrossFields(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 
 		inrec := inrecAndContext.Record
 		originalEntry := inrec.GetEntry(tr.fieldName)
 		if originalEntry == nil {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 			return
 		}
 
@@ -416,25 +416,25 @@ func (tr *TransformerNest) explodePairsAcrossFields(
 		}
 
 		inrec.Unlink(originalEntry)
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 
 	} else {
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerNest) explodePairsAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 		mvalue := inrec.Get(tr.fieldName)
 		if mvalue == nil {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 			return
 		}
 
@@ -455,20 +455,20 @@ func (tr *TransformerNest) explodePairsAcrossRecords(
 			}
 
 			outrec.Unlink(originalEntry)
-			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 		}
 
 	} else {
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerNest) implodeValuesAcrossFields(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -505,26 +505,26 @@ func (tr *TransformerNest) implodeValuesAcrossFields(
 			}
 		}
 
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 
 	} else {
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerNest) implodeValueAcrossRecords(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
 		originalEntry := inrec.GetEntry(tr.fieldName)
 		if originalEntry == nil {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 			return
 		}
 
@@ -577,11 +577,11 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 
 				// tr.fieldName was already present so we'll overwrite it in-place here.
 				outrec.PutReference(tr.fieldName, types.MlrvalFromString(buffer.String()))
-				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
 		}
 
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 

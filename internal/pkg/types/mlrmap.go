@@ -59,6 +59,7 @@ package types
 // default-on pending more profiling on more complex record-processing operations
 // such as mlr sort.
 var hashRecords = true
+
 func HashRecords(onOff bool) {
 	hashRecords = onOff
 }

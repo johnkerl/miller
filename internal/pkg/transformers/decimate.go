@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -144,9 +145,9 @@ func NewTransformerDecimate(
 
 func (tr *TransformerDecimate) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -165,13 +166,13 @@ func (tr *TransformerDecimate) Transform(
 
 		remainder := countForGroup % tr.decimateCount
 		if remainder == tr.remainderToKeep {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 		}
 
 		countForGroup++
 		tr.countsByGroup[groupingKey] = countForGroup
 
 	} else {
-		outputChannel <- inrecAndContext // Emit the stream-terminating null record
+		outputRecordsAndContexts.PushBack(inrecAndContext) // Emit the stream-terminating null record
 	}
 }

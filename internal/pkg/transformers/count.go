@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -152,39 +153,38 @@ func NewTransformerCount(
 
 func (tr *TransformerCount) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerCount) countUngrouped(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		tr.ungroupedCount++
 	} else {
 		newrec := types.NewMlrmapAsRecord()
 		newrec.PutCopy(tr.outputFieldName, types.MlrvalFromInt(tr.ungroupedCount))
+		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 
-		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
-
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerCount) countGrouped(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -213,7 +213,7 @@ func (tr *TransformerCount) countGrouped(
 			newrec.PutCopy(tr.outputFieldName, types.MlrvalFromInt(tr.groupedCounts.FieldCount))
 
 			outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
-			outputChannel <- outrecAndContext
+			outputRecordsAndContexts.PushBack(outrecAndContext)
 
 		} else {
 			for outer := tr.groupedCounts.Head; outer != nil; outer = outer.Next {
@@ -238,10 +238,10 @@ func (tr *TransformerCount) countGrouped(
 				newrec.PutCopy(tr.outputFieldName, types.MlrvalFromInt(countForGroup))
 
 				outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
-				outputChannel <- outrecAndContext
+				outputRecordsAndContexts.PushBack(outrecAndContext)
 			}
 		}
 
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }

@@ -983,8 +983,8 @@ func (node *EmitXStatementNode) emitRecordToRecordStream(
 	state *runtime.State,
 ) error {
 	// The output channel is always non-nil, except for the Miller REPL.
-	if state.OutputChannel != nil {
-		state.OutputChannel <- types.NewRecordAndContext(outrec, state.Context)
+	if state.OutputRecordsAndContexts != nil {
+		state.OutputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, state.Context))
 	} else {
 		fmt.Println(outrec.String())
 	}

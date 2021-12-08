@@ -17,9 +17,9 @@ import (
 
 // ----------------------------------------------------------------
 type RecordReaderCSV struct {
-	readerOptions *cli.TReaderOptions
+	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int
-	ifs0          byte // Go's CSV library only lets its 'Comma' be a single character
+	ifs0            byte // Go's CSV library only lets its 'Comma' be a single character
 }
 
 // ----------------------------------------------------------------

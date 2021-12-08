@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -170,13 +171,13 @@ func NewTransformerFormatValues(
 
 func (tr *TransformerFormatValues) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if inrecAndContext.EndOfStream {
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 		return
 	}
 
@@ -201,5 +202,5 @@ func (tr *TransformerFormatValues) Transform(
 		}
 	}
 
-	outputChannel <- inrecAndContext
+	outputRecordsAndContexts.PushBack(inrecAndContext)
 }
