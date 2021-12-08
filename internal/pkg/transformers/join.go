@@ -458,7 +458,8 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	readerOpts := &tr.opts.joinFlagOptions.ReaderOptions
 
 	// Instantiate the record-reader
-	recordReader, err := input.Create(readerOpts)
+	// TODO: perhaps increase recordsPerBatch, and/or refactor
+	recordReader, err := input.Create(readerOpts, 1)
 	if recordReader == nil {
 		fmt.Fprintf(os.Stderr, "mlr join: %v\n", err)
 		os.Exit(1)
@@ -472,7 +473,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	initialContext.UpdateForStartOfFile(tr.opts.leftFileName)
 
 	// Set up channels for the record-reader.
-	readerChannel := make(chan *types.RecordAndContext, 10)
+	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
 	errorChannel := make(chan error, 1)
 	downstreamDoneChannel := make(chan bool, 1)
 
@@ -493,7 +494,11 @@ func (tr *TransformerJoin) ingestLeftFile() {
 			fmt.Fprintln(os.Stderr, "mlr", ": ", err)
 			os.Exit(1)
 
-		case leftrecAndContext := <-readerChannel:
+		case leftrecsAndContexts := <-readerChannel:
+			// TODO: temp for batch-reader refactor
+			lib.InternalCodingErrorIf(leftrecsAndContexts.Len() != 1)
+			leftrecAndContext := leftrecsAndContexts.Front().Value.(*types.RecordAndContext)
+
 			if leftrecAndContext.EndOfStream {
 				done = true
 				break // breaks the switch, not the for, in Golang

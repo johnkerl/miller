@@ -1,6 +1,7 @@
 package input
 
 import (
+	"container/list"
 	"io"
 	"strconv"
 	"strings"
@@ -11,19 +12,24 @@ import (
 )
 
 type RecordReaderNIDX struct {
-	readerOptions *cli.TReaderOptions
+	readerOptions   *cli.TReaderOptions
+	recordsPerBatch int
 }
 
-func NewRecordReaderNIDX(readerOptions *cli.TReaderOptions) (*RecordReaderNIDX, error) {
+func NewRecordReaderNIDX(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int,
+) (*RecordReaderNIDX, error) {
 	return &RecordReaderNIDX{
-		readerOptions: readerOptions,
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
 	}, nil
 }
 
 func (reader *RecordReaderNIDX) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -55,14 +61,14 @@ func (reader *RecordReaderNIDX) Read(
 			}
 		}
 	}
-	readerChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
 func (reader *RecordReaderNIDX) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -92,7 +98,7 @@ func (reader *RecordReaderNIDX) processHandle(
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				readerChannel <- types.NewOutputString(line+"\n", context)
+				readerChannel <- types.NewOutputStringList(line+"\n", context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
@@ -103,7 +109,7 @@ func (reader *RecordReaderNIDX) processHandle(
 		record := reader.recordFromNIDXLine(line)
 
 		context.UpdateForInputRecord()
-		readerChannel <- types.NewRecordAndContext(
+		readerChannel <- types.NewRecordAndContextList(
 			record,
 			context,
 		)

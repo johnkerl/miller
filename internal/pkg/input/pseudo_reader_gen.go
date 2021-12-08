@@ -1,6 +1,7 @@
 package input
 
 import (
+	"container/list"
 	"errors"
 	"fmt"
 
@@ -9,29 +10,34 @@ import (
 )
 
 type PseudoReaderGen struct {
-	readerOptions *cli.TReaderOptions
+	readerOptions   *cli.TReaderOptions
+	recordsPerBatch int
 }
 
-func NewPseudoReaderGen(readerOptions *cli.TReaderOptions) (*PseudoReaderGen, error) {
+func NewPseudoReaderGen(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int,
+) (*PseudoReaderGen, error) {
 	return &PseudoReaderGen{
-		readerOptions: readerOptions,
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
 	}, nil
 }
 
 func (reader *PseudoReaderGen) Read(
 	filenames []string, // ignored
 	context types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	reader.process(&context, readerChannel, errorChannel, downstreamDoneChannel)
-	readerChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
 func (reader *PseudoReaderGen) process(
 	context *types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -91,7 +97,7 @@ func (reader *PseudoReaderGen) process(
 		record.PutCopy(key, value)
 
 		context.UpdateForInputRecord()
-		readerChannel <- types.NewRecordAndContext(
+		readerChannel <- types.NewRecordAndContextList(
 			record,
 			context,
 		)

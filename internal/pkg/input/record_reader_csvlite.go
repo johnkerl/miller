@@ -19,6 +19,7 @@ package input
 //            3,4,5,6               3,4,5
 
 import (
+	"container/list"
 	"errors"
 	"fmt"
 	"io"
@@ -32,20 +33,29 @@ import (
 
 // ----------------------------------------------------------------
 type RecordReaderCSVLite struct {
-	readerOptions *cli.TReaderOptions
+	readerOptions   *cli.TReaderOptions
+	recordsPerBatch int
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderCSVLite(readerOptions *cli.TReaderOptions) (*RecordReaderCSVLite, error) {
+func NewRecordReaderCSVLite(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int,
+) (*RecordReaderCSVLite, error) {
 	return &RecordReaderCSVLite{
-		readerOptions: readerOptions,
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
 	}, nil
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderPPRINT(readerOptions *cli.TReaderOptions) (*RecordReaderCSVLite, error) {
+func NewRecordReaderPPRINT(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int,
+) (*RecordReaderCSVLite, error) {
 	return &RecordReaderCSVLite{
-		readerOptions: readerOptions,
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
 	}, nil
 }
 
@@ -53,7 +63,7 @@ func NewRecordReaderPPRINT(readerOptions *cli.TReaderOptions) (*RecordReaderCSVL
 func (reader *RecordReaderCSVLite) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -121,7 +131,7 @@ func (reader *RecordReaderCSVLite) Read(
 			}
 		}
 	}
-	readerChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
 // ----------------------------------------------------------------
@@ -129,7 +139,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -170,7 +180,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				readerChannel <- types.NewOutputString(line+"\n", context)
+				readerChannel <- types.NewOutputStringList(line+"\n", context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
@@ -242,7 +252,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			}
 
 			context.UpdateForInputRecord()
-			readerChannel <- types.NewRecordAndContext(
+			readerChannel <- types.NewRecordAndContextList(
 				record,
 				context,
 			)
@@ -256,7 +266,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -293,7 +303,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				readerChannel <- types.NewOutputString(line+"\n", context)
+				readerChannel <- types.NewOutputStringList(line+"\n", context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
@@ -373,7 +383,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 		}
 
 		context.UpdateForInputRecord()
-		readerChannel <- types.NewRecordAndContext(
+		readerChannel <- types.NewRecordAndContextList(
 			record,
 			context,
 		)

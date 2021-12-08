@@ -2,6 +2,7 @@ package stream
 
 import (
 	"bufio"
+	"container/list"
 	"fmt"
 	"io"
 	"os"
@@ -47,8 +48,10 @@ func Stream(
 	// passed through the channels along with each record.
 	initialContext := types.NewContext()
 
-	// Instantiate the record-reader
-	recordReader, err := input.Create(&options.ReaderOptions)
+	// Instantiate the record-reader.
+	// RecordsPerBatch is tracked separately from ReaderOptions since join/repl
+	// may use batch size of 1.
+	recordReader, err := input.Create(&options.ReaderOptions, options.ReaderOptions.RecordsPerBatch)
 	if err != nil {
 		return err
 	}
@@ -60,7 +63,8 @@ func Stream(
 	}
 
 	// Set up the reader-to-transformer and transformer-to-writer channels.
-	readerChannel := make(chan *types.RecordAndContext, 10)
+	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
+	tempChannel := make(chan *types.RecordAndContext, 10)
 	writerChannel := make(chan *types.RecordAndContext, 1)
 
 	// We're done when a fatal error is registered on input (file not found,
@@ -81,7 +85,9 @@ func Stream(
 	bufferedOutputStream := bufio.NewWriter(outputStream)
 
 	go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
-	go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
+	// TODO: temp for iterative batched-reader refactor
+	go tempReader(readerChannel, tempChannel)
+	go transformers.ChainTransformer(tempChannel, readerDownstreamDoneChannel, recordTransformers,
 		writerChannel, options)
 	go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
 		bufferedOutputStream, outputIsStdout)
@@ -101,4 +107,25 @@ func Stream(
 	bufferedOutputStream.Flush()
 
 	return nil
+}
+
+func tempReader(
+	readerChannel <-chan *list.List, // list of *types.RecordAndContext
+	transformerChannel chan<- *types.RecordAndContext,
+) {
+	done := false
+	for !done {
+		racs := <-readerChannel
+
+		for e := racs.Front(); e != nil; e = e.Next() {
+			rac := e.Value.(*types.RecordAndContext)
+			transformerChannel <- rac
+
+			if rac.EndOfStream {
+				done = true
+				break
+			}
+		}
+
+	}
 }

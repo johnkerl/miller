@@ -1,6 +1,7 @@
 package input
 
 import (
+	"container/list"
 	"io"
 	"strconv"
 	"strings"
@@ -11,19 +12,24 @@ import (
 )
 
 type RecordReaderDKVP struct {
-	readerOptions *cli.TReaderOptions
+	readerOptions   *cli.TReaderOptions
+	recordsPerBatch int
 }
 
-func NewRecordReaderDKVP(readerOptions *cli.TReaderOptions) (*RecordReaderDKVP, error) {
+func NewRecordReaderDKVP(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int,
+) (*RecordReaderDKVP, error) {
 	return &RecordReaderDKVP{
-		readerOptions: readerOptions,
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
 	}, nil
 }
 
 func (reader *RecordReaderDKVP) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -55,21 +61,22 @@ func (reader *RecordReaderDKVP) Read(
 			}
 		}
 	}
-	readerChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
 func (reader *RecordReaderDKVP) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
 
-	scanner := NewLineScanner(handle, reader.readerOptions.IRS)
-	for scanner.Scan() {
+	lineScanner := NewLineScanner(handle, reader.readerOptions.IRS)
+
+	for lineScanner.Scan() {
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
@@ -86,12 +93,12 @@ func (reader *RecordReaderDKVP) processHandle(
 			break
 		}
 
-		line := scanner.Text()
+		line := lineScanner.Text()
 
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				readerChannel <- types.NewOutputString(line+"\n", context)
+				readerChannel <- types.NewOutputStringList(line+"\n", context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
@@ -101,7 +108,7 @@ func (reader *RecordReaderDKVP) processHandle(
 
 		record := reader.recordFromDKVPLine(line)
 		context.UpdateForInputRecord()
-		readerChannel <- types.NewRecordAndContext(
+		readerChannel <- types.NewRecordAndContextList(
 			record,
 			context,
 		)

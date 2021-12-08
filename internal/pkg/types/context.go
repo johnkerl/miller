@@ -2,6 +2,7 @@ package types
 
 import (
 	"bytes"
+	"container/list"
 	"strconv"
 )
 
@@ -37,6 +38,16 @@ func NewRecordAndContext(
 	}
 }
 
+// TODO: temp for batch-reader refactor
+func NewRecordAndContextList(
+	record *Mlrmap,
+	context *Context,
+) *list.List {
+	ell := list.New()
+	ell.PushBack(NewRecordAndContext(record, context))
+	return ell
+}
+
 // For the record-readers to update their initial context as each new record is read.
 func (rac *RecordAndContext) Copy() *RecordAndContext {
 	if rac == nil {
@@ -69,6 +80,16 @@ func NewOutputString(
 	}
 }
 
+// TODO: temp for batch-reader refactor
+func NewOutputStringList(
+	outputString string,
+	context *Context,
+) *list.List {
+	ell := list.New()
+	ell.PushBack(NewOutputString(outputString, context))
+	return ell
+}
+
 // For the record-readers to update their initial context as each new record is read.
 func NewEndOfStreamMarker(context *Context) *RecordAndContext {
 	return &RecordAndContext{
@@ -77,6 +98,14 @@ func NewEndOfStreamMarker(context *Context) *RecordAndContext {
 		OutputString: "",
 		EndOfStream:  true,
 	}
+}
+
+// TODO: comment
+// For the record-readers to update their initial context as each new record is read.
+func NewEndOfStreamMarkerList(context *Context) *list.List {
+	ell := list.New()
+	ell.PushBack(NewEndOfStreamMarker(context))
+	return ell
 }
 
 // ----------------------------------------------------------------

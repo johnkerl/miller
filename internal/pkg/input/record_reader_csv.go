@@ -2,6 +2,7 @@ package input
 
 import (
 	"bytes"
+	"container/list"
 	"encoding/csv"
 	"errors"
 	"fmt"
@@ -17,11 +18,15 @@ import (
 // ----------------------------------------------------------------
 type RecordReaderCSV struct {
 	readerOptions *cli.TReaderOptions
+	recordsPerBatch int
 	ifs0          byte // Go's CSV library only lets its 'Comma' be a single character
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) (*RecordReaderCSV, error) {
+func NewRecordReaderCSV(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int,
+) (*RecordReaderCSV, error) {
 	if readerOptions.IRS != "\n" && readerOptions.IRS != "\r\n" {
 		return nil, errors.New("CSV IRS cannot be altered; LF vs CR/LF is autodetected")
 	}
@@ -29,8 +34,9 @@ func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) (*RecordReaderCSV, er
 		return nil, errors.New("CSV IFS can only be a single character")
 	}
 	return &RecordReaderCSV{
-		readerOptions: readerOptions,
-		ifs0:          readerOptions.IFS[0],
+		readerOptions:   readerOptions,
+		ifs0:            readerOptions.IFS[0],
+		recordsPerBatch: recordsPerBatch,
 	}, nil
 }
 
@@ -38,7 +44,7 @@ func NewRecordReaderCSV(readerOptions *cli.TReaderOptions) (*RecordReaderCSV, er
 func (reader *RecordReaderCSV) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -70,7 +76,7 @@ func (reader *RecordReaderCSV) Read(
 			}
 		}
 	}
-	readerChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
 // ----------------------------------------------------------------
@@ -78,7 +84,7 @@ func (reader *RecordReaderCSV) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -204,7 +210,7 @@ func (reader *RecordReaderCSV) processHandle(
 
 		context.UpdateForInputRecord()
 
-		readerChannel <- types.NewRecordAndContext(
+		readerChannel <- types.NewRecordAndContextList(
 			record,
 			context,
 		)
@@ -216,7 +222,7 @@ func (reader *RecordReaderCSV) processHandle(
 func (reader *RecordReaderCSV) maybeConsumeComment(
 	csvRecord []string,
 	context *types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 ) bool {
 	if reader.readerOptions.CommentHandling == cli.CommentsAreData {
 		// Nothing is to be construed as a comment
@@ -249,7 +255,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 		csvWriter.Comma = rune(reader.ifs0)
 		csvWriter.Write(csvRecord)
 		csvWriter.Flush()
-		readerChannel <- types.NewOutputString(buffer.String(), context)
+		readerChannel <- types.NewOutputStringList(buffer.String(), context)
 	} else /* reader.readerOptions.CommentHandling == cli.SkipComments */ {
 		// discard entirely
 	}

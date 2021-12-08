@@ -2,6 +2,7 @@ package input
 
 import (
 	"bufio"
+	"container/list"
 	"io"
 
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -19,7 +20,7 @@ type IRecordReader interface {
 	Read(
 		filenames []string,
 		initialContext types.Context,
-		readerChannel chan<- *types.RecordAndContext,
+		readerChannel chan<- *list.List, // list of *types.RecordAndContext
 		errorChannel chan error,
 		downstreamDoneChannel <-chan bool, // for mlr head
 	)

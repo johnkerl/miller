@@ -27,17 +27,15 @@ PUNCHDOWN LIST
       o dkvp-reader factor-out ...
   o mods:
     ? outputChannel -> *list.List at each transformer -- ? profile first
-    - un-legacy fflush flag :(
-      > conditional on isatty stdout
-      > new fflushWasSpecified
-      > downcase OFSWasSpecified, HaveRandSeed, et al.
+    ? readerChannel length 1 or 2 ?
+    ? cli option for records per batch
+    ? experiment again with hashed/unhashed
     - do and maybe keep? record-reader return (raclist, err) & refactor repl accordingly
       > needs factor for-loop to stateful so maybe not
-    - transfomers w/ reclist: *maybe*, but idchan/odchan too ... invest time after some refactor decions made
+    - transformers w/ reclist: *maybe*, but idchan/odchan too ... invest time after some refactor decions made
     - fix record/line sequencing regressions
-    - tail -f handling
-      > batch-size 1 on stdin, for repl at least?
-      > adaptive is-blocking detection -- make sure it's not over-sensitive
+    - maybe increase records-per-batch in join-bucket-keeper; and/or refactor
+    - maybe increase records-per-batch in repl; and/or refactor
   o goals:
     - keep goroutines -- including per-transformer -- for parallelism
     - look for flex ideas on how to structure that parallelism
@@ -70,10 +68,6 @@ PUNCHDOWN LIST
     d how to handle tail -f and repl
       > try unconditional batching and hiding *first* to see how much best-case perf to be had
     ? lazy type-infer?? needs careful use of accessor-mutators in place of mv.type etc
-<<<<<<< HEAD
-=======
-* note somewhere why NewEndOfStreamMarker instead of channel close -- readers carry final context
->>>>>>> f2e709408 (Rename inputChannel,outputChannel to readerChannel,writerChannel (#772))
 
 * blockers:
   - keep checking issues

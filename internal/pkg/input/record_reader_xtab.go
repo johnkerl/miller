@@ -12,14 +12,19 @@ import (
 )
 
 type RecordReaderXTAB struct {
-	readerOptions *cli.TReaderOptions
+	readerOptions   *cli.TReaderOptions
+	recordsPerBatch int
 	// Note: XTAB uses two consecutive IFS in place of an IRS; IRS is ignored
 }
 
 // ----------------------------------------------------------------
-func NewRecordReaderXTAB(readerOptions *cli.TReaderOptions) (*RecordReaderXTAB, error) {
+func NewRecordReaderXTAB(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int,
+) (*RecordReaderXTAB, error) {
 	return &RecordReaderXTAB{
-		readerOptions: readerOptions,
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
 	}, nil
 }
 
@@ -27,7 +32,7 @@ func NewRecordReaderXTAB(readerOptions *cli.TReaderOptions) (*RecordReaderXTAB, 
 func (reader *RecordReaderXTAB) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -59,14 +64,14 @@ func (reader *RecordReaderXTAB) Read(
 			}
 		}
 	}
-	readerChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
 func (reader *RecordReaderXTAB) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -102,7 +107,7 @@ func (reader *RecordReaderXTAB) processHandle(
 					return
 				}
 				context.UpdateForInputRecord()
-				readerChannel <- types.NewRecordAndContext(record, context)
+				readerChannel <- types.NewRecordAndContextList(record, context)
 				linesForRecord = list.New()
 			}
 
@@ -114,7 +119,7 @@ func (reader *RecordReaderXTAB) processHandle(
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
 			if reader.readerOptions.CommentHandling == cli.PassComments {
-				readerChannel <- types.NewOutputString(line+reader.readerOptions.IFS, context)
+				readerChannel <- types.NewOutputStringList(line+reader.readerOptions.IFS, context)
 				continue
 			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
 				continue
@@ -133,7 +138,7 @@ func (reader *RecordReaderXTAB) processHandle(
 					return
 				}
 				context.UpdateForInputRecord()
-				readerChannel <- types.NewRecordAndContext(record, context)
+				readerChannel <- types.NewRecordAndContextList(record, context)
 				linesForRecord = list.New()
 			}
 		}
