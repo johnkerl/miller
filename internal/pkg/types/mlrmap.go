@@ -53,6 +53,16 @@
 
 package types
 
+// For the C port having this off was a noticeable performance improvement (10-15%).
+// For the Go port having it off is a less-noticeable performance improvement (5%).
+// Both these figures are for just doing mlr cat. At the moment I'm leaving this
+// default-on pending more profiling on more complex record-processing operations
+// such as mlr sort.
+var hashRecords = true
+func HashRecords(onOff bool) {
+	hashRecords = onOff
+}
+
 // ----------------------------------------------------------------
 type Mlrmap struct {
 	FieldCount int
@@ -80,7 +90,11 @@ type MlrmapPair struct {
 
 // ----------------------------------------------------------------
 func NewMlrmapAsRecord() *Mlrmap {
-	return newMlrmapUnhashed()
+	if hashRecords {
+		return newMlrmapHashed()
+	} else {
+		return newMlrmapUnhashed()
+	}
 }
 func NewMlrmap() *Mlrmap {
 	return newMlrmapHashed()

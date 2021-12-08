@@ -162,7 +162,7 @@ func (reader *RecordReaderCSV) processHandle(
 			}
 		}
 
-		record := types.NewMlrmap()
+		record := types.NewMlrmapAsRecord()
 
 		nh := len(header)
 		nd := len(csvRecord)

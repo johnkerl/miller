@@ -26,6 +26,8 @@ const DEFAULT_GEN_START_AS_STRING = "1"
 const DEFAULT_GEN_STEP_AS_STRING = "1"
 const DEFAULT_GEN_STOP_AS_STRING = "100"
 
+const DEFAULT_RECORDS_PER_BATCH = 500
+
 type TGeneratorOptions struct {
 	FieldName     string
 	StartAsString string
@@ -185,8 +187,8 @@ func DefaultReaderOptions() TReaderOptions {
 			StopAsString:  DEFAULT_GEN_STOP_AS_STRING,
 		},
 
-		// TODO: make a cli option
-		RecordsPerBatch: 500,
+		// TODO: comment
+		RecordsPerBatch: DEFAULT_RECORDS_PER_BATCH,
 	}
 }
 

@@ -119,7 +119,7 @@ func (reader *RecordReaderDKVP) processHandle(
 func (reader *RecordReaderDKVP) recordFromDKVPLine(
 	line string,
 ) *types.Mlrmap {
-	record := types.NewMlrmap()
+	record := types.NewMlrmapAsRecord()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex

@@ -120,7 +120,7 @@ func (reader *RecordReaderNIDX) processHandle(
 func (reader *RecordReaderNIDX) recordFromNIDXLine(
 	line string,
 ) *types.Mlrmap {
-	record := types.NewMlrmap()
+	record := types.NewMlrmapAsRecord()
 
 	var values []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex

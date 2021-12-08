@@ -149,7 +149,7 @@ func (reader *RecordReaderXTAB) processHandle(
 func (reader *RecordReaderXTAB) recordFromXTABLines(
 	lines *list.List,
 ) (*types.Mlrmap, error) {
-	record := types.NewMlrmap()
+	record := types.NewMlrmapAsRecord()
 
 	for entry := lines.Front(); entry != nil; entry = entry.Next() {
 		line := entry.Value.(string)

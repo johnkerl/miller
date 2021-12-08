@@ -220,7 +220,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 				return
 			}
 
-			record := types.NewMlrmap()
+			record := types.NewMlrmapAsRecord()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
 					value := types.MlrvalFromInferredTypeForDataFiles(field)
@@ -353,7 +353,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			}
 		}
 
-		record := types.NewMlrmap()
+		record := types.NewMlrmapAsRecord()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
 				value := types.MlrvalFromInferredTypeForDataFiles(field)
