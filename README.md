@@ -78,9 +78,12 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 
 # Building from source
 
-* `make` and `make check`
-* The Miller executable is `./mlr` (or `.\mlr.exe` on Windows)
-* For more developer information please see [README-go-port.md](./README-go-port.md)
+* `make`: takes just a few seconds and produces the Miller executable, which is `./mlr` (or `.\mlr.exe` on Windows).
+* `make check` runs tests.
+* `make install` installs executable `/usr/local/bin/mlr` and manual page `/usr/local/share/man/man1/mlr.1` (so you can do `man mlr`).
+  * You can instead do `./configure --prefix=/some/install/path` followed by `make install` if you want to install somewhere other than `/usr/local`.
+* See also the doc page on [building from source](https://miller.readthedocs.io/en/latest/build).
+* For more developer information please see [README-go-port.md](./README-go-port.md).
 
 # License
 
@@ -93,8 +96,9 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 
 # Contributors
 
-Thanks to all the fine people who help make Miller better by contributing commits/PRs! (I wish there
-were an equally good way to honor all the fine people who contribute through issues and feature requests!)
+Thanks to all the fine people who help make Miller better by contributing
+commits/PRs! (Coming soon -- there will be an equally good way to honor all the
+fine people who contribute through issues and feature requests!)
 
 <a href="https://github.com/johnkerl/miller/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
@@ -145,9 +149,9 @@ system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
 
 * Miller has high-throughput **performance** on par with the Unix toolkit.
 
-* Not unlike `jq` (http://stedolan.github.io/jq/) for JSON, Miller is written
-in portable, modern C, with **zero runtime dependencies**. You can download or
-compile a single binary, `scp` it to a faraway machine, and expect it to work.
+* Miller is written in portable, modern Go, with **zero runtime dependencies**.
+You can download or compile a single binary, `scp` it to a faraway machine,
+and expect it to work.
 
 # What people are saying about Miller
 

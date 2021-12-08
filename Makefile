@@ -1,13 +1,18 @@
 PREFIX=/usr/local
 INSTALLDIR=$(PREFIX)/bin
 
+# This must remain the first target in this file, which is what 'make' with no
+# arguments will run.
 build:
 	go build github.com/johnkerl/miller/cmd/mlr
-mlr:
-	go build github.com/johnkerl/miller/cmd/mlr
+	@echo "Build complete. The Miller executable is ./mlr (or .\mlr.exe on Windows)."
+	@echo "You can use 'make check' to run tests".
 
 # For interactive use, 'mlr regtest' offers more options and transparency.
 check: unit_test regression_test
+	@echo "Tests complete. You can use 'make install' if you like, optionally preceded"
+	@echo "by './configure --prefix=/your/install/path' if you wish to install to"
+	@echo "somewhere other than /usr/local/bin -- the default prefix is /usr/local."
 
 # Unit tests (small number)
 unit_test:
@@ -66,6 +71,8 @@ dev:
 it: build check
 so: install
 sure: build check
+mlr:
+	go build github.com/johnkerl/miller/cmd/mlr
 
 # Please see comments in ./create-release-tarball as well as
 # https://miller.readthedocs.io/en/latest/build/#creating-a-new-release-for-developers
