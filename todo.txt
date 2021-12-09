@@ -38,7 +38,7 @@ PUNCHDOWN LIST
         - reads
       > everything else
         - reads and writes
-    ! fix mlr head -n 1
+    a remove NewOutputStringList and NewRecordAndContextList
     ? outputChannel -> *list.List at each transformer -- ? profile first
     ? readerChannel length 1 or 2 ?
     ? experiment again with hashed/unhashed -- mlr sort etc

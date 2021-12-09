@@ -73,47 +73,62 @@ func (reader *RecordReaderNIDX) processHandle(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
+	recordsPerBatch := reader.readerOptions.RecordsPerBatch
 
-	scanner := NewLineScanner(handle, reader.readerOptions.IRS)
+	lineScanner := NewLineScanner(handle, reader.readerOptions.IRS)
+	linesChannel := make(chan *list.List, recordsPerBatch)
+	go channelizedLineScanner(lineScanner, linesChannel, downstreamDoneChannel, recordsPerBatch)
 
-	for scanner.Scan() {
-
-		// See if downstream processors will be ignoring further data (e.g. mlr
-		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
-		// quickly, as it should.
-		eof := false
-		select {
-		case _ = <-downstreamDoneChannel:
-			eof = true
-			break
-		default:
-			break
-		}
+	for {
+		recordsAndContexts, eof := reader.getRecordBatch(linesChannel, recordsPerBatch, context)
+		readerChannel <- recordsAndContexts
 		if eof {
 			break
 		}
+	}
+}
 
-		line := scanner.Text()
+// TODO: comment copiously we're trying to handle slow/fast/short/long reads: tail -f, smallfile, bigfile.
+func (reader *RecordReaderNIDX) getRecordBatch(
+	linesChannel <-chan *list.List,
+	maxBatchSize int,
+	context *types.Context,
+) (
+	recordsAndContexts *list.List,
+	eof bool,
+) {
+	recordsAndContexts = list.New()
+
+	lines, more := <-linesChannel
+	if !more {
+		return recordsAndContexts, true
+	}
+
+	for e := lines.Front(); e != nil; e = e.Next() {
+		line := e.Value.(string)
 
 		// Check for comments-in-data feature
-		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-			if reader.readerOptions.CommentHandling == cli.PassComments {
-				readerChannel <- types.NewOutputStringList(line+"\n", context)
-				continue
-			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
-				continue
+		// TODO: function-pointer this away
+		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
+			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+				if reader.readerOptions.CommentHandling == cli.PassComments {
+					recordsAndContexts.PushBack(types.NewOutputString(line+"\n", context))
+					continue
+				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+					continue
+				}
+				// else comments are data
 			}
-			// else comments are data
 		}
 
 		record := reader.recordFromNIDXLine(line)
 
 		context.UpdateForInputRecord()
-		readerChannel <- types.NewRecordAndContextList(
-			record,
-			context,
-		)
+		recordAndContext := types.NewRecordAndContext(record, context)
+		recordsAndContexts.PushBack(recordAndContext)
 	}
+
+	return recordsAndContexts, false
 }
 
 // ----------------------------------------------------------------

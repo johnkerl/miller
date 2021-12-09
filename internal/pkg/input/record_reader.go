@@ -77,3 +77,46 @@ func NewLineScanner(handle io.Reader, irs string) *bufio.Scanner {
 
 	return scanner
 }
+
+// TODO: comment
+func channelizedLineScanner(
+	lineScanner *bufio.Scanner,
+	linesChannel chan<- *list.List,
+	downstreamDoneChannel <-chan bool, // for mlr head
+	recordsPerBatch int,
+) {
+	i := 0
+	done := false
+
+	lines := list.New()
+
+	for lineScanner.Scan() {
+		i++
+
+		lines.PushBack(lineScanner.Text())
+
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
+		if i%recordsPerBatch == 0 {
+			select {
+			case _ = <-downstreamDoneChannel:
+				done = true
+				break
+			default:
+				break
+			}
+			if done {
+				break
+			}
+			linesChannel <- lines
+			lines = list.New()
+		}
+
+		if done {
+			break
+		}
+	}
+	linesChannel <- lines
+	close(linesChannel) // end-of-stream marker
+}
