@@ -1,6 +1,0 @@
-a xyz_sum xyz_min xyz_max xyz_antimode xyz_mode
-b 3       1       2       1            1
-b 7       3       4       3            3
-b 5       5       5       5            5
-b 6       6       6       6            6
-b 0       -       -       -            -

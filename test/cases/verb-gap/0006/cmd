@@ -1,0 +1,1 @@
+mlr --opprint --barred gap -n 4 test/input/ten.dkvp

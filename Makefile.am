@@ -1,6 +1,0 @@
-# not GPL, thus no COPYING file
-AUTOMAKE_OPTIONS=foreign
-
-EXTRA_DIST= LICENSE.txt README.md
-
-SUBDIRS=c man

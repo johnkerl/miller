@@ -1,0 +1,1 @@
+mlr --nidx cat test/input/truncated.nidx

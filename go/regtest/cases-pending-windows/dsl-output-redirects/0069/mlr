@@ -1,1 +1,0 @@
-@x={"a":1}; @y={"a":2}; emitp > "${CASEDIR}/foo.dat", (@x, @y), "a"

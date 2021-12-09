@@ -1,0 +1,1 @@
+mlr --from test/input/xyz2 put -q -f ${CASEDIR}/mlr

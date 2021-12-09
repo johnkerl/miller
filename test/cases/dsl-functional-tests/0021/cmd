@@ -1,0 +1,1 @@
+mlr --opprint put -f ${CASEDIR}/a.mlr then put -f ${CASEDIR}/b.mlr test/input/modarith.dat

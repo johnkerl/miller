@@ -1,0 +1,1 @@
+@a[NR]=$a; @b[NR]=$b; emitp >> ENV["CASEDIR"]."/out.".$a.$b, (@a, @b), "NR"

@@ -1,0 +1,1 @@
+@x={"a":1}; emit > ENV["CASEDIR"]."/foo.dat", @x, "a"

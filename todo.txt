@@ -1,0 +1,652 @@
+================================================================
+PUNCHDOWN LIST
+
+* perf:
+  o go tool pprof -http=:8080 cpu.pprof
+  x close(chan) as EOS throughout
+    - note somewhere why NewEndOfStreamMarker instead of channel close -- readers carry final context
+  o notes
+    - https://github.com/golang/go/issues/18237
+    - https://github.com/google/gvisor/issues/1942
+    - https://github.com/golang/go/issues/21827
+    - https://news.ycombinator.com/item?id=19841580
+    - https://news.ycombinator.com/item?id=19839081
+    - https://about.sourcegraph.com/go/gophercon-2019-death-by-three-thousand-timers-streaming-video-on-demand-for-cable-tv/
+    - https://stackoverflow.com/questions/41353508/how-to-determine-which-side-of-go-channel-is-waiting
+      case p <- result:
+      case <-time.After(500 * time.Millisecond):
+      ...
+    - https://github.com/dgryski/go-perfbook
+    - https://dave.cheney.net/high-performance-go-workshop/dotgo-paris.html
+  o find:
+    - perf x platform, input-file format, (output-file format), etc
+    - try select-check & stats-keep -- ?
+    - try select-check & list-build -- ?
+    - make a 2nd/3rd cmd main w/ simple model & tweak that
+      o dkvp-reader factor-out ...
+  o mods:
+    ? outputChannel -> *list.List at each transformer -- ? profile first
+    - un-legacy fflush flag :(
+      > conditional on isatty stdout
+      > new fflushWasSpecified
+      > downcase OFSWasSpecified, HaveRandSeed, et al.
+    - do and maybe keep? record-reader return (raclist, err) & refactor repl accordingly
+      > needs factor for-loop to stateful so maybe not
+    - transfomers w/ reclist: *maybe*, but idchan/odchan too ... invest time after some refactor decions made
+    - fix record/line sequencing regressions
+    - tail -f handling
+      > batch-size 1 on stdin, for repl at least?
+      > adaptive is-blocking detection -- make sure it's not over-sensitive
+  o goals:
+    - keep goroutines -- including per-transformer -- for parallelism
+    - look for flex ideas on how to structure that parallelism
+  o ideas:
+    n different concurrency abstraction?
+    n no-select -- just <- on a single channel?
+      > tried in mprof/main.go: reader & writer both write/read only one channel.
+      > still unacceptable runtime overhead :(
+    K string-buffer still too many write-syscalls: use bufio.Writer
+      w TODO: flush() points
+    d idchan/odchan can maybe be marked in chain-transformers as local array
+      d do other stuff first
+    d replace errchan w/ retval only?
+      d do other stuff first
+    d rac-batching; ensure env-var access
+      k also prototyped for no-transformer case
+      > how to structure this for the transformers?
+      > do that after hiding
+    ! have an extra eye on CSV-reader perf
+    - mprof split-reader getenv something
+    - hide app-level scan/format under sys-level read/write: also batched
+      easier/line-oriented:
+        record_reader_csvlite.go
+        record_reader_dkvp.go
+        record_reader_nidx.go
+        record_reader_xtab.go
+      harder b/c using encoding APIs:
+        record_reader_csv.go
+        record_reader_json.go
+    d how to handle tail -f and repl
+      > try unconditional batching and hiding *first* to see how much best-case perf to be had
+    ? lazy type-infer?? needs careful use of accessor-mutators in place of mv.type etc
+
+* blockers:
+  - keep checking issues
+  - verslink old relnotes
+  - fractional-strptime
+  - cmp-matrices
+  - all-contribs: twi dm
+  - license triple-checks
+  - `mlr put` -> coverart
+  - #756 octal
+  - 0b1011 olh/webdoc
+  - rtd links somewhere
+  - rd -> dbr
+  - more why-6 notes -- ?
+  - beta-link & hnp
+  -> beta-release page
+  - integrate:
+    > https://www.libhunt.com/r/miller
+    > https://repology.org/project/miller/information
+
+* shebang
+  - olh -s & --norc; --version & --bare-version; --
+  - maybe multiple -s -- ? []args would continue growing during parse ...
+  - try mlr -s on windows; maybe consolation for shebang-bash -- ?
+  - doc re where to put --norc
+    > it needn't be first (after -s) anymore
+  - olh
+  - webdocs
+  - want:
+    > myscript.mlr --c2j input.csv
+
+* release ordering?
+  conda
+  brew macports chocolatey
+  ubuntu debian fedora gentoo prolinux archlinux
+  netbsd freebsd
+
+* post-release:
+  w installing-miller.md.in
+
+* nikos materials -> fold in
+
+* cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
+  NUMERICS < BOOL < VOID < STRING
+
+* regex
+  o authoritative regex docs accompanied by thorough UT
+    - expand existing regex webdoc
+  o r-strings/implicit-r/297: double-check end of reference-main-data-types.md.in
+  o reference-main-regular-expressions:
+    separate escaping for "\t" etc in arg-2/regex position -- "\t"."\t" example as well ...
+
+* datetime
+  o sysdate, sysdate_local; datediff ...
+  o .6S bugfix -- separate PR -- ?
+  o strptime w/ ...00.Z -> error
+  o strptime/strftime experiments ...
+    - verb sec2gmtdate
+      > leaves non-numbers as-is -- ?
+      > check sec2gmt as well -- ?
+    ! strptime:
+      strptime("1970-01-01T00:00:00.Z", "%Y-%m-%dT%H:%M:%SZ")
+      (error)
+
+* kw olh for func and funct both
+
+* pre-release:
+  o check issues
+  o TODO in *.go & *.mi
+
+* doc
+  o new-in-miller-6: missings:
+    - dump syntax -- ?
+    - emittable constraints -- ?
+  o wut h1 spacing before/after ...
+  o shell-commands: while-read example from issues
+  ? special-symbols-and-formatting: How to escape '?' in regexes? -> still true? link to torbiak297?
+  E reference-dsl-user-defined-functions: UDSes -> non-factorial example -- maybe some useful aggregator
+  o reference-main-arithmetic: ? test stats1/step -F flag
+  o reference-dsl-control-structures:
+    e while (NR < 10) will never terminate as NR is only incremented between
+      records -> and each expression is invoked once per record so once for NR=1,
+      once for NR=2, etc.
+  o C-style triple-for loops: loop to NR -> NO!!!
+  o Since uninitialized out-of-stream variables default to 0 for
+    addition/substraction and 1 for multiplication when they appear on expression
+    right-hand sides (not quite as in awk, where they'd default to 0 either way)
+    <-> xlink to other page
+  r fzf-ish w/ head -n 4, --from, up-arrow & append verb, then cat -- find & update the existing section
+  ! https://github.com/johnkerl/miller/issues/653 -- stats1 w/ empties? check stats2
+    - needs UTs as well
+  o while-read example from issues
+
+* pv: 'mlr --prepipex pv --gzin tail -n 10 ~/tmp/zhuge.gz' needs --gzin & --prepipex both
+  o plus corresponding docwork
+
+? BIFs as FCFs?
+
+================================================================
+NON-BLOCKERS
+
+* main-level (verb-level?) flag for "," -> X in verbs -- in case commas in field names
+* golinter
+
+* single UT, hard to invoke w/ new full go.mod path
+  go test $(ls internal/pkg/lib/*.go|grep -v test) internal/pkg/lib/unbackslash_test.go
+  etc
+
+* file-formats: NIDX link to headerless CSV
+
+* fmtnum(98, "%3d%%") -- ? workaround: fmtnum(98, "%3d") . "%"
+
+* link to SE table ...
+  https://github.com/johnkerl/miller/discussions/609#discussioncomment-1115715
+
+* single-line JSON for DKVP/CSV/etc ...
+  o mlr --j2x --no-auto-flatten cat $mlg/regtest/input/flatten-input-2.json
+    - code: make sure this does single-line json ...
+  o mlr --j2c --no-auto-flatten cat $mlg/regtest/input/flatten-input-2.json
+    - code: this is ok ... maybe prefer single-line -- ?
+
+* hofs section on typedecls
+  o hofs+typedecls RT cases
+* glossary re natural ordering
+  o separate webdoc section ... somewhere ...
+  o hofs.md.in link
+  o numerics < bool < string
+
+* nr, nf, keys
+t* ranspose ...
+* -colname syntax ... -x colname maybe into more verbs ...
+
+* consider expanding '(error)' to have more useful error-text
+
+* mlr -k
+  o c,go
+  o various test cases
+  o OLH re limitations
+  o check JSON-parser x 2 -- is there really a 'restart'?
+    - infinite-loop avoidance for sure
+
+* -S/-A/-O page with examples -- ?
+
+* sysdate & sysdate_local
+
+* broadly rethink os.Exit, especially as affecting mlr repl
+
+* mlr stdlib -- ? how to deliver?
+* some support for UDF help-strings -- ?
+
+* separate -S/-A/-O inference page w/ examples of whywhens
+
+* mlr -k
+* transpose
+* print w/ #{...}; defer variadic printf
+* meta: nf,nr,keys?
+
+* mlr -f {arg}, mlr -F {arg}, etc
+
+* non-streaming DSL-enabled cut
+  https://github.com/johnkerl/miller/discussions/613
+
+* single cheatsheet page -- put out RFH?
+  https://twitter.com/icymi_py/status/1426622817785765898/photo/1
+
+* mlrval_json -- get file/line in internal-coding-error detected
+
+? $0 as raw-record string -- ? would make mlr grep simpler and more natural ...
+
+* IIFEs: 'func f = (func(){ return udf})()'
+* BIFs in non-sigil context (UDFs already are)
+* non-top-level func defs
+
+* non-lite DKVP reader/writer
+
+* precedence for `:` in slicing syntax
+
+* full format-string parser for corner cases like "X%08lldX"
+
+* more of:
+  o colored-shapes.dkvp -> csv; also mkdat2
+  o data/small -> csv throughout. and/or just use example.csv
+
+* json-triple-quote -- what can be done here?
+
+* godoc neatens at func/const/etc level
+
+* unarrayify function
+
+* XYZWasSpecified -> XYZ = "default" w/ check-after -- ?
+
+* parquet -- ?
+
+* case auxfiles: cat them too
+
+* uniqify-field-names in record-readers -- which issue?
+
+* non-blocker: commenting passes ...
+
+* non-blocker: array and string slices on LHS of assignments
+
+* non-blocker: feature/shorthand for repl newline before prompt
+
+* non-blocker: new functions:
+  o new columns-to-arrays and arrays-to-columns for stan format
+
+? gzout, bz2out -- ? make sure this works through tee? bleah ...
+? zip -- but that is an archive case too not just an encoding case
+  ? miller support for archive-traversal; directory-traversal even w/o zip -- ?
+  ? as 6.1 follow-on work -- ?
+
+* more about HTTP logs in miller -- doc and encapsulate:
+  mlr --icsv --implicit-csv-header --ifs space --oxtab --from elb-log put -q 'print $27'
+* PR-template etc checklists
+
+* clean up TODO/xxx in internal/pkg/platform
+* mlr regtest doc -- focus on either go/regtest or internal/pkg/auxents/regtest, one linking to the other
+
+* also: write up how git status after test should show any missed extra-outs
+
+* help-refactor:
+  o audit for DEFAULT_FOOs @
+  o audit for '-z {zzz}'
+  o audit for consistent usage style
+
+* new columns-to-arrays and arrays-to-columns for stan format
+
+* https://segment.com/blog/allocation-efficiency-in-high-performance-go-services/
+
+* c/go both:
+  o https://brandur.org/logfmt is simply DKVP w/ IFS = space (need dquot though)
+  o https://docs.fluentbit.io/manual/pipeline/parsers/ltsv is just DKVP with IFS tab and IPS colon
+* do some profiling every so often
+
+* UDF nexts:
+  o more functions (see below)
+  o strmatch https://github.com/johnkerl/miller/issues/77#issuecomment-538790927
+  o DSL sort function https://github.com/johnkerl/miller/issues/77#issuecomment-321916921
+
+* bash completion script https://github.com/johnkerl/miller/issues/77#issuecomment-308247402
+  https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial#:~:text=Bash%20completion%20is%20a%20functionality,key%20while%20typing%20a%20command.
+
+* sliding-window averages into mapper step (C + Go)
+* stats1 rank
+
+* double-check rand-seeding
+  o all rand invocations should go through the seeder for UT/other determinism
+
+* comment-handling
+  - delegator for CSV ...
+
+! quoted NIDX
+  - how with whitespace regex -- ?
+! quoted DKVP
+  - what about csvlite-style -- ? needs a --dkvplite ?
+! pprint emit on schema change, not all-at-end.
+
+* widen DSL coverage
+  o err-return for array/map get/put if incorrect types ... currently go-void ...
+    ! the DSL needs a full, written-down-and-published spell-out of error-eval semantics
+  o profile mand.mlr & check for need for idx-assign
+    -> most definitely needed
+  o multiple-valued return/assign -- ?
+    - array destructure at LHS for multi-retval assign (maps too?)
+
+* UT per se for lrec ops
+
+* libify errors.New callsites for DSL/CST
+* record-readers are fully in-channel/loop; record-writers are multi with in-channel/loop being
+  done by ChannelWriter, which is very small. opportunity to refactor.
+* address all manner of xxx and TODO comments
+* empty csv ... reminder ...
+
+* functions as first-class objects; then sortaf/sortmf take f not "f"
+
+* godoc notes:
+  o go get golang.org/x/tools/cmd/godoc
+  o dev mode:
+    godoc -http=:6060 -goroot .
+  o publish:
+    godoc -http=:6060 -goroot .
+    cd ~/tmp/bar
+    wget -p -k http://localhost:6060/pkg
+    mv localhost:6060 miller6
+    file:///Users/kerl/tmp/bar/miller6/pkg
+    maybe publish to ISP space
+
+* het ifmt-reading
+  - separate out InputFormat into per-file (or tbd) & have autodetect on file endings -- ?
+  - maybe a TBD reader -- ?
+  - InputFormat into Context
+  - TBD writer -- defer factory until first context?
+  - deeper refactor pulling format out of reader/writer options entirely -- ?
+
+================================================================
+MAYBES
+
+* dotted-syntax support in verbs?
+
+* repl as verb -- ?  'put --repl' maybe
+
+* json-triple-quote -- what can be done here?
+
+* non-blocker: _ variable feature?
+
+* headerful/headerless mix -- ?
+  TOptions as list, not single -- ?
+
+* miller extensibility re golang plugins -- ?!?
+  ? verbs ?
+  ? DSL functions ?
+
+* pkg graph:
+  go get github.com/kisielk/godepgraph
+  godepgraph miller | dot -Tpng -o ~/Desktop/mlrdeps.png
+  flamegraph etc double-check
+
+* more data formats:
+  https://indico.cern.ch/event/613842/contributions/2585787/attachments/1463230/2260889/pivarski-data-formats.pdf
+
+----------------------------------------------------------------
+DEFER:
+
+* once on go 1.16: get around ioutil.ReadFile depcreation
+  o build-dsl hand-edit / sedder
+  o io/ioutil -> os
+  o ioutil.ReadFile -> os.ReadFile on internal/pkg/parsing/lexer/lexer.go
+
+* parser-fu:
+  o iterative LALR grok
+- jackson notes
+- gocc .txt/.go for simple grammars
+o find/bookmark/grok rob's lexer slides
+o iterate on a parser-generator with JSON config file
+no need to bootstrap a parser for the parser-generator language
+
+----------------------------------------------------------------
+INFO
+
+i go tool nm -size mlr | sort -nrk 2
+
+----------------------------------------------------------------
+GOCC UPSTREAMS:
+
+? support "abc" (not just 'a' 'b' 'c') in the lexer part
+
+----------------------------------------------------------------
+TBF:
+* go 1.16 at some point
+* tools/perf:
+  o https://eng.uber.com/pprof-go-profiler/
+  o profile mlr --j2x cat mappings.json
+  o golang static-analysis tool -- ?
+* iconv note
+* AST insertions: make a simple NodeFromToken & have all interface{} be *ASTNode, not *token.Token
+* cst printer with reflect.TypeOf -- ?
+? makefile for build-dsl: if $bnf newer than productionstable.go
+* I/O perf delta between C & Go is smaller for CSV, middle for DKVP, large for JSON -- debug
+* neaten/error-proof:
+  o mlrmapEntry -> own keys/mlrvals -- keep the kcopy/vcopy & be very clear,
+    or remove. (keeping pointers allows nil-check which is good.)
+  o inrec *types.Mlrmap is good for default no-copy across channels ... needs
+    a big red flag though for things like the repeat verb (maybe *only* that one ...)
+! clean up the AST API. ish! :^/
+* json:
+  d thorough UT for json mlrval-parser including various expect-fail error cases
+  d doc re no jlistwrap on input if they want get streaming input
+  d UT JSON-to-JSON cat-mapping should be identical
+  d JSON-like accessor syntax in the grammar: $field[3]["bar"]
+  d flatten/unflatten for non-JSON I/O formats -- maybe just double-quoted JSON strings -- ?
+    - make a force-single-line writer
+    - make a jsonparse DSL function -- ?
+  d other formats: use JSON marshaler for collection types, maybe double-quoted
+  o research gocc support
+  o maybe a case for hand-roll
+? dsl/ast.go -> parsing/ast.go? then, put new-ast ctor -> parsing package
+  o if so, update r.mds
+* relnotes: label b,i,x vs x,i,b change
+* double-check dump CR-terminators depending on expression type
+* good example of wording for why/when to make a breaking release:
+  https://webpack.js.org/blog/2020-10-10-webpack-5-release/
+* unset, unassign, remove -- too many different names. also assign/put ... maybe stick w/ 2?
+* huge commenting pass
+* profile mlr sort
+* go exe 17MB, wut. try to discover. (gocc presumably but verify.)
+* fill-down make columns required. also, --all.
+* check triple-dash at mlr fill-down-h ; check others
+* clean up unused exitCode arg in sort/put usage.
+  o also document pre/post conditions for flag and non-flag usages x all mappers
+? emit @x or emit x -- should make k/v pairs w/ "x" & value -- ? check against C impl
+i emitp/emitf -- note for-loops didn't appear until 4.1.0 & emits are much older (emitp 3.5.0).
+  if i were starting clean-slate, i'd have had just a single `emit`.
+* asserting_{type}: os.Exit(1) -> return nil, err flow?
+* test put/filter w/ various combinations of -s/-e/-f
+* mt_void keep-or-not .......
+  o check dispo matrices
+  o if keep, need careful MT_VOID at from-string constructor -- ? or not ?
+  o comment clearly regardless
+* bitwise_and_dispositions et al should not have _absn for collections -- _erro instead
+* ast-parex separate mlr auxents entrypoint?
+* port u/window*.mlr from mlrc to mlrgo (actually, fix mlrgo of course)
+* line/column caret at parse-error messages -- would require some GOCC refactoring
+  in order to get the full DSL string and the line/number info into the same method
+* csvlite rd/wr: comment for USV/ASV too. no need for escaping then.
+* comment schema-change supported only in csvlite reader, not csv reader
+* for-multi: C semantics 'k1: data k2: a:x v:1', sigh ...
+* neaten mlr gap -g (default) print
+! write out thorough min/max/cmp cases for all orderings by type
+* silent zero-pass for-loops on non-collections:
+  o intended as a heterogenity feature ...
+  o consider a --errors or --strict mode; something
+* note about non-determinism for DSL print/dump vs record output-stream now ...
+* put/filter updates:
+* [[...]] / [[[...]]]:
+  o put '$array = [1,2,3,[4,5]]' is a syntax error unfortunately; need '$array = [1,2,3,[4,5] ]'
+i https://en.wikipedia.org/wiki/Delimiter#Delimiter_collision
+* reorder locations of get/put/remove methods in mlrval/mlrmap
+* grep out all error message from regtest outputs & doc them all & make sure index-searchable at readthedocs
+* short 'asserting' functions (absent/error); and/or put --strict or somesuch
+* function metadata: auto-sort on mlr -f?
+* --x2b @ help-doc .go; etc
+? remove flagSet x all -- ? for consistency?
+* os.Args[0] etc -> "mlr" throughout the codebase
+* emitx later: 'emit([a,b,c],d,e,f)' for SR-conflict issues
+
+* genmds multi-line something something for autogen of repl examples -- ?
+
+* maybe split Context into varying & non-varying -- separate structs entirely
+
+* idea: records as mlrmap -> mlrval?
+  o reduce $* copy ...
+  o opens the door to some (verb-subset) truly arbitrary-JSON processing ...
+
+* mlr --opprint put $[[1]] = $[[2]]; unset $["a"] ./regtest/input/abixy
+  o squint at pointer-handling
+  o output varied after flatten-mods
+
+* join
+  > clean up VERBOSE in joiner-files
+  > joinBucketKeeper & joinBucket need to be privatized
+  > rewrite join-bucket-keeper.go entirely
+  > also needs UT per se (not just regression)
+* cli-doc --no-auto-flatten and --no-auto-unflatten
+* note (fix? doc?) flatten of '$x={}' expands to nothing. not invertible.
+* parex print regtest -- what about new ast-node types?
+* all case-files could use top-notes
+* dev-note on why `int` not `int64` -- processor-arch & those who most need it get it
+* doc auto-flatten/auto-unflatten -- incl narrative from mlrcli_parse.go
+* doc6: default flatsep is now "." not ":" in keeping with JSON culture
+? allow [[...]] / [[[...]]] at assignment LHS
+
+* readeropts/writeropts/readerwriteropts -> cliutil funcs
+  o then put into join.go, put.go, & repl
+* mlr inp parse error failstring retback?
+* https://blog.golang.org/go1.13-errors
+* split REPL lines on ';' -- ?
+* tilde-expand for REPL load/open: if '~' is at the start of the string, run it though 'sh -c echo'
+* doc shift/unshift as using [2:] and append
+? ctx invars -> ptr w/ cmt
+? string/array slices on assignment LHS -- ?
+* beyond:
+  o support 'x[1]["a"]' etc notation in various verbs?
+  o sort within nested data structures?
+  o array-sort, map-key sort, map-value sort in the DSL?
+  o closures for sorting and more -- ?!?
+  o or maybe just use UDFs ...
+* optimize MlrvalLessThanForSort
+  o mlr --cpuprofile cpu.pprof --from ~tmp/big sort -f a -nr x then nothing
+  o GOGC=1000 mlr --cpuprofile cpu.pprof --from /Users/kerl/tmp/huge sort -f a -nr x then nothing
+  o wc -l ~/tmp/big
+    1000000 /Users/kerl/tmp/big
+  o wc -l ~/tmp/huge
+    10000000 /Users/kerl/tmp/huge
+* optimize MlrvalGetMeanEB et al.
+* data-copy reduction wup:
+  o literal-type nodes -- now zero-copy
+  x modify Evaluate to return pointer -- too much copying
+  o wup for it was the binary-operator node, w/ the '*', that broke w/ no-output-copy & fibo UT
+  o bonus: return MlrvalSqrt(MlrvalDivide(input1, input2))
+  o type-gated mv -- should use passed-in storage slot -- ?
+  o nice narrative write-up w/ the C stack-allocator problem, Go non-solution,
+    profilng methods, GC readings/findings, before-and-after CST data structures,
+    final perf results.
+  o next round of data-copy reduction:
+    - $z = min($x, $y) -- needs to return pointer to x or y
+    o $z = $x + $y -- needs to have space for sum, and return pointer to it
+    o therefore type BinaryFunc func(input1, input2 *Mlrval) *types.Mlrval
+      > have the function z-allocate outputs when needed
+      > the outputs must be on the stack, not statically allocated, to make them re-entrant
+        and OK for recursive functions
+      > var output types.Mlrval w/ field-setters, rather than return &Mlrval{... all of them ...}
+    - then IEvaluable: Evaluate(state *runtime.State) *types.Mlrval
+    - invalidate CopyFrom
+    - check for under/over copy at Assign
+    - global *ERROR / *ABSENT / etc
+* for i, e in range c optimization -- always *copies* e
+  o try and benchmark/compare ...
+  o lots of array-of-pointer stuff, this is totally fine
+  o take care w/ copying (non-pointer) mlrvals though
+* more copy-on-retain for concurrent pointer-mods
+  o make a thorough audit, and warn everywhere
+  o either do copy for all retainers, or treat inrecs as immutable ...
+  o 'this.recordsAndContexts.PushBack(inrecAndContext)' idiom needs copy everywhere ...
+* consider -w/-W to stderr not stdout -- ?
+* doc6 re warnings
+* -W to mlr main also -- so it can be used with .mlrrc
+* push/pop/shift/unshift functions
+* 0035.cmd
+  begin{@x=1} func f(x) { dump; print "hello"; tee  > ENV["outdir"]."/udf-x", $* } $o=f($i)
+
+* zlib: n.b. brew install pigz, then pigz -z
+
+* regex-capture follow-on: https://github.com/johnkerl/miller/issues/388 is much cleaner
+  o keep current syntax for backward compatibility
+  o but encourage use of this
+
+* put -T -- ?
+
+----------------------------------------------------------------
+DOC6:
+
+* mlrdoc false && 4, true || 4 because of short-circuiting requirement
+* error if UDF has same name as built-in
+* more text examples in mlr-put doc
+* window.mlr, window2.mlr -> doc somewhere
+* doc: substr in inferred-numeric fields: https://github.com/johnkerl/miller/issues/290.
+  o xref to 1-up note.
+* document --jvstack is now the default; --no-jvstack
+* doc about put -S/-F cannot make sense anymore
+* why not flagSet. can't be supported everywhere, so don't confuse the user by
+  supporting it some places and not others.
+* back-incompat:
+  mlr -n put $vflag '@x=1; dump > stdout, @x'
+  mlr -n put $vflag '@x=1; dump > stdout @x'
+
+* document tee -p
+
+* why no flagSet:
+
+	Unlike other transformers, we can't use flagSet here. The syntax of 'mlr
+	sort' is it needs to take things like 'mlr sort -f a -n b -n c', i.e.
+	first sort lexically on field a, then numerically on field b, then
+	lexically on field c. The flagSet API would let the '-f c' clobber the
+	'-f a', while we want both.
+
+	Unlike other transformers, we can't use flagSet here. The syntax of 'mlr put'
+	and 'mlr filter' is they need to be able to take -f and/or -e more than
+	once, and Go flags can't handle that.
+
+* doc re multi-load: can't '$x >' and '3' in separate -f anymore. no worries.
+* sec2gmt --millis/--micros/--nanos doc
+* sort-within-records --recursive doc
+
+* docs nest simplers now that we have getoptish
+* mongo examples to doc :D
+* doclink re https://readthedocs.org/projects/miller/ & https://github.com/johnkerl/miller/settings/hooks
+* dotted-map doc ...
+  o $*.foo["bar"] = NR b04k b/c precedence :(
+  o change precedence?
+
+? * would LOVE to have small prev-page/next-page links at the *top* not bottom ...
+  https://squidfunk.github.io/mkdocs-material/customization/#extending-the-theme
+
+* go test single files:
+  $ go test src/types/mlrval_functions_test.go $(ls src/types/*.go | grep -v test)
+  ok   command-line-arguments 0.100s
+  $ lsr \*test\*.go
+  ./regression_test.go
+  ./src/types/mlrval_functions_test.go
+  ./src/types/mlrval_format_test.go
+  ./src/auxents/regtest/regtester.go
+  ./src/lib/regex_test.go
+  ./src/lib/unbackslash_test.go
+  $ go test src/types/mlrval_functions_test.go $(ls src/types/*.go|grep -v test)
+  ok   command-line-arguments 0.097s
+  $ go test src/types/mlrval_format_test.go $(ls src/types/*.go|grep -v test)
+  ok   command-line-arguments 0.093s
+  $ go test src/lib/regex_test.go src/lib/regex.go
+  ok   command-line-arguments 0.083s
+  $ go test src/lib/unbackslash_test.go src/lib/unbackslash.go
+  ok   command-line-arguments 0.081s

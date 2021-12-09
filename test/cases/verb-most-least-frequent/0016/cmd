@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/freq.dkvp least-frequent -f nonesuch -n 3 -o foo

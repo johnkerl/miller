@@ -1,0 +1,1 @@
+@x=1; tee > ENV["CASEDIR"]."/foo.dat", $*

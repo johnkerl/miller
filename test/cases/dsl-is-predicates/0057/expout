@@ -1,0 +1,6 @@
+a x y z f
+r 1 2 - true
+s 3 4 - true
+t 5 - - true
+u - 6 - true
+v - - - true

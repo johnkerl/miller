@@ -1,0 +1,14 @@
+# Sort descending numeric on the index field
+func cmp(ak, av, bk, bv) {
+  return bv.index <=> av.index
+}
+begin {
+  @records = {};  # Define as a map
+}
+@records[NR] = $*; # Accumulate
+end {
+  @records = sort(@records, cmp);
+  for (_, record in @records) {
+    emit record;
+  }
+}

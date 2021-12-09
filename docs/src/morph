@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+while true
+	begin
+		line = $stdin.readline.chomp
+	rescue EOFError
+		break
+	end
+
+  if line =~ /GENMD-RUN-COMMAND{{.*}}HERE/
+    line.sub!("GENMD-RUN-COMMAND{{", "")
+    line.sub!("}}HERE", "")
+    puts 'GENMD-RUN-COMMAND'
+    puts line
+    puts 'GENMD-EOF'
+  else
+    puts line
+  end
+end

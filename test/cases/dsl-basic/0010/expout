@@ -1,0 +1,5 @@
+a   b   i x                   y
+pan pan 1 0.3467901443380824  test/input/s.dkvp
+eks pan 2 0.7586799647899636  test/input/s.dkvp
+wye wye 3 0.20460330576630303 test/input/s.dkvp
+eks wye 4 0.38139939387114097 test/input/s.dkvp

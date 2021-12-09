@@ -1,0 +1,1 @@
+mlr --from test/input/sort-within-records.dkvp sort-within-records

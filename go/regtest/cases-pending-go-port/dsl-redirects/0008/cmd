@@ -1,1 +1,0 @@
-mlr put -q -o json -f ${CASEDIR}/mlr regtest/input/abixy

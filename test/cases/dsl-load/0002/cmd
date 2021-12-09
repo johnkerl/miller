@@ -1,0 +1,1 @@
+mlr --opprint --mload test/stdlib/fibo.mlr test/stdlib/factorial.mlr -- --from test/input/abixy put -f ${CASEDIR}/mlr

@@ -1,0 +1,1 @@
+mlr --icsv --opprint cat test/input/bom.csv

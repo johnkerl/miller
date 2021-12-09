@@ -1,1 +1,0 @@
-mlr --opprint template -t regtest/input/template-1.csv regtest/input/abixy

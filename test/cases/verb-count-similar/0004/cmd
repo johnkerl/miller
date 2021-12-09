@@ -1,0 +1,1 @@
+mlr --opprint --from test/input/abixy count-similar -g a -o other_name_for_counter

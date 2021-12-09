@@ -1,0 +1,1 @@
+mlr --opprint --load test/stdlib --from test/input/abixy put -f ${CASEDIR}/mlr

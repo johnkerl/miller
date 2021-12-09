@@ -1,0 +1,1 @@
+mlr cut -r -f '/C/i,/E/' test/input/having-fields-regex.dkvp

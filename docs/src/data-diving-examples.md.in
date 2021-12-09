@@ -1,0 +1,120 @@
+# Data-diving examples
+
+## flins data
+
+The [flins.csv](data/flins.csv) file is some sample data obtained from [https://support.spatialkey.com/spatialkey-sample-csv-data](https://support.spatialkey.com/spatialkey-sample-csv-data).
+
+Vertical-tabular format is good for a quick look at CSV data layout -- seeing what columns you have to work with, as this is a file big enough that we can't just see it on a single screenful:
+
+GENMD-RUN-COMMAND
+wc -l data/flins.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2x --from data/flins.csv head -n 2
+GENMD-EOF
+
+A few simple queries:
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/flins.csv count-distinct -f county | head
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/flins.csv count-distinct -f line
+GENMD-EOF
+
+Categorization of total insured value:
+
+GENMD-RUN-COMMAND
+mlr --c2x --from data/flins.csv stats1 -a min,mean,max -f tiv_2012
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/flins.csv \
+  stats1 -a min,mean,max -f tiv_2012 -g construction,line
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2x --from data/flins.csv \
+  stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/flins.csv \
+  stats1 -a p95,p99,p100 -f hu_site_deductible -g county \
+  then sort -f county | head
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2x --from data/flins.csv \
+  stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2x --from data/flins.csv --ofmt '%.4f' \
+  stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county \
+  then head -n 5
+GENMD-EOF
+
+## Color/shape data
+
+The [data/colored-shapes.dkvp](data/colored-shapes.dkvp) file is some sample data produced by the [mkdat2](../data/mkdat2) script. The idea is:
+
+* Produce some data with known distributions and correlations, and verify that Miller recovers those properties empirically.
+* Each record is labeled with one of a few colors and one of a few shapes.
+* The `flag` field is 0 or 1, with probability dependent on color
+* The `u` field is plain uniform on the unit interval.
+* The `v` field is the same, except tightly correlated with `u` for red circles.
+* The `w` field is autocorrelated for each color/shape pair.
+* The `x` field is boring Gaussian with mean 5 and standard deviation about 1.2, with no dependence on color or shape.
+
+Peek at the data:
+
+GENMD-RUN-COMMAND
+wc -l data/colored-shapes.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+head -n 6 data/colored-shapes.dkvp | mlr --opprint cat
+GENMD-EOF
+
+Look at uncategorized stats (using [creach](https://github.com/johnkerl/scripts/blob/master/fundam/creach) for spacing).
+
+Here it looks reasonable that `u` is unit-uniform; something's up with `v` but we can't yet see what:
+
+GENMD-RUN-COMMAND
+mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3
+GENMD-EOF
+
+The histogram shows the different distribution of 0/1 flags:
+
+GENMD-RUN-COMMAND
+mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp
+GENMD-EOF
+
+Look at univariate stats by color and shape. In particular, color-dependent flag probabilities pop out, aligning with their original Bernoulli probablities from the data-generator script:
+
+GENMD-RUN-COMMAND
+mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color \
+  then sort -f color \
+  data/colored-shapes.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape \
+  then sort -f shape \
+  data/colored-shapes.dkvp
+GENMD-EOF
+
+Look at bivariate stats by color and shape. In particular, `u,v` pairwise correlation for red circles pops out:
+
+GENMD-RUN-COMMAND
+mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint --right \
+  stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr \
+  data/colored-shapes.dkvp
+GENMD-EOF

@@ -1,0 +1,23 @@
+end {
+  # Test that function literals can access containing scope
+  f = func(x) { return x  < cap };
+  g = func(x) { return x >= cap };
+
+  cap = 10;
+  print 5,  f(5);
+  print 15, f(15);
+
+  print 5,  g(5);
+  print 15, g(15);
+
+  h = func(a, y) {
+    print y, a(y);
+  };
+
+  h(f, 9);
+  h(f, 10);
+  h(f, 11);
+  h(g, 9);
+  h(g, 10);
+  h(g, 11);
+}

@@ -1,0 +1,3 @@
+end {
+  print reduce({"a":1,"b":2,"c":3}, func (acck,accv,ek,ev) { return {} });
+}

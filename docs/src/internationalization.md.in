@@ -1,0 +1,26 @@
+# Internationalization
+
+Miller handles ASCII and UTF-8 strings. (I have no plans to support UTF-16 or ISO-8859-1.)
+
+Support for internationalization includes:
+
+* Tabular output formats such pprint and xtab (see [File Formats](file-formats.md)) are aligned correctly.
+* The [strlen](reference-dsl-builtin-functions.md#strlen) function correctly counts UTF-8 codepoints rather than bytes.
+* The [toupper](reference-dsl-builtin-functions.md#toupper), [tolower](reference-dsl-builtin-functions.md#tolower), and [capitalize](reference-dsl-builtin-functions.md#capitalize) DSL functions operate within the capabilities of the Go libraries.
+* While Miller's function names, verb names, online help, etc. are all in English, you can write field names, string literals, variable names, etc in UTF-8.
+
+GENMD-RUN-COMMAND
+cat παράδειγμα.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p filter '$σχήμα == "κύκλος"' παράδειγμα.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p sort -f σημαία παράδειγμα.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p put '$форма = toupper($форма); $длина = strlen($цвет)' пример.csv
+GENMD-EOF

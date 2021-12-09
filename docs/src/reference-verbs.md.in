@@ -1,0 +1,1208 @@
+# List of verbs
+
+Verbs are the building blocks of how you can use Miller to process your data.
+When you type
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint sort -n quanity then head -n 4 example.csv
+GENMD-EOF
+
+the `sort` and `head` bits are _verbs_.  See the [Miller command
+structure](reference-main-overview.md) page for context.
+
+At the command line, you can use `mlr -l` and `mlr -L` for information much
+like what's on this page.
+
+## Overview
+
+Whereas the Unix toolkit is made of the separate executables `cat`, `tail`, `cut`,
+`sort`, etc., Miller has subcommands, or **verbs**, such as `mlr cat`, `mlr tail`, `mlr cut`, and
+`mlr sort`, invoked as follows:
+
+GENMD-INCLUDE-ESCAPED(data/subcommand-example.txt)
+
+These fall into categories as follows:
+
+* Analogs of their Unix-toolkit namesakes, discussed below as well as in [Unix-toolkit Context](unix-toolkit-context.md): [cat](reference-verbs.md#cat), [cut](reference-verbs.md#cut), [grep](reference-verbs.md#grep), [head](reference-verbs.md#head), [join](reference-verbs.md#join), [sort](reference-verbs.md#sort), [tac](reference-verbs.md#tac), [tail](reference-verbs.md#tail), [top](reference-verbs.md#top), [uniq](reference-verbs.md#uniq).
+
+* `awk`-like functionality: [filter](reference-verbs.md#filter), [put](reference-verbs.md#put), [sec2gmt](reference-verbs.md#sec2gmt), [sec2gmtdate](reference-verbs.md#sec2gmtdate), [step](reference-verbs.md#step), [tee](reference-verbs.md#tee).
+
+* Statistically oriented: [bar](reference-verbs.md#bar), [bootstrap](reference-verbs.md#bootstrap), [decimate](reference-verbs.md#decimate), [histogram](reference-verbs.md#histogram), [least-frequent](reference-verbs.md#least-frequent), [most-frequent](reference-verbs.md#most-frequent), [sample](reference-verbs.md#sample), [shuffle](reference-verbs.md#shuffle), [stats1](reference-verbs.md#stats1), [stats2](reference-verbs.md#stats2).
+
+* Particularly oriented toward [Record Heterogeneity](record-heterogeneity.md), although all Miller commands can handle heterogeneous records: [group-by](reference-verbs.md#group-by), [group-like](reference-verbs.md#group-like), [having-fields](reference-verbs.md#having-fields).
+
+* These draw from other sources (see also [How Original Is Miller?](originality.md)): [count-distinct](reference-verbs.md#count-distinct) is SQL-ish, and [rename](reference-verbs.md#rename) can be done by `sed` (which does it faster: see [Performance](performance.md)). Verbs: [check](reference-verbs.md#check), [count-distinct](reference-verbs.md#count-distinct), [label](reference-verbs.md#label), [merge-fields](reference-verbs.md#merge-fields), [nest](reference-verbs.md#nest), [nothing](reference-verbs.md#nothing), [regularize](reference-verbs.md#regularize), [rename](reference-verbs.md#rename), [reorder](reference-verbs.md#reorder), [reshape](reference-verbs.md#reshape), [seqgen](reference-verbs.md#seqgen).
+
+## altkv
+
+Map list of values to alternating key/value pairs.
+
+GENMD-RUN-COMMAND
+mlr altkv -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+echo 'a,b,c,d,e,f' | mlr altkv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+echo 'a,b,c,d,e,f,g' | mlr altkv
+GENMD-EOF
+
+## bar
+
+Cheesy bar-charting.
+
+GENMD-RUN-COMMAND
+mlr bar -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint cat data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint bar --lo 0 --hi 1 -f x,y data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint bar --auto -f x,y -w 20 data/small
+GENMD-EOF
+
+## bootstrap
+
+GENMD-RUN-COMMAND
+mlr bootstrap --help
+GENMD-EOF
+
+The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
+
+<!--- hard-coded, not live-code, since random sampling would generate different data on each doc run
+    which would needlessly complicate git diff -->
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --c2p stats1 -a mean,count -f u -g color data/colored-shapes.csv
+color  u_mean              u_count
+yellow 0.4971291160651098  1413
+red    0.49255964641241273 4641
+purple 0.49400496322241666 1142
+green  0.5048610595130744  1109
+blue   0.5177171537414964  1470
+orange 0.49053241584158375 303
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --c2p bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.csv
+color  u_mean              u_count
+red    0.49183858109559747 4655
+yellow 0.487271566995769   1418
+green  0.5018994641860465  1075
+orange 0.5005396620689654  290
+blue   0.5309761257817928  1439
+purple 0.4917481873438798  1201
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+color  u_mean              u_count
+yellow 0.4809714157857651  1419
+blue   0.5057790647530039  1498
+red    0.49114305508382283 4593
+purple 0.49652395202020194 1188
+green  0.5011425433212993  1108
+orange 0.48935696323529426 272
+GENMD-EOF
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+mlr --c2p bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.csv
+color  u_mean              u_count
+red    0.49934473217726466 4671
+purple 0.4934976176735793  1109
+blue   0.5097866573146287  1497
+yellow 0.4987188126740959  1436
+orange 0.4802164827586204  290
+green  0.5129018241860459  1075
+GENMD-EOF
+
+## cat
+
+Most useful for format conversions (see [File Formats](file-formats.md), and concatenating multiple same-schema CSV files to have the same header:
+
+GENMD-RUN-COMMAND
+mlr cat -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/a.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/b.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv cat data/a.csv data/b.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --oxtab cat data/a.csv data/b.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv cat -n data/a.csv data/b.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint cat data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint cat -n -g a data/small
+GENMD-EOF
+
+## check
+
+GENMD-RUN-COMMAND
+mlr check --help
+GENMD-EOF
+
+## clean-whitespace
+
+GENMD-RUN-COMMAND
+mlr clean-whitespace --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson cat data/clean-whitespace.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv
+GENMD-EOF
+
+Function links:
+
+* [lstrip](reference-dsl-builtin-functions.md#lstrip)
+* [rstrip](reference-dsl-builtin-functions.md#rstrip)
+* [strip](reference-dsl-builtin-functions.md#strip)
+* [collapse_whitespace](reference-dsl-builtin-functions.md#collapse_whitespace)
+* [clean_whitespace](reference-dsl-builtin-functions.md#clean_whitespace)
+
+## count
+
+GENMD-RUN-COMMAND
+mlr count --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count -g a data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count -n -g a data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count -g b data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count -n -g b data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count -g a,b data/medium
+GENMD-EOF
+
+## count-distinct
+
+GENMD-RUN-COMMAND
+mlr count-distinct --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count-distinct -f a,b then sort -nr count data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count-distinct -u -f a,b data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr count-distinct -n -f a,b data/medium
+GENMD-EOF
+
+## count-similar
+
+GENMD-RUN-COMMAND
+mlr count-similar --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint head -n 20 data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint head -n 20 then count-similar -g a data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium
+GENMD-EOF
+
+## cut
+
+GENMD-RUN-COMMAND
+mlr cut --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint cat data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint cut -f y,x,i data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+echo 'a=1,b=2,c=3' | mlr cut -f b,c,a
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a
+GENMD-EOF
+
+## decimate
+
+GENMD-RUN-COMMAND
+mlr decimate --help
+GENMD-EOF
+
+## fill-down
+
+GENMD-RUN-COMMAND
+mlr fill-down --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/fillable.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv fill-down -f b data/fillable.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv fill-down -a -f b data/fillable.csv
+GENMD-EOF
+
+## fill-empty
+
+GENMD-RUN-COMMAND
+mlr fill-empty --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/fillable.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv fill-empty data/fillable.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv fill-empty -v something data/fillable.csv
+GENMD-EOF
+
+## filter
+
+GENMD-RUN-COMMAND
+mlr filter --help
+GENMD-EOF
+
+### Features which filter shares with put
+
+Please see [DSL reference](reference-dsl.md) for more information about the expression language for `mlr filter`.
+
+## flatten
+
+GENMD-RUN-COMMAND
+mlr flatten --help
+GENMD-EOF
+
+## format-values
+
+GENMD-RUN-COMMAND
+mlr format-values --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint format-values data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint format-values -n data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small
+GENMD-EOF
+
+## fraction
+
+GENMD-RUN-COMMAND
+mlr fraction --help
+GENMD-EOF
+
+For example, suppose you have the following CSV file:
+
+GENMD-INCLUDE-ESCAPED(data/fraction-example.csv)
+
+Then we can see what each record's `n` contributes to the total `n`:
+
+GENMD-RUN-COMMAND
+mlr --opprint fraction -f n data/fraction-example.csv
+GENMD-EOF
+
+Using `-g` we can split those out by gender, or by color:
+
+GENMD-RUN-COMMAND
+mlr --opprint fraction -f n -g u data/fraction-example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint fraction -f n -g v data/fraction-example.csv
+GENMD-EOF
+
+We can see, for example, that 70.9% of females have red (on the left) while 94.5% of reds are for females.
+
+To convert fractions to percents, you may use `-p`:
+
+GENMD-RUN-COMMAND
+mlr --opprint fraction -f n -p data/fraction-example.csv
+GENMD-EOF
+
+Another often-used idiom is to convert from a point distribution to a cumulative distribution, also known as "running sums". Here, you can use `-c`:
+
+GENMD-RUN-COMMAND
+mlr --opprint fraction -f n -p -c data/fraction-example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv
+GENMD-EOF
+
+## gap
+
+GENMD-RUN-COMMAND
+mlr gap -h
+GENMD-EOF
+
+## grep
+
+GENMD-RUN-COMMAND
+mlr grep -h
+GENMD-EOF
+
+## group-by
+
+GENMD-RUN-COMMAND
+mlr group-by --help
+GENMD-EOF
+
+This is similar to `sort` but with less work. Namely, Miller's sort has three steps: read through the data and append linked lists of records, one for each unique combination of the key-field values; after all records are read, sort the key-field values; then print each record-list. The group-by operation simply omits the middle sort.  An example should make this more clear:
+
+GENMD-RUN-COMMAND
+mlr --opprint sort -f a data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint group-by a data/small
+GENMD-EOF
+
+In this example, since the sort is on field `a`, the first step is to group together all records having the same value for field `a`; the second step is to sort the distinct `a`-field values `pan`, `eks`, and `wye` into `eks`, `pan`, and `wye`; the third step is to print out the record-list for `a=eks`, then the record-list for `a=pan`, then the record-list for `a=wye`.  The group-by operation omits the middle sort and just puts like records together, for those times when a sort isn't desired. In particular, the ordering of group-by fields for group-by is the order in which they were encountered in the data stream, which in some cases may be more interesting to you.
+
+## group-like
+
+GENMD-RUN-COMMAND
+mlr group-like --help
+GENMD-EOF
+
+This groups together records having the same schema (i.e. same ordered list of field names) which is useful for making sense of time-ordered output as described in [Record Heterogeneity](record-heterogeneity.md) -- in particular, in preparation for CSV or pretty-print output.
+
+GENMD-RUN-COMMAND
+mlr cat data/het.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint group-like data/het.dkvp
+GENMD-EOF
+
+## having-fields
+
+GENMD-RUN-COMMAND
+mlr having-fields --help
+GENMD-EOF
+
+Similar to [group-like](reference-verbs.md#group-like), this retains records with specified schema.
+
+GENMD-RUN-COMMAND
+mlr cat data/het.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr having-fields --at-least resource data/het.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr having-fields --which-are resource,ok,loadsec data/het.dkvp
+GENMD-EOF
+
+## head
+
+GENMD-RUN-COMMAND
+mlr head --help
+GENMD-EOF
+
+Note that `head` is distinct from [top](reference-verbs.md#top) -- `head` shows fields which appear first in the data stream; `top` shows fields which are numerically largest (or smallest).
+
+GENMD-RUN-COMMAND
+mlr --opprint head -n 4 data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint head -n 1 -g b data/medium
+GENMD-EOF
+
+## histogram
+
+GENMD-RUN-COMMAND
+mlr histogram --help
+GENMD-EOF
+
+This is just a histogram; there's not too much to say here. A note about binning, by example: Suppose you use `--lo 0.0 --hi 1.0 --nbins 10 -f x`.  The input numbers less than 0 or greater than 1 aren't counted in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin 0 has `0.0 &le; x < 0.1`, bin 1 has `0.1 &le; x < 0.2`, etc., but bin 9 has `0.9 &le; x &le; 1.0`.
+
+GENMD-RUN-COMMAND
+mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
+  then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 \
+  data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint put '$x2=$x**2;$x3=$x2*$x' \
+  then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ \
+  data/medium
+GENMD-EOF
+
+## join
+
+GENMD-RUN-COMMAND
+mlr join --help
+GENMD-EOF
+
+Examples:
+
+Join larger table with IDs with smaller ID-to-name lookup table, showing only paired records:
+
+GENMD-RUN-COMMAND
+mlr --icsvlite --opprint cat data/join-left-example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsvlite --opprint cat data/join-right-example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsvlite --opprint \
+  join -u -j id -r idcode -f data/join-left-example.csv \
+  data/join-right-example.csv
+GENMD-EOF
+
+Same, but with sorting the input first:
+
+GENMD-RUN-COMMAND
+mlr --icsvlite --opprint sort -f idcode \
+  then join -j id -r idcode -f data/join-left-example.csv \
+  data/join-right-example.csv
+GENMD-EOF
+
+Same, but showing only unpaired records:
+
+GENMD-RUN-COMMAND
+mlr --icsvlite --opprint \
+  join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv \
+  data/join-right-example.csv
+GENMD-EOF
+
+Use prefixing options to disambiguate between otherwise identical non-join field names:
+
+GENMD-RUN-COMMAND
+mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+GENMD-EOF
+
+Use zero join columns:
+
+GENMD-RUN-COMMAND
+mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv
+GENMD-EOF
+
+## json-parse
+
+GENMD-RUN-COMMAND
+mlr json-parse --help
+GENMD-EOF
+
+## json-stringify
+
+GENMD-RUN-COMMAND
+mlr json-stringify --help
+GENMD-EOF
+
+## label
+
+GENMD-RUN-COMMAND
+mlr label --help
+GENMD-EOF
+
+See also [rename](reference-verbs.md#rename).
+
+Example: Files such as `/etc/passwd`, `/etc/group`, and so on have implicit field names which are found in section-5 manpages. These field names may be made explicit as follows:
+
+GENMD-INCLUDE-ESCAPED(data/label-example.txt)
+
+Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using `--implicit-csv-header` and `label`:
+
+GENMD-RUN-COMMAND
+cat data/headerless.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr  --csv --implicit-csv-header cat data/headerless.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr  --csv --implicit-csv-header label name,age,status data/headerless.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv
+GENMD-EOF
+
+## least-frequent
+
+GENMD-RUN-COMMAND
+mlr least-frequent -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/colored-shapes.csv least-frequent -f shape -n 5
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/colored-shapes.csv least-frequent -f shape,color -n 5
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/colored-shapes.csv least-frequent -f shape,color -n 5 -o someothername
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/colored-shapes.csv least-frequent -f shape,color -n 5 -b
+GENMD-EOF
+
+See also [most-frequent](reference-verbs.md#most-frequent).
+
+## merge-fields
+
+GENMD-RUN-COMMAND
+mlr merge-fields --help
+GENMD-EOF
+
+This is like `mlr stats1` but all accumulation is done across fields within each given record: horizontal rather than vertical statistics, if you will.
+
+Examples:
+
+GENMD-RUN-COMMAND
+mlr --csvlite --opprint cat data/inout.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv
+GENMD-EOF
+
+## most-frequent
+
+GENMD-RUN-COMMAND
+mlr most-frequent -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/colored-shapes.csv most-frequent -f shape -n 5
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/colored-shapes.csv  most-frequent -f shape,color -n 5
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/colored-shapes.csv  most-frequent -f shape,color -n 5 -o someothername
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from data/colored-shapes.csv  most-frequent -f shape,color -n 5 -b
+GENMD-EOF
+
+See also [least-frequent](reference-verbs.md#least-frequent).
+
+## nest
+
+GENMD-RUN-COMMAND
+mlr nest -h
+GENMD-EOF
+
+## nothing
+
+GENMD-RUN-COMMAND
+mlr nothing -h
+GENMD-EOF
+
+## put
+
+GENMD-RUN-COMMAND
+mlr put --help
+GENMD-EOF
+
+### Features which put shares with filter
+
+Please see the [DSL reference](reference-dsl.md) for more information about the expression language for `mlr put`.
+
+## regularize
+
+GENMD-RUN-COMMAND
+mlr regularize --help
+GENMD-EOF
+
+This exists since hash-map software in various languages and tools encountered in the wild does not always print similar rows with fields in the same order: `mlr regularize` helps clean that up.
+
+See also [reorder](reference-verbs.md#reorder).
+
+## remove-empty-columns
+
+GENMD-RUN-COMMAND
+mlr remove-empty-columns --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/remove-empty-columns.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv remove-empty-columns data/remove-empty-columns.csv
+GENMD-EOF
+
+Since this verb needs to read all records to see if any of them has a non-empty value for a given field name, it is non-streaming: it will ingest all records before writing any.
+
+## rename
+
+GENMD-RUN-COMMAND
+mlr rename --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint cat data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint rename i,INDEX,b,COLUMN2 data/small
+GENMD-EOF
+
+As discussed in [Performance](performance.md), `sed` is significantly faster than Miller at doing this. However, Miller is format-aware, so it knows to do renames only within specified field keys and not any others, nor in field values which may happen to contain the same pattern. Example:
+
+GENMD-RUN-COMMAND
+sed 's/y/COLUMN5/g' data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr rename y,COLUMN5 data/small
+GENMD-EOF
+
+See also [label](reference-verbs.md#label).
+
+## reorder
+
+GENMD-RUN-COMMAND
+mlr reorder --help
+GENMD-EOF
+
+This pivots specified field names to the start or end of the record -- for
+example when you have highly multi-column data and you want to bring a field or
+two to the front of line where you can give a quick visual scan.
+
+GENMD-RUN-COMMAND
+mlr --opprint cat data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint reorder -f i,b data/small
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint reorder -e -f i,b data/small
+GENMD-EOF
+
+## repeat
+
+GENMD-RUN-COMMAND
+mlr repeat --help
+GENMD-EOF
+
+This is useful in at least two ways: one, as a data-generator as in the
+above example using `urand()`; two, for reconstructing individual
+samples from data which has been count-aggregated:
+
+GENMD-RUN-COMMAND
+cat data/repeat-example.dat
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr repeat -f count then cut -x -f count data/repeat-example.dat
+GENMD-EOF
+
+After expansion with `repeat`, such data can then be sent on to
+`stats1 -a mode`, or (if the data are numeric) to `stats1 -a
+p10,p50,p90`, etc.
+
+## reshape
+
+GENMD-RUN-COMMAND
+mlr reshape --help
+GENMD-EOF
+
+## sample
+
+GENMD-RUN-COMMAND
+mlr sample --help
+GENMD-EOF
+
+This is reservoir-sampling: select *k* items from *n* with
+uniform probability and no repeats in the sample. (If *n* is less than
+*k*, then of course only *n* samples are produced.) With `-g
+{field names}`, produce a *k*-sample for each distinct value of the
+specified field names.
+
+GENMD-INCLUDE-ESCAPED(data/sample-example.txt)
+
+Note that no output is produced until all inputs are in. Another way to do
+sampling, which works in the streaming case, is `mlr filter 'urand() &
+0.001'` where you tune the 0.001 to meet your needs.
+
+## sec2gmt
+
+GENMD-RUN-COMMAND
+mlr sec2gmt -h
+GENMD-EOF
+
+## sec2gmtdate
+
+GENMD-RUN-COMMAND
+mlr sec2gmtdate -h
+GENMD-EOF
+
+## seqgen
+
+GENMD-RUN-COMMAND
+mlr seqgen -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr seqgen --stop 10
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr seqgen --start 20 --stop 40 --step 4
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr seqgen --start 40 --stop 20 --step -4
+GENMD-EOF
+
+## shuffle
+
+GENMD-RUN-COMMAND
+mlr shuffle -h
+GENMD-EOF
+
+## skip-trivial-records
+
+GENMD-RUN-COMMAND
+mlr skip-trivial-records -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/trivial-records.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv skip-trivial-records data/trivial-records.csv
+GENMD-EOF
+
+## sort
+
+GENMD-RUN-COMMAND
+mlr sort --help
+GENMD-EOF
+
+Example:
+
+GENMD-RUN-COMMAND
+mlr --opprint sort -f a -nr x data/small
+GENMD-EOF
+
+Here's an example filtering log data: suppose multiple threads (labeled here by color) are all logging progress counts to a single log file. The log file is (by nature) chronological, so the progress of various threads is interleaved:
+
+GENMD-RUN-COMMAND
+head -n 10 data/multicountdown.dat
+GENMD-EOF
+
+We can group these by thread by sorting on the thread ID (here,
+`color`). Since Miller's sort is stable, this means that
+timestamps within each thread's log data are still chronological:
+
+GENMD-RUN-COMMAND
+head -n 20 data/multicountdown.dat | mlr --opprint sort -f color
+GENMD-EOF
+
+Any records not having all specified sort keys will appear at the end of the output, in the order they
+were encountered, regardless of the specified sort order:
+
+GENMD-RUN-COMMAND
+mlr sort -n  x data/sort-missing.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr sort -nr x data/sort-missing.dkvp
+GENMD-EOF
+
+## sort-within-records
+
+GENMD-RUN-COMMAND
+mlr sort-within-records -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+cat data/sort-within-records.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ijson --opprint cat data/sort-within-records.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --json sort-within-records data/sort-within-records.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ijson --opprint sort-within-records data/sort-within-records.json
+GENMD-EOF
+
+## stats1
+
+GENMD-RUN-COMMAND
+mlr stats1 --help
+GENMD-EOF
+
+These are simple univariate statistics on one or more number-valued fields
+(`count` and `mode` apply to non-numeric fields as well),
+optionally categorized by one or more other fields.
+
+GENMD-RUN-COMMAND
+mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p stats1 -a p50,p99 -f u,v -g color \
+  then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' \
+  data/colored-shapes.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p count-distinct -f shape then sort -nr count data/colored-shapes.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p stats1 -a mode -f color -g shape data/colored-shapes.csv
+GENMD-EOF
+
+## stats2
+
+GENMD-RUN-COMMAND
+mlr stats2 --help
+GENMD-EOF
+
+These are simple bivariate statistics on one or more pairs of number-valued
+fields, optionally categorized by one or more fields.
+
+GENMD-RUN-COMMAND
+mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
+  then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 \
+  data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' \
+  then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a \
+  data/medium
+GENMD-EOF
+
+Here's an example simple line-fit. The `x` and `y`
+fields of the `data/medium` dataset are just independent uniformly
+distributed on the unit interval. Here we remove half the data and fit a line to it.
+
+GENMD-INCLUDE-ESCAPED(data/linreg-example.txt)
+
+I use [pgr](https://github.com/johnkerl/pgr) for plotting; here's a screenshot.
+
+![data/linreg-example.jpg](data/linreg-example.jpg)
+
+(Thanks Drew Kunas for a good conversation about PCA!)
+
+Here's an example estimating time-to-completion for a set of jobs. Input data comes from a log file, with number of work units left to do in the `count` field and accumulated seconds in the `upsec` field, labeled by the `color` field:
+
+GENMD-RUN-COMMAND
+head -n 10 data/multicountdown.dat
+GENMD-EOF
+
+We can do a linear regression on count remaining as a function of time: with `c = m*u+b` we want to find the time when the count goes to zero, i.e. `u=-b/m`.
+
+GENMD-RUN-COMMAND
+mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color \
+  then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' \
+  data/multicountdown.dat
+GENMD-EOF
+
+## step
+
+GENMD-RUN-COMMAND
+mlr step --help
+GENMD-EOF
+
+Most Miller commands are record-at-a-time, with the exception of `stats1`, `stats2`, and `histogram` which compute aggregate output. The `step` command is intermediate: it allows the option of adding fields which are functions of fields from previous records. Rsum is short for *running sum*.
+
+GENMD-RUN-COMMAND
+mlr --opprint step -a shift,delta,rsum,counter -f x data/medium | head -15
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint step -a ewma -f x -d 0.1,0.9 data/medium | head -15
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough data/medium | head -15
+GENMD-EOF
+
+
+Example deriving uptime-delta from system uptime:
+
+GENMD-INCLUDE-ESCAPED(data/ping-delta-example.txt)
+
+## tac
+
+GENMD-RUN-COMMAND
+mlr tac --help
+GENMD-EOF
+
+Prints the records in the input stream in reverse order. Note: this requires Miller to retain all input records in memory before any output records are produced.
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint cat data/a.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint cat data/b.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint tac data/a.csv data/b.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv
+GENMD-EOF
+
+## tail
+
+GENMD-RUN-COMMAND
+mlr tail --help
+GENMD-EOF
+
+Prints the last *n* records in the input stream, optionally by category.
+
+GENMD-RUN-COMMAND
+mlr --c2p tail -n 4 data/colored-shapes.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p tail -n 1 -g shape data/colored-shapes.csv
+GENMD-EOF
+
+## tee
+
+GENMD-RUN-COMMAND
+mlr tee --help
+GENMD-EOF
+
+## template
+
+GENMD-RUN-COMMAND
+mlr template --help
+GENMD-EOF
+
+## top
+
+GENMD-RUN-COMMAND
+mlr top --help
+GENMD-EOF
+
+Note that `top` is distinct from [head](reference-verbs.md#head) -- `head` shows fields which appear first in the data stream; `top` shows fields which are numerically largest (or smallest).
+
+GENMD-RUN-COMMAND
+mlr --opprint top -n 4 -f x data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint top -n 4 -f x -o someothername data/medium
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint top -n 2 -f x -g a then sort -f a data/medium
+GENMD-EOF
+
+## unflatten
+
+GENMD-RUN-COMMAND
+mlr unflatten --help
+GENMD-EOF
+
+## uniq
+
+GENMD-RUN-COMMAND
+mlr uniq --help
+GENMD-EOF
+
+There are two main ways to use `mlr uniq`: the first way is with `-g` to specify group-by columns.
+
+GENMD-RUN-COMMAND
+wc -l data/colored-shapes.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv uniq -g color,shape data/colored-shapes.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p uniq -g color,shape -c then sort -f color,shape data/colored-shapes.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p uniq -g color,shape -c -o someothername \
+  then sort -nr someothername \
+  data/colored-shapes.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p uniq -n -g color,shape data/colored-shapes.csv
+GENMD-EOF
+
+The second main way to use `mlr uniq` is without group-by columns, using `-a` instead:
+
+GENMD-RUN-COMMAND
+cat data/repeats.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+wc -l data/repeats.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint uniq -a data/repeats.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint uniq -a -n data/repeats.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint uniq -a -c data/repeats.dkvp
+GENMD-EOF
+
+## unsparsify
+
+GENMD-RUN-COMMAND
+mlr unsparsify --help
+GENMD-EOF
+
+Examples:
+
+GENMD-RUN-COMMAND
+cat data/sparse.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --json unsparsify data/sparse.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ijson --opprint unsparsify data/sparse.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ijson --opprint unsparsify --fill-with missing data/sparse.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ijson --opprint unsparsify -f a,b,u data/sparse.json
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ijson --opprint unsparsify -f a,b,u,v,w,x then regularize data/sparse.json
+GENMD-EOF
+

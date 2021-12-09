@@ -1,0 +1,168 @@
+# DSL user-defined functions
+
+As of Miller 5.0.0 you can define your own functions, as well as subroutines.
+
+## User-defined functions
+
+Here's the obligatory example of a recursive function to compute the factorial function:
+
+GENMD-RUN-COMMAND
+mlr --opprint --from data/small put '
+    func f(n) {
+        if (is_numeric(n)) {
+            if (n > 0) {
+                return n * f(n-1);
+            } else {
+                return 1;
+            }
+        }
+        # implicitly return absent-null if non-numeric
+    }
+    $ox = f($x + NR);
+    $oi = f($i);
+'
+GENMD-EOF
+
+Properties of user-defined functions:
+
+* Function bodies start with `func` and a parameter list, defined outside of `begin`, `end`, or other `func` or `subr` blocks. (I.e. the Miller DSL has no nested functions.)
+
+* A function (uniqified by its name) may not be redefined: either by redefining a user-defined function, or by redefining a built-in function. However, functions and subroutines have separate namespaces: you can define a subroutine `log` (for logging messages to stderr, say) which does not clash with the mathematical `log` (logarithm) function.
+
+* Functions may be defined either before or after use -- there is an object-binding/linkage step at startup.  More specifically, functions may be either recursive or mutually recursive.
+
+* Functions may be defined and called either within `mlr filter` or `mlr put`.
+
+* Argument values may be reassigned: they are not read-only.
+
+* When a return value is not implicitly returned, this results in a return value of [absent-null](reference-main-null-data.md). (In the example above, if there were records for which the argument to `f` is non-numeric, the assignments would be skipped.) See also the [null-data reference page](reference-main-null-data.md).
+
+* See the section on [Local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
+
+* See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.
+
+## User-defined subroutines
+
+Example:
+
+GENMD-RUN-COMMAND
+mlr --opprint --from data/small put -q '
+  begin {
+    @call_count = 0;
+  }
+  subr s(n) {
+    @call_count += 1;
+    if (is_numeric(n)) {
+      if (n > 1) {
+        call s(n-1);
+      } else {
+        print "numcalls=" . @call_count;
+      }
+    }
+  }
+  print "NR=" . NR;
+  call s(NR);
+'
+GENMD-EOF
+
+Properties of user-defined subroutines:
+
+* Subroutine bodies start with `subr` and a parameter list, defined outside of `begin`, `end`, or other `func` or `subr` blocks. (I.e. the Miller DSL has no nested subroutines.)
+
+* A subroutine (uniqified by its name) may not be redefined. However, functions and subroutines have separate namespaces: you can define a subroutine `log` which does not clash with the mathematical `log` function.
+
+* Subroutines may be defined either before or after use -- there is an object-binding/linkage step at startup.  More specifically, subroutines may be either recursive or mutually recursive. Subroutines may call functions.
+
+* Subroutines may be defined and called either within `mlr put` or `mlr put`.
+
+* Subroutines have read/write access to `$`-variables and `@`-variables.
+
+* Argument values may be reassigned: they are not read-only.
+
+* See the section on [local variables](reference-dsl-variables.md#local-variables) for information on scope and extent of arguments, as well as for information on the use of local variables within functions.
+
+* See the section on [Expressions from files](reference-dsl-syntax.md#expressions-from-files) for information on the use of `-f` and `-e` flags.
+
+## Differences between functions and subroutines
+
+Subroutines cannot return values, and they are invoked by the keyword `call`.
+
+In hindsight, subroutines needn't have been invented. If `foo` is a function
+then you can write `foo(1,2,3)` while ignoring its return value, and that plays
+the role of subroutine quite well.
+
+## Loading a library of functions
+
+If you have a file with UDFs you use frequently, say `my-udfs.mlr`, you can use
+`--load` or `--mload` to define them for your Miller scripts. For example, in
+your shell, 
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+alias mlr='mlr --load ~/my-functions.mlr'
+GENMD-EOF
+
+or
+
+GENMD-CARDIFY-HIGHLIGHT-ONE
+alias mlr='mlr --load /u/miller-udfs/'
+GENMD-EOF
+
+See the [miscellaneous-flags page](reference-main-flag-list.md#miscellaneous-flags) for more information.
+
+## Function literals
+
+You can define unmnamed functions and assign the to variables, or pass them to functions.
+
+See also the [page on higher-order functions](reference-dsl-higher-order-functions.md)
+for more information on
+[`select`](reference-dsl-builtin-functions.md#select),
+[`apply`](reference-dsl-builtin-functions.md#apply),
+[`reduce`](reference-dsl-builtin-functions.md#reduce),
+[`fold`](reference-dsl-builtin-functions.md#fold), and sort.
+[`sort`](reference-dsl-builtin-functions.md#sort),
+
+For example:
+
+GENMD-RUN-COMMAND
+mlr --c2p --from example.csv put '
+  f = func(s, t) {
+    return s . ":" . t;
+  };
+  $z = f($color, $shape);
+'
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --c2p --from example.csv put '
+  a = func(s, t) {
+    return s . ":" . t . " above";
+  };
+  b = func(s, t) {
+    return s . ":" . t . " below";
+  };
+  f = $index >= 50 ? a : b;
+  $z = f($color, $shape);
+'
+GENMD-EOF
+
+Note that you need a semicolon after the closing curly brace of the function literal.
+
+Unlike named functions, function literals (also known as unnamed functions)
+have access to local variables defined in their enclosing scope. That's
+so you can do things like this:
+
+GENMD-RUN-COMMAND
+mlr --c2p --from example.csv put '
+  f = func(s, t, i) {
+    if (i >= cap) {
+      return s . ":" . t . " above";
+    } else {
+      return s . ":" . t . " below";
+    }
+  };
+  cap = 10;
+  $z = f($color, $shape, $index);
+'
+GENMD-EOF
+
+See the [page on higher-order functions](reference-dsl-higher-order-functions.md) for more.

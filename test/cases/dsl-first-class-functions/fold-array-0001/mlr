@@ -1,0 +1,18 @@
+end {
+  my_array = [2, 9, 10, 3, 1, 4, 5, 8, 7, 6];
+
+  print "Original:";
+  print my_array;
+
+  print;
+  print "Sum with reduce:";
+  print reduce(my_array, func (acc,e) { return acc + e });
+
+  print;
+  print "Sum with fold and 0 initial value:";
+  print fold(my_array, func (acc,e) { return acc + e }, 0);
+
+  print;
+  print "Sum with fold and 1000000 initial value:";
+  print fold(my_array, func (acc,e) { return acc + e }, 1000000);
+}

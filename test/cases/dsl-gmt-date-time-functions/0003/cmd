@@ -1,0 +1,1 @@
+mlr --csvlite put -f ${CASEDIR}/mlr test/input/sec2gmt

@@ -1,0 +1,1 @@
+mlr: is_not_map type-assertion failed at NR=1 FNR=1 FILENAME=test/input/nullvals.dkvp

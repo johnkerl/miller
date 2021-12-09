@@ -1,0 +1,23 @@
+# Then-chaining
+
+In accord with the [Unix philosophy](http://en.wikipedia.org/wiki/Unix_philosophy), you can pipe data into or out of Miller. For example:
+
+GENMD-SHOW-COMMAND
+mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
+GENMD-EOF
+
+You can, if you like, instead simply chain commands together using the `then` keyword:
+
+GENMD-SHOW-COMMAND
+mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
+GENMD-EOF
+
+(You can precede the very first verb with `then`, if you like, for symmetry.)
+
+Here's a performance comparison:
+
+GENMD-INCLUDE-ESCAPED(data/then-chaining-performance.txt)
+
+There are two reasons to use then-chaining: one is for performance, although I don't expect this to be a win in all cases.  Using then-chaining avoids redundant string-parsing and string-formatting at each pipeline step: instead input records are parsed once, they are fed through each pipeline stage in memory, and then output records are formatted once.
+
+The other reason to use then-chaining is for simplicity: you don't have re-type formatting flags (e.g. `--csv --fs tab`) at every pipeline stage.

@@ -1,0 +1,1 @@
+mlr --from test/input/abixy filter -f ./${CASEDIR}/mlr

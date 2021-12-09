@@ -1,0 +1,1 @@
+mlr --icsvlite --opprint put '$langue = capitalize($langue)' test/input/utf8-1.csv

@@ -1,0 +1,62 @@
+[
+  {
+    "zsum": 12,
+    "zsumt": "int"
+  },
+  {
+    "zdiff": 4,
+    "zdifft": "int"
+  },
+  {
+    "zprod": 32,
+    "zprodt": "int"
+  },
+  {
+    "zquot": 2,
+    "zquott": "int"
+  },
+  {
+    "zpquot": 2,
+    "zpquott": "int"
+  },
+  {
+    "zmod": 0,
+    "zmodt": "int"
+  },
+  {
+    "zmin": 4,
+    "zmint": "int"
+  },
+  {
+    "zmax": 4,
+    "zmaxt": "int"
+  },
+  {
+    "zabs": 4,
+    "zabst": "int"
+  },
+  {
+    "zceil": 4,
+    "zceilt": "int"
+  },
+  {
+    "zceil": 4,
+    "zceilt": "int"
+  },
+  {
+    "zfloor": 4,
+    "zfloort": "int"
+  },
+  {
+    "zround": 4,
+    "zroundt": "int"
+  },
+  {
+    "zroundm": 4,
+    "zroundmt": "int"
+  },
+  {
+    "zsgn": 1,
+    "zsgnt": "int"
+  }
+]

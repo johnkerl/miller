@@ -1,3 +1,0 @@
-func f(x,y,z) {
-  return x + y + z
-}

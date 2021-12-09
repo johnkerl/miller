@@ -1,0 +1,1 @@
+mlr --icsv --otsv cat test/input/s.tsv

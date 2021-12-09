@@ -1,3 +1,0 @@
-copy \msys64\miller\miller-git\miller\c\mlr.exe .
-copy \msys64\mingw64\bin\libpcreposix-0.dll .
-copy \msys64\mingw64\bin\libpcre-1.dll .

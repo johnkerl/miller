@@ -1,1 +1,0 @@
-mlr put -v -f ${CASEDIR}/mlr regtest/input/abixy

@@ -1,0 +1,1 @@
+mlr cut -f a,x test/input/abixy

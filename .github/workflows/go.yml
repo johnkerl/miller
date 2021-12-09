@@ -23,21 +23,18 @@ jobs:
         go-version: 1.15
 
     - name: Build
-      run: cd go && go build -v mlr.go
+      run: make build
 
     - name: Test
-      # In the event of needing to debug failures you can modify `./mlr regtest` verbosity
-      # using `-v`, `-vv`, or `-vvv`. Commit changes to this file and re-push to GitHub
-      # and let the GitHub Actions re-run.
-      run: cd go && go test -v mlr/src/... && ./mlr regtest -s 5
+      run: make check
 
     - name: PrepareArtifactNonWindows
       if: matrix.os != 'windows-latest'
-      run: mkdir -p bin/${{matrix.os}} && cp go/mlr bin/${{matrix.os}}
+      run: mkdir -p bin/${{matrix.os}} && cp mlr bin/${{matrix.os}}
 
     - name: PrepareArtifactWindows
       if: matrix.os == 'windows-latest'
-      run: mkdir -p bin/${{matrix.os}} && cp go/mlr.exe bin/${{matrix.os}}
+      run: mkdir -p bin/${{matrix.os}} && cp mlr.exe bin/${{matrix.os}}
 
     - uses: actions/upload-artifact@v2
       with:

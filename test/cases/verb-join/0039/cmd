@@ -1,0 +1,1 @@
+mlr --opprint join --ul --ur -f test/input/joina.dkvp -l l -r r -j o test/input/dev-null.txt

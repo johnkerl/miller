@@ -1,0 +1,40 @@
+# Check that these operations are all int-preserving
+end {
+  x = 8;
+  y = 4;
+
+  zsum    = x+y;
+  zdiff   = x-y;
+  zprod   = x*y;
+  zquot   = x/y;
+  zpquot  = x//y;
+  zmod    = x%y;
+  zmin    = min(x,y);
+  zmax    = min(x,y);
+  zabs    = abs(y);
+  zceil   = ceil(y);
+  zceil   = ceil(y);
+  zfloor  = floor(y);
+  zround  = round(y);
+  zroundm = roundm(y, 2);
+  zsgn    = sgn(y);
+
+  output = [
+    {"zsum":    zsum,    "zsumt":    typeof(zsum)},
+    {"zdiff":   zdiff,   "zdifft":   typeof(zdiff)},
+    {"zprod":   zprod,   "zprodt":   typeof(zprod)},
+    {"zquot":   zquot,   "zquott":   typeof(zquot)},
+    {"zpquot":  zpquot,  "zpquott":  typeof(zpquot)},
+    {"zmod":    zmod,    "zmodt":    typeof(zmod)},
+    {"zmin":    zmin,    "zmint":    typeof(zmin)},
+    {"zmax":    zmax,    "zmaxt":    typeof(zmax)},
+    {"zabs":    zabs,    "zabst":    typeof(zabs)},
+    {"zceil":   zceil,   "zceilt":   typeof(zceil)},
+    {"zceil":   zceil,   "zceilt":   typeof(zceil)},
+    {"zfloor":  zfloor,  "zfloort":  typeof(zfloor)},
+    {"zround":  zround,  "zroundt":  typeof(zround)},
+    {"zroundm": zroundm, "zroundmt": typeof(zroundm)},
+    {"zsgn":    zsgn,    "zsgnt":    typeof(zsgn)},
+  ];
+  dump output;
+}

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Run the live-code bits within the markup files. See README.md for details.
+
+if [ $# -ge 1 ]; then
+  names="$@"
+  names=$(echo "$names" | sed 's/\.md\.in$//g')
+  names=$(echo "$names" | sed 's/\.md$//g')
+else
+  names=$(echo *.md.in | sed 's/\.md\.in//g')
+fi
+
+# Live code-generation needs to be using mlr from *this* tree, not from
+# somewhere else in the PATH.
+if [ ! -x ../../mlr ]; then
+  echo "$0: Need ../../mlr to exist: please check 'make build' in ../.." 1>&2
+  exit 1
+fi
+export PATH=../..:$PATH
+
+for name in $names; do
+  echo Generating $name.md
+  if [ -f $name.md ]; then # Won't exist yet on first run
+    chmod u+w $name.md
+  fi
+  # The filename is used for link-generation; file contents
+  # are read from standard input.
+  ./genmd-filter $name.md.in < $name.md.in > /tmp/$name.md.tmp
+  mv /tmp/$name.md.tmp $name.md
+  chmod 400 $name.md
+done

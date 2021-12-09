@@ -1,0 +1,34 @@
+a          r
+x_sum      1
+x_min      1
+x_max      1
+x_antimode 1
+x_mode     1
+
+a          s
+x_sum      3
+x_min      3
+x_max      3
+x_antimode 3
+x_mode     3
+
+a          t
+x_sum      5
+x_min      5
+x_max      5
+x_antimode 5
+x_mode     5
+
+a          u
+x_sum      0
+x_min      
+x_max      
+x_antimode 
+x_mode     
+
+a          v
+x_sum      0
+x_min      
+x_max      
+x_antimode 
+x_mode     

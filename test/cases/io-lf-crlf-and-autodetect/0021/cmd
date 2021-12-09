@@ -1,0 +1,1 @@
+mlr --ifs auto --xtab cat test/input/line-term-lf.xtab

@@ -1,0 +1,1 @@
+mlr --icsvlite --odkvp cat test/input/c.csv test/input/d.csv

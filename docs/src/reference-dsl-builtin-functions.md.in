@@ -1,0 +1,38 @@
+# DSL built-in functions
+
+These are functions in the [Miller programming language](miller-programming-language.md)
+that you can call when you use `mlr put` and `mlr filter`. For example, when you type
+
+GENMD-RUN-COMMAND
+mlr --icsv --opprint --from example.csv put '
+  $color = toupper($color);
+  $shape = gsub($shape, "[aeiou]", "*");
+'
+GENMD-EOF
+
+the `toupper` and `gsub` bits are _functions_.
+
+## Overview
+
+At the command line, you can use `mlr -f` and `mlr -F` for information much
+like what's on this page.
+
+Each function takes a specific number of arguments, as shown below, except for
+functions marked as variadic such as `min` and `max`. (The latter compute min
+and max of any number of arguments.) There is no notion of optional or
+default-on-absent arguments. All argument-passing is positional rather than by
+name; arguments are passed by value, not by reference.
+
+At the command line, you can get a list of all functions using `mlr -f`, with
+details using `mlr -F`.  (Or, `mlr help usage-functions-by-class` to get
+details in the order shown on this page.) You can get detail for a given
+function using `mlr help function namegoeshere`, e.g.  `mlr help function
+gsub`.
+
+Operators are listed here along with functions. In this case, the
+argument-count is the number of items involved in the infix operator, e.g. we
+say `x+y` so the details for the `+` operator say that its number of arguments
+is 2. Unary operators such as `!` and `~` show argument-count of 1; the ternary
+`? :` operator shows an argument-count of 3.
+
+GENMD-RUN-CONTENT-GENERATOR(./mk-func-info.rb)

@@ -1,0 +1,17 @@
+end {
+  my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
+  print "Original:";
+  print my_map;
+
+  print;
+  print "Squared values:";
+  print apply(my_map, func(k,v) { return {k: v**2} });
+
+  print;
+  print "Cubed values, sorted by key:";
+  print sort(apply(my_map, func(k,v) { return {k: v**3} }));
+
+  print;
+  print "Same, with upcased keys:";
+  print sort(apply(my_map, func(k,v) { return {toupper(k): v**3} }));
+}

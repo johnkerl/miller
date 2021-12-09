@@ -1,0 +1,58 @@
+Original:
+{
+  "cubit": 823,
+  "dale": 13,
+  "apple": 199,
+  "ember": 191,
+  "bottle": 107
+}
+
+Ascending by key:
+{
+  "apple": 199,
+  "bottle": 107,
+  "cubit": 823,
+  "dale": 13,
+  "ember": 191
+}
+{
+  "apple": 199,
+  "bottle": 107,
+  "cubit": 823,
+  "dale": 13,
+  "ember": 191
+}
+
+Descending by key:
+{
+  "ember": 191,
+  "dale": 13,
+  "cubit": 823,
+  "bottle": 107,
+  "apple": 199
+}
+{
+  "ember": 191,
+  "dale": 13,
+  "cubit": 823,
+  "bottle": 107,
+  "apple": 199
+}
+
+Ascending by value:
+{
+  "dale": 13,
+  "bottle": 107,
+  "ember": 191,
+  "apple": 199,
+  "cubit": 823
+}
+
+Descending by value:
+{
+  "cubit": 823,
+  "apple": 199,
+  "ember": 191,
+  "bottle": 107,
+  "dale": 13
+}

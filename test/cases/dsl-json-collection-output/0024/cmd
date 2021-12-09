@@ -1,0 +1,1 @@
+mlr --json --no-jvstack cat test/input/json-collection-0014.json

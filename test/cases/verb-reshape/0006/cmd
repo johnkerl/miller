@@ -1,0 +1,1 @@
+mlr --pprint reshape -i X,Y,Z -o item,price then reshape -s item,price test/input/reshape-wide.tbl

@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+# ================================================================
+# This scans mkdocs.yml and for each .md file updates the description string
+# with line one of the .md file.
+#
+# Usage:
+# * ./retitle mkdocs.yml > temp
+# * diff mkdocs.yml temp # and review
+# * mv temp mkdocs.yml   # to accept
+# ================================================================
+
+ARGF.each do |line|
+  line.chomp!
+  # >>    - "Miller in 10 minutes": "10min.md"<<
+  if line =~ /(.*")([^"]*)(": ")(.*\.md)(")$/
+    pre = $1
+    old_tile = $2
+    mid = $3
+    md_file_name = $4
+    post = $5
+
+    if md_file_name == "index.md"
+      new_title = "Introduction"
+    else
+      md_in_file_path = "./src/#{md_file_name}.in"
+      new_title = File.open(md_in_file_path).readlines()[0].sub(/^# /, "").chomp
+    end
+    puts "#{pre}#{new_title}#{mid}#{md_file_name}#{post}"
+
+  else
+    puts line
+  end
+end

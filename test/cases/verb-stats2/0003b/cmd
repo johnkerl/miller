@@ -1,0 +1,1 @@
+mlr --oxtab stats2 -s -a r2 -f x,y,xy,y2 test/input/abixy-wide-short

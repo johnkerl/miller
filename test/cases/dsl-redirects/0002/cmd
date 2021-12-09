@@ -1,0 +1,1 @@
+mlr --from test/input/abixy tee --no-fflush ${CASEDIR}/out then nothing

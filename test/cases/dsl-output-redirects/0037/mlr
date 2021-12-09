@@ -1,0 +1,1 @@
+@x=1; emitf > ENV["CASEDIR"]."/foo.dat", @x

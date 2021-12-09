@@ -1,0 +1,1 @@
+mlr --opprint put '$y = -123.4 + $i' test/input/scinot1.dkvp

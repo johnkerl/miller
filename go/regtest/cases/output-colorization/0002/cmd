@@ -1,1 +1,0 @@
-mlr -C --ojson cat regtest/input/abixy

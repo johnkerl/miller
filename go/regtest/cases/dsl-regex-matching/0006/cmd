@@ -1,1 +1,0 @@
-mlr filter -v -f ${CASEDIR}/mlr regtest/input/regex.dkvp

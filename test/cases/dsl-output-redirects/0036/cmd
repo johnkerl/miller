@@ -1,0 +1,1 @@
+mlr --from test/input/2.dkvp put -f ${CASEDIR}/mlr

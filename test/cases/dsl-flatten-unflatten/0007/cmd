@@ -1,0 +1,1 @@
+mlr --ixtab --ojson --no-auto-unflatten --from test/input/unflatten-input.xtab put -f ${CASEDIR}/mlr

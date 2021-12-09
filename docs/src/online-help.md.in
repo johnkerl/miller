@@ -1,0 +1,101 @@
+# Online help
+
+Miller has several online help mechanisms built in.
+
+## Main help
+
+The front door is `mlr --help` or its synonym `mlr -h`. This leads you to `mlr help topics` with its list of specific areas:
+
+GENMD-RUN-COMMAND
+mlr --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr help topics
+GENMD-EOF
+
+If you know the name of the thing you're looking for, use `mlr help`:
+
+GENMD-RUN-COMMAND
+mlr help map
+GENMD-EOF
+
+To search by substring, use `mlr help find`:
+
+GENMD-RUN-COMMAND
+mlr help find gmt
+GENMD-EOF
+
+Etc.
+
+## Command-line flags
+
+This is a command-line version of the [List of command-line flags](reference-main-flag-list.md) page.
+See `mlr help flags` for a full listing.
+
+## Per-verb help
+
+This is a command-line version of the [List of verbs](reference-verbs.md) page.
+Given the name of a verb (from `mlr -l`) you can invoke it with `--help` or `-h` -- or, use `mlr help verb`:
+
+GENMD-RUN-COMMAND
+mlr cat --help
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr group-like -h
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr help verb sort
+GENMD-EOF
+
+Etc.
+
+## Per-function help
+
+This is a command-line version of the [DSL built-in functions](reference-dsl-builtin-functions.md) page.
+Given the name of a DSL function (from `mlr -f`) you can use `mlr help function` for details:
+
+GENMD-RUN-COMMAND
+mlr help function append
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr help function split
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr help function splita
+GENMD-EOF
+
+Etc.
+
+## REPL help
+
+You can use `:h` or `:help` inside the [REPL](repl.md):
+
+<!--- TODO: repl-executor genmd function -->
+GENMD-CARDIFY-HIGHLIGHT-ONE
+$ mlr repl
+Miller v6.0.0-dev REPL for darwin:amd64:go1.16.5
+Docs: https://miller.readthedocs.io
+Type ':h' or ':help' for on-line help; ':q' or ':quit' to quit.
+[mlr] :h
+Options:
+:help intro
+:help examples
+:help repl-list
+:help repl-details
+:help prompt
+:help function-names
+:help function-details
+:help {function name}, e.g. :help sec2gmt
+:help {function name}, e.g. :help sec2gmt
+[mlr]
+GENMD-EOF
+
+## Manual page
+
+If you've gotten Miller from a package installer, you should have `man mlr` producing a traditional manual page.
+If not, no worries -- the manual page is a concatenated listing of the same information also available by each of the topics in `mlr help topics`. See also the [Manual page](manpage.md) which is an online copy.

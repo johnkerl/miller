@@ -1,0 +1,39 @@
+end {
+  sao = "America/Sao_Paulo";
+  ist = "Asia/Istanbul";
+  iso = "%Y-%m-%dT%H:%M:%SZ";
+  loc = "%Y-%m-%d %H:%M:%S";
+  zeg = "1970-01-01T00:00:00Z";
+  zel = "1970-01-01 00:00:00";
+
+  print(sec2localtime(0, 0, sao));
+  print(sec2localtime(0, 0, ist));
+  print;
+
+  print(sec2localdate(0,    sao));
+  print(sec2localdate(0,    ist));
+  print;
+
+  print(localtime2sec(zel, sao));
+  print(localtime2sec(zel, ist));
+  print;
+
+  print(localtime2sec(zel, sao));
+  print(localtime2sec(zel, ist));
+  print;
+
+  print(strptime_local(zel, loc, sao));
+  print(strptime_local(zel, loc, ist));
+  print;
+
+  print(strftime_local(0, loc, sao));
+  print(strftime_local(0, loc, ist));
+  print;
+
+  print(gmt2localtime(zeg, sao));
+  print(gmt2localtime(zeg, ist));
+  print;
+
+  print(localtime2gmt(zel, sao));
+  print(localtime2gmt(zel, ist));
+}

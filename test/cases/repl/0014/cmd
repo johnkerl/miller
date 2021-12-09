@@ -1,0 +1,1 @@
+mlr repl -q -s --load test/stdlib < ./${CASEDIR}/input

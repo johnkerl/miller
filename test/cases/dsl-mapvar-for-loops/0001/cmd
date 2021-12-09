@@ -1,0 +1,1 @@
+mlr --from test/input/abixy put -q -f ./${CASEDIR}/mlr

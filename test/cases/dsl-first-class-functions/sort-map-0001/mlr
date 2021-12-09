@@ -1,0 +1,24 @@
+end {
+  my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
+
+  print "Original:";
+  print my_map;
+
+  print;
+  print "Ascending by key:";
+  print sort(my_map);
+  print sort(my_map, func(ak,av,bk,bv) { return ak <=> bk });
+
+  print;
+  print "Descending by key:";
+  print sort(my_map, "r");
+  print sort(my_map, func(ak,av,bk,bv) { return bk <=> ak });
+
+  print;
+  print "Ascending by value:";
+  print sort(my_map, func(ak,av,bk,bv) { return av <=> bv });
+
+  print;
+  print "Descending by value:";
+  print sort(my_map, func(ak,av,bk,bv) { return bv <=> av });
+}

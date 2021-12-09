@@ -1,0 +1,8 @@
+$default  = sort([$a, $b, $c]);
+$reverse  = sort([$a, $b, $c],  "r");
+$numup    = sort([$a, $b, $c],  "n");
+$numdown  = sort([$a, $b, $c],  "nr");
+$lexup    = sort([$a, $b, $c],  "f");
+$lexdown  = sort([$a, $b, $c],  "fr");
+$foldup   = sort([$a, $b, $c],  "c");
+$folddown = sort([$a, $b, $c],  "cr");

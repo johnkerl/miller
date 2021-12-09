@@ -1,3 +1,0 @@
-# List of command-line flags
-
-GENMD_RUN_CONTENT_GENERATOR(./mk-flag-info.rb)

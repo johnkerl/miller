@@ -1,0 +1,1 @@
+mlr --ojson --jvstack --from test/input/emit2.dkvp put -q -f ${CASEDIR}/mlr

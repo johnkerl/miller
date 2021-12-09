@@ -1,0 +1,125 @@
+# DSL syntax
+
+## Expression formatting
+
+Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
+
+GENMD-RUN-COMMAND
+ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'
+GENMD-EOF
+
+Newlines within the expression are ignored, which can help increase legibility of complex expressions:
+
+GENMD-RUN-COMMAND
+mlr --opprint put '
+  $nf       = NF;
+  $nr       = NR;
+  $fnr      = FNR;
+  $filenum  = FILENUM;
+  $filename = FILENAME
+' data/small data/small2
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' \
+  then stats2 -a corr -f x,y \
+  data/medium
+GENMD-EOF
+
+## Expressions from files
+
+The simplest way to enter expressions for `put` and `filter` is between single quotes on the command line (see also [here](miller-on-windows.md) for Windows). For example:
+
+GENMD-RUN-COMMAND
+mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --from data/small put 'func f(a, b) { return sqrt(a**2 + b**2) } $xy = f($x, $y)'
+GENMD-EOF
+
+You may, though, find it convenient to put expressions into files for reuse, and read them
+**using the -f option**. For example:
+
+GENMD-RUN-COMMAND
+cat data/fe-example-3.mlr
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --from data/small put -f data/fe-example-3.mlr
+GENMD-EOF
+
+If you have some of the logic in a file and you want to write the rest on the command line, you can **use the -f and -e options together**:
+
+GENMD-RUN-COMMAND
+cat data/fe-example-4.mlr
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'
+GENMD-EOF
+
+A suggested use-case here is defining functions in files, and calling them from command-line expressions.
+
+Another suggested use-case is putting default parameter values in files, e.g. using `begin{@count=is_present(@count)?@count:10}` in the file, where you can precede that using `begin{@count=40}` using `-e`.
+
+Moreover, you can have one or more `-f` expressions (maybe one function per file, for example) and one or more `-e` expressions on the command line.  If you mix `-f` and `-e` then the expressions are evaluated in the order encountered.
+
+## Semicolons, commas, newlines, and curly braces
+
+Miller uses **semicolons as statement separators**, not statement terminators. This means you can write:
+
+GENMD-INCLUDE-ESCAPED(data/semicolon-example.txt)
+
+Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
+
+GENMD-RUN-COMMAND
+echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo = "bar"'
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'
+GENMD-EOF
+
+Semicolons are required between statements even if those statements are on separate lines.  **Newlines** are for your convenience but have no syntactic meaning: line endings do not terminate statements. For example, adjacent assignment statements must be separated by semicolons even if those statements are on separate lines:
+
+GENMD-INCLUDE-ESCAPED(data/newline-example.txt)
+
+**Trailing commas** are allowed in function/subroutine definitions, function/subroutine callsites, and map literals. This is intended for (although not restricted to) the multi-line case:
+
+GENMD-RUN-COMMAND
+mlr --csvlite --from data/a.csv put '
+  func f(
+    num a,
+    num b,
+  ): num {
+    return a**2 + b**2;
+  }
+  $* = {
+    "s": $a + $b,
+    "t": $a - $b,
+    "u": f(
+      $a,
+      $b,
+    ),
+    "v": NR,
+  }
+'
+GENMD-EOF
+
+Bodies for all compound statements must be enclosed in **curly braces**, even if the body is a single statement:
+
+GENMD-SHOW-COMMAND
+mlr put 'if ($x == 1) $y = 2' # Syntax error
+GENMD-EOF
+
+GENMD-SHOW-COMMAND
+mlr put 'if ($x == 1) { $y = 2 }' # This is OK
+GENMD-EOF
+
+Bodies for compound statements may be empty:
+
+GENMD-SHOW-COMMAND
+mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
+GENMD-EOF
+

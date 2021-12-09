@@ -1,0 +1,11 @@
+end {
+
+  print "---------------------------------------------------------------- TIMEZONE";
+  print "TZ is", ENV["TZ"];
+
+  print "---------------------------------------------------------------- SEC2GMTDATE";
+  print sec2gmtdate(0.0);
+  print sec2gmtdate(0.123456);
+  print sec2gmtdate(-0.123456);
+
+}

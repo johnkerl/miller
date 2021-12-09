@@ -1,0 +1,56 @@
+# Log-processing examples
+
+Another of my favorite use-cases for Miller is doing ad-hoc processing of log-file data.  Here's where DKVP format really shines: one, since the field names and field values are present on every line, every line stands on its own. That means you can `grep` or what have you. Also it means not every line needs to have the same list of field names ("schema").
+
+## Generating and aggregating log-file output
+
+Again, all the examples in the CSV section apply here -- just change the input-format flags. But there's more you can do when not all the records have the same shape.
+
+Writing a program -- in any language whatsoever -- you can have it print out log lines as it goes along, with items for various events jumbled together. After the program has finished running you can sort it all out, filter it, analyze it, and learn from it.
+
+Suppose your program has printed something like this [log.txt](./log.txt):
+
+GENMD-RUN-COMMAND
+cat log.txt
+GENMD-EOF
+
+Each print statement simply contains local information: the current timestamp, whether a particular cache was hit or not, etc. Then using either the system `grep` command, or Miller's [having-fields verb](reference-verbs.md#having-fields), or the [is_present DSL function](reference-dsl-builtin-functions.md#is_present), we can pick out the parts we want and analyze them:
+
+GENMD-RUN-COMMAND
+grep op=cache log.txt \
+  | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --from log.txt --opprint \
+  filter 'is_present($batch_size)' \
+  then step -a delta -f time,num_filtered \
+  then sec2gmt time
+GENMD-EOF
+
+Alternatively, we can simply group the similar data for a better look:
+
+GENMD-RUN-COMMAND
+mlr --opprint group-like log.txt
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --opprint group-like then sec2gmt time log.txt
+GENMD-EOF
+
+## Parsing log-file output
+
+This, of course, depends highly on what's in your log files. But, as an example, suppose you have log-file lines such as
+
+GENMD-CARDIFY
+2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378
+GENMD-EOF
+
+I prefer to pre-filter with `grep` and/or `sed` to extract the structured text, then hand that to Miller. Example:
+
+GENMD-CARDIFY-HIGHLIGHT-THREE
+grep 'various sorts' *.log \
+  | sed 's/.*} //' \
+  | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
+... output here ...
+GENMD-EOF

@@ -1,0 +1,4 @@
+mlr: reduce: second-argument function must return single-element map; got "{
+  "x": 7,
+  "y": 8
+}".

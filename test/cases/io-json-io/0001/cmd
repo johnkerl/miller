@@ -1,0 +1,1 @@
+mlr --ijson --opprint cat test/input/small-non-nested.json

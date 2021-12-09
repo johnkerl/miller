@@ -1,1 +1,0 @@
-tee >> "${CASEDIR}/out.".$a, $*

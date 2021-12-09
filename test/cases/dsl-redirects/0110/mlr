@@ -1,0 +1,1 @@
+@a[NR]=$a; @b[NR]=$b; emit > ENV["CASEDIR"]."/out.".$a.$b, @*

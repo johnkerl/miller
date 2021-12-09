@@ -1,0 +1,1 @@
+mlr --icsvlite --oxtab cat test/input/utf8-2.csv

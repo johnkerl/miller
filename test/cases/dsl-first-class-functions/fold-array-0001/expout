@@ -1,0 +1,11 @@
+Original:
+[2, 9, 10, 3, 1, 4, 5, 8, 7, 6]
+
+Sum with reduce:
+55
+
+Sum with fold and 0 initial value:
+55
+
+Sum with fold and 1000000 initial value:
+1000055

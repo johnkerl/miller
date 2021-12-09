@@ -1,0 +1,1 @@
+mlr termcvt --crlf2cr < test/input/line-ending-crlf.bin

@@ -1,0 +1,15 @@
+end {
+  my_array = [2, 9, 10, 3, 1, 4, 5, 8, 7, 6];
+
+  print "Original:";
+  print my_array;
+
+  print;
+  print "Evens:";
+  print select(my_array, func (e) { return e % 2 == 0});
+
+  print;
+  print "Odds:";
+  print select(my_array, func (e) { return e % 2 == 1});
+  print;
+}

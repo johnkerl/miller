@@ -1,0 +1,3 @@
+end {
+  print sort({"a":1,"b":2,"c":3}, func (ak,av,bk,bv) { return {} });
+}

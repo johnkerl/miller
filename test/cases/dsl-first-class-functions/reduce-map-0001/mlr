@@ -1,0 +1,29 @@
+end {
+  my_map = {"cubit": 823, "dale": 13, "apple": 199, "ember": 191, "bottle": 107};
+  print "Original:";
+  print my_map;
+
+  print;
+  print "First:";
+  print reduce(my_map, func (acck,accv,ek,ev) { return {acck: accv}});
+
+  print;
+  print "Last:";
+  print reduce(my_map, func (acck,accv,ek,ev) { return {ek: ev}});
+
+  print;
+  print "Concatenate keys and values:";
+  print reduce(my_map, func (acck,accv,ek,ev) { return {acck . "," . ek: accv . "," . ev}});
+
+  print;
+  print "Sum of values:";
+  print reduce(my_map, func (acck,accv,ek,ev) { return {"sum": accv + ev }});
+
+  print;
+  print "Product of values:";
+  print reduce(my_map, func (acck,accv,ek,ev) { return {"product": accv * ev }});
+
+  print;
+  print "String-join of values:";
+  print reduce(my_map, func (acck,accv,ek,ev) { return {"joined": accv . "," . ev }});
+}

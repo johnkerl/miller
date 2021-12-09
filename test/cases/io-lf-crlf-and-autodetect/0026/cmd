@@ -1,0 +1,1 @@
+mlr --irs auto --ors lf --csv cat test/input/line-term-crlf.csv

@@ -1,0 +1,157 @@
+# Separators
+
+## Record, field, and pair separators
+
+Miller has record separators, field separators, and pair separators. For
+example, given the following [DKVP](file-formats.md#dkvp-key-value-pairs)
+records:
+
+GENMD-RUN-COMMAND
+cat data/a.dkvp
+GENMD-EOF
+
+* the **record separator** is newline -- it separates records from one another;
+* the **field separator** is `,` -- it separates fields (key-value pairs) from one another;
+* and the **pair separator** is `=` -- it separates the key from the value within each key-value pair.
+
+These are the default values, which you can override with flags such as `--ips`
+and `--ops` (below).
+
+Not all [file formats](file-formats.md) have all three of these: for example,
+CSV does not have a pair separator, since keys are on the header line and
+values are on each data line.
+
+Also, separators are not programmable for all file formats.  For example, in
+[JSON objects](file-formats.md#json), the pair separator is `:` and the
+field-separator is `,` -- we write `{"a":1,"b":2,"c":3}` -- but these aren't
+modifiable.  If you do `mlr --json --ips : --ips '=' cat myfile.json` then you
+don't get `{"a"=1,"b"=2,"c"=3}`.  This is because the pair-separator `:` is
+part of the JSON specification.
+
+## Input and output separators
+
+Miller lets you use the same separators for input and output (e.g. CSV input,
+CSV output), or, to change them between input and output (e.g. CSV input, JSON
+output), if you wish to transform your data in that way.
+
+Miller uses the names `IRS` and `ORS` for the input and output record
+separators, `IFS` and `OFS` for the input and output field separators, and
+`IPS` and `OPS` for input and output pair separators.
+
+For example:
+
+GENMD-RUN-COMMAND
+cat data/a.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ifs , --ofs ';' --ips = --ops : cut -o -f c,a,b data/a.dkvp
+GENMD-EOF
+
+If your data has non-default separators and you don't want to change those
+between input and output, you can use `--rs`, `--fs`, and `--ps`. Setting `--fs
+:` is the same as setting `--ifs : --ofs :`, but with fewer keystrokes.
+
+GENMD-RUN-COMMAND
+cat data/modsep.dkvp
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --fs ';' --ps : cut -o -f c,a,b data/modsep.dkvp
+GENMD-EOF
+
+## Multi-character and regular-expression separators
+
+The separators default to single characters, but can be multiple characters if you like:
+
+GENMD-RUN-COMMAND
+mlr --ifs ';' --ips : --ofs ';;;' --ops := cut -o -f c,a,b data/modsep.dkvp
+GENMD-EOF
+
+As of September 2021:
+
+* `IFS` and `IPS` can be regular expressions.
+* `IRS` can be multi-character (except for file formats which don't allow parameterization -- see below)
+* `OFS`, `OPS`, and `ORS` can be multi-character.
+
+Since `IFS` and `IPS` can be regular expressions, if your data has field
+separators which are one or more consecutive spaces, you can use `--ifs '(
+)+'`. But that gets a little tedious, so Miller has the `--repifs` and
+`--repips` flags you can use if you like.  This wraps the `IFS` or `IPS`, say
+`X`, as `(X)+`.
+
+The `--repifs` flag means that multiple successive occurrences of the field
+separator count as one.  For example, in CSV data we often signify nulls by
+empty strings, e.g. `2,9,,,,,6,5,4`. On the other hand, if the field separator
+is a space, it might be more natural to parse `2 4    5` the same as `2 4 5`:
+`--repifs --ifs ' '` lets this happen.  In fact, the `--ipprint` option above
+is internally implemented in terms of `--repifs`.
+
+For example:
+
+GENMD-RUN-COMMAND
+cat data/extra-spaces.txt
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --ifs ' ' --repifs --inidx --oxtab cat  data/extra-spaces.txt
+GENMD-EOF
+
+## Aliases
+
+Many things we'd like to write as separators need to be escaped from the shell
+-- e.g. `--ifs ';'` or `--ofs '|'`, and so on. You can use the following if you like:
+
+GENMD-RUN-COMMAND
+mlr help list-separator-aliases
+GENMD-EOF
+
+Note that `spaces`, `tabs`, and `whitespace` already are regexes so you
+shouldn't use `--repifs` with them.
+
+## Command-line flags
+
+Given the above, we now have seen the following flags:
+
+GENMD-CARDIFY
+--rs --irs --ors
+--fs --ifs --ofs --repifs
+--ps --ips --ops
+GENMD-EOF
+
+See also the [separator-flags section](reference-main-flag-list.md#separator-flags).
+
+## DSL built-in variables
+
+Miller exposes for you read-only [built-in variables](reference-dsl-variables.md#built-in-variables) with
+names `IRS`, `ORS`, `IFS`, `OFS`, `IPS`, and `OPS`. Unlike in AWK, you can't set these in begin-blocks --
+their values indicate what you specified at the command line -- so their use is limited.
+
+GENMD-RUN-COMMAND
+mlr --ifs , --ofs ';' --ips = --ops : --from data/a.dkvp put '$d = ">>>" . IFS . "|||" . OFS . "<<<"'
+GENMD-EOF
+
+## Which separators apply to which file formats
+
+Notes:
+
+* If CSV field separator is tab, we have TSV; see more examples (ASV, USV, etc.) at in the [CSV section](file-formats.md#csvtsvasvusvetc).
+* CSV IRS and ORS must be newline, and CSV IFS must be a single character. (CSV-lite does not have these restrictions.)
+* JSON: ignores all separator flags from the command line.
+* Headerless CSV overlaps quite a bit with NIDX format using comma for IFS. See also the page on [CSV with and without headers](csv-with-and-without-headers.md).
+* For XTAB, the record separator is a repetition of the field separator. For example, if one record has `x=1,y=2` and the next has `x=3,y=4`, and OFS is newline, then output lines are `x 1`, then `y 2`, then an extra newline, then `x 3`, then `y 4`. This means: to customize XTAB, set `OFS` rather than `ORS`.
+
+|            | **RS**  | **FS**  | **PS**   |
+|------------|---------|---------|----------|
+| [**CSV**](file-formats.md#csvtsvasvusvetc)    | Always `\n`; not alterable * | Default `,`; must be single-character    | None     |
+| [**TSV**](file-formats.md#csvtsvasvusvetc)    | Always `\n`; not alterable * |  Default `\t`; must be single-character   | None     |
+| [**CSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *   | Default `,`    | None     |
+| [**TSV-lite**](file-formats.md#csvtsvasvusvetc)    | Default `\n` *  |  Default `\t`   | None     |
+| [**JSON**](file-formats.md#json)   | N/A; records are between `{` and `}` | Always `,`; not alterable    | Always `:`; not alterable |
+| [**DKVP**](file-formats.md#dkvp-key-value-pairs)   | Default `\n`    | Default `,`    | Default `=` |
+| [**NIDX**](file-formats.md#nidx-index-numbered-toolkit-style)   | Default `\n`    | Default space    | None     |
+| [**XTAB**](file-formats.md#xtab-vertical-tabular)   | Not used; records are separated by an extra FS    | `\n` *    | Default: space with repeats  |
+| [**PPRINT**](file-formats.md#pprint-pretty-printed-tabular) | Default `\n` *    | Space with repeats    | None     |
+| [**Markdown**](file-formats.md#markdown-tabular) | Always `\n`; not alterable * | One or more spaces, then `|`, then one or more spaces; not alterable | None     |
+
+\* or `\r\n` on Windows

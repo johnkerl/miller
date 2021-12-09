@@ -12,7 +12,7 @@ positionally-indexed.  Then, on the fly, you can add new fields which are
 functions of existing fields, drop fields, sort, aggregate statistically,
 pretty-print, and more.
 
-![cover-art](./docs/coverart/cover-combined.png)
+![cover-art](./docs/src/coverart/cover-combined.png)
 
 * Miller operates on **key-value-pair data** while the familiar
 Unix tools operate on integer-indexed fields: if the natural data structure for
@@ -23,31 +23,25 @@ insertion-ordered hash map.
 including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 (Miller can handle **positionally-indexed data** too!)
 
-In the above image (color added for the illustration) you can see how Miller embraces the common themes
-of key-value-pair data in a variety of data formats.
+In the above image you can see how Miller embraces the common themes of
+key-value-pair data in a variety of data formats.
 
 # Getting started
 
+* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min)
 * [A quick tutorial on Miller](https://www.ict4g.net/adolfo/notes/data-analysis/miller-quick-tutorial.html)
 * [Tools to manipulate CSV files from the Command Line](https://www.ict4g.net/adolfo/notes/data-analysis/tools-to-manipulate-csv.html)
 * [www.togaware.com/linux/survivor/CSV_Files.html](https://www.togaware.com/linux/survivor/CSV_Files.html)
 * [MLR for CSV manipulation](https://guillim.github.io/terminal/2018/06/19/MLR-for-CSV-manipulation.html)
-* [Miller in 10 minutes](https://miller.readthedocs.io/en/latest/10min.html)
 * [Linux Magazine: Process structured text files with Miller](https://www.linux-magazine.com/Issues/2016/187/Miller)
 * [Miller: Command Line CSV File Processing](https://onepointzero.app/posts/miller-command-line-csv-file-processing/)
 
 # More documentation links
 
 * [**Full documentation**](https://miller.readthedocs.io/)
-* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
+* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/main/LICENSE.txt)
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-
-# Miller 6 pre-release
-
-* Pre-release/WIP docs are at [http://johnkerl.org/miller6](http://johnkerl.org/miller6)
-* [go/README.md](./go/README.md)
-* [Tracking issue](https://github.com/johnkerl/miller/issues/372)
 
 # Installing
 
@@ -65,6 +59,7 @@ There's a good chance you can get Miller pre-built for your system:
 [![NetBSD](https://img.shields.io/badge/distros-netbsd-f26711.svg)](http://pkgsrc.se/textproc/miller)
 [![FreeBSD](https://img.shields.io/badge/distros-freebsd-8c0707.svg)](https://www.freshports.org/textproc/miller/)
 
+[![Anaconda](https://img.shields.io/badge/distros-anaconda-63ad41.svg)](https://anaconda.org/conda-forge/miller/)
 [![Homebrew/MacOSX](https://img.shields.io/badge/distros-macosxbrew-ba832b.svg)](https://github.com/Homebrew/homebrew-core/search?utf8=%E2%9C%93&q=miller)
 [![MacPorts/MacOSX](https://img.shields.io/badge/distros-macports-1376ec.svg)](https://www.macports.org/ports.php?by=name&substr=miller)
 [![Chocolatey](https://img.shields.io/badge/distros-chocolatey-red.svg)](https://chocolatey.org/packages/miller)
@@ -81,9 +76,18 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 
 [![Go-port multi-platform build status](https://github.com/johnkerl/miller/actions/workflows/go.yml/badge.svg)](https://github.com/johnkerl/miller/actions)
 
-[License: BSD2](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
+# Building from source
 
-[Docs](https://miller.readthedocs.io/en/latest/?badge=latest)
+* `make`: takes just a few seconds and produces the Miller executable, which is `./mlr` (or `.\mlr.exe` on Windows).
+* `make check` runs tests.
+* `make install` installs executable `/usr/local/bin/mlr` and manual page `/usr/local/share/man/man1/mlr.1` (so you can do `man mlr`).
+  * You can instead do `./configure --prefix=/some/install/path` followed by `make install` if you want to install somewhere other than `/usr/local`.
+* See also the doc page on [building from source](https://miller.readthedocs.io/en/latest/build).
+* For more developer information please see [README-go-port.md](./README-go-port.md).
+
+# License
+
+[License: BSD2](https://github.com/johnkerl/miller/blob/main/LICENSE.txt)
 
 # Community
 
@@ -92,8 +96,9 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 
 # Contributors
 
-Thanks to all the fine people who help make Miller better by contributing commits/PRs! (I wish there
-were an equally good way to honor all the fine people who contribute through issues and feature requests!)
+Thanks to all the fine people who help make Miller better by contributing
+commits/PRs! (Coming soon -- there will be an equally good way to honor all the
+fine people who contribute through issues and feature requests!)
 
 <a href="https://github.com/johnkerl/miller/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
@@ -144,9 +149,9 @@ system&rsquo;s available RAM, and you can use Miller in **tail -f** contexts.
 
 * Miller has high-throughput **performance** on par with the Unix toolkit.
 
-* Not unlike `jq` (http://stedolan.github.io/jq/) for JSON, Miller is written
-in portable, modern C, with **zero runtime dependencies**. You can download or
-compile a single binary, `scp` it to a faraway machine, and expect it to work.
+* Miller is written in portable, modern Go, with **zero runtime dependencies**.
+You can download or compile a single binary, `scp` it to a faraway machine,
+and expect it to work.
 
 # What people are saying about Miller
 
@@ -163,3 +168,5 @@ compile a single binary, `scp` it to a faraway machine, and expect it to work.
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Miller: a *format-aware* data munging tool By <a href="https://twitter.com/__jo_ker__?ref_src=twsrc%5Etfw">@__jo_ker__</a> to overcome limitations with *line-aware* workshorses like awk, sed et al <a href="https://t.co/LCyPkhYvt9">https://t.co/LCyPkhYvt9</a><br><br>The project website is a fantastic example of good software documentation!!</p>&mdash; Donny Daniel (@dnnydnl) <a href="https://twitter.com/dnnydnl/status/1038883999391932416?ref_src=twsrc%5Etfw">September 9, 2018</a></blockquote>
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Holy holly data swiss army knife batman! How did noone suggest Miller <a href="https://t.co/JGQpmRAZLv">https://t.co/JGQpmRAZLv</a> for solving database cleaning / ETL issues to me before <br><br>Congrats to <a href="https://twitter.com/__jo_ker__?ref_src=twsrc%5Etfw">@__jo_ker__</a> for amazingly intuitive tool for critical data management tasks!<a href="https://twitter.com/hashtag/DataScienceandLaw?src=hash&amp;ref_src=twsrc%5Etfw">#DataScienceandLaw</a> <a href="https://twitter.com/hashtag/ComputationalLaw?src=hash&amp;ref_src=twsrc%5Etfw">#ComputationalLaw</a></p>&mdash; James Miller (@japanlawprof) <a href="https://twitter.com/japanlawprof/status/1006547451409518597?ref_src=twsrc%5Etfw">June 12, 2018</a></blockquote>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">🤯<a href="https://twitter.com/__jo_ker__?ref_src=twsrc%5Etfw">@__jo_ker__</a>&#39;s Miller easily reads, transforms, + writes all sorts of tabular data. It&#39;s standalone, fast, and built for streaming data (operating on one line at a time, so you can work on files larger than memory).<br><br>And the docs are dream. I&#39;ve been reading them all morning! <a href="https://t.co/Be2pGPZK6t">https://t.co/Be2pGPZK6t</a></p>&mdash; Benjamin Wolfe (he/him) (@BenjaminWolfe) <a href="https://twitter.com/BenjaminWolfe/status/1435966268499128324?ref_src=twsrc%5Etfw">September 9, 2021</a></blockquote>
