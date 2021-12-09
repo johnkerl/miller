@@ -20,6 +20,11 @@ type RecordReaderCSV struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int
 	ifs0            byte // Go's CSV library only lets its 'Comma' be a single character
+
+	filename   string
+	rowNumber  int
+	needHeader bool
+	header     []string
 }
 
 // ----------------------------------------------------------------
@@ -79,7 +84,6 @@ func (reader *RecordReaderCSV) Read(
 	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
-// ----------------------------------------------------------------
 func (reader *RecordReaderCSV) processHandle(
 	handle io.Reader,
 	filename string,
@@ -89,53 +93,44 @@ func (reader *RecordReaderCSV) processHandle(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
-	needHeader := !reader.readerOptions.UseImplicitCSVHeader
-	var header []string = nil
-	var rowNumber int = 0
+	recordsPerBatch := reader.readerOptions.RecordsPerBatch
+
+	// Reset state for start of next input file
+	reader.filename = filename
+	reader.rowNumber = 0
+	reader.needHeader = !reader.readerOptions.UseImplicitCSVHeader
+	reader.header = nil
 
 	csvReader := csv.NewReader(NewBOMStrippingReader(handle))
 	csvReader.Comma = rune(reader.ifs0)
+	csvRecordsChannel := make(chan *list.List, recordsPerBatch)
+	go channelizedCSVRecordScanner(csvReader, csvRecordsChannel, downstreamDoneChannel, errorChannel,
+		recordsPerBatch)
 
-	eof := false
 	for {
-
-		// See if downstream processors will be ignoring further data (e.g. mlr
-		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
-		// quickly, as it should.
-		select {
-		case _ = <-downstreamDoneChannel:
-			eof = true
-			break
-		default:
-			break
-		}
+		recordsAndContexts, eof := reader.getRecordBatch(csvRecordsChannel, errorChannel, recordsPerBatch, context)
+		readerChannel <- recordsAndContexts
 		if eof {
 			break
 		}
+	}
+}
 
-		if needHeader {
-			// TODO: make this a helper function
-			csvRecord, err := csvReader.Read()
-			if lib.IsEOF(err) {
-				break
-			}
-			if err != nil && csvRecord == nil {
-				// See https://golang.org/pkg/encoding/csv.
-				// We handle field-count ourselves.
-				errorChannel <- err
-				return
-			}
+// TODO: comment
+func channelizedCSVRecordScanner(
+	csvReader *csv.Reader,
+	csvRecordsChannel chan<- *list.List,
+	downstreamDoneChannel <-chan bool, // for mlr head
+	errorChannel chan error,
+	recordsPerBatch int,
+) {
+	i := 0
+	done := false
 
-			isData := reader.maybeConsumeComment(csvRecord, context, readerChannel)
-			if !isData {
-				continue
-			}
+	csvRecords := list.New()
 
-			header = csvRecord
-			rowNumber++
-
-			needHeader = false
-		}
+	for {
+		i++
 
 		csvRecord, err := csvReader.Read()
 		if lib.IsEOF(err) {
@@ -145,31 +140,91 @@ func (reader *RecordReaderCSV) processHandle(
 			// See https://golang.org/pkg/encoding/csv.
 			// We handle field-count ourselves.
 			errorChannel <- err
-			return
+			break
 		}
-		rowNumber++
 
-		isData := reader.maybeConsumeComment(csvRecord, context, readerChannel)
-		if !isData {
+		csvRecords.PushBack(csvRecord)
+
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
+		if i%recordsPerBatch == 0 {
+			select {
+			case _ = <-downstreamDoneChannel:
+				done = true
+				break
+			default:
+				break
+			}
+			if done {
+				break
+			}
+			csvRecordsChannel <- csvRecords
+			csvRecords = list.New()
+		}
+
+		if done {
+			break
+		}
+	}
+	csvRecordsChannel <- csvRecords
+	close(csvRecordsChannel) // end-of-stream marker
+}
+
+// TODO: comment copiously we're trying to handle slow/fast/short/long reads: tail -f, smallfile, bigfile.
+func (reader *RecordReaderCSV) getRecordBatch(
+	csvRecordsChannel <-chan *list.List,
+	errorChannel chan error,
+	maxBatchSize int,
+	context *types.Context,
+) (
+	recordsAndContexts *list.List,
+	eof bool,
+) {
+	recordsAndContexts = list.New()
+
+	csvRecords, more := <-csvRecordsChannel
+	if !more {
+		return recordsAndContexts, true
+	}
+
+	for e := csvRecords.Front(); e != nil; e = e.Next() {
+		csvRecord := e.Value.([]string)
+
+		if reader.needHeader {
+			isData := reader.maybeConsumeComment(csvRecord, context, recordsAndContexts)
+			if !isData {
+				continue
+			}
+
+			reader.header = csvRecord
+			reader.rowNumber++
+			reader.needHeader = false
 			continue
 		}
 
-		if header == nil { // implicit CSV header
+		isData := reader.maybeConsumeComment(csvRecord, context, recordsAndContexts)
+		if !isData {
+			continue
+		}
+		reader.rowNumber++
+
+		if reader.header == nil { // implicit CSV header
 			n := len(csvRecord)
-			header = make([]string, n)
+			reader.header = make([]string, n)
 			for i := 0; i < n; i++ {
-				header[i] = strconv.Itoa(i + 1)
+				reader.header[i] = strconv.Itoa(i + 1)
 			}
 		}
 
 		record := types.NewMlrmapAsRecord()
 
-		nh := len(header)
+		nh := len(reader.header)
 		nd := len(csvRecord)
 
 		if nh == nd {
 			for i := 0; i < nh; i++ {
-				key := header[i]
+				key := reader.header[i]
 				value := types.MlrvalFromInferredTypeForDataFiles(csvRecord[i])
 				record.PutReference(key, value)
 			}
@@ -180,7 +235,7 @@ func (reader *RecordReaderCSV) processHandle(
 					fmt.Sprintf(
 						"mlr: CSV header/data length mismatch %d != %d "+
 							"at filename %s row %d.\n",
-						nh, nd, filename, rowNumber,
+						nh, nd, reader.filename, reader.rowNumber,
 					),
 				)
 				errorChannel <- err
@@ -189,7 +244,7 @@ func (reader *RecordReaderCSV) processHandle(
 				i := 0
 				n := lib.IntMin2(nh, nd)
 				for i = 0; i < n; i++ {
-					key := header[i]
+					key := reader.header[i]
 					value := types.MlrvalFromInferredTypeForDataFiles(csvRecord[i])
 					record.PutReference(key, value)
 				}
@@ -202,7 +257,7 @@ func (reader *RecordReaderCSV) processHandle(
 				if nh > nd {
 					// if header longer than data: use "" values
 					for i = nd; i < nh; i++ {
-						record.PutCopy(header[i], types.MLRVAL_VOID)
+						record.PutCopy(reader.header[i], types.MLRVAL_VOID)
 					}
 				}
 			}
@@ -210,11 +265,10 @@ func (reader *RecordReaderCSV) processHandle(
 
 		context.UpdateForInputRecord()
 
-		readerChannel <- types.NewRecordAndContextList(
-			record,
-			context,
-		)
+		recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
 	}
+
+	return recordsAndContexts, false
 }
 
 // maybeConsumeComment returns true if the CSV record should be processed as
@@ -222,7 +276,7 @@ func (reader *RecordReaderCSV) processHandle(
 func (reader *RecordReaderCSV) maybeConsumeComment(
 	csvRecord []string,
 	context *types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
+	recordsAndContexts *list.List, // list of *types.RecordAndContext
 ) bool {
 	if reader.readerOptions.CommentHandling == cli.CommentsAreData {
 		// Nothing is to be construed as a comment
@@ -255,7 +309,7 @@ func (reader *RecordReaderCSV) maybeConsumeComment(
 		csvWriter.Comma = rune(reader.ifs0)
 		csvWriter.Write(csvRecord)
 		csvWriter.Flush()
-		readerChannel <- types.NewOutputStringList(buffer.String(), context)
+		recordsAndContexts.PushBack(types.NewOutputString(buffer.String(), context))
 	} else /* reader.readerOptions.CommentHandling == cli.SkipComments */ {
 		// discard entirely
 	}
