@@ -236,14 +236,17 @@ func (reader *RecordReaderDKVP) getRecordBatch(
 		}
 
 		// Check for comments-in-data feature
-		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-			if reader.readerOptions.CommentHandling == cli.PassComments {
-				recordsAndContexts.PushBack(types.NewOutputStringList(line+"\n", context))
-				continue
-			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
-				continue
+		// TODO: funcptr this away
+		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
+			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+				if reader.readerOptions.CommentHandling == cli.PassComments {
+					recordsAndContexts.PushBack(types.NewOutputStringList(line+"\n", context))
+					continue
+				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+					continue
+				}
+				// else comments are data
 			}
-			// else comments are data
 		}
 
 		record := reader.recordFromDKVPLine(line)

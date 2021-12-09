@@ -12,15 +12,14 @@ import (
 	"runtime/pprof"
 	"strconv"
 	"strings"
-	//"time"
 
 	"github.com/pkg/profile" // for trace.out
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/input"
 	"github.com/johnkerl/miller/internal/pkg/lib"
-	"github.com/johnkerl/miller/internal/pkg/types"
 	"github.com/johnkerl/miller/internal/pkg/output"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 func main() {
@@ -112,15 +111,16 @@ func Stream(
 		return err
 	}
 
-	ostream := bufio.NewWriter(os.Stdout)
-	defer ostream.Flush()
+	bufferedOutputStream := bufio.NewWriter(os.Stdout)
+	defer bufferedOutputStream.Flush()
 
 	ioChannel := make(chan *list.List, 1)
 	errorChannel := make(chan error, 1)
 	doneWritingChannel := make(chan bool, 1)
 
 	go recordReader.Read(ioChannel)
-	go ChannelWriter(ioChannel, recordWriter, doneWritingChannel, ostream)
+	go output.ChannelWriter(ioChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
+		bufferedOutputStream, true)
 
 	done := false
 	for !done {
@@ -160,7 +160,7 @@ func NewRecordReaderDKVPChanPipelined(
 }
 
 func (reader *RecordReaderDKVPChanPipelined) Read(
-	inputChannel chan<- *list.List,
+	readerChannel chan<- *list.List,
 ) error {
 	handle, err := lib.OpenFileForRead(
 		reader.filename,
@@ -171,19 +171,19 @@ func (reader *RecordReaderDKVPChanPipelined) Read(
 	if err != nil {
 		return err
 	} else {
-		reader.processHandle(handle, reader.filename, reader.initialContext, inputChannel)
+		reader.processHandle(handle, reader.filename, reader.initialContext, readerChannel)
 		handle.Close()
 	}
 
 	eom := types.NewEndOfStreamMarker(reader.initialContext)
 	leom := list.New()
 	leom.PushBack(eom)
-	inputChannel <- leom
+	readerChannel <- leom
 	////fmt.Fprintf(os.Stderr, "IOCHAN WRITE EOM\n")
 	return nil
 }
 
-func chanProvider(
+func provideChannelizedLines(
 	lineScanner *bufio.Scanner,
 	linesChannel chan<- string,
 ) {
@@ -191,6 +191,28 @@ func chanProvider(
 		linesChannel <- lineScanner.Text()
 	}
 	close(linesChannel) // end-of-stream marker
+}
+
+func (reader *RecordReaderDKVPChanPipelined) processHandle(
+	handle io.Reader,
+	filename string,
+	context *types.Context,
+	readerChannel chan<- *list.List,
+) {
+	context.UpdateForStartOfFile(filename)
+	m := getBatchSize()
+
+	lineScanner := input.NewLineScanner(handle, reader.readerOptions.IRS)
+	linesChannel := make(chan string, m)
+	go provideChannelizedLines(lineScanner, linesChannel)
+
+	eof := false
+	for !eof {
+		var recordsAndContexts *list.List
+		recordsAndContexts, eof = reader.getRecordBatch(linesChannel, m, context)
+		//fmt.Fprintf(os.Stderr, "GOT RECORD BATCH OF LENGTH %d\n", recordsAndContexts.Len())
+		readerChannel <- recordsAndContexts
+	}
 }
 
 // TODO: comment copiously we're trying to handle slow/fast/short/long
@@ -221,6 +243,20 @@ func (reader *RecordReaderDKVPChanPipelined) getRecordBatch(
 			break
 		}
 
+		// Check for comments-in-data feature
+		// TODO: funcptr this away
+		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
+			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+				if reader.readerOptions.CommentHandling == cli.PassComments {
+					recordsAndContexts.PushBack(types.NewOutputStringList(line+"\n", context))
+					continue
+				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+					continue
+				}
+				// else comments are data
+			}
+		}
+
 		record := reader.recordFromDKVPLine(line)
 		context.UpdateForInputRecord()
 		recordAndContext := types.NewRecordAndContext(record, context)
@@ -231,32 +267,10 @@ func (reader *RecordReaderDKVPChanPipelined) getRecordBatch(
 	return recordsAndContexts, eof
 }
 
-func (reader *RecordReaderDKVPChanPipelined) processHandle(
-	handle io.Reader,
-	filename string,
-	context *types.Context,
-	inputChannel chan<- *list.List,
-) {
-	context.UpdateForStartOfFile(filename)
-	m := getBatchSize()
-
-	lineScanner := input.NewLineScanner(handle, reader.readerOptions.IRS)
-	linesChannel := make(chan string, m)
-	go chanProvider(lineScanner, linesChannel)
-
-	eof := false
-	for !eof {
-		var recordsAndContexts *list.List
-		recordsAndContexts, eof = reader.getRecordBatch(linesChannel, m, context)
-		//fmt.Fprintf(os.Stderr, "GOT RECORD BATCH OF LENGTH %d\n", recordsAndContexts.Len())
-		inputChannel <- recordsAndContexts
-	}
-}
-
 func (reader *RecordReaderDKVPChanPipelined) recordFromDKVPLine(
 	line string,
 ) *types.Mlrmap {
-	record := types.NewMlrmap()
+	record := types.NewMlrmapAsRecord()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
@@ -289,59 +303,4 @@ func (reader *RecordReaderDKVPChanPipelined) recordFromDKVPLine(
 		}
 	}
 	return record
-}
-
-// ================================================================
-func ChannelWriter(
-	outputChannel <-chan *list.List,
-	recordWriter output.IRecordWriter,
-	doneChannel chan<- bool,
-	ostream *bufio.Writer,
-) {
-	outputIsStdout := true
-	for {
-		recordsAndContexts := <-outputChannel
-		if recordsAndContexts != nil {
-			//fmt.Fprintf(os.Stderr, "IOCHAN READ BATCH LEN %d\n", recordsAndContexts.Len())
-		}
-		if recordsAndContexts == nil {
-			//fmt.Fprintf(os.Stderr, "IOCHAN READ EOS\n")
-			doneChannel <- true
-			break
-		}
-
-		for e := recordsAndContexts.Front(); e != nil; e = e.Next() {
-			recordAndContext := e.Value.(*types.RecordAndContext)
-
-			// Three things can come through:
-			// * End-of-stream marker
-			// * Non-nil records to be printed
-			// * Strings to be printed from put/filter DSL print/dump/etc
-			//   statements. They are handled here rather than fmt.Println directly
-			//   in the put/filter handlers since we want all print statements and
-			//   record-output to be in the same goroutine, for deterministic
-			//   output ordering.
-			if !recordAndContext.EndOfStream {
-				record := recordAndContext.Record
-				if record != nil {
-					recordWriter.Write(record, ostream, outputIsStdout)
-				}
-
-				outputString := recordAndContext.OutputString
-				if outputString != "" {
-					fmt.Print(outputString)
-				}
-
-			} else {
-				// Let the record-writers drain their output, if they have any
-				// queued up. For example, PPRINT needs to see all same-schema
-				// records before printing any, since it needs to compute max width
-				// down columns.
-				recordWriter.Write(nil, ostream, outputIsStdout)
-				doneChannel <- true
-				////fmt.Fprintf(os.Stderr, "ZCHAN WRITE\n")
-				return
-			}
-		}
-	}
 }

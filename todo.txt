@@ -1,6 +1,10 @@
 ================================================================
 PUNCHDOWN LIST
 
+uu  1.5514
+uu2 1.8186
+uu3 2.2992
+
 * perf wup @ rgp.md
 * perf:
   o go tool pprof -http=:8080 cpu.pprof
@@ -67,6 +71,9 @@ PUNCHDOWN LIST
       > how to structure this for the transformers?
       > do that after hiding
     ! have an extra eye on CSV-reader perf
+    ? why mprof,mprof2 record-writer 1.5486, 1.9036
+    ? double-check flush-handling
+    - funcptr around comment-handling stuff
     - mprof split-reader getenv something
     - flags for mlr.pprof & trace.out to CLI
     - hide app-level scan/format under sys-level read/write: also batched
