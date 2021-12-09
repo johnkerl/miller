@@ -55,6 +55,7 @@ PUNCHDOWN LIST
       k also prototyped for no-transformer case
       > how to structure this for the transformers?
       > do that after hiding
+    ! have an extra eye on CSV-reader perf
     - mprof split-reader getenv something
     - hide app-level scan/format under sys-level read/write: also batched
       easier/line-oriented:

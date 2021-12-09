@@ -124,13 +124,12 @@ func (reader *RecordReaderDKVP) recordFromDKVPLine(
 	for i, pair := range pairs {
 		var kv []string
 		if reader.readerOptions.IPSRegex == nil { // e.g. --no-ips-regex
-			kv = strings.SplitN(line, reader.readerOptions.IPS, 2)
+			kv = strings.SplitN(pair, reader.readerOptions.IPS, 2)
 		} else {
 			kv = lib.RegexSplitString(reader.readerOptions.IPSRegex, pair, 2)
 		}
 
-		// TODO check length 0. also, check input is empty since "".split() -> [""] not []
-		if len(kv) == 0 {
+		if len(kv) == 0 || (len(kv) == 1 && kv[0] == "") {
 			// Ignore. This is expected when splitting with repeated IFS.
 		} else if len(kv) == 1 {
 			// E.g the pair has no equals sign: "a" rather than "a=1" or
