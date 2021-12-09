@@ -69,25 +69,33 @@ func Stream(
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use
 	// channels to communicate both of these conditions.
-	errorChannel := make(chan error, 1)
-	doneWritingChannel := make(chan bool, 1)
+	errorChannel := make(chan error, 0)
+	doneWritingChannel := make(chan bool, 0)
 
 	// For mlr head, so a transformer can communicate it will disregard all
 	// further input.  It writes this back upstream, and that is passed back to
 	// the record-reader which then stops reading input. This is necessary to
 	// get quick response from, for example, mlr head -n 10 on input files with
 	// millions or billions of records.
-	readerDownstreamDoneChannel := make(chan bool, 1)
+	readerDownstreamDoneChannel := make(chan bool, 0)
 
 	// Start the reader, transformer, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
 	bufferedOutputStream := bufio.NewWriter(outputStream)
 
-	go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
-	go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
-		writerChannel, options)
-	go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
-		bufferedOutputStream, outputIsStdout)
+	if os.Getenv("MLR_BYPASS_CHAIN") == "true" {
+		// TODO: comment: for profiling
+		fmt.Fprintln(os.Stderr, "EXPERIMENTAL CHAIN BYPASS")
+		go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
+		go output.ChannelWriter(readerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
+			bufferedOutputStream, outputIsStdout)
+	} else {
+		go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
+		go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
+			writerChannel, options)
+		go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
+			bufferedOutputStream, outputIsStdout)
+	}
 
 	done := false
 	for !done {

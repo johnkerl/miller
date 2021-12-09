@@ -70,7 +70,7 @@ func (reader *RecordReaderDKVP) processHandle(
 	filename string,
 	context *types.Context,
 	readerChannel chan<- *list.List,
-	errorChannel chan error,
+	errorChannel chan<- error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -104,7 +104,7 @@ func provideChannelizedLines(
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
 		// quickly, as it should.
-		if i&recordsPerBatch == 0 {
+		if i%recordsPerBatch == 0 {
 			select {
 			case _ = <-downstreamDoneChannel:
 				done = true
@@ -121,6 +121,91 @@ func provideChannelizedLines(
 	}
 	close(linesChannel) // end-of-stream marker
 }
+
+//// TODO: productionalize this for the case no-head -- if profiling shows it to be worthwhile
+//// TODO: comment
+//func provideChannelizedLines(
+//	lineScanner *bufio.Scanner,
+//	linesChannel chan<- *list.List,
+//	downstreamDoneChannel <-chan bool, // for mlr head
+//	recordsPerBatch int,
+//) {
+//	i := 0
+//	done := false
+//
+//	lines := list.New()
+//
+//	for !done && lineScanner.Scan() {
+//		i++
+//
+//		lines.PushBack(lineScanner.Text())
+//
+//		// See if downstream processors will be ignoring further data (e.g. mlr
+//		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+//		// quickly, as it should.
+//		if i%recordsPerBatch == 0 {
+//			select {
+//			case _ = <-downstreamDoneChannel:
+//				done = true
+//				break
+//			default:
+//				break
+//			}
+//			if done {
+//				break
+//			}
+//			linesChannel <- lines
+//			lines = list.New()
+//		}
+//
+//		//linesChannel <- lineScanner.Text()
+//	}
+//	linesChannel <- lines
+//	close(linesChannel) // end-of-stream marker
+//}
+
+//// TODO: productionalize this for the case no-head -- if profiling shows it to be worthwhile
+//// TODO: comment copiously we're trying to handle slow/fast/short/long
+//// reads: tail -f, smallfile, bigfile.
+//func (reader *RecordReaderDKVP) getRecordBatch(
+//	linesChannel <-chan *list.List,
+//	maxBatchSize int,
+//	context *types.Context,
+//) (
+//	recordsAndContexts *list.List,
+//	eof bool,
+//) {
+//	//fmt.Printf("GRB ENTER\n")
+//	recordsAndContexts = list.New()
+//
+//	lines, more := <-linesChannel
+//	if !more {
+//		return recordsAndContexts, true
+//	}
+//
+//	for e := lines.Front(); e != nil; e = e.Next() {
+//		line := e.Value.(string)
+//
+//		// Check for comments-in-data feature
+//		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+//			if reader.readerOptions.CommentHandling == cli.PassComments {
+//				recordsAndContexts.PushBack(types.NewOutputStringList(line+"\n", context))
+//				continue
+//			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+//				continue
+//			}
+//			// else comments are data
+//		}
+//
+//		record := reader.recordFromDKVPLine(line)
+//		context.UpdateForInputRecord()
+//		recordAndContext := types.NewRecordAndContext(record, context)
+//		recordsAndContexts.PushBack(recordAndContext)
+//	}
+//
+//	//fmt.Printf("GRB EXIT\n")
+//	return recordsAndContexts, false
+//}
 
 // TODO: comment copiously we're trying to handle slow/fast/short/long
 // reads: tail -f, smallfile, bigfile.
