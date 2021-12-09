@@ -9,6 +9,7 @@ package cli
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/mattn/go-isatty"
@@ -59,6 +60,10 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 		readerOptions.IFSRegex = nil
 	} else if readerOptions.AllowRepeatIFS {
 		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IFS + ")+")
+	} else if regexp.QuoteMeta(readerOptions.IFS) == readerOptions.IFS {
+		// Using regex-splitting on IFS/IPS in record-readers that support it is a HUGE perf hit (almost 2x).
+		// Don't use it unless these are actually value-adding regexes.
+		readerOptions.IFSRegex = nil
 	} else {
 		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(readerOptions.IFS)
 	}
@@ -67,6 +72,11 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 		readerOptions.IPSRegex = nil
 	} else if readerOptions.AllowRepeatIPS {
 		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IPS + ")+")
+	} else if regexp.QuoteMeta(readerOptions.IPS) == readerOptions.IPS {
+		// Using regex-splitting on IFS/IPS in record-readers that support it
+		// is a HUGE perf hit (almost 2x).  Don't use it unless these are
+		// actually value-adding regexes.
+		readerOptions.IPSRegex = nil
 	} else {
 		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie(readerOptions.IPS)
 	}
@@ -2518,7 +2528,6 @@ var MiscFlagSection = FlagSection{
 				if !ok || nrProgressMod <= 0 {
 					fmt.Fprintf(os.Stderr,
 						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-
 						"mlr", args[*pargi+1])
 					os.Exit(1)
 				}
