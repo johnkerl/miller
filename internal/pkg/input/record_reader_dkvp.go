@@ -265,6 +265,7 @@ func (reader *RecordReaderDKVP) recordFromDKVPLine(
 	record := types.NewMlrmapAsRecord()
 
 	var pairs []string
+	// TODO: func-pointer this away
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
 		pairs = lib.SplitString(line, reader.readerOptions.IFS)
 	} else {

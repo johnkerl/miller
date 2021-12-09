@@ -80,7 +80,7 @@ func main() {
 }
 
 func getBatchSize() int {
-	return 1000
+	return 500
 }
 
 func Stream(
@@ -106,11 +106,11 @@ func Stream(
 	defer bufferedOutputStream.Flush()
 
 	ioChannel := make(chan *list.List, 1)
-	downstreamDoneChannel := make(chan bool, 0)
+	readerDownstreamDoneChannel := make(chan bool, 0)
 	errorChannel := make(chan error, 1)
 	doneWritingChannel := make(chan bool, 1)
 
-	go recordReader.Read(filenames, *initialContext, ioChannel, errorChannel, downstreamDoneChannel)
+	go recordReader.Read(filenames, *initialContext, ioChannel, errorChannel, readerDownstreamDoneChannel)
 	go output.ChannelWriter(ioChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
 		bufferedOutputStream, true)
 

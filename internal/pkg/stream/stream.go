@@ -63,14 +63,14 @@ func Stream(
 	}
 
 	// Set up the reader-to-transformer and transformer-to-writer channels.
-	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
-	writerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
+	readerChannel := make(chan *list.List, 1) // list of *types.RecordAndContext
+	writerChannel := make(chan *list.List, 1) // list of *types.RecordAndContext
 
 	// We're done when a fatal error is registered on input (file not found,
 	// etc) or when the record-writer has written all its output. We use
 	// channels to communicate both of these conditions.
-	errorChannel := make(chan error, 0)
-	doneWritingChannel := make(chan bool, 0)
+	errorChannel := make(chan error, 1)
+	doneWritingChannel := make(chan bool, 1)
 
 	// For mlr head, so a transformer can communicate it will disregard all
 	// further input.  It writes this back upstream, and that is passed back to

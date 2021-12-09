@@ -1,9 +1,7 @@
 ================================================================
 PUNCHDOWN LIST
 
-uu  1.5514
-uu2 1.8186
-uu3 2.2992
+! mlr --csv sort -f shape $mlds/example.csv
 
 * perf wup @ rgp.md
 * perf:
@@ -45,6 +43,7 @@ uu3 2.2992
     ? readerChannel length 1 or 2 ?
     ? experiment again with hashed/unhashed -- mlr sort etc
     ? coalesce errchan & done-writing w/ Err to RAC, and close-chan *and* EOSMarker -- ?
+    - funcptr away the ifs/ifsregex check in record-readers
     - checklist channelize all record-reader types
     - do and maybe keep? record-reader return (raclist, err) & refactor repl accordingly
       > needs factor for-loop to stateful so maybe not
