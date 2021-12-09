@@ -19,8 +19,8 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/input"
 	"github.com/johnkerl/miller/internal/pkg/lib"
-	"github.com/johnkerl/miller/internal/pkg/types"
 	"github.com/johnkerl/miller/internal/pkg/output"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 func main() {

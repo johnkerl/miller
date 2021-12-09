@@ -63,7 +63,7 @@ func Stream(
 	}
 
 	// Set up the reader-to-transformer and transformer-to-writer channels.
-	readerChannel := make(chan *list.List, 1) // list of *types.RecordAndContext
+	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
 	writerChannel := make(chan *list.List, 1) // list of *types.RecordAndContext
 
 	// We're done when a fatal error is registered on input (file not found,
@@ -77,25 +77,17 @@ func Stream(
 	// the record-reader which then stops reading input. This is necessary to
 	// get quick response from, for example, mlr head -n 10 on input files with
 	// millions or billions of records.
-	readerDownstreamDoneChannel := make(chan bool, 0)
+	readerDownstreamDoneChannel := make(chan bool, 1)
 
 	// Start the reader, transformer, and writer. Let them run until fatal input
 	// error or end-of-processing happens.
 	bufferedOutputStream := bufio.NewWriter(outputStream)
 
-	if os.Getenv("MLR_BYPASS_CHAIN") == "true" {
-		// TODO: comment: for profiling
-		fmt.Fprintln(os.Stderr, "EXPERIMENTAL CHAIN BYPASS")
-		go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
-		go output.ChannelWriter(readerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
-			bufferedOutputStream, outputIsStdout)
-	} else {
-		go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
-		go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
-			writerChannel, options)
-		go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
-			bufferedOutputStream, outputIsStdout)
-	}
+	go recordReader.Read(fileNames, *initialContext, readerChannel, errorChannel, readerDownstreamDoneChannel)
+	go transformers.ChainTransformer(readerChannel, readerDownstreamDoneChannel, recordTransformers,
+		writerChannel, options)
+	go output.ChannelWriter(writerChannel, recordWriter, &options.WriterOptions, doneWritingChannel,
+		bufferedOutputStream, outputIsStdout)
 
 	done := false
 	for !done {

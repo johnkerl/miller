@@ -9,8 +9,8 @@ import (
 	"runtime/pprof"
 	"strconv"
 
-	"github.com/pkg/profile" // for trace.out
 	"github.com/johnkerl/miller/internal/pkg/entrypoint"
+	"github.com/pkg/profile" // for trace.out
 )
 
 func main() {
@@ -60,7 +60,7 @@ func main() {
 		defer pprof.StopCPUProfile()
 
 		fmt.Fprintf(os.Stderr, "CPU profile started.\n")
-		defer fmt.Fprintf(os.Stderr, "CPU profile finished: go tool pprof -http=:8080 %s\n", profFilename)
+		defer fmt.Fprintf(os.Stderr, "CPU profile finished.\ngo tool pprof -http=:8080 %s\n", profFilename)
 	}
 
 	if len(os.Args) >= 3 && os.Args[1] == "--traceprofile" {

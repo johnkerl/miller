@@ -159,6 +159,7 @@ func (tr *TransformerHead) transformUnkeyed(
 			// Signify to data producers upstream that we'll ignore further
 			// data, so as far as we're concerned they can stop sending it. See
 			// ChainTransformer.
+			//TODO: maybe remove: outputRecordsAndContexts.PushBack(types.NewEndOfStreamMarker(&inrecAndContext.Context))
 			outputDownstreamDoneChannel <- true
 			tr.wroteDownstreamDone = true
 		}

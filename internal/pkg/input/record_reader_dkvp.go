@@ -77,68 +77,29 @@ func (reader *RecordReaderDKVP) processHandle(
 	recordsPerBatch := reader.readerOptions.RecordsPerBatch
 
 	lineScanner := NewLineScanner(handle, reader.readerOptions.IRS)
-	linesChannel := make(chan string, recordsPerBatch)
+	////linesChannel := make(chan string, recordsPerBatch)
+	linesChannel := make(chan *list.List, recordsPerBatch)
 	go provideChannelizedLines(lineScanner, linesChannel, downstreamDoneChannel, recordsPerBatch)
 
 	eof := false
 	for !eof {
 		var recordsAndContexts *list.List
 		recordsAndContexts, eof = reader.getRecordBatch(linesChannel, recordsPerBatch, context)
-		//fmt.Fprintf(os.Stderr, "GOT RECORD BATCH OF LENGTH %d\n", recordsAndContexts.Len())
 		readerChannel <- recordsAndContexts
 	}
 }
 
-// TODO: comment
-func provideChannelizedLines(
-	lineScanner *bufio.Scanner,
-	linesChannel chan<- string,
-	downstreamDoneChannel <-chan bool, // for mlr head
-	recordsPerBatch int,
-) {
-	i := 0
-	done := false
-	for !done && lineScanner.Scan() {
-		i++
-
-		// See if downstream processors will be ignoring further data (e.g. mlr
-		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
-		// quickly, as it should.
-		if i%recordsPerBatch == 0 {
-			select {
-			case _ = <-downstreamDoneChannel:
-				done = true
-				break
-			default:
-				break
-			}
-			if done {
-				break
-			}
-		}
-
-		linesChannel <- lineScanner.Text()
-	}
-	close(linesChannel) // end-of-stream marker
-}
-
-//// TODO: productionalize this for the case no-head -- if profiling shows it to be worthwhile
 //// TODO: comment
 //func provideChannelizedLines(
 //	lineScanner *bufio.Scanner,
-//	linesChannel chan<- *list.List,
+//	linesChannel chan<- string,
 //	downstreamDoneChannel <-chan bool, // for mlr head
 //	recordsPerBatch int,
 //) {
 //	i := 0
 //	done := false
-//
-//	lines := list.New()
-//
 //	for !done && lineScanner.Scan() {
 //		i++
-//
-//		lines.PushBack(lineScanner.Text())
 //
 //		// See if downstream processors will be ignoring further data (e.g. mlr
 //		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
@@ -154,21 +115,17 @@ func provideChannelizedLines(
 //			if done {
 //				break
 //			}
-//			linesChannel <- lines
-//			lines = list.New()
 //		}
 //
-//		//linesChannel <- lineScanner.Text()
+//		linesChannel <- lineScanner.Text()
 //	}
-//	linesChannel <- lines
 //	close(linesChannel) // end-of-stream marker
 //}
 
-//// TODO: productionalize this for the case no-head -- if profiling shows it to be worthwhile
 //// TODO: comment copiously we're trying to handle slow/fast/short/long
 //// reads: tail -f, smallfile, bigfile.
 //func (reader *RecordReaderDKVP) getRecordBatch(
-//	linesChannel <-chan *list.List,
+//	linesChannel <-chan string,
 //	maxBatchSize int,
 //	context *types.Context,
 //) (
@@ -177,24 +134,34 @@ func provideChannelizedLines(
 //) {
 //	//fmt.Printf("GRB ENTER\n")
 //	recordsAndContexts = list.New()
+//	eof = false
 //
-//	lines, more := <-linesChannel
-//	if !more {
-//		return recordsAndContexts, true
-//	}
-//
-//	for e := lines.Front(); e != nil; e = e.Next() {
-//		line := e.Value.(string)
+//	for i := 0; i < maxBatchSize; i++ {
+//		//fmt.Fprintf(os.Stderr, "-- %d/%d %d/%d\n", i, maxBatchSize, len(linesChannel), cap(linesChannel))
+//		if len(linesChannel) == 0 && i > 0 {
+//			//fmt.Println(" .. BREAK")
+//			break
+//		}
+//		//fmt.Println(" .. B:BLOCK")
+//		line, more := <-linesChannel
+//		//fmt.Printf(" .. E:BLOCK <<%s>> %v\n", line, more)
+//		if !more {
+//			eof = true
+//			break
+//		}
 //
 //		// Check for comments-in-data feature
-//		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-//			if reader.readerOptions.CommentHandling == cli.PassComments {
-//				recordsAndContexts.PushBack(types.NewOutputStringList(line+"\n", context))
-//				continue
-//			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
-//				continue
+//		// TODO: funcptr this away
+//		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
+//			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+//				if reader.readerOptions.CommentHandling == cli.PassComments {
+//					recordsAndContexts.PushBack(types.NewOutputStringList(line+"\n", context))
+//					continue
+//				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+//					continue
+//				}
+//				// else comments are data
 //			}
-//			// else comments are data
 //		}
 //
 //		record := reader.recordFromDKVPLine(line)
@@ -204,49 +171,84 @@ func provideChannelizedLines(
 //	}
 //
 //	//fmt.Printf("GRB EXIT\n")
-//	return recordsAndContexts, false
+//	return recordsAndContexts, eof
 //}
 
+// TODO: productionalize this for the case no-head -- if profiling shows it to be worthwhile
+// TODO: comment
+func provideChannelizedLines(
+	lineScanner *bufio.Scanner,
+	linesChannel chan<- *list.List,
+	downstreamDoneChannel <-chan bool, // for mlr head
+	recordsPerBatch int,
+) {
+	i := 0
+	done := false
+
+	lines := list.New()
+
+	for lineScanner.Scan() {
+		i++
+
+		lines.PushBack(lineScanner.Text())
+
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
+		if i%recordsPerBatch == 0 {
+			select {
+			case _ = <-downstreamDoneChannel:
+				done = true
+				break
+			default:
+				break
+			}
+			if done {
+				break
+			}
+			linesChannel <- lines
+			lines = list.New()
+		}
+
+		//linesChannel <- lineScanner.Text()
+		if done {
+			break
+		}
+	}
+	linesChannel <- lines
+	close(linesChannel) // end-of-stream marker
+}
+
+// TODO: productionalize this for the case no-head -- if profiling shows it to be worthwhile
 // TODO: comment copiously we're trying to handle slow/fast/short/long
 // reads: tail -f, smallfile, bigfile.
 func (reader *RecordReaderDKVP) getRecordBatch(
-	linesChannel <-chan string,
+	linesChannel <-chan *list.List,
 	maxBatchSize int,
 	context *types.Context,
 ) (
 	recordsAndContexts *list.List,
 	eof bool,
 ) {
-	//fmt.Printf("GRB ENTER\n")
 	recordsAndContexts = list.New()
-	eof = false
 
-	for i := 0; i < maxBatchSize; i++ {
-		//fmt.Fprintf(os.Stderr, "-- %d/%d %d/%d\n", i, maxBatchSize, len(linesChannel), cap(linesChannel))
-		if len(linesChannel) == 0 && i > 0 {
-			//fmt.Println(" .. BREAK")
-			break
-		}
-		//fmt.Println(" .. B:BLOCK")
-		line, more := <-linesChannel
-		//fmt.Printf(" .. E:BLOCK <<%s>> %v\n", line, more)
-		if !more {
-			eof = true
-			break
-		}
+	lines, more := <-linesChannel
+	if !more {
+		return recordsAndContexts, true
+	}
+
+	for e := lines.Front(); e != nil; e = e.Next() {
+		line := e.Value.(string)
 
 		// Check for comments-in-data feature
-		// TODO: funcptr this away
-		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
-			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-				if reader.readerOptions.CommentHandling == cli.PassComments {
-					recordsAndContexts.PushBack(types.NewOutputStringList(line+"\n", context))
-					continue
-				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
-					continue
-				}
-				// else comments are data
+		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+			if reader.readerOptions.CommentHandling == cli.PassComments {
+				recordsAndContexts.PushBack(types.NewOutputString(line+"\n", context))
+				continue
+			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+				continue
 			}
+			// else comments are data
 		}
 
 		record := reader.recordFromDKVPLine(line)
@@ -255,8 +257,7 @@ func (reader *RecordReaderDKVP) getRecordBatch(
 		recordsAndContexts.PushBack(recordAndContext)
 	}
 
-	//fmt.Printf("GRB EXIT\n")
-	return recordsAndContexts, eof
+	return recordsAndContexts, false
 }
 
 func (reader *RecordReaderDKVP) recordFromDKVPLine(

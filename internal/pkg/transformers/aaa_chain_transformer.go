@@ -236,15 +236,15 @@ func runSingleTransformerBatch(
 	done := false
 
 	for e := inputRecordsAndContexts.Front(); e != nil; e = e.Next() {
-		recordAndContext := e.Value.(*types.RecordAndContext)
+		inputRecordAndContext := e.Value.(*types.RecordAndContext)
 
 		// --nr-progress-mod
 		// TODO: function-pointer this away to reduce instruction count in the
 		// normal case which it isn't used at all. No need to test if {static thing} != 0
 		// on every record.
 		if options.NRProgressMod != 0 {
-			if isFirstInChain && recordAndContext.Record != nil {
-				context := &recordAndContext.Context
+			if isFirstInChain && inputRecordAndContext.Record != nil {
+				context := &inputRecordAndContext.Context
 				if context.NR%options.NRProgressMod == 0 {
 					fmt.Fprintf(os.Stderr, "NR=%d FNR=%d FILENAME=%s\n", context.NR, context.FNR, context.FILENAME)
 				}
@@ -265,9 +265,9 @@ func runSingleTransformerBatch(
 		// the output channel without involving the record-transformer, since
 		// there is no record to be transformed.
 
-		if recordAndContext.EndOfStream == true || recordAndContext.Record != nil {
+		if inputRecordAndContext.EndOfStream == true || inputRecordAndContext.Record != nil {
 			recordTransformer.Transform(
-				recordAndContext,
+				inputRecordAndContext,
 				outputRecordsAndContexts,
 				// TODO: maybe refactor these out of each transformer.
 				// And/or maybe poll them once per batch not once per record.
@@ -275,11 +275,15 @@ func runSingleTransformerBatch(
 				outputDownstreamDoneChannel,
 			)
 		} else {
-			outputRecordsAndContexts.PushBack(recordAndContext)
+			outputRecordsAndContexts.PushBack(inputRecordAndContext)
 		}
 
-		if recordAndContext.EndOfStream {
+		if inputRecordAndContext.EndOfStream {
 			done = true
+			break
+		}
+
+		if done {
 			break
 		}
 	}
