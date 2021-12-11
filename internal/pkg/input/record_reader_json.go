@@ -77,27 +77,34 @@ func (reader *RecordReaderJSON) processHandle(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
+	// TODO: comment
+	recordsPerBatch := reader.readerOptions.RecordsPerBatch
 
 	if reader.readerOptions.CommentHandling != cli.CommentsAreData {
 		handle = NewJSONCommentEnabledReader(handle, reader.readerOptions, readerChannel)
 	}
 	decoder := json.NewDecoder(handle)
+	recordsAndContexts := list.New()
 
 	eof := false
+	i := 0
 	for {
-
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
-		// quickly, as it should.
-		select {
-		case _ = <-downstreamDoneChannel:
-			eof = true
-			break
-		default:
-			break
-		}
-		if eof {
-			break
+		// quickly, as it should. Do this channel-check every so often to avoid
+		// scheduler overhead.
+		i++
+		if i%recordsPerBatch == 0 {
+			select {
+			case _ = <-downstreamDoneChannel:
+				eof = true
+				break
+			default:
+				break
+			}
+			if eof {
+				break
+			}
 		}
 
 		mlrval, eof, err := types.MlrvalDecodeFromJSON(decoder)
@@ -122,16 +129,20 @@ func (reader *RecordReaderJSON) processHandle(
 				return
 			}
 			context.UpdateForInputRecord()
-			readerChannel <- types.NewRecordAndContextList(
-				record,
-				context,
-			)
+			recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+
+			if recordsAndContexts.Len() >= recordsPerBatch {
+				readerChannel <- recordsAndContexts
+				recordsAndContexts = list.New()
+			}
+
 		} else if mlrval.IsArray() {
 			records := mlrval.GetArray()
 			if records == nil {
 				errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
 				return
 			}
+
 			for _, mlrval := range records {
 				if !mlrval.IsMap() {
 					// TODO: more context
@@ -149,11 +160,12 @@ func (reader *RecordReaderJSON) processHandle(
 					return
 				}
 				context.UpdateForInputRecord()
-				readerChannel <- types.NewRecordAndContextList(
-					record,
-					context,
-				)
+				recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
 
+				if recordsAndContexts.Len() >= recordsPerBatch {
+					readerChannel <- recordsAndContexts
+					recordsAndContexts = list.New()
+				}
 			}
 
 		} else {
@@ -165,6 +177,10 @@ func (reader *RecordReaderJSON) processHandle(
 			)
 			return
 		}
+	}
+
+	if recordsAndContexts.Len() > 0 {
+		readerChannel <- recordsAndContexts
 	}
 }
 
