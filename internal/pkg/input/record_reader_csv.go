@@ -108,7 +108,7 @@ func (reader *RecordReaderCSV) processHandle(
 		recordsPerBatch)
 
 	for {
-		recordsAndContexts, eof := reader.getRecordBatch(csvRecordsChannel, errorChannel, recordsPerBatch, context)
+		recordsAndContexts, eof := reader.getRecordBatch(csvRecordsChannel, errorChannel, context)
 		readerChannel <- recordsAndContexts
 		if eof {
 			break
@@ -175,7 +175,6 @@ func channelizedCSVRecordScanner(
 func (reader *RecordReaderCSV) getRecordBatch(
 	csvRecordsChannel <-chan *list.List,
 	errorChannel chan error,
-	maxBatchSize int,
 	context *types.Context,
 ) (
 	recordsAndContexts *list.List,

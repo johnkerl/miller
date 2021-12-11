@@ -43,6 +43,7 @@ PUNCHDOWN LIST
     ? readerChannel length 1 or 2 ?
     ? experiment again with hashed/unhashed -- mlr sort etc
     ? coalesce errchan & done-writing w/ Err to RAC, and close-chan *and* EOSMarker -- ?
+    - docnote JSON (a) no channelization opportunity (unless missed); (b) no JIT type-inference. therefore slower.
     - funcptr away the ifs/ifsregex check in record-readers
     - checklist channelize all record-reader types
     - do and maybe keep? record-reader return (raclist, err) & refactor repl accordingly

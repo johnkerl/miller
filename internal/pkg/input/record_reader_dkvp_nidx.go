@@ -99,7 +99,7 @@ func (reader *RecordReaderDKVPNIDX) processHandle(
 	go channelizedLineScanner(lineScanner, linesChannel, downstreamDoneChannel, recordsPerBatch)
 
 	for {
-		recordsAndContexts, eof := reader.getRecordBatch(linesChannel, recordsPerBatch, context)
+		recordsAndContexts, eof := reader.getRecordBatch(linesChannel, context)
 		readerChannel <- recordsAndContexts
 		if eof {
 			break
@@ -110,7 +110,6 @@ func (reader *RecordReaderDKVPNIDX) processHandle(
 // TODO: comment copiously we're trying to handle slow/fast/short/long reads: tail -f, smallfile, bigfile.
 func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 	linesChannel <-chan *list.List,
-	maxBatchSize int,
 	context *types.Context,
 ) (
 	recordsAndContexts *list.List,
