@@ -77,7 +77,7 @@ func (reader *RecordReaderXTAB) processHandle(
 ) {
 	context.UpdateForStartOfFile(filename)
 
-	scanner := NewLineScanner(handle, reader.readerOptions.IFS)
+	lineScanner := NewLineScanner(handle, reader.readerOptions.IFS)
 
 	linesForRecord := list.New()
 
@@ -98,7 +98,7 @@ func (reader *RecordReaderXTAB) processHandle(
 			break
 		}
 
-		if !scanner.Scan() {
+		if !lineScanner.Scan() {
 
 			if linesForRecord.Len() > 0 {
 				record, err := reader.recordFromXTABLines(linesForRecord)
@@ -114,7 +114,7 @@ func (reader *RecordReaderXTAB) processHandle(
 			break
 		}
 
-		line := scanner.Text()
+		line := lineScanner.Text()
 
 		// Check for comments-in-data feature
 		if strings.HasPrefix(line, reader.readerOptions.CommentString) {

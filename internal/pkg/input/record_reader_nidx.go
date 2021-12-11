@@ -68,8 +68,8 @@ func (reader *RecordReaderNIDX) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *list.List, // list of *types.RecordAndContext
-	errorChannel chan error,
+	readerChannel chan<- *list.List,
+	errorChannel chan<- error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
@@ -122,7 +122,6 @@ func (reader *RecordReaderNIDX) getRecordBatch(
 		}
 
 		record := reader.recordFromNIDXLine(line)
-
 		context.UpdateForInputRecord()
 		recordAndContext := types.NewRecordAndContext(record, context)
 		recordsAndContexts.PushBack(recordAndContext)
@@ -131,7 +130,7 @@ func (reader *RecordReaderNIDX) getRecordBatch(
 	return recordsAndContexts, false
 }
 
-// ----------------------------------------------------------------
+
 func (reader *RecordReaderNIDX) recordFromNIDXLine(
 	line string,
 ) *types.Mlrmap {
