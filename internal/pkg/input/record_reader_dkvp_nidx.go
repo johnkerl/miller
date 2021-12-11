@@ -1,3 +1,5 @@
+// This is mostly-identical code for the DKVP and NIDX record-readers.
+
 package input
 
 import (
@@ -11,22 +13,39 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
-type RecordReaderDKVP struct {
+// splitter_DKVP_NIDX is a function type for the one bit of code differing
+// between the DKVP reader and the NIDX reader, namely, how it splits lines.
+type splitter_DKVP_NIDX func (reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
+
+type RecordReaderDKVPNIDX struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int
+	splitter splitter_DKVP_NIDX
 }
 
 func NewRecordReaderDKVP(
 	readerOptions *cli.TReaderOptions,
 	recordsPerBatch int,
-) (*RecordReaderDKVP, error) {
-	return &RecordReaderDKVP{
+) (*RecordReaderDKVPNIDX, error) {
+	return &RecordReaderDKVPNIDX{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
+		splitter: recordFromDKVPLine,
 	}, nil
 }
 
-func (reader *RecordReaderDKVP) Read(
+func NewRecordReaderNIDX(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int,
+) (*RecordReaderDKVPNIDX, error) {
+	return &RecordReaderDKVPNIDX{
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
+		splitter: recordFromNIDXLine,
+	}, nil
+}
+
+func (reader *RecordReaderDKVPNIDX) Read(
 	filenames []string,
 	context types.Context,
 	readerChannel chan<- *list.List, // list of *types.RecordAndContext
@@ -64,7 +83,7 @@ func (reader *RecordReaderDKVP) Read(
 	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
-func (reader *RecordReaderDKVP) processHandle(
+func (reader *RecordReaderDKVPNIDX) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
@@ -89,7 +108,7 @@ func (reader *RecordReaderDKVP) processHandle(
 }
 
 // TODO: comment copiously we're trying to handle slow/fast/short/long reads: tail -f, smallfile, bigfile.
-func (reader *RecordReaderDKVP) getRecordBatch(
+func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 	linesChannel <-chan *list.List,
 	maxBatchSize int,
 	context *types.Context,
@@ -121,7 +140,7 @@ func (reader *RecordReaderDKVP) getRecordBatch(
 			}
 		}
 
-		record := reader.recordFromDKVPLine(line)
+		record := reader.splitter(reader, line)
 		context.UpdateForInputRecord()
 		recordAndContext := types.NewRecordAndContext(record, context)
 		recordsAndContexts.PushBack(recordAndContext)
@@ -130,9 +149,7 @@ func (reader *RecordReaderDKVP) getRecordBatch(
 	return recordsAndContexts, false
 }
 
-func (reader *RecordReaderDKVP) recordFromDKVPLine(
-	line string,
-) *types.Mlrmap {
+func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap {
 	record := types.NewMlrmapAsRecord()
 
 	var pairs []string
@@ -165,6 +182,31 @@ func (reader *RecordReaderDKVP) recordFromDKVPLine(
 			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
 			record.PutReference(key, value)
 		}
+	}
+	return record
+}
+
+func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap {
+	record := types.NewMlrmapAsRecord()
+
+	var values []string
+	// TODO: func-pointer this away
+	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
+		values = lib.SplitString(line, reader.readerOptions.IFS)
+	} else {
+		values = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
+	}
+
+	if reader.readerOptions.AllowRepeatIFS {
+		values = lib.StripEmpties(values) // left/right trim
+	}
+
+	var i int = 0
+	for _, value := range values {
+		i++
+		key := strconv.Itoa(i)
+		mval := types.MlrvalFromInferredTypeForDataFiles(value)
+		record.PutReference(key, mval)
 	}
 	return record
 }

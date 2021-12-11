@@ -31,13 +31,11 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
-// ----------------------------------------------------------------
 type RecordReaderCSVLite struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int
 }
 
-// ----------------------------------------------------------------
 func NewRecordReaderCSVLite(
 	readerOptions *cli.TReaderOptions,
 	recordsPerBatch int,
@@ -48,7 +46,6 @@ func NewRecordReaderCSVLite(
 	}, nil
 }
 
-// ----------------------------------------------------------------
 func NewRecordReaderPPRINT(
 	readerOptions *cli.TReaderOptions,
 	recordsPerBatch int,
@@ -59,7 +56,6 @@ func NewRecordReaderPPRINT(
 	}, nil
 }
 
-// ----------------------------------------------------------------
 func (reader *RecordReaderCSVLite) Read(
 	filenames []string,
 	context types.Context,
@@ -134,7 +130,6 @@ func (reader *RecordReaderCSVLite) Read(
 	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
-// ----------------------------------------------------------------
 func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	handle io.Reader,
 	filename string,
@@ -148,8 +143,8 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 
 	context.UpdateForStartOfFile(filename)
 
-	scanner := NewLineScanner(handle, reader.readerOptions.IRS)
-	for scanner.Scan() {
+	lineScanner := NewLineScanner(handle, reader.readerOptions.IRS)
+	for lineScanner.Scan() {
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
@@ -166,7 +161,7 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 			break
 		}
 
-		line := scanner.Text()
+		line := lineScanner.Text()
 
 		inputLineNumber++
 
@@ -261,7 +256,6 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 	}
 }
 
-// ----------------------------------------------------------------
 func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 	handle io.Reader,
 	filename string,
@@ -275,8 +269,8 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 
 	context.UpdateForStartOfFile(filename)
 
-	scanner := NewLineScanner(handle, reader.readerOptions.IRS)
-	for scanner.Scan() {
+	lineScanner := NewLineScanner(handle, reader.readerOptions.IRS)
+	for lineScanner.Scan() {
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
@@ -295,8 +289,7 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 			break
 		}
 
-		// TODO: IRS
-		line := scanner.Text()
+		line := lineScanner.Text()
 
 		inputLineNumber++
 
