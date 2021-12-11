@@ -189,6 +189,10 @@ PUNCHDOWN LIST
 ================================================================
 NON-BLOCKERS
 
+* try simpler-than-regex-split-string for repeated-single -- especially for XTAB reader
+
+* UT-per-se of XTAB channelizedStanzaScanner
+
 * main-level (verb-level?) flag for "," -> X in verbs -- in case commas in field names
 * golinter
 

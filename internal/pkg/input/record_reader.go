@@ -78,7 +78,10 @@ func NewLineScanner(handle io.Reader, irs string) *bufio.Scanner {
 	return scanner
 }
 
-// TODO: comment
+// TODO: comment copiously
+//
+// Lines are written to the channel with their trailing newline (or whatever
+// IRS) stripped off. So, callers get "a=1,b=2" rather than "a=1,b=2\n".
 func channelizedLineScanner(
 	lineScanner *bufio.Scanner,
 	linesChannel chan<- *list.List,

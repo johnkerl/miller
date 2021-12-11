@@ -1,6 +1,7 @@
 package input
 
 import (
+	"bufio"
 	"container/list"
 	"errors"
 	"io"
@@ -17,7 +18,6 @@ type RecordReaderXTAB struct {
 	// Note: XTAB uses two consecutive IFS in place of an IRS; IRS is ignored
 }
 
-// ----------------------------------------------------------------
 func NewRecordReaderXTAB(
 	readerOptions *cli.TReaderOptions,
 	recordsPerBatch int,
@@ -28,7 +28,6 @@ func NewRecordReaderXTAB(
 	}, nil
 }
 
-// ----------------------------------------------------------------
 func (reader *RecordReaderXTAB) Read(
 	filenames []string,
 	context types.Context,
@@ -76,83 +75,160 @@ func (reader *RecordReaderXTAB) processHandle(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
+	recordsPerBatch := reader.readerOptions.RecordsPerBatch
 
+	// XTAB uses repeated IFS, rather than IRS, to delimit records
 	lineScanner := NewLineScanner(handle, reader.readerOptions.IFS)
 
-	linesForRecord := list.New()
+	stanzasChannel := make(chan *list.List, recordsPerBatch)
+	go channelizedStanzaScanner(lineScanner, stanzasChannel, downstreamDoneChannel, recordsPerBatch)
 
-	eof := false
-	for !eof {
-
-		// See if downstream processors will be ignoring further data (e.g. mlr
-		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
-		// quickly, as it should.
-		select {
-		case _ = <-downstreamDoneChannel:
-			eof = true
-			break
-		default:
-			break
-		}
+	for {
+		recordsAndContexts, eof := reader.getRecordBatch(stanzasChannel, context, errorChannel)
+		readerChannel <- recordsAndContexts
 		if eof {
 			break
-		}
-
-		if !lineScanner.Scan() {
-
-			if linesForRecord.Len() > 0 {
-				record, err := reader.recordFromXTABLines(linesForRecord)
-				if err != nil {
-					errorChannel <- err
-					return
-				}
-				context.UpdateForInputRecord()
-				readerChannel <- types.NewRecordAndContextList(record, context)
-				linesForRecord = list.New()
-			}
-
-			break
-		}
-
-		line := lineScanner.Text()
-
-		// Check for comments-in-data feature
-		if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-			if reader.readerOptions.CommentHandling == cli.PassComments {
-				readerChannel <- types.NewOutputStringList(line+reader.readerOptions.IFS, context)
-				continue
-			} else if reader.readerOptions.CommentHandling == cli.SkipComments {
-				continue
-			}
-			// else comments are data
-		}
-
-		if line != "" {
-			linesForRecord.PushBack(line)
-
-		} else {
-			if linesForRecord.Len() > 0 {
-				record, err := reader.recordFromXTABLines(linesForRecord)
-				if err != nil {
-					errorChannel <- err
-					return
-				}
-				context.UpdateForInputRecord()
-				readerChannel <- types.NewRecordAndContextList(record, context)
-				linesForRecord = list.New()
-			}
 		}
 	}
 }
 
-// ----------------------------------------------------------------
+// Given input like
+//
+//   a 1
+//   b 2
+//   c 3
+//
+//   a 4
+//   b 5
+//   c 6
+//
+// this function reads the input stream a line at a time, then produces
+// string-lists one per stanza where a stanza is delimited by blank line, or
+// start or end of file. A single stanza, once parsed, will become a single
+// record.
+func channelizedStanzaScanner(
+	lineScanner *bufio.Scanner,
+	stanzasChannel chan<- *list.List, // list of list of string
+	downstreamDoneChannel <-chan bool, // for mlr head
+	recordsPerBatch int,
+) {
+	numStanzasSeen := 0
+	inStanza := false
+	done := false
+
+	stanzas := list.New()
+	stanza := list.New()
+
+	for lineScanner.Scan() {
+		line := lineScanner.Text()
+		if line == "" {
+			// Empty-line handling:
+			// 1. First empty line(s) in the stream are ignored.
+			// 2. After that, one or more empty lines separate records.
+			// 3. At end of file, multiple empty lines are ignored.
+			if inStanza {
+				inStanza = false
+				stanzas.PushBack(stanza)
+				numStanzasSeen++
+				stanza = list.New()
+			} else {
+				continue
+			}
+		} else {
+			if !inStanza {
+				inStanza = true
+			}
+			stanza.PushBack(line)
+		}
+
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
+		if numStanzasSeen%recordsPerBatch == 0 {
+			select {
+			case _ = <-downstreamDoneChannel:
+				done = true
+				break
+			default:
+				break
+			}
+			if done {
+				break
+			}
+			stanzasChannel <- stanzas
+			stanzas = list.New()
+		}
+
+		if done {
+			break
+		}
+	}
+
+	// The last stanza may not have a trailing newline after it. Any lines in the stanza
+	// at this point will form the final record in the stream.
+	if stanza.Len() > 0 {
+		stanzas.PushBack(stanza)
+	}
+
+	stanzasChannel <- stanzas
+	close(stanzasChannel) // end-of-stream marker
+}
+
+// TODO: comment copiously we're trying to handle slow/fast/short/long reads: tail -f, smallfile, bigfile.
+func (reader *RecordReaderXTAB) getRecordBatch(
+	stanzasChannel <-chan *list.List,
+	context *types.Context,
+	errorChannel chan error,
+) (
+	recordsAndContexts *list.List,
+	eof bool,
+) {
+	recordsAndContexts = list.New()
+
+	stanzas, more := <-stanzasChannel
+	if !more {
+		return recordsAndContexts, true
+	}
+
+	for e := stanzas.Front(); e != nil; e = e.Next() {
+		stanza := e.Value.(*list.List)
+
+		//		// TODO: move
+		//		// Check for comments-in-data feature
+		//		// TODO: function-pointer this away
+		//		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
+		//			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+		//				if reader.readerOptions.CommentHandling == cli.PassComments {
+		//					recordsAndContexts.PushBack(types.NewOutputString(line+reader.readerOptions.IFS, context))
+		//					continue
+		//				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+		//					continue
+		//				}
+		//				// else comments are data
+		//			}
+		//		}
+
+		lib.InternalCodingErrorIf(stanza.Len() == 0)
+
+		record, err := reader.recordFromXTABLines(stanza)
+		if err != nil {
+			errorChannel <- err
+			return
+		}
+		context.UpdateForInputRecord()
+		recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+	}
+
+	return recordsAndContexts, false
+}
+
 func (reader *RecordReaderXTAB) recordFromXTABLines(
-	lines *list.List,
+	stanza *list.List,
 ) (*types.Mlrmap, error) {
 	record := types.NewMlrmapAsRecord()
 
-	for entry := lines.Front(); entry != nil; entry = entry.Next() {
-		line := entry.Value.(string)
+	for e := stanza.Front(); e != nil; e = e.Next() {
+		line := e.Value.(string)
 
 		var kv []string
 		if reader.readerOptions.IPSRegex == nil { // e.g. --no-ips-regex
