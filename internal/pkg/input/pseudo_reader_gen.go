@@ -42,6 +42,7 @@ func (reader *PseudoReaderGen) process(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile("(gen-pseudo-reader)")
+	recordsPerBatch := reader.readerOptions.RecordsPerBatch
 
 	start, err := reader.tryParse("start", reader.readerOptions.GeneratorOptions.StartAsString)
 	if err != nil {
@@ -69,23 +70,10 @@ func (reader *PseudoReaderGen) process(
 	key := reader.readerOptions.GeneratorOptions.FieldName
 	value := start.Copy()
 
+	recordsAndContexts := list.New()
+
 	eof := false
 	for !eof {
-
-		// See if downstream processors will be ignoring further data (e.g. mlr
-		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
-		// quickly, as it should.
-		eof := false
-		select {
-		case _ = <-downstreamDoneChannel:
-			eof = true
-			break
-		default:
-			break
-		}
-		if eof {
-			break
-		}
 
 		mdone := doneComparator(value, stop)
 		done, _ := mdone.GetBoolValue()
@@ -97,12 +85,36 @@ func (reader *PseudoReaderGen) process(
 		record.PutCopy(key, value)
 
 		context.UpdateForInputRecord()
-		readerChannel <- types.NewRecordAndContextList(
-			record,
-			context,
-		)
+		recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+
+		if recordsAndContexts.Len() >= recordsPerBatch {
+			readerChannel <- recordsAndContexts
+			recordsAndContexts = list.New()
+
+			// See if downstream processors will be ignoring further data (e.g.
+			// mlr head).  If so, stop reading. This makes 'mlr head hugefile'
+			// exit quickly, as it should. Check this only every so often to
+			// avoid goroutine-scheduler thrash.
+			eof := false
+			select {
+			case _ = <-downstreamDoneChannel:
+				eof = true
+				break
+			default:
+				break
+			}
+			if eof {
+				break
+			}
+
+		}
 
 		value = types.BIF_plus_binary(value, step)
+	}
+
+	if recordsAndContexts.Len() > 0 {
+		readerChannel <- recordsAndContexts
+		recordsAndContexts = list.New()
 	}
 }
 

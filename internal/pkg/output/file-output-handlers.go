@@ -340,11 +340,10 @@ func (handler *FileOutputHandler) WriteRecordAndContext(
 		}
 	}
 
-	// TODO: mahbe refactor to batch better
-	handler.recordOutputChannel <- types.NewRecordAndContextList(
-		outrecAndContext.Record,
-		&outrecAndContext.Context,
-	)
+	// TODO: myybe refactor to batch better
+	ell := list.New()
+	ell.PushBack(outrecAndContext)
+	handler.recordOutputChannel <- ell
 	return nil
 }
 

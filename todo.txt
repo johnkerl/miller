@@ -3,6 +3,8 @@ PUNCHDOWN LIST
 
 ! mlr --csv sort -f shape $mlds/example.csv
 
+* big-picture item @ Rmd; also webdoc intro page
+
 * perf wup @ rgp.md
 * perf:
   o go tool pprof -http=:8080 cpu.pprof
@@ -39,6 +41,7 @@ PUNCHDOWN LIST
       > everything else
         - reads and writes
     a remove NewOutputStringList and NewRecordAndContextList
+    - JSON reader pass raclist to comment-scanner for orderly injection
     ? outputChannel -> *list.List at each transformer -- ? profile first
     ? readerChannel length 1 or 2 ?
     ? experiment again with hashed/unhashed -- mlr sort etc

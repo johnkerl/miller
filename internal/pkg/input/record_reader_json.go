@@ -256,7 +256,9 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 		if bsr.readerOptions.CommentHandling == cli.PassComments {
 			// Insert the string into the record-output stream, so that goroutine can
 			// print it, resulting in deterministic output-ordering.
-			bsr.readerChannel <- types.NewOutputStringList(line+"\n", bsr.context)
+			ell := list.New()
+			ell.PushBack(types.NewOutputString(line+"\n", bsr.context))
+			bsr.readerChannel <- ell
 		}
 	}
 }

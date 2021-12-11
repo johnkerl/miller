@@ -67,7 +67,6 @@ func NewRecordReaderCSVLite(
 	} else {
 		reader.recordBatchGetter = getRecordBatchExplicitCSVHeader
 	}
-
 	return reader, nil
 }
 
@@ -75,10 +74,16 @@ func NewRecordReaderPPRINT(
 	readerOptions *cli.TReaderOptions,
 	recordsPerBatch int,
 ) (*RecordReaderCSVLite, error) {
-	return &RecordReaderCSVLite{
+	reader := &RecordReaderCSVLite{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
-	}, nil
+	}
+	if reader.readerOptions.UseImplicitCSVHeader {
+		reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
+	} else {
+		reader.recordBatchGetter = getRecordBatchExplicitCSVHeader
+	}
+	return reader, nil
 }
 
 func (reader *RecordReaderCSVLite) Read(
@@ -382,7 +387,7 @@ func getRecordBatchImplicitCSVHeader(
 		}
 
 		context.UpdateForInputRecord()
-		recordsAndContexts.PushBack(types.NewRecordAndContextList(record, context))
+		recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
 	}
 
 	return recordsAndContexts, false
