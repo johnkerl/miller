@@ -1,9 +1,14 @@
 ================================================================
 PUNCHDOWN LIST
 
-! mlr --csv sort -f shape $mlds/example.csv
 
 * big-picture item @ Rmd; also webdoc intro page
+
+* mr -S
+  test/cases/io-skip-pass-comments
+  test/cases/repl
+  test/cases/verb-join
+  test/cases/verb-join-mixed-format
 
 * perf wup @ rgp.md
 * perf:
@@ -30,6 +35,7 @@ PUNCHDOWN LIST
     - make a 2nd/3rd cmd main w/ simple model & tweak that
       o dkvp-reader factor-out ...
   o mods:
+    - randsel for arrays
     - downstreamDone batchify
       > head
         - writes
@@ -40,9 +46,7 @@ PUNCHDOWN LIST
         - reads
       > everything else
         - reads and writes
-    a remove NewOutputStringList and NewRecordAndContextList
     - JSON reader pass raclist to comment-scanner for orderly injection
-    ? outputChannel -> *list.List at each transformer -- ? profile first
     ? readerChannel length 1 or 2 ?
     ? experiment again with hashed/unhashed -- mlr sort etc
     ? coalesce errchan & done-writing w/ Err to RAC, and close-chan *and* EOSMarker -- ?

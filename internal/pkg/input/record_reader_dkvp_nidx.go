@@ -15,12 +15,12 @@ import (
 
 // splitter_DKVP_NIDX is a function type for the one bit of code differing
 // between the DKVP reader and the NIDX reader, namely, how it splits lines.
-type splitter_DKVP_NIDX func (reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
+type splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
 
 type RecordReaderDKVPNIDX struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int
-	splitter splitter_DKVP_NIDX
+	splitter        splitter_DKVP_NIDX
 }
 
 func NewRecordReaderDKVP(
@@ -30,7 +30,7 @@ func NewRecordReaderDKVP(
 	return &RecordReaderDKVPNIDX{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
-		splitter: recordFromDKVPLine,
+		splitter:        recordFromDKVPLine,
 	}, nil
 }
 
@@ -41,7 +41,7 @@ func NewRecordReaderNIDX(
 	return &RecordReaderDKVPNIDX{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
-		splitter: recordFromNIDXLine,
+		splitter:        recordFromNIDXLine,
 	}, nil
 }
 
