@@ -10,6 +10,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -179,11 +180,11 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[0])
+			value := mlrval.FromInferredType(kv[0])
 			record.PutReference(key, value)
 		} else {
 			key := kv[0]
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromInferredType(kv[1])
 			record.PutReference(key, value)
 		}
 	}
@@ -208,7 +209,7 @@ func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
 	for _, value := range values {
 		i++
 		key := strconv.Itoa(i)
-		mval := types.MlrvalFromInferredTypeForDataFiles(value)
+		mval := mlrval.FromInferredType(value)
 		record.PutReference(key, mval)
 	}
 	return record

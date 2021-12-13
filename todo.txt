@@ -2,6 +2,9 @@
 PUNCHDOWN LIST
 
 * --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
+* JIT next:
+  o mlrval copy
+  o mlrmap copy
 
 * big-picture item @ Rmd; also webdoc intro page
 

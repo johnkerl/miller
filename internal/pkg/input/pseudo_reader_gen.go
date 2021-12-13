@@ -123,7 +123,7 @@ func (reader *PseudoReaderGen) tryParse(
 	name string,
 	svalue string,
 ) (*mlrval.Mlrval, error) {
-	mvalue := mlrval.MlrvalFromInferredType(svalue)
+	mvalue := mlrval.FromInferredType(svalue)
 	if mvalue == nil || !mvalue.IsNumeric() {
 		return nil, errors.New(
 			fmt.Sprintf("mlr: gen: %s \"%s\" is not parseable as number", name, svalue),

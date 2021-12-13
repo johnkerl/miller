@@ -11,17 +11,17 @@ import (
 func TestRecordFromDKVPLine(t *testing.T) {
 	readerOptions := cli.DefaultReaderOptions()
 	cli.FinalizeReaderOptions(&readerOptions) // compute IPS, IFS -> IPSRegex, IFSRegex
-	reader, err := NewRecordReaderDKVP(&readerOptions)
+	reader, err := NewRecordReaderDKVP(&readerOptions, 1)
 	assert.NotNil(t, reader)
 	assert.Nil(t, err)
 
 	line := ""
-	record := reader.recordFromDKVPLine(line)
+	record := recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
 	assert.Equal(t, 0, record.FieldCount)
 
 	line = "a=1,b=2,c=3"
-	record = reader.recordFromDKVPLine(line)
+	record = recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
 	assert.Equal(t, 3, record.FieldCount)
 
@@ -34,7 +34,7 @@ func TestRecordFromDKVPLine(t *testing.T) {
 	assert.Equal(t, record.Head.Next.Next.Key, "c")
 
 	line = "a=1,b=2,b=3"
-	record = reader.recordFromDKVPLine(line)
+	record = recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
 	assert.Equal(t, 2, record.FieldCount)
 
@@ -45,7 +45,7 @@ func TestRecordFromDKVPLine(t *testing.T) {
 	assert.Equal(t, record.Head.Next.Key, "b")
 
 	line = "a,b,c"
-	record = reader.recordFromDKVPLine(line)
+	record = recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
 	assert.Equal(t, 3, record.FieldCount)
 

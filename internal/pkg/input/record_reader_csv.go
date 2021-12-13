@@ -12,6 +12,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -27,7 +28,6 @@ type RecordReaderCSV struct {
 	header     []string
 }
 
-// ----------------------------------------------------------------
 func NewRecordReaderCSV(
 	readerOptions *cli.TReaderOptions,
 	recordsPerBatch int,
@@ -45,7 +45,6 @@ func NewRecordReaderCSV(
 	}, nil
 }
 
-// ----------------------------------------------------------------
 func (reader *RecordReaderCSV) Read(
 	filenames []string,
 	context types.Context,

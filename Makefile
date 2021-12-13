@@ -72,7 +72,7 @@ mlrmap-tests: mlrmap-new-test mlrmap-accessors-test
 input-dkvp-test:
 	go test internal/pkg/input/record_reader_dkvp_test.go \
 	  internal/pkg/input/record_reader.go \
-	  internal/pkg/input/record_reader_dkvp.go
+	  internal/pkg/input/record_reader_dkvp_nidx.go
 input-tests: input-dkvp-test
 
 #mlrval_functions_test:
