@@ -92,9 +92,9 @@ func NewTransformerTac() (*TransformerTac, error) {
 
 func (tr *TransformerTac) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -102,8 +102,8 @@ func (tr *TransformerTac) Transform(
 	} else {
 		// end of stream
 		for e := tr.recordsAndContexts.Front(); e != nil; e = e.Next() {
-			outputChannel <- e.Value.(*types.RecordAndContext)
+			outputRecordsAndContexts.PushBack(e.Value.(*types.RecordAndContext))
 		}
-		outputChannel <- types.NewEndOfStreamMarker(&inrecAndContext.Context)
+		outputRecordsAndContexts.PushBack(types.NewEndOfStreamMarker(&inrecAndContext.Context))
 	}
 }

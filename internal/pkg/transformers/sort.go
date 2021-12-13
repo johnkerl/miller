@@ -303,9 +303,9 @@ type GroupingKeysAndMlrvals struct {
 
 func (tr *TransformerSort) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -367,15 +367,15 @@ func (tr *TransformerSort) Transform(
 			iRecordsInGroup := tr.recordListsByGroup.Get(groupingKeyAndMlrvals.groupingKey)
 			recordsInGroup := iRecordsInGroup.(*list.List)
 			for iRecord := recordsInGroup.Front(); iRecord != nil; iRecord = iRecord.Next() {
-				outputChannel <- iRecord.Value.(*types.RecordAndContext)
+				outputRecordsAndContexts.PushBack(iRecord.Value.(*types.RecordAndContext))
 			}
 		}
 
 		for iRecord := tr.spillGroup.Front(); iRecord != nil; iRecord = iRecord.Next() {
-			outputChannel <- iRecord.Value.(*types.RecordAndContext)
+			outputRecordsAndContexts.PushBack(iRecord.Value.(*types.RecordAndContext))
 		}
 
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }
 

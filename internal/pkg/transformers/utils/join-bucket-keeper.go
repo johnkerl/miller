@@ -125,7 +125,7 @@ type JoinBucketKeeper struct {
 	// For streaming through the left-side file
 	recordReader  input.IRecordReader
 	context       *types.Context
-	readerChannel <-chan *types.RecordAndContext
+	readerChannel <-chan *list.List // list of *types.RecordAndContext
 	errorChannel  chan error
 	// TODO: merge with leof flag
 	recordReaderDone bool
@@ -165,7 +165,7 @@ func NewJoinBucketKeeper(
 ) *JoinBucketKeeper {
 
 	// Instantiate the record-reader
-	recordReader, err := input.Create(joinReaderOptions)
+	recordReader, err := input.Create(joinReaderOptions, 1) // TODO: maybe increase records per batch
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "mlr join: %v", err)
 		os.Exit(1)
@@ -178,7 +178,7 @@ func NewJoinBucketKeeper(
 	initialContext.UpdateForStartOfFile(leftFileName)
 
 	// Set up channels for the record-reader
-	readerChannel := make(chan *types.RecordAndContext, 10)
+	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
 	errorChannel := make(chan error, 1)
 	downstreamDoneChannel := make(chan bool, 1)
 
@@ -529,7 +529,7 @@ func (keeper *JoinBucketKeeper) markRemainingsAsUnpaired() {
 // ----------------------------------------------------------------
 // TODO: comment
 func (keeper *JoinBucketKeeper) OutputAndReleaseLeftUnpaireds(
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	for {
 		element := keeper.leftUnpaireds.Front()
@@ -537,13 +537,13 @@ func (keeper *JoinBucketKeeper) OutputAndReleaseLeftUnpaireds(
 			break
 		}
 		recordAndContext := element.Value.(*types.RecordAndContext)
-		outputChannel <- recordAndContext
+		outputRecordsAndContexts.PushBack(recordAndContext)
 		keeper.leftUnpaireds.Remove(element)
 	}
 }
 
 func (keeper *JoinBucketKeeper) ReleaseLeftUnpaireds(
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	for {
 		element := keeper.leftUnpaireds.Front()
@@ -570,7 +570,10 @@ func (keeper *JoinBucketKeeper) readRecord() *types.RecordAndContext {
 	case err := <-keeper.errorChannel:
 		fmt.Fprintln(os.Stderr, "mlr", ": ", err)
 		os.Exit(1)
-	case leftrecAndContext := <-keeper.readerChannel:
+	case leftrecsAndContexts := <-keeper.readerChannel:
+		// TODO: temp
+		lib.InternalCodingErrorIf(leftrecsAndContexts.Len() != 1)
+		leftrecAndContext := leftrecsAndContexts.Front().Value.(*types.RecordAndContext)
 		if leftrecAndContext.EndOfStream { // end-of-stream marker
 			keeper.recordReaderDone = true
 			return nil

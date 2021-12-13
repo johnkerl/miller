@@ -209,28 +209,28 @@ func NewTransformerBar(
 
 func (tr *TransformerBar) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerBar) simpleBar(
 	inrecAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
-	outputChannel <- inrecAndContext
+	outputRecordsAndContexts.PushBack(inrecAndContext)
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerBar) processNoAuto(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -254,18 +254,18 @@ func (tr *TransformerBar) processNoAuto(
 			inrec.PutReference(fieldName, types.MlrvalFromString(tr.bars[idx]))
 		}
 
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	} else {
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerBar) processAuto(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		tr.recordsForAutoMode.PushBack(inrecAndContext.Copy())
@@ -331,7 +331,7 @@ func (tr *TransformerBar) processAuto(
 				idx = tr.width
 			}
 
-			var buffer bytes.Buffer // faster than fmt.Print() separately
+			var buffer bytes.Buffer
 			buffer.WriteString("[")
 			buffer.WriteString(slo)
 			buffer.WriteString("]")
@@ -345,8 +345,8 @@ func (tr *TransformerBar) processAuto(
 
 	for e := tr.recordsForAutoMode.Front(); e != nil; e = e.Next() {
 		recordAndContext := e.Value.(*types.RecordAndContext)
-		outputChannel <- recordAndContext
+		outputRecordsAndContexts.PushBack(recordAndContext)
 	}
 
-	outputChannel <- inrecAndContext // Emit the end-of-stream marker
+	outputRecordsAndContexts.PushBack(inrecAndContext) // Emit the end-of-stream marker
 }

@@ -65,8 +65,8 @@ func (node *Emit1StatementNode) Execute(state *runtime.State) (*BlockExitPayload
 		return nil, nil
 	}
 
-	if state.OutputChannel != nil {
-		state.OutputChannel <- types.NewRecordAndContext(valueAsMap, state.Context)
+	if state.OutputRecordsAndContexts != nil {
+		state.OutputRecordsAndContexts.PushBack(types.NewRecordAndContext(valueAsMap, state.Context))
 	} else {
 		fmt.Println(valueAsMap.String())
 	}

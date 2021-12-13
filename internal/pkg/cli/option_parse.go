@@ -2558,6 +2558,43 @@ var MiscFlagSection = FlagSection{
 		},
 
 		{
+			name: "--records-per-batch",
+			arg:  "{n}",
+			help: `This is an internal parameter for maximum number of records in a batch size. Normally
+this does not need to be modified.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				recordsPerBatch, ok := lib.TryIntFromString(args[*pargi+1])
+				if !ok || recordsPerBatch <= 0 {
+					fmt.Fprintf(os.Stderr,
+						"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+						"mlr", args[*pargi+1])
+					os.Exit(1)
+				}
+				options.ReaderOptions.RecordsPerBatch = recordsPerBatch
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--hash-records",
+			help: `This is an internal parameter which normally does not need to be modified.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				types.HashRecords(true)
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--no-hash-records",
+			help: `This is an internal parameter which normally does not need to be modified.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				types.HashRecords(false)
+				*pargi += 1
+			},
+		},
+
+		{
 			name:     "--infer-none",
 			altNames: []string{"-S"},
 			help:     `Don't treat values like 123 or 456.7 in data files as int/float; leave them as strings.`,

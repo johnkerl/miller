@@ -2,21 +2,48 @@ package output
 
 import (
 	"bufio"
+	"container/list"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 func ChannelWriter(
-	writerChannel <-chan *types.RecordAndContext,
+	writerChannel <-chan *list.List, // list of *types.RecordAndContext
 	recordWriter IRecordWriter,
 	writerOptions *cli.TWriterOptions,
 	doneChannel chan<- bool,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
+
 	for {
-		recordAndContext := <-writerChannel
+		recordsAndContexts := <-writerChannel
+		done := channelWriterHandleBatch(
+			recordsAndContexts,
+			recordWriter,
+			writerOptions,
+			bufferedOutputStream,
+			outputIsStdout,
+		)
+		if done {
+			doneChannel <- true
+			break
+		}
+	}
+}
+
+// TODO: comment
+// Returns true on end of record stream
+func channelWriterHandleBatch(
+	recordsAndContexts *list.List,
+	recordWriter IRecordWriter,
+	writerOptions *cli.TWriterOptions,
+	bufferedOutputStream *bufio.Writer,
+	outputIsStdout bool,
+) bool {
+	for e := recordsAndContexts.Front(); e != nil; e = e.Next() {
+		recordAndContext := e.Value.(*types.RecordAndContext)
 
 		// Three things can come through:
 		// * End-of-stream marker
@@ -28,7 +55,6 @@ func ChannelWriter(
 		//   output ordering.
 
 		if !recordAndContext.EndOfStream {
-
 			record := recordAndContext.Record
 			if record != nil {
 				recordWriter.Write(record, bufferedOutputStream, outputIsStdout)
@@ -49,9 +75,8 @@ func ChannelWriter(
 			// records before printing any, since it needs to compute max width
 			// down columns.
 			recordWriter.Write(nil, bufferedOutputStream, outputIsStdout)
-			doneChannel <- true
-			break
+			return true
 		}
-
 	}
+	return false
 }

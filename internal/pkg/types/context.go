@@ -2,6 +2,7 @@ package types
 
 import (
 	"bytes"
+	"container/list"
 	"strconv"
 )
 
@@ -77,6 +78,14 @@ func NewEndOfStreamMarker(context *Context) *RecordAndContext {
 		OutputString: "",
 		EndOfStream:  true,
 	}
+}
+
+// TODO: comment
+// For the record-readers to update their initial context as each new record is read.
+func NewEndOfStreamMarkerList(context *Context) *list.List {
+	ell := list.New()
+	ell.PushBack(NewEndOfStreamMarker(context))
+	return ell
 }
 
 // ----------------------------------------------------------------

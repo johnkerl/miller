@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"errors"
 	"fmt"
 	"os"
@@ -189,13 +190,11 @@ func NewTransformerSeqgen(
 	}, nil
 }
 
-// ----------------------------------------------------------------
-
 func (tr *TransformerSeqgen) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	counter := tr.start
 	context := types.NewNilContext()
@@ -233,10 +232,10 @@ func (tr *TransformerSeqgen) Transform(
 		context.UpdateForInputRecord()
 
 		outrecAndContext := types.NewRecordAndContext(outrec, context)
-		outputChannel <- outrecAndContext
+		outputRecordsAndContexts.PushBack(outrecAndContext)
 
 		counter = types.BIF_plus_binary(counter, tr.step)
 	}
 
-	outputChannel <- types.NewEndOfStreamMarker(context)
+	outputRecordsAndContexts.PushBack(types.NewEndOfStreamMarker(context))
 }

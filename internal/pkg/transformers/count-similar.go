@@ -127,9 +127,9 @@ func NewTransformerCountSimilar(
 
 func (tr *TransformerCountSimilar) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -159,10 +159,10 @@ func (tr *TransformerCountSimilar) Transform(
 				recordAndContext := inner.Value.(*types.RecordAndContext)
 				recordAndContext.Record.PutCopy(tr.counterFieldName, mgroupSize)
 
-				outputChannel <- recordAndContext
+				outputRecordsAndContexts.PushBack(recordAndContext)
 			}
 		}
 
-		outputChannel <- inrecAndContext // Emit the stream-terminating null record
+		outputRecordsAndContexts.PushBack(inrecAndContext) // Emit the stream-terminating null record
 	}
 }

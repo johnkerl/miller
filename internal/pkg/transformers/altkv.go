@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strconv"
@@ -91,9 +92,9 @@ func NewTransformerAltkv() (*TransformerAltkv, error) {
 
 func (tr *TransformerAltkv) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -122,9 +123,9 @@ func (tr *TransformerAltkv) Transform(
 			pe = pe.Next
 		}
 
-		outputChannel <- types.NewRecordAndContext(newrec, &inrecAndContext.Context)
+		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 
 	} else { // end of record stream
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}
 }

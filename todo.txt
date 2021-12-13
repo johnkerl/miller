@@ -3,6 +3,13 @@ PUNCHDOWN LIST
 
 * --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
 
+* big-picture item @ Rmd; also webdoc intro page
+
+* mr -S
+  test/cases/dsl-array-map-indexing
+  test/cases/io-skip-pass-comments
+
+* perf wup @ rgp.md
 * perf:
   o go tool pprof -http=:8080 cpu.pprof
   x close(chan) as EOS throughout
@@ -27,18 +34,30 @@ PUNCHDOWN LIST
     - make a 2nd/3rd cmd main w/ simple model & tweak that
       o dkvp-reader factor-out ...
   o mods:
-    ? outputChannel -> *list.List at each transformer -- ? profile first
-    - un-legacy fflush flag :(
-      > conditional on isatty stdout
-      > new fflushWasSpecified
-      > downcase OFSWasSpecified, HaveRandSeed, et al.
+    - randsel for arrays
+    - downstreamDone batchify
+      > head
+        - writes
+      > seqgen
+        - reads and writes
+        - might involve batch-size somehow -- ?
+      > tee
+        - reads
+      > everything else
+        - reads and writes
+    - JSON reader pass raclist to comment-scanner for orderly injection
+    ? readerChannel length 1 or 2 ?
+    ? experiment again with hashed/unhashed -- mlr sort etc
+    ? coalesce errchan & done-writing w/ Err to RAC, and close-chan *and* EOSMarker -- ?
+    - docnote JSON (a) no channelization opportunity (unless missed); (b) no JIT type-inference. therefore slower.
+    - funcptr away the ifs/ifsregex check in record-readers
+    - checklist channelize all record-reader types
     - do and maybe keep? record-reader return (raclist, err) & refactor repl accordingly
       > needs factor for-loop to stateful so maybe not
-    - transfomers w/ reclist: *maybe*, but idchan/odchan too ... invest time after some refactor decions made
+    - transformers w/ reclist: *maybe*, but idchan/odchan too ... invest time after some refactor decions made
     - fix record/line sequencing regressions
-    - tail -f handling
-      > batch-size 1 on stdin, for repl at least?
-      > adaptive is-blocking detection -- make sure it's not over-sensitive
+    - maybe increase records-per-batch in join-bucket-keeper; and/or refactor
+    - maybe increase records-per-batch in repl; and/or refactor
   o goals:
     - keep goroutines -- including per-transformer -- for parallelism
     - look for flex ideas on how to structure that parallelism
@@ -58,7 +77,11 @@ PUNCHDOWN LIST
       > how to structure this for the transformers?
       > do that after hiding
     ! have an extra eye on CSV-reader perf
+    ? why mprof,mprof2 record-writer 1.5486, 1.9036
+    ? double-check flush-handling
+    - funcptr around comment-handling stuff
     - mprof split-reader getenv something
+    - flags for mlr.pprof & trace.out to CLI
     - hide app-level scan/format under sys-level read/write: also batched
       easier/line-oriented:
         record_reader_csvlite.go
@@ -171,6 +194,10 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* try simpler-than-regex-split-string for repeated-single -- especially for XTAB reader
+
+* UT-per-se of XTAB channelizedStanzaScanner
 
 * main-level (verb-level?) flag for "," -> X in verbs -- in case commas in field names
 * golinter

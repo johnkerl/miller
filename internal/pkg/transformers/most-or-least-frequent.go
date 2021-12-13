@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"sort"
@@ -210,9 +211,9 @@ func NewTransformerMostOrLeastFrequent(
 
 func (tr *TransformerMostOrLeastFrequent) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -285,9 +286,9 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 			if tr.showCounts {
 				outrec.PutReference(tr.outputFieldName, types.MlrvalFromInt(sortPairs[i].count))
 			}
-			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 		}
 
-		outputChannel <- inrecAndContext // End-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // End-of-stream marker
 	}
 }

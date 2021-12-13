@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -96,9 +97,9 @@ func NewTransformerRegularize() (*TransformerRegularize, error) {
 
 func (tr *TransformerRegularize) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
@@ -109,16 +110,16 @@ func (tr *TransformerRegularize) Transform(
 		previousSortedFieldNames := tr.sortedToOriginal[currentSortedFieldNamesJoined]
 		if previousSortedFieldNames == nil {
 			tr.sortedToOriginal[currentSortedFieldNamesJoined] = currentFieldNames
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 		} else {
 			outrec := types.NewMlrmapAsRecord()
 			for _, fieldName := range previousSortedFieldNames {
 				outrec.PutReference(fieldName, inrec.Get(fieldName)) // inrec will be GC'ed
 			}
 			outrecAndContext := types.NewRecordAndContext(outrec, &inrecAndContext.Context)
-			outputChannel <- outrecAndContext
+			outputRecordsAndContexts.PushBack(outrecAndContext)
 		}
 	} else {
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }

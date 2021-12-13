@@ -47,7 +47,7 @@ func NewRepl(
 	recordOutputStream *os.File,
 ) (*Repl, error) {
 
-	recordReader, err := input.Create(&options.ReaderOptions)
+	recordReader, err := input.Create(&options.ReaderOptions, 1) // recordsPerBatch
 	if err != nil {
 		return nil, err
 	}

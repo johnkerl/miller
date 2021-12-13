@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/johnkerl/miller/internal/pkg/entrypoint"
+	"github.com/pkg/profile" // for trace.out
 )
 
 func main() {
@@ -59,7 +60,12 @@ func main() {
 		defer pprof.StopCPUProfile()
 
 		fmt.Fprintf(os.Stderr, "CPU profile started.\n")
-		defer fmt.Fprintf(os.Stderr, "CPU profile finished.\n")
+		defer fmt.Fprintf(os.Stderr, "CPU profile finished.\ngo tool pprof -http=:8080 %s\n", profFilename)
+	}
+
+	if len(os.Args) >= 3 && os.Args[1] == "--traceprofile" {
+		defer profile.Start(profile.TraceProfile, profile.ProfilePath(".")).Stop()
+		defer fmt.Fprintf(os.Stderr, "go tool trace trace.out\n")
 	}
 
 	// This will obtain os.Args and go from there.  All the usual contents of

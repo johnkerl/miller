@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -142,18 +143,18 @@ import (
 // subdivides goroutines for each transformer in the chain, with intermediary
 // channels between them.
 func ChainTransformer(
-	readerRecordChannel <-chan *types.RecordAndContext,
+	readerRecordChannel <-chan *list.List, // list of *types.RecordAndContext
 	readerDownstreamDoneChannel chan<- bool, // for mlr head -- see also stream.go
 	recordTransformers []IRecordTransformer, // not *recordTransformer since this is an interface
-	writerRecordChannel chan<- *types.RecordAndContext,
+	writerRecordChannel chan<- *list.List, // list of *types.RecordAndContext
 	options *cli.TOptions,
 ) {
 	i := 0
 	n := len(recordTransformers)
 
-	intermediateRecordChannels := make([]chan *types.RecordAndContext, n-1)
+	intermediateRecordChannels := make([]chan *list.List, n-1) // list of *types.RecordAndContext
 	for i = 0; i < n-1; i++ {
-		intermediateRecordChannels[i] = make(chan *types.RecordAndContext, 1)
+		intermediateRecordChannels[i] = make(chan *list.List, 1) // list of *types.RecordAndContext
 	}
 
 	intermediateDownstreamDoneChannels := make([]chan bool, n)
@@ -197,24 +198,53 @@ func ChainTransformer(
 
 func runSingleTransformer(
 	recordTransformer IRecordTransformer,
-	isFirst bool,
-	inputRecordChannel <-chan *types.RecordAndContext,
-	outputRecordChannel chan<- *types.RecordAndContext,
+	isFirstInChain bool,
+	inputRecordChannel <-chan *list.List, // list of *types.RecordAndContext
+	outputRecordChannel chan<- *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
 	options *cli.TOptions,
 ) {
 
-	for {
-		recordAndContext := <-inputRecordChannel
+	done := false
+	for !done {
+		recordsAndContexts := <-inputRecordChannel
+		done = runSingleTransformerBatch(
+			recordsAndContexts,
+			recordTransformer,
+			isFirstInChain,
+			outputRecordChannel,
+			inputDownstreamDoneChannel,
+			outputDownstreamDoneChannel,
+			options,
+		)
+	}
+}
+
+// TODO: comment
+// Returns true on end of record stream
+func runSingleTransformerBatch(
+	inputRecordsAndContexts *list.List, // list of types.RecordAndContext
+	recordTransformer IRecordTransformer,
+	isFirstInChain bool,
+	outputRecordChannel chan<- *list.List, // list of *types.RecordAndContext
+	inputDownstreamDoneChannel <-chan bool,
+	outputDownstreamDoneChannel chan<- bool,
+	options *cli.TOptions,
+) bool {
+	outputRecordsAndContexts := list.New()
+	done := false
+
+	for e := inputRecordsAndContexts.Front(); e != nil; e = e.Next() {
+		inputRecordAndContext := e.Value.(*types.RecordAndContext)
 
 		// --nr-progress-mod
 		// TODO: function-pointer this away to reduce instruction count in the
 		// normal case which it isn't used at all. No need to test if {static thing} != 0
 		// on every record.
 		if options.NRProgressMod != 0 {
-			if isFirst && recordAndContext.Record != nil {
-				context := &recordAndContext.Context
+			if isFirstInChain && inputRecordAndContext.Record != nil {
+				context := &inputRecordAndContext.Context
 				if context.NR%options.NRProgressMod == 0 {
 					fmt.Fprintf(os.Stderr, "NR=%d FNR=%d FILENAME=%s\n", context.NR, context.FNR, context.FILENAME)
 				}
@@ -235,19 +265,30 @@ func runSingleTransformer(
 		// the output channel without involving the record-transformer, since
 		// there is no record to be transformed.
 
-		if recordAndContext.EndOfStream == true || recordAndContext.Record != nil {
+		if inputRecordAndContext.EndOfStream == true || inputRecordAndContext.Record != nil {
 			recordTransformer.Transform(
-				recordAndContext,
+				inputRecordAndContext,
+				outputRecordsAndContexts,
+				// TODO: maybe refactor these out of each transformer.
+				// And/or maybe poll them once per batch not once per record.
 				inputDownstreamDoneChannel,
 				outputDownstreamDoneChannel,
-				outputRecordChannel,
 			)
 		} else {
-			outputRecordChannel <- recordAndContext
+			outputRecordsAndContexts.PushBack(inputRecordAndContext)
 		}
 
-		if recordAndContext.EndOfStream {
+		if inputRecordAndContext.EndOfStream {
+			done = true
+			break
+		}
+
+		if done {
 			break
 		}
 	}
+
+	outputRecordChannel <- outputRecordsAndContexts
+
+	return done
 }

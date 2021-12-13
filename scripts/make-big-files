@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -x
+
+mkdir ~/tmp/
+
+mlr --csv \
+  repeat -n 100000 \
+  then shuffle \
+  then put '
+    begin{@index=1}
+    $k = NR;
+    @index += urandint(2,10);
+    $index=@index;
+    $quantity=fmtnum(urandrange(50,100),"%.4f");
+    $rate=fmtnum(urandrange(1,10),"%.4f");
+  ' \
+docs/src/example.csv > ~/tmp/big.csv
+
+mlr --c2d cat ~/tmp/big.csv > ~/tmp/big.dkvp
+mlr --c2j cat ~/tmp/big.csv > ~/tmp/big.json
+mlr --c2n cat ~/tmp/big.csv > ~/tmp/big.nidx
+mlr --c2x cat ~/tmp/big.csv > ~/tmp/big.xtab

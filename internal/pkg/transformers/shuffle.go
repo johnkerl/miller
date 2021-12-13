@@ -101,9 +101,9 @@ func NewTransformerShuffle() (*TransformerShuffle, error) {
 
 func (tr *TransformerShuffle) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
@@ -149,10 +149,10 @@ func (tr *TransformerShuffle) Transform(
 		// all input records have ownership transferred exactly once. So, there are no
 		// records to copy here.
 		for i := 0; i < n; i++ {
-			outputChannel <- array[images[i]]
+			outputRecordsAndContexts.PushBack(array[images[i]])
 		}
 
 		// Emit the stream-terminating null record
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}
 }

@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"errors"
 	"fmt"
 	"os"
@@ -235,13 +236,13 @@ func NewTransformerStep(
 
 func (tr *TransformerStep) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if inrecAndContext.EndOfStream {
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 		return
 	}
 
@@ -252,7 +253,7 @@ func (tr *TransformerStep) Transform(
 	// Grouping key is "s,t"
 	groupingKey, gok := inrec.GetSelectedValuesJoined(tr.groupByFieldNames)
 	if !gok { // current record doesn't have fields to be stepped; pass it along
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 		return
 	}
 
@@ -302,7 +303,7 @@ func (tr *TransformerStep) Transform(
 		}
 	}
 
-	outputChannel <- inrecAndContext
+	outputRecordsAndContexts.PushBack(inrecAndContext)
 }
 
 // ================================================================
