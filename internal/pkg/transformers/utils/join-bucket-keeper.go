@@ -178,7 +178,7 @@ func NewJoinBucketKeeper(
 	initialContext.UpdateForStartOfFile(leftFileName)
 
 	// Set up channels for the record-reader
-	readerChannel := make(chan *list.List, 10) // list of *types.RecordAndContext
+	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
 	errorChannel := make(chan error, 1)
 	downstreamDoneChannel := make(chan bool, 1)
 

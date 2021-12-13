@@ -17,7 +17,7 @@ import (
 
 type RecordReaderJSON struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int
+	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
 }
 
 func NewRecordReaderJSON(
@@ -78,7 +78,7 @@ func (reader *RecordReaderJSON) processHandle(
 ) {
 	context.UpdateForStartOfFile(filename)
 	// TODO: comment
-	recordsPerBatch := reader.readerOptions.RecordsPerBatch
+	recordsPerBatch := reader.recordsPerBatch
 
 	if reader.readerOptions.CommentHandling != cli.CommentsAreData {
 		handle = NewJSONCommentEnabledReader(handle, reader.readerOptions, readerChannel)

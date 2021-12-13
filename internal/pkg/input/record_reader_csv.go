@@ -18,7 +18,7 @@ import (
 // ----------------------------------------------------------------
 type RecordReaderCSV struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int
+	recordsPerBatch int  // distinct from readerOptions.RecordsPerBatch for join/repl
 	ifs0            byte // Go's CSV library only lets its 'Comma' be a single character
 
 	filename   string
@@ -93,7 +93,7 @@ func (reader *RecordReaderCSV) processHandle(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
-	recordsPerBatch := reader.readerOptions.RecordsPerBatch
+	recordsPerBatch := reader.recordsPerBatch
 
 	// Reset state for start of next input file
 	reader.filename = filename
@@ -109,7 +109,9 @@ func (reader *RecordReaderCSV) processHandle(
 
 	for {
 		recordsAndContexts, eof := reader.getRecordBatch(csvRecordsChannel, errorChannel, context)
-		readerChannel <- recordsAndContexts
+		if recordsAndContexts.Len() > 0 {
+			readerChannel <- recordsAndContexts
+		}
 		if eof {
 			break
 		}

@@ -46,7 +46,7 @@ type recordBatchGetterCSV func(
 
 type RecordReaderCSVLite struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int
+	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
 
 	recordBatchGetter recordBatchGetterCSV
 
@@ -151,14 +151,16 @@ func (reader *RecordReaderCSVLite) processHandle(
 	reader.inputLineNumber = 0
 	reader.headerStrings = nil
 
-	recordsPerBatch := reader.readerOptions.RecordsPerBatch
+	recordsPerBatch := reader.recordsPerBatch
 	lineScanner := NewLineScanner(handle, reader.readerOptions.IRS)
 	linesChannel := make(chan *list.List, recordsPerBatch)
 	go channelizedLineScanner(lineScanner, linesChannel, downstreamDoneChannel, recordsPerBatch)
 
 	for {
 		recordsAndContexts, eof := reader.recordBatchGetter(reader, linesChannel, filename, context, errorChannel)
-		readerChannel <- recordsAndContexts
+		if recordsAndContexts.Len() > 0 {
+			readerChannel <- recordsAndContexts
+		}
 		if eof {
 			break
 		}

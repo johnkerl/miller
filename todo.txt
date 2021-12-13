@@ -5,10 +5,8 @@ PUNCHDOWN LIST
 * big-picture item @ Rmd; also webdoc intro page
 
 * mr -S
+  test/cases/dsl-array-map-indexing
   test/cases/io-skip-pass-comments
-  test/cases/repl
-  test/cases/verb-join
-  test/cases/verb-join-mixed-format
 
 * perf wup @ rgp.md
 * perf:

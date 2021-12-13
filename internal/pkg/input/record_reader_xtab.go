@@ -14,7 +14,8 @@ import (
 
 type RecordReaderXTAB struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int
+	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
+
 	// Note: XTAB uses two consecutive IFS in place of an IRS; IRS is ignored
 }
 
@@ -75,7 +76,7 @@ func (reader *RecordReaderXTAB) processHandle(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
-	recordsPerBatch := reader.readerOptions.RecordsPerBatch
+	recordsPerBatch := reader.recordsPerBatch
 
 	// XTAB uses repeated IFS, rather than IRS, to delimit records
 	lineScanner := NewLineScanner(handle, reader.readerOptions.IFS)
@@ -85,7 +86,9 @@ func (reader *RecordReaderXTAB) processHandle(
 
 	for {
 		recordsAndContexts, eof := reader.getRecordBatch(stanzasChannel, context, errorChannel)
-		readerChannel <- recordsAndContexts
+		if recordsAndContexts.Len() > 0 {
+			readerChannel <- recordsAndContexts
+		}
 		if eof {
 			break
 		}
@@ -121,6 +124,22 @@ func channelizedStanzaScanner(
 
 	for lineScanner.Scan() {
 		line := lineScanner.Text()
+
+		// TODO: stanzas should pair data-list and comment-list ...
+		// Check for comments-in-data feature
+		// TODO: function-pointer this away
+		//		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
+		//			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
+		//				if reader.readerOptions.CommentHandling == cli.PassComments {
+		//					recordsAndContexts.PushBack(types.NewOutputString(line+reader.readerOptions.IFS, context))
+		//					continue
+		//				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
+		//					continue
+		//				}
+		//				// else comments are data
+		//			}
+		//		}
+
 		if line == "" {
 			// Empty-line handling:
 			// 1. First empty line(s) in the stream are ignored.
@@ -192,21 +211,6 @@ func (reader *RecordReaderXTAB) getRecordBatch(
 
 	for e := stanzas.Front(); e != nil; e = e.Next() {
 		stanza := e.Value.(*list.List)
-
-		//		// TODO: move
-		//		// Check for comments-in-data feature
-		//		// TODO: function-pointer this away
-		//		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
-		//			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-		//				if reader.readerOptions.CommentHandling == cli.PassComments {
-		//					recordsAndContexts.PushBack(types.NewOutputString(line+reader.readerOptions.IFS, context))
-		//					continue
-		//				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
-		//					continue
-		//				}
-		//				// else comments are data
-		//			}
-		//		}
 
 		lib.InternalCodingErrorIf(stanza.Len() == 0)
 

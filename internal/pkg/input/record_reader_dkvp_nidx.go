@@ -19,7 +19,7 @@ type splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) *types.M
 
 type RecordReaderDKVPNIDX struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int
+	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
 	splitter        splitter_DKVP_NIDX
 }
 
@@ -92,7 +92,7 @@ func (reader *RecordReaderDKVPNIDX) processHandle(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
-	recordsPerBatch := reader.readerOptions.RecordsPerBatch
+	recordsPerBatch := reader.recordsPerBatch
 
 	lineScanner := NewLineScanner(handle, reader.readerOptions.IRS)
 	linesChannel := make(chan *list.List, recordsPerBatch)
@@ -100,7 +100,9 @@ func (reader *RecordReaderDKVPNIDX) processHandle(
 
 	for {
 		recordsAndContexts, eof := reader.getRecordBatch(linesChannel, context)
-		readerChannel <- recordsAndContexts
+		if recordsAndContexts.Len() > 0 {
+			readerChannel <- recordsAndContexts
+		}
 		if eof {
 			break
 		}

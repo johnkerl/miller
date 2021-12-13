@@ -11,7 +11,7 @@ import (
 
 type PseudoReaderGen struct {
 	readerOptions   *cli.TReaderOptions
-	recordsPerBatch int
+	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
 }
 
 func NewPseudoReaderGen(
@@ -42,7 +42,7 @@ func (reader *PseudoReaderGen) process(
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile("(gen-pseudo-reader)")
-	recordsPerBatch := reader.readerOptions.RecordsPerBatch
+	recordsPerBatch := reader.recordsPerBatch
 
 	start, err := reader.tryParse("start", reader.readerOptions.GeneratorOptions.StartAsString)
 	if err != nil {
