@@ -19,6 +19,24 @@ type RecordReaderXTAB struct {
 	// Note: XTAB uses two consecutive IFS in place of an IRS; IRS is ignored
 }
 
+// tStanza is for the channelized reader which operates (for performance) in
+// its own goroutine. An XTAB "stanza" is a collection of lines which will be
+// parsed as a Miller record. Also for performance (to reduce
+// goroutine-scheduler thrash) stanzas are delivered in batches (nominally max
+// 500 or so). This struct helps us keep each stanza's comment lines along with
+// the stanza they originated in.
+type tStanza struct {
+	dataLines    *list.List
+	commentLines *list.List
+}
+
+func newStanza() *tStanza {
+	return &tStanza{
+		dataLines:    list.New(),
+		commentLines: list.New(),
+	}
+}
+
 func NewRecordReaderXTAB(
 	readerOptions *cli.TReaderOptions,
 	recordsPerBatch int,
@@ -82,7 +100,8 @@ func (reader *RecordReaderXTAB) processHandle(
 	lineScanner := NewLineScanner(handle, reader.readerOptions.IFS)
 
 	stanzasChannel := make(chan *list.List, recordsPerBatch)
-	go channelizedStanzaScanner(lineScanner, stanzasChannel, downstreamDoneChannel, recordsPerBatch)
+	go channelizedStanzaScanner(lineScanner, reader.readerOptions, stanzasChannel, downstreamDoneChannel,
+		recordsPerBatch)
 
 	for {
 		recordsAndContexts, eof := reader.getRecordBatch(stanzasChannel, context, errorChannel)
@@ -111,6 +130,7 @@ func (reader *RecordReaderXTAB) processHandle(
 // record.
 func channelizedStanzaScanner(
 	lineScanner *bufio.Scanner,
+	readerOptions *cli.TReaderOptions,
 	stanzasChannel chan<- *list.List, // list of list of string
 	downstreamDoneChannel <-chan bool, // for mlr head
 	recordsPerBatch int,
@@ -120,25 +140,24 @@ func channelizedStanzaScanner(
 	done := false
 
 	stanzas := list.New()
-	stanza := list.New()
+	stanza := newStanza()
 
 	for lineScanner.Scan() {
 		line := lineScanner.Text()
 
-		// TODO: stanzas should pair data-list and comment-list ...
 		// Check for comments-in-data feature
 		// TODO: function-pointer this away
-		//		if reader.readerOptions.CommentHandling != cli.CommentsAreData {
-		//			if strings.HasPrefix(line, reader.readerOptions.CommentString) {
-		//				if reader.readerOptions.CommentHandling == cli.PassComments {
-		//					recordsAndContexts.PushBack(types.NewOutputString(line+reader.readerOptions.IFS, context))
-		//					continue
-		//				} else if reader.readerOptions.CommentHandling == cli.SkipComments {
-		//					continue
-		//				}
-		//				// else comments are data
-		//			}
-		//		}
+		if readerOptions.CommentHandling != cli.CommentsAreData {
+			if strings.HasPrefix(line, readerOptions.CommentString) {
+				if readerOptions.CommentHandling == cli.PassComments {
+					stanza.commentLines.PushBack(line)
+					continue
+				} else if readerOptions.CommentHandling == cli.SkipComments {
+					continue
+				}
+				// else comments are data
+			}
+		}
 
 		if line == "" {
 			// Empty-line handling:
@@ -149,7 +168,7 @@ func channelizedStanzaScanner(
 				inStanza = false
 				stanzas.PushBack(stanza)
 				numStanzasSeen++
-				stanza = list.New()
+				stanza = newStanza()
 			} else {
 				continue
 			}
@@ -157,7 +176,7 @@ func channelizedStanzaScanner(
 			if !inStanza {
 				inStanza = true
 			}
-			stanza.PushBack(line)
+			stanza.dataLines.PushBack(line)
 		}
 
 		// See if downstream processors will be ignoring further data (e.g. mlr
@@ -185,7 +204,7 @@ func channelizedStanzaScanner(
 
 	// The last stanza may not have a trailing newline after it. Any lines in the stanza
 	// at this point will form the final record in the stream.
-	if stanza.Len() > 0 {
+	if stanza.dataLines.Len() > 0 || stanza.commentLines.Len() > 0 {
 		stanzas.PushBack(stanza)
 	}
 
@@ -210,17 +229,24 @@ func (reader *RecordReaderXTAB) getRecordBatch(
 	}
 
 	for e := stanzas.Front(); e != nil; e = e.Next() {
-		stanza := e.Value.(*list.List)
+		stanza := e.Value.(*tStanza)
 
-		lib.InternalCodingErrorIf(stanza.Len() == 0)
-
-		record, err := reader.recordFromXTABLines(stanza)
-		if err != nil {
-			errorChannel <- err
-			return
+		if stanza.commentLines.Len() > 0 {
+			for f := stanza.commentLines.Front(); f != nil; f = f.Next() {
+				line := f.Value.(string)
+				recordsAndContexts.PushBack(types.NewOutputString(line+reader.readerOptions.IFS, context))
+			}
 		}
-		context.UpdateForInputRecord()
-		recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+
+		if stanza.dataLines.Len() > 0 {
+			record, err := reader.recordFromXTABLines(stanza.dataLines)
+			if err != nil {
+				errorChannel <- err
+				return
+			}
+			context.UpdateForInputRecord()
+			recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+		}
 	}
 
 	return recordsAndContexts, false
