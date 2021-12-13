@@ -1,6 +1,8 @@
 ================================================================
 PUNCHDOWN LIST
 
+* --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
+
 * perf:
   o go tool pprof -http=:8080 cpu.pprof
   x close(chan) as EOS throughout
