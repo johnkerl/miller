@@ -296,7 +296,6 @@ func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int, name *Mlrval) {
 		return
 	}
 
-	// TODO: rekey the hashmap
 	s := ""
 	if name.mvtype == MT_STRING {
 		s = name.printrep
@@ -311,11 +310,18 @@ func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int, name *Mlrval) {
 	// and the user does '$[[1]] = $[[2]]'. Then there would be two b's.
 	mapEntry := mlrmap.findEntry(s)
 	if mapEntry != nil && mapEntry != positionalEntry {
+		if mlrmap.keysToEntries != nil {
+			delete(mlrmap.keysToEntries, positionalEntry.Key)
+		}
 		mlrmap.Unlink(mapEntry)
 	}
 
 	lib.InternalCodingErrorIf(s == "")
 	positionalEntry.Key = s
+
+	if mlrmap.keysToEntries != nil {
+		mlrmap.keysToEntries[s] = positionalEntry
+	}
 }
 
 // ----------------------------------------------------------------
