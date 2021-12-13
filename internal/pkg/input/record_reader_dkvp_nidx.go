@@ -158,6 +158,9 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
 	} else {
 		pairs = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
 	}
+	if reader.readerOptions.AllowRepeatIFS {
+		pairs = lib.StripEmpties(pairs) // left/right trim
+	}
 
 	for i, pair := range pairs {
 		var kv []string
@@ -195,7 +198,6 @@ func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
 	} else {
 		values = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
 	}
-
 	if reader.readerOptions.AllowRepeatIFS {
 		values = lib.StripEmpties(values) // left/right trim
 	}
