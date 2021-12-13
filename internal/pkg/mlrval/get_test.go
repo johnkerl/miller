@@ -161,3 +161,29 @@ func TestGetBoolValue(t *testing.T) {
 	boolval, ok = mv.GetBoolValue()
 	assert.False(t, ok, "from-data-file \"false\" should infer to string")
 }
+
+func TestGetTypeName(t *testing.T) {
+	mv := FromInferredType("234")
+	assert.Equal(t, "int", mv.GetTypeName())
+
+	mv = FromDeferredType("234")
+	assert.Equal(t, "int", mv.GetTypeName())
+
+	mv = FromInferredType("234.5")
+	assert.Equal(t, "float", mv.GetTypeName())
+
+	mv = FromDeferredType("234.5")
+	assert.Equal(t, "float", mv.GetTypeName())
+
+	mv = FromInferredType("abc")
+	assert.Equal(t, "string", mv.GetTypeName())
+
+	mv = FromDeferredType("abc")
+	assert.Equal(t, "string", mv.GetTypeName())
+
+	mv = FromInferredType("")
+	assert.Equal(t, "empty", mv.GetTypeName())
+
+	mv = FromDeferredType("")
+	assert.Equal(t, "empty", mv.GetTypeName())
+}

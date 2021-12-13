@@ -1,7 +1,7 @@
 PREFIX=/usr/local
 INSTALLDIR=$(PREFIX)/bin
 
-# ----------------------------------------------------------------
+# ================================================================
 # General-use targets
 
 # This must remain the first target in this file, which is what 'make' with no
@@ -23,9 +23,10 @@ install: build
 	cp mlr $(DESTDIR)/$(INSTALLDIR)
 	make -C man install
 
-# ----------------------------------------------------------------
+# ================================================================
 # Dev targets
 
+# ----------------------------------------------------------------
 # Unit tests (small number)
 unit-test ut:
 	go test github.com/johnkerl/miller/internal/pkg/...
@@ -58,7 +59,10 @@ mlrval-get-test:
 	  internal/pkg/mlrval/infer.go \
 	  internal/pkg/mlrval/is.go \
 	  internal/pkg/mlrval/get.go
-mlrval-tests: mlrval-new-test mlrval-is-test mlrval-get-test
+mlrval-stringify-test:
+	go test internal/pkg/types/mlrval_stringify_test.go \
+	  internal/pkg/types/mlrval_stringify.go
+mlrval-tests: mlrval-new-test mlrval-is-test mlrval-get-test mlrval-stringify-test
 
 mlrmap-new-test:
 	go test internal/pkg/types/mlrmap_new_test.go \
@@ -80,6 +84,9 @@ input-tests: input-dkvp-test
 #mlrval_format_test:
 #	go test internal/pkg/types/mlrval_format_test.go $(ls internal/pkg/types/*.go|grep -v test)
 
+tests-in-order: mlrval-tests mlrmap-tests input-tests
+
+# ----------------------------------------------------------------
 # Regression tests (large number)
 #
 # See ./regression_test.go for information on how to get more details
@@ -92,6 +99,7 @@ regression-test:
 fmt:
 	-go fmt ./...
 
+# ----------------------------------------------------------------
 # For developers before pushing to GitHub.
 #
 # These steps are done in a particular order:
@@ -113,6 +121,7 @@ dev:
 	make -C docs
 	@echo DONE
 
+# ----------------------------------------------------------------
 # Keystroke-savers
 it: build check
 so: install
@@ -131,11 +140,12 @@ mprof5:
 	go build github.com/johnkerl/miller/cmd/mprof5
 mall: mprof5 mprof4 mprof3 mprof2 mprof mlr
 
+# ----------------------------------------------------------------
 # Please see comments in ./create-release-tarball as well as
 # https://miller.readthedocs.io/en/latest/build/#creating-a-new-release-for-developers
 release_tarball: build check
 	./create-release-tarball
 
-# ----------------------------------------------------------------
+# ================================================================
 # Go does its own dependency management, outside of make.
 .PHONY: build mlr mprof mprof2 mprof3 mprof4 mprof5 check unit_test regression_test fmt dev

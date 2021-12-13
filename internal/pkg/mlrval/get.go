@@ -79,3 +79,7 @@ func (mv *Mlrval) GetFunction() interface{} {
 		return nil
 	}
 }
+
+func (mv *Mlrval) GetTypeName() string {
+	return TYPE_NAMES[mv.Type()]
+}

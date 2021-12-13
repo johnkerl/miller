@@ -8,20 +8,9 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
-// ----------------------------------------------------------------
-func (mv *Mlrval) GetType() MVType {
-	return mv.mvtype
-}
-
-func (mv *Mlrval) GetTypeName() string {
-	return TYPE_NAMES[mv.mvtype]
-}
-
 func GetTypeName(mvtype MVType) string {
 	return TYPE_NAMES[mvtype]
 }
-
-// ----------------------------------------------------------------
 
 func (mv *Mlrval) GetArrayLength() (int, bool) {
 	if mv.IsArray() {
@@ -31,7 +20,6 @@ func (mv *Mlrval) GetArrayLength() (int, bool) {
 	}
 }
 
-// ----------------------------------------------------------------
 func (mv *Mlrval) Copy() *Mlrval {
 	other := *mv
 	if mv.IsMap() {
