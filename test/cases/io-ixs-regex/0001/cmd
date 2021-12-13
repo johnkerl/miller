@@ -1,0 +1,1 @@
+mlr --ifs . --ojson cat ${CASEDIR}/input
