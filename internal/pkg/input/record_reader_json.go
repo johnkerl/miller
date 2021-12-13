@@ -2,6 +2,7 @@ package input
 
 import (
 	"bufio"
+	"container/list"
 	"errors"
 	"fmt"
 	"io"
@@ -15,19 +16,24 @@ import (
 )
 
 type RecordReaderJSON struct {
-	readerOptions *cli.TReaderOptions
+	readerOptions   *cli.TReaderOptions
+	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
 }
 
-func NewRecordReaderJSON(readerOptions *cli.TReaderOptions) (*RecordReaderJSON, error) {
+func NewRecordReaderJSON(
+	readerOptions *cli.TReaderOptions,
+	recordsPerBatch int,
+) (*RecordReaderJSON, error) {
 	return &RecordReaderJSON{
-		readerOptions: readerOptions,
+		readerOptions:   readerOptions,
+		recordsPerBatch: recordsPerBatch,
 	}, nil
 }
 
 func (reader *RecordReaderJSON) Read(
 	filenames []string,
 	context types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
@@ -59,39 +65,46 @@ func (reader *RecordReaderJSON) Read(
 			}
 		}
 	}
-	readerChannel <- types.NewEndOfStreamMarker(&context)
+	readerChannel <- types.NewEndOfStreamMarkerList(&context)
 }
 
 func (reader *RecordReaderJSON) processHandle(
 	handle io.Reader,
 	filename string,
 	context *types.Context,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 	errorChannel chan error,
 	downstreamDoneChannel <-chan bool, // for mlr head
 ) {
 	context.UpdateForStartOfFile(filename)
+	// TODO: comment
+	recordsPerBatch := reader.recordsPerBatch
 
 	if reader.readerOptions.CommentHandling != cli.CommentsAreData {
 		handle = NewJSONCommentEnabledReader(handle, reader.readerOptions, readerChannel)
 	}
 	decoder := json.NewDecoder(handle)
+	recordsAndContexts := list.New()
 
 	eof := false
+	i := 0
 	for {
-
 		// See if downstream processors will be ignoring further data (e.g. mlr
 		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
-		// quickly, as it should.
-		select {
-		case _ = <-downstreamDoneChannel:
-			eof = true
-			break
-		default:
-			break
-		}
-		if eof {
-			break
+		// quickly, as it should. Do this channel-check every so often to avoid
+		// scheduler overhead.
+		i++
+		if i%recordsPerBatch == 0 {
+			select {
+			case _ = <-downstreamDoneChannel:
+				eof = true
+				break
+			default:
+				break
+			}
+			if eof {
+				break
+			}
 		}
 
 		mlrval, eof, err := types.MlrvalDecodeFromJSON(decoder)
@@ -116,16 +129,20 @@ func (reader *RecordReaderJSON) processHandle(
 				return
 			}
 			context.UpdateForInputRecord()
-			readerChannel <- types.NewRecordAndContext(
-				record,
-				context,
-			)
+			recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
+
+			if recordsAndContexts.Len() >= recordsPerBatch {
+				readerChannel <- recordsAndContexts
+				recordsAndContexts = list.New()
+			}
+
 		} else if mlrval.IsArray() {
 			records := mlrval.GetArray()
 			if records == nil {
 				errorChannel <- errors.New("Internal coding error detected in JSON record-reader")
 				return
 			}
+
 			for _, mlrval := range records {
 				if !mlrval.IsMap() {
 					// TODO: more context
@@ -143,11 +160,12 @@ func (reader *RecordReaderJSON) processHandle(
 					return
 				}
 				context.UpdateForInputRecord()
-				readerChannel <- types.NewRecordAndContext(
-					record,
-					context,
-				)
+				recordsAndContexts.PushBack(types.NewRecordAndContext(record, context))
 
+				if recordsAndContexts.Len() >= recordsPerBatch {
+					readerChannel <- recordsAndContexts
+					recordsAndContexts = list.New()
+				}
 			}
 
 		} else {
@@ -159,6 +177,10 @@ func (reader *RecordReaderJSON) processHandle(
 			)
 			return
 		}
+	}
+
+	if recordsAndContexts.Len() > 0 {
+		readerChannel <- recordsAndContexts
 	}
 }
 
@@ -187,8 +209,8 @@ func (reader *RecordReaderJSON) processHandle(
 type JSONCommentEnabledReader struct {
 	lineScanner   *bufio.Scanner
 	readerOptions *cli.TReaderOptions
-	context       *types.Context // Needed for channelized stdout-printing logic
-	readerChannel chan<- *types.RecordAndContext
+	context       *types.Context    // Needed for channelized stdout-printing logic
+	readerChannel chan<- *list.List // list of *types.RecordAndContext
 
 	// In case a line was ingested which was longer than the read-buffer passed
 	// to us, in which case we need to split up that line and return it over
@@ -199,7 +221,7 @@ type JSONCommentEnabledReader struct {
 func NewJSONCommentEnabledReader(
 	underlying io.Reader,
 	readerOptions *cli.TReaderOptions,
-	readerChannel chan<- *types.RecordAndContext,
+	readerChannel chan<- *list.List, // list of *types.RecordAndContext
 ) *JSONCommentEnabledReader {
 	return &JSONCommentEnabledReader{
 		lineScanner:   bufio.NewScanner(underlying),
@@ -234,7 +256,9 @@ func (bsr *JSONCommentEnabledReader) Read(p []byte) (n int, err error) {
 		if bsr.readerOptions.CommentHandling == cli.PassComments {
 			// Insert the string into the record-output stream, so that goroutine can
 			// print it, resulting in deterministic output-ordering.
-			bsr.readerChannel <- types.NewOutputString(line+"\n", bsr.context)
+			ell := list.New()
+			ell.PushBack(types.NewOutputString(line+"\n", bsr.context))
+			bsr.readerChannel <- ell
 		}
 	}
 }

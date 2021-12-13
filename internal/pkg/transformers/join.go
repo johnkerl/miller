@@ -339,12 +339,12 @@ func NewTransformerJoin(
 
 func (tr *TransformerJoin) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // ----------------------------------------------------------------
@@ -352,9 +352,9 @@ func (tr *TransformerJoin) Transform(
 // matching each right record against those.
 func (tr *TransformerJoin) transformHalfStreaming(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
@@ -375,7 +375,7 @@ func (tr *TransformerJoin) transformHalfStreaming(
 			iLeftBucket := tr.leftBucketsByJoinFieldValues.Get(groupingKey)
 			if iLeftBucket == nil {
 				if tr.opts.emitRightUnpairables {
-					outputChannel <- inrecAndContext
+					outputRecordsAndContexts.PushBack(inrecAndContext)
 				}
 			} else {
 				leftBucket := iLeftBucket.(*utils.JoinBucket)
@@ -384,29 +384,29 @@ func (tr *TransformerJoin) transformHalfStreaming(
 					tr.formAndEmitPairs(
 						leftBucket.RecordsAndContexts,
 						inrecAndContext,
-						outputChannel,
+						outputRecordsAndContexts,
 					)
 				}
 			}
 		} else if tr.opts.emitRightUnpairables {
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 		}
 
 	} else { // end of record stream
 		if tr.opts.emitLeftUnpairables {
-			tr.emitLeftUnpairedBuckets(outputChannel)
-			tr.emitLeftUnpairables(outputChannel)
+			tr.emitLeftUnpairedBuckets(outputRecordsAndContexts)
+			tr.emitLeftUnpairables(outputRecordsAndContexts)
 		}
-		outputChannel <- inrecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // emit end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerJoin) transformDoublyStreaming(
 	rightRecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	keeper := tr.joinBucketKeeper // keystroke-saver
 
@@ -421,29 +421,29 @@ func (tr *TransformerJoin) transformDoublyStreaming(
 			isPaired = keeper.FindJoinBucket(rightFieldValues)
 		}
 		if tr.opts.emitLeftUnpairables {
-			keeper.OutputAndReleaseLeftUnpaireds(outputChannel)
+			keeper.OutputAndReleaseLeftUnpaireds(outputRecordsAndContexts)
 		} else {
-			keeper.ReleaseLeftUnpaireds(outputChannel)
+			keeper.ReleaseLeftUnpaireds(outputRecordsAndContexts)
 		}
 
 		lefts := keeper.JoinBucket.RecordsAndContexts // keystroke-saver
 
 		if !isPaired && tr.opts.emitRightUnpairables {
-			outputChannel <- rightRecAndContext
+			outputRecordsAndContexts.PushBack(rightRecAndContext)
 		}
 
 		if isPaired && tr.opts.emitPairables && lefts != nil {
-			tr.formAndEmitPairs(lefts, rightRecAndContext, outputChannel)
+			tr.formAndEmitPairs(lefts, rightRecAndContext, outputRecordsAndContexts)
 		}
 
 	} else { // end of record stream
 		keeper.FindJoinBucket(nil)
 
 		if tr.opts.emitLeftUnpairables {
-			keeper.OutputAndReleaseLeftUnpaireds(outputChannel)
+			keeper.OutputAndReleaseLeftUnpaireds(outputRecordsAndContexts)
 		}
 
-		outputChannel <- rightRecAndContext // emit end-of-stream marker
+		outputRecordsAndContexts.PushBack(rightRecAndContext) // emit end-of-stream marker
 	}
 }
 
@@ -458,7 +458,8 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	readerOpts := &tr.opts.joinFlagOptions.ReaderOptions
 
 	// Instantiate the record-reader
-	recordReader, err := input.Create(readerOpts)
+	// TODO: perhaps increase recordsPerBatch, and/or refactor
+	recordReader, err := input.Create(readerOpts, 1)
 	if recordReader == nil {
 		fmt.Fprintf(os.Stderr, "mlr join: %v\n", err)
 		os.Exit(1)
@@ -472,7 +473,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 	initialContext.UpdateForStartOfFile(tr.opts.leftFileName)
 
 	// Set up channels for the record-reader.
-	readerChannel := make(chan *types.RecordAndContext, 10)
+	readerChannel := make(chan *list.List, 2) // list of *types.RecordAndContext
 	errorChannel := make(chan error, 1)
 	downstreamDoneChannel := make(chan bool, 1)
 
@@ -493,7 +494,11 @@ func (tr *TransformerJoin) ingestLeftFile() {
 			fmt.Fprintln(os.Stderr, "mlr", ": ", err)
 			os.Exit(1)
 
-		case leftrecAndContext := <-readerChannel:
+		case leftrecsAndContexts := <-readerChannel:
+			// TODO: temp for batch-reader refactor
+			lib.InternalCodingErrorIf(leftrecsAndContexts.Len() != 1)
+			leftrecAndContext := leftrecsAndContexts.Front().Value.(*types.RecordAndContext)
+
 			if leftrecAndContext.EndOfStream {
 				done = true
 				break // breaks the switch, not the for, in Golang
@@ -527,7 +532,7 @@ func (tr *TransformerJoin) ingestLeftFile() {
 func (tr *TransformerJoin) formAndEmitPairs(
 	leftRecordsAndContexts *list.List,
 	rightRecordAndContext *types.RecordAndContext,
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	////fmt.Println("-- pairs start") // VERBOSE
 	// Loop over each to-be-paired-with record from the left file.
@@ -577,7 +582,7 @@ func (tr *TransformerJoin) formAndEmitPairs(
 		outrecAndContext := types.NewRecordAndContext(outrec, &context)
 
 		// Emit the new joined record on the downstream channel
-		outputChannel <- outrecAndContext
+		outputRecordsAndContexts.PushBack(outrecAndContext)
 	}
 	////fmt.Println("-- pairs end") // VERBOSE
 }
@@ -593,24 +598,24 @@ func (tr *TransformerJoin) formAndEmitPairs(
 // in the second category.
 
 func (tr *TransformerJoin) emitLeftUnpairables(
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	// Loop over each to-be-paired-with record from the left file.
 	for pe := tr.leftUnpairableRecordsAndContexts.Front(); pe != nil; pe = pe.Next() {
 		leftRecordAndContext := pe.Value.(*types.RecordAndContext)
-		outputChannel <- leftRecordAndContext
+		outputRecordsAndContexts.PushBack(leftRecordAndContext)
 	}
 }
 
 func (tr *TransformerJoin) emitLeftUnpairedBuckets(
-	outputChannel chan<- *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 ) {
 	for pe := tr.leftBucketsByJoinFieldValues.Head; pe != nil; pe = pe.Next {
 		bucket := pe.Value.(*utils.JoinBucket)
 		if !bucket.WasPaired {
 			for pf := bucket.RecordsAndContexts.Front(); pf != nil; pf = pf.Next() {
 				recordAndContext := pf.Value.(*types.RecordAndContext)
-				outputChannel <- recordAndContext
+				outputRecordsAndContexts.PushBack(recordAndContext)
 			}
 		}
 	}

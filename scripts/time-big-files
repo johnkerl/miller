@@ -1,0 +1,26 @@
+#!/bin/bash
+
+ourdir=$(dirname $0)
+
+$ourdir/time-big-file dkvp    mlr5
+$ourdir/time-big-file dkvp    'mlr -S'
+echo
+
+$ourdir/time-big-file nidx    mlr5
+$ourdir/time-big-file nidx    'mlr -S'
+echo
+
+$ourdir/time-big-file xtab    mlr5
+$ourdir/time-big-file xtab    'mlr -S'
+echo
+
+$ourdir/time-big-file csv     mlr5
+$ourdir/time-big-file csv     'mlr -S'
+echo
+
+$ourdir/time-big-file csvlite mlr5
+$ourdir/time-big-file csvlite 'mlr -S'
+echo
+
+$ourdir/time-big-file json    mlr5
+$ourdir/time-big-file json    'mlr -S'

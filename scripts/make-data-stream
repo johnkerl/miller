@@ -1,0 +1,32 @@
+stop=1000000000
+profile=""
+
+#stop=1000000
+#profile="cpuprofile cpu.pprof"
+
+mlr \
+  $profile \
+  --ocsv \
+  --igen --gen-stop $stop \
+  put '
+    begin {
+      @colors=["red","purple","yellow","green","blue","orange"];
+      @shapes=["triangle","square","circle","pentagon","hexagon"];
+      @index = 1;
+    }
+
+    $color = @colors[urandint(1,length(@colors))];
+    $shape = @shapes[urandint(1,length(@shapes))];
+    $flag = (urand32() < 0.6) ? "true" : "false";
+    $index = @index;
+    $quantity=fmtnum(urandrange(50,100),"%.4f");
+    $rate=fmtnum(urandrange(1,10),"%.4f");
+
+    @index += urandint(2,10);
+  ' \
+  then filter '$quantity > 60.0' \
+  then put '$y = $k + $index**2 + log10($rate/$quantity)' \
+  then rename i,k \
+  then cut -xf index \
+  then filter '$rate > 2'
+

@@ -26,6 +26,8 @@ const DEFAULT_GEN_START_AS_STRING = "1"
 const DEFAULT_GEN_STEP_AS_STRING = "1"
 const DEFAULT_GEN_STOP_AS_STRING = "100"
 
+const DEFAULT_RECORDS_PER_BATCH = 500
+
 type TGeneratorOptions struct {
 	FieldName     string
 	StartAsString string
@@ -72,6 +74,9 @@ type TReaderOptions struct {
 	PrepipeIsRaw bool
 	// For in-process gunzip/bunzip2/zcat (distinct from prepipe)
 	FileInputEncoding lib.TFileInputEncoding
+
+	// TODO: comment
+	RecordsPerBatch int
 }
 
 // ----------------------------------------------------------------
@@ -181,6 +186,9 @@ func DefaultReaderOptions() TReaderOptions {
 			StepAsString:  DEFAULT_GEN_STEP_AS_STRING,
 			StopAsString:  DEFAULT_GEN_STOP_AS_STRING,
 		},
+
+		// TODO: comment
+		RecordsPerBatch: DEFAULT_RECORDS_PER_BATCH,
 	}
 }
 

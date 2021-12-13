@@ -1,0 +1,18 @@
+#!/bin/bash
+
+mlr="mlr -S"
+suffix="dkvp"
+
+iflag=""
+if [ $# -ge 1 ]; then
+  iflag="--$1"
+  if [ "$iflag" = "--csvlite" ]; then
+    suffix="csv"
+  else
+    suffix=$1
+  fi
+fi
+if [ $# -eq 2 ]; then
+  mlr="$2"
+fi
+justtime $mlr $iflag cat ~/tmp/big.$suffix | md5sum -

@@ -14,6 +14,7 @@ package output
 
 import (
 	"bufio"
+	"container/list"
 	"errors"
 	"fmt"
 	"io"
@@ -212,7 +213,7 @@ type FileOutputHandler struct {
 	// print and dump variants call WriteString.
 	recordWriterOptions *cli.TWriterOptions
 	recordWriter        IRecordWriter
-	recordOutputChannel chan *types.RecordAndContext
+	recordOutputChannel chan *list.List // list of *types.RecordAndContext
 	recordDoneChannel   chan bool
 }
 
@@ -339,7 +340,10 @@ func (handler *FileOutputHandler) WriteRecordAndContext(
 		}
 	}
 
-	handler.recordOutputChannel <- outrecAndContext
+	// TODO: myybe refactor to batch better
+	ell := list.New()
+	ell.PushBack(outrecAndContext)
+	handler.recordOutputChannel <- ell
 	return nil
 }
 
@@ -354,7 +358,7 @@ func (handler *FileOutputHandler) setUpRecordWriter() error {
 	}
 	handler.recordWriter = recordWriter
 
-	handler.recordOutputChannel = make(chan *types.RecordAndContext, 1)
+	handler.recordOutputChannel = make(chan *list.List, 1) // list of *types.RecordAndContext
 	handler.recordDoneChannel = make(chan bool, 1)
 
 	go ChannelWriter(
@@ -374,7 +378,7 @@ func (handler *FileOutputHandler) Close() error {
 	if handler.recordOutputChannel != nil {
 		// TODO: see if we need a real context
 		emptyContext := types.Context{}
-		handler.recordOutputChannel <- types.NewEndOfStreamMarker(&emptyContext)
+		handler.recordOutputChannel <- types.NewEndOfStreamMarkerList(&emptyContext)
 
 		// Wait for the output channel to drain
 		done := false

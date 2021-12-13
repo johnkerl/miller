@@ -2,6 +2,7 @@ package input
 
 import (
 	"bufio"
+	"container/list"
 	"io"
 
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -19,7 +20,7 @@ type IRecordReader interface {
 	Read(
 		filenames []string,
 		initialContext types.Context,
-		readerChannel chan<- *types.RecordAndContext,
+		readerChannel chan<- *list.List, // list of *types.RecordAndContext
 		errorChannel chan error,
 		downstreamDoneChannel <-chan bool, // for mlr head
 	)
@@ -75,4 +76,50 @@ func NewLineScanner(handle io.Reader, irs string) *bufio.Scanner {
 	scanner.Split(recordSplitter)
 
 	return scanner
+}
+
+// TODO: comment copiously
+//
+// Lines are written to the channel with their trailing newline (or whatever
+// IRS) stripped off. So, callers get "a=1,b=2" rather than "a=1,b=2\n".
+func channelizedLineScanner(
+	lineScanner *bufio.Scanner,
+	linesChannel chan<- *list.List,
+	downstreamDoneChannel <-chan bool, // for mlr head
+	recordsPerBatch int,
+) {
+	i := 0
+	done := false
+
+	lines := list.New()
+
+	for lineScanner.Scan() {
+		i++
+
+		lines.PushBack(lineScanner.Text())
+
+		// See if downstream processors will be ignoring further data (e.g. mlr
+		// head).  If so, stop reading. This makes 'mlr head hugefile' exit
+		// quickly, as it should.
+		if i%recordsPerBatch == 0 {
+			select {
+			case _ = <-downstreamDoneChannel:
+				done = true
+				break
+			default:
+				break
+			}
+			if done {
+				break
+			}
+			linesChannel <- lines
+			lines = list.New()
+		}
+
+		if done {
+			break
+		}
+	}
+	linesChannel <- lines
+	close(linesChannel) // end-of-stream marker
 }

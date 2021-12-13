@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -130,9 +131,9 @@ func NewTransformerSample(
 
 func (tr *TransformerSample) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	// Not end of input stream: retain the record, and emit nothing until end of stream.
@@ -153,13 +154,13 @@ func (tr *TransformerSample) Transform(
 		for pe := tr.bucketsByGroup.Head; pe != nil; pe = pe.Next {
 			sampleBucket := pe.Value.(*sampleBucketType)
 			for i := 0; i < sampleBucket.nused; i++ {
-				outputChannel <- sampleBucket.recordsAndContexts[i]
+				outputRecordsAndContexts.PushBack(sampleBucket.recordsAndContexts[i])
 
 			}
 		}
 
 		// Emit the stream-terminating null record
-		outputChannel <- inrecAndContext
+		outputRecordsAndContexts.PushBack(inrecAndContext)
 	}
 }
 

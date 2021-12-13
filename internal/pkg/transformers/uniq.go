@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"container/list"
 	"fmt"
 	"os"
 	"strings"
@@ -337,12 +338,12 @@ func NewTransformerUniq(
 
 func (tr *TransformerUniq) Transform(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
-	tr.recordTransformerFunc(inrecAndContext, inputDownstreamDoneChannel, outputDownstreamDoneChannel, outputChannel)
+	tr.recordTransformerFunc(inrecAndContext, outputRecordsAndContexts, inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 }
 
 // ----------------------------------------------------------------
@@ -350,9 +351,9 @@ func (tr *TransformerUniq) Transform(
 // non-streaming, with output at end of stream.
 func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -373,10 +374,10 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 			icount := tr.uniqifiedRecordCounts.Get(pe.Key)
 			mcount := types.MlrvalFromInt(icount.(int))
 			outrecAndContext.Record.PrependReference(tr.outputFieldName, mcount)
-			outputChannel <- outrecAndContext
+			outputRecordsAndContexts.PushBack(outrecAndContext)
 		}
 
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 
 }
@@ -386,9 +387,9 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 // of stream.
 func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -403,9 +404,9 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 			tr.outputFieldName,
 			types.MlrvalFromInt(tr.uniqifiedRecordCounts.FieldCount),
 		)
-		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }
 
@@ -413,9 +414,9 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 // Print each unique record only once (on first occurrence).
 func (tr *TransformerUniq) transformUniqifyEntireRecords(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -423,21 +424,21 @@ func (tr *TransformerUniq) transformUniqifyEntireRecords(
 		recordAsString := inrec.String()
 		if !tr.uniqifiedRecordCounts.Has(recordAsString) {
 			tr.uniqifiedRecordCounts.Put(recordAsString, 1)
-			outputChannel <- inrecAndContext
+			outputRecordsAndContexts.PushBack(inrecAndContext)
 		}
 
 	} else { // end of record stream
 
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerUniq) transformUnlashed(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -479,20 +480,20 @@ func (tr *TransformerUniq) transformUnlashed(
 					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Get(fieldValueString).(*types.Mlrval),
 				)
 				outrec.PutReference("count", types.MlrvalFromInt(pf.Value.(int)))
-				outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
 		}
 
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerUniq) transformNumDistinctOnly(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -513,18 +514,18 @@ func (tr *TransformerUniq) transformNumDistinctOnly(
 			"count",
 			types.MlrvalFromInt(tr.countsByGroup.FieldCount),
 		)
-		outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerUniq) transformWithCounts(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -557,19 +558,19 @@ func (tr *TransformerUniq) transformWithCounts(
 					types.MlrvalFromInt(pa.Value.(int)),
 				)
 			}
-			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 		}
 
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }
 
 // ----------------------------------------------------------------
 func (tr *TransformerUniq) transformWithoutCounts(
 	inrecAndContext *types.RecordAndContext,
+	outputRecordsAndContexts *list.List, // list of *types.RecordAndContext
 	inputDownstreamDoneChannel <-chan bool,
 	outputDownstreamDoneChannel chan<- bool,
-	outputChannel chan<- *types.RecordAndContext,
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
@@ -592,13 +593,13 @@ func (tr *TransformerUniq) transformWithoutCounts(
 				)
 			}
 
-			outputChannel <- types.NewRecordAndContext(outrec, &inrecAndContext.Context)
+			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
 		} else {
 			tr.countsByGroup.Put(groupingKey, iCount.(int)+1)
 		}
 
 	} else { // end of record stream
-		outputChannel <- inrecAndContext // end-of-stream marker
+		outputRecordsAndContexts.PushBack(inrecAndContext) // end-of-stream marker
 	}
 }

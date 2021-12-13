@@ -73,6 +73,17 @@ so: install
 sure: build check
 mlr:
 	go build github.com/johnkerl/miller/cmd/mlr
+mprof:
+	go build github.com/johnkerl/miller/cmd/mprof
+mprof2:
+	go build github.com/johnkerl/miller/cmd/mprof2
+mprof3:
+	go build github.com/johnkerl/miller/cmd/mprof3
+mprof4:
+	go build github.com/johnkerl/miller/cmd/mprof4
+mprof5:
+	go build github.com/johnkerl/miller/cmd/mprof5
+mall: mprof5 mprof4 mprof3 mprof2 mprof mlr
 
 # Please see comments in ./create-release-tarball as well as
 # https://miller.readthedocs.io/en/latest/build/#creating-a-new-release-for-developers
@@ -80,4 +91,4 @@ release_tarball: build check
 	./create-release-tarball
 
 # Go does its own dependency management, outside of make.
-.PHONY: build mlr check unit_test regression_test fmt dev
+.PHONY: build mlr mprof mprof2 mprof3 mprof4 mprof5 check unit_test regression_test fmt dev
