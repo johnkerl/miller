@@ -123,7 +123,6 @@ func (reader *RecordReaderNIDX) recordFromNIDXLine(
 	} else {
 		values = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
 	}
-
 	if reader.readerOptions.AllowRepeatIFS {
 		values = lib.StripEmpties(values) // left/right trim
 	}

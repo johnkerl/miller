@@ -9,7 +9,6 @@ package cli
 import (
 	"fmt"
 	"os"
-	"regexp"
 	"strings"
 
 	"github.com/mattn/go-isatty"
@@ -60,7 +59,7 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 		readerOptions.IFSRegex = nil
 	} else if readerOptions.AllowRepeatIFS {
 		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IFS + ")+")
-	} else if regexp.QuoteMeta(readerOptions.IFS) == readerOptions.IFS {
+	} else if !lib.IsRegexString(readerOptions.IFS) {
 		// Using regex-splitting on IFS/IPS in record-readers that support it is a HUGE perf hit (almost 2x).
 		// Don't use it unless these are actually value-adding regexes.
 		readerOptions.IFSRegex = nil
@@ -72,7 +71,7 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 		readerOptions.IPSRegex = nil
 	} else if readerOptions.AllowRepeatIPS {
 		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IPS + ")+")
-	} else if regexp.QuoteMeta(readerOptions.IPS) == readerOptions.IPS {
+	} else if !lib.IsRegexString(readerOptions.IPS) {
 		// Using regex-splitting on IFS/IPS in record-readers that support it
 		// is a HUGE perf hit (almost 2x).  Don't use it unless these are
 		// actually value-adding regexes.

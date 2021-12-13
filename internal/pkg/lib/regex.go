@@ -44,6 +44,16 @@ var captureDetector = regexp.MustCompile("\\\\[0-9]")
 // "\2:\1" so they don't need to be recomputed on every record.
 var captureSplitter = regexp.MustCompile("(\\\\[0-9])")
 
+// IsRegexString is for the IFS/IPS-as-regex feature.
+// TODO: probably put this entirely under user control, so people can explicitly say '--ifs-regex something'.
+func IsRegexString(s string) bool {
+	if len(s) == 1 { // Unfortunately, '|' and '.' qualify as "regex metacharacters".
+		return false
+	} else {
+		return regexp.QuoteMeta(s) != s
+	}
+}
+
 // CompileMillerRegex wraps Go regex-compile with some Miller-specific syntax
 // which predate the port of Miller from C to Go.  Miller regexes use a final
 // 'i' to indicate case-insensitivity; Go regexes use an initial "(?i)".
