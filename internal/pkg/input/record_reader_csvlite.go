@@ -190,10 +190,10 @@ func (reader *RecordReaderCSVLite) processHandleExplicitCSVHeader(
 		} else {
 			fields = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
 		}
-
 		if reader.readerOptions.AllowRepeatIFS {
 			fields = lib.StripEmpties(fields) // left/right trim
 		}
+
 		if headerStrings == nil {
 			headerStrings = fields
 			// Get data lines on subsequent loop iterations
@@ -319,10 +319,10 @@ func (reader *RecordReaderCSVLite) processHandleImplicitCSVHeader(
 		} else {
 			fields = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
 		}
-
 		if reader.readerOptions.AllowRepeatIFS {
 			fields = lib.StripEmpties(fields) // left/right trim
 		}
+
 		if headerStrings == nil {
 			n := len(fields)
 			headerStrings = make([]string, n)
