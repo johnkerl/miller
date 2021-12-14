@@ -1,25 +1,18 @@
-// ================================================================
-// Most Miller tests (thousands of them) are command-line-driven via
-// mlr regtest. Here are some cases needing special focus.
-// ================================================================
-
-// Invoke as:
-// * cd internal/pkg/types
-// * go test
-// Or:
-// * cd go
-// * go test github.com/johnkerl/miller/internal/pkg/types/...
-
-package types
+package mlrval
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestFormatterToString(t *testing.T) {
+func TestFoo(t *testing.T) {
+	assert.Equal(t, true, true)
+}
 
-	mv := MlrvalFromString("hello")
-	formatter := newMlrvalFormatterToString("%s")
+func TestFormatterToString(t *testing.T) {
+	mv := FromString("hello")
+	formatter := newFormatterToString("%s")
 	fmv := formatter.Format(mv)
 	if !fmv.IsString() {
 		t.Fatal()
@@ -28,8 +21,8 @@ func TestFormatterToString(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_NULL
-	formatter = newMlrvalFormatterToString("%s")
+	mv = NULL
+	formatter = newFormatterToString("%s")
 	fmv = formatter.Format(mv)
 	if !fmv.IsString() {
 		t.Fatal()
@@ -38,8 +31,8 @@ func TestFormatterToString(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_TRUE
-	formatter = newMlrvalFormatterToString("%s")
+	mv = TRUE
+	formatter = newFormatterToString("%s")
 	fmv = formatter.Format(mv)
 	if !fmv.IsString() {
 		t.Fatal()
@@ -48,8 +41,8 @@ func TestFormatterToString(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_FALSE
-	formatter = newMlrvalFormatterToString("%s")
+	mv = FALSE
+	formatter = newFormatterToString("%s")
 	fmv = formatter.Format(mv)
 	if !fmv.IsString() {
 		t.Fatal()
@@ -58,8 +51,8 @@ func TestFormatterToString(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalFromInt(10)
-	formatter = newMlrvalFormatterToString("%s")
+	mv = FromInt(10)
+	formatter = newFormatterToString("%s")
 	fmv = formatter.Format(mv)
 	if !fmv.IsString() {
 		t.Fatal()
@@ -68,8 +61,8 @@ func TestFormatterToString(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalFromString("hello")
-	formatter = newMlrvalFormatterToString("[[%s]]")
+	mv = FromString("hello")
+	formatter = newFormatterToString("[[%s]]")
 	fmv = formatter.Format(mv)
 	if !fmv.IsString() {
 		t.Fatal()
@@ -81,9 +74,8 @@ func TestFormatterToString(t *testing.T) {
 }
 
 func TestFormatterToInt(t *testing.T) {
-
-	mv := MlrvalFromString("hello")
-	formatter := newMlrvalFormatterToInt("%d")
+	mv := FromString("hello")
+	formatter := newFormatterToInt("%d")
 	fmv := formatter.Format(mv)
 	if !fmv.IsString() {
 		t.Fatal()
@@ -92,8 +84,8 @@ func TestFormatterToInt(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_NULL
-	formatter = newMlrvalFormatterToInt("%d")
+	mv = NULL
+	formatter = newFormatterToInt("%d")
 	fmv = formatter.Format(mv)
 	if !fmv.IsNull() {
 		t.Fatal()
@@ -102,8 +94,8 @@ func TestFormatterToInt(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_TRUE
-	formatter = newMlrvalFormatterToInt("%d")
+	mv = TRUE
+	formatter = newFormatterToInt("%d")
 	fmv = formatter.Format(mv)
 	if !fmv.IsBool() {
 		t.Fatal()
@@ -112,8 +104,8 @@ func TestFormatterToInt(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_FALSE
-	formatter = newMlrvalFormatterToInt("%d")
+	mv = FALSE
+	formatter = newFormatterToInt("%d")
 	fmv = formatter.Format(mv)
 	if !fmv.IsBool() {
 		t.Fatal()
@@ -122,8 +114,8 @@ func TestFormatterToInt(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalFromInt(10)
-	formatter = newMlrvalFormatterToInt("%d")
+	mv = FromInt(10)
+	formatter = newFormatterToInt("%d")
 	fmv = formatter.Format(mv)
 	if !fmv.IsInt() {
 		t.Fatal()
@@ -132,8 +124,8 @@ func TestFormatterToInt(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalFromInt(10)
-	formatter = newMlrvalFormatterToInt("[[0x%x]]")
+	mv = FromInt(10)
+	formatter = newFormatterToInt("[[0x%x]]")
 	fmv = formatter.Format(mv)
 	if !fmv.IsString() {
 		t.Fatal()
@@ -142,8 +134,8 @@ func TestFormatterToInt(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalFromFloat64(10.1)
-	formatter = newMlrvalFormatterToInt("%d")
+	mv = FromFloat(10.1)
+	formatter = newFormatterToInt("%d")
 	fmv = formatter.Format(mv)
 	if !fmv.IsInt() {
 		t.Fatal()
@@ -156,8 +148,8 @@ func TestFormatterToInt(t *testing.T) {
 
 func TestFormatterToFloat(t *testing.T) {
 
-	mv := MlrvalFromString("hello")
-	formatter := newMlrvalFormatterToFloat("%.4f")
+	mv := FromString("hello")
+	formatter := newFormatterToFloat("%.4f")
 	fmv := formatter.Format(mv)
 	if !fmv.IsString() {
 		t.Fatal()
@@ -166,8 +158,8 @@ func TestFormatterToFloat(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_NULL
-	formatter = newMlrvalFormatterToFloat("%.4f")
+	mv = NULL
+	formatter = newFormatterToFloat("%.4f")
 	fmv = formatter.Format(mv)
 	if !fmv.IsNull() {
 		t.Fatal()
@@ -176,8 +168,8 @@ func TestFormatterToFloat(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_TRUE
-	formatter = newMlrvalFormatterToFloat("%.4f")
+	mv = TRUE
+	formatter = newFormatterToFloat("%.4f")
 	fmv = formatter.Format(mv)
 	if !fmv.IsBool() {
 		t.Fatal()
@@ -186,8 +178,8 @@ func TestFormatterToFloat(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_FALSE
-	formatter = newMlrvalFormatterToFloat("%.4f")
+	mv = FALSE
+	formatter = newFormatterToFloat("%.4f")
 	fmv = formatter.Format(mv)
 	if !fmv.IsBool() {
 		t.Fatal()
@@ -196,8 +188,8 @@ func TestFormatterToFloat(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalFromFloat64(10)
-	formatter = newMlrvalFormatterToFloat("%.4f")
+	mv = FromFloat(10)
+	formatter = newFormatterToFloat("%.4f")
 	fmv = formatter.Format(mv)
 	if !fmv.IsFloat() {
 		t.Fatal()
@@ -206,8 +198,8 @@ func TestFormatterToFloat(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalFromFloat64(10.1)
-	formatter = newMlrvalFormatterToFloat("%.4f")
+	mv = FromFloat(10.1)
+	formatter = newFormatterToFloat("%.4f")
 	fmv = formatter.Format(mv)
 	if !fmv.IsFloat() {
 		t.Fatal()
@@ -219,8 +211,8 @@ func TestFormatterToFloat(t *testing.T) {
 
 func TestFormatter(t *testing.T) {
 
-	mv := MlrvalFromString("hello")
-	formatter, err := GetMlrvalFormatter("%d")
+	mv := FromString("hello")
+	formatter, err := GetFormatter("%d")
 	if err != nil {
 		t.Fatal()
 	}
@@ -232,8 +224,8 @@ func TestFormatter(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_NULL
-	formatter, err = GetMlrvalFormatter("%d")
+	mv = NULL
+	formatter, err = GetFormatter("%d")
 	if err != nil {
 		t.Fatal()
 	}
@@ -245,8 +237,8 @@ func TestFormatter(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_TRUE
-	formatter, err = GetMlrvalFormatter("%d")
+	mv = TRUE
+	formatter, err = GetFormatter("%d")
 	if err != nil {
 		t.Fatal()
 	}
@@ -258,8 +250,8 @@ func TestFormatter(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MLRVAL_FALSE
-	formatter, err = GetMlrvalFormatter("%d")
+	mv = FALSE
+	formatter, err = GetFormatter("%d")
 	if err != nil {
 		t.Fatal()
 	}
@@ -271,8 +263,8 @@ func TestFormatter(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalFromFloat64(10.123)
-	formatter, err = GetMlrvalFormatter("%d")
+	mv = FromFloat(10.123)
+	formatter, err = GetFormatter("%d")
 	if err != nil {
 		t.Fatal()
 	}
@@ -284,8 +276,8 @@ func TestFormatter(t *testing.T) {
 		t.Fatal()
 	}
 
-	mv = MlrvalFromFloat64(10.1)
-	formatter, err = GetMlrvalFormatter("%d")
+	mv = FromFloat(10.1)
+	formatter, err = GetFormatter("%d")
 	if err != nil {
 		t.Fatal()
 	}

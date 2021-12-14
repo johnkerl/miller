@@ -5,10 +5,8 @@ PUNCHDOWN LIST
 * JIT next:
   o mlrval copy
   o mlrmap copy
-  o s, ok := mlrval.ScalarString -- ?
-  o MlrvalString
 
-* big-picture item @ Rmd; also webdoc intro page
+* big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
 
 * mr -S
   test/cases/dsl-array-map-indexing

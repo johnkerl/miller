@@ -1,4 +1,4 @@
-package types
+package mlrval
 
 import (
 	"errors"
@@ -38,40 +38,51 @@ import (
 //    - -i, -f, -s
 // ----------------------------------------------------------------
 
-// ----------------------------------------------------------------
-var mlrvalFormatterCache map[string]IMlrvalFormatter = make(map[string]IMlrvalFormatter)
+// Nil means use default format.
+// Set from the CLI parser using mlr --ofmt.
+var floatOutputFormatter IFormatter = nil
 
-func GetMlrvalFormatter(
+func SetFloatOutputFormat(formatString string) error {
+	formatter, err := GetFormatter(formatString)
+	if err != nil {
+		return err
+	}
+	floatOutputFormatter = formatter
+	return nil
+}
+
+var formatterCache map[string]IFormatter = make(map[string]IFormatter)
+
+type IFormatter interface {
+	Format(mlrval *Mlrval) *Mlrval
+	FormatFloat(floatValue float64) string // for --ofmt
+}
+
+func GetFormatter(
 	userLevelFormatString string,
-) (IMlrvalFormatter, error) {
+) (IFormatter, error) {
 	// Cache hit
-	formatter, ok := mlrvalFormatterCache[userLevelFormatString]
+	formatter, ok := formatterCache[userLevelFormatString]
 	if ok {
 		return formatter, nil
 	}
 
 	// Cache miss
-	formatter, err := newMlrvalFormatter(userLevelFormatString)
+	formatter, err := newFormatter(userLevelFormatString)
 	if err != nil {
 		// TODO: temp exit
 		fmt.Printf("mlr: %v\n", err)
 		return nil, err
 	}
 
-	mlrvalFormatterCache[userLevelFormatString] = formatter
+	formatterCache[userLevelFormatString] = formatter
 	return formatter, nil
 }
 
-// ----------------------------------------------------------------
-type IMlrvalFormatter interface {
-	Format(mlrval *Mlrval) *Mlrval
-	FormatFloat(floatValue float64) string // for --ofmt
-}
-
 // People can pass in things like "X%sX" unfortunately :(
-func newMlrvalFormatter(
+func newFormatter(
 	userLevelFormatString string,
-) (IMlrvalFormatter, error) {
+) (IFormatter, error) {
 	numPercents := strings.Count(userLevelFormatString, "%")
 	if numPercents < 1 {
 		return nil, errors.New(
@@ -99,111 +110,113 @@ func newMlrvalFormatter(
 	// and double-precision floats: e.g. "%08lld" and "%9.6lf". For Miller 6,
 	// We must still accept these for backward compatibility.
 	if strings.HasSuffix(goFormatString, "d") {
-		return newMlrvalFormatterToInt(goFormatString), nil
+		return newFormatterToInt(goFormatString), nil
 	}
 	if strings.HasSuffix(goFormatString, "x") {
-		return newMlrvalFormatterToInt(goFormatString), nil
+		return newFormatterToInt(goFormatString), nil
 	}
 
 	if strings.HasSuffix(goFormatString, "f") {
-		return newMlrvalFormatterToFloat(goFormatString), nil
+		return newFormatterToFloat(goFormatString), nil
 	}
 	if strings.HasSuffix(goFormatString, "e") {
-		return newMlrvalFormatterToFloat(goFormatString), nil
+		return newFormatterToFloat(goFormatString), nil
 	}
 	if strings.HasSuffix(goFormatString, "g") {
-		return newMlrvalFormatterToFloat(goFormatString), nil
+		return newFormatterToFloat(goFormatString), nil
 	}
 
 	if strings.HasSuffix(goFormatString, "s") {
-		return newMlrvalFormatterToString(goFormatString), nil
+		return newFormatterToString(goFormatString), nil
 	}
 
 	// TODO:
 	// return nil, errors.New(fmt.Sprintf("unhandled format string \"%s\"", userLevelFormatString))
-	return newMlrvalFormatterToString(goFormatString), nil
+	return newFormatterToString(goFormatString), nil
 }
 
-//func regularizeFormat
-
 // ----------------------------------------------------------------
-type mlrvalFormatterToFloat struct {
+
+type formatterToFloat struct {
 	goFormatString string
 }
 
-func newMlrvalFormatterToFloat(goFormatString string) IMlrvalFormatter {
-	return &mlrvalFormatterToFloat{
+func newFormatterToFloat(goFormatString string) IFormatter {
+	return &formatterToFloat{
 		goFormatString: goFormatString,
 	}
 }
 
-func (formatter *mlrvalFormatterToFloat) Format(mlrval *Mlrval) *Mlrval {
-	floatValue, isFloat := mlrval.GetFloatValue()
+func (formatter *formatterToFloat) Format(mv *Mlrval) *Mlrval {
+	floatValue, isFloat := mv.GetFloatValue()
 	if isFloat {
 		formatted := fmt.Sprintf(formatter.goFormatString, floatValue)
-		return MlrvalTryPointerFromFloatString(formatted)
+		return TryFromFloatString(formatted)
 	}
-	intValue, isInt := mlrval.GetIntValue()
+	intValue, isInt := mv.GetIntValue()
 	if isInt {
 		formatted := fmt.Sprintf(formatter.goFormatString, float64(intValue))
-		return MlrvalTryPointerFromFloatString(formatted)
+		return TryFromFloatString(formatted)
 	}
-	return mlrval
+	return mv
 }
 
-func (formatter *mlrvalFormatterToFloat) FormatFloat(floatValue float64) string {
+func (formatter *formatterToFloat) FormatFloat(floatValue float64) string {
 	return fmt.Sprintf(formatter.goFormatString, floatValue)
 }
 
 // ----------------------------------------------------------------
-type mlrvalFormatterToInt struct {
+
+type formatterToInt struct {
 	goFormatString string
 }
 
-func newMlrvalFormatterToInt(goFormatString string) IMlrvalFormatter {
-	return &mlrvalFormatterToInt{
+func newFormatterToInt(goFormatString string) IFormatter {
+	return &formatterToInt{
 		goFormatString: goFormatString,
 	}
 }
 
-func (formatter *mlrvalFormatterToInt) Format(mlrval *Mlrval) *Mlrval {
-	intValue, isInt := mlrval.GetIntValue()
+func (formatter *formatterToInt) Format(mv *Mlrval) *Mlrval {
+	intValue, isInt := mv.GetIntValue()
 	if isInt {
 		formatted := fmt.Sprintf(formatter.goFormatString, intValue)
-		return MlrvalTryPointerFromIntString(formatted)
+		return TryFromIntString(formatted)
 	}
-	floatValue, isFloat := mlrval.GetFloatValue()
+	floatValue, isFloat := mv.GetFloatValue()
 	if isFloat {
 		formatted := fmt.Sprintf(formatter.goFormatString, int(floatValue))
-		return MlrvalTryPointerFromIntString(formatted)
+		return TryFromIntString(formatted)
 	}
-	return mlrval
+	return mv
 }
 
-func (formatter *mlrvalFormatterToInt) FormatFloat(floatValue float64) string {
+func (formatter *formatterToInt) FormatFloat(floatValue float64) string {
 	return fmt.Sprintf(formatter.goFormatString, int(floatValue))
 }
 
+
 // ----------------------------------------------------------------
-type mlrvalFormatterToString struct {
+
+type formatterToString struct {
 	goFormatString string
 }
 
-func newMlrvalFormatterToString(goFormatString string) IMlrvalFormatter {
-	return &mlrvalFormatterToString{
+func newFormatterToString(goFormatString string) IFormatter {
+	return &formatterToString{
 		goFormatString: goFormatString,
 	}
 }
 
-func (formatter *mlrvalFormatterToString) Format(mlrval *Mlrval) *Mlrval {
-	return MlrvalFromString(
+func (formatter *formatterToString) Format(mv *Mlrval) *Mlrval {
+	return FromString(
 		fmt.Sprintf(
 			formatter.goFormatString,
-			mlrval.String(),
+			mv.String(),
 		),
 	)
 }
 
-func (formatter *mlrvalFormatterToString) FormatFloat(floatValue float64) string {
+func (formatter *formatterToString) FormatFloat(floatValue float64) string {
 	return strconv.FormatFloat(floatValue, 'g', -1, 64)
 }

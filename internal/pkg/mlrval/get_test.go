@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	//"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
 func TestGetString(t *testing.T) {

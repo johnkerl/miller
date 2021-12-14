@@ -59,10 +59,27 @@ mlrval-get-test:
 	  internal/pkg/mlrval/infer.go \
 	  internal/pkg/mlrval/is.go \
 	  internal/pkg/mlrval/get.go
-mlrval-stringify-test:
-	go test internal/pkg/types/mlrval_stringify_test.go \
-	  internal/pkg/types/mlrval_stringify.go
-mlrval-tests: mlrval-new-test mlrval-is-test mlrval-get-test mlrval-stringify-test
+mlrval-output-test:
+	go test internal/pkg/mlrval/output_test.go \
+	  internal/pkg/mlrval/type.go \
+	  internal/pkg/mlrval/constants.go \
+	  internal/pkg/mlrval/new.go \
+	  internal/pkg/mlrval/infer.go \
+	  internal/pkg/mlrval/is.go \
+	  internal/pkg/mlrval/get.go \
+	  internal/pkg/mlrval/output.go \
+	  internal/pkg/mlrval/format.go
+mlrval-format-test:
+	go test internal/pkg/mlrval/format_test.go \
+	  internal/pkg/mlrval/type.go \
+	  internal/pkg/mlrval/constants.go \
+	  internal/pkg/mlrval/new.go \
+	  internal/pkg/mlrval/infer.go \
+	  internal/pkg/mlrval/is.go \
+	  internal/pkg/mlrval/get.go \
+	  internal/pkg/mlrval/output.go \
+	  internal/pkg/mlrval/format.go
+mlrval-tests: mlrval-new-test mlrval-is-test mlrval-get-test mlrval-output-test mlrval-format-test
 
 mlrmap-new-test:
 	go test internal/pkg/types/mlrmap_new_test.go \

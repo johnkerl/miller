@@ -74,10 +74,30 @@ func TestFromInt(t *testing.T) {
 	assert.False(t, mv.printrepValid, "printrep should not be computed yet")
 }
 
+func TestTryFromIntString(t *testing.T) {
+	mv := TryFromIntString("123")
+	assert.Equal(t, MVType(MT_INT), MVType(mv.mvtype))
+	assert.True(t, mv.printrepValid, "printrep should be computed")
+
+	mv = TryFromIntString("[123]")
+	assert.Equal(t, MVType(MT_STRING), MVType(mv.mvtype))
+	assert.True(t, mv.printrepValid, "printrep should be computed")
+}
+
 func TestFromFloat(t *testing.T) {
 	mv := FromFloat(123.4)
 	assert.Equal(t, MVType(MT_FLOAT), MVType(mv.mvtype))
 	assert.False(t, mv.printrepValid, "printrep should not be computed yet")
+}
+
+func TestTryFromFloatString(t *testing.T) {
+	mv := TryFromFloatString("123.4")
+	assert.Equal(t, MVType(MT_FLOAT), MVType(mv.mvtype))
+	assert.True(t, mv.printrepValid, "printrep should be computed")
+
+	mv = TryFromIntString("[123.4]")
+	assert.Equal(t, MVType(MT_STRING), MVType(mv.mvtype))
+	assert.True(t, mv.printrepValid, "printrep should be computed")
 }
 
 func TestFromBool(t *testing.T) {

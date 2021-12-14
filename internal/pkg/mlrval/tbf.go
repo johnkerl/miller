@@ -161,50 +161,6 @@ package mlrval
 //	}
 //}
 
-//// MlrvalTryPointerFromFloatString is used by MlrvalFormatter (fmtnum DSL
-//// function, format-values verb, etc).  Each mlrval has printrep and a
-//// printrepValid for its original string, then a type-code like MT_INT or
-//// MT_FLOAT, and type-specific storage like intval or floatval.
-////
-//// If the user has taken a mlrval with original string "3.14" and formatted it
-//// with "%.4f" then its printrep will be "3.1400" but its type should still be
-//// MT_FLOAT.
-////
-//// If on the other hand the user has formatted the same mlrval with "[[%.4f]]"
-//// then its printrep will be "[[3.1400]]" and it will be MT_STRING.
-//// This function supports that.
-//func MlrvalTryPointerFromFloatString(input string) *Mlrval {
-//	_, fok := lib.TryFloat64FromString(input)
-//	if fok {
-//		return MlrvalFromPrevalidatedFloat64String(input)
-//	} else {
-//		return MlrvalFromString(input)
-//	}
-//}
-//
-//// MlrvalTryPointerFromIntString is  used by MlrvalFormatter (fmtnum DSL
-//// function, format-values verb, etc).  Each mlrval has printrep and a
-//// printrepValid for its original string, then a type-code like MT_INT or
-//// MT_FLOAT, and type-specific storage like intval or floatval.
-////
-//// If the user has taken a mlrval with original string "314" and formatted it
-//// with "0x%04x" then its printrep will be "0x013a" but its type should still be
-//// MT_INT.
-////
-//// If on the other hand the user has formatted the same mlrval with
-//// "[[%0x04x]]" then its printrep will be "[[0x013a]]" and it will be
-//// MT_STRING.  This function supports that.
-//func MlrvalTryPointerFromIntString(input string) *Mlrval {
-//	_, iok := lib.TryIntFromString(input)
-//	if iok {
-//		return MlrvalFromPrevalidatedIntString(input)
-//	} else {
-//		return MlrvalFromString(input)
-//	}
-//}
-//
-//// ----------------------------------------------------------------
-
 // TODO: FILE
 //
 //// MlrvalFromInferredTypeForDataFiles is for parsing field values directly from
