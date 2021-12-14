@@ -12,7 +12,7 @@
 // example: adding two ints, or an int and a float, or int and boolean (the
 // latter being an error).
 //
-// The next-past-highest mlrval type enum is called MT_DIM and that is the
+// The next-past-highest mlrval type enum is called mlrval.MT_DIM and that is the
 // dimension of the binary-operator disposition matrices and unary-operator
 // disposition vectors.
 //
@@ -47,36 +47,41 @@
 
 package types
 
+import (
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
+	"github.com/johnkerl/miller/internal/pkg/types"
+)
+
 // Function-pointer type for zary functions.
-type ZaryFunc func() *Mlrval
+type ZaryFunc func() *mlrval.Mlrval
 
 // Function-pointer type for unary-operator disposition vectors.
-type UnaryFunc func(input1 *Mlrval) *Mlrval
+type UnaryFunc func(input1 *mlrval.Mlrval) *mlrval.Mlrval
 
 // The asserting_{type} need access to the context to say things like 'Assertion ... failed
 // at filename {FILENAME} record number {NR}'.
-type UnaryFuncWithContext func(input1 *Mlrval, context *Context) *Mlrval
+type UnaryFuncWithContext func(input1 *mlrval.Mlrval, context *types.Context) *mlrval.Mlrval
 
 // Returns nil, or one-up captures array as array slots 1..9 of 10-element
 // array for "\1".."\9".
-type RegexCaptureBinaryFunc func(input *Mlrval, sregex *Mlrval) (*Mlrval, []string)
+type RegexCaptureBinaryFunc func(input *mlrval.Mlrval, sregex *mlrval.Mlrval) (*mlrval.Mlrval, []string)
 
 // Helps keystroke-saving for wrapping Go math-library functions
 // Examples: cos, sin, etc.
 type mathLibUnaryFunc func(float64) float64
-type mathLibUnaryFuncWrapper func(input1 *Mlrval, f mathLibUnaryFunc) *Mlrval
+type mathLibUnaryFuncWrapper func(input1 *mlrval.Mlrval, f mathLibUnaryFunc) *mlrval.Mlrval
 
 // Function-pointer type for binary-operator disposition matrices.
-type BinaryFunc func(input1, input2 *Mlrval) *Mlrval
+type BinaryFunc func(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval
 
 // Function-pointer type for ternary functions
-type TernaryFunc func(input1, input2, input3 *Mlrval) *Mlrval
+type TernaryFunc func(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval
 
 // Function-pointer type for variadic functions.
-type VariadicFunc func(inputs []*Mlrval) *Mlrval
+type VariadicFunc func(inputs []*mlrval.Mlrval) *mlrval.Mlrval
 
 // Function-pointer type for sorting. Returns < 0 if a < b, 0 if a == b, > 0 if a > b.
-type ComparatorFunc func(*Mlrval, *Mlrval) int
+type ComparatorFunc func(*mlrval.Mlrval, *mlrval.Mlrval) int
 
 // ================================================================
 // The following are frequently used in disposition matrices for various
@@ -86,102 +91,102 @@ type ComparatorFunc func(*Mlrval, *Mlrval) int
 
 // ----------------------------------------------------------------
 // Return error (unary)
-func _erro1(input1 *Mlrval) *Mlrval {
-	return MLRVAL_ERROR
+func _erro1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.ERROR
 }
 
 // Return absent (unary)
-func _absn1(input1 *Mlrval) *Mlrval {
-	return MLRVAL_ABSENT
+func _absn1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.ABSENT
 }
 
 // Return zero (unary)
-func _zero1(input1 *Mlrval) *Mlrval {
-	return MlrvalFromInt(0)
+func _zero1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(0)
 }
 
 // Return null (unary)
-func _null1(input1 *Mlrval) *Mlrval {
-	return MLRVAL_NULL
+func _null1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.NULL
 }
 
 // Return void (unary)
-func _void1(input1 *Mlrval) *Mlrval {
-	return MLRVAL_VOID
+func _void1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.VOID
 }
 
 // Return argument (unary)
-func _1u___(input1 *Mlrval) *Mlrval {
+func _1u___(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return input1
 }
 
 // ----------------------------------------------------------------
 // Return error (binary)
-func _erro(input1, input2 *Mlrval) *Mlrval {
-	return MLRVAL_ERROR
+func _erro(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.ERROR
 }
 
 // Return absent (binary)
-func _absn(input1, input2 *Mlrval) *Mlrval {
-	return MLRVAL_ABSENT
+func _absn(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.ABSENT
 }
 
 // Return null (binary)
-func _null(input1, input2 *Mlrval) *Mlrval {
-	return MLRVAL_NULL
+func _null(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.NULL
 }
 
 // Return void (binary)
-func _void(input1, input2 *Mlrval) *Mlrval {
-	return MLRVAL_VOID
+func _void(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.VOID
 }
 
 // Return 0 (binary)
-func _zero2(input1 *Mlrval) *Mlrval {
-	return MlrvalFromInt(0)
+func _zero2(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(0)
 }
 
 // Return first argument (binary)
-func _1___(input1, input2 *Mlrval) *Mlrval {
+func _1___(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return input1
 }
 
 // Return second argument (binary)
-func _2___(input1, input2 *Mlrval) *Mlrval {
+func _2___(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return input2
 }
 
 // Return negative second argument (binary)
-func _n2__(input1, input2 *Mlrval) *Mlrval {
+func _n2__(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_minus_unary(input2)
 }
 
 // Return first argument, as string (binary)
-func _s1__(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromString(input1.String())
+func _s1__(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromString(input1.String())
 }
 
 // Return second argument, as string (binary)
-func _s2__(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromString(input2.String())
+func _s2__(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromString(input2.String())
 }
 
 // Return integer zero (binary)
-func _i0__(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(0)
+func _i0__(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(0)
 }
 
 // Return float zero (binary)
-func _f0__(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(0)
+func _f0__(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(0)
 }
 
 // Return boolean true (binary)
-func _true(input1, input2 *Mlrval) *Mlrval {
-	return MLRVAL_TRUE
+func _true(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.TRUE
 }
 
 // Return boolean false (binary)
-func _fals(input1, input2 *Mlrval) *Mlrval {
-	return MLRVAL_FALSE
+func _fals(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FALSE
 }

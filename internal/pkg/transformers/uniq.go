@@ -475,7 +475,7 @@ func (tr *TransformerUniq) transformUnlashed(
 			for pf := countsForFieldName.Head; pf != nil; pf = pf.Next {
 				fieldValueString := pf.Key
 				outrec := types.NewMlrmapAsRecord()
-				outrec.PutReference("field", mlrval.MlrvalFromString(fieldName))
+				outrec.PutReference("field", mlrval.mlrval.FromString(fieldName))
 				outrec.PutCopy(
 					"value",
 					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Get(fieldValueString).(*mlrval.Mlrval),

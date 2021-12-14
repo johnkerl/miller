@@ -4,11 +4,12 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // BIF_ssub implements the ssub function -- no-frills string-replace, no
 // regexes, no escape sequences.
-func BIF_ssub(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_ssub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -19,16 +20,16 @@ func BIF_ssub(input1, input2, input3 *Mlrval) *Mlrval {
 		return input3
 	}
 	if !input1.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input2.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input3.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
-	return MlrvalFromString(
-		strings.Replace(input1.printrep, input2.printrep, input3.printrep, 1),
+	return mlrval.FromString(
+		strings.Replace(input1.AcquireStringValue(), input2.AcquireStringValue(), input3.AcquireStringValue(), 1),
 	)
 }
 
@@ -39,7 +40,7 @@ func BIF_ssub(input1, input2, input3 *Mlrval) *Mlrval {
 // on each record. Likewise for other regex-using functions in this file.  But
 // first, do a profiling run to see how much time would be saved, and if this
 // precomputing+caching would be worthwhile.
-func BIF_sub(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -50,26 +51,26 @@ func BIF_sub(input1, input2, input3 *Mlrval) *Mlrval {
 		return input3
 	}
 	if !input1.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input2.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input3.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
-	input := input1.printrep
-	sregex := input2.printrep
-	replacement := input3.printrep
+	input := input1.AcquireStringValue()
+	sregex := input2.AcquireStringValue()
+	replacement := input3.AcquireStringValue()
 
 	stringOutput := lib.RegexSub(input, sregex, replacement)
-	return MlrvalFromString(stringOutput)
+	return mlrval.FromString(stringOutput)
 }
 
 // BIF_gsub implements the gsub function, with support for regexes and regex captures
 // of the form "\1" .. "\9".
-func BIF_gsub(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_gsub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -80,26 +81,26 @@ func BIF_gsub(input1, input2, input3 *Mlrval) *Mlrval {
 		return input3
 	}
 	if !input1.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input2.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input3.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
-	input := input1.printrep
-	sregex := input2.printrep
-	replacement := input3.printrep
+	input := input1.AcquireStringValue()
+	sregex := input2.AcquireStringValue()
+	replacement := input3.AcquireStringValue()
 
 	stringOutput := lib.RegexGsub(input, sregex, replacement)
-	return MlrvalFromString(stringOutput)
+	return mlrval.FromString(stringOutput)
 }
 
 // BIF_string_matches_regexp implements the =~ operator, with support for
 // setting regex-captures for later expressions to access using "\1" .. "\9".
-func BIF_string_matches_regexp(input1, input2 *Mlrval) (retval *Mlrval, captures []string) {
+func BIF_string_matches_regexp(input1, input2 *mlrval.Mlrval) (retval *mlrval.Mlrval, captures []string) {
 	if !input1.IsLegit() {
 		return input1, nil
 	}
@@ -108,51 +109,51 @@ func BIF_string_matches_regexp(input1, input2 *Mlrval) (retval *Mlrval, captures
 	}
 	input1string := input1.String()
 	if !input2.IsStringOrVoid() {
-		return MLRVAL_ERROR, nil
+		return mlrval.ERROR, nil
 	}
 
-	boolOutput, captures := lib.RegexMatches(input1string, input2.printrep)
-	return MlrvalFromBool(boolOutput), captures
+	boolOutput, captures := lib.RegexMatches(input1string, input2.AcquireStringValue())
+	return mlrval.FromBool(boolOutput), captures
 }
 
 // BIF_string_matches_regexp implements the !=~ operator.
-func BIF_string_does_not_match_regexp(input1, input2 *Mlrval) (retval *Mlrval, captures []string) {
+func BIF_string_does_not_match_regexp(input1, input2 *mlrval.Mlrval) (retval *mlrval.Mlrval, captures []string) {
 	output, captures := BIF_string_matches_regexp(input1, input2)
 	if output.IsBool() {
-		return MlrvalFromBool(!output.boolval), captures
+		return mlrval.FromBool(!output.AcquireBoolValue()), captures
 	} else {
 		// else leave it as error, absent, etc.
 		return output, captures
 	}
 }
 
-func BIF_regextract(input1, input2 *Mlrval) *Mlrval {
+func BIF_regextract(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input2.IsString() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
-	regex := lib.CompileMillerRegexOrDie(input2.printrep)
-	match := regex.FindStringIndex(input1.printrep)
+	regex := lib.CompileMillerRegexOrDie(input2.AcquireStringValue())
+	match := regex.FindStringIndex(input1.AcquireStringValue())
 	if match != nil {
-		return MlrvalFromString(input1.printrep[match[0]:match[1]])
+		return mlrval.FromString(input1.AcquireStringValue()[match[0]:match[1]])
 	} else {
-		return MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 }
 
-func BIF_regextract_or_else(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_regextract_or_else(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsString() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input2.IsString() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
-	regex := lib.CompileMillerRegexOrDie(input2.printrep)
-	match := regex.FindStringIndex(input1.printrep)
+	regex := lib.CompileMillerRegexOrDie(input2.AcquireStringValue())
+	match := regex.FindStringIndex(input1.AcquireStringValue())
 	if match != nil {
-		return MlrvalFromString(input1.printrep[match[0]:match[1]])
+		return mlrval.FromString(input1.AcquireStringValue()[match[0]:match[1]])
 	} else {
 		return input3
 	}

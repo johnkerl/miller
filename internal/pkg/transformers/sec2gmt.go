@@ -164,7 +164,7 @@ func (tr *TransformerSec2GMT) Transform(
 			if value != nil {
 				floatval, ok := value.GetNumericToFloatValue()
 				if ok {
-					newValue := mlrval.MlrvalFromString(lib.Sec2GMT(
+					newValue := mlrval.mlrval.FromString(lib.Sec2GMT(
 						floatval/tr.preDivide,
 						tr.numDecimalPlaces,
 					))

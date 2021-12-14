@@ -1,13 +1,17 @@
 package types
 
+import (
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
+)
+
 // ================================================================
 // Bitwise NOT
 
-func bitwise_not_i_i(input1 *Mlrval) *Mlrval {
-	return MlrvalFromInt(^input1.intval)
+func bitwise_not_i_i(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(^input1.AcquireIntValue())
 }
 
-var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
+var bitwise_not_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*ERROR  */ _erro1,
 	/*ABSENT */ _absn1,
 	/*NULL   */ _null1,
@@ -21,8 +25,8 @@ var bitwise_not_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func BIF_bitwise_not(input1 *Mlrval) *Mlrval {
-	return bitwise_not_dispositions[input1.mvtype](input1)
+func BIF_bitwise_not(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bitwise_not_dispositions[input1.Type()](input1)
 }
 
 // ================================================================
@@ -36,18 +40,18 @@ const _m08 uint64 = 0x00ff00ff00ff00ff
 const _m16 uint64 = 0x0000ffff0000ffff
 const _m32 uint64 = 0x00000000ffffffff
 
-func bitcount_i_i(input1 *Mlrval) *Mlrval {
-	a := uint64(input1.intval)
+func bitcount_i_i(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := uint64(input1.AcquireIntValue())
 	a = (a & _m01) + ((a >> 1) & _m01)
 	a = (a & _m02) + ((a >> 2) & _m02)
 	a = (a & _m04) + ((a >> 4) & _m04)
 	a = (a & _m08) + ((a >> 8) & _m08)
 	a = (a & _m16) + ((a >> 16) & _m16)
 	a = (a & _m32) + ((a >> 32) & _m32)
-	return MlrvalFromInt(int(a))
+	return mlrval.FromInt(int(a))
 }
 
-var bitcount_dispositions = [MT_DIM]UnaryFunc{
+var bitcount_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*ERROR  */ _erro1,
 	/*ABSENT */ _absn1,
 	/*NULL   */ _zero1,
@@ -61,18 +65,18 @@ var bitcount_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func BIF_bitcount(input1 *Mlrval) *Mlrval {
-	return bitcount_dispositions[input1.mvtype](input1)
+func BIF_bitcount(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bitcount_dispositions[input1.Type()](input1)
 }
 
 // ================================================================
 // Bitwise AND
 
-func bitwise_and_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(input1.intval & input2.intval)
+func bitwise_and_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(input1.AcquireIntValue() & input2.AcquireIntValue())
 }
 
-var bitwise_and_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var bitwise_and_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT               FLOAT  BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn, _erro},
@@ -87,18 +91,18 @@ var bitwise_and_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_bitwise_and(input1, input2 *Mlrval) *Mlrval {
-	return bitwise_and_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_bitwise_and(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bitwise_and_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Bitwise OR
 
-func bitwise_or_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(input1.intval | input2.intval)
+func bitwise_or_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(input1.AcquireIntValue() | input2.AcquireIntValue())
 }
 
-var bitwise_or_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var bitwise_or_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT              FLOAT  BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn, _erro},
@@ -113,18 +117,18 @@ var bitwise_or_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_bitwise_or(input1, input2 *Mlrval) *Mlrval {
-	return bitwise_or_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_bitwise_or(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bitwise_or_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Bitwise XOR
 
-func bitwise_xor_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(input1.intval ^ input2.intval)
+func bitwise_xor_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(input1.AcquireIntValue() ^ input2.AcquireIntValue())
 }
 
-var bitwise_xor_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var bitwise_xor_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT               FLOAT  BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn, _erro},
@@ -139,18 +143,18 @@ var bitwise_xor_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_bitwise_xor(input1, input2 *Mlrval) *Mlrval {
-	return bitwise_xor_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_bitwise_xor(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return bitwise_xor_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Left shift
 
-func lsh_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(input1.intval << uint64(input2.intval))
+func lsh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(input1.AcquireIntValue() << uint64(input2.AcquireIntValue()))
 }
 
-var left_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var left_shift_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT       FLOAT  BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn, _erro},
@@ -165,18 +169,18 @@ var left_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_left_shift(input1, input2 *Mlrval) *Mlrval {
-	return left_shift_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_left_shift(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return left_shift_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Signed right shift
 
-func srsh_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(input1.intval >> uint64(input2.intval))
+func srsh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(input1.AcquireIntValue() >> uint64(input2.AcquireIntValue()))
 }
 
-var signed_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var signed_right_shift_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT        FLOAT  BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn, _erro},
@@ -191,21 +195,21 @@ var signed_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_signed_right_shift(input1, input2 *Mlrval) *Mlrval {
-	return signed_right_shift_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_signed_right_shift(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return signed_right_shift_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Unsigned right shift
 
-func ursh_i_ii(input1, input2 *Mlrval) *Mlrval {
-	var ua uint64 = uint64(input1.intval)
-	var ub uint64 = uint64(input2.intval)
+func ursh_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var ua uint64 = uint64(input1.AcquireIntValue())
+	var ub uint64 = uint64(input2.AcquireIntValue())
 	var uc = ua >> ub
-	return MlrvalFromInt(int(uc))
+	return mlrval.FromInt(int(uc))
 }
 
-var unsigned_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var unsigned_right_shift_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT        FLOAT  BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _erro, _erro, _absn, _absn, _erro},
@@ -220,6 +224,6 @@ var unsigned_right_shift_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_unsigned_right_shift(input1, input2 *Mlrval) *Mlrval {
-	return unsigned_right_shift_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_unsigned_right_shift(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return unsigned_right_shift_dispositions[input1.Type()][input2.Type()](input1, input2)
 }

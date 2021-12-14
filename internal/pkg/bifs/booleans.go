@@ -6,6 +6,8 @@ package types
 
 import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
+	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -43,233 +45,233 @@ func float_cmp(a, b float64) int {
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep == input2.printrep)
+func eq_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() == input2.AcquireStringValue())
 }
-func ne_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep != input2.printrep)
+func ne_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() != input2.AcquireStringValue())
 }
-func gt_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep > input2.printrep)
+func gt_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() > input2.AcquireStringValue())
 }
-func ge_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep >= input2.printrep)
+func ge_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() >= input2.AcquireStringValue())
 }
-func lt_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep < input2.printrep)
+func lt_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() < input2.AcquireStringValue())
 }
-func le_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep <= input2.printrep)
+func le_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() <= input2.AcquireStringValue())
 }
-func cmp_b_ss(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(string_cmp(input1.printrep, input2.printrep))
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.String() == input2.printrep)
-}
-func ne_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.String() != input2.printrep)
-}
-func gt_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.String() > input2.printrep)
-}
-func ge_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.String() >= input2.printrep)
-}
-func lt_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.String() < input2.printrep)
-}
-func le_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.String() <= input2.printrep)
-}
-func cmp_b_xs(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(string_cmp(input1.String(), input2.printrep))
+func cmp_b_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(string_cmp(input1.AcquireStringValue(), input2.AcquireStringValue()))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep == input2.String())
+func eq_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.String() == input2.AcquireStringValue())
 }
-func ne_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep != input2.String())
+func ne_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.String() != input2.AcquireStringValue())
 }
-func gt_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep > input2.String())
+func gt_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.String() > input2.AcquireStringValue())
 }
-func ge_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep >= input2.String())
+func ge_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.String() >= input2.AcquireStringValue())
 }
-func lt_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep < input2.String())
+func lt_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.String() < input2.AcquireStringValue())
 }
-func le_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.printrep <= input2.String())
+func le_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.String() <= input2.AcquireStringValue())
 }
-func cmp_b_sx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(string_cmp(input1.printrep, input2.String()))
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.intval == input2.intval)
-}
-func ne_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.intval != input2.intval)
-}
-func gt_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.intval > input2.intval)
-}
-func ge_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.intval >= input2.intval)
-}
-func lt_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.intval < input2.intval)
-}
-func le_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.intval <= input2.intval)
-}
-func cmp_b_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(int_cmp(input1.intval, input2.intval))
+func cmp_b_xs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(string_cmp(input1.String(), input2.AcquireStringValue()))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(float64(input1.intval) == input2.floatval)
+func eq_b_sx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() == input2.String())
 }
-func ne_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(float64(input1.intval) != input2.floatval)
+func ne_b_sx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() != input2.String())
 }
-func gt_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(float64(input1.intval) > input2.floatval)
+func gt_b_sx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() > input2.String())
 }
-func ge_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(float64(input1.intval) >= input2.floatval)
+func ge_b_sx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() >= input2.String())
 }
-func lt_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(float64(input1.intval) < input2.floatval)
+func lt_b_sx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() < input2.String())
 }
-func le_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(float64(input1.intval) <= input2.floatval)
+func le_b_sx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireStringValue() <= input2.String())
 }
-func cmp_b_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(float_cmp(float64(input1.intval), input2.floatval))
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval == float64(input2.intval))
-}
-func ne_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval != float64(input2.intval))
-}
-func gt_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval > float64(input2.intval))
-}
-func ge_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval >= float64(input2.intval))
-}
-func lt_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval < float64(input2.intval))
-}
-func le_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval <= float64(input2.intval))
-}
-func cmp_b_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(float_cmp(input1.floatval, float64(input2.intval)))
+func cmp_b_sx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(string_cmp(input1.AcquireStringValue(), input2.String()))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval == input2.floatval)
+func eq_b_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireIntValue() == input2.AcquireIntValue())
 }
-func ne_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval != input2.floatval)
+func ne_b_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireIntValue() != input2.AcquireIntValue())
 }
-func gt_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval > input2.floatval)
+func gt_b_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireIntValue() > input2.AcquireIntValue())
 }
-func ge_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval >= input2.floatval)
+func ge_b_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireIntValue() >= input2.AcquireIntValue())
 }
-func lt_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval < input2.floatval)
+func lt_b_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireIntValue() < input2.AcquireIntValue())
 }
-func le_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.floatval <= input2.floatval)
+func le_b_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireIntValue() <= input2.AcquireIntValue())
 }
-func cmp_b_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(float_cmp(input1.floatval, input2.floatval))
+func cmp_b_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(int_cmp(input1.AcquireIntValue(), input2.AcquireIntValue()))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.boolval == input2.boolval)
+func eq_b_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(float64(input1.AcquireIntValue()) == input2.AcquireFloatValue())
 }
-func ne_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.boolval != input2.boolval)
+func ne_b_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(float64(input1.AcquireIntValue()) != input2.AcquireFloatValue())
+}
+func gt_b_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(float64(input1.AcquireIntValue()) > input2.AcquireFloatValue())
+}
+func ge_b_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(float64(input1.AcquireIntValue()) >= input2.AcquireFloatValue())
+}
+func lt_b_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(float64(input1.AcquireIntValue()) < input2.AcquireFloatValue())
+}
+func le_b_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(float64(input1.AcquireIntValue()) <= input2.AcquireFloatValue())
+}
+func cmp_b_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(float_cmp(float64(input1.AcquireIntValue()), input2.AcquireFloatValue()))
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() == float64(input2.AcquireIntValue()))
+}
+func ne_b_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() != float64(input2.AcquireIntValue()))
+}
+func gt_b_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() > float64(input2.AcquireIntValue()))
+}
+func ge_b_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() >= float64(input2.AcquireIntValue()))
+}
+func lt_b_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() < float64(input2.AcquireIntValue()))
+}
+func le_b_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() <= float64(input2.AcquireIntValue()))
+}
+func cmp_b_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(float_cmp(input1.AcquireFloatValue(), float64(input2.AcquireIntValue())))
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() == input2.AcquireFloatValue())
+}
+func ne_b_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() != input2.AcquireFloatValue())
+}
+func gt_b_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() > input2.AcquireFloatValue())
+}
+func ge_b_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() >= input2.AcquireFloatValue())
+}
+func lt_b_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() < input2.AcquireFloatValue())
+}
+func le_b_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireFloatValue() <= input2.AcquireFloatValue())
+}
+func cmp_b_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(float_cmp(input1.AcquireFloatValue(), input2.AcquireFloatValue()))
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+func eq_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireBoolValue() == input2.AcquireBoolValue())
+}
+func ne_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireBoolValue() != input2.AcquireBoolValue())
 }
 
 // We could say ordering on bool is error, but, Miller allows
 // sorting on bool so it should allow ordering on bool.
 
-func gt_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(lib.BoolToInt(input1.boolval) > lib.BoolToInt(input2.boolval))
+func gt_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(lib.BoolToInt(input1.AcquireBoolValue()) > lib.BoolToInt(input2.AcquireBoolValue()))
 }
-func ge_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(lib.BoolToInt(input1.boolval) >= lib.BoolToInt(input2.boolval))
+func ge_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(lib.BoolToInt(input1.AcquireBoolValue()) >= lib.BoolToInt(input2.AcquireBoolValue()))
 }
-func lt_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(lib.BoolToInt(input1.boolval) < lib.BoolToInt(input2.boolval))
+func lt_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(lib.BoolToInt(input1.AcquireBoolValue()) < lib.BoolToInt(input2.AcquireBoolValue()))
 }
-func le_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(lib.BoolToInt(input1.boolval) <= lib.BoolToInt(input2.boolval))
+func le_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(lib.BoolToInt(input1.AcquireBoolValue()) <= lib.BoolToInt(input2.AcquireBoolValue()))
 }
-func cmp_b_bb(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(int_cmp(lib.BoolToInt(input1.boolval), lib.BoolToInt(input2.boolval)))
+func cmp_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(int_cmp(lib.BoolToInt(input1.AcquireBoolValue()), lib.BoolToInt(input2.AcquireBoolValue())))
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_aa(input1, input2 *Mlrval) *Mlrval {
-	a := input1.arrayval
-	b := input2.arrayval
+func eq_b_aa(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireArrayValue().([]mlrval.Mlrval)
+	b := input2.AcquireArrayValue().([]mlrval.Mlrval)
 
 	// Different-length arrays are not equal
 	if len(a) != len(b) {
-		return MLRVAL_FALSE
+		return mlrval.FALSE
 	}
 
 	// Same-length arrays: return false if any slot is not equal, else true.
 	for i := range a {
 		eq := BIF_equals(&a[i], &b[i])
-		lib.InternalCodingErrorIf(eq.mvtype != MT_BOOL)
-		if eq.boolval == false {
-			return MLRVAL_FALSE
+		lib.InternalCodingErrorIf(eq.Type() != mlrval.MT_BOOL)
+		if eq.AcquireBoolValue() == false {
+			return mlrval.FALSE
 		}
 	}
 
-	return MLRVAL_TRUE
+	return mlrval.TRUE
 }
-func ne_b_aa(input1, input2 *Mlrval) *Mlrval {
+func ne_b_aa(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	output := eq_b_aa(input1, input2)
-	return MlrvalFromBool(!output.boolval)
+	return mlrval.FromBool(!output.AcquireBoolValue())
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-func eq_b_mm(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(input1.mapval.Equals(input2.mapval))
+func eq_b_mm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(input1.AcquireMapValue().(types.Mlrmap).Equals(input2.AcquireMapValue().(types.Mlrmap)))
 }
-func ne_b_mm(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromBool(!input1.mapval.Equals(input2.mapval))
+func ne_b_mm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromBool(!input1.AcquireArrayValue().(types.Mlrmap).Equals(input2.AcquireArrayValue().(types.Mlrmap)))
 }
 
 // We get a Golang "initialization loop" due to recursive depth computation
 // if this is defined statically. So, we use a "package init" function.
-var eq_dispositions = [MT_DIM][MT_DIM]BinaryFunc{}
+var eq_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{}
 
 func init() {
-	eq_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+	eq_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 		//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY    MAP FUNC
 		/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 		/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _erro},
@@ -285,7 +287,7 @@ func init() {
 	}
 }
 
-var ne_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var ne_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY    MAP FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _erro},
@@ -300,7 +302,7 @@ var ne_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-var gt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var gt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY  MAP FUNC
 	/*ERROR  */ {_erro, _erro, _fals, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _true, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _erro},
@@ -315,7 +317,7 @@ var gt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-var ge_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var ge_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _fals, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _true, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _erro},
@@ -330,7 +332,7 @@ var ge_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-var lt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var lt_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _true, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _fals, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _erro},
@@ -345,7 +347,7 @@ var lt_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-var le_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var le_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID     STRING   INT      FLOAT    BOOL     ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _true, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _fals, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _erro},
@@ -360,7 +362,7 @@ var le_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-var cmp_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var cmp_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID      STRING    INT       FLOAT     BOOL      ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _true, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _fals, _absn, _absn, _absn, _absn, _absn, _absn, _absn, _erro},
@@ -375,97 +377,97 @@ var cmp_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_equals(input1, input2 *Mlrval) *Mlrval {
-	return eq_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_equals(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return eq_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
-func BIF_not_equals(input1, input2 *Mlrval) *Mlrval {
-	return ne_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_not_equals(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return ne_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
-func BIF_greater_than(input1, input2 *Mlrval) *Mlrval {
-	return gt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_greater_than(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return gt_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
-func BIF_greater_than_or_equals(input1, input2 *Mlrval) *Mlrval {
-	return ge_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_greater_than_or_equals(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return ge_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
-func BIF_less_than(input1, input2 *Mlrval) *Mlrval {
-	return lt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_less_than(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return lt_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
-func BIF_less_than_or_equals(input1, input2 *Mlrval) *Mlrval {
-	return le_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_less_than_or_equals(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return le_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
-func BIF_cmp(input1, input2 *Mlrval) *Mlrval {
-	return cmp_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_cmp(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // For Go's sort.Slice.
-func MlrvalLessThanAsBool(input1, input2 *Mlrval) bool {
+func MlrvalLessThanAsBool(input1, input2 *mlrval.Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
-	mretval := lt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	mretval := lt_dispositions[input1.Type()][input2.Type()](input1, input2)
 	retval, ok := mretval.GetBoolValue()
 	lib.InternalCodingErrorIf(!ok)
 	return retval
 }
 
 // For Go's sort.Slice.
-func MlrvalLessThanOrEqualsAsBool(input1, input2 *Mlrval) bool {
+func MlrvalLessThanOrEqualsAsBool(input1, input2 *mlrval.Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
-	mretval := le_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	mretval := le_dispositions[input1.Type()][input2.Type()](input1, input2)
 	retval, ok := mretval.GetBoolValue()
 	lib.InternalCodingErrorIf(!ok)
 	return retval
 }
 
 // For top-keeper
-func MlrvalGreaterThanAsBool(input1, input2 *Mlrval) bool {
+func MlrvalGreaterThanAsBool(input1, input2 *mlrval.Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
-	mretval := gt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	mretval := gt_dispositions[input1.Type()][input2.Type()](input1, input2)
 	retval, ok := mretval.GetBoolValue()
 	lib.InternalCodingErrorIf(!ok)
 	return retval
 }
 
 // For top-keeper
-func MlrvalGreaterThanOrEqualsAsBool(input1, input2 *Mlrval) bool {
+func MlrvalGreaterThanOrEqualsAsBool(input1, input2 *mlrval.Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
-	mretval := ge_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	mretval := ge_dispositions[input1.Type()][input2.Type()](input1, input2)
 	retval, ok := mretval.GetBoolValue()
 	lib.InternalCodingErrorIf(!ok)
 	return retval
 }
 
 // Convenience wrapper for non-DSL callsites that just want a bool
-func MlrvalEqualsAsBool(input1, input2 *Mlrval) bool {
-	mretval := eq_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalEqualsAsBool(input1, input2 *mlrval.Mlrval) bool {
+	mretval := eq_dispositions[input1.Type()][input2.Type()](input1, input2)
 	retval, ok := mretval.GetBoolValue()
 	lib.InternalCodingErrorIf(!ok)
 	return retval
 }
 
 // ----------------------------------------------------------------
-func MlrvalLogicalAND(input1, input2 *Mlrval) *Mlrval {
+func MlrvalLogicalAND(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsBool() && input2.IsBool() {
-		return MlrvalFromBool(input1.boolval && input2.boolval)
+		return mlrval.FromBool(input1.AcquireBoolValue() && input2.AcquireBoolValue())
 	} else {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }
 
-func MlrvalLogicalOR(input1, input2 *Mlrval) *Mlrval {
+func MlrvalLogicalOR(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsBool() && input2.IsBool() {
-		return MlrvalFromBool(input1.boolval || input2.boolval)
+		return mlrval.FromBool(input1.AcquireBoolValue() || input2.AcquireBoolValue())
 	} else {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }
 
-func BIF_logicalxor(input1, input2 *Mlrval) *Mlrval {
+func BIF_logicalxor(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsBool() && input2.IsBool() {
-		return MlrvalFromBool(input1.boolval != input2.boolval)
+		return mlrval.FromBool(input1.AcquireBoolValue() != input2.AcquireBoolValue())
 	} else {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }

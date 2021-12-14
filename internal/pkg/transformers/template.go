@@ -130,7 +130,7 @@ func NewTransformerTemplate(
 	return &TransformerTemplate{
 		fieldNameList: fieldNames,
 		fieldNameSet:  lib.StringListToSet(fieldNames),
-		fillWith:      mlrval.MlrvalFromString(fillWith),
+		fillWith:      mlrval.mlrval.FromString(fillWith),
 	}, nil
 }
 

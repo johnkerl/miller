@@ -50,29 +50,29 @@ func (mlrmap *Mlrmap) PutReference(key string, value *mlrval.Mlrval) {
 	}
 }
 
-//// PutCopy copies the key and value (deep-copying in case the value is array/map).
-//// This is safe for DSL use. See also PutReference.
-//func (mlrmap *Mlrmap) PutCopy(key string, value *mlrval.Mlrval) {
-//	pe := mlrmap.findEntry(key)
-//	if pe == nil {
-//		pe = newMlrmapEntry(key, value.Copy())
-//		if mlrmap.Head == nil {
-//			mlrmap.Head = pe
-//			mlrmap.Tail = pe
-//		} else {
-//			pe.Prev = mlrmap.Tail
-//			pe.Next = nil
-//			mlrmap.Tail.Next = pe
-//			mlrmap.Tail = pe
-//		}
-//		if mlrmap.keysToEntries != nil {
-//			mlrmap.keysToEntries[key] = pe
-//		}
-//		mlrmap.FieldCount++
-//	} else {
-//		pe.Value = value.Copy()
-//	}
-//}
+// PutCopy copies the key and value (deep-copying in case the value is array/map).
+// This is safe for DSL use. See also PutReference.
+func (mlrmap *Mlrmap) PutCopy(key string, value *mlrval.Mlrval) {
+	pe := mlrmap.findEntry(key)
+	if pe == nil {
+		pe = newMlrmapEntry(key, value.Copy())
+		if mlrmap.Head == nil {
+			mlrmap.Head = pe
+			mlrmap.Tail = pe
+		} else {
+			pe.Prev = mlrmap.Tail
+			pe.Next = nil
+			mlrmap.Tail.Next = pe
+			mlrmap.Tail = pe
+		}
+		if mlrmap.keysToEntries != nil {
+			mlrmap.keysToEntries[key] = pe
+		}
+		mlrmap.FieldCount++
+	} else {
+		pe.Value = value.Copy()
+	}
+}
 
 // PrependReference is the same as PutReference, but puts a new entry first, not last.
 func (mlrmap *Mlrmap) PrependReference(key string, value *mlrval.Mlrval) {
@@ -220,10 +220,10 @@ func (mlrmap *Mlrmap) findEntryByPositionalIndex(position int) *MlrmapEntry {
 //	}
 //}
 
-//// ----------------------------------------------------------------
-//func (mlrmap *Mlrmap) PrependCopy(key string, value *mlrval.Mlrval) {
-//	mlrmap.PrependReference(key, value.Copy())
-//}
+// ----------------------------------------------------------------
+func (mlrmap *Mlrmap) PrependCopy(key string, value *mlrval.Mlrval) {
+	mlrmap.PrependReference(key, value.Copy())
+}
 
 //// ----------------------------------------------------------------
 //// Merges that into mlrmap.

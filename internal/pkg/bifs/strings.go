@@ -7,20 +7,21 @@ import (
 	"unicode/utf8"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // ================================================================
-func BIF_strlen(input1 *Mlrval) *Mlrval {
+func BIF_strlen(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	} else {
-		return MlrvalFromInt(int(utf8.RuneCountInString(input1.printrep)))
+		return mlrval.FromInt(int(utf8.RuneCountInString(input1.AcquireStringValue())))
 	}
 }
 
 // ================================================================
-func BIF_string(input1 *Mlrval) *Mlrval {
-	return MlrvalFromString(input1.String())
+func BIF_string(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromString(input1.String())
 }
 
 // ================================================================
@@ -37,11 +38,11 @@ func BIF_string(input1 *Mlrval) *Mlrval {
 // should be: always the string concatenation of the string representations of
 // the two arguments. So, we do the string-cast for the user.
 
-func dot_s_xx(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromString(input1.String() + input2.String())
+func dot_s_xx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromString(input1.String() + input2.String())
 }
 
-var dot_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var dot_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING    INT       FLOAT     BOOL      ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _null, _void, _2___, _s2__, _s2__, _s2__, _absn, _absn, _erro},
@@ -56,38 +57,38 @@ var dot_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_dot(input1, input2 *Mlrval) *Mlrval {
-	return dot_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_dot(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return dot_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ================================================================
 // substr1(s,m,n) gives substring of s from 1-up position m to n inclusive.
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
-func BIF_substr_1_up(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
-	// Handle UTF-8 correctly: len(input1.printrep) will count bytes, not runes.
-	runes := []rune(input1.printrep)
+	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
+	runes := []rune(input1.AcquireStringValue())
 	strlen := int(len(runes))
 
 	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
 	// empty in the DSL expression it comes in here as a 1. But when the upper
 	// index is empty in the DSL expression it comes in here as "".
 	if !input2.IsInt() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
-	lowerMindex := input2.intval
+	lowerMindex := input2.AcquireIntValue()
 
 	upperMindex := strlen
 	if input3.IsEmpty() {
 		// Keep strlen
 	} else if !input3.IsInt() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	} else {
-		upperMindex = input3.intval
+		upperMindex = input3.AcquireIntValue()
 	}
 
 	// Convert from negative-aliased 1-up to positive-only 0-up
@@ -95,14 +96,14 @@ func BIF_substr_1_up(input1, input2, input3 *Mlrval) *Mlrval {
 	n, nok := UnaliasArrayLengthIndex(strlen, upperMindex)
 
 	if !mok || !nok {
-		return MLRVAL_VOID
+		return mlrval.VOID
 	} else if m > n {
-		return MLRVAL_VOID
+		return mlrval.VOID
 	} else {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
 		// while the 2nd is exclusive. For Miller, indices are 1-up and both
 		// are inclusive.
-		return MlrvalFromString(string(runes[m : n+1]))
+		return mlrval.FromString(string(runes[m : n+1]))
 	}
 }
 
@@ -110,22 +111,22 @@ func BIF_substr_1_up(input1, input2, input3 *Mlrval) *Mlrval {
 // substr0(s,m,n) gives substring of s from 0-up position m to n inclusive.
 // Negative indices -len .. -1 alias to 0 .. len-1.
 
-func BIF_substr_0_up(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
-	// Handle UTF-8 correctly: len(input1.printrep) will count bytes, not runes.
-	runes := []rune(input1.printrep)
+	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
+	runes := []rune(input1.AcquireStringValue())
 	strlen := int(len(runes))
 
 	// For array slices like s[1:2], s[:2], s[1:], when the lower index is
 	// empty in the DSL expression it comes in here as a 1. But when the upper
 	// index is empty in the DSL expression it comes in here as "".
 	if !input2.IsInt() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
-	lowerMindex := input2.intval
+	lowerMindex := input2.AcquireIntValue()
 	if lowerMindex >= 0 {
 		// Make 1-up
 		lowerMindex += 1
@@ -135,9 +136,9 @@ func BIF_substr_0_up(input1, input2, input3 *Mlrval) *Mlrval {
 	if input3.IsEmpty() {
 		// Keep strlen
 	} else if !input3.IsInt() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	} else {
-		upperMindex = input3.intval
+		upperMindex = input3.AcquireIntValue()
 		if upperMindex >= 0 {
 			// Make 1-up
 			upperMindex += 1
@@ -149,19 +150,19 @@ func BIF_substr_0_up(input1, input2, input3 *Mlrval) *Mlrval {
 	n, nok := UnaliasArrayLengthIndex(strlen, upperMindex)
 
 	if !mok || !nok {
-		return MLRVAL_VOID
+		return mlrval.VOID
 	} else if m > n {
-		return MLRVAL_VOID
+		return mlrval.VOID
 	} else {
 		// Note Golang slice indices are 0-up, and the 1st index is inclusive
 		// while the 2nd is exclusive. For Miller, indices are 1-up and both
 		// are inclusive.
-		return MlrvalFromString(string(runes[m : n+1]))
+		return mlrval.FromString(string(runes[m : n+1]))
 	}
 }
 
 // ================================================================
-func BIF_truncate(input1, input2 *Mlrval) *Mlrval {
+func BIF_truncate(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsErrorOrAbsent() {
 		return input1
 	}
@@ -169,59 +170,59 @@ func BIF_truncate(input1, input2 *Mlrval) *Mlrval {
 		return input2
 	}
 	if !input1.IsStringOrVoid() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input2.IsInt() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
-	if input2.intval < 0 {
-		return MLRVAL_ERROR
+	if input2.AcquireIntValue() < 0 {
+		return mlrval.ERROR
 	}
 
-	// Handle UTF-8 correctly: len(input1.printrep) will count bytes, not runes.
-	runes := []rune(input1.printrep)
+	// Handle UTF-8 correctly: len(input1.AcquireStringValue()) will count bytes, not runes.
+	runes := []rune(input1.AcquireStringValue())
 	oldLength := int(len(runes))
-	maxLength := input2.intval
+	maxLength := input2.AcquireIntValue()
 	if oldLength <= maxLength {
 		return input1
 	} else {
-		return MlrvalFromString(string(runes[0:maxLength]))
+		return mlrval.FromString(string(runes[0:maxLength]))
 	}
 }
 
 // ================================================================
-func BIF_lstrip(input1 *Mlrval) *Mlrval {
+func BIF_lstrip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
-		return MlrvalFromString(strings.TrimLeft(input1.printrep, " \t"))
+		return mlrval.FromString(strings.TrimLeft(input1.AcquireStringValue(), " \t"))
 	} else {
 		return input1
 	}
 }
 
-func BIF_rstrip(input1 *Mlrval) *Mlrval {
+func BIF_rstrip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
-		return MlrvalFromString(strings.TrimRight(input1.printrep, " \t"))
+		return mlrval.FromString(strings.TrimRight(input1.AcquireStringValue(), " \t"))
 	} else {
 		return input1
 	}
 }
 
-func BIF_strip(input1 *Mlrval) *Mlrval {
+func BIF_strip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
-		return MlrvalFromString(strings.Trim(input1.printrep, " \t"))
+		return mlrval.FromString(strings.Trim(input1.AcquireStringValue(), " \t"))
 	} else {
 		return input1
 	}
 }
 
 // ----------------------------------------------------------------
-func BIF_collapse_whitespace(input1 *Mlrval) *Mlrval {
+func BIF_collapse_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return MlrvalCollapseWhitespaceRegexp(input1, WhitespaceRegexp())
 }
 
-func MlrvalCollapseWhitespaceRegexp(input1 *Mlrval, whitespaceRegexp *regexp.Regexp) *Mlrval {
+func MlrvalCollapseWhitespaceRegexp(input1 *mlrval.Mlrval, whitespaceRegexp *regexp.Regexp) *mlrval.Mlrval {
 	if input1.IsString() {
-		return MlrvalFromString(whitespaceRegexp.ReplaceAllString(input1.printrep, " "))
+		return mlrval.FromString(whitespaceRegexp.ReplaceAllString(input1.AcquireStringValue(), " "))
 	} else {
 		return input1
 	}
@@ -232,9 +233,9 @@ func WhitespaceRegexp() *regexp.Regexp {
 }
 
 // ================================================================
-func BIF_toupper(input1 *Mlrval) *Mlrval {
+func BIF_toupper(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
-		return MlrvalFromString(strings.ToUpper(input1.printrep))
+		return mlrval.FromString(strings.ToUpper(input1.AcquireStringValue()))
 	} else if input1.IsVoid() {
 		return input1
 	} else {
@@ -242,9 +243,9 @@ func BIF_toupper(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func BIF_tolower(input1 *Mlrval) *Mlrval {
+func BIF_tolower(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
-		return MlrvalFromString(strings.ToLower(input1.printrep))
+		return mlrval.FromString(strings.ToLower(input1.AcquireStringValue()))
 	} else if input1.IsVoid() {
 		return input1
 	} else {
@@ -252,17 +253,17 @@ func BIF_tolower(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func BIF_capitalize(input1 *Mlrval) *Mlrval {
+func BIF_capitalize(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsString() {
-		if input1.printrep == "" {
+		if input1.AcquireStringValue() == "" {
 			return input1
 		} else {
-			runes := []rune(input1.printrep)
+			runes := []rune(input1.AcquireStringValue())
 			rfirst := runes[0]
 			rrest := runes[1:]
 			sfirst := strings.ToUpper(string(rfirst))
 			srest := string(rrest)
-			return MlrvalFromString(sfirst + srest)
+			return mlrval.FromString(sfirst + srest)
 		}
 	} else {
 		return input1
@@ -270,7 +271,7 @@ func BIF_capitalize(input1 *Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func BIF_clean_whitespace(input1 *Mlrval) *Mlrval {
+func BIF_clean_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_strip(
 		MlrvalCollapseWhitespaceRegexp(
 			input1, WhitespaceRegexp(),
@@ -279,57 +280,57 @@ func BIF_clean_whitespace(input1 *Mlrval) *Mlrval {
 }
 
 // ================================================================
-func BIF_hexfmt(input1 *Mlrval) *Mlrval {
+func BIF_hexfmt(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsInt() {
-		return MlrvalFromString("0x" + strconv.FormatUint(uint64(input1.intval), 16))
+		return mlrval.FromString("0x" + strconv.FormatUint(uint64(input1.AcquireIntValue()), 16))
 	} else {
 		return input1
 	}
 }
 
 // ----------------------------------------------------------------
-func fmtnum_is(input1, input2 *Mlrval) *Mlrval {
+func fmtnum_is(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
-	formatString := input2.printrep
+	formatString := input2.AcquireStringValue()
 	formatter, err := GetMlrvalFormatter(formatString)
 	if err != nil {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	return formatter.Format(input1)
 }
 
-func fmtnum_fs(input1, input2 *Mlrval) *Mlrval {
+func fmtnum_fs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
-	formatString := input2.printrep
+	formatString := input2.AcquireStringValue()
 	formatter, err := GetMlrvalFormatter(formatString)
 	if err != nil {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	return formatter.Format(input1)
 }
 
-func fmtnum_bs(input1, input2 *Mlrval) *Mlrval {
+func fmtnum_bs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsString() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
-	formatString := input2.printrep
+	formatString := input2.AcquireStringValue()
 	formatter, err := GetMlrvalFormatter(formatString)
 	if err != nil {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
-	intMv := MlrvalFromInt(lib.BoolToInt(input1.boolval))
+	intMv := mlrval.FromInt(lib.BoolToInt(input1.AcquireBoolValue()))
 
 	return formatter.Format(intMv)
 }
 
-var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var fmtnum_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING     INT    FLOAT  BOOL   ARRAY  MAP    FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _absn, _absn, _absn, _erro, _erro, _erro, _erro},
@@ -344,6 +345,6 @@ var fmtnum_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC   */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_fmtnum(input1, input2 *Mlrval) *Mlrval {
-	return fmtnum_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_fmtnum(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return fmtnum_dispositions[input1.Type()][input2.Type()](input1, input2)
 }

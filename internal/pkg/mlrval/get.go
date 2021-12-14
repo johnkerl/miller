@@ -8,7 +8,7 @@ import (
 // predicate, or another Get...(), since types are JIT-computed on first access
 // for most data-file values. See type.go for more information.
 
-func (mv *Mlrval) GetString() (stringValue string, isString bool) {
+func (mv *Mlrval) GetStringValue() (stringValue string, isString bool) {
 	if mv.Type() == MT_STRING || mv.Type() == MT_VOID {
 		return mv.printrep, true
 	} else {
@@ -82,4 +82,40 @@ func (mv *Mlrval) GetFunction() interface{} {
 
 func (mv *Mlrval) GetTypeName() string {
 	return TYPE_NAMES[mv.Type()]
+}
+
+
+// These are for built-in functions operating within type-keyed
+// disposition-vector/disposition-matrix context. They've already computed
+// mv.Type() -- it's a fatal error if they haven't -- and they need the typed
+// value.
+
+func (mv *Mlrval) AcquireStringValue() string {
+	lib.InternalCodingErrorIf(mv.mvtype != MT_STRING && mv.mvtype != MT_VOID)
+	return mv.printrep
+}
+
+func (mv *Mlrval) AcquireIntValue() int {
+	lib.InternalCodingErrorIf(mv.mvtype != MT_INT)
+	return mv.intval
+}
+
+func (mv *Mlrval) AcquireFloatValue() float64 {
+	lib.InternalCodingErrorIf(mv.mvtype != MT_FLOAT)
+	return mv.floatval
+}
+
+func (mv *Mlrval) AcquireBoolValue() bool {
+	lib.InternalCodingErrorIf(mv.mvtype != MT_BOOL)
+	return mv.boolval
+}
+
+func (mv *Mlrval) AcquireArrayValue() interface{} {
+	lib.InternalCodingErrorIf(mv.mvtype != MT_ARRAY)
+	return mv.arrayval
+}
+
+func (mv *Mlrval) AcquireMapValue() interface{} {
+	lib.InternalCodingErrorIf(mv.mvtype != MT_MAP)
+	return mv.mapval
 }

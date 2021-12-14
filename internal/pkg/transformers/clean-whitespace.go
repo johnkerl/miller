@@ -153,10 +153,10 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 		newrec := types.NewMlrmapAsRecord()
 
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
-			oldKey := mlrval.MlrvalFromString(pe.Key)
+			oldKey := mlrval.mlrval.FromString(pe.Key)
 			// xxx temp
-			newKey := types.BIF_clean_whitespace(oldKey)
-			newValue := types.BIF_clean_whitespace(pe.Value)
+			newKey := bifs.BIF_clean_whitespace(oldKey)
+			newValue := bifs.BIF_clean_whitespace(pe.Value)
 			// Transferring ownership from old record to new record; no copy needed
 			newrec.PutReference(newKey.String(), newValue)
 		}
@@ -178,8 +178,8 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 		newrec := types.NewMlrmapAsRecord()
 
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
-			oldKey := mlrval.MlrvalFromString(pe.Key)
-			newKey := types.BIF_clean_whitespace(oldKey)
+			oldKey := mlrval.mlrval.FromString(pe.Key)
+			newKey := bifs.BIF_clean_whitespace(oldKey)
 			// Transferring ownership from old record to new record; no copy needed
 			newrec.PutReference(newKey.String(), pe.Value)
 		}
@@ -199,7 +199,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInValues(
 ) {
 	if !inrecAndContext.EndOfStream {
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
-			pe.Value = types.BIF_clean_whitespace(pe.Value)
+			pe.Value = bifs.BIF_clean_whitespace(pe.Value)
 		}
 		outputRecordsAndContexts.PushBack(inrecAndContext)
 	} else {

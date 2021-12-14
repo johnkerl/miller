@@ -20,7 +20,7 @@ type State struct {
 	Inrec                    *types.Mlrmap
 	Context                  *types.Context
 	Oosvars                  *types.Mlrmap
-	FilterExpression         *types.Mlrval
+	FilterExpression         *mlrval.Mlrval
 	Stack                    *Stack
 	OutputRecordsAndContexts *list.List // list of *types.RecordAndContext
 
@@ -36,7 +36,7 @@ func NewEmptyState(options *cli.TOptions) *State {
 		Inrec:            nil,
 		Context:          nil,
 		Oosvars:          oosvars,
-		FilterExpression: types.MLRVAL_TRUE,
+		FilterExpression: mlrval.TRUE,
 		Stack:            NewStack(),
 
 		// OutputRecordsAndContexts is assigned after construction

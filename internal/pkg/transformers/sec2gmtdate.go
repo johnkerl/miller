@@ -118,7 +118,7 @@ func (tr *TransformerSec2GMTDate) Transform(
 		for _, fieldName := range tr.fieldNameList {
 			value := inrec.Get(fieldName)
 			if value != nil {
-				inrec.PutReference(fieldName, types.BIF_sec2gmtdate(value))
+				inrec.PutReference(fieldName, bifs.BIF_sec2gmtdate(value))
 			}
 		}
 		outputRecordsAndContexts.PushBack(inrecAndContext)

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -63,9 +64,9 @@ func (reader *PseudoReaderGen) process(
 		return
 	}
 
-	var doneComparator types.BinaryFunc = types.BIF_greater_than
+	var doneComparator types.BinaryFunc = bifs.BIF_greater_than
 	if step.GetNumericNegativeorDie() {
-		doneComparator = types.BIF_less_than
+		doneComparator = bifs.BIF_less_than
 	}
 
 	key := reader.readerOptions.GeneratorOptions.FieldName
@@ -110,7 +111,7 @@ func (reader *PseudoReaderGen) process(
 
 		}
 
-		value = types.BIF_plus_binary(value, step)
+		value = bifs.BIF_plus_binary(value, step)
 	}
 
 	if recordsAndContexts.Len() > 0 {

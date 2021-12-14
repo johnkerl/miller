@@ -57,7 +57,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 		// values would disappear entirely in a JSON-to-CSV conversion.
 		if mv.mapval.IsEmpty() {
 			if prefix != "" {
-				retval.PutCopy(prefix, MlrvalFromString("{}"))
+				retval.PutCopy(prefix, mlrval.FromString("{}"))
 			}
 		}
 
@@ -82,7 +82,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 		// values would disappear entirely in a JSON-to-CSV conversion.
 		if len(mv.arrayval) == 0 {
 			if prefix != "" {
-				retval.PutCopy(prefix, MlrvalFromString("[]"))
+				retval.PutCopy(prefix, mlrval.FromString("[]"))
 			}
 		}
 

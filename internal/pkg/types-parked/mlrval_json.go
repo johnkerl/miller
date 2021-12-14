@@ -140,7 +140,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 
 		sval, ok := startToken.(string)
 		if ok {
-			mlrval := MlrvalFromString(sval)
+			mlrval := mlrval.FromString(sval)
 			return mlrval, false, nil
 		}
 

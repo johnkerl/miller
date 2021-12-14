@@ -25,18 +25,18 @@ import (
 
 func TestComparators(t *testing.T) {
 
-	i10 := MlrvalFromInt(10)
-	i2 := MlrvalFromInt(2)
+	i10 := mlrval.FromInt(10)
+	i2 := mlrval.FromInt(2)
 
-	bfalse := MlrvalFromBool(false)
-	btrue := MlrvalFromBool(true)
+	bfalse := mlrval.FromBool(false)
+	btrue := mlrval.FromBool(true)
 
-	sabc := MlrvalFromString("abc")
-	sdef := MlrvalFromString("def")
+	sabc := mlrval.FromString("abc")
+	sdef := mlrval.FromString("def")
 
-	e := *MLRVAL_ERROR
+	e := *mlrval.ERROR
 
-	a := *MLRVAL_ABSENT
+	a := *mlrval.ABSENT
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Within-type lexical comparisons

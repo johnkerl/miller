@@ -12,38 +12,38 @@ import (
 
 func TestGetString(t *testing.T) {
 	mv := FromInferredType("234")
-	stringval, ok := mv.GetString()
+	stringval, ok := mv.GetStringValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("234")
-	stringval, ok = mv.GetString()
+	stringval, ok = mv.GetStringValue()
 	assert.False(t, ok)
 
 	mv = FromInferredType("234.5")
-	stringval, ok = mv.GetString()
+	stringval, ok = mv.GetStringValue()
 	assert.False(t, ok)
 
 	mv = FromDeferredType("234.5")
-	stringval, ok = mv.GetString()
+	stringval, ok = mv.GetStringValue()
 	assert.False(t, ok)
 
 	mv = FromInferredType("abc")
-	stringval, ok = mv.GetString()
+	stringval, ok = mv.GetStringValue()
 	assert.Equal(t, "abc", stringval)
 	assert.True(t, ok)
 
 	mv = FromDeferredType("abc")
-	stringval, ok = mv.GetString()
+	stringval, ok = mv.GetStringValue()
 	assert.Equal(t, "abc", stringval)
 	assert.True(t, ok)
 
 	mv = FromInferredType("")
-	stringval, ok = mv.GetString()
+	stringval, ok = mv.GetStringValue()
 	assert.Equal(t, "", stringval)
 	assert.True(t, ok)
 
 	mv = FromDeferredType("")
-	stringval, ok = mv.GetString()
+	stringval, ok = mv.GetStringValue()
 	assert.Equal(t, "", stringval)
 	assert.True(t, ok)
 }

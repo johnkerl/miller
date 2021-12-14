@@ -385,7 +385,7 @@ func (stepper *tStepperDelta) process(
 
 	delta := mlrval.MlrvalFromInt(0)
 	if stepper.previous != nil {
-		delta = types.BIF_minus_binary(valueFieldValue, stepper.previous)
+		delta = bifs.BIF_minus_binary(valueFieldValue, stepper.previous)
 	}
 	inrec.PutCopy(stepper.outputFieldName, delta)
 
@@ -448,7 +448,7 @@ func (stepper *tStepperFromFirst) process(
 	if stepper.first == nil {
 		stepper.first = valueFieldValue.Copy()
 	} else {
-		fromFirst = types.BIF_minus_binary(valueFieldValue, stepper.first)
+		fromFirst = bifs.BIF_minus_binary(valueFieldValue, stepper.first)
 	}
 	inrec.PutCopy(stepper.outputFieldName, fromFirst)
 }
@@ -481,7 +481,7 @@ func (stepper *tStepperRatio) process(
 
 	ratio := mlrval.MlrvalFromInt(1)
 	if stepper.previous != nil {
-		ratio = types.BIF_divide(valueFieldValue, stepper.previous)
+		ratio = bifs.BIF_divide(valueFieldValue, stepper.previous)
 	}
 	inrec.PutCopy(stepper.outputFieldName, ratio)
 
@@ -512,7 +512,7 @@ func (stepper *tStepperRsum) process(
 	if valueFieldValue.IsEmpty() {
 		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
 	} else {
-		stepper.rsum = types.BIF_plus_binary(valueFieldValue, stepper.rsum)
+		stepper.rsum = bifs.BIF_plus_binary(valueFieldValue, stepper.rsum)
 		inrec.PutCopy(stepper.outputFieldName, stepper.rsum)
 	}
 }
@@ -543,7 +543,7 @@ func (stepper *tStepperCounter) process(
 	if valueFieldValue.IsEmpty() {
 		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
 	} else {
-		stepper.counter = types.BIF_plus_binary(stepper.counter, stepper.one)
+		stepper.counter = bifs.BIF_plus_binary(stepper.counter, stepper.one)
 		inrec.PutCopy(stepper.outputFieldName, stepper.counter)
 	}
 }
@@ -621,9 +621,9 @@ func (stepper *tStepperEWMA) process(
 		for i := range stepper.alphas {
 			curr := valueFieldValue.Copy()
 			// xxx pending pointer-output refactor
-			product1 := types.BIF_times(curr, stepper.alphas[i])
-			product2 := types.BIF_times(stepper.prevs[i], stepper.oneMinusAlphas[i])
-			next := types.BIF_plus_binary(product1, product2)
+			product1 := bifs.BIF_times(curr, stepper.alphas[i])
+			product2 := bifs.BIF_times(stepper.prevs[i], stepper.oneMinusAlphas[i])
+			next := bifs.BIF_plus_binary(product1, product2)
 			inrec.PutCopy(stepper.outputFieldNames[i], next)
 			stepper.prevs[i] = next
 		}

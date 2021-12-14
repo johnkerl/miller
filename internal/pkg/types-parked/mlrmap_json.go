@@ -155,7 +155,7 @@ func (entry *MlrmapEntry) JSONStringifyInPlace(
 	if err != nil {
 		entry.Value = MLRVAL_ERROR
 	} else {
-		entry.Value = MlrvalFromString(string(outputBytes))
+		entry.Value = mlrval.FromString(string(outputBytes))
 	}
 }
 

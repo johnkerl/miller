@@ -252,7 +252,7 @@ func (tr *TransformerBar) processNoAuto(
 			if idx > tr.width {
 				idx = tr.width
 			}
-			inrec.PutReference(fieldName, mlrval.MlrvalFromString(tr.bars[idx]))
+			inrec.PutReference(fieldName, mlrval.mlrval.FromString(tr.bars[idx]))
 		}
 
 		outputRecordsAndContexts.PushBack(inrecAndContext)
@@ -340,7 +340,7 @@ func (tr *TransformerBar) processAuto(
 			buffer.WriteString("[")
 			buffer.WriteString(shi)
 			buffer.WriteString("]")
-			record.PutReference(fieldName, mlrval.MlrvalFromString(buffer.String()))
+			record.PutReference(fieldName, mlrval.mlrval.FromString(buffer.String()))
 		}
 	}
 

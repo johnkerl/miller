@@ -225,7 +225,7 @@ func (tr *TransformerFraction) Transform(
 						sumsForGroup[fractionFieldName] = value.Copy()
 						cumusForGroup[fractionFieldName] = tr.zero
 					} else {
-						sumsForGroup[fractionFieldName] = types.BIF_plus_binary(sum, value)
+						sumsForGroup[fractionFieldName] = bifs.BIF_plus_binary(sum, value)
 					}
 				}
 			}
@@ -261,15 +261,15 @@ func (tr *TransformerFraction) Transform(
 
 						if tr.doCumu {
 							cumu = cumusForGroup[fractionFieldName]
-							numerator = types.BIF_plus_binary(value, cumu)
+							numerator = bifs.BIF_plus_binary(value, cumu)
 						} else {
 							numerator = value
 						}
 
 						denominator := sumsForGroup[fractionFieldName]
 						if !mlrval.MlrvalEqualsAsBool(value, tr.zero) {
-							outputValue = types.BIF_divide(numerator, denominator)
-							outputValue = types.BIF_times(outputValue, tr.multiplier)
+							outputValue = bifs.BIF_divide(numerator, denominator)
+							outputValue = bifs.BIF_times(outputValue, tr.multiplier)
 						} else {
 							outputValue = types.MLRVAL_ERROR
 						}
@@ -280,7 +280,7 @@ func (tr *TransformerFraction) Transform(
 						)
 
 						if tr.doCumu {
-							cumusForGroup[fractionFieldName] = types.BIF_plus_binary(cumu, value)
+							cumusForGroup[fractionFieldName] = bifs.BIF_plus_binary(cumu, value)
 						}
 					}
 				}

@@ -168,12 +168,12 @@ func NewTransformerSeqgen(
 	}
 
 	if fstep > 0 {
-		doneComparator = types.BIF_greater_than
+		doneComparator = bifs.BIF_greater_than
 	} else if fstep < 0 {
-		doneComparator = types.BIF_less_than
+		doneComparator = bifs.BIF_less_than
 	} else {
 		if fstart == fstop {
-			doneComparator = types.BIF_equals
+			doneComparator = bifs.BIF_equals
 		} else {
 			return nil, errors.New(
 				"mlr seqgen: step must not be zero unless start == stop.",
@@ -235,7 +235,7 @@ func (tr *TransformerSeqgen) Transform(
 		outrecAndContext := types.NewRecordAndContext(outrec, context)
 		outputRecordsAndContexts.PushBack(outrecAndContext)
 
-		counter = types.BIF_plus_binary(counter, tr.step)
+		counter = bifs.BIF_plus_binary(counter, tr.step)
 	}
 
 	outputRecordsAndContexts.PushBack(types.NewEndOfStreamMarker(context))

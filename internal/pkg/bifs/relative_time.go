@@ -4,187 +4,189 @@ import (
 	"fmt"
 	"math"
 	"strings"
+
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
-func BIF_dhms2sec(input1 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
-		return MLRVAL_ERROR
+func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.Type() != MT_STRING {
+		return mlrval.ERROR
 	}
 	var d, h, m, s int
 
-	if strings.HasPrefix(input1.printrep, "-") {
+	if strings.HasPrefix(input1.AcquireStringValue(), "-") {
 
-		n, err := fmt.Sscanf(input1.printrep, "-%dd%dh%dm%ds", &d, &h, &m, &s)
+		n, err := fmt.Sscanf(input1.AcquireStringValue(), "-%dd%dh%dm%ds", &d, &h, &m, &s)
 		if n == 4 && err == nil {
-			return MlrvalFromInt(-(s + m*60 + h*60*60 + d*60*60*24))
+			return mlrval.FromInt(-(s + m*60 + h*60*60 + d*60*60*24))
 		}
-		n, err = fmt.Sscanf(input1.printrep, "-%dh%dm%ds", &h, &m, &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%dh%dm%ds", &h, &m, &s)
 		if n == 3 && err == nil {
-			return MlrvalFromInt(-(s + m*60 + h*60*60))
+			return mlrval.FromInt(-(s + m*60 + h*60*60))
 		}
-		n, err = fmt.Sscanf(input1.printrep, "-%dm%ds", &m, &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%dm%ds", &m, &s)
 		if n == 2 && err == nil {
-			return MlrvalFromInt(-(s + m*60))
+			return mlrval.FromInt(-(s + m*60))
 		}
-		n, err = fmt.Sscanf(input1.printrep, "-%ds", &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%ds", &s)
 		if n == 1 && err == nil {
-			return MlrvalFromInt(-(s))
+			return mlrval.FromInt(-(s))
 		}
 
 	} else {
 
-		n, err := fmt.Sscanf(input1.printrep, "%dd%dh%dm%ds", &d, &h, &m, &s)
+		n, err := fmt.Sscanf(input1.AcquireStringValue(), "%dd%dh%dm%ds", &d, &h, &m, &s)
 		if n == 4 && err == nil {
-			return MlrvalFromInt(s + m*60 + h*60*60 + d*60*60*24)
+			return mlrval.FromInt(s + m*60 + h*60*60 + d*60*60*24)
 		}
-		n, err = fmt.Sscanf(input1.printrep, "%dh%dm%ds", &h, &m, &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%dh%dm%ds", &h, &m, &s)
 		if n == 3 && err == nil {
-			return MlrvalFromInt(s + m*60 + h*60*60)
+			return mlrval.FromInt(s + m*60 + h*60*60)
 		}
-		n, err = fmt.Sscanf(input1.printrep, "%dm%ds", &m, &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%dm%ds", &m, &s)
 		if n == 2 && err == nil {
-			return MlrvalFromInt(s + m*60)
+			return mlrval.FromInt(s + m*60)
 		}
-		n, err = fmt.Sscanf(input1.printrep, "%ds", &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%ds", &s)
 		if n == 1 && err == nil {
-			return MlrvalFromInt(s)
+			return mlrval.FromInt(s)
 		}
 
 	}
-	return MLRVAL_ERROR
+	return mlrval.ERROR
 }
 
-func BIF_dhms2fsec(input1 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
-		return MLRVAL_ERROR
+func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.Type() != MT_STRING {
+		return mlrval.ERROR
 	}
 
 	var d, h, m int
 	var s float64
 
-	if strings.HasPrefix(input1.printrep, "-") {
+	if strings.HasPrefix(input1.AcquireStringValue(), "-") {
 
-		n, err := fmt.Sscanf(input1.printrep, "-%dd%dh%dm%fs", &d, &h, &m, &s)
+		n, err := fmt.Sscanf(input1.AcquireStringValue(), "-%dd%dh%dm%fs", &d, &h, &m, &s)
 		if n == 4 && err == nil {
-			return MlrvalFromFloat64(-(s + float64(m*60+h*60*60+d*60*60*24)))
+			return mlrval.FromFloat(-(s + float64(m*60+h*60*60+d*60*60*24)))
 		}
-		n, err = fmt.Sscanf(input1.printrep, "-%dh%dm%fs", &h, &m, &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%dh%dm%fs", &h, &m, &s)
 		if n == 3 && err == nil {
-			return MlrvalFromFloat64(-(s + float64(m*60+h*60*60)))
+			return mlrval.FromFloat(-(s + float64(m*60+h*60*60)))
 		}
-		n, err = fmt.Sscanf(input1.printrep, "-%dm%fs", &m, &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%dm%fs", &m, &s)
 		if n == 2 && err == nil {
-			return MlrvalFromFloat64(-(s + float64(m*60)))
+			return mlrval.FromFloat(-(s + float64(m*60)))
 		}
-		n, err = fmt.Sscanf(input1.printrep, "-%fs", &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "-%fs", &s)
 		if n == 1 && err == nil {
-			return MlrvalFromFloat64(-(s))
+			return mlrval.FromFloat(-(s))
 		}
 
 	} else {
 
-		n, err := fmt.Sscanf(input1.printrep, "%dd%dh%dm%fs", &d, &h, &m, &s)
+		n, err := fmt.Sscanf(input1.AcquireStringValue(), "%dd%dh%dm%fs", &d, &h, &m, &s)
 		if n == 4 && err == nil {
-			return MlrvalFromFloat64(s + float64(m*60+h*60*60+d*60*60*24))
+			return mlrval.FromFloat(s + float64(m*60+h*60*60+d*60*60*24))
 		}
-		n, err = fmt.Sscanf(input1.printrep, "%dh%dm%fs", &h, &m, &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%dh%dm%fs", &h, &m, &s)
 		if n == 3 && err == nil {
-			return MlrvalFromFloat64(s + float64(m*60+h*60*60))
+			return mlrval.FromFloat(s + float64(m*60+h*60*60))
 		}
-		n, err = fmt.Sscanf(input1.printrep, "%dm%fs", &m, &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%dm%fs", &m, &s)
 		if n == 2 && err == nil {
-			return MlrvalFromFloat64(s + float64(m*60))
+			return mlrval.FromFloat(s + float64(m*60))
 		}
-		n, err = fmt.Sscanf(input1.printrep, "%fs", &s)
+		n, err = fmt.Sscanf(input1.AcquireStringValue(), "%fs", &s)
 		if n == 1 && err == nil {
-			return MlrvalFromFloat64(s)
+			return mlrval.FromFloat(s)
 		}
 
 	}
-	return MLRVAL_ERROR
+	return mlrval.ERROR
 }
 
-func BIF_hms2sec(input1 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
-		return MLRVAL_ERROR
+func BIF_hms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.Type() != MT_STRING {
+		return mlrval.ERROR
 	}
-	if input1.printrep == "" {
-		return MLRVAL_ERROR
+	if input1.AcquireStringValue() == "" {
+		return mlrval.ERROR
 	}
 	var h, m, s int
 
-	if strings.HasPrefix(input1.printrep, "-") {
-		n, err := fmt.Sscanf(input1.printrep, "-%d:%d:%d", &h, &m, &s)
+	if strings.HasPrefix(input1.AcquireStringValue(), "-") {
+		n, err := fmt.Sscanf(input1.AcquireStringValue(), "-%d:%d:%d", &h, &m, &s)
 		if n == 3 && err == nil {
-			return MlrvalFromInt(-(s + m*60 + h*60*60))
+			return mlrval.FromInt(-(s + m*60 + h*60*60))
 		}
 	} else {
-		n, err := fmt.Sscanf(input1.printrep, "%d:%d:%d", &h, &m, &s)
+		n, err := fmt.Sscanf(input1.AcquireStringValue(), "%d:%d:%d", &h, &m, &s)
 		if n == 3 && err == nil {
-			return MlrvalFromInt(s + m*60 + h*60*60)
+			return mlrval.FromInt(s + m*60 + h*60*60)
 		}
 	}
 
-	return MLRVAL_ERROR
+	return mlrval.ERROR
 }
 
-func BIF_hms2fsec(input1 *Mlrval) *Mlrval {
-	if input1.mvtype != MT_STRING {
-		return MLRVAL_ERROR
+func BIF_hms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.Type() != MT_STRING {
+		return mlrval.ERROR
 	}
 
 	var h, m int
 	var s float64
 
-	if strings.HasPrefix(input1.printrep, "-") {
-		n, err := fmt.Sscanf(input1.printrep, "-%d:%d:%f", &h, &m, &s)
+	if strings.HasPrefix(input1.AcquireStringValue(), "-") {
+		n, err := fmt.Sscanf(input1.AcquireStringValue(), "-%d:%d:%f", &h, &m, &s)
 		if n == 3 && err == nil {
-			return MlrvalFromFloat64(-(s + float64(m*60+h*60*60)))
+			return mlrval.FromFloat(-(s + float64(m*60+h*60*60)))
 		}
 	} else {
-		n, err := fmt.Sscanf(input1.printrep, "%d:%d:%f", &h, &m, &s)
+		n, err := fmt.Sscanf(input1.AcquireStringValue(), "%d:%d:%f", &h, &m, &s)
 		if n == 3 && err == nil {
-			return MlrvalFromFloat64(s + float64(m*60+h*60*60))
+			return mlrval.FromFloat(s + float64(m*60+h*60*60))
 		}
 	}
 
-	return MLRVAL_ERROR
+	return mlrval.ERROR
 }
 
-func BIF_sec2dhms(input1 *Mlrval) *Mlrval {
+func BIF_sec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	isec, ok := input1.GetIntValue()
 	if !ok {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	var d, h, m, s int
 
 	splitIntToDHMS(isec, &d, &h, &m, &s)
 	if d != 0 {
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf("%dd%02dh%02dm%02ds", d, h, m, s),
 		)
 	} else if h != 0 {
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf("%dh%02dm%02ds", h, m, s),
 		)
 	} else if m != 0 {
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf("%dm%02ds", m, s),
 		)
 	} else {
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf("%ds", s),
 		)
 	}
 
-	return MLRVAL_ERROR
+	return mlrval.ERROR
 }
 
-func BIF_sec2hms(input1 *Mlrval) *Mlrval {
+func BIF_sec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	isec, ok := input1.GetIntValue()
 	if !ok {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	sign := ""
 	if isec < 0 {
@@ -197,17 +199,17 @@ func BIF_sec2hms(input1 *Mlrval) *Mlrval {
 	splitIntToDHMS(isec, &d, &h, &m, &s)
 	h += d * 24
 
-	return MlrvalFromString(
+	return mlrval.FromString(
 		fmt.Sprintf("%s%02d:%02d:%02d", sign, h, m, s),
 	)
 
-	return MLRVAL_ERROR
+	return mlrval.ERROR
 }
 
-func BIF_fsec2dhms(input1 *Mlrval) *Mlrval {
+func BIF_fsec2dhms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	fsec, ok := input1.GetNumericToFloatValue()
 	if !ok {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	sign := 1
@@ -224,21 +226,21 @@ func BIF_fsec2dhms(input1 *Mlrval) *Mlrval {
 
 	if d != 0 {
 		d = sign * d
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf(
 				"%dd%02dh%02dm%09.6fs",
 				d, h, m, float64(s)+fractional),
 		)
 	} else if h != 0 {
 		h = sign * h
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf(
 				"%dh%02dm%09.6fs",
 				h, m, float64(s)+fractional),
 		)
 	} else if m != 0 {
 		m = sign * m
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf(
 				"%dm%09.6fs",
 				m, float64(s)+fractional),
@@ -246,7 +248,7 @@ func BIF_fsec2dhms(input1 *Mlrval) *Mlrval {
 	} else {
 		s = sign * s
 		fractional = float64(sign) * fractional
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf(
 				"%.6fs",
 				float64(s)+fractional),
@@ -254,10 +256,10 @@ func BIF_fsec2dhms(input1 *Mlrval) *Mlrval {
 	}
 }
 
-func BIF_fsec2hms(input1 *Mlrval) *Mlrval {
+func BIF_fsec2hms(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	fsec, ok := input1.GetNumericToFloatValue()
 	if !ok {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	sign := ""
@@ -275,16 +277,16 @@ func BIF_fsec2hms(input1 *Mlrval) *Mlrval {
 
 	// "%02.6f" does not exist so we have to do our own zero-pad
 	if s < 10 {
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf("%s%02d:%02d:0%.6f", sign, h, m, float64(s)+fractional),
 		)
 	} else {
-		return MlrvalFromString(
+		return mlrval.FromString(
 			fmt.Sprintf("%s%02d:%02d:%.6f", sign, h, m, float64(s)+fractional),
 		)
 	}
 
-	return MLRVAL_ERROR
+	return mlrval.ERROR
 }
 
 // Helper function

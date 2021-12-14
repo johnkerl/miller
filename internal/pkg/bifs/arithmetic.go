@@ -2,12 +2,14 @@ package types
 
 import (
 	"math"
+
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // ================================================================
 // Unary plus operator
 
-var upos_dispositions = [MT_DIM]UnaryFunc{
+var upos_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*ERROR  */ _erro1,
 	/*ABSENT */ _absn1,
 	/*NULL   */ _null1,
@@ -21,22 +23,22 @@ var upos_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func BIF_plus_unary(input1 *Mlrval) *Mlrval {
-	return upos_dispositions[input1.mvtype](input1)
+func BIF_plus_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return upos_dispositions[input1.Type()](input1)
 }
 
 // ================================================================
 // Unary minus operator
 
-func uneg_i_i(input1 *Mlrval) *Mlrval {
-	return MlrvalFromInt(-input1.intval)
+func uneg_i_i(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(-input1.AcquireIntValue())
 }
 
-func uneg_f_f(input1 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(-input1.floatval)
+func uneg_f_f(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(-input1.AcquireFloatValue())
 }
 
-var uneg_dispositions = [MT_DIM]UnaryFunc{
+var uneg_dispositions = [mlrval.MT_DIM]UnaryFunc{
 	/*ERROR  */ _erro1,
 	/*ABSENT */ _absn1,
 	/*NULL   */ _null1,
@@ -50,18 +52,18 @@ var uneg_dispositions = [MT_DIM]UnaryFunc{
 	/*FUNC   */ _erro1,
 }
 
-func BIF_minus_unary(input1 *Mlrval) *Mlrval {
-	return uneg_dispositions[input1.mvtype](input1)
+func BIF_minus_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return uneg_dispositions[input1.Type()](input1)
 }
 
 // ================================================================
 // Logical NOT operator
 
-func BIF_logicalnot(input1 *Mlrval) *Mlrval {
+func BIF_logicalnot(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsBool() {
-		return MlrvalFromBool(!input1.boolval)
+		return mlrval.FromBool(!input1.AcquireBoolValue())
 	} else {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }
 
@@ -71,9 +73,9 @@ func BIF_logicalnot(input1 *Mlrval) *Mlrval {
 
 // Auto-overflows up to float.  Additions & subtractions overflow by at most
 // one bit so it suffices to check sign-changes.
-func plus_n_ii(input1, input2 *Mlrval) *Mlrval {
-	a := input1.intval
-	b := input2.intval
+func plus_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
 	c := a + b
 
 	overflowed := false
@@ -88,23 +90,23 @@ func plus_n_ii(input1, input2 *Mlrval) *Mlrval {
 	}
 
 	if overflowed {
-		return MlrvalFromFloat64(float64(a) + float64(b))
+		return mlrval.FromFloat(float64(a) + float64(b))
 	} else {
-		return MlrvalFromInt(c)
+		return mlrval.FromInt(c)
 	}
 }
 
-func plus_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(float64(input1.intval) + input2.floatval)
+func plus_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(float64(input1.AcquireIntValue()) + input2.AcquireFloatValue())
 }
-func plus_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval + float64(input2.intval))
+func plus_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() + float64(input2.AcquireIntValue()))
 }
-func plus_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval + input2.floatval)
+func plus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() + input2.AcquireFloatValue())
 }
 
-var plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var plus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT        FLOAT      BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn, _erro},
@@ -119,8 +121,8 @@ var plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_plus_binary(input1, input2 *Mlrval) *Mlrval {
-	return plus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_plus_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return plus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ================================================================
@@ -129,9 +131,9 @@ func BIF_plus_binary(input1, input2 *Mlrval) *Mlrval {
 
 // Adds & subtracts overflow by at most one bit so it suffices to check
 // sign-changes.
-func minus_n_ii(input1, input2 *Mlrval) *Mlrval {
-	a := input1.intval
-	b := input2.intval
+func minus_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
 	c := a - b
 
 	overflowed := false
@@ -146,23 +148,23 @@ func minus_n_ii(input1, input2 *Mlrval) *Mlrval {
 	}
 
 	if overflowed {
-		return MlrvalFromFloat64(float64(a) - float64(b))
+		return mlrval.FromFloat(float64(a) - float64(b))
 	} else {
-		return MlrvalFromInt(c)
+		return mlrval.FromInt(c)
 	}
 }
 
-func minus_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(float64(input1.intval) - input2.floatval)
+func minus_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(float64(input1.AcquireIntValue()) - input2.AcquireFloatValue())
 }
-func minus_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval - float64(input2.intval))
+func minus_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() - float64(input2.AcquireIntValue()))
 }
-func minus_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval - input2.floatval)
+func minus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() - input2.AcquireFloatValue())
 }
 
-var minus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var minus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT         FLOAT       BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn, _erro},
@@ -177,8 +179,8 @@ var minus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_minus_binary(input1, input2 *Mlrval) *Mlrval {
-	return minus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_minus_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return minus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ================================================================
@@ -214,29 +216,29 @@ func BIF_minus_binary(input1, input2 *Mlrval) *Mlrval {
 // double less than 2**63. (An alterative would be to do all integer multiplies
 // using handcrafted multi-word 128-bit arithmetic).
 
-func times_n_ii(input1, input2 *Mlrval) *Mlrval {
-	a := input1.intval
-	b := input2.intval
+func times_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
 	c := float64(a) * float64(b)
 
 	if math.Abs(c) > 9223372036854774784.0 {
-		return MlrvalFromFloat64(c)
+		return mlrval.FromFloat(c)
 	} else {
-		return MlrvalFromInt(a * b)
+		return mlrval.FromInt(a * b)
 	}
 }
 
-func times_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(float64(input1.intval) * input2.floatval)
+func times_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(float64(input1.AcquireIntValue()) * input2.AcquireFloatValue())
 }
-func times_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval * float64(input2.intval))
+func times_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() * float64(input2.AcquireIntValue()))
 }
-func times_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval * input2.floatval)
+func times_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() * input2.AcquireFloatValue())
 }
 
-var times_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var times_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT         FLOAT       BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn, _erro},
@@ -251,8 +253,8 @@ var times_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_times(input1, input2 *Mlrval) *Mlrval {
-	return times_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return times_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ================================================================
@@ -272,42 +274,42 @@ func BIF_times(input1, input2 *Mlrval) *Mlrval {
 //   $ echo 'x=1e-300,y=1e300' | mlr put '$z=$y/$x'
 //   x=1e-300,y=1e300,z=+Inf
 
-func divide_n_ii(input1, input2 *Mlrval) *Mlrval {
-	a := input1.intval
-	b := input2.intval
+func divide_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
 
 	if b == 0 {
 		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
-		return MlrvalFromFloat64(float64(a) / float64(b))
+		return mlrval.FromFloat(float64(a) / float64(b))
 	}
 
 	// Pythonic division, not C division.
 	if a%b == 0 {
-		return MlrvalFromInt(a / b)
+		return mlrval.FromInt(a / b)
 	} else {
-		return MlrvalFromFloat64(float64(a) / float64(b))
+		return mlrval.FromFloat(float64(a) / float64(b))
 	}
 
 	c := float64(a) * float64(b)
 
 	if math.Abs(c) > 9223372036854774784.0 {
-		return MlrvalFromFloat64(c)
+		return mlrval.FromFloat(c)
 	} else {
-		return MlrvalFromInt(a * b)
+		return mlrval.FromInt(a * b)
 	}
 }
 
-func divide_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(float64(input1.intval) / input2.floatval)
+func divide_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(float64(input1.AcquireIntValue()) / input2.AcquireFloatValue())
 }
-func divide_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval / float64(input2.intval))
+func divide_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() / float64(input2.AcquireIntValue()))
 }
-func divide_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval / input2.floatval)
+func divide_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() / input2.AcquireFloatValue())
 }
 
-var divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var divide_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT          FLOAT        BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn, _erro},
@@ -322,21 +324,21 @@ var divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_divide(input1, input2 *Mlrval) *Mlrval {
-	return divide_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return divide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ================================================================
 // Integer division: DSL operator '//' as in Python.  See also
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
-func int_divide_n_ii(input1, input2 *Mlrval) *Mlrval {
-	a := input1.intval
-	b := input2.intval
+func int_divide_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
 
 	if b == 0 {
 		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
-		return MlrvalFromFloat64(float64(a) / float64(b))
+		return mlrval.FromFloat(float64(a) / float64(b))
 	}
 
 	// Pythonic division, not C division.
@@ -355,20 +357,20 @@ func int_divide_n_ii(input1, input2 *Mlrval) *Mlrval {
 			}
 		}
 	}
-	return MlrvalFromInt(q)
+	return mlrval.FromInt(q)
 }
 
-func int_divide_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(math.Floor(float64(input1.intval) / input2.floatval))
+func int_divide_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(math.Floor(float64(input1.AcquireIntValue()) / input2.AcquireFloatValue()))
 }
-func int_divide_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(math.Floor(input1.floatval / float64(input2.intval)))
+func int_divide_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(math.Floor(input1.AcquireFloatValue() / float64(input2.AcquireIntValue())))
 }
-func int_divide_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(math.Floor(input1.floatval / input2.floatval))
+func int_divide_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(math.Floor(input1.AcquireFloatValue() / input2.AcquireFloatValue()))
 }
 
-var int_divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var int_divide_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT              FLOAT            BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn, _erro},
@@ -383,28 +385,28 @@ var int_divide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_int_divide(input1, input2 *Mlrval) *Mlrval {
-	return int_divide_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_int_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return int_divide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ================================================================
 // Non-auto-overflowing addition: DSL operator '.+'.  See also
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
-func dotplus_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(input1.intval + input2.intval)
+func dotplus_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(input1.AcquireIntValue() + input2.AcquireIntValue())
 }
-func dotplus_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(float64(input1.intval) + input2.floatval)
+func dotplus_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(float64(input1.AcquireIntValue()) + input2.AcquireFloatValue())
 }
-func dotplus_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval + float64(input2.intval))
+func dotplus_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() + float64(input2.AcquireIntValue()))
 }
-func dotplus_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval + input2.floatval)
+func dotplus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() + input2.AcquireFloatValue())
 }
 
-var dot_plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var dot_plus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT           FLOAT         BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn, _erro},
@@ -419,28 +421,28 @@ var dot_plus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_dot_plus(input1, input2 *Mlrval) *Mlrval {
-	return dot_plus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_dot_plus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return dot_plus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ================================================================
 // Non-auto-overflowing subtraction: DSL operator '.-'.  See also
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
-func dotminus_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(input1.intval - input2.intval)
+func dotminus_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(input1.AcquireIntValue() - input2.AcquireIntValue())
 }
-func dotminus_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(float64(input1.intval) - input2.floatval)
+func dotminus_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(float64(input1.AcquireIntValue()) - input2.AcquireFloatValue())
 }
-func dotminus_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval - float64(input2.intval))
+func dotminus_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() - float64(input2.AcquireIntValue()))
 }
-func dotminus_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval - input2.floatval)
+func dotminus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() - input2.AcquireFloatValue())
 }
 
-var dotminus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var dotminus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT            FLOAT          BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _n2__, _n2__, _erro, _absn, _absn, _erro},
@@ -455,28 +457,28 @@ var dotminus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_dot_minus(input1, input2 *Mlrval) *Mlrval {
-	return dotminus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_dot_minus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return dotminus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Non-auto-overflowing multiplication: DSL operator '.*'.  See also
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
-func dottimes_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(input1.intval * input2.intval)
+func dottimes_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(input1.AcquireIntValue() * input2.AcquireIntValue())
 }
-func dottimes_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(float64(input1.intval) * input2.floatval)
+func dottimes_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(float64(input1.AcquireIntValue()) * input2.AcquireFloatValue())
 }
-func dottimes_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval * float64(input2.intval))
+func dottimes_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() * float64(input2.AcquireIntValue()))
 }
-func dottimes_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval * input2.floatval)
+func dottimes_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() * input2.AcquireFloatValue())
 }
 
-var dottimes_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var dottimes_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT            FLOAT          BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn, _erro},
@@ -491,28 +493,28 @@ var dottimes_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_dot_times(input1, input2 *Mlrval) *Mlrval {
-	return dottimes_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_dot_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return dottimes_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './'.  See also
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
-func dotdivide_i_ii(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromInt(input1.intval / input2.intval)
+func dotdivide_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromInt(input1.AcquireIntValue() / input2.AcquireIntValue())
 }
-func dotdivide_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(float64(input1.intval) / input2.floatval)
+func dotdivide_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(float64(input1.AcquireIntValue()) / input2.AcquireFloatValue())
 }
-func dotdivide_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval / float64(input2.intval))
+func dotdivide_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() / float64(input2.AcquireIntValue()))
 }
-func dotdivide_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(input1.floatval / input2.floatval)
+func dotdivide_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(input1.AcquireFloatValue() / input2.AcquireFloatValue())
 }
 
-var dotdivide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var dotdivide_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT             FLOAT           BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _2___, _2___, _erro, _absn, _absn, _erro},
@@ -527,21 +529,21 @@ var dotdivide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_dot_divide(input1, input2 *Mlrval) *Mlrval {
-	return dotdivide_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_dot_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return dotdivide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './/'.  See also
 // https://johnkerl.org/miller6/reference-main-arithmetic.html
 
-func dotidivide_i_ii(input1, input2 *Mlrval) *Mlrval {
-	a := input1.intval
-	b := input2.intval
+func dotidivide_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
 
 	if b == 0 {
 		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
-		return MlrvalFromFloat64(float64(a) / float64(b))
+		return mlrval.FromFloat(float64(a) / float64(b))
 	}
 
 	// Pythonic division, not C division.
@@ -560,20 +562,20 @@ func dotidivide_i_ii(input1, input2 *Mlrval) *Mlrval {
 			}
 		}
 	}
-	return MlrvalFromInt(q)
+	return mlrval.FromInt(q)
 }
 
-func dotidivide_f_if(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(math.Floor(float64(input1.intval) / input2.floatval))
+func dotidivide_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(math.Floor(float64(input1.AcquireIntValue()) / input2.AcquireFloatValue()))
 }
-func dotidivide_f_fi(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(math.Floor(input1.floatval / float64(input2.intval)))
+func dotidivide_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(math.Floor(input1.AcquireFloatValue() / float64(input2.AcquireIntValue())))
 }
-func dotidivide_f_ff(input1, input2 *Mlrval) *Mlrval {
-	return MlrvalFromFloat64(math.Floor(input1.floatval / input2.floatval))
+func dotidivide_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mlrval.FromFloat(math.Floor(input1.AcquireFloatValue() / input2.AcquireFloatValue()))
 }
 
-var dotidivide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var dotidivide_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT              FLOAT            BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _erro, _absn, _erro, _2___, _2___, _erro, _absn, _absn, _erro},
@@ -588,20 +590,20 @@ var dotidivide_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalDotIntDivide(input1, input2 *Mlrval) *Mlrval {
-	return dotidivide_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func MlrvalDotIntDivide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return dotidivide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------
 // Modulus
 
-func modulus_i_ii(input1, input2 *Mlrval) *Mlrval {
-	a := input1.intval
-	b := input2.intval
+func modulus_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireIntValue()
+	b := input2.AcquireIntValue()
 
 	if b == 0 {
 		// Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
-		return MlrvalFromFloat64(float64(a) / float64(b))
+		return mlrval.FromFloat(float64(a) / float64(b))
 	}
 
 	// Pythonic division, not C division.
@@ -616,28 +618,28 @@ func modulus_i_ii(input1, input2 *Mlrval) *Mlrval {
 		}
 	}
 
-	return MlrvalFromInt(m)
+	return mlrval.FromInt(m)
 }
 
-func modulus_f_fi(input1, input2 *Mlrval) *Mlrval {
-	a := input1.floatval
-	b := float64(input2.intval)
-	return MlrvalFromFloat64(a - b*math.Floor(a/b))
+func modulus_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireFloatValue()
+	b := float64(input2.AcquireIntValue())
+	return mlrval.FromFloat(a - b*math.Floor(a/b))
 }
 
-func modulus_f_if(input1, input2 *Mlrval) *Mlrval {
-	a := float64(input1.intval)
-	b := input2.floatval
-	return MlrvalFromFloat64(a - b*math.Floor(a/b))
+func modulus_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := float64(input1.AcquireIntValue())
+	b := input2.AcquireFloatValue()
+	return mlrval.FromFloat(a - b*math.Floor(a/b))
 }
 
-func modulus_f_ff(input1, input2 *Mlrval) *Mlrval {
-	a := input1.floatval
-	b := input2.floatval
-	return MlrvalFromFloat64(a - b*math.Floor(a/b))
+func modulus_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	a := input1.AcquireFloatValue()
+	b := input2.AcquireFloatValue()
+	return mlrval.FromFloat(a - b*math.Floor(a/b))
 }
 
-var modulus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var modulus_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING INT           FLOAT         BOOL   ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _absn, _erro, _i0__, _f0__, _erro, _absn, _absn, _erro},
@@ -652,8 +654,8 @@ var modulus_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func BIF_modulus(input1, input2 *Mlrval) *Mlrval {
-	return modulus_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+func BIF_modulus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return modulus_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ================================================================
@@ -701,7 +703,7 @@ func imodexp(a, e, m int) int {
 	return c
 }
 
-func imodop(input1, input2, input3 *Mlrval, iop i_iii_func) *Mlrval {
+func imodop(input1, input2, input3 *mlrval.Mlrval, iop i_iii_func) *mlrval.Mlrval {
 	if !input1.IsLegit() {
 		return input1
 	}
@@ -712,34 +714,34 @@ func imodop(input1, input2, input3 *Mlrval, iop i_iii_func) *Mlrval {
 		return input3
 	}
 	if !input1.IsInt() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input2.IsInt() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input3.IsInt() {
-		return MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
-	return MlrvalFromInt(iop(input1.intval, input2.intval, input3.intval))
+	return mlrval.FromInt(iop(input1.AcquireIntValue(), input2.AcquireIntValue(), input3.AcquireIntValue()))
 }
 
-func BIF_mod_add(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_mod_add(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return imodop(input1, input2, input3, imodadd)
 }
 
-func BIF_mod_sub(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_mod_sub(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return imodop(input1, input2, input3, imodsub)
 }
 
-func BIF_mod_mul(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_mod_mul(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	return imodop(input1, input2, input3, imodmul)
 }
 
-func BIF_mod_exp(input1, input2, input3 *Mlrval) *Mlrval {
+func BIF_mod_exp(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	// Pre-check for negative exponent
-	if input2.IsInt() && input2.intval < 0 {
-		return MLRVAL_ERROR
+	if input2.IsInt() && input2.AcquireIntValue() < 0 {
+		return mlrval.ERROR
 	}
 	return imodop(input1, input2, input3, imodexp)
 }
@@ -759,27 +761,27 @@ func BIF_mod_exp(input1, input2, input3 *Mlrval) *Mlrval {
 // * empty-null always loses against numbers
 
 // ----------------------------------------------------------------
-func min_f_ff(input1, input2 *Mlrval) *Mlrval {
-	var a float64 = input1.floatval
-	var b float64 = input2.floatval
-	return MlrvalFromFloat64(math.Min(a, b))
+func min_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a float64 = input1.AcquireFloatValue()
+	var b float64 = input2.AcquireFloatValue()
+	return mlrval.FromFloat(math.Min(a, b))
 }
 
-func min_f_fi(input1, input2 *Mlrval) *Mlrval {
-	var a float64 = input1.floatval
-	var b float64 = float64(input2.intval)
-	return MlrvalFromFloat64(math.Min(a, b))
+func min_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a float64 = input1.AcquireFloatValue()
+	var b float64 = float64(input2.AcquireIntValue())
+	return mlrval.FromFloat(math.Min(a, b))
 }
 
-func min_f_if(input1, input2 *Mlrval) *Mlrval {
-	var a float64 = float64(input1.intval)
-	var b float64 = input2.floatval
-	return MlrvalFromFloat64(math.Min(a, b))
+func min_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a float64 = float64(input1.AcquireIntValue())
+	var b float64 = input2.AcquireFloatValue()
+	return mlrval.FromFloat(math.Min(a, b))
 }
 
-func min_i_ii(input1, input2 *Mlrval) *Mlrval {
-	var a int = input1.intval
-	var b int = input2.intval
+func min_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a int = input1.AcquireIntValue()
+	var b int = input2.AcquireIntValue()
 	if a < b {
 		return input1
 	} else {
@@ -791,17 +793,17 @@ func min_i_ii(input1, input2 *Mlrval) *Mlrval {
 // --- + ----- -----
 // a=F | min=a min=a
 // a=T | min=b min=b
-func min_b_bb(input1, input2 *Mlrval) *Mlrval {
-	if input1.boolval == false {
+func min_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.AcquireBoolValue() == false {
 		return input1
 	} else {
 		return input2
 	}
 }
 
-func min_s_ss(input1, input2 *Mlrval) *Mlrval {
-	var a string = input1.printrep
-	var b string = input2.printrep
+func min_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a string = input1.AcquireStringValue()
+	var b string = input2.AcquireStringValue()
 	if a < b {
 		return input1
 	} else {
@@ -809,7 +811,7 @@ func min_s_ss(input1, input2 *Mlrval) *Mlrval {
 	}
 }
 
-var min_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var min_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING    INT       FLOAT     BOOL      ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _null, _2___, _2___, _2___, _2___, _2___, _absn, _absn, _erro},
@@ -824,13 +826,13 @@ var min_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalBinaryMin(input1, input2 *Mlrval) *Mlrval {
-	return (min_dispositions[input1.mvtype][input2.mvtype])(input1, input2)
+func MlrvalBinaryMin(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return (min_dispositions[input1.Type()][input2.Type()])(input1, input2)
 }
 
-func BIF_min_variadic(mlrvals []*Mlrval) *Mlrval {
+func BIF_min_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
-		return MLRVAL_VOID
+		return mlrval.VOID
 	} else {
 		retval := mlrvals[0]
 		for i := range mlrvals {
@@ -843,27 +845,27 @@ func BIF_min_variadic(mlrvals []*Mlrval) *Mlrval {
 }
 
 // ----------------------------------------------------------------
-func max_f_ff(input1, input2 *Mlrval) *Mlrval {
-	var a float64 = input1.floatval
-	var b float64 = input2.floatval
-	return MlrvalFromFloat64(math.Max(a, b))
+func max_f_ff(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a float64 = input1.AcquireFloatValue()
+	var b float64 = input2.AcquireFloatValue()
+	return mlrval.FromFloat(math.Max(a, b))
 }
 
-func max_f_fi(input1, input2 *Mlrval) *Mlrval {
-	var a float64 = input1.floatval
-	var b float64 = float64(input2.intval)
-	return MlrvalFromFloat64(math.Max(a, b))
+func max_f_fi(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a float64 = input1.AcquireFloatValue()
+	var b float64 = float64(input2.AcquireIntValue())
+	return mlrval.FromFloat(math.Max(a, b))
 }
 
-func max_f_if(input1, input2 *Mlrval) *Mlrval {
-	var a float64 = float64(input1.intval)
-	var b float64 = input2.floatval
-	return MlrvalFromFloat64(math.Max(a, b))
+func max_f_if(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a float64 = float64(input1.AcquireIntValue())
+	var b float64 = input2.AcquireFloatValue()
+	return mlrval.FromFloat(math.Max(a, b))
 }
 
-func max_i_ii(input1, input2 *Mlrval) *Mlrval {
-	var a int = input1.intval
-	var b int = input2.intval
+func max_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a int = input1.AcquireIntValue()
+	var b int = input2.AcquireIntValue()
 	if a > b {
 		return input1
 	} else {
@@ -875,17 +877,17 @@ func max_i_ii(input1, input2 *Mlrval) *Mlrval {
 // --- + ----- -----
 // a=F | max=a max=b
 // a=T | max=a max=b
-func max_b_bb(input1, input2 *Mlrval) *Mlrval {
-	if input2.boolval == false {
+func max_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input2.AcquireBoolValue() == false {
 		return input1
 	} else {
 		return input2
 	}
 }
 
-func max_s_ss(input1, input2 *Mlrval) *Mlrval {
-	var a string = input1.printrep
-	var b string = input2.printrep
+func max_s_ss(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	var a string = input1.AcquireStringValue()
+	var b string = input2.AcquireStringValue()
 	if a > b {
 		return input1
 	} else {
@@ -893,7 +895,7 @@ func max_s_ss(input1, input2 *Mlrval) *Mlrval {
 	}
 }
 
-var max_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
+var max_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	//       .  ERROR   ABSENT NULL   VOID   STRING    INT       FLOAT     BOOL      ARRAY  MAP     FUNC
 	/*ERROR  */ {_erro, _erro, _null, _erro, _erro, _erro, _erro, _erro, _absn, _absn, _erro},
 	/*ABSENT */ {_erro, _absn, _absn, _2___, _2___, _2___, _2___, _2___, _absn, _absn, _erro},
@@ -908,13 +910,13 @@ var max_dispositions = [MT_DIM][MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalBinaryMax(input1, input2 *Mlrval) *Mlrval {
-	return (max_dispositions[input1.mvtype][input2.mvtype])(input1, input2)
+func MlrvalBinaryMax(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+	return (max_dispositions[input1.Type()][input2.Type()])(input1, input2)
 }
 
-func BIF_max_variadic(mlrvals []*Mlrval) *Mlrval {
+func BIF_max_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if len(mlrvals) == 0 {
-		return MLRVAL_VOID
+		return mlrval.VOID
 	} else {
 		retval := mlrvals[0]
 		for i := range mlrvals {
