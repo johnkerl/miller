@@ -1,4 +1,4 @@
-package types
+package bifs
 
 import (
 	"github.com/johnkerl/miller/internal/pkg/mlrval"

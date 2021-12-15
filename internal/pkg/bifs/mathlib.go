@@ -2,7 +2,7 @@
 // Go math-library functions
 // ================================================================
 
-package types
+package bifs
 
 import (
 	"math"

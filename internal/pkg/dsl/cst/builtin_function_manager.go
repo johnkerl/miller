@@ -263,7 +263,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			name:      "!",
 			class:     FUNC_CLASS_BOOLEAN,
 			help:      `Logical negation.`,
-			unaryFunc: types.BIF_logicalnot,
+			unaryFunc: types.BIF_logical_NOT,
 		},
 
 		{
@@ -348,7 +348,7 @@ func makeBuiltinFunctionLookupTable() []BuiltinFunctionInfo {
 			name:       "^^",
 			class:      FUNC_CLASS_BOOLEAN,
 			help:       `Logical XOR.`,
-			binaryFunc: types.BIF_logicalxor,
+			binaryFunc: types.BIF_logical_XOR,
 		},
 
 		{

@@ -4,6 +4,12 @@ PUNCHDOWN LIST
 * --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
 * JIT next:
   o mlrmap copy
+  o krepl miller6 new doclink-comments
+
+* perf next:
+  o batchify source-quench
+  ! hash-records back off
+  ? further channelize (CSV-first focus) mlrval infer vs record-put ?
 
 * big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
 
@@ -100,8 +106,9 @@ PUNCHDOWN LIST
 ----------------------------------------------------------------
 * JIT refactor
   o x 'tens/dozens of UT cases' 
+  o populate each bifs/X_test.go for each bifs/X.go from existing regression-test data
   m internal/pkg/mlrval
-    - UT-driven mlrval defer/infer
+    k UT-driven mlrval defer/infer
     - pkg/mlrval doc.go & README.md
   o internal/pkg/types
     k UT-driven mlrmap constructor refactor
@@ -112,9 +119,8 @@ PUNCHDOWN LIST
       mlrmap.PutReference(key, value)
 
     k UT-driven DKVP-from-line
-    - UT-driven X-from-line: nidx, xtab, csvlite, csv
-    - UT-driven JSON-from-line
-    - defer channelizers to a separate PR
+    ~ UT-driven X-from-line: nidx, xtab, csvlite, csv
+    - UT-driven JSON-from-string
   o internal/pkg/output
     - basic
       mlrval.String()
@@ -145,17 +151,16 @@ PUNCHDOWN LIST
 ----------------------------------------------------------------
 
 * perf more
-  o see other branch
   o nim6 note on perf: baseline/cat; processor/pipelining; 
   o update https://miller.readthedocs.io/en/latest/cpu/, and/or
     https://miller.readthedocs.io/en/latest/streaming-and-memory/, and/or
     make a new page w/ info on per
   o JIT: maasure
-  o pipelined reader
-  o batched reader separately
-  o buffered output
+  k pipelined reader
+  k batched reader separately
+  k buffered output
   o re-check hashed/unhashed and do so periodically
-    - env-var back door
+    - CLI switch
     - check with more than just abixy
 
 ----------------------------------------------------------------

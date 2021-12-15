@@ -2,7 +2,7 @@
 // For sorting
 // ================================================================
 
-package types
+package bifs
 
 import (
 	"fmt"

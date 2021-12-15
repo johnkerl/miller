@@ -805,7 +805,7 @@ func (node *LogicalANDOperatorNode) Evaluate(
 		return types.MLRVAL_ABSENT
 	}
 
-	return mlrval.MlrvalLogicalAND(aout, bout)
+	return mlrval.BIF_logical_AND(aout, bout)
 }
 
 // ================================================================
@@ -852,7 +852,7 @@ func (node *LogicalOROperatorNode) Evaluate(
 	if btype == types.MT_ABSENT {
 		return types.MLRVAL_ABSENT
 	}
-	return mlrval.MlrvalLogicalOR(aout, bout)
+	return mlrval.BIF_logical_OR(aout, bout)
 }
 
 // ================================================================

@@ -1,4 +1,4 @@
-package types
+package bifs
 
 import (
 	"math"
@@ -57,19 +57,8 @@ func BIF_minus_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ================================================================
-// Logical NOT operator
-
-func BIF_logicalnot(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.IsBool() {
-		return mlrval.FromBool(!input1.AcquireBoolValue())
-	} else {
-		return mlrval.ERROR
-	}
-}
-
-// ================================================================
 // Addition with auto-overflow from int to float when necessary.  See also
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 // Auto-overflows up to float.  Additions & subtractions overflow by at most
 // one bit so it suffices to check sign-changes.
@@ -127,7 +116,7 @@ func BIF_plus_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ================================================================
 // Subtraction with auto-overflow from int to float when necessary.  See also
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 // Adds & subtracts overflow by at most one bit so it suffices to check
 // sign-changes.
@@ -185,7 +174,7 @@ func BIF_minus_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ================================================================
 // Multiplication with auto-overflow from int to float when necessary.  See
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 // Auto-overflows up to float.
 //
@@ -259,7 +248,7 @@ func BIF_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ================================================================
 // Pythonic division.  See also
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 //
 // Int/int pairings don't produce overflow.
 //
@@ -330,7 +319,7 @@ func BIF_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ================================================================
 // Integer division: DSL operator '//' as in Python.  See also
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 func int_divide_n_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	a := input1.AcquireIntValue()
@@ -391,7 +380,7 @@ func BIF_int_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ================================================================
 // Non-auto-overflowing addition: DSL operator '.+'.  See also
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 func dotplus_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(input1.AcquireIntValue() + input2.AcquireIntValue())
@@ -427,7 +416,7 @@ func BIF_dot_plus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ================================================================
 // Non-auto-overflowing subtraction: DSL operator '.-'.  See also
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 func dotminus_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(input1.AcquireIntValue() - input2.AcquireIntValue())
@@ -463,7 +452,7 @@ func BIF_dot_minus(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ----------------------------------------------------------------
 // Non-auto-overflowing multiplication: DSL operator '.*'.  See also
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 func dottimes_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(input1.AcquireIntValue() * input2.AcquireIntValue())
@@ -499,7 +488,7 @@ func BIF_dot_times(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './'.  See also
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 func dotdivide_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromInt(input1.AcquireIntValue() / input2.AcquireIntValue())
@@ -535,7 +524,7 @@ func BIF_dot_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ----------------------------------------------------------------
 // 64-bit integer division: DSL operator './/'.  See also
-// https://johnkerl.org/miller6/reference-main-arithmetic.html
+// https://miller.readthedocs.io/en/latest/reference-main-arithmetic
 
 func dotidivide_i_ii(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	a := input1.AcquireIntValue()
@@ -590,7 +579,7 @@ var dotidivide_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalDotIntDivide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_dot_int_divide(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return dotidivide_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
@@ -826,7 +815,7 @@ var min_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalBinaryMin(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_min_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return (min_dispositions[input1.Type()][input2.Type()])(input1, input2)
 }
 
@@ -837,7 +826,7 @@ func BIF_min_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 		retval := mlrvals[0]
 		for i := range mlrvals {
 			if i > 0 {
-				retval = MlrvalBinaryMin(retval, mlrvals[i])
+				retval = BIF_min_binary(retval, mlrvals[i])
 			}
 		}
 		return retval
@@ -910,7 +899,7 @@ var max_dispositions = [mlrval.MT_DIM][mlrval.MT_DIM]BinaryFunc{
 	/*FUNC    */ {_erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro, _erro},
 }
 
-func MlrvalBinaryMax(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_max_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return (max_dispositions[input1.Type()][input2.Type()])(input1, input2)
 }
 
@@ -921,7 +910,7 @@ func BIF_max_variadic(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 		retval := mlrvals[0]
 		for i := range mlrvals {
 			if i > 0 {
-				retval = MlrvalBinaryMax(retval, mlrvals[i])
+				retval = BIF_max_binary(retval, mlrvals[i])
 			}
 		}
 		return retval

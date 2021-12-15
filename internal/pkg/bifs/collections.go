@@ -1,4 +1,4 @@
-package types
+package bifs
 
 import (
 	"bytes"
@@ -573,12 +573,12 @@ func BIF_splitax(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	input := input1.AcquireStringValue()
 	fieldSeparator := input2.AcquireStringValue()
 
-	return mlrvalSplitAXHelper(input, fieldSeparator)
+	return bif_splitax_helper(input, fieldSeparator)
 }
 
-// mlrvalSplitAXHelper is Split out for the benefit of BIF_splitax and
+// bif_splitax_helper is split out for the benefit of BIF_splitax and
 // BIF_unflatten.
-func mlrvalSplitAXHelper(input string, separator string) *mlrval.Mlrval {
+func bif_splitax_helper(input string, separator string) *mlrval.Mlrval {
 	fields := lib.SplitString(input, separator)
 
 	output := NewSizedMlrvalArray(int(len(fields)))

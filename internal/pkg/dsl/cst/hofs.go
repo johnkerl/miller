@@ -616,11 +616,11 @@ func sortA(
 func sortANumerical(array []mlrval.Mlrval, reverse bool) {
 	if !reverse {
 		sort.Slice(array, func(i, j int) bool {
-			return mlrval.MlrvalLessThanAsBool(&array[i], &array[j])
+			return mlrval.BIF_less_than_as_bool(&array[i], &array[j])
 		})
 	} else {
 		sort.Slice(array, func(i, j int) bool {
-			return mlrval.MlrvalGreaterThanAsBool(&array[i], &array[j])
+			return mlrval.BIF_greater_than_as_bool(&array[i], &array[j])
 		})
 	}
 }

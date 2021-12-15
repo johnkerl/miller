@@ -1,4 +1,4 @@
-package types
+package bifs
 
 import (
 	"regexp"
@@ -217,10 +217,10 @@ func BIF_strip(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ----------------------------------------------------------------
 func BIF_collapse_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return MlrvalCollapseWhitespaceRegexp(input1, WhitespaceRegexp())
+	return BIF_collapse_whitespace_regexp(input1, WhitespaceRegexp())
 }
 
-func MlrvalCollapseWhitespaceRegexp(input1 *mlrval.Mlrval, whitespaceRegexp *regexp.Regexp) *mlrval.Mlrval {
+func BIF_collapse_whitespace_regexp(input1 *mlrval.Mlrval, whitespaceRegexp *regexp.Regexp) *mlrval.Mlrval {
 	if input1.IsString() {
 		return mlrval.FromString(whitespaceRegexp.ReplaceAllString(input1.AcquireStringValue(), " "))
 	} else {
@@ -273,7 +273,7 @@ func BIF_capitalize(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // ----------------------------------------------------------------
 func BIF_clean_whitespace(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return BIF_strip(
-		MlrvalCollapseWhitespaceRegexp(
+		BIF_collapse_whitespace_regexp(
 			input1, WhitespaceRegexp(),
 		),
 	)

@@ -2,7 +2,7 @@
 // Boolean expressions for ==, !=, >, >=, <, <=
 // ================================================================
 
-package types
+package bifs
 
 import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -400,7 +400,7 @@ func BIF_cmp(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // For Go's sort.Slice.
-func MlrvalLessThanAsBool(input1, input2 *mlrval.Mlrval) bool {
+func BIF_less_than_as_bool(input1, input2 *mlrval.Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
 	mretval := lt_dispositions[input1.Type()][input2.Type()](input1, input2)
@@ -410,7 +410,7 @@ func MlrvalLessThanAsBool(input1, input2 *mlrval.Mlrval) bool {
 }
 
 // For Go's sort.Slice.
-func MlrvalLessThanOrEqualsAsBool(input1, input2 *mlrval.Mlrval) bool {
+func BIF_less_than_or_equals_as_bool(input1, input2 *mlrval.Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
 	mretval := le_dispositions[input1.Type()][input2.Type()](input1, input2)
@@ -420,7 +420,7 @@ func MlrvalLessThanOrEqualsAsBool(input1, input2 *mlrval.Mlrval) bool {
 }
 
 // For top-keeper
-func MlrvalGreaterThanAsBool(input1, input2 *mlrval.Mlrval) bool {
+func BIF_greater_than_as_bool(input1, input2 *mlrval.Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
 	mretval := gt_dispositions[input1.Type()][input2.Type()](input1, input2)
@@ -430,7 +430,7 @@ func MlrvalGreaterThanAsBool(input1, input2 *mlrval.Mlrval) bool {
 }
 
 // For top-keeper
-func MlrvalGreaterThanOrEqualsAsBool(input1, input2 *mlrval.Mlrval) bool {
+func BIF_greater_than_or_equals_as_bool(input1, input2 *mlrval.Mlrval) bool {
 	// TODO refactor to avoid copy
 	// This is a hot path for sort GC and is worth significant hand-optimization
 	mretval := ge_dispositions[input1.Type()][input2.Type()](input1, input2)
@@ -440,7 +440,7 @@ func MlrvalGreaterThanOrEqualsAsBool(input1, input2 *mlrval.Mlrval) bool {
 }
 
 // Convenience wrapper for non-DSL callsites that just want a bool
-func MlrvalEqualsAsBool(input1, input2 *mlrval.Mlrval) bool {
+func BIF_equals_as_bool(input1, input2 *mlrval.Mlrval) bool {
 	mretval := eq_dispositions[input1.Type()][input2.Type()](input1, input2)
 	retval, ok := mretval.GetBoolValue()
 	lib.InternalCodingErrorIf(!ok)
@@ -448,7 +448,15 @@ func MlrvalEqualsAsBool(input1, input2 *mlrval.Mlrval) bool {
 }
 
 // ----------------------------------------------------------------
-func MlrvalLogicalAND(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_logical_NOT(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	if input1.IsBool() {
+		return mlrval.FromBool(!input1.AcquireBoolValue())
+	} else {
+		return mlrval.ERROR
+	}
+}
+
+func BIF_logical_AND(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsBool() && input2.IsBool() {
 		return mlrval.FromBool(input1.AcquireBoolValue() && input2.AcquireBoolValue())
 	} else {
@@ -456,7 +464,7 @@ func MlrvalLogicalAND(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-func MlrvalLogicalOR(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_logical_OR(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsBool() && input2.IsBool() {
 		return mlrval.FromBool(input1.AcquireBoolValue() || input2.AcquireBoolValue())
 	} else {
@@ -464,7 +472,7 @@ func MlrvalLogicalOR(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 
-func BIF_logicalxor(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_logical_XOR(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsBool() && input2.IsBool() {
 		return mlrval.FromBool(input1.AcquireBoolValue() != input2.AcquireBoolValue())
 	} else {

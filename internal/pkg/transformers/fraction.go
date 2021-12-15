@@ -267,7 +267,7 @@ func (tr *TransformerFraction) Transform(
 						}
 
 						denominator := sumsForGroup[fractionFieldName]
-						if !mlrval.MlrvalEqualsAsBool(value, tr.zero) {
+						if !mlrval.BIF_equals_as_bool(value, tr.zero) {
 							outputValue = bifs.BIF_divide(numerator, denominator)
 							outputValue = bifs.BIF_times(outputValue, tr.multiplier)
 						} else {

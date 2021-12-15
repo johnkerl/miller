@@ -258,7 +258,7 @@ func getPercentileLinearlyInterpolated(array []*mlrval.Mlrval, n int, p float64)
 func (keeper *PercentileKeeper) sortIfNecessary() {
 	if !keeper.sorted {
 		sort.Slice(keeper.data, func(i, j int) bool {
-			return mlrval.MlrvalLessThanAsBool(keeper.data[i], keeper.data[j])
+			return mlrval.BIF_less_than_as_bool(keeper.data[i], keeper.data[j])
 		})
 		keeper.sorted = true
 	}

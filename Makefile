@@ -96,12 +96,39 @@ input-dkvp-test:
 	  internal/pkg/input/record_reader_dkvp_nidx.go
 input-tests: input-dkvp-test
 
+bifs-arithmetic-test:
+	go test internal/pkg/bifs/arithmetic_test.go \
+	  internal/pkg/bifs/base.go \
+	  internal/pkg/bifs/arithmetic.go
+bifs-bits-test:
+	go test internal/pkg/bifs/bits_test.go \
+	  internal/pkg/bifs/base.go \
+	  internal/pkg/bifs/arithmetic.go \
+	  internal/pkg/bifs/bits.go
+bifs-collections-test:
+	go test internal/pkg/bifs/bits_test.go \
+	  internal/pkg/bifs/base.go \
+	  internal/pkg/bifs/arithmetic.go \
+	  internal/pkg/bifs/collections.go
+bifs-hashing-test:
+	go test internal/pkg/bifs/hashing_test.go \
+	  internal/pkg/bifs/base.go \
+	  internal/pkg/bifs/arithmetic.go \
+	  internal/pkg/bifs/hashing.go
+bifs-sort-test:
+	go test internal/pkg/bifs/sort_test.go \
+	  internal/pkg/bifs/base.go \
+	  internal/pkg/bifs/arithmetic.go \
+	  internal/pkg/bifs/sort.go
+
+bifs-tests: bifs-arithmetic-test bifs-bits-test bifs-collections-test bifs-hashing-test bifs-sort-test
+
 #mlrval_functions_test:
 #	go test internal/pkg/types/mlrval_functions_test.go $(ls internal/pkg/types/*.go | grep -v test)
 #mlrval_format_test:
 #	go test internal/pkg/types/mlrval_format_test.go $(ls internal/pkg/types/*.go|grep -v test)
 
-tests-in-order: mlrval-tests mlrmap-tests input-tests
+tests-in-order: mlrval-tests mlrmap-tests input-tests bifs-tests
 
 # ----------------------------------------------------------------
 # Regression tests (large number)

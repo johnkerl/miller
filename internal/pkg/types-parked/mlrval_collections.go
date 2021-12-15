@@ -575,18 +575,18 @@ func BsearchMlrvalArrayForDescendingInsert(
 		return 0
 	}
 
-	if MlrvalGreaterThanAsBool(value, (*array)[0]) {
+	if BIF_greater_than_as_bool(value, (*array)[0]) {
 		return 0
 	}
-	if MlrvalLessThanAsBool(value, (*array)[hi]) {
+	if BIF_less_than_as_bool(value, (*array)[hi]) {
 		return size
 	}
 
 	for lo < hi {
 		middleElement := (*array)[mid]
-		if MlrvalEqualsAsBool(value, middleElement) {
+		if BIF_equals_as_bool(value, middleElement) {
 			return mid
-		} else if MlrvalGreaterThanAsBool(value, middleElement) {
+		} else if BIF_greater_than_as_bool(value, middleElement) {
 			hi = mid
 			newmid = (hi + lo) / 2
 		} else {
@@ -594,9 +594,9 @@ func BsearchMlrvalArrayForDescendingInsert(
 			newmid = (hi + lo) / 2
 		}
 		if mid == newmid {
-			if MlrvalGreaterThanOrEqualsAsBool(value, (*array)[lo]) {
+			if BIF_greater_than_or_equals_as_bool(value, (*array)[lo]) {
 				return lo
-			} else if MlrvalGreaterThanOrEqualsAsBool(value, (*array)[hi]) {
+			} else if BIF_greater_than_or_equals_as_bool(value, (*array)[hi]) {
 				return hi
 			} else {
 				return hi + 1
@@ -622,18 +622,18 @@ func BsearchMlrvalArrayForAscendingInsert(
 		return 0
 	}
 
-	if MlrvalLessThanAsBool(value, (*array)[0]) {
+	if BIF_less_than_as_bool(value, (*array)[0]) {
 		return 0
 	}
-	if MlrvalGreaterThanAsBool(value, (*array)[hi]) {
+	if BIF_greater_than_as_bool(value, (*array)[hi]) {
 		return size
 	}
 
 	for lo < hi {
 		middleElement := (*array)[mid]
-		if MlrvalEqualsAsBool(value, middleElement) {
+		if BIF_equals_as_bool(value, middleElement) {
 			return mid
-		} else if MlrvalLessThanAsBool(value, middleElement) {
+		} else if BIF_less_than_as_bool(value, middleElement) {
 			hi = mid
 			newmid = (hi + lo) / 2
 		} else {
@@ -641,9 +641,9 @@ func BsearchMlrvalArrayForAscendingInsert(
 			newmid = (hi + lo) / 2
 		}
 		if mid == newmid {
-			if MlrvalLessThanOrEqualsAsBool(value, (*array)[lo]) {
+			if BIF_less_than_or_equals_as_bool(value, (*array)[lo]) {
 				return lo
-			} else if MlrvalLessThanOrEqualsAsBool(value, (*array)[hi]) {
+			} else if BIF_less_than_or_equals_as_bool(value, (*array)[hi]) {
 				return hi
 			} else {
 				return hi + 1

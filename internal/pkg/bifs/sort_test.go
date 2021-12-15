@@ -1,12 +1,9 @@
-// ================================================================
-// Most Miller tests (thousands of them) are command-line-driven via
-// mlr regtest. Here are some cases needing special focus.
-// ================================================================
-
-package types
+package bifs
 
 import (
 	"testing"
+
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // ----------------------------------------------------------------

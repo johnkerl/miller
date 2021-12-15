@@ -1,4 +1,4 @@
-package types
+package bifs
 
 import (
 	"math"
@@ -24,7 +24,7 @@ import (
 //	output = [m, b, math.sqrt(var_m), math.sqrt(var_b)]
 
 // ----------------------------------------------------------------
-func MlrvalGetVar(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_get_var(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	sum, isNumber := msum.GetNumericToFloatValue()
@@ -46,8 +46,8 @@ func MlrvalGetVar(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalGetStddev(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
-	mvar := MlrvalGetVar(mn, msum, msum2)
+func BIF_get_stddev(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
+	mvar := BIF_get_var(mn, msum, msum2)
 	if mvar.IsVoid() {
 		return mvar
 	}
@@ -55,8 +55,8 @@ func MlrvalGetStddev(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 // ----------------------------------------------------------------
-func MlrvalGetMeanEB(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
-	mvar := MlrvalGetVar(mn, msum, msum2)
+func BIF_get_mean_EB(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
+	mvar := BIF_get_var(mn, msum, msum2)
 	if mvar.IsVoid() {
 		return mvar
 	}
@@ -87,7 +87,7 @@ func MlrvalGetMeanEB(mn, msum, msum2 *mlrval.Mlrval) *mlrval.Mlrval {
 //   = sumx2 - n mean^2
 
 // ----------------------------------------------------------------
-func MlrvalGetSkewness(mn, msum, msum2, msum3 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_get_skewness(mn, msum, msum2, msum3 *mlrval.Mlrval) *mlrval.Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
@@ -124,7 +124,7 @@ func MlrvalGetSkewness(mn, msum, msum2, msum3 *mlrval.Mlrval) *mlrval.Mlrval {
 //   = sumx4 - mean*(4 sumx3 - mean*(6 sumx2 - 3 n mean^2))
 
 // ----------------------------------------------------------------
-func MlrvalGetKurtosis(mn, msum, msum2, msum3, msum4 *mlrval.Mlrval) *mlrval.Mlrval {
+func BIF_get_kurtosis(mn, msum, msum2, msum3, msum4 *mlrval.Mlrval) *mlrval.Mlrval {
 	n, isInt := mn.GetIntValue()
 	lib.InternalCodingErrorIf(!isInt)
 	if n < 2 {
