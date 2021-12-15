@@ -341,6 +341,8 @@ These are flags which don't fit into any other category.
 `: Force buffered output to be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to force frequent updates even when output is to a pipe or file, at a performance cost.
 * `--from {filename}
 `: Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.
+* `--hash-records
+`: This is an internal parameter which normally does not need to be modified. It controls the mechanism by which Miller accesses fields within records. In general --no-hash-records is faster, and is the default. For specific use-cases involving data having many fields, and many of them being processed during a given processing run, --hash-records might offer a slight performance benefit.
 * `--infer-int-as-float or -A
 `: Cast all integers in data files to floats.
 * `--infer-no-octal or -O
@@ -355,10 +357,14 @@ These are flags which don't fit into any other category.
 `: Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.
 * `--no-fflush
 `: Let buffered output not be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to allow less-frequent updates when output is to the terminal. This is unlikely to be a noticeable performance improvement, since direct-to-screen output for large files has its own overhead.
+* `--no-hash-records
+`: See --hash-records.
 * `--nr-progress-mod {m}
 `: With m a positive integer: print filename and record count to os.Stderr every m input records.
 * `--ofmt {format}
 `: E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
+* `--records-per-batch {n}
+`: This is an internal parameter for maximum number of records in a batch size. Normally this does not need to be modified.
 * `--seed {n}
 `: with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.
 * `--tz {timezone}

@@ -1,6 +1,7 @@
 ================================================================
 PUNCHDOWN LIST
 
+* --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
 
 * big-picture item @ Rmd; also webdoc intro page
 
