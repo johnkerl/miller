@@ -2578,7 +2578,11 @@ this does not need to be modified.`,
 
 		{
 			name: "--hash-records",
-			help: `This is an internal parameter which normally does not need to be modified.`,
+			help: `This is an internal parameter which normally does not need to be modified.
+It controls the mechanism by which Miller accesses fields within records.
+In general --no-hash-records is faster, and is the default. For specific use-cases involving
+data having many fields, and many of them being processed during a given processing run,
+--hash-records might offer a slight performance benefit.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				types.HashRecords(true)
 				*pargi += 1
@@ -2587,7 +2591,7 @@ this does not need to be modified.`,
 
 		{
 			name: "--no-hash-records",
-			help: `This is an internal parameter which normally does not need to be modified.`,
+			help: `See --hash-records.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				types.HashRecords(false)
 				*pargi += 1
