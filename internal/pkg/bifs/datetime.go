@@ -102,7 +102,7 @@ func BIF_sec2localtime_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Ml
 		return mlrval.ERROR
 	}
 
-	locationString, isString := input3.GetString()
+	locationString, isString := input3.GetStringValue()
 	if !isString {
 		return mlrval.ERROR
 	}
@@ -181,7 +181,7 @@ func BIF_strftime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_strftime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	locationString, isString := input3.GetString()
+	locationString, isString := input3.GetStringValue()
 	if !isString {
 		return mlrval.ERROR
 	}
@@ -202,7 +202,7 @@ func strftimeHelper(input1, input2 *mlrval.Mlrval, doLocal bool, location *time.
 	if !ok {
 		return mlrval.ERROR
 	}
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 
@@ -301,10 +301,10 @@ func init() {
 // Argument 1 is formatted date string like "2021-03-04 02:59:50".
 // Argument 2 is format string like "%Y-%m-%d %H:%M:%S".
 func BIF_strptime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.Type() != MT_STRING {
+	if !input1.IsString() {
 		return mlrval.ERROR
 	}
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 	timeString := input1.AcquireStringValue()
@@ -319,10 +319,10 @@ func BIF_strptime(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_strptime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.Type() != MT_STRING {
+	if !input1.IsString() {
 		return mlrval.ERROR
 	}
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 	timeString := input1.AcquireStringValue()
@@ -337,13 +337,13 @@ func BIF_strptime_local_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_strptime_local_ternary(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.Type() != MT_STRING {
+	if !input1.IsString() {
 		return mlrval.ERROR
 	}
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
-	if input3.Type() != MT_STRING {
+	if !input3.IsString() {
 		return mlrval.ERROR
 	}
 

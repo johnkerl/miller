@@ -474,7 +474,7 @@ func (tr *TransformerNest) implodeValuesAcrossFields(
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
 
-		var previousEntry *types.MlrmapEntry = nil
+		var previousEntry *mlrval.MlrmapEntry = nil
 		fieldCount := 0
 		var buffer bytes.Buffer
 		for pe := inrec.Head; pe != nil; /* increment in loop */ {
@@ -552,7 +552,7 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 			bucket = iBucket.(*tNestBucket)
 		}
 
-		pair := types.NewMlrmapAsRecord()
+		pair := mlrval.NewMlrmapAsRecord()
 		pair.PutReference(tr.fieldName, fieldValueCopy)
 		bucket.pairs.PushBack(pair)
 
@@ -568,7 +568,7 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 
 				i := 0
 				for pg := bucket.pairs.Front(); pg != nil; pg = pg.Next() {
-					pr := pg.Value.(*types.Mlrmap)
+					pr := pg.Value.(*mlrval.Mlrmap)
 					if i > 0 {
 						buffer.WriteString(tr.nestedFS)
 					}
@@ -587,11 +587,11 @@ func (tr *TransformerNest) implodeValueAcrossRecords(
 }
 
 type tNestBucket struct {
-	representative *types.Mlrmap
+	representative *mlrval.Mlrmap
 	pairs          *list.List
 }
 
-func newNestBucket(representative *types.Mlrmap) *tNestBucket {
+func newNestBucket(representative *mlrval.Mlrmap) *tNestBucket {
 	return &tNestBucket{
 		representative: representative,
 		pairs:          list.New(),

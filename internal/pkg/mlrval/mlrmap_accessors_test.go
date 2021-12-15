@@ -1,11 +1,9 @@
-package types
+package mlrval
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 func TestIsEmpty(t *testing.T) {
@@ -16,7 +14,7 @@ func TestIsEmpty(t *testing.T) {
 func TestPutReference(t *testing.T) {
 	mlrmap := NewMlrmap()
 	key1 := "a"
-	val1 := mlrval.FromInt(1)
+	val1 := FromInt(1)
 	mlrmap.PutReference(key1, val1)
 
 	assert.False(t, mlrmap.IsEmpty())
@@ -35,7 +33,7 @@ func TestPutReference(t *testing.T) {
 	assert.Equal(t, 1, intval)
 
 	key2 := "b"
-	val2 := mlrval.FromBool(true)
+	val2 := FromBool(true)
 	mlrmap.PutReference(key2, val2)
 
 	assert.True(t, mlrmap.Has("a"))

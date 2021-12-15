@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"container/list"
 	"strconv"
+
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // Since Go is concurrent, the context struct (AWK-like variables such as
@@ -17,14 +19,14 @@ import (
 // output ordering.
 
 type RecordAndContext struct {
-	Record       *Mlrmap
+	Record       *mlrval.Mlrmap
 	Context      Context
 	OutputString string
 	EndOfStream  bool
 }
 
 func NewRecordAndContext(
-	record *Mlrmap,
+	record *mlrval.Mlrmap,
 	context *Context,
 ) *RecordAndContext {
 	return &RecordAndContext{

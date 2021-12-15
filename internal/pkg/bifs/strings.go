@@ -83,7 +83,7 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	lowerMindex := input2.AcquireIntValue()
 
 	upperMindex := strlen
-	if input3.IsEmpty() {
+	if input3.IsVoid() {
 		// Keep strlen
 	} else if !input3.IsInt() {
 		return mlrval.ERROR
@@ -92,8 +92,8 @@ func BIF_substr_1_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 
 	// Convert from negative-aliased 1-up to positive-only 0-up
-	m, mok := UnaliasArrayLengthIndex(strlen, lowerMindex)
-	n, nok := UnaliasArrayLengthIndex(strlen, upperMindex)
+	m, mok := unaliasArrayLengthIndex(strlen, lowerMindex)
+	n, nok := unaliasArrayLengthIndex(strlen, upperMindex)
 
 	if !mok || !nok {
 		return mlrval.VOID
@@ -133,7 +133,7 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 
 	upperMindex := strlen
-	if input3.IsEmpty() {
+	if input3.IsVoid() {
 		// Keep strlen
 	} else if !input3.IsInt() {
 		return mlrval.ERROR
@@ -146,8 +146,8 @@ func BIF_substr_0_up(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 
 	// Convert from negative-aliased 1-up to positive-only 0-up
-	m, mok := UnaliasArrayLengthIndex(strlen, lowerMindex)
-	n, nok := UnaliasArrayLengthIndex(strlen, upperMindex)
+	m, mok := unaliasArrayLengthIndex(strlen, lowerMindex)
+	n, nok := unaliasArrayLengthIndex(strlen, upperMindex)
 
 	if !mok || !nok {
 		return mlrval.VOID
@@ -294,7 +294,7 @@ func fmtnum_is(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ERROR
 	}
 	formatString := input2.AcquireStringValue()
-	formatter, err := GetMlrvalFormatter(formatString)
+	formatter, err := mlrval.GetFormatter(formatString)
 	if err != nil {
 		return mlrval.ERROR
 	}
@@ -307,7 +307,7 @@ func fmtnum_fs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ERROR
 	}
 	formatString := input2.AcquireStringValue()
-	formatter, err := GetMlrvalFormatter(formatString)
+	formatter, err := mlrval.GetFormatter(formatString)
 	if err != nil {
 		return mlrval.ERROR
 	}
@@ -320,7 +320,7 @@ func fmtnum_bs(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.ERROR
 	}
 	formatString := input2.AcquireStringValue()
-	formatter, err := GetMlrvalFormatter(formatString)
+	formatter, err := mlrval.GetFormatter(formatString)
 	if err != nil {
 		return mlrval.ERROR
 	}

@@ -175,7 +175,7 @@ func (tr *TransformerUnsparsify) transformNonStreaming(
 			outrecAndContext := e.Value.(*types.RecordAndContext)
 			outrec := outrecAndContext.Record
 
-			newrec := types.NewMlrmapAsRecord()
+			newrec := mlrval.NewMlrmapAsRecord()
 			for pe := tr.fieldNamesSeen.Head; pe != nil; pe = pe.Next {
 				fieldName := pe.Key
 				if !outrec.Has(fieldName) {

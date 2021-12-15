@@ -27,7 +27,7 @@ import (
 // in the CST logic, to keep this parser/AST logic simpler.
 
 type tEmitFToRedirectFunc func(
-	newrec *types.Mlrmap,
+	newrec *mlrval.Mlrmap,
 	state *runtime.State,
 ) error
 
@@ -139,7 +139,7 @@ func (root *RootNode) BuildEmitFStatementNode(astNode *dsl.ASTNode) (IExecutable
 }
 
 func (node *EmitFStatementNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
-	newrec := types.NewMlrmapAsRecord()
+	newrec := mlrval.NewMlrmapAsRecord()
 	for i, emitfEvaluable := range node.emitfEvaluables {
 		emitfName := node.emitfNames[i]
 		emitfValue := emitfEvaluable.Evaluate(state)
@@ -178,7 +178,7 @@ func getNameFromNamedNode(astNode *dsl.ASTNode, description string) (string, err
 
 // ----------------------------------------------------------------
 func (node *EmitFStatementNode) emitfToRecordStream(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	state *runtime.State,
 ) error {
 	// The output channel is always non-nil, except for the Miller REPL.
@@ -192,7 +192,7 @@ func (node *EmitFStatementNode) emitfToRecordStream(
 
 // ----------------------------------------------------------------
 func (node *EmitFStatementNode) emitfToFileOrPipe(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	state *runtime.State,
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)

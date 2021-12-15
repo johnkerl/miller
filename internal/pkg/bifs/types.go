@@ -157,7 +157,7 @@ func BIF_is_empty(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 func BIF_is_emptymap(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(input1.IsMap() && input1.AcquireArrayValue().(types.Mlrmap).IsEmpty())
+	return mlrval.FromBool(input1.IsMap() && input1.AcquireMapValue().IsEmpty())
 }
 func BIF_is_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsFloat())
@@ -172,7 +172,7 @@ func BIF_is_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsArray())
 }
 func BIF_is_nonemptymap(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(input1.IsMap() && input1.AcquireArrayValue().(types.Mlrmap).FieldCount != 0)
+	return mlrval.FromBool(input1.IsMap() && input1.AcquireMapValue().FieldCount != 0)
 }
 func BIF_is_notempty(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsVoid() {
@@ -188,13 +188,13 @@ func BIF_is_notempty(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	}
 }
 func BIF_is_notmap(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(input1.Type() != MT_MAP)
+	return mlrval.FromBool(!input1.IsMap())
 }
 func BIF_is_notarray(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(input1.Type() != MT_ARRAY)
+	return mlrval.FromBool(!input1.IsArray())
 }
 func BIF_is_notnull(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(input1.Type() != MT_ABSENT && input1.Type() != MT_VOID)
+	return mlrval.FromBool(!input1.IsAbsent() && !input1.IsVoid())
 }
 func BIF_is_null(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsAbsent() || input1.IsVoid())
@@ -203,10 +203,10 @@ func BIF_is_numeric(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.IsInt() || input1.IsFloat())
 }
 func BIF_is_present(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(input1.Type() != MT_ABSENT)
+	return mlrval.FromBool(!input1.IsAbsent())
 }
 func BIF_is_string(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(input1.IsString() || input1.IsVoid())
+	return mlrval.FromBool(input1.IsStringOrVoid())
 }
 
 // ----------------------------------------------------------------

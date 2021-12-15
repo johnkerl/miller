@@ -255,8 +255,8 @@ func (reader *RecordReaderXTAB) getRecordBatch(
 
 func (reader *RecordReaderXTAB) recordFromXTABLines(
 	stanza *list.List,
-) (*types.Mlrmap, error) {
-	record := types.NewMlrmapAsRecord()
+) (*mlrval.Mlrmap, error) {
+	record := mlrval.NewMlrmapAsRecord()
 
 	for e := stanza.Front(); e != nil; e = e.Next() {
 		line := e.Value.(string)

@@ -7,7 +7,6 @@ package bifs
 import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -234,8 +233,8 @@ func cmp_b_bb(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_aa(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	a := input1.AcquireArrayValue().([]mlrval.Mlrval)
-	b := input2.AcquireArrayValue().([]mlrval.Mlrval)
+	a := input1.AcquireArrayValue()
+	b := input2.AcquireArrayValue()
 
 	// Different-length arrays are not equal
 	if len(a) != len(b) {
@@ -260,10 +259,10 @@ func ne_b_aa(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 func eq_b_mm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(input1.AcquireMapValue().(types.Mlrmap).Equals(input2.AcquireMapValue().(types.Mlrmap)))
+	return mlrval.FromBool(input1.AcquireMapValue().Equals(input2.AcquireMapValue()))
 }
 func ne_b_mm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(!input1.AcquireArrayValue().(types.Mlrmap).Equals(input2.AcquireArrayValue().(types.Mlrmap)))
+	return mlrval.FromBool(!input1.AcquireMapValue().Equals(input2.AcquireArrayValue()))
 }
 
 // We get a Golang "initialization loop" due to recursive depth computation

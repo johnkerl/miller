@@ -255,8 +255,8 @@ func (reader *RecordReaderDKVPChanPipelined) processHandle(
 
 func (reader *RecordReaderDKVPChanPipelined) recordFromDKVPLine(
 	line string,
-) *types.Mlrmap {
-	record := types.NewMlrmap()
+) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmap()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex

@@ -8,6 +8,10 @@ import (
 // predicate, or another Get...(), since types are JIT-computed on first access
 // for most data-file values. See type.go for more information.
 
+func (mv *Mlrval) GetTypeBit() int {
+	return 1 << mv.Type()
+}
+
 func (mv *Mlrval) GetStringValue() (stringValue string, isString bool) {
 	if mv.Type() == MT_STRING || mv.Type() == MT_VOID {
 		return mv.printrep, true
@@ -110,12 +114,12 @@ func (mv *Mlrval) AcquireBoolValue() bool {
 	return mv.boolval
 }
 
-func (mv *Mlrval) AcquireArrayValue() interface{} {
+func (mv *Mlrval) AcquireArrayValue() []Mlrval {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_ARRAY)
 	return mv.arrayval
 }
 
-func (mv *Mlrval) AcquireMapValue() interface{} {
+func (mv *Mlrval) AcquireMapValue() *Mlrmap {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_MAP)
 	return mv.mapval
 }

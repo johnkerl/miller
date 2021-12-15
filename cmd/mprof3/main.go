@@ -269,8 +269,8 @@ func (reader *RecordReaderDKVPChanPipelined) getRecordBatch(
 
 func (reader *RecordReaderDKVPChanPipelined) recordFromDKVPLine(
 	line string,
-) *types.Mlrmap {
-	record := types.NewMlrmapAsRecord()
+) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmapAsRecord()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex

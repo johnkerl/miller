@@ -128,15 +128,15 @@ func TestFromFunction(t *testing.T) {
 }
 
 func TestFromArray(t *testing.T) {
-	mv := FromArray("test data")
+	mv := FromArray([]Mlrval{*FromInt(10)})
 	assert.Equal(t, MVType(MT_ARRAY), MVType(mv.mvtype))
 	assert.True(t, mv.printrepValid)
-	assert.Equal(t, "test data", mv.arrayval.(string))
+	assert.Equal(t, 1, len(mv.arrayval))
 }
 
 func TestFromMap(t *testing.T) {
-	mv := FromMap("test data")
+	mv := FromMap(NewMlrmap())
 	assert.Equal(t, MVType(MT_MAP), MVType(mv.mvtype))
 	assert.True(t, mv.printrepValid)
-	assert.Equal(t, "test data", mv.mapval.(string))
+	assert.True(t, mv.mapval.IsEmpty())
 }

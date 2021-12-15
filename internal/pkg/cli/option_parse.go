@@ -16,7 +16,6 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/colorizer"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // FinalizeReaderOptions does a few things.
@@ -2585,7 +2584,7 @@ In general --no-hash-records is faster, and is the default. For specific use-cas
 data having many fields, and many of them being processed during a given processing run,
 --hash-records might offer a slight performance benefit.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				types.HashRecords(true)
+				mlrval.HashRecords(true)
 				*pargi += 1
 			},
 		},
@@ -2594,7 +2593,7 @@ data having many fields, and many of them being processed during a given process
 			name: "--no-hash-records",
 			help: `See --hash-records.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				types.HashRecords(false)
+				mlrval.HashRecords(false)
 				*pargi += 1
 			},
 		},

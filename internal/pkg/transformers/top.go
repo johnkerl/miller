@@ -260,7 +260,7 @@ func (tr *TransformerTop) emit(
 		} else {
 
 			for i := 0; i < tr.topCount; i++ {
-				newrec := types.NewMlrmapAsRecord()
+				newrec := mlrval.NewMlrmapAsRecord()
 
 				// Add in a=s,b=t fields:
 				for j := range tr.groupByFieldNames {

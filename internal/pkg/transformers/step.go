@@ -317,7 +317,7 @@ type tStepperAllocator func(
 ) tStepper
 
 type tStepper interface {
-	process(valueFieldValue *mlrval.Mlrval, inputRecord *types.Mlrmap)
+	process(valueFieldValue *mlrval.Mlrval, inputRecord *mlrval.Mlrmap)
 }
 
 type tStepperLookup struct {
@@ -376,7 +376,7 @@ func stepperDeltaAlloc(
 
 func (stepper *tStepperDelta) process(
 	valueFieldValue *mlrval.Mlrval,
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 ) {
 	if valueFieldValue.IsEmpty() {
 		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
@@ -411,7 +411,7 @@ func stepperShiftAlloc(
 
 func (stepper *tStepperShift) process(
 	valueFieldValue *mlrval.Mlrval,
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 ) {
 	if stepper.previous == nil {
 		shift := types.MLRVAL_VOID
@@ -442,7 +442,7 @@ func stepperFromFirstAlloc(
 
 func (stepper *tStepperFromFirst) process(
 	valueFieldValue *mlrval.Mlrval,
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 ) {
 	fromFirst := mlrval.MlrvalFromInt(0)
 	if stepper.first == nil {
@@ -472,7 +472,7 @@ func stepperRatioAlloc(
 
 func (stepper *tStepperRatio) process(
 	valueFieldValue *mlrval.Mlrval,
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 ) {
 	if valueFieldValue.IsEmpty() {
 		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
@@ -507,7 +507,7 @@ func stepperRsumAlloc(
 
 func (stepper *tStepperRsum) process(
 	valueFieldValue *mlrval.Mlrval,
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 ) {
 	if valueFieldValue.IsEmpty() {
 		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
@@ -538,7 +538,7 @@ func stepperCounterAlloc(
 
 func (stepper *tStepperCounter) process(
 	valueFieldValue *mlrval.Mlrval,
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 ) {
 	if valueFieldValue.IsEmpty() {
 		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
@@ -609,7 +609,7 @@ func stepperEWMAAlloc(
 
 func (stepper *tStepperEWMA) process(
 	valueFieldValue *mlrval.Mlrval,
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 ) {
 	if !stepper.havePrevs {
 		for i := range stepper.alphas {

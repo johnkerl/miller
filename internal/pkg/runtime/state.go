@@ -17,9 +17,9 @@ import (
 
 type State struct {
 
-	Inrec                    *types.Mlrmap
+	Inrec                    *mlrval.Mlrmap
 	Context                  *types.Context
-	Oosvars                  *types.Mlrmap
+	Oosvars                  *mlrval.Mlrmap
 	FilterExpression         *mlrval.Mlrval
 	Stack                    *Stack
 	OutputRecordsAndContexts *list.List // list of *types.RecordAndContext
@@ -31,7 +31,7 @@ type State struct {
 }
 
 func NewEmptyState(options *cli.TOptions) *State {
-	oosvars := types.NewMlrmap()
+	oosvars := mlrval.NewMlrmap()
 	return &State{
 		Inrec:            nil,
 		Context:          nil,
@@ -48,7 +48,7 @@ func NewEmptyState(options *cli.TOptions) *State {
 }
 
 func (state *State) Update(
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 	context *types.Context,
 ) {
 	state.Inrec = inrec

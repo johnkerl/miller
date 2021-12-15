@@ -227,7 +227,7 @@ func (tr *TransformerSeqgen) Transform(
 			break
 		}
 
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 		outrec.PutCopy(tr.fieldName, counter)
 
 		context.UpdateForInputRecord()

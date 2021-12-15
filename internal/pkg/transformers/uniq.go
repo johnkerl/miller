@@ -400,7 +400,7 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 		}
 
 	} else { // end of record stream
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 		outrec.PutReference(
 			tr.outputFieldName,
 			mlrval.MlrvalFromInt(tr.uniqifiedRecordCounts.FieldCount),
@@ -474,7 +474,7 @@ func (tr *TransformerUniq) transformUnlashed(
 			countsForFieldName := pe.Value.(*lib.OrderedMap)
 			for pf := countsForFieldName.Head; pf != nil; pf = pf.Next {
 				fieldValueString := pf.Key
-				outrec := types.NewMlrmapAsRecord()
+				outrec := mlrval.NewMlrmapAsRecord()
 				outrec.PutReference("field", mlrval.mlrval.FromString(fieldName))
 				outrec.PutCopy(
 					"value",
@@ -510,7 +510,7 @@ func (tr *TransformerUniq) transformNumDistinctOnly(
 		}
 
 	} else {
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 		outrec.PutReference(
 			"count",
 			mlrval.MlrvalFromInt(tr.countsByGroup.FieldCount),
@@ -545,7 +545,7 @@ func (tr *TransformerUniq) transformWithCounts(
 	} else { // end of record stream
 
 		for pa := tr.countsByGroup.Head; pa != nil; pa = pa.Next {
-			outrec := types.NewMlrmapAsRecord()
+			outrec := mlrval.NewMlrmapAsRecord()
 			valuesForGroup := tr.valuesByGroup.Get(pa.Key).([]*mlrval.Mlrval)
 			for i, fieldName := range tr.fieldNames {
 				outrec.PutCopy(
@@ -585,7 +585,7 @@ func (tr *TransformerUniq) transformWithoutCounts(
 		if !present {
 			tr.countsByGroup.Put(groupingKey, 1)
 			tr.valuesByGroup.Put(groupingKey, selectedValues)
-			outrec := types.NewMlrmapAsRecord()
+			outrec := mlrval.NewMlrmapAsRecord()
 
 			for i, fieldName := range tr.fieldNames {
 				outrec.PutCopy(

@@ -1,8 +1,9 @@
-package types
+package mlrval
 
 import (
+	"bytes"
+
 	"github.com/johnkerl/miller/internal/pkg/lib"
-	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // IsEmpty determines if an map is empty.
@@ -14,7 +15,7 @@ func (mlrmap *Mlrmap) Has(key string) bool {
 	return mlrmap.findEntry(key) != nil
 }
 
-func (mlrmap *Mlrmap) Get(key string) *mlrval.Mlrval {
+func (mlrmap *Mlrmap) Get(key string) *Mlrval {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
 		return nil
@@ -28,7 +29,7 @@ func (mlrmap *Mlrmap) Get(key string) *mlrval.Mlrval {
 // where we could create undesired references between different objects.  Only
 // intended to be used at callsites which allocate a mlrval solely for the
 // purpose of putting into a map, e.g. input-record readers.
-func (mlrmap *Mlrmap) PutReference(key string, value *mlrval.Mlrval) {
+func (mlrmap *Mlrmap) PutReference(key string, value *Mlrval) {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
 		pe = newMlrmapEntry(key, value)
@@ -52,7 +53,7 @@ func (mlrmap *Mlrmap) PutReference(key string, value *mlrval.Mlrval) {
 
 // PutCopy copies the key and value (deep-copying in case the value is array/map).
 // This is safe for DSL use. See also PutReference.
-func (mlrmap *Mlrmap) PutCopy(key string, value *mlrval.Mlrval) {
+func (mlrmap *Mlrmap) PutCopy(key string, value *Mlrval) {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
 		pe = newMlrmapEntry(key, value.Copy())
@@ -75,7 +76,7 @@ func (mlrmap *Mlrmap) PutCopy(key string, value *mlrval.Mlrval) {
 }
 
 // PrependReference is the same as PutReference, but puts a new entry first, not last.
-func (mlrmap *Mlrmap) PrependReference(key string, value *mlrval.Mlrval) {
+func (mlrmap *Mlrmap) PrependReference(key string, value *Mlrval) {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
 		pe = newMlrmapEntry(key, value)
@@ -101,7 +102,7 @@ func (mlrmap *Mlrmap) PrependReference(key string, value *mlrval.Mlrval) {
 func (mlrmap *Mlrmap) PutReferenceAfter(
 	pe *MlrmapEntry,
 	key string,
-	value *mlrval.Mlrval,
+	value *Mlrval,
 ) *MlrmapEntry {
 	if pe == nil || pe.Next == nil {
 		// New entry is supposed to go 'after' old, but there is no such old
@@ -206,7 +207,7 @@ func (mlrmap *Mlrmap) findEntryByPositionalIndex(position int) *MlrmapEntry {
 	return nil
 }
 
-//func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *mlrval.Mlrval, value *mlrval.Mlrval) error {
+//func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
 //	if key.IsString() {
 //		mlrmap.PutCopy(key.printrep, value)
 //		return nil
@@ -221,7 +222,7 @@ func (mlrmap *Mlrmap) findEntryByPositionalIndex(position int) *MlrmapEntry {
 //}
 
 // ----------------------------------------------------------------
-func (mlrmap *Mlrmap) PrependCopy(key string, value *mlrval.Mlrval) {
+func (mlrmap *Mlrmap) PrependCopy(key string, value *Mlrval) {
 	mlrmap.PrependReference(key, value.Copy())
 }
 
@@ -270,7 +271,7 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 
 // ----------------------------------------------------------------
 // TODO: put error-return into this API
-//func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int, name *mlrval.Mlrval) {
+//func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int, name *Mlrval) {
 //	positionalEntry := mlrmap.findEntryByPositionalIndex(position)
 //
 //	if positionalEntry == nil {
@@ -304,7 +305,7 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 //	}
 //}
 
-//func (mlrmap *Mlrmap) GetWithPositionalIndex(position int) *mlrval.Mlrval {
+//func (mlrmap *Mlrmap) GetWithPositionalIndex(position int) *Mlrval {
 //	mapEntry := mlrmap.findEntryByPositionalIndex(position)
 //	if mapEntry == nil {
 //		return nil
@@ -312,7 +313,7 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 //	return mapEntry.Value
 //}
 
-//func (mlrmap *Mlrmap) GetWithMlrvalIndex(index *mlrval.Mlrval) (*mlrval.Mlrval, error) {
+//func (mlrmap *Mlrmap) GetWithMlrvalIndex(index *Mlrval) (*Mlrval, error) {
 //	if index.IsArray() {
 //		return mlrmap.getWithMlrvalArrayIndex(index)
 //	} else {
@@ -322,9 +323,9 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 
 //// This lets the user do '$y = $x[ ["a", "b", "c"] ]' in lieu of
 //// '$y = $x["a"]["b"]["c"]'.
-//func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *mlrval.Mlrval) (*mlrval.Mlrval, error) {
+//func (mlrmap *Mlrmap) getWithMlrvalArrayIndex(index *Mlrval) (*Mlrval, error) {
 //	current := mlrmap
-//	var retval *mlrval.Mlrval = nil
+//	var retval *Mlrval = nil
 //	lib.InternalCodingErrorIf(!index.IsArray())
 //	array := index.arrayval
 //	n := len(array)
@@ -348,7 +349,7 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 //	return retval, nil
 //}
 
-//func (mlrmap *Mlrmap) getWithMlrvalSingleIndex(index *mlrval.Mlrval) (*mlrval.Mlrval, error) {
+//func (mlrmap *Mlrmap) getWithMlrvalSingleIndex(index *Mlrval) (*Mlrval, error) {
 //	if index.IsString() {
 //		return mlrmap.Get(index.printrep), nil
 //	} else if index.IsInt() {
@@ -380,7 +381,7 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 
 //// ----------------------------------------------------------------
 //// TODO: put error-return into this API
-//func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int, name *mlrval.Mlrval) {
+//func (mlrmap *Mlrmap) PutNameWithPositionalIndex(position int, name *Mlrval) {
 //	positionalEntry := mlrmap.findEntryByPositionalIndex(position)
 //
 //	if positionalEntry == nil {
@@ -415,7 +416,7 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 // This is safe for DSL use. See also PutReference.
 
 // TODO: put error-return into this API
-//func (mlrmap *Mlrmap) PutCopyWithPositionalIndex(position int, value *mlrval.Mlrval) {
+//func (mlrmap *Mlrmap) PutCopyWithPositionalIndex(position int, value *Mlrval) {
 //	mapEntry := mlrmap.findEntryByPositionalIndex(position)
 //
 //	if mapEntry != nil {
@@ -445,7 +446,7 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 //	}
 //	return true
 //}
-//
+
 //// True if this contains other, i.e. if other is contained by mlrmap.
 //// * If any key of other is not a key of this, return false.
 //// * If any key of other has a value unequal to this' value at the same key, return false.
@@ -457,7 +458,7 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 //		}
 //		thisval := mlrmap.Get(pe.Key)
 //		thatval := pe.Value
-//		meq := BIF_equals(thisval, thatval)
+//		meq := bifs.BIF_equals(thisval, thatval)
 //		eq, ok := meq.GetBoolValue()
 //		lib.InternalCodingErrorIf(!ok)
 //		if !eq {
@@ -522,31 +523,31 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 // In the former case the indices are ["name", 1, "foo"] and in the latter case
 // the indices are ["foo", 1]. See also indexed-lvalues.md.
 //
-// This is a Mlrmap (from string to mlrval.Mlrval) so we handle the first level of
-// indexing here, then pass the remaining indices to the mlrval.Mlrval at the desired
+// This is a Mlrmap (from string to Mlrval) so we handle the first level of
+// indexing here, then pass the remaining indices to the Mlrval at the desired
 // slot.
 
-//func (mlrmap *Mlrmap) PutIndexed(indices []*mlrval.Mlrval, rvalue *mlrval.Mlrval) error {
+//func (mlrmap *Mlrmap) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 //	return putIndexedOnMap(mlrmap, indices, rvalue)
 //}
 
-//func (mlrmap *Mlrmap) RemoveIndexed(indices []*mlrval.Mlrval) error {
+//func (mlrmap *Mlrmap) RemoveIndexed(indices []*Mlrval) error {
 //	return removeIndexedOnMap(mlrmap, indices)
 //}
 
-//// ----------------------------------------------------------------
-//func (mlrmap *Mlrmap) GetKeysJoined() string {
-//	var buffer bytes.Buffer
-//	i := 0
-//	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
-//		if i > 0 {
-//			buffer.WriteString(",")
-//		}
-//		i++
-//		buffer.WriteString(pe.Key)
-//	}
-//	return buffer.String()
-//}
+// ----------------------------------------------------------------
+func (mlrmap *Mlrmap) GetKeysJoined() string {
+	var buffer bytes.Buffer
+	i := 0
+	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
+		if i > 0 {
+			buffer.WriteString(",")
+		}
+		i++
+		buffer.WriteString(pe.Key)
+	}
+	return buffer.String()
+}
 
 //// For mlr reshape
 //func (mlrmap *Mlrmap) GetValuesJoined() string {
@@ -602,10 +603,10 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 //// TODO: put 'Copy' into the method name
 //func (mlrmap *Mlrmap) GetSelectedValuesAndJoined(selectedFieldNames []string) (
 //	string,
-//	[]*mlrval.Mlrval,
+//	[]*Mlrval,
 //	bool,
 //) {
-//	mlrvals := make([]*mlrval.Mlrval, 0, len(selectedFieldNames))
+//	mlrvals := make([]*Mlrval, 0, len(selectedFieldNames))
 //
 //	if len(selectedFieldNames) == 0 {
 //		// The fall-through is functionally correct, but this is quicker with
@@ -633,9 +634,9 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 
 //// As above but only returns the array. Also, these are references, NOT copies.
 //// For step and join.
-//func (mlrmap *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) ([]*mlrval.Mlrval, bool) {
+//func (mlrmap *Mlrmap) ReferenceSelectedValues(selectedFieldNames []string) ([]*Mlrval, bool) {
 //	allFound := true
-//	mlrvals := make([]*mlrval.Mlrval, 0, len(selectedFieldNames))
+//	mlrvals := make([]*Mlrval, 0, len(selectedFieldNames))
 //
 //	for _, selectedFieldName := range selectedFieldNames {
 //		entry := mlrmap.findEntry(selectedFieldName)
@@ -651,9 +652,9 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 
 //// TODO: rename to CopySelectedValues
 //// As previous but with copying. For stats1.
-//func (mlrmap *Mlrmap) GetSelectedValues(selectedFieldNames []string) ([]*mlrval.Mlrval, bool) {
+//func (mlrmap *Mlrmap) GetSelectedValues(selectedFieldNames []string) ([]*Mlrval, bool) {
 //	allFound := true
-//	mlrvals := make([]*mlrval.Mlrval, 0, len(selectedFieldNames))
+//	mlrvals := make([]*Mlrval, 0, len(selectedFieldNames))
 //
 //	for _, selectedFieldName := range selectedFieldNames {
 //		entry := mlrmap.findEntry(selectedFieldName)

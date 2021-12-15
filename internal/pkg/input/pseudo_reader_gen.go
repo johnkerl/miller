@@ -83,7 +83,7 @@ func (reader *PseudoReaderGen) process(
 			break
 		}
 
-		record := types.NewMlrmap()
+		record := mlrval.NewMlrmap()
 		record.PutCopy(key, value)
 
 		context.UpdateForInputRecord()

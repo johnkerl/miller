@@ -1,5 +1,5 @@
 // ================================================================
-// The `mlrval.Mlrval` structure includes **string, int, float, boolean, void,
+// The `Mlrval` structure includes **string, int, float, boolean, void,
 // absent, and error** types (not unlike PHP's `zval`) as well as
 // type-conversion logic for various operators.
 //
@@ -65,10 +65,11 @@ type Mlrval struct {
 	floatval      float64
 	boolval       bool
 
-	// Interfaced here to avoid package-dependency cycles:
-	arrayval interface{} // []Mlrval
-	mapval   interface{} // *Mlrmap
-	funcval  interface{} // first-class-function literals from internal/pkg/dsl/cst
+	arrayval []Mlrval
+	mapval   *Mlrmap
+	// First-class-function literals from internal/pkg/dsl/cst.
+	// Interfaced here to avoid package-dependency cycles.
+	funcval  interface{}
 }
 
 const INVALID_PRINTREP = "(bug-if-you-see-this)"
@@ -181,4 +182,13 @@ var typeNameToMaskMap = map[string]int{
 	"map":   MT_TYPE_MASK_MAP,
 	"any":   MT_TYPE_MASK_ANY,
 	"funct": MT_TYPE_MASK_FUNC,
+}
+
+func TypeNameToMask(typeName string) (mask int, present bool) {
+	retval := typeNameToMaskMap[typeName]
+	if retval != 0 {
+		return retval, true
+	} else {
+		return 0, false
+	}
 }

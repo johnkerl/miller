@@ -243,8 +243,8 @@ func (reader *RecordReaderDKVPNonPipelined) processHandle(
 
 func (reader *RecordReaderDKVPNonPipelined) recordFromDKVPLine(
 	line string,
-) *types.Mlrmap {
-	record := types.NewMlrmap()
+) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmap()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
@@ -379,8 +379,8 @@ func (reader *RecordReaderDKVPListPipelined) processHandle(
 
 func (reader *RecordReaderDKVPListPipelined) recordFromDKVPLine(
 	line string,
-) *types.Mlrmap {
-	record := types.NewMlrmap()
+) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmap()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
@@ -531,8 +531,8 @@ func (reader *RecordReaderDKVPChanPipelined) processHandle(
 
 func (reader *RecordReaderDKVPChanPipelined) recordFromDKVPLine(
 	line string,
-) *types.Mlrmap {
-	record := types.NewMlrmap()
+) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmap()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
@@ -643,7 +643,7 @@ func NewRecordWriterDKVP2(writerOptions *cli.TWriterOptions) (*RecordWriterDKVP2
 }
 
 func (writer *RecordWriterDKVP2) Write(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	ostream *bufio.Writer,
 ) {
 	// End of record stream: nothing special for this output format

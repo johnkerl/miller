@@ -217,7 +217,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 			}
 		}
 
-		record := types.NewMlrmapAsRecord()
+		record := mlrval.NewMlrmapAsRecord()
 
 		nh := len(reader.header)
 		nd := len(csvRecord)

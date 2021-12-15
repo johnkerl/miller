@@ -3,8 +3,11 @@ PUNCHDOWN LIST
 
 * --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
 * JIT next:
+  o mv.Equals & mv.Copy
   o mlrmap copy
+  o JSON I/O UT
   o krepl miller6 new doclink-comments
+  ? []Mlrval -> []*Mlrval ?
 
 * perf next:
   o batchify source-quench
@@ -42,6 +45,8 @@ PUNCHDOWN LIST
     - make a 2nd/3rd cmd main w/ simple model & tweak that
       o dkvp-reader factor-out ...
   o mods:
+    - replace rac-list with batch-array -- ? profile to see what value.
+    - unaliasArrayIndex in multiple packages for cycdep break -- ?
     - randsel for arrays
     - downstreamDone batchify
       > head
@@ -264,6 +269,8 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* handling for --cpuprofile not at args[1] slot
 
 * try simpler-than-regex-split-string for repeated-single -- especially for XTAB reader
 

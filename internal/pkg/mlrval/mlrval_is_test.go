@@ -19,8 +19,8 @@ func TestIsLegit(t *testing.T) {
 	assert.True(t, FromInt(123).IsLegit())
 	assert.True(t, FromFloat(123.4).IsLegit())
 	assert.True(t, FromBool(true).IsLegit())
-	assert.True(t, FromArray("test data").IsLegit())
-	assert.True(t, FromMap("test data").IsLegit())
+	assert.True(t, FromArray([]Mlrval{*FromInt(10)}).IsLegit())
+	assert.True(t, FromMap(NewMlrmap()).IsLegit())
 }
 
 func TestIsErrorOrAbsent(t *testing.T) {

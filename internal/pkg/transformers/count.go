@@ -172,7 +172,7 @@ func (tr *TransformerCount) countUngrouped(
 	if !inrecAndContext.EndOfStream {
 		tr.ungroupedCount++
 	} else {
-		newrec := types.NewMlrmapAsRecord()
+		newrec := mlrval.NewMlrmapAsRecord()
 		newrec.PutCopy(tr.outputFieldName, mlrval.MlrvalFromInt(tr.ungroupedCount))
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 
@@ -210,7 +210,7 @@ func (tr *TransformerCount) countGrouped(
 
 	} else {
 		if tr.showCountsOnly {
-			newrec := types.NewMlrmapAsRecord()
+			newrec := mlrval.NewMlrmapAsRecord()
 			newrec.PutCopy(tr.outputFieldName, mlrval.MlrvalFromInt(tr.groupedCounts.FieldCount))
 
 			outrecAndContext := types.NewRecordAndContext(newrec, &inrecAndContext.Context)
@@ -219,7 +219,7 @@ func (tr *TransformerCount) countGrouped(
 		} else {
 			for outer := tr.groupedCounts.Head; outer != nil; outer = outer.Next {
 				groupingKey := outer.Key
-				newrec := types.NewMlrmapAsRecord()
+				newrec := mlrval.NewMlrmapAsRecord()
 
 				// Example:
 				// * Suppose group-by fields are a,b.

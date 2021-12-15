@@ -9,7 +9,7 @@ import (
 )
 
 func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.Type() != MT_STRING {
+	if !input1.IsString() {
 		return mlrval.ERROR
 	}
 	var d, h, m, s int
@@ -57,7 +57,7 @@ func BIF_dhms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.Type() != MT_STRING {
+	if !input1.IsString() {
 		return mlrval.ERROR
 	}
 
@@ -107,7 +107,7 @@ func BIF_dhms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_hms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.Type() != MT_STRING {
+	if !input1.IsString() {
 		return mlrval.ERROR
 	}
 	if input1.AcquireStringValue() == "" {
@@ -131,7 +131,7 @@ func BIF_hms2sec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 }
 
 func BIF_hms2fsec(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.Type() != MT_STRING {
+	if !input1.IsString() {
 		return mlrval.ERROR
 	}
 

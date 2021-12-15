@@ -145,7 +145,7 @@ func (tr *TransformerTemplate) Transform(
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		outrec := types.NewMlrmap()
+		outrec := mlrval.NewMlrmap()
 		for _, fieldName := range tr.fieldNameList {
 			value := inrec.Get(fieldName)
 			if value != nil {

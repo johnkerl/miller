@@ -7,11 +7,10 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ================================================================
-// Map/array count. Scalars (including strings) have length 1.
+// Map/array count. Scalars (including strings) have length 1; strlen is for string length.
 func BIF_length(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	switch input1.Type() {
 	case mlrval.MT_ERROR:
@@ -21,10 +20,12 @@ func BIF_length(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		return mlrval.FromInt(0)
 		break
 	case mlrval.MT_ARRAY:
-		return mlrval.FromInt(int(len(input1.AcquireArrayValue().([]mlrval.Mlrval))))
+		arrayval := input1.AcquireArrayValue()
+		return mlrval.FromInt(int(len(arrayval)))
 		break
 	case mlrval.MT_MAP:
-		return mlrval.FromInt(int(input1.AcquireArrayValue().(types.Mlrmap).FieldCount))
+		mapval := input1.AcquireMapValue()
+		return mlrval.FromInt(int(mapval.FieldCount))
 		break
 	}
 	return mlrval.FromInt(1)
@@ -33,7 +34,8 @@ func BIF_length(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // ================================================================
 func depth_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	maxChildDepth := 0
-	for _, child := range input1.AcquireArrayValue().([]mlrval.Mlrval) {
+	arrayval := input1.AcquireArrayValue()
+	for _, child := range arrayval {
 		childDepth := BIF_depth(&child)
 		lib.InternalCodingErrorIf(!childDepth.IsInt())
 		iChildDepth := int(childDepth.AcquireIntValue())
@@ -46,7 +48,8 @@ func depth_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func depth_from_map(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	maxChildDepth := 0
-	for pe := input1.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
+	mapval := input1.AcquireMapValue()
+	for pe := mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
 		childDepth := BIF_depth(child)
 		lib.InternalCodingErrorIf(!childDepth.IsInt())
@@ -89,7 +92,8 @@ func BIF_depth(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // ================================================================
 func leafcount_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	sumChildLeafCount := 0
-	for _, child := range input1.AcquireArrayValue().([]mlrval.Mlrval) {
+	arrayval := input1.AcquireArrayValue()
+	for _, child := range arrayval {
 		// Golang initialization loop if we do this :(
 		// childLeafCount := BIF_leafcount(&child)
 
@@ -109,7 +113,8 @@ func leafcount_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 func leafcount_from_map(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	sumChildLeafCount := 0
-	for pe := input1.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
+	mapval := input1.AcquireMapValue()
+	for pe := mapval.Head; pe != nil; pe = pe.Next {
 		child := pe.Value
 
 		// Golang initialization loop if we do this :(
@@ -159,13 +164,14 @@ func has_key_in_array(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input2.IsInt() {
 		return mlrval.ERROR
 	}
-	_, ok := UnaliasArrayIndex(&input1.AcquireArrayValue().([]mlrval.Mlrval), input2.AcquireIntValue())
+	arrayval := input1.AcquireArrayValue()
+	_, ok := unaliasArrayIndex(&arrayval, input2.AcquireIntValue())
 	return mlrval.FromBool(ok)
 }
 
 func has_key_in_map(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input2.IsString() || input2.IsInt() {
-		return mlrval.FromBool(input1.AcquireArrayValue().(types.Mlrmap).Has(input2.String()))
+		return mlrval.FromBool(input1.AcquireMapValue().Has(input2.String()))
 	} else {
 		return mlrval.ERROR
 	}
@@ -189,8 +195,8 @@ func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	if !mlrvals[0].IsMap() {
 		return mlrval.ERROR
 	}
-	oldmap := mlrvals[0].AcquireArrayValue().(types.Mlrmap)
-	newMap := NewMlrmap()
+	oldmap := mlrvals[0].AcquireMapValue()
+	newMap := mlrval.NewMlrmap()
 
 	newKeys := make(map[string]bool)
 	for _, selectArg := range mlrvals[1:] {
@@ -199,7 +205,7 @@ func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 		} else if selectArg.IsInt() {
 			newKeys[selectArg.String()] = true
 		} else if selectArg.IsArray() {
-			for _, element := range selectArg.AcquireArrayValue().([]mlrval.Mlrval) {
+			for _, element := range selectArg.AcquireArrayValue() {
 				if element.IsString() {
 					newKeys[element.AcquireStringValue()] = true
 				} else {
@@ -222,101 +228,101 @@ func BIF_mapselect(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromMap(newMap)
 }
 
-// ----------------------------------------------------------------
-func BIF_mapexcept(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
-	if len(mlrvals) < 1 {
-		return mlrval.ERROR
-	}
-	if !mlrvals[0].IsMap() {
-		return mlrval.ERROR
-	}
-	newMap := mlrvals[0].AcquireArrayValue().(types.Mlrmap).Copy()
+//// ----------------------------------------------------------------
+//func BIF_mapexcept(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+//	if len(mlrvals) < 1 {
+//		return mlrval.ERROR
+//	}
+//	if !mlrvals[0].IsMap() {
+//		return mlrval.ERROR
+//	}
+//	newMap := mlrvals[0].AcquireMapValue().Copy()
+//
+//	for _, exceptArg := range mlrvals[1:] {
+//		if exceptArg.IsString() {
+//			newMap.Remove(exceptArg.AcquireStringValue())
+//		} else if exceptArg.IsInt() {
+//			newMap.Remove(exceptArg.String())
+//		} else if exceptArg.IsArray() {
+//			for _, element := range exceptArg.AcquireArrayValue() {
+//				if element.IsString() {
+//					newMap.Remove(element.AcquireStringValue())
+//				} else {
+//					return mlrval.ERROR
+//				}
+//			}
+//		} else {
+//			return mlrval.ERROR
+//		}
+//	}
+//
+//	return mlrval.FromMap(newMap)
+//}
 
-	for _, exceptArg := range mlrvals[1:] {
-		if exceptArg.IsString() {
-			newMap.Remove(exceptArg.AcquireStringValue())
-		} else if exceptArg.IsInt() {
-			newMap.Remove(exceptArg.String())
-		} else if exceptArg.IsArray() {
-			for _, element := range exceptArg.AcquireArrayValue().([]mlrval.Mlrval) {
-				if element.IsString() {
-					newMap.Remove(element.AcquireStringValue())
-				} else {
-					return mlrval.ERROR
-				}
-			}
-		} else {
-			return mlrval.ERROR
-		}
-	}
+//// ----------------------------------------------------------------
+//func BIF_mapsum(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+//	if len(mlrvals) == 0 {
+//		return mlrval.FromEmptyMap()
+//	}
+//	if len(mlrvals) == 1 {
+//		return mlrvals[0]
+//	}
+//	if mlrvals[0].Type() != MT_MAP {
+//		return mlrval.ERROR
+//	}
+//	newMap := mlrvals[0].AcquireMapValue().Copy()
+//
+//	for _, otherMapArg := range mlrvals[1:] {
+//		if otherMapArg.Type() != MT_MAP {
+//			return mlrval.ERROR
+//		}
+//
+//		for pe := otherMapArg.AcquireMapValue().Head; pe != nil; pe = pe.Next {
+//			newMap.PutCopy(pe.Key, pe.Value)
+//		}
+//	}
+//
+//	return mlrval.FromMap(newMap)
+//}
 
-	return mlrval.FromMap(newMap)
-}
-
-// ----------------------------------------------------------------
-func BIF_mapsum(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
-	if len(mlrvals) == 0 {
-		return mlrval.FromEmptyMap()
-	}
-	if len(mlrvals) == 1 {
-		return mlrvals[0]
-	}
-	if mlrvals[0].Type() != MT_MAP {
-		return mlrval.ERROR
-	}
-	newMap := mlrvals[0].AcquireArrayValue().(types.Mlrmap).Copy()
-
-	for _, otherMapArg := range mlrvals[1:] {
-		if otherMapArg.Type() != MT_MAP {
-			return mlrval.ERROR
-		}
-
-		for pe := otherMapArg.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
-			newMap.PutCopy(pe.Key, pe.Value)
-		}
-	}
-
-	return mlrval.FromMap(newMap)
-}
-
-// ----------------------------------------------------------------
-func BIF_mapdiff(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
-	if len(mlrvals) == 0 {
-		return mlrval.FromEmptyMap()
-	}
-	if len(mlrvals) == 1 {
-		return mlrvals[0]
-	}
-	if mlrvals[0].Type() != MT_MAP {
-		return mlrval.ERROR
-	}
-	newMap := mlrvals[0].AcquireArrayValue().(types.Mlrmap).Copy()
-
-	for _, otherMapArg := range mlrvals[1:] {
-		if otherMapArg.Type() != MT_MAP {
-			return mlrval.ERROR
-		}
-
-		for pe := otherMapArg.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
-			newMap.Remove(pe.Key)
-		}
-	}
-
-	return mlrval.FromMap(newMap)
-}
+//// ----------------------------------------------------------------
+//func BIF_mapdiff(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+//	if len(mlrvals) == 0 {
+//		return mlrval.FromEmptyMap()
+//	}
+//	if len(mlrvals) == 1 {
+//		return mlrvals[0]
+//	}
+//	if mlrvals[0].Type() != MT_MAP {
+//		return mlrval.ERROR
+//	}
+//	newMap := mlrvals[0].AcquireMapValue().Copy()
+//
+//	for _, otherMapArg := range mlrvals[1:] {
+//		if otherMapArg.Type() != MT_MAP {
+//			return mlrval.ERROR
+//		}
+//
+//		for pe := otherMapArg.AcquireMapValue().Head; pe != nil; pe = pe.Next {
+//			newMap.Remove(pe.Key)
+//		}
+//	}
+//
+//	return mlrval.FromMap(newMap)
+//}
 
 // ================================================================
 // joink([1,2,3], ",") -> "1,2,3"
 // joink({"a":3,"b":4,"c":5}, ",") -> "a,b,c"
 func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 	fieldSeparator := input2.AcquireStringValue()
 	if input1.IsMap() {
 		var buffer bytes.Buffer
 
-		for pe := input1.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
+		for pe := input1.AcquireMapValue().Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(pe.Key)
 			if pe.Next != nil {
 				buffer.WriteString(fieldSeparator)
@@ -327,7 +333,7 @@ func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else if input1.IsArray() {
 		var buffer bytes.Buffer
 
-		for i := range input1.AcquireArrayValue().([]mlrval.Mlrval) {
+		for i := range input1.AcquireArrayValue() {
 			if i > 0 {
 				buffer.WriteString(fieldSeparator)
 			}
@@ -345,7 +351,7 @@ func BIF_joink(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // joinv([3,4,5], ",") -> "3,4,5"
 // joinv({"a":3,"b":4,"c":5}, ",") -> "3,4,5"
 func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 	fieldSeparator := input2.AcquireStringValue()
@@ -353,7 +359,7 @@ func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsMap() {
 		var buffer bytes.Buffer
 
-		for pe := input1.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
+		for pe := input1.AcquireMapValue().Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(pe.Value.String())
 			if pe.Next != nil {
 				buffer.WriteString(fieldSeparator)
@@ -364,7 +370,7 @@ func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else if input1.IsArray() {
 		var buffer bytes.Buffer
 
-		for i, element := range input1.AcquireArrayValue().([]mlrval.Mlrval) {
+		for i, element := range input1.AcquireArrayValue() {
 			if i > 0 {
 				buffer.WriteString(fieldSeparator)
 			}
@@ -381,11 +387,11 @@ func BIF_joinv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 // joinkv([3,4,5], "=", ",") -> "1=3,2=4,3=5"
 // joinkv({"a":3,"b":4,"c":5}, "=", ",") -> "a=3,b=4,c=5"
 func BIF_joinkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 	pairSeparator := input2.AcquireStringValue()
-	if input3.Type() != MT_STRING {
+	if !input3.IsString() {
 		return mlrval.ERROR
 	}
 	fieldSeparator := input3.AcquireStringValue()
@@ -393,7 +399,7 @@ func BIF_joinkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsMap() {
 		var buffer bytes.Buffer
 
-		for pe := input1.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
+		for pe := input1.AcquireMapValue().Head; pe != nil; pe = pe.Next {
 			buffer.WriteString(pe.Key)
 			buffer.WriteString(pairSeparator)
 			buffer.WriteString(pe.Value.String())
@@ -406,7 +412,7 @@ func BIF_joinkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	} else if input1.IsArray() {
 		var buffer bytes.Buffer
 
-		for i, element := range input1.AcquireArrayValue().([]mlrval.Mlrval) {
+		for i, element := range input1.AcquireArrayValue() {
 			if i > 0 {
 				buffer.WriteString(fieldSeparator)
 			}
@@ -428,16 +434,16 @@ func BIF_splitkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
 		return mlrval.ERROR
 	}
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 	pairSeparator := input2.AcquireStringValue()
-	if input3.Type() != MT_STRING {
+	if !input3.IsString() {
 		return mlrval.ERROR
 	}
 	fieldSeparator := input3.AcquireStringValue()
 
-	output := mlrval.FromEmptyMap()
+	output := mlrval.FromMap(mlrval.NewMlrmap())
 
 	fields := lib.SplitString(input1.AcquireStringValue(), fieldSeparator)
 	for i, field := range fields {
@@ -445,11 +451,11 @@ func BIF_splitkv(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 		if len(pair) == 1 {
 			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			value := mlrval.FromInferredType(pair[0])
-			output.AcquireArrayValue().(types.Mlrmap).PutReference(key, value)
+			output.AcquireMapValue().PutReference(key, value)
 		} else if len(pair) == 2 {
 			key := pair[0]
 			value := mlrval.FromInferredType(pair[1])
-			output.AcquireArrayValue().(types.Mlrmap).PutReference(key, value)
+			output.AcquireMapValue().PutReference(key, value)
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
@@ -463,16 +469,16 @@ func BIF_splitkvx(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
 		return mlrval.ERROR
 	}
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 	pairSeparator := input2.AcquireStringValue()
-	if input3.Type() != MT_STRING {
+	if !input3.IsString() {
 		return mlrval.ERROR
 	}
 	fieldSeparator := input3.AcquireStringValue()
 
-	output := mlrval.FromEmptyMap()
+	output := mlrval.FromMap(mlrval.NewMlrmap())
 
 	fields := lib.SplitString(input1.AcquireStringValue(), fieldSeparator)
 	for i, field := range fields {
@@ -480,11 +486,11 @@ func BIF_splitkvx(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 		if len(pair) == 1 {
 			key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 			value := mlrval.FromString(pair[0])
-			output.AcquireArrayValue().(types.Mlrmap).PutReference(key, value)
+			output.AcquireMapValue().PutReference(key, value)
 		} else if len(pair) == 2 {
 			key := pair[0]
 			value := mlrval.FromString(pair[1])
-			output.AcquireArrayValue().(types.Mlrmap).PutReference(key, value)
+			output.AcquireMapValue().PutReference(key, value)
 		} else {
 			lib.InternalCodingErrorIf(true)
 		}
@@ -499,17 +505,17 @@ func BIF_splitnv(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
 		return mlrval.ERROR
 	}
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 
-	output := mlrval.FromEmptyMap()
+	output := mlrval.FromMap(mlrval.NewMlrmap())
 
 	fields := lib.SplitString(input1.AcquireStringValue(), input2.AcquireStringValue())
 	for i, field := range fields {
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 		value := mlrval.FromInferredType(field)
-		output.AcquireArrayValue().(types.Mlrmap).PutReference(key, value)
+		output.AcquireMapValue().PutReference(key, value)
 	}
 
 	return output
@@ -521,17 +527,17 @@ func BIF_splitnvx(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
 		return mlrval.ERROR
 	}
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 
-	output := mlrval.FromEmptyMap()
+	output := mlrval.FromMap(mlrval.NewMlrmap())
 
 	fields := lib.SplitString(input1.AcquireStringValue(), input2.AcquireStringValue())
 	for i, field := range fields {
 		key := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
 		value := mlrval.FromString(field)
-		output.AcquireArrayValue().(types.Mlrmap).PutReference(key, value)
+		output.AcquireMapValue().PutReference(key, value)
 	}
 
 	return output
@@ -550,14 +556,14 @@ func BIF_splita(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 
 	fields := lib.SplitString(input1.AcquireStringValue(), fieldSeparator)
 
-	output := NewSizedMlrvalArray(int(len(fields)))
+	arrayval := make([]mlrval.Mlrval, len(fields))
 
 	for i, field := range fields {
 		value := mlrval.FromInferredType(field)
-		output.AcquireArrayValue().([]mlrval.Mlrval)[i] = *value
+		arrayval[i] = *value
 	}
 
-	return output
+	return mlrval.FromArray(arrayval)
 }
 
 // ----------------------------------------------------------------
@@ -567,7 +573,7 @@ func BIF_splitax(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	if !input1.IsStringOrVoid() {
 		return mlrval.ERROR
 	}
-	if input2.Type() != MT_STRING {
+	if !input2.IsString() {
 		return mlrval.ERROR
 	}
 	input := input1.AcquireStringValue()
@@ -581,33 +587,35 @@ func BIF_splitax(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 func bif_splitax_helper(input string, separator string) *mlrval.Mlrval {
 	fields := lib.SplitString(input, separator)
 
-	output := NewSizedMlrvalArray(int(len(fields)))
+	arrayval := make([]mlrval.Mlrval, len(fields))
 
 	for i, field := range fields {
-		output.AcquireArrayValue().([]mlrval.Mlrval)[i] = *mlrval.FromString(field)
+		arrayval[i] = *mlrval.FromString(field)
 	}
 
-	return output
+	return mlrval.FromArray(arrayval)
 }
 
 // ----------------------------------------------------------------
 func BIF_get_keys(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsMap() {
 		// TODO: make a ReferenceFrom with comments
-		output := NewSizedMlrvalArray(input1.AcquireArrayValue().(types.Mlrmap).FieldCount)
+		mapval := input1.AcquireMapValue()
+		arrayval := make([]mlrval.Mlrval, mapval.FieldCount)
 		i := 0
-		for pe := input1.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
-			output.AcquireArrayValue().([]mlrval.Mlrval)[i] = *mlrval.FromString(pe.Key)
+		for pe := mapval.Head; pe != nil; pe = pe.Next {
+			arrayval[i] = *mlrval.FromString(pe.Key)
 			i++
 		}
-		return output
+		return mlrval.FromArray(arrayval)
 
 	} else if input1.IsArray() {
-		output := NewSizedMlrvalArray(int(len(input1.AcquireArrayValue().([]mlrval.Mlrval))))
-		for i := range input1.AcquireArrayValue().([]mlrval.Mlrval) {
-			output.AcquireArrayValue().([]mlrval.Mlrval)[i] = *mlrval.FromInt(int(i + 1)) // Miller user-space indices are 1-up
+		inputarrayval := input1.AcquireArrayValue()
+		arrayval := make([]mlrval.Mlrval, len(inputarrayval))
+		for i := range inputarrayval {
+			arrayval[i] = *mlrval.FromInt(int(i + 1)) // Miller user-space indices are 1-up
 		}
-		return output
+		return mlrval.FromArray(arrayval)
 
 	} else {
 		return mlrval.ERROR
@@ -617,168 +625,228 @@ func BIF_get_keys(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 // ----------------------------------------------------------------
 func BIF_get_values(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 	if input1.IsMap() {
-		// TODO: make a ReferenceFrom with commenbs
-		output := NewSizedMlrvalArray(input1.AcquireArrayValue().(types.Mlrmap).FieldCount)
+		mapval := input1.AcquireMapValue()
+		arrayval := make([]mlrval.Mlrval, mapval.FieldCount)
 		i := 0
-		for pe := input1.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
-			output.AcquireArrayValue().([]mlrval.Mlrval)[i] = *pe.Value.Copy()
+		for pe := mapval.Head; pe != nil; pe = pe.Next {
+			arrayval[i] = *pe.Value.Copy()
 			i++
 		}
-		return output
+		return mlrval.FromArray(arrayval)
 
 	} else if input1.IsArray() {
-		output := NewSizedMlrvalArray(int(len(input1.AcquireArrayValue().([]mlrval.Mlrval))))
-		for i, value := range input1.AcquireArrayValue().([]mlrval.Mlrval) {
-			output.AcquireArrayValue().([]mlrval.Mlrval)[i] = *value.Copy()
+		inputarrayval := input1.AcquireArrayValue()
+		arrayval := make([]mlrval.Mlrval, len(inputarrayval))
+		for i, value := range inputarrayval {
+			arrayval[i] = *value.Copy()
 		}
-		return output
+	return mlrval.FromArray(arrayval)
 
 	} else {
 		return mlrval.ERROR
 	}
 }
 
-// ----------------------------------------------------------------
-func BIF_append(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.Type() != MT_ARRAY {
-		return mlrval.ERROR
-	}
+//// ----------------------------------------------------------------
+//func BIF_append(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+//	if !input1.IsArray() {
+//		return mlrval.ERROR
+//	}
+//
+//	output := input1.Copy()
+//	output.ArrayAppend(input2.Copy())
+//	return output
+//}
 
-	output := input1.Copy()
-	output.ArrayAppend(input2.Copy())
-	return output
+//// ----------------------------------------------------------------
+//// First argumemnt is prefix.
+//// Second argument is delimiter.
+//// Third argument is map or array.
+//// flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
+//// flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
+//func BIF_flatten(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
+//	if input3.IsMap() || input3.IsArray() {
+//		if !input1.IsString() && input1.Type() != MT_VOID {
+//			return mlrval.ERROR
+//		}
+//		prefix := input1.AcquireStringValue()
+//		if !input2.IsString() {
+//			return mlrval.ERROR
+//		}
+//		delimiter := input2.AcquireStringValue()
+//
+//		retval := input3.FlattenToMap(prefix, delimiter)
+//		return &retval
+//	} else {
+//		return input3
+//	}
+//}
+//
+//// flatten($*, ".") is the same as flatten("", ".", $*)
+//func BIF_flatten_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+//	return BIF_flatten(mlrval.VOID, input2, input1)
+//}
+//
+//// ----------------------------------------------------------------
+//// First argument is a map.
+//// Second argument is a delimiter string.
+//// unflatten({"a.b.c", ".") is {"a": { "b": { "c": 4}}}.
+//func BIF_unflatten(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+//	if !input2.IsString() {
+//		return mlrval.ERROR
+//	}
+//	if input1.Type() != MT_MAP {
+//		return input1
+//	}
+//	oldmap := input1.AcquireMapValue()
+//	separator := input2.AcquireStringValue()
+//	newmap := oldmap.CopyUnflattened(separator)
+//	return mlrval.FromMapReferenced(newmap)
+//}
+//
+//// ----------------------------------------------------------------
+//// Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
+//func BIF_arrayify(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+//	if input1.IsMap() {
+//		if input1.AcquireMapValue().IsEmpty() {
+//			return input1
+//		}
+//
+//		convertible := true
+//		i := 0
+//		for pe := input1.AcquireMapValue().Head; pe != nil; pe = pe.Next {
+//			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
+//			i++
+//			if pe.Key != sval {
+//				convertible = false
+//			}
+//			pe.Value = BIF_arrayify(pe.Value)
+//		}
+//
+//		if convertible {
+//			mapval := input1.AcquireMapValue()
+//			arrayval := make([]mlrval.Mlrval, input1.AcquireMapValue().FieldCount)
+//			i := 0
+//			for pe := mapval.Head; pe != nil; pe = pe.Next {
+//				AcquireArrayValue()[i] = *pe.Value.Copy()
+//				i++
+//			}
+//			return mlrval.FromArrayReference(AcquireArrayValue())
+//
+//		} else {
+//			return input1
+//		}
+//
+//	} else if input1.IsArray() {
+//		// TODO: comment (or rethink) that this modifies its inputs!!
+//		output := input1.Copy()
+//		for i := range input1.AcquireArrayValue() {
+//			output.AcquireArrayValue()[i] = *BIF_arrayify(&output.AcquireArrayValue()[i])
+//		}
+//		return output
+//
+//	} else {
+//		return input1
+//	}
+//}
+//
+//// ----------------------------------------------------------------
+//func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+//	if input1.IsVoid() {
+//		return input1
+//	} else if !input1.IsString() {
+//		return mlrval.ERROR
+//	} else {
+//		output := mlrval.FromPending()
+//		err := output.UnmarshalJSON([]byte(input1.AcquireStringValue()))
+//		if err != nil {
+//			return mlrval.ERROR
+//		}
+//		return &output
+//	}
+//}
+//
+//func BIF_json_stringify_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+//	outputBytes, err := input1.MarshalJSON(JSON_SINGLE_LINE, false)
+//	if err != nil {
+//		return mlrval.ERROR
+//	} else {
+//		return mlrval.FromString(string(outputBytes))
+//	}
+//}
+//
+//func BIF_json_stringify_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
+//	var jsonFormatting TJSONFormatting = JSON_SINGLE_LINE
+//	useMultiline, ok := input2.GetBoolValue()
+//	if !ok {
+//		return mlrval.ERROR
+//	}
+//	if useMultiline {
+//		jsonFormatting = JSON_MULTILINE
+//	}
+//
+//	outputBytes, err := input1.MarshalJSON(jsonFormatting, false)
+//	if err != nil {
+//		return mlrval.ERROR
+//	} else {
+//		return mlrval.FromString(string(outputBytes))
+//	}
+//}
+
+func unaliasArrayIndex(array *[]mlrval.Mlrval, mindex int) (int, bool) {
+	n := int(len(*array))
+	return unaliasArrayLengthIndex(n, mindex)
 }
 
-// ----------------------------------------------------------------
-// First argumemnt is prefix.
-// Second argument is delimiter.
-// Third argument is map or array.
-// flatten("a", ".", {"b": { "c": 4 }}) is {"a.b.c" : 4}.
-// flatten("", ".", {"a": { "b": 3 }}) is {"a.b" : 3}.
-func BIF_flatten(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input3.IsMap() || input3.IsArray() {
-		if input1.Type() != MT_STRING && input1.Type() != MT_VOID {
-			return mlrval.ERROR
-		}
-		prefix := input1.AcquireStringValue()
-		if input2.Type() != MT_STRING {
-			return mlrval.ERROR
-		}
-		delimiter := input2.AcquireStringValue()
+// Input "mindex" is a Miller DSL array index. These are 1-up, so 1..n where n
+// is the length of the array. Also, -n..-1 are aliases to 1..n. 0 is never a
+// valid index.
+//
+// Output "zindex" is a Golang array index. These are 0-up, so 0..(n-1).
+//
+// The second return value indicates whether the Miller index is in-bounds.
+// Even if it's out of bounds, while the second return value is false, the
+// first return is correctly de-aliased. E.g. if the array has length 5 and the
+// mindex is 8, zindex is 7 and valid=false. This is so in array-slice
+// operations like 'v = myarray[2:8]' the callsite can hand back slots 2-5 of
+// the array (which is the same way Python handles beyond-the-end indexing).
 
-		retval := input3.FlattenToMap(prefix, delimiter)
-		return &retval
+// Examples with n = 5:
+//
+// mindex zindex ok
+// -7    -2      false
+// -6    -1      false
+// -5     0      true
+// -4     1      true
+// -3     2      true
+// -2     3      true
+// -1     4      true
+//  0    -1      false
+//  1     0      true
+//  2     1      true
+//  3     2      true
+//  4     3      true
+//  5     4      true
+//  6     5      false
+//  7     6      false
+
+func unaliasArrayLengthIndex(n int, mindex int) (int, bool) {
+	if 1 <= mindex {
+		zindex := mindex - 1
+		if mindex <= n { // in bounds
+			return zindex, true
+		} else { // out of bounds
+			return zindex, false
+		}
+	} else if mindex <= -1 {
+		zindex := mindex + n
+		if -n <= mindex { // in bounds
+			return zindex, true
+		} else { // out of bounds
+			return zindex, false
+		}
 	} else {
-		return input3
-	}
-}
-
-// flatten($*, ".") is the same as flatten("", ".", $*)
-func BIF_flatten_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return BIF_flatten(mlrval.VOID, input2, input1)
-}
-
-// ----------------------------------------------------------------
-// First argument is a map.
-// Second argument is a delimiter string.
-// unflatten({"a.b.c", ".") is {"a": { "b": { "c": 4}}}.
-func BIF_unflatten(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input2.Type() != MT_STRING {
-		return mlrval.ERROR
-	}
-	if input1.Type() != MT_MAP {
-		return input1
-	}
-	oldmap := input1.AcquireArrayValue().(types.Mlrmap)
-	separator := input2.AcquireStringValue()
-	newmap := oldmap.CopyUnflattened(separator)
-	return mlrval.FromMapReferenced(newmap)
-}
-
-// ----------------------------------------------------------------
-// Converts maps with "1", "2", ... keys into arrays. Recurses nested data structures.
-func BIF_arrayify(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.IsMap() {
-		if input1.AcquireArrayValue().(types.Mlrmap).IsEmpty() {
-			return input1
-		}
-
-		convertible := true
-		i := 0
-		for pe := input1.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
-			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
-			i++
-			if pe.Key != sval {
-				convertible = false
-			}
-			pe.Value = BIF_arrayify(pe.Value)
-		}
-
-		if convertible {
-			AcquireArrayValue().([]mlrval.Mlrval) := make([]mlrval.Mlrval, input1.AcquireArrayValue().(types.Mlrmap).FieldCount)
-			i := 0
-			for pe := input1.AcquireArrayValue().(types.Mlrmap).Head; pe != nil; pe = pe.Next {
-				AcquireArrayValue().([]mlrval.Mlrval)[i] = *pe.Value.Copy()
-				i++
-			}
-			return mlrval.FromArrayReference(AcquireArrayValue().([]mlrval.Mlrval))
-
-		} else {
-			return input1
-		}
-
-	} else if input1.IsArray() {
-		// TODO: comment (or rethink) that this modifies its inputs!!
-		output := input1.Copy()
-		for i := range input1.AcquireArrayValue().([]mlrval.Mlrval) {
-			output.AcquireArrayValue().([]mlrval.Mlrval)[i] = *BIF_arrayify(&output.AcquireArrayValue().([]mlrval.Mlrval)[i])
-		}
-		return output
-
-	} else {
-		return input1
-	}
-}
-
-// ----------------------------------------------------------------
-func BIF_json_parse(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	if input1.IsVoid() {
-		return input1
-	} else if input1.Type() != MT_STRING {
-		return mlrval.ERROR
-	} else {
-		output := mlrval.FromPending()
-		err := output.UnmarshalJSON([]byte(input1.AcquireStringValue()))
-		if err != nil {
-			return mlrval.ERROR
-		}
-		return &output
-	}
-}
-
-func BIF_json_stringify_unary(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	outputBytes, err := input1.MarshalJSON(JSON_SINGLE_LINE, false)
-	if err != nil {
-		return mlrval.ERROR
-	} else {
-		return mlrval.FromString(string(outputBytes))
-	}
-}
-
-func BIF_json_stringify_binary(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	var jsonFormatting TJSONFormatting = JSON_SINGLE_LINE
-	useMultiline, ok := input2.GetBoolValue()
-	if !ok {
-		return mlrval.ERROR
-	}
-	if useMultiline {
-		jsonFormatting = JSON_MULTILINE
-	}
-
-	outputBytes, err := input1.MarshalJSON(jsonFormatting, false)
-	if err != nil {
-		return mlrval.ERROR
-	} else {
-		return mlrval.FromString(string(outputBytes))
+		// mindex is 0
+		return -1, false
 	}
 }

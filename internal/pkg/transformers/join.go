@@ -543,7 +543,7 @@ func (tr *TransformerJoin) formAndEmitPairs(
 		rightrec := rightRecordAndContext.Record
 
 		// Allocate a new output record which is the join of the left and right records.
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 
 		// Add the joined-on fields to the new output record
 		n := len(tr.opts.leftJoinFieldNames)

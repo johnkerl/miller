@@ -258,7 +258,7 @@ func (tr *TransformerHistogram) emitNonAuto(
 		countFieldNames[valueFieldName] = tr.outputPrefix + valueFieldName + "_count"
 	}
 	for i := 0; i < tr.nbins; i++ {
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 
 		outrec.PutReference(
 			tr.outputPrefix+"bin_lo",
@@ -364,7 +364,7 @@ func (tr *TransformerHistogram) emitAuto(
 	}
 
 	for i := 0; i < nbins; i++ {
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 
 		outrec.PutReference(
 			tr.outputPrefix+"bin_lo",

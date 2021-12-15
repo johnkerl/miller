@@ -394,7 +394,7 @@ func (tr *TransformerStats2) emit(
 	context *types.Context,
 ) {
 	for pa := tr.namedAccumulators.Head; pa != nil; pa = pa.Next {
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 
 		// Add in a=s,b=t fields:
 		groupingKey := pa.Key
@@ -428,7 +428,7 @@ func (tr *TransformerStats2) emit(
 }
 
 func (tr *TransformerStats2) populateRecord(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	valueFieldName1 string,
 	valueFieldName2 string,
 	valueFieldsToAccumulator *lib.OrderedMap,

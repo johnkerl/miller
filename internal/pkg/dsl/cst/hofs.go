@@ -141,7 +141,7 @@ func isNonAbsentOrDie(mlrval *mlrval.Mlrval, hofName string) *mlrval.Mlrval {
 
 // getKVPairForAccumulatorOrDie checks that a user-supplied accumulator value
 // for a map fold is indeed a single-element map.
-func getKVPairForAccumulatorOrDie(mlrval *mlrval.Mlrval, hofName string) *types.Mlrmap {
+func getKVPairForAccumulatorOrDie(mlrval *mlrval.Mlrval, hofName string) *mlrval.Mlrmap {
 	kvPair := getKVPair(mlrval)
 	if kvPair == nil {
 		hofCheckDie(mlrval, hofName, "accumulator value must be a single-element map")
@@ -151,7 +151,7 @@ func getKVPairForAccumulatorOrDie(mlrval *mlrval.Mlrval, hofName string) *types.
 
 // getKVPairForCallbackOrDie checks that a return value from a UDF for map
 // reduce/fold/apply is indeed a single-element map.
-func getKVPairForCallbackOrDie(mlrval *mlrval.Mlrval, hofName string) *types.Mlrmap {
+func getKVPairForCallbackOrDie(mlrval *mlrval.Mlrval, hofName string) *mlrval.Mlrmap {
 	kvPair := getKVPair(mlrval)
 	if kvPair == nil {
 		hofCheckDie(mlrval, hofName, "second-argument function must return single-element map")
@@ -173,7 +173,7 @@ func hofCheckDie(mlrval *mlrval.Mlrval, hofName string, message string) {
 }
 
 // getKVPair is a helper function getKVPairOrDie.
-func getKVPair(mlrval *mlrval.Mlrval) *types.Mlrmap {
+func getKVPair(mlrval *mlrval.Mlrval) *mlrval.Mlrmap {
 	mapval := mlrval.GetMap()
 	if mapval == nil {
 		return nil
@@ -261,7 +261,7 @@ func selectMap(
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
-	outputMap := types.NewMlrmap()
+	outputMap := mlrval.NewMlrmap()
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
 		argsArray[0] = mlrval.MlrvalFromString(pe.Key)
@@ -342,7 +342,7 @@ func applyMap(
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
-	outputMap := types.NewMlrmap()
+	outputMap := mlrval.NewMlrmap()
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
 		argsArray[0] = mlrval.MlrvalFromString(pe.Key)
@@ -683,7 +683,7 @@ func sortMK(
 	}
 
 	// Make a new map with keys in the new sort order.
-	outmap := types.NewMlrmap()
+	outmap := mlrval.NewMlrmap()
 	for i := 0; i < n; i++ {
 		key := keys[i]
 		outmap.PutCopy(key, inmap.Get(key))
@@ -828,7 +828,7 @@ func sortMF(
 		return nret < 0
 	})
 
-	sortedMap := types.MlrmapFromPairsArray(pairsArray)
+	sortedMap := mlrval.MlrmapFromPairsArray(pairsArray)
 	return mlrval.MlrvalFromMapReferenced(sortedMap)
 }
 

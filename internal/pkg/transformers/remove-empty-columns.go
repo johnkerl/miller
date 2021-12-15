@@ -118,7 +118,7 @@ func (tr *TransformerRemoveEmptyColumns) Transform(
 			outrecAndContext := e.Value.(*types.RecordAndContext)
 			outrec := outrecAndContext.Record
 
-			newrec := types.NewMlrmapAsRecord()
+			newrec := mlrval.NewMlrmapAsRecord()
 
 			for pe := outrec.Head; pe != nil; pe = pe.Next {
 				_, ok := tr.namesWithNonEmptyValues[pe.Key]

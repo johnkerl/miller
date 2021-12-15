@@ -112,7 +112,7 @@ func (tr *TransformerRegularize) Transform(
 			tr.sortedToOriginal[currentSortedFieldNamesJoined] = currentFieldNames
 			outputRecordsAndContexts.PushBack(inrecAndContext)
 		} else {
-			outrec := types.NewMlrmapAsRecord()
+			outrec := mlrval.NewMlrmapAsRecord()
 			for _, fieldName := range previousSortedFieldNames {
 				outrec.PutReference(fieldName, inrec.Get(fieldName)) // inrec will be GC'ed
 			}

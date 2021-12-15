@@ -150,7 +150,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	if !inrecAndContext.EndOfStream {
-		newrec := types.NewMlrmapAsRecord()
+		newrec := mlrval.NewMlrmapAsRecord()
 
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
 			oldKey := mlrval.mlrval.FromString(pe.Key)
@@ -175,7 +175,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 	outputDownstreamDoneChannel chan<- bool,
 ) {
 	if !inrecAndContext.EndOfStream {
-		newrec := types.NewMlrmapAsRecord()
+		newrec := mlrval.NewMlrmapAsRecord()
 
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
 			oldKey := mlrval.mlrval.FromString(pe.Key)

@@ -36,58 +36,78 @@ lib-unbackslash-test:
 	go test internal/pkg/lib/unbackslash_test.go internal/pkg/lib/unbackslash.go
 lib_regex_test:
 	go test internal/pkg/lib/regex_test.go internal/pkg/lib/regex.go
-lib_tests: lib_unbackslash_test lib_regex_test
+lib-tests:
+	go test github.com/johnkerl/miller/internal/pkg/lib/...
 
 mlrval-new-test:
 	go test internal/pkg/mlrval/new_test.go \
-	  internal/pkg/mlrval/type.go \
-	  internal/pkg/mlrval/constants.go \
-	  internal/pkg/mlrval/new.go \
-	  internal/pkg/mlrval/infer.go
+	  internal/pkg/mlrval/mlrval_type.go \
+	  internal/pkg/mlrval/mlrval_constants.go \
+	  internal/pkg/mlrval/mlrval_new.go \
+	  internal/pkg/mlrval/mlrval_infer.go
 mlrval-is-test:
 	go test internal/pkg/mlrval/is_test.go \
-	  internal/pkg/mlrval/type.go \
-	  internal/pkg/mlrval/constants.go \
-	  internal/pkg/mlrval/new.go \
-	  internal/pkg/mlrval/infer.go \
-	  internal/pkg/mlrval/is.go
+	  internal/pkg/mlrval/mlrval_type.go \
+	  internal/pkg/mlrval/mlrval_constants.go \
+	  internal/pkg/mlrval/mlrval_new.go \
+	  internal/pkg/mlrval/mlrval_infer.go \
+	  internal/pkg/mlrval/mlrval_is.go
 mlrval-get-test:
 	go test internal/pkg/mlrval/get_test.go \
-	  internal/pkg/mlrval/type.go \
-	  internal/pkg/mlrval/constants.go \
-	  internal/pkg/mlrval/new.go \
-	  internal/pkg/mlrval/infer.go \
-	  internal/pkg/mlrval/is.go \
-	  internal/pkg/mlrval/get.go
+	  internal/pkg/mlrval/mlrval_type.go \
+	  internal/pkg/mlrval/mlrval_constants.go \
+	  internal/pkg/mlrval/mlrval_new.go \
+	  internal/pkg/mlrval/mlrval_infer.go \
+	  internal/pkg/mlrval/mlrval_is.go \
+	  internal/pkg/mlrval/mlrval_get.go
 mlrval-output-test:
 	go test internal/pkg/mlrval/output_test.go \
-	  internal/pkg/mlrval/type.go \
-	  internal/pkg/mlrval/constants.go \
-	  internal/pkg/mlrval/new.go \
-	  internal/pkg/mlrval/infer.go \
-	  internal/pkg/mlrval/is.go \
-	  internal/pkg/mlrval/get.go \
-	  internal/pkg/mlrval/output.go \
-	  internal/pkg/mlrval/format.go
+	  internal/pkg/mlrval/mlrval_type.go \
+	  internal/pkg/mlrval/mlrval_constants.go \
+	  internal/pkg/mlrval/mlrval_new.go \
+	  internal/pkg/mlrval/mlrval_infer.go \
+	  internal/pkg/mlrval/mlrval_is.go \
+	  internal/pkg/mlrval/mlrval_get.go \
+	  internal/pkg/mlrval/mlrval_output.go \
+	  internal/pkg/mlrval/mlrval_format.go
 mlrval-format-test:
 	go test internal/pkg/mlrval/format_test.go \
-	  internal/pkg/mlrval/type.go \
-	  internal/pkg/mlrval/constants.go \
-	  internal/pkg/mlrval/new.go \
-	  internal/pkg/mlrval/infer.go \
-	  internal/pkg/mlrval/is.go \
-	  internal/pkg/mlrval/get.go \
-	  internal/pkg/mlrval/output.go \
-	  internal/pkg/mlrval/format.go
-mlrval-tests: mlrval-new-test mlrval-is-test mlrval-get-test mlrval-output-test mlrval-format-test
+	  internal/pkg/mlrval/mlrval_type.go \
+	  internal/pkg/mlrval/mlrval_constants.go \
+	  internal/pkg/mlrval/mlrval_new.go \
+	  internal/pkg/mlrval/mlrval_infer.go \
+	  internal/pkg/mlrval/mlrval_is.go \
+	  internal/pkg/mlrval/mlrval_get.go \
+	  internal/pkg/mlrval/mlrval_output.go \
+	  internal/pkg/mlrval/mlrval_format.go
+mlrval-tests:
+	go test github.com/johnkerl/miller/internal/pkg/mlrval/...
 
 mlrmap-new-test:
-	go test internal/pkg/types/mlrmap_new_test.go \
-	  internal/pkg/types/mlrmap.go
+	go test internal/pkg/mlrval/mlrmap_new_test.go \
+	  internal/pkg/mlrval/mlrmap.go \
+	  internal/pkg/mlrval/mlrval_type.go \
+	  internal/pkg/mlrval/mlrval_constants.go \
+	  internal/pkg/mlrval/mlrval_new.go \
+	  internal/pkg/mlrval/mlrval_infer.go \
+	  internal/pkg/mlrval/mlrval_is.go \
+	  internal/pkg/mlrval/mlrval_get.go \
+	  internal/pkg/mlrval/mlrval_output.go \
+	  internal/pkg/mlrval/mlrval_format.go
 mlrmap-accessors-test:
-	go test internal/pkg/types/mlrmap_accessors_test.go \
-	  internal/pkg/types/mlrmap.go \
-	  internal/pkg/types/mlrmap_accessors.go
+	go test internal/pkg/mlrval/mlrmap_accessors_test.go \
+	  internal/pkg/mlrval/mlrmap.go \
+	  internal/pkg/mlrval/mlrmap_accessors.go \
+	  internal/pkg/mlrval/mlrval_type.go \
+	  internal/pkg/mlrval/mlrval_constants.go \
+	  internal/pkg/mlrval/mlrval_new.go \
+	  internal/pkg/mlrval/mlrval_copy.go \
+	  internal/pkg/mlrval/mlrval_infer.go \
+	  internal/pkg/mlrval/mlrval_is.go \
+	  internal/pkg/mlrval/mlrval_get.go \
+	  internal/pkg/mlrval/mlrval_output.go \
+	  internal/pkg/mlrval/mlrval_format.go
+
 mlrmap-tests: mlrmap-new-test mlrmap-accessors-test
 
 input-dkvp-test:
@@ -106,7 +126,7 @@ bifs-bits-test:
 	  internal/pkg/bifs/arithmetic.go \
 	  internal/pkg/bifs/bits.go
 bifs-collections-test:
-	go test internal/pkg/bifs/bits_test.go \
+	go test internal/pkg/bifs/collections_test.go \
 	  internal/pkg/bifs/base.go \
 	  internal/pkg/bifs/arithmetic.go \
 	  internal/pkg/bifs/collections.go
@@ -124,9 +144,9 @@ bifs-sort-test:
 bifs-tests: bifs-arithmetic-test bifs-bits-test bifs-collections-test bifs-hashing-test bifs-sort-test
 
 #mlrval_functions_test:
-#	go test internal/pkg/types/mlrval_functions_test.go $(ls internal/pkg/types/*.go | grep -v test)
+#	go test internal/pkg/mlrval/mlrval_functions_test.go $(ls internal/pkg/types/*.go | grep -v test)
 #mlrval_format_test:
-#	go test internal/pkg/types/mlrval_format_test.go $(ls internal/pkg/types/*.go|grep -v test)
+#	go test internal/pkg/mlrval/mlrval_format_test.go $(ls internal/pkg/types/*.go|grep -v test)
 
 tests-in-order: mlrval-tests mlrmap-tests input-tests bifs-tests
 

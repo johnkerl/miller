@@ -24,13 +24,13 @@ type IStats2Accumulator interface {
 	Populate(
 		valueFieldName1 string,
 		valueFieldName2 string,
-		outrec *types.Mlrmap,
+		outrec *mlrval.Mlrmap,
 	)
 
 	Fit(
 		x float64,
 		y float64,
-		outrec *types.Mlrmap,
+		outrec *mlrval.Mlrmap,
 	)
 }
 
@@ -178,7 +178,7 @@ func (acc *Stats2LinRegOLSAccumulator) Ingest(
 func (acc *Stats2LinRegOLSAccumulator) Populate(
 	valueFieldName1 string,
 	valueFieldName2 string,
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 ) {
 	if acc.count < 2 {
 		outrec.PutCopy(acc.mOutputFieldName, types.MLRVAL_VOID)
@@ -196,7 +196,7 @@ func (acc *Stats2LinRegOLSAccumulator) Populate(
 func (acc *Stats2LinRegOLSAccumulator) Fit(
 	x float64,
 	y float64,
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 ) {
 
 	if !acc.fitReady {
@@ -263,7 +263,7 @@ func (acc *Stats2LogiRegAccumulator) Ingest(
 func (acc *Stats2LogiRegAccumulator) Populate(
 	valueFieldName1 string,
 	valueFieldName2 string,
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 ) {
 
 	if len(acc.xs) < 2 {
@@ -280,7 +280,7 @@ func (acc *Stats2LogiRegAccumulator) Populate(
 func (acc *Stats2LogiRegAccumulator) Fit(
 	x float64,
 	y float64,
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 ) {
 
 	if !acc.fitReady {
@@ -348,7 +348,7 @@ func (acc *Stats2R2Accumulator) Ingest(
 func (acc *Stats2R2Accumulator) Populate(
 	valueFieldName1 string,
 	valueFieldName2 string,
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 ) {
 
 	if acc.count < 2 {
@@ -372,7 +372,7 @@ func (acc *Stats2R2Accumulator) Populate(
 func (acc *Stats2R2Accumulator) Fit(
 	x float64,
 	y float64,
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 ) {
 }
 
@@ -489,7 +489,7 @@ func (acc *Stats2CorrCovAccumulator) Ingest(
 func (acc *Stats2CorrCovAccumulator) Populate(
 	valueFieldName1 string,
 	valueFieldName2 string,
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 ) {
 
 	if acc.doWhich == DO_COVX {
@@ -597,7 +597,7 @@ func (acc *Stats2CorrCovAccumulator) Populate(
 func (acc *Stats2CorrCovAccumulator) Fit(
 	x float64,
 	y float64,
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 ) {
 	if acc.doWhich != DO_LINREG_PCA {
 		return

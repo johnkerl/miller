@@ -243,7 +243,7 @@ func getRecordBatchExplicitCSVHeader(
 				return
 			}
 
-			record := types.NewMlrmapAsRecord()
+			record := mlrval.NewMlrmapAsRecord()
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
 					value := mlrval.FromDeferredType(field)
@@ -360,7 +360,7 @@ func getRecordBatchImplicitCSVHeader(
 			}
 		}
 
-		record := types.NewMlrmapAsRecord()
+		record := mlrval.NewMlrmapAsRecord()
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
 				value := mlrval.FromDeferredType(field)

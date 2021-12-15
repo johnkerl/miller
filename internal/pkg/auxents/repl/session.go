@@ -59,7 +59,7 @@ func NewRepl(
 	}
 
 	// $* is the empty map {} until/unless the user opens a file and reads records from it.
-	inrec := types.NewMlrmapAsRecord()
+	inrec := mlrval.NewMlrmapAsRecord()
 	// NR is 0, etc until/unless the user opens a file and reads records from it.
 	context := types.NewContext()
 

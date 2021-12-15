@@ -16,13 +16,32 @@ func TestBIF_length(t *testing.T) {
 	assert.Equal(t, 1, intval)
 }
 
+func TestBIF_depth(t *testing.T) {
+	input1 := mlrval.FromInt(123)
+	output := BIF_depth(input1)
+	intval, ok := output.GetIntValue()
+	assert.True(t, ok)
+	assert.Equal(t, 0, intval)
+
+	mapval := mlrval.NewMlrmap()
+	mapval.PutReference("key", mlrval.FromString("value"))
+	input1 = mlrval.FromMap(mapval)
+	output = BIF_depth(input1)
+	intval, ok = output.GetIntValue()
+	assert.True(t, ok)
+	assert.Equal(t, 1, intval)
+
+	arrayval := make([]mlrval.Mlrval, 1)
+	arrayval[0] = *mlrval.FromString("value")
+	input1 = mlrval.FromArray(arrayval)
+	output = BIF_depth(input1)
+	intval, ok = output.GetIntValue()
+	assert.True(t, ok)
+	assert.Equal(t, 1, intval)
+}
+
 // TODO: copy in more unit-test cases from existing regression-test data
 
-// func BIF_length(input1 *mlrval.Mlrval) *mlrval.Mlrval
-// func depth_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval
-// func depth_from_map(input1 *mlrval.Mlrval) *mlrval.Mlrval
-// func depth_from_scalar(input1 *mlrval.Mlrval) *mlrval.Mlrval
-// func BIF_depth(input1 *mlrval.Mlrval) *mlrval.Mlrval
 // func leafcount_from_array(input1 *mlrval.Mlrval) *mlrval.Mlrval
 // func leafcount_from_map(input1 *mlrval.Mlrval) *mlrval.Mlrval
 // func leafcount_from_scalar(input1 *mlrval.Mlrval) *mlrval.Mlrval

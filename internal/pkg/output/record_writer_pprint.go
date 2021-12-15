@@ -9,7 +9,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/colorizer"
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 type RecordWriterPPRINT struct {
@@ -34,7 +34,7 @@ func NewRecordWriterPPRINT(writerOptions *cli.TWriterOptions) (*RecordWriterPPRI
 
 // ----------------------------------------------------------------
 func (writer *RecordWriterPPRINT) Write(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
@@ -97,7 +97,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousList(
 	var maxNR int = 0
 
 	for e := records.Front(); e != nil; e = e.Next() {
-		outrec := e.Value.(*types.Mlrmap)
+		outrec := e.Value.(*mlrval.Mlrmap)
 		nr := outrec.FieldCount
 		if maxNR < nr {
 			maxNR = nr
@@ -152,7 +152,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListNonBarred(
 
 	onFirst := true
 	for e := records.Front(); e != nil; e = e.Next() {
-		outrec := e.Value.(*types.Mlrmap)
+		outrec := e.Value.(*mlrval.Mlrmap)
 
 		// Print header line
 		if onFirst && !writer.writerOptions.HeaderlessCSVOutput {
@@ -254,7 +254,7 @@ func (writer *RecordWriterPPRINT) writeHeterogenousListBarred(
 
 	onFirst := true
 	for e := records.Front(); e != nil; e = e.Next() {
-		outrec := e.Value.(*types.Mlrmap)
+		outrec := e.Value.(*mlrval.Mlrmap)
 
 		// Print header line
 		if onFirst && !writer.writerOptions.HeaderlessCSVOutput {

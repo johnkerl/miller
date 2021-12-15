@@ -608,7 +608,7 @@ func handleWrite(repl *Repl, args []string) bool {
 	return true
 }
 
-func writeRecord(repl *Repl, outrec *types.Mlrmap) {
+func writeRecord(repl *Repl, outrec *mlrval.Mlrmap) {
 	if outrec != nil {
 		// E.g. '{"req": {"method": "GET", "path": "/api/check"}}' becomes
 		// req.method=GET,req.path=/api/check.

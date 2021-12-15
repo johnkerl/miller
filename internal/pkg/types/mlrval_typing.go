@@ -8,6 +8,8 @@ package types
 import (
 	"errors"
 	"fmt"
+
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // ----------------------------------------------------------------
@@ -21,7 +23,7 @@ func NewTypeGatedMlrvalName(
 	name string, // e.g. "x"
 	typeName string, // e.g. "num"
 ) (*TypeGatedMlrvalName, error) {
-	typeMask, ok := TypeNameToMask(typeName)
+	typeMask, ok := mlrval.TypeNameToMask(typeName)
 	if !ok {
 		return nil, errors.New(
 			fmt.Sprintf(
@@ -36,7 +38,7 @@ func NewTypeGatedMlrvalName(
 	}, nil
 }
 
-func (tname *TypeGatedMlrvalName) Check(value *Mlrval) error {
+func (tname *TypeGatedMlrvalName) Check(value *mlrval.Mlrval) error {
 	bit := value.GetTypeBit()
 	if bit&tname.TypeMask != 0 {
 		return nil
@@ -53,13 +55,13 @@ func (tname *TypeGatedMlrvalName) Check(value *Mlrval) error {
 // ----------------------------------------------------------------
 type TypeGatedMlrvalVariable struct {
 	typeGatedMlrvalName *TypeGatedMlrvalName
-	value               *Mlrval
+	value               *mlrval.Mlrval
 }
 
 func NewTypeGatedMlrvalVariable(
 	name string, // e.g. "x"
 	typeName string, // e.g. "num"
-	value *Mlrval,
+	value *mlrval.Mlrval,
 ) (*TypeGatedMlrvalVariable, error) {
 	typeGatedMlrvalName, err := NewTypeGatedMlrvalName(name, typeName)
 	if err != nil {
@@ -81,7 +83,7 @@ func (tvar *TypeGatedMlrvalVariable) GetName() string {
 	return tvar.typeGatedMlrvalName.Name
 }
 
-func (tvar *TypeGatedMlrvalVariable) GetValue() *Mlrval {
+func (tvar *TypeGatedMlrvalVariable) GetValue() *mlrval.Mlrval {
 	return tvar.value
 }
 
@@ -89,7 +91,7 @@ func (tvar *TypeGatedMlrvalVariable) ValueString() string {
 	return tvar.value.String()
 }
 
-func (tvar *TypeGatedMlrvalVariable) Assign(value *Mlrval) error {
+func (tvar *TypeGatedMlrvalVariable) Assign(value *mlrval.Mlrval) error {
 	err := tvar.typeGatedMlrvalName.Check(value)
 	if err != nil {
 		return err
@@ -101,5 +103,5 @@ func (tvar *TypeGatedMlrvalVariable) Assign(value *Mlrval) error {
 }
 
 func (tvar *TypeGatedMlrvalVariable) Unassign() {
-	tvar.value = MLRVAL_ABSENT
+	tvar.value = mlrval.ABSENT
 }

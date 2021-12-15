@@ -156,7 +156,7 @@ func (tr *TransformerGap) transformUnkeyed(
 ) {
 	if !inrecAndContext.EndOfStream {
 		if tr.recordCount > 0 && tr.recordCount%tr.gapCount == 0 {
-			newrec := types.NewMlrmapAsRecord()
+			newrec := mlrval.NewMlrmapAsRecord()
 			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 		}
 		outputRecordsAndContexts.PushBack(inrecAndContext)
@@ -183,7 +183,7 @@ func (tr *TransformerGap) transformKeyed(
 		}
 
 		if groupingKey != tr.previousGroupingKey && tr.recordCount > 0 {
-			newrec := types.NewMlrmapAsRecord()
+			newrec := mlrval.NewMlrmapAsRecord()
 			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(newrec, &inrecAndContext.Context))
 		}
 

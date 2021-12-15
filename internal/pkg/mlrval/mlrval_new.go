@@ -198,7 +198,7 @@ func FromFunction(funcval interface{}, name string) *Mlrval {
 	}
 }
 
-func FromArray(arrayval interface{}) *Mlrval {
+func FromArray(arrayval []Mlrval) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_ARRAY,
 		printrep:      INVALID_PRINTREP,
@@ -207,7 +207,7 @@ func FromArray(arrayval interface{}) *Mlrval {
 	}
 }
 
-func FromMap(mapval interface{}) *Mlrval {
+func FromMap(mapval *Mlrmap) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_MAP,
 		printrep:      INVALID_PRINTREP,

@@ -2,10 +2,6 @@ package mlrval
 
 // things to be filed
 
-//func (mv *Mlrval) GetTypeBit() int {
-//	return 1 << mv.mvtype
-//}
-
 //// NewMlrvalForAutoDeepen is for auto-deepen of nested maps in things like
 ////
 ////   $foo[1]["a"][2]["b"] = 3
@@ -149,15 +145,6 @@ package mlrval
 //		return nil, errors.New(
 //			"mlr: indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
 //		)
-//	}
-//}
-
-//func TypeNameToMask(typeName string) (mask int, present bool) {
-//	retval := typeNameToMaskMap[typeName]
-//	if retval != 0 {
-//		return retval, true
-//	} else {
-//		return 0, false
 //	}
 //}
 

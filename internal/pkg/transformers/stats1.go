@@ -426,7 +426,7 @@ func (tr *TransformerStats1) handleInputRecord(
 // regexed group-by field names, the group-by field names/values are the same
 // on every record.
 func (tr *TransformerStats1) getGroupByFieldNamesWithoutRegexes(
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 ) (
 	groupingKey string,
 	groupByFieldValues *lib.OrderedMap, // OrderedMap[string]*mlrval.Mlrval,
@@ -449,7 +449,7 @@ func (tr *TransformerStats1) getGroupByFieldNamesWithoutRegexes(
 // regexed group-by field names, the group-by field names/values may or may not
 // be the same on every record.
 func (tr *TransformerStats1) getGroupByFieldNamesWithRegexes(
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 ) (
 	groupingKey string,
 	groupByFieldValues *lib.OrderedMap, // OrderedMap[string]*mlrval.Mlrval,
@@ -481,7 +481,7 @@ func (tr *TransformerStats1) getGroupByFieldNamesWithRegexes(
 }
 
 func (tr *TransformerStats1) ingestWithoutValueFieldRegexes(
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 	groupingKey string,
 	level2 *lib.OrderedMap,
 ) {
@@ -518,7 +518,7 @@ func (tr *TransformerStats1) ingestWithoutValueFieldRegexes(
 }
 
 func (tr *TransformerStats1) ingestWithValueFieldRegexes(
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 	groupingKey string,
 	level2 *lib.OrderedMap,
 ) {
@@ -600,7 +600,7 @@ func (tr *TransformerStats1) handleEndOfRecordStream(
 		level2 := pa.Value.(*lib.OrderedMap)
 		groupByFieldValues := tr.groupingKeysToGroupByFieldValues[groupingKey]
 
-		newrec := types.NewMlrmapAsRecord()
+		newrec := mlrval.NewMlrmapAsRecord()
 
 		tr.emitIntoOutputRecord(
 			inrecAndContext.Record,
@@ -616,10 +616,10 @@ func (tr *TransformerStats1) handleEndOfRecordStream(
 }
 
 func (tr *TransformerStats1) emitIntoOutputRecord(
-	inrec *types.Mlrmap,
+	inrec *mlrval.Mlrmap,
 	groupByFieldValues *lib.OrderedMap, // OrderedMap[string]*mlrval.Mlrval,
 	level2accumulators *lib.OrderedMap,
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 ) {
 
 	for pa := tr.groupByFieldNamesForOutput.Head; pa != nil; pa = pa.Next {

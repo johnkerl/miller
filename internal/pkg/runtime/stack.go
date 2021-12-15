@@ -420,15 +420,15 @@ func (frame *StackFrame) defineTyped(
 func (frame *StackFrame) setIndexed(
 	stackVariable *StackVariable,
 	indices []*mlrval.Mlrval,
-	mlrval *mlrval.Mlrval,
+	mv *mlrval.Mlrval,
 ) error {
 	value := frame.get(stackVariable)
 	if value == nil {
 		lib.InternalCodingErrorIf(len(indices) < 1)
 		leadingIndex := indices[0]
 		if leadingIndex.IsString() || leadingIndex.IsInt() {
-			newval := mlrval.MlrvalFromEmptyMap()
-			newval.PutIndexed(indices, mlrval)
+			newval := mlrval.FromMap(mlrval.NewMlrmap())
+			newval.PutIndexed(indices, mv)
 			return frame.set(stackVariable, newval)
 		} else {
 			return errors.New(
@@ -441,7 +441,7 @@ func (frame *StackFrame) setIndexed(
 	} else {
 		// For example maybe the variable exists and is an array but the
 		// leading index is a string.
-		return value.PutIndexed(indices, mlrval)
+		return value.PutIndexed(indices, mv)
 	}
 }
 

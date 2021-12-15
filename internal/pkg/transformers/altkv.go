@@ -99,7 +99,7 @@ func (tr *TransformerAltkv) Transform(
 	HandleDefaultDownstreamDone(inputDownstreamDoneChannel, outputDownstreamDoneChannel)
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		newrec := types.NewMlrmapAsRecord()
+		newrec := mlrval.NewMlrmapAsRecord()
 		outputFieldNumber := 1
 
 		for pe := inrec.Head; pe != nil; /* increment in loop body */ {

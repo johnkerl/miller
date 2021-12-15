@@ -302,7 +302,7 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		pairs := types.NewMlrmap()
+		pairs := mlrval.NewMlrmap()
 		for _, inputFieldName := range tr.inputFieldNames {
 			value := inrec.Get(inputFieldName)
 			if value != nil {
@@ -341,7 +341,7 @@ func (tr *TransformerReshape) wideToLongRegex(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		pairs := types.NewMlrmap()
+		pairs := mlrval.NewMlrmap()
 
 		for pd := inrec.Head; pd != nil; pd = pd.Next {
 			for _, inputFieldRegex := range tr.inputFieldRegexes {
@@ -440,13 +440,13 @@ func (tr *TransformerReshape) longToWide(
 }
 
 type tReshapeBucket struct {
-	representative *types.Mlrmap
-	pairs          *types.Mlrmap
+	representative *mlrval.Mlrmap
+	pairs          *mlrval.Mlrmap
 }
 
-func newReshapeBucket(representative *types.Mlrmap) *tReshapeBucket {
+func newReshapeBucket(representative *mlrval.Mlrmap) *tReshapeBucket {
 	return &tReshapeBucket{
 		representative: representative,
-		pairs:          types.NewMlrmap(),
+		pairs:          mlrval.NewMlrmap(),
 	}
 }
