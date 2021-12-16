@@ -262,17 +262,17 @@ func (tr *TransformerHistogram) emitNonAuto(
 
 		outrec.PutReference(
 			tr.outputPrefix+"bin_lo",
-			mlrval.MlrvalFromFloat64((tr.lo+float64(i))/tr.mul),
+			mlrval.FromFloat((tr.lo+float64(i))/tr.mul),
 		)
 		outrec.PutReference(
 			tr.outputPrefix+"bin_hi",
-			mlrval.MlrvalFromFloat64((tr.lo+float64(i+1))/tr.mul),
+			mlrval.FromFloat((tr.lo+float64(i+1))/tr.mul),
 		)
 
 		for _, valueFieldName := range tr.valueFieldNames {
 			outrec.PutReference(
 				countFieldNames[valueFieldName],
-				mlrval.MlrvalFromInt(tr.countsByField[valueFieldName][i]),
+				mlrval.FromInt(tr.countsByField[valueFieldName][i]),
 			)
 		}
 
@@ -368,17 +368,17 @@ func (tr *TransformerHistogram) emitAuto(
 
 		outrec.PutReference(
 			tr.outputPrefix+"bin_lo",
-			mlrval.MlrvalFromFloat64((lo+float64(i))/mul),
+			mlrval.FromFloat((lo+float64(i))/mul),
 		)
 		outrec.PutReference(
 			tr.outputPrefix+"bin_hi",
-			mlrval.MlrvalFromFloat64((lo+float64(i+1))/mul),
+			mlrval.FromFloat((lo+float64(i+1))/mul),
 		)
 
 		for _, valueFieldName := range tr.valueFieldNames {
 			outrec.PutReference(
 				countFieldNames[valueFieldName],
-				mlrval.MlrvalFromInt(tr.countsByField[valueFieldName][i]),
+				mlrval.FromInt(tr.countsByField[valueFieldName][i]),
 			)
 		}
 

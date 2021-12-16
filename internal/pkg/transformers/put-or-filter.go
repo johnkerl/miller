@@ -456,7 +456,7 @@ func NewTransformerPut(
 			}
 			key := pair[0]
 			svalue := pair[1]
-			mvalue := mlrval.MlrvalFromInferredType(svalue)
+			mvalue := mlrval.FromInferredType(svalue)
 			runtimeState.Oosvars.PutCopy(key, mvalue)
 		}
 	}

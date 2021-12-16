@@ -373,7 +373,7 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 		for pe := tr.uniqifiedRecords.Head; pe != nil; pe = pe.Next {
 			outrecAndContext := pe.Value.(*types.RecordAndContext)
 			icount := tr.uniqifiedRecordCounts.Get(pe.Key)
-			mcount := mlrval.MlrvalFromInt(icount.(int))
+			mcount := mlrval.FromInt(icount.(int))
 			outrecAndContext.Record.PrependReference(tr.outputFieldName, mcount)
 			outputRecordsAndContexts.PushBack(outrecAndContext)
 		}
@@ -403,7 +403,7 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 		outrec := mlrval.NewMlrmapAsRecord()
 		outrec.PutReference(
 			tr.outputFieldName,
-			mlrval.MlrvalFromInt(tr.uniqifiedRecordCounts.FieldCount),
+			mlrval.FromInt(tr.uniqifiedRecordCounts.FieldCount),
 		)
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
@@ -480,7 +480,7 @@ func (tr *TransformerUniq) transformUnlashed(
 					"value",
 					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Get(fieldValueString).(*mlrval.Mlrval),
 				)
-				outrec.PutReference("count", mlrval.MlrvalFromInt(pf.Value.(int)))
+				outrec.PutReference("count", mlrval.FromInt(pf.Value.(int)))
 				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
 		}
@@ -513,7 +513,7 @@ func (tr *TransformerUniq) transformNumDistinctOnly(
 		outrec := mlrval.NewMlrmapAsRecord()
 		outrec.PutReference(
 			"count",
-			mlrval.MlrvalFromInt(tr.countsByGroup.FieldCount),
+			mlrval.FromInt(tr.countsByGroup.FieldCount),
 		)
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
@@ -556,7 +556,7 @@ func (tr *TransformerUniq) transformWithCounts(
 			if tr.showCounts {
 				outrec.PutReference(
 					tr.outputFieldName,
-					mlrval.MlrvalFromInt(pa.Value.(int)),
+					mlrval.FromInt(pa.Value.(int)),
 				)
 			}
 			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))

@@ -206,7 +206,7 @@ func SelectHOF(
 	} else if input1.IsMap() {
 		return selectMap(input1, input2, state)
 	} else {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }
 
@@ -217,7 +217,7 @@ func selectArray(
 ) *mlrval.Mlrval {
 	inputArray := input1.GetArray()
 	if inputArray == nil { // not an array
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "select")
 
@@ -243,7 +243,7 @@ func selectArray(
 			outputArray = append(outputArray, *inputArray[i].Copy())
 		}
 	}
-	return mlrval.MlrvalFromArrayReference(outputArray)
+	return mlrval.FromArrayReference(outputArray)
 }
 
 func selectMap(
@@ -253,7 +253,7 @@ func selectMap(
 ) *mlrval.Mlrval {
 	inputMap := input1.GetMap()
 	if inputMap == nil { // not a map
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "select")
 
@@ -264,7 +264,7 @@ func selectMap(
 	outputMap := mlrval.NewMlrmap()
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = mlrval.MlrvalFromString(pe.Key)
+		argsArray[0] = mlrval.FromString(pe.Key)
 		argsArray[1] = pe.Value
 		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
 		bret, ok := mret.GetBoolValue()
@@ -281,7 +281,7 @@ func selectMap(
 		}
 	}
 
-	return mlrval.MlrvalFromMap(outputMap)
+	return mlrval.FromMap(outputMap)
 }
 
 // ================================================================
@@ -297,7 +297,7 @@ func ApplyHOF(
 	} else if input1.IsMap() {
 		return applyMap(input1, input2, state)
 	} else {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }
 
@@ -308,7 +308,7 @@ func applyArray(
 ) *mlrval.Mlrval {
 	inputArray := input1.GetArray()
 	if inputArray == nil { // not an array
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "apply")
 
@@ -324,7 +324,7 @@ func applyArray(
 		isNonAbsentOrDie(&retval, "apply")
 		outputArray[i] = retval
 	}
-	return mlrval.MlrvalFromArrayReference(outputArray)
+	return mlrval.FromArrayReference(outputArray)
 }
 
 func applyMap(
@@ -334,7 +334,7 @@ func applyMap(
 ) *mlrval.Mlrval {
 	inputMap := input1.GetMap()
 	if inputMap == nil { // not a map
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "apply")
 
@@ -345,13 +345,13 @@ func applyMap(
 	outputMap := mlrval.NewMlrmap()
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = mlrval.MlrvalFromString(pe.Key)
+		argsArray[0] = mlrval.FromString(pe.Key)
 		argsArray[1] = pe.Value
 		retval := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
 		kvPair := getKVPairForCallbackOrDie(retval, "apply")
 		outputMap.PutReference(kvPair.Head.Key, kvPair.Head.Value)
 	}
-	return mlrval.MlrvalFromMap(outputMap)
+	return mlrval.FromMap(outputMap)
 }
 
 // ================================================================
@@ -367,7 +367,7 @@ func ReduceHOF(
 	} else if input1.IsMap() {
 		return reduceMap(input1, input2, state)
 	} else {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }
 
@@ -378,7 +378,7 @@ func reduceArray(
 ) *mlrval.Mlrval {
 	inputArray := input1.GetArray()
 	if inputArray == nil { // not an array
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "reduce")
 
@@ -408,7 +408,7 @@ func reduceMap(
 ) *mlrval.Mlrval {
 	inputMap := input1.GetMap()
 	if inputMap == nil { // not a map
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "reduce")
 
@@ -422,15 +422,15 @@ func reduceMap(
 	}
 
 	for pe := inputMap.Head.Next; pe != nil; pe = pe.Next {
-		argsArray[0] = mlrval.MlrvalFromString(accumulator.Head.Key)
+		argsArray[0] = mlrval.FromString(accumulator.Head.Key)
 		argsArray[1] = accumulator.Head.Value
-		argsArray[2] = mlrval.MlrvalFromString(pe.Key)
+		argsArray[2] = mlrval.FromString(pe.Key)
 		argsArray[3] = pe.Value.Copy()
 		retval := (udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray))
 		kvPair := getKVPairForCallbackOrDie(retval, "reduce")
 		accumulator = kvPair
 	}
-	return mlrval.MlrvalFromMap(accumulator)
+	return mlrval.FromMap(accumulator)
 }
 
 // ================================================================
@@ -447,7 +447,7 @@ func FoldHOF(
 	} else if input1.IsMap() {
 		return foldMap(input1, input2, input3, state)
 	} else {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }
 
@@ -459,7 +459,7 @@ func foldArray(
 ) *mlrval.Mlrval {
 	inputArray := input1.GetArray()
 	if inputArray == nil { // not an array
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "fold")
 
@@ -486,7 +486,7 @@ func foldMap(
 ) *mlrval.Mlrval {
 	inputMap := input1.GetMap()
 	if inputMap == nil { // not a map
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "fold")
 
@@ -495,21 +495,21 @@ func foldMap(
 	argsArray := hofSpace.argsArray
 
 	if inputMap.IsEmpty() {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 
 	accumulator := getKVPairForAccumulatorOrDie(input3, "reduce").Copy()
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = mlrval.MlrvalFromString(accumulator.Head.Key)
+		argsArray[0] = mlrval.FromString(accumulator.Head.Key)
 		argsArray[1] = accumulator.Head.Value
-		argsArray[2] = mlrval.MlrvalFromString(pe.Key)
+		argsArray[2] = mlrval.FromString(pe.Key)
 		argsArray[3] = pe.Value.Copy()
 		retval := (udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray))
 		kvPair := getKVPairForCallbackOrDie(retval, "reduce")
 		accumulator = kvPair
 	}
-	return mlrval.MlrvalFromMap(accumulator)
+	return mlrval.FromMap(accumulator)
 }
 
 // ================================================================
@@ -526,7 +526,7 @@ func SortHOF(
 		} else if inputs[0].IsMap() {
 			return sortMK(inputs[0], "")
 		} else {
-			return types.MLRVAL_ERROR
+			return mlrval.ERROR
 		}
 
 	} else if inputs[1].IsString() {
@@ -535,7 +535,7 @@ func SortHOF(
 		} else if inputs[0].IsMap() {
 			return sortMK(inputs[0], inputs[1].String())
 		} else {
-			return types.MLRVAL_ERROR
+			return mlrval.ERROR
 		}
 
 	} else if inputs[1].IsFunction() {
@@ -544,7 +544,7 @@ func SortHOF(
 		} else if inputs[0].IsMap() {
 			return sortMF(inputs[0], inputs[1], state)
 		} else {
-			return types.MLRVAL_ERROR
+			return mlrval.ERROR
 		}
 
 	} else {
@@ -553,7 +553,7 @@ func SortHOF(
 		)
 		os.Exit(1)
 	}
-	return types.MLRVAL_ERROR
+	return mlrval.ERROR
 }
 
 // ----------------------------------------------------------------
@@ -593,7 +593,7 @@ func sortA(
 	flags string,
 ) *mlrval.Mlrval {
 	if input1.GetArray() == nil { // not an array
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	output := input1.Copy()
@@ -656,7 +656,7 @@ func sortMK(
 ) *mlrval.Mlrval {
 	inmap := input1.GetMap()
 	if inmap == nil { // not a map
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	// Copy the keys to an array for sorting.
@@ -689,7 +689,7 @@ func sortMK(
 		outmap.PutCopy(key, inmap.Get(key))
 	}
 
-	return mlrval.MlrvalFromMapReferenced(outmap)
+	return mlrval.FromMapReferenced(outmap)
 }
 
 func sortMKNumerical(array []string, reverse bool) {
@@ -749,10 +749,10 @@ func sortAF(
 ) *mlrval.Mlrval {
 	inputArray := input1.GetArray()
 	if inputArray == nil { // not an array
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input2.IsFunction() {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	hofSpace := getHOFSpace(input2, 2, "sort", "array")
@@ -781,7 +781,7 @@ func sortAF(
 		// Go sort-callback conventions: true if a < b, false otherwise.
 		return nret < 0
 	})
-	return mlrval.MlrvalFromArrayReference(outputArray)
+	return mlrval.FromArrayReference(outputArray)
 }
 
 // sortAF implements sort on arrays with callback UDF.
@@ -792,10 +792,10 @@ func sortMF(
 ) *mlrval.Mlrval {
 	inputMap := input1.GetMap()
 	if inputMap == nil { // not a map
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	if !input2.IsFunction() {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	pairsArray := inputMap.ToPairsArray()
@@ -805,9 +805,9 @@ func sortMF(
 	argsArray := hofSpace.argsArray
 
 	sort.Slice(pairsArray, func(i, j int) bool {
-		argsArray[0] = mlrval.MlrvalFromString(pairsArray[i].Key)
+		argsArray[0] = mlrval.FromString(pairsArray[i].Key)
 		argsArray[1] = pairsArray[i].Value
-		argsArray[2] = mlrval.MlrvalFromString(pairsArray[j].Key)
+		argsArray[2] = mlrval.FromString(pairsArray[j].Key)
 		argsArray[3] = pairsArray[j].Value
 
 		// Call the user's comparator function.
@@ -829,7 +829,7 @@ func sortMF(
 	})
 
 	sortedMap := mlrval.MlrmapFromPairsArray(pairsArray)
-	return mlrval.MlrvalFromMapReferenced(sortedMap)
+	return mlrval.FromMapReferenced(sortedMap)
 }
 
 // ================================================================
@@ -845,7 +845,7 @@ func AnyHOF(
 	} else if input1.IsMap() {
 		return anyMap(input1, input2, state)
 	} else {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }
 
@@ -856,7 +856,7 @@ func anyArray(
 ) *mlrval.Mlrval {
 	inputArray := input1.GetArray()
 	if inputArray == nil { // not an array
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "any")
 
@@ -882,7 +882,7 @@ func anyArray(
 			break
 		}
 	}
-	return mlrval.MlrvalFromBool(boolAny)
+	return mlrval.FromBool(boolAny)
 }
 
 func anyMap(
@@ -892,7 +892,7 @@ func anyMap(
 ) *mlrval.Mlrval {
 	inputMap := input1.GetMap()
 	if inputMap == nil { // not a map
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "any")
 
@@ -903,7 +903,7 @@ func anyMap(
 	boolAny := false
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = mlrval.MlrvalFromString(pe.Key)
+		argsArray[0] = mlrval.FromString(pe.Key)
 		argsArray[1] = pe.Value
 		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
 		bret, ok := mret.GetBoolValue()
@@ -921,7 +921,7 @@ func anyMap(
 		}
 	}
 
-	return mlrval.MlrvalFromBool(boolAny)
+	return mlrval.FromBool(boolAny)
 }
 
 // ================================================================
@@ -937,7 +937,7 @@ func EveryHOF(
 	} else if input1.IsMap() {
 		return everyMap(input1, input2, state)
 	} else {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 }
 
@@ -948,7 +948,7 @@ func everyArray(
 ) *mlrval.Mlrval {
 	inputArray := input1.GetArray()
 	if inputArray == nil { // not an array
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "every")
 
@@ -974,7 +974,7 @@ func everyArray(
 			break
 		}
 	}
-	return mlrval.MlrvalFromBool(boolEvery)
+	return mlrval.FromBool(boolEvery)
 }
 
 func everyMap(
@@ -984,7 +984,7 @@ func everyMap(
 ) *mlrval.Mlrval {
 	inputMap := input1.GetMap()
 	if inputMap == nil { // not a map
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 	isFunctionOrDie(input2, "every")
 
@@ -995,7 +995,7 @@ func everyMap(
 	boolEvery := true
 
 	for pe := inputMap.Head; pe != nil; pe = pe.Next {
-		argsArray[0] = mlrval.MlrvalFromString(pe.Key)
+		argsArray[0] = mlrval.FromString(pe.Key)
 		argsArray[1] = pe.Value
 		mret := udfCallsite.EvaluateWithArguments(state, udfCallsite.udf, argsArray)
 		bret, ok := mret.GetBoolValue()
@@ -1013,5 +1013,5 @@ func everyMap(
 		}
 	}
 
-	return mlrval.MlrvalFromBool(boolEvery)
+	return mlrval.FromBool(boolEvery)
 }

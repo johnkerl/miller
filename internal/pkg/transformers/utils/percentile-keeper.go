@@ -9,8 +9,8 @@ import (
 	"math"
 	"sort"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 type PercentileKeeper struct {
@@ -247,10 +247,10 @@ func getPercentileLinearlyInterpolated(array []*mlrval.Mlrval, n int, p float64)
 	} else {
 		// array[iindex] + frac * (array[iindex+1] - array[iindex])
 		// TODO: just do this in float64.
-		frac := mlrval.MlrvalFromFloat64(findex - float64(iindex))
-		diff := types.BIF_minus_binary(array[iindex+1], array[iindex])
-		prod := types.BIF_times(frac, diff)
-		return *types.BIF_plus_binary(array[iindex], prod)
+		frac := mlrval.FromFloat(findex - float64(iindex))
+		diff := bifs.BIF_minus_binary(array[iindex+1], array[iindex])
+		prod := bifs.BIF_times(frac, diff)
+		return *bifs.BIF_plus_binary(array[iindex], prod)
 	}
 }
 
@@ -258,7 +258,7 @@ func getPercentileLinearlyInterpolated(array []*mlrval.Mlrval, n int, p float64)
 func (keeper *PercentileKeeper) sortIfNecessary() {
 	if !keeper.sorted {
 		sort.Slice(keeper.data, func(i, j int) bool {
-			return mlrval.BIF_less_than_as_bool(keeper.data[i], keeper.data[j])
+			return mlrval.LessThan(keeper.data[i], keeper.data[j])
 		})
 		keeper.sorted = true
 	}
@@ -275,7 +275,7 @@ func (keeper *PercentileKeeper) Emit(percentile float64) *mlrval.Mlrval {
 
 func (keeper *PercentileKeeper) EmitNonInterpolated(percentile float64) *mlrval.Mlrval {
 	if len(keeper.data) == 0 {
-		return types.MLRVAL_VOID
+		return mlrval.VOID
 	}
 	keeper.sortIfNecessary()
 	return keeper.data[computeIndexNoninterpolated(int(len(keeper.data)), percentile)].Copy()
@@ -283,7 +283,7 @@ func (keeper *PercentileKeeper) EmitNonInterpolated(percentile float64) *mlrval.
 
 func (keeper *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) *mlrval.Mlrval {
 	if len(keeper.data) == 0 {
-		return types.MLRVAL_VOID
+		return mlrval.VOID
 	}
 	keeper.sortIfNecessary()
 	output := getPercentileLinearlyInterpolated(keeper.data, int(len(keeper.data)), percentile)

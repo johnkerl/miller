@@ -449,10 +449,10 @@ func helpOutputColorization() {
 // ----------------------------------------------------------------
 func helpTypeArithmeticInfo() {
 	mlrvals := []*mlrval.Mlrval{
-		mlrval.MlrvalFromInt(1),
-		mlrval.MlrvalFromFloat64(2.5),
-		types.MLRVAL_ABSENT,
-		types.MLRVAL_ERROR,
+		mlrval.FromInt(1),
+		mlrval.FromFloat(2.5),
+		mlrval.ABSENT,
+		mlrval.ERROR,
 	}
 
 	n := len(mlrvals)
@@ -471,7 +471,7 @@ func helpTypeArithmeticInfo() {
 			} else if i == -1 {
 				fmt.Printf(" %-10s", "------")
 			} else {
-				sum := types.BIF_plus_binary(mlrvals[i], mlrvals[j])
+				sum := bifs.BIF_plus_binary(mlrvals[i], mlrvals[j])
 				fmt.Printf(" %-10s", sum.String())
 			}
 		}

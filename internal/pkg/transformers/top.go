@@ -274,11 +274,11 @@ func (tr *TransformerTop) emit(
 					topKeeper := pb.Value.(*utils.TopKeeper)
 					key := valueFieldName + "_top"
 					if i < topKeeper.GetSize() {
-						newrec.PutReference(tr.outputFieldName, mlrval.MlrvalFromInt(i+1))
+						newrec.PutReference(tr.outputFieldName, mlrval.FromInt(i+1))
 						newrec.PutReference(key, topKeeper.TopValues[i].Copy())
 					} else {
-						newrec.PutReference(tr.outputFieldName, mlrval.MlrvalFromInt(i+1))
-						newrec.PutCopy(key, types.MLRVAL_VOID)
+						newrec.PutReference(tr.outputFieldName, mlrval.FromInt(i+1))
+						newrec.PutCopy(key, mlrval.VOID)
 					}
 				}
 

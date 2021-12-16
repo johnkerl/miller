@@ -155,7 +155,7 @@ func (tr *TransformerCountSimilar) Transform(
 			recordListForGroup := outer.Value.(*list.List)
 			// TODO: make 64-bit friendly
 			groupSize := recordListForGroup.Len()
-			mgroupSize := mlrval.MlrvalFromInt(int(groupSize))
+			mgroupSize := mlrval.FromInt(int(groupSize))
 			for inner := recordListForGroup.Front(); inner != nil; inner = inner.Next() {
 				recordAndContext := inner.Value.(*types.RecordAndContext)
 				recordAndContext.Record.PutCopy(tr.counterFieldName, mgroupSize)

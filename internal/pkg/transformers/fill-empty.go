@@ -103,7 +103,7 @@ func NewTransformerFillEmpty(
 ) (*TransformerFillEmpty, error) {
 	tr := &TransformerFillEmpty{}
 	if inferType {
-		tr.fillValue = mlrval.MlrvalFromInferredType(fillString)
+		tr.fillValue = mlrval.FromInferredType(fillString)
 	} else {
 		tr.fillValue = mlrval.mlrval.FromString(fillString)
 	}

@@ -9,9 +9,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------
@@ -293,7 +293,7 @@ func (acc *Stats1CountAccumulator) Ingest(value *mlrval.Mlrval) {
 	acc.count++
 }
 func (acc *Stats1CountAccumulator) Emit() *mlrval.Mlrval {
-	return mlrval.MlrvalFromInt(acc.count)
+	return mlrval.FromInt(acc.count)
 }
 func (acc *Stats1CountAccumulator) Reset() {
 	acc.count = 0
@@ -322,7 +322,7 @@ func (acc *Stats1ModeAccumulator) Ingest(value *mlrval.Mlrval) {
 }
 func (acc *Stats1ModeAccumulator) Emit() *mlrval.Mlrval {
 	if acc.countsByValue.IsEmpty() {
-		return types.MLRVAL_VOID
+		return mlrval.VOID
 	}
 	maxValue := ""
 	var maxCount = int(0)
@@ -334,7 +334,7 @@ func (acc *Stats1ModeAccumulator) Emit() *mlrval.Mlrval {
 			maxCount = count
 		}
 	}
-	return mlrval.MlrvalFromString(maxValue)
+	return mlrval.FromString(maxValue)
 }
 func (acc *Stats1ModeAccumulator) Reset() {
 	acc.countsByValue = lib.NewOrderedMap()
@@ -363,7 +363,7 @@ func (acc *Stats1AntimodeAccumulator) Ingest(value *mlrval.Mlrval) {
 }
 func (acc *Stats1AntimodeAccumulator) Emit() *mlrval.Mlrval {
 	if acc.countsByValue.IsEmpty() {
-		return types.MLRVAL_VOID
+		return mlrval.VOID
 	}
 	minValue := ""
 	var minCount = int(0)
@@ -375,7 +375,7 @@ func (acc *Stats1AntimodeAccumulator) Emit() *mlrval.Mlrval {
 			minCount = count
 		}
 	}
-	return mlrval.MlrvalFromString(minValue)
+	return mlrval.FromString(minValue)
 }
 func (acc *Stats1AntimodeAccumulator) Reset() {
 	acc.countsByValue = lib.NewOrderedMap()
@@ -388,17 +388,17 @@ type Stats1SumAccumulator struct {
 
 func NewStats1SumAccumulator() IStats1Accumulator {
 	return &Stats1SumAccumulator{
-		sum: mlrval.MlrvalFromInt(0),
+		sum: mlrval.FromInt(0),
 	}
 }
 func (acc *Stats1SumAccumulator) Ingest(value *mlrval.Mlrval) {
-	acc.sum = types.BIF_plus_binary(acc.sum, value)
+	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
 }
 func (acc *Stats1SumAccumulator) Emit() *mlrval.Mlrval {
 	return acc.sum.Copy()
 }
 func (acc *Stats1SumAccumulator) Reset() {
-	acc.sum = mlrval.MlrvalFromInt(0)
+	acc.sum = mlrval.FromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -409,23 +409,23 @@ type Stats1MeanAccumulator struct {
 
 func NewStats1MeanAccumulator() IStats1Accumulator {
 	return &Stats1MeanAccumulator{
-		sum:   mlrval.MlrvalFromInt(0),
+		sum:   mlrval.FromInt(0),
 		count: 0,
 	}
 }
 func (acc *Stats1MeanAccumulator) Ingest(value *mlrval.Mlrval) {
-	acc.sum = types.BIF_plus_binary(acc.sum, value)
+	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
 	acc.count++
 }
 func (acc *Stats1MeanAccumulator) Emit() *mlrval.Mlrval {
 	if acc.count == 0 {
-		return types.MLRVAL_VOID
+		return mlrval.VOID
 	} else {
-		return types.BIF_divide(acc.sum, mlrval.MlrvalFromInt(acc.count))
+		return bifs.BIF_divide(acc.sum, mlrval.FromInt(acc.count))
 	}
 }
 func (acc *Stats1MeanAccumulator) Reset() {
-	acc.sum = mlrval.MlrvalFromInt(0)
+	acc.sum = mlrval.FromInt(0)
 	acc.count = 0
 }
 
@@ -436,21 +436,21 @@ type Stats1MinAccumulator struct {
 
 func NewStats1MinAccumulator() IStats1Accumulator {
 	return &Stats1MinAccumulator{
-		min: types.MLRVAL_ABSENT,
+		min: mlrval.ABSENT,
 	}
 }
 func (acc *Stats1MinAccumulator) Ingest(value *mlrval.Mlrval) {
-	acc.min = mlrval.BIF_min_binary(acc.min, value)
+	acc.min = bifs.BIF_min_binary(acc.min, value)
 }
 func (acc *Stats1MinAccumulator) Emit() *mlrval.Mlrval {
 	if acc.min.IsAbsent() {
-		return types.MLRVAL_VOID
+		return mlrval.VOID
 	} else {
 		return acc.min.Copy()
 	}
 }
 func (acc *Stats1MinAccumulator) Reset() {
-	acc.min = types.MLRVAL_ABSENT
+	acc.min = mlrval.ABSENT
 }
 
 // ----------------------------------------------------------------
@@ -460,21 +460,21 @@ type Stats1MaxAccumulator struct {
 
 func NewStats1MaxAccumulator() IStats1Accumulator {
 	return &Stats1MaxAccumulator{
-		max: types.MLRVAL_ABSENT,
+		max: mlrval.ABSENT,
 	}
 }
 func (acc *Stats1MaxAccumulator) Ingest(value *mlrval.Mlrval) {
-	acc.max = mlrval.BIF_max_binary(acc.max, value)
+	acc.max = bifs.BIF_max_binary(acc.max, value)
 }
 func (acc *Stats1MaxAccumulator) Emit() *mlrval.Mlrval {
 	if acc.max.IsAbsent() {
-		return types.MLRVAL_VOID
+		return mlrval.VOID
 	} else {
 		return acc.max.Copy()
 	}
 }
 func (acc *Stats1MaxAccumulator) Reset() {
-	acc.max = types.MLRVAL_ABSENT
+	acc.max = mlrval.ABSENT
 }
 
 // ----------------------------------------------------------------
@@ -487,23 +487,23 @@ type Stats1VarAccumulator struct {
 func NewStats1VarAccumulator() IStats1Accumulator {
 	return &Stats1VarAccumulator{
 		count: 0,
-		sum:   mlrval.MlrvalFromInt(0),
-		sum2:  mlrval.MlrvalFromInt(0),
+		sum:   mlrval.FromInt(0),
+		sum2:  mlrval.FromInt(0),
 	}
 }
 func (acc *Stats1VarAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := types.BIF_times(value, value)
+	value2 := bifs.BIF_times(value, value)
 	acc.count++
-	acc.sum = types.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = types.BIF_plus_binary(acc.sum2, value2)
+	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
 }
 func (acc *Stats1VarAccumulator) Emit() *mlrval.Mlrval {
-	return mlrval.BIF_get_var(mlrval.MlrvalFromInt(acc.count), acc.sum, acc.sum2)
+	return bifs.BIF_get_var(mlrval.FromInt(acc.count), acc.sum, acc.sum2)
 }
 func (acc *Stats1VarAccumulator) Reset() {
 	acc.count = 0
-	acc.sum = mlrval.MlrvalFromInt(0)
-	acc.sum2 = mlrval.MlrvalFromInt(0)
+	acc.sum = mlrval.FromInt(0)
+	acc.sum2 = mlrval.FromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -516,23 +516,23 @@ type Stats1StddevAccumulator struct {
 func NewStats1StddevAccumulator() IStats1Accumulator {
 	return &Stats1StddevAccumulator{
 		count: 0,
-		sum:   mlrval.MlrvalFromInt(0),
-		sum2:  mlrval.MlrvalFromInt(0),
+		sum:   mlrval.FromInt(0),
+		sum2:  mlrval.FromInt(0),
 	}
 }
 func (acc *Stats1StddevAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := types.BIF_times(value, value)
+	value2 := bifs.BIF_times(value, value)
 	acc.count++
-	acc.sum = types.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = types.BIF_plus_binary(acc.sum2, value2)
+	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
 }
 func (acc *Stats1StddevAccumulator) Emit() *mlrval.Mlrval {
-	return mlrval.BIF_get_stddev(mlrval.MlrvalFromInt(acc.count), acc.sum, acc.sum2)
+	return bifs.BIF_get_stddev(mlrval.FromInt(acc.count), acc.sum, acc.sum2)
 }
 func (acc *Stats1StddevAccumulator) Reset() {
 	acc.count = 0
-	acc.sum = mlrval.MlrvalFromInt(0)
-	acc.sum2 = mlrval.MlrvalFromInt(0)
+	acc.sum = mlrval.FromInt(0)
+	acc.sum2 = mlrval.FromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -545,24 +545,24 @@ type Stats1MeanEBAccumulator struct {
 func NewStats1MeanEBAccumulator() IStats1Accumulator {
 	return &Stats1MeanEBAccumulator{
 		count: 0,
-		sum:   mlrval.MlrvalFromInt(0),
-		sum2:  mlrval.MlrvalFromInt(0),
+		sum:   mlrval.FromInt(0),
+		sum2:  mlrval.FromInt(0),
 	}
 }
 func (acc *Stats1MeanEBAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := types.BIF_times(value, value)
+	value2 := bifs.BIF_times(value, value)
 	acc.count++
-	acc.sum = types.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = types.BIF_plus_binary(acc.sum2, value2)
+	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
 }
 func (acc *Stats1MeanEBAccumulator) Emit() *mlrval.Mlrval {
-	mcount := mlrval.MlrvalFromInt(acc.count)
-	return mlrval.BIF_get_mean_EB(mcount, acc.sum, acc.sum2)
+	mcount := mlrval.FromInt(acc.count)
+	return bifs.BIF_get_mean_EB(mcount, acc.sum, acc.sum2)
 }
 func (acc *Stats1MeanEBAccumulator) Reset() {
 	acc.count = 0
-	acc.sum = mlrval.MlrvalFromInt(0)
-	acc.sum2 = mlrval.MlrvalFromInt(0)
+	acc.sum = mlrval.FromInt(0)
+	acc.sum2 = mlrval.FromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -576,28 +576,28 @@ type Stats1SkewnessAccumulator struct {
 func NewStats1SkewnessAccumulator() IStats1Accumulator {
 	return &Stats1SkewnessAccumulator{
 		count: 0,
-		sum:   mlrval.MlrvalFromInt(0),
-		sum2:  mlrval.MlrvalFromInt(0),
-		sum3:  mlrval.MlrvalFromInt(0),
+		sum:   mlrval.FromInt(0),
+		sum2:  mlrval.FromInt(0),
+		sum3:  mlrval.FromInt(0),
 	}
 }
 func (acc *Stats1SkewnessAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := types.BIF_times(value, value)
-	value3 := types.BIF_times(value, value2)
+	value2 := bifs.BIF_times(value, value)
+	value3 := bifs.BIF_times(value, value2)
 	acc.count++
-	acc.sum = types.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = types.BIF_plus_binary(acc.sum2, value2)
-	acc.sum3 = types.BIF_plus_binary(acc.sum3, value3)
+	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+	acc.sum3 = bifs.BIF_plus_binary(acc.sum3, value3)
 }
 func (acc *Stats1SkewnessAccumulator) Emit() *mlrval.Mlrval {
-	mcount := mlrval.MlrvalFromInt(acc.count)
-	return mlrval.BIF_get_skewness(mcount, acc.sum, acc.sum2, acc.sum3)
+	mcount := mlrval.FromInt(acc.count)
+	return bifs.BIF_get_skewness(mcount, acc.sum, acc.sum2, acc.sum3)
 }
 func (acc *Stats1SkewnessAccumulator) Reset() {
 	acc.count = 0
-	acc.sum = mlrval.MlrvalFromInt(0)
-	acc.sum2 = mlrval.MlrvalFromInt(0)
-	acc.sum3 = mlrval.MlrvalFromInt(0)
+	acc.sum = mlrval.FromInt(0)
+	acc.sum2 = mlrval.FromInt(0)
+	acc.sum3 = mlrval.FromInt(0)
 }
 
 // ----------------------------------------------------------------
@@ -612,32 +612,32 @@ type Stats1KurtosisAccumulator struct {
 func NewStats1KurtosisAccumulator() IStats1Accumulator {
 	return &Stats1KurtosisAccumulator{
 		count: 0,
-		sum:   mlrval.MlrvalFromInt(0),
-		sum2:  mlrval.MlrvalFromInt(0),
-		sum3:  mlrval.MlrvalFromInt(0),
-		sum4:  mlrval.MlrvalFromInt(0),
+		sum:   mlrval.FromInt(0),
+		sum2:  mlrval.FromInt(0),
+		sum3:  mlrval.FromInt(0),
+		sum4:  mlrval.FromInt(0),
 	}
 }
 func (acc *Stats1KurtosisAccumulator) Ingest(value *mlrval.Mlrval) {
-	value2 := types.BIF_times(value, value)
-	value3 := types.BIF_times(value, value2)
-	value4 := types.BIF_times(value, value3)
+	value2 := bifs.BIF_times(value, value)
+	value3 := bifs.BIF_times(value, value2)
+	value4 := bifs.BIF_times(value, value3)
 	acc.count++
-	acc.sum = types.BIF_plus_binary(acc.sum, value)
-	acc.sum2 = types.BIF_plus_binary(acc.sum2, value2)
-	acc.sum3 = types.BIF_plus_binary(acc.sum3, value3)
-	acc.sum4 = types.BIF_plus_binary(acc.sum4, value4)
+	acc.sum = bifs.BIF_plus_binary(acc.sum, value)
+	acc.sum2 = bifs.BIF_plus_binary(acc.sum2, value2)
+	acc.sum3 = bifs.BIF_plus_binary(acc.sum3, value3)
+	acc.sum4 = bifs.BIF_plus_binary(acc.sum4, value4)
 }
 func (acc *Stats1KurtosisAccumulator) Emit() *mlrval.Mlrval {
-	mcount := mlrval.MlrvalFromInt(acc.count)
-	return mlrval.BIF_get_kurtosis(mcount, acc.sum, acc.sum2, acc.sum3, acc.sum4)
+	mcount := mlrval.FromInt(acc.count)
+	return bifs.BIF_get_kurtosis(mcount, acc.sum, acc.sum2, acc.sum3, acc.sum4)
 }
 func (acc *Stats1KurtosisAccumulator) Reset() {
 	acc.count = 0
-	acc.sum = mlrval.MlrvalFromInt(0)
-	acc.sum2 = mlrval.MlrvalFromInt(0)
-	acc.sum3 = mlrval.MlrvalFromInt(0)
-	acc.sum4 = mlrval.MlrvalFromInt(0)
+	acc.sum = mlrval.FromInt(0)
+	acc.sum2 = mlrval.FromInt(0)
+	acc.sum3 = mlrval.FromInt(0)
+	acc.sum4 = mlrval.FromInt(0)
 }
 
 // ----------------------------------------------------------------

@@ -12,7 +12,6 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------
@@ -122,11 +121,11 @@ func (node *DirectFieldRvalueNode) Evaluate(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 	value := state.Inrec.Get(node.fieldName)
 	if value == nil {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	} else {
 		return value
 	}
@@ -148,9 +147,9 @@ func (node *FullSrecRvalueNode) Evaluate(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	} else {
-		return mlrval.MlrvalFromMap(state.Inrec)
+		return mlrval.FromMap(state.Inrec)
 	}
 }
 
@@ -169,7 +168,7 @@ func (node *DirectOosvarRvalueNode) Evaluate(
 ) *mlrval.Mlrval {
 	value := state.Oosvars.Get(node.variableName)
 	if value == nil {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	} else {
 		return value
 	}
@@ -185,7 +184,7 @@ func (root *RootNode) BuildFullOosvarRvalueNode() *FullOosvarRvalueNode {
 func (node *FullOosvarRvalueNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromMap(state.Oosvars)
+	return mlrval.FromMap(state.Oosvars)
 }
 
 // ----------------------------------------------------------------
@@ -219,14 +218,14 @@ func (node *LocalVariableNode) Evaluate(
 
 	udf := node.udfManager.LookUpDisregardingArity(functionName)
 	if udf != nil {
-		return mlrval.MlrvalFromFunction(udf, functionName)
+		return mlrval.FromFunction(udf, functionName)
 	}
 
 	// TODO: allow built-in functions as well. Needs some API-merging as a
 	// prerequisite since UDFs and BIFs are managed in quite different
 	// structures.
 
-	return types.MLRVAL_ABSENT
+	return mlrval.ABSENT
 }
 
 // ----------------------------------------------------------------
@@ -243,7 +242,7 @@ type RegexLiteralNode struct {
 
 func (root *RootNode) BuildRegexLiteralNode(literal string) IEvaluable {
 	return &RegexLiteralNode{
-		literal: mlrval.MlrvalFromString(literal),
+		literal: mlrval.FromString(literal),
 	}
 }
 
@@ -289,7 +288,7 @@ func (root *RootNode) BuildStringLiteralNode(literal string) IEvaluable {
 	hasCaptures, replacementCaptureMatrix := lib.RegexReplacementHasCaptures(literal)
 	if !hasCaptures {
 		return &StringLiteralNode{
-			literal: mlrval.MlrvalFromString(literal),
+			literal: mlrval.FromString(literal),
 		}
 	} else {
 		return &RegexCaptureReplacementNode{
@@ -318,7 +317,7 @@ func (node *StringLiteralNode) Evaluate(
 func (node *RegexCaptureReplacementNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromString(
+	return mlrval.FromString(
 		lib.InterpolateCaptures(
 			node.replacementString,
 			node.replacementCaptureMatrix,
@@ -334,7 +333,7 @@ type IntLiteralNode struct {
 
 func (root *RootNode) BuildIntLiteralNode(literal string) *IntLiteralNode {
 	return &IntLiteralNode{
-		literal: mlrval.MlrvalFromPrevalidatedIntString(literal),
+		literal: mlrval.FromPrevalidatedIntString(literal),
 	}
 }
 func (node *IntLiteralNode) Evaluate(
@@ -350,7 +349,7 @@ type FloatLiteralNode struct {
 
 func (root *RootNode) BuildFloatLiteralNode(literal string) *FloatLiteralNode {
 	return &FloatLiteralNode{
-		literal: mlrval.MlrvalFromPrevalidatedFloat64String(literal),
+		literal: mlrval.FromPrevalidatedFloat64String(literal),
 	}
 }
 func (node *FloatLiteralNode) Evaluate(
@@ -366,7 +365,7 @@ type BoolLiteralNode struct {
 
 func (root *RootNode) BuildBoolLiteralNode(literal string) *BoolLiteralNode {
 	return &BoolLiteralNode{
-		literal: mlrval.MlrvalFromBoolString(literal),
+		literal: mlrval.FromBoolString(literal),
 	}
 }
 func (node *BoolLiteralNode) Evaluate(
@@ -382,7 +381,7 @@ type NullLiteralNode struct {
 
 func (root *RootNode) BuildNullLiteralNode() *NullLiteralNode {
 	return &NullLiteralNode{
-		literal: types.MLRVAL_NULL,
+		literal: mlrval.NULL,
 	}
 }
 func (node *NullLiteralNode) Evaluate(
@@ -455,7 +454,7 @@ func (root *RootNode) BuildFILENAMENode() *FILENAMENode {
 func (node *FILENAMENode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromString(state.Context.FILENAME)
+	return mlrval.FromString(state.Context.FILENAME)
 }
 
 // ----------------------------------------------------------------
@@ -468,7 +467,7 @@ func (root *RootNode) BuildFILENUMNode() *FILENUMNode {
 func (node *FILENUMNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromInt(state.Context.FILENUM)
+	return mlrval.FromInt(state.Context.FILENUM)
 }
 
 // ----------------------------------------------------------------
@@ -481,7 +480,7 @@ func (root *RootNode) BuildNFNode() *NFNode {
 func (node *NFNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromInt(state.Inrec.FieldCount)
+	return mlrval.FromInt(state.Inrec.FieldCount)
 }
 
 // ----------------------------------------------------------------
@@ -494,7 +493,7 @@ func (root *RootNode) BuildNRNode() *NRNode {
 func (node *NRNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromInt(state.Context.NR)
+	return mlrval.FromInt(state.Context.NR)
 }
 
 // ----------------------------------------------------------------
@@ -507,7 +506,7 @@ func (root *RootNode) BuildFNRNode() *FNRNode {
 func (node *FNRNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromInt(state.Context.FNR)
+	return mlrval.FromInt(state.Context.FNR)
 }
 
 // ----------------------------------------------------------------
@@ -519,9 +518,8 @@ func (root *RootNode) BuildIRSNode() *IRSNode {
 }
 func (node *IRSNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	return types.MlrvalFromString(state.Options.ReaderOptions.IRS)
->>>>>>> 8f0ac5233 (mlrmap refactor)
+) *mlrval.Mlrval {
+	return mlrval.FromString(state.Options.ReaderOptions.IRS)
 }
 
 // ----------------------------------------------------------------
@@ -533,8 +531,8 @@ func (root *RootNode) BuildIFSNode() *IFSNode {
 }
 func (node *IFSNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	return types.MlrvalFromString(state.Options.ReaderOptions.IFS)
+) *mlrval.Mlrval {
+	return mlrval.FromString(state.Options.ReaderOptions.IFS)
 }
 
 // ----------------------------------------------------------------
@@ -546,8 +544,8 @@ func (root *RootNode) BuildIPSNode() *IPSNode {
 }
 func (node *IPSNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	return types.MlrvalFromString(state.Options.ReaderOptions.IPS)
+) *mlrval.Mlrval {
+	return mlrval.FromString(state.Options.ReaderOptions.IPS)
 }
 
 // ----------------------------------------------------------------
@@ -559,8 +557,8 @@ func (root *RootNode) BuildORSNode() *ORSNode {
 }
 func (node *ORSNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	return types.MlrvalFromString(state.Options.WriterOptions.ORS)
+) *mlrval.Mlrval {
+	return mlrval.FromString(state.Options.WriterOptions.ORS)
 }
 
 // ----------------------------------------------------------------
@@ -572,8 +570,8 @@ func (root *RootNode) BuildOFSNode() *OFSNode {
 }
 func (node *OFSNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	return types.MlrvalFromString(state.Options.WriterOptions.OFS)
+) *mlrval.Mlrval {
+	return mlrval.FromString(state.Options.WriterOptions.OFS)
 }
 
 // ----------------------------------------------------------------
@@ -585,8 +583,8 @@ func (root *RootNode) BuildOPSNode() *OPSNode {
 }
 func (node *OPSNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	return types.MlrvalFromString(state.Options.WriterOptions.OPS)
+) *mlrval.Mlrval {
+	return mlrval.FromString(state.Options.WriterOptions.OPS)
 }
 
 // ----------------------------------------------------------------
@@ -598,8 +596,8 @@ func (root *RootNode) BuildFLATSEPNode() *FLATSEPNode {
 }
 func (node *FLATSEPNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
-	return types.MlrvalFromString(state.Options.WriterOptions.FLATSEP)
+) *mlrval.Mlrval {
+	return mlrval.FromString(state.Options.WriterOptions.FLATSEP)
 }
 
 // ================================================================
@@ -633,7 +631,7 @@ func (root *RootNode) BuildMathPINode() *MathPINode {
 func (node *MathPINode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromFloat64(math.Pi)
+	return mlrval.FromFloat(math.Pi)
 }
 
 // ----------------------------------------------------------------
@@ -646,7 +644,7 @@ func (root *RootNode) BuildMathENode() *MathENode {
 func (node *MathENode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromFloat64(math.E)
+	return mlrval.FromFloat(math.E)
 }
 
 // ================================================================
@@ -664,7 +662,7 @@ func (root *RootNode) BuildArraySliceEmptyLowerIndexNode(
 func (node *LiteralOneNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromInt(1)
+	return mlrval.FromInt(1)
 }
 
 // ================================================================
@@ -684,7 +682,7 @@ func (root *RootNode) BuildArraySliceEmptyUpperIndexNode(
 func (node *LiteralEmptyStringNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
-	return mlrval.MlrvalFromString("")
+	return mlrval.FromString("")
 }
 
 // ----------------------------------------------------------------

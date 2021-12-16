@@ -159,14 +159,14 @@ func NewTransformerFraction(
 	var multiplier *mlrval.Mlrval
 	var outputFieldNameSuffix string
 	if doPercents {
-		multiplier = mlrval.MlrvalFromInt(100)
+		multiplier = mlrval.FromInt(100)
 		if doCumu {
 			outputFieldNameSuffix = "_cumulative_percent"
 		} else {
 			outputFieldNameSuffix = "_percent"
 		}
 	} else {
-		multiplier = mlrval.MlrvalFromInt(1)
+		multiplier = mlrval.FromInt(1)
 		if doCumu {
 			outputFieldNameSuffix = "_cumulative_fraction"
 		} else {
@@ -174,7 +174,7 @@ func NewTransformerFraction(
 		}
 	}
 
-	zero := mlrval.MlrvalFromInt(0)
+	zero := mlrval.FromInt(0)
 
 	return &TransformerFraction{
 		fractionFieldNames:    fractionFieldNames,
@@ -271,7 +271,7 @@ func (tr *TransformerFraction) Transform(
 							outputValue = bifs.BIF_divide(numerator, denominator)
 							outputValue = bifs.BIF_times(outputValue, tr.multiplier)
 						} else {
-							outputValue = types.MLRVAL_ERROR
+							outputValue = mlrval.ERROR
 						}
 
 						outrec.PutCopy(

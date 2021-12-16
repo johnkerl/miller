@@ -60,7 +60,7 @@ func (mv *Mlrval) GetBoolValue() (boolValue bool, isBool bool) {
 	}
 }
 
-func (mv *Mlrval) GetArray() interface{} {
+func (mv *Mlrval) GetArray() []Mlrval {
 	if mv.IsArray() {
 		return mv.arrayval
 	} else {
@@ -68,7 +68,7 @@ func (mv *Mlrval) GetArray() interface{} {
 	}
 }
 
-func (mv *Mlrval) GetMap() interface{} {
+func (mv *Mlrval) GetMap() *Mlrmap {
 	if mv.IsMap() {
 		return mv.mapval
 	} else {
@@ -86,6 +86,10 @@ func (mv *Mlrval) GetFunction() interface{} {
 
 func (mv *Mlrval) GetTypeName() string {
 	return TYPE_NAMES[mv.Type()]
+}
+
+func GetTypeName(mvtype MVType) string {
+	return TYPE_NAMES[mvtype]
 }
 
 

@@ -101,16 +101,16 @@ const (
 
 // ----------------------------------------------------------------
 func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
-	mv = FromPending()
+	*mv = *FromPending()
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
-	mlrval, eof, err := MlrvalDecodeFromJSON(decoder)
+	pmv, eof, err := MlrvalDecodeFromJSON(decoder)
 	if eof {
 		return errors.New("Miller JSON parser: unexpected premature EOF.")
 	}
 	if err != nil {
 		return err
 	}
-	*mv = *mlrval
+	*mv = *pmv
 	return nil
 }
 
@@ -178,9 +178,9 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			)
 		}
 
-		mlrval := FromPending()
+		mv := FromPending()
 		if isArray {
-			mlrval = FromEmptyArray()
+			mv = FromEmptyArray()
 
 			for decoder.More() {
 				element, eof, err := MlrvalDecodeFromJSON(decoder)
@@ -191,11 +191,11 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 				if err != nil {
 					return nil, false, err
 				}
-				ArrayAppend(element)
+				mv.ArrayAppend(element)
 			}
 
 		} else {
-			mlrval = FromEmptyMap()
+			mv = FromEmptyMap()
 
 			for decoder.More() {
 				key, eof, err := MlrvalDecodeFromJSON(decoder)
@@ -223,7 +223,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 				}
 
 				// xxx check here string-valued key
-				MapPut(key, value)
+				mv.MapPut(key, value)
 			}
 		}
 
@@ -252,7 +252,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			return nil, false, imbalanceError
 		}
 
-		return mlrval, false, nil
+		return mv, false, nil
 	}
 
 	return nil, false, errors.New("unimplemented")

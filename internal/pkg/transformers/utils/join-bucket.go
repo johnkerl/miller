@@ -8,7 +8,6 @@ import (
 	"container/list"
 
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------

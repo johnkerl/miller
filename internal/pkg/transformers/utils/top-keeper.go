@@ -15,7 +15,7 @@ type TopKeeper struct {
 	TopRecordsAndContexts []*types.RecordAndContext
 	size                  int
 	capacity              int
-	bsearchFunc           types.BsearchMlrvalArrayFunc
+	bsearchFunc           mlrval.BsearchMlrvalArrayFunc
 }
 
 // ----------------------------------------------------------------

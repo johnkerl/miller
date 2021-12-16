@@ -132,9 +132,9 @@ func NewTransformerSeqgen(
 	stopString string,
 	stepString string,
 ) (*TransformerSeqgen, error) {
-	start := mlrval.MlrvalFromInferredType(startString)
-	stop := mlrval.MlrvalFromInferredType(stopString)
-	step := mlrval.MlrvalFromInferredType(stepString)
+	start := mlrval.FromInferredType(startString)
+	stop := mlrval.FromInferredType(stopString)
+	step := mlrval.FromInferredType(stepString)
 	var doneComparator types.BinaryFunc = nil
 
 	fstart, startIsNumeric := start.GetNumericToFloatValue()
@@ -187,7 +187,7 @@ func NewTransformerSeqgen(
 		stop:           stop,
 		step:           step,
 		doneComparator: doneComparator,
-		mdone:          types.MLRVAL_FALSE,
+		mdone:          mlrval.FALSE,
 	}, nil
 }
 

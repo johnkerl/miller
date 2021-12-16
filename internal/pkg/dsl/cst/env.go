@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 type EnvironmentVariableNode struct {
@@ -39,11 +38,11 @@ func (node *EnvironmentVariableNode) Evaluate(
 ) *mlrval.Mlrval {
 	name := node.nameEvaluable.Evaluate(state)
 	if name.IsAbsent() {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 	if !name.IsString() {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
-	return mlrval.MlrvalFromString(os.Getenv(name.String()))
+	return mlrval.FromString(os.Getenv(name.String()))
 }

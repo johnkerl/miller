@@ -9,8 +9,8 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------
@@ -120,7 +120,7 @@ func (root *RootNode) BuildIfChainNode(astNode *dsl.ASTNode) (*IfChainNode, erro
 // ----------------------------------------------------------------
 func (node *IfChainNode) Execute(state *runtime.State) (*BlockExitPayload, error) {
 	for _, ifItem := range node.ifItems {
-		condition := types.MLRVAL_TRUE
+		condition := mlrval.TRUE
 		if ifItem.conditionNode != nil {
 			condition = ifItem.conditionNode.Evaluate(state)
 		}

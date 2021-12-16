@@ -8,11 +8,11 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------
@@ -89,7 +89,7 @@ func (root *RootNode) BuildMultipleArityFunctionCallsiteNode(
 
 // ----------------------------------------------------------------
 type ZaryFunctionCallsiteNode struct {
-	zaryFunc types.ZaryFunc
+	zaryFunc bifs.ZaryFunc
 }
 
 func (root *RootNode) BuildZaryFunctionCallsiteNode(
@@ -123,7 +123,7 @@ func (node *ZaryFunctionCallsiteNode) Evaluate(
 
 // ----------------------------------------------------------------
 type UnaryFunctionCallsiteNode struct {
-	unaryFunc  types.UnaryFunc
+	unaryFunc  bifs.UnaryFunc
 	evaluable1 IEvaluable
 }
 
@@ -164,7 +164,7 @@ func (node *UnaryFunctionCallsiteNode) Evaluate(
 
 // ----------------------------------------------------------------
 type UnaryFunctionWithContextCallsiteNode struct {
-	unaryFuncWithContext types.UnaryFuncWithContext
+	unaryFuncWithContext bifs.UnaryFuncWithContext
 	evaluable1           IEvaluable
 }
 
@@ -205,7 +205,7 @@ func (node *UnaryFunctionWithContextCallsiteNode) Evaluate(
 
 // ----------------------------------------------------------------
 type BinaryFunctionCallsiteNode struct {
-	binaryFunc types.BinaryFunc
+	binaryFunc bifs.BinaryFunc
 	evaluable1 IEvaluable
 	evaluable2 IEvaluable
 }
@@ -421,7 +421,7 @@ func (node *TernaryFunctionWithStateCallsiteNode) Evaluate(
 // !=~ callsites only -- not sub/gsub, and not the capture-using replacement
 // statements like '$y = "\2:\1".
 type RegexCaptureBinaryFunctionCallsiteNode struct {
-	regexCaptureBinaryFunc types.RegexCaptureBinaryFunc
+	regexCaptureBinaryFunc bifs.RegexCaptureBinaryFunc
 	evaluable1             IEvaluable
 	evaluable2             IEvaluable
 }
@@ -525,23 +525,20 @@ func (node *DotCallsiteNode) Evaluate(
 		// Case 1: map.attribute as shorthand for map["attribute"]
 		value2 := mapvalue1.Get(node.string2)
 		if value2 == nil {
-			return types.MLRVAL_ABSENT
+			return mlrval.ABSENT
 		} else {
 			return value2
 		}
 	} else {
 		// Case 2: string concatenation
 		value2 := node.evaluable2.Evaluate(state)
-		return types.BIF_dot(
-			value1,
-			value2,
-		)
+		return bifs.BIF_dot(value1, value2)
 	}
 }
 
 // ----------------------------------------------------------------
 type TernaryFunctionCallsiteNode struct {
-	ternaryFunc types.TernaryFunc
+	ternaryFunc bifs.TernaryFunc
 	evaluable1  IEvaluable
 	evaluable2  IEvaluable
 	evaluable3  IEvaluable
@@ -607,7 +604,7 @@ func (node *TernaryFunctionCallsiteNode) Evaluate(
 
 // ----------------------------------------------------------------
 type VariadicFunctionCallsiteNode struct {
-	variadicFunc types.VariadicFunc
+	variadicFunc bifs.VariadicFunc
 	evaluables   []IEvaluable
 }
 
@@ -782,11 +779,11 @@ func (node *LogicalANDOperatorNode) Evaluate(
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 	atype := aout.GetType()
-	if !(atype == types.MT_ABSENT || atype == types.MT_BOOL) {
-		return types.MLRVAL_ERROR
+	if !(atype == mlrval.MT_ABSENT || atype == mlrval.MT_BOOL) {
+		return mlrval.ERROR
 	}
-	if atype == types.MT_ABSENT {
-		return types.MLRVAL_ABSENT
+	if atype == mlrval.MT_ABSENT {
+		return mlrval.ABSENT
 	}
 	if aout.IsFalse() {
 		// This means false && bogus type evaluates to true, which is sad but
@@ -798,11 +795,11 @@ func (node *LogicalANDOperatorNode) Evaluate(
 
 	bout := node.b.Evaluate(state)
 	btype := bout.GetType()
-	if !(btype == types.MT_ABSENT || btype == types.MT_BOOL) {
-		return types.MLRVAL_ERROR
+	if !(btype == mlrval.MT_ABSENT || btype == mlrval.MT_BOOL) {
+		return mlrval.ERROR
 	}
-	if btype == types.MT_ABSENT {
-		return types.MLRVAL_ABSENT
+	if btype == mlrval.MT_ABSENT {
+		return mlrval.ABSENT
 	}
 
 	return mlrval.BIF_logical_AND(aout, bout)
@@ -830,11 +827,11 @@ func (node *LogicalOROperatorNode) Evaluate(
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 	atype := aout.GetType()
-	if !(atype == types.MT_ABSENT || atype == types.MT_BOOL) {
-		return types.MLRVAL_ERROR
+	if !(atype == mlrval.MT_ABSENT || atype == mlrval.MT_BOOL) {
+		return mlrval.ERROR
 	}
-	if atype == types.MT_ABSENT {
-		return types.MLRVAL_ABSENT
+	if atype == mlrval.MT_ABSENT {
+		return mlrval.ABSENT
 	}
 	if aout.IsTrue() {
 		// This means true || bogus type evaluates to true, which is sad but
@@ -846,11 +843,11 @@ func (node *LogicalOROperatorNode) Evaluate(
 
 	bout := node.b.Evaluate(state)
 	btype := bout.GetType()
-	if !(btype == types.MT_ABSENT || btype == types.MT_BOOL) {
-		return types.MLRVAL_ERROR
+	if !(btype == mlrval.MT_ABSENT || btype == mlrval.MT_BOOL) {
+		return mlrval.ERROR
 	}
-	if btype == types.MT_ABSENT {
-		return types.MLRVAL_ABSENT
+	if btype == mlrval.MT_ABSENT {
+		return mlrval.ABSENT
 	}
 	return mlrval.BIF_logical_OR(aout, bout)
 }
@@ -871,7 +868,7 @@ func (node *AbsentCoalesceOperatorNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
-	if aout.GetType() != types.MT_ABSENT {
+	if aout.GetType() != mlrval.MT_ABSENT {
 		return aout
 	}
 
@@ -895,7 +892,7 @@ func (node *EmptyCoalesceOperatorNode) Evaluate(
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
 	atype := aout.GetType()
-	if atype == types.MT_ABSENT || atype == types.MT_VOID || (atype == types.MT_STRING && aout.String() == "") {
+	if atype == mlrval.MT_ABSENT || atype == mlrval.MT_VOID || (atype == mlrval.MT_STRING && aout.String() == "") {
 		return node.b.Evaluate(state)
 	} else {
 		return aout
@@ -915,7 +912,7 @@ func (node *StandardTernaryOperatorNode) Evaluate(
 
 	boolValue, isBool := aout.GetBoolValue()
 	if !isBool {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	// Short-circuit: defer evaluation unless needed
@@ -939,10 +936,10 @@ func (node *StandardTernaryOperatorNode) Evaluate(
 
 func BinaryShortCircuitPlaceholder(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
-	return types.MLRVAL_ERROR // not reached
+	return mlrval.ERROR // not reached
 }
 
 func TernaryShortCircuitPlaceholder(input1, input2, input3 *mlrval.Mlrval) *mlrval.Mlrval {
 	lib.InternalCodingErrorPanic("Short-circuting was not correctly implemented")
-	return types.MLRVAL_ERROR // not reached
+	return mlrval.ERROR // not reached
 }

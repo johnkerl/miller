@@ -66,7 +66,7 @@
 //
 // ================================================================
 
-package types
+package mlrval
 
 import (
 	"errors"
@@ -80,14 +80,14 @@ import (
 // TODO: copy-reduction refactor
 func (mv *Mlrval) ArrayGet(mindex *Mlrval) Mlrval {
 	if !mv.IsArray() {
-		return *MLRVAL_ERROR
+		return *ERROR
 	}
 	if !mindex.IsInt() {
-		return *MLRVAL_ERROR
+		return *ERROR
 	}
 	value := arrayGetAliased(&mv.arrayval, mindex.intval)
 	if value == nil {
-		return *MLRVAL_ABSENT
+		return *ABSENT
 	} else {
 		return *value
 	}
@@ -219,15 +219,15 @@ func (mv *Mlrval) ArrayAppend(value *Mlrval) {
 // ================================================================
 func (mv *Mlrval) MapGet(key *Mlrval) Mlrval {
 	if !mv.IsMap() {
-		return *MLRVAL_ERROR
+		return *ERROR
 	}
 
 	mval, err := mv.mapval.GetWithMlrvalIndex(key)
 	if err != nil { // xxx maybe error-return in the API
-		return *MLRVAL_ERROR
+		return *ERROR
 	}
 	if mval == nil {
-		return *MLRVAL_ABSENT
+		return *ABSENT
 	}
 	// This returns a reference, not a (deep) copy. In general in Miller, we
 	// copy only on write/put.
@@ -299,10 +299,10 @@ func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	} else {
 		baseIndex := indices[0]
 		if baseIndex.IsString() {
-			*mv = *MlrvalFromEmptyMap()
+			mv = FromEmptyMap()
 			return putIndexedOnMap(mv.mapval, indices, rvalue)
 		} else if baseIndex.IsInt() {
-			*mv = MlrvalEmptyArray()
+			mv = FromEmptyArray()
 			return putIndexedOnArray(&mv.arrayval, indices, rvalue)
 		} else {
 			return errors.New(
@@ -408,11 +408,11 @@ func putIndexedOnArray(
 			// Overwrite what's in this slot if it's the wrong type
 			if nextIndex.IsString() {
 				if (*baseArray)[zindex].mvtype != MT_MAP {
-					(*baseArray)[zindex] = *MlrvalFromEmptyMap()
+					(*baseArray)[zindex] = *FromEmptyMap()
 				}
 			} else if nextIndex.IsInt() {
 				if (*baseArray)[zindex].mvtype != MT_ARRAY {
-					(*baseArray)[zindex] = MlrvalEmptyArray()
+					(*baseArray)[zindex] = *FromEmptyArray()
 				}
 			} else {
 				return errors.New(
@@ -575,18 +575,18 @@ func BsearchMlrvalArrayForDescendingInsert(
 		return 0
 	}
 
-	if BIF_greater_than_as_bool(value, (*array)[0]) {
+	if GreaterThan(value, (*array)[0]) {
 		return 0
 	}
-	if BIF_less_than_as_bool(value, (*array)[hi]) {
+	if LessThan(value, (*array)[hi]) {
 		return size
 	}
 
 	for lo < hi {
 		middleElement := (*array)[mid]
-		if BIF_equals_as_bool(value, middleElement) {
+		if Equals(value, middleElement) {
 			return mid
-		} else if BIF_greater_than_as_bool(value, middleElement) {
+		} else if GreaterThan(value, middleElement) {
 			hi = mid
 			newmid = (hi + lo) / 2
 		} else {
@@ -594,9 +594,9 @@ func BsearchMlrvalArrayForDescendingInsert(
 			newmid = (hi + lo) / 2
 		}
 		if mid == newmid {
-			if BIF_greater_than_or_equals_as_bool(value, (*array)[lo]) {
+			if GreaterThanOrEquals(value, (*array)[lo]) {
 				return lo
-			} else if BIF_greater_than_or_equals_as_bool(value, (*array)[hi]) {
+			} else if GreaterThanOrEquals(value, (*array)[hi]) {
 				return hi
 			} else {
 				return hi + 1
@@ -622,18 +622,18 @@ func BsearchMlrvalArrayForAscendingInsert(
 		return 0
 	}
 
-	if BIF_less_than_as_bool(value, (*array)[0]) {
+	if LessThan(value, (*array)[0]) {
 		return 0
 	}
-	if BIF_greater_than_as_bool(value, (*array)[hi]) {
+	if GreaterThan(value, (*array)[hi]) {
 		return size
 	}
 
 	for lo < hi {
 		middleElement := (*array)[mid]
-		if BIF_equals_as_bool(value, middleElement) {
+		if Equals(value, middleElement) {
 			return mid
-		} else if BIF_less_than_as_bool(value, middleElement) {
+		} else if LessThan(value, middleElement) {
 			hi = mid
 			newmid = (hi + lo) / 2
 		} else {
@@ -641,9 +641,9 @@ func BsearchMlrvalArrayForAscendingInsert(
 			newmid = (hi + lo) / 2
 		}
 		if mid == newmid {
-			if BIF_less_than_or_equals_as_bool(value, (*array)[lo]) {
+			if LessThanOrEquals(value, (*array)[lo]) {
 				return lo
-			} else if BIF_less_than_or_equals_as_bool(value, (*array)[hi]) {
+			} else if LessThanOrEquals(value, (*array)[hi]) {
 				return hi
 			} else {
 				return hi + 1

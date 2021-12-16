@@ -664,7 +664,7 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitAux(
 	for i, emittableMap := range emittableMaps {
 		for pe := emittableMap.Head; pe != nil; pe = pe.Next {
 			newrec := templateRecord.Copy()
-			newrec.PutCopy(indexString, mlrval.MlrvalFromString(pe.Key))
+			newrec.PutCopy(indexString, mlrval.FromString(pe.Key))
 
 			if len(indices) == 1 {
 				valueAsMap := pe.Value.GetMap()
@@ -811,7 +811,7 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitAux(
 
 	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
 		newrec := templateRecord.Copy()
-		indexValue := mlrval.MlrvalFromString(pe.Key)
+		indexValue := mlrval.FromString(pe.Key)
 		newrec.PutCopy(indexString, indexValue)
 
 		nextLevelValues := make([]*mlrval.Mlrval, len(emittableMaps))
@@ -879,7 +879,7 @@ func (node *EmitXStatementNode) executeIndexedNonLashedEmitPAux(
 	for i, emittableMap := range emittableMaps {
 		for pe := emittableMap.Head; pe != nil; pe = pe.Next {
 			newrec := templateRecord.Copy()
-			newrec.PutCopy(indexString, mlrval.MlrvalFromString(pe.Key))
+			newrec.PutCopy(indexString, mlrval.FromString(pe.Key))
 
 			if len(indices) == 1 {
 				newrec.PutCopy(names[i], pe.Value)
@@ -927,7 +927,7 @@ func (node *EmitXStatementNode) executeIndexedLashedEmitPAux(
 	for pe := leadingMap.Head; pe != nil; pe = pe.Next {
 		newrec := templateRecord.Copy()
 
-		indexValue := mlrval.MlrvalFromString(pe.Key)
+		indexValue := mlrval.FromString(pe.Key)
 		newrec.PutCopy(indexString, indexValue)
 		indexValueString := indexValue.String()
 

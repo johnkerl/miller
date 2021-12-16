@@ -93,7 +93,7 @@ func (root *RootNode) BuildDirectFieldValueLvalueNode(
 ) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectFieldValue)
 
-	lhsFieldName := mlrval.MlrvalFromString(string(astNode.Token.Lit))
+	lhsFieldName := mlrval.FromString(string(astNode.Token.Lit))
 	return NewDirectFieldValueLvalueNode(lhsFieldName), nil
 }
 
@@ -586,7 +586,7 @@ type DirectOosvarValueLvalueNode struct {
 func (root *RootNode) BuildDirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectOosvarValue)
 
-	lhsOosvarName := mlrval.MlrvalFromString(string(astNode.Token.Lit))
+	lhsOosvarName := mlrval.FromString(string(astNode.Token.Lit))
 	return NewDirectOosvarValueLvalueNode(lhsOosvarName), nil
 }
 

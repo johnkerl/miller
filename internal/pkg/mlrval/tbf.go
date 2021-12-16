@@ -1,25 +1,31 @@
 package mlrval
 
+import (
+	"errors"
+
+	"github.com/johnkerl/miller/internal/pkg/lib"
+)
+
 // things to be filed
 
-//// NewMlrvalForAutoDeepen is for auto-deepen of nested maps in things like
-////
-////   $foo[1]["a"][2]["b"] = 3
-////
-//// Autocreated levels are maps.  Array levels can be explicitly created e.g.
-////
-////   $foo[1]["a"] ??= []
-////   $foo[1]["a"][2]["b"] = 3
-//func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
-//	if mvtype == MT_STRING || mvtype == MT_INT {
-//		empty := MlrvalFromEmptyMap()
-//		return empty, nil
-//	} else {
-//		return nil, errors.New(
-//			"mlr: indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
-//		)
-//	}
-//}
+// NewMlrvalForAutoDeepen is for auto-deepen of nested maps in things like
+//
+//   $foo[1]["a"][2]["b"] = 3
+//
+// Autocreated levels are maps.  Array levels can be explicitly created e.g.
+//
+//   $foo[1]["a"] ??= []
+//   $foo[1]["a"][2]["b"] = 3
+func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
+	if mvtype == MT_STRING || mvtype == MT_INT {
+		empty := FromEmptyMap()
+		return empty, nil
+	} else {
+		return nil, errors.New(
+			"mlr: indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
+		)
+	}
+}
 
 //func MlrvalFromEmptyMap() *Mlrval {
 //	return &Mlrval{
@@ -103,32 +109,32 @@ package mlrval
 //		arrayval:      input,
 //	}
 //}
-//
-//func LengthenMlrvalArray(array *[]Mlrval, newLength64 int) {
-//	newLength := int(newLength64)
-//	lib.InternalCodingErrorIf(newLength <= len(*array))
-//
-//	if newLength <= cap(*array) {
-//		newArray := (*array)[:newLength]
-//		for zindex := len(*array); zindex < newLength; zindex++ {
-//			// TODO: comment why not MT_ABSENT or MT_VOID
-//			newArray[zindex] = *NULL
-//		}
-//		*array = newArray
-//	} else {
-//		newArray := make([]Mlrval, newLength, 2*newLength)
-//		zindex := 0
-//		for zindex = 0; zindex < len(*array); zindex++ {
-//			newArray[zindex] = (*array)[zindex]
-//		}
-//		for zindex = len(*array); zindex < newLength; zindex++ {
-//			// TODO: comment why not MT_ABSENT or MT_VOID
-//			newArray[zindex] = *NULL
-//		}
-//		*array = newArray
-//	}
-//}
-//
+
+func LengthenMlrvalArray(array *[]Mlrval, newLength64 int) {
+	newLength := int(newLength64)
+	lib.InternalCodingErrorIf(newLength <= len(*array))
+
+	if newLength <= cap(*array) {
+		newArray := (*array)[:newLength]
+		for zindex := len(*array); zindex < newLength; zindex++ {
+			// TODO: comment why not MT_ABSENT or MT_VOID
+			newArray[zindex] = *NULL
+		}
+		*array = newArray
+	} else {
+		newArray := make([]Mlrval, newLength, 2*newLength)
+		zindex := 0
+		for zindex = 0; zindex < len(*array); zindex++ {
+			newArray[zindex] = (*array)[zindex]
+		}
+		for zindex = len(*array); zindex < newLength; zindex++ {
+			// TODO: comment why not MT_ABSENT or MT_VOID
+			newArray[zindex] = *NULL
+		}
+		*array = newArray
+	}
+}
+
 //// NewMlrvalForAutoDeepen is for auto-deepen of nested maps in things like
 ////
 ////   $foo[1]["a"][2]["b"] = 3

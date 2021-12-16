@@ -268,11 +268,11 @@ func (reader *RecordReaderDKVPNonPipelined) recordFromDKVPLine(
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[0])
+			value := mlrval.FromInferredTypeForDataFiles(kv[0])
 			record.PutReference(key, value)
 		} else {
 			key := kv[0]
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromInferredTypeForDataFiles(kv[1])
 			record.PutReference(key, value)
 		}
 	}
@@ -404,11 +404,11 @@ func (reader *RecordReaderDKVPListPipelined) recordFromDKVPLine(
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[0])
+			value := mlrval.FromInferredTypeForDataFiles(kv[0])
 			record.PutReference(key, value)
 		} else {
 			key := kv[0]
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromInferredTypeForDataFiles(kv[1])
 			record.PutReference(key, value)
 		}
 	}
@@ -556,11 +556,11 @@ func (reader *RecordReaderDKVPChanPipelined) recordFromDKVPLine(
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[0])
+			value := mlrval.FromInferredTypeForDataFiles(kv[0])
 			record.PutReference(key, value)
 		} else {
 			key := kv[0]
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromInferredTypeForDataFiles(kv[1])
 			record.PutReference(key, value)
 		}
 	}

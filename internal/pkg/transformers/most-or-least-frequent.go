@@ -285,7 +285,7 @@ func (tr *TransformerMostOrLeastFrequent) Transform(
 			}
 
 			if tr.showCounts {
-				outrec.PutReference(tr.outputFieldName, mlrval.MlrvalFromInt(sortPairs[i].count))
+				outrec.PutReference(tr.outputFieldName, mlrval.FromInt(sortPairs[i].count))
 			}
 			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 		}

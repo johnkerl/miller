@@ -251,34 +251,34 @@ func (site *UDFCallsite) EvaluateWithArguments(
 	// being MT_ERROR should be mapped to MT_ERROR here (nominally,
 	// data-dependent). But error-return could be something not data-dependent.
 	if err != nil {
-		err = udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ERROR)
+		err = udf.signature.typeGatedReturnValue.Check(mlrval.ERROR)
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
 		}
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
 	// Fell off end of function with no return
 	if blockExitPayload == nil {
-		err = udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
+		err = udf.signature.typeGatedReturnValue.Check(mlrval.ABSENT)
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
 		}
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 
 	// TODO: should be an internal coding error. This would be break or
 	// continue not in a loop, or return-void, both of which should have been
 	// reported as syntax errors during the parsing pass.
 	if blockExitPayload.blockExitStatus != BLOCK_EXIT_RETURN_VALUE {
-		err = udf.signature.typeGatedReturnValue.Check(types.MLRVAL_ABSENT)
+		err = udf.signature.typeGatedReturnValue.Check(mlrval.ABSENT)
 		if err != nil {
 			fmt.Fprint(os.Stderr, err)
 			os.Exit(1)
 		}
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 
 	// Definitely a Miller internal coding error if the user put 'return x' in
@@ -448,7 +448,7 @@ func (root *RootNode) BuildUnnamedUDFNode(astNode *dsl.ASTNode) (IEvaluable, err
 		return nil, err
 	}
 
-	udfAsMlrval := mlrval.MlrvalFromFunction(udf, name)
+	udfAsMlrval := mlrval.FromFunction(udf, name)
 
 	return &UnnamedUDFNode{
 		udfAsMlrval: udfAsMlrval,
