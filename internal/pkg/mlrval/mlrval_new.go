@@ -10,6 +10,15 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
+// TODO: comment for JSON-scanner context.
+func FromPending() *Mlrval {
+	return &Mlrval{
+		mvtype:        MT_PENDING,
+		printrep:      "(bug-if-you-see-this-pending)",
+		printrepValid: false,
+	}
+}
+
 // TODO: comment JIT context. Some things we already know are typed -- DSL
 // things, or JSON contents.  Others are deferred, e.g. items from any file
 // format except JSON.
@@ -207,6 +216,10 @@ func FromArray(arrayval []Mlrval) *Mlrval {
 	}
 }
 
+func FromEmptyArray() *Mlrval {
+	return FromArray(make([]Mlrval, 0))
+}
+
 func FromMap(mapval *Mlrmap) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_MAP,
@@ -214,4 +227,8 @@ func FromMap(mapval *Mlrmap) *Mlrval {
 		printrepValid: true,
 		mapval:        mapval,
 	}
+}
+
+func FromEmptyMap() *Mlrval {
+	return FromMap(NewMlrmap())
 }

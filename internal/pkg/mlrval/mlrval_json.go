@@ -6,7 +6,7 @@
 // Please see also https://golang.org/pkg/encoding/json/
 // ================================================================
 
-package types
+package mlrval
 
 import (
 	"bytes"
@@ -18,7 +18,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
-const MLRVAL_JSON_INDENT_STRING string = "  "
+const JSON_INDENT_STRING string = "  "
 
 type TJSONFormatting int
 
@@ -101,7 +101,7 @@ const (
 
 // ----------------------------------------------------------------
 func (mv *Mlrval) UnmarshalJSON(inputBytes []byte) error {
-	*mv = MlrvalFromPending()
+	mv = FromPending()
 	decoder := json.NewDecoder(bytes.NewReader(inputBytes))
 	mlrval, eof, err := MlrvalDecodeFromJSON(decoder)
 	if eof {
@@ -135,23 +135,23 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 	delimiter, isDelim := startToken.(json.Delim)
 	if !isDelim {
 		if startToken == nil {
-			return MLRVAL_NULL, false, nil
+			return NULL, false, nil
 		}
 
 		sval, ok := startToken.(string)
 		if ok {
-			mlrval := mlrval.FromString(sval)
+			mlrval := FromString(sval)
 			return mlrval, false, nil
 		}
 
 		bval, ok := startToken.(bool)
 		if ok {
-			return MlrvalFromBool(bval), false, nil
+			return FromBool(bval), false, nil
 		}
 
 		nval, ok := startToken.(json.Number)
 		if ok {
-			mlrval := MlrvalFromInferredType(nval.String())
+			mlrval := FromInferredType(nval.String())
 			return mlrval, false, nil
 		}
 
@@ -178,9 +178,9 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			)
 		}
 
-		mlrval := MlrvalFromPending()
+		mlrval := FromPending()
 		if isArray {
-			mlrval = MlrvalEmptyArray()
+			mlrval = FromEmptyArray()
 
 			for decoder.More() {
 				element, eof, err := MlrvalDecodeFromJSON(decoder)
@@ -191,11 +191,11 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 				if err != nil {
 					return nil, false, err
 				}
-				mlrval.ArrayAppend(element)
+				ArrayAppend(element)
 			}
 
 		} else {
-			mlrval = *MlrvalFromEmptyMap()
+			mlrval = FromEmptyMap()
 
 			for decoder.More() {
 				key, eof, err := MlrvalDecodeFromJSON(decoder)
@@ -223,7 +223,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 				}
 
 				// xxx check here string-valued key
-				mlrval.MapPut(key, value)
+				MapPut(key, value)
 			}
 		}
 
@@ -252,7 +252,7 @@ func MlrvalDecodeFromJSON(decoder *json.Decoder) (
 			return nil, false, imbalanceError
 		}
 
-		return &mlrval, false, nil
+		return mlrval, false, nil
 	}
 
 	return nil, false, errors.New("unimplemented")
@@ -495,7 +495,7 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 			return "", err
 		}
 		for i := 0; i < elementNestingDepth; i++ {
-			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
+			buffer.WriteString(JSON_INDENT_STRING)
 		}
 		buffer.WriteString(elementString)
 		if i < n-1 {
@@ -507,7 +507,7 @@ func (mv *Mlrval) marshalJSONArrayMultipleLines(
 	// Write empty array as '[]'
 	if n > 0 {
 		for i := 0; i < elementNestingDepth-1; i++ {
-			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
+			buffer.WriteString(JSON_INDENT_STRING)
 		}
 	}
 

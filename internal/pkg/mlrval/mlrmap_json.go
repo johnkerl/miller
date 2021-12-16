@@ -2,7 +2,7 @@
 // See mlrval_json.go for details. This is the unmarshal/marshal solely for Mlrmap.
 // ================================================================
 
-package types
+package mlrval
 
 import (
 	"bytes"
@@ -76,7 +76,7 @@ func (mlrmap *Mlrmap) marshalJSONAuxMultiline(
 		// Write the key which is necessarily string-valued in Miller, and in
 		// JSON for that matter :)
 		for i := 0; i < elementNestingDepth; i++ {
-			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
+			buffer.WriteString(JSON_INDENT_STRING)
 		}
 		encoded := string(millerJSONEncodeString(pe.Key))
 		colorized := colorizer.MaybeColorizeKey(encoded, outputIsStdout)
@@ -102,7 +102,7 @@ func (mlrmap *Mlrmap) marshalJSONAuxMultiline(
 	// Write empty map as '{}'.
 	if mlrmap.Head != nil {
 		for i := 0; i < elementNestingDepth-1; i++ {
-			buffer.WriteString(MLRVAL_JSON_INDENT_STRING)
+			buffer.WriteString(JSON_INDENT_STRING)
 		}
 	}
 	buffer.WriteString("}")
@@ -153,9 +153,9 @@ func (entry *MlrmapEntry) JSONStringifyInPlace(
 ) {
 	outputBytes, err := entry.Value.MarshalJSON(jsonFormatting, false)
 	if err != nil {
-		entry.Value = MLRVAL_ERROR
+		entry.Value = ERROR
 	} else {
-		entry.Value = mlrval.FromString(string(outputBytes))
+		entry.Value = FromString(string(outputBytes))
 	}
 }
 
@@ -165,6 +165,6 @@ func (entry *MlrmapEntry) JSONParseInPlace() {
 	input := entry.Value.String()
 	err := entry.Value.UnmarshalJSON([]byte(input))
 	if err != nil {
-		entry.Value = MLRVAL_ERROR
+		entry.Value = ERROR
 	}
 }
