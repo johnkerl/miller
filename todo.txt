@@ -5,6 +5,7 @@ PUNCHDOWN LIST
 * JIT next:
   o mv.Equals & mv.Copy
   o mlrmap copy
+  o move all but wrappers from $bifs/booleans.go to mlrval; also copy-reduce for sort -- ?
   o JSON I/O UT
   o krepl miller6 new doclink-comments
   ? []Mlrval -> []*Mlrval ?
@@ -45,6 +46,8 @@ PUNCHDOWN LIST
     - make a 2nd/3rd cmd main w/ simple model & tweak that
       o dkvp-reader factor-out ...
   o mods:
+    ! need cmps for array/map -- no absent/error anymore here
+    ! moreover, proofread all mlrval_cmp.go dispo mxes
     - replace rac-list with batch-array -- ? profile to see what value.
     - unaliasArrayIndex in multiple packages for cycdep break -- ?
     - randsel for arrays

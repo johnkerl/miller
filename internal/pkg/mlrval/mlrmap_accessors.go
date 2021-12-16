@@ -433,40 +433,37 @@ func (mlrmap *Mlrmap) GetNameAtPositionalIndex(position int) (string, bool) {
 //	}
 //}
 
-//// ----------------------------------------------------------------
-//func (mlrmap *Mlrmap) Equals(other *Mlrmap) bool {
-//	if mlrmap.FieldCount != mlrmap.FieldCount {
-//		return false
-//	}
-//	if !mlrmap.Contains(other) {
-//		return false
-//	}
-//	if !other.Contains(mlrmap) {
-//		return false
-//	}
-//	return true
-//}
+// ----------------------------------------------------------------
+func (mlrmap *Mlrmap) Equals(other *Mlrmap) bool {
+	if mlrmap.FieldCount != mlrmap.FieldCount {
+		return false
+	}
+	if !mlrmap.Contains(other) {
+		return false
+	}
+	if !other.Contains(mlrmap) {
+		return false
+	}
+	return true
+}
 
-//// True if this contains other, i.e. if other is contained by mlrmap.
-//// * If any key of other is not a key of this, return false.
-//// * If any key of other has a value unequal to this' value at the same key, return false.
-//// * Else return true
-//func (mlrmap *Mlrmap) Contains(other *Mlrmap) bool {
-//	for pe := other.Head; pe != nil; pe = pe.Next {
-//		if !mlrmap.Has(pe.Key) {
-//			return false
-//		}
-//		thisval := mlrmap.Get(pe.Key)
-//		thatval := pe.Value
-//		meq := bifs.BIF_equals(thisval, thatval)
-//		eq, ok := meq.GetBoolValue()
-//		lib.InternalCodingErrorIf(!ok)
-//		if !eq {
-//			return false
-//		}
-//	}
-//	return true
-//}
+// True if this contains other, i.e. if other is contained by mlrmap.
+// * If any key of other is not a key of this, return false.
+// * If any key of other has a value unequal to this' value at the same key, return false.
+// * Else return true
+func (mlrmap *Mlrmap) Contains(other *Mlrmap) bool {
+	for pe := other.Head; pe != nil; pe = pe.Next {
+		if !mlrmap.Has(pe.Key) {
+			return false
+		}
+		thisval := mlrmap.Get(pe.Key)
+		thatval := pe.Value
+		if !Equals(thisval, thatval) {
+			return false
+		}
+	}
+	return true
+}
 
 //// ----------------------------------------------------------------
 //func (mlrmap *Mlrmap) Clear() {

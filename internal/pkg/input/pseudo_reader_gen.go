@@ -64,9 +64,9 @@ func (reader *PseudoReaderGen) process(
 		return
 	}
 
-	var doneComparator types.BinaryFunc = bifs.BIF_greater_than
+	var doneComparator mlrval.CmpFuncBool = mlrval.GreaterThan
 	if step.GetNumericNegativeorDie() {
-		doneComparator = bifs.BIF_less_than
+		doneComparator = mlrval.LessThan
 	}
 
 	key := reader.readerOptions.GeneratorOptions.FieldName
@@ -77,9 +77,7 @@ func (reader *PseudoReaderGen) process(
 	eof := false
 	for !eof {
 
-		mdone := doneComparator(value, stop)
-		done, _ := mdone.GetBoolValue()
-		if done {
+		if doneComparator(value, stop) {
 			break
 		}
 

@@ -101,6 +101,7 @@ mlrmap-accessors-test:
 	  internal/pkg/mlrval/mlrval_type.go \
 	  internal/pkg/mlrval/mlrval_constants.go \
 	  internal/pkg/mlrval/mlrval_new.go \
+	  internal/pkg/mlrval/mlrval_cmp.go \
 	  internal/pkg/mlrval/mlrval_copy.go \
 	  internal/pkg/mlrval/mlrval_infer.go \
 	  internal/pkg/mlrval/mlrval_is.go \

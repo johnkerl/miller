@@ -262,7 +262,7 @@ func eq_b_mm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromBool(input1.AcquireMapValue().Equals(input2.AcquireMapValue()))
 }
 func ne_b_mm(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
-	return mlrval.FromBool(!input1.AcquireMapValue().Equals(input2.AcquireArrayValue()))
+	return mlrval.FromBool(!input1.AcquireMapValue().Equals(input2.AcquireMapValue()))
 }
 
 // We get a Golang "initialization loop" due to recursive depth computation
