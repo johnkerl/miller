@@ -3,12 +3,11 @@ PUNCHDOWN LIST
 
 * --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
 * JIT next:
-  o mv.Equals & mv.Copy
-  o mlrmap copy
-  o move all but wrappers from $bifs/booleans.go to mlrval; also copy-reduce for sort -- ?
   o JSON I/O UT
   o krepl miller6 new doclink-comments
-  ? []Mlrval -> []*Mlrval ?
+  o IsArrayOrMap infers all -- it should not & it should say why not
+  o fix:
+    mlr --from test/input/abixy --opprint put -v -f test/cases/dsl-for-srec-loops/0005/mlr
 
 * perf next:
   o batchify source-quench
@@ -74,6 +73,9 @@ PUNCHDOWN LIST
     - fix record/line sequencing regressions
     - maybe increase records-per-batch in join-bucket-keeper; and/or refactor
     - maybe increase records-per-batch in repl; and/or refactor
+    - lots of reading/neatening on types, bifs, mlrval split-up x all source files
+    - follow-ons for lots of  UT per se on types, bifs, mlrval
+    ? []Mlrval -> []*Mlrval ?
   o goals:
     - keep goroutines -- including per-transformer -- for parallelism
     - look for flex ideas on how to structure that parallelism

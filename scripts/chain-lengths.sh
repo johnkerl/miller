@@ -1,36 +1,26 @@
-echo; for m in mlr5 "./mlr -S"; do
+echo; for m in mlr5 ~/tmp/miller/mlr "mlr -S" mlr; do
   justtime $m --csv --from ~/tmp/big.csv \
     then put -f scripts/chain-1.mlr \
   | md5sum;
 done
 
-echo; for m in mlr5 "./mlr -S"; do
+echo; for m in mlr5 ~/tmp/miller/mlr "mlr -S" mlr; do
   justtime $m --csv --from ~/tmp/big.csv \
     then put -f scripts/chain-1.mlr \
     then put -f scripts/chain-1.mlr \
   | md5sum;
 done
 
-echo; for m in mlr5 "./mlr -S"; do
+echo; for m in mlr5 ~/tmp/miller/mlr "mlr -S" mlr; do
   justtime $m --csv --from ~/tmp/big.csv \
-    then put -f scripts/chain-1.mlr \
-    then put -f scripts/chain-1.mlr \
-    then put -f scripts/chain-1.mlr \
-  | md5sum;
-done
-
-echo; for m in mlr5 "./mlr -S"; do
-  justtime $m --csv --from ~/tmp/big.csv \
-    then put -f scripts/chain-1.mlr \
     then put -f scripts/chain-1.mlr \
     then put -f scripts/chain-1.mlr \
     then put -f scripts/chain-1.mlr \
   | md5sum;
 done
 
-echo; for m in mlr5 "./mlr -S"; do
+echo; for m in mlr5 ~/tmp/miller/mlr "mlr -S" mlr; do
   justtime $m --csv --from ~/tmp/big.csv \
-    then put -f scripts/chain-1.mlr \
     then put -f scripts/chain-1.mlr \
     then put -f scripts/chain-1.mlr \
     then put -f scripts/chain-1.mlr \
@@ -38,7 +28,17 @@ echo; for m in mlr5 "./mlr -S"; do
   | md5sum;
 done
 
-echo; for m in mlr5 "./mlr -S"; do
+echo; for m in mlr5 ~/tmp/miller/mlr "mlr -S" mlr; do
+  justtime $m --csv --from ~/tmp/big.csv \
+    then put -f scripts/chain-1.mlr \
+    then put -f scripts/chain-1.mlr \
+    then put -f scripts/chain-1.mlr \
+    then put -f scripts/chain-1.mlr \
+    then put -f scripts/chain-1.mlr \
+  | md5sum;
+done
+
+echo; for m in mlr5 ~/tmp/miller/mlr "mlr -S" mlr; do
   justtime $m --csv --from ~/tmp/big.csv \
     then put -f scripts/chain-1.mlr \
     then put -f scripts/chain-1.mlr \

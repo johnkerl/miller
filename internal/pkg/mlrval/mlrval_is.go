@@ -88,13 +88,23 @@ func (mv *Mlrval) IsFalse() bool {
 }
 
 func (mv *Mlrval) IsArray() bool {
-	return mv.Type() == MT_ARRAY
+	// TODO: comment non-deferrable type -- don't force a (potentially
+	// expensive in bulk) JIT-infer of other types
+	// return mv.Type() == MT_ARRAY
+	return mv.mvtype == MT_ARRAY
 }
 func (mv *Mlrval) IsMap() bool {
-	return mv.Type() == MT_MAP
+	// TODO: comment non-deferrable type -- don't force a (potentially
+	// expensive in bulk) JIT-infer of other types
+	// return mv.Type() == MT_ARRAY
+	return mv.mvtype == MT_MAP
 }
 func (mv *Mlrval) IsArrayOrMap() bool {
-	t := mv.Type()
+	// TODO: comment why not
+	// In flatten we don't want to type-infer things that don't need to be jitted.
+	// Arrays & maps are never from deferred type.
+	// t := mv.Type()
+	t := mv.mvtype
 	return t == MT_ARRAY || t == MT_MAP
 }
 

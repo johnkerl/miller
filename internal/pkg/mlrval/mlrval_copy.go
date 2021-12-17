@@ -2,12 +2,11 @@ package mlrval
 
 // TODO: comment about mvtype; deferrence; copying of deferrence.
 func (mv *Mlrval) Copy() *Mlrval {
+	other := *mv
 	if mv.mvtype == MT_MAP {
-		panic("mlrval map-valued copy unimplemented, pending refactor")
+		other.mapval = mv.mapval.Copy()
 	} else if mv.mvtype == MT_ARRAY {
-		panic("mlrval array-valued copy unimplemented, pending refactor")
-	} else {
-		other := *mv
-		return &other
+		other.arrayval = CopyMlrvalArray(mv.arrayval)
 	}
+	return &other
 }

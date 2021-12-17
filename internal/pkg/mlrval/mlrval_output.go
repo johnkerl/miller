@@ -7,7 +7,10 @@ import (
 // Must have non-pointer receiver in order to implement the fmt.Stringer
 // interface to make this printable via fmt.Println et al.
 func (mv Mlrval) String() string {
-	if mv.IsFloat() && floatOutputFormatter != nil {
+	// TODO: comment re deferral -- important perf effect!
+	// if mv.IsFloat() && floatOutputFormatter != nil
+	// if mv.mvtype == MT_FLOAT && floatOutputFormatter != nil {
+	if floatOutputFormatter != nil && (mv.mvtype == MT_FLOAT || mv.mvtype == MT_PENDING) {
 		// Use the format string from global --ofmt, if supplied
 		return floatOutputFormatter.FormatFloat(mv.floatval)
 	} else {
