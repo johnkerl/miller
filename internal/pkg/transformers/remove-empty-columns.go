@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -107,7 +108,7 @@ func (tr *TransformerRemoveEmptyColumns) Transform(
 		tr.recordsAndContexts.PushBack(inrecAndContext)
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if !pe.Value.IsEmpty() {
+			if !pe.Value.IsVoid() {
 				tr.namesWithNonEmptyValues[pe.Key] = true
 			}
 		}

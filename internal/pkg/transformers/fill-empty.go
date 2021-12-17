@@ -105,7 +105,7 @@ func NewTransformerFillEmpty(
 	if inferType {
 		tr.fillValue = mlrval.FromInferredType(fillString)
 	} else {
-		tr.fillValue = mlrval.mlrval.FromString(fillString)
+		tr.fillValue = mlrval.FromString(fillString)
 	}
 	return tr, nil
 }
@@ -123,7 +123,7 @@ func (tr *TransformerFillEmpty) Transform(
 		inrec := inrecAndContext.Record
 
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
-			if pe.Value.IsEmpty() {
+			if pe.Value.IsVoid() {
 				pe.Value = tr.fillValue
 			}
 		}

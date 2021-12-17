@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
@@ -378,7 +379,7 @@ func (stepper *tStepperDelta) process(
 	valueFieldValue *mlrval.Mlrval,
 	inrec *mlrval.Mlrmap,
 ) {
-	if valueFieldValue.IsEmpty() {
+	if valueFieldValue.IsVoid() {
 		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
@@ -474,7 +475,7 @@ func (stepper *tStepperRatio) process(
 	valueFieldValue *mlrval.Mlrval,
 	inrec *mlrval.Mlrmap,
 ) {
-	if valueFieldValue.IsEmpty() {
+	if valueFieldValue.IsVoid() {
 		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
@@ -509,7 +510,7 @@ func (stepper *tStepperRsum) process(
 	valueFieldValue *mlrval.Mlrval,
 	inrec *mlrval.Mlrmap,
 ) {
-	if valueFieldValue.IsEmpty() {
+	if valueFieldValue.IsVoid() {
 		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
 		stepper.rsum = bifs.BIF_plus_binary(valueFieldValue, stepper.rsum)
@@ -540,7 +541,7 @@ func (stepper *tStepperCounter) process(
 	valueFieldValue *mlrval.Mlrval,
 	inrec *mlrval.Mlrmap,
 ) {
-	if valueFieldValue.IsEmpty() {
+	if valueFieldValue.IsVoid() {
 		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
 		stepper.counter = bifs.BIF_plus_binary(stepper.counter, stepper.one)
@@ -583,7 +584,7 @@ func stepperEWMAAlloc(
 	for i, stringAlpha := range stringAlphas {
 		suffix := suffixes[i]
 
-		dalpha, ok := lib.TryFloat64FromString(stringAlpha)
+		dalpha, ok := lib.TryFloatFromString(stringAlpha)
 		if !ok {
 			fmt.Fprintf(
 				os.Stderr,

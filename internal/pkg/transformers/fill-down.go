@@ -176,7 +176,7 @@ func (tr *TransformerFillDown) transformSpecified(
 			if tr.onlyIfAbsent {
 				present = value != nil
 			} else {
-				present = value != nil && !value.IsEmpty()
+				present = value != nil && !value.IsVoid()
 			}
 
 			if present {
@@ -215,7 +215,7 @@ func (tr *TransformerFillDown) transformAll(
 			if tr.onlyIfAbsent {
 				present = value != nil
 			} else {
-				present = value != nil && !value.IsEmpty()
+				present = value != nil && !value.IsVoid()
 			}
 
 			if present {

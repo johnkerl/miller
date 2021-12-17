@@ -332,8 +332,10 @@ type IntLiteralNode struct {
 }
 
 func (root *RootNode) BuildIntLiteralNode(literal string) *IntLiteralNode {
+	ival, ok := lib.TryIntFromString(literal)
+	lib.InternalCodingErrorIf(!ok)
 	return &IntLiteralNode{
-		literal: mlrval.FromPrevalidatedIntString(literal),
+		literal: mlrval.FromPrevalidatedIntString(literal, ival),
 	}
 }
 func (node *IntLiteralNode) Evaluate(
@@ -348,8 +350,10 @@ type FloatLiteralNode struct {
 }
 
 func (root *RootNode) BuildFloatLiteralNode(literal string) *FloatLiteralNode {
+	fval, ok := lib.TryFloatFromString(literal)
+	lib.InternalCodingErrorIf(!ok)
 	return &FloatLiteralNode{
-		literal: mlrval.FromPrevalidatedFloat64String(literal),
+		literal: mlrval.FromPrevalidatedFloatString(literal, fval),
 	}
 }
 func (node *FloatLiteralNode) Evaluate(

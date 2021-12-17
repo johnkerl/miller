@@ -14,7 +14,6 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------
@@ -1022,7 +1021,7 @@ func (node *IndexedLvalueNode) Assign(
 	// This lets the user do '$y[ ["a", "b", "c"] ] = $x' in lieu of
 	// '$y["a"]["b"]["c"] = $x'.
 	if len(indices) == 1 && indices[0].IsArray() {
-		indices = types.MakePointerArray(indices[0].GetArray())
+		indices = mlrval.MakePointerArray(indices[0].GetArray())
 	}
 
 	return node.baseLvalue.AssignIndexed(rvalue, indices, state)

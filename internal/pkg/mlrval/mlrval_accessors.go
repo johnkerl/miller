@@ -1,16 +1,10 @@
-package types
+package mlrval
 
 import (
-	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
-
-func GetTypeName(mvtype MVType) string {
-	return TYPE_NAMES[mvtype]
-}
 
 func (mv *Mlrval) GetArrayLength() (int, bool) {
 	if mv.IsArray() {
@@ -18,16 +12,6 @@ func (mv *Mlrval) GetArrayLength() (int, bool) {
 	} else {
 		return -999, false
 	}
-}
-
-func (mv *Mlrval) Copy() *Mlrval {
-	other := *mv
-	if mv.IsMap() {
-		other.mapval = mv.mapval.Copy()
-	} else if mv.IsArray() {
-		other.arrayval = CopyMlrvalArray(mv.arrayval)
-	}
-	return &other
 }
 
 func CopyMlrvalArray(input []Mlrval) []Mlrval {
@@ -57,7 +41,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 		// values would disappear entirely in a JSON-to-CSV conversion.
 		if mv.mapval.IsEmpty() {
 			if prefix != "" {
-				retval.PutCopy(prefix, mlrval.FromString("{}"))
+				retval.PutCopy(prefix, FromString("{}"))
 			}
 		}
 
@@ -82,7 +66,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 		// values would disappear entirely in a JSON-to-CSV conversion.
 		if len(mv.arrayval) == 0 {
 			if prefix != "" {
-				retval.PutCopy(prefix, mlrval.FromString("[]"))
+				retval.PutCopy(prefix, FromString("[]"))
 			}
 		}
 
@@ -106,7 +90,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 		retval.PutCopy(prefix, mv.Copy())
 	}
 
-	return *MlrvalFromMapReferenced(retval)
+	return *FromMap(retval)
 }
 
 // ----------------------------------------------------------------

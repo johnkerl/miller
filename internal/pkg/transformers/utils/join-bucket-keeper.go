@@ -466,7 +466,7 @@ func (keeper *JoinBucketKeeper) fillNextJoinBucket() {
 		os.Exit(1)
 	}
 
-	keeper.JoinBucket.leftFieldValues = types.CopyMlrvalPointerArray(peekFieldValues)
+	keeper.JoinBucket.leftFieldValues = mlrval.CopyMlrvalPointerArray(peekFieldValues)
 	keeper.JoinBucket.RecordsAndContexts.PushBack(keeper.peekRecordAndContext)
 	keeper.JoinBucket.WasPaired = false
 

@@ -187,7 +187,7 @@ func tryPercentileFromName(accumulatorName string) (float64, bool) {
 		return 50.0, true
 	}
 	if strings.HasPrefix(accumulatorName, "p") {
-		percentile, ok := lib.TryFloat64FromString(accumulatorName[1:])
+		percentile, ok := lib.TryFloatFromString(accumulatorName[1:])
 		if !ok {
 			return 0.0, false
 		}

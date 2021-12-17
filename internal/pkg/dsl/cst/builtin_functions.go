@@ -778,7 +778,7 @@ func (node *LogicalANDOperatorNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
-	atype := aout.GetType()
+	atype := aout.Type()
 	if !(atype == mlrval.MT_ABSENT || atype == mlrval.MT_BOOL) {
 		return mlrval.ERROR
 	}
@@ -794,7 +794,7 @@ func (node *LogicalANDOperatorNode) Evaluate(
 	}
 
 	bout := node.b.Evaluate(state)
-	btype := bout.GetType()
+	btype := bout.Type()
 	if !(btype == mlrval.MT_ABSENT || btype == mlrval.MT_BOOL) {
 		return mlrval.ERROR
 	}
@@ -802,7 +802,7 @@ func (node *LogicalANDOperatorNode) Evaluate(
 		return mlrval.ABSENT
 	}
 
-	return mlrval.BIF_logical_AND(aout, bout)
+	return bifs.BIF_logical_AND(aout, bout)
 }
 
 // ================================================================
@@ -826,7 +826,7 @@ func (node *LogicalOROperatorNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
-	atype := aout.GetType()
+	atype := aout.Type()
 	if !(atype == mlrval.MT_ABSENT || atype == mlrval.MT_BOOL) {
 		return mlrval.ERROR
 	}
@@ -842,14 +842,14 @@ func (node *LogicalOROperatorNode) Evaluate(
 	}
 
 	bout := node.b.Evaluate(state)
-	btype := bout.GetType()
+	btype := bout.Type()
 	if !(btype == mlrval.MT_ABSENT || btype == mlrval.MT_BOOL) {
 		return mlrval.ERROR
 	}
 	if btype == mlrval.MT_ABSENT {
 		return mlrval.ABSENT
 	}
-	return mlrval.BIF_logical_OR(aout, bout)
+	return bifs.BIF_logical_OR(aout, bout)
 }
 
 // ================================================================
@@ -868,7 +868,7 @@ func (node *AbsentCoalesceOperatorNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
-	if aout.GetType() != mlrval.MT_ABSENT {
+	if aout.Type() != mlrval.MT_ABSENT {
 		return aout
 	}
 
@@ -891,7 +891,7 @@ func (node *EmptyCoalesceOperatorNode) Evaluate(
 	state *runtime.State,
 ) *mlrval.Mlrval {
 	aout := node.a.Evaluate(state)
-	atype := aout.GetType()
+	atype := aout.Type()
 	if atype == mlrval.MT_ABSENT || atype == mlrval.MT_VOID || (atype == mlrval.MT_STRING && aout.String() == "") {
 		return node.b.Evaluate(state)
 	} else {

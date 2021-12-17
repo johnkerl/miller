@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
@@ -267,7 +268,7 @@ func (tr *TransformerFraction) Transform(
 						}
 
 						denominator := sumsForGroup[fractionFieldName]
-						if !mlrval.BIF_equals_as_bool(value, tr.zero) {
+						if !mlrval.Equals(value, tr.zero) {
 							outputValue = bifs.BIF_divide(numerator, denominator)
 							outputValue = bifs.BIF_times(outputValue, tr.multiplier)
 						} else {

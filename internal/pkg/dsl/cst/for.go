@@ -524,17 +524,17 @@ func (node *ForLoopMultivariableNode) Execute(state *runtime.State) (*BlockExitP
 
 // ----------------------------------------------------------------
 func (node *ForLoopMultivariableNode) executeOuter(
-	mlrval *mlrval.Mlrval,
+	mv *mlrval.Mlrval,
 	keyIndexVariables []*runtime.StackVariable,
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
 	if len(keyIndexVariables) == 1 {
-		return node.executeInner(mlrval, keyIndexVariables[0], state)
+		return node.executeInner(mv, keyIndexVariables[0], state)
 	}
 	// else, recurse
 
-	if mlrval.IsMap() {
-		mapval := mlrval.GetMap()
+	if mv.IsMap() {
+		mapval := mv.GetMap()
 
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := mlrval.FromString(pe.Key)
@@ -563,8 +563,8 @@ func (node *ForLoopMultivariableNode) executeOuter(
 			}
 		}
 
-	} else if mlrval.IsArray() {
-		arrayval := mlrval.GetArray()
+	} else if mv.IsArray() {
+		arrayval := mv.GetArray()
 
 		// Note: Miller user-space array indices ("mindex") are 1-up. Internal
 		// Go storage ("zindex") is 0-up.
@@ -597,7 +597,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 			}
 		}
 
-	} else if mlrval.IsAbsent() {
+	} else if mv.IsAbsent() {
 		// Data-heterogeneity no-op
 	}
 
@@ -608,7 +608,7 @@ func (node *ForLoopMultivariableNode) executeOuter(
 	//		return nil, errors.New(
 	//			fmt.Sprintf(
 	//				"mlr: looped-over item is not a map or array; got %s",
-	//				mlrval.GetTypeName(),
+	//				mv.GetTypeName(),
 	//			),
 	//		)
 
@@ -617,12 +617,12 @@ func (node *ForLoopMultivariableNode) executeOuter(
 
 // ----------------------------------------------------------------
 func (node *ForLoopMultivariableNode) executeInner(
-	mlrval *mlrval.Mlrval,
+	mv *mlrval.Mlrval,
 	keyIndexVariable *runtime.StackVariable,
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
-	if mlrval.IsMap() {
-		mapval := mlrval.GetMap()
+	if mv.IsMap() {
+		mapval := mv.GetMap()
 
 		for pe := mapval.Head; pe != nil; pe = pe.Next {
 			mapkey := mlrval.FromString(pe.Key)
@@ -656,8 +656,8 @@ func (node *ForLoopMultivariableNode) executeInner(
 			}
 		}
 
-	} else if mlrval.IsArray() {
-		arrayval := mlrval.GetArray()
+	} else if mv.IsArray() {
+		arrayval := mv.GetArray()
 
 		// Note: Miller user-space array indices ("mindex") are 1-up. Internal
 		// Go storage ("zindex") is 0-up.
@@ -694,7 +694,7 @@ func (node *ForLoopMultivariableNode) executeInner(
 			}
 		}
 
-	} else if mlrval.IsAbsent() {
+	} else if mv.IsAbsent() {
 		// Data-heterogeneity no-op
 	}
 
@@ -705,7 +705,7 @@ func (node *ForLoopMultivariableNode) executeInner(
 	//		return nil, errors.New(
 	//			fmt.Sprintf(
 	//				"mlr: looped-over item is not a map or array; got %s",
-	//				mlrval.GetTypeName(),
+	//				mv.GetTypeName(),
 	//			),
 	//		)
 

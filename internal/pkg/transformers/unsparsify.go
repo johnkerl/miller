@@ -128,7 +128,7 @@ func NewTransformerUnsparsify(
 	}
 
 	tr := &TransformerUnsparsify{
-		fillerMlrval:       mlrval.mlrval.FromString(fillerString),
+		fillerMlrval:       mlrval.FromString(fillerString),
 		recordsAndContexts: list.New(),
 		fieldNamesSeen:     fieldNamesSeen,
 	}

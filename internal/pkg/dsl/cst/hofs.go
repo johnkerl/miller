@@ -15,7 +15,6 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // Most function types are in the github.com/johnkerl/miller/internal/pkg/types package. These types, though,
@@ -243,7 +242,7 @@ func selectArray(
 			outputArray = append(outputArray, *inputArray[i].Copy())
 		}
 	}
-	return mlrval.FromArrayReference(outputArray)
+	return mlrval.FromArray(outputArray)
 }
 
 func selectMap(
@@ -324,7 +323,7 @@ func applyArray(
 		isNonAbsentOrDie(&retval, "apply")
 		outputArray[i] = retval
 	}
-	return mlrval.FromArrayReference(outputArray)
+	return mlrval.FromArray(outputArray)
 }
 
 func applyMap(
@@ -616,11 +615,11 @@ func sortA(
 func sortANumerical(array []mlrval.Mlrval, reverse bool) {
 	if !reverse {
 		sort.Slice(array, func(i, j int) bool {
-			return mlrval.BIF_less_than_as_bool(&array[i], &array[j])
+			return mlrval.LessThan(&array[i], &array[j])
 		})
 	} else {
 		sort.Slice(array, func(i, j int) bool {
-			return mlrval.BIF_greater_than_as_bool(&array[i], &array[j])
+			return mlrval.GreaterThan(&array[i], &array[j])
 		})
 	}
 }
@@ -689,7 +688,7 @@ func sortMK(
 		outmap.PutCopy(key, inmap.Get(key))
 	}
 
-	return mlrval.FromMapReferenced(outmap)
+	return mlrval.FromMap(outmap)
 }
 
 func sortMKNumerical(array []string, reverse bool) {
@@ -759,7 +758,7 @@ func sortAF(
 	udfCallsite := hofSpace.udfCallsite
 	argsArray := hofSpace.argsArray
 
-	outputArray := types.CopyMlrvalArray(inputArray)
+	outputArray := mlrval.CopyMlrvalArray(inputArray)
 
 	sort.Slice(outputArray, func(i, j int) bool {
 		argsArray[0] = &outputArray[i]
@@ -781,7 +780,7 @@ func sortAF(
 		// Go sort-callback conventions: true if a < b, false otherwise.
 		return nret < 0
 	})
-	return mlrval.FromArrayReference(outputArray)
+	return mlrval.FromArray(outputArray)
 }
 
 // sortAF implements sort on arrays with callback UDF.
@@ -829,7 +828,7 @@ func sortMF(
 	})
 
 	sortedMap := mlrval.MlrmapFromPairsArray(pairsArray)
-	return mlrval.FromMapReferenced(sortedMap)
+	return mlrval.FromMap(sortedMap)
 }
 
 // ================================================================

@@ -57,7 +57,7 @@ func inferNormally(mv *Mlrval, input string, inferBool bool) *Mlrval {
 	}
 
 	if downcasedFloatNamesToNotInfer[strings.ToLower(input)] == false {
-		floatval, fok := lib.TryFloat64FromString(input)
+		floatval, fok := lib.TryFloatFromString(input)
 		if fok {
 			return mv.SetFromPrevalidatedFloatString(input, floatval)
 		}

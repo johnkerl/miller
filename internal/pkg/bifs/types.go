@@ -56,7 +56,7 @@ func BIF_int(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 
 // ----------------------------------------------------------------
 func string_to_float(input1 *mlrval.Mlrval) *mlrval.Mlrval {
-	f, ok := lib.TryFloat64FromString(input1.AcquireStringValue())
+	f, ok := lib.TryFloatFromString(input1.AcquireStringValue())
 	if ok {
 		return mlrval.FromFloat(f)
 	} else {

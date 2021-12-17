@@ -20,7 +20,7 @@
 // otherwise) when we convert to/from JSON.
 // ================================================================
 
-package types
+package mlrval
 
 import (
 	"strings"
@@ -136,7 +136,7 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		// Is the field name something dot something?
 		if strings.Contains(pe.Key, separator) {
-			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
+			arrayOfIndices := SplitAXHelper(pe.Key, separator)
 			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
 			// If the input field name was "x.a" then remember the "x".
 			baseIndex := arrayOfIndices.arrayval[0].String()
@@ -157,7 +157,7 @@ func (mlrmap *Mlrmap) CopyUnflattened(
 	for baseIndex := range affectedBaseIndices {
 		oldValue := other.Get(baseIndex)
 		lib.InternalCodingErrorIf(oldValue == nil)
-		newValue := BIF_arrayify(oldValue)
+		newValue := oldValue.Arrayify()
 		other.PutReference(baseIndex, newValue)
 	}
 
@@ -186,7 +186,7 @@ func (mlrmap *Mlrmap) CopyUnflattenFields(
 	for pe := mlrmap.Head; pe != nil; pe = pe.Next {
 		// Is the field name something dot something?
 		if strings.Contains(pe.Key, separator) {
-			arrayOfIndices := mlrvalSplitAXHelper(pe.Key, separator)
+			arrayOfIndices := SplitAXHelper(pe.Key, separator)
 			lib.InternalCodingErrorIf(len(arrayOfIndices.arrayval) < 1)
 			// If the input field name was "x.a" then remember the "x".
 			baseIndex := arrayOfIndices.arrayval[0].String()
@@ -211,7 +211,7 @@ func (mlrmap *Mlrmap) CopyUnflattenFields(
 	for baseIndex := range affectedBaseIndices {
 		oldValue := other.Get(baseIndex)
 		lib.InternalCodingErrorIf(oldValue == nil)
-		newValue := BIF_arrayify(oldValue)
+		newValue := oldValue.Arrayify()
 		other.PutReference(baseIndex, newValue)
 	}
 
@@ -231,10 +231,24 @@ func unflattenTerminal(input *Mlrval) *Mlrval {
 		return input
 	}
 	if input.printrep == "{}" {
-		return MlrvalFromMapReferenced(NewMlrmap())
+		return FromMap(NewMlrmap())
 	}
 	if input.printrep == "[]" {
-		return MlrvalFromArrayReference(make([]Mlrval, 0))
+		return FromArray(make([]Mlrval, 0))
 	}
 	return input
+}
+
+// SplitAXHelper is split out for the benefit of BIF_splitax and
+// BIF_unflatten.
+func SplitAXHelper(input string, separator string) *Mlrval {
+	fields := lib.SplitString(input, separator)
+
+	output := FromArray(make([]Mlrval, len(fields)))
+
+	for i, field := range fields {
+		output.arrayval[i] = *FromString(field)
+	}
+
+	return output
 }

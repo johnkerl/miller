@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -153,7 +154,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeysAndValues(
 		newrec := mlrval.NewMlrmapAsRecord()
 
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
-			oldKey := mlrval.mlrval.FromString(pe.Key)
+			oldKey := mlrval.FromString(pe.Key)
 			// xxx temp
 			newKey := bifs.BIF_clean_whitespace(oldKey)
 			newValue := bifs.BIF_clean_whitespace(pe.Value)
@@ -178,7 +179,7 @@ func (tr *TransformerCleanWhitespace) cleanWhitespaceInKeys(
 		newrec := mlrval.NewMlrmapAsRecord()
 
 		for pe := inrecAndContext.Record.Head; pe != nil; pe = pe.Next {
-			oldKey := mlrval.mlrval.FromString(pe.Key)
+			oldKey := mlrval.FromString(pe.Key)
 			newKey := bifs.BIF_clean_whitespace(oldKey)
 			// Transferring ownership from old record to new record; no copy needed
 			newrec.PutReference(newKey.String(), pe.Value)

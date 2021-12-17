@@ -139,7 +139,7 @@ func FromFloat(input float64) *Mlrval {
 // then its printrep will be "[[3.1400]]" and it will be MT_STRING.  This
 // function supports that.
 func TryFromFloatString(input string) *Mlrval {
-	floatval, ok := lib.TryFloat64FromString(input)
+	floatval, ok := lib.TryFloatFromString(input)
 	if ok {
 		return FromPrevalidatedFloatString(input, floatval)
 	} else {

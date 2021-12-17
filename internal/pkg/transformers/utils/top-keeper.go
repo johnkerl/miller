@@ -27,9 +27,9 @@ func NewTopKeeper(capacity int, doMax bool) *TopKeeper {
 		capacity:              capacity,
 	}
 	if doMax {
-		keeper.bsearchFunc = types.BsearchMlrvalArrayForDescendingInsert
+		keeper.bsearchFunc = mlrval.BsearchMlrvalArrayForDescendingInsert
 	} else {
-		keeper.bsearchFunc = types.BsearchMlrvalArrayForAscendingInsert
+		keeper.bsearchFunc = mlrval.BsearchMlrvalArrayForAscendingInsert
 	}
 	return keeper
 }

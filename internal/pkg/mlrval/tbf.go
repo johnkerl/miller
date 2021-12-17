@@ -2,6 +2,9 @@ package mlrval
 
 import (
 	"errors"
+	"fmt"
+	"os"
+	"strconv"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
@@ -24,6 +27,49 @@ func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
 		return nil, errors.New(
 			"mlr: indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
 		)
+	}
+}
+
+func (mv *Mlrval) Arrayify() *Mlrval {
+	if mv.IsMap() {
+		if mv.mapval.IsEmpty() {
+			return mv
+		}
+
+		convertible := true
+		i := 0
+		for pe := mv.mapval.Head; pe != nil; pe = pe.Next {
+			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
+			i++
+			if pe.Key != sval {
+				convertible = false
+			}
+			pe.Value = pe.Value.Arrayify()
+		}
+
+		if convertible {
+			arrayval := make([]Mlrval, mv.mapval.FieldCount)
+			i := 0
+			for pe := mv.mapval.Head; pe != nil; pe = pe.Next {
+				arrayval[i] = *pe.Value.Copy()
+				i++
+			}
+			return FromArray(arrayval)
+
+		} else {
+			return mv
+		}
+
+	} else if mv.IsArray() {
+		// TODO: comment (or rethink) that this modifies its inputs!!
+		output := mv.Copy()
+		for i := range mv.arrayval {
+			output.arrayval[i] = *output.arrayval[i].Arrayify()
+		}
+		return output
+
+	} else {
+		return mv
 	}
 }
 
@@ -171,27 +217,19 @@ func LengthenMlrvalArray(array *[]Mlrval, newLength64 int) {
 //	return inferrer(input, true)
 //}
 
-//func (mv *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {
-//	floatValue, ok := mv.GetNumericToFloatValue()
-//	if !ok {
-//		fmt.Fprintf(
-//			os.Stderr,
-//			"%s: couldn't parse \"%s\" as number.",
-//			"mlr", mv.String(),
-//		)
-//		os.Exit(1)
-//	}
-//	return floatValue
-//}
+func (mv *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {
+	floatValue, ok := mv.GetNumericToFloatValue()
+	if !ok {
+		fmt.Fprintf(
+			os.Stderr,
+			"%s: couldn't parse \"%s\" as number.",
+			"mlr", mv.String(),
+		)
+		os.Exit(1)
+	}
+	return floatValue
+}
 
-//func (mv *Mlrval) AssertNumeric() {
-//	_ = mv.GetNumericToFloatValueOrDie()
-//}
-
-//func (mv *Mlrval) GetArrayLength() (int, bool) {
-//	if mv.IsArray() {
-//		return len(mv.arrayval), true
-//	} else {
-//		return -999, false
-//	}
-//}
+func (mv *Mlrval) AssertNumeric() {
+	_ = mv.GetNumericToFloatValueOrDie()
+}

@@ -285,31 +285,31 @@ func BIF_mapsum(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
 	return mlrval.FromMap(newMap)
 }
 
-//// ----------------------------------------------------------------
-//func BIF_mapdiff(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
-//	if len(mlrvals) == 0 {
-//		return mlrval.FromEmptyMap()
-//	}
-//	if len(mlrvals) == 1 {
-//		return mlrvals[0]
-//	}
-//	if mlrvals[0].Type() != MT_MAP {
-//		return mlrval.ERROR
-//	}
-//	newMap := mlrvals[0].AcquireMapValue().Copy()
-//
-//	for _, otherMapArg := range mlrvals[1:] {
-//		if otherMapArg.Type() != MT_MAP {
-//			return mlrval.ERROR
-//		}
-//
-//		for pe := otherMapArg.AcquireMapValue().Head; pe != nil; pe = pe.Next {
-//			newMap.Remove(pe.Key)
-//		}
-//	}
-//
-//	return mlrval.FromMap(newMap)
-//}
+// ----------------------------------------------------------------
+func BIF_mapdiff(mlrvals []*mlrval.Mlrval) *mlrval.Mlrval {
+	if len(mlrvals) == 0 {
+		return mlrval.FromEmptyMap()
+	}
+	if len(mlrvals) == 1 {
+		return mlrvals[0]
+	}
+	if !mlrvals[0].IsMap() {
+		return mlrval.ERROR
+	}
+	newMap := mlrvals[0].AcquireMapValue().Copy()
+
+	for _, otherMapArg := range mlrvals[1:] {
+		if !otherMapArg.IsMap() {
+			return mlrval.ERROR
+		}
+
+		for pe := otherMapArg.AcquireMapValue().Head; pe != nil; pe = pe.Next {
+			newMap.Remove(pe.Key)
+		}
+	}
+
+	return mlrval.FromMap(newMap)
+}
 
 // ================================================================
 // joink([1,2,3], ",") -> "1,2,3"

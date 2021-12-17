@@ -40,21 +40,20 @@ func NewRecordAndContext(
 	}
 }
 
-// TODO: uncomment and integrate
-//// For the record-readers to update their initial context as each new record is read.
-//func (rac *RecordAndContext) Copy() *RecordAndContext {
-//	if rac == nil {
-//		return nil
-//	}
-//	recordCopy := rac.Record.Copy()
-//	contextCopy := rac.Context
-//	return &RecordAndContext{
-//		Record:       recordCopy,
-//		Context:      contextCopy,
-//		OutputString: "",
-//		EndOfStream:  false,
-//	}
-//}
+// For the record-readers to update their initial context as each new record is read.
+func (rac *RecordAndContext) Copy() *RecordAndContext {
+	if rac == nil {
+		return nil
+	}
+	recordCopy := rac.Record.Copy()
+	contextCopy := rac.Context
+	return &RecordAndContext{
+		Record:       recordCopy,
+		Context:      contextCopy,
+		OutputString: "",
+		EndOfStream:  false,
+	}
+}
 
 // For print/dump/etc to insert strings sequenced into the record-output
 // stream.  This avoids race conditions between different goroutines printing
