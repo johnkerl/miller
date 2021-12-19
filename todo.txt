@@ -8,6 +8,16 @@ PUNCHDOWN LIST
   o IsArrayOrMap infers all -- it should not & it should say why not
   o fix:
     mlr --from test/input/abixy --opprint put -v -f test/cases/dsl-for-srec-loops/0005/mlr
+    -> for(k,v in $*) {...} while modifying $* in-loop: $* isn't being copied
+  o fix:
+    mlr --from data/small put 'dump $*'
+  o look at pre/post FromMap; also check PutReference/PutCopy callsites
+  o UTs for gd-2
+    - mlrval_cmp.go
+    - JSON I/O
+    - mv from-array/from-map w/ copy & mutate orig & check new -- & vice versa
+    - dash-O and octal infer
+  o grep tmiller map put ref vs map put copy
 
 * perf next:
   o batchify source-quench
@@ -47,6 +57,7 @@ PUNCHDOWN LIST
   o mods:
     ! need cmps for array/map -- no absent/error anymore here
     ! moreover, proofread all mlrval_cmp.go dispo mxes
+    ! array/map fields: marshal as JSON_SINGLE_LINE
     - replace rac-list with batch-array -- ? profile to see what value.
     - unaliasArrayIndex in multiple packages for cycdep break -- ?
     - randsel for arrays

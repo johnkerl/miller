@@ -69,12 +69,12 @@ type Mlrval struct {
 	mapval   *Mlrmap
 	// First-class-function literals from internal/pkg/dsl/cst.
 	// Interfaced here to avoid package-dependency cycles.
-	funcval  interface{}
+	funcval interface{}
 }
 
-const INVALID_PRINTREP = "(bug-if-you-see-this)"
+const INVALID_PRINTREP = "(bug-if-you-see-this:case-2)"
 const ERROR_PRINTREP = "(error)"
-const ABSENT_PRINTREP = "(error)"
+const ABSENT_PRINTREP = "(absent)"
 
 // Enumeration for mlrval types
 //

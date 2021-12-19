@@ -12,7 +12,7 @@ package mlrval
 func MlrvalFromPending() Mlrval {
 	return Mlrval{
 		mvtype:   MT_PENDING,
-		printrep: INVALID_PRINTREP,
+		printrep: "(bug-if-you-see-this:case-3)", // INVALID_PRINTREP,
 	}
 }
 

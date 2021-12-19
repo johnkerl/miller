@@ -353,7 +353,7 @@ func putIndexedOnMap(baseMap *Mlrmap, indices []*Mlrval, rvalue *Mlrval) error {
 		nextIndex := indices[1]
 
 		var err error = nil
-		baseValue, err = NewMlrvalForAutoDeepen(nextIndex.mvtype)
+		baseValue, err = NewMlrvalForAutoDeepen(nextIndex.Type())
 		if err != nil {
 			return err
 		}
@@ -407,11 +407,11 @@ func putIndexedOnArray(
 
 			// Overwrite what's in this slot if it's the wrong type
 			if nextIndex.IsString() {
-				if (*baseArray)[zindex].mvtype != MT_MAP {
+				if !(*baseArray)[zindex].IsMap() {
 					(*baseArray)[zindex] = *FromEmptyMap()
 				}
 			} else if nextIndex.IsInt() {
-				if (*baseArray)[zindex].mvtype != MT_ARRAY {
+				if !(*baseArray)[zindex].IsArray() {
 					(*baseArray)[zindex] = *FromEmptyArray()
 				}
 			} else {

@@ -271,7 +271,7 @@ func (mv *Mlrval) marshalJSONAux(
 	elementNestingDepth int,
 	outputIsStdout bool,
 ) (string, error) {
-	switch mv.mvtype {
+	switch mv.Type() {
 	case MT_PENDING:
 		return mv.marshalJSONPending(outputIsStdout)
 		break

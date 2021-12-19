@@ -17,25 +17,25 @@ type CmpFuncInt func(input1, input2 *Mlrval) int // -1, 0, 1 for <=>
 // Exported methods
 
 func Equals(input1, input2 *Mlrval) bool {
-	return eq_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	return eq_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func NotEquals(input1, input2 *Mlrval) bool {
-	return ne_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	return ne_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func GreaterThan(input1, input2 *Mlrval) bool {
-	return gt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	return gt_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func GreaterThanOrEquals(input1, input2 *Mlrval) bool {
-	return ge_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	return ge_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func LessThan(input1, input2 *Mlrval) bool {
-	return lt_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	return lt_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func LessThanOrEquals(input1, input2 *Mlrval) bool {
-	return le_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	return le_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 func Cmp(input1, input2 *Mlrval) int {
-	return cmp_dispositions[input1.mvtype][input2.mvtype](input1, input2)
+	return cmp_dispositions[input1.Type()][input2.Type()](input1, input2)
 }
 
 // ----------------------------------------------------------------

@@ -14,7 +14,7 @@ import (
 func FromPending() *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_PENDING,
-		printrep:      "(bug-if-you-see-this-pending)",
+		printrep:      "(bug-if-you-see-this:case-1)",
 		printrepValid: false,
 	}
 }
@@ -210,9 +210,9 @@ func FromFunction(funcval interface{}, name string) *Mlrval {
 func FromArray(arrayval []Mlrval) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_ARRAY,
-		printrep:      INVALID_PRINTREP,
-		printrepValid: true,
-		arrayval:      arrayval,
+		printrep:      "(bug-if-you-see-this:case-4)", // INVALID_PRINTREP,
+		printrepValid: false,
+		arrayval:      CopyMlrvalArray(arrayval),
 	}
 }
 
@@ -223,9 +223,9 @@ func FromEmptyArray() *Mlrval {
 func FromMap(mapval *Mlrmap) *Mlrval {
 	return &Mlrval{
 		mvtype:        MT_MAP,
-		printrep:      INVALID_PRINTREP,
-		printrepValid: true,
-		mapval:        mapval,
+		printrep:      "(bug-if-you-see-this:case-5)", // INVALID_PRINTREP,
+		printrepValid: false,
+		mapval:        mapval.Copy(),
 	}
 }
 

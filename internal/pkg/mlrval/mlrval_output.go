@@ -1,6 +1,8 @@
 package mlrval
 
 import (
+	"fmt"
+	"os"
 	"strconv"
 )
 
@@ -28,7 +30,7 @@ func (mv *Mlrval) setPrintRep() {
 			// Should not have gotten outside of the JSON decoder, so flag this
 			// clearly visually if it should (buggily) slip through to
 			// user-level visibility.
-			mv.printrep = "(bug-if-you-see-this)" // xxx constdef at top of file
+			mv.printrep = "(bug-if-you-see-this:case=3)" // xxx constdef at top of file
 			break
 
 		case MT_ERROR:
@@ -39,7 +41,7 @@ func (mv *Mlrval) setPrintRep() {
 			// Callsites should be using absence to do non-assigns, so flag
 			// this clearly visually if it should (buggily) slip through to
 			// user-level visibility.
-			mv.printrep = "(bug-if-you-see-this)" // xxx constdef at top of file
+			mv.printrep = "(bug-if-you-see-this:case=4)" // xxx constdef at top of file
 			break
 
 		case MT_VOID:
@@ -66,26 +68,24 @@ func (mv *Mlrval) setPrintRep() {
 			break
 
 		case MT_ARRAY:
-			panic("mlrval array-to-string unimplemented, pending refactor")
-			//bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
-			//// maybe just InternalCodingErrorIf(err != nil)
-			//if err != nil {
-			//	fmt.Fprintln(os.Stderr, err)
-			//	os.Exit(1)
-			//}
-			//mv.printrep = string(bytes)
+			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
+			// maybe just InternalCodingErrorIf(err != nil)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+			mv.printrep = string(bytes)
 
 			break
 
 		case MT_MAP:
-			panic("mlrval map-to-string unimplemented, pending refactor")
-			//bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
-			//// maybe just InternalCodingErrorIf(err != nil)
-			//if err != nil {
-			//	fmt.Fprintln(os.Stderr, err)
-			//	os.Exit(1)
-			//}
-			//mv.printrep = string(bytes)
+			bytes, err := mv.MarshalJSON(JSON_MULTILINE, false)
+			// maybe just InternalCodingErrorIf(err != nil)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+			mv.printrep = string(bytes)
 
 			break
 		}

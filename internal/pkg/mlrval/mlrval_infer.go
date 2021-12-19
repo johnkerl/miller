@@ -6,7 +6,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
-// TODO: no infer bool. Always false in this path.
+// TODO: no infer-bool from data files. Always false in this path.
 
 // It's essential that we use mv.Type() not mv.mvtype since types are
 // JIT-computed on first access for most data-file values. See type.go for more

@@ -82,7 +82,7 @@ func (mv *Mlrval) Arrayify() *Mlrval {
 //	}
 //}
 //
-//func MlrvalFromMap(mlrmap *Mlrmap) *Mlrval {
+//func FromMap(mlrmap *Mlrmap) *Mlrval {
 //	mv := MlrvalFromEmptyMap()
 //	if mlrmap == nil {
 //		// TODO maybe return 2nd-arg error in the API

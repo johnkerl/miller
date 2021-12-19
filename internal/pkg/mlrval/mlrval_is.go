@@ -1,5 +1,9 @@
 package mlrval
 
+import (
+	"github.com/johnkerl/miller/internal/pkg/lib"
+)
+
 // It's essential that we use mv.Type() not mv.mvtype since types are
 // JIT-computed on first access for most data-file values. See type.go for more
 // information.
@@ -8,8 +12,9 @@ func (mv *Mlrval) IsLegit() bool {
 	return mv.Type() >= MT_VOID
 }
 
+// TODO: comment no JIT-infer here -- absent is non-inferrable and we needn't take the expense of JIT.
 func (mv *Mlrval) IsErrorOrAbsent() bool {
-	t := mv.Type()
+	t := mv.mvtype
 	return t == MT_ERROR || t == MT_ABSENT
 }
 
@@ -17,21 +22,30 @@ func (mv *Mlrval) IsError() bool {
 	return mv.Type() == MT_ERROR
 }
 
+// TODO: comment no JIT-infer here -- absent is non-inferrable and we needn't take the expense of JIT.
 func (mv *Mlrval) IsAbsent() bool {
-	return mv.Type() == MT_ABSENT
+	return mv.mvtype == MT_ABSENT
 }
 
+// TODO: comment no JIT-infer here -- NULL is non-inferrable and we needn't take the expense of JIT.
+// This is a literal in JSON files, or else explicitly set to NULL.
 func (mv *Mlrval) IsNull() bool {
-	return mv.Type() == MT_NULL
+	return mv.mvtype == MT_NULL
 }
 
 func (mv *Mlrval) IsVoid() bool {
-	return mv.Type() == MT_VOID
+	if mv.mvtype == MT_VOID {
+		return true
+	}
+	if mv.mvtype == MT_PENDING && mv.printrep == "" {
+		lib.InternalCodingErrorIf(!mv.printrepValid)
+		return true
+	}
+	return false
 }
 
 func (mv *Mlrval) IsErrorOrVoid() bool {
-	t := mv.Type()
-	return t == MT_ERROR || t == MT_VOID
+	return mv.IsError() || mv.IsVoid()
 }
 
 // * Error is non-empty
@@ -40,14 +54,17 @@ func (mv *Mlrval) IsErrorOrVoid() bool {
 // * Empty string is empty
 // * Int/float/bool/array/map are all non-empty
 func (mv *Mlrval) IsEmptyString() bool {
-	t := mv.Type()
-	if t == MT_VOID {
+	if mv.mvtype == MT_VOID {
 		return true
-	} else if t == MT_STRING {
-		return mv.printrep == ""
-	} else {
-		return false
 	}
+	if mv.mvtype == MT_STRING && mv.printrep == "" {
+		return true
+	}
+	if mv.mvtype == MT_PENDING && mv.printrep == "" {
+		lib.InternalCodingErrorIf(!mv.printrepValid)
+		return true
+	}
+	return false
 }
 
 func (mv *Mlrval) IsString() bool {
@@ -109,5 +126,5 @@ func (mv *Mlrval) IsArrayOrMap() bool {
 }
 
 func (mv *Mlrval) IsFunction() bool {
-	return mv.Type() == MT_FUNC
+	return mv.mvtype == MT_FUNC
 }
