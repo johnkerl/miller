@@ -11,6 +11,8 @@ PUNCHDOWN LIST
     -> for(k,v in $*) {...} while modifying $* in-loop: $* isn't being copied
   o fix:
     mlr --from data/small put 'dump $*'
+  ! fix
+    echo x=0xff | mlr --oxtab --ofmt '%f' cat
   o look at pre/post FromMap; also check PutReference/PutCopy callsites
   o UTs for gd-2
     - mlrval_cmp.go

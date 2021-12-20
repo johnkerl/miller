@@ -12,7 +12,8 @@ func (mv Mlrval) String() string {
 	// TODO: comment re deferral -- important perf effect!
 	// if mv.IsFloat() && floatOutputFormatter != nil
 	// if mv.mvtype == MT_FLOAT && floatOutputFormatter != nil {
-	if floatOutputFormatter != nil && (mv.mvtype == MT_FLOAT || mv.mvtype == MT_PENDING) {
+	//if floatOutputFormatter != nil && (mv.mvtype == MT_FLOAT || mv.mvtype == MT_PENDING) {
+	if floatOutputFormatter != nil && mv.Type() == MT_FLOAT {
 		// Use the format string from global --ofmt, if supplied
 		return floatOutputFormatter.FormatFloat(mv.floatval)
 	} else {
