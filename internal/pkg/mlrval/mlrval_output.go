@@ -7,8 +7,11 @@ import (
 )
 
 // Must have non-pointer receiver in order to implement the fmt.Stringer
-// interface to make this printable via fmt.Println et al.
-func (mv Mlrval) String() string {
+// interface to make this printable via fmt.Println et al.  However, that
+// results in a needless copy of the Mlrval. So, we intentionally use pointer
+// receiver, and if we need to print to stdout, we can fmt.Printf with "%s" and
+// mv.String().
+func (mv *Mlrval) String() string {
 	// TODO: comment re deferral -- important perf effect!
 	// if mv.IsFloat() && floatOutputFormatter != nil
 	// if mv.mvtype == MT_FLOAT && floatOutputFormatter != nil {
