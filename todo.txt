@@ -2,6 +2,7 @@
 PUNCHDOWN LIST
 
 * blockers:
+  - sort-hof check
   - more linux perf checks
   - mlr -O / abor!
   - --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
