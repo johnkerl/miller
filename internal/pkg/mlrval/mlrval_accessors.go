@@ -93,9 +93,7 @@ func (mv *Mlrval) FlattenToMap(prefix string, delimiter string) Mlrval {
 	return *FromMap(retval)
 }
 
-// ----------------------------------------------------------------
-// Used by stats1.
-
+// Increment is used by stats1.
 func (mv *Mlrval) Increment() {
 	if mv.mvtype == MT_INT {
 		mv.intval++

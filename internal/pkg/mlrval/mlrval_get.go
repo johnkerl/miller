@@ -1,6 +1,9 @@
 package mlrval
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
 
@@ -125,4 +128,21 @@ func (mv *Mlrval) AcquireArrayValue() []Mlrval {
 func (mv *Mlrval) AcquireMapValue() *Mlrmap {
 	lib.InternalCodingErrorIf(mv.mvtype != MT_MAP)
 	return mv.mapval
+}
+
+func (mv *Mlrval) GetNumericToFloatValueOrDie() (floatValue float64) {
+	floatValue, ok := mv.GetNumericToFloatValue()
+	if !ok {
+		fmt.Fprintf(
+			os.Stderr,
+			"%s: couldn't parse \"%s\" as number.",
+			"mlr", mv.String(),
+		)
+		os.Exit(1)
+	}
+	return floatValue
+}
+
+func (mv *Mlrval) AssertNumeric() {
+	_ = mv.GetNumericToFloatValueOrDie()
 }

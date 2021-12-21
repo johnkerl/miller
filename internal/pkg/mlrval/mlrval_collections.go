@@ -72,6 +72,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
@@ -299,10 +300,10 @@ func (mv *Mlrval) PutIndexed(indices []*Mlrval, rvalue *Mlrval) error {
 	} else {
 		baseIndex := indices[0]
 		if baseIndex.IsString() {
-			mv = FromEmptyMap()
+			*mv = *FromEmptyMap()
 			return putIndexedOnMap(mv.mapval, indices, rvalue)
 		} else if baseIndex.IsInt() {
-			mv = FromEmptyArray()
+			*mv = *FromEmptyArray()
 			return putIndexedOnArray(&mv.arrayval, indices, rvalue)
 		} else {
 			return errors.New(
@@ -653,4 +654,91 @@ func BsearchMlrvalArrayForAscendingInsert(
 	}
 
 	return lo
+}
+
+// NewMlrvalForAutoDeepen is for auto-deepen of nested maps in things like
+//
+//   $foo[1]["a"][2]["b"] = 3
+//
+// Autocreated levels are maps.  Array levels can be explicitly created e.g.
+//
+//   $foo[1]["a"] ??= []
+//   $foo[1]["a"][2]["b"] = 3
+func NewMlrvalForAutoDeepen(mvtype MVType) (*Mlrval, error) {
+	if mvtype == MT_STRING || mvtype == MT_INT {
+		empty := FromEmptyMap()
+		return empty, nil
+	} else {
+		return nil, errors.New(
+			"mlr: indices must be string, int, or array thereof; got " + GetTypeName(mvtype),
+		)
+	}
+}
+
+func (mv *Mlrval) Arrayify() *Mlrval {
+	if mv.IsMap() {
+		if mv.mapval.IsEmpty() {
+			return mv
+		}
+
+		convertible := true
+		i := 0
+		for pe := mv.mapval.Head; pe != nil; pe = pe.Next {
+			sval := strconv.Itoa(i + 1) // Miller user-space indices are 1-up
+			i++
+			if pe.Key != sval {
+				convertible = false
+			}
+			pe.Value = pe.Value.Arrayify()
+		}
+
+		if convertible {
+			arrayval := make([]Mlrval, mv.mapval.FieldCount)
+			i := 0
+			for pe := mv.mapval.Head; pe != nil; pe = pe.Next {
+				arrayval[i] = *pe.Value.Copy()
+				i++
+			}
+			return FromArray(arrayval)
+
+		} else {
+			return mv
+		}
+
+	} else if mv.IsArray() {
+		// TODO: comment (or rethink) that this modifies its inputs!!
+		output := mv.Copy()
+		for i := range mv.arrayval {
+			output.arrayval[i] = *output.arrayval[i].Arrayify()
+		}
+		return output
+
+	} else {
+		return mv
+	}
+}
+
+func LengthenMlrvalArray(array *[]Mlrval, newLength64 int) {
+	newLength := int(newLength64)
+	lib.InternalCodingErrorIf(newLength <= len(*array))
+
+	if newLength <= cap(*array) {
+		newArray := (*array)[:newLength]
+		for zindex := len(*array); zindex < newLength; zindex++ {
+			// TODO: comment why not MT_ABSENT or MT_VOID
+			newArray[zindex] = *NULL
+		}
+		*array = newArray
+	} else {
+		newArray := make([]Mlrval, newLength, 2*newLength)
+		zindex := 0
+		for zindex = 0; zindex < len(*array); zindex++ {
+			newArray[zindex] = (*array)[zindex]
+		}
+		for zindex = len(*array); zindex < newLength; zindex++ {
+			// TODO: comment why not MT_ABSENT or MT_VOID
+			newArray[zindex] = *NULL
+		}
+		*array = newArray
+	}
 }
