@@ -2,6 +2,7 @@
 PUNCHDOWN LIST
 
 * blockers:
+  - more linux perf checks
   - mlr -O / abor!
   - --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
   - big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
