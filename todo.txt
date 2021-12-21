@@ -1,194 +1,11 @@
 ================================================================
 PUNCHDOWN LIST
 
-* --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
-* JIT next:
-  o JSON I/O UT
-  o krepl miller6 new doclink-comments
-  o IsArrayOrMap infers all -- it should not & it should say why not
-  o fix:
-    mlr --from test/input/abixy --opprint put -v -f test/cases/dsl-for-srec-loops/0005/mlr
-    -> for(k,v in $*) {...} while modifying $* in-loop: $* isn't being copied
-  o fix:
-    mlr --from data/small put 'dump $*'
-  ! fix
-    echo x=0xff | mlr --oxtab --ofmt '%f' cat
-  o look at pre/post FromMap; also check PutReference/PutCopy callsites
-  o UTs for gd-2
-    - mlrval_cmp.go
-    - JSON I/O
-    - mv from-array/from-map w/ copy & mutate orig & check new -- & vice versa
-    - dash-O and octal infer
-  o grep tmiller map put ref vs map put copy
-
-* perf next:
-  o batchify source-quench
-  ! hash-records back off
-  ? further channelize (CSV-first focus) mlrval infer vs record-put ?
-
-* big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
-
-* mr -S
-  test/cases/dsl-array-map-indexing
-  test/cases/io-skip-pass-comments
-
-* perf wup @ rgp.md
-* perf:
-  o go tool pprof -http=:8080 cpu.pprof
-  x close(chan) as EOS throughout
-    - note somewhere why NewEndOfStreamMarker instead of channel close -- readers carry final context
-  o notes
-    - https://github.com/golang/go/issues/18237
-    - https://github.com/google/gvisor/issues/1942
-    - https://github.com/golang/go/issues/21827
-    - https://news.ycombinator.com/item?id=19841580
-    - https://news.ycombinator.com/item?id=19839081
-    - https://about.sourcegraph.com/go/gophercon-2019-death-by-three-thousand-timers-streaming-video-on-demand-for-cable-tv/
-    - https://stackoverflow.com/questions/41353508/how-to-determine-which-side-of-go-channel-is-waiting
-      case p <- result:
-      case <-time.After(500 * time.Millisecond):
-      ...
-    - https://github.com/dgryski/go-perfbook
-    - https://dave.cheney.net/high-performance-go-workshop/dotgo-paris.html
-  o find:
-    - perf x platform, input-file format, (output-file format), etc
-    - try select-check & stats-keep -- ?
-    - try select-check & list-build -- ?
-    - make a 2nd/3rd cmd main w/ simple model & tweak that
-      o dkvp-reader factor-out ...
-  o mods:
-    ! need cmps for array/map -- no absent/error anymore here
-    ! moreover, proofread all mlrval_cmp.go dispo mxes
-    ! array/map fields: marshal as JSON_SINGLE_LINE
-    - replace rac-list with batch-array -- ? profile to see what value.
-    - unaliasArrayIndex in multiple packages for cycdep break -- ?
-    - randsel for arrays
-    - downstreamDone batchify
-      > head
-        - writes
-      > seqgen
-        - reads and writes
-        - might involve batch-size somehow -- ?
-      > tee
-        - reads
-      > everything else
-        - reads and writes
-    - JSON reader pass raclist to comment-scanner for orderly injection
-    ? readerChannel length 1 or 2 ?
-    ? experiment again with hashed/unhashed -- mlr sort etc
-    ? coalesce errchan & done-writing w/ Err to RAC, and close-chan *and* EOSMarker -- ?
-    - docnote JSON (a) no channelization opportunity (unless missed); (b) no JIT type-inference. therefore slower.
-    - funcptr away the ifs/ifsregex check in record-readers
-    - checklist channelize all record-reader types
-    - do and maybe keep? record-reader return (raclist, err) & refactor repl accordingly
-      > needs factor for-loop to stateful so maybe not
-    - transformers w/ reclist: *maybe*, but idchan/odchan too ... invest time after some refactor decions made
-    - fix record/line sequencing regressions
-    - maybe increase records-per-batch in join-bucket-keeper; and/or refactor
-    - maybe increase records-per-batch in repl; and/or refactor
-    - lots of reading/neatening on types, bifs, mlrval split-up x all source files
-    - follow-ons for lots of  UT per se on types, bifs, mlrval
-    ? []Mlrval -> []*Mlrval ?
-  o goals:
-    - keep goroutines -- including per-transformer -- for parallelism
-    - look for flex ideas on how to structure that parallelism
-  o ideas:
-    n different concurrency abstraction?
-    n no-select -- just <- on a single channel?
-      > tried in mprof/main.go: reader & writer both write/read only one channel.
-      > still unacceptable runtime overhead :(
-    K string-buffer still too many write-syscalls: use bufio.Writer
-      w TODO: flush() points
-    d idchan/odchan can maybe be marked in chain-transformers as local array
-      d do other stuff first
-    d replace errchan w/ retval only?
-      d do other stuff first
-    d rac-batching; ensure env-var access
-      k also prototyped for no-transformer case
-      > how to structure this for the transformers?
-      > do that after hiding
-    ! have an extra eye on CSV-reader perf
-    ? why mprof,mprof2 record-writer 1.5486, 1.9036
-    ? double-check flush-handling
-    - funcptr around comment-handling stuff
-    - mprof split-reader getenv something
-    - flags for mlr.pprof & trace.out to CLI
-    - hide app-level scan/format under sys-level read/write: also batched
-      easier/line-oriented:
-        record_reader_csvlite.go
-        record_reader_dkvp.go
-        record_reader_nidx.go
-        record_reader_xtab.go
-      harder b/c using encoding APIs:
-        record_reader_csv.go
-        record_reader_json.go
-    d how to handle tail -f and repl
-      > try unconditional batching and hiding *first* to see how much best-case perf to be had
-    ? lazy type-infer?? needs careful use of accessor-mutators in place of mv.type etc
-
-----------------------------------------------------------------
-* JIT refactor
-  o x 'tens/dozens of UT cases' 
-  o populate each bifs/X_test.go for each bifs/X.go from existing regression-test data
-  m internal/pkg/mlrval
-    k UT-driven mlrval defer/infer
-    - pkg/mlrval doc.go & README.md
-  o internal/pkg/types
-    k UT-driven mlrmap constructor refactor
-    - UT-driven JSON-parser refactor
-  o internal/pkg/input
-    k basic
-      mlrval.FromDeferredType
-      mlrmap.PutReference(key, value)
-
-    k UT-driven DKVP-from-line
-    ~ UT-driven X-from-line: nidx, xtab, csvlite, csv
-    - UT-driven JSON-from-string
-  o internal/pkg/output
-    - basic
-      mlrval.String()
-    - UT-driven to-line
-  o internal/pkg/bifs
-    - more UT ... final authority is RT though
-
-  ? stick w/ regtest ?
-    - internal/pkg/colorizer
-    - internal/pkg/platform
-    - internal/pkg/runtime
-
-    - internal/pkg/stream
-    - internal/pkg/cli
-    - internal/pkg/climain
-
-    - internal/pkg/transformers/utils
-    - internal/pkg/transformers
-
-    - internal/pkg/parsing
-    - internal/pkg/dsl
-    - internal/pkg/dsl/cst
-
-    - internal/pkg/auxents/repl
-    - internal/pkg/auxents/regtest
-    - internal/pkg/auxents
-    - internal/pkg/auxents/help
-----------------------------------------------------------------
-
-* perf more
-  o nim6 note on perf: baseline/cat; processor/pipelining; 
-  o update https://miller.readthedocs.io/en/latest/cpu/, and/or
-    https://miller.readthedocs.io/en/latest/streaming-and-memory/, and/or
-    make a new page w/ info on per
-  o JIT: maasure
-  k pipelined reader
-  k batched reader separately
-  k buffered output
-  o re-check hashed/unhashed and do so periodically
-    - CLI switch
-    - check with more than just abixy
-
-----------------------------------------------------------------
-
 * blockers:
+  - mlr -O / abor!
+  - --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
+  - big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
+  - function: randsel for arrays; use for example-csv-expander
   - keep checking issues
   - verslink old relnotes
   - fractional-strptime
@@ -206,6 +23,13 @@ PUNCHDOWN LIST
   - integrate:
     > https://www.libhunt.com/r/miller
     > https://repology.org/project/miller/information
+  ? array/map fields: marshal as JSON_SINGLE_LINE
+  o JIT doc
+    - perf wup @ rgp.md
+    - nim6 lead with this
+      > also https://miller.readthedocs.io/en/latest/cpu
+      > also https://miller.readthedocs.io/en/latest/streaming-and-memory
+      > new webdoc page with graphs
 
 * shebang
   - olh -s & --norc; --version & --bare-version; --
@@ -217,6 +41,23 @@ PUNCHDOWN LIST
   - webdocs
   - want:
     > myscript.mlr --c2j input.csv
+
+* JIT follow-ons:
+  o UT:
+    - JSON I/O
+    - mlrval_cmp.go
+    - mv from-array/from-map w/ copy & mutate orig & check new -- & vice versa
+    - dash-O and octal infer
+    - populate each bifs/X_test.go for each bifs/X.go etc etc
+  o neatens
+    - carefully read all $mlv files
+    - check $types & $bifs as well
+    - proofread all mlrval_cmp.go dispo mxes
+    - update rmds x several
+  o misc
+    - grep tmiller map put ref vs map put copy
+    - krepl miller6 new doclink-comments
+    - git rm cmd/mprof{n}
 
 * release ordering?
   conda
@@ -287,6 +128,15 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* more perf?
+  - batchify source-quench -- experiment 1st
+  - further channelize (CSV-first focus) mlrval infer vs record-put ?
+  ? coalesce errchan & done-writing w/ Err to RAC, and close-chan *and* EOSMarker -- ?
+
+* []Mlrval -> []*Mlrval ?
+
+* funcptr away the ifs/ifsregex check in record-readers
 
 * handling for --cpuprofile not at args[1] slot
 
