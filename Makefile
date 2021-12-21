@@ -161,8 +161,11 @@ tests-in-order: mlrval-tests mlrmap-tests input-tests bifs-tests
 regression-test:
 	go test -v regression_test.go
 
+# go fmt ./... finds experimental C files which we want to ignore.
 fmt:
-	-go fmt ./...
+	-go fmt ./cmd/...
+	-go fmt ./internal/pkg/...
+	-go fmt ./regression_test.go
 
 # ----------------------------------------------------------------
 # For developers before pushing to GitHub.

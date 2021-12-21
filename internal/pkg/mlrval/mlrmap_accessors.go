@@ -770,7 +770,7 @@ func (mlrmap *Mlrmap) IsNested() bool {
 	if mlrmap.Head == nil {
 		return false
 	} else if mlrmap.Head.Value.GetMap() == nil {
-  		//TODO: check IsArrayOrMap()
+		//TODO: check IsArrayOrMap()
 		return false
 	} else {
 		return true

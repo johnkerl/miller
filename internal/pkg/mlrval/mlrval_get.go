@@ -92,7 +92,6 @@ func GetTypeName(mvtype MVType) string {
 	return TYPE_NAMES[mvtype]
 }
 
-
 // These are for built-in functions operating within type-keyed
 // disposition-vector/disposition-matrix context. They've already computed
 // mv.Type() -- it's a fatal error if they haven't -- and they need the typed

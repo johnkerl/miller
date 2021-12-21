@@ -16,7 +16,6 @@ import (
 )
 
 type State struct {
-
 	Inrec                    *mlrval.Mlrmap
 	Context                  *types.Context
 	Oosvars                  *mlrval.Mlrmap

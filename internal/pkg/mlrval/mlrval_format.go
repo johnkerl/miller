@@ -195,7 +195,6 @@ func (formatter *formatterToInt) FormatFloat(floatValue float64) string {
 	return fmt.Sprintf(formatter.goFormatString, int(floatValue))
 }
 
-
 // ----------------------------------------------------------------
 
 type formatterToString struct {

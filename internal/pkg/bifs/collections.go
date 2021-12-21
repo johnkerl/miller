@@ -640,7 +640,7 @@ func BIF_get_values(input1 *mlrval.Mlrval) *mlrval.Mlrval {
 		for i, value := range inputarrayval {
 			arrayval[i] = *value.Copy()
 		}
-	return mlrval.FromArray(arrayval)
+		return mlrval.FromArray(arrayval)
 
 	} else {
 		return mlrval.ERROR

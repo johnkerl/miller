@@ -58,29 +58,45 @@ var mudispo = [mlrval.MT_DIM]mathLibUnaryFuncWrapper{
 	/*FUNC   */ _math_unary_erro1,
 }
 
-func BIF_acos(input1 *mlrval.Mlrval) *mlrval.Mlrval     { return mudispo[input1.Type()](input1, math.Acos) }
-func BIF_acosh(input1 *mlrval.Mlrval) *mlrval.Mlrval    { return mudispo[input1.Type()](input1, math.Acosh) }
-func BIF_asin(input1 *mlrval.Mlrval) *mlrval.Mlrval     { return mudispo[input1.Type()](input1, math.Asin) }
-func BIF_asinh(input1 *mlrval.Mlrval) *mlrval.Mlrval    { return mudispo[input1.Type()](input1, math.Asinh) }
-func BIF_atan(input1 *mlrval.Mlrval) *mlrval.Mlrval     { return mudispo[input1.Type()](input1, math.Atan) }
-func BIF_atanh(input1 *mlrval.Mlrval) *mlrval.Mlrval    { return mudispo[input1.Type()](input1, math.Atanh) }
-func BIF_cbrt(input1 *mlrval.Mlrval) *mlrval.Mlrval     { return mudispo[input1.Type()](input1, math.Cbrt) }
-func BIF_cos(input1 *mlrval.Mlrval) *mlrval.Mlrval      { return mudispo[input1.Type()](input1, math.Cos) }
-func BIF_cosh(input1 *mlrval.Mlrval) *mlrval.Mlrval     { return mudispo[input1.Type()](input1, math.Cosh) }
-func BIF_erf(input1 *mlrval.Mlrval) *mlrval.Mlrval      { return mudispo[input1.Type()](input1, math.Erf) }
-func BIF_erfc(input1 *mlrval.Mlrval) *mlrval.Mlrval     { return mudispo[input1.Type()](input1, math.Erfc) }
-func BIF_exp(input1 *mlrval.Mlrval) *mlrval.Mlrval      { return mudispo[input1.Type()](input1, math.Exp) }
-func BIF_expm1(input1 *mlrval.Mlrval) *mlrval.Mlrval    { return mudispo[input1.Type()](input1, math.Expm1) }
-func BIF_invqnorm(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, lib.Invqnorm) }
-func BIF_log(input1 *mlrval.Mlrval) *mlrval.Mlrval      { return mudispo[input1.Type()](input1, math.Log) }
-func BIF_log10(input1 *mlrval.Mlrval) *mlrval.Mlrval    { return mudispo[input1.Type()](input1, math.Log10) }
-func BIF_log1p(input1 *mlrval.Mlrval) *mlrval.Mlrval    { return mudispo[input1.Type()](input1, math.Log1p) }
-func BIF_qnorm(input1 *mlrval.Mlrval) *mlrval.Mlrval    { return mudispo[input1.Type()](input1, lib.Qnorm) }
-func BIF_sin(input1 *mlrval.Mlrval) *mlrval.Mlrval      { return mudispo[input1.Type()](input1, math.Sin) }
-func BIF_sinh(input1 *mlrval.Mlrval) *mlrval.Mlrval     { return mudispo[input1.Type()](input1, math.Sinh) }
-func BIF_sqrt(input1 *mlrval.Mlrval) *mlrval.Mlrval     { return mudispo[input1.Type()](input1, math.Sqrt) }
-func BIF_tan(input1 *mlrval.Mlrval) *mlrval.Mlrval      { return mudispo[input1.Type()](input1, math.Tan) }
-func BIF_tanh(input1 *mlrval.Mlrval) *mlrval.Mlrval     { return mudispo[input1.Type()](input1, math.Tanh) }
+func BIF_acos(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Acos) }
+func BIF_acosh(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mudispo[input1.Type()](input1, math.Acosh)
+}
+func BIF_asin(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Asin) }
+func BIF_asinh(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mudispo[input1.Type()](input1, math.Asinh)
+}
+func BIF_atan(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Atan) }
+func BIF_atanh(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mudispo[input1.Type()](input1, math.Atanh)
+}
+func BIF_cbrt(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Cbrt) }
+func BIF_cos(input1 *mlrval.Mlrval) *mlrval.Mlrval  { return mudispo[input1.Type()](input1, math.Cos) }
+func BIF_cosh(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Cosh) }
+func BIF_erf(input1 *mlrval.Mlrval) *mlrval.Mlrval  { return mudispo[input1.Type()](input1, math.Erf) }
+func BIF_erfc(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Erfc) }
+func BIF_exp(input1 *mlrval.Mlrval) *mlrval.Mlrval  { return mudispo[input1.Type()](input1, math.Exp) }
+func BIF_expm1(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mudispo[input1.Type()](input1, math.Expm1)
+}
+func BIF_invqnorm(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mudispo[input1.Type()](input1, lib.Invqnorm)
+}
+func BIF_log(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Log) }
+func BIF_log10(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mudispo[input1.Type()](input1, math.Log10)
+}
+func BIF_log1p(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mudispo[input1.Type()](input1, math.Log1p)
+}
+func BIF_qnorm(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return mudispo[input1.Type()](input1, lib.Qnorm)
+}
+func BIF_sin(input1 *mlrval.Mlrval) *mlrval.Mlrval  { return mudispo[input1.Type()](input1, math.Sin) }
+func BIF_sinh(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Sinh) }
+func BIF_sqrt(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Sqrt) }
+func BIF_tan(input1 *mlrval.Mlrval) *mlrval.Mlrval  { return mudispo[input1.Type()](input1, math.Tan) }
+func BIF_tanh(input1 *mlrval.Mlrval) *mlrval.Mlrval { return mudispo[input1.Type()](input1, math.Tanh) }
 
 // Disposition vector for unary mathlib functions which are int-preserving
 var imudispo = [mlrval.MT_DIM]mathLibUnaryFuncWrapper{
@@ -98,11 +114,17 @@ var imudispo = [mlrval.MT_DIM]mathLibUnaryFuncWrapper{
 }
 
 // Int-preserving
-func BIF_abs(input1 *mlrval.Mlrval) *mlrval.Mlrval   { return imudispo[input1.Type()](input1, math.Abs) }   // xxx
-func BIF_ceil(input1 *mlrval.Mlrval) *mlrval.Mlrval  { return imudispo[input1.Type()](input1, math.Ceil) }  // xxx
-func BIF_floor(input1 *mlrval.Mlrval) *mlrval.Mlrval { return imudispo[input1.Type()](input1, math.Floor) } // xxx
-func BIF_round(input1 *mlrval.Mlrval) *mlrval.Mlrval { return imudispo[input1.Type()](input1, math.Round) } // xxx
-func BIF_sgn(input1 *mlrval.Mlrval) *mlrval.Mlrval   { return imudispo[input1.Type()](input1, lib.Sgn) }    // xxx
+func BIF_abs(input1 *mlrval.Mlrval) *mlrval.Mlrval { return imudispo[input1.Type()](input1, math.Abs) } // xxx
+func BIF_ceil(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return imudispo[input1.Type()](input1, math.Ceil)
+} // xxx
+func BIF_floor(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return imudispo[input1.Type()](input1, math.Floor)
+} // xxx
+func BIF_round(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	return imudispo[input1.Type()](input1, math.Round)
+}                                                  // xxx
+func BIF_sgn(input1 *mlrval.Mlrval) *mlrval.Mlrval { return imudispo[input1.Type()](input1, lib.Sgn) } // xxx
 
 // ================================================================
 // Exponentiation: DSL operator '**'.  See also
