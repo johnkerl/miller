@@ -1,0 +1,59 @@
+package input
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/johnkerl/miller/internal/pkg/cli"
+)
+
+func TestRecordFromDKVPLine(t *testing.T) {
+	readerOptions := cli.DefaultReaderOptions()
+	cli.FinalizeReaderOptions(&readerOptions) // compute IPS, IFS -> IPSRegex, IFSRegex
+	reader, err := NewRecordReaderDKVP(&readerOptions, 1)
+	assert.NotNil(t, reader)
+	assert.Nil(t, err)
+
+	line := ""
+	record := recordFromDKVPLine(reader, line)
+	assert.NotNil(t, record)
+	assert.Equal(t, 0, record.FieldCount)
+
+	line = "a=1,b=2,c=3"
+	record = recordFromDKVPLine(reader, line)
+	assert.NotNil(t, record)
+	assert.Equal(t, 3, record.FieldCount)
+
+	assert.NotNil(t, record.Head)
+	assert.NotNil(t, record.Head.Next)
+	assert.NotNil(t, record.Head.Next.Next)
+	assert.Nil(t, record.Head.Next.Next.Next)
+	assert.Equal(t, record.Head.Key, "a")
+	assert.Equal(t, record.Head.Next.Key, "b")
+	assert.Equal(t, record.Head.Next.Next.Key, "c")
+
+	line = "a=1,b=2,b=3"
+	record = recordFromDKVPLine(reader, line)
+	assert.NotNil(t, record)
+	assert.Equal(t, 2, record.FieldCount)
+
+	assert.NotNil(t, record.Head)
+	assert.NotNil(t, record.Head.Next)
+	assert.Nil(t, record.Head.Next.Next)
+	assert.Equal(t, record.Head.Key, "a")
+	assert.Equal(t, record.Head.Next.Key, "b")
+
+	line = "a,b,c"
+	record = recordFromDKVPLine(reader, line)
+	assert.NotNil(t, record)
+	assert.Equal(t, 3, record.FieldCount)
+
+	assert.NotNil(t, record.Head)
+	assert.NotNil(t, record.Head.Next)
+	assert.NotNil(t, record.Head.Next.Next)
+	assert.Nil(t, record.Head.Next.Next.Next)
+	assert.Equal(t, record.Head.Key, "1")
+	assert.Equal(t, record.Head.Next.Key, "2")
+	assert.Equal(t, record.Head.Next.Next.Key, "3")
+}

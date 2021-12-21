@@ -6,7 +6,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/colorizer"
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 type RecordWriterCSVLite struct {
@@ -26,7 +26,7 @@ func NewRecordWriterCSVLite(writerOptions *cli.TWriterOptions) (*RecordWriterCSV
 }
 
 func (writer *RecordWriterCSVLite) Write(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {

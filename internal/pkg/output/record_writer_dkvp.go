@@ -5,7 +5,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/colorizer"
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 type RecordWriterDKVP struct {
@@ -19,7 +19,7 @@ func NewRecordWriterDKVP(writerOptions *cli.TWriterOptions) (*RecordWriterDKVP, 
 }
 
 func (writer *RecordWriterDKVP) Write(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {

@@ -114,7 +114,7 @@ func TryIntFromString(input string) (int, bool) {
 	return 0, false
 }
 
-func TryFloat64FromString(input string) (float64, bool) {
+func TryFloatFromString(input string) (float64, bool) {
 	fval, err := strconv.ParseFloat(input, 64)
 	if err == nil {
 		return fval, true

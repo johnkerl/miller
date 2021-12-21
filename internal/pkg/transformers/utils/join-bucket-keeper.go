@@ -116,6 +116,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/input"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -251,7 +252,7 @@ func (keeper *JoinBucketKeeper) computeState() tJoinBucketKeeperState {
 // will also be moved to keeper.leftUnpaired.
 
 func (keeper *JoinBucketKeeper) FindJoinBucket(
-	rightFieldValues []*types.Mlrval, // nil means right-file EOF
+	rightFieldValues []*mlrval.Mlrval, // nil means right-file EOF
 ) bool {
 	// TODO: comment me
 	isPaired := false
@@ -367,7 +368,7 @@ func (keeper *JoinBucketKeeper) prepareForFirstJoinBucket() {
 //   leftvals < rightvals && !eof.
 
 func (keeper *JoinBucketKeeper) prepareForNewJoinBucket(
-	rightFieldValues []*types.Mlrval,
+	rightFieldValues []*mlrval.Mlrval,
 ) {
 	if !keeper.JoinBucket.WasPaired {
 		moveRecordsAndContexts(keeper.leftUnpaireds, keeper.JoinBucket.RecordsAndContexts)
@@ -465,7 +466,7 @@ func (keeper *JoinBucketKeeper) fillNextJoinBucket() {
 		os.Exit(1)
 	}
 
-	keeper.JoinBucket.leftFieldValues = types.CopyMlrvalPointerArray(peekFieldValues)
+	keeper.JoinBucket.leftFieldValues = mlrval.CopyMlrvalPointerArray(peekFieldValues)
 	keeper.JoinBucket.RecordsAndContexts.PushBack(keeper.peekRecordAndContext)
 	keeper.JoinBucket.WasPaired = false
 
@@ -607,8 +608,8 @@ func moveRecordsAndContexts(
 // for numerical values).
 
 func compareLexically(
-	leftFieldValues []*types.Mlrval,
-	rightFieldValues []*types.Mlrval,
+	leftFieldValues []*mlrval.Mlrval,
+	rightFieldValues []*mlrval.Mlrval,
 ) int {
 	lib.InternalCodingErrorIf(len(leftFieldValues) != len(rightFieldValues))
 	n := len(leftFieldValues)
@@ -659,7 +660,7 @@ func (keeper *JoinBucketKeeper) dump(prefix string) {
 	fmt.Printf("------------------------------------------------------\n")
 }
 
-func dumpFieldValues(name string, values []*types.Mlrval) {
+func dumpFieldValues(name string, values []*mlrval.Mlrval) {
 	for i, value := range values {
 		fmt.Printf("-- %s[%d] = %s\n", name, i, value.String())
 	}

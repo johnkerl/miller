@@ -9,6 +9,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -254,8 +255,8 @@ func (reader *RecordReaderXTAB) getRecordBatch(
 
 func (reader *RecordReaderXTAB) recordFromXTABLines(
 	stanza *list.List,
-) (*types.Mlrmap, error) {
-	record := types.NewMlrmapAsRecord()
+) (*mlrval.Mlrmap, error) {
+	record := mlrval.NewMlrmapAsRecord()
 
 	for e := stanza.Front(); e != nil; e = e.Next() {
 		line := e.Value.(string)
@@ -272,10 +273,10 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 
 		key := kv[0]
 		if len(kv) == 1 {
-			value := types.MLRVAL_VOID
+			value := mlrval.VOID
 			record.PutReference(key, value)
 		} else {
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromDeferredType(kv[1])
 			record.PutReference(key, value)
 		}
 	}

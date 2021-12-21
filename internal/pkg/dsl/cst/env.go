@@ -12,8 +12,8 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 type EnvironmentVariableNode struct {
@@ -35,14 +35,14 @@ func (root *RootNode) BuildEnvironmentVariableNode(astNode *dsl.ASTNode) (*Envir
 
 func (node *EnvironmentVariableNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval {
+) *mlrval.Mlrval {
 	name := node.nameEvaluable.Evaluate(state)
 	if name.IsAbsent() {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 	if !name.IsString() {
-		return types.MLRVAL_ERROR
+		return mlrval.ERROR
 	}
 
-	return types.MlrvalFromString(os.Getenv(name.String()))
+	return mlrval.FromString(os.Getenv(name.String()))
 }

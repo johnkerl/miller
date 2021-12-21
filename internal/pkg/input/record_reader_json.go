@@ -12,6 +12,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -107,7 +108,7 @@ func (reader *RecordReaderJSON) processHandle(
 			}
 		}
 
-		mlrval, eof, err := types.MlrvalDecodeFromJSON(decoder)
+		mlrval, eof, err := mlrval.MlrvalDecodeFromJSON(decoder)
 		if eof {
 			break
 		}

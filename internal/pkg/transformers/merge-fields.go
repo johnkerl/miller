@@ -351,7 +351,7 @@ func (tr *TransformerMergeFields) transformByNameList(
 			continue
 		}
 
-		if mvalue.IsEmpty() { // key present with empty value
+		if mvalue.IsVoid() { // key present with empty value
 			if !tr.keepInputFields {
 				inrec.Remove(valueFieldName)
 			}
@@ -418,7 +418,7 @@ func (tr *TransformerMergeFields) transformByNameRegex(
 			continue
 		}
 
-		if mvalue.IsEmpty() { // Key present with empty value
+		if mvalue.IsVoid() { // Key present with empty value
 			if !tr.keepInputFields { // We are modifying the record while iterating over it.
 				next := pe.Next
 				inrec.Unlink(pe)
@@ -521,7 +521,7 @@ func (tr *TransformerMergeFields) transformByCollapsing(
 		// The accumulator has been initialized with default values; continue
 		// here. (If we were to continue before namedAccumulators.Put(...) we
 		// would be failing to construct the accumulator.)
-		if mvalue.IsEmpty() { // key present with empty value
+		if mvalue.IsVoid() { // key present with empty value
 			if !tr.keepInputFields { // We are modifying the record while iterating over it.
 				next := pe.Next
 				inrec.Unlink(pe)

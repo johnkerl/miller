@@ -4,7 +4,7 @@ import (
 	"bufio"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 type RecordWriterNIDX struct {
@@ -20,7 +20,7 @@ func NewRecordWriterNIDX(writerOptions *cli.TWriterOptions) (*RecordWriterNIDX, 
 }
 
 func (writer *RecordWriterNIDX) Write(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {

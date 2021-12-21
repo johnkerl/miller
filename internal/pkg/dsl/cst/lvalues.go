@@ -12,8 +12,8 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------
@@ -84,7 +84,7 @@ func (root *RootNode) BuildAssignableNode(
 
 // ----------------------------------------------------------------
 type DirectFieldValueLvalueNode struct {
-	lhsFieldName *types.Mlrval
+	lhsFieldName *mlrval.Mlrval
 }
 
 func (root *RootNode) BuildDirectFieldValueLvalueNode(
@@ -92,26 +92,26 @@ func (root *RootNode) BuildDirectFieldValueLvalueNode(
 ) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectFieldValue)
 
-	lhsFieldName := types.MlrvalFromString(string(astNode.Token.Lit))
+	lhsFieldName := mlrval.FromString(string(astNode.Token.Lit))
 	return NewDirectFieldValueLvalueNode(lhsFieldName), nil
 }
 
-func NewDirectFieldValueLvalueNode(lhsFieldName *types.Mlrval) *DirectFieldValueLvalueNode {
+func NewDirectFieldValueLvalueNode(lhsFieldName *mlrval.Mlrval) *DirectFieldValueLvalueNode {
 	return &DirectFieldValueLvalueNode{
 		lhsFieldName: lhsFieldName,
 	}
 }
 
 func (node *DirectFieldValueLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	return node.AssignIndexed(rvalue, nil, state)
 }
 
 func (node *DirectFieldValueLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 
@@ -134,7 +134,7 @@ func (node *DirectFieldValueLvalueNode) AssignIndexed(
 		return nil
 	} else {
 		return state.Inrec.PutIndexed(
-			append([]*types.Mlrval{node.lhsFieldName}, indices...),
+			append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
 			rvalue,
 		)
 	}
@@ -147,7 +147,7 @@ func (node *DirectFieldValueLvalueNode) Unassign(
 }
 
 func (node *DirectFieldValueLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 
@@ -166,7 +166,7 @@ func (node *DirectFieldValueLvalueNode) UnassignIndexed(
 		state.Inrec.Remove(name)
 	} else {
 		state.Inrec.RemoveIndexed(
-			append([]*types.Mlrval{node.lhsFieldName}, indices...),
+			append([]*mlrval.Mlrval{node.lhsFieldName}, indices...),
 		)
 	}
 }
@@ -199,15 +199,15 @@ func NewIndirectFieldValueLvalueNode(
 }
 
 func (node *IndirectFieldValueLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	return node.AssignIndexed(rvalue, nil, state)
 }
 
 func (node *IndirectFieldValueLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
@@ -233,7 +233,7 @@ func (node *IndirectFieldValueLvalueNode) AssignIndexed(
 		return nil
 	} else {
 		return state.Inrec.PutIndexed(
-			append([]*types.Mlrval{lhsFieldName.Copy()}, indices...),
+			append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
 			rvalue,
 		)
 	}
@@ -246,7 +246,7 @@ func (node *IndirectFieldValueLvalueNode) Unassign(
 }
 
 func (node *IndirectFieldValueLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	// For normal DSL use the CST validator will prohibit this from being
@@ -264,7 +264,7 @@ func (node *IndirectFieldValueLvalueNode) UnassignIndexed(
 		state.Inrec.Remove(name)
 	} else {
 		state.Inrec.RemoveIndexed(
-			append([]*types.Mlrval{lhsFieldName.Copy()}, indices...),
+			append([]*mlrval.Mlrval{lhsFieldName.Copy()}, indices...),
 		)
 	}
 }
@@ -300,7 +300,7 @@ func NewPositionalFieldNameLvalueNode(
 }
 
 func (node *PositionalFieldNameLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
@@ -334,8 +334,8 @@ func (node *PositionalFieldNameLvalueNode) Assign(
 }
 
 func (node *PositionalFieldNameLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// TODO: reconsider this if /when we decide to allow string-slice
@@ -352,7 +352,7 @@ func (node *PositionalFieldNameLvalueNode) Unassign(
 }
 
 func (node *PositionalFieldNameLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	lhsFieldIndex := node.lhsFieldIndexExpression.Evaluate(state)
@@ -376,7 +376,7 @@ func (node *PositionalFieldNameLvalueNode) UnassignIndexed(
 	} else {
 		// xxx positional
 		state.Inrec.RemoveIndexed(
-			append([]*types.Mlrval{lhsFieldIndex}, indices...),
+			append([]*mlrval.Mlrval{lhsFieldIndex}, indices...),
 		)
 	}
 }
@@ -412,15 +412,15 @@ func NewPositionalFieldValueLvalueNode(
 }
 
 func (node *PositionalFieldValueLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	return node.AssignIndexed(rvalue, nil, state)
 }
 
 func (node *PositionalFieldValueLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
@@ -460,7 +460,7 @@ func (node *PositionalFieldValueLvalueNode) AssignIndexed(
 	} else {
 		// xxx positional
 		return state.Inrec.PutIndexed(
-			append([]*types.Mlrval{lhsFieldIndex}, indices...),
+			append([]*mlrval.Mlrval{lhsFieldIndex}, indices...),
 			rvalue,
 		)
 	}
@@ -475,7 +475,7 @@ func (node *PositionalFieldValueLvalueNode) Unassign(
 }
 
 func (node *PositionalFieldValueLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	// For normal DSL use the CST validator will prohibit this from being
@@ -498,7 +498,7 @@ func (node *PositionalFieldValueLvalueNode) UnassignIndexed(
 	} else {
 		// xxx positional
 		state.Inrec.RemoveIndexed(
-			append([]*types.Mlrval{lhsFieldIndex}, indices...),
+			append([]*mlrval.Mlrval{lhsFieldIndex}, indices...),
 		)
 	}
 }
@@ -519,15 +519,15 @@ func NewFullSrecLvalueNode() *FullSrecLvalueNode {
 }
 
 func (node *FullSrecLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	return node.AssignIndexed(rvalue, nil, state)
 }
 
 func (node *FullSrecLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// For normal DSL use the CST validator will prohibit this from being
@@ -558,7 +558,7 @@ func (node *FullSrecLvalueNode) Unassign(
 }
 
 func (node *FullSrecLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	// For normal DSL use the CST validator will prohibit this from being
@@ -579,32 +579,32 @@ func (node *FullSrecLvalueNode) UnassignIndexed(
 
 // ----------------------------------------------------------------
 type DirectOosvarValueLvalueNode struct {
-	lhsOosvarName *types.Mlrval
+	lhsOosvarName *mlrval.Mlrval
 }
 
 func (root *RootNode) BuildDirectOosvarValueLvalueNode(astNode *dsl.ASTNode) (IAssignable, error) {
 	lib.InternalCodingErrorIf(astNode.Type != dsl.NodeTypeDirectOosvarValue)
 
-	lhsOosvarName := types.MlrvalFromString(string(astNode.Token.Lit))
+	lhsOosvarName := mlrval.FromString(string(astNode.Token.Lit))
 	return NewDirectOosvarValueLvalueNode(lhsOosvarName), nil
 }
 
-func NewDirectOosvarValueLvalueNode(lhsOosvarName *types.Mlrval) *DirectOosvarValueLvalueNode {
+func NewDirectOosvarValueLvalueNode(lhsOosvarName *mlrval.Mlrval) *DirectOosvarValueLvalueNode {
 	return &DirectOosvarValueLvalueNode{
 		lhsOosvarName: lhsOosvarName,
 	}
 }
 
 func (node *DirectOosvarValueLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	return node.AssignIndexed(rvalue, nil, state)
 }
 
 func (node *DirectOosvarValueLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// AssignmentNode checks for absent, so we just assign whatever we get
@@ -617,7 +617,7 @@ func (node *DirectOosvarValueLvalueNode) AssignIndexed(
 		return nil
 	} else {
 		return state.Oosvars.PutIndexed(
-			append([]*types.Mlrval{node.lhsOosvarName}, indices...),
+			append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
 			rvalue,
 		)
 	}
@@ -630,7 +630,7 @@ func (node *DirectOosvarValueLvalueNode) Unassign(
 }
 
 func (node *DirectOosvarValueLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	if indices == nil {
@@ -638,7 +638,7 @@ func (node *DirectOosvarValueLvalueNode) UnassignIndexed(
 		state.Oosvars.Remove(name)
 	} else {
 		state.Oosvars.RemoveIndexed(
-			append([]*types.Mlrval{node.lhsOosvarName}, indices...),
+			append([]*mlrval.Mlrval{node.lhsOosvarName}, indices...),
 		)
 	}
 }
@@ -672,15 +672,15 @@ func NewIndirectOosvarValueLvalueNode(
 }
 
 func (node *IndirectOosvarValueLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	return node.AssignIndexed(rvalue, nil, state)
 }
 
 func (node *IndirectOosvarValueLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
@@ -697,7 +697,7 @@ func (node *IndirectOosvarValueLvalueNode) AssignIndexed(
 		return nil
 	} else {
 		return state.Oosvars.PutIndexed(
-			append([]*types.Mlrval{lhsOosvarName.Copy()}, indices...),
+			append([]*mlrval.Mlrval{lhsOosvarName.Copy()}, indices...),
 			rvalue,
 		)
 	}
@@ -710,7 +710,7 @@ func (node *IndirectOosvarValueLvalueNode) Unassign(
 }
 
 func (node *IndirectOosvarValueLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	lhsOosvarName := node.lhsOosvarNameExpression.Evaluate(state)
@@ -720,7 +720,7 @@ func (node *IndirectOosvarValueLvalueNode) UnassignIndexed(
 		state.Oosvars.Remove(sname)
 	} else {
 		state.Oosvars.RemoveIndexed(
-			append([]*types.Mlrval{lhsOosvarName}, indices...),
+			append([]*mlrval.Mlrval{lhsOosvarName}, indices...),
 		)
 	}
 }
@@ -741,15 +741,15 @@ func NewFullOosvarLvalueNode() *FullOosvarLvalueNode {
 }
 
 func (node *FullOosvarLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	return node.AssignIndexed(rvalue, nil, state)
 }
 
 func (node *FullOosvarLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
@@ -771,7 +771,7 @@ func (node *FullOosvarLvalueNode) Unassign(
 }
 
 func (node *FullOosvarLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	if indices == nil {
@@ -827,15 +827,15 @@ func NewLocalVariableLvalueNode(
 }
 
 func (node *LocalVariableLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	return node.AssignIndexed(rvalue, nil, state)
 }
 
 func (node *LocalVariableLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// AssignmentNode checks for absent, so we just assign whatever we get
@@ -863,7 +863,7 @@ func (node *LocalVariableLvalueNode) Unassign(
 }
 
 func (node *LocalVariableLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	if indices == nil {
@@ -1006,10 +1006,10 @@ func NewIndexedLvalueNode(
 // '$x[1][2] = 3' or '@x[1][2] = 3', the indices are [1,2], and the baseLvalue
 // is '$x' or '@x' respectively.
 func (node *IndexedLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
-	indices := make([]*types.Mlrval, len(node.indexEvaluables))
+	indices := make([]*mlrval.Mlrval, len(node.indexEvaluables))
 
 	for i := range node.indexEvaluables {
 		indices[i] = node.indexEvaluables[i].Evaluate(state)
@@ -1021,15 +1021,15 @@ func (node *IndexedLvalueNode) Assign(
 	// This lets the user do '$y[ ["a", "b", "c"] ] = $x' in lieu of
 	// '$y["a"]["b"]["c"] = $x'.
 	if len(indices) == 1 && indices[0].IsArray() {
-		indices = types.MakePointerArray(indices[0].GetArray())
+		indices = mlrval.MakePointerArray(indices[0].GetArray())
 	}
 
 	return node.baseLvalue.AssignIndexed(rvalue, indices, state)
 }
 
 func (node *IndexedLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// We are the delegator, not the delegatee
@@ -1040,7 +1040,7 @@ func (node *IndexedLvalueNode) AssignIndexed(
 func (node *IndexedLvalueNode) Unassign(
 	state *runtime.State,
 ) {
-	indices := make([]*types.Mlrval, len(node.indexEvaluables))
+	indices := make([]*mlrval.Mlrval, len(node.indexEvaluables))
 	for i := range node.indexEvaluables {
 		indices[i] = node.indexEvaluables[i].Evaluate(state)
 	}
@@ -1049,7 +1049,7 @@ func (node *IndexedLvalueNode) Unassign(
 }
 
 func (node *IndexedLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	// We are the delegator, not the delegatee
@@ -1082,7 +1082,7 @@ func NewEnvironmentVariableLvalueNode(
 }
 
 func (node *EnvironmentVariableLvalueNode) Assign(
-	rvalue *types.Mlrval,
+	rvalue *mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	// AssignmentNode checks for absentness of the rvalue, so we just assign
@@ -1114,8 +1114,8 @@ func (node *EnvironmentVariableLvalueNode) Assign(
 }
 
 func (node *EnvironmentVariableLvalueNode) AssignIndexed(
-	rvalue *types.Mlrval,
-	indices []*types.Mlrval,
+	rvalue *mlrval.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) error {
 	return errors.New("mlr: ENV[...] cannot be indexed.")
@@ -1138,7 +1138,7 @@ func (node *EnvironmentVariableLvalueNode) Unassign(
 }
 
 func (node *EnvironmentVariableLvalueNode) UnassignIndexed(
-	indices []*types.Mlrval,
+	indices []*mlrval.Mlrval,
 	state *runtime.State,
 ) {
 	// TODO: needs error return

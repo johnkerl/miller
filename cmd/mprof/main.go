@@ -243,8 +243,8 @@ func (reader *RecordReaderDKVPNonPipelined) processHandle(
 
 func (reader *RecordReaderDKVPNonPipelined) recordFromDKVPLine(
 	line string,
-) *types.Mlrmap {
-	record := types.NewMlrmap()
+) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmap()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
@@ -268,11 +268,11 @@ func (reader *RecordReaderDKVPNonPipelined) recordFromDKVPLine(
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[0])
+			value := mlrval.FromInferredTypeForDataFiles(kv[0])
 			record.PutReference(key, value)
 		} else {
 			key := kv[0]
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromInferredTypeForDataFiles(kv[1])
 			record.PutReference(key, value)
 		}
 	}
@@ -379,8 +379,8 @@ func (reader *RecordReaderDKVPListPipelined) processHandle(
 
 func (reader *RecordReaderDKVPListPipelined) recordFromDKVPLine(
 	line string,
-) *types.Mlrmap {
-	record := types.NewMlrmap()
+) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmap()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
@@ -404,11 +404,11 @@ func (reader *RecordReaderDKVPListPipelined) recordFromDKVPLine(
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[0])
+			value := mlrval.FromInferredTypeForDataFiles(kv[0])
 			record.PutReference(key, value)
 		} else {
 			key := kv[0]
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromInferredTypeForDataFiles(kv[1])
 			record.PutReference(key, value)
 		}
 	}
@@ -531,8 +531,8 @@ func (reader *RecordReaderDKVPChanPipelined) processHandle(
 
 func (reader *RecordReaderDKVPChanPipelined) recordFromDKVPLine(
 	line string,
-) *types.Mlrmap {
-	record := types.NewMlrmap()
+) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmap()
 
 	var pairs []string
 	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
@@ -556,11 +556,11 @@ func (reader *RecordReaderDKVPChanPipelined) recordFromDKVPLine(
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[0])
+			value := mlrval.FromInferredTypeForDataFiles(kv[0])
 			record.PutReference(key, value)
 		} else {
 			key := kv[0]
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromInferredTypeForDataFiles(kv[1])
 			record.PutReference(key, value)
 		}
 	}
@@ -643,7 +643,7 @@ func NewRecordWriterDKVP2(writerOptions *cli.TWriterOptions) (*RecordWriterDKVP2
 }
 
 func (writer *RecordWriterDKVP2) Write(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	ostream *bufio.Writer,
 ) {
 	// End of record stream: nothing special for this output format

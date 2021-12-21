@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -257,21 +258,21 @@ func (tr *TransformerHistogram) emitNonAuto(
 		countFieldNames[valueFieldName] = tr.outputPrefix + valueFieldName + "_count"
 	}
 	for i := 0; i < tr.nbins; i++ {
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 
 		outrec.PutReference(
 			tr.outputPrefix+"bin_lo",
-			types.MlrvalFromFloat64((tr.lo+float64(i))/tr.mul),
+			mlrval.FromFloat((tr.lo+float64(i))/tr.mul),
 		)
 		outrec.PutReference(
 			tr.outputPrefix+"bin_hi",
-			types.MlrvalFromFloat64((tr.lo+float64(i+1))/tr.mul),
+			mlrval.FromFloat((tr.lo+float64(i+1))/tr.mul),
 		)
 
 		for _, valueFieldName := range tr.valueFieldNames {
 			outrec.PutReference(
 				countFieldNames[valueFieldName],
-				types.MlrvalFromInt(tr.countsByField[valueFieldName][i]),
+				mlrval.FromInt(tr.countsByField[valueFieldName][i]),
 			)
 		}
 
@@ -363,21 +364,21 @@ func (tr *TransformerHistogram) emitAuto(
 	}
 
 	for i := 0; i < nbins; i++ {
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 
 		outrec.PutReference(
 			tr.outputPrefix+"bin_lo",
-			types.MlrvalFromFloat64((lo+float64(i))/mul),
+			mlrval.FromFloat((lo+float64(i))/mul),
 		)
 		outrec.PutReference(
 			tr.outputPrefix+"bin_hi",
-			types.MlrvalFromFloat64((lo+float64(i+1))/mul),
+			mlrval.FromFloat((lo+float64(i+1))/mul),
 		)
 
 		for _, valueFieldName := range tr.valueFieldNames {
 			outrec.PutReference(
 				countFieldNames[valueFieldName],
-				types.MlrvalFromInt(tr.countsByField[valueFieldName][i]),
+				mlrval.FromInt(tr.countsByField[valueFieldName][i]),
 			)
 		}
 

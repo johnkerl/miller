@@ -6,8 +6,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -135,12 +137,12 @@ type TransformerFraction struct {
 	recordsAndContexts *list.List
 	// Two-level map: Group-by field names are the first keyset;
 	// fraction field names are keys into the second.
-	sums  map[string]map[string]*types.Mlrval
-	cumus map[string]map[string]*types.Mlrval
+	sums  map[string]map[string]*mlrval.Mlrval
+	cumus map[string]map[string]*mlrval.Mlrval
 
-	outputFieldNameSuffix string        // "_fraction" or "_percent"
-	multiplier            *types.Mlrval // 1.0 for fraction or 100.0 for percent
-	zero                  *types.Mlrval
+	outputFieldNameSuffix string         // "_fraction" or "_percent"
+	multiplier            *mlrval.Mlrval // 1.0 for fraction or 100.0 for percent
+	zero                  *mlrval.Mlrval
 }
 
 // ----------------------------------------------------------------
@@ -152,20 +154,20 @@ func NewTransformerFraction(
 ) (*TransformerFraction, error) {
 
 	recordsAndContexts := list.New()
-	sums := make(map[string]map[string]*types.Mlrval)
-	cumus := make(map[string]map[string]*types.Mlrval)
+	sums := make(map[string]map[string]*mlrval.Mlrval)
+	cumus := make(map[string]map[string]*mlrval.Mlrval)
 
-	var multiplier *types.Mlrval
+	var multiplier *mlrval.Mlrval
 	var outputFieldNameSuffix string
 	if doPercents {
-		multiplier = types.MlrvalFromInt(100)
+		multiplier = mlrval.FromInt(100)
 		if doCumu {
 			outputFieldNameSuffix = "_cumulative_percent"
 		} else {
 			outputFieldNameSuffix = "_percent"
 		}
 	} else {
-		multiplier = types.MlrvalFromInt(1)
+		multiplier = mlrval.FromInt(1)
 		if doCumu {
 			outputFieldNameSuffix = "_cumulative_fraction"
 		} else {
@@ -173,7 +175,7 @@ func NewTransformerFraction(
 		}
 	}
 
-	zero := types.MlrvalFromInt(0)
+	zero := mlrval.FromInt(0)
 
 	return &TransformerFraction{
 		fractionFieldNames:    fractionFieldNames,
@@ -208,11 +210,11 @@ func (tr *TransformerFraction) Transform(
 
 		if hasAll {
 			sumsForGroup := tr.sums[groupingKey]
-			var cumusForGroup map[string]*types.Mlrval = nil
+			var cumusForGroup map[string]*mlrval.Mlrval = nil
 			if sumsForGroup == nil {
-				sumsForGroup = make(map[string]*types.Mlrval)
+				sumsForGroup = make(map[string]*mlrval.Mlrval)
 				tr.sums[groupingKey] = sumsForGroup
-				cumusForGroup = make(map[string]*types.Mlrval)
+				cumusForGroup = make(map[string]*mlrval.Mlrval)
 				tr.cumus[groupingKey] = cumusForGroup
 			}
 			for _, fractionFieldName := range tr.fractionFieldNames {
@@ -224,7 +226,7 @@ func (tr *TransformerFraction) Transform(
 						sumsForGroup[fractionFieldName] = value.Copy()
 						cumusForGroup[fractionFieldName] = tr.zero
 					} else {
-						sumsForGroup[fractionFieldName] = types.BIF_plus_binary(sum, value)
+						sumsForGroup[fractionFieldName] = bifs.BIF_plus_binary(sum, value)
 					}
 				}
 			}
@@ -254,23 +256,23 @@ func (tr *TransformerFraction) Transform(
 					if value != nil {
 						value.AssertNumeric() // may fatal the process
 
-						var numerator *types.Mlrval = nil
-						var cumu *types.Mlrval = nil
-						var outputValue *types.Mlrval = nil
+						var numerator *mlrval.Mlrval = nil
+						var cumu *mlrval.Mlrval = nil
+						var outputValue *mlrval.Mlrval = nil
 
 						if tr.doCumu {
 							cumu = cumusForGroup[fractionFieldName]
-							numerator = types.BIF_plus_binary(value, cumu)
+							numerator = bifs.BIF_plus_binary(value, cumu)
 						} else {
 							numerator = value
 						}
 
 						denominator := sumsForGroup[fractionFieldName]
-						if !types.MlrvalEqualsAsBool(value, tr.zero) {
-							outputValue = types.BIF_divide(numerator, denominator)
-							outputValue = types.BIF_times(outputValue, tr.multiplier)
+						if !mlrval.Equals(value, tr.zero) {
+							outputValue = bifs.BIF_divide(numerator, denominator)
+							outputValue = bifs.BIF_times(outputValue, tr.multiplier)
 						} else {
-							outputValue = types.MLRVAL_ERROR
+							outputValue = mlrval.ERROR
 						}
 
 						outrec.PutCopy(
@@ -279,7 +281,7 @@ func (tr *TransformerFraction) Transform(
 						)
 
 						if tr.doCumu {
-							cumusForGroup[fractionFieldName] = types.BIF_plus_binary(cumu, value)
+							cumusForGroup[fractionFieldName] = bifs.BIF_plus_binary(cumu, value)
 						}
 					}
 				}

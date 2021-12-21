@@ -7,18 +7,18 @@ package utils
 import (
 	"container/list"
 
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // ----------------------------------------------------------------
 type JoinBucket struct {
-	leftFieldValues    []*types.Mlrval
+	leftFieldValues    []*mlrval.Mlrval
 	RecordsAndContexts *list.List
 	WasPaired          bool
 }
 
 func NewJoinBucket(
-	leftFieldValues []*types.Mlrval,
+	leftFieldValues []*mlrval.Mlrval,
 ) *JoinBucket {
 	return &JoinBucket{
 		leftFieldValues:    leftFieldValues,

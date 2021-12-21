@@ -9,11 +9,12 @@ import (
 	"math"
 	"sort"
 
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/bifs"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 type PercentileKeeper struct {
-	data                      []*types.Mlrval
+	data                      []*mlrval.Mlrval
 	sorted                    bool
 	doInterpolatedPercentiles bool
 }
@@ -23,21 +24,21 @@ func NewPercentileKeeper(
 	doInterpolatedPercentiles bool,
 ) *PercentileKeeper {
 	return &PercentileKeeper{
-		data:                      make([]*types.Mlrval, 0, 1000),
+		data:                      make([]*mlrval.Mlrval, 0, 1000),
 		sorted:                    false,
 		doInterpolatedPercentiles: doInterpolatedPercentiles,
 	}
 }
 
 func (keeper *PercentileKeeper) Reset() {
-	keeper.data = make([]*types.Mlrval, 0, 1000)
+	keeper.data = make([]*mlrval.Mlrval, 0, 1000)
 	keeper.sorted = false
 }
 
 // ----------------------------------------------------------------
-func (keeper *PercentileKeeper) Ingest(value *types.Mlrval) {
+func (keeper *PercentileKeeper) Ingest(value *mlrval.Mlrval) {
 	if len(keeper.data) >= cap(keeper.data) {
-		newData := make([]*types.Mlrval, len(keeper.data), 2*cap(keeper.data))
+		newData := make([]*mlrval.Mlrval, len(keeper.data), 2*cap(keeper.data))
 		copy(newData, keeper.data)
 		keeper.data = newData
 	}
@@ -235,7 +236,7 @@ func computeIndexNoninterpolated(n int, p float64) int {
 }
 
 // xxx pending pointer-output refactor
-func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int, p float64) types.Mlrval {
+func getPercentileLinearlyInterpolated(array []*mlrval.Mlrval, n int, p float64) mlrval.Mlrval {
 	findex := (p / 100.0) * (float64(n) - 1)
 	if findex < 0.0 {
 		findex = 0.0
@@ -246,10 +247,10 @@ func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int, p float64) 
 	} else {
 		// array[iindex] + frac * (array[iindex+1] - array[iindex])
 		// TODO: just do this in float64.
-		frac := types.MlrvalFromFloat64(findex - float64(iindex))
-		diff := types.BIF_minus_binary(array[iindex+1], array[iindex])
-		prod := types.BIF_times(frac, diff)
-		return *types.BIF_plus_binary(array[iindex], prod)
+		frac := mlrval.FromFloat(findex - float64(iindex))
+		diff := bifs.BIF_minus_binary(array[iindex+1], array[iindex])
+		prod := bifs.BIF_times(frac, diff)
+		return *bifs.BIF_plus_binary(array[iindex], prod)
 	}
 }
 
@@ -257,14 +258,14 @@ func getPercentileLinearlyInterpolated(array []*types.Mlrval, n int, p float64) 
 func (keeper *PercentileKeeper) sortIfNecessary() {
 	if !keeper.sorted {
 		sort.Slice(keeper.data, func(i, j int) bool {
-			return types.MlrvalLessThanAsBool(keeper.data[i], keeper.data[j])
+			return mlrval.LessThan(keeper.data[i], keeper.data[j])
 		})
 		keeper.sorted = true
 	}
 }
 
 // ----------------------------------------------------------------
-func (keeper *PercentileKeeper) Emit(percentile float64) *types.Mlrval {
+func (keeper *PercentileKeeper) Emit(percentile float64) *mlrval.Mlrval {
 	if keeper.doInterpolatedPercentiles {
 		return keeper.EmitLinearlyInterpolated(percentile)
 	} else {
@@ -272,17 +273,17 @@ func (keeper *PercentileKeeper) Emit(percentile float64) *types.Mlrval {
 	}
 }
 
-func (keeper *PercentileKeeper) EmitNonInterpolated(percentile float64) *types.Mlrval {
+func (keeper *PercentileKeeper) EmitNonInterpolated(percentile float64) *mlrval.Mlrval {
 	if len(keeper.data) == 0 {
-		return types.MLRVAL_VOID
+		return mlrval.VOID
 	}
 	keeper.sortIfNecessary()
 	return keeper.data[computeIndexNoninterpolated(int(len(keeper.data)), percentile)].Copy()
 }
 
-func (keeper *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) *types.Mlrval {
+func (keeper *PercentileKeeper) EmitLinearlyInterpolated(percentile float64) *mlrval.Mlrval {
 	if len(keeper.data) == 0 {
-		return types.MLRVAL_VOID
+		return mlrval.VOID
 	}
 	keeper.sortIfNecessary()
 	output := getPercentileLinearlyInterpolated(keeper.data, int(len(keeper.data)), percentile)

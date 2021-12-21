@@ -6,14 +6,14 @@ import (
 	"os"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // ----------------------------------------------------------------
 type RecordWriterJSON struct {
 	// Parameters:
 	writerOptions  *cli.TWriterOptions
-	jsonFormatting types.TJSONFormatting
+	jsonFormatting mlrval.TJSONFormatting
 
 	// State:
 	onFirst bool
@@ -21,9 +21,9 @@ type RecordWriterJSON struct {
 
 // ----------------------------------------------------------------
 func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, error) {
-	var jsonFormatting types.TJSONFormatting = types.JSON_SINGLE_LINE
+	var jsonFormatting mlrval.TJSONFormatting = mlrval.JSON_SINGLE_LINE
 	if writerOptions.JSONOutputMultiline {
-		jsonFormatting = types.JSON_MULTILINE
+		jsonFormatting = mlrval.JSON_MULTILINE
 	}
 	return &RecordWriterJSON{
 		writerOptions:  writerOptions,
@@ -34,7 +34,7 @@ func NewRecordWriterJSON(writerOptions *cli.TWriterOptions) (*RecordWriterJSON, 
 
 // ----------------------------------------------------------------
 func (writer *RecordWriterJSON) Write(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
@@ -47,7 +47,7 @@ func (writer *RecordWriterJSON) Write(
 
 // ----------------------------------------------------------------
 func (writer *RecordWriterJSON) writeWithListWrap(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
@@ -82,7 +82,7 @@ func (writer *RecordWriterJSON) writeWithListWrap(
 
 // ----------------------------------------------------------------
 func (writer *RecordWriterJSON) writeWithoutListWrap(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {

@@ -3,24 +3,36 @@
 ourdir=$(dirname $0)
 
 $ourdir/time-big-file dkvp    mlr5
+$ourdir/time-big-file dkvp    ~/tmp/miller/mlr
 $ourdir/time-big-file dkvp    'mlr -S'
+$ourdir/time-big-file dkvp    mlr
 echo
 
 $ourdir/time-big-file nidx    mlr5
+$ourdir/time-big-file nidx    ~/tmp/miller/mlr
 $ourdir/time-big-file nidx    'mlr -S'
+$ourdir/time-big-file nidx    mlr
 echo
 
 $ourdir/time-big-file xtab    mlr5
+$ourdir/time-big-file xtab    ~/tmp/miller/mlr
 $ourdir/time-big-file xtab    'mlr -S'
+$ourdir/time-big-file xtab    mlr
 echo
 
 $ourdir/time-big-file csv     mlr5
+$ourdir/time-big-file csv     ~/tmp/miller/mlr
 $ourdir/time-big-file csv     'mlr -S'
+$ourdir/time-big-file csv     mlr
 echo
 
 $ourdir/time-big-file csvlite mlr5
+$ourdir/time-big-file csvlite ~/tmp/miller/mlr
 $ourdir/time-big-file csvlite 'mlr -S'
+$ourdir/time-big-file csvlite mlr
 echo
 
 $ourdir/time-big-file json    mlr5
+$ourdir/time-big-file json    ~/tmp/miller/mlr
 $ourdir/time-big-file json    'mlr -S'
+$ourdir/time-big-file json    mlr

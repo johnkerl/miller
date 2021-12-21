@@ -14,6 +14,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -608,7 +609,7 @@ func handleWrite(repl *Repl, args []string) bool {
 	return true
 }
 
-func writeRecord(repl *Repl, outrec *types.Mlrmap) {
+func writeRecord(repl *Repl, outrec *mlrval.Mlrmap) {
 	if outrec != nil {
 		// E.g. '{"req": {"method": "GET", "path": "/api/check"}}' becomes
 		// req.method=GET,req.path=/api/check.

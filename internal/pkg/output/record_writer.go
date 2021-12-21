@@ -3,7 +3,7 @@ package output
 import (
 	"bufio"
 
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // IRecordWriter is the abstract interface for all record-writers.  They are
@@ -17,7 +17,7 @@ import (
 // format.
 type IRecordWriter interface {
 	Write(
-		outrec *types.Mlrmap,
+		outrec *mlrval.Mlrmap,
 		bufferedOutputStream *bufio.Writer,
 		outputIsStdout bool,
 	)

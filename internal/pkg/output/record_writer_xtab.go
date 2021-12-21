@@ -7,7 +7,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/colorizer"
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // ----------------------------------------------------------------
@@ -42,7 +42,7 @@ func NewRecordWriterXTAB(writerOptions *cli.TWriterOptions) (*RecordWriterXTAB, 
 }
 
 func (writer *RecordWriterXTAB) Write(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 ) {
@@ -67,7 +67,7 @@ func (writer *RecordWriterXTAB) Write(
 }
 
 func (writer *RecordWriterXTAB) writeWithLeftAlignedValues(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 	maxKeyLength int,
@@ -100,7 +100,7 @@ func (writer *RecordWriterXTAB) writeWithLeftAlignedValues(
 }
 
 func (writer *RecordWriterXTAB) writeWithRightAlignedValues(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	bufferedOutputStream *bufio.Writer,
 	outputIsStdout bool,
 	maxKeyLength int,

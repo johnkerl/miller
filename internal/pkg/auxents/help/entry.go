@@ -10,11 +10,12 @@ import (
 
 	"github.com/mattn/go-isatty"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/transformers"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ================================================================
@@ -447,11 +448,11 @@ func helpOutputColorization() {
 
 // ----------------------------------------------------------------
 func helpTypeArithmeticInfo() {
-	mlrvals := []*types.Mlrval{
-		types.MlrvalFromInt(1),
-		types.MlrvalFromFloat64(2.5),
-		types.MLRVAL_ABSENT,
-		types.MLRVAL_ERROR,
+	mlrvals := []*mlrval.Mlrval{
+		mlrval.FromInt(1),
+		mlrval.FromFloat(2.5),
+		mlrval.ABSENT,
+		mlrval.ERROR,
 	}
 
 	n := len(mlrvals)
@@ -470,7 +471,7 @@ func helpTypeArithmeticInfo() {
 			} else if i == -1 {
 				fmt.Printf(" %-10s", "------")
 			} else {
-				sum := types.BIF_plus_binary(mlrvals[i], mlrvals[j])
+				sum := bifs.BIF_plus_binary(mlrvals[i], mlrvals[j])
 				fmt.Printf(" %-10s", sum.String())
 			}
 		}

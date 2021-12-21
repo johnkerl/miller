@@ -11,6 +11,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/parsing/lexer"
 	"github.com/johnkerl/miller/internal/pkg/parsing/parser"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
@@ -455,7 +456,7 @@ func NewTransformerPut(
 			}
 			key := pair[0]
 			svalue := pair[1]
-			mvalue := types.MlrvalFromInferredType(svalue)
+			mvalue := mlrval.FromInferredType(svalue)
 			runtimeState.Oosvars.PutCopy(key, mvalue)
 		}
 	}

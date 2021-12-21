@@ -9,6 +9,7 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/input"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/transformers/utils"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
@@ -543,7 +544,7 @@ func (tr *TransformerJoin) formAndEmitPairs(
 		rightrec := rightRecordAndContext.Record
 
 		// Allocate a new output record which is the join of the left and right records.
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 
 		// Add the joined-on fields to the new output record
 		n := len(tr.opts.leftJoinFieldNames)

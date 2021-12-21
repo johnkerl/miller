@@ -5,30 +5,31 @@
 package utils
 
 import (
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------
 type TopKeeper struct {
-	TopValues             []*types.Mlrval
+	TopValues             []*mlrval.Mlrval
 	TopRecordsAndContexts []*types.RecordAndContext
 	size                  int
 	capacity              int
-	bsearchFunc           types.BsearchMlrvalArrayFunc
+	bsearchFunc           mlrval.BsearchMlrvalArrayFunc
 }
 
 // ----------------------------------------------------------------
 func NewTopKeeper(capacity int, doMax bool) *TopKeeper {
 	keeper := &TopKeeper{
-		TopValues:             make([]*types.Mlrval, capacity),
+		TopValues:             make([]*mlrval.Mlrval, capacity),
 		TopRecordsAndContexts: make([]*types.RecordAndContext, capacity),
 		size:                  0,
 		capacity:              capacity,
 	}
 	if doMax {
-		keeper.bsearchFunc = types.BsearchMlrvalArrayForDescendingInsert
+		keeper.bsearchFunc = mlrval.BsearchMlrvalArrayForDescendingInsert
 	} else {
-		keeper.bsearchFunc = types.BsearchMlrvalArrayForAscendingInsert
+		keeper.bsearchFunc = mlrval.BsearchMlrvalArrayForAscendingInsert
 	}
 	return keeper
 }
@@ -69,7 +70,7 @@ func (keeper *TopKeeper) GetSize() int {
 // Our caller, the 'top' verb, feeds us records. We keep them or not; in the
 // latter case, the Go runtime GCs them.
 
-func (keeper *TopKeeper) Add(value *types.Mlrval, recordAndContext *types.RecordAndContext) {
+func (keeper *TopKeeper) Add(value *mlrval.Mlrval, recordAndContext *types.RecordAndContext) {
 	destidx := keeper.bsearchFunc(&keeper.TopValues, keeper.size, value)
 
 	if keeper.size < keeper.capacity {

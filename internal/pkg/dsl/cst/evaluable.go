@@ -13,8 +13,8 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // ----------------------------------------------------------------
@@ -107,10 +107,10 @@ func (root *RootNode) BuildIndirectFieldValueNode(
 
 func (node *IndirectFieldValueNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval { // TODO: err
+) *mlrval.Mlrval { // TODO: err
 	fieldName := node.fieldNameEvaluable.Evaluate(state)
 	if fieldName.IsAbsent() {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 
 	// For normal DSL use the CST validator will prohibit this from being
@@ -119,7 +119,7 @@ func (node *IndirectFieldValueNode) Evaluate(
 	// print inrec attributes. Also, a UDF/UDS invoked from begin/end could try
 	// to access the inrec, and that would get past the validator.
 	if state.Inrec == nil {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 
 	value, err := state.Inrec.GetWithMlrvalIndex(fieldName)
@@ -130,7 +130,7 @@ func (node *IndirectFieldValueNode) Evaluate(
 		os.Exit(1)
 	}
 	if value == nil {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 	return value
 }
@@ -157,15 +157,15 @@ func (root *RootNode) BuildIndirectOosvarValueNode(
 
 func (node *IndirectOosvarValueNode) Evaluate(
 	state *runtime.State,
-) *types.Mlrval { // TODO: err
+) *mlrval.Mlrval { // TODO: err
 	oosvarName := node.oosvarNameEvaluable.Evaluate(state)
 	if oosvarName.IsAbsent() {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 
 	value := state.Oosvars.Get(oosvarName.String())
 	if value == nil {
-		return types.MLRVAL_ABSENT
+		return mlrval.ABSENT
 	}
 
 	return value

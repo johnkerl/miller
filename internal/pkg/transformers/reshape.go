@@ -36,6 +36,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -301,7 +302,7 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		pairs := types.NewMlrmap()
+		pairs := mlrval.NewMlrmap()
 		for _, inputFieldName := range tr.inputFieldNames {
 			value := inrec.Get(inputFieldName)
 			if value != nil {
@@ -320,7 +321,7 @@ func (tr *TransformerReshape) wideToLongNoRegex(
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
-				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalFromString(pf.Key))
+				outrec.PutReference(tr.outputKeyFieldName, mlrval.FromString(pf.Key))
 				outrec.PutReference(tr.outputValueFieldName, pf.Value)
 				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
@@ -340,7 +341,7 @@ func (tr *TransformerReshape) wideToLongRegex(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		pairs := types.NewMlrmap()
+		pairs := mlrval.NewMlrmap()
 
 		for pd := inrec.Head; pd != nil; pd = pd.Next {
 			for _, inputFieldRegex := range tr.inputFieldRegexes {
@@ -362,7 +363,7 @@ func (tr *TransformerReshape) wideToLongRegex(
 		} else {
 			for pf := pairs.Head; pf != nil; pf = pf.Next {
 				outrec := inrec.Copy()
-				outrec.PutReference(tr.outputKeyFieldName, types.MlrvalFromString(pf.Key))
+				outrec.PutReference(tr.outputKeyFieldName, mlrval.FromString(pf.Key))
 				outrec.PutReference(tr.outputValueFieldName, pf.Value)
 				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
@@ -439,13 +440,13 @@ func (tr *TransformerReshape) longToWide(
 }
 
 type tReshapeBucket struct {
-	representative *types.Mlrmap
-	pairs          *types.Mlrmap
+	representative *mlrval.Mlrmap
+	pairs          *mlrval.Mlrmap
 }
 
-func newReshapeBucket(representative *types.Mlrmap) *tReshapeBucket {
+func newReshapeBucket(representative *mlrval.Mlrmap) *tReshapeBucket {
 	return &tReshapeBucket{
 		representative: representative,
-		pairs:          types.NewMlrmap(),
+		pairs:          mlrval.NewMlrmap(),
 	}
 }

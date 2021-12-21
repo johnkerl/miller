@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -372,7 +373,7 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowCounts(
 		for pe := tr.uniqifiedRecords.Head; pe != nil; pe = pe.Next {
 			outrecAndContext := pe.Value.(*types.RecordAndContext)
 			icount := tr.uniqifiedRecordCounts.Get(pe.Key)
-			mcount := types.MlrvalFromInt(icount.(int))
+			mcount := mlrval.FromInt(icount.(int))
 			outrecAndContext.Record.PrependReference(tr.outputFieldName, mcount)
 			outputRecordsAndContexts.PushBack(outrecAndContext)
 		}
@@ -399,10 +400,10 @@ func (tr *TransformerUniq) transformUniqifyEntireRecordsShowNumDistinctOnly(
 		}
 
 	} else { // end of record stream
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 		outrec.PutReference(
 			tr.outputFieldName,
-			types.MlrvalFromInt(tr.uniqifiedRecordCounts.FieldCount),
+			mlrval.FromInt(tr.uniqifiedRecordCounts.FieldCount),
 		)
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
@@ -473,13 +474,13 @@ func (tr *TransformerUniq) transformUnlashed(
 			countsForFieldName := pe.Value.(*lib.OrderedMap)
 			for pf := countsForFieldName.Head; pf != nil; pf = pf.Next {
 				fieldValueString := pf.Key
-				outrec := types.NewMlrmapAsRecord()
-				outrec.PutReference("field", types.MlrvalFromString(fieldName))
+				outrec := mlrval.NewMlrmapAsRecord()
+				outrec.PutReference("field", mlrval.FromString(fieldName))
 				outrec.PutCopy(
 					"value",
-					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Get(fieldValueString).(*types.Mlrval),
+					tr.unlashedCountValues.Get(fieldName).(*lib.OrderedMap).Get(fieldValueString).(*mlrval.Mlrval),
 				)
-				outrec.PutReference("count", types.MlrvalFromInt(pf.Value.(int)))
+				outrec.PutReference("count", mlrval.FromInt(pf.Value.(int)))
 				outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 			}
 		}
@@ -509,10 +510,10 @@ func (tr *TransformerUniq) transformNumDistinctOnly(
 		}
 
 	} else {
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 		outrec.PutReference(
 			"count",
-			types.MlrvalFromInt(tr.countsByGroup.FieldCount),
+			mlrval.FromInt(tr.countsByGroup.FieldCount),
 		)
 		outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
 
@@ -544,8 +545,8 @@ func (tr *TransformerUniq) transformWithCounts(
 	} else { // end of record stream
 
 		for pa := tr.countsByGroup.Head; pa != nil; pa = pa.Next {
-			outrec := types.NewMlrmapAsRecord()
-			valuesForGroup := tr.valuesByGroup.Get(pa.Key).([]*types.Mlrval)
+			outrec := mlrval.NewMlrmapAsRecord()
+			valuesForGroup := tr.valuesByGroup.Get(pa.Key).([]*mlrval.Mlrval)
 			for i, fieldName := range tr.fieldNames {
 				outrec.PutCopy(
 					fieldName,
@@ -555,7 +556,7 @@ func (tr *TransformerUniq) transformWithCounts(
 			if tr.showCounts {
 				outrec.PutReference(
 					tr.outputFieldName,
-					types.MlrvalFromInt(pa.Value.(int)),
+					mlrval.FromInt(pa.Value.(int)),
 				)
 			}
 			outputRecordsAndContexts.PushBack(types.NewRecordAndContext(outrec, &inrecAndContext.Context))
@@ -584,7 +585,7 @@ func (tr *TransformerUniq) transformWithoutCounts(
 		if !present {
 			tr.countsByGroup.Put(groupingKey, 1)
 			tr.valuesByGroup.Put(groupingKey, selectedValues)
-			outrec := types.NewMlrmapAsRecord()
+			outrec := mlrval.NewMlrmapAsRecord()
 
 			for i, fieldName := range tr.fieldNames {
 				outrec.PutCopy(

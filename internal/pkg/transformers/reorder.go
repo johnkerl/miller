@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -232,7 +233,7 @@ func (tr *TransformerReorder) reorderBefore(
 			return
 		}
 
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 		pe := inrec.Head
 
 		// * inrec will be GC'ed
@@ -289,7 +290,7 @@ func (tr *TransformerReorder) reorderAfter(
 			return
 		}
 
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 		pe := inrec.Head
 
 		// * inrec will be GC'ed

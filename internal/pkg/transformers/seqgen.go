@@ -7,7 +7,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -117,11 +119,11 @@ func transformerSeqgenParseCLI(
 // ----------------------------------------------------------------
 type TransformerSeqgen struct {
 	fieldName      string
-	start          *types.Mlrval
-	stop           *types.Mlrval
-	step           *types.Mlrval
-	doneComparator types.BinaryFunc
-	mdone          *types.Mlrval
+	start          *mlrval.Mlrval
+	stop           *mlrval.Mlrval
+	step           *mlrval.Mlrval
+	doneComparator bifs.BinaryFunc
+	mdone          *mlrval.Mlrval
 }
 
 // ----------------------------------------------------------------
@@ -131,10 +133,10 @@ func NewTransformerSeqgen(
 	stopString string,
 	stepString string,
 ) (*TransformerSeqgen, error) {
-	start := types.MlrvalFromInferredType(startString)
-	stop := types.MlrvalFromInferredType(stopString)
-	step := types.MlrvalFromInferredType(stepString)
-	var doneComparator types.BinaryFunc = nil
+	start := mlrval.FromInferredType(startString)
+	stop := mlrval.FromInferredType(stopString)
+	step := mlrval.FromInferredType(stepString)
+	var doneComparator bifs.BinaryFunc = nil
 
 	fstart, startIsNumeric := start.GetNumericToFloatValue()
 	if !startIsNumeric {
@@ -167,12 +169,12 @@ func NewTransformerSeqgen(
 	}
 
 	if fstep > 0 {
-		doneComparator = types.BIF_greater_than
+		doneComparator = bifs.BIF_greater_than
 	} else if fstep < 0 {
-		doneComparator = types.BIF_less_than
+		doneComparator = bifs.BIF_less_than
 	} else {
 		if fstart == fstop {
-			doneComparator = types.BIF_equals
+			doneComparator = bifs.BIF_equals
 		} else {
 			return nil, errors.New(
 				"mlr seqgen: step must not be zero unless start == stop.",
@@ -186,7 +188,7 @@ func NewTransformerSeqgen(
 		stop:           stop,
 		step:           step,
 		doneComparator: doneComparator,
-		mdone:          types.MLRVAL_FALSE,
+		mdone:          mlrval.FALSE,
 	}, nil
 }
 
@@ -226,7 +228,7 @@ func (tr *TransformerSeqgen) Transform(
 			break
 		}
 
-		outrec := types.NewMlrmapAsRecord()
+		outrec := mlrval.NewMlrmapAsRecord()
 		outrec.PutCopy(tr.fieldName, counter)
 
 		context.UpdateForInputRecord()
@@ -234,7 +236,7 @@ func (tr *TransformerSeqgen) Transform(
 		outrecAndContext := types.NewRecordAndContext(outrec, context)
 		outputRecordsAndContexts.PushBack(outrecAndContext)
 
-		counter = types.BIF_plus_binary(counter, tr.step)
+		counter = bifs.BIF_plus_binary(counter, tr.step)
 	}
 
 	outputRecordsAndContexts.PushBack(types.NewEndOfStreamMarker(context))

@@ -8,6 +8,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -84,11 +85,11 @@ func transformerJSONStringifyParseCLI(
 		}
 	}
 
-	var jsonFormatting types.TJSONFormatting = types.JSON_SINGLE_LINE
+	var jsonFormatting mlrval.TJSONFormatting = mlrval.JSON_SINGLE_LINE
 	if jvStack {
-		jsonFormatting = types.JSON_MULTILINE
+		jsonFormatting = mlrval.JSON_MULTILINE
 	} else {
-		jsonFormatting = types.JSON_SINGLE_LINE
+		jsonFormatting = mlrval.JSON_SINGLE_LINE
 	}
 
 	*pargi = argi
@@ -111,7 +112,7 @@ func transformerJSONStringifyParseCLI(
 // ----------------------------------------------------------------
 type TransformerJSONStringify struct {
 	// input
-	jsonFormatting types.TJSONFormatting
+	jsonFormatting mlrval.TJSONFormatting
 	fieldNameSet   map[string]bool
 
 	// state
@@ -119,7 +120,7 @@ type TransformerJSONStringify struct {
 }
 
 func NewTransformerJSONStringify(
-	jsonFormatting types.TJSONFormatting,
+	jsonFormatting mlrval.TJSONFormatting,
 	fieldNames []string,
 ) (*TransformerJSONStringify, error) {
 	var fieldNameSet map[string]bool = nil

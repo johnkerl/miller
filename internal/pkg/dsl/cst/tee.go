@@ -10,6 +10,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/output"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
 	"github.com/johnkerl/miller/internal/pkg/types"
@@ -58,7 +59,7 @@ import (
 
 // ================================================================
 type tTeeToRedirectFunc func(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	state *runtime.State,
 ) error
 
@@ -156,7 +157,7 @@ func (node *TeeStatementNode) Execute(state *runtime.State) (*BlockExitPayload, 
 
 // ----------------------------------------------------------------
 func (node *TeeStatementNode) teeToFileOrPipe(
-	outrec *types.Mlrmap,
+	outrec *mlrval.Mlrmap,
 	state *runtime.State,
 ) error {
 	redirectorTarget := node.redirectorTargetEvaluable.Evaluate(state)

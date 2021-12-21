@@ -10,8 +10,8 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/runtime"
-	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 type CondBlockNode struct {
@@ -46,7 +46,7 @@ func (root *RootNode) BuildCondBlockNode(astNode *dsl.ASTNode) (*CondBlockNode, 
 func (node *CondBlockNode) Execute(
 	state *runtime.State,
 ) (*BlockExitPayload, error) {
-	condition := types.MLRVAL_TRUE
+	condition := mlrval.TRUE
 	if node.conditionNode != nil {
 		condition = node.conditionNode.Evaluate(state)
 	}

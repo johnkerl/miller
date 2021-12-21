@@ -2,8 +2,31 @@
 PUNCHDOWN LIST
 
 * --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
+* JIT next:
+  o JSON I/O UT
+  o krepl miller6 new doclink-comments
+  o IsArrayOrMap infers all -- it should not & it should say why not
+  o fix:
+    mlr --from test/input/abixy --opprint put -v -f test/cases/dsl-for-srec-loops/0005/mlr
+    -> for(k,v in $*) {...} while modifying $* in-loop: $* isn't being copied
+  o fix:
+    mlr --from data/small put 'dump $*'
+  ! fix
+    echo x=0xff | mlr --oxtab --ofmt '%f' cat
+  o look at pre/post FromMap; also check PutReference/PutCopy callsites
+  o UTs for gd-2
+    - mlrval_cmp.go
+    - JSON I/O
+    - mv from-array/from-map w/ copy & mutate orig & check new -- & vice versa
+    - dash-O and octal infer
+  o grep tmiller map put ref vs map put copy
 
-* big-picture item @ Rmd; also webdoc intro page
+* perf next:
+  o batchify source-quench
+  ! hash-records back off
+  ? further channelize (CSV-first focus) mlrval infer vs record-put ?
+
+* big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
 
 * mr -S
   test/cases/dsl-array-map-indexing
@@ -34,6 +57,11 @@ PUNCHDOWN LIST
     - make a 2nd/3rd cmd main w/ simple model & tweak that
       o dkvp-reader factor-out ...
   o mods:
+    ! need cmps for array/map -- no absent/error anymore here
+    ! moreover, proofread all mlrval_cmp.go dispo mxes
+    ! array/map fields: marshal as JSON_SINGLE_LINE
+    - replace rac-list with batch-array -- ? profile to see what value.
+    - unaliasArrayIndex in multiple packages for cycdep break -- ?
     - randsel for arrays
     - downstreamDone batchify
       > head
@@ -58,6 +86,9 @@ PUNCHDOWN LIST
     - fix record/line sequencing regressions
     - maybe increase records-per-batch in join-bucket-keeper; and/or refactor
     - maybe increase records-per-batch in repl; and/or refactor
+    - lots of reading/neatening on types, bifs, mlrval split-up x all source files
+    - follow-ons for lots of  UT per se on types, bifs, mlrval
+    ? []Mlrval -> []*Mlrval ?
   o goals:
     - keep goroutines -- including per-transformer -- for parallelism
     - look for flex ideas on how to structure that parallelism
@@ -94,6 +125,68 @@ PUNCHDOWN LIST
     d how to handle tail -f and repl
       > try unconditional batching and hiding *first* to see how much best-case perf to be had
     ? lazy type-infer?? needs careful use of accessor-mutators in place of mv.type etc
+
+----------------------------------------------------------------
+* JIT refactor
+  o x 'tens/dozens of UT cases' 
+  o populate each bifs/X_test.go for each bifs/X.go from existing regression-test data
+  m internal/pkg/mlrval
+    k UT-driven mlrval defer/infer
+    - pkg/mlrval doc.go & README.md
+  o internal/pkg/types
+    k UT-driven mlrmap constructor refactor
+    - UT-driven JSON-parser refactor
+  o internal/pkg/input
+    k basic
+      mlrval.FromDeferredType
+      mlrmap.PutReference(key, value)
+
+    k UT-driven DKVP-from-line
+    ~ UT-driven X-from-line: nidx, xtab, csvlite, csv
+    - UT-driven JSON-from-string
+  o internal/pkg/output
+    - basic
+      mlrval.String()
+    - UT-driven to-line
+  o internal/pkg/bifs
+    - more UT ... final authority is RT though
+
+  ? stick w/ regtest ?
+    - internal/pkg/colorizer
+    - internal/pkg/platform
+    - internal/pkg/runtime
+
+    - internal/pkg/stream
+    - internal/pkg/cli
+    - internal/pkg/climain
+
+    - internal/pkg/transformers/utils
+    - internal/pkg/transformers
+
+    - internal/pkg/parsing
+    - internal/pkg/dsl
+    - internal/pkg/dsl/cst
+
+    - internal/pkg/auxents/repl
+    - internal/pkg/auxents/regtest
+    - internal/pkg/auxents
+    - internal/pkg/auxents/help
+----------------------------------------------------------------
+
+* perf more
+  o nim6 note on perf: baseline/cat; processor/pipelining; 
+  o update https://miller.readthedocs.io/en/latest/cpu/, and/or
+    https://miller.readthedocs.io/en/latest/streaming-and-memory/, and/or
+    make a new page w/ info on per
+  o JIT: maasure
+  k pipelined reader
+  k batched reader separately
+  k buffered output
+  o re-check hashed/unhashed and do so periodically
+    - CLI switch
+    - check with more than just abixy
+
+----------------------------------------------------------------
 
 * blockers:
   - keep checking issues
@@ -194,6 +287,8 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* handling for --cpuprofile not at args[1] slot
 
 * try simpler-than-regex-split-string for repeated-single -- especially for XTAB reader
 

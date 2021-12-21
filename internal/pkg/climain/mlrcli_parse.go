@@ -75,8 +75,8 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/auxents/help"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/transformers"
-	"github.com/johnkerl/miller/internal/pkg/types"
 	"github.com/johnkerl/miller/internal/pkg/version"
 )
 
@@ -280,7 +280,7 @@ func parseCommandLinePassTwo(
 
 	// Set an optional global formatter for floating-point values
 	if options.WriterOptions.FPOFMT != "" {
-		err = types.SetMlrvalFloatOutputFormat(options.WriterOptions.FPOFMT)
+		err = mlrval.SetFloatOutputFormat(options.WriterOptions.FPOFMT)
 		if err != nil {
 			return options, recordTransformers, err
 		}

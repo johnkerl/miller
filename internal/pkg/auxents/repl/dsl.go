@@ -25,7 +25,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/dsl"
 	"github.com/johnkerl/miller/internal/pkg/dsl/cst"
-	"github.com/johnkerl/miller/internal/pkg/types"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 )
 
 // ----------------------------------------------------------------
@@ -83,8 +83,8 @@ func (repl *Repl) handleDSLStringAux(
 		// The filter expression for the main Miller DSL is any non-assignment
 		// statment like 'true' or '$x > 0.5' etc. For the REPL, we re-use this for
 		// interactive expressions to be printed to the terminal. For the main DSL,
-		// the default is types.MlrvalFromTrue(); for the REPL, the default is
-		// types.MLRVAL_VOID.
+		// the default is mlrval.FromTrue(); for the REPL, the default is
+		// mlrval.VOID.
 		filterExpression := repl.runtimeState.FilterExpression
 		if filterExpression.IsVoid() {
 			// nothing to print
@@ -93,7 +93,7 @@ func (repl *Repl) handleDSLStringAux(
 		} else {
 			fmt.Println(filterExpression.String())
 		}
-		repl.runtimeState.FilterExpression = types.MLRVAL_VOID
+		repl.runtimeState.FilterExpression = mlrval.VOID
 	}
 
 	return nil

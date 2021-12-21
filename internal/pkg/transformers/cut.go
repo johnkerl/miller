@@ -9,6 +9,7 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -201,7 +202,7 @@ func (tr *TransformerCut) includeWithInputOrder(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		outrec := types.NewMlrmap()
+		outrec := mlrval.NewMlrmap()
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			fieldName := pe.Key
 			_, wanted := tr.fieldNameSet[fieldName]
@@ -226,7 +227,7 @@ func (tr *TransformerCut) includeWithArgOrder(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		outrec := types.NewMlrmap()
+		outrec := mlrval.NewMlrmap()
 		for _, fieldName := range tr.fieldNameList {
 			value := inrec.Get(fieldName)
 			if value != nil {
@@ -268,7 +269,7 @@ func (tr *TransformerCut) processWithRegexes(
 ) {
 	if !inrecAndContext.EndOfStream {
 		inrec := inrecAndContext.Record
-		newrec := types.NewMlrmapAsRecord()
+		newrec := mlrval.NewMlrmapAsRecord()
 		for pe := inrec.Head; pe != nil; pe = pe.Next {
 			matchesAny := false
 			for _, regex := range tr.regexes {

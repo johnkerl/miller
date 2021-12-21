@@ -7,8 +7,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -163,7 +165,7 @@ type TransformerStep struct {
 
 	// STATE
 	// Scratch space used per-record
-	valueFieldValues []types.Mlrval
+	valueFieldValues []mlrval.Mlrval
 	// Map from group-by field names to value-field names to array of
 	// stepper objects.  See the Transform method below for more details.
 	groups map[string]map[string]map[string]tStepper
@@ -316,7 +318,7 @@ type tStepperAllocator func(
 ) tStepper
 
 type tStepper interface {
-	process(valueFieldValue *types.Mlrval, inputRecord *types.Mlrmap)
+	process(valueFieldValue *mlrval.Mlrval, inputRecord *mlrval.Mlrmap)
 }
 
 type tStepperLookup struct {
@@ -358,7 +360,7 @@ func allocateStepper(
 
 // ================================================================
 type tStepperDelta struct {
-	previous        *types.Mlrval
+	previous        *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -374,17 +376,17 @@ func stepperDeltaAlloc(
 }
 
 func (stepper *tStepperDelta) process(
-	valueFieldValue *types.Mlrval,
-	inrec *types.Mlrmap,
+	valueFieldValue *mlrval.Mlrval,
+	inrec *mlrval.Mlrmap,
 ) {
-	if valueFieldValue.IsEmpty() {
-		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
+	if valueFieldValue.IsVoid() {
+		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
-	delta := types.MlrvalFromInt(0)
+	delta := mlrval.FromInt(0)
 	if stepper.previous != nil {
-		delta = types.BIF_minus_binary(valueFieldValue, stepper.previous)
+		delta = bifs.BIF_minus_binary(valueFieldValue, stepper.previous)
 	}
 	inrec.PutCopy(stepper.outputFieldName, delta)
 
@@ -393,7 +395,7 @@ func (stepper *tStepperDelta) process(
 
 // ================================================================
 type tStepperShift struct {
-	previous        *types.Mlrval
+	previous        *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -409,11 +411,11 @@ func stepperShiftAlloc(
 }
 
 func (stepper *tStepperShift) process(
-	valueFieldValue *types.Mlrval,
-	inrec *types.Mlrmap,
+	valueFieldValue *mlrval.Mlrval,
+	inrec *mlrval.Mlrmap,
 ) {
 	if stepper.previous == nil {
-		shift := types.MLRVAL_VOID
+		shift := mlrval.VOID
 		inrec.PutCopy(stepper.outputFieldName, shift)
 	} else {
 		inrec.PutCopy(stepper.outputFieldName, stepper.previous)
@@ -424,7 +426,7 @@ func (stepper *tStepperShift) process(
 
 // ================================================================
 type tStepperFromFirst struct {
-	first           *types.Mlrval
+	first           *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -440,21 +442,21 @@ func stepperFromFirstAlloc(
 }
 
 func (stepper *tStepperFromFirst) process(
-	valueFieldValue *types.Mlrval,
-	inrec *types.Mlrmap,
+	valueFieldValue *mlrval.Mlrval,
+	inrec *mlrval.Mlrmap,
 ) {
-	fromFirst := types.MlrvalFromInt(0)
+	fromFirst := mlrval.FromInt(0)
 	if stepper.first == nil {
 		stepper.first = valueFieldValue.Copy()
 	} else {
-		fromFirst = types.BIF_minus_binary(valueFieldValue, stepper.first)
+		fromFirst = bifs.BIF_minus_binary(valueFieldValue, stepper.first)
 	}
 	inrec.PutCopy(stepper.outputFieldName, fromFirst)
 }
 
 // ================================================================
 type tStepperRatio struct {
-	previous        *types.Mlrval
+	previous        *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -470,17 +472,17 @@ func stepperRatioAlloc(
 }
 
 func (stepper *tStepperRatio) process(
-	valueFieldValue *types.Mlrval,
-	inrec *types.Mlrmap,
+	valueFieldValue *mlrval.Mlrval,
+	inrec *mlrval.Mlrmap,
 ) {
-	if valueFieldValue.IsEmpty() {
-		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
+	if valueFieldValue.IsVoid() {
+		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 		return
 	}
 
-	ratio := types.MlrvalFromInt(1)
+	ratio := mlrval.FromInt(1)
 	if stepper.previous != nil {
-		ratio = types.BIF_divide(valueFieldValue, stepper.previous)
+		ratio = bifs.BIF_divide(valueFieldValue, stepper.previous)
 	}
 	inrec.PutCopy(stepper.outputFieldName, ratio)
 
@@ -489,7 +491,7 @@ func (stepper *tStepperRatio) process(
 
 // ================================================================
 type tStepperRsum struct {
-	rsum            *types.Mlrval
+	rsum            *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -499,27 +501,27 @@ func stepperRsumAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperRsum{
-		rsum:            types.MlrvalFromInt(0),
+		rsum:            mlrval.FromInt(0),
 		outputFieldName: inputFieldName + "_rsum",
 	}
 }
 
 func (stepper *tStepperRsum) process(
-	valueFieldValue *types.Mlrval,
-	inrec *types.Mlrmap,
+	valueFieldValue *mlrval.Mlrval,
+	inrec *mlrval.Mlrmap,
 ) {
-	if valueFieldValue.IsEmpty() {
-		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
+	if valueFieldValue.IsVoid() {
+		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
-		stepper.rsum = types.BIF_plus_binary(valueFieldValue, stepper.rsum)
+		stepper.rsum = bifs.BIF_plus_binary(valueFieldValue, stepper.rsum)
 		inrec.PutCopy(stepper.outputFieldName, stepper.rsum)
 	}
 }
 
 // ================================================================
 type tStepperCounter struct {
-	counter         *types.Mlrval
-	one             *types.Mlrval
+	counter         *mlrval.Mlrval
+	one             *mlrval.Mlrval
 	outputFieldName string
 }
 
@@ -529,20 +531,20 @@ func stepperCounterAlloc(
 	_unused2 []string,
 ) tStepper {
 	return &tStepperCounter{
-		counter:         types.MlrvalFromInt(0),
-		one:             types.MlrvalFromInt(1),
+		counter:         mlrval.FromInt(0),
+		one:             mlrval.FromInt(1),
 		outputFieldName: inputFieldName + "_counter",
 	}
 }
 
 func (stepper *tStepperCounter) process(
-	valueFieldValue *types.Mlrval,
-	inrec *types.Mlrmap,
+	valueFieldValue *mlrval.Mlrval,
+	inrec *mlrval.Mlrmap,
 ) {
-	if valueFieldValue.IsEmpty() {
-		inrec.PutCopy(stepper.outputFieldName, types.MLRVAL_VOID)
+	if valueFieldValue.IsVoid() {
+		inrec.PutCopy(stepper.outputFieldName, mlrval.VOID)
 	} else {
-		stepper.counter = types.BIF_plus_binary(stepper.counter, stepper.one)
+		stepper.counter = bifs.BIF_plus_binary(stepper.counter, stepper.one)
 		inrec.PutCopy(stepper.outputFieldName, stepper.counter)
 	}
 }
@@ -552,9 +554,9 @@ func (stepper *tStepperCounter) process(
 
 // ================================================================
 type tStepperEWMA struct {
-	alphas           []*types.Mlrval
-	oneMinusAlphas   []*types.Mlrval
-	prevs            []*types.Mlrval
+	alphas           []*mlrval.Mlrval
+	oneMinusAlphas   []*mlrval.Mlrval
+	prevs            []*mlrval.Mlrval
 	outputFieldNames []string
 	havePrevs        bool
 }
@@ -569,9 +571,9 @@ func stepperEWMAAlloc(
 	// len(ewmaSuffixes) in the CLI parser.
 	n := len(stringAlphas)
 
-	alphas := make([]*types.Mlrval, n)
-	oneMinusAlphas := make([]*types.Mlrval, n)
-	prevs := make([]*types.Mlrval, n)
+	alphas := make([]*mlrval.Mlrval, n)
+	oneMinusAlphas := make([]*mlrval.Mlrval, n)
+	prevs := make([]*mlrval.Mlrval, n)
 	outputFieldNames := make([]string, n)
 
 	suffixes := stringAlphas
@@ -582,7 +584,7 @@ func stepperEWMAAlloc(
 	for i, stringAlpha := range stringAlphas {
 		suffix := suffixes[i]
 
-		dalpha, ok := lib.TryFloat64FromString(stringAlpha)
+		dalpha, ok := lib.TryFloatFromString(stringAlpha)
 		if !ok {
 			fmt.Fprintf(
 				os.Stderr,
@@ -591,9 +593,9 @@ func stepperEWMAAlloc(
 			)
 			os.Exit(1)
 		}
-		alphas[i] = types.MlrvalFromFloat64(dalpha)
-		oneMinusAlphas[i] = types.MlrvalFromFloat64(1.0 - dalpha)
-		prevs[i] = types.MlrvalFromFloat64(0.0)
+		alphas[i] = mlrval.FromFloat(dalpha)
+		oneMinusAlphas[i] = mlrval.FromFloat(1.0 - dalpha)
+		prevs[i] = mlrval.FromFloat(0.0)
 		outputFieldNames[i] = inputFieldName + "_ewma_" + suffix
 	}
 
@@ -607,8 +609,8 @@ func stepperEWMAAlloc(
 }
 
 func (stepper *tStepperEWMA) process(
-	valueFieldValue *types.Mlrval,
-	inrec *types.Mlrmap,
+	valueFieldValue *mlrval.Mlrval,
+	inrec *mlrval.Mlrmap,
 ) {
 	if !stepper.havePrevs {
 		for i := range stepper.alphas {
@@ -620,9 +622,9 @@ func (stepper *tStepperEWMA) process(
 		for i := range stepper.alphas {
 			curr := valueFieldValue.Copy()
 			// xxx pending pointer-output refactor
-			product1 := types.BIF_times(curr, stepper.alphas[i])
-			product2 := types.BIF_times(stepper.prevs[i], stepper.oneMinusAlphas[i])
-			next := types.BIF_plus_binary(product1, product2)
+			product1 := bifs.BIF_times(curr, stepper.alphas[i])
+			product2 := bifs.BIF_times(stepper.prevs[i], stepper.oneMinusAlphas[i])
+			next := bifs.BIF_plus_binary(product1, product2)
 			inrec.PutCopy(stepper.outputFieldNames[i], next)
 			stepper.prevs[i] = next
 		}

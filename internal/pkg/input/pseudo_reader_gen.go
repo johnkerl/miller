@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/johnkerl/miller/internal/pkg/bifs"
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -62,9 +64,9 @@ func (reader *PseudoReaderGen) process(
 		return
 	}
 
-	var doneComparator types.BinaryFunc = types.BIF_greater_than
+	var doneComparator mlrval.CmpFuncBool = mlrval.GreaterThan
 	if step.GetNumericNegativeorDie() {
-		doneComparator = types.BIF_less_than
+		doneComparator = mlrval.LessThan
 	}
 
 	key := reader.readerOptions.GeneratorOptions.FieldName
@@ -75,13 +77,11 @@ func (reader *PseudoReaderGen) process(
 	eof := false
 	for !eof {
 
-		mdone := doneComparator(value, stop)
-		done, _ := mdone.GetBoolValue()
-		if done {
+		if doneComparator(value, stop) {
 			break
 		}
 
-		record := types.NewMlrmap()
+		record := mlrval.NewMlrmap()
 		record.PutCopy(key, value)
 
 		context.UpdateForInputRecord()
@@ -109,7 +109,7 @@ func (reader *PseudoReaderGen) process(
 
 		}
 
-		value = types.BIF_plus_binary(value, step)
+		value = bifs.BIF_plus_binary(value, step)
 	}
 
 	if recordsAndContexts.Len() > 0 {
@@ -121,8 +121,8 @@ func (reader *PseudoReaderGen) process(
 func (reader *PseudoReaderGen) tryParse(
 	name string,
 	svalue string,
-) (*types.Mlrval, error) {
-	mvalue := types.MlrvalFromInferredType(svalue)
+) (*mlrval.Mlrval, error) {
+	mvalue := mlrval.FromDeferredType(svalue)
 	if mvalue == nil || !mvalue.IsNumeric() {
 		return nil, errors.New(
 			fmt.Sprintf("mlr: gen: %s \"%s\" is not parseable as number", name, svalue),

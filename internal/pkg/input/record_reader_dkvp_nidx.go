@@ -10,12 +10,13 @@ import (
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
 	"github.com/johnkerl/miller/internal/pkg/lib"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
 // splitter_DKVP_NIDX is a function type for the one bit of code differing
 // between the DKVP reader and the NIDX reader, namely, how it splits lines.
-type splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
+type splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) *mlrval.Mlrmap
 
 type RecordReaderDKVPNIDX struct {
 	readerOptions   *cli.TReaderOptions
@@ -150,8 +151,8 @@ func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 	return recordsAndContexts, false
 }
 
-func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap {
-	record := types.NewMlrmapAsRecord()
+func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmapAsRecord()
 
 	var pairs []string
 	// TODO: func-pointer this away
@@ -179,19 +180,19 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
 			// "a=".  Here we use the positional index as the key. This way
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[0])
+			value := mlrval.FromDeferredType(kv[0])
 			record.PutReference(key, value)
 		} else {
 			key := kv[0]
-			value := types.MlrvalFromInferredTypeForDataFiles(kv[1])
+			value := mlrval.FromDeferredType(kv[1])
 			record.PutReference(key, value)
 		}
 	}
 	return record
 }
 
-func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap {
-	record := types.NewMlrmapAsRecord()
+func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) *mlrval.Mlrmap {
+	record := mlrval.NewMlrmapAsRecord()
 
 	var values []string
 	// TODO: func-pointer this away
@@ -208,7 +209,7 @@ func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) *types.Mlrmap
 	for _, value := range values {
 		i++
 		key := strconv.Itoa(i)
-		mval := types.MlrvalFromInferredTypeForDataFiles(value)
+		mval := mlrval.FromDeferredType(value)
 		record.PutReference(key, mval)
 	}
 	return record

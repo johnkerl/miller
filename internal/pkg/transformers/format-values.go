@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
+	"github.com/johnkerl/miller/internal/pkg/mlrval"
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
@@ -131,9 +132,9 @@ func transformerFormatValuesParseCLI(
 
 // ----------------------------------------------------------------
 type TransformerFormatValues struct {
-	stringFormatter  types.IMlrvalFormatter
-	intFormatter     types.IMlrvalFormatter
-	floatFormatter   types.IMlrvalFormatter
+	stringFormatter  mlrval.IFormatter
+	intFormatter     mlrval.IFormatter
+	floatFormatter   mlrval.IFormatter
 	coerceIntToFloat bool
 }
 
@@ -143,17 +144,17 @@ func NewTransformerFormatValues(
 	floatFormat string,
 	coerceIntToFloat bool,
 ) (*TransformerFormatValues, error) {
-	stringFormatter, err := types.GetMlrvalFormatter(stringFormat)
+	stringFormatter, err := mlrval.GetFormatter(stringFormat)
 	if err != nil {
 		return nil, err
 	}
 
-	intFormatter, err := types.GetMlrvalFormatter(intFormat)
+	intFormatter, err := mlrval.GetFormatter(intFormat)
 	if err != nil {
 		return nil, err
 	}
 
-	floatFormatter, err := types.GetMlrvalFormatter(floatFormat)
+	floatFormatter, err := mlrval.GetFormatter(floatFormat)
 	if err != nil {
 		return nil, err
 	}
