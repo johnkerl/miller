@@ -1,6 +1,7 @@
 package mlrval
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
@@ -72,28 +73,24 @@ func inferNormally(mv *Mlrval, input string, inferBool bool) *Mlrval {
 	return mv.SetFromString(input)
 }
 
+var octalDetector = regexp.MustCompile("^-?0[0-9]+")
+
 func inferWithOctalSuppress(mv *Mlrval, input string, inferBool bool) *Mlrval {
 	inferNormally(mv, input, inferBool)
-	if mv.mvtype == MT_INT {
-		if input[0] == '0' && len(input) > 1 {
-			c := input[1]
-			if c != 'x' && c != 'X' && c != 'b' && c != 'B' {
-				return mv.SetFromString(input)
-			}
-		}
-		if strings.HasPrefix(input, "-0") && len(input) > 2 {
-			c := input[2]
-			if c != 'x' && c != 'X' && c != 'b' && c != 'B' {
-				return mv.SetFromString(input)
-			}
-		}
+	if mv.mvtype != MT_INT && mv.mvtype != MT_FLOAT {
+		return mv
 	}
-	return mv
+
+	if octalDetector.MatchString(mv.printrep) {
+		return mv.SetFromString(input)
+	} else {
+		return mv
+	}
 }
 
 func inferWithIntAsFloat(mv *Mlrval, input string, inferBool bool) *Mlrval {
 	inferNormally(mv, input, inferBool)
-	if mv.mvtype == MT_INT {
+	if mv.Type() == MT_INT {
 		mv.floatval = float64(mv.intval)
 		mv.mvtype = MT_FLOAT
 	}
