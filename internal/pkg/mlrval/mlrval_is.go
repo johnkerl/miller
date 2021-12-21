@@ -76,6 +76,11 @@ func (mv *Mlrval) IsStringOrVoid() bool {
 	return t == MT_STRING || t == MT_VOID
 }
 
+func (mv *Mlrval) IsStringOrInt() bool {
+	t := mv.Type()
+	return t == MT_STRING || t == MT_VOID || t == MT_INT
+}
+
 func (mv *Mlrval) IsInt() bool {
 	return mv.Type() == MT_INT
 }

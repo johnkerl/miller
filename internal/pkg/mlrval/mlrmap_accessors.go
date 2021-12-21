@@ -209,10 +209,7 @@ func (mlrmap *Mlrmap) findEntryByPositionalIndex(position int) *MlrmapEntry {
 }
 
 func (mlrmap *Mlrmap) PutCopyWithMlrvalIndex(key *Mlrval, value *Mlrval) error {
-	if key.IsString() {
-		mlrmap.PutCopy(key.printrep, value)
-		return nil
-	} else if key.IsInt() {
+	if key.IsStringOrInt() {
 		mlrmap.PutCopy(key.String(), value)
 		return nil
 	} else {
