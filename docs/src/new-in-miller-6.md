@@ -22,7 +22,7 @@ Quick links:
 
 As tabulated in [PR 786](https://github.com/johnkerl/miller/pull/786),
 performance is now on par with Miller 5 for simple processing, and is far
-better thabn Miller 5 for complex processing chains -- the latter due to improved multicore
+better than Miller 5 for complex processing chains -- the latter due to improved multicore
 utilization.
 
 ### Documentation improvements
