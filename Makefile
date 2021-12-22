@@ -189,6 +189,9 @@ dev:
 	make -C docs
 	@echo DONE
 
+docs:
+	make -C docs
+
 # ----------------------------------------------------------------
 # Keystroke-savers
 it: build check
@@ -216,4 +219,4 @@ release_tarball: build check
 
 # ================================================================
 # Go does its own dependency management, outside of make.
-.PHONY: build mlr mprof mprof2 mprof3 mprof4 mprof5 check unit_test regression_test fmt dev
+.PHONY: build mlr mprof mprof2 mprof3 mprof4 mprof5 check unit_test regression_test fmt dev docs

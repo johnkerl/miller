@@ -209,7 +209,7 @@ The following differences are rather technical. If they don't sound familiar to 
     * See also `mlr help legacy-flags` or the [legacy-flags reference](reference-main-flag-list.md#legacy-flags).
 * Type-inference:
     * The `-S` and `-F` flags to `mlr put` and `mlr filter` are ignored, since type-inference is no longer done in `mlr put` and `mlr filter`, but rather, when records are first read. You can use `mlr -S` and `mlr -A`, respectively, instead to control type-inference within the record-readers.
-    * Similarly, use `mlr -O` to force octal-looking strings to remain strings like `"0123"`, not ints like `0123` which is 83 in decimal.
+    * Octal numbers like `0123` and `07` are type-inferred as string. Use `mlr -O` to infer them as octal integers. Note that `08` and `09` will then infer as float.
     * See also the [miscellaneous-flags reference](reference-main-flag-list.md#miscellaneous-flags).
 * Emitting a map-valued expression now requires either a temporary variable or the new `emit1` keyword. Please see the
 [page on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) for more information.

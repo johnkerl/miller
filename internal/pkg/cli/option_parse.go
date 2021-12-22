@@ -2619,11 +2619,12 @@ data having many fields, and many of them being processed during a given process
 		},
 
 		{
-			name:     "--infer-no-octal",
+			name:     "--infer-octal",
 			altNames: []string{"-O"},
-			help:     `Treat numbers like 0123 in data files as string "0123", not octal for decimal 83 etc.`,
+			help: `Treat numbers like 0123 in data files as numeric; default is string.
+Note that 00--07 etc scan as int; 08-09 scan as float.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				mlrval.SetInferrerNoOctal()
+				mlrval.SetInferrerOctalAsInt()
 				*pargi += 1
 			},
 		},

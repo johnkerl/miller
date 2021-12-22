@@ -19,10 +19,17 @@ func (mv *Mlrval) String() string {
 	if floatOutputFormatter != nil && mv.Type() == MT_FLOAT {
 		// Use the format string from global --ofmt, if supplied
 		return floatOutputFormatter.FormatFloat(mv.floatval)
-	} else {
-		mv.setPrintRep()
-		return mv.printrep
 	}
+
+	// TODO: track dirty-flag checking / somesuch.
+	// At present it's cumbersome to check if an array or map has been modified
+	// and it's safest to always recompute the string-rep.
+	if mv.IsArrayOrMap() {
+		mv.printrepValid = false
+	}
+
+	mv.setPrintRep()
+	return mv.printrep
 }
 
 // See mlrval.go for more about JIT-formatting of string backings
