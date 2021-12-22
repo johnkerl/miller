@@ -488,10 +488,11 @@ MISCELLANEOUS FLAGS
                                 slight performance benefit.
        --infer-int-as-float or -A
                                 Cast all integers in data files to floats.
-       --infer-no-octal or -O   Treat numbers like 0123 in data files as string
-                                "0123", not octal for decimal 83 etc.
        --infer-none or -S       Don't treat values like 123 or 456.7 in data files as
                                 int/float; leave them as strings.
+       --infer-octal or -O      Treat numbers like 0123 in data files as numeric;
+                                default is string. Note that 00--07 etc scan as int;
+                                08-09 scan as float.
        --load {filename}        Load DSL script file for all put/filter operations on
                                 the command line. If the name following `--load` is a
                                 directory, load all `*.mlr` files in that directory.
@@ -3006,5 +3007,5 @@ SEE ALSO
 
 
 
-                                  2021-12-15                         MILLER(1)
+                                  2021-12-22                         MILLER(1)
 </pre>

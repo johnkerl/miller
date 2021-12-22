@@ -345,10 +345,10 @@ These are flags which don't fit into any other category.
 `: This is an internal parameter which normally does not need to be modified. It controls the mechanism by which Miller accesses fields within records. In general --no-hash-records is faster, and is the default. For specific use-cases involving data having many fields, and many of them being processed during a given processing run, --hash-records might offer a slight performance benefit.
 * `--infer-int-as-float or -A
 `: Cast all integers in data files to floats.
-* `--infer-no-octal or -O
-`: Treat numbers like 0123 in data files as string "0123", not octal for decimal 83 etc.
 * `--infer-none or -S
 `: Don't treat values like 123 or 456.7 in data files as int/float; leave them as strings.
+* `--infer-octal or -O
+`: Treat numbers like 0123 in data files as numeric; default is string. Note that 00--07 etc scan as int; 08-09 scan as float.
 * `--load {filename}
 `: Load DSL script file for all put/filter operations on the command line.  If the name following `--load` is a directory, load all `*.mlr` files in that directory. This is just like `put -f` and `filter -f` except it's up-front on the command line, so you can do something like `alias mlr='mlr --load ~/myscripts'` if you like.
 * `--mfrom {filenames}
