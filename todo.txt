@@ -10,10 +10,7 @@ PUNCHDOWN LIST
   - dup field names https://github.com/johnkerl/miller/issues/225
   - --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
   - allow-repeat-ixs nidx perf mod w/o regex split string ...
-  - big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
 
-  - keep checking issues
-  - verslink old relnotes
   - fractional-strptime
   - cmp-matrices
   - all-contribs: twi dm
@@ -21,10 +18,6 @@ PUNCHDOWN LIST
   - `mlr put` -> coverart
   - 0b1011 olh/webdoc
   - rtd links somewhere
-  - rd -> dbr
-  - integrate:
-    > https://www.libhunt.com/r/miller
-    > https://repology.org/project/miller/information
   ? array/map fields: marshal as JSON_SINGLE_LINE
 
 * shebang
@@ -90,10 +83,6 @@ PUNCHDOWN LIST
 
 * kw olh for func and funct both
 
-* pre-release:
-  o check issues
-  o TODO in *.go & *.mi
-
 * doc
   o new-in-miller-6: missings:
     - dump syntax -- ?
@@ -124,6 +113,12 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* integrate:
+  o https://www.libhunt.com/r/miller
+  o https://repology.org/project/miller/information
+
+* verslink old relnotes
 
 * more perf?
   - batchify source-quench -- experiment 1st

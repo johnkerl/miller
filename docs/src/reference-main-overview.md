@@ -103,3 +103,13 @@ a=wye,x_sum=0.777891
 * They take more keystrokes
 * There's more to learn
 * They're highly customizable
+
+## Exit codes
+
+When you do `echo $?` immediately after running a Miller command (or any shell command), that's the _exit code_.
+
+Miller's are as follows:
+
+* 0 for normal exit.
+* 1 if an error was encountered. There should be helpful text written to `stderr`; please [file a bug report](https://github.com/johnkerl/miller/issues/new), ideally with a reproducible scenario, if the text is either missing or unhelpful.
+* 2 if there was a `panic` in the Go runtime -- you'll see lots of stack-trace lines. Please [file a bug report](https://github.com/johnkerl/miller/issues/new), ideally with a reproducible scenario, if you ever see this.
