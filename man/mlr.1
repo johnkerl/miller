@@ -234,9 +234,9 @@ sec2gmt sec2gmtdate sec2hms sec2localdate sec2localtime select sgn sha1 sha256
 sha512 sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt
 ssub strftime strftime_local string strip strlen strptime strptime_local sub
 substr substr0 substr1 system systime systimeint tan tanh tolower toupper
-truncate typeof unflatten uptime urand urand32 urandint urandrange version !
-!= !=~ % & && * ** + - . .* .+ .- ./ / // < << <= <=> == =~ > >= >> >>> ?: ??
-??? ^ ^^ | || ~
+truncate typeof unflatten uptime urand urand32 urandelement urandint
+urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= <=> ==
+=~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 .fi
 .if n \{\
 .RE
@@ -4001,6 +4001,15 @@ Int-valued example: '$n=floor(20+urand()*11)'.
 .\}
 .nf
  (class=math #args=0) Integer uniformly distributed 0 and 2**32-1 inclusive.
+.fi
+.if n \{\
+.RE
+.SS "urandelement"
+.if n \{\
+.RS 0
+.\}
+.nf
+ (class=math #args=1) Random sample from the first argument, which must be an non-empty array.
 .fi
 .if n \{\
 .RE

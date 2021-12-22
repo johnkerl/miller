@@ -71,3 +71,17 @@ func BIF_urandrange(input1, input2 *mlrval.Mlrval) *mlrval.Mlrval {
 		a + (b-a)*lib.RandFloat64(),
 	)
 }
+
+func BIF_urandelement(input1 *mlrval.Mlrval) *mlrval.Mlrval {
+	arrayval := input1.GetArray()
+	if arrayval == nil { // not an array
+		return mlrval.ERROR
+	}
+	if len(arrayval) == 0 {
+		return mlrval.ERROR
+	}
+
+	// lo is inclusive, hi is exclusive
+	index := lib.RandRange(0, len(arrayval))
+	return arrayval[index].Copy()
+}

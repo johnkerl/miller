@@ -187,9 +187,9 @@ FUNCTION LIST
        sha512 sin sinh sort splita splitax splitkv splitkvx splitnv splitnvx sqrt
        ssub strftime strftime_local string strip strlen strptime strptime_local sub
        substr substr0 substr1 system systime systimeint tan tanh tolower toupper
-       truncate typeof unflatten uptime urand urand32 urandint urandrange version !
-       != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= <=> == =~ > >= >> >>> ?: ??
-       ??? ^ ^^ | || ~
+       truncate typeof unflatten uptime urand urand32 urandelement urandint
+       urandrange version ! != !=~ % & && * ** + - . .* .+ .- ./ / // < << <= <=> ==
+       =~ > >= >> >>> ?: ?? ??? ^ ^^ | || ~
 
 COMMENTS-IN-DATA FLAGS
        Miller lets you put comments in your data, such as
@@ -2486,6 +2486,9 @@ FUNCTIONS FOR FILTER/PUT
 
    urand32
         (class=math #args=0) Integer uniformly distributed 0 and 2**32-1 inclusive.
+
+   urandelement
+        (class=math #args=1) Random sample from the first argument, which must be an non-empty array.
 
    urandint
         (class=math #args=2) Integer uniformly distributed between inclusive integer endpoints.
