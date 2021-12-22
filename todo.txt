@@ -7,12 +7,11 @@ PUNCHDOWN LIST
     > also https://miller.readthedocs.io/en/latest/cpu
     > also https://miller.readthedocs.io/en/latest/streaming-and-memory
     > new webdoc page with graphs
-
-  - more linux perf checks
+  - dup field names https://github.com/johnkerl/miller/issues/225
   - --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
   - allow-repeat-ixs nidx perf mod w/o regex split string ...
-  - dup field names https://github.com/johnkerl/miller/issues/225
   - big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
+
   - keep checking issues
   - verslink old relnotes
   - fractional-strptime
@@ -23,8 +22,6 @@ PUNCHDOWN LIST
   - 0b1011 olh/webdoc
   - rtd links somewhere
   - rd -> dbr
-  - beta-link & hnp
-  -> beta-release page
   - integrate:
     > https://www.libhunt.com/r/miller
     > https://repology.org/project/miller/information
