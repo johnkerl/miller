@@ -79,7 +79,9 @@ See also [building from source](https://miller.readthedocs.io/en/latest/build.ht
 # Building from source
 
 * `make`: takes just a few seconds and produces the Miller executable, which is `./mlr` (or `.\mlr.exe` on Windows).
+  * Without `make`: `go build github.com/johnkerl/miller/cmd/mlr`
 * `make check` runs tests.
+  * Without `make`: `go test github.com/johnkerl/miller/internal/pkg/...` and `mlr regtest`
 * `make install` installs executable `/usr/local/bin/mlr` and manual page `/usr/local/share/man/man1/mlr.1` (so you can do `man mlr`).
   * You can instead do `./configure --prefix=/some/install/path` followed by `make install` if you want to install somewhere other than `/usr/local`.
 * See also the doc page on [building from source](https://miller.readthedocs.io/en/latest/build).

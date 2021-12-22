@@ -31,17 +31,15 @@ Two-clause BSD license [https://github.com/johnkerl/miller/blob/master/LICENSE.t
 * `cd mlr-i.j.k`
 * `cd go`
 * `make` creates the `./mlr` (or `.\mlr.exe` on Windows) executable
+    * Without `make`: `go build github.com/johnkerl/miller/cmd/mlr`
 * `make check` runs tests
+    * Without `make`: `go test github.com/johnkerl/miller/internal/pkg/...` and `mlr regtest`
 * `make install` installs the `mlr` executable and the `mlr` manpage
-* On Windows, if you don't have `make`, then you can do `choco install make` -- or, alternatively:
-    * `cd go`
-    * `go build` creates `mlr.exe`
-    * `go test -v mlr\src\...` and `go test -v` runs tests
 
 ## From git clone
 
 * `git clone https://github.com/johnkerl/miller`
-* `make`, `make check`, and `make install` as above
+* `make`/`go build github.com/johnkerl/miller/cmd/mlr` as above
 
 ## In case of problems
 
