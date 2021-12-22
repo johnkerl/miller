@@ -804,6 +804,13 @@ is normally distributed.`,
 			zaryFunc: bifs.BIF_urand32,
 		},
 
+		{
+			name:      "urandelement",
+			class:     FUNC_CLASS_MATH,
+			help:      `Random sample from the first argument, which must be an non-empty array.`,
+			unaryFunc: bifs.BIF_urandelement,
+		},
+
 		// ----------------------------------------------------------------
 		// FUNC_CLASS_TIME
 

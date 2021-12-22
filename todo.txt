@@ -2,10 +2,7 @@
 PUNCHDOWN LIST
 
 * blockers:
-  - sort-hof check
   - more linux perf checks
-  - mlr -O / abor!
-    > doc 07 int 08 float
   - --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
   - big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
   - function: randsel for arrays; use for example-csv-expander

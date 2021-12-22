@@ -15,8 +15,8 @@ mlr \
       @index = 1;
     }
 
-    $color = @colors[urandint(1,length(@colors))];
-    $shape = @shapes[urandint(1,length(@shapes))];
+    $color = urandelement(@colors);
+    $shape = urandelement(@shapes);
     $flag = (urand32() < 0.6) ? "true" : "false";
     $index = @index;
     $quantity=fmtnum(urandrange(50,100),"%.4f");
