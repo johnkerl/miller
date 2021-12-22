@@ -12,7 +12,7 @@ build:
 	@echo "You can use 'make check' to run tests".
 
 # For interactive use, 'mlr regtest' offers more options and transparency.
-check: unit_test regression_test
+check: unit-test regression-test
 	@echo "Tests complete. You can use 'make install' if you like, optionally preceded"
 	@echo "by './configure --prefix=/your/install/path' if you wish to install to"
 	@echo "somewhere other than /usr/local/bin -- the default prefix is /usr/local."
