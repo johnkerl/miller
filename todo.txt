@@ -2,10 +2,17 @@
 PUNCHDOWN LIST
 
 * blockers:
+  - perf wup @ rgp.md
+  - nim6 lead with this
+    > also https://miller.readthedocs.io/en/latest/cpu
+    > also https://miller.readthedocs.io/en/latest/streaming-and-memory
+    > new webdoc page with graphs
+
   - more linux perf checks
   - --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
+  - allow-repeat-ixs nidx perf mod w/o regex split string ...
+  - dup field names https://github.com/johnkerl/miller/issues/225
   - big-picture item @ Rmd (csv memes; and beyond); also webdoc intro page
-  - function: randsel for arrays; use for example-csv-expander
   - keep checking issues
   - verslink old relnotes
   - fractional-strptime
@@ -13,23 +20,15 @@ PUNCHDOWN LIST
   - all-contribs: twi dm
   - license triple-checks
   - `mlr put` -> coverart
-  - #756 octal
   - 0b1011 olh/webdoc
   - rtd links somewhere
   - rd -> dbr
-  - more why-6 notes -- ?
   - beta-link & hnp
   -> beta-release page
   - integrate:
     > https://www.libhunt.com/r/miller
     > https://repology.org/project/miller/information
   ? array/map fields: marshal as JSON_SINGLE_LINE
-  o JIT doc
-    - perf wup @ rgp.md
-    - nim6 lead with this
-      > also https://miller.readthedocs.io/en/latest/cpu
-      > also https://miller.readthedocs.io/en/latest/streaming-and-memory
-      > new webdoc page with graphs
 
 * shebang
   - olh -s & --norc; --version & --bare-version; --
