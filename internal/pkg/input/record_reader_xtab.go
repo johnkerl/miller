@@ -257,6 +257,7 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 	stanza *list.List,
 ) (*mlrval.Mlrmap, error) {
 	record := mlrval.NewMlrmapAsRecord()
+	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	for e := stanza.Front(); e != nil; e = e.Next() {
 		line := e.Value.(string)
@@ -274,10 +275,16 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 		key := kv[0]
 		if len(kv) == 1 {
 			value := mlrval.VOID
-			record.PutReference(key, value)
+			_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+			if err != nil {
+				return nil, err
+			}
 		} else {
 			value := mlrval.FromDeferredType(kv[1])
-			record.PutReference(key, value)
+			_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 

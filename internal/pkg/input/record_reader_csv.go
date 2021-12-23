@@ -182,6 +182,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 	eof bool,
 ) {
 	recordsAndContexts = list.New()
+	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	csvRecords, more := <-csvRecordsChannel
 	if !more {
@@ -226,7 +227,11 @@ func (reader *RecordReaderCSV) getRecordBatch(
 			for i := 0; i < nh; i++ {
 				key := reader.header[i]
 				value := mlrval.FromDeferredType(csvRecord[i])
-				record.PutReference(key, value)
+				_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+				if err != nil {
+					errorChannel <- err
+					return
+				}
 			}
 
 		} else {
@@ -246,18 +251,30 @@ func (reader *RecordReaderCSV) getRecordBatch(
 				for i = 0; i < n; i++ {
 					key := reader.header[i]
 					value := mlrval.FromDeferredType(csvRecord[i])
-					record.PutReference(key, value)
+					_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+					if err != nil {
+						errorChannel <- err
+						return
+					}
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					key := strconv.Itoa(i + 1)
 					value := mlrval.FromDeferredType(csvRecord[i])
-					record.PutReference(key, value)
+					_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+					if err != nil {
+						errorChannel <- err
+						return
+					}
 				}
 				if nh > nd {
 					// if header longer than data: use "" values
 					for i = nd; i < nh; i++ {
-						record.PutCopy(reader.header[i], mlrval.VOID)
+						_, err := record.PutReferenceMaybeDedupe(reader.header[i], mlrval.VOID.Copy(), dedupeFieldNames)
+						if err != nil {
+							errorChannel <- err
+							return
+						}
 					}
 				}
 			}

@@ -1,0 +1,1 @@
+mlr --no-dedupe-field-names --inidx --ojson cat ${CASEDIR}/input

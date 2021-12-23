@@ -121,31 +121,31 @@ Here's some sample CSV data which is values-only, i.e. headerless:
 </pre>
 
 There are clearly nine fields here, but if we try to have Miller parse it as CSV, we
-see there are fewer than nine columns:
+see something happened:
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --csv cat data/nas.csv</b>
 </pre>
 <pre class="pre-non-highlight-in-pair">
--349801.10097848,4537221.43295653,2,1,NA
--338681.59578181,4537221.43295653,14,1,0.964
--334975.09404959,4537221.43295653,18,1,NA
--332195.21775042,4537221.43295653,21,1,0.96
--331268.59231736,4537221.43295653,22,1,0.962
--330341.96688431,4537221.43295653,23,1,0.962
--326635.46515209,4537221.43295653,27,1,0.958
+-349801.10097848,4537221.43295653,2,1,NA,NA_2,NA_3,NA_4,NA_5
+-338681.59578181,4537221.43295653,14,1,13.1,1,0.978,0.964,0.964
+-334975.09404959,4537221.43295653,18,1,13.1,1,NA,NA,NA
+-332195.21775042,4537221.43295653,21,1,13.1,1,0.978,0.974,0.96
+-331268.59231736,4537221.43295653,22,1,13.1,1,0.978,0.978,0.962
+-330341.96688431,4537221.43295653,23,1,13.1,1,0.978,0.978,0.962
+-326635.46515209,4537221.43295653,27,1,13.1,2,0.978,0.972,0.958
 </pre>
 
 What happened?
 
 Miller is (by central design) a mapping from name to value, rather than integer
 position to value as in most tools in the Unix toolkit such as `sort`, `cut`,
-`awk`, etc. So given input `Yea=1,Yea=2` on the same input line, first `Yea=1`
-is stored, then updated with `Yea=2`. This is in the input-parser and the value
-`Yea=1` is unavailable to any further processing.
+`awk`, etc. And its default behavior with repeated column/field names is to append `_2`, `_3`, etc to dedupe them.
+So given input `Yea=1,Yea=2` on the same input line, first `Yea=1`
+is stored, then updated with `Yea_2=2`. This is in the input-parser.
 
-Here, the first data line is being seen as a header ine, and the repeated `NA`
-values are being seen as duplicate keys.
+Here, the first data line is being seen as a header line, and the repeated `NA`
+values are being seen as duplicate keys that need to be deduplicated.
 
 One solution is to use `--implicit-csv-header`, or its shorter alias `--hi`:
 
