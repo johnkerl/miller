@@ -5,8 +5,9 @@
 ### Performance
 
 Performance is on par with Miller 5 for simple processing, and is far better than Miller 5 for
-complex processing chains -- the latter due to improved multicore utilization. See the
-[Performance benchmarks](#performance-benchmarks) section at the bottom of this page for details.
+complex processing chains -- the latter due to improved multicore utilization. CSV I/O is notably
+improved.  See the [Performance benchmarks](#performance-benchmarks) section at the bottom of this
+page for details.
 
 ### Documentation improvements
 
