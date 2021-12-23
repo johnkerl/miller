@@ -252,7 +252,7 @@ func (reader *RecordReaderCSV) getRecordBatch(
 					// if header shorter than data: use 1-up itoa keys
 					key := strconv.Itoa(i + 1)
 					value := mlrval.FromDeferredType(csvRecord[i])
-					record.PutCopy(key, value)
+					record.PutReference(key, value)
 				}
 				if nh > nd {
 					// if header longer than data: use "" values

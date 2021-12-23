@@ -247,7 +247,7 @@ func getRecordBatchExplicitCSVHeader(
 			if !reader.readerOptions.AllowRaggedCSVInput {
 				for i, field := range fields {
 					value := mlrval.FromDeferredType(field)
-					record.PutCopy(reader.headerStrings[i], value)
+					record.PutReference(reader.headerStrings[i], value)
 				}
 			} else {
 				nh := len(reader.headerStrings)
@@ -256,14 +256,14 @@ func getRecordBatchExplicitCSVHeader(
 				var i int
 				for i = 0; i < n; i++ {
 					value := mlrval.FromDeferredType(fields[i])
-					record.PutCopy(reader.headerStrings[i], value)
+					record.PutReference(reader.headerStrings[i], value)
 				}
 				if nh < nd {
 					// if header shorter than data: use 1-up itoa keys
 					for i = nh; i < nd; i++ {
 						key := strconv.Itoa(i + 1)
 						value := mlrval.FromDeferredType(fields[i])
-						record.PutCopy(key, value)
+						record.PutReference(key, value)
 					}
 				}
 				if nh > nd {
@@ -364,7 +364,7 @@ func getRecordBatchImplicitCSVHeader(
 		if !reader.readerOptions.AllowRaggedCSVInput {
 			for i, field := range fields {
 				value := mlrval.FromDeferredType(field)
-				record.PutCopy(reader.headerStrings[i], value)
+				record.PutReference(reader.headerStrings[i], value)
 			}
 		} else {
 			nh := len(reader.headerStrings)
@@ -373,13 +373,13 @@ func getRecordBatchImplicitCSVHeader(
 			var i int
 			for i = 0; i < n; i++ {
 				value := mlrval.FromDeferredType(fields[i])
-				record.PutCopy(reader.headerStrings[i], value)
+				record.PutReference(reader.headerStrings[i], value)
 			}
 			if nh < nd {
 				// if header shorter than data: use 1-up itoa keys
 				key := strconv.Itoa(i + 1)
 				value := mlrval.FromDeferredType(fields[i])
-				record.PutCopy(key, value)
+				record.PutReference(key, value)
 			}
 			if nh > nd {
 				// if header longer than data: use "" values
