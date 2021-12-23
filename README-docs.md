@@ -17,6 +17,7 @@
   * A `genmds` script reads `docs/src/*.md.in` and writes `docs/src/*.md`.
   * The `mkdocs build` tools reads `docs/src/*.md` and writes HTML files in `docs/site`.
   * Running `make` within the `docs` directory handles both of those steps.
+  * TL;DR just `make docs` from the Miller base directory
 * Quick-editing loop:
   * In one terminal, cd to this directory and leave `mkdocs serve` running.
   * In another terminal, cd to the `src` subdirectory of `docs` and edit `*.md.in`.
@@ -38,7 +39,7 @@
 ## Notes
 
 * CSS:
-  * I used the Mkdocs Readthedocs theme which I like a lot. I customized `docs/src/extra.css` for Miller coloring/branding.
+  * I used the Mkdocs "material" theme which I like a lot. I customized `docs/src/extra.css` for Miller coloring/branding.
 * Live code:
   * I didn't find a way to include non-Python live-code examples within Mkdocs so I adapted the pre-Mkdocs Miller-doc strategy which is to have a generator script read a template file (here, `foo.md.in`), run the marked lines, and generate the output file (`foo.md`). This is `genmds`.
   * Edit the `*.md.in` files, not `*.md` directly.
@@ -48,3 +49,11 @@
   * https://readthedocs.org/projects/miller/
   * https://readthedocs.org/projects/miller/builds/
   * https://miller.readthedocs.io/en/latest/
+
+## readthedocs website
+
+* Published to https://miller.readthedocs.io/en/latest on each commit to `main` in this repo
+* https://readthedocs.org/projects/miller/
+* https://readthedocs.org/api/v2/webhook/miller/134065/
+* https://readthedocs.org/projects/miller/builds/
+* https://readthedocs.org/

@@ -2,6 +2,7 @@
 PUNCHDOWN LIST
 
 * blockers:
+  - nim6 more images
   - perf wup @ rgp.md
   - nim6 lead with this
     > also https://miller.readthedocs.io/en/latest/cpu
@@ -17,7 +18,6 @@ PUNCHDOWN LIST
   - license triple-checks
   - `mlr put` -> coverart
   - 0b1011 olh/webdoc
-  - rtd links somewhere
   ? array/map fields: marshal as JSON_SINGLE_LINE
 
 * shebang
