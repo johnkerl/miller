@@ -20,10 +20,9 @@ Quick links:
 
 ### Performance
 
-As tabulated in [PR 786](https://github.com/johnkerl/miller/pull/786),
-performance is now on par with Miller 5 for simple processing, and is far
-better than Miller 5 for complex processing chains -- the latter due to improved multicore
-utilization.
+Performance is on par with Miller 5 for simple processing, and is far better than Miller 5 for
+complex processing chains -- the latter due to improved multicore utilization. See the
+[Performance benchmarks](#performance-benchmarks) section at the bottom of this page for details.
 
 ### Documentation improvements
 
@@ -242,11 +241,6 @@ absent-empty-coalesce operator [`???`](reference-dsl-builtin-functions.md#absent
 
 See also the [list of issues tagged with go-port](https://github.com/johnkerl/miller/issues?q=label%3Ago-port).
 
-## Developer-specific aspects
-
-* Miller has been ported from C to Go. Developer notes: [https://github.com/johnkerl/miller/blob/main/README-go-port.md](https://github.com/johnkerl/miller/blob/main/README-go-port.md).
-* Regression testing has been completely reworked, including regression-testing now running fully on Windows (alongside Linux and Mac) [on each GitHub commit](https://github.com/johnkerl/miller/actions).
-
 ## Changes from Miller 5
 
 The following differences are rather technical. If they don't sound familiar to you, not to worry! Most users won't be affected by the (relatively minor) changes between Miller 5 and Miller 6.
@@ -265,3 +259,55 @@ The following differences are rather technical. If they don't sound familiar to 
 * Emitting a map-valued expression now requires either a temporary variable or the new `emit1` keyword. Please see the
 [page on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) for more information.
 * By default, field names are deduped for all file formats except JSON. So if you have an input record with `x=8,x=9` then the second field's key is renamed to `x_2` and so on -- the record scans as `x=8,x_2=9`. Use `mlr --no-dedupe-field-names` to suppress this, and have the record be scanned as `x=9`. For JSON, the last duplicated key in an input record is always retained, regardless of `mlr --no-dedupe-field-names`: `{"x":8,"x":9}` scans as if it were `{"x":9}`.
+
+## Developer-specific aspects
+
+* Miller has been ported from C to Go. Developer notes: [https://github.com/johnkerl/miller/blob/main/README-go-port.md](https://github.com/johnkerl/miller/blob/main/README-go-port.md).
+* Regression testing has been completely reworked, including regression-testing now running fully on Windows (alongside Linux and Mac) [on each GitHub commit](https://github.com/johnkerl/miller/actions).
+
+## Performance benchmarks
+
+As a benchmark, the [example.csv](https://github.com/johnkerl/miller/blob/main/docs/src/example.csv) file
+[was expanded](https://github.com/johnkerl/miller/blob/main/scripts/make-big-files) into a million-line CSV file,
+then converted to DKVP, JSON, etc. These were run on a commodity Mac laptop with four CPUs.
+
+For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/time-big-files), we have `mlr cat` of those files, with processing times shown:
+
+| Format   | Miller 5 | Miller 6 | Speedup |
+|----------|----------|----------|---------|
+| CSV      | 2.482    | 1.571    | 1.58x   |
+| CSV-lite | 1.671    | 1.428    | 1.17x   |
+| DKVP     | 2.485    | 2.040    | 1.22x   |
+| NIDX     | 1.638    | 1.468    | 1.12x   |
+| XTAB     | 5.147    | 6.252    | 0.82x   |
+| JSON     | 12.457   | 12.416   | 1.00x   |
+
+For the [second benchmark](https://github.com/johnkerl/miller/blob/main/scripts/chain-cmps.sh), the operations are varied:
+
+| Operation            | Miller 5 | Miller 6 | Speedup |
+|----------------------|----------|----------|---------|
+| CSV check            | 1.496    | 1.182    | 1.26x   |
+| CSV cat              | 2.412    | 1.491    | 1.62x   |
+| CSV tail             | 1.523    | 1.212    | 1.26x   |
+| CSV tac              | 2.785    | 2.885    | 0.96x   |
+| CSV sort -f shape    | 3.264    | 3.683    | 0.89x   |
+| CSV sort -n quantity | 4.827    | 5.438    | 0.89x   |
+
+For the [third benchmark](https://github.com/johnkerl/miller/blob/main/scripts/chain-lengths.sh), we have longer and longer then-chains: `mlr put ...`, then `mlr put ... then put ...`, etc. -- deepening the then-chain from one to six:
+
+| Chain length | Miller 5 | Miller 6 | Speedup |
+|--------------|----------|----------|---------|
+| 1            |  5.902   | 3.704    | 1.59x   |
+| 2            | 11.059   | 4.042    | 2.74x   |
+| 3            | 12.793   | 4.796    | 2.67x   |
+| 4            | 15.288   | 5.473    | 2.79x   |
+| 5            | 18.410   | 5.899    | 3.12x   |
+| 6            | 21.706   | 7.498    | 2.89x   |
+
+Notes:
+
+* CSV processing is particularly improved in Miller 6.
+* Record I/O is improved for all but XTAB.
+* JSON continues to be a CPU-intensive format.
+* Miller 6's `sort` merits more performance analysis.
+* Longer then-chains benefit from Miller 6's [multicore approach](cpu.md).
