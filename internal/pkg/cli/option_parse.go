@@ -2559,9 +2559,9 @@ var MiscFlagSection = FlagSection{
 
 		{
 			name: "--no-dedupe-field-names",
-			help: `By default, if an input record has a field name x and
-another also named x, the second will be renamed x_2, and so on.  With this flag provided, the
-second x's value will replace the first x's value when the record is read.  This flag has no effect
+			help: `By default, if an input record has a field named ` + "`x`" + ` and
+another also named ` + "`x`" + `, the second will be renamed ` + "`x_2`" + `, and so on.  With this flag provided, the
+second ` + "`x`" + `'s value will replace the first ` + "`x`" + `'s value when the record is read.  This flag has no effect
 on JSON input records, where duplicate keys always result in the last one's value being retained.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.ReaderOptions.DedupeFieldNames = false

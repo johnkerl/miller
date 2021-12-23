@@ -140,9 +140,10 @@ What happened?
 
 Miller is (by central design) a mapping from name to value, rather than integer
 position to value as in most tools in the Unix toolkit such as `sort`, `cut`,
-`awk`, etc. And its default behavior with repeated column/field names is to append `_2`, `_3`, etc to dedupe them.
-So given input `Yea=1,Yea=2` on the same input line, first `Yea=1`
-is stored, then updated with `Yea_2=2`. This is in the input-parser.
+`awk`, etc. And its default behavior with repeated column/field names is to
+append `_2`, `_3`, etc to dedupe them.  So given input `Yea=1,Yea=2` on the
+same input line, first `Yea=1` is stored, then `Yea_2=2`. This is in the
+input-parser.
 
 Here, the first data line is being seen as a header line, and the repeated `NA`
 values are being seen as duplicate keys that need to be deduplicated.
