@@ -3,6 +3,8 @@ package mlrval
 import (
 	"bytes"
 	"errors"
+	"fmt"
+	"strconv"
 
 	"github.com/johnkerl/miller/internal/pkg/lib"
 )
@@ -28,28 +30,63 @@ func (mlrmap *Mlrmap) Get(key string) *Mlrval {
 
 // PutReference copies the key but not the value. This is not safe for DSL use,
 // where we could create undesired references between different objects.  Only
-// intended to be used at callsites which allocate a mlrval solely for the
-// purpose of putting into a map, e.g. input-record readers.
+// intended to be used at callsites which allocate a mlrval on the spot, solely
+// for the purpose of putting into the map.
 func (mlrmap *Mlrmap) PutReference(key string, value *Mlrval) {
 	pe := mlrmap.findEntry(key)
 	if pe == nil {
-		pe = newMlrmapEntry(key, value)
-		if mlrmap.Head == nil {
-			mlrmap.Head = pe
-			mlrmap.Tail = pe
-		} else {
-			pe.Prev = mlrmap.Tail
-			pe.Next = nil
-			mlrmap.Tail.Next = pe
-			mlrmap.Tail = pe
-		}
-		if mlrmap.keysToEntries != nil {
-			mlrmap.keysToEntries[key] = pe
-		}
-		mlrmap.FieldCount++
+		mlrmap.putReferenceNewAux(key, value)
 	} else {
 		pe.Value = value
 	}
+}
+
+// putReferenceNewAux is a helper function for code shared between PutReference
+// and PutReferenceMaybeDedupe. It should not be invoked from anywhere else --
+// it doesn't do its own check if the key already exists in the record or not.
+func (mlrmap *Mlrmap) putReferenceNewAux(key string, value *Mlrval) {
+	pe := newMlrmapEntry(key, value)
+	if mlrmap.Head == nil {
+		mlrmap.Head = pe
+		mlrmap.Tail = pe
+	} else {
+		pe.Prev = mlrmap.Tail
+		pe.Next = nil
+		mlrmap.Tail.Next = pe
+		mlrmap.Tail = pe
+	}
+	if mlrmap.keysToEntries != nil {
+		mlrmap.keysToEntries[key] = pe
+	}
+	mlrmap.FieldCount++
+}
+
+// PutReferenceMaybeDedupe is the default inserter for key-value pairs in input records --
+// if the input is 'x=8,x=9` then we make a record with x=8 and x_2=9. This can be suppressed
+// via a command-line flag which this method's dedupe flag respects.
+func (mlrmap *Mlrmap) PutReferenceMaybeDedupe(key string, value *Mlrval, dedupe bool) (string, error) {
+	if !dedupe {
+		mlrmap.PutReference(key, value)
+		return key, nil
+	}
+
+	pe := mlrmap.findEntry(key)
+	if pe == nil {
+		mlrmap.putReferenceNewAux(key, value)
+		return key, nil
+	}
+
+	for i := 2; i < 1000; i++ {
+		newKey := key + "_" + strconv.Itoa(i)
+		pe := mlrmap.findEntry(newKey)
+		if pe == nil {
+			mlrmap.putReferenceNewAux(newKey, value)
+			return newKey, nil
+		}
+	}
+	return key, errors.New(
+		fmt.Sprintf("record has too many input fields named \"%s\"", key),
+	)
 }
 
 // PutCopy copies the key and value (deep-copying in case the value is array/map).

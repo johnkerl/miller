@@ -16,13 +16,15 @@ func TestRecordFromDKVPLine(t *testing.T) {
 	assert.Nil(t, err)
 
 	line := ""
-	record := recordFromDKVPLine(reader, line)
+	record, err := recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
+	assert.Nil(t, err)
 	assert.Equal(t, 0, record.FieldCount)
 
 	line = "a=1,b=2,c=3"
-	record = recordFromDKVPLine(reader, line)
+	record, err = recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
+	assert.Nil(t, err)
 	assert.Equal(t, 3, record.FieldCount)
 
 	assert.NotNil(t, record.Head)
@@ -33,20 +35,25 @@ func TestRecordFromDKVPLine(t *testing.T) {
 	assert.Equal(t, record.Head.Next.Key, "b")
 	assert.Equal(t, record.Head.Next.Next.Key, "c")
 
+	// Default is to dedupe to a=1,b=2,b_2=3
 	line = "a=1,b=2,b=3"
-	record = recordFromDKVPLine(reader, line)
+	record, err = recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
-	assert.Equal(t, 2, record.FieldCount)
+	assert.Nil(t, err)
+	assert.Equal(t, 3, record.FieldCount)
 
 	assert.NotNil(t, record.Head)
 	assert.NotNil(t, record.Head.Next)
-	assert.Nil(t, record.Head.Next.Next)
+	assert.NotNil(t, record.Head.Next.Next)
+	assert.Nil(t, record.Head.Next.Next.Next)
 	assert.Equal(t, record.Head.Key, "a")
 	assert.Equal(t, record.Head.Next.Key, "b")
+	assert.Equal(t, record.Head.Next.Next.Key, "b_2")
 
 	line = "a,b,c"
-	record = recordFromDKVPLine(reader, line)
+	record, err = recordFromDKVPLine(reader, line)
 	assert.NotNil(t, record)
+	assert.Nil(t, err)
 	assert.Equal(t, 3, record.FieldCount)
 
 	assert.NotNil(t, record.Head)

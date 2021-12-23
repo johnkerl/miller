@@ -16,7 +16,7 @@ import (
 
 // splitter_DKVP_NIDX is a function type for the one bit of code differing
 // between the DKVP reader and the NIDX reader, namely, how it splits lines.
-type splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) *mlrval.Mlrmap
+type splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error)
 
 type RecordReaderDKVPNIDX struct {
 	readerOptions   *cli.TReaderOptions
@@ -100,7 +100,7 @@ func (reader *RecordReaderDKVPNIDX) processHandle(
 	go channelizedLineScanner(lineScanner, linesChannel, downstreamDoneChannel, recordsPerBatch)
 
 	for {
-		recordsAndContexts, eof := reader.getRecordBatch(linesChannel, context)
+		recordsAndContexts, eof := reader.getRecordBatch(linesChannel, errorChannel, context)
 		if recordsAndContexts.Len() > 0 {
 			readerChannel <- recordsAndContexts
 		}
@@ -113,6 +113,7 @@ func (reader *RecordReaderDKVPNIDX) processHandle(
 // TODO: comment copiously we're trying to handle slow/fast/short/long reads: tail -f, smallfile, bigfile.
 func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 	linesChannel <-chan *list.List,
+	errorChannel chan<- error,
 	context *types.Context,
 ) (
 	recordsAndContexts *list.List,
@@ -142,7 +143,11 @@ func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 			}
 		}
 
-		record := reader.splitter(reader, line)
+		record, err := reader.splitter(reader, line)
+		if err != nil {
+			errorChannel <- err
+			return
+		}
 		context.UpdateForInputRecord()
 		recordAndContext := types.NewRecordAndContext(record, context)
 		recordsAndContexts.PushBack(recordAndContext)
@@ -151,8 +156,9 @@ func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 	return recordsAndContexts, false
 }
 
-func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) *mlrval.Mlrmap {
+func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error) {
 	record := mlrval.NewMlrmapAsRecord()
+	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	var pairs []string
 	// TODO: func-pointer this away
@@ -181,17 +187,23 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) *mlrval.Mlrma
 			// DKVP is a generalization of NIDX.
 			key := strconv.Itoa(i + 1) // Miller userspace indices are 1-up
 			value := mlrval.FromDeferredType(kv[0])
-			record.PutReference(key, value)
+			_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+			if err != nil {
+				return nil, err
+			}
 		} else {
 			key := kv[0]
 			value := mlrval.FromDeferredType(kv[1])
-			record.PutReference(key, value)
+			_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
-	return record
+	return record, nil
 }
 
-func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) *mlrval.Mlrmap {
+func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error) {
 	record := mlrval.NewMlrmapAsRecord()
 
 	var values []string
@@ -212,5 +224,5 @@ func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) *mlrval.Mlrma
 		mval := mlrval.FromDeferredType(value)
 		record.PutReference(key, mval)
 	}
-	return record
+	return record, nil
 }

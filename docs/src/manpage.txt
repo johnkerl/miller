@@ -486,6 +486,13 @@ MISCELLANEOUS FLAGS
                                 what you might hope but `--mfrom *.csv --` does.
        --mload {filenames}      Like `--load` but works with more than one filename,
                                 e.g. `--mload *.mlr --`.
+       --no-dedupe-field-names  By default, if an input record has a field name x and
+                                another also named x, the second will be renamed x_2,
+                                and so on. With this flag provided, the second x's
+                                value will replace the first x's value when the
+                                record is read. This flag has no effect on JSON input
+                                records, where duplicate keys always result in the
+                                last one's value being retained.
        --no-fflush              Let buffered output not be written after every output
                                 record. The default is flush output after every
                                 record if the output is to the terminal, or less
@@ -2989,4 +2996,4 @@ SEE ALSO
 
 
 
-                                  2021-12-22                         MILLER(1)
+                                  2021-12-23                         MILLER(1)

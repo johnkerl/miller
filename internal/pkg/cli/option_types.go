@@ -46,6 +46,7 @@ type TReaderOptions struct {
 	IPSRegex            *regexp.Regexp
 	SuppressIFSRegexing bool // e.g. if they want to do '--ifs .' since '.' is a regex metacharacter
 	SuppressIPSRegexing bool // e.g. if they want to do '--ips .' since '.' is a regex metacharacter
+	DedupeFieldNames    bool
 
 	// If unspecified on the command line, these take input-format-dependent
 	// defaults.  E.g. default FS is comma for DKVP but space for NIDX;
@@ -186,6 +187,7 @@ func DefaultReaderOptions() TReaderOptions {
 			StepAsString:  DEFAULT_GEN_STEP_AS_STRING,
 			StopAsString:  DEFAULT_GEN_STOP_AS_STRING,
 		},
+		DedupeFieldNames: true,
 
 		// TODO: comment
 		RecordsPerBatch: DEFAULT_RECORDS_PER_BATCH,

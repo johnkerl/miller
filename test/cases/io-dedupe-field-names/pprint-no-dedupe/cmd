@@ -1,0 +1,1 @@
+mlr --no-dedupe-field-names --ipprint --ojson cat ${CASEDIR}/input
