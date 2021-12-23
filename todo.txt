@@ -2,11 +2,9 @@
 PUNCHDOWN LIST
 
 * blockers:
-  - nim6 more images
   - perf wup @ rgp.md
   - nim6 lead with this
     > also https://miller.readthedocs.io/en/latest/cpu
-    > also https://miller.readthedocs.io/en/latest/streaming-and-memory
     > new webdoc page with graphs
   - --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
   - allow-repeat-ixs nidx perf mod w/o regex split string ...

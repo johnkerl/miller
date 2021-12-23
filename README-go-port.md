@@ -158,7 +158,23 @@ nil through the reader/transformer/writer sequence.
   * This is different from JavaScript, which has only double-precision floats and thus no support for 64-bit numbers (note however that there is now [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)).
   * This is also different from C and Go, wherein casts are necessary -- without which int arithmetic overflows.
   * See also [here](https://miller.readthedocs.io/en/latest/reference-main-arithmetic) for the semantics of Miller arithmetic, which the [`Mlrval`](./internal/pkg/types/mlrval.go) class implements.
- 
+
+## Performance optimizations
+
+Key performance-related PRs for the Go port include:
+
+* [https://github.com/johnkerl/miller/pull/765](#765): In C, prints to `stdout` are buffered a line at a time if the output is to the terminal, or a few KB at a time if not (i.e. file or pipe). Note the cost is how often the process does a `write` system call with associated overhead of context-switching into the kernel and back out. The C behavior is the right thing to do. In the Go port, very early on writes were all unbuffered -- several per record. Then buffering was soon switched to per-record, which was an improvement. But as of #765, the buffering is done at the library level, and it's done C-style -- much less frequently when output is not to a terminal.
+* [https://github.com/johnkerl/miller/pull/774](#774): For CSV-lite and DKVP, this avoids using regexes to split strings when `strings.Split` will do.
+* [https://github.com/johnkerl/miller/pull/779](#779): The basic idea of the Miller Go port was that the record-reader writes a record at a time over a channel to the first verb; the first verb writes records one at a time to the second verb, and so on; the last verb writes records one at a time to the record-writer. This is very simple, but for large files, the Go runtime scheduler overhead is too large -- data are chopped up into too many pieces. On #779 records are written 500 (or fewer) per batch, and all the channels from record-reader, to verbs, to record-writer are on record-batches. This lets Miller spend more time doing its job and less time yielding to the goroutine scheduler.
+* [https://github.com/johnkerl/miller/pull/787](#786): In the C version, all values were strings until operated on specifically (expliclitly) by a verb. In the Go port, initially, all values were type-inferred on read, with types retained throughout the processing chain. This was an incredibly elegant and empowering design decision -- central to the Go port, in fact -- but it came with the cost that _all_ fields were being scanned as float/int even if they weren't used in the processing chain. On #786, fields are left as raw strings with type "pending", only just-in-time inferred to string/int/float only when used within the processing chain.
+* [https://github.com/johnkerl/miller/pull/787](#787): This removed an unnecessary data copy in the `mlrval.String()` method. Originally this method had non-pointer receiver to conform with the `fmt.Stringer` interface. Hoewver, that's a false economy: `fmt.Println(someMlrval)` is a corner case, and stream processing is the primary concern. Implementing this as a pointer-receiver method was a performance improvement.
+
+In summary:
+
+* #765, #774, and #787 were low-hanging fruit.
+* #779 was a bit more involved, and reveals that Go's elegant goroutine/channel processing model comes with the caveat that channelized data should not be organized in many, small pieces.
+* #786 was a massive refactor involving about 10KLOC -- in hindsight it would have been best to do this work at the start of the Go port, not at the end.
+
 ## Software-testing methodology
 
 See [./test/README.md](./test/README.md).
