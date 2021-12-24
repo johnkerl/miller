@@ -44,8 +44,6 @@ type TReaderOptions struct {
 	AllowRepeatIPS      bool
 	IFSRegex            *regexp.Regexp
 	IPSRegex            *regexp.Regexp
-	SuppressIFSRegexing bool // e.g. if they want to do '--ifs .' since '.' is a regex metacharacter
-	SuppressIPSRegexing bool // e.g. if they want to do '--ips .' since '.' is a regex metacharacter
 	DedupeFieldNames    bool
 
 	// If unspecified on the command line, these take input-format-dependent

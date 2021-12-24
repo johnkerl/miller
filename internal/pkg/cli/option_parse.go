@@ -55,30 +55,28 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 		readerOptions.AllowRepeatIPS = defaultAllowRepeatIPSes[readerOptions.InputFileFormat]
 	}
 
-	if readerOptions.SuppressIFSRegexing {
-		readerOptions.IFSRegex = nil
-	} else if readerOptions.AllowRepeatIFS {
-		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IFS + ")+")
-	} else if !lib.IsRegexString(readerOptions.IFS) {
-		// Using regex-splitting on IFS/IPS in record-readers that support it is a HUGE perf hit (almost 2x).
-		// Don't use it unless these are actually value-adding regexes.
-		readerOptions.IFSRegex = nil
-	} else {
-		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(readerOptions.IFS)
-	}
+// TODO -- rework
+//	if readerOptions.AllowRepeatIFS {
+//		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IFS + ")+")
+//	} else if !lib.IsRegexString(readerOptions.IFS) {
+//		// Using regex-splitting on IFS/IPS in record-readers that support it is a HUGE perf hit (almost 2x).
+//		// Don't use it unless these are actually value-adding regexes.
+//		readerOptions.IFSRegex = nil
+//	} else {
+//		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(readerOptions.IFS)
+//	}
 
-	if readerOptions.SuppressIPSRegexing {
-		readerOptions.IPSRegex = nil
-	} else if readerOptions.AllowRepeatIPS {
-		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IPS + ")+")
-	} else if !lib.IsRegexString(readerOptions.IPS) {
-		// Using regex-splitting on IFS/IPS in record-readers that support it
-		// is a HUGE perf hit (almost 2x).  Don't use it unless these are
-		// actually value-adding regexes.
-		readerOptions.IPSRegex = nil
-	} else {
-		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie(readerOptions.IPS)
-	}
+// TODO -- rework
+//	if readerOptions.AllowRepeatIPS {
+//		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IPS + ")+")
+//	} else if !lib.IsRegexString(readerOptions.IPS) {
+//		// Using regex-splitting on IFS/IPS in record-readers that support it
+//		// is a HUGE perf hit (almost 2x).  Don't use it unless these are
+//		// actually value-adding regexes.
+//		readerOptions.IPSRegex = nil
+//	} else {
+//		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie(readerOptions.IPS)
+//	}
 
 	readerOptions.IRS = lib.UnbackslashStringLiteral(readerOptions.IRS)
 }
@@ -380,24 +378,6 @@ var SeparatorFlagSection = FlagSection{
 				options.ReaderOptions.ipsWasSpecified = true
 				options.WriterOptions.opsWasSpecified = true
 				*pargi += 2
-			},
-		},
-
-		{
-			name: "--no-ifs-regex",
-			help: `Don't treat IFS value as a regular expression. Useful if your IFS is ".".`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.SuppressIFSRegexing = true
-				*pargi += 1
-			},
-		},
-
-		{
-			name: "--no-ips-regex",
-			help: `Don't treat IPS value as a regular expression. Useful if your IPS is ".".`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.ReaderOptions.SuppressIPSRegexing = true
-				*pargi += 1
 			},
 		},
 	},
