@@ -3,6 +3,11 @@ PUNCHDOWN LIST
 
 * blockers:
   ! --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
+    > --ixs vs --ixs-regex at cli-parser
+    > remove SuppressIFSRegexing
+    > remove lib.IsRegexString
+    d make a helper class to encapsulate
+    d olh/webdoc updates
   - allow-repeat-ixs nidx perf mod w/o regex split string ...
 
   - fractional-strptime

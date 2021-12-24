@@ -16,6 +16,7 @@ import (
 type RecordReaderXTAB struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
+	pairSplitter    iPairSplitter
 
 	// Note: XTAB uses two consecutive IFS in place of an IRS; IRS is ignored
 }
@@ -45,6 +46,7 @@ func NewRecordReaderXTAB(
 	return &RecordReaderXTAB{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
+		pairSplitter:    newPairSplitter(readerOptions),
 	}, nil
 }
 
@@ -262,12 +264,7 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 	for e := stanza.Front(); e != nil; e = e.Next() {
 		line := e.Value.(string)
 
-		var kv []string
-		if reader.readerOptions.IPSRegex == nil { // e.g. --no-ips-regex
-			kv = strings.SplitN(line, reader.readerOptions.IPS, 2)
-		} else {
-			kv = lib.RegexSplitString(reader.readerOptions.IPSRegex, line, 2)
-		}
+		kv := reader.pairSplitter.Split(line)
 		if len(kv) < 1 {
 			return nil, errors.New("mlr: internal coding error in XTAB reader")
 		}

@@ -16,12 +16,14 @@ import (
 
 // splitter_DKVP_NIDX is a function type for the one bit of code differing
 // between the DKVP reader and the NIDX reader, namely, how it splits lines.
-type splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error)
+type line_splitter_DKVP_NIDX func(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error)
 
 type RecordReaderDKVPNIDX struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
-	splitter        splitter_DKVP_NIDX
+	lineSplitter    line_splitter_DKVP_NIDX
+	fieldSplitter   iFieldSplitter
+	pairSplitter    iPairSplitter
 }
 
 func NewRecordReaderDKVP(
@@ -31,7 +33,9 @@ func NewRecordReaderDKVP(
 	return &RecordReaderDKVPNIDX{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
-		splitter:        recordFromDKVPLine,
+		lineSplitter:    recordFromDKVPLine,
+		fieldSplitter:   newFieldSplitter(readerOptions),
+		pairSplitter:    newPairSplitter(readerOptions),
 	}, nil
 }
 
@@ -42,7 +46,9 @@ func NewRecordReaderNIDX(
 	return &RecordReaderDKVPNIDX{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
-		splitter:        recordFromNIDXLine,
+		lineSplitter:    recordFromNIDXLine,
+		fieldSplitter:   newFieldSplitter(readerOptions),
+		pairSplitter:    newPairSplitter(readerOptions),
 	}, nil
 }
 
@@ -143,7 +149,7 @@ func (reader *RecordReaderDKVPNIDX) getRecordBatch(
 			}
 		}
 
-		record, err := reader.splitter(reader, line)
+		record, err := reader.lineSplitter(reader, line)
 		if err != nil {
 			errorChannel <- err
 			return
@@ -160,24 +166,13 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 	record := mlrval.NewMlrmapAsRecord()
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
-	var pairs []string
-	// TODO: func-pointer this away
-	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
-		pairs = lib.SplitString(line, reader.readerOptions.IFS)
-	} else {
-		pairs = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
-	}
+	pairs := reader.fieldSplitter.Split(line)
 	if reader.readerOptions.AllowRepeatIFS {
 		pairs = lib.StripEmpties(pairs) // left/right trim
 	}
 
 	for i, pair := range pairs {
-		var kv []string
-		if reader.readerOptions.IPSRegex == nil { // e.g. --no-ips-regex
-			kv = strings.SplitN(pair, reader.readerOptions.IPS, 2)
-		} else {
-			kv = lib.RegexSplitString(reader.readerOptions.IPSRegex, pair, 2)
-		}
+		kv := reader.pairSplitter.Split(pair)
 
 		if len(kv) == 0 || (len(kv) == 1 && kv[0] == "") {
 			// Ignore. This is expected when splitting with repeated IFS.
@@ -206,13 +201,7 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrmap, error) {
 	record := mlrval.NewMlrmapAsRecord()
 
-	var values []string
-	// TODO: func-pointer this away
-	if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
-		values = lib.SplitString(line, reader.readerOptions.IFS)
-	} else {
-		values = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
-	}
+	values := reader.fieldSplitter.Split(line)
 	if reader.readerOptions.AllowRepeatIFS {
 		values = lib.StripEmpties(values) // left/right trim
 	}
