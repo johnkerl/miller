@@ -47,6 +47,11 @@ fmt:
 	-go fmt ./internal/pkg/...
 	-go fmt ./regression_test.go
 
+# Needs first: go install honnef.co/go/tools/cmd/staticcheck@latest
+# See also: https://staticcheck.io
+staticcheck:
+	staticcheck ./...
+
 # ----------------------------------------------------------------
 # For developers before pushing to GitHub.
 #
@@ -89,4 +94,4 @@ release_tarball: build check
 
 # ================================================================
 # Go does its own dependency management, outside of make.
-.PHONY: build mlr check unit_test regression_test fmt dev docs
+.PHONY: build mlr check unit_test regression_test fmt staticcheck dev docs
