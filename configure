@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 usage() {
   echo "Usage: $0 [--prefix {prefix directory}], e.g. /usr/local" 2>&1
   echo "    or $0 [--prefix={prefix directory}], e.g. /usr/local" 2>&1
@@ -37,11 +39,12 @@ if [ ! -d "$prefix" ]; then
   exit 1
 fi
 
-sed -I .prefix-backup 's@^PREFIX.*@PREFIX='$prefix'@' Makefile
-rm Makefile.prefix-backup
+ext=".prefix-backup"
+sed 's@^PREFIX.*@PREFIX='$prefix'@' Makefile > Makefile.$ext
+mv Makefile.$ext Makefile
 echo Updated Makefile
 
-sed -I .prefix-backup 's@^PREFIX.*@PREFIX='$prefix'@' man/Makefile
-rm man/Makefile.prefix-backup
+sed 's@^PREFIX.*@PREFIX='$prefix'@' man/Makefile > man/Makefile.$ext
+mv man/Makefile.$ext man/Makefile
 echo Updated man/Makefile
 
