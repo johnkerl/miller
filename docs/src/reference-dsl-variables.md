@@ -871,6 +871,7 @@ filter
 float
 for
 func
+funct
 if
 in
 int
@@ -1105,6 +1106,10 @@ C-style for-loop:
 func: used for defining a user-defined function.
 
   Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
+
+funct: used for saying that a function argument is a user-defined function.
+
+  Example: 'func g(num a, num b, funct f) :num { return f(a**2+b**2) }'
 
 if: starts an if/elif/elif chain. The body statements must be wrapped
 in curly braces.
