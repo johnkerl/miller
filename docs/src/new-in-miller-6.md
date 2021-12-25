@@ -280,7 +280,7 @@ For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/t
 | CSV-lite | 1.671    | 1.428    | 1.17x   |
 | DKVP     | 2.485    | 2.040    | 1.22x   |
 | NIDX     | 1.638    | 1.468    | 1.12x   |
-| XTAB     | 5.147    | 6.252    | 0.82x   |
+| XTAB     | 5.147    | 2.184    | 2.35x   |
 | JSON     | 12.457   | 12.416   | 1.00x   |
 
 For the [second benchmark](https://github.com/johnkerl/miller/blob/main/scripts/chain-cmps.sh), the operations are varied:
@@ -308,7 +308,6 @@ For the [third benchmark](https://github.com/johnkerl/miller/blob/main/scripts/c
 Notes:
 
 * CSV processing is particularly improved in Miller 6.
-* Record I/O is improved for all but XTAB.
-* JSON continues to be a CPU-intensive format.
+* Record I/O is improved across the board, except that JSON continues to be a CPU-intensive format.
 * Miller 6's `sort` merits more performance analysis.
 * Longer then-chains benefit from Miller 6's [multicore approach](cpu.md).
