@@ -94,6 +94,13 @@ func IntMin2(a, b int) int {
 
 // TryIntFromString tries decimal, hex, octal, and binary.
 func TryIntFromString(input string) (int, bool) {
+	// Go's strconv parses "1_2" as 12; not OK for Miller syntax. (Also not valid JSON.)
+	for i := 0; i < len(input); i++ {
+		if input[i] == '_' {
+			return 0, false
+		}
+	}
+
 	// Following twos-complement formatting familiar from all manners of
 	// languages, including C which was Miller's original implementation
 	// language, we want to allow 0x00....00 through 0x7f....ff as positive
@@ -115,6 +122,13 @@ func TryIntFromString(input string) (int, bool) {
 }
 
 func TryFloatFromString(input string) (float64, bool) {
+	// Go's strconv parses "1_2.3_4" as 12.34; not OK for Miller syntax. (Also not valid JSON.)
+	for i := 0; i < len(input); i++ {
+		if input[i] == '_' {
+			return 0, false
+		}
+	}
+
 	fval, err := strconv.ParseFloat(input, 64)
 	if err == nil {
 		return fval, true
