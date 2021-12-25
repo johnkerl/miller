@@ -3,6 +3,7 @@ PUNCHDOWN LIST
 
 * blockers:
   - allow-repeat-ixs nidx perf mod w/o regex split string ...
+  - grep -i whitespace docs/src/*.in & act
 
   - fractional-strptime
   - cmp-matrices
