@@ -4,7 +4,6 @@ PUNCHDOWN LIST
 * blockers:
   - fractional-strptime
   - improved regex doc w/ lots of examples
-  - kw olh for func and funct both
   - cmp-matrices
   - all-contribs: twi dm
   - license triple-checks

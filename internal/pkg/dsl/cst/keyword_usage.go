@@ -40,6 +40,7 @@ var KEYWORD_USAGE_TABLE = []tKeywordUsageEntry{
 	{"float", floatKeywordUsage},
 	{"for", forKeywordUsage},
 	{"func", funcKeywordUsage},
+	{"funct", functKeywordUsage},
 	{"if", ifKeywordUsage},
 	{"in", inKeywordUsage},
 	{"int", intKeywordUsage},
@@ -400,6 +401,13 @@ func funcKeywordUsage() {
 		`used for defining a user-defined function.
 
   Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'`)
+}
+
+func functKeywordUsage() {
+	fmt.Println(
+		`used for saying that a function argument is a user-defined function.
+
+  Example: 'func g(num a, num b, funct f) :num { return f(a**2+b**2) }'`)
 }
 
 func ifKeywordUsage() {

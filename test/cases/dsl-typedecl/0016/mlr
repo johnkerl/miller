@@ -1,0 +1,9 @@
+func f(x) {
+  return sqrt(x)
+};
+
+func g(num a, num b, funct f) :num {
+  return f(a**2+b**2)
+};
+
+$d = g($x, $y, f);
