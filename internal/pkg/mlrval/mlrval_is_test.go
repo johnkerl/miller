@@ -82,6 +82,10 @@ func TestIsString(t *testing.T) {
 	assert.False(t, FromInferredType("").IsString())
 	assert.True(t, FromDeferredType("abc").IsString())
 	assert.True(t, FromInferredType("abc").IsString())
+	assert.True(t, FromInferredType("1_").IsString())
+	assert.True(t, FromInferredType("_2").IsString())
+	assert.True(t, FromInferredType("1_2").IsString())
+	assert.True(t, FromInferredType("1_2.3_4").IsString())
 }
 
 func TestIsStringOrVoid(t *testing.T) {
