@@ -10,8 +10,6 @@ PUNCHDOWN LIST
   - 0b1011 olh/webdoc
   ? array/map fields: marshal as JSON_SINGLE_LINE
 
-* red-PR cmd/mprofs
-
 * shebang
   - olh -s & --norc; --version & --bare-version; --
   - maybe multiple -s -- ? []args would continue growing during parse ...

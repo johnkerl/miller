@@ -24,7 +24,7 @@ The command-line option `--ofmt {format string}` is the global number format for
 --ofmt %.9e --ofmt %.6f --ofmt %.0f
 </pre>
 
-These are just familiar `printf` formats.  (TODO: write about type-checking once that's implemented.) Additionally, if you use leading width (e.g. `%18.12f`) then the output will contain embedded whitespace, which may not be what you want if you pipe the output to something else, particularly CSV. I use Miller's pretty-print format (`mlr --opprint`) to column-align numerical data.
+These are just familiar `printf` formats. Additionally, if you use leading width (e.g. `%18.12f`) then the output will contain embedded whitespace, which may not be what you want if you pipe the output to something else, particularly CSV. I use Miller's pretty-print format (`mlr --opprint`) to column-align numerical data.
 
 <pre class="pre-highlight-in-pair">
 <b>echo 'x=3.1,y=4.3' | mlr --ofmt '%8.3f' cat</b>
