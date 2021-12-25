@@ -270,7 +270,9 @@ The following differences are rather technical. If they don't sound familiar to 
 
 As a benchmark, the [example.csv](https://github.com/johnkerl/miller/blob/main/docs/src/example.csv) file
 [was expanded](https://github.com/johnkerl/miller/blob/main/scripts/make-big-files) into a million-line CSV file,
-then converted to DKVP, JSON, etc. These were run on a commodity Mac laptop with four CPUs.
+then converted to DKVP, JSON, etc.
+
+These were run on a commodity Mac laptop with four CPUs, using `go1.16.5 darwin/amd64`.
 
 For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/time-big-files), we have `mlr cat` of those files, with processing times shown:
 

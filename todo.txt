@@ -2,6 +2,7 @@
 PUNCHDOWN LIST
 
 * blockers:
+  - linux/1.17 perf checks
   - fractional-strptime
   - improved regex doc w/ lots of examples
   - cmp-matrices
@@ -11,6 +12,59 @@ PUNCHDOWN LIST
   - 0b1011 olh/webdoc
   - big-picture note
   ? array/map fields: marshal as JSON_SINGLE_LINE
+
+* numeric-inference perf
+  o perf docs mac -> mac w/ 1.16
+  o multiple go versions
+    1.15, 1.16, 1.17; 1.18 beta
+    https://go.dev/doc/manage-install
+    https://go.dev/dl/#go1.18beta1
+    go install golang.org/dl/go1.18beta1@latest
+    go install golang.org/dl/go1.17.5@latest
+    go install golang.org/dl/go1.16.12@latest
+    go install golang.org/dl/go1.15.15@latest
+
+    go1.15.15 download
+    go1.16.12 download
+    go1.17.5 download
+    go1.18beta1 download
+
+    for go in go1.15.15 go1.16.12 go1.17.5 go1.18beta1; do
+      $go clean github.com/johnkerl/miller/cmd/mlr
+      $go build github.com/johnkerl/miller/cmd/mlr
+      mv mlr mlr-$go
+    done
+
+    for mlr in mlr5 mlr-go1.1*; do justtime $mlr --csv check ~/tmp/big.csv > /dev/null; done
+    for mlr in mlr5 mlr-go1.1*; do justtime $mlr --csv cat ~/tmp/big.csv > /dev/null; done
+    for mlr in mlr5 mlr-go1.1*; do justtime $mlr --csv --from ~/tmp/big.csv put -f ./scripts/chain-1.mlr > /dev/null; done
+
+  o https://stackoverflow.com/questions/64513411/why-is-strconv-parseuint-so-slow-compared-to-strconv-atoi
+  o benchmark per se
+  o enough UT cases
+  o reconsider TryInt/TryFloat -> maybe try number -- ?
+  o get octal regexp out of hot path
+  o make a grammar for numbers & case-though
+    - len 0
+    - len 1
+    - has leading minus; strip & rest
+    - 0x, 0b, 0[0-9]
+    - decimal: leading minus; [0-9]+
+    - octal: leading minus; 0[0-7]+
+    - hex: leading minus; 0[xX][0-9a-fA-F]+
+    - float: leadinug minus;
+
+  o float literals:
+    123 123.  123.4 .234
+    1e2 1e-2 1.2e3 1.e3 1.2e-3 1.e-3
+    .2e3 .2e-3 1.e-3
+
+    ?- [0-9]+
+    ?- [0-9]+ '.' [0-9]*
+    ?- [0-9]* '.' [0-9]+
+    ?- [0-9]+            [eE] ?- [0-9]+
+    ?- [0-9]+ '.' [0-9]* [eE] ?- [0-9]+
+    ?- [0-9]* '.' [0-9]+ [eE] ?- [0-9]+
 
 * nikos materials -> fold in
 
