@@ -3,11 +3,14 @@ PUNCHDOWN LIST
 
 * blockers:
   - fractional-strptime
+  - improved regex doc w/ lots of examples
+  - kw olh for func and funct both
   - cmp-matrices
   - all-contribs: twi dm
   - license triple-checks
   - `mlr put` -> coverart
   - 0b1011 olh/webdoc
+  - shebang
   ? array/map fields: marshal as JSON_SINGLE_LINE
 
 * shebang
@@ -20,32 +23,6 @@ PUNCHDOWN LIST
   - webdocs
   - want:
     > myscript.mlr --c2j input.csv
-
-* JIT follow-ons:
-  o UT:
-    - JSON I/O
-    - mlrval_cmp.go
-    - mv from-array/from-map w/ copy & mutate orig & check new -- & vice versa
-    - dash-O and octal infer
-    - populate each bifs/X_test.go for each bifs/X.go etc etc
-  o neatens
-    - carefully read all $mlv files
-    - check $types & $bifs as well
-    - proofread all mlrval_cmp.go dispo mxes
-    - update rmds x several
-  o misc
-    - grep tmiller map put ref vs map put copy
-    - krepl miller6 new doclink-comments
-    - git rm cmd/mprof{n}
-
-* release ordering?
-  conda
-  brew macports chocolatey
-  ubuntu debian fedora gentoo prolinux archlinux
-  netbsd freebsd
-
-* post-release:
-  w installing-miller.md.in
 
 * nikos materials -> fold in
 
@@ -71,8 +48,6 @@ PUNCHDOWN LIST
       strptime("1970-01-01T00:00:00.Z", "%Y-%m-%dT%H:%M:%SZ")
       (error)
 
-* kw olh for func and funct both
-
 * doc
   o new-in-miller-6: missings:
     - dump syntax -- ?
@@ -96,13 +71,39 @@ PUNCHDOWN LIST
     - needs UTs as well
   o while-read example from issues
 
-* pv: 'mlr --prepipex pv --gzin tail -n 10 ~/tmp/zhuge.gz' needs --gzin & --prepipex both
-  o plus corresponding docwork
+* release ordering?
+  conda
+  brew macports chocolatey
+  ubuntu debian fedora gentoo prolinux archlinux
+  netbsd freebsd
 
-? BIFs as FCFs?
+* post-release:
+  w installing-miller.md.in
 
 ================================================================
 NON-BLOCKERS
+
+? BIFs as FCFs?
+
+* pv: 'mlr --prepipex pv --gzin tail -n 10 ~/tmp/zhuge.gz' needs --gzin & --prepipex both
+  o plus corresponding docwork
+
+* JIT follow-ons:
+  o UT:
+    - JSON I/O
+    - mlrval_cmp.go
+    - mv from-array/from-map w/ copy & mutate orig & check new -- & vice versa
+    - dash-O and octal infer
+    - populate each bifs/X_test.go for each bifs/X.go etc etc
+  o neatens
+    - carefully read all $mlv files
+    - check $types & $bifs as well
+    - proofread all mlrval_cmp.go dispo mxes
+    - update rmds x several
+  o misc
+    - grep tmiller map put ref vs map put copy
+    - krepl miller6 new doclink-comments
+    - git rm cmd/mprof{n}
 
 * https://staticcheck.io/docs
   o lots of nice little things to clean up -- no bugs per se, all stylistic i *think* ...
