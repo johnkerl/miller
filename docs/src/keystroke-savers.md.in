@@ -48,3 +48,19 @@ I think `mlr --csv ...` explains itself better than `mlr -c ...`. Nonetheless, t
 If you want the default file format for Miller to be CSV, you can simply put `--csv` on a line by itself in your `~/.mlrrc` file. Then instead of `mlr --csv cat example.csv` you can just do `mlr cat example.csv`. This is just a personal default, though, so `mlr --opprint cat example.csv` will use default CSV format for input, and PPRINT (tabular) for output.
 
 You can read more about this at the [Customization](customization.md) page.
+
+## Scripts and mlr -s
+
+Suppose you are often doing something like
+
+GENMD-CARDIFY
+mlr --csv \
+filter ‘$quantity > 100’ then \
+count-distinct -f category then \
+fraction -f count \
+filename-which-varies.csv
+GENMD-EOF
+
+Typing this out can get a bit old, if the only thing that changes for you is the filename.
+
+See [Scripting with Miller](scripting.md) for some keystroke-saving options.

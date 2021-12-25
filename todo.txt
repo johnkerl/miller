@@ -9,18 +9,8 @@ PUNCHDOWN LIST
   - license triple-checks
   - `mlr put` -> coverart
   - 0b1011 olh/webdoc
-  - shebang
   - big-picture note
   ? array/map fields: marshal as JSON_SINGLE_LINE
-
-* shebang
-  - olh -s ; --version & --bare-version
-  - maybe multiple -s -- ? []args would continue growing during parse ...
-  - try mlr -s on windows; maybe consolation for shebang-bash -- ?
-  - olh
-  - webdocs
-  - want:
-    > myscript.mlr --c2j input.csv
 
 * nikos materials -> fold in
 
