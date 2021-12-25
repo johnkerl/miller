@@ -9,7 +9,6 @@ PUNCHDOWN LIST
   - license triple-checks
   - `mlr put` -> coverart
   - 0b1011 olh/webdoc
-  - shebang
   - big-picture note
   ? array/map fields: marshal as JSON_SINGLE_LINE
 

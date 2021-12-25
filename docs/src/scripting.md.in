@@ -46,6 +46,10 @@ GENMD-RUN-COMMAND
 example-shell-script --ojson example.csv
 GENMD-EOF
 
+GENMD-RUN-COMMAND
+example-shell-script --ojson then filter '$count == 3' example.csv
+GENMD-EOF
+
 etc.
 
 ## Miller scripts
@@ -78,6 +82,10 @@ GENMD-RUN-COMMAND
 example-mlr-s-script --ojson example.csv
 GENMD-EOF
 
+GENMD-RUN-COMMAND
+example-mlr-s-script --ojson then filter '$count == 3' example.csv
+GENMD-EOF
+
 ## Miller scripts on Windows
 
 Both the previous options require executable mode with `chmod`, and a _shebang
@@ -106,4 +114,8 @@ GENMD-RUN-COMMAND
 mlr -s example-mlr-s-script-no-shebang --ojson example.csv
 GENMD-EOF
 
-and so on.
+GENMD-RUN-COMMAND
+mlr -s example-mlr-s-script-no-shebang --ojson then filter '$count == 3' example.csv
+GENMD-EOF
+
+and so on. See also [Miller on Windows](miller-on-windows.md).

@@ -105,6 +105,22 @@ circle   3     0.3
 }
 </pre>
 
+<pre class="pre-highlight-in-pair">
+<b>example-shell-script --ojson then filter '$count == 3' example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "shape": "triangle",
+  "count": 3,
+  "count_fraction": 0.3
+}
+{
+  "shape": "circle",
+  "count": 3,
+  "count_fraction": 0.3
+}
+</pre>
+
 etc.
 
 ## Miller scripts
@@ -173,6 +189,22 @@ circle   3     0.3
 }
 </pre>
 
+<pre class="pre-highlight-in-pair">
+<b>example-mlr-s-script --ojson then filter '$count == 3' example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "shape": "triangle",
+  "count": 3,
+  "count_fraction": 0.3
+}
+{
+  "shape": "circle",
+  "count": 3,
+  "count_fraction": 0.3
+}
+</pre>
+
 ## Miller scripts on Windows
 
 Both the previous options require executable mode with `chmod`, and a _shebang
@@ -230,4 +262,20 @@ circle   3     0.3
 }
 </pre>
 
-and so on.
+<pre class="pre-highlight-in-pair">
+<b>mlr -s example-mlr-s-script-no-shebang --ojson then filter '$count == 3' example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+{
+  "shape": "triangle",
+  "count": 3,
+  "count_fraction": 0.3
+}
+{
+  "shape": "circle",
+  "count": 3,
+  "count_fraction": 0.3
+}
+</pre>
+
+and so on. See also [Miller on Windows](miller-on-windows.md).

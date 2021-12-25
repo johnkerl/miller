@@ -39,3 +39,5 @@ One workaround is to use MSYS2. Another workaround is to put more complex DSL ex
 A third workaround is to replace `"` with `"""`, then `'` with `"`:
 
 ![pix/miller-windows-triple-double-quote.png](pix/miller-windows-triple-double-quote.png)
+
+A fourth workaround is `mlr -s`: see [Scripting with Miller](scripting.md).
