@@ -36,7 +36,11 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 		readerOptions.IFS = defaultFSes[readerOptions.InputFileFormat]
 	}
 	if !readerOptions.ipsWasSpecified {
+		//if readerOptions.InputFileFormat == "xtab" && !readerOptions.ipsWasSpecified {
+		//readerOptions.IPSRegex = lib.CompileMillerRegexOrDie(WHITESPACE_REGEX)
+		//} else {
 		readerOptions.IPS = defaultPSes[readerOptions.InputFileFormat]
+		//}
 	}
 	if !readerOptions.irsWasSpecified {
 		readerOptions.IRS = defaultRSes[readerOptions.InputFileFormat]
@@ -46,38 +50,14 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 		// and spaces, that should now be the default for NIDX. But *only* for NIDX format,
 		// and if IFS wasn't specified.
 		if readerOptions.InputFileFormat == "nidx" && !readerOptions.ifsWasSpecified {
-			readerOptions.IFS = WHITESPACE
+			readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(WHITESPACE_REGEX)
 		} else {
 			readerOptions.AllowRepeatIFS = defaultAllowRepeatIFSes[readerOptions.InputFileFormat]
 		}
 	}
-	if !readerOptions.allowRepeatIPSWasSpecified {
-		readerOptions.AllowRepeatIPS = defaultAllowRepeatIPSes[readerOptions.InputFileFormat]
-	}
 
-// TODO -- rework
-//	if readerOptions.AllowRepeatIFS {
-//		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IFS + ")+")
-//	} else if !lib.IsRegexString(readerOptions.IFS) {
-//		// Using regex-splitting on IFS/IPS in record-readers that support it is a HUGE perf hit (almost 2x).
-//		// Don't use it unless these are actually value-adding regexes.
-//		readerOptions.IFSRegex = nil
-//	} else {
-//		readerOptions.IFSRegex = lib.CompileMillerRegexOrDie(readerOptions.IFS)
-//	}
-
-// TODO -- rework
-//	if readerOptions.AllowRepeatIPS {
-//		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie("(" + readerOptions.IPS + ")+")
-//	} else if !lib.IsRegexString(readerOptions.IPS) {
-//		// Using regex-splitting on IFS/IPS in record-readers that support it
-//		// is a HUGE perf hit (almost 2x).  Don't use it unless these are
-//		// actually value-adding regexes.
-//		readerOptions.IPSRegex = nil
-//	} else {
-//		readerOptions.IPSRegex = lib.CompileMillerRegexOrDie(readerOptions.IPS)
-//	}
-
+	readerOptions.IFS = lib.UnbackslashStringLiteral(readerOptions.IFS)
+	readerOptions.IPS = lib.UnbackslashStringLiteral(readerOptions.IPS)
 	readerOptions.IRS = lib.UnbackslashStringLiteral(readerOptions.IRS)
 }
 
@@ -250,12 +230,41 @@ var SeparatorFlagSection = FlagSection{
 		},
 
 		{
+			name: "--ifs-regex",
+			arg:  "{string}",
+			help: "Specify FS for input as a regular expression.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				// Backward compatibility with Miller <= 5. Auto-inference of
+				// LF vs CR/LF line endings is handled within Go libraries so
+				// we needn't do anything ourselves.
+				if args[*pargi+1] != "auto" {
+					options.ReaderOptions.IFSRegex = lib.CompileMillerRegexOrDie(SeparatorRegexFromArg(args[*pargi+1]))
+					options.ReaderOptions.ifsWasSpecified = true
+				}
+				*pargi += 2
+			},
+		},
+
+		{
 			name: "--ips",
 			arg:  "{string}",
 			help: "Specify PS for input.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				CheckArgCount(args, *pargi, argc, 2)
 				options.ReaderOptions.IPS = SeparatorFromArg(args[*pargi+1])
+				options.ReaderOptions.ipsWasSpecified = true
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--ips-regex",
+			arg:  "{string}",
+			help: "Specify PS for input as a regular expression.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				CheckArgCount(args, *pargi, argc, 2)
+				options.ReaderOptions.IPSRegex = lib.CompileMillerRegexOrDie(SeparatorRegexFromArg(args[*pargi+1]))
 				options.ReaderOptions.ipsWasSpecified = true
 				*pargi += 2
 			},

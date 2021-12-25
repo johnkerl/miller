@@ -25,3 +25,14 @@ func SeparatorFromArg(name string) string {
 		return name
 	}
 }
+
+// SeparatorRegexFromArg is for letting people do things like `--ifs-regex whitespace`
+// rather than `--ifs '([ \t])+'`.
+func SeparatorRegexFromArg(name string) string {
+	sep, ok := SEPARATOR_REGEX_NAMES_TO_VALUES[name]
+	if ok {
+		return sep
+	} else {
+		return name
+	}
+}

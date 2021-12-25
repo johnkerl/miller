@@ -41,7 +41,6 @@ type TReaderOptions struct {
 	IPS                 string
 	IRS                 string
 	AllowRepeatIFS      bool
-	AllowRepeatIPS      bool
 	IFSRegex            *regexp.Regexp
 	IPSRegex            *regexp.Regexp
 	DedupeFieldNames    bool
@@ -53,7 +52,6 @@ type TReaderOptions struct {
 	ipsWasSpecified            bool
 	irsWasSpecified            bool
 	allowRepeatIFSWasSpecified bool
-	allowRepeatIPSWasSpecified bool
 
 	UseImplicitCSVHeader bool
 	AllowRaggedCSVInput  bool

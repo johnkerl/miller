@@ -167,9 +167,6 @@ func recordFromDKVPLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 	dedupeFieldNames := reader.readerOptions.DedupeFieldNames
 
 	pairs := reader.fieldSplitter.Split(line)
-	if reader.readerOptions.AllowRepeatIFS {
-		pairs = lib.StripEmpties(pairs) // left/right trim
-	}
 
 	for i, pair := range pairs {
 		kv := reader.pairSplitter.Split(pair)
@@ -202,9 +199,6 @@ func recordFromNIDXLine(reader *RecordReaderDKVPNIDX, line string) (*mlrval.Mlrm
 	record := mlrval.NewMlrmapAsRecord()
 
 	values := reader.fieldSplitter.Split(line)
-	if reader.readerOptions.AllowRepeatIFS {
-		values = lib.StripEmpties(values) // left/right trim
-	}
 
 	var i int = 0
 	for _, value := range values {

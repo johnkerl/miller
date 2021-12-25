@@ -222,9 +222,6 @@ func getRecordBatchExplicitCSVHeader(
 		}
 
 		fields := reader.fieldSplitter.Split(line)
-		if reader.readerOptions.AllowRepeatIFS {
-			fields = lib.StripEmpties(fields) // left/right trim
-		}
 
 		if reader.headerStrings == nil {
 			reader.headerStrings = fields
@@ -342,9 +339,6 @@ func getRecordBatchImplicitCSVHeader(
 		}
 
 		fields := reader.fieldSplitter.Split(line)
-		if reader.readerOptions.AllowRepeatIFS {
-			fields = lib.StripEmpties(fields) // left/right trim
-		}
 
 		if reader.headerStrings == nil {
 			n := len(fields)

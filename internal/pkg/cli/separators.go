@@ -14,10 +14,11 @@ const PIPE = "|"
 const SEMICOLON = ";"
 const SLASH = "/"
 const SPACE = " "
-const SPACES = "( )+"
 const TAB = "\\t"
-const TABS = "(\\t)+"
-const WHITESPACE = "([ \\t])+"
+
+const SPACES_REGEX = "( )+"
+const TABS_REGEX = "(\\t)+"
+const WHITESPACE_REGEX = "([ \\t])+"
 
 const ASCII_ESC = "\\x1b"
 const ASCII_ETX = "\\x04"
@@ -67,12 +68,15 @@ var SEPARATOR_NAMES_TO_VALUES = map[string]string{
 	"semicolon":  SEMICOLON,
 	"slash":      SLASH,
 	"space":      SPACE,
-	"spaces":     SPACES,
 	"tab":        TAB,
-	"tabs":       TABS,
 	"usv_fs":     USV_FS,
 	"usv_rs":     USV_RS,
-	"whitespace": WHITESPACE,
+}
+
+var SEPARATOR_REGEX_NAMES_TO_VALUES = map[string]string{
+	"spaces":     SPACES_REGEX,
+	"tabs":       TABS_REGEX,
+	"whitespace": WHITESPACE_REGEX,
 }
 
 // E.g. if IFS isn't specified, it's space for NIDX and comma for DKVP, etc.
@@ -96,7 +100,7 @@ var defaultPSes = map[string]string{
 	"markdown": "N/A",
 	"nidx":     "N/A",
 	"pprint":   "N/A",
-	"xtab":     " ", // todo: windows-dependent ...
+	"xtab":     " ",
 }
 
 var defaultRSes = map[string]string{
@@ -119,15 +123,4 @@ var defaultAllowRepeatIFSes = map[string]bool{
 	"nidx":     false,
 	"pprint":   true,
 	"xtab":     false,
-}
-
-var defaultAllowRepeatIPSes = map[string]bool{
-	"csv":      false,
-	"csvlite":  false,
-	"dkvp":     false,
-	"json":     false,
-	"markdown": false,
-	"nidx":     false,
-	"pprint":   false,
-	"xtab":     true,
 }

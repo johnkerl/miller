@@ -137,25 +137,11 @@ type iPairSplitter interface {
 	Split(input string) []string
 }
 
-// IFieldSplitter splits a string into pieces, e.g. for IFS.
-// This helps us reuse code for splitting by IFS string, or IFS regex.
-type iFieldSplitter interface {
-	Split(input string) []string
-}
-
 func newPairSplitter(options *cli.TReaderOptions) iPairSplitter {
 	if options.IPSRegex == nil {
 		return &tIPSSplitter{ips: options.IPS}
 	} else {
 		return &tIPSRegexSplitter{ipsRegex: options.IPSRegex}
-	}
-}
-
-func newFieldSplitter(options *cli.TReaderOptions) iFieldSplitter {
-	if options.IFSRegex == nil {
-		return &tIFSSplitter{ifs: options.IFS}
-	} else {
-		return &tIFSRegexSplitter{ifsRegex: options.IFSRegex}
 	}
 }
 
@@ -175,12 +161,31 @@ func (s *tIPSRegexSplitter) Split(input string) []string {
 	return lib.RegexSplitString(s.ipsRegex, input, 2)
 }
 
+// IFieldSplitter splits a string into pieces, e.g. for IFS.
+// This helps us reuse code for splitting by IFS string, or IFS regex.
+type iFieldSplitter interface {
+	Split(input string) []string
+}
+
+func newFieldSplitter(options *cli.TReaderOptions) iFieldSplitter {
+	if options.IFSRegex == nil {
+		return &tIFSSplitter{ifs: options.IFS, allowRepeatIFS: options.AllowRepeatIFS}
+	} else {
+		return &tIFSRegexSplitter{ifsRegex: options.IFSRegex}
+	}
+}
+
 type tIFSSplitter struct {
 	ifs string
+	allowRepeatIFS bool
 }
 
 func (s *tIFSSplitter) Split(input string) []string {
-	return lib.SplitString(input, s.ifs)
+	fields := lib.SplitString(input, s.ifs)
+	if s.allowRepeatIFS {
+		fields = lib.StripEmpties(fields) // left/right trim
+	}
+	return fields
 }
 
 type tIFSRegexSplitter struct {
