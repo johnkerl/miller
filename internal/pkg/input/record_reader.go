@@ -176,7 +176,7 @@ func newFieldSplitter(options *cli.TReaderOptions) iFieldSplitter {
 }
 
 type tIFSSplitter struct {
-	ifs string
+	ifs            string
 	allowRepeatIFS bool
 }
 

@@ -73,6 +73,7 @@ func init() {
 				handlerInfos: []tHandlerInfo{
 					{name: "flags", zaryHandlerFunc: showFlagHelp},
 					{name: "list-separator-aliases", zaryHandlerFunc: listSeparatorAliases},
+					{name: "list-separator-regex-aliases", zaryHandlerFunc: listSeparatorRegexAliases},
 					// Per-section entries will be computed and installed below
 				},
 			},
@@ -313,6 +314,10 @@ func showFlagHelp() {
 
 func listSeparatorAliases() {
 	cli.ListSeparatorAliasesForOnlineHelp()
+}
+
+func listSeparatorRegexAliases() {
+	cli.ListSeparatorRegexAliasesForOnlineHelp()
 }
 
 // ----------------------------------------------------------------

@@ -171,6 +171,14 @@ Notes about all other separators:
 	}
 	fmt.Println()
 
+	fmt.Println("  - Similarly, you can use the following for `--ifs-regex` and `--ips-regex`:")
+	fmt.Println()
+	aliases = lib.GetArrayKeysSorted(SEPARATOR_REGEX_NAMES_TO_VALUES)
+	for _, alias := range aliases {
+		fmt.Printf("          %-10s = \"%s\"\n", alias, SEPARATOR_REGEX_NAMES_TO_VALUES[alias])
+	}
+	fmt.Println()
+
 	fmt.Println("* Default separators by format:")
 	fmt.Println()
 
@@ -202,6 +210,16 @@ func ListSeparatorAliasesForOnlineHelp() {
 		// Really absurd level of indent needed to get fixed-with font in mkdocs here,
 		// I don't know why. Usually it only takes 4, not 10.
 		fmt.Printf("%-10s = \"%s\"\n", alias, SEPARATOR_NAMES_TO_VALUES[alias])
+	}
+}
+
+func ListSeparatorRegexAliasesForOnlineHelp() {
+	// Go doesn't preserve insertion order in its arrays so here we are inlining a sort.
+	aliases := lib.GetArrayKeysSorted(SEPARATOR_REGEX_NAMES_TO_VALUES)
+	for _, alias := range aliases {
+		// Really absurd level of indent needed to get fixed-with font in mkdocs here,
+		// I don't know why. Usually it only takes 4, not 10.
+		fmt.Printf("%-10s = \"%s\"\n", alias, SEPARATOR_REGEX_NAMES_TO_VALUES[alias])
 	}
 }
 

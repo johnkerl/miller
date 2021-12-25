@@ -2,17 +2,6 @@
 PUNCHDOWN LIST
 
 * blockers:
-  ! --ifs-regex & --ips-regex -- guessing is not safe as evidence by '.' and '|'
-    > xtab ips space by default; 3x faster
-      * incl webdoc
-    > xtab splitter UT; nidx too
-    > regex aliases too
-    k make a helper class to encapsulate
-    k --ixs vs --ixs-regex at cli-parser
-    k remove SuppressIFSRegexing
-    k remove lib.IsRegexString
-    d olh/webdoc updates
-
   - allow-repeat-ixs nidx perf mod w/o regex split string ...
 
   - fractional-strptime
@@ -116,6 +105,8 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* xtab splitter UT; nidx too
 
 * integrate:
   o https://www.libhunt.com/r/miller

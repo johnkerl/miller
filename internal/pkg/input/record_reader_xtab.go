@@ -314,7 +314,7 @@ func (s *tXTABIPSSplitter) Split(input string) (key, value string, err error) {
 		return "", "", errors.New("mlr: internal coding error in XTAB reader")
 	}
 
-	// '   a 1' splits as key '', value 'a 1' for compatibility with Miller 5.
+	// '   abc 123' splits as key '', value 'abc 123'.
 	if strings.HasPrefix(input, s.ips) {
 		keyStart := 0
 		for keyStart < n && strings.HasPrefix(input[keyStart:], s.ips) {

@@ -48,6 +48,14 @@ GENMD-RUN-COMMAND
 mlr --ifs , --ofs ';' --ips = --ops : cut -o -f c,a,b data/a.dkvp
 GENMD-EOF
 
+GENMD-RUN-COMMAND
+mlr --csv head -n 2 example.csv
+GENMD-EOF
+
+GENMD-RUN-COMMAND
+mlr --csv --ofs pipe head -n 2 example.csv
+GENMD-EOF
+
 If your data has non-default separators and you don't want to change those
 between input and output, you can use `--rs`, `--fs`, and `--ps`. Setting `--fs
 :` is the same as setting `--ifs : --ofs :`, but with fewer keystrokes.
@@ -60,31 +68,23 @@ GENMD-RUN-COMMAND
 mlr --fs ';' --ps : cut -o -f c,a,b data/modsep.dkvp
 GENMD-EOF
 
-## Multi-character and regular-expression separators
+## Multi-character separators
 
-The separators default to single characters, but can be multiple characters if you like:
+All separators can be multi-character, except for file formats which don't
+allow parameterization (see below). And for CSV (CSV-lite doesn't have these
+restrictions), IRS must be `\n` and IFS must be a single character.
 
 GENMD-RUN-COMMAND
 mlr --ifs ';' --ips : --ofs ';;;' --ops := cut -o -f c,a,b data/modsep.dkvp
 GENMD-EOF
 
-As of September 2021:
-
-* `IFS` and `IPS` can be regular expressions.
-* `IRS` can be multi-character (except for file formats which don't allow parameterization -- see below)
-* `OFS`, `OPS`, and `ORS` can be multi-character.
-
-Since `IFS` and `IPS` can be regular expressions, if your data has field
-separators which are one or more consecutive spaces, you can use `--ifs '(
-)+'`. But that gets a little tedious, so Miller has the `--repifs` and
-`--repips` flags you can use if you like.  This wraps the `IFS` or `IPS`, say
-`X`, as `(X)+`.
-
-The `--repifs` flag means that multiple successive occurrences of the field
+If your data has field separators which are one or more consecutive spaces, you
+can use `--ifs space --repifs`.
+More generally, the `--repifs` flag means that multiple successive occurrences of the field
 separator count as one.  For example, in CSV data we often signify nulls by
 empty strings, e.g. `2,9,,,,,6,5,4`. On the other hand, if the field separator
 is a space, it might be more natural to parse `2 4    5` the same as `2 4 5`:
-`--repifs --ifs ' '` lets this happen.  In fact, the `--ipprint` option above
+`--repifs --ifs ' '` lets this happen.  In fact, the `--ipprint` option
 is internally implemented in terms of `--repifs`.
 
 For example:
@@ -97,6 +97,15 @@ GENMD-RUN-COMMAND
 mlr --ifs ' ' --repifs --inidx --oxtab cat  data/extra-spaces.txt
 GENMD-EOF
 
+## Regular-expression separators
+
+`IFS` and `IPS` can be regular expressions: use `--ifs-regex` or `--ips-regex` in place of
+`--ifs` or `--ips`, respectively.
+
+You can also use either `--ifs space --repifs` or `--ifs-regex '()+'`. (But that gets a little tedious,
+so there are aliases listed below.) Note however that `--ifs space --repifs` is about 3x faster than
+`--ifs-regex '( )+'` -- regular expressions are powerful, but slower.
+
 ## Aliases
 
 Many things we'd like to write as separators need to be escaped from the shell
@@ -106,8 +115,15 @@ GENMD-RUN-COMMAND
 mlr help list-separator-aliases
 GENMD-EOF
 
+And for `--ifs-regex` and `--ips-regex`:
+
+GENMD-RUN-COMMAND
+mlr help list-separator-regex-aliases
+GENMD-EOF
+
 Note that `spaces`, `tabs`, and `whitespace` already are regexes so you
-shouldn't use `--repifs` with them.
+shouldn't use `--repifs` with them. (In fact, the `--repifs` flag is ignored
+when `--ifs-regex` is provided.)
 
 ## Command-line flags
 
@@ -115,8 +131,8 @@ Given the above, we now have seen the following flags:
 
 GENMD-CARDIFY
 --rs --irs --ors
---fs --ifs --ofs --repifs
---ps --ips --ops
+--fs --ifs --ofs --repifs --ifs-regex
+--ps --ips --ops --ips-regex
 GENMD-EOF
 
 See also the [separator-flags section](reference-main-flag-list.md#separator-flags).

@@ -115,7 +115,6 @@ func transformerJoinUsage(
 	fmt.Fprintf(o, "  --ifs {field-separator character}\n")
 	fmt.Fprintf(o, "  --ips {pair-separator character}\n")
 	fmt.Fprintf(o, "  --repifs\n")
-	fmt.Fprintf(o, "  --repips\n")
 	fmt.Fprintf(o, "  --implicit-csv-header\n")
 	fmt.Fprintf(o, "  --no-implicit-csv-header\n")
 	fmt.Fprintf(o, "For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will\n")

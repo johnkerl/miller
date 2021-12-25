@@ -541,11 +541,14 @@ Notes about all other separators:
           semicolon  = ";"
           slash      = "/"
           space      = " "
-          spaces     = "( )+"
           tab        = "\t"
-          tabs       = "(\t)+"
           usv_fs     = "\xe2\x90\x9f"
           usv_rs     = "\xe2\x90\x9e"
+
+  - Similarly, you can use the following for `--ifs-regex` and `--ips-regex`:
+
+          spaces     = "( )+"
+          tabs       = "(\t)+"
           whitespace = "([ \t])+"
 
 * Default separators by format:
@@ -567,14 +570,14 @@ Notes about all other separators:
 `: Specify FS for input and output.
 * `--ifs {string}
 `: Specify FS for input.
+* `--ifs-regex {string}
+`: Specify FS for input as a regular expression.
 * `--ips {string}
 `: Specify PS for input.
+* `--ips-regex {string}
+`: Specify PS for input as a regular expression.
 * `--irs {string}
 `: Specify RS for input.
-* `--no-ifs-regex
-`: Don't treat IFS value as a regular expression. Useful if your IFS is ".".
-* `--no-ips-regex
-`: Don't treat IPS value as a regular expression. Useful if your IPS is ".".
 * `--ofs {string}
 `: Specify FS for output.
 * `--ops {string}

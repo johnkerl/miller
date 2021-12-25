@@ -455,7 +455,6 @@ the main "mlr --help" for more information on syntax for these arguments:
   --ifs {field-separator character}
   --ips {pair-separator character}
   --repifs
-  --repips
   --implicit-csv-header
   --no-implicit-csv-header
 For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will
