@@ -266,7 +266,7 @@ See the [seprators page](reference-main-separators.md) regarding how to specify 
 
 ## NIDX: Index-numbered (toolkit style)
 
-With `--inidx --ifs ' ' --repifs`, Miller splits lines on whitespace and assigns integer field names starting with 1.
+With `--inidx --ifs ' ' --repifs`, Miller splits lines on spaces and assigns integer field names starting with 1.
 
 This recapitulates Unix-toolkit behavior.
 

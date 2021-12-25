@@ -36,11 +36,7 @@ func FinalizeReaderOptions(readerOptions *TReaderOptions) {
 		readerOptions.IFS = defaultFSes[readerOptions.InputFileFormat]
 	}
 	if !readerOptions.ipsWasSpecified {
-		//if readerOptions.InputFileFormat == "xtab" && !readerOptions.ipsWasSpecified {
-		//readerOptions.IPSRegex = lib.CompileMillerRegexOrDie(WHITESPACE_REGEX)
-		//} else {
 		readerOptions.IPS = defaultPSes[readerOptions.InputFileFormat]
-		//}
 	}
 	if !readerOptions.irsWasSpecified {
 		readerOptions.IRS = defaultRSes[readerOptions.InputFileFormat]
