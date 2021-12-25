@@ -440,7 +440,8 @@ How to specify location of .mlrrc:
   o If $HOME/.mlrrc exists, it's then processed as above.
   o If ./.mlrrc exists, it's then also processed as above.
   (I.e. current-directory .mlrrc defaults are stacked over home-directory .mlrrc defaults.)
-
+* The command-line flag "--norc" can be used to suppress loading the .mlrrc file even when other
+  conditions are met.
 See also:
 https://miller.readthedocs.io/en/latest/customization.html
 `)

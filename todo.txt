@@ -14,11 +14,9 @@ PUNCHDOWN LIST
   ? array/map fields: marshal as JSON_SINGLE_LINE
 
 * shebang
-  - olh -s & --norc; --version & --bare-version; --
+  - olh -s ; --version & --bare-version
   - maybe multiple -s -- ? []args would continue growing during parse ...
   - try mlr -s on windows; maybe consolation for shebang-bash -- ?
-  - doc re where to put --norc
-    > it needn't be first (after -s) anymore
   - olh
   - webdocs
   - want:
