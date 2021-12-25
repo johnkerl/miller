@@ -76,6 +76,24 @@ c:3;a:1;b:2
 c:6;a:4;b:5
 </pre>
 
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv head -n 2 example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color,shape,flag,k,index,quantity,rate
+yellow,triangle,true,1,11,43.6498,9.8870
+red,square,true,2,15,79.2778,0.0130
+</pre>
+
+<pre class="pre-highlight-in-pair">
+<b>mlr --csv --ofs pipe head -n 2 example.csv</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+color|shape|flag|k|index|quantity|rate
+yellow|triangle|true|1|11|43.6498|9.8870
+red|square|true|2|15|79.2778|0.0130
+</pre>
+
 If your data has non-default separators and you don't want to change those
 between input and output, you can use `--rs`, `--fs`, and `--ps`. Setting `--fs
 :` is the same as setting `--ifs : --ofs :`, but with fewer keystrokes.
@@ -96,9 +114,11 @@ c:3;a:1;b:2
 c:6;a:4;b:5
 </pre>
 
-## Multi-character and regular-expression separators
+## Multi-character separators
 
-The separators default to single characters, but can be multiple characters if you like:
+All separators can be multi-character, except for file formats which don't
+allow parameterization (see below). And for CSV (CSV-lite doesn't have these
+restrictions), IRS must be `\n` and IFS must be a single character.
 
 <pre class="pre-highlight-in-pair">
 <b>mlr --ifs ';' --ips : --ofs ';;;' --ops := cut -o -f c,a,b data/modsep.dkvp</b>
@@ -108,23 +128,13 @@ c:=3;;;a:=1;;;b:=2
 c:=6;;;a:=4;;;b:=5
 </pre>
 
-As of September 2021:
-
-* `IFS` and `IPS` can be regular expressions.
-* `IRS` can be multi-character (except for file formats which don't allow parameterization -- see below)
-* `OFS`, `OPS`, and `ORS` can be multi-character.
-
-Since `IFS` and `IPS` can be regular expressions, if your data has field
-separators which are one or more consecutive spaces, you can use `--ifs '(
-)+'`. But that gets a little tedious, so Miller has the `--repifs` and
-`--repips` flags you can use if you like.  This wraps the `IFS` or `IPS`, say
-`X`, as `(X)+`.
-
-The `--repifs` flag means that multiple successive occurrences of the field
+If your data has field separators which are one or more consecutive spaces, you
+can use `--ifs space --repifs`.
+More generally, the `--repifs` flag means that multiple successive occurrences of the field
 separator count as one.  For example, in CSV data we often signify nulls by
 empty strings, e.g. `2,9,,,,,6,5,4`. On the other hand, if the field separator
 is a space, it might be more natural to parse `2 4    5` the same as `2 4 5`:
-`--repifs --ifs ' '` lets this happen.  In fact, the `--ipprint` option above
+`--repifs --ifs ' '` lets this happen.  In fact, the `--ipprint` option
 is internally implemented in terms of `--repifs`.
 
 For example:
@@ -157,6 +167,15 @@ early light what so
 3 what
 4 so
 </pre>
+
+## Regular-expression separators
+
+`IFS` and `IPS` can be regular expressions: use `--ifs-regex` or `--ips-regex` in place of
+`--ifs` or `--ips`, respectively.
+
+You can also use either `--ifs space --repifs` or `--ifs-regex '()+'`. (But that gets a little tedious,
+so there are aliases listed below.) Note however that `--ifs space --repifs` is about 3x faster than
+`--ifs-regex '( )+'` -- regular expressions are powerful, but slower.
 
 ## Aliases
 
@@ -192,16 +211,25 @@ pipe       = "|"
 semicolon  = ";"
 slash      = "/"
 space      = " "
-spaces     = "( )+"
 tab        = "\t"
-tabs       = "(\t)+"
 usv_fs     = "\xe2\x90\x9f"
 usv_rs     = "\xe2\x90\x9e"
+</pre>
+
+And for `--ifs-regex` and `--ips-regex`:
+
+<pre class="pre-highlight-in-pair">
+<b>mlr help list-separator-regex-aliases</b>
+</pre>
+<pre class="pre-non-highlight-in-pair">
+spaces     = "( )+"
+tabs       = "(\t)+"
 whitespace = "([ \t])+"
 </pre>
 
 Note that `spaces`, `tabs`, and `whitespace` already are regexes so you
-shouldn't use `--repifs` with them.
+shouldn't use `--repifs` with them. (In fact, the `--repifs` flag is ignored
+when `--ifs-regex` is provided.)
 
 ## Command-line flags
 
@@ -209,8 +237,8 @@ Given the above, we now have seen the following flags:
 
 <pre class="pre-non-highlight-non-pair">
 --rs --irs --ors
---fs --ifs --ofs --repifs
---ps --ips --ops
+--fs --ifs --ofs --repifs --ifs-regex
+--ps --ips --ops --ips-regex
 </pre>
 
 See also the [separator-flags section](reference-main-flag-list.md#separator-flags).

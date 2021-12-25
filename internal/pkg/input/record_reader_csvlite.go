@@ -49,6 +49,7 @@ type RecordReaderCSVLite struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
 
+	fieldSplitter     iFieldSplitter
 	recordBatchGetter recordBatchGetterCSV
 
 	inputLineNumber int
@@ -62,6 +63,7 @@ func NewRecordReaderCSVLite(
 	reader := &RecordReaderCSVLite{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
+		fieldSplitter:   newFieldSplitter(readerOptions),
 	}
 	if reader.readerOptions.UseImplicitCSVHeader {
 		reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
@@ -78,6 +80,7 @@ func NewRecordReaderPPRINT(
 	reader := &RecordReaderCSVLite{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
+		fieldSplitter:   newFieldSplitter(readerOptions),
 	}
 	if reader.readerOptions.UseImplicitCSVHeader {
 		reader.recordBatchGetter = getRecordBatchImplicitCSVHeader
@@ -218,15 +221,7 @@ func getRecordBatchExplicitCSVHeader(
 			continue
 		}
 
-		var fields []string
-		if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
-			fields = lib.SplitString(line, reader.readerOptions.IFS)
-		} else {
-			fields = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
-		}
-		if reader.readerOptions.AllowRepeatIFS {
-			fields = lib.StripEmpties(fields) // left/right trim
-		}
+		fields := reader.fieldSplitter.Split(line)
 
 		if reader.headerStrings == nil {
 			reader.headerStrings = fields
@@ -343,16 +338,7 @@ func getRecordBatchImplicitCSVHeader(
 			continue
 		}
 
-		var fields []string
-		// TODO: function-pointer this
-		if reader.readerOptions.IFSRegex == nil { // e.g. --no-ifs-regex
-			fields = lib.SplitString(line, reader.readerOptions.IFS)
-		} else {
-			fields = lib.RegexSplitString(reader.readerOptions.IFSRegex, line, -1)
-		}
-		if reader.readerOptions.AllowRepeatIFS {
-			fields = lib.StripEmpties(fields) // left/right trim
-		}
+		fields := reader.fieldSplitter.Split(line)
 
 		if reader.headerStrings == nil {
 			n := len(fields)

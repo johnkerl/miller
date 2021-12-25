@@ -132,6 +132,7 @@ HELP OPTIONS
        Flags:
          mlr help flags
          mlr help list-separator-aliases
+         mlr help list-separator-regex-aliases
          mlr help comments-in-data-flags
          mlr help compressed-data-flags
          mlr help csv-only-flags
@@ -709,11 +710,14 @@ SEPARATOR FLAGS
                  semicolon  = ";"
                  slash      = "/"
                  space      = " "
-                 spaces     = "( )+"
                  tab        = "\t"
-                 tabs       = "(\t)+"
                  usv_fs     = "\xe2\x90\x9f"
                  usv_rs     = "\xe2\x90\x9e"
+
+         - Similarly, you can use the following for `--ifs-regex` and `--ips-regex`:
+
+                 spaces     = "( )+"
+                 tabs       = "(\t)+"
                  whitespace = "([ \t])+"
 
        * Default separators by format:
@@ -730,12 +734,10 @@ SEPARATOR FLAGS
 
        --fs {string}            Specify FS for input and output.
        --ifs {string}           Specify FS for input.
+       --ifs-regex {string}     Specify FS for input as a regular expression.
        --ips {string}           Specify PS for input.
+       --ips-regex {string}     Specify PS for input as a regular expression.
        --irs {string}           Specify RS for input.
-       --no-ifs-regex           Don't treat IFS value as a regular expression. Useful
-                                if your IFS is ".".
-       --no-ips-regex           Don't treat IPS value as a regular expression. Useful
-                                if your IPS is ".".
        --ofs {string}           Specify FS for output.
        --ops {string}           Specify PS for output.
        --ors {string}           Specify RS for output.
@@ -1250,7 +1252,6 @@ VERBS
          --ifs {field-separator character}
          --ips {pair-separator character}
          --repifs
-         --repips
          --implicit-csv-header
          --no-implicit-csv-header
        For example, if you have 'mlr --csv ... join -l foo ... ' then the left-file format will
@@ -3017,5 +3018,5 @@ SEE ALSO
 
 
 
-                                  2021-12-23                         MILLER(1)
+                                  2021-12-25                         MILLER(1)
 </pre>

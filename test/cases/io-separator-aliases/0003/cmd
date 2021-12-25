@@ -1,1 +1,1 @@
-mlr --from ${CASEDIR}/input --n2j --ifs spaces cat
+mlr --from ${CASEDIR}/input --n2j --ifs-regex spaces cat

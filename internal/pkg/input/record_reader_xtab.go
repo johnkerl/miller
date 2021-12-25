@@ -5,6 +5,7 @@ import (
 	"container/list"
 	"errors"
 	"io"
+	"regexp"
 	"strings"
 
 	"github.com/johnkerl/miller/internal/pkg/cli"
@@ -13,9 +14,14 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/types"
 )
 
+type iXTABPairSplitter interface {
+	Split(input string) (key, value string, err error)
+}
+
 type RecordReaderXTAB struct {
 	readerOptions   *cli.TReaderOptions
 	recordsPerBatch int // distinct from readerOptions.RecordsPerBatch for join/repl
+	pairSplitter    iXTABPairSplitter
 
 	// Note: XTAB uses two consecutive IFS in place of an IRS; IRS is ignored
 }
@@ -45,6 +51,7 @@ func NewRecordReaderXTAB(
 	return &RecordReaderXTAB{
 		readerOptions:   readerOptions,
 		recordsPerBatch: recordsPerBatch,
+		pairSplitter:    newXTABPairSplitter(readerOptions),
 	}, nil
 }
 
@@ -262,31 +269,103 @@ func (reader *RecordReaderXTAB) recordFromXTABLines(
 	for e := stanza.Front(); e != nil; e = e.Next() {
 		line := e.Value.(string)
 
-		var kv []string
-		if reader.readerOptions.IPSRegex == nil { // e.g. --no-ips-regex
-			kv = strings.SplitN(line, reader.readerOptions.IPS, 2)
-		} else {
-			kv = lib.RegexSplitString(reader.readerOptions.IPSRegex, line, 2)
-		}
-		if len(kv) < 1 {
-			return nil, errors.New("mlr: internal coding error in XTAB reader")
+		key, value, err := reader.pairSplitter.Split(line)
+		if err != nil {
+			return nil, err
 		}
 
-		key := kv[0]
-		if len(kv) == 1 {
-			value := mlrval.VOID
-			_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-			if err != nil {
-				return nil, err
-			}
-		} else {
-			value := mlrval.FromDeferredType(kv[1])
-			_, err := record.PutReferenceMaybeDedupe(key, value, dedupeFieldNames)
-			if err != nil {
-				return nil, err
-			}
+		_, err = record.PutReferenceMaybeDedupe(key, mlrval.FromDeferredType(value), dedupeFieldNames)
+		if err != nil {
+			return nil, err
 		}
 	}
 
 	return record, nil
+}
+
+// IPairSplitter splits a string into left and right, e.g. for IPS.
+// This is similar to the general one for multiple formats; the exception
+// is that for XTAB we always allow repeat IPS.
+func newXTABPairSplitter(options *cli.TReaderOptions) iXTABPairSplitter {
+	if options.IPSRegex == nil {
+		return &tXTABIPSSplitter{ips: options.IPS, ipslen: len(options.IPS)}
+	} else {
+		return &tXTABIPSRegexSplitter{ipsRegex: options.IPSRegex}
+	}
+}
+
+type tXTABIPSSplitter struct {
+	ips    string
+	ipslen int
+}
+
+// This is a splitter for XTAB lines, like 'abc      123'.  It's not quite the same as the
+// field/pair-splitter functions shared by DKVP, NIDX, and CSV-lite. XTAB is the omly format for
+// which we need to produce just a pair of items -- a key and a value -- delimited by one or more
+// IPS. For exaemple, with IPS being a space, in 'abc     123' we need to get key 'abc' and value
+// '123'; for 'abc    123 456' we need key 'abc' and value '123 456'.  It's super-elegant to simply
+// regex-split the line like 'kv = lib.RegexSplitString(reader.readerOptions.IPSRegex, line, 2)' --
+// however, that's 3x slower than the current implementation. It turns out regexes are great
+// but we should use them only when we must, since they are expensive.
+func (s *tXTABIPSSplitter) Split(input string) (key, value string, err error) {
+	// Empty string is a length-0 return value.
+	n := len(input)
+	if n == 0 {
+		return "", "", errors.New("mlr: internal coding error in XTAB reader")
+	}
+
+	// '   abc 123' splits as key '', value 'abc 123'.
+	if strings.HasPrefix(input, s.ips) {
+		keyStart := 0
+		for keyStart < n && strings.HasPrefix(input[keyStart:], s.ips) {
+			keyStart += s.ipslen
+		}
+		return "", input[keyStart:n], nil
+	}
+
+	// Find the first IPS, if any. If there isn't any in the input line then there is no value, only key:
+	// e.g. the line is 'abc'.
+	var keyEnd, valueStart int
+	foundIPS := false
+	for keyEnd = 1; keyEnd <= n; keyEnd++ {
+		if strings.HasPrefix(input[keyEnd:], s.ips) {
+			foundIPS = true
+			break
+		}
+	}
+	if !foundIPS {
+		return input, "", nil
+	}
+
+	// Find the first non-IPS character after last-found IPS, if any. If there isn't any in the input
+	// line then there is no value, only key: e.g. the line is 'abc   '.
+	foundValue := false
+	for valueStart = keyEnd + s.ipslen; valueStart <= n; valueStart++ {
+		if !strings.HasPrefix(input[valueStart:], s.ips) {
+			foundValue = true
+			break
+		}
+	}
+	if !foundValue {
+		return input[0:keyEnd], "", nil
+	}
+
+	return input[0:keyEnd], input[valueStart:n], nil
+}
+
+type tXTABIPSRegexSplitter struct {
+	ipsRegex *regexp.Regexp
+}
+
+func (s *tXTABIPSRegexSplitter) Split(input string) (key, value string, err error) {
+	kv := lib.RegexSplitString(s.ipsRegex, input, 2)
+	if len(kv) == 0 {
+		return "", "", errors.New("mlr: internal coding error in XTAB reader")
+	} else if len(kv) == 1 {
+		return kv[0], "", nil
+	} else if len(kv) == 2 {
+		return kv[0], kv[1], nil
+	} else {
+		return "", "", errors.New("mlr: internal coding error in XTAB reader")
+	}
 }
