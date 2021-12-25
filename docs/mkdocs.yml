@@ -78,6 +78,7 @@ nav:
     - "Streaming processing, and memory usage": "streaming-and-memory.md"
     - "Compressed data": "reference-main-compressed-data.md"
     - "CPU/multicore usage": "cpu.md"
+    - "Scripting with Miller": "scripting.md"
     - "Miller environment variables": "reference-main-env-vars.md"
   - 'Types reference':
     - "Data types": "reference-main-data-types.md"
