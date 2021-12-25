@@ -13,15 +13,6 @@ PUNCHDOWN LIST
   - big-picture note
   ? array/map fields: marshal as JSON_SINGLE_LINE
 
-* shebang
-  - olh -s ; --version & --bare-version
-  - maybe multiple -s -- ? []args would continue growing during parse ...
-  - try mlr -s on windows; maybe consolation for shebang-bash -- ?
-  - olh
-  - webdocs
-  - want:
-    > myscript.mlr --c2j input.csv
-
 * nikos materials -> fold in
 
 * cases/dsl-min-max-types: cmp-matrices need to be fixed to follow the advertised rule for mixed types
