@@ -1,0 +1,6 @@
+#!/bin/bash
+mlr --c2p \
+  filter '$quantity != 20' \
+  then count-distinct -f shape \
+  then fraction -f count \
+  -- "$@"

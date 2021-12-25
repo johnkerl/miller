@@ -1,0 +1,5 @@
+#!/usr/bin/env mlr -s
+--c2p
+filter '$quantity != 20'
+then count-distinct -f shape
+then fraction -f count
