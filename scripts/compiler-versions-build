@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for go in go1.15.15 go1.16.12 go1.17.5 go1.18beta1; do
+  $go clean github.com/johnkerl/miller/cmd/mlr
+  $go build github.com/johnkerl/miller/cmd/mlr
+  mv mlr mlr-$go
+done
