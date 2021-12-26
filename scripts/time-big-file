@@ -15,4 +15,4 @@ fi
 if [ $# -eq 2 ]; then
   mlr="$2"
 fi
-justtime $mlr $iflag cat ~/tmp/big.$suffix | md5sum -
+justtime $mlr $iflag cat ~/tmp/big.$suffix > /dev/null
