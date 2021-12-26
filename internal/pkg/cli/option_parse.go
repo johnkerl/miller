@@ -99,6 +99,7 @@ var FLAG_TABLE = FlagTable{
 		&OutputColorizationFlagSection,
 		&FlattenUnflattenFlagSection,
 		&MiscFlagSection,
+		// TODO: make a Profiling section
 	},
 }
 
@@ -2669,6 +2670,16 @@ has its own overhead.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.FlushOnEveryRecord = false
 				options.WriterOptions.flushOnEveryRecordWasSpecified = true
+				*pargi += 1
+			},
+		},
+
+		// TODO: make a Profiling section
+		{
+			name: "--time",
+			help: `Print elapsed execution time in seconds to stderr at the end of the execution of the program.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.PrintElapsedTime = true
 				*pargi += 1
 			},
 		},

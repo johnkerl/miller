@@ -25,6 +25,7 @@ PUNCHDOWN LIST
   o README-profiling.md re various scripts
   o README-profiling.md re this PR
   o webdoc re on-battery anecdote
+  o webdoc section --cpuprofile --traceprofile --time
 
   o look at trace-profile again ...
 

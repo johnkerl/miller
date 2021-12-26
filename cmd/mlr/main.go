@@ -8,12 +8,16 @@ import (
 	"runtime/debug"
 	"runtime/pprof"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/johnkerl/miller/internal/pkg/entrypoint"
 	"github.com/pkg/profile" // for trace.out
 )
 
 func main() {
+	// For mlr --time
+	startTime := time.Now()
 
 	// Respect env $GOMAXPROCS, if provided, else set default.
 	haveSetGoMaxProcs := false
@@ -68,7 +72,30 @@ func main() {
 		defer fmt.Fprintf(os.Stderr, "go tool trace trace.out\n")
 	}
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// This will obtain os.Args and go from there.  All the usual contents of
 	// main() are put into this package for ease of testing.
-	entrypoint.Main()
+	mainReturn := entrypoint.Main()
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Timing
+	//
+	// The system 'time' command is built-in, of course but it's nice to have
+	// simply wall-time without the real/user/sys distinction. Also, making
+	// this a Miller built-in is nice for Windows.
+	if mainReturn.PrintElapsedTime {
+		endTime := time.Now()
+		startNanos := startTime.UnixNano()
+		endNanos := endTime.UnixNano()
+		seconds := float64(endNanos-startNanos) / 1e9
+		fmt.Fprintf(os.Stderr, "%.6f", seconds)
+		for _, arg := range os.Args {
+			if strings.Contains(arg, " ") || strings.Contains(arg, "\t") {
+				fmt.Fprintf(os.Stderr, " '%s'", arg)
+			} else {
+				fmt.Fprintf(os.Stderr, " %s", arg)
+			}
+		}
+		fmt.Fprintf(os.Stderr, "\n")
+	}
 }
