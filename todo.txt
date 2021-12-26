@@ -2,6 +2,7 @@
 PUNCHDOWN LIST
 
 * blockers:
+  ! .mlrrc suppress
   - linux/1.17 perf checks
   - fractional-strptime
   - improved regex doc w/ lots of examples
@@ -16,9 +17,12 @@ PUNCHDOWN LIST
 * numeric-inference perf
   o README-profiling.md re various scripts
   o https://stackoverflow.com/questions/64513411/why-is-strconv-parseuint-so-slow-compared-to-strconv-atoi
-  o benchmark per se
-  o reconsider TryInt/TryFloat -> maybe try number -- ?
+  k benchmark per se
+  o mlr --time
+  o try traceprofile?
+  o find a second linux machine to check -- ?
   o get octal regexp out of hot path
+
   o make a grammar for numbers & case-through
     - len 0
     - len 1
