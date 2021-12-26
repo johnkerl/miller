@@ -59,7 +59,7 @@ func Main() MainReturn {
 		processInPlace(options)
 	}
 
-	return MainReturn {
+	return MainReturn{
 		PrintElapsedTime: options.PrintElapsedTime,
 	}
 }

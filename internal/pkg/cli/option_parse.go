@@ -98,8 +98,8 @@ var FLAG_TABLE = FlagTable{
 		&CommentsInDataFlagSection,
 		&OutputColorizationFlagSection,
 		&FlattenUnflattenFlagSection,
+		&ProfilingFlagSection,
 		&MiscFlagSection,
-		// TODO: make a Profiling section
 	},
 }
 
@@ -2412,6 +2412,51 @@ var FlattenUnflattenFlagSection = FlagSection{
 }
 
 // ================================================================
+// PROFILING FLAGS
+
+func ProfilingPrintInfo() {
+	fmt.Print("These are flags for profiling Miller performance.")
+}
+
+func init() { ProfilingFlagSection.Sort() }
+
+var ProfilingFlagSection = FlagSection{
+	name:        "Profiling flags",
+	infoPrinter: ProfilingPrintInfo,
+	flags: []Flag{
+		{
+			name: "--cpuprofile",
+			arg:  "{CPU-profile file name}",
+			help: `Create a CPU-profile file for performance analysis. Instructions will be printed to stderr.
+This flag must be the very first thing after 'mlr' on the command line.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				// Already handled in main(). Nothing to do here except to accept this as valid syntax.
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--traceprofile",
+			help: `Create a trace-profile file for performance analysis. Instructions will be printed to stderr.
+This flag must be the very first thing after 'mlr' on the command line.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				// Already handled in main(). Nothing to do here except to accept this as valid syntax.
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--time",
+			help: "Print elapsed execution time in seconds to stderr at the end of the execution of the program.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.PrintElapsedTime = true
+				*pargi += 1
+			},
+		},
+	},
+}
+
+// ================================================================
 // MISC FLAGS
 
 func MiscPrintInfo() {
@@ -2670,16 +2715,6 @@ has its own overhead.`,
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.FlushOnEveryRecord = false
 				options.WriterOptions.flushOnEveryRecordWasSpecified = true
-				*pargi += 1
-			},
-		},
-
-		// TODO: make a Profiling section
-		{
-			name: "--time",
-			help: `Print elapsed execution time in seconds to stderr at the end of the execution of the program.`,
-			parser: func(args []string, argc int, pargi *int, options *TOptions) {
-				options.PrintElapsedTime = true
 				*pargi += 1
 			},
 		},

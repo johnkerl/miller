@@ -2,7 +2,6 @@
 PUNCHDOWN LIST
 
 * blockers:
-  ! .mlrrc suppress
   - linux/1.17 perf checks
   - fractional-strptime
   - improved regex doc w/ lots of examples
@@ -16,18 +15,14 @@ PUNCHDOWN LIST
 
 * numeric-inference perf
   k benchmark per se
+  ? webdoc --cpuprofile wut
 
   ! octal handling
   ! opt-bool handling
 
-  o mlr --time
-
   o README-profiling.md re various scripts
   o README-profiling.md re this PR
   o webdoc re on-battery anecdote
-  o webdoc section --cpuprofile --traceprofile --time
-
-  o look at trace-profile again ...
 
 * nikos materials -> fold in
 

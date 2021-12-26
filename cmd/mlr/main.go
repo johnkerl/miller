@@ -67,7 +67,7 @@ func main() {
 		defer fmt.Fprintf(os.Stderr, "CPU profile finished.\ngo tool pprof -http=:8080 %s\n", profFilename)
 	}
 
-	if len(os.Args) >= 3 && os.Args[1] == "--traceprofile" {
+	if len(os.Args) >= 2 && os.Args[1] == "--traceprofile" {
 		defer profile.Start(profile.TraceProfile, profile.ProfilePath(".")).Stop()
 		defer fmt.Fprintf(os.Stderr, "go tool trace trace.out\n")
 	}

@@ -25,8 +25,10 @@ func (mv *Mlrval) Type() MVType {
 // Support for mlr -S, mlr -A, mlr -O.
 type tInferrer func(mv *Mlrval, inferBool bool) *Mlrval
 
-// xxx temp var packageLevelInferrer tInferrer = inferWithOctalAsString
-var packageLevelInferrer tInferrer = inferTemp
+// xxx temp
+var packageLevelInferrer tInferrer = inferWithOctalAsString
+
+//var packageLevelInferrer tInferrer = inferTemp
 
 // SetInferrerOctalAsInt is for default behavior.
 func SetInferrerOctalAsString() {

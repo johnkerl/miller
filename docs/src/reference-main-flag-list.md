@@ -60,14 +60,10 @@ Notes:
 
 **Flags:**
 
-* `--pass-comments
-`: Immediately print commented lines (prefixed by `#`) within the input.
-* `--pass-comments-with {string}
-`: Immediately print commented lines within input, with specified prefix.
-* `--skip-comments
-`: Ignore commented lines (prefixed by `#`) within the input.
-* `--skip-comments-with {string}
-`: Ignore commented lines within input, with specified prefix.
+* `--pass-comments`: Immediately print commented lines (prefixed by `#`) within the input.
+* `--pass-comments-with {string}`: Immediately print commented lines within input, with specified prefix.
+* `--skip-comments`: Ignore commented lines (prefixed by `#`) within the input.
+* `--skip-comments-with {string}`: Ignore commented lines within input, with specified prefix.
 
 ## Compressed-data flags
 
@@ -102,22 +98,14 @@ decisions that might have been made based on the file suffix. Likewise,
 
 **Flags:**
 
-* `--bz2in
-`: Uncompress bzip2 within the Miller process. Done by default if file ends in `.bz2`.
-* `--gzin
-`: Uncompress gzip within the Miller process. Done by default if file ends in `.gz`.
-* `--prepipe {decompression command}
-`: You can, of course, already do without this for single input files, e.g. `gunzip < myfile.csv.gz | mlr ...`.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.
-* `--prepipe-bz2
-`: Same as  `--prepipe bz2`, except this is allowed in `.mlrrc`.
-* `--prepipe-gunzip
-`: Same as  `--prepipe gunzip`, except this is allowed in `.mlrrc`.
-* `--prepipe-zcat
-`: Same as  `--prepipe zcat`, except this is allowed in `.mlrrc`.
-* `--prepipex {decompression command}
-`: Like `--prepipe` with one exception: doesn't insert `<` between command and filename at runtime. Useful for some commands like `unzip -qc` which don't read standard input.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.
-* `--zin
-`: Uncompress zlib within the Miller process. Done by default if file ends in `.z`.
+* `--bz2in`: Uncompress bzip2 within the Miller process. Done by default if file ends in `.bz2`.
+* `--gzin`: Uncompress gzip within the Miller process. Done by default if file ends in `.gz`.
+* `--prepipe {decompression command}`: You can, of course, already do without this for single input files, e.g. `gunzip < myfile.csv.gz | mlr ...`.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.
+* `--prepipe-bz2`: Same as  `--prepipe bz2`, except this is allowed in `.mlrrc`.
+* `--prepipe-gunzip`: Same as  `--prepipe gunzip`, except this is allowed in `.mlrrc`.
+* `--prepipe-zcat`: Same as  `--prepipe zcat`, except this is allowed in `.mlrrc`.
+* `--prepipex {decompression command}`: Like `--prepipe` with one exception: doesn't insert `<` between command and filename at runtime. Useful for some commands like `unzip -qc` which don't read standard input.  Allowed at the command line, but not in `.mlrrc` to avoid unexpected code execution.
+* `--zin`: Uncompress zlib within the Miller process. Done by default if file ends in `.z`.
 
 ## CSV-only flags
 
@@ -126,16 +114,11 @@ These are flags which are applicable to CSV format.
 
 **Flags:**
 
-* `--allow-ragged-csv-input or --ragged
-`: If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.
-* `--headerless-csv-output or --ho
-`: Print only CSV data lines; do not print CSV header lines.
-* `--implicit-csv-header or --headerless-csv-input or --hi
-`: Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.
-* `--no-implicit-csv-header
-`: Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.
-* `-N
-`: Keystroke-saver for `--implicit-csv-header --headerless-csv-output`.
+* `--allow-ragged-csv-input or --ragged`: If a data line has fewer fields than the header line, fill remaining keys with empty string. If a data line has more fields than the header line, use integer field labels as in the implicit-header case.
+* `--headerless-csv-output or --ho`: Print only CSV data lines; do not print CSV header lines.
+* `--implicit-csv-header or --headerless-csv-input or --hi`: Use 1,2,3,... as field labels, rather than from line 1 of input files. Tip: combine with `label` to recreate missing headers.
+* `--no-implicit-csv-header`: Opposite of `--implicit-csv-header`. This is the default anyway -- the main use is for the flags to `mlr join` if you have main file(s) which are headerless but you want to join in on a file which does have a CSV header. Then you could use `mlr --csv --implicit-csv-header join --no-implicit-csv-header -l your-join-in-with-header.csv ... your-headerless.csv`.
+* `-N`: Keystroke-saver for `--implicit-csv-header --headerless-csv-output`.
 
 ## File-format flags
 
@@ -152,90 +135,48 @@ are overridden in all cases by setting output format to `format2`.
 
 **Flags:**
 
-* `--asv or --asvlite
-`: Use ASV format for input and output data.
-* `--csv or -c
-`: Use CSV format for input and output data.
-* `--csvlite
-`: Use CSV-lite format for input and output data.
-* `--dkvp
-`: Use DKVP format for input and output data.
-* `--gen-field-name
-`: Specify field name for --igen. Defaults to "i".
-* `--gen-start
-`: Specify start value for --igen. Defaults to 1.
-* `--gen-step
-`: Specify step value for --igen. Defaults to 1.
-* `--gen-stop
-`: Specify stop value for --igen. Defaults to 100.
-* `--iasv or --iasvlite
-`: Use ASV format for input data.
-* `--icsv
-`: Use CSV format for input data.
-* `--icsvlite
-`: Use CSV-lite format for input data.
-* `--idkvp
-`: Use DKVP format for input data.
-* `--igen
-`: Ignore input files and instead generate sequential numeric input using --gen-field-name, --gen-start, --gen-step, and --gen-stop values. See also the seqgen verb, which is more useful/intuitive.
-* `--ijson
-`: Use JSON format for input data.
-* `--inidx
-`: Use NIDX format for input data.
-* `--io {format name}
-`: Use format name for input and output data. For example: `--io csv` is the same as `--csv`.
-* `--ipprint
-`: Use PPRINT format for input data.
-* `--itsv
-`: Use TSV format for input data.
-* `--itsvlite
-`: Use TSV-lite format for input data.
-* `--iusv or --iusvlite
-`: Use USV format for input data.
-* `--ixtab
-`: Use XTAB format for input data.
-* `--json or -j
-`: Use JSON format for input and output data.
-* `--nidx
-`: Use NIDX format for input and output data.
-* `--oasv or --oasvlite
-`: Use ASV format for output data.
-* `--ocsv
-`: Use CSV format for output data.
-* `--ocsvlite
-`: Use CSV-lite format for output data.
-* `--odkvp
-`: Use DKVP format for output data.
-* `--ojson
-`: Use JSON format for output data.
-* `--omd
-`: Use markdown-tabular format for output data.
-* `--onidx
-`: Use NIDX format for output data.
-* `--opprint
-`: Use PPRINT format for output data.
-* `--otsv
-`: Use TSV format for output data.
-* `--otsvlite
-`: Use TSV-lite format for output data.
-* `--ousv or --ousvlite
-`: Use USV format for output data.
-* `--oxtab
-`: Use XTAB format for output data.
-* `--pprint
-`: Use PPRINT format for input and output data.
-* `--tsv
-`: Use TSV format for input and output data.
-* `--tsvlite or -t
-`: Use TSV-lite format for input and output data.
-* `--usv or --usvlite
-`: Use USV format for input and output data.
-* `--xtab
-`: Use XTAB format for input and output data.
-* `-i {format name}
-`: Use format name for input data. For example: `-i csv` is the same as `--icsv`.
-* `-o {format name}
-`: Use format name for output data.  For example: `-o csv` is the same as `--ocsv`.
+* `--asv or --asvlite`: Use ASV format for input and output data.
+* `--csv or -c`: Use CSV format for input and output data.
+* `--csvlite`: Use CSV-lite format for input and output data.
+* `--dkvp`: Use DKVP format for input and output data.
+* `--gen-field-name`: Specify field name for --igen. Defaults to "i".
+* `--gen-start`: Specify start value for --igen. Defaults to 1.
+* `--gen-step`: Specify step value for --igen. Defaults to 1.
+* `--gen-stop`: Specify stop value for --igen. Defaults to 100.
+* `--iasv or --iasvlite`: Use ASV format for input data.
+* `--icsv`: Use CSV format for input data.
+* `--icsvlite`: Use CSV-lite format for input data.
+* `--idkvp`: Use DKVP format for input data.
+* `--igen`: Ignore input files and instead generate sequential numeric input using --gen-field-name, --gen-start, --gen-step, and --gen-stop values. See also the seqgen verb, which is more useful/intuitive.
+* `--ijson`: Use JSON format for input data.
+* `--inidx`: Use NIDX format for input data.
+* `--io {format name}`: Use format name for input and output data. For example: `--io csv` is the same as `--csv`.
+* `--ipprint`: Use PPRINT format for input data.
+* `--itsv`: Use TSV format for input data.
+* `--itsvlite`: Use TSV-lite format for input data.
+* `--iusv or --iusvlite`: Use USV format for input data.
+* `--ixtab`: Use XTAB format for input data.
+* `--json or -j`: Use JSON format for input and output data.
+* `--nidx`: Use NIDX format for input and output data.
+* `--oasv or --oasvlite`: Use ASV format for output data.
+* `--ocsv`: Use CSV format for output data.
+* `--ocsvlite`: Use CSV-lite format for output data.
+* `--odkvp`: Use DKVP format for output data.
+* `--ojson`: Use JSON format for output data.
+* `--omd`: Use markdown-tabular format for output data.
+* `--onidx`: Use NIDX format for output data.
+* `--opprint`: Use PPRINT format for output data.
+* `--otsv`: Use TSV format for output data.
+* `--otsvlite`: Use TSV-lite format for output data.
+* `--ousv or --ousvlite`: Use USV format for output data.
+* `--oxtab`: Use XTAB format for output data.
+* `--pprint`: Use PPRINT format for input and output data.
+* `--tsv`: Use TSV format for input and output data.
+* `--tsvlite or -t`: Use TSV-lite format for input and output data.
+* `--usv or --usvlite`: Use USV format for input and output data.
+* `--xtab`: Use XTAB format for input and output data.
+* `-i {format name}`: Use format name for input data. For example: `-i csv` is the same as `--icsv`.
+* `-o {format name}`: Use format name for output data.  For example: `-o csv` is the same as `--ocsv`.
 
 ## Flatten-unflatten flags
 
@@ -246,14 +187,10 @@ See the Flatten/unflatten doc page for more information.
 
 **Flags:**
 
-* `--flatsep or --jflatsep {string}
-`: Separator for flattening multi-level JSON keys, e.g. `{"a":{"b":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `.`.
-* `--no-auto-flatten
-`: When output is non-JSON, suppress the default auto-flatten behavior. Default: if `$y = [7,8,9]` then this flattens to `y.1=7,y.2=8,y.3=9, and similarly for maps. With `--no-auto-flatten`, instead we get `$y=[1, 2, 3]`.
-* `--no-auto-unflatten
-`: When input non-JSON and output is JSON, suppress the default auto-unflatten behavior. Default: if the input has `y.1=7,y.2=8,y.3=9` then this unflattens to `$y=[7,8,9]`.  flattens to `y.1=7,y.2=8,y.3=9. With `--no-auto-flatten`, instead we get `${y.1}=7,${y.2}=8,${y.3}=9`.
-* `--xvright
-`: Right-justify values for XTAB format.
+* `--flatsep or --jflatsep {string}`: Separator for flattening multi-level JSON keys, e.g. `{"a":{"b":3}}` becomes `a:b => 3` for non-JSON formats. Defaults to `.`.
+* `--no-auto-flatten`: When output is non-JSON, suppress the default auto-flatten behavior. Default: if `$y = [7,8,9]` then this flattens to `y.1=7,y.2=8,y.3=9, and similarly for maps. With `--no-auto-flatten`, instead we get `$y=[1, 2, 3]`.
+* `--no-auto-unflatten`: When input non-JSON and output is JSON, suppress the default auto-unflatten behavior. Default: if the input has `y.1=7,y.2=8,y.3=9` then this unflattens to `$y=[7,8,9]`.  flattens to `y.1=7,y.2=8,y.3=9. With `--no-auto-flatten`, instead we get `${y.1}=7,${y.2}=8,${y.3}=9`.
+* `--xvright`: Right-justify values for XTAB format.
 
 ## Format-conversion keystroke-saver flags
 
@@ -283,12 +220,9 @@ These are flags which are applicable to JSON format.
 
 **Flags:**
 
-* `--jlistwrap or --jl
-`: Wrap JSON output in outermost `[ ]`.
-* `--jvstack
-`: Put one key-value pair per line for JSON output (multi-line output).
-* `--no-jvstack
-`: Put objects/arrays all on one line for JSON output.
+* `--jlistwrap or --jl`: Wrap JSON output in outermost `[ ]`.
+* `--jvstack`: Put one key-value pair per line for JSON output (multi-line output).
+* `--no-jvstack`: Put objects/arrays all on one line for JSON output.
 
 ## Legacy flags
 
@@ -298,38 +232,22 @@ They are accepted as no-op flags in order to keep old scripts from breaking.
 
 **Flags:**
 
-* `--jknquoteint
-`: Type information from JSON input files is now preserved throughout the processing stream.
-* `--jquoteall
-`: Type information from JSON input files is now preserved throughout the processing stream.
-* `--json-fatal-arrays-on-input
-`: Miller now supports arrays as of version 6.
-* `--json-map-arrays-on-input
-`: Miller now supports arrays as of version 6.
-* `--json-skip-arrays-on-input
-`: Miller now supports arrays as of version 6.
-* `--jsonx
-`: The `--jvstack` flag is now default true in Miller 6.
-* `--jvquoteall
-`: Type information from JSON input files is now preserved throughout the processing stream.
-* `--mmap
-`: Miller no longer uses memory-mapping to access data files.
-* `--no-mmap
-`: Miller no longer uses memory-mapping to access data files.
-* `--ojsonx
-`: The `--jvstack` flag is now default true in Miller 6.
-* `--quote-all
-`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
-* `--quote-minimal
-`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
-* `--quote-none
-`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
-* `--quote-numeric
-`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
-* `--quote-original
-`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
-* `--vflatsep
-`: Ignored as of version 6. This functionality is subsumed into JSON formatting.
+* `--jknquoteint`: Type information from JSON input files is now preserved throughout the processing stream.
+* `--jquoteall`: Type information from JSON input files is now preserved throughout the processing stream.
+* `--json-fatal-arrays-on-input`: Miller now supports arrays as of version 6.
+* `--json-map-arrays-on-input`: Miller now supports arrays as of version 6.
+* `--json-skip-arrays-on-input`: Miller now supports arrays as of version 6.
+* `--jsonx`: The `--jvstack` flag is now default true in Miller 6.
+* `--jvquoteall`: Type information from JSON input files is now preserved throughout the processing stream.
+* `--mmap`: Miller no longer uses memory-mapping to access data files.
+* `--no-mmap`: Miller no longer uses memory-mapping to access data files.
+* `--ojsonx`: The `--jvstack` flag is now default true in Miller 6.
+* `--quote-all`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--quote-minimal`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--quote-none`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--quote-numeric`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--quote-original`: Ignored as of version 6. Types are inferred/retained through the processing flow now.
+* `--vflatsep`: Ignored as of version 6. This functionality is subsumed into JSON formatting.
 
 ## Miscellaneous flags
 
@@ -337,44 +255,25 @@ These are flags which don't fit into any other category.
 
 **Flags:**
 
-* `--fflush
-`: Force buffered output to be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to force frequent updates even when output is to a pipe or file, at a performance cost.
-* `--from {filename}
-`: Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.
-* `--hash-records
-`: This is an internal parameter which normally does not need to be modified. It controls the mechanism by which Miller accesses fields within records. In general --no-hash-records is faster, and is the default. For specific use-cases involving data having many fields, and many of them being processed during a given processing run, --hash-records might offer a slight performance benefit.
-* `--infer-int-as-float or -A
-`: Cast all integers in data files to floats.
-* `--infer-none or -S
-`: Don't treat values like 123 or 456.7 in data files as int/float; leave them as strings.
-* `--infer-octal or -O
-`: Treat numbers like 0123 in data files as numeric; default is string. Note that 00--07 etc scan as int; 08-09 scan as float.
-* `--load {filename}
-`: Load DSL script file for all put/filter operations on the command line.  If the name following `--load` is a directory, load all `*.mlr` files in that directory. This is just like `put -f` and `filter -f` except it's up-front on the command line, so you can do something like `alias mlr='mlr --load ~/myscripts'` if you like.
-* `--mfrom {filenames}
-`: Use this to specify one of more input files before the verb(s), rather than after. May be used more than once.  The list of filename must end with `--`. This is useful for example since `--from *.csv` doesn't do what you might hope but `--mfrom *.csv --` does.
-* `--mload {filenames}
-`: Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.
-* `--no-dedupe-field-names
-`: By default, if an input record has a field named `x` and another also named `x`, the second will be renamed `x_2`, and so on.  With this flag provided, the second `x`'s value will replace the first `x`'s value when the record is read.  This flag has no effect on JSON input records, where duplicate keys always result in the last one's value being retained.
-* `--no-fflush
-`: Let buffered output not be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to allow less-frequent updates when output is to the terminal. This is unlikely to be a noticeable performance improvement, since direct-to-screen output for large files has its own overhead.
-* `--no-hash-records
-`: See --hash-records.
-* `--nr-progress-mod {m}
-`: With m a positive integer: print filename and record count to os.Stderr every m input records.
-* `--ofmt {format}
-`: E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
-* `--records-per-batch {n}
-`: This is an internal parameter for maximum number of records in a batch size. Normally this does not need to be modified.
-* `--seed {n}
-`: with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.
-* `--tz {timezone}
-`: Specify timezone, overriding `$TZ` environment variable (if any).
-* `-I
-`: Process files in-place. For each file name on the command line, output is written to a temp file in the same directory, which is then renamed over the original. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file, statistics are only over each file's own records; and so on.
-* `-n
-`: Process no input files, nor standard input either. Useful for `mlr put` with `begin`/`end` statements only. (Same as `--from /dev/null`.) Also useful in `mlr -n put -v '...'` for analyzing abstract syntax trees (if that's your thing).
+* `--fflush`: Force buffered output to be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to force frequent updates even when output is to a pipe or file, at a performance cost.
+* `--from {filename}`: Use this to specify an input file before the verb(s), rather than after. May be used more than once. Example: `mlr --from a.dat --from b.dat cat` is the same as `mlr cat a.dat b.dat`.
+* `--hash-records`: This is an internal parameter which normally does not need to be modified. It controls the mechanism by which Miller accesses fields within records. In general --no-hash-records is faster, and is the default. For specific use-cases involving data having many fields, and many of them being processed during a given processing run, --hash-records might offer a slight performance benefit.
+* `--infer-int-as-float or -A`: Cast all integers in data files to floats.
+* `--infer-none or -S`: Don't treat values like 123 or 456.7 in data files as int/float; leave them as strings.
+* `--infer-octal or -O`: Treat numbers like 0123 in data files as numeric; default is string. Note that 00--07 etc scan as int; 08-09 scan as float.
+* `--load {filename}`: Load DSL script file for all put/filter operations on the command line.  If the name following `--load` is a directory, load all `*.mlr` files in that directory. This is just like `put -f` and `filter -f` except it's up-front on the command line, so you can do something like `alias mlr='mlr --load ~/myscripts'` if you like.
+* `--mfrom {filenames}`: Use this to specify one of more input files before the verb(s), rather than after. May be used more than once.  The list of filename must end with `--`. This is useful for example since `--from *.csv` doesn't do what you might hope but `--mfrom *.csv --` does.
+* `--mload {filenames}`: Like `--load` but works with more than one filename, e.g. `--mload *.mlr --`.
+* `--no-dedupe-field-names`: By default, if an input record has a field named `x` and another also named `x`, the second will be renamed `x_2`, and so on.  With this flag provided, the second `x`'s value will replace the first `x`'s value when the record is read.  This flag has no effect on JSON input records, where duplicate keys always result in the last one's value being retained.
+* `--no-fflush`: Let buffered output not be written after every output record. The default is flush output after every record if the output is to the terminal, or less often if the output is to a file or a pipe. The default is a significant performance optimization for large files.  Use this flag to allow less-frequent updates when output is to the terminal. This is unlikely to be a noticeable performance improvement, since direct-to-screen output for large files has its own overhead.
+* `--no-hash-records`: See --hash-records.
+* `--nr-progress-mod {m}`: With m a positive integer: print filename and record count to os.Stderr every m input records.
+* `--ofmt {format}`: E.g. `%.18f`, `%.0f`, `%9.6e`. Please use sprintf-style codes for floating-point nummbers. If not specified, default formatting is used.  See also the `fmtnum` function and the `format-values` verb.
+* `--records-per-batch {n}`: This is an internal parameter for maximum number of records in a batch size. Normally this does not need to be modified.
+* `--seed {n}`: with `n` of the form `12345678` or `0xcafefeed`. For `put`/`filter` `urand`, `urandint`, and `urand32`.
+* `--tz {timezone}`: Specify timezone, overriding `$TZ` environment variable (if any).
+* `-I`: Process files in-place. For each file name on the command line, output is written to a temp file in the same directory, which is then renamed over the original. Each file is processed in isolation: if the output format is CSV, CSV headers will be present in each output file, statistics are only over each file's own records; and so on.
+* `-n`: Process no input files, nor standard input either. Useful for `mlr put` with `begin`/`end` statements only. (Same as `--from /dev/null`.) Also useful in `mlr -n put -v '...'` for analyzing abstract syntax trees (if that's your thing).
 
 ## Output-colorization flags
 
@@ -436,24 +335,15 @@ and `mlr --list-color-names` to see available names (like `orchid`).
 
 **Flags:**
 
-* `--always-color or -C
-`: Instructs Miller to colorize output even when it normally would not. Useful for piping output to `less -r`.
-* `--fail-color
-`: Specify the color (see `--list-color-codes` and `--list-color-names`) for failing cases in `mlr regtest`.
-* `--help-color
-`: Specify the color (see `--list-color-codes` and `--list-color-names`) for highlights in `mlr help` output.
-* `--key-color
-`: Specify the color (see `--list-color-codes` and `--list-color-names`) for record keys.
-* `--list-color-codes
-`: Show the available color codes in the range 0..255, such as 170 for example.
-* `--list-color-names
-`: Show the names for the available color codes, such as `orchid` for example.
-* `--no-color or -M
-`: Instructs Miller to not colorize any output.
-* `--pass-color
-`: Specify the color (see `--list-color-codes` and `--list-color-names`) for passing cases in `mlr regtest`.
-* `--value-color
-`: Specify the color (see `--list-color-codes` and `--list-color-names`) for record values.
+* `--always-color or -C`: Instructs Miller to colorize output even when it normally would not. Useful for piping output to `less -r`.
+* `--fail-color`: Specify the color (see `--list-color-codes` and `--list-color-names`) for failing cases in `mlr regtest`.
+* `--help-color`: Specify the color (see `--list-color-codes` and `--list-color-names`) for highlights in `mlr help` output.
+* `--key-color`: Specify the color (see `--list-color-codes` and `--list-color-names`) for record keys.
+* `--list-color-codes`: Show the available color codes in the range 0..255, such as 170 for example.
+* `--list-color-names`: Show the names for the available color codes, such as `orchid` for example.
+* `--no-color or -M`: Instructs Miller to not colorize any output.
+* `--pass-color`: Specify the color (see `--list-color-codes` and `--list-color-names`) for passing cases in `mlr regtest`.
+* `--value-color`: Specify the color (see `--list-color-codes` and `--list-color-names`) for record values.
 
 ## PPRINT-only flags
 
@@ -462,10 +352,18 @@ These are flags which are applicable to PPRINT output format.
 
 **Flags:**
 
-* `--barred
-`: Prints a border around PPRINT output (not available for input).
-* `--right
-`: Right-justifies all fields for PPRINT output.
+* `--barred`: Prints a border around PPRINT output (not available for input).
+* `--right`: Right-justifies all fields for PPRINT output.
+
+## Profiling flags
+
+These are flags for profiling Miller performance.
+
+**Flags:**
+
+* `--cpuprofile {CPU-profile file name}`: Create a CPU-profile file for performance analysis. Instructions will be printed to stderr. This flag must be the very first thing after 'mlr' on the command line.
+* `--time`: Print elapsed execution time in seconds to stderr at the end of the execution of the program.
+* `--traceprofile`: Create a trace-profile file for performance analysis. Instructions will be printed to stderr. This flag must be the very first thing after 'mlr' on the command line.
 
 ## Separator flags
 
@@ -566,28 +464,16 @@ Notes about all other separators:
 
 **Flags:**
 
-* `--fs {string}
-`: Specify FS for input and output.
-* `--ifs {string}
-`: Specify FS for input.
-* `--ifs-regex {string}
-`: Specify FS for input as a regular expression.
-* `--ips {string}
-`: Specify PS for input.
-* `--ips-regex {string}
-`: Specify PS for input as a regular expression.
-* `--irs {string}
-`: Specify RS for input.
-* `--ofs {string}
-`: Specify FS for output.
-* `--ops {string}
-`: Specify PS for output.
-* `--ors {string}
-`: Specify RS for output.
-* `--ps {string}
-`: Specify PS for input and output.
-* `--repifs
-`: Let IFS be repeated: e.g. for splitting on multiple spaces.
-* `--rs {string}
-`: Specify RS for input and output.
+* `--fs {string}`: Specify FS for input and output.
+* `--ifs {string}`: Specify FS for input.
+* `--ifs-regex {string}`: Specify FS for input as a regular expression.
+* `--ips {string}`: Specify PS for input.
+* `--ips-regex {string}`: Specify PS for input as a regular expression.
+* `--irs {string}`: Specify RS for input.
+* `--ofs {string}`: Specify FS for output.
+* `--ops {string}`: Specify PS for output.
+* `--ors {string}`: Specify RS for output.
+* `--ps {string}`: Specify PS for input and output.
+* `--repifs`: Let IFS be repeated: e.g. for splitting on multiple spaces.
+* `--rs {string}`: Specify RS for input and output.
 
