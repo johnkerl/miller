@@ -159,6 +159,8 @@ func (regtester *RegTester) Execute(
 	for _, name := range envVarsToUnset {
 		os.Unsetenv(name)
 	}
+	// If there is an accessible .mlrrc file, we don't want it to be read for the regression test.
+	os.Setenv("MLRRC", "__none__")
 
 	regtester.resetCounts()
 
