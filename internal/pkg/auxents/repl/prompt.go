@@ -50,7 +50,7 @@ func getPrompt2() string {
 
 func (repl *Repl) printStartupBanner() {
 	if repl.inputIsTerminal {
-		fmt.Printf("Miller %s REPL for %s:%s:%s\n", version.STRING, runtime.GOOS, runtime.GOARCH, runtime.Version())
+		fmt.Printf("Miller %s REPL for %s/%s/%s\n", version.STRING, runtime.GOOS, runtime.GOARCH, runtime.Version())
 		fmt.Printf("Docs: %s\n", lib.DOC_URL)
 		fmt.Printf("Type ':h' or ':help' for online help; ':q' or ':quit' to quit.\n")
 	}

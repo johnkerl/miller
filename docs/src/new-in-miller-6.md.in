@@ -230,11 +230,11 @@ As a benchmark, the [example.csv](https://github.com/johnkerl/miller/blob/main/d
 [was expanded](https://github.com/johnkerl/miller/blob/main/scripts/make-big-files) into a million-line CSV file,
 then converted to DKVP, JSON, etc.
 
-These were run on a commodity Mac laptop with four CPUs, using `go1.16.5 darwin/amd64`.
+Notes:
 
-Linux benchmarks are pending.
-
-As of late 2021, Miller has been benchmarks using Go compiler versions 1.15.15, 1.16.12, 1.17.5, and 1.18beta1, with no significant performance changes attributable to compiler versions.
+* These were run on a commodity Mac laptop with four CPUs, on MacOS Monterey, using `go1.16.5 darwin/amd64`.
+* Linux benchmarks are pending.
+* As of late 2021, Miller has been benchmarks using Go compiler versions 1.15.15, 1.16.12, 1.17.5, and 1.18beta1, with no significant performance changes attributable to compiler versions.
 
 For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/time-big-files), we have `mlr cat` of those files, with processing times shown:
 

@@ -8,10 +8,12 @@ package auxents
 import (
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/johnkerl/miller/internal/pkg/auxents/help"
 	"github.com/johnkerl/miller/internal/pkg/auxents/regtest"
 	"github.com/johnkerl/miller/internal/pkg/auxents/repl"
+	"github.com/johnkerl/miller/internal/pkg/version"
 )
 
 // tAuxMain is a function-pointer type for the entrypoint handler for a given auxent,
@@ -38,6 +40,7 @@ func init() {
 		{"help", help.HelpMain},
 		{"regtest", regtest.RegTestMain},
 		{"repl", repl.ReplMain},
+		{"version", showVersion},
 	}
 }
 
@@ -81,4 +84,9 @@ func ShowAuxEntries(o *os.File) {
 	}
 
 	fmt.Fprintf(o, "For more information, please invoke mlr {subcommand} --help.\n")
+}
+
+func showVersion(args []string) int {
+	fmt.Printf("mlr version %s for %s/%s/%s\n", version.STRING, runtime.GOOS, runtime.GOARCH, runtime.Version())
+	return 0
 }
