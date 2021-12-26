@@ -18,6 +18,8 @@ PUNCHDOWN LIST
   o README-profiling.md re various scripts
   o https://stackoverflow.com/questions/64513411/why-is-strconv-parseuint-so-slow-compared-to-strconv-atoi
   k benchmark per se
+  ! octal handling
+  ! opt-bool handling
   o mlr --time
   o try traceprofile?
   o find a second linux machine to check -- ?
