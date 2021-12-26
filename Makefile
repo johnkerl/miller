@@ -31,14 +31,21 @@ install: build
 unit-test ut:
 	go test github.com/johnkerl/miller/internal/pkg/...
 
-lib-ut:
+ut-lib:
 	go test github.com/johnkerl/miller/internal/pkg/lib...
-mv-ut:
+ut-mlv:
 	go test github.com/johnkerl/miller/internal/pkg/mlrval/...
-bifs-ut:
+ut-bifs:
 	go test github.com/johnkerl/miller/internal/pkg/bifs/...
-input-ut:
+ut-input:
 	go test github.com/johnkerl/miller/internal/pkg/input/...
+
+bench:
+	go test -run=nonesuch -bench=. github.com/johnkerl/miller/internal/pkg/...
+bench-mlv:
+	go test -run=nonesuch -bench=. github.com/johnkerl/miller/internal/pkg/mlrval/...
+bench-input:
+	go test -run=nonesuch -bench=. github.com/johnkerl/miller/internal/pkg/input/...
 
 # ----------------------------------------------------------------
 # Regression tests (large number)
@@ -102,4 +109,4 @@ release_tarball: build check
 
 # ================================================================
 # Go does its own dependency management, outside of make.
-.PHONY: build mlr check unit_test regression_test fmt staticcheck dev docs
+.PHONY: build mlr check unit_test regression_test bench fmt staticcheck dev docs

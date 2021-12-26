@@ -14,6 +14,7 @@ PUNCHDOWN LIST
   ? array/map fields: marshal as JSON_SINGLE_LINE
 
 * numeric-inference perf
+  o README-profiling.md re various scripts
   o https://stackoverflow.com/questions/64513411/why-is-strconv-parseuint-so-slow-compared-to-strconv-atoi
   o benchmark per se
   o reconsider TryInt/TryFloat -> maybe try number -- ?
