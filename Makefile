@@ -84,7 +84,6 @@ so: install
 sure: build check
 mlr:
 	go build github.com/johnkerl/miller/cmd/mlr
-	go build github.com/johnkerl/miller/cmd/mprof5
 
 # ----------------------------------------------------------------
 # Please see comments in ./create-release-tarball as well as
