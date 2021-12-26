@@ -15,13 +15,13 @@ import (
 
 func (mv *Mlrval) Type() MVType {
 	if mv.mvtype == MT_PENDING {
-		packageLevelInferrer(mv, mv.printrep, false)
+		packageLevelInferrer(mv, false)
 	}
 	return mv.mvtype
 }
 
 // Support for mlr -S, mlr -A, mlr -O.
-type tInferrer func(mv *Mlrval, input string, inferBool bool) *Mlrval
+type tInferrer func(mv *Mlrval, inferBool bool) *Mlrval
 
 var packageLevelInferrer tInferrer = inferWithOctalAsString
 
@@ -60,49 +60,49 @@ var downcasedFloatNamesToNotInfer = map[string]bool{
 var octalDetector = regexp.MustCompile("^-?0[0-9]+")
 
 // inferWithOctalAsString is for default behavior.
-func inferWithOctalAsString(mv *Mlrval, input string, inferBool bool) *Mlrval {
-	inferWithOctalAsInt(mv, input, inferBool)
+func inferWithOctalAsString(mv *Mlrval, inferBool bool) *Mlrval {
+	inferWithOctalAsInt(mv, inferBool)
 	if mv.mvtype != MT_INT && mv.mvtype != MT_FLOAT {
 		return mv
 	}
 
 	if octalDetector.MatchString(mv.printrep) {
-		return mv.SetFromString(input)
+		return mv.SetFromString(mv.printrep)
 	} else {
 		return mv
 	}
 }
 
 // inferWithOctalAsInt is for mlr -O.
-func inferWithOctalAsInt(mv *Mlrval, input string, inferBool bool) *Mlrval {
-	if input == "" {
+func inferWithOctalAsInt(mv *Mlrval, inferBool bool) *Mlrval {
+	if mv.printrep == "" {
 		return mv.SetFromVoid()
 	}
 
-	intval, iok := lib.TryIntFromString(input)
+	intval, iok := lib.TryIntFromString(mv.printrep)
 	if iok {
-		return mv.SetFromPrevalidatedIntString(input, intval)
+		return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
 	}
 
-	if downcasedFloatNamesToNotInfer[strings.ToLower(input)] == false {
-		floatval, fok := lib.TryFloatFromString(input)
+	if downcasedFloatNamesToNotInfer[strings.ToLower(mv.printrep)] == false {
+		floatval, fok := lib.TryFloatFromString(mv.printrep)
 		if fok {
-			return mv.SetFromPrevalidatedFloatString(input, floatval)
+			return mv.SetFromPrevalidatedFloatString(mv.printrep, floatval)
 		}
 	}
 
 	if inferBool {
-		boolval, bok := lib.TryBoolFromBoolString(input)
+		boolval, bok := lib.TryBoolFromBoolString(mv.printrep)
 		if bok {
-			return mv.SetFromPrevalidatedBoolString(input, boolval)
+			return mv.SetFromPrevalidatedBoolString(mv.printrep, boolval)
 		}
 	}
-	return mv.SetFromString(input)
+	return mv.SetFromString(mv.printrep)
 }
 
 // inferWithIntAsFloat is for mlr -A.
-func inferWithIntAsFloat(mv *Mlrval, input string, inferBool bool) *Mlrval {
-	inferWithOctalAsString(mv, input, inferBool)
+func inferWithIntAsFloat(mv *Mlrval, inferBool bool) *Mlrval {
+	inferWithOctalAsString(mv, inferBool)
 	if mv.Type() == MT_INT {
 		mv.floatval = float64(mv.intval)
 		mv.mvtype = MT_FLOAT
@@ -111,6 +111,6 @@ func inferWithIntAsFloat(mv *Mlrval, input string, inferBool bool) *Mlrval {
 }
 
 // inferStringOnly is for mlr -S.
-func inferStringOnly(mv *Mlrval, input string, inferBool bool) *Mlrval {
-	return mv.SetFromString(input)
+func inferStringOnly(mv *Mlrval, inferBool bool) *Mlrval {
+	return mv.SetFromString(mv.printrep)
 }

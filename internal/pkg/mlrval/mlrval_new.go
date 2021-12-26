@@ -40,7 +40,7 @@ func FromInferredType(input string) *Mlrval {
 		printrepValid: true,
 	}
 	// TODO: comment re inferBool arg
-	packageLevelInferrer(mv, mv.printrep, true)
+	packageLevelInferrer(mv, true)
 	return mv
 }
 
