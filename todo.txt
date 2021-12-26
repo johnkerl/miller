@@ -15,37 +15,18 @@ PUNCHDOWN LIST
   ? array/map fields: marshal as JSON_SINGLE_LINE
 
 * numeric-inference perf
-  o README-profiling.md re various scripts
-  o https://stackoverflow.com/questions/64513411/why-is-strconv-parseuint-so-slow-compared-to-strconv-atoi
   k benchmark per se
+
   ! octal handling
   ! opt-bool handling
+
   o mlr --time
-  o try traceprofile?
-  o find a second linux machine to check -- ?
-  o get octal regexp out of hot path
 
-  o make a grammar for numbers & case-through
-    - len 0
-    - len 1
-    - has leading minus; strip & rest
-    - 0x, 0b, 0[0-9]
-    - decimal: leading minus; [0-9]+
-    - octal: leading minus; 0[0-7]+
-    - hex: leading minus; 0[xX][0-9a-fA-F]+
-    - float: leadinug minus;
+  o README-profiling.md re various scripts
+  o README-profiling.md re this PR
+  o webdoc re on-battery anecdote
 
-  o float literals:
-    123 123.  123.4 .234
-    1e2 1e-2 1.2e3 1.e3 1.2e-3 1.e-3
-    .2e3 .2e-3 1.e-3
-
-    ?- [0-9]+
-    ?- [0-9]+ '.' [0-9]*
-    ?- [0-9]* '.' [0-9]+
-    ?- [0-9]+            [eE] ?- [0-9]+
-    ?- [0-9]+ '.' [0-9]* [eE] ?- [0-9]+
-    ?- [0-9]* '.' [0-9]+ [eE] ?- [0-9]+
+  o look at trace-profile again ...
 
 * nikos materials -> fold in
 
