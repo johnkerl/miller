@@ -235,7 +235,7 @@ Notes:
 
 * These benchmarks were run on two laptops: a commodity Mac laptop with four CPUs, on MacOS Monterey, using `go1.16.5 darwin/amd64`, and a commodity Linux Lenovo with eight CPUs, on Ubuntu 21.10, using `go1.17.5 linux/amd64`.
 * Interestingly, I noted a serious slowdown -- for this particular Linux laptop on low battery -- for the Go version but not the C version. Perhaps multicore interacts with power-saving mode.
-* As of late 2021, Miller has been benchmarks using Go compiler versions 1.15.15, 1.16.12, 1.17.5, and 1.18beta1, with no significant performance changes attributable to compiler versions.
+* As of late 2021, Miller has been benchmarked using Go compiler versions 1.15.15, 1.16.12, 1.17.5, and 1.18beta1, with no significant performance changes attributable to compiler versions.
 
 For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/chain-cmps.sh), the format is CSV and the operations are varied:
 

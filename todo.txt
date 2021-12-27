@@ -6,7 +6,6 @@ PUNCHDOWN LIST
   o README-profiling.md re this PR
 
 * blockers:
-  - json perf wut
   - fractional-strptime
   - improved regex doc w/ lots of examples
   - cmp-matrices
@@ -75,6 +74,8 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* JSON perf -- try alternate packages to encoding/json
 
 * pos/neg 0x/0b/0o UTs
 
