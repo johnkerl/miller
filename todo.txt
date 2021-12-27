@@ -2,20 +2,9 @@
 PUNCHDOWN LIST
 
 * numeric-inference perf
-  k benchmark per se
-  ? webdoc --cpuprofile wut
-
-  ! 0x8..0 ..0xf..f handling
-  ! octal handling
-    > note/doc 0o prefix
-    > leading-0 tests @ scan & mlv
-    > what about 0999?
-    > ensure ut 0x/0b/0o pos neg
-  ! opt-bool handling
-
   o README-profiling.md re various scripts
   o README-profiling.md re this PR
-  o webdoc 0899 w/ mlr -O float -> int
+  o update mac numbers; type up linux numbers
   o webdoc re on-battery anecdote
 
 * blockers:
@@ -88,6 +77,10 @@ PUNCHDOWN LIST
 
 ================================================================
 NON-BLOCKERS
+
+* pos/neg 0x/0b/0o UTs
+
+* 0o into BNF
 
 ? BIFs as FCFs?
 

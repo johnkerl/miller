@@ -4,11 +4,20 @@
 
 Numbers in Miller are double-precision float or 64-bit signed integers. Anything scannable as int, e.g `123` or `0xabcd`, is treated as an integer; otherwise, input scannable as float (`4.56` or `8e9`) is treated as float; everything else is a string.
 
-If you want all numbers to be treated as floats, then you may use `float()` in your filter/put expressions (e.g. replacing `$c = $a * $b` with `$c = float($a) * float($b)`).
+Three flags control input-scanning for numbers: `mlr -O`, `mlr -A`, and `mlr -S`.
 
-<!--- TODO: probably remove this entirely for Miller6.
-Or, more simply, use `mlr filter -F` and `mlr put -F` which forces all numeric input, whether from expression literals or field values, to float. Likewise `mlr stats1 -F` and `mlr step -F` force integerable accumulators (such as `count`) to be done in floating-point.
--->
+Prefix `0x` means hexadecimal, e.g. `0xcafe`; prefix `0b` means binary, e.g.
+`0b1011`; prefix `0o` means octal, e.g. `0o377`. Numbers in data files with
+leading zeroes, e.g. `0377` or `06789`, are treated as strings in Miller,
+unless you specifiy `mlr -O`: then `0377` will scan as an octal integer (with
+value 255), and `06789` will scan as a decimal integer (with value 6789).
+
+If you want all numbers from data files to be treated as floats, then you may
+use `float()` in your filter/put expressions (e.g. replacing `$c = $a * $b`
+with `$c = float($a) * float($b)`). Or, use `mlr -A`.
+
+If you use `mlr -S` then all field values from data files are read in as
+strings; you can cast them using `int()` or `float()`.
 
 ## Conversion by math routines
 
