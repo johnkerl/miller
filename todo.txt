@@ -2,8 +2,8 @@
 PUNCHDOWN LIST
 
 * numeric-inference perf
-  o README-profiling.md re various scripts
-  o README-profiling.md re this PR
+  o README-profiling.md -- update ...
+  o README-go-port.md re various scripts
 
 * blockers:
   - fractional-strptime
