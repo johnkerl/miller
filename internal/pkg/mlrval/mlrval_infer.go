@@ -110,7 +110,7 @@ func inferDecimalInt(mv *Mlrval) *Mlrval {
 
 // TODO: comment
 func inferLeadingZeroDecimalIntAsInt(mv *Mlrval) *Mlrval {
-	intval, err := strconv.ParseInt(mv.printrep[1:], 10, 64)
+	intval, err := strconv.ParseInt(mv.printrep, 10, 64)
 	if err == nil {
 		return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
 	} else {
@@ -121,19 +121,7 @@ func inferLeadingZeroDecimalIntAsInt(mv *Mlrval) *Mlrval {
 // TODO: comment
 // E.g. explicit 0o377, not 0377
 func inferOctalInt(mv *Mlrval) *Mlrval {
-	var input string
-	// Skip known leading 0x or -0x prefix
-	if mv.printrep[0] == '-' {
-		input = mv.printrep[3:]
-	} else {
-		input = mv.printrep[2:]
-	}
-	intval, err := strconv.ParseInt(input, 8, 64)
-	if err == nil {
-		return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
-	} else {
-		return mv.SetFromString(mv.printrep)
-	}
+	return inferBaseInt(mv, 8)
 }
 
 // TODO: comment
@@ -147,17 +135,19 @@ func inferFromLeadingZeroOctalIntAsInt(mv *Mlrval) *Mlrval {
 }
 
 // TODO: comment
-// The 2: is to get past the known 0x prefix
 func inferHexInt(mv *Mlrval) *Mlrval {
 	var input string
+	var negate bool
 	// Skip known leading 0x or -0x prefix
 	if mv.printrep[0] == '-' {
 		input = mv.printrep[3:]
+		negate = true
 	} else {
 		input = mv.printrep[2:]
+		negate = false
 	}
 
-	// Following twos-complement formatting familiar from all manners of
+	// Following twos-complement formatting familiar from all manner of
 	// languages, including C which was Miller's original implementation
 	// language, we want to allow 0x00....00 through 0x7f....ff as positive
 	// 64-bit integers and 0x80....00 through 0xff....ff as negative ones. Go's
@@ -170,13 +160,20 @@ func inferHexInt(mv *Mlrval) *Mlrval {
 	i0 := input[0]
 	if len(input) == 16 && ('8' <= i0 && i0 <= 'f') {
 		uintval, err := strconv.ParseUint(input, 16, 64)
+		intval := int(uintval)
+		if negate {
+			intval = -intval
+		}
 		if err == nil {
-			return mv.SetFromPrevalidatedIntString(mv.printrep, int(uintval))
+			return mv.SetFromPrevalidatedIntString(mv.printrep, intval)
 		} else {
 			return mv.SetFromString(mv.printrep)
 		}
 	} else {
 		intval, err := strconv.ParseInt(input, 16, 64)
+		if negate {
+			intval = -intval
+		}
 		if err == nil {
 			return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
 		} else {
@@ -187,21 +184,8 @@ func inferHexInt(mv *Mlrval) *Mlrval {
 }
 
 // TODO: comment
-// The 2: is to get past the known 0b prefix
 func inferBinaryInt(mv *Mlrval) *Mlrval {
-	var input string
-	// Skip known leading 0x or -0x prefix
-	if mv.printrep[0] == '-' {
-		input = mv.printrep[3:]
-	} else {
-		input = mv.printrep[2:]
-	}
-	intval, err := strconv.ParseInt(input, 16, 64)
-	if err == nil {
-		return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
-	} else {
-		return mv.SetFromString(mv.printrep)
-	}
+	return inferBaseInt(mv, 2)
 }
 
 // TODO: comment
@@ -220,5 +204,29 @@ func inferFromBool(mv *Mlrval) *Mlrval {
 		return mv.SetFromPrevalidatedBoolString(mv.printrep, true)
 	} else {
 		return mv.SetFromPrevalidatedBoolString(mv.printrep, false)
+	}
+}
+
+// TODO: comment
+// Shared code for 0o/0b integers
+func inferBaseInt(mv *Mlrval, base int) *Mlrval {
+	var input string
+	var negate bool
+	// Skip known leading 0x or -0x prefix
+	if mv.printrep[0] == '-' {
+		input = mv.printrep[3:]
+		negate = true
+	} else {
+		input = mv.printrep[2:]
+		negate = false
+	}
+	intval, err := strconv.ParseInt(input, base, 64)
+	if err == nil {
+		if negate {
+			intval = -intval
+		}
+		return mv.SetFromPrevalidatedIntString(mv.printrep, int(intval))
+	} else {
+		return mv.SetFromString(mv.printrep)
 	}
 }

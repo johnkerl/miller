@@ -1,7 +1,6 @@
 package scan
 
-import (
-)
+import ()
 
 // TODO: comment re context
 

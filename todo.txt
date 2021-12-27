@@ -10,10 +10,12 @@ PUNCHDOWN LIST
     > note/doc 0o prefix
     > leading-0 tests @ scan & mlv
     > what about 0999?
+    > ensure ut 0x/0b/0o pos neg
   ! opt-bool handling
 
   o README-profiling.md re various scripts
   o README-profiling.md re this PR
+  o webdoc 0899 w/ mlr -O float -> int
   o webdoc re on-battery anecdote
 
 * blockers:

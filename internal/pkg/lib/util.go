@@ -101,7 +101,7 @@ func TryIntFromString(input string) (int, bool) {
 		}
 	}
 
-	// Following twos-complement formatting familiar from all manners of
+	// Following twos-complement formatting familiar from all manner of
 	// languages, including C which was Miller's original implementation
 	// language, we want to allow 0x00....00 through 0x7f....ff as positive
 	// 64-bit integers and 0x80....00 through 0xff....ff as negative ones. Go's
