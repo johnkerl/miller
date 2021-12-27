@@ -4,11 +4,9 @@ PUNCHDOWN LIST
 * numeric-inference perf
   o README-profiling.md re various scripts
   o README-profiling.md re this PR
-  o update mac numbers; type up linux numbers
-  o webdoc re on-battery anecdote
 
 * blockers:
-  - linux/1.17 perf checks
+  - json perf wut
   - fractional-strptime
   - improved regex doc w/ lots of examples
   - cmp-matrices

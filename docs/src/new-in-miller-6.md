@@ -269,52 +269,96 @@ The following differences are rather technical. If they don't sound familiar to 
 
 ## Performance benchmarks
 
-As a benchmark, the [example.csv](https://github.com/johnkerl/miller/blob/main/docs/src/example.csv) file
+For performance testing, the [example.csv](https://github.com/johnkerl/miller/blob/main/docs/src/example.csv) file
 [was expanded](https://github.com/johnkerl/miller/blob/main/scripts/make-big-files) into a million-line CSV file,
 then converted to DKVP, JSON, etc.
 
 Notes:
 
-* These were run on a commodity Mac laptop with four CPUs, on MacOS Monterey, using `go1.16.5 darwin/amd64`.
-* Linux benchmarks are pending.
+* These benchmarks were run on two laptops: a commodity Mac laptop with four CPUs, on MacOS Monterey, using `go1.16.5 darwin/amd64`, and a commodity Linux Lenovo with eight CPUs, on Ubuntu 21.10, using `go1.17.5 linux/amd64`.
+* Interestingly, I noted a serious slowdown -- for this particular Linux laptop on low battery -- for the Go version but not the C version. Perhaps multicore interacts with power-saving mode.
 * As of late 2021, Miller has been benchmarks using Go compiler versions 1.15.15, 1.16.12, 1.17.5, and 1.18beta1, with no significant performance changes attributable to compiler versions.
 
-For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/time-big-files), we have `mlr cat` of those files, with processing times shown:
+For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/chain-cmps.sh), the format is CSV and the operations are varied:
+
+**Mac**
+
+| Operation | Miller 5 | Miller 6 | Speedup |
+| --- | --- | --- | --- |
+| CSV check | 1.541 | 1.216 | 1.27x |
+| CSV cat | 2.403 | 1.430 | 1.68x |
+| CSV tail | 1.526 | 1.222 | 1.25x |
+| CSV tac | 2.785 | 3.122 | 0.89x |
+| CSV sort -f shape | 2.996 | 3.139 | 0.95x |
+| CSV sort -n quantity | 4.895 | 5.200 | 0.94x |
+| CSV stats1 | 2.955 | 1.865 | 1.58x |
+| CSV put expressions | 5.642 | 2.577 | 2.19x |
+
+**Linux**
+
+| Operation | Miller 5 | Miller 6 | Speedup |
+| --- | --- | --- | --- |
+| CSV check | 0.680 | 1.104 | 0.62x |
+| CSV cat | 1.066 | 1.231 | 0.87x |
+| CSV tail | 0.691 | 1.130 | 0.61x |
+| CSV tac | 1.648 | 2.620 | 0.63x |
+| CSV sort -f shape | 2.087 | 2.953 | 0.71x |
+| CSV sort -n quantity | 5.588 | 5.337 | 1.05x |
+| CSV stats1 | 2.376 | 1.751 | 1.36x |
+| CSV put expressions | 4.520 | 2.091 | 2.16x |
+
+For the [second benchmark](https://github.com/johnkerl/miller/blob/main/scripts/time-big-files), we have `mlr cat` of those files, varying file types, with processing times shown. Catting out files as-is isn't a particularly useful operation in itself, but it gives an idea of how processing time depends on file format:
+
+**Mac**
 
 | Format   | Miller 5 | Miller 6 | Speedup |
-|----------|----------|----------|---------|
-| CSV      | 2.482    | 1.571    | 1.58x   |
-| CSV-lite | 1.671    | 1.428    | 1.17x   |
-| DKVP     | 2.485    | 2.040    | 1.22x   |
-| NIDX     | 1.638    | 1.468    | 1.12x   |
-| XTAB     | 5.147    | 2.184    | 2.35x   |
-| JSON     | 12.457   | 12.416   | 1.00x   |
+| ---      | ---      | ---      | ---     |
+| CSV      | 2.393    | 1.493    | 1.60x   |
+| CSV-lite | 1.644    | 1.351    | 1.22x   |
+| DKVP     | 2.418    | 1.920    | 1.26x   |
+| NIDX     | 1.053    | 0.958    | 1.10x   |
+| XTAB     | 4.978    | 2.003    | 2.49x   |
+| JSON     | 10.966   | 10.569   | 1.04x   |
 
-For the [second benchmark](https://github.com/johnkerl/miller/blob/main/scripts/chain-cmps.sh), the operations are varied:
+**Linux**
 
-| Operation            | Miller 5 | Miller 6 | Speedup |
-|----------------------|----------|----------|---------|
-| CSV check            | 1.496    | 1.182    | 1.26x   |
-| CSV cat              | 2.412    | 1.491    | 1.62x   |
-| CSV tail             | 1.523    | 1.212    | 1.26x   |
-| CSV tac              | 2.785    | 2.885    | 0.96x   |
-| CSV sort -f shape    | 3.264    | 3.683    | 0.89x   |
-| CSV sort -n quantity | 4.827    | 5.438    | 0.89x   |
+| Format   | Miller 5 | Miller 6 | Speedup |
+| ---      | ---      | ---      | ---     |
+| CSV      | 1.069    | 1.157    | 0.92x   |
+| CSV-lite | 0.640    | 1.187    | 0.54x   |
+| DKVP     | 1.017    | 1.853    | 0.55x   |
+| NIDX     | 0.623    | 1.398    | 0.45x   |
+| XTAB     | 2.159    | 1.893    | 1.14x   |
+| JSON     | 5.077    | 10.445   | 0.49x   |
 
 For the [third benchmark](https://github.com/johnkerl/miller/blob/main/scripts/chain-lengths.sh), we have longer and longer then-chains: `mlr put ...`, then `mlr put ... then put ...`, etc. -- deepening the then-chain from one to six:
 
+**Mac**
+
 | Chain length | Miller 5 | Miller 6 | Speedup |
-|--------------|----------|----------|---------|
-| 1            |  5.902   | 3.704    | 1.59x   |
-| 2            | 11.059   | 4.042    | 2.74x   |
-| 3            | 12.793   | 4.796    | 2.67x   |
-| 4            | 15.288   | 5.473    | 2.79x   |
-| 5            | 18.410   | 5.899    | 3.12x   |
-| 6            | 21.706   | 7.498    | 2.89x   |
+| --- | --- | --- | --- |
+| 1 | 5.709 | 2.567 | 2.22x |
+| 2 | 8.926 | 3.110 | 2.87x |
+| 3 | 11.915 | 3.712 | 3.21x |
+| 4 | 15.093 | 4.391 | 3.44x |
+| 5 | 18.209 | 5.090 | 3.58x |
+| 6 | 21.109 | 6.032 | 3.50x |
+
+**Linux**
+
+| Chain length | Miller 5 | Miller 6 | Speedup |
+| --- | --- | --- | --- |
+| 1 | 4.732 | 2.106 | 2.25x |
+| 2 | 8.103 | 2.992 | 2.71x |
+| 3 | 11.42 | 3.4743 | 3.29x |
+| 4 | 14.904 | 3.859 | 3.86x |
+| 5 | 18.128 | 4.1563 | 4.36x |
+| 6 | 21.827 | 4.512 | 4.84x |
 
 Notes:
 
 * CSV processing is particularly improved in Miller 6.
-* Record I/O is improved across the board, except that JSON continues to be a CPU-intensive format.
+* Record I/O is improved across the board, except that JSON continues to be a CPU-intensive format. Miller 6 JSON throughput is the same on Mac and Linux; Miller 5 did better on Miller 5 but only on Linux, not Mac.
 * Miller 6's `sort` merits more performance analysis.
-* Longer then-chains benefit from Miller 6's [multicore approach](cpu.md).
+* Even single-verb processing with `put` and `stats1` is significantly faster on both platforms -- approximately 2.2x faster.
+* Longer then-chains benefit even more from Miller 6's [multicore approach](cpu.md).
