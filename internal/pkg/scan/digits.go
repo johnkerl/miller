@@ -22,6 +22,17 @@ var isDecimalDigitTable = []bool{
 	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 70-7f
 }
 
+var isOctalDigitTable = []bool{
+	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 00-0f
+	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 10-1f
+	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 20-2f
+	true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, // 30-3f
+	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 40-4f
+	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 50-5f
+	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 60-6f
+	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 70-7f
+}
+
 var isHexDigitTable = []bool{
 	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 00-0f
 	false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, // 10-1f
@@ -49,6 +60,14 @@ var isFloatDigitTable = []bool{
 func isDecimalDigit(c byte) bool {
 	if c < 128 { // byte is unsigned in Go
 		return isDecimalDigitTable[c]
+	} else {
+		return false
+	}
+}
+
+func isOctalDigit(c byte) bool {
+	if c < 128 { // byte is unsigned in Go
+		return isOctalDigitTable[c]
 	} else {
 		return false
 	}

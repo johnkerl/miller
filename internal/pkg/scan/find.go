@@ -1,5 +1,8 @@
 package scan
 
+import (
+)
+
 // TODO: comment re context
 
 //  o grammar for numbers & case-through
@@ -46,10 +49,6 @@ func FindScanType(sinput string) ScanType {
 		}
 	}
 
-	if sinput == "true" || sinput == "false" {
-		return scanTypeBool
-	}
-
 	return scanTypeString
 }
 
@@ -81,6 +80,13 @@ func findScanTypePositiveNumberOrString(input []byte) ScanType {
 					return findScanTypePositiveHexOrString(input[2:])
 				}
 			}
+			if i1 == 'o' || i1 == 'O' {
+				if len(input) == 2 {
+					return scanTypeString
+				} else {
+					return findScanTypePositiveOctalOrString(input[2:])
+				}
+			}
 			if i1 == 'b' || i1 == 'B' {
 				if len(input) == 2 {
 					return scanTypeString
@@ -88,6 +94,25 @@ func findScanTypePositiveNumberOrString(input []byte) ScanType {
 					return findScanTypePositiveBinaryOrString(input[2:])
 				}
 			}
+
+			allOctal := true
+			allDecimal := true
+			for _, c := range input[1:] {
+				if !isOctalDigit(c) {
+					allOctal = false
+				}
+				if !isDecimalDigit(c) {
+					allDecimal = false
+					break
+				}
+			}
+			if allOctal {
+				return scanTypeLeadingZeroOctalInt
+			}
+			if allDecimal {
+				return scanTypeLeadingZeroDecimalInt
+			}
+			// else fall through
 		}
 
 		return findScanTypePositiveDecimalOrFloatOrString(input)
@@ -125,6 +150,16 @@ func findScanTypePositiveDecimalOrFloatOrString(input []byte) ScanType {
 	} else {
 		return scanTypeMaybeFloat
 	}
+}
+
+// Leading 0o has already been stripped
+func findScanTypePositiveOctalOrString(input []byte) ScanType {
+	for _, c := range []byte(input) {
+		if !isOctalDigit(c) {
+			return scanTypeString
+		}
+	}
+	return scanTypeOctalInt
 }
 
 // Leading 0x has already been stripped

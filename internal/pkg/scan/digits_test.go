@@ -17,6 +17,17 @@ func TestIsDecimalDigit(t *testing.T) {
 	}
 }
 
+func TestIsOctalDigit(t *testing.T) {
+	var c byte
+	for c = 0x00; c < 0xff; c++ {
+		if c >= '0' && c <= '7' {
+			assert.True(t, isOctalDigit(c))
+		} else {
+			assert.False(t, isOctalDigit(c))
+		}
+	}
+}
+
 func TestIsHexDigit(t *testing.T) {
 	var c byte
 	for c = 0x00; c < 0xff; c++ {

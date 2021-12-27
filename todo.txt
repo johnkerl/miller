@@ -1,6 +1,21 @@
 ================================================================
 PUNCHDOWN LIST
 
+* numeric-inference perf
+  k benchmark per se
+  ? webdoc --cpuprofile wut
+
+  ! 0x8..0 ..0xf..f handling
+  ! octal handling
+    > note/doc 0o prefix
+    > leading-0 tests @ scan & mlv
+    > what about 0999?
+  ! opt-bool handling
+
+  o README-profiling.md re various scripts
+  o README-profiling.md re this PR
+  o webdoc re on-battery anecdote
+
 * blockers:
   - linux/1.17 perf checks
   - fractional-strptime
@@ -12,17 +27,6 @@ PUNCHDOWN LIST
   - 0b1011 olh/webdoc
   - big-picture note
   ? array/map fields: marshal as JSON_SINGLE_LINE
-
-* numeric-inference perf
-  k benchmark per se
-  ? webdoc --cpuprofile wut
-
-  ! octal handling
-  ! opt-bool handling
-
-  o README-profiling.md re various scripts
-  o README-profiling.md re this PR
-  o webdoc re on-battery anecdote
 
 * nikos materials -> fold in
 
