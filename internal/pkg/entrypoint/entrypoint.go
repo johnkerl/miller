@@ -20,8 +20,11 @@ import (
 	"github.com/johnkerl/miller/internal/pkg/transformers"
 )
 
-// ----------------------------------------------------------------
-func Main() {
+type MainReturn struct {
+	PrintElapsedTime bool
+}
+
+func Main() MainReturn {
 	// Special handling for Windows so we can do things like:
 	//
 	//   mlr put '$a = $b . "cd \"efg\" hi"' foo.dat
@@ -54,6 +57,10 @@ func Main() {
 		processToStdout(options, recordTransformers)
 	} else {
 		processInPlace(options)
+	}
+
+	return MainReturn{
+		PrintElapsedTime: options.PrintElapsedTime,
 	}
 }
 

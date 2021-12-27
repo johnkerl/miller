@@ -1,3 +1,4 @@
+// ================================================================
 // Miller main command-line parsing.
 //
 // Before Miller 6 the ordering was:
@@ -65,6 +66,7 @@
 // foo.csv' the '--csv' looks like it belongs to the 'head' verb. When people
 // use '#!/bin/sh' scripts they need to insert the '--' in 'mlr head -n 10 --
 // --csv foo.csv'; for 'mlr -s' we insert the '--' for them.
+// ================================================================
 
 package climain
 
@@ -128,15 +130,7 @@ func parseCommandLinePassOne(
 		oargi := argi
 
 		if args[argi][0] == '-' {
-
-			if args[argi] == "--cpuprofile" {
-				// Already handled in main(); ignore here, and don't send it to pass two.
-				cli.CheckArgCount(args, argi, argc, 1)
-				argi += 2
-			} else if args[argi] == "--traceprofile" {
-				// Already handled in main(); ignore here, and don't send it to pass two.
-				argi += 1
-			} else if args[argi] == "--version" {
+			if args[argi] == "--version" {
 				// Exiting flag: handle it immediately.
 				fmt.Printf("mlr %s\n", version.STRING)
 				os.Exit(0)

@@ -46,7 +46,7 @@ EOF
     for flag in flags
       headline = `mlr help show-headline-for-flag '#{flag}'`
       help = `mlr help show-help-for-flag '#{flag}'`
-      puts "* `#{headline}`: #{help}"
+      puts "* `#{headline.chomp}`: #{help}"
     end
   end
 

@@ -3,11 +3,15 @@
 ourdir=$(dirname $0)
 
 mlrs="mlr5 ~/tmp/miller/mlr ./mlr"
+#mlrs="mlr5 ./mlr"
 
-echo; for mlr in $mlrs; do $ourdir/time-big-file csv     $mlr; done
-echo; for mlr in $mlrs; do $ourdir/time-big-file csvlite $mlr; done
-echo; for mlr in $mlrs; do $ourdir/time-big-file dkvp    $mlr; done
-echo; for mlr in $mlrs; do $ourdir/time-big-file nidx    $mlr; done
-echo; for mlr in $mlrs; do $ourdir/time-big-file xtab    $mlr; done
-echo; for mlr in $mlrs; do $ourdir/time-big-file json    $mlr; done
+#reps="1"
+reps="1 2 3"
+
+echo; for mlr in $mlrs; do for k in $reps; do $ourdir/time-big-file csv     $mlr; done; done
+echo; for mlr in $mlrs; do for k in $reps; do $ourdir/time-big-file csvlite $mlr; done; done
+echo; for mlr in $mlrs; do for k in $reps; do $ourdir/time-big-file dkvp    $mlr; done; done
+echo; for mlr in $mlrs; do for k in $reps; do $ourdir/time-big-file nidx    $mlr; done; done
+echo; for mlr in $mlrs; do for k in $reps; do $ourdir/time-big-file xtab    $mlr; done; done
+echo; for mlr in $mlrs; do for k in $reps; do $ourdir/time-big-file json    $mlr; done; done
 

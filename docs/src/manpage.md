@@ -144,6 +144,7 @@ HELP OPTIONS
          mlr help miscellaneous-flags
          mlr help output-colorization-flags
          mlr help pprint-only-flags
+         mlr help profiling-flags
          mlr help separator-flags
        Verbs:
          mlr help list-verbs
@@ -637,6 +638,20 @@ PPRINT-ONLY FLAGS
                                 for input).
        --right                  Right-justifies all fields for PPRINT output.
 
+PROFILING FLAGS
+       These are flags for profiling Miller performance.
+       --cpuprofile {CPU-profile file name}
+                                Create a CPU-profile file for performance analysis.
+                                Instructions will be printed to stderr. This flag
+                                must be the very first thing after 'mlr' on the
+                                command line.
+       --time                   Print elapsed execution time in seconds to stderr at
+                                the end of the execution of the program.
+       --traceprofile           Create a trace-profile file for performance analysis.
+                                Instructions will be printed to stderr. This flag
+                                must be the very first thing after 'mlr' on the
+                                command line.
+
 SEPARATOR FLAGS
        See the Separators doc page for more about record separators, field
        separators, and pair separators. Also see the File formats doc page, or
@@ -756,6 +771,7 @@ AUXILIARY COMMANDS
          help
          regtest
          repl
+         version
        For more information, please invoke mlr {subcommand} --help.
 
 MLRRC
@@ -3024,5 +3040,5 @@ SEE ALSO
 
 
 
-                                  2021-12-25                         MILLER(1)
+                                  2021-12-27                         MILLER(1)
 </pre>

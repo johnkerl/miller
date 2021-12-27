@@ -39,9 +39,15 @@ func FromInferredType(input string) *Mlrval {
 		printrep:      input,
 		printrepValid: true,
 	}
-	// TODO: comment re inferBool arg
-	packageLevelInferrer(mv, mv.printrep, true)
-	return mv
+	// TODO: comment re data files vs literals context -- this is for the latter
+	if input == "true" {
+		return TRUE
+	} else if input == "false" {
+		return FALSE
+	} else {
+		packageLevelInferrer(mv)
+		return mv
+	}
 }
 
 func FromString(input string) *Mlrval {

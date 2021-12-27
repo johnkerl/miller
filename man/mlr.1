@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2021-12-25
+.\"      Date: 2021-12-27
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2021-12-25" "\ \&" "\ \&"
+.TH "MILLER" "1" "2021-12-27" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -158,6 +158,7 @@ Flags:
   mlr help miscellaneous-flags
   mlr help output-colorization-flags
   mlr help pprint-only-flags
+  mlr help profiling-flags
   mlr help separator-flags
 Verbs:
   mlr help list-verbs
@@ -753,6 +754,28 @@ These are flags which are applicable to PPRINT output format.
 .fi
 .if n \{\
 .RE
+.SH "PROFILING FLAGS"
+.sp
+
+.if n \{\
+.RS 0
+.\}
+.nf
+These are flags for profiling Miller performance.
+--cpuprofile {CPU-profile file name}
+                         Create a CPU-profile file for performance analysis.
+                         Instructions will be printed to stderr. This flag
+                         must be the very first thing after 'mlr' on the
+                         command line.
+--time                   Print elapsed execution time in seconds to stderr at
+                         the end of the execution of the program.
+--traceprofile           Create a trace-profile file for performance analysis.
+                         Instructions will be printed to stderr. This flag
+                         must be the very first thing after 'mlr' on the
+                         command line.
+.fi
+.if n \{\
+.RE
 .SH "SEPARATOR FLAGS"
 .sp
 
@@ -884,6 +907,7 @@ Available subcommands:
   help
   regtest
   repl
+  version
 For more information, please invoke mlr {subcommand} --help.
 .fi
 .if n \{\

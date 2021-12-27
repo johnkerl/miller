@@ -31,6 +31,24 @@ install: build
 unit-test ut:
 	go test github.com/johnkerl/miller/internal/pkg/...
 
+ut-lib:
+	go test github.com/johnkerl/miller/internal/pkg/lib...
+ut-scan:
+	go test github.com/johnkerl/miller/internal/pkg/scan/...
+ut-mlv:
+	go test github.com/johnkerl/miller/internal/pkg/mlrval/...
+ut-bifs:
+	go test github.com/johnkerl/miller/internal/pkg/bifs/...
+ut-input:
+	go test github.com/johnkerl/miller/internal/pkg/input/...
+
+bench:
+	go test -run=nonesuch -bench=. github.com/johnkerl/miller/internal/pkg/...
+bench-mlv:
+	go test -run=nonesuch -bench=. github.com/johnkerl/miller/internal/pkg/mlrval/...
+bench-input:
+	go test -run=nonesuch -bench=. github.com/johnkerl/miller/internal/pkg/input/...
+
 # ----------------------------------------------------------------
 # Regression tests (large number)
 #
@@ -41,11 +59,21 @@ unit-test ut:
 regression-test:
 	go test -v regression_test.go
 
+# ----------------------------------------------------------------
+# Experimental executables:
+scan:
+	go build github.com/johnkerl/miller/cmd/scan
+
+# ----------------------------------------------------------------
+# Formatting
 # go fmt ./... finds experimental C files which we want to ignore.
 fmt:
 	-go fmt ./cmd/...
 	-go fmt ./internal/pkg/...
 	-go fmt ./regression_test.go
+
+# ----------------------------------------------------------------
+# Static analysis
 
 # Needs first: go install honnef.co/go/tools/cmd/staticcheck@latest
 # See also: https://staticcheck.io
@@ -93,4 +121,4 @@ release_tarball: build check
 
 # ================================================================
 # Go does its own dependency management, outside of make.
-.PHONY: build mlr check unit_test regression_test fmt staticcheck dev docs
+.PHONY: build mlr scan check unit_test regression_test bench fmt staticcheck dev docs

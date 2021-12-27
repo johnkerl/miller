@@ -31,6 +31,7 @@ Available subcommands:
   help
   regtest
   repl
+  version
 For more information, please invoke mlr {subcommand} --help.
 </pre>
 

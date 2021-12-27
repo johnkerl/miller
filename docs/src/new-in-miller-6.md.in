@@ -213,7 +213,8 @@ The following differences are rather technical. If they don't sound familiar to 
     * See also `mlr help legacy-flags` or the [legacy-flags reference](reference-main-flag-list.md#legacy-flags).
 * Type-inference:
     * The `-S` and `-F` flags to `mlr put` and `mlr filter` are ignored, since type-inference is no longer done in `mlr put` and `mlr filter`, but rather, when records are first read. You can use `mlr -S` and `mlr -A`, respectively, instead to control type-inference within the record-readers.
-    * Octal numbers like `0123` and `07` are type-inferred as string. Use `mlr -O` to infer them as octal integers. Note that `08` and `09` will then infer as float.
+    * Octal numbers like `0123` and `07` are type-inferred as string. Use `mlr -O` to infer them as octal integers. Note that `08` and `09` will then infer as deicmal integers.
+    * Any numbers prefix with `0o`, e.g. `0o377`, are already treated as octal regardless of `mlr -O` -- `mlr -O` only affects how leading-zero integers are handled.
     * See also the [miscellaneous-flags reference](reference-main-flag-list.md#miscellaneous-flags).
 * Emitting a map-valued expression now requires either a temporary variable or the new `emit1` keyword. Please see the
 [page on emit statements](reference-dsl-output-statements.md#emit1-and-emitemitpemitf) for more information.
@@ -228,7 +229,13 @@ The following differences are rather technical. If they don't sound familiar to 
 
 As a benchmark, the [example.csv](https://github.com/johnkerl/miller/blob/main/docs/src/example.csv) file
 [was expanded](https://github.com/johnkerl/miller/blob/main/scripts/make-big-files) into a million-line CSV file,
-then converted to DKVP, JSON, etc. These were run on a commodity Mac laptop with four CPUs.
+then converted to DKVP, JSON, etc.
+
+Notes:
+
+* These were run on a commodity Mac laptop with four CPUs, on MacOS Monterey, using `go1.16.5 darwin/amd64`.
+* Linux benchmarks are pending.
+* As of late 2021, Miller has been benchmarks using Go compiler versions 1.15.15, 1.16.12, 1.17.5, and 1.18beta1, with no significant performance changes attributable to compiler versions.
 
 For the [first benchmark](https://github.com/johnkerl/miller/blob/main/scripts/time-big-files), we have `mlr cat` of those files, with processing times shown:
 

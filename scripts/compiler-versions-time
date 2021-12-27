@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for mlr in mlr5 mlr-go1.1*; do justtime $mlr --csv check ~/tmp/big.csv > /dev/null; done
+echo
+
+for mlr in mlr5 mlr-go1.1*; do justtime $mlr --csv cat ~/tmp/big.csv > /dev/null; done
+echo
+
+for mlr in mlr5 mlr-go1.1*; do justtime $mlr --csv --from ~/tmp/big.csv put -f ./scripts/chain-1.mlr > /dev/null; done

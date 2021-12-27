@@ -62,6 +62,7 @@ Flags:
   mlr help miscellaneous-flags
   mlr help output-colorization-flags
   mlr help pprint-only-flags
+  mlr help profiling-flags
   mlr help separator-flags
 Verbs:
   mlr help list-verbs

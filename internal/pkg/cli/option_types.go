@@ -153,6 +153,8 @@ type TOptions struct {
 
 	HaveRandSeed bool
 	RandSeed     int
+
+	PrintElapsedTime bool // mlr --time
 }
 
 // Not usable until FinalizeReaderOptions and FinalizeWriterOptions are called.

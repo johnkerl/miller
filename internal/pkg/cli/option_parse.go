@@ -98,6 +98,7 @@ var FLAG_TABLE = FlagTable{
 		&CommentsInDataFlagSection,
 		&OutputColorizationFlagSection,
 		&FlattenUnflattenFlagSection,
+		&ProfilingFlagSection,
 		&MiscFlagSection,
 	},
 }
@@ -2404,6 +2405,51 @@ var FlattenUnflattenFlagSection = FlagSection{
 			help: "When input non-JSON and output is JSON, suppress the default auto-unflatten behavior. Default: if the input has `y.1=7,y.2=8,y.3=9` then this unflattens to `$y=[7,8,9]`.  flattens to `y.1=7,y.2=8,y.3=9. With `--no-auto-flatten`, instead we get `${y.1}=7,${y.2}=8,${y.3}=9`.",
 			parser: func(args []string, argc int, pargi *int, options *TOptions) {
 				options.WriterOptions.AutoUnflatten = false
+				*pargi += 1
+			},
+		},
+	},
+}
+
+// ================================================================
+// PROFILING FLAGS
+
+func ProfilingPrintInfo() {
+	fmt.Print("These are flags for profiling Miller performance.")
+}
+
+func init() { ProfilingFlagSection.Sort() }
+
+var ProfilingFlagSection = FlagSection{
+	name:        "Profiling flags",
+	infoPrinter: ProfilingPrintInfo,
+	flags: []Flag{
+		{
+			name: "--cpuprofile",
+			arg:  "{CPU-profile file name}",
+			help: `Create a CPU-profile file for performance analysis. Instructions will be printed to stderr.
+This flag must be the very first thing after 'mlr' on the command line.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				// Already handled in main(). Nothing to do here except to accept this as valid syntax.
+				*pargi += 2
+			},
+		},
+
+		{
+			name: "--traceprofile",
+			help: `Create a trace-profile file for performance analysis. Instructions will be printed to stderr.
+This flag must be the very first thing after 'mlr' on the command line.`,
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				// Already handled in main(). Nothing to do here except to accept this as valid syntax.
+				*pargi += 1
+			},
+		},
+
+		{
+			name: "--time",
+			help: "Print elapsed execution time in seconds to stderr at the end of the execution of the program.",
+			parser: func(args []string, argc int, pargi *int, options *TOptions) {
+				options.PrintElapsedTime = true
 				*pargi += 1
 			},
 		},

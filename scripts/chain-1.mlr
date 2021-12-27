@@ -1,2 +1,2 @@
 $color_shape = $color . $shape;
-$y = int($k) + int($index) **3 + log10(float($quantity)/float($rate));
+$y = $k + $index **3 + log10($quantity/$rate);
