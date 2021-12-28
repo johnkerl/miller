@@ -55,6 +55,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "0-wiz-0",
+      "name": "Thomas Klausner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2221844?v=4",
+      "profile": "https://github.com/0-wiz-0",
+      "contributions": [
+        "infra"
+      ]
     }
   ],
   "contributorsPerLine": 7
