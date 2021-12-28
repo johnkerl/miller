@@ -200,6 +200,15 @@
       "contributions": [
         "platform"
       ]
+    },
+    {
+      "login": "kub1x",
+      "name": "Jakub Podlaha",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1833840?v=4",
+      "profile": "https://blog.kub1x.org/",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7
