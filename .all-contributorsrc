@@ -118,6 +118,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "kundeng",
+      "name": "kundeng",
+      "avatar_url": "https://avatars.githubusercontent.com/u/89032?v=4",
+      "profile": "https://github.com/kundeng",
+      "contributions": [
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7
