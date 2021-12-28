@@ -1,6 +1,6 @@
 [**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-23-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # What is Miller?
@@ -216,6 +216,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
   </tr>
   <tr>
     <td align="center"><a href="https://blog.kub1x.org/"><img src="https://avatars.githubusercontent.com/u/1833840?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Jakub Podlaha</b></sub></a><br /><a href="#design-kub1x" title="Design">🎨</a></td>
+    <td align="center"><a href="https://goo.gl/ZGZynx"><img src="https://avatars.githubusercontent.com/u/85767?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Miodrag Milić</b></sub></a><br /><a href="#platform-majkinetor" title="Packaging/porting to new platform">📦</a></td>
   </tr>
 </table>
 

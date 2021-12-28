@@ -209,6 +209,15 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "majkinetor",
+      "name": "Miodrag Milić",
+      "avatar_url": "https://avatars.githubusercontent.com/u/85767?v=4",
+      "profile": "https://goo.gl/ZGZynx",
+      "contributions": [
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7
