@@ -155,6 +155,15 @@
       "contributions": [
         "platform"
       ]
+    },
+    {
+      "login": "davidselassie",
+      "name": "David Selassie",
+      "avatar_url": "https://avatars.githubusercontent.com/u/921669?v=4",
+      "profile": "https://dsel.net/",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7
