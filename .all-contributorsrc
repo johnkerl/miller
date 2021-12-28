@@ -236,6 +236,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "koernepr",
+      "name": "Peter Körner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/24551942?v=4",
+      "profile": "https://github.com/koernepr",
+      "contributions": [
+        "security"
+      ]
     }
   ],
   "contributorsPerLine": 7
