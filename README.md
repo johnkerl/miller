@@ -1,6 +1,6 @@
 [**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # What is Miller?
@@ -192,6 +192,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
     <td align="center"><a href="https://sjackman.ca/"><img src="https://avatars.githubusercontent.com/u/291551?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Shaun Jackman</b></sub></a><br /><a href="#ideas-sjackman" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://www.fredtrotter.com/"><img src="https://avatars.githubusercontent.com/u/83133?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Fred Trotter</b></sub></a><br /><a href="#ideas-ftrotter" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-ftrotter" title="Design">🎨</a></td>
     <td align="center"><a href="https://github.com/Komosa"><img src="https://avatars.githubusercontent.com/u/10688154?v=4?s=50" width="50px;" alt=""/><br /><sub><b>komosa</b></sub></a><br /><a href="#ideas-Komosa" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/jungle-boogie"><img src="https://avatars.githubusercontent.com/u/1111743?v=4?s=50" width="50px;" alt=""/><br /><sub><b>jungle-boogie</b></sub></a><br /><a href="#ideas-jungle-boogie" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
