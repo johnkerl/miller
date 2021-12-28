@@ -317,6 +317,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "vapniks",
+      "name": "vapniks",
+      "avatar_url": "https://avatars.githubusercontent.com/u/174330?v=4",
+      "profile": "https://github.com/vapniks",
+      "contributions": [
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7

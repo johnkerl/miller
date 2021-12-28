@@ -1,6 +1,6 @@
 [**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-34-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-35-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # What is Miller?
@@ -230,6 +230,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
     <td align="center"><a href="https://www.linkedin.com/in/fulvio-scapin"><img src="https://avatars.githubusercontent.com/u/69568?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Fulvio Scapin</b></sub></a><br /><a href="#ideas-trantor" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/torbiak"><img src="https://avatars.githubusercontent.com/u/109347?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Jordan Torbiak</b></sub></a><br /><a href="#ideas-torbiak" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/Andy1978"><img src="https://avatars.githubusercontent.com/u/240064?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Andreas Weber</b></sub></a><br /><a href="#ideas-Andy1978" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/vapniks"><img src="https://avatars.githubusercontent.com/u/174330?v=4?s=50" width="50px;" alt=""/><br /><sub><b>vapniks</b></sub></a><br /><a href="#platform-vapniks" title="Packaging/porting to new platform">📦</a></td>
   </tr>
 </table>
 
