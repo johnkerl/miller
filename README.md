@@ -1,6 +1,6 @@
 [**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-28-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-29-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # What is Miller?
@@ -222,6 +222,9 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
     <td align="center"><a href="https://github.com/koernepr"><img src="https://avatars.githubusercontent.com/u/24551942?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Peter Körner</b></sub></a><br /><a href="#security-koernepr" title="Security">🛡️</a></td>
     <td align="center"><a href="https://github.com/rubyFeedback"><img src="https://avatars.githubusercontent.com/u/46686565?v=4?s=50" width="50px;" alt=""/><br /><sub><b>rubyFeedback</b></sub></a><br /><a href="#ideas-rubyFeedback" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/rbolsius"><img src="https://avatars.githubusercontent.com/u/2106964?v=4?s=50" width="50px;" alt=""/><br /><sub><b>rbolsius</b></sub></a><br /><a href="#platform-rbolsius" title="Packaging/porting to new platform">📦</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/awildturtok"><img src="https://avatars.githubusercontent.com/u/1553491?v=4?s=50" width="50px;" alt=""/><br /><sub><b>awildturtok</b></sub></a><br /><a href="#ideas-awildturtok" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
