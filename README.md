@@ -1,6 +1,6 @@
 [**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-37-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-38-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # What is Miller?
@@ -167,18 +167,6 @@ and expect it to work.
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">🤯<a href="https://twitter.com/__jo_ker__?ref_src=twsrc%5Etfw">@__jo_ker__</a>&#39;s Miller easily reads, transforms, + writes all sorts of tabular data. It&#39;s standalone, fast, and built for streaming data (operating on one line at a time, so you can work on files larger than memory).<br><br>And the docs are dream. I&#39;ve been reading them all morning! <a href="https://t.co/Be2pGPZK6t">https://t.co/Be2pGPZK6t</a></p>&mdash; Benjamin Wolfe (he/him) (@BenjaminWolfe) <a href="https://twitter.com/BenjaminWolfe/status/1435966268499128324?ref_src=twsrc%5Etfw">September 9, 2021</a></blockquote>
 
-<!--
-# Contributors
-
-Thanks to all the fine people who help make Miller better by contributing
-commits/PRs! (Coming soon -- there will be an equally good way to honor all the
-fine people who contribute through issues and feature requests!)
-
-<a href="https://github.com/johnkerl/miller/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
-</a>
--->
-
 ## Contributors ✨
 
 Thanks to all the fine people who help make Miller better ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -235,6 +223,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
   <tr>
     <td align="center"><a href="https://github.com/89z"><img src="https://avatars.githubusercontent.com/u/73562167?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Zombo</b></sub></a><br /><a href="#platform-89z" title="Packaging/porting to new platform">📦</a></td>
     <td align="center"><a href="https://github.com/BEFH"><img src="https://avatars.githubusercontent.com/u/3386600?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Brian Fulton-Howard</b></sub></a><br /><a href="#platform-BEFH" title="Packaging/porting to new platform">📦</a></td>
+    <td align="center"><a href="https://github.com/ChCyrill"><img src="https://avatars.githubusercontent.com/u/2165604?v=4?s=50" width="50px;" alt=""/><br /><sub><b>ChCyrill</b></sub></a><br /><a href="#ideas-ChCyrill" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
@@ -242,5 +231,9 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+<a href="https://github.com/johnkerl/miller/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=johnkerl/miller" />
+</a>
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind are welcome!
