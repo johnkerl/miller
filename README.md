@@ -1,6 +1,6 @@
 [**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-32-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-33-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # What is Miller?
@@ -228,6 +228,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
     <td align="center"><a href="https://github.com/agguser"><img src="https://avatars.githubusercontent.com/u/1206106?v=4?s=50" width="50px;" alt=""/><br /><sub><b>agguser</b></sub></a><br /><a href="#ideas-agguser" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/jganong"><img src="https://avatars.githubusercontent.com/u/2783890?v=4?s=50" width="50px;" alt=""/><br /><sub><b>jganong</b></sub></a><br /><a href="#ideas-jganong" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://www.linkedin.com/in/fulvio-scapin"><img src="https://avatars.githubusercontent.com/u/69568?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Fulvio Scapin</b></sub></a><br /><a href="#ideas-trantor" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/torbiak"><img src="https://avatars.githubusercontent.com/u/109347?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Jordan Torbiak</b></sub></a><br /><a href="#ideas-torbiak" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
