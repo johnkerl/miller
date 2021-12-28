@@ -1,6 +1,6 @@
 [**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # What is Miller?
@@ -198,6 +198,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
   </tr>
   <tr>
     <td align="center"><a href="http://leahneukirchen.org/"><img src="https://avatars.githubusercontent.com/u/139?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Leah Neukirchen</b></sub></a><br /><a href="#ideas-leahneukirchen" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/lgbaldoni"><img src="https://avatars.githubusercontent.com/u/1450716?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Luigi Baldoni</b></sub></a><br /><a href="#platform-lgbaldoni" title="Packaging/porting to new platform">📦</a></td>
   </tr>
 </table>
 
