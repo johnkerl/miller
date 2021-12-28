@@ -191,6 +191,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "terorie",
+      "name": "Richard Patel",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21371810?v=4",
+      "profile": "https://github.com/terorie",
+      "contributions": [
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7
