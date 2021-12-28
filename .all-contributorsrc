@@ -37,6 +37,15 @@
         "ideas",
         "design"
       ]
+    },
+    {
+      "login": "Komosa",
+      "name": "komosa",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10688154?v=4",
+      "profile": "https://github.com/Komosa",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7
