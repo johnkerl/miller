@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mlr="mlr -S"
+mlr="mlr"
 suffix="dkvp"
 
 iflag=""

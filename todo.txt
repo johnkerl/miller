@@ -1,20 +1,14 @@
 ================================================================
 PUNCHDOWN LIST
 
-* numeric-inference perf
-  o README-profiling.md -- update ...
-  o README-go-port.md re various scripts
-
 * blockers:
   - fractional-strptime
   - improved regex doc w/ lots of examples
   - cmp-matrices
   - all-contribs: twi dm
+    https://github.com/all-contributors/all-contributors
   - license triple-checks
   - `mlr put` -> coverart
-  - 0b1011 olh/webdoc
-  - big-picture note
-  ? array/map fields: marshal as JSON_SINGLE_LINE
 
 * nikos materials -> fold in
 
