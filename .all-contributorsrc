@@ -1,0 +1,24 @@
+{
+  "projectName": "miller",
+  "projectOwner": "johnkerl",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 50,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "aborruso",
+      "name": "Andrea Borruso",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30607?v=4",
+      "profile": "https://github.com/aborruso",
+      "contributions": [
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
