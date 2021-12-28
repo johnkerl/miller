@@ -1,6 +1,6 @@
 [**Take the 2021 Miller User Survey!**](https://docs.google.com/forms/d/e/1FAIpQLSfNgLS9WVRq9mu8dZlMbS7LbTyRH1diRDnT_dGiavSOh_A8xA/viewform?usp=sf_link)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-18-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-19-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # What is Miller?
@@ -210,6 +210,7 @@ Thanks to all the fine people who help make Miller better ([emoji key](https://a
     <td align="center"><a href="https://github.com/Zachp"><img src="https://avatars.githubusercontent.com/u/1316442?v=4?s=50" width="50px;" alt=""/><br /><sub><b>zachp</b></sub></a><br /><a href="#platform-Zachp" title="Packaging/porting to new platform">📦</a></td>
     <td align="center"><a href="https://dsel.net/"><img src="https://avatars.githubusercontent.com/u/921669?v=4?s=50" width="50px;" alt=""/><br /><sub><b>David Selassie</b></sub></a><br /><a href="#ideas-davidselassie" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://www.joelparkerhenderson.com/"><img src="https://avatars.githubusercontent.com/u/27145?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Joel Parker Henderson</b></sub></a><br /><a href="#ideas-joelparkerhenderson" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/divtiply"><img src="https://avatars.githubusercontent.com/u/5359679?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Michel Ace</b></sub></a><br /><a href="#ideas-divtiply" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
