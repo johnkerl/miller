@@ -64,6 +64,15 @@
       "contributions": [
         "infra"
       ]
+    },
+    {
+      "login": "skitt",
+      "name": "Stephen Kitt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2128935?v=4",
+      "profile": "https://github.com/skitt",
+      "contributions": [
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7
